@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/xhtml; charset=UTF-8" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <meta http-equiv="Content-Language" content="en" />
+    <link rel="icon" type="image/gif" href="../plugins/default/files/images/favicon.gif" />
+    <link rel="stylesheet" href="../plugins/default/files/css/style.css" type="text/css" />
+    <title>RapidContext :: Server Programming</title>
+  </head>
+
+  <body>
+
+<h1>Server Programming</h1>
+
+<p>RapidContext server programming is based on Java, JavaScript and the specific
+languages used for communication with external systems (such as SQL). Server
+functionality is added by <em>plug-ins</em>, a ZIP file containing Java
+libraries, procedures, applets, configuration or file data. The API:s exposed
+by the server to the client is file retrieval (HTTP GET), file upload (HTTP
+POST to a specific URL) and a set of callable <em>procedures</em>.</p>
+
+
+<h2>1. Plug-in Installation &amp; Restarts</h2>
+
+<p>Plug-ins are installed or updated by using the built-in Admin application.
+The steps below explains how to install or update a plug-in:</p>
+
+<ol class="box">
+  <li>Choose the "Plug-Ins" tab in the Admin application</li>
+  <li>Locate the "Software Install &amp; Update" pane at the top (see
+      screenshot)</li>
+  <p style="text-align: center;">
+    <img src="screenshot-plugin-upload.png" />
+  </p>
+  <li>Click the "Browse..." button and choose the plug-in ZIP file</li>
+  <li>Wait for the upload progress bar to complete</li>
+  <li>Click the "Install / Update Plug-In" button</li>
+  <li>The plug-in has been installed (but client and/or server restarts
+      might be necessary)</li>
+</ol>
+
+<p>Plug-ins can also easily be loaded and unloaded through the built-in
+Admin application. Once unloaded, the plug-in directory under
+<code>plugins</code> can be removed to completely uninstall it. In certain
+circumstances, the web browser and/or the server must also be restarted
+for the plug-in loading or unloading to have effect:</p>
+
+<ul class="box">
+  <li><strong>Client Restarts:</strong> Once a new plug-in has been
+      installed, it is normally possible to use any applets in it
+      immediately. The list of displayed applets on the start page is not
+      automatically updated, however. So sometimes a restart of the web
+      browser (using Ctrl-R for a forced page reload) might be necessary.</li>
+  <li><strong>Server Restarts:</strong> The server is automatically
+      re-initiated once a plug-in has been installed, loaded or unloaded.
+      This is however not always sufficient when the plug-in contains Java
+      libraries that conflicts with ones previously loaded in the Java
+      Virtual Machine. This happens, for example, when updating a plug-in
+      containing a modified JAR file, in which case the server must be
+      restarted manually.</li>
+</ul>
+
+
+<h2>2. Plug-in Structure</h2>
+
+<p>All installed plug-ins are stored unpacked in the <code>plugins</code>
+directory. Each plug-in is stored in its own subdirectory based on the
+unique plug-in identifier. A few plug-in identifiers are reserved with a
+special meaning:</p>
+
+<ul class="box">
+  <li><code>default</code> &mdash; A plug-in that provides all the platform
+      built-in functionality. In essence, a platform update consists of
+      replacing this plug-in with a new version. This plug-in is always
+      searched last, meaning that any file in it may be fully replaced by
+      an equally named file in another plug-in.</li>
+  <li><code>local</code> &mdash; A plug-in the provides all the local
+      modifications to the default platform settings. In particular this
+      plug-in usually stores the <code>config.properties</code> file that
+      lists which plug-ins should be loaded on startup. This plug-in is
+      always searched first, meaning that any file in it will always
+      override an equally named file in another plug-in.</li>
+</ul>
+
+<p>When installing a plug-in, the contents of the ZIP file is just unpacked
+into the corresponding <code>plugins/&lt;plug-in id&gt;</code> directory.
+The plug-in directories and their corresponding ZIP files are all structured
+in the same way. The list below explains the standard files and directories:</p>
+
+<pre class="box code">
+plugin.properties <span class="comment">-- The plug-in manifest file (see below)</span>
+files/            <span class="comment">-- Contains all files mapped to URL:s</span>
+lib/              <span class="comment">-- Contains Java JAR libraries to load</span>
+applet/           <span class="comment">-- Contains applet configuration files</span>
+procedure/        <span class="comment">-- Contains procedure configuration files</span>
+environment/      <span class="comment">-- Contains environment configuration file(s)</span>
+role/             <span class="comment">-- Contains role configuration files</span>
+user/             <span class="comment">-- Contains user configuration files</span>
+</pre>
+
+<p>The <code>files</code> sub-directory is special in that it automatically
+maps the files inside onto URL:s. This is the standard way to provide
+JavaScript source files, images and other resources needed by the applets
+running in the web browser.</p>
+
+
+<h2>3. Plug-in Development</h2>
+
+<p>Each plug-in must contain a <code>plugin.properties</code> manifest file.
+It is the only mandatory content of a plug-in and consists of the following
+fields:</p>
+
+<ul class="box">
+  <li><code>id</code> &mdash; The unique plug-in identifier. May only contain
+      ASCII alphanumeric characters without spaces or separators.</li>
+  <li><code>name</code> &mdash; The plug-in name as presented to the users.</li>
+  <li><code>version</code> &mdash; The plug-in version number.</li>
+  <li><code>description</code> &mdash; The optional description text that
+      explains what functionality in provided by the plug-in.</li>
+  <li><code>className</code> &mdash; The optional fully qualified name of
+      a Java class that is loaded to initialize the plug-in. The class must
+      subclass <code>org.rapidcontext.app.plugin.Plugin</code> and handled the
+      lifecycle of the plug-in.</li>
+</ul>
+
+<p>The plug-in manifest is the first file to write when developing a plug-in.
+An example <code>plugin.properties</code> file is illustrated below:</p>
+
+<pre class="box code">
+<span class="comment"># General properties</span>
+id = example
+name = Example Plug-in
+version = 1.0
+description = Provides tests and examples for the platform.
+className = org.rapidcontext.app.plugin.example.ExamplePlugin
+</pre>
+
+<p>Once the <code>plugin.properties</code> file has been created, the template
+<code>src/plugin/build.xml</code> file can be copied into the root of the
+plug-in development folder. With this Ant build file, it is easy to package
+the plug-in ZIP file for installation.</p>
+
+
+<h2>4. Procedures</h2>
+
+<p>Most common server-side operations can be achieved by creating one or
+more <em>procedures</em>. A procedure is a server-side operation that can be
+invoked from the client or from other procedures. The operation may take
+arguments, modify data and/or return a value depending on implementation.</p>
+
+<p>Each procedure has a specific procedure type. The procedure type
+defines which server-side Java code is used to execute the procedure. Since
+most server-side operations are so similar, only a few different procedure
+types are actually needed. So most procedures are instead created by
+configuring one of the standard procedure types available. The standard
+procedure types are listed below:</p>
+
+<ul class="box">
+  <li><code>built-in</code> &mdash; The built-in procedure type, used for
+      non-configurable procedures implemented directly in Java code. This
+      procedure type is normally only used for platform operations.</li>
+  <li><code>cmdline.exec</code> &mdash; The command-line execution procedure
+      type, used for running shell commands on the server. Procedure arguments
+      may be inserted as arguments on the command-line.</li>
+  <li><code>http.post</code> &mdash; The HTTP POST request procedure type,
+      used for sending dynamic data to a receiving URL. Procedure arguments
+      may be inserted into the request headers and/or data.</li>
+  <li><code>javascript</code> &mdash; The JavaScript procedure type, used
+      for fully dynamic control of the execution. Procedure arguments may
+      be provided as global variables for the JavaScript code upon
+      execution.</li>
+  <li><code>jdbc.query</code> &mdash; The JDBC SQL query procedure type,
+      used for SQL SELECT queries returning results. Procedure arguments
+      may be inserted as literals into the SQL text.</li>
+  <li><code>jdbc.statement</code> &mdash; The JDBC SQL statement procedure
+      type, used for SQL INSERT, UPDATE and DELETE statements (and others).
+      Procedure arguments may be inserted as literals into the SQL text.</li>
+</ul>
+
+<p>By installing additional plug-ins, more procedure types can become
+available. It is possible to edit or create new procedures of any registered
+procedure type in the Admin applet. Below is a screenshot showing the
+location of the add and edit procedure buttons:</p>
+
+<p style="text-align: center;">
+  <img src="screenshot-procedure-buttons.png" />
+</p>
+
+<p>By storing SQL queries, JavaScript code or similar as configuration
+parameters, it is possible to create advanced procedures easily without
+writing any Java code at all. Each procedure configuration parameter has
+a specific type, as listed below:</p>
+
+<ol class="box">
+  <li><strong>Constant Data</strong> &mdash; The value is a data string that
+      may or may not span multiple lines.</li>
+  <li><strong>Procedure Reference</strong> &mdash; The value contains a
+      procedure name. The procedure can be called by using the identifier
+      as a function (JavaScript only).</li>
+  <li><strong>Connection Reference</strong> &mdash; The value contains a
+      connection name. The connection will be reserved before calling the
+      procedure and the identifier allows calling any connection methods
+      directly from JavaScript.</li>
+  <li><strong>Procedure Argument</strong> &mdash; The value is the
+      description of a procedure argument, as shown to the user. When the
+      procedure is executing, the identifier will be replaced by the value
+      provided by the procedure caller.</li>
+</ol>
+
+<p>Editing the procedure and the procedure configuration parameters is
+easy in the Admin applet, as shown in the screenshot below:</p>
+
+<p style="text-align: center;">
+  <img src="screenshot-procedure-edit.png" />
+</p>
+
+<p>Once created or modified, the procedures edited in the Admin applet
+are stored in the <code>local</code> plug-in, in the <code>procedures</code>
+directory. From that location the files may be copied into the corresponding
+plug-in development folder for procedures.</p>
+
+
+<h2>5. Environment</h2>
+
+<p>The environment contains a list of named connections. Each connection
+name is associated with a set of parameters for creating new connnections.
+The creation parameters depend what each adapter requires and may contain
+IP addresses, user names, passwords and similar. There is currently no
+user interface for editing or creating environment files, so they must
+be manually created as <code>environment/&lt;name&gt;.properties</code> in
+one of the plug-ins. See below for a simple example environment file.</p>
+
+<pre class="box code">
+<span class="comment"># Environment information</span>
+name = EXAMPLE
+description = The example environment
+
+<span class="comment"># Pool 0 configuration</span>
+pool.0.name = jdbc.example
+pool.0.adapter = jdbc
+pool.0.param.maxConnections = 10
+pool.0.param.maxIdleSecs = 600
+pool.0.param.driver = com.mysql.jdbc.Driver
+pool.0.param.url = jdbc:mysql://localhost:3306/example_database
+pool.0.param.user = example
+pool.0.param.password = password
+pool.0.param.sqlping = SHOW DATABASES
+pool.0.param.timeout = 45
+
+<span class="comment"># Pool 1 configuration</span>
+pool.1.name = http.ncbi.entrez
+pool.1.adapter = http
+pool.1.param.maxConnections = 0
+pool.1.param.url = http://eutils.ncbi.nlm.nih.gov/entrez/
+</pre>
+
+<p>The environment also keeps a pool of established connections. The
+connection pools are used to minimize the overhead of creating and closing 
+connections, as well as providing a mechanism to limit the resource usage
+in the server. Connections are created or reserved automatically before
+processing user requests. This enables detection of resource shortages before
+any actual operations are made. All connections reserved also participate in
+the same transaction (if supported) and will be committed or rolled back
+in sequence.</p>
+
+<p class="box"><strong>Note:</strong> A RapidContext server may only have a
+single environment loaded. This environment (and all its connections) is
+shared between all applets, procedures and users on the server. If several
+environment are required, separate RapidContext server instances must be
+used.</p>
+
+  </body>
+
+</html>

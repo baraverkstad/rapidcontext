@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/xhtml; charset=UTF-8" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <meta http-equiv="Content-Language" content="en" />
+    <link rel="icon" type="image/gif" href="../plugins/default/files/images/favicon.gif" />
+    <link rel="stylesheet" href="../plugins/default/files/css/style.css" type="text/css" />
+    <title>RapidContext :: Client Programming</title>
+  </head>
+
+  <body>
+
+<h1>Client Programming</h1>
+
+<p>RapidContext client programming is based on JavaScript, HTML, CSS and
+DOM (i.e. AJAX without XML). Client applications are called "applets"
+and executes in the web browser. Care must therefore be taken to follow
+appropriate web standards in order to remain compatible with all
+targeted browsers.</p>
+
+
+<h2>1. Technology Reference</h2>
+
+<p>A number of web technologies are used in the standard RapidContext client
+libraries, besides the RapidContext API:s themselves. Please refer to the
+references below for more information:</p>
+
+<ul class="box">
+  <li><a href="http://www.w3.org/TR/html401/">HTML 4.01</a> &mdash; User
+      interface presentation layer. Normally used dynamically through the
+      HTML DOM by both <code>MochiKit.DOM</code> and
+      <code>RapidContext.Widget</code> API:s.</li>
+  <li><a href="http://www.w3.org/TR/CSS21/">CSS 2.1</a> &mdash; User interface
+      style and layout layer. Normally used dynamically through the CSS DOM
+      by both <code>MochiKit.Style</code> and <code>RapidContext.Widget</code>
+      API:s.</li>
+  <li><a href="http://developer.mozilla.org/en/docs/Core_JavaScript_1.5_Reference">JavaScript 1.5</a>
+      &mdash; Programming language reference for the core JavaScript library.</li>
+  <li><a href="http://www.mochikit.com/doc/html/MochiKit/index.html">MochiKit 1.4</a>
+      &mdash; API reference for the MochiKit JavaScript library.</li>
+  <li><a href="http://www.w3.org/TR/DOM-Level-2-Core/">DOM Level 2 Core</a>
+      &mdash; API reference for the basic DOM (dynamic HTML) operations.
+      Often simplified by using <code>MochiKit.DOM</code> API:s instead.</li>
+  <li><a href="http://www.w3.org/TR/DOM-Level-2-HTML/">DOM Level 2 HTML</a>
+      &mdash; API reference for the HTML DOM (dynamic HTML) operations.
+      Often simplified by using <code>MochiKit.DOM</code> API:s instead.</li>
+</ul>
+
+
+<h2>2. Applet Declaration</h2>
+
+<p>Applet source code and resources are stored on the server, but will be
+transferred to the client web browser upon launch. The client can also list
+available applets through the built-in <code>System.Applet.List</code>
+procedure. This procedure will return a list of all declared applets and
+their respective configuration settings. If an applet is not properly
+declared in a configuration file, it will not be visible to the client
+and the standard launch mechanisms won't work.</p>
+
+<p>The applet configuration file is normally placed in the
+<code>plugin/local/applet</code> directory (for the <code>local</code>
+plug-in). The file name should match <code>&lt;applet id&gt;.properties</code>,
+replacing the unique applet identifier for the <code>&lt;applet id&gt;</code>
+part. In the file, generic configuration parameters are specified along with
+a list of URL resources required to load the applet. Below follows a simple
+example:</p>
+
+<pre class="box code">
+<span class="comment"># General properties</span>
+name = Example Applet
+description = A small example applet.
+className = ExampleApplet
+
+<span class="comment"># Resources array</span>
+resources.0.url = example/applet.js
+resources.0.type = code
+resources.1.url = example/icon.png
+resources.1.type = icon
+</pre>
+
+<p>In the example above, the two files <code>icon.png</code> and
+<code>applet.js</code> are referenced and should be available in the plug-in
+file area (more on that later). The applet resources of type <code>code</code>
+are dynamically loaded as JavaScript files into the web page when the applet
+is first launched and is thereafter reused without reloading on subsequent
+launches. The available configuration parameters and their meaning is as
+follows:</p>
+
+<ul class="box">
+  <li><code>name</code> &mdash; The applet name as presented to the user.
+      This name is shown in various places in the default user interface.</li>
+  <li><code>description</code> &mdash; The optional applet description that
+      may be presented to the user.</li>
+  <li><code>className</code> &mdash; The applet JavaScript class name. This
+      name must be unique and refer to a constructor function for the applet
+      instance (see below for more details). The class name must be unique
+      in order to avoid collisions with other applets being executed in the
+      same web page. The source code for the class should be placed in one
+      of the <code>code</code> resources listed.</li>
+  <li><code>launch</code> &mdash; The optional applet launch setting. Can have
+      one of the following values:</li>
+  <ul>
+    <li><code>manual</code> (default) &mdash; The applet is manually started
+        and stopped by the user (when clicking on icons or similar).</li>
+    <li><code>auto</code> &mdash; The applet is started automatically when
+        a new user session starts, but can also be started and stopped
+        manually by the user.</li>
+    <li><code>once</code> &mdash; The applet is started automatically when
+        a new user session starts and can thereafter neither be started nor
+        stopped by the user.</li>
+    <li><code>limited</code> &mdash; The applet is hidden from the user to
+        avoid manual starting and stopping in the default user interface.
+        The applet can still be started programmatically by other applets
+        through the RapidContext client API:s.</li>
+  </ul>
+  <li><code>resources.#.url</code> &mdash; The resource local URL. The actual
+      resource data must also be mapped onto this URL, which is normally
+      achieved by placing it in the <code>plugin/local/files</code> directory
+      (for the <code>local</code> plug-in). It is a good custom to prefix all
+      URL:s in order to avoid collisions with URL:s from other plug-ins.</li>
+  <li><code>resources.#.type</code> &mdash; The resource type. Can be any
+      text string, but the following values have a defined meaning:</li>
+  <ul>
+    <li><code>code</code> &mdash; A JavaScript source code file that must be
+        loaded before applet launch.</li>
+    <li><code>ui</code> &mdash; A user interface XML definition file (see
+        below). The interface specified in this file will be automatically
+        created each time the applet is launched.</li>
+    <li><code>icon</code> &mdash; An applet icon displayed in the default
+        user interface for launching the applet. Should be a transparent
+        GIF or PNG image in 48x48 size for optimal viewing.</li>
+    <li><code>file</code> &mdash; A generic file resource with no special
+        handling.</li>
+  </ul>
+  <li><code>resource.#.id</code> &mdash; The optional resource identifier. All
+      resources with an identifier are easily accessible from the applet
+      JavaScript code, using a <code>this.resource.&lt;id&gt;</code> construct.
+      This is useful for providing URL:s to icons, images or files used by
+      the applet.</li>
+  <li><code>resources.#.topic</code> &mdash; The optional resource help topic
+      name. Use only if the resource file contains a HTML help document for
+      the applet. The topic name may contain <code>/</code> characters to
+      indicate directories.</li>
+</ul>
+
+
+<h2>3. Applet Implementation</h2>
+
+<p>All applets are implemented as JavaScript objects with a common constructor
+function (i.e. as JavaScript "classes"). Upon applet launch, the applet
+constructor function is called and a new applet instance object is supposed
+to be created. In the default user interface it is possible to launch multiple
+instances of a single applet, so usage of global variables or similar should
+be avoided in applet implementations.</p>
+
+<p>Normally a single <code>code</code> resource contains the source code file
+for the applet. By declaring multiple <code>code</code> resources, several
+source code files can be loaded to provide helper functions, configuration
+code, etc.</p>
+
+<p>The JavaScript constructor function for an applet must be named
+<strong>exactly</strong> as specified by the <code>className</code> property
+in the <code>&lt;applet id&gt;.properties</code> file. The created objects
+must also contain two methods &mdash; <code>start()</code> and
+<code>stop()</code> &mdash; that handles the applet lifecycle. Below is an
+example JavaScript file that implements a minimal example applet:</p>
+
+<pre class="box code">
+<span class="comment">/**
+ * Creates a new ExampleApplet instance. This function is called once all
+ * applet JavaScript resources have been loaded. It is called as a
+ * constructor function, so it will create a new object with the prototype
+ * inherited from the function.
+ */</span>
+function ExampleApplet() {
+<span class="comment">    // Constructor code. No user interface or external calls here.</span>
+}
+
+<span class="comment">/**
+ * Starts the applet execution. This function is called when the user
+ * interface has been created (if available).
+ */</span>
+ExampleApplet.prototype.start = function() {
+<span class="comment">    // this.className -- the applet className property value
+    // this.ui -- a map of identifiers from the user interface XML
+    // this.ui.root -- the user interface parent container widget
+    // this.ui.overlay -- the default overlay widget for the applet
+    // this.resource -- a map of resource URL:s</span>
+}
+
+<span class="comment">/**
+ * Stops the applet execution. This function is called when the user
+ * has terminated the applet, but before the user interface is
+ * destroyed. The applet should kill any asynchronous requests
+ * currently executing when this method is called.
+ */</span>
+ExampleApplet.prototype.stop = function() {
+<span class="comment">    // stop async requests and other pending actions</span>
+}
+</pre>
+
+<p>The <code>RapidContext.App.startApplet()</code> function is responsible for
+applet loading, instance creation and calling the <code>start()</code> method
+once the user interface has been created. A number of instance variables will
+also be provided to all applet instances:</p>
+
+<ul class="box">
+  <li><code>this.className</code> &mdash; The applet class name value.</li>
+  <li><code>this.ui</code> &mdash; Contains an <code>Object</code> with
+      properties for any user interface widget with an <code>id</code>
+      attribute. The property value is set to the UI widget or DOM node.</li>
+  <li><code>this.ui.root</code> &mdash; Contains the parent container widget
+      for the applet user interface, normally an instance of
+      <code>RapidContext.Widget.Pane</code>.</li>
+  <li><code>this.ui.overlay</code> &mdash; Contains a 
+      <code>RapidContext.Widget.Overlay</code> widget for the whole applet user
+      interface. This overlay is used while loading the applet resources,
+      but may thereafter be used by the applet to display various messages
+      while blocking the user interface for input.</li>
+  <li><code>this.resource</code> &mdash; Contains an <code>Object</code>
+      with properties for any applet resource with an <code>id</code>
+      attribute in the <code>.applet</code> file. The value is a string with
+      the resource URL.</li>
+</ul>
+
+
+<h2>4. User Interface XML</h2>
+
+<p>The user interface for an applet is normally contained inside a
+<code>RapidContext.Widget.TabContainer</code> widget. The applet itself is
+assigned a <code>RapidContext.Widget.Pane</code> widget inside which it is
+responsible for creating and managing its own user interface.</p>
+
+<p>The RapidContext platform further simplifies the user interface creation
+however, by providing an optional mechanism for automatically creating the
+user interface from a serialized XML format. The user interface XML is
+normally stored in a <code>ui.xml</code> file in the same location as the
+applet JavaScript source code and other resources. To trigger the automatic
+loading and creation of the user interface from this file, it must be
+specified as an applet resource as follows:</p>
+
+<pre class="box code">
+...
+resources.2.url = example/ui.xml
+resources.2.type = ui
+</pre>
+
+<p>The <code>ui.xml</code> file contains a mix of plain XHTML and an XML
+serialization of user interface widgets defined in the
+<code>RapidContext.Widget</code> namespace. The actual XML is processed by
+the <code>RapidContext.UI.buildUI</code> function. Here is a simple example:</p>
+
+<pre class="box code">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+
+&lt;ui&gt;
+  &lt;Button id="test"&gt;&lt;Icon ref="COMMENT" /&gt; Press Me&lt;/Button&gt;
+&lt;/ui&gt;
+</pre>
+
+<p>The root XML tag in a <code>ui.xml</code> file should always be
+<code>&lt;ui&gt;</code>. Inside this tag, all well-formed XML tags will be
+interpreted as follows:</p>
+
+<ul class="box">
+  <li><strong>Tag Names</strong> &mdash; The XML tag names will be looked up
+      in the <code>RapidContext.Widget.CLASSES</code> map, using the exact
+      case-sensitive tag name. If found, the corresponding constructor function
+      is used to create the HTML DOM node. Otherwise the tag name is sent to
+      the <code>MochiKit.DOM.createDOM</code> function to create the
+      corresponding HTML DOM node.</li>
+  <li><strong>The <code>id</code> Attribute</strong> &mdash; The <code>id</code>
+      attribute is not set on the HTML DOM node created. Instead it is used
+      to map the DOM node in the returned applet <code>this.ui</code> lookup
+      object. The benefit of this solution is that any identified DOM nodes
+      are immediately available, without going through the DOM API of
+      <code>document.getElementById</code>. Also, this solution avoids
+      identifier collisions when the same applet is launched twice or when
+      multiple applets use the same identifiers.</li>
+  <li><strong>The <code>class</code> Attribute</strong> &mdash;
+      The <code>class</code> attribute value is set on the HTML DOM node
+      created (similar to in HTML files). Note that widgets will have more
+      CSS classes than the ones specified, potentially causing conflicts
+      with specific style settings (see below).</li>
+  <li><strong>The <code>w</code>, <code>h</code> &amp; <code>a</code>
+      Attributes</strong>&mdash; The attributes <code>w</code>,
+      <code>h</code> and <code>a</code> are not set on the HTML DOM node
+      created, but are instead used in a call to 
+      <code>RapidContext.Util.registerSizeConstraints</code>. This sets up a
+      JavaScript function for the node that will calculate the appropriate
+      size and aspect ratio whenever <code>RapidContext.Util.resizeElements</code>
+      is called (mostly done automatically by the platform).</li>
+  <li><strong>Other Attributes</strong> &mdash; Other XML attributes are
+      either set as string values to the HTML DOM nodes created, or sent to
+      the corresponding <code>RapidContext.Widget.setAttrs</code> function. This
+      makes it possible to configure each widget with the specific attributes
+      supported in each case.</li>
+</ul>
+
+
+<h2>5. User Interface Style</h2>
+
+<p>The platform user interface is default styled by two CSS files &mdash;
+<code>css/style.css</code> and <code>css/widget.css</code>. When the default
+style is not sufficient, the element style can be set either inline on the
+specific elements or by loading an additional CSS file. Only in special
+circumstances should the default CSS files be overwritten or modified, since
+such changes won't be preserved in platform updates. Below follows a list
+of the possibilities for user interface styling:</p>
+
+<ol class="box">
+  <li><strong>Element <code>style</code> Attribute</strong> &mdash; The
+      easiest way to modify the style of a widget or an HTML DOM node is by
+      setting the <code>style</code> attribute. This can be done either in
+      the <code>ui.xml</code> file or through the
+      <code>MochiKit.Style.setStyle</code> function.</li>
+  <li><strong>Loading Additional CSS files</strong> &mdash; Another way to
+      style the user interface is by loading additional an additional CSS
+      file. Ideally such a file should not modify styles for all elements,
+      but only those with specific <code>class</code> names. Otherwise,
+      applets or widgets might break in various ways. To override specific
+      default styles, the normal CSS cascading and priority order can also
+      be used (although this is not recommended).</li>
+  <li><strong>Replace Default CSS Files</strong> &mdash; The default CSS files
+      are located in the default plug-in and can be replaced in any other
+      plug-in. The same is true for the default image and icon set located
+      in the <code>images</code> directory. Replacing default styles or
+      images is useful for creating a new user interface theme for the whole
+      platform, but it is <strong>strongly discouraged</strong> to replace or
+      modify these files for other purposes. The styles and images provided
+      by these files might change without notice in future versions.</li>
+</ol>
+
+  </body>
+
+</html>

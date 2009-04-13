@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui>
+  <p style="position: absolute; left: 0px; bottom: 0px;">
+    <span class="label">Application icons by: </span>
+    <a href="http://fasticon.com/" target="_blank">FastIcon.com</a>
+  </p>
+  <div style="float: left; width: 30%; height: 100%; border-right: solid 1px #6290d2; padding-right: 6px;">
+    <h3>Applications:</h3>
+    <div w="100%" h="100%-50" style="overflow-y: auto;">
+      <table>
+        <tbody id="appletTable">
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div id="inlineArea" w="70%-14" h="100%" style="float: left; padding-left: 6px;">
+    <div style="padding-left: 20px">
+      <h1 style="font-family: Trebuchet MS; font-size: 30px; font-weight; bold;">Welcome to RapidContext</h1>
+      <p>RapidContext is a JavaScript application server that makes creating
+      dynamic web applications easier.</p>
+      <table id="tourButton" class="box" style="cursor: pointer;">
+        <tbody>
+          <tr>
+            <td style="vertical-align: middle; padding-right: 20px;">
+              <img src="applet/start/tour.png" />
+            </td>
+            <td>
+              <h2>Quick Tour</h2>
+              <p>The quick tour shows the basics of RapidContext in an
+              interactive fashion.</p> 
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <Dialog id="tourDialog" title="RapidContext Quick Tour" center="false" resizeable="false" w="80%" h="190" style="z-index: 1000;">
+    <Wizard id="tourWizard" style="width: 100%; height: 100%; font-size: larger;">
+      <Pane pageTitle="Welcome to the Quick Tour of RapidContext!">
+        <ul>
+          <li>In this tour you'll see some of the basic functionality in RapidContext.</li>
+          <li>The tour can be cancelled at any time by pressing the
+              <Icon url="close-red.gif" /> icon on this dialog.</li>
+        </ul>
+      </Pane>
+      <Pane pageTitle="The Start Application">
+        <ul>
+          <li>The built-in Start application is normally launched directly on
+              startup.</li>
+          <li>It provides convenient launchers for all available
+              applications (that the user has permission to run).</li>
+          <li>It also provides an information area which can be configured
+              by the installed plug-ins.</li>
+        </ul>
+        <Button id="tourStartLocate"><Icon ref="HELP" /> Locate</Button>
+      </Pane>
+      <Pane pageTitle="The User Menu">
+        <ul>
+          <li>At the top right corner of the screen is the user and environment
+              information.</li>
+          <li>Hovering over it with the mouse reveals the User Menu.</li>
+          <li>This menu provides quick launchers for the built-in applications.</li>
+        </ul>
+        <Button id="tourUserLocate"><Icon ref="HELP" /> Locate</Button>
+      </Pane>
+      <Pane pageTitle="Using Help &amp; Docs">
+        <ul>
+          <li>This is the <strong>Help &amp; Docs</strong> application.</li>
+          <li>Here you'll find the complete user manual for RapidContext.</li>
+          <li>It also contains all the developer documentation, including the
+              MochiKit API:s.</li>
+        </ul>
+        <Button id="tourHelpLocate"><Icon ref="HELP" /> Locate</Button>
+      </Pane>
+      <Pane pageTitle="Application Switching &amp; Tabs">
+        <ul>
+          <li>Several applications can be run in parallel, each using a separate tab.</li>
+          <li>Switching and closing applications is easy using the tab control bar.</li>
+          <li>Multiple instances of a single application is also possible.</li>
+        </ul>
+        <Button id="tourTabsLocate"><Icon ref="HELP" /> Locate</Button>
+      </Pane>
+      <Pane pageTitle="The Admin Application">
+        <ul>
+          <li>This is the <strong>Admin</strong> application.</li>
+          <li>Here you can monitor and change many aspects of RapidContext.</li>
+          <li>It also provides a number of development tools.</li>
+        </ul>
+        <Button id="tourAdminLocate"><Icon ref="HELP" /> Locate</Button>
+      </Pane>
+      <Pane pageTitle="Editing &amp; Testing Procedures">
+        <ul>
+          <li>Server-side calls are executed with something called a
+              <strong>procedure</strong>.</li>
+          <li>The <strong>Admin</strong> application makes it possible to
+              view, edit and test all installed procedures.</li>
+          <li>Try executing the <code>System.Session.Current</code> for example!</li>
+        </ul>
+        <Button id="tourAdminProcLocate"><Icon ref="HELP" /> Locate</Button>
+      </Pane>
+      <Pane pageTitle="Monitoring Client &amp; Server Activity">
+        <ul>
+          <li>All calls from the client to the server can be logged and
+              traced.</li>
+          <li>The log level is dynamic and can be changed at any time.</li>
+          <li>Errors and warnings from the various applications also end up
+              here.</li>
+        </ul>
+        <Button id="tourAdminLogLocate"><Icon ref="HELP" /> Locate</Button>
+      </Pane>
+      <Pane pageTitle="Managing Users">
+        <ul>
+          <li>The <strong>Admin</strong> application also makes it easy to
+              add or modify users.</li>
+          <li>New users can be created by the <Icon ref="ADD" /> icon.</li>
+          <li>Permissions are controlled by the roles that a user has
+              (role "<strong>Admin</strong>" gives full access).</li>
+        </ul>
+        <Button id="tourAdminUserLocate"><Icon ref="HELP" /> Locate</Button>
+      </Pane>
+      <Pane pageTitle="Installing Plug-ins">
+        <ul>
+          <li>New functionality can easily be added by installing new or
+              updated plug-ins.</li>
+          <li>A plug-in can provide any type of functionality, from applications
+              via default configuration to connectivity API:s.</li>
+          <li>It is also possible to unload plug-ins to disable them without
+              removing them completely.</li>
+        </ul>
+        <Button id="tourAdminPluginLocate"><Icon ref="HELP" /> Locate</Button>
+      </Pane>
+    </Wizard>
+  </Dialog>
+  <Pane id="tourLocator" style="position: absolute; z-index: 10000; border: 3px solid #70263e; background: #ffddee; display: none;"></Pane>
+</ui>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui>
+  <div w="30%" h="100%" style="float: left; padding-right: 20px;">
+    <h3>Topics: <Icon id="topicReload" ref="RELOAD" /></h3>
+    <Tree id="topicTree" w="100%-2" h="100% - 24">
+    </Tree>
+  </div>
+  <div w="70%-30" h="100%" style="float: left;">
+    <h3>
+      Content:
+      <Icon id="contentReload" ref="RELOAD" style="margin-left: 6px;" />
+      <Icon id="contentLoading" ref="LOADING" style="margin-left: 6px;" />
+      <Icon id="contentExpand" ref="EXPAND" style="margin-left: 6px;" />
+    </h3>
+    <div id="contentScroll" w="100%" h="100% - 22" style="overflow: auto;">
+      <img id="contentIcon" src="images/icons/blank.gif" width="48" height="48" style="float: left; padding-top: 10px; padding-right: 10px; "/>
+      <h1 id="contentTitle" style="margin-top: 10px; margin-bottom: 6px;"></h1>
+      <p id="contentInfo" style="margin-top: 6px; margin-bottom: 20px; color: #666;"></p>
+      <div id="contentText" class="doc" style="margin-right: 20px;"></div>
+    </div>
+  </div>
+</ui>

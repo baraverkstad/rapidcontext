@@ -1,0 +1,340 @@
+/*
+ * RapidContext <http://www.rapidcontext.com/>
+ * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
+ * All rights reserved.
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the BSD license.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the RapidContext LICENSE.txt file for more details.
+ */
+
+package org.rapidcontext.core.security;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.logging.Logger;
+
+import org.rapidcontext.core.data.Data;
+import org.rapidcontext.util.ArrayUtil;
+
+/**
+ * An application user.
+ *
+ * @author   Per Cederberg, Dynabyte AB
+ * @version  1.0
+ */
+public class User {
+
+    /**
+     * The class logger.
+     */
+    private static final Logger LOG =
+        Logger.getLogger(User.class.getName());
+
+    /**
+     * The user data object.
+     */
+    private Data data;
+
+    /**
+     * Creates a new user with the specified name.
+     *
+     * @param name           the unique user name
+     */
+    public User(String name) {
+        this.data = new Data();
+        this.data.set("name", name);
+    }
+
+    /**
+     * Creates a new user with the specified data object.
+     *
+     * @param data           the user data object
+     */
+    // TODO: Make this method package internal.
+    public User(Data data) {
+        this.data = data;
+    }
+
+    /**
+     * Returns a string representation of this object.
+     *
+     * @return a string representation of this object
+     */
+    public String toString() {
+        return getName();
+    }
+
+    /**
+     * Returns the user data object. Note that changes to the data
+     * object will also affect this role object. Also note that the
+     * data object contain the hashed password, which is unsuitable
+     * to send to web clients.
+     *
+     * @return the user data object
+     */
+    public Data getData() {
+        return this.data;
+    }
+
+    /**
+     * Returns the unique user name.
+     *
+     * @return the user name
+     */
+    public String getName() {
+        return this.data.getString("name", null);
+    }
+
+    /**
+     * Returns the user description.
+     *
+     * @return the user description
+     */
+    public String getDescription() {
+        return this.data.getString("description", "");
+    }
+
+    /**
+     * Sets the user description.
+     *
+     * @param descr          the user description
+     */
+    public void setDescription(String descr) {
+        this.data.set("description", descr);
+    }
+
+    /**
+     * Checks if the user is enabled.
+     *
+     * @return true if the user is enabled, or
+     *         false otherwise
+     */
+    public boolean isEnabled() {
+        return this.data.getBoolean("enabled", true);
+    }
+
+    /**
+     * Sets the user enabled flag.
+     *
+     * @param enabled        the enabled flag
+     */
+    public void setEnabled(boolean enabled) {
+        this.data.setBoolean("enabled", enabled);
+    }
+
+    /**
+     * Checks if the specified password is correct. This method will
+     * hash and encode the specified password, and compare the
+     * result with the user password hash. If the user password hash
+     * is blank, this method will always return true.
+     *
+     * @param password       the password to check
+     *
+     * @return true if the password is correct, or
+     *         false otherwise
+     */
+    public boolean hasPassword(String password) {
+        return hasPasswordHash(createPasswordHash(password));
+    }
+
+    /**
+     * Sets the user password. This method will hash and encode the
+     * specified password, which is an irreversible process.
+     *
+     * @param password       the user password
+     */
+    public void setPassword(String password) {
+        setPasswordHash(createPasswordHash(password));
+    }
+
+    /**
+     * Checks if the specified password hash is correct. This method
+     * will compare the specified hash value with the user password
+     * hash. If the user password hash is blank, this method will
+     * always return true.
+     *
+     * @param hash           the password hash to check
+     *
+     * @return true if the password hash is correct, or
+     *         false otherwise
+     */
+    public boolean hasPasswordHash(String hash) {
+        String str = this.data.getString("password", "");
+        return str.equals("") || str.equals(hash);
+    }
+
+    /**
+     * Sets the user password hash. This method assumes that the
+     * specified password is already been hashed and encoded.
+     *
+     * @param hash           the new password hash
+     */
+    public void setPasswordHash(String hash) {
+        this.data.set("password", hash);
+    }
+
+    /**
+     * Creates a password hash string (in ASCII). The hash value
+     * calculation is irreversible, and is calculated with the
+     * SHA-256 algorithm and encoded as a hexadecimal lower-case
+     * ASCII string. The password will also be salted with the user
+     * name, so that separate password cracking attempts must be
+     * made for each user.
+     *
+     * @param password       the password text
+     *
+     * @return the hash value as a hexadecimal string
+     */
+    public String createPasswordHash(String password) {
+        StringBuffer   res = new StringBuffer();
+        MessageDigest  digest;
+        byte           bytes[];
+        String         str;
+
+        // Compute SHA-256 digest
+        try {
+            str = getName() + ":" + password;
+            digest = MessageDigest.getInstance("SHA-256");
+            digest.reset();
+            digest.update(str.getBytes());
+            bytes = digest.digest();
+        } catch (NoSuchAlgorithmException e) {
+            LOG.severe("failed to create SHA-256 password hash: " +
+                       e.getMessage());
+            return "";
+        }
+
+        // Encode digest as hex string
+        for (int i = 0; i < bytes.length; i++) {
+            str = Integer.toHexString(bytes[i] & 0xFF);
+            if (str.length() < 2) {
+                res.append("0");
+            }
+            res.append(str);
+        }
+        return res.toString();
+    }
+
+    /**
+     * Returns the unique NTLM user identification (user\domain).
+     *
+     * @return the unique NTLM user identification, or
+     *         an empty string if not set
+     */
+    public String getNtlmName() {
+        if (this.data.containsKey("ntlmUser")) {
+            return getNtlmUser() + "\\" + getNtlmDomain();
+        } else {
+            return "";
+        }
+    }
+
+    /**
+     * Returns the NTLM user name.
+     *
+     * @return the NTLM user name, or
+     *         an empty string if not set
+     */
+    public String getNtlmUser() {
+        return this.data.getString("ntlmUser", "");
+    }
+
+    /**
+     * Sets the NTLM user name.
+     *
+     * @param name           the new NTLM user name
+     */
+    public void setNtlmUser(String name) {
+        this.data.set("ntlmUser", name);
+    }
+
+    /**
+     * Returns the NTLM domain name.
+     *
+     * @return the NTLM domain name, or
+     *         an empty string if not set
+     */
+    public String getNtlmDomain() {
+        return this.data.getString("ntlmDomain", "");
+    }
+
+    /**
+     * Sets the NTLM domain name.
+     *
+     * @param name           the new NTLM domain name
+     */
+    public void setNtlmDomain(String name) {
+        this.data.set("ntlmDomain", name);
+    }
+
+    /**
+     * Checks if the user has the specified role.
+     *
+     * @param name           the role name
+     *
+     * @return true if the user has the role, or
+     *         false otherwise
+     */
+    public boolean hasRole(String name) {
+        Data  roles = this.data.getData("role");
+
+        return roles != null && roles.containsValue(name);
+    }
+
+    /**
+     * Returns an array with all the roles for the user.
+     *
+     * @return an array with all the roles
+     */
+    public String[] getRoles() {
+        Data      roles = this.data.getData("role");
+        String[]  res;
+
+        if (roles == null || roles.arraySize() <= 0) {
+            return new String[0];
+        } else {
+            res = new String[roles.arraySize()];
+            for (int i = 0; i < roles.arraySize(); i++) {
+                res[i] = roles.get(i).toString();
+            }
+            return res;
+        }
+    }
+
+    /**
+     * Sets all the all the roles for the user.
+     *
+     * @param roles          the array with all roles
+     */
+    public void setRoles(String[] roles) {
+        Data    list = this.data.getData("role");
+        String  name;
+
+        if (list == null) {
+            list = new Data();
+            this.data.set("role", list);
+        }
+        for (int i = 0; i < list.arraySize(); i++) {
+            if (ArrayUtil.indexOf(roles, list.getString(i, "")) < 0) {
+                list.remove(i);
+                i--;
+            }
+        }
+        for (int i = 0; roles != null && i < roles.length; i++) {
+            name = roles[i].trim();
+            if (name.length() <= 0) {
+                // Skip whitespace
+            } else if (list.arraySize() <= 0) {
+                list.set(0, name);
+            } else if (!list.containsValue(name)) {
+                list.set(list.arraySize(), name);
+            }
+        }
+    }
+}

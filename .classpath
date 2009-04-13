@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/java"/>
+	<classpathentry kind="src" path="src/plugin/http/src"/>
+	<classpathentry kind="src" path="src/plugin/cmdline/src"/>
+	<classpathentry kind="src" path="src/plugin/jdbc/src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/servlet-api.jar"/>
+	<classpathentry kind="lib" path="lib/commons-pool-1.3.jar"/>
+	<classpathentry kind="lib" path="lib/js.jar"/>
+	<classpathentry kind="lib" path="lib/jetty-6.1.9.jar"/>
+	<classpathentry kind="lib" path="lib/jetty-util-6.1.9.jar"/>
+	<classpathentry kind="lib" path="lib/commons-fileupload-1.2.1.jar"/>
+	<classpathentry kind="output" path="classes"/>
+</classpath>

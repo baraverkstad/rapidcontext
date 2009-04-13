@@ -1,0 +1,7 @@
+# General properties
+id = <Short Id Here>
+name = <Display Name Here>
+version = 0.1
+date = 
+description = <Description Text Here>
+#className = <optional Java Plugin class here>

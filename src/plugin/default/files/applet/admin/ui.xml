@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui>
+  <TabContainer id="tabContainer" w="100%" h="100%">
+    <Pane pageTitle="Applets">
+      <div w="35%" h="100%" style="float: left; padding-right: 20px;">
+        <h3>Applet Names: <Icon id="appletReload" ref="RELOAD" /><Icon id="appletLoading" ref="LOADING" /></h3>
+        <Table id="appletTable" w="100%" h="100%-22">
+          <TableColumn title="Name" field="name" sort="asc" key="true" />
+        </Table>
+      </div>
+      <Form id="appletForm" w="65%-30" h="100%" style="float: left;">
+        <h3>Applet Details: <Icon ref="BLANK" /></h3>
+        <table>
+          <tbody>
+            <tr>
+              <th class="label" style="padding-right: 4px;">Name:</th>
+              <td>
+                <Field name="name" />
+              </td>
+            </tr>
+            <tr>
+              <th class="label" style="padding-right: 4px;">Class Name:</th>
+              <td>
+                <Field name="className" />
+              </td>
+            </tr>
+            <tr>
+              <th class="label" style="padding-right: 4px;">Description:</th>
+              <td>
+                <Field name="description" />
+              </td>
+            </tr>
+            <tr>
+              <th class="label" style="padding-right: 4px;">Launch Type:</th>
+              <td>
+                <Field name="launch" />
+              </td>
+            </tr>
+            <tr>
+              <th class="label" style="padding-right: 4px;">Resources:</th>
+              <td id="appletResources"></td>
+            </tr>
+            <tr>
+              <td colspan="2" style="padding-top: 4px;">
+                <Button id="appletLaunch" style="margin-right: 6px"><Icon ref="OK" /> Launch</Button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </Form>
+    </Pane>
+    <Pane id="pluginTab" pageTitle="Plug-Ins">
+      <Form id="pluginUploadForm" w="100%" style="margin-bottom: 10px; border-bottom: solid 1px #6290d2; padding-bottom: 10px;">
+        <h3>Software Install &amp; Update:</h3>
+        <table>
+          <tbody>
+            <tr>
+              <th class="label" style="padding-right: 4px; padding-top: 4px;">Plug-in File:</th>
+              <td>
+                <FileStreamer id="pluginFile" url="rapidcontext/upload/plugin" />
+                <ProgressBar id="pluginProgress" style="width: 500px" />
+                <Pane id="pluginFileInfo" style="padding-left: 4px;">
+                  <strong><Field name="name" /></strong>,
+                  <Field name="approxSize" />,
+                  <Field name="mimeType" />
+                  <Icon id="pluginFileDelete" ref="DELETE" style="margin-left: 6px;" />
+                </Pane>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <Button id="pluginInstall" style="margin-top: 4px;"><Icon ref="PLUGIN" /> Install / Update Plug-In</Button>
+        <Button id="pluginReset" style="margin-top: 4px; margin-left: 10px;"><Icon ref="RELOAD" /> Reset Server</Button>
+      </Form>
+      <div w="45%" h="100%-100" style="float: left; padding-right: 20px;">
+        <h3>Installed Plug-Ins: <Icon id="pluginReload" ref="RELOAD" /><Icon id="pluginLoading" ref="LOADING" /></h3>
+        <Table id="pluginTable" w="100%" h="100%-22">
+          <TableColumn title="Status" field="loaded" type="boolean" />
+          <TableColumn title="Identifier" field="id" key="true" />
+          <TableColumn title="Version" field="version" />
+          <TableColumn title="Name" field="name" />
+        </Table>
+      </div>
+      <Form id="pluginForm" w="45%-30" h="100%-100" style="float: left;">
+        <h3>Plug-In Details: <Icon ref="BLANK" /></h3>
+        <table>
+          <tbody>
+            <tr>
+              <th class="label" style="padding-right: 4px;">Identifier:</th>
+              <td>
+                <Field name="id" />
+              </td>
+            </tr>
+            <tr>
+              <th class="label" style="padding-right: 4px;">Version:</th>
+              <td>
+                <Field name="version" />
+              </td>
+            </tr>
+            <tr>
+              <th class="label" style="padding-right: 4px;">Date:</th>
+              <td>
+                <Field name="date" />
+              </td>
+            </tr>
+            <tr>
+              <th class="label" style="padding-right: 4px;">Name:</th>
+              <td>
+                <Field name="name" />
+              </td>
+            </tr>
+            <tr>
+              <th class="label" style="padding-right: 4px;">Description:</th>
+              <td>
+                <Field name="description" style="white-space: pre;" />
+              </td>
+            </tr>
+            <tr>
+              <th class="label" style="padding-right: 4px;">Copyright:</th>
+              <td>
+                <Field name="copyright" style="white-space: pre;" />
+              </td>
+            </tr>
+            <tr>
+              <th class="label" style="padding-right: 4px;">Java Class:</th>
+              <td>
+                <Field name="className" />
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2" style="padding-top: 4px;">
+                <Button id="pluginLoad" style="margin-right: 6px"><Icon ref="OK" tooltip="Load" /> Load</Button>
+                <Button id="pluginUnload" style="margin-right: 6px"><Icon ref="ERROR" tooltip="Unload" /> Unload</Button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </Form>
+    </Pane>
+    <Pane id="procTab" pageTitle="Procedures">
+      <div w="35%" h="100%" style="float: left; padding-right: 20px;">
+        <h3>Procedure Names: <Icon id="procTreeReload" ref="RELOAD" /><Icon id="procTreeLoading" ref="LOADING" /></h3>
+        <Tree id="procTree" w="100%" h="100%-22" />
+      </div>
+      <div w="65%-30" h="100%" style="float: left;">
+        <Form id="procForm" style="width: 100%; height: 100%;">
+          <h3>Procedure Details:
+            <Icon id="procAdd" ref="ADD" style="padding-right: 3px;" />
+            <Icon id="procEdit" ref="EDIT" style="padding-right: 3px;" />
+            <Icon id="procReload" ref="RELOAD" />
+            <Icon id="procLoading" ref="LOADING" />
+          </h3>
+          <table>
+            <tbody>
+              <tr>
+                <th class="label" style="width: 15%; padding-right: 4px;">Name:</th>
+                <td>
+                  <Field name="name" />
+                </td>
+              </tr>
+              <tr>
+                <th class="label" style="padding-right: 4px;">Type:</th>
+                <td>
+                  <Field name="type" />
+                </td>
+              </tr>
+              <tr>
+                <th class="label" style="padding-right: 4px;">Description:</th>
+                <td>
+                  <Field name="description" />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <h3 style="margin-top: 6px;">Procedure Call:
+            <Icon id="procExecLoading" ref="LOADING" />
+            <Icon ref="BLANK" />
+          </h3>
+          <table>
+            <tbody id="procArgTable">
+            </tbody>
+          </table>
+          <div style="margin-top: 6px;">
+            <Button id="procExec" disabled="true" style="margin-right: 6px;"><Icon ref="OK" /> Execute</Button>
+            <Button id="procBatch" disabled="true"><Icon ref="DELAY" /> Execute Batch</Button>
+          </div>
+          <Tree id="procExecResult" w="100%" h="10%" style="margin-top: 6px;">
+          </Tree>
+        </Form>
+      </div>
+      <Dialog id="procArgDialog" title="Edit Argument" modal="true" w="50%" h="75%">
+        <Form id="procArgForm" style="width: 100%; height: 100%;">
+          <div style="padding-bottom: 4px;">
+            <span class="label" style="padding-right: 4px;">Data Type:</span>
+            <label style="margin-right: 4px; font-weight: bold;">
+              <input type="radio" name="type" value="string" checked="checked" style="vertical-align: -20%;" />
+              String
+            </label>
+            <label style="margin-right: 4px; font-weight: bold;">
+              <input type="radio" name="type" value="json" style="vertical-align: -20%;" />
+              JSON
+            </label>
+          </div>
+          <TextArea name="value" w="100%-5" h="100%-65" />
+          <div style="position: absolute; bottom: 10px; right: 10px;">
+            <Button id="procArgCancel" style="margin-left: 6px;"><Icon ref="CANCEL" /> Cancel</Button>
+            <Button id="procArgSave" style="margin-left: 6px;"><Icon ref="OK" /> Save</Button>
+          </div>
+        </Form>
+      </Dialog>
+      <Dialog id="procEditDialog" title="Edit Procedure" modal="true" w="73%" h="90%">
+        <h3>Edit Procedure:</h3>
+        <Form id="procEditForm" w="100%" h="100%-60" style="overflow-y: auto;">
+          <table w="100%-30">
+            <tbody>
+              <tr>
+                <th class="label" style="padding-top: 4px; padding-right: 4px;">Name:</th>
+                <td style="width: 100%;">
+                  <TextField name="name" style="width: 100%;" />
+                </td>
+              </tr>
+              <tr>
+                <th class="label" style="padding-top: 4px; padding-right: 2px;">Type:</th>
+                <td style="padding-top: 2px;">
+                  <select id="procEditType" name="type">
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <th class="label" style="padding-top: 4px; padding-right: 4px;">Description:</th>
+                <td style=" width: 100%; padding-bottom: 4px;">
+                  <TextArea name="description" style="width: 100%;" rows="3" />
+                </td>
+              </tr>
+              <tr>
+                <th class="label" style="padding-top: 4px; padding-right: 4px;">Connections:</th>
+                <td id="procEditConns" style="width: 100%; padding-bottom: 4px;"></td>
+              </tr>
+              <tr>
+                <th class="label" style="padding-top: 4px; padding-right: 4px;">Data:</th>
+                <td id="procEditData" style="width: 100%; padding-bottom: 4px;"></td>
+              </tr>
+              <tr>
+                <th class="label" style="padding-top: 4px; padding-right: 4px;">Procedures:</th>
+                <td id="procEditProcs" style="width: 100%; padding-bottom: 4px;"></td>
+              </tr>
+              <tr>
+                <th class="label" style="padding-top: 4px; padding-right: 4px;">Arguments:</th>
+                <td id="procEditArgs" style="width: 100%; padding-bottom: 4px;"></td>
+              </tr>
+              <tr>
+                <th class="label" style="padding-top: 4px; padding-right: 4px;">Add New:</th>
+                <td style="width: 100%; padding-bottom: 4px;">
+                  <select id="procEditAddType" style="margin-right: 6px;">
+                    <option value="connection">Connection</option>
+                    <option value="data">Data</option>
+                    <option value="procedure">Procedure</option>
+                    <option value="argument">Argument</option>
+                  </select>
+                  <TextField id="procEditAddName" helpText="&lt; Enter new name &gt;" style="margin-right: 6px;" />
+                  <Icon id="procEditAdd" ref="ADD" />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </Form>
+        <div style="position: absolute; bottom: 10px; right: 10px;">
+          <Button id="procEditCancel" style="margin-left: 6px;"><Icon ref="CANCEL" /> Cancel</Button>
+          <Button id="procEditSave" style="margin-left: 6px;"><Icon ref="OK" /> Save</Button>
+        </div>
+      </Dialog>
+    </Pane>
+    <Pane id="batchTab" pageTitle="Batch">
+      <Form id="batchForm">
+        <h3>Batch Control:
+          <Icon id="batchDelete" ref="DELETE" style="padding-right: 3px;" />
+          <Icon id="batchDelay" ref="DELAY" style="padding-right: 3px;" />
+          <Icon id="batchLoading" ref="LOADING" />
+        </h3>
+        <table>
+          <tbody>
+            <tr>
+              <th class="label" style="padding-right: 4px;">Progress:</th>
+              <td style="width: 500px;">
+                <ProgressBar id="batchProgress" />
+              </td>
+            </tr>
+            <tr>
+              <th class="label" style="padding-right: 4px;">Success:</th>
+              <td>
+                <Field name="success" />
+              </td>
+            </tr>
+            <tr>
+              <th class="label" style="padding-right: 4px;">Failed:</th>
+              <td>
+                <Field name="failed" />
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2" style="padding-top: 4px;">
+                <Button id="batchResume" style="margin-top: 3px">Resume</Button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </Form>
+    </Pane>
+    <Pane id="userTab" pageTitle="Users">
+      <div w="35%" h="100%" style="float: left; padding-right: 20px;">
+        <h3>User List: <Icon id="userReload" ref="RELOAD" /><Icon id="userLoading" ref="LOADING" /></h3>
+        <Table id="userTable" w="100%" h="100%-22">
+          <TableColumn title="Name" field="name" sort="asc" key="true" />
+          <TableColumn title="Description" field="description" />
+        </Table>
+      </div>
+      <Form id="userForm" w="65%-30" h="100%" style="float: left;">
+        <h3>Edit User: <Icon id="userAdd" ref="ADD" /></h3>
+        <table>
+          <tbody>
+            <tr>
+              <th class="label" style="padding-top: 4px; padding-right: 4px;">Name:</th>
+              <td>
+                <TextField id="userName" name="name" />
+                <FormValidator name="name" message="User name cannot be empty" />
+              </td>
+            </tr>
+            <tr>
+              <th class="label" style="padding-top: 4px; padding-right: 4px;">Description:</th>
+              <td>
+                <TextField name="description" />
+              </td>
+            </tr>
+            <tr>
+              <th class="label" style="padding-top: 2px; padding-right: 4px;">Enabled:</th>
+              <td>
+                <input type="checkbox" name="enabled" />
+              </td>
+            </tr>
+            <tr>
+              <th class="label" style="padding-top: 4px; padding-right: 4px;">Password:</th>
+              <td>
+                <input type="password" name="password" />
+                <Field name="passwordHint" style="padding-left: 10px;" />
+              </td>
+            </tr>
+            <tr>
+              <th class="label" style="padding-top: 4px; padding-right: 4px;">NTLM User:</th>
+              <td>
+                <TextField name="ntlmUser" />
+              </td>
+            </tr>
+            <tr>
+              <th class="label" style="padding-top: 4px; padding-right: 4px;">NTLM Domain:</th>
+              <td>
+                <TextField name="ntlmDomain" />
+              </td>
+            </tr>
+            <tr>
+              <th class="label" style="padding-top: 4px; padding-right: 4px;">Roles:</th>
+              <td>
+                <TextField name="roles" />
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2" style="padding-top: 4px;">
+                <Button id="userSave" style="margin-right: 6px"><Icon ref="OK" /> Save</Button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </Form>
+    </Pane>
+    <Pane id="logTab" pageTitle="Logging">
+      <div w="100" h="60%" style="float: left; padding-right: 20px; padding-bottom: 6px;">
+        <Form id="logForm">
+          <h3>Log Level: <Icon ref="BLANK" /></h3>
+          <span id="logError" class="label"><input type="radio" name="level" value="Error" /> Error</span><br/>
+          <span id="logWarning" class="label"><input type="radio" name="level" value="Warning" /> Warning</span><br/>
+          <span id="logInfo" class="label"><input type="radio" name="level" value="Info" checked="true" /> Info</span><br/>
+          <span id="logTrace" class="label"><input type="radio" name="level" value="Trace" /> Trace</span>
+          <p style="padding-top: 20px;">Press refresh to update log entries table.</p>
+        </Form>
+      </div>
+      <div w="100%-120" h="60%" style="float: left; padding-bottom: 6px;">
+        <h3>Log Entries:
+          <Icon id="logClear" ref="DELETE" style="padding-right: 3px;" />
+          <Icon id="logReload" ref="RELOAD" />
+        </h3>
+        <Table id="logTable" w="100%" h="100%-22">
+          <TableColumn title="Id" field="id" type="number" sort="desc" key="true" />
+          <TableColumn title="Time" field="time" type="time" />
+          <TableColumn title="Level" field="level" />
+          <TableColumn title="Context" field="context" />
+          <TableColumn title="Function" field="caller" />
+          <TableColumn title="Message" field="message" />
+        </Table>
+      </div>
+      <div w="25%" h="40%-20" style="float: left; padding-right: 20px; padding-top: 6px; border-top: solid 1px #6290d2;">
+        <h3>Stack Trace:</h3>
+        <pre id="logStack" w="100%" h="100%-25" style="overflow: auto;"></pre>
+      </div>
+      <div w="75%-25" h="40%-20" style="float: left; padding-top: 6px; border-top: solid 1px #6290d2;">
+        <h3>Log Data:</h3>
+        <p id="logData" w="100%" h="100%-25" style="overflow: auto;"></p>
+      </div>
+    </Pane>
+  </TabContainer>
+</ui>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- User Interface XML File -->
+
+<ui>
+  <h3>
+    Example Procedure List:
+    <Icon id="reload" ref="RELOAD" />
+    <Icon id="loading" ref="LOADING" />
+  </h3>
+  <Table id="table" style="width: 400px;">
+    <TableColumn title="Name" field="name" sort="asc" />
+  </Table>
+  <!-- Add more widgets here... -->
+</ui>

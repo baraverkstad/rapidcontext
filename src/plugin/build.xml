@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<project name="plugin" default="package">
+
+<!-- INITIALIZATION -->
+  <buildnumber />
+  <tstamp>
+    <format property="build.date" pattern="yyyy-MM-dd" />
+  </tstamp>
+  <property prefix="plugin" file="plugin.properties" />
+  <condition property="build.version" value="${plugin.version}.${build.number}">
+    <and>
+      <isset property="plugin.version" />
+      <not>
+        <isset property="build.version" />
+      </not>
+    </and>
+  </condition>
+  <condition property="build.version" value="${DSTAMP}">
+    <not>
+      <isset property="build.version" />
+    </not>
+  </condition>
+  <available property="build.java" file="src" type="dir" />
+  <path id="build.classpath">
+    <pathelement path="${java.class.path}" />
+    <fileset dir="lib" includes="**/*.jar" />
+  </path>
+
+
+<!-- COMPILATION TARGETS -->
+  <target name="compile" depends="compile-clean,compile-java" if="build.java"
+          description="Compiles the Java source code for the plugin">
+    <jar jarfile="lib/${plugin.id}-${build.version}.jar">
+      <fileset dir="classes" />
+    </jar>
+  </target>
+
+  <target name="compile-clean" if="build.java">
+    <delete quiet="true">
+      <fileset dir="classes" />
+      <fileset dir="lib" includes="${plugin.id}-*.jar" />
+    </delete>
+    <mkdir dir="classes" />
+  </target>
+
+  <target name="compile-java" if="build.java">
+    <javac srcdir="src"
+           destdir="classes"
+           classpathref="build.classpath"
+           target="1.4"
+           source="1.4"
+           debug="on"
+           deprecation="on" />
+  </target>
+
+
+<!-- PACKAGING TARGETS -->
+  <target name="package" depends="compile"
+          description="Packages the plugin files into proper format">
+    <delete quiet="true">
+      <fileset dir="." includes="${plugin.id}-*.zip" />
+    </delete>
+    <delete dir="tmp" quiet="true" />
+    <mkdir dir="tmp" />
+    <copy todir="tmp">
+      <fileset dir=".">
+        <patternset id="replace.files">
+          <include name="plugin.properties" />
+          <include name="platform.properties" />
+        </patternset>
+      </fileset>
+    </copy>
+    <replaceregexp match="version\s*=.*" replace="version = ${build.version}">
+      <fileset dir="tmp">
+        <patternset refid="replace.files" />
+      </fileset>
+    </replaceregexp>
+    <replaceregexp match="date\s*=.*" replace="date = ${build.date}">
+      <fileset dir="tmp">
+        <patternset refid="replace.files" />
+      </fileset>
+    </replaceregexp>
+    <zip destfile="${plugin.id}-${build.version}.zip">
+      <fileset dir="tmp" />
+      <fileset dir=".">
+        <exclude name=".*" />
+        <exclude name="build.xml" />
+        <exclude name="build.number" />
+        <exclude name="plugin.properties" />
+        <exclude name="platform.properties" />
+        <exclude name="${plugin.id}-*.zip" />
+        <exclude name="src/**" />
+        <exclude name="classes/**" />
+        <exclude name="lib/rapidcontext*.jar" />
+        <exclude name="tmp/**" />
+      </fileset>
+    </zip>
+    <delete dir="tmp" quiet="true" />
+  </target>
+
+</project>

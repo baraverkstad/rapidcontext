@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/xhtml; charset=UTF-8" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <meta http-equiv="Content-Language" content="en" />
+    <link rel="icon" type="image/gif" href="../plugins/default/files/images/favicon.gif" />
+    <link rel="stylesheet" href="../plugins/default/files/css/style.css" type="text/css" />
+    <title>RapidContext :: Users &amp; Security</title>
+  </head>
+
+  <body>
+
+<h1>Users &amp; Security</h1>
+
+<p>RapidContext requires all users to authenticate with username and password.
+The user information is available for logging and is also used to check all
+procedure calls before execution. By default the platform requires
+administrative privileges for any operation that modifies the configuration
+or accesses sensitive information.</p>
+
+
+<h2>1. Default Users &amp; Roles</h2>
+
+<p>The default installation of RapidContext contain the following users
+and roles:</p>
+
+<ul class="box">
+  <li><strong><code>admin</code> (user)</strong> &ndash; Created if no other users are
+      detected on server startup. The password is initially set to accept
+      any value (blank string) and has the <code>Admin</code> role.</li>
+  <li><strong><code>Admin</code> (role)</strong> &ndash; A built-in role that provides
+      full system access. This role is required in order to modify procedures,
+      install plug-ins, and similar adminirative operations.</li>
+</ul>
+
+
+<h2>2. User Authentication</h2>
+
+<p>In the standard configuration, user authentication is supported by the
+following protocols:</p>
+
+<ul class="box">
+  <li><strong>HTTP Basic Auth</strong> &ndash; Uses browser built-in login
+      dialog for user authentication. Note that the user name and password
+      will be sent unencrypted over the wire, so the communication channel
+      must be secure (intranet, VPN tunnel or HTTPS is recommended).</li>
+</ul>
+
+<p>After successful authentication, the user credentials are stored in the
+HTTP session. This avoids repeated authentication requests and makes other
+authentication methods feasible (provided by plug-ins).</p>
+
+<p class="box"><strong>Note:</strong> By default the HTTP sessions are
+configured to expire after 4 hours of inactivity. The sessions may also be
+forcefully terminated with the <code>System.Session.Terminate</code>
+procedure.</p>
+
+
+<h2>3. Managing Users</h2>
+
+<p>Users are managed with the <strong>Admin</strong> application, in the
+<strong>Users</strong> tab. Below is a screenshot showing the editing
+of the default <code>admin</code> user:</p>
+
+<p style="text-align: center;">
+  <img src="screenshot-user-edit.png" />
+</p>
+
+<p>New and modified user are automatically stored in the <code>local</code>
+plug-in, under the <code>plugins/local/user</code> directory. A few important
+facts should be noted regarding the storage of user data:</p>
+
+<ul class="box">
+  <li><strong>Passwords</strong> &ndash; Passwords are stored with a one-way
+      SHA-256 hash (with salting). This makes it virtually impossible to
+      retrieve passwords other than by guessing. An administrator can of
+      course reset user passwords if needed.</li>
+  <li><strong>User Removal</strong> &ndash; Users can be removed by deleting
+      the corresponding file in the plug-in <code>user</code> directory.
+      This is discouraged since it makes unintentional reuse of user names
+      possible. Use the <strong>enabled</strong> flag instead.</li>
+  <li><strong>Default Reset</strong> &ndash; By removing or renaming all
+      plug-in <code>user</code> directories and restarting the server, the
+      default <code>admin</code> user is recreated. This is useful to
+      reset a server.</li>
+</ul>
+
+
+<h2>4. Roles &amp; Access Control</h2>
+
+<p>User roles are by default only possible to create or modify by accessing
+the corresponding data files in the <code>plugins/&lt;plugin id&gt;/role</code>
+directory. The files are named <code>&lt;name&gt;.properties</code>. See below
+for a simple example role file.</p>
+
+<pre class="box code">
+<span class="comment"># General properties</span>
+name = Demo
+description = Provides access to all read-only procedures (if properly named).
+
+<span class="comment"># Access array</span>
+access.0.type = procedure
+access.0.regexp = .*\\.Find[^.]*
+</pre>
+
+<p>All procedure calls are authorized (permission checked) based on the roles
+that a user has. The <code>Admin</code> role automatically provides access to
+all procedures, but other roles use the configured <code>access</code> array
+in the role data file.</p>
+
+<ul class="box">
+  <li><code>access.#.type</code> &ndash; The object type to match. Only the
+      <code>procedure</code> type is currently recognized and used in default
+      access controls. Use a prefix <code>&lt;plugin id&gt;:</code> for custom
+      permission types used in generic access controls.</li>
+  <li><code>access.#.name</code> &ndash; The exact object name to match, e.g.
+      the procedure name. Either this property or the <code>regexp</code>
+      property must be specified. Use the <code>name</code> property when a
+      single unique object is to be identified.</li>
+  <li><code>access.#.regexp</code> &ndash; The regular expression object name
+      to match. Either this property or the <code>name</code> property must be
+      specified. Note that the "." character has special meaning when using
+      regular expressions, so it must be escaped with a single "\"
+      character.</li>
+  <li><code>access.#.caller</code> &ndash; The regular expression caller name
+      to match. If this property is specified, the procedure will only be
+      accessible when executed by the matched caller procedure. This is useful
+      for limiting access to generic helper procedures.</li>
+  <li><code>access.#.allow</code> &ndash; The access permission value, defaults
+      to <code>true</code>. The permission access list is processed in order,
+      so once an object matches an access list entry, the value of the
+      <code>allow</code> property will be returned as the permission check
+      result.</li>
+</ul>
+
+<p>Since only procedures are permission checked by default, other object
+accesses must be programmatically checked (from JavaScript procedures) by
+using the <code>System.User.CheckAccess</code> procedure.</p>
+
+<p class="box"><strong>Note:</strong> When using programmatic access checks,
+care must be taken to ensure that no procedures are exposed that allow direct
+access to the protected data or operation. Make sure to use wrapper JavaScript
+procedures and the <code>caller</code> access list property to protect the
+direct access to resources.</p>
+
+
+<h2>5. Security Checklist</h2>
+
+<p>Before installing a RapidContext server in a publically acessible location,
+please check the following:</p>
+
+<ul class="box">
+  <li><strong>Disable Default User</strong> &ndash; Make sure that the
+      <strong>admin</strong> user is either removed, disabled or provided with
+      a strong password.</li>
+  <li><strong>Check User Passwords</strong> &ndash; All users should have
+      strong passwords to avoid brute-force attacks with password guessing.</li>
+  <li><strong>Encrypt Connection</strong> &ndash; Communication over the
+      internet must be encrypted, since passwords and data can otherwise be
+      eavesdropped. Either use an HTTPS proxy, an HTTPS servlet container or
+      a VPN tunnel.</li>
+  <li><strong>Check Access Controls</strong> &ndash; The access controls for
+      each role must be checked to verify that no private resources are
+      available to unprivileged users.</li>
+  <li><strong>Limit Admin Access</strong> &ndash; The number of users with
+      the <code>Admin</code> role should be limited, to avoid potential abuse
+      of the system.</li>
+</ul>
+
+
+  </body>
+
+</html>

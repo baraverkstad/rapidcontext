@@ -1,0 +1,232 @@
+RapidContext 0.9.2 - 0.9.9
+==========================
+
+* Client: Libraries
+   o Fix issues with IE 7:
+      - FileStreamer initialization is broken
+      - Incorrect padding on root tab container (only!)
+      - Admin: proc argument dialog incorrect size
+      - Admin: proc edit dialog incorrect size
+      - Admin: plug-in info not having line-breaks
+      - Admin: stack trace not having line-breaks
+   o Fix issues with IE 6:
+      - FileStreamer initialization is broken
+      - Icon background not transparent/white
+      - Demo font-size is too small (doesn't handle "larger"?)
+      - Incorrect size on root tab container
+      - Incorrect size on quick tour wizard
+      - Ugly border on tab container labels
+      - Admin: proc argument dialog incorrect size
+      - Admin: proc edit dialog incorrect size
+      - Admin: plug-in info not having line-breaks
+      - Admin: stack trace not having line-breaks
+   o Fix issues with Chrome 1.0:
+      - Random widget init issues (Admin applet, plug-in tables....)
+      - Quick tour broken inside Admin applet
+   o Document Web Browser Support
+   o JDBC plug-in
+      - Default mapping of numbers to Integer
+      - Default handling of metadata should skip it
+
+RapidContext 1.0
+================
+
+* General
+   o Ensure runnable default installation on Mac, Linux & Windows
+   o Ensure working clients in IE 7, Firefox 3, Safari 3 & Opera 9.6
+   o Resolve or document all outstanding issues
+
+* Project
+   o Create web site with info and download
+   o Create Google group
+
+
+RapidContext 1.x
+================
+
+* Client: Libraries
+   o Create new SidePane widget (or similar)
+   o Add Library support for tracking all created defereds and
+     connecting them to each applet instance
+   o Create new FileUpload widget
+   o Add RapidContext.App.callProc() option for creating server thread
+     and returning a special deferred that regularly retrieves info
+   o Migrate to use MochiKit.Logging everywhere
+   o Remove all old and deprecated API and widgets
+   o Move functions from util.js to RapidContext.Util namespace
+   o [Option] Change to use red close button on active dialog and tab
+   o [Option] Change RapidContext.UI namespace to contain helper functions
+     for the RapidContext applets and default UI
+   o Move RapidContext.Util into MochiKit 1.5 as much as possible
+   o Add graphical diagram and plot widget
+   o Investigate potential issues with memory leaks
+   o Improve context/stacktrace when triggering calls from signals
+   o Table Widget: Remember selected line and reselect it on reload
+   o Simple API for speedy Tree widget creating child DOM nodes
+     only when expanded
+
+* Client: Administration
+   o Create new UI structure based on SidePane widget
+      - Apps - for applications, web mappings & plug-ins
+      - Objects - for server files, procedures, environment
+      - Users - for server users and groups
+      - Monitor - for local logs, server threads & connections
+   o Support managing user sessions:
+      - List all active user sessions
+      - Terminate individual user sessions
+   o Support managing server threads:
+      - List all active threads
+      - Interrupt threads
+   o Enable procedure calls in background thread
+   o Show owner plug-in for procedures
+   o Support removal of procedures located in the 'local' plug-in
+   o Display tree of all plug-in files and data
+   o Support managing environment and connections:
+      - List of environment pools with name & adapter
+      - Show details for selected pool - config params and detailed data
+        for each open connection
+      - Dialog for add and edit or each pool, modifies name and parameters
+      - Button for testing each pool
+   o Show applet owner plug-in
+   o Show applet resources as table with url, type & other fields
+   o Test applet resource URL:s for existance
+
+* Client: Help & Documentation
+   o Change to store topic HTML files in data store
+   o Enable WYSIWYG topic editing of HTML
+   o Add support for uploading images
+   o More example code for RapidContext.Widget components
+
+* Server: Application
+   o Add plug-in built-in procedures:
+      - System.PlugIn.Read to list all files and data objects contained
+        in a plug-in (useful for creating a tree view)
+   o Add environment and adapter built-in procedures:
+      - System.Adapter.List to list all available adapters with
+        description and connection parameters
+      - System.Environment.Info similar to current ...Read
+      - Update System.Environment.Read to provide full env. info with
+        all adapter pools (requires admin access). Possibly also include
+        list of all open connections, loan stats, lease times, last used,
+        etc.
+      - System.Environment.Test to test connecting to one or all pools
+        in the current environment
+      - System.Environment.Write to write a full environment config
+        (and force a server reset)
+   o Handle request out-of-session correctly (reload page)
+   o Support message broadcast and forced reloads
+   o Support deferred request cancellation all the way down to the db
+
+* Server: Core
+   o Add progress ratio to call context information
+   o Create JavaScript dynamic wrapper for classes and objects
+   o Add new proc binding type for java classes and objects
+   o Remove existing JavaScript "Packages" symbol access
+   o Support background tasks for service listerners or cron jobs
+   o Speed up permission control by storing parsed regexp
+
+
+RapidContext 2.x
+================
+
+* Concern: Improved Administration
+   o Support creating, editing, renaming and deleting applets
+   o Provide UI for plug-in configuration
+   o Display connection statistics
+   o Improve procedure tree drawing speed
+   o Show complete procedure result (format choice)
+
+* Concern: Server Object Model
+   o Move all server-side objects into single namespace
+   o Create a single set of procedures and API for manipulating objects
+   o Executable objects may be either client or server
+   o Executable objects have declared requirements
+   o All required object can be checked for security access
+   o Admin UI should allow filters: user, group, plug-in...
+   o WebDAV access should simplify file updates
+
+* Concern: JavaScript Procedure Improvements
+   o Allow library bindings (MochiKit)
+   o Allow library creation
+   o Allow dynamic procedure calls (introspection)
+
+* Concern: Plug-in Management
+   o Dynamic download of plug-in zip files
+   o Allow plugin installation and deinstallation scripts
+   o Load plugin classes in separate classloaders (for unload)
+   o Allow updates also of the local and default plug-ins
+   o Add packaging and zip creation for the local plug-in
+   o Add plug-in dependency checking
+   o Enable full server (Java) restart when needed
+
+* Concern: Logging
+   o Add logging for direct calls to connection objects (JS wrapper)
+   o Create proper server logging configuration
+      - Based on JDK 1.4 java.util.logging
+      - Simple configuration via accessible properties file
+      - Default configuration to files
+      - Reset logging when resetting server
+   o Support client modifications to server logging configuration
+   o Improve server logging facilities
+      - Add support for Unix system logging
+      - [Option] Add support for Windows system logging
+   o Refactor existing log plug-in
+      - Allow writing to file instead of database (configurable)
+      - Support setting a log level
+      - Allow client browsing of logs
+      - [Option] Move plug-in into core service
+
+* Concern: Web Server
+   o Enable virtual hosting
+      - Connect applications to virtual host(s)
+      - Expose API:s to plug-ins
+   o Improve URL resource mapping
+      - Allow redirects, 404 handlers, virtual resources, etc
+      - Allow plug-in request handlers in Java
+   o Add gzip compression for text resources
+   o Allow CMS plug-ins to be created
+
+* Concern: Security & Authentication
+   o Display logged in users
+   o Enable forced logout of users (session termination)
+   o Enforce permission control on any object type
+   o Allow form-based login
+   o Support anonymous usage if permitted by security settings
+   o Allow persistent cookies with login information
+   o Re-enable Windows NTLM login if possible
+   o Support challenge-response authentication:
+      1. The client sends a challenge request to the server
+      2. The server generates a random challenge (sequence of characters)
+      3. The server uses the challenge as salt to re-hash the password
+      4. The result is stored in the users session on the server
+      5. The challenge sequence is sent back to the client
+      6. The browser first hashes the password with SHA-256
+      7. The browser then uses the challenge as salt to re-hash the result
+      8. The result is sent to the server as the challenge response
+      9. The server can compare the value sent with its own result
+
+* Concern: Application Installer
+   o Handling of both first time and update installs
+   o Simple configuration (built into installer)
+   o Support for Windows service installation (see Tomcat)
+   o Support for Mac service installation (launchd)
+   o Possible installer toolkits:
+      - Launch4J
+      - WiX
+
+* Concern: User Interface (ui.xml) Builder
+   o New application for creating ui.xml
+   o Allow editing existing ui.xml files
+   o Store ui.xml files into local plug-in?
+
+* Concern: New Database Explorer Application
+   o Allow simple server/database connection and config storing
+   o Allow simple database exploration (tables/columns)
+   o Allow generic SQL queries
+   o Allow monitoring server connections/threads etc
+   o Allow creating procedures easily from test SQL
+   o [Option] Create plug-in to enable simplified db access
+
+* Concern: SSH & Telnet access
+   o Create new SSH plug-in for remote scripting
+   o Create new Telnet plug-in for remote scripting

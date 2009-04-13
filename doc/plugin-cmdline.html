@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/xhtml; charset=UTF-8" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <meta http-equiv="Content-Language" content="en" />
+    <link rel="icon" type="image/gif" href="../plugins/default/files/images/favicon.gif" />
+    <link rel="stylesheet" href="../plugins/default/files/css/style.css" type="text/css" />
+    <title>RapidContext :: Command-Line Plug-In</title>
+  </head>
+
+  <body>
+
+<h1>Command-Line Plug-In</h1>
+
+<p>The command-line plug-in provides the ability to execute programs on the
+RapidContext server. This allows RapidContext to run shell scripts, binary
+executables or system utilities supporting a non-interactive or scriptable
+execution.</p>
+
+
+<h2>1. Built-in Procedure &amp; Procedure Type</h2>
+
+<p>The command-line plug-in provides two ways to execute programs on the
+server:</p>
+
+<ul class="box">
+  <li><strong>The <code>PlugIn.CmdLine.Exec</code> procedure</strong> &ndash;
+      A built-in procedure for running any program. Only accessible to users
+      in the <code>Admin</code> group. This procedure should normally only be
+      used for testing and development.</li>
+  <li><strong>Procedures of the <code>cmdline.exec</code> type</strong> &ndash;
+      Supports inserting procedure arguments into the command-line or into
+      the environment. Useful to enable limited command-line access for normal
+      users and for storing pre-configured commands.</li>
+</ul>
+
+
+<h2>2. Return Values</h2>
+
+<p>Using the <code>PlugIn.CmdLine.Exec</code> procedure, the command-line
+execution can easily be tested. Below follows some simple command examples
+(using a Unix or Cygwin environment):</p>
+
+<pre class="box code">PlugIn.CmdLine.Exec('dir', '', '')
+  <span class="comment">--> { exitValue: 0, output: 'cmdline default http jdbc ...' }</span>
+
+PlugIn.CmdLine.Exec('test 0 -eq 1', '', '')
+  <span class="comment">--> { exitValue: 1, output: '' }</span>
+
+PlugIn.CmdLine.Exec('bash -c set', '', '')
+  <span class="comment">--> { exitValue: 0, output: 'BASH=/bin/bash BASH_ARGC=() BASH_ARGV=...' }</span></pre>
+
+<p>The result of a program execution is always an object with the following
+properties:</p>
+
+<ul class="box">
+  <li><code>exitValue</code> &ndash; The return status code from the
+      operating system process. Normally 0 (zero) if the execution succeeded
+      and non-zero otherwise. See the documentation for each command for more
+      information.</li>
+  <li><code>output</code> &ndash; The output text from the program. In the
+      examples above this has been simplified, but the actual strings are not
+      truncated and may contain newline characters (and other control
+      characters).</li>
+</ul>
+
+
+<h2>3. Input &amp; Output Streams</h2>
+
+<p>When executing command-line programs, the RapidContext server captures the
+standard input and output streams (file descriptors 0, 1 &amp; 2) in the
+following way:</p>
+
+<ul class="box">
+  <li><code>stdin</code> &ndash; Always an empty input
+      stream, returning <code>EOF</code> on the first byte read.</li>
+  <li><code>stdout</code> &ndash; All output is captured and returned in the
+      <code>output</code> string as part of the result.</li>
+  <li><code>stderr</code> &ndash; All output is captured and sent to the
+      thread context log.</li>
+</ul>
+
+<p>Using the <code>stderr</code> stream, the program may also communicate
+progress information back to the server thread context. If the command is
+executed in a background thread, this information can also be retrieved using
+a built-in procedure like <code>System.Thread.Context</code> and displayed
+as a progress bar or similar.</p>
+
+<p>Each progress update must be on its own line and should be flushed to the
+<code>stderr</code> stream immediately (normally automatic). Each line
+starting with a <code>#</code> character will be analyzed, but only the
+lines matching the progress information format below will be used:</p>
+
+<pre class="box code"><span class="comment">...
+# progress: 34.9%
+# progress: 35.0%
+# progress: 35.3%
+...</span></pre>
+
+
+<h2>4. Execution Environment</h2>
+
+<p>The execution environment for each command can be controlled by the
+following two parameters:</p>
+
+<ul class="box">
+  <li><strong>Directory</strong> &ndash; The working directory for the program.
+      If not specified or left blank, the <code>plugins</code> directory will
+      be used.</li>
+  <li><strong>Environment</strong> &ndash; The list of environment variables
+      to set, specified in a <code>"NAME1=VALUE1;NAME2=VALUE2;..."</code> format
+      each entry separated by a <code>;</code> character. If not specified or
+      left blank, all the RapidContext environment variables will be passed on
+      unmodified.</li>
+</ul>
+
+<p>The executable lookup is performed by the underlying operating system using
+the <code>PATH</code> variable as it was set when the RapidContext server was
+started. An absolute path to the executable program can naturally also be
+specified at the beginning of the command-line.</p>
+
+<p class="box"><strong>Note:</strong> Some commands like <code>cd</code> &amp;
+<code>set</code> are not binary executables on most systems, but instead
+available as shell built-ins. These commands are available by executing the
+shell binary and specifying the command with a parameter (see the last example
+above).</p>
+
+
+<h2>5. Parameter Substitution</h2>
+
+<p>Command-line arguments and environment values may contain procedure
+call arguments (for <code>cmdline.exec</code> procedures). These are
+substituted with the procedure argument values at call time. Each procedure
+argument name must be prefixed with a <code>:</code> character in the
+command-line or environment string in order to be replaced:</p>
+
+<pre class="box code">
+<span class="comment"># Substituting a 'dirName' procedure argument</span>
+echo :dirName</pre>
+
+  </body>
+
+</html>

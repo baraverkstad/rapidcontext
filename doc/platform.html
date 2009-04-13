@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/xhtml; charset=UTF-8" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <meta http-equiv="Content-Language" content="en" />
+    <link rel="icon" type="image/gif" href="../plugins/default/files/images/favicon.gif" />
+    <link rel="stylesheet" href="../plugins/default/files/css/style.css" type="text/css" />
+    <title>RapidContext :: Platform Overview</title>
+  </head>
+
+  <body>
+
+<h1>Overview &amp; Features</h1>
+
+<p>RapidContext is a platform for creating rich dynamic web applications. The
+platform consists of both a client and a server part, providing a simple,
+safe and stable way to build applications that can connect to a wide range
+of back-end services. The RapidContext platform provides a number of features
+that are important when developing applications for the web:</p>
+
+<ul class="box">
+  <li><strong>Simple Connectivity</strong> &mdash; Standard plug-ins
+      for accessing JDBC, HTTP, messaging buses and more is available.
+      Transactions and connection pooling is built-in from the start
+      and will be used whenever supported.</li>
+  <li><strong>Flexible Scripting</strong> &mdash; JavaScript is
+      supported both on the client and the server side, providing
+      advanced, standardized and flexible programming to implement
+      business logic and other non-trivial data flows.</li>
+  <li><strong>Extensible Architecture</strong> &mdash; The RapidContext
+      platform is built around a plug-in architecture, making it
+      possible to create new services and applications when the default
+      ones are not sufficient.</li>
+  <li><strong>Robust Security</strong> &mdash; User authentication,
+      authorization and auditing mechanisms are available to guarantee
+      the integrity of applications and data.</li>
+  <li><strong>Efficient Development</strong> &mdash; The platform
+      provides both structure and tools to simplify development,
+      testing and deployment of web applications.</li>
+</ul>
+
+
+<h2>1. Technologies</h2>
+
+<p>The client-side technologies used in RapidContext are JavaScript, HTML,
+CSS and DOM (i.e. AJAX without XML) based on the
+<a href="http://www.mochikit.com/">MochiKit</a> JavaScript library.
+All data transfers between the client and the server are encoded in the
+<a href="http://www.json.org/"><acronym title="JavaScript Object Notation">JSON</acronym></a>
+data format as it is compact, efficient and well-suited to a
+JavaScript environment. The RapidContext web applications normally run
+without any page reloads.</p>
+
+<p>On the server-side, the RapidContext server is implemented as a Java
+Servlet (J2EE). Several Java technologies are included via libraries
+and plugins, such as Mozilla Rhino (JavaScript), JDBC and more.</p>
+
+
+<h2>2. Deployment</h2>
+
+<p>RapidContext is normally deployed either as a stand-alone server or
+inside a Java Servlet container, such as Jetty or Tomcat. The client
+and server parts can be used without each other, although no special
+provisions have been made to facilitate such a setup.</p>
+
+<p style="margin: 10px; text-align: center;">
+<img src="deployment.png" />
+</p>
+
+
+<h2>3. Concepts &amp; Terminology</h2>
+
+<p>A number of terms are used repeatedly in the RapidContext platform and
+documentation. Their definitions are as follows:</p>
+
+<ul class="box">
+  <li><strong>Adapter</strong> &mdash; A connection communication handler
+      written in Java. The adapter controls all the communication over a
+      connection and defines which operations are available. Default
+      adapters for JDBC, HTTP and command-line program execution are
+      available, and other adapters can be loaded as plug-ins.</li>
+  <li><strong>Applet</strong> &mdash; A client-side application that
+      runs in the web browser, normally as a "tab" in the default user
+      interface. Applets are installed on the server, but executes solely
+      on the client. Multiple applets can be executing at the same time,
+      allowing the user to switch beween different tasks and transferring
+      data between the applets.</li>
+  <li><strong>Connection</strong> &mdash; A named link to a database or
+      another system. Each connection is managed by an adapter on the server.
+      The connection names and configuration parameters are defined in the
+      environment.</li>
+  <li><strong>Environment</strong> &mdash; A set of named connections on
+      the server. The environment stores the connection creation parameters
+      for the adapter and a pool of already established connnections. The
+      pool is continually monitored for stale connections and expands as
+      necessary.</li>
+  <li><strong>Plug-in</strong> &mdash; A ZIP file containing Java libraries,
+      procedures, applets, configuration or file data. A plug-in is the
+      standard way of installing additional applications or functionality
+      in a RapidContext server.</li>
+  <li><strong>Procedure</strong> &mdash; A server-side operation that can
+      be invoked from the client. The operation may take arguments, modify
+      data and/or return a value depending on implementation. New procedures
+      can easily be created in the Admin applet.</li>
+</ul>
+
+  </body>
+
+</html>

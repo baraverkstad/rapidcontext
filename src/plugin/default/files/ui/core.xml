@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui>
+  <TabContainer id="container" w="100%-20" h="100%-20" style="padding: 10px;">
+  </TabContainer>
+  <div id="info" style="position: absolute; top: 10px; right: 12px;">
+    <strong>User: </strong>
+    <span id="infoUser" />
+    <strong style="padding-left: 10px;">Environment: </strong>
+    <span id="infoEnv" />
+  </div>
+  <Popup id="menu" style="top: 26px; right: 10px; display: none; z-index: 10000;">
+    <h3 id="menuTitle">Anonymous User</h3>
+    <div id="menuAbout" class="widgetPopupItem">&#187; About RapidContext</div>
+    <div id="menuHelp" class="widgetPopupItem">&#187; Help &amp; Documentation</div>
+    <div id="menuAdmin" class="widgetPopupItem disabled">&#187; Administration</div>
+    <hr/>
+    <div id="menuPassword" class="widgetPopupItem widgetPopupDisabled">&#187; Change Password</div>
+    <div id="menuLogInOut" class="widgetPopupItem widgetPopupDisabled">&#187; Login</div>
+  </Popup>
+  <Dialog id="about" title="About RapidContext" modal="false" resizeable="false">
+    <div style="position: relative; width: 600px; height: 500px; padding: 0px;
+                background: url(images/backgrounds/about.jpg) white; background-repeat: no-repeat;">
+      <div style="position: absolute; top: 20px; left: 290px; font-family: Trebuchet MS;">
+        <a href="http://www.rapidcontext.com/" target="_blank">
+          <span style="font-size: 40px; color: white;">RapidContext</span><br/>
+          <span style="font-size: 18px; padding-left: 5px; color: #ffccdd;">Connecting Web Applications</span>
+        </a>
+      </div>
+      <div style="padding-top: 230px; padding-left: 20px; padding-right: 10px;">
+        <p><strong>Version: </strong><span id="aboutVersion">1.0.0</span><br/>
+        <strong>License: </strong><a href="doc/LICENSE.txt" target="_blank">BSD License</a></p>
+
+        <p>Copyright &#169; 2007-2009 by Per Cederberg &amp;
+        <a href="http://www.dynabyte.se/" target="_blank">Dynabyte AB</a>.
+        All rights reserved.<br/>
+        Please visit the
+        <a href="http://www.rapidcontext.com/" target="_blank">RapidContext project</a>
+        web site for more information.</p>
+
+        <p>This software would not be possible without the following software libraries;<br/>
+        &#187; <a href="http://www.mochikit.com/" target="_blank">MochiKit</a>,
+        copyright &#169; 2005-2008 Bob Ippolito,<br/>
+        &#187; <a href="http://www.liquidx.net/plotkit/" target="_blank">PlotKit</a>,
+        copyright &#169; Alastair Tse,<br/>
+        &#187; <a href="http://www.mozilla.org/rhino/" target="_blank">Mozilla Rhino</a>,
+        copyright &#169; The Mozilla Foundation,<br/>
+        &#187; <a href="http://commons.apache.org/" target="_blank">Apache Commons</a>,
+        copyright &#169; The Apache Software Foundation, and<br/>
+        &#187; <a href="http://www.mortbay.org/jetty/" target="_blank">Jetty WebServer</a>,
+        copyright &#169; 1995-2008 Mort Bay Consulting.</p>
+
+        <p>Images have kindly been provided and adapted from the following sources;<br/>
+        &#187; <a href="http://www.famfamfam.com/lab/icons/silk/" target="_blank">Silk
+        Icons by FamFamFam</a>, copyright &#169; Mark James (small widget icons),<br/>
+        &#187; <a href="http://fasticon.com/" target="_blank">FastIcon.com</a>,
+        copyright &#169; Dirceu Veiga (icons for built-in applets),<br/>
+        &#187; <a href="http://www.sxc.hu/photo/875775" target="_blank">Stock Photography</a>,
+        copyright &#169; 2007 Sachin Ghodke (about dialog), and<br/>
+        &#187; <a href="http://dojotoolkit.org/" target="_blank">The Dojo Toolkit</a>,
+        copyright &#169; The Dojo Foundation (Table and TabContainer backgrounds).</p>
+      </div>
+    </div>
+    <div style="position: absolute; bottom: 10px; right: 10px;">
+      <Button id="aboutClose" style="margin-left: 6px;"><Icon ref="OK" /> Close</Button>
+    </div>
+  </Dialog>
+</ui>

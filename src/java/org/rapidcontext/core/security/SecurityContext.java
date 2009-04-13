@@ -1,0 +1,495 @@
+/*
+ * RapidContext <http://www.rapidcontext.com/>
+ * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
+ * All rights reserved.
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the BSD license.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the RapidContext LICENSE.txt file for more details.
+ */
+
+package org.rapidcontext.core.security;
+
+import java.util.HashMap;
+import java.util.logging.Logger;
+
+import org.rapidcontext.core.data.Data;
+import org.rapidcontext.core.data.DataStore;
+import org.rapidcontext.core.data.DataStoreException;
+import org.rapidcontext.core.proc.Procedure;
+import org.rapidcontext.util.ArrayUtil;
+
+/**
+ * The application security context. This class provides static
+ * methods for authentication and resource authorization. It stores
+ * the currently authenticated user in a thread-local storage, so
+ * user credentials must be provided separately for each execution
+ * thread. It is important that the manager is initialized before
+ * any authentication calls are made, or they will fail.<p>
+ *
+ * The security context handles the anonymous and "system" users
+ * specially. The built-in roles "Admin" and "Default" are also
+ * handled in a special way.
+ *
+ * @author   Per Cederberg, Dynabyte AB
+ * @version  1.0
+ */
+public class SecurityContext {
+
+    /**
+     * The class logger.
+     */
+    private static final Logger LOG =
+        Logger.getLogger(SecurityContext.class.getName());
+
+    /**
+     * The data store used for reading and writing configuration
+     * data.
+     */
+    private static DataStore dataStore = null;
+
+    /**
+     * The map of all roles. The map is indexed by the role names and
+     * contains role objects.
+     */
+    private static HashMap roles = new HashMap();
+
+    /**
+     * The map of all users. The map is indexed by the user names and
+     * contains user objects.
+     */
+    private static HashMap users = new HashMap();
+
+    /**
+     * The map of NTLM users. The map is indexed by the user NTLM id
+     * and contains user names.
+     */
+    private static HashMap userNtlm = new HashMap();
+
+    /**
+     * The currently authenticated users. This is a thread-local
+     * variable containing one user object per thread. If the value
+     * is set to null, no user is currently authenticated for the
+     * thread.
+     */
+    private static ThreadLocal authUser = new ThreadLocal();
+
+    /**
+     * Initializes the security context. It can be called multiple
+     * times in order to re-read the configuration data from the
+     * data store. The data store specified will be used for reading
+     * and writing users and roles both during initialization and
+     * later.
+     *
+     * @param store          the data store to use
+     *
+     * @throws DataStoreException if the data store couldn't be read
+     *             or written
+     */
+    public static void init(DataStore store) throws DataStoreException {
+        String[]  names;
+        Role      role;
+        User      user;
+
+        dataStore = store;
+        roles.clear();
+        users.clear();
+        userNtlm.clear();
+        names = dataStore.findDataIds("role");
+        for (int pos = 0; pos < names.length; pos++) {
+            role = new Role(dataStore.readData("role", names[pos]));
+            roles.put(role.getName().toLowerCase(), role);
+        }
+        // TODO: Create default/anonymous role?
+        // TODO: What if there are many users?
+        names = dataStore.findDataIds("user");
+        for (int pos = 0; pos < names.length; pos++) {
+            user = new User(dataStore.readData("user", names[pos]));
+            users.put(user.getName(), user);
+            userNtlm.put(user.getNtlmName(), user.getName());
+        }
+        if (names.length <= 0) {
+            createUser("admin", "Default administrator user", "Admin");
+        }
+        // TODO: create default system user?
+    }
+
+    /**
+     * Returns the currently authenticated user for this thread.
+     *
+     * @return the currently authenticated user, or
+     *         null if no user is currently authenticated
+     */
+    public static User currentUser() {
+        return (User) authUser.get();
+    }
+
+    /**
+     * Checks if the currently authenticated user has access to an
+     * object.
+     *
+     * @param obj            the object to check
+     *
+     * @return true if the current user has access, or
+     *         false otherwise
+     */
+    public static boolean hasAccess(Object obj) {
+        return hasAccess(obj, null);
+    }
+
+    /**
+     * Checks if the currently authenticated user has access to an
+     * object.
+     *
+     * @param obj            the object to check
+     * @param caller         the caller procedure, or null for none
+     *
+     * @return true if the current user has access, or
+     *         false otherwise
+     */
+    public static boolean hasAccess(Object obj, String caller) {
+        if (obj instanceof Restricted) {
+            return ((Restricted) obj).hasAccess();
+        } else if (obj instanceof Procedure) {
+            return hasAccess("procedure",
+                             ((Procedure) obj).getName(),
+                             caller);
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * Checks if the currently authenticated user has access to an
+     * object.
+     *
+     * @param type           the object type
+     * @param name           the object name
+     *
+     * @return true if the current user has access, or
+     *         false otherwise
+     */
+    public static boolean hasAccess(String type, String name) {
+        return hasAccess(type, name, null);
+    }
+
+    /**
+     * Checks if the currently authenticated user has access to an
+     * object.
+     *
+     * @param type           the object type
+     * @param name           the object name
+     * @param caller         the caller procedure, or null for none
+     *
+     * @return true if the current user has access, or
+     *         false otherwise
+     */
+    public static boolean hasAccess(String type, String name, String caller) {
+        String[]  list;
+        Role      role;
+
+        if (hasAdmin()) {
+            return true;
+        } else if (currentUser() != null) {
+            list = currentUser().getRoles();
+            for (int i = 0; i < list.length; i++) {
+                role = getRole(list[i]);
+                if (role != null && role.hasAccess(type, name, caller)) {
+                    return true;
+                }
+            }
+            return false;
+        } else {
+            // TODO: support anonymous access (Default role)
+            return false;
+        }
+    }
+
+    /**
+     * Checks if the currently authenticated user has admin access.
+     *
+     * @return true if the current user has admin access, or
+     *         false otherwise
+     */
+    public static boolean hasAdmin() {
+        User  user = currentUser();
+
+        return user != null && user.hasRole("Admin");
+    }
+
+    /**
+     * Authenticates the specified user. This method will verify
+     * that the user exists and is enabled. It should only be called
+     * if a previous user authentication can be trusted, either via
+     * a cookie, command-line login or similar. After a successful
+     * authentication the current user will be set to the specified
+     * user.
+     *
+     * @param name           the user name
+     *
+     * @throws SecurityException if the user failed authentication
+     */
+    public static void auth(String name) throws SecurityException {
+        User    user = (User) users.get(name);
+        String  msg;
+
+        if (user == null) {
+            msg = "user " + name + " does not exist";
+            LOG.info("failed authentication: " + msg); 
+            throw new SecurityException(msg);
+        } else if (!user.isEnabled()) {
+            msg = "user " + name + " is disabled";
+            LOG.info("failed authentication: " + msg); 
+            throw new SecurityException(msg);
+        }
+        authUser.set(user);
+    }
+
+    /**
+     * Authenticates the specified used with a clear-text password.
+     * This method will verify that the user exists, is enabled and
+     * has the specified password (or really the same SHA-256 hash).
+     * After a successful authentication the current user will be
+     * set to the specified user.
+     *
+     * @param name           the user name
+     * @param password       the user password
+     *
+     * @throws SecurityException if the user failed authentication
+     */
+    public static void authPassword(String name, String password)
+        throws SecurityException {
+
+        User    user = (User) users.get(name);
+        String  msg;
+
+        if (user == null) {
+            msg = "user " + name + " does not exist";
+            LOG.info("failed authentication: " + msg); 
+            throw new SecurityException(msg);
+        } else if (!user.isEnabled()) {
+            msg = "user " + name + " is disabled";
+            LOG.info("failed authentication: " + msg); 
+            throw new SecurityException(msg);
+        } else if (!user.hasPassword(password)) {
+            msg = "invalid password for user " + name;
+            LOG.info("failed authentication: " + msg +
+                     ", using hash " + user.createPasswordHash(password)); 
+            throw new SecurityException(msg);
+        }
+        authUser.set(user);
+    }
+
+    /**
+     * Authenticates a user with the specified NTLM user and domain
+     * name. This method will verify that the NTLM user exists and
+     * is enabled. It should only be called if the NTLM credentials
+     * can be trusted, since it will not verify any password or
+     * connect to a domain controller. After a successful
+     * authentication the current user will be set to the specified
+     * user.
+     *
+     * @param domain         the NTLM domain name
+     * @param name           the NTLM user name
+     *
+     * @throws SecurityException if the user failed authentication
+     */
+    public static void authNtlm(String domain, String name)
+        throws SecurityException {
+
+        String  ntlm = name + "\\" + domain;
+        String  str;
+
+        str = (String) userNtlm.get(ntlm);
+        if (str == null) {
+            str = "NTLM user " + name + "\\" + domain + " does not exist";
+            LOG.info("failed authentication: " + str); 
+            throw new SecurityException(str);
+        }
+        auth(str);
+    }
+
+    /**
+     * Removes any previous authentication. I.e. the current user
+     * will be reset to the anonymous user.
+     */
+    public static void authClear() {
+        authUser.set(null);
+    }
+
+    /**
+     * Returns all role names.
+     *
+     * @return all role names
+     */
+    public static String[] getRoleNames() {
+        return ArrayUtil.stringKeys(roles);
+    }
+
+    /**
+     * Returns the role for the specified name.
+     *
+     * @param name           the role name
+     *
+     * @return the role object, or
+     *         null if not found
+     */
+    public static Role getRole(String name) {
+        return (Role) roles.get(name.toLowerCase());
+    }
+
+    /**
+     * Saves a role to the application data store. This method will
+     * verify that the current user has the Admin role before writing
+     * the role data.
+     *
+     * @param role           the role to save
+     *
+     * @throws DataStoreException if the data store couldn't be
+     *             written
+     * @throws SecurityException if the current user doesn't have
+     *             admin access
+     */
+    public static void saveRole(Role role)
+        throws DataStoreException, SecurityException {
+
+        String  name = role.getName().toLowerCase();
+        Data    data;
+
+        try {
+            if (!hasAdmin()) {
+                LOG.info("failed to modify role " + role.getName() +
+                         ": user " + SecurityContext.currentUser() +
+                         " lacks admin privileges"); 
+                throw new SecurityException("Permission denied");
+            } else if (name.equals("admin")) {
+                LOG.info("failed to modify role " + role.getName() +
+                         ": role is built-in and read-only"); 
+                throw new SecurityException("Permission denied");
+            }
+            dataStore.writeData("role", name, role.getData());
+        } finally {
+            data = dataStore.readData("role", name);
+            if (data == null) {
+                roles.remove(name);
+            } else {
+                role = new Role(data);
+                roles.put(name, role);
+            }
+        }
+    }
+
+    /**
+     * Returns all user names.
+     *
+     * @return all user names
+     */
+    public static String[] getUserNames() {
+        return ArrayUtil.stringKeys(users);
+    }
+
+    /**
+     * Returns the user for the specified user name.
+     *
+     * @param name           the user name
+     *
+     * @return the user object, or
+     *         null if not found
+     */
+    public static User getUser(String name) {
+        return (User) users.get(name);
+    }
+
+    /**
+     * Creates a default user if not already existing. The user
+     * password hash will be initialized to an empty string, meaning
+     * that no password is required for login.
+     *
+     * @param name           the user name
+     * @param descr          the default description
+     * @param roleNames      the role names, separated by " "
+     *
+     * @throws DataStoreException if the data store couldn't be
+     *             written
+     */
+    private static void createUser(String name, String descr, String roleNames)
+        throws DataStoreException {
+
+        User  user;
+
+        if (!users.containsKey(name)) {
+            LOG.info("creating user " + name + ": " + descr); 
+            user = new User(name);
+            user.setDescription(descr);
+            user.setEnabled(true);
+            user.setPasswordHash("");
+            user.setRoles(roleNames.split(" "));
+            dataStore.writeData("user", name, user.getData());
+            users.put(name, user);
+        }
+    }
+
+    /**
+     * Saves a user to the application data store.
+     *
+     * @param user           the user to save
+     *
+     * @throws DataStoreException if the data store couldn't be
+     *             written
+     * @throws SecurityException if the current user doesn't have
+     *             admin access
+     */
+    public static void saveUser(User user)
+        throws DataStoreException, SecurityException {
+
+        String  name = user.getName();
+        Data    data;
+
+        try {
+            if (!hasAdmin()) {
+                LOG.info("failed to modify user " + name +
+                         ": user " + SecurityContext.currentUser() +
+                         " lacks admin privileges"); 
+                throw new SecurityException("Permission denied");
+            }
+            dataStore.writeData("user", name, user.getData());
+        } finally {
+            data = dataStore.readData("user", name);
+            if (data == null) {
+                user.setEnabled(false);
+                users.remove(name);
+            } else {
+                user = new User(data);
+                users.put(name, user);
+                userNtlm.put(user.getNtlmName(), name);
+            }
+        }
+    }
+
+    /**
+     * Updates the current user password in the application data store.
+     *
+     * @param password       the new user password
+     *
+     * @throws DataStoreException if the data store couldn't be
+     *             written
+     * @throws SecurityException if the current user isn't logged in
+     */
+    public static void updatePassword(String password)
+        throws DataStoreException, SecurityException {
+
+        User  user = SecurityContext.currentUser();
+
+        if (user == null) {
+            LOG.info("failed to modify user password: user not logged in");
+            throw new SecurityException("Permission denied");
+        }
+        user.setPassword(password);
+        dataStore.writeData("user", user.getName(), user.getData());
+    }
+}
