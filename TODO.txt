@@ -36,10 +36,6 @@ RapidContext 1.0
    o Ensure working clients in IE 7, Firefox 3, Safari 3 & Opera 9.6
    o Resolve or document all outstanding issues
 
-* Project
-   o Create web site with info and download
-   o Create Google group
-
 
 RapidContext 1.x
 ================
