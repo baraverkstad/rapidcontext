@@ -28,7 +28,7 @@ RapidContext LICENSE
        documentation and/or other materials provided with the distribution.
 
     3. The software must be accompanied with documentation containing the
-       following (or similar) acknowledgement text:
+       following (or similar) acknowledgment text:
 
          This product includes software from the RapidContext project and
          its contributors. Please visit http://www.rapidcontext.com/ for
@@ -740,7 +740,7 @@ RapidContext LICENSE
       copyright (c) The Mozilla Foundation,
     o Apache Commons (http://commons.apache.org/),
       copyright (c) The Apache Software Foundation
-    o Jett WebServer (http://www.mortbay.org/jetty/),
+    o Jetty WebServer (http://www.mortbay.org/jetty/),
       copyright (c) 1995-2008 Mort Bay Consulting
 
   Images have kindly been provided and adapted from the following sources:
