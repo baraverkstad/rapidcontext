@@ -97,7 +97,7 @@ public class Environment {
         env = new Environment(data.getString("name", ""),
                               data.getString("description", ""));
         list = data.getData("pool");
-        for (int i = 0; i < list.arraySize(); i++) {
+        for (int i = 0; list != null && i < list.arraySize(); i++) {
             pool = list.getData(i);
             poolName = pool.getString("name", null);
             if (poolName != null) {
