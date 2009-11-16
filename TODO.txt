@@ -27,6 +27,7 @@ RapidContext 0.9.2 - 0.9.9
    o JDBC plug-in
       - Default mapping of numbers to Integer
       - Default handling of metadata should skip it
+      - Add singlerow flag to avoid creating array result
 
 RapidContext 1.0
 ================
