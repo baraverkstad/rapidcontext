@@ -38,7 +38,9 @@ AdminApplet.prototype.start = function () {
     MochiKit.Signal.connect(this.ui.pluginTable, "onselect", this, "_showPlugin");
     MochiKit.Signal.connect(this.ui.pluginLoad, "onclick", this, "_togglePlugin");
     MochiKit.Signal.connect(this.ui.pluginUnload, "onclick", this, "_togglePlugin");
-    MochiKit.Signal.connect(this.ui.procTab, "onenter", this, "loadProcedures");
+    MochiKit.Signal.connect(this.ui.procTab, "onenter", this.proc.procList, "call");
+    MochiKit.Signal.connect(this.ui.procTab, "onenter",
+                            MochiKit.Base.bind(MochiKit.Signal.disconnectAll, this, this.ui.procTab, "onenter"));
     RapidContext.UI.connectProc(this.proc.procList, this.ui.procTreeLoading, this.ui.procTreeReload);
     MochiKit.Signal.connect(this.proc.procList, "onsuccess", this, "_callbackProcedures");
     MochiKit.Signal.connect(this.ui.procTree, "onselect", this, "_showProcedure");
@@ -277,14 +279,6 @@ AdminApplet.prototype.resetServer = function (e) {
         d.addErrback(RapidContext.UI.showError);
     }
     return d;
-}
-
-/**
- * Loads the tree of available procedures.
- */
-AdminApplet.prototype.loadProcedures = function () {
-    MochiKit.Signal.disconnectAll(this.ui.procTab, "onenter");
-    this.proc.procList.call();
 }
 
 /**
@@ -643,7 +637,7 @@ AdminApplet.prototype._saveProcedure = function () {
     var args = [data.name, data.type, data.description, bindings];
     var d = RapidContext.App.callProc("System.Procedure.Write", args);
     d.addCallback(MochiKit.Base.bind("hide", this.ui.procEditDialog));
-    d.addCallback(MochiKit.Base.bind("loadProcedures", this));
+    d.addCallback(MochiKit.Base.bind("recall", this.proc.procList));
     d.addCallback(MochiKit.Base.bind("showProcedure", this, data.name));
     d.addErrback(RapidContext.UI.showError);
 }
