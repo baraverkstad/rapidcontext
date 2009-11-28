@@ -159,3 +159,26 @@ RapidContext.UI._buildUIElem = function (node, ids) {
     }
     return widget;
 }
+
+/**
+ * Connects the default UI signals for a procedure. This includes a default
+ * error handler, a loading icon with cancellation handler and a reload icon
+ * with the appropriate click handler.
+ *
+ * @param {Procedure} proc the RapidContext.Procedure instance
+ * @param {Icon} [loadingIcon] the loading icon, or null
+ * @param {Icon} [reloadIcon] the reload icon, or null
+ */
+RapidContext.UI.connectProc = function (proc, loadingIcon, reloadIcon) {
+    MochiKit.Signal.connect(proc, "onerror", RapidContext.UI, "showError");
+    if (loadingIcon) {
+        MochiKit.Signal.connect(proc, "oncall", loadingIcon, "show");
+        MochiKit.Signal.connect(proc, "onresponse", loadingIcon, "hide");
+        MochiKit.Signal.connect(loadingIcon, "onclick", proc, "cancel");
+    }
+    if (reloadIcon) {
+        MochiKit.Signal.connect(proc, "oncall", reloadIcon, "hide");
+        MochiKit.Signal.connect(proc, "onresponse", reloadIcon, "show");
+        MochiKit.Signal.connect(reloadIcon, "onclick", proc, "recall");
+    }
+}
