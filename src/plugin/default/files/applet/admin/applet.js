@@ -18,7 +18,8 @@ AdminApplet.prototype.start = function () {
         appletList: "System.Applet.List",
         plugInList: "System.PlugIn.List",
         procList: "System.Procedure.List",
-        userList: "System.User.List"
+        userList: "System.User.List",
+        userChange: "System.User.Change"
     });
     // Initialize event signals
     MochiKit.Signal.connect(this.ui.root, "onenter", MochiKit.Base.bind("selectChild", this.ui.tabContainer, null));
@@ -33,7 +34,7 @@ AdminApplet.prototype.start = function () {
     MochiKit.Signal.connect(this.ui.pluginReset, "onclick", this, "resetServer");
     MochiKit.Signal.connect(this.ui.pluginFileDelete, "onclick", this, "_pluginUploadInit");
     RapidContext.UI.connectProc(this.proc.plugInList, this.ui.pluginLoading, this.ui.pluginReload);
-    MochiKit.Signal.connect(this.proc.pluginTable, "onsuccess", this.ui.pluginTable, "setData");
+    MochiKit.Signal.connect(this.proc.plugInList, "onsuccess", this.ui.pluginTable, "setData");
     MochiKit.Signal.connect(this.ui.pluginTable, "onselect", this, "_showPlugin");
     MochiKit.Signal.connect(this.ui.pluginLoad, "onclick", this, "_togglePlugin");
     MochiKit.Signal.connect(this.ui.pluginUnload, "onclick", this, "_togglePlugin");
@@ -62,6 +63,8 @@ AdminApplet.prototype.start = function () {
     MochiKit.Signal.connect(this.ui.userTable, "onselect", this, "_editUser");
     MochiKit.Signal.connect(this.ui.userAdd, "onclick", this, "_addUser");
     MochiKit.Signal.connect(this.ui.userSave, "onclick", this, "_saveUser");
+    RapidContext.UI.connectProc(this.proc.userChange);
+    MochiKit.Signal.connect(this.proc.userChange, "onsuccess", this.proc.userList, "recall");
     MochiKit.Signal.connect(this.ui.logTab, "onenter", this, "_showLogs");
     MochiKit.Signal.connect(this.ui.logError, "onclick", MochiKit.Base.bind("setLogLevel", this, LOG.ERROR));
     MochiKit.Signal.connect(this.ui.logWarning, "onclick", MochiKit.Base.bind("setLogLevel", this, LOG.WARNING));
@@ -982,28 +985,13 @@ AdminApplet.prototype._editUser = function () {
 AdminApplet.prototype._saveUser = function () {
     var data = this.ui.userForm.valueMap();
     if (this.ui.userForm.validate()) {
-        var args = [ data.name,
-                     data.description,
-                     data.enabled ? "1" : "0",
-                     data.password,
-                     data.ntlmUser,
-                     data.ntlmDomain,
-                     data.roles ]; 
-        var d = RapidContext.App.callProc("System.User.Change", args);
-        d.addBoth(MochiKit.Base.bind("_callbackSaveUser", this));
-    }
-}
-
-/**
- * Callback function for the user modification procedure.
- *
- * @param {Object} res the response data or error
- */
-AdminApplet.prototype._callbackSaveUser = function (res) {
-    if (res instanceof Error) {
-        RapidContext.UI.showError(res);
-    } else {
-        this.loadUsers();
+        this.proc.userChange.call(data.name,
+                                  data.description,
+                                  data.enabled ? "1" : "0",
+                                  data.password,
+                                  data.ntlmUser,
+                                  data.ntlmDomain,
+                                  data.roles);
     }
 }
 
