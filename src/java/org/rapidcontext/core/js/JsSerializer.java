@@ -123,11 +123,7 @@ public class JsSerializer {
                 if (i > 0) {
                     buffer.append(", ");
                 }
-                if (isIdentifier(keys[i])) {
-                    buffer.append(keys[i]);
-                } else {
-                    serialize(keys[i], buffer);
-                }
+                serialize(keys[i], buffer);
                 buffer.append(": ");
                 serialize(data.get(keys[i]), buffer);
             }
