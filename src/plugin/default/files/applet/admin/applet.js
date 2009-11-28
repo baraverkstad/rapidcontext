@@ -13,8 +13,17 @@ function AdminApplet() {
  * Starts the applet and initializes the UI.
  */
 AdminApplet.prototype.start = function () {
+    // Create procedure callers
+    this.proc = RapidContext.Procedure.mapAll({
+        appletList: "System.Applet.List",
+        plugInList: "System.PlugIn.List",
+        procList: "System.Procedure.List",
+        userList: "System.User.List"
+    });
+    // Initialize event signals
     MochiKit.Signal.connect(this.ui.root, "onenter", MochiKit.Base.bind("selectChild", this.ui.tabContainer, null));
-    MochiKit.Signal.connect(this.ui.appletReload, "onclick", this, "loadApplets");
+    RapidContext.UI.connectProc(this.proc.appletList, this.ui.appletLoading, this.ui.appletReload);
+    MochiKit.Signal.connect(this.proc.appletList, "onsuccess", this.ui.appletTable, "setData");
     MochiKit.Signal.connect(this.ui.appletTable, "onselect", this, "_showApplet");
     MochiKit.Signal.connect(this.ui.appletLaunch, "onclick", this, "_launchApplet");
     MochiKit.Signal.connect(this.ui.pluginTab, "onenter", this, "_pluginUploadInit");
@@ -23,12 +32,14 @@ AdminApplet.prototype.start = function () {
     MochiKit.Signal.connect(this.ui.pluginInstall, "onclick", this, "_pluginInstall");
     MochiKit.Signal.connect(this.ui.pluginReset, "onclick", this, "resetServer");
     MochiKit.Signal.connect(this.ui.pluginFileDelete, "onclick", this, "_pluginUploadInit");
-    MochiKit.Signal.connect(this.ui.pluginReload, "onclick", this, "loadPlugins");
+    RapidContext.UI.connectProc(this.proc.plugInList, this.ui.pluginLoading, this.ui.pluginReload);
+    MochiKit.Signal.connect(this.proc.pluginTable, "onsuccess", this.ui.pluginTable, "setData");
     MochiKit.Signal.connect(this.ui.pluginTable, "onselect", this, "_showPlugin");
     MochiKit.Signal.connect(this.ui.pluginLoad, "onclick", this, "_togglePlugin");
     MochiKit.Signal.connect(this.ui.pluginUnload, "onclick", this, "_togglePlugin");
     MochiKit.Signal.connect(this.ui.procTab, "onenter", this, "loadProcedures");
-    MochiKit.Signal.connect(this.ui.procTreeReload, "onclick", this, "loadProcedures");
+    RapidContext.UI.connectProc(this.proc.procList, this.ui.procTreeLoading, this.ui.procTreeReload);
+    MochiKit.Signal.connect(this.proc.procList, "onsuccess", this, "_callbackProcedures");
     MochiKit.Signal.connect(this.ui.procTree, "onselect", this, "_showProcedure");
     MochiKit.Signal.connect(this.ui.procAdd, "onclick", this, "_addProcedure");
     MochiKit.Signal.connect(this.ui.procEdit, "onclick", this, "_editProcedure");
@@ -46,7 +57,8 @@ AdminApplet.prototype.start = function () {
     MochiKit.Signal.connect(this.ui.batchDelay, "onclick", this, "_configBatchDelay");
     MochiKit.Signal.connect(this.ui.batchResume, "onclick", this, "_toggleBatch");
     MochiKit.Signal.connect(this.ui.userTab, "onenter", this, "loadUsers");
-    MochiKit.Signal.connect(this.ui.userReload, "onclick", this, "loadUsers");
+    RapidContext.UI.connectProc(this.proc.userList, this.ui.userLoading, this.ui.userReload);
+    MochiKit.Signal.connect(this.proc.userList, "onsuccess", this.ui.userTable, "setData");
     MochiKit.Signal.connect(this.ui.userTable, "onselect", this, "_editUser");
     MochiKit.Signal.connect(this.ui.userAdd, "onclick", this, "_addUser");
     MochiKit.Signal.connect(this.ui.userSave, "onclick", this, "_saveUser");
@@ -84,7 +96,7 @@ AdminApplet.prototype.start = function () {
     }
 
     // Initialize data
-    this.loadApplets();
+    this.proc.appletList.call();
     this._showProcedure();
     this._stopBatch();
 }
@@ -94,31 +106,6 @@ AdminApplet.prototype.start = function () {
  */
 AdminApplet.prototype.stop = function () {
     // Nothing to do here
-}
-
-/**
- * Loads the list of available applets.
- */
-AdminApplet.prototype.loadApplets = function () {
-    var d = RapidContext.App.callProc("System.Applet.List");
-    d.addBoth(MochiKit.Base.bind("_callbackApplets", this));
-    this.ui.appletReload.hide();
-    this.ui.appletLoading.show();
-}
-
-/**
- * Callback function for loading the applet list.
- *
- * @param {Object} res the result object or error
- */
-AdminApplet.prototype._callbackApplets = function (res) {
-    this.ui.appletReload.show();
-    this.ui.appletLoading.hide();
-    if (res instanceof Error) {
-        RapidContext.UI.showError(res);
-    } else {
-        this.ui.appletTable.setData(res);
-    }
 }
 
 /**
@@ -148,26 +135,7 @@ AdminApplet.prototype._launchApplet = function () {
  */
 AdminApplet.prototype.loadPlugins = function () {
     MochiKit.Signal.disconnectAll(this.ui.pluginTab, "onenter");
-    this.ui.pluginReload.hide();
-    this.ui.pluginLoading.show();
-    var d = RapidContext.App.callProc("System.PlugIn.List");
-    d.addBoth(MochiKit.Base.bind("_callbackPlugins", this));
-    return d;
-}
-
-/**
- * Callback function for loading the plugins table.
- *
- * @param {Object} res the result object or error
- */
-AdminApplet.prototype._callbackPlugins = function (res) {
-    this.ui.pluginReload.show();
-    this.ui.pluginLoading.hide();
-    if (res instanceof Error) {
-        RapidContext.UI.showError(res);
-    } else {
-        this.ui.pluginTable.setData(res);
-    }
+    return this.proc.plugInList.call();
 }
 
 /**
@@ -313,32 +281,22 @@ AdminApplet.prototype.resetServer = function (e) {
  */
 AdminApplet.prototype.loadProcedures = function () {
     MochiKit.Signal.disconnectAll(this.ui.procTab, "onenter");
-    var d = RapidContext.App.callProc("System.Procedure.List");
-    d.addBoth(MochiKit.Base.bind("_callbackProcedures", this));
-    this.ui.procTreeReload.hide();
-    this.ui.procTreeLoading.show();
-    return d;
+    this.proc.procList.call();
 }
 
 /**
  * Callback function for loading the procedure tree.
  *
- * @param {Object} res the result object or error
+ * @param {Object} res the result object
  */
 AdminApplet.prototype._callbackProcedures = function (res) {
-    this.ui.procTreeReload.show();
-    this.ui.procTreeLoading.hide();
-    if (res instanceof Error) {
-        RapidContext.UI.showError(res);
-    } else {
-        this.ui.procTree.markAll();
-        for (var i = 0; i < res.length; i++) {
-            var path = res[i].split(".");
-            var node = this.ui.procTree.addPath(path);
-            node.data = res[i];
-        }
-        this.ui.procTree.removeAllMarked();
+    this.ui.procTree.markAll();
+    for (var i = 0; i < res.length; i++) {
+        var path = res[i].split(".");
+        var node = this.ui.procTree.addPath(path);
+        node.data = res[i];
     }
+    this.ui.procTree.removeAllMarked();
 }
 
 /**
@@ -993,25 +951,7 @@ AdminApplet.prototype._callbackBatch = function (res) {
  */
 AdminApplet.prototype.loadUsers = function () {
     MochiKit.Signal.disconnectAll(this.ui.userTab, "onenter");
-    var d = RapidContext.App.callProc("System.User.List");
-    d.addBoth(MochiKit.Base.bind("_callbackLoadUsers", this));
-    this.ui.userReload.hide();
-    this.ui.userLoading.show();
-}
-
-/**
- * Callback function for loading the user list.
- *
- * @param {Object} res the result object or error
- */
-AdminApplet.prototype._callbackLoadUsers = function (res) {
-    this.ui.userReload.show();
-    this.ui.userLoading.hide();
-    if (res instanceof Error) {
-        RapidContext.UI.showError(res);
-    } else {
-        this.ui.userTable.setData(res);
-    }
+    this.proc.userList.call();
 }
 
 /**
