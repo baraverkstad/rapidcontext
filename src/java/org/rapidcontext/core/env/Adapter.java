@@ -20,7 +20,7 @@ import org.rapidcontext.core.data.Data;
 /**
  * An external connectivity adapter. An adapter handles the creation
  * of external connections, some of which may be pooled or managed
- * for reutilization. 
+ * for reutilization.
  *
  * @author   Per Cederberg, Dynabyte AB
  * @version  1.0
@@ -50,7 +50,7 @@ public interface Adapter {
     /**
      * Returns an array with all configuration parameter names. The
      * order of the parameters will control how the they are
-     * requested from the user in a GUI or similar. 
+     * requested from the user in a GUI or similar.
      *
      * @return an array with configuration parameter names
      */
@@ -85,7 +85,7 @@ public interface Adapter {
      * @return the adapter connection created
      *
      * @throws AdapterException if the connection couldn't be created
-     *             properly 
+     *             properly
      */
     public AdapterConnection createConnection(Data params)
         throws AdapterException;

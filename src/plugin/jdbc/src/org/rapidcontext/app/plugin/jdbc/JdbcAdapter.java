@@ -40,37 +40,37 @@ import java.util.Properties;
 public class JdbcAdapter implements Adapter {
 
     /**
-     * The JDBC driver configuration parameter name. 
+     * The JDBC driver configuration parameter name.
      */
     private static final String JDBC_DRIVER = "driver";
 
     /**
-     * The JDBC URL configuration parameter name. 
+     * The JDBC URL configuration parameter name.
      */
     private static final String JDBC_URL = "url";
 
     /**
-     * The JDBC user configuration parameter name. 
+     * The JDBC user configuration parameter name.
      */
     private static final String JDBC_USER = "user";
 
     /**
-     * The JDBC password configuration parameter name. 
+     * The JDBC password configuration parameter name.
      */
     private static final String JDBC_PASSWORD = "password";
 
     /**
-     * The JDBC SQL ping configuration parameter name. 
+     * The JDBC SQL ping configuration parameter name.
      */
     private static final String JDBC_PING = "sqlping";
 
     /**
-     * The JDBC auto-commit configuration parameter name. 
+     * The JDBC auto-commit configuration parameter name.
      */
     private static final String JDBC_AUTOCOMMIT = "autocommit";
 
     /**
-     * The JDBC connection and query timeout configuration parameter name. 
+     * The JDBC connection and query timeout configuration parameter name.
      */
     private static final String JDBC_TIMEOUT = "timeout";
 
@@ -117,7 +117,7 @@ public class JdbcAdapter implements Adapter {
     /**
      * Returns an array with all configuration parameter names. The
      * order of the parameters will control how the they are
-     * requested from the user in a GUI or similar. 
+     * requested from the user in a GUI or similar.
      *
      * @return an array with configuration parameter names
      */
@@ -174,7 +174,7 @@ public class JdbcAdapter implements Adapter {
      * @return the adapter connection created
      *
      * @throws AdapterException if the connection couldn't be created
-     *             properly 
+     *             properly
      */
     public AdapterConnection createConnection(Data params)
         throws AdapterException {

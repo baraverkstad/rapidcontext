@@ -274,6 +274,6 @@ public class HttpPostProcedure extends AddOnProcedure {
         } finally {
             con.disconnect();
         }
-        return response.toString();        
+        return response.toString();
     }
 }

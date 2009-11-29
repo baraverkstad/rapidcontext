@@ -22,7 +22,7 @@ package org.rapidcontext.core.security;
  * mappings for the built-in procedures in an unsafe or incorrect
  * way. By implementing this interface the security settings are
  * locked and cannot be modified by the user in the role access
- * mappings. 
+ * mappings.
  *
  * @author   Per Cederberg, Dynabyte AB
  * @version  1.0

@@ -240,11 +240,11 @@ public class SecurityContext {
 
         if (user == null) {
             msg = "user " + name + " does not exist";
-            LOG.info("failed authentication: " + msg); 
+            LOG.info("failed authentication: " + msg);
             throw new SecurityException(msg);
         } else if (!user.isEnabled()) {
             msg = "user " + name + " is disabled";
-            LOG.info("failed authentication: " + msg); 
+            LOG.info("failed authentication: " + msg);
             throw new SecurityException(msg);
         }
         authUser.set(user);
@@ -270,16 +270,16 @@ public class SecurityContext {
 
         if (user == null) {
             msg = "user " + name + " does not exist";
-            LOG.info("failed authentication: " + msg); 
+            LOG.info("failed authentication: " + msg);
             throw new SecurityException(msg);
         } else if (!user.isEnabled()) {
             msg = "user " + name + " is disabled";
-            LOG.info("failed authentication: " + msg); 
+            LOG.info("failed authentication: " + msg);
             throw new SecurityException(msg);
         } else if (!user.hasPassword(password)) {
             msg = "invalid password for user " + name;
             LOG.info("failed authentication: " + msg +
-                     ", using hash " + user.createPasswordHash(password)); 
+                     ", using hash " + user.createPasswordHash(password));
             throw new SecurityException(msg);
         }
         authUser.set(user);
@@ -308,7 +308,7 @@ public class SecurityContext {
         str = (String) userNtlm.get(ntlm);
         if (str == null) {
             str = "NTLM user " + name + "\\" + domain + " does not exist";
-            LOG.info("failed authentication: " + str); 
+            LOG.info("failed authentication: " + str);
             throw new SecurityException(str);
         }
         auth(str);
@@ -365,11 +365,11 @@ public class SecurityContext {
             if (!hasAdmin()) {
                 LOG.info("failed to modify role " + role.getName() +
                          ": user " + SecurityContext.currentUser() +
-                         " lacks admin privileges"); 
+                         " lacks admin privileges");
                 throw new SecurityException("Permission denied");
             } else if (name.equals("admin")) {
                 LOG.info("failed to modify role " + role.getName() +
-                         ": role is built-in and read-only"); 
+                         ": role is built-in and read-only");
                 throw new SecurityException("Permission denied");
             }
             dataStore.writeData("role", name, role.getData());
@@ -423,7 +423,7 @@ public class SecurityContext {
         User  user;
 
         if (!users.containsKey(name)) {
-            LOG.info("creating user " + name + ": " + descr); 
+            LOG.info("creating user " + name + ": " + descr);
             user = new User(name);
             user.setDescription(descr);
             user.setEnabled(true);
@@ -454,7 +454,7 @@ public class SecurityContext {
             if (!hasAdmin()) {
                 LOG.info("failed to modify user " + name +
                          ": user " + SecurityContext.currentUser() +
-                         " lacks admin privileges"); 
+                         " lacks admin privileges");
                 throw new SecurityException("Permission denied");
             }
             dataStore.writeData("user", name, user.getData());

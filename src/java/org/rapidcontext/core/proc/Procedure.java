@@ -27,7 +27,7 @@ package org.rapidcontext.core.proc;
  * names, etc). The built-in procedures are basically singleton
  * procedures that cannot be modified by the user. The latter type
  * provides services needed by the platform, such as introspection,
- * administration and control.<p>  
+ * administration and control.<p>
  *
  * Each procedure has a number of bindings, containing any resources
  * required during execution. The bindings have different types to

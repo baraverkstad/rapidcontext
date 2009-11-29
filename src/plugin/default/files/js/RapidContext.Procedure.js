@@ -143,7 +143,7 @@ RapidContext.Procedure.prototype.recall = function () {
 
 /**
  * The procedure deferred callback handler. Dispatches the appropriate signals
- * depending on the result. 
+ * depending on the result.
  *
  * @param {Object/Error} res the procedure result object
  */
@@ -162,7 +162,7 @@ RapidContext.Procedure.prototype._callback = function (res) {
 
 /**
  * Cancels any current execution of this procedure. This method does nothing if
- * no procedure call was currently executing. 
+ * no procedure call was currently executing.
  */
 RapidContext.Procedure.prototype.cancel = function () {
     if (this._deferred !== null) {
@@ -175,7 +175,7 @@ RapidContext.Procedure.prototype.cancel = function () {
 
 /**
  * Cancels any current execution and removes the reference to the arguments of
- * this procedure. 
+ * this procedure.
  */
 RapidContext.Procedure.prototype.reset = function () {
     this.cancel();

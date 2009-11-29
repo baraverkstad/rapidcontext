@@ -36,7 +36,7 @@ import org.rapidcontext.core.env.AdapterConnection;
 public class ConnectionWrapper implements Scriptable {
 
     /**
-     * The encapsulated adapter connection object. 
+     * The encapsulated adapter connection object.
      */
     private AdapterConnection con;
 

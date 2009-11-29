@@ -42,10 +42,10 @@ RapidContext.App.init = function () {
     RapidContext.Util.registerFunctionNames(RapidContext, "RapidContext");
     MochiKit.Base.registerRepr("func",
                                MochiKit.Base.typeMatcher("function"),
-                               RapidContext.Util.functionName); 
+                               RapidContext.Util.functionName);
     MochiKit.Base.registerRepr("dom",
                                RapidContext.Util.isDOM,
-                               RapidContext.Util.reprDOM); 
+                               RapidContext.Util.reprDOM);
     LOG.info("Initializing RapidContext");
     var d = RapidContext.App.loadXML("ui/core.xml");
     d.addCallback(function (ui) {
@@ -425,9 +425,9 @@ RapidContext.App.callProc = function (name, args) {
  * source location.
  *
  * @param {String} url the URL to request
- * @param {Object} [params] the request parameters, or null 
+ * @param {Object} [params] the request parameters, or null
  * @param {Object} [options] the request options, or null
- * @config {String} [method] the HTTP method, "GET" or "POST" 
+ * @config {String} [method] the HTTP method, "GET" or "POST"
  * @config {Number} [timeout] the timeout in seconds, default is
  *             no timeout
  * @config {Object} [headers] the specific HTTP headers to use
@@ -440,7 +440,7 @@ RapidContext.App.callProc = function (name, args) {
 RapidContext.App.loadText = function (url, params, options) {
     var d = RapidContext.App.loadXHR(url, params, options);
     d.addCallback(function (res) { return res.responseText; });
-    return d; 
+    return d;
 }
 
 /**
@@ -454,9 +454,9 @@ RapidContext.App.loadText = function (url, params, options) {
  * timeout option for automatic request cancellation.
  *
  * @param {String} url the URL to request
- * @param {Object} [params] the request parameters, or null 
+ * @param {Object} [params] the request parameters, or null
  * @param {Object} [options] the request options, or null
- * @config {String} [method] the HTTP method, "GET" or "POST" 
+ * @config {String} [method] the HTTP method, "GET" or "POST"
  * @config {Number} [timeout] the timeout in seconds, default is
  *             no timeout
  * @config {Object} [headers] the specific HTTP headers to use
@@ -469,7 +469,7 @@ RapidContext.App.loadText = function (url, params, options) {
 RapidContext.App.loadXML = function (url, params, options) {
     var d = RapidContext.App.loadXHR(url, params, options);
     d.addCallback(function (res) { return res.responseXML; });
-    return d; 
+    return d;
 }
 
 /**
@@ -488,9 +488,9 @@ RapidContext.App.loadXML = function (url, params, options) {
  * source location.
  *
  * @param {String} url the URL to request
- * @param {Object} [params] the request parameters, or null 
+ * @param {Object} [params] the request parameters, or null
  * @param {Object} [options] the request options, or null
- * @config {String} [method] the HTTP method, "GET" or "POST" 
+ * @config {String} [method] the HTTP method, "GET" or "POST"
  * @config {Number} [timeout] the timeout in seconds, default is
  *             no timeout
  * @config {Object} [headers] the specific HTTP headers to use
@@ -594,7 +594,6 @@ RapidContext.App.loadScript = function (url) {
             MochiKit.Async.callLater(10, script.onerror, "Script loading timed out")
         }
     };
-    
     LOG.trace("Starting script loading", url);
     head.appendChild(script);
     RapidContext.App._addErrbackLogger(d);
@@ -624,7 +623,7 @@ RapidContext.App.downloadFile = function (url, data) {
         var name = MochiKit.DOM.INPUT({ name: "fileName", value: url });
         var file = MochiKit.DOM.INPUT({ name: "fileData", value: data });
         var flag = MochiKit.DOM.INPUT({ name: "download", value: "1" });
-        var attrs = { action: "RapidContext/download", method: "POST", 
+        var attrs = { action: "RapidContext/download", method: "POST",
                       target: "_blank", style: { display: "none" } };
         var form = MochiKit.DOM.FORM(attrs, name, file, flag);
         document.body.appendChild(form);

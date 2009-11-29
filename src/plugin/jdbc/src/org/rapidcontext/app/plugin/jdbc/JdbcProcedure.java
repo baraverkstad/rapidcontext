@@ -395,7 +395,7 @@ public abstract class JdbcProcedure extends AddOnProcedure {
             if (value.arraySize() <= 0) {
                 return bindNull();
             } else {
-                return cond(column, op, literal(value));                
+                return cond(column, op, literal(value));
             }
         }
 
@@ -434,9 +434,9 @@ public abstract class JdbcProcedure extends AddOnProcedure {
          */
         private String cond(String col, String op, String value) {
             if (col != null) {
-                return col + " " + op + " " + value; 
+                return col + " " + op + " " + value;
             } else if (op != null) {
-                return " " + op + " " + value; 
+                return " " + op + " " + value;
             } else {
                 return value;
             }

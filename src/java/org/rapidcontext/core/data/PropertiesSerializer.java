@@ -58,7 +58,7 @@ import org.rapidcontext.util.StringUtil;
  * @version  1.0
  */
 public class PropertiesSerializer {
-    
+
     /**
      * Reads a file containing properties and returns the contents
      * in a data object. The property names from the file are
@@ -66,7 +66,7 @@ public class PropertiesSerializer {
      * ('.') characters in names are interpreted as object
      * separators, and numbers are interpreted as an array indices.
      * The property values are stored as booleans, integers or
-     * strings.  
+     * strings.
      *
      * @param file           the file to load
      *
@@ -141,7 +141,7 @@ public class PropertiesSerializer {
      * normally preserved, except for structural interpretation. Dot
      * ('.') characters in the name are interpreted as object
      * separators, and numbers are interpreted as array indices. The
-     * property value is stored as a string.  
+     * property value is stored as a string.
      *
      * @param data           the data object to modify
      * @param name           the property name
@@ -246,7 +246,7 @@ public class PropertiesSerializer {
      * Writes the contents of a data object into a properties file.
      * The property names from the data object are preserved, but
      * augmented with dot ('.') characters and numbers for structure.
-     * The data object values are all stored as strings.  
+     * The data object values are all stored as strings.
      *
      * @param file           the file to save
      * @param data           the data object

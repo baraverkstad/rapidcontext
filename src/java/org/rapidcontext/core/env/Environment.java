@@ -27,7 +27,7 @@ import org.rapidcontext.core.data.DataStoreException;
 /**
  * An external connectivity environment. The environment contains a
  * list of adapter connection pool, each with their own set of
- * configuration parameter values. 
+ * configuration parameter values.
  *
  * @author   Per Cederberg, Dynabyte AB
  * @version  1.0

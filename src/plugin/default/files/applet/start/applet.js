@@ -111,7 +111,7 @@ StartApplet.prototype._createInlinePane = function (name, position) {
     }
     // TODO: use proper widget and container instead
     var style = { "position": "relative", "float": position,
-                  "min-height": "200px", 
+                  "min-height": "200px",
                   "border": "1px solid #bbbbbb", "padding": "5px" };
     var attrs = { pageTitle: name, pageCloseable: true, style: style };
     var pane = new RapidContext.Widget.Pane(attrs);

@@ -174,7 +174,7 @@ AdminApplet.prototype._togglePlugin = function () {
     d.addErrback(RapidContext.UI.showError);
     if (data.loaded && data.className) {
         d.addCallback(function () {
-            alert("Note: Unloading Java resources requires a full server restart."); 
+            alert("Note: Unloading Java resources requires a full server restart.");
         });
     }
     // TODO: This should be handled internally on the server...
@@ -696,7 +696,7 @@ AdminApplet.prototype._callbackExecute = function (res) {
  * specified value.
  *
  * @param {Node} node the tree node (or tree) widget
- * @param {Object} [data] the data object to add 
+ * @param {Object} [data] the data object to add
  */
 AdminApplet.prototype._showExecData = function (node, data) {
     function typeName(value) {
@@ -817,7 +817,7 @@ AdminApplet.prototype._createBatch = function () {
         }
     }
     if (count == null) {
-        RapidContext.UI.showError("Multiple argument values required for batch creation"); 
+        RapidContext.UI.showError("Multiple argument values required for batch creation");
         return;
     }
     for (var i = 0; i < count; i++) {

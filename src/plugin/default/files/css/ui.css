@@ -80,7 +80,7 @@ th {
     padding-right: 10px;
     clear: both;
     overflow: hidden;
-    /* z-index: -1;  Required for IE6, but breaks in IE7 */ 
+    /* z-index: -1;  Required for IE6, but breaks in IE7 */
 }
 
 .uiTabPane {
@@ -144,7 +144,7 @@ th {
     font-size: 12px;
     font-weight: bold;
     cursor: default;
-    -moz-user-select: none; 
+    -moz-user-select: none;
 }
 
 .uiDialogContent {
@@ -252,7 +252,7 @@ table.uiTable tbody tr.selected:hover td {
 /**
  * Drop-down Styles
  */
- 
+
 .dropdown {
     position: absolute;
     z-index: 10000;

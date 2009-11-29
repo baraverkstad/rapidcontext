@@ -33,7 +33,7 @@ public class FileUtil {
 
     /**
      * Deletes a file or a directory tree. This function will delete
-     * all files and sub-directories inside a directory recursively. 
+     * all files and sub-directories inside a directory recursively.
      *
      * @param file           the file or directory to delete
      *

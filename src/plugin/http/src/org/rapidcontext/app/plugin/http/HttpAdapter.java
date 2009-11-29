@@ -34,12 +34,12 @@ import org.rapidcontext.core.env.AdapterException;
 public class HttpAdapter implements Adapter {
 
     /**
-     * The HTTP base URL configuration parameter name. 
+     * The HTTP base URL configuration parameter name.
      */
     public static final String HTTP_URL = "url";
 
     /**
-     * The HTTP header configuration parameter name. 
+     * The HTTP header configuration parameter name.
      */
     public static final String HTTP_HEADER = "header";
 
@@ -81,7 +81,7 @@ public class HttpAdapter implements Adapter {
     /**
      * Returns an array with all configuration parameter names. The
      * order of the parameters will control how the they are
-     * requested from the user in a GUI or similar. 
+     * requested from the user in a GUI or similar.
      *
      * @return an array with configuration parameter names
      */
@@ -128,7 +128,7 @@ public class HttpAdapter implements Adapter {
      * @return the adapter connection created
      *
      * @throws AdapterException if the connection couldn't be created
-     *             properly 
+     *             properly
      */
     public AdapterConnection createConnection(Data params)
         throws AdapterException {

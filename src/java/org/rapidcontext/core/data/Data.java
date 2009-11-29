@@ -29,7 +29,7 @@ import java.util.LinkedHashMap;
  * and values may have any Java data object type, such as strings,
  * numbers, dates, etc. Values may also be set to data objects, but
  * circular references or custom-defined classes should be avoided
- * in order to keep compliance with the standard data serializers. 
+ * in order to keep compliance with the standard data serializers.
  *
  * @author   Per Cederberg, Dynabyte AB
  * @version  1.0
@@ -67,7 +67,7 @@ public class Data implements Cloneable {
      * the specified capacity and by default represents an empty
      * list instead of an empty object.
      *
-     * @param initialCapacity the initial array capacity 
+     * @param initialCapacity the initial array capacity
      */
     public Data(int initialCapacity) {
         if (initialCapacity >= 0) {

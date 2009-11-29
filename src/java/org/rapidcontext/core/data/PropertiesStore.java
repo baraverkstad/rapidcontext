@@ -143,7 +143,7 @@ public class PropertiesStore implements DataStore {
      * Returns the last modified timestamp for a data object. This
      * operation should be implemented as a fast path, without need
      * for complete parsing of the data. It is intended to be used
-     * for automatically invalidating objects in data object caches. 
+     * for automatically invalidating objects in data object caches.
      *
      * @param type           the type name, or null for generic
      * @param id             the unique object id

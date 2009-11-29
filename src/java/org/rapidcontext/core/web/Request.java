@@ -151,7 +151,7 @@ public class Request {
      * must be handled differently from ordinary requests, since the
      * normal request parameter access is limited to query
      * parameters. Files can only be accessed by iterating through
-     * them with the getNextFile() method. 
+     * them with the getNextFile() method.
      *
      * @return true if this request contains a file upload, or
      *         false otherwise

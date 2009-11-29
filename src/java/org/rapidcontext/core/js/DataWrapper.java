@@ -30,7 +30,7 @@ import org.rapidcontext.core.data.Data;
 class DataWrapper implements Scriptable {
 
     /**
-     * The encapsulated data object. 
+     * The encapsulated data object.
      */
     private Data data;
 

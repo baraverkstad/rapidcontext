@@ -27,7 +27,7 @@ import org.rapidcontext.core.security.SecurityContext;
  * simplified access to HTTP data sending and retrieval. It is
  * restricted to admin-only access for security reasons. Create a
  * more specified add-on procedure with the "http.post" type to
- * allow other users access to this functionality. 
+ * allow other users access to this functionality.
  *
  * @author   Per Cederberg, Dynabyte AB
  * @version  1.0
@@ -52,7 +52,7 @@ public class HttpPostBuiltInProcedure implements Procedure, Restricted {
     public HttpPostBuiltInProcedure() throws ProcedureException {
         defaults.set(HttpPostProcedure.BINDING_URL, Bindings.ARGUMENT, "",
                      "The HTTP URL to send the data to.");
-        defaults.set(HttpPostProcedure.BINDING_HEADER, Bindings.ARGUMENT, "", 
+        defaults.set(HttpPostProcedure.BINDING_HEADER, Bindings.ARGUMENT, "",
                      "The additional HTTP headers or blank for none.");
         defaults.set(HttpPostProcedure.BINDING_DATA, Bindings.ARGUMENT, "",
                      "The HTTP POST data to send or blank for none.");

@@ -41,7 +41,7 @@ public class Pool {
         Logger.getLogger(Pool.class.getName());
 
     /**
-     * The maximum number of connections configuration parameter name. 
+     * The maximum number of connections configuration parameter name.
      */
     public static final String PARAM_MAX_CONNECTIONS = "maxConnections";
 
@@ -349,7 +349,7 @@ public class Pool {
 
     /**
      * An adapter connection pool evictor. This will evict old
-     * connections from all the pools. 
+     * connections from all the pools.
      *
      * @author   Per Cederberg
      * @version  1.0

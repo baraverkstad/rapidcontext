@@ -28,19 +28,19 @@ import java.util.Date;
 public class DateUtil {
 
     /**
-     * The ISO date format. 
+     * The ISO date format.
      */
     private static final SimpleDateFormat ISO_DATE_FORMAT =
         new SimpleDateFormat("yyyy-MM-dd");
 
     /**
-     * The ISO date and time format. 
+     * The ISO date and time format.
      */
     private static final SimpleDateFormat ISO_DATETIME_FORMAT =
         new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     /**
-     * The ISO time format. 
+     * The ISO time format.
      */
     private static final SimpleDateFormat ISO_TIME_FORMAT =
         new SimpleDateFormat("HH:mm:ss");
@@ -48,7 +48,7 @@ public class DateUtil {
     /**
      * Converts an ISO date or datetime string to a date object.
      * Note that this method will omit the time portion of the
-     * string if not available. 
+     * string if not available.
      *
      * @param str            the string to convert
      *

@@ -6,7 +6,7 @@ RapidContext README
   RapidContext is a platform for creating rich dynamic web applications.
   It consists of both a client and a server part, providing a simple,
   safe and stable way to build applications that can connect to a wide
-  range of back-end services. 
+  range of back-end services.
 
 
 2. Installation & Usage
@@ -26,7 +26,7 @@ RapidContext README
 
   Once the server has been started, a web browser pointing to one
   of the following addresses should be able to launch a client:
-  
+
     http://localhost/
     http://localhost:8080/
     http://localhost:8180/

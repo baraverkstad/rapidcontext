@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 /**
  * A procedure call stack. The stack contains an ordered list of the
- * procedures currently being called. 
+ * procedures currently being called.
  *
  * @author   Per Cederberg, Dynabyte AB
  * @version  1.0
@@ -91,7 +91,7 @@ public class CallStack {
      *
      * @param proc           the procedure being called
      * @param bindings       the bindings used
-     */    
+     */
     void push(Procedure proc, Bindings bindings) {
         stack.add(proc);
     }

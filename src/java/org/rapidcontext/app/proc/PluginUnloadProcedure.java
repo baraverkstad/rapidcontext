@@ -55,7 +55,7 @@ public class PluginUnloadProcedure implements Procedure, Restricted {
 
     /**
      * Checks if the currently authenticated user has access to this object.
-     * 
+     *
      * @return true if the current user has access, or false otherwise
      */
     public boolean hasAccess() {
@@ -64,7 +64,7 @@ public class PluginUnloadProcedure implements Procedure, Restricted {
 
     /**
      * Returns the procedure name.
-     * 
+     *
      * @return the procedure name
      */
     public String getName() {
@@ -73,7 +73,7 @@ public class PluginUnloadProcedure implements Procedure, Restricted {
 
     /**
      * Returns the procedure description.
-     * 
+     *
      * @return the procedure description
      */
     public String getDescription() {

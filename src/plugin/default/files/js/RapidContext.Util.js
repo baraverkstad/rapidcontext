@@ -68,7 +68,7 @@ RapidContext.Util.isFalse = function (value) {
  * @param {Object} [...] the values to check
  *
  * @return {Object} the first non-undefined argument, or
- *         undefined if all arguments were undefined 
+ *         undefined if all arguments were undefined
  */
 RapidContext.Util.defaultValue = function (/* ... */) {
     for (var i = 0; i < arguments.length; i++) {
@@ -499,7 +499,7 @@ RapidContext.Util.TimePeriod = function (millis) {
  * @return {String} the string representation of the period
  */
 RapidContext.Util.toApproxPeriod = function (millis) {
-    var p = RapidContext.Util.TimePeriod(millis); 
+    var p = RapidContext.Util.TimePeriod(millis);
 
     if (p.days >= 10) {
         return p.days + " days";
@@ -547,7 +547,7 @@ RapidContext.Util.isDOM = function (obj) {
  * Returns true if the specified object looks like an HTML or XHTML
  * DOM node. Otherwise, false will be returned. Any non-null object
  * with a nodeType > 0 will be considered a DOM node, but only those
- * with a matching namespaceURI will be considered HTML DOM nodes. 
+ * with a matching namespaceURI will be considered HTML DOM nodes.
  *
  * @param {Object} obj the object to check
  *
@@ -705,7 +705,7 @@ RapidContext.Util.createDOMFuncExt = function (ns, tag, args, attrs/*, ...*/) {
         var myAttrs = MochiKit.Base.update({}, attrs);
         for (var pos = 0; pos < args.length; pos++) {
             if (arguments[pos] == null) {
-                throw new Error("Argument '" + args[pos] + "' cannot be null");  
+                throw new Error("Argument '" + args[pos] + "' cannot be null");
             }
             myAttrs[args[pos]] = arguments[pos];
         }
@@ -776,7 +776,7 @@ RapidContext.Util.resetScrollOffset = function (node, recursive) {
  *
  * @param {Object} node the HTML DOM node
  * @param {Object} box the coordinates box with optional properties
- *            {l, t, r, b} or {x, y, w, h}  
+ *            {l, t, r, b} or {x, y, w, h}
  */
 RapidContext.Util.adjustScrollOffset = function (node, box) {
     node = MochiKit.DOM.getElement(node);

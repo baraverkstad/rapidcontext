@@ -1049,7 +1049,7 @@ RapidContext.Widget.Form = function (attrs/*, ...*/) {
 
 /**
  * Returns an array with all child DOM nodes containing form fields.
- * The child nodes will be returned based on the results of the 
+ * The child nodes will be returned based on the results of the
  * RapidContext.Widget.isFormField() function.
  *
  * @return {Array} the array of form field elements
@@ -1417,7 +1417,7 @@ RapidContext.Widget.FormValidator.prototype.verify = function (field) {
             } else if (typeof(res) == "string") {
                 this.addError(field, res);
                 return false;
-            } else if (res === false) { 
+            } else if (res === false) {
                 this.addError(field, "Field validation failed");
                 return false;
             }
@@ -2492,7 +2492,7 @@ RapidContext.Widget.Table.prototype.getIdKey = function () {
  * method will regenerate all row identifiers if the table already
  * contains data.
  *
- * @param {String} key the new key column field name 
+ * @param {String} key the new key column field name
  */
 RapidContext.Widget.Table.prototype.setIdKey = function (key) {
     this._keyField = key;
@@ -2900,7 +2900,7 @@ RapidContext.Widget.Table.prototype._unmarkSelection = function (indexOrNull) {
     } else {
         var tbody = this.firstChild.lastChild;
         var tr = tbody.childNodes[indexOrNull];
-        MochiKit.DOM.removeElementClass(tr, "selected"); 
+        MochiKit.DOM.removeElementClass(tr, "selected");
     }
 }
 
@@ -2985,13 +2985,13 @@ RapidContext.Widget.TableColumn.prototype.setAttrs = function (attrs) {
     if (typeof(locals.sort) !== "undefined") {
         this.sort = locals.sort;
         if (locals.sort == null || locals.sort == "none") {
-            MochiKit.DOM.removeElementClass(this, "sortAsc"); 
-            MochiKit.DOM.removeElementClass(this, "sortDesc"); 
+            MochiKit.DOM.removeElementClass(this, "sortAsc");
+            MochiKit.DOM.removeElementClass(this, "sortDesc");
         } else if (locals.sort == "desc") {
-            MochiKit.DOM.removeElementClass(this, "sortAsc"); 
+            MochiKit.DOM.removeElementClass(this, "sortAsc");
             MochiKit.DOM.addElementClass(this, "sortDesc");
         } else {
-            MochiKit.DOM.removeElementClass(this, "sortDesc"); 
+            MochiKit.DOM.removeElementClass(this, "sortDesc");
             MochiKit.DOM.addElementClass(this, "sortAsc");
         }
     }

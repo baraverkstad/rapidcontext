@@ -29,7 +29,7 @@ HelpApplet.prototype.stop = function() {
  * Loads all available topics and displays them in the topic tree
  * view. Currently this method does not fetch any topic list from
  * the server, but only unifies the topic data from applets and the
- * constant platform docs. 
+ * constant platform docs.
  */
 HelpApplet.prototype.loadTopics = function() {
     this.ui.topicTree.removeAll();
@@ -108,7 +108,7 @@ HelpApplet.prototype.clearContent = function() {
  * loaded from a specified URL or from the currently selected topic
  * tree node.
  *
- * @param {String} [url] the optional content data URL 
+ * @param {String} [url] the optional content data URL
  */
 HelpApplet.prototype.loadContent = function(url) {
     this.clearContent();

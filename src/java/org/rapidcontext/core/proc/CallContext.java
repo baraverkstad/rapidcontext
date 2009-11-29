@@ -374,7 +374,7 @@ public class CallContext {
      * for the procedure. All the required arguments must be provided
      * and all connections must already have been reserved. Use
      * execute() when a procedure is to be called from outside a
-     * prepared call context. 
+     * prepared call context.
      *
      * @param proc           the procedure definition
      * @param args           the call arguments
@@ -464,7 +464,7 @@ public class CallContext {
     /**
      * Reserves an adapter connection for the specified pool. The
      * reserved connection will be stored in this context until all
-     * connections are released. 
+     * connections are released.
      *
      * @param poolName       the adapter pool name
      *

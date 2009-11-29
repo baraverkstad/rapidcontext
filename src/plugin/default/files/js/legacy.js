@@ -22,25 +22,25 @@ var ReTracer = RapidContext;
 var LOG = { nextId: 1, entries: [], max: 100, enabled: {} }
 
 /**
- * The error log level constant. 
+ * The error log level constant.
  */
 LOG.ERROR = "Error";
 LOG.enabled[LOG.ERROR] = true;
 
 /**
- * The warning log level constant. 
+ * The warning log level constant.
  */
 LOG.WARNING = "Warning";
 LOG.enabled[LOG.WARNING] = true;
 
 /**
- * The info log level constant. 
+ * The info log level constant.
  */
 LOG.INFO = "Info"
 LOG.enabled[LOG.INFO] = true;
 
 /**
- * The trace log level constant. 
+ * The trace log level constant.
  */
 LOG.TRACE = "Trace";
 LOG.enabled[LOG.TRACE] = false;

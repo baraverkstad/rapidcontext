@@ -55,7 +55,7 @@ public class SessionManager implements HttpSessionBindingListener {
      * The map of currently active sessions. Each session is mapped
      * by its unique id in this map. Adding and removing sessions in
      * this map is handled by the session counter object added to
-     * each session created. 
+     * each session created.
      */
     private static HashMap sessions = new HashMap();
 

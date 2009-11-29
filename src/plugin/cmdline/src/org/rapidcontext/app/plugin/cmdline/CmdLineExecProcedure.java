@@ -264,7 +264,7 @@ public class CmdLineExecProcedure extends AddOnProcedure {
     /**
      * Analyzes the error output buffer from a process and adds the
      * relevant log messages
-     * 
+     *
      * @param cx             the procedure call context
      * @param buffer         the process error output buffer
      */

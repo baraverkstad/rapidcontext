@@ -53,7 +53,7 @@ public class HttpConnection implements AdapterConnection {
      * connection is to be used, i.e. when a new connection has been
      * created or when fetched from a resource pool. It can also be
      * called to trigger a "ping" of a connection, if such
-     * functionality is implemented by the adapter. 
+     * functionality is implemented by the adapter.
      *
      * @throws AdapterException if the connection couldn't be
      *             activated (connection will be closed)
@@ -92,7 +92,7 @@ public class HttpConnection implements AdapterConnection {
      * Commits any pending changes. This method is called after each
      * successful procedure tree execution that included this
      * connection. This method may be implemented as a no-op, if
-     * the adapter does not support commit and rollback semantics. 
+     * the adapter does not support commit and rollback semantics.
      *
      * @throws AdapterException if the pending changes couldn't be
      *             committed to permanent storage (connection will be
