@@ -1,7 +1,7 @@
 /**
 	@constructor
 	@param [opt] Used to override the commandline options. Useful for testing.
-	@version $Id: JsDoc.js 769 2009-01-11 12:13:00Z micmath $
+	@version $Id: JsDoc.js 773 2009-01-24 09:42:04Z micmath $
 */
 JSDOC.JsDoc = function(/**object*/ opt) {
 	if (opt) {
@@ -89,7 +89,7 @@ JSDOC.JsDoc._getSrcFiles = function() {
 						}
 					}
 					
-					return (ext.indexOf(thisExt) > -1 || thisExt in JSDOC.handlers); // we're only interested in files with certain extensions
+					return (ext.indexOf(thisExt) > -1); // we're only interested in files with certain extensions
 				}
 			)
 		);

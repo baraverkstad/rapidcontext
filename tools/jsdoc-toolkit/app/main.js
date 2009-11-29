@@ -1,5 +1,5 @@
 /**
- * @version $Id: main.js 769 2009-01-11 12:13:00Z micmath $
+ * @version $Id: main.js 795 2009-06-19 07:03:22Z micmath $
  */
 
 function main() {
@@ -92,7 +92,7 @@ function main() {
 				}
 			}
 			else {
-				LOG.warn("No template or handlers given. Might as well read the usage notes.");
+				LOG.warn("No template given. Might as well read the usage notes.");
 				JSDOC.usage();
 			}
 		}
