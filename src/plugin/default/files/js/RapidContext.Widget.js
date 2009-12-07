@@ -3083,7 +3083,7 @@ RapidContext.Widget.TableColumn.prototype._render = function (obj) {
     var td = MochiKit.DOM.TD();
     var value = obj[this.field];
     if (typeof(this.renderer) === "function") {
-        this.renderer(td, value);
+        this.renderer(td, value, obj.$data);
     } else {
         if (value == null || (typeof(value) == "number" && isNaN(value))) {
             value = "";
