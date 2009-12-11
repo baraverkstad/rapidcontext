@@ -862,10 +862,10 @@ RapidContext.Widget.Field.prototype.setAttrs = function (attrs) {
     }
     if (typeof(locals.value) != "undefined") {
         var str = this.value = locals.value;
-        if (this.format) {
+        if (str == null || str == "") {
+            str = "";
+        } else if (this.format) {
             str = MochiKit.Text.format(this.format, str);
-        } else if (str == null) {
-            str = "null";
         } else if (typeof(str) != "string") {
             str = str.toString();
         }
@@ -1082,7 +1082,7 @@ RapidContext.Widget.Form.prototype.fieldMap = function () {
     var map = {};
     for (var i = 0; i < fields.length; i++) {
         var name = fields[i].name;
-        if (typeof(name) == "string") {
+        if (typeof(name) == "string" && name != "*") {
             if (map[name] instanceof Array) {
                 map[name].push(fields[i]);
             } else if (map[name] != null) {
@@ -1151,7 +1151,7 @@ RapidContext.Widget.Form.prototype.valueMap = function () {
                 value = null;
             }
         }
-        if (typeof(name) == "string" && value != null) {
+        if (typeof(name) == "string" && name != "*" && value != null) {
             if (map[name] instanceof Array) {
                 map[name].push(value);
             } else if (map[name] != null) {
@@ -1175,7 +1175,11 @@ RapidContext.Widget.Form.prototype.update = function (values) {
     var fields = this.fields();
     for (var i = 0; i < fields.length; i++) {
         var elem = fields[i];
-        if (elem.name in values) {
+        if (elem.name == "*") {
+            if (typeof(elem.setAttrs) == "function") {
+                elem.setAttrs({ value: values });
+            }
+        } else if (elem.name in values) {
             var value = values[elem.name];
             // TODO: generic form field value setting
             if (elem.type === "radio" || elem.type === "checkbox") {
