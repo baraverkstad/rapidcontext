@@ -1191,12 +1191,12 @@ RapidContext.Widget.Form.prototype.update = function (values) {
                     elem.checked = (elem.value === value || value === true);
                 }
             } else {
-                if (MochiKit.Base.isArrayLike(value)) {
-                    value = value.join(", ");
-                }
                 if (typeof(elem.setAttrs) == "function") {
                     elem.setAttrs({ value: value });
                 } else {
+                    if (MochiKit.Base.isArrayLike(value)) {
+                        value = value.join(", ");
+                    }
                     elem.value = value;
                 }
             }
