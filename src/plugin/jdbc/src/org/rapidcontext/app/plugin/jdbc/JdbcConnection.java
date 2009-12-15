@@ -400,7 +400,12 @@ class JdbcConnection implements AdapterConnection {
                     switch (meta.getColumnType(i + 1)) {
                     case Types.DATE:
                     case Types.TIMESTAMP:
-                        value = DateUtil.formatIsoDateTime(rs.getTimestamp(i + 1));
+                        try {
+                            value = DateUtil.formatIsoDateTime(rs.getTimestamp(i + 1));
+                        } catch (SQLException e) {
+                            // TODO: log this as a warning, it is here due to MySQL dates being '0000-00-00' and such
+                            value = null;
+                        }
                         break;
                     default:
                         value = rs.getString(i + 1);
