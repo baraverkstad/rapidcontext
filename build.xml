@@ -56,7 +56,7 @@ build.date=${build.date}
         <path refid="build.classpath" />
         <pathelement location="classes" />
       </path>
-      <ant dir="src/plugin/@{id}" antfile="../build.xml">
+      <ant dir="src/plugin/@{id}" antfile="../plugin-build.xml">
         <property name="java.class.path" value="${toString:plugin.classpath}" />
       </ant>
       <delete dir="plugins/@{id}" quiet="true" />
