@@ -1551,6 +1551,8 @@ MochiKit.Base.update(RapidContext.Widget.Icon, {
     PREVIOUS: { url: "previous.gif", tooltip: "Previous" },
     /** The config icon definition. */
     CONFIG: { url: "config.gif", tooltip: "Configure" },
+    /** The options icon definition. */
+    OPTIONS: { url: "options.gif", tooltip: "Options" },
     /** The delay icon definition. */
     DELAY: { url: "delay.gif", tooltip: "Configure Delay" },
     /** The reload icon definition. */
@@ -1598,7 +1600,13 @@ MochiKit.Base.update(RapidContext.Widget.Icon, {
     /** The folder icon definition. */
     FOLDER: { url: "folder.gif" },
     /** The document icon definition. */
-    DOCUMENT: { url: "document.gif" }
+    DOCUMENT: { url: "document.gif" },
+    /** The bar chart icon definition. */
+    BARCHART: { url: "barchart.gif", tooltip: "Bar Chart" },
+    /** The line chart icon definition. */
+    LINECHART: { url: "linechart.gif", tooltip: "Line Chart" },
+    /** The pie chart icon definition. */
+    PIECHART: { url: "piechart.gif", tooltip: "Pie Chart" }
 });
 
 /**
