@@ -21,6 +21,7 @@
           description="Compiles the application source code">
     <jar jarfile="lib/${build.name}-${build.version}.jar">
       <fileset dir="classes" />
+      <fileset dir="src/java" />
     </jar>
   </target>
 
