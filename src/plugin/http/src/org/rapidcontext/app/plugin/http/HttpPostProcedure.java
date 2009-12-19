@@ -27,7 +27,6 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.StringTokenizer;
 
-import org.rapidcontext.core.js.JsSerializer;
 import org.rapidcontext.core.proc.AddOnProcedure;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
@@ -177,40 +176,29 @@ public class HttpPostProcedure extends AddOnProcedure {
      * Replaces any parameters with the corresponding argument value
      * from the bindings.
      *
-     * @param str            the string to process
+     * @param data           the data string to process
      * @param bindings       the bindings to use
      *
-     * @return the processed string
+     * @return the processed data string
      *
      * @throws ProcedureException if some parameter couldn't be found
      */
-    private static String replaceArguments(String str, Bindings bindings)
+    private static String replaceArguments(String data, Bindings bindings)
         throws ProcedureException {
 
-        StringBuffer  buffer = new StringBuffer();
-        Object        value;
-        int           pos;
+        String[]  names = bindings.getNames();
+        Object    value;
 
-        while ((pos = str.indexOf(":")) >= 0) {
-            buffer.append(str.substring(0, pos));
-            str = str.substring(pos + 1);
-            pos = 0;
-            while (pos < str.length() &&
-                   JsSerializer.isIdentifierStart(str.charAt(0)) &&
-                   JsSerializer.isIdentifierPart(str.charAt(pos))) {
-
-                pos++;
-            }
-            if (pos == 0) {
-                buffer.append(":");
-            } else {
-                value = bindings.getValue(str.substring(0, pos));
-                buffer.append(value);
-                str = str.substring(pos);
+        for (int i = 0; i < names.length; i++) {
+            if (bindings.getType(names[i]) == Bindings.ARGUMENT) {
+                value = bindings.getValue(names[i], null);
+                if (value == null) {
+                    value = "";
+                }
+                data = data.replaceAll("\\:" + names[i], value.toString());
             }
         }
-        buffer.append(str);
-        return buffer.toString();
+        return data;
     }
 
     /**
