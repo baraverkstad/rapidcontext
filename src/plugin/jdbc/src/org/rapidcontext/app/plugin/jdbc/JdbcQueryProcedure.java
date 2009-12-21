@@ -60,11 +60,8 @@ public class JdbcQueryProcedure extends JdbcProcedure {
                              String flags)
         throws ProcedureException {
 
-        boolean mapMetadata = (flags.indexOf("no-metadata") < 0);
-        boolean mapColumnName = (flags.indexOf("no-mapping") < 0);
-
         try {
-            return con.executeQuery(stmt, mapMetadata, mapColumnName);
+            return con.executeQuery(stmt, flags);
         } catch (AdapterException e) {
             throw new ProcedureException(e.getMessage());
         }

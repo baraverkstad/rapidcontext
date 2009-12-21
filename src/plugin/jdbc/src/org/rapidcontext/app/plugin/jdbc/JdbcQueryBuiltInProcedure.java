@@ -56,6 +56,9 @@ public class JdbcQueryBuiltInProcedure implements Procedure, Restricted {
                      "The JDBC connection pool name.");
         defaults.set(JdbcProcedure.BINDING_SQL, Bindings.ARGUMENT, "",
                      "The SQL query string.");
+        defaults.set(JdbcProcedure.BINDING_FLAGS, Bindings.ARGUMENT, "",
+                     "Optional execution flags, currently 'metadata' " +
+                     "and 'no-column-names' are supported.");
         this.defaults.seal();
     }
 
@@ -121,10 +124,12 @@ public class JdbcQueryBuiltInProcedure implements Procedure, Restricted {
 
         JdbcConnection  con = JdbcProcedure.getConnection(cx, bindings);
         String          sql;
+        String          flags;
 
         sql = (String) bindings.getValue(JdbcProcedure.BINDING_SQL);
+        flags = (String) bindings.getValue(JdbcProcedure.BINDING_FLAGS);
         try {
-            return con.executeQuery(sql);
+            return con.executeQuery(sql, flags);
         } catch (AdapterException e) {
             throw new ProcedureException(e.getMessage());
         }

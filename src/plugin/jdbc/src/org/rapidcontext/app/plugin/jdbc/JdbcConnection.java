@@ -244,9 +244,9 @@ public class JdbcConnection implements AdapterConnection {
     }
 
     /**
-     * Executes an SQL query. Default object mapping will be used,
-     * which means that column meta-data will be included and column
-     * names will be mapped into object properties.
+     * Executes an SQL query. Default processing flags will be used, which
+     * means that column meta-data will not be included and column names will
+     * be mapped into object properties.
      *
      * @param sql            the SQL query to execute
      *
@@ -259,10 +259,24 @@ public class JdbcConnection implements AdapterConnection {
     }
 
     /**
+     * Executes an SQL query with the specified processing flags.
+     *
+     * @param sql            the SQL query to execute
+     * @param flags          the processing and mapping flags
+     *
+     * @return the data object with all the result data
+     *
+     * @throws AdapterException if the execution failed
+     */
+    public Data executeQuery(String sql, String flags) throws AdapterException {
+        return executeQuery(prepare(sql, null), flags);
+    }
+
+    /**
      * Executes a prepared SQL query. The prepared statement will be
-     * closed by this method. Default object mapping will be used,
-     * which means that column meta-data will be included and column
-     * names will be mapped into object properties.
+     * closed by this method. Default processing flags will be used, which
+     * means that column meta-data will not be included and column names will
+     * be mapped into object properties.
      *
      * @param stmt           the prepared SQL query to execute
      *
@@ -273,7 +287,7 @@ public class JdbcConnection implements AdapterConnection {
     public Data executeQuery(PreparedStatement stmt)
         throws AdapterException {
 
-        return executeQuery(stmt, true, true);
+        return executeQuery(stmt, "");
     }
 
     /**
@@ -281,23 +295,20 @@ public class JdbcConnection implements AdapterConnection {
      * closed by this method.
      *
      * @param stmt           the prepared SQL query to execute
-     * @param mapMetadata    the meta-data mapping flag
-     * @param mapColumnName  the column name to property mapping flag
+     * @param flags          the processing and mapping flags
      *
      * @return the data object with all the result data
      *
      * @throws AdapterException if the execution failed
      */
-    public Data executeQuery(PreparedStatement stmt,
-                             boolean mapMetadata,
-                             boolean mapColumnName)
+    public Data executeQuery(PreparedStatement stmt, String flags)
         throws AdapterException {
 
         ResultSet  set = null;
 
         try {
             set = stmt.executeQuery();
-            return createResults(set, mapMetadata, mapColumnName);
+            return createResults(set, flags);
         } catch (SQLException e) {
             throw new AdapterException("failed to execute query: " +
                                        e.getMessage());
@@ -359,18 +370,17 @@ public class JdbcConnection implements AdapterConnection {
      * Converts a query result set to a data object.
      *
      * @param rs             the result set to convert
-     * @param mapMetadata    the meta-data mapping flag
-     * @param mapColumnName  the column name to property mapping flag
+     * @param flags          the processing and mapping flags
      *
      * @return the data object with all the result data
      *
      * @throws AdapterException if the result data couldn't be read
      */
-    protected Data createResults(ResultSet rs,
-                                 boolean mapMetadata,
-                                 boolean mapColumnName)
+    protected Data createResults(ResultSet rs, String flags)
         throws AdapterException {
 
+        boolean            flagMetadata = (flags.indexOf("metadata") >= 0);
+        boolean            flagNoColumnNames = (flags.indexOf("no-column-names") < 0);
         Data               res = new Data();
         Data               cols;
         Data               rows = new Data(10);
@@ -395,7 +405,7 @@ public class JdbcConnection implements AdapterConnection {
                 cols.add(obj);
             }
             while (rs.next()) {
-                obj = mapColumnName ? new Data() : new Data(colCount);
+                obj = flagNoColumnNames ? new Data(colCount) : new Data();
                 for (int i = 0; i < colCount; i++) {
                     switch (meta.getColumnType(i + 1)) {
                     case Types.DATE:
@@ -410,10 +420,10 @@ public class JdbcConnection implements AdapterConnection {
                     default:
                         value = rs.getString(i + 1);
                     }
-                    if (mapColumnName) {
-                        obj.set(meta.getColumnName(i + 1).toLowerCase(), value);
-                    } else {
+                    if (flagNoColumnNames) {
                         obj.set(i, value);
+                    } else {
+                        obj.set(meta.getColumnName(i + 1).toLowerCase(), value);
                     }
                 }
                 rows.add(obj);
@@ -424,6 +434,6 @@ public class JdbcConnection implements AdapterConnection {
             throw new AdapterException("failed to extract query results: " +
                                        e.getMessage());
         }
-        return mapMetadata ? res : rows;
+        return flagMetadata ? res : rows;
     }
 }
