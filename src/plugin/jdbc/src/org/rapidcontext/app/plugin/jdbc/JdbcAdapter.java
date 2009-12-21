@@ -42,42 +42,42 @@ public class JdbcAdapter implements Adapter {
     /**
      * The JDBC driver configuration parameter name.
      */
-    private static final String JDBC_DRIVER = "driver";
+    protected static final String JDBC_DRIVER = "driver";
 
     /**
      * The JDBC URL configuration parameter name.
      */
-    private static final String JDBC_URL = "url";
+    protected static final String JDBC_URL = "url";
 
     /**
      * The JDBC user configuration parameter name.
      */
-    private static final String JDBC_USER = "user";
+    protected static final String JDBC_USER = "user";
 
     /**
      * The JDBC password configuration parameter name.
      */
-    private static final String JDBC_PASSWORD = "password";
+    protected static final String JDBC_PASSWORD = "password";
 
     /**
      * The JDBC SQL ping configuration parameter name.
      */
-    private static final String JDBC_PING = "sqlping";
+    protected static final String JDBC_PING = "sqlping";
 
     /**
      * The JDBC auto-commit configuration parameter name.
      */
-    private static final String JDBC_AUTOCOMMIT = "autocommit";
+    protected static final String JDBC_AUTOCOMMIT = "autocommit";
 
     /**
      * The JDBC connection and query timeout configuration parameter name.
      */
-    private static final String JDBC_TIMEOUT = "timeout";
+    protected static final String JDBC_TIMEOUT = "timeout";
 
     /**
      * The array of all parameters.
      */
-    private static final String[] PARAMS = {
+    protected static final String[] PARAMS = {
         JDBC_DRIVER,
         JDBC_URL,
         JDBC_USER,
@@ -212,11 +212,39 @@ public class JdbcAdapter implements Adapter {
                                        params.getString(JDBC_TIMEOUT, ""));
         }
         props = PropertiesSerializer.toProperties(params);
-        return new JdbcConnection(driver,
-                                  params.getString(JDBC_URL, ""),
-                                  props,
-                                  params.getString(JDBC_PING, ""),
-                                  autoCommit,
-                                  timeout);
+        return createConnection(driver,
+                                params.getString(JDBC_URL, ""),
+                                props,
+                                params.getString(JDBC_PING, ""),
+                                autoCommit,
+                                timeout);
+    }
+
+    /**
+     * Creates a new JDBC connection. This method exists to simplify the
+     * creation of subclass implementation of the standard JDBC connection.
+     * This method is called by the createConnection(Data) method that performs
+     * parameter validations.
+     *
+     * @param driver            the JDBC driver
+     * @param url               the connection URL
+     * @param props             the connection properties (user and password)
+     * @param sqlPing           the SQL ping query
+     * @param autoCommit        the auto-commit flag
+     * @param timeout           the request timeout (in secs)
+     *
+     * @return the JDBC connection created
+     *
+     * @throws AdapterException if a connection couldn't be established
+     */
+    protected JdbcConnection createConnection(Driver driver,
+                                              String url,
+                                              Properties props,
+                                              String sqlPing,
+                                              boolean autoCommit,
+                                              int timeout)
+        throws AdapterException {
+
+        return new JdbcConnection(driver, url, props, sqlPing, autoCommit, timeout);
     }
 }

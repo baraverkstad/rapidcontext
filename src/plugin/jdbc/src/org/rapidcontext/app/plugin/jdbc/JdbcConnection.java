@@ -43,22 +43,22 @@ import org.rapidcontext.util.DateUtil;
  * @author   Per Cederberg
  * @version  1.0
  */
-class JdbcConnection implements AdapterConnection {
+public class JdbcConnection implements AdapterConnection {
 
     /**
      * The encapsulated JDBC connection.
      */
-    private Connection con;
+    protected Connection con;
 
     /**
      * The SQL ping query.
      */
-    private String sqlPing;
+    protected String sqlPing;
 
     /**
      * The SQL connection and query timeout.
      */
-    private int timeout;
+    protected int timeout;
 
     /**
      * Creates a new JDBC connection.
@@ -72,12 +72,12 @@ class JdbcConnection implements AdapterConnection {
      *
      * @throws AdapterException if a connection couldn't be established
      */
-    JdbcConnection(Driver driver,
-                   String url,
-                   Properties props,
-                   String sqlPing,
-                   boolean autoCommit,
-                   int timeout)
+    protected JdbcConnection(Driver driver,
+                             String url,
+                             Properties props,
+                             String sqlPing,
+                             boolean autoCommit,
+                             int timeout)
         throws AdapterException {
 
         String  msg;
@@ -366,9 +366,9 @@ class JdbcConnection implements AdapterConnection {
      *
      * @throws AdapterException if the result data couldn't be read
      */
-    private Data createResults(ResultSet rs,
-                               boolean mapMetadata,
-                               boolean mapColumnName)
+    protected Data createResults(ResultSet rs,
+                                 boolean mapMetadata,
+                                 boolean mapColumnName)
         throws AdapterException {
 
         Data               res = new Data();

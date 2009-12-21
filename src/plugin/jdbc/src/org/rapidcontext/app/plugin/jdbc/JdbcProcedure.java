@@ -125,7 +125,7 @@ public abstract class JdbcProcedure extends AddOnProcedure {
      *
      * @throws ProcedureException if no JDBC connection was found
      */
-    static JdbcConnection getConnection(CallContext cx, Bindings bindings)
+    protected static JdbcConnection getConnection(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
         String  str;
@@ -155,9 +155,9 @@ public abstract class JdbcProcedure extends AddOnProcedure {
      * @throws ProcedureException if the SQL referred to an argument
      *             that wasn't defined in the bindings
      */
-    static PreparedStatement prepare(JdbcConnection con,
-                                     CallContext cx,
-                                     Bindings bindings)
+    protected static PreparedStatement prepare(JdbcConnection con,
+                                               CallContext cx,
+                                               Bindings bindings)
         throws ProcedureException {
 
         String        sql = (String) bindings.getValue(BINDING_SQL);
