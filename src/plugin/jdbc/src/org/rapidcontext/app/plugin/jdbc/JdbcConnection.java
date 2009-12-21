@@ -380,17 +380,43 @@ public class JdbcConnection implements AdapterConnection {
         throws AdapterException {
 
         boolean            flagMetadata = (flags.indexOf("metadata") >= 0);
-        boolean            flagNoColumnNames = (flags.indexOf("no-column-names") < 0);
-        Data               res = new Data();
-        Data               cols;
-        Data               rows = new Data(10);
-        Data               obj;
         ResultSetMetaData  meta;
-        int                colCount;
-        String             value;
+        Data               res;
 
         try {
             meta = rs.getMetaData();
+        } catch (SQLException e) {
+            throw new AdapterException("failed to retrieve query result meta-data: " +
+                                       e.getMessage());
+        }
+        if (flagMetadata) {
+            res = new Data();
+            res.set("columns", createColumnData(meta, flags));
+            res.set("rows", createRowData(meta, rs, flags));
+        } else {
+            res = createRowData(meta, rs, flags);
+        }
+        return res;
+    }
+
+    /**
+     * Converts the query meta-data into an array of column data objects.
+     *
+     * @param meta           the result set meta-data to convert
+     * @param flags          the processing and mapping flags
+     *
+     * @return the data array object with all the column information
+     *
+     * @throws AdapterException if the result data couldn't be read
+     */
+    protected Data createColumnData(ResultSetMetaData meta, String flags)
+        throws AdapterException {
+
+        Data  cols;
+        Data  obj;
+        int   colCount;
+
+        try {
             colCount = meta.getColumnCount();
             cols = new Data(colCount);
             for (int i = 0; i < colCount; i++) {
@@ -404,36 +430,91 @@ public class JdbcConnection implements AdapterConnection {
                 obj.set("column", meta.getColumnName(i + 1));
                 cols.add(obj);
             }
+        } catch (SQLException e) {
+            throw new AdapterException("failed to extract query meta-data: " +
+                                       e.getMessage());
+        }
+        return cols;
+    }
+
+    /**
+     * Converts the query result set into an array of row data objects.
+     *
+     * @param meta           the result set meta-data
+     * @param rs             the result set to convert
+     * @param flags          the processing and mapping flags
+     *
+     * @return the data array object with all the result data
+     *
+     * @throws AdapterException if the result data couldn't be read
+     */
+    protected Data createRowData(ResultSetMetaData meta, ResultSet rs, String flags)
+        throws AdapterException {
+
+        boolean  flagNoColumnNames = (flags.indexOf("no-column-names") < 0);
+        int      colCount;
+        Data     rows = new Data(10);
+        Data     obj;
+        Object   value;
+
+        try {
+            colCount = meta.getColumnCount();
             while (rs.next()) {
                 obj = flagNoColumnNames ? new Data(colCount) : new Data();
                 for (int i = 0; i < colCount; i++) {
-                    switch (meta.getColumnType(i + 1)) {
-                    case Types.DATE:
-                    case Types.TIMESTAMP:
-                        try {
-                            value = DateUtil.formatIsoDateTime(rs.getTimestamp(i + 1));
-                        } catch (SQLException e) {
-                            // TODO: log this as a warning, it is here due to MySQL dates being '0000-00-00' and such
-                            value = null;
-                        }
-                        break;
-                    default:
-                        value = rs.getString(i + 1);
-                    }
+                    value = createValue(meta, rs, i + 1, flags);
                     if (flagNoColumnNames) {
                         obj.set(i, value);
                     } else {
+                        // TODO: avoid accidental column name overwrites!
                         obj.set(meta.getColumnName(i + 1).toLowerCase(), value);
                     }
                 }
                 rows.add(obj);
             }
-            res.set("columns", cols);
-            res.set("rows", rows);
         } catch (SQLException e) {
             throw new AdapterException("failed to extract query results: " +
                                        e.getMessage());
         }
-        return flagMetadata ? res : rows;
+        return rows;
+    }
+
+    /**
+     * Converts a specific row column value to a scriptable object. Normally
+     * this means returning a simple string containing the value.
+     *
+     * @param meta           the result set meta-data
+     * @param rs             the result set to convert
+     * @param column         the column index
+     * @param flags          the processing and mapping flags
+     *
+     * @return the scriptable object with the column value
+     *
+     * @throws AdapterException if the result data couldn't be read
+     */
+    protected Object createValue(ResultSetMetaData meta,
+                                 ResultSet rs,
+                                 int column,
+                                 String flags)
+        throws AdapterException {
+
+        try {
+            switch (meta.getColumnType(column)) {
+            case Types.DATE:
+            case Types.TIMESTAMP:
+                try {
+                    return DateUtil.formatIsoDateTime(rs.getTimestamp(column));
+                } catch (SQLException e) {
+                    // TODO: log this as a warning, it is here due to MySQL dates being '0000-00-00' and such
+                    return null;
+                }
+            default:
+                return rs.getString(column);
+            }
+        } catch (SQLException e) {
+            throw new AdapterException("failed to extract query result value " +
+                                       "for column " + column + ": " +
+                                       e.getMessage());
+        }
     }
 }
