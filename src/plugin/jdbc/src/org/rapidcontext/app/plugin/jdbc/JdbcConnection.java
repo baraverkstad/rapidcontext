@@ -379,7 +379,7 @@ public class JdbcConnection implements AdapterConnection {
     protected Data createResults(ResultSet rs, String flags)
         throws AdapterException {
 
-        boolean            flagMetadata = (flags.indexOf("metadata") >= 0);
+        boolean            flagMetadata = hasFlag(flags, "metadata", false);
         ResultSetMetaData  meta;
         Data               res;
 
@@ -451,7 +451,8 @@ public class JdbcConnection implements AdapterConnection {
     protected Data createRowData(ResultSetMetaData meta, ResultSet rs, String flags)
         throws AdapterException {
 
-        boolean  flagNoColumnNames = (flags.indexOf("no-column-names") < 0);
+        boolean  flagColumnNames = hasFlag(flags, "column-names", true);
+        boolean  flagNativeTypes = hasFlag(flags, "native-types", true);
         int      colCount;
         Data     rows = new Data(10);
         Data     obj;
@@ -460,14 +461,14 @@ public class JdbcConnection implements AdapterConnection {
         try {
             colCount = meta.getColumnCount();
             while (rs.next()) {
-                obj = flagNoColumnNames ? new Data(colCount) : new Data();
+                obj = flagColumnNames ? new Data() : new Data(colCount);
                 for (int i = 0; i < colCount; i++) {
-                    value = createValue(meta, rs, i + 1, flags);
-                    if (flagNoColumnNames) {
-                        obj.set(i, value);
-                    } else {
+                    value = createValue(meta, rs, i + 1, flagNativeTypes);
+                    if (flagColumnNames) {
                         // TODO: avoid accidental column name overwrites!
                         obj.set(meta.getColumnName(i + 1).toLowerCase(), value);
+                    } else {
+                        obj.set(i, value);
                     }
                 }
                 rows.add(obj);
@@ -481,12 +482,14 @@ public class JdbcConnection implements AdapterConnection {
 
     /**
      * Converts a specific row column value to a scriptable object. Normally
-     * this means returning a simple string containing the value.
+     * this means returning a simple string containing the value. If the native
+     * types flag is set, SQL types will be converted into their native Java
+     * object types by the JDBC driver.
      *
      * @param meta           the result set meta-data
      * @param rs             the result set to convert
      * @param column         the column index
-     * @param flags          the processing and mapping flags
+     * @param nativeTypes    the native value types flag
      *
      * @return the scriptable object with the column value
      *
@@ -495,26 +498,55 @@ public class JdbcConnection implements AdapterConnection {
     protected Object createValue(ResultSetMetaData meta,
                                  ResultSet rs,
                                  int column,
-                                 String flags)
+                                 boolean nativeTypes)
         throws AdapterException {
 
         try {
-            switch (meta.getColumnType(column)) {
-            case Types.DATE:
-            case Types.TIMESTAMP:
-                try {
-                    return DateUtil.formatIsoDateTime(rs.getTimestamp(column));
-                } catch (SQLException e) {
-                    // TODO: log this as a warning, it is here due to MySQL dates being '0000-00-00' and such
-                    return null;
+            if (nativeTypes) {
+                return rs.getObject(column);
+            } else {
+                switch (meta.getColumnType(column)) {
+                case Types.DATE:
+                case Types.TIMESTAMP:
+                    try {
+                        return DateUtil.formatIsoDateTime(rs.getTimestamp(column));
+                    } catch (SQLException e) {
+                        // TODO: log this as a warning, it is here due to MySQL
+                        //       dates being '0000-00-00' and such
+                        return null;
+                    }
+                default:
+                    return rs.getString(column);
                 }
-            default:
-                return rs.getString(column);
             }
         } catch (SQLException e) {
             throw new AdapterException("failed to extract query result value " +
                                        "for column " + column + ": " +
                                        e.getMessage());
+        }
+    }
+
+    /**
+     * Checks if a specified flag is either set or unset. I.e. this method both
+     * checks for "no-whatever" and "whatever" in the flags string. If none of
+     * the two variants is found, the default value is returned.
+     *
+     * @param flags          the flags string to check
+     * @param flag           the flag name
+     * @param defaultValue   the default flag value
+     *
+     * @return true if the flag was set, or
+     *         false otherwise
+     */
+    protected boolean hasFlag(String flags, String flag, boolean defaultValue) {
+        if (flags == null || flag == null) {
+            return defaultValue;
+        } else if (flags.indexOf("no-" + flag) >= 0) {
+            return false;
+        } else if (flags.indexOf(flag) >= 0) {
+            return true;
+        } else {
+            return defaultValue;
         }
     }
 }
