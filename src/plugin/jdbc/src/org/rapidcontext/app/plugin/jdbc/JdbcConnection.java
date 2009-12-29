@@ -453,6 +453,7 @@ public class JdbcConnection implements AdapterConnection {
 
         boolean  flagColumnNames = hasFlag(flags, "column-names", true);
         boolean  flagNativeTypes = hasFlag(flags, "native-types", true);
+        boolean  flagSingleRow = hasFlag(flags, "single-row", false);
         int      colCount;
         Data     rows = new Data(10);
         Data     obj;
@@ -476,6 +477,17 @@ public class JdbcConnection implements AdapterConnection {
         } catch (SQLException e) {
             throw new AdapterException("failed to extract query results: " +
                                        e.getMessage());
+        }
+        if (flagSingleRow) {
+            if (rows.arraySize() < 1) {
+                return null;
+            } else if (rows.arraySize() == 1) {
+                return rows.getData(0);
+            } else {
+                throw new AdapterException("too many rows in query results; " +
+                                           "expected 1, but found " +
+                                           rows.arraySize());
+            }
         }
         return rows;
     }
@@ -502,20 +514,20 @@ public class JdbcConnection implements AdapterConnection {
         throws AdapterException {
 
         try {
-            if (nativeTypes) {
-                return rs.getObject(column);
-            } else {
-                switch (meta.getColumnType(column)) {
-                case Types.DATE:
-                case Types.TIMESTAMP:
-                    try {
-                        return DateUtil.formatIsoDateTime(rs.getTimestamp(column));
-                    } catch (SQLException e) {
-                        // TODO: log this as a warning, it is here due to MySQL
-                        //       dates being '0000-00-00' and such
-                        return null;
-                    }
-                default:
+            switch (meta.getColumnType(column)) {
+            case Types.DATE:
+            case Types.TIMESTAMP:
+                try {
+                    return DateUtil.formatIsoDateTime(rs.getTimestamp(column));
+                } catch (SQLException e) {
+                    // TODO: log this as a warning, it is here due to MySQL
+                    //       dates being '0000-00-00' and such
+                    return null;
+                }
+            default:
+                if (nativeTypes) {
+                    return rs.getObject(column);
+                } else {
                     return rs.getString(column);
                 }
             }

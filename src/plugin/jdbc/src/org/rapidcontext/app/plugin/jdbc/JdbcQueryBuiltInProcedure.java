@@ -58,7 +58,8 @@ public class JdbcQueryBuiltInProcedure implements Procedure, Restricted {
                      "The SQL query string.");
         defaults.set(JdbcProcedure.BINDING_FLAGS, Bindings.ARGUMENT, "",
                      "Optional execution flags, currently '[no-]metadata', " +
-                     "'[no-]column-names' and '[no-]native-types' are supported.");
+                     "'[no-]column-names', '[no-]native-types' and " +
+                     "'single-row' are supported.");
         this.defaults.seal();
     }
 
