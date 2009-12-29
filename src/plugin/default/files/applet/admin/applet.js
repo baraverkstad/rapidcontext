@@ -211,12 +211,15 @@ AdminApplet.prototype._pluginUploadStart = function () {
  */
 AdminApplet.prototype._pluginUploadProgress = function (res) {
     var selfCallback = MochiKit.Base.bind("_pluginUploadProgress", this);
-    if (res == null) {
+    function pluginLoadStatus() {
         var d = RapidContext.App.callProc("System.Session.Current");
         d.addBoth(selfCallback);
+    }
+    if (res == null) {
+        MochiKit.Async.callLater(1, pluginLoadStatus);
     } else if (res.files.progress) {
         this.ui.pluginProgress.setRatio(res.files.progress);
-        var d = MochiKit.Async.callLater(1, selfCallback);
+        MochiKit.Async.callLater(1, pluginLoadStatus);
     } else {
         this._pluginUploadInfo(res.files.plugin);
     }
