@@ -23,6 +23,7 @@ RapidContext 0.9.2 - 0.9.9
    o Fix issues with Chrome 1.0:
       - Random widget init issues (Admin applet, plug-in tables....) ???
       - Quick tour broken inside Admin applet (must focus applet)
+   o Relicense the JDBC plugin
    o Document Web Browser Support
 
 RapidContext 1.0
