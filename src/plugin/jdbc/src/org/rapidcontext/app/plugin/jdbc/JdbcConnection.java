@@ -466,10 +466,9 @@ public class JdbcConnection implements AdapterConnection {
                 for (int i = 0; i < colCount; i++) {
                     value = createValue(meta, rs, i + 1, flagNativeTypes);
                     if (flagColumnNames) {
-                        // TODO: avoid accidental column name overwrites!
-                        obj.set(meta.getColumnName(i + 1).toLowerCase(), value);
+                        obj.add(meta.getColumnName(i + 1).toLowerCase(), value);
                     } else {
-                        obj.set(i, value);
+                        obj.add(value);
                     }
                 }
                 rows.add(obj);

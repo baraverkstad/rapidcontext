@@ -720,6 +720,33 @@ public class Data implements Cloneable {
     }
 
     /**
+     * Adds a property value using the specified key if possible. If the key is
+     * already in use, a new unique key will be generated instead. This will
+     * ensure that an existing value will not be overwritten.
+     *
+     * @param key            the suggested property key name
+     * @param value          the property value
+     *
+     * @return the property key name used
+     *
+     * @throws UnsupportedOperationException if this object has been
+     *             sealed
+     */
+    public String add(String key, Object value)
+        throws UnsupportedOperationException {
+
+        String  keyName = key;
+        int     attempt = 0;
+
+        while (containsKey(keyName)) {
+            attempt++;
+            keyName = key + "_" + attempt;
+        }
+        set(keyName, value);
+        return keyName;
+    }
+
+    /**
      * Adds an array value at the first available index. This method
      * uses the current array size to determine which index to use.
      *
@@ -745,6 +772,25 @@ public class Data implements Cloneable {
     }
 
     /**
+     * Adds a boolean property value using the specified key if possible. If
+     * the key is already in use, a new unique key will be generated instead.
+     * This will ensure that an existing value will not be overwritten.
+     *
+     * @param key            the suggested property key name
+     * @param value          the property value
+     *
+     * @return the property key name used
+     *
+     * @throws UnsupportedOperationException if this object has been
+     *             sealed
+     */
+    public String addBoolean(String key, boolean value)
+        throws UnsupportedOperationException {
+
+        return add(key, Boolean.valueOf(value));
+    }
+
+    /**
      * Adds a boolean array value at the first available index. This
      * method uses the current array size to determine which index
      * to use.
@@ -763,7 +809,26 @@ public class Data implements Cloneable {
     }
 
     /**
-     * Adds a integer array value at the first available index. This
+     * Adds an integer property value using the specified key if possible. If
+     * the key is already in use, a new unique key will be generated instead.
+     * This will ensure that an existing value will not be overwritten.
+     *
+     * @param key            the suggested property key name
+     * @param value          the property value
+     *
+     * @return the property key name used
+     *
+     * @throws UnsupportedOperationException if this object has been
+     *             sealed
+     */
+    public String addInt(String key, int value)
+        throws UnsupportedOperationException {
+
+        return add(key, Integer.valueOf(value));
+    }
+
+    /**
+     * Adds an integer array value at the first available index. This
      * method uses the current array size to determine which index
      * to use.
      *
