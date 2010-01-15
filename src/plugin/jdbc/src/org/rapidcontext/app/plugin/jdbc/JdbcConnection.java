@@ -525,7 +525,8 @@ public class JdbcConnection implements AdapterConnection {
                 }
             default:
                 if (nativeTypes) {
-                    return rs.getObject(column);
+                    Object value = rs.getObject(column);
+                    return isNativeValue(value) ? value : rs.getString(column);
                 } else {
                     return rs.getString(column);
                 }
@@ -559,5 +560,23 @@ public class JdbcConnection implements AdapterConnection {
         } else {
             return defaultValue;
         }
+    }
+
+    /**
+     * Checks if a specified value is an acceptable native value. If this
+     * method returns true, then the value will be returned. Otherwise a string
+     * value will be extracted for the column instead. If native types are not
+     * used for a query, this step will naturally be omitted.
+     *
+     * @param value          the value to check
+     *
+     * @return true if the value is of an acceptable native type, or
+     *         false otherwise
+     */
+    protected boolean isNativeValue(Object value) {
+        return value == null ||
+               value instanceof Boolean ||
+               value instanceof Number ||
+               value instanceof String;
     }
 }
