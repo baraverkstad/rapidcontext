@@ -133,8 +133,7 @@ HelpApplet.prototype.loadContent = function(url) {
         MochiKit.DOM.replaceChildNodes(this.ui.contentTitle, node.name);
         if (node.data != null) {
             this.ui.contentLoading.show();
-            str = "Static document from " + node.data.source
-            MochiKit.DOM.replaceChildNodes(this.ui.contentInfo, str);
+            MochiKit.DOM.replaceChildNodes(this.ui.contentInfo, node.data.source);
             url = url || node.data.url;
             this._current = { topic: node.data.topic, text: null, url: url };
             var d = RapidContext.App.loadText(url, null, { timeout: 60 });
