@@ -749,8 +749,8 @@ RapidContext.App._Cache = {
 RapidContext.App._UI = {
     // Initializes the user interface.
     init: function () {
-        var show = { effect: "appear", duration: 0.3 };
-        var hide = { effect: "fade", delay: 0.2 };
+        var show = { effect: "appear", duration: 0.2 };
+        var hide = { effect: "fade", duration: 0.2, delay: 0.2 };
         this.menu.setAttrs({ showAnim: show, hideAnim: hide });
         if (/MSIE/.test(navigator.userAgent)) {
             // TODO: MSIE 6.0 sets div width to 100%, so we hack the width
@@ -784,7 +784,7 @@ RapidContext.App._UI = {
     hideMenu: function() {
         this.menu.setAttrs({ hideAnim: { effect: "fade", duration: 0 } });
         this.menu.hide();
-        this.menu.setAttrs({ hideAnim: { effect: "fade", delay: 0.2 } });
+        this.menu.setAttrs({ hideAnim: { effect: "fade", duration: 0.2, delay: 0.2 } });
     },
     // Updates the information label.
     updateInfo: function () {
