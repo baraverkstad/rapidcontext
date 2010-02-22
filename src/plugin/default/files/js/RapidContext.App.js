@@ -64,7 +64,7 @@ RapidContext.App.init = function () {
     RapidContext.Util.injectStackTrace(stack, fun);
     d.addBoth(fun);
     return d;
-}
+};
 
 /**
  * Returns an object with status information about the platform and
@@ -77,7 +77,7 @@ RapidContext.App.init = function () {
 RapidContext.App.status = function () {
     // TODO: use deep clone
     return MochiKit.Base.clone(RapidContext.App._Cache.status);
-}
+};
 
 /**
  * Returns an object with information about the user. The object
@@ -89,7 +89,7 @@ RapidContext.App.status = function () {
 RapidContext.App.user = function () {
     // TODO: use deep clone
     return MochiKit.Base.clone(RapidContext.App._Cache.user);
-}
+};
 
 /**
  * Returns an array with applet launchers. The array returned is an
@@ -100,7 +100,7 @@ RapidContext.App.user = function () {
 RapidContext.App.applets = function () {
     // TODO: use deep clone, but copy instance array content
     return RapidContext.App._Cache.applets;
-}
+};
 
 /**
  * Finds the applet launcher from an applet instance, class name or
@@ -122,7 +122,7 @@ RapidContext.App.findApplet = function (applet) {
         }
     }
     return null;
-}
+};
 
 /**
  * Creates and starts applets on startup or when no other applets are
@@ -162,7 +162,7 @@ RapidContext.App._startAuto = function (startup) {
     RapidContext.App._addErrbackLogger(d);
     d.callback();
     return d;
-}
+};
 
 /**
  * Creates and starts an applet instance.
@@ -255,7 +255,7 @@ RapidContext.App.startApplet = function (applet, container) {
     RapidContext.App._addErrbackLogger(d);
     d.callback();
     return d;
-}
+};
 
 /**
  * Stops an applet instance. If only the class name or launcher is
@@ -291,7 +291,7 @@ RapidContext.App.stopApplet = function (applet) {
         delete applet[n];
     }
     return RapidContext.App._startAuto(false);
-}
+};
 
 /**
  * Performs an asynchronous call to a method in an applet. If only
@@ -351,7 +351,7 @@ RapidContext.App.callApplet = function (applet, method) {
         }
     });
     return d;
-}
+};
 
 /**
  * Performs an asynchronous procedure call. This function returns a
@@ -407,7 +407,7 @@ RapidContext.App.callProc = function (name, args) {
         });
     }
     return d;
-}
+};
 
 /**
  * Performs an asynchronous HTTP request for a text document and
@@ -441,7 +441,7 @@ RapidContext.App.loadText = function (url, params, options) {
     var d = RapidContext.App.loadXHR(url, params, options);
     d.addCallback(function (res) { return res.responseText; });
     return d;
-}
+};
 
 /**
  * Performs an asynchronous HTTP request for an XML document and
@@ -470,7 +470,7 @@ RapidContext.App.loadXML = function (url, params, options) {
     var d = RapidContext.App.loadXHR(url, params, options);
     d.addCallback(function (res) { return res.responseXML; });
     return d;
-}
+};
 
 /**
  * Performs an asynchronous HTTP request and returns a deferred
@@ -527,7 +527,7 @@ RapidContext.App.loadXHR = function (url, params, options) {
     }
     RapidContext.App._addErrbackLogger(d);
     return d;
-}
+};
 
 /**
  * Loads a JavaScript to the the current page asynchronously and
@@ -584,7 +584,7 @@ RapidContext.App.loadScript = function (url) {
             msg = "Failed to load script at " + url + ": " + msg;
             d.errback(new URIError(msg, url));
         }
-    }
+    };
     script.onreadystatechange = function () {
         RapidContext.Util.injectStackTrace(stack);
         LOG.trace("Script loading status", url + ": " + script.readyState);
@@ -598,7 +598,7 @@ RapidContext.App.loadScript = function (url) {
     head.appendChild(script);
     RapidContext.App._addErrbackLogger(d);
     return d;
-}
+};
 
 /**
  * Downloads a file to the user desktop. This works by creating a new
@@ -629,7 +629,7 @@ RapidContext.App.downloadFile = function (url, data) {
         document.body.appendChild(form);
         form.submit();
     }
-}
+};
 
 /**
  * Returns a non-cacheable version of the specified URL. This
@@ -645,7 +645,7 @@ RapidContext.App.downloadFile = function (url, data) {
 RapidContext.App._nonCachedUrl = function (url) {
     var timestamp = new Date().getTime() % 100000;
     return url + ((url.indexOf("?") < 0) ? "?" : "&") + timestamp;
-}
+};
 
 /**
  * Adds an error logger to a MochiKit.Async.Deferred object. The
@@ -666,14 +666,14 @@ RapidContext.App._addErrbackLogger = function (d) {
             LOG.warning("Unhandled error in deferred", err);
         }
         return err;
-    }
+    };
     var adder = function () {
         if (!d.chained) {
             d.addErrback(logger);
         }
-    }
+    };
     MochiKit.Async.callLater(0, adder);
-}
+};
 
 /**
  * The application data cache. Contains the most recently retrieved
@@ -816,4 +816,4 @@ RapidContext.App._UI = {
         this.container.selectChild(tab);
         return tab;
     }
-}
+};

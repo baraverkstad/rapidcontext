@@ -25,7 +25,7 @@ if (typeof(RapidContext) == "undefined") {
  */
 RapidContext.Widget = function () {
     throw new ReferenceError("cannot call Widget constructor");
-}
+};
 
 /**
  * Function to return unique identifiers.
@@ -60,7 +60,7 @@ RapidContext.Widget.isWidget = function (obj, className) {
         return RapidContext.Util.isHTML(obj) &&
                MochiKit.DOM.hasElementClass(obj, "widget");
     }
-}
+};
 
 /**
  * Checks if the specified object is a form field. Any non-null
@@ -85,7 +85,7 @@ RapidContext.Widget.isFormField = function (obj) {
            tagName == "TEXTAREA" ||
            tagName == "SELECT" ||
            RapidContext.Widget.isWidget(obj, "Field");
-}
+};
 
 /**
  * Adds all functions from a widget class to a DOM node. This will
@@ -110,7 +110,7 @@ RapidContext.Widget._widgetMixin = function (node/*, objOrClass, ...*/) {
     }
     MochiKit.Base.setdefault(node, RapidContext.Widget.prototype);
     return node;
-}
+};
 
 /**
  * Creates a new widget with the specified name, attributes and
@@ -137,7 +137,7 @@ RapidContext.Widget.createWidget = function (name, attrs/*, ...*/) {
                                  "' in RapidContext.Widget.Classes");
     }
     return cls.apply(this, MochiKit.Base.extend([], arguments, 1));
-}
+};
 
 /**
  * Destroys a widget or a DOM node. This function will remove the DOM
@@ -168,7 +168,7 @@ RapidContext.Widget.destroyWidget = function (node) {
             RapidContext.Widget.destroyWidget(node[i]);
         }
     }
-}
+};
 
 /**
  * Creates an event handler function that will forward any calls to
@@ -192,7 +192,7 @@ RapidContext.Widget._eventHandler = function (className, methodName/*, ...*/) {
         var e = new MochiKit.Signal.Event(this, evt);
         return node[methodName].apply(node, baseArgs.concat([e]));
     };
-}
+};
 
 /**
  * Emits a signal to any listeners connected with MochiKit.Signal.
@@ -218,7 +218,7 @@ RapidContext.Widget.emitSignal = function (node, sig/*, ...*/) {
         MochiKit.Logging.logError(msg, e);
         return false;
     }
-}
+};
 
 /**
  * The internal widget destructor function. This method should only
@@ -227,7 +227,7 @@ RapidContext.Widget.emitSignal = function (node, sig/*, ...*/) {
  */
 RapidContext.Widget.prototype.destroy = function () {
     // Nothing to do by default
-}
+};
 
 /**
  * Updates the widget or HTML DOM node attributes. This method is
@@ -238,7 +238,7 @@ RapidContext.Widget.prototype.destroy = function () {
  */
 RapidContext.Widget.prototype.setAttrs = function (attrs) {
     MochiKit.DOM.updateNodeAttributes(this, attrs);
-}
+};
 
 /**
  * Updates the CSS styles of this HTML DOM node. This method is
@@ -252,7 +252,7 @@ RapidContext.Widget.prototype.setAttrs = function (attrs) {
  */
 RapidContext.Widget.prototype.setStyle = function (styles) {
     MochiKit.Style.setStyle(this, styles);
-}
+};
 
 /**
  * Checks if this HTML DOM node has the specified CSS class names.
@@ -271,7 +271,7 @@ RapidContext.Widget.prototype.hasClass = function (/* ... */) {
         }
     }
     return true;
-}
+};
 
 /**
  * Adds the specified CSS class names to this HTML DOM node.
@@ -282,7 +282,7 @@ RapidContext.Widget.prototype.addClass = function (/* ... */) {
     for (var i = 0; i < arguments.length; i++) {
         MochiKit.DOM.addElementClass(this, arguments[i]);
     }
-}
+};
 
 /**
  * Removes the specified CSS class names from this HTML DOM node.
@@ -293,7 +293,7 @@ RapidContext.Widget.prototype.removeClass = function (/* ... */) {
     for (var i = 0; i < arguments.length; i++) {
         MochiKit.DOM.removeElementClass(this, arguments[i]);
     }
-}
+};
 
 /**
  * Toggles adding and removing the specified CSS class names to and
@@ -313,7 +313,7 @@ RapidContext.Widget.prototype.toggleClass = function (/* ... */) {
         this.addClass.apply(this, arguments);
         return true;
     }
-}
+};
 
 /**
  * Checks if this HTML DOM node is hidden (with the hide() method).
@@ -326,7 +326,7 @@ RapidContext.Widget.prototype.toggleClass = function (/* ... */) {
  */
 RapidContext.Widget.prototype.isHidden = function () {
     return this.hasClass("widgetHidden");
-}
+};
 
 /**
  * Shows this HTML DOM node if it was previously hidden with the
@@ -336,7 +336,7 @@ RapidContext.Widget.prototype.isHidden = function () {
  */
 RapidContext.Widget.prototype.show = function () {
     this.removeClass("widgetHidden");
-}
+};
 
 /**
  * Hides this HTML DOM node if it doesn't have an explicit "display"
@@ -346,7 +346,7 @@ RapidContext.Widget.prototype.show = function () {
  */
 RapidContext.Widget.prototype.hide = function () {
     this.addClass("widgetHidden");
-}
+};
 
 /**
  * Performs a visual effect animation on this widget. This is
@@ -375,7 +375,7 @@ RapidContext.Widget.prototype.animate = function (opts) {
     if (typeof(func) == "function") {
         func.call(null, this, opts);
     }
-}
+};
 
 /**
  * Returns the default visual effect queue identifier.
@@ -387,7 +387,7 @@ RapidContext.Widget.prototype._animQueueId = function () {
         this._queueId = this.id || "widget" + RapidContext.Widget._id();
     }
     return this._queueId;
-}
+};
 
 /**
  * Blurs (unfocuses) this DOM node and all relevant child nodes.
@@ -396,7 +396,7 @@ RapidContext.Widget.prototype._animQueueId = function () {
  */
 RapidContext.Widget.prototype.blurAll = function () {
     RapidContext.Util.blurAll(this);
-}
+};
 
 /**
  * Returns an array with all child DOM nodes. Note that the array is
@@ -408,7 +408,7 @@ RapidContext.Widget.prototype.blurAll = function () {
  */
 RapidContext.Widget.prototype.getChildNodes = function () {
     return MochiKit.Base.extend([], this.childNodes);
-}
+};
 
 /**
  * Adds a single child DOM node to this widget. This method is
@@ -419,7 +419,7 @@ RapidContext.Widget.prototype.getChildNodes = function () {
  */
 RapidContext.Widget.prototype.addChildNode = function (child) {
     this.appendChild(child);
-}
+};
 
 /**
  * Removes a single child DOM node from this widget. This method is
@@ -433,7 +433,7 @@ RapidContext.Widget.prototype.addChildNode = function (child) {
  */
 RapidContext.Widget.prototype.removeChildNode = function (child) {
     this.removeChild(child);
-}
+};
 
 /**
  * Adds one or more children to this widget. This method will
@@ -458,7 +458,7 @@ RapidContext.Widget.prototype.addAll = function (/* ... */) {
             this.addChildNode(RapidContext.Util.createTextNode(args[i]));
         }
     }
-}
+};
 
 /**
  * Removes all children to this widget. This method will also destroy
@@ -472,7 +472,7 @@ RapidContext.Widget.prototype.removeAll = function () {
         this.removeChildNode(children[i]);
         RapidContext.Widget.destroyWidget(children[i]);
     }
-}
+};
 
 /**
  * Creates a new button widget.
@@ -500,7 +500,7 @@ RapidContext.Widget.Button = function (attrs/*, ...*/) {
     o.setAttrs(attrs);
     o.addAll(MochiKit.Base.extend(null, arguments, 1));
     return o;
-}
+};
 
 /**
  * Updates the widget or HTML DOM node attributes.
@@ -519,7 +519,7 @@ RapidContext.Widget.Button.prototype.setAttrs = function (attrs) {
         }
     }
     MochiKit.DOM.updateNodeAttributes(this, attrs);
-}
+};
 
 /**
  * Creates a new dialog widget.
@@ -560,7 +560,7 @@ RapidContext.Widget.Dialog = function (attrs/*, ... */) {
     close.onclick = RapidContext.Widget._eventHandler("Dialog", "hide");
     resize.onmousedown = RapidContext.Widget._eventHandler("Dialog", "_handleResizeStart");
     return o;
-}
+};
 
 /**
  * Emitted when the dialog is shown.
@@ -622,7 +622,7 @@ RapidContext.Widget.Dialog.prototype.setAttrs = function (attrs) {
         }
     }
     MochiKit.DOM.updateNodeAttributes(this, attrs);
-}
+};
 
 /**
  * Shows the dialog.
@@ -644,7 +644,7 @@ RapidContext.Widget.Dialog.prototype.show = function () {
     }
     RapidContext.Util.resetScrollOffset(this, true);
     RapidContext.Widget.emitSignal(this, "onshow");
-}
+};
 
 /**
  * Hides the dialog.
@@ -657,7 +657,7 @@ RapidContext.Widget.Dialog.prototype.hide = function () {
     this.blurAll();
     this.addClass("widgetHidden");
     RapidContext.Widget.emitSignal(this, "onhide");
-}
+};
 
 /**
  * Returns an array with all child DOM nodes. Note that the array is
@@ -667,7 +667,7 @@ RapidContext.Widget.Dialog.prototype.hide = function () {
  */
 RapidContext.Widget.Dialog.prototype.getChildNodes = function () {
     return MochiKit.Base.extend([], this.lastChild.childNodes);
-}
+};
 
 /**
  * Adds a single child DOM node to this widget.
@@ -676,7 +676,7 @@ RapidContext.Widget.Dialog.prototype.getChildNodes = function () {
  */
 RapidContext.Widget.Dialog.prototype.addChildNode = function (child) {
     this.lastChild.appendChild(child);
-}
+};
 
 /**
  * Removes a single child DOM node from this widget.
@@ -685,7 +685,7 @@ RapidContext.Widget.Dialog.prototype.addChildNode = function (child) {
  */
 RapidContext.Widget.Dialog.prototype.removeChildNode = function (child) {
     this.lastChild.removeChild(child);
-}
+};
 
 /**
  * Moves the dialog to the specified position (relative to the
@@ -702,7 +702,7 @@ RapidContext.Widget.Dialog.prototype.moveTo = function (x, y) {
                 y: Math.max(0, Math.min(y, parentDim.h - dim.h - 2)) };
     MochiKit.Style.setElementPosition(this, pos);
     RapidContext.Widget.emitSignal(this, "onmove", pos);
-}
+};
 
 /**
  * Moves the dialog to the center (relative to the parent DOM node).
@@ -714,7 +714,7 @@ RapidContext.Widget.Dialog.prototype.moveToCenter = function () {
                 y: Math.round(Math.max(0, (parentDim.h - dim.h) / 2)) };
     MochiKit.Style.setElementPosition(this, pos);
     RapidContext.Widget.emitSignal(this, "onmove", pos);
-}
+};
 
 /**
  * Resizes the dialog to the specified size (in pixels). The size
@@ -733,7 +733,7 @@ RapidContext.Widget.Dialog.prototype.resizeTo = function (width, height) {
     MochiKit.Base.update(this, dim);
     RapidContext.Util.resizeElements(this.lastChild);
     RapidContext.Widget.emitSignal(this, "onresize", dim);
-}
+};
 
 /**
  * Initiates a dialog move drag operation. This will install a mouse
@@ -748,7 +748,7 @@ RapidContext.Widget.Dialog.prototype._handleMoveStart = function (evt) {
     evt.stop();
     MochiKit.Signal.connect(document, "onmousemove", this, "_handleMove");
     MochiKit.Signal.connect(document, "onmouseup", this, "_stopDrag");
-}
+};
 
 /**
  * Handles a dialog move drag operation.
@@ -759,7 +759,7 @@ RapidContext.Widget.Dialog.prototype._handleMove = function (evt) {
     var pos = evt.mouse().page;
     this.moveTo(this._offsetPos.x + pos.x - this._startPos.x,
                 this._offsetPos.y + pos.y - this._startPos.y);
-}
+};
 
 /**
  * Initiates a dialog resize drag operation. This will install a
@@ -776,7 +776,7 @@ RapidContext.Widget.Dialog.prototype._handleResizeStart = function (evt) {
     MochiKit.Signal.connect(document, "onmousemove", this, "_handleResize");
     MochiKit.Signal.connect(document, "onmousedown", function (evt) { evt.stop(); });
     MochiKit.Signal.connect(document, "onmouseup", this, "_stopDrag");
-}
+};
 
 /**
  * Handles a dialog resize drag operation.
@@ -787,7 +787,7 @@ RapidContext.Widget.Dialog.prototype._handleResize = function (evt) {
     var pos = evt.mouse().page;
     this.resizeTo(this._offsetDim.w + pos.x - this._startPos.x,
                   this._offsetDim.h + pos.y - this._startPos.y);
-}
+};
 
 /**
  * Stops a dialog resize or move drag operation.
@@ -798,7 +798,7 @@ RapidContext.Widget.Dialog.prototype._stopDrag = function (evt) {
     MochiKit.Signal.disconnectAll(document, "onmousemove");
     MochiKit.Signal.disconnectAll(document, "onmousedown");
     MochiKit.Signal.disconnectAll(document, "onmouseup");
-}
+};
 
 /**
  * Creates a new field widget.
@@ -833,7 +833,7 @@ RapidContext.Widget.Field = function (attrs) {
     o.setAttrs(MochiKit.Base.update({ name: "", value: "", maxLength: -1 }, attrs));
     o.defaultValue = o.value;
     return o;
-}
+};
 
 /**
  * Updates the widget or HTML DOM node attributes.
@@ -877,14 +877,14 @@ RapidContext.Widget.Field.prototype.setAttrs = function (attrs) {
         this.title = (str == longStr) ? null : longStr;
     }
     MochiKit.DOM.updateNodeAttributes(this, attrs);
-}
+};
 
 /**
  * Resets the field value to the initial value.
  */
 RapidContext.Widget.Field.prototype.reset = function () {
     this.setAttrs({ value: this.defaultValue });
-}
+};
 
 /**
  * Creates a new file streamer widget.
@@ -933,7 +933,7 @@ RapidContext.Widget.FileStreamer = function (attrs) {
     }
     o.onload = o._handleLoad;
     return o;
-}
+};
 
 /**
  * Updates the widget or HTML DOM node attributes.
@@ -957,7 +957,7 @@ RapidContext.Widget.FileStreamer.prototype.setAttrs = function (attrs) {
     }
     // TODO: update form if already created, or recreate?
     MochiKit.DOM.updateNodeAttributes(this, attrs);
-}
+};
 
 /**
  * Handles the iframe onload event.
@@ -968,7 +968,7 @@ RapidContext.Widget.FileStreamer.prototype._handleLoad = function () {
         RapidContext.Widget.emitSignal(this, "onupload");
     }
     MochiKit.DOM.withDocument(doc, MochiKit.Base.bind("_initDocument", this));
-}
+};
 
 /**
  * Handles the file input onchange event.
@@ -978,7 +978,7 @@ RapidContext.Widget.FileStreamer.prototype._handleChange = function () {
     var form = this.contentDocument.getElementsByTagName("form")[0];
     form.submit();
     form.appendChild(RapidContext.Widget.Overlay());
-}
+};
 
 /**
  * Creates the document form and file input element.
@@ -1001,7 +1001,7 @@ RapidContext.Widget.FileStreamer.prototype._initDocument = function () {
     input.onchange = MochiKit.Base.bind("_handleChange", this);
     body.className = "widgetFileStreamer";
     MochiKit.DOM.replaceChildNodes(body, form);
-}
+};
 
 /**
  * Handles widget resize calls, so that the iframe can be adjusted
@@ -1019,7 +1019,7 @@ RapidContext.Widget.FileStreamer.prototype.resizeContent = function () {
             this.height = Math.max(24, input.clientHeight);
         }
     }
-}
+};
 
 /**
  * Creates a new form widget.
@@ -1045,7 +1045,7 @@ RapidContext.Widget.Form = function (attrs/*, ...*/) {
     o.onsubmit = RapidContext.Widget._eventHandler(null, "_handleSubmit");
     o.addAll(MochiKit.Base.extend(null, arguments, 1));
     return o;
-}
+};
 
 /**
  * Returns an array with all child DOM nodes containing form fields.
@@ -1068,7 +1068,7 @@ RapidContext.Widget.Form.prototype.fields = function () {
         }
     });
     return fields;
-}
+};
 
 /**
  * Returns a map with all child DOM nodes containing form fields with
@@ -1093,7 +1093,7 @@ RapidContext.Widget.Form.prototype.fieldMap = function () {
         }
     }
     return map;
-}
+};
 
 /**
  * Resets all fields in the form to their default values.
@@ -1123,7 +1123,7 @@ RapidContext.Widget.Form.prototype.reset = function () {
             }
         }
     }
-}
+};
 
 /**
  * Returns a map with all form field values. If multiple fields have
@@ -1162,7 +1162,7 @@ RapidContext.Widget.Form.prototype.valueMap = function () {
         }
     }
     return map;
-}
+};
 
 /**
  * Updates the fields in this form with a specified map of values.
@@ -1202,7 +1202,7 @@ RapidContext.Widget.Form.prototype.update = function (values) {
             }
         }
     }
-}
+};
 
 /**
  * Returns an array with all child DOM nodes containing form
@@ -1219,7 +1219,7 @@ RapidContext.Widget.Form.prototype.validators = function () {
         }
     }
     return res;
-}
+};
 
 /**
  * Validates this form using the form validators found.
@@ -1256,7 +1256,7 @@ RapidContext.Widget.Form.prototype.validate = function () {
     } else {
         return true;
     }
-}
+};
 
 /**
  * Resets all form validators.
@@ -1266,7 +1266,7 @@ RapidContext.Widget.Form.prototype.validateReset = function () {
     for (var i = 0; i < validators.length; i++) {
         validators[i].reset();
     }
-}
+};
 
 /**
  * Handles the form submit signal.
@@ -1276,7 +1276,7 @@ RapidContext.Widget.Form.prototype.validateReset = function () {
 RapidContext.Widget.Form.prototype._handleSubmit = function (evt) {
     evt.stop();
     return false;
-}
+};
 
 /**
  * Creates a new form validator widget.
@@ -1313,7 +1313,7 @@ RapidContext.Widget.FormValidator = function (attrs) {
     o.fields = [];
     o.hide();
     return o;
-}
+};
 
 /**
  * Updates the widget or HTML DOM node attributes.
@@ -1360,7 +1360,7 @@ RapidContext.Widget.FormValidator.prototype.setAttrs = function (attrs) {
         this.validator = locals.validator;
     }
     MochiKit.DOM.updateNodeAttributes(this, attrs);
-}
+};
 
 /**
  * Resets this form validator. This will hide any error messages and
@@ -1375,7 +1375,7 @@ RapidContext.Widget.FormValidator.prototype.reset = function () {
         this.hide();
         this.removeAll();
     }
-}
+};
 
 /**
  * Verifies a form field with this validator. If the form field
@@ -1428,7 +1428,7 @@ RapidContext.Widget.FormValidator.prototype.verify = function (field) {
         }
     }
     return true;
-}
+};
 
 /**
  * Adds a validation error message for the specified field. If the
@@ -1447,7 +1447,7 @@ RapidContext.Widget.FormValidator.prototype.addError = function (field, message)
             this.show();
         }
     }
-}
+};
 
 /**
  * Creates a new icon widget.
@@ -1477,7 +1477,7 @@ RapidContext.Widget.Icon = function (attrs) {
     o.setAttrs(attrs);
     o.addClass("widgetIcon");
     return o;
-}
+};
 
 /**
  * Updates the icon or HTML DOM node attributes.
@@ -1519,7 +1519,7 @@ RapidContext.Widget.Icon.prototype.setAttrs = function (attrs) {
         this.setStyle({ height: locals.height });
     }
     MochiKit.DOM.updateNodeAttributes(this, attrs);
-}
+};
 
 /**
  * @scope RapidContext.Widget.Icon.prototype
@@ -1637,7 +1637,7 @@ RapidContext.Widget.Overlay = function (attrs/*, ...*/) {
     o.setAttrs(attrs);
     o.addAll(MochiKit.Base.extend(null, arguments, 1));
     return o;
-}
+};
 
 /**
  * Updates the widget or HTML DOM node attributes.
@@ -1661,7 +1661,7 @@ RapidContext.Widget.Overlay.prototype.setAttrs = function (attrs) {
     }
     MochiKit.DOM.replaceChildNodes(this.firstChild, icon, this.message);
     MochiKit.DOM.updateNodeAttributes(this, attrs);
-}
+};
 
 /**
  * Creates a new pane widget.
@@ -1702,7 +1702,7 @@ RapidContext.Widget.Pane = function (attrs/*, ... */) {
     o.setAttrs(MochiKit.Base.update({ pageTitle: "Page", pageStatus: "ANY", pageCloseable: false }, attrs));
     o.addAll(MochiKit.Base.extend(null, arguments, 1));
     return o;
-}
+};
 
 /**
  * The default page status. Allows page transitions both to the
@@ -1781,7 +1781,7 @@ RapidContext.Widget.Pane.prototype.setAttrs = function (attrs) {
         this.parentNode._updateStatus();
     }
     MochiKit.DOM.updateNodeAttributes(this, attrs);
-}
+};
 
 /**
  * Handles the page enter event. This method is called by a parent
@@ -1809,7 +1809,7 @@ RapidContext.Widget.Pane.prototype._handleEnter = function (opts) {
         RapidContext.Util.resizeElements(this);
     }
     RapidContext.Widget.emitSignal(this, "onenter");
-}
+};
 
 /**
  * Handles the page exit event. This method is called by a parent
@@ -1846,7 +1846,7 @@ RapidContext.Widget.Pane.prototype._handleExit = function (opts) {
     }
     RapidContext.Widget.emitSignal(this, "onexit");
     return true;
-}
+};
 
 /**
  * Creates a new popup widget.
@@ -1883,7 +1883,7 @@ RapidContext.Widget.Popup = function (attrs/*, ...*/) {
     MochiKit.Signal.connect(o, "onmousemove", o, "_handleMouseMove");
     MochiKit.Signal.connect(o, "onclick", o, "_handleMouseClick");
     return o;
-}
+};
 
 /**
  * Updates the widget or HTML DOM node attributes.
@@ -1910,7 +1910,7 @@ RapidContext.Widget.Popup.prototype.setAttrs = function (attrs) {
         this.hideAnim = locals.hideAnim;
     }
     MochiKit.DOM.updateNodeAttributes(this, attrs);
-}
+};
 
 /**
  * Shows the popup.
@@ -1928,7 +1928,7 @@ RapidContext.Widget.Popup.prototype.show = function () {
     } else {
         this.resetDelay();
     }
-}
+};
 
 /**
  * Hides the popup.
@@ -1944,7 +1944,7 @@ RapidContext.Widget.Popup.prototype.hide = function () {
         }
         RapidContext.Widget.emitSignal(this, "onhide");
     }
-}
+};
 
 /**
  * Resets the popup auto-hide timer. Might be called manually when
@@ -1958,7 +1958,7 @@ RapidContext.Widget.Popup.prototype.resetDelay = function () {
     if (!this.isHidden() && this.delay > 0) {
         this._delayTimer = setTimeout(MochiKit.Base.bind("hide", this), this.delay);
     }
-}
+};
 
 /**
  * Returns the currently selected child node.
@@ -1968,7 +1968,7 @@ RapidContext.Widget.Popup.prototype.resetDelay = function () {
  */
 RapidContext.Widget.Popup.prototype.selectedChild = function () {
     return RapidContext.Util.childNode(this, this.selectedIndex);
-}
+};
 
 /**
  * Marks a popup child as selected. The currently selected child will
@@ -2000,7 +2000,7 @@ RapidContext.Widget.Popup.prototype.selectChild = function (indexOrNode) {
         this.selectedIndex = -1;
     }
     return this.selectedIndex;
-}
+};
 
 /**
  * Moves the current selection by a numeric offset.
@@ -2020,7 +2020,7 @@ RapidContext.Widget.Popup.prototype.selectMove = function (offset) {
         index = this.childNodes.length - 1;
     }
     return this.selectChild(index);
-}
+};
 
 /**
  * Handles mouse move events over the popup.
@@ -2035,7 +2035,7 @@ RapidContext.Widget.Popup.prototype._handleMouseMove = function (evt) {
     } else {
         this.selectChild(-1);
     }
-}
+};
 
 /**
  * Handles mouse click events on the popup.
@@ -2049,7 +2049,7 @@ RapidContext.Widget.Popup.prototype._handleMouseClick = function (evt) {
     } else {
         this.selectChild(-1);
     }
-}
+};
 
 /**
  * Creates a new progress bar widget.
@@ -2077,7 +2077,7 @@ RapidContext.Widget.ProgressBar = function (attrs) {
     o.setAttrs(MochiKit.Base.update({ min: 0, max: 100 }, attrs));
     o.setValue(0);
     return o;
-}
+};
 
 /**
  * Updates the widget or HTML DOM node attributes.
@@ -2097,7 +2097,7 @@ RapidContext.Widget.ProgressBar.prototype.setAttrs = function (attrs) {
         this.timeLeft = null;
     }
     MochiKit.DOM.updateNodeAttributes(this, attrs);
-}
+};
 
 /**
  * Updates the progress bar completion value. The value should be
@@ -2119,7 +2119,7 @@ RapidContext.Widget.ProgressBar.prototype.setValue = function (value, text) {
         str += " \u2014 " + text;
     }
     this.setRatio(pos / total, str);
-}
+};
 
 /**
  * Updates the progress bar completion ratio. The ratio value should
@@ -2156,7 +2156,7 @@ RapidContext.Widget.ProgressBar.prototype.setRatio = function (ratio, text) {
         text += " \u2014 " + this.timeLeft + " left";
     }
     this.setText(text);
-}
+};
 
 /**
  * Updates the progress bar text.
@@ -2165,7 +2165,7 @@ RapidContext.Widget.ProgressBar.prototype.setRatio = function (ratio, text) {
  */
 RapidContext.Widget.ProgressBar.prototype.setText = function (text) {
     MochiKit.DOM.replaceChildNodes(this.lastChild, text);
-}
+};
 
 /**
  * Creates a new tab container widget.
@@ -2199,7 +2199,7 @@ RapidContext.Widget.TabContainer = function (attrs/*, ... */) {
     o._selectedIndex = -1;
     o.addAll(MochiKit.Base.extend(null, arguments, 1));
     return o;
-}
+};
 
 /**
  * Returns an array with all child pane widgets. Note that the array
@@ -2209,7 +2209,7 @@ RapidContext.Widget.TabContainer = function (attrs/*, ... */) {
  */
 RapidContext.Widget.TabContainer.prototype.getChildNodes = function () {
     return MochiKit.Base.extend([], this.lastChild.childNodes);
-}
+};
 
 /**
  * Adds a single child page widget to this widget. The child widget
@@ -2239,7 +2239,7 @@ RapidContext.Widget.TabContainer.prototype.addChildNode = function (child) {
     if (this._selectedIndex < 0) {
         this.selectChild(0);
     }
-}
+};
 
 /**
  * Removes a single child DOM node from this widget. This method is
@@ -2270,7 +2270,7 @@ RapidContext.Widget.TabContainer.prototype.removeChildNode = function (child) {
     if (this._selectedIndex < 0 && this.getChildNodes().length > 0) {
         this.selectChild((index == 0) ? 0 : index - 1);
     }
-}
+};
 
 // TODO: add support for status updates in child pane widget
 
@@ -2283,7 +2283,7 @@ RapidContext.Widget.TabContainer.prototype.removeChildNode = function (child) {
  */
 RapidContext.Widget.TabContainer.prototype.selectedIndex = function () {
     return this._selectedIndex;
-}
+};
 
 /**
  * Returns the child widget currently selected in the tab container.
@@ -2294,7 +2294,7 @@ RapidContext.Widget.TabContainer.prototype.selectedIndex = function () {
 RapidContext.Widget.TabContainer.prototype.selectedChild = function () {
     var children = this.getChildNodes();
     return (this._selectedIndex < 0) ? null : children[this._selectedIndex];
-}
+};
 
 /**
  * Selects a specified child in the tab container. This method can be
@@ -2323,7 +2323,7 @@ RapidContext.Widget.TabContainer.prototype.selectChild = function (indexOrChild)
         MochiKit.DOM.addElementClass(label, "selected");
         children[this._selectedIndex]._handleEnter();
     }
-}
+};
 
 /**
  * Resizes the currently selected child. This method need not be called
@@ -2338,7 +2338,7 @@ RapidContext.Widget.TabContainer.prototype.resizeContent = function () {
     if (child != null) {
         RapidContext.Util.resizeElements(child);
     }
-}
+};
 
 /**
  * Handles the tab close event.
@@ -2349,7 +2349,7 @@ RapidContext.Widget.TabContainer.prototype.resizeContent = function () {
 RapidContext.Widget.TabContainer.prototype._handleClose = function (child, evt) {
     evt.stop();
     this.removeChildNode(child);
-}
+};
 
 /**
  * Creates a new data table widget.
@@ -2396,7 +2396,7 @@ RapidContext.Widget.Table = function (attrs/*, ...*/) {
     o.addAll(MochiKit.Base.extend(null, arguments, 1));
     tbody.onmousedown = RapidContext.Widget._eventHandler("Table", "_handleSelect");
     return o;
-}
+};
 
 /**
  * Updates the widget or HTML DOM node attributes.
@@ -2416,7 +2416,7 @@ RapidContext.Widget.Table.prototype.setAttrs = function (attrs) {
         this.setIdKey(locals.key);
     }
     MochiKit.DOM.updateNodeAttributes(this, attrs);
-}
+};
 
 /**
  * Returns an array with all child table column widgets. Note that
@@ -2429,7 +2429,7 @@ RapidContext.Widget.Table.prototype.getChildNodes = function () {
     var thead = table.firstChild;
     var tr = thead.firstChild;
     return MochiKit.Base.extend([], tr.childNodes);
-}
+};
 
 /**
  * Adds a single child table column widget to this widget.
@@ -2445,7 +2445,7 @@ RapidContext.Widget.Table.prototype.addChildNode = function (child) {
     var thead = table.firstChild;
     var tr = thead.firstChild;
     tr.appendChild(child);
-}
+};
 
 /**
  * Removes a single child table column widget from this widget.
@@ -2459,7 +2459,7 @@ RapidContext.Widget.Table.prototype.removeChildNode = function (child) {
     var thead = table.firstChild;
     var tr = thead.firstChild;
     tr.removeChild(child);
-}
+};
 
 /**
  * Returns the column index of a field.
@@ -2477,7 +2477,7 @@ RapidContext.Widget.Table.prototype.getColumnIndex = function (field) {
         }
     }
     return -1;
-}
+};
 
 /**
  * Returns the unique key identifier column field, or null if none
@@ -2497,7 +2497,7 @@ RapidContext.Widget.Table.prototype.getIdKey = function () {
         }
     }
     return null;
-}
+};
 
 /**
  * Sets the unique key identifier column field. Note that this
@@ -2514,7 +2514,7 @@ RapidContext.Widget.Table.prototype.setIdKey = function (key) {
             row.$id = row.$data[this._keyField];
         }
     }
-}
+};
 
 /**
  * Returns the current sort key for the table.
@@ -2530,7 +2530,7 @@ RapidContext.Widget.Table.prototype.getSortKey = function () {
         }
     }
     return null;
-}
+};
 
 /**
  * Returns a table cell element.
@@ -2549,7 +2549,7 @@ RapidContext.Widget.Table.prototype.getCellElem = function (row, col) {
     } catch (e) {
         return null;
     }
-}
+};
 
 /**
  * Clears all the data in the table. The column headers will not be
@@ -2558,7 +2558,7 @@ RapidContext.Widget.Table.prototype.getCellElem = function (row, col) {
  */
 RapidContext.Widget.Table.prototype.clear = function () {
     this.setData([]);
-}
+};
 
 /**
  * Returns an array with the data in the table. The array returned
@@ -2569,7 +2569,7 @@ RapidContext.Widget.Table.prototype.clear = function () {
  */
 RapidContext.Widget.Table.prototype.getData = function () {
     return this._data;
-}
+};
 
 /**
  * Sets the table data. The table data is an array of objects, each
@@ -2614,7 +2614,7 @@ RapidContext.Widget.Table.prototype.setData = function (data) {
     if (this.getIdKey() != null) {
         this._addSelectedIds(selectedIds);
     }
-}
+};
 
 /**
  * Sorts the table data by field and direction.
@@ -2646,7 +2646,7 @@ RapidContext.Widget.Table.prototype.sortData = function (field, direction) {
     }
     this._renderRows();
     this._addSelectedIds(selectedIds);
-}
+};
 
 /**
  * Redraws the table from updated source data. Note that this method
@@ -2665,7 +2665,7 @@ RapidContext.Widget.Table.prototype.redraw = function () {
     for (var i = 0; i < this._selected.length; i++) {
         this._markSelection(this._selected[i]);
     }
-}
+};
 
 /**
  * Renders the table rows.
@@ -2689,7 +2689,7 @@ RapidContext.Widget.Table.prototype._renderRows = function () {
         // Add empty row to avoid browser bugs
         tbody.appendChild(MochiKit.DOM.TR());
     }
-}
+};
 
 /**
  * Returns the currently selected row ids. If no rows are selected,
@@ -2705,7 +2705,7 @@ RapidContext.Widget.Table.prototype.getSelectedIds = function () {
         res.push(this._rows[this._selected[i]].$id);
     }
     return res;
-}
+};
 
 /**
  * Returns the currently selected row data.
@@ -2725,7 +2725,7 @@ RapidContext.Widget.Table.prototype.getSelectedData = function () {
     } else {
         return null;
     }
-}
+};
 
 /**
  * Sets the selection to the specified row id values. If the current
@@ -2759,7 +2759,7 @@ RapidContext.Widget.Table.prototype.setSelectedIds = function () {
         RapidContext.Widget.emitSignal(this, "onselect");
     }
     return res;
-}
+};
 
 /**
  * Adds the specified row id values to the selection. If the current
@@ -2775,7 +2775,7 @@ RapidContext.Widget.Table.prototype.addSelectedIds = function () {
         RapidContext.Widget.emitSignal(this, "onselect");
     }
     return res;
-}
+};
 
 /**
  * Adds the specified row id values to the selection. Note that this
@@ -2798,7 +2798,7 @@ RapidContext.Widget.Table.prototype._addSelectedIds = function () {
         }
     }
     return res;
-}
+};
 
 /**
  * Removes the specified row id values from the selection. If the
@@ -2826,7 +2826,7 @@ RapidContext.Widget.Table.prototype.removeSelectedIds = function () {
         RapidContext.Widget.emitSignal(this, "onselect");
     }
     return res;
-}
+};
 
 /**
  * Handles the mouse selection events.
@@ -2880,7 +2880,7 @@ RapidContext.Widget.Table.prototype._handleSelect = function (evt) {
     evt.stop();
     RapidContext.Widget.emitSignal(this, "onselect");
     return false;
-}
+};
 
 /**
  * Marks selected rows.
@@ -2897,7 +2897,7 @@ RapidContext.Widget.Table.prototype._markSelection = function (indexOrNull) {
         var tr = tbody.childNodes[indexOrNull];
         MochiKit.DOM.addElementClass(tr, "selected");
     }
-}
+};
 
 /**
  * Unmarks selected rows.
@@ -2914,7 +2914,7 @@ RapidContext.Widget.Table.prototype._unmarkSelection = function (indexOrNull) {
         var tr = tbody.childNodes[indexOrNull];
         MochiKit.DOM.removeElementClass(tr, "selected");
     }
-}
+};
 
 /**
  * Creates a new data table column widget.
@@ -2956,7 +2956,7 @@ RapidContext.Widget.TableColumn = function (attrs) {
     o.setAttrs(MochiKit.Base.update({ title: attrs.field, type: "string", key: false }, attrs));
     o.onclick = RapidContext.Widget._eventHandler(null, "_handleClick");
     return o;
-}
+};
 
 /**
  * Updates the widget or HTML DOM node attributes. Note that some
@@ -3020,7 +3020,7 @@ RapidContext.Widget.TableColumn.prototype.setAttrs = function (attrs) {
         this.renderer = locals.renderer;
     }
     MochiKit.DOM.updateNodeAttributes(this, attrs);
-}
+};
 
 /**
  * Maps the column field from one object onto another. This method
@@ -3082,7 +3082,7 @@ RapidContext.Widget.TableColumn.prototype._map = function (src, dst) {
         }
     }
     dst[this.field] = value;
-}
+};
 
 /**
  * Renders the column field value into a table cell.
@@ -3109,7 +3109,7 @@ RapidContext.Widget.TableColumn.prototype._render = function (obj) {
         td.appendChild(RapidContext.Util.createTextNode(value));
     }
     return td;
-}
+};
 
 /**
  * Handles click events on the column header.
@@ -3122,7 +3122,7 @@ RapidContext.Widget.TableColumn.prototype._handleClick = function () {
         var table = thead.parentNode;
         table.parentNode.sortData(this.field, dir);
     }
-}
+};
 
 /**
  * Creates a new text area (or text box) widget.
@@ -3169,7 +3169,7 @@ RapidContext.Widget.TextArea = function (attrs/*, ...*/) {
     o.onfocus = focusHandler;
     o.onblur = focusHandler;
     return o;
-}
+};
 
 /**
  * Updates the widget or HTML DOM node attributes.
@@ -3196,14 +3196,14 @@ RapidContext.Widget.TextArea.prototype.setAttrs = function (attrs) {
     }
     MochiKit.DOM.updateNodeAttributes(this, attrs);
     this._render();
-}
+};
 
 /**
  * Resets the text area form value to the initial value.
  */
 RapidContext.Widget.TextArea.prototype.reset = function () {
     this.setAttrs({ value: this.defaultValue });
-}
+};
 
 /**
  * Returns the text area value. This function is slightly different
@@ -3234,7 +3234,7 @@ RapidContext.Widget.TextArea.prototype.getValue = function () {
         this.value = str;
     }
     return str;
-}
+};
 
 /**
  * Handles focus and blur events for this widget.
@@ -3251,7 +3251,7 @@ RapidContext.Widget.TextArea.prototype._handleFocus = function (evt) {
         this.storedValue = str;
     }
     this._render();
-}
+};
 
 /**
  * Updates the display of the widget content.
@@ -3266,7 +3266,7 @@ RapidContext.Widget.TextArea.prototype._render = function () {
         this.value = str;
         this.removeClass("widgetTextAreaHelp");
     }
-}
+};
 
 /**
  * Creates a new text field widget.
@@ -3316,7 +3316,7 @@ RapidContext.Widget.TextField = function (attrs/*, ...*/) {
     o.onfocus = focusHandler;
     o.onblur = focusHandler;
     return o;
-}
+};
 
 /**
  * Updates the widget or HTML DOM node attributes.
@@ -3341,14 +3341,14 @@ RapidContext.Widget.TextField.prototype.setAttrs = function (attrs) {
     }
     this._render();
     MochiKit.DOM.updateNodeAttributes(this, attrs);
-}
+};
 
 /**
  * Resets the text area form value to the initial value.
  */
 RapidContext.Widget.TextField.prototype.reset = function () {
     this.setAttrs({ value: this.defaultValue });
-}
+};
 
 /**
  * Returns the text field value. This function is slightly different
@@ -3365,7 +3365,7 @@ RapidContext.Widget.TextField.prototype.reset = function () {
  */
 RapidContext.Widget.TextField.prototype.getValue = function () {
     return (this.focused) ? this.value : this.storedValue;
-}
+};
 
 /**
  * Returns (or creates) a popup for this text field. The popup will
@@ -3393,7 +3393,7 @@ RapidContext.Widget.TextField.prototype.popup = function (create) {
         MochiKit.Signal.connect(popup, "onclick", this, "_handleClick");
     }
     return (this._popupCreated) ? this.nextSibling : null;
-}
+};
 
 /**
  * Shows a popup for the text field containing the specified items.
@@ -3425,7 +3425,7 @@ RapidContext.Widget.TextField.prototype.showPopup = function (attrs, items) {
         popup.setAttrs(MochiKit.Base.update({ delay: 30000 }, attrs));
         popup.show();
     }
-}
+};
 
 /**
  * Handles focus and blur events for this widget.
@@ -3445,7 +3445,7 @@ RapidContext.Widget.TextField.prototype._handleFocus = function (evt) {
         }
     }
     this._render();
-}
+};
 
 /**
  * Handles the key down event for the text field.
@@ -3490,7 +3490,7 @@ RapidContext.Widget.TextField.prototype._handleKeyDown = function (evt) {
             }
         }
     }
-}
+};
 
 /**
  * Handles the mouse click event on the popup.
@@ -3501,7 +3501,7 @@ RapidContext.Widget.TextField.prototype._handleClick = function (evt) {
     this.blur();
     this.focus();
     RapidContext.Widget.emitSignal(this, "onpopupselect");
-}
+};
 
 /**
  * Updates the display of the widget content.
@@ -3516,7 +3516,7 @@ RapidContext.Widget.TextField.prototype._render = function () {
         this.value = str;
         this.removeClass("widgetTextFieldHelp");
     }
-}
+};
 
 /**
  * Creates a new tree widget.
@@ -3541,7 +3541,7 @@ RapidContext.Widget.Tree = function (attrs/*, ...*/) {
     o.selectedPath = null;
     o.addAll(MochiKit.Base.extend(null, arguments, 1));
     return o;
-}
+};
 
 /**
  * Adds a single child tree node widget to this widget.
@@ -3553,7 +3553,7 @@ RapidContext.Widget.Tree.prototype.addChildNode = function (child) {
         throw new Error("Tree widget can only have TreeNode children");
     }
     this.appendChild(child);
-}
+};
 
 /**
  * Removes all tree nodes that are marked as unmodified. When adding
@@ -3572,7 +3572,7 @@ RapidContext.Widget.Tree.prototype.removeAllMarked = function () {
             children[i].removeAllMarked();
         }
     }
-}
+};
 
 /**
  * Marks all tree nodes as unmodified. When adding or updating nodes,
@@ -3587,7 +3587,7 @@ RapidContext.Widget.Tree.prototype.markAll = function () {
     for (var i = 0; i < children.length; i++) {
         children[i].markAll();
     }
-}
+};
 
 /**
  * Finds a root tree node with the specified name.
@@ -3605,7 +3605,7 @@ RapidContext.Widget.Tree.prototype.findRoot = function (name) {
         }
     }
     return null;
-}
+};
 
 /**
  * Searches for a tree node from the specified path.
@@ -3625,7 +3625,7 @@ RapidContext.Widget.Tree.prototype.findByPath = function (path) {
     } else {
         return null;
     }
-}
+};
 
 /**
  * Returns the currently selected tree node.
@@ -3639,7 +3639,7 @@ RapidContext.Widget.Tree.prototype.selectedChild = function () {
     } else {
         return this.findByPath(this.selectedPath);
     }
-}
+};
 
 /**
  * Sets the currently selected node in the tree. This method is only
@@ -3659,7 +3659,7 @@ RapidContext.Widget.Tree.prototype._handleSelect = function (node) {
         this.selectedPath = node.path();
         RapidContext.Widget.emitSignal(this, "onselect", node);
     }
-}
+};
 
 /**
  * Emits a signal when a node has been expanded or collapsed.
@@ -3668,7 +3668,7 @@ RapidContext.Widget.Tree.prototype._handleSelect = function (node) {
  */
 RapidContext.Widget.Tree.prototype._emitExpand = function (node) {
     RapidContext.Widget.emitSignal(this, "onexpand", node);
-}
+};
 
 /**
  * Recursively expands all nodes. If a depth is specified,
@@ -3684,7 +3684,7 @@ RapidContext.Widget.Tree.prototype.expandAll = function (depth) {
     for (var i = 0; depth > 0 && i < children.length; i++) {
         children[i].expandAll(depth - 1);
     }
-}
+};
 
 /**
  * Recursively collapses all nodes. If a depth is specified, only
@@ -3700,7 +3700,7 @@ RapidContext.Widget.Tree.prototype.collapseAll = function (depth) {
     for (var i = 0; i < children.length; i++) {
         children[i].collapseAll(depth - 1);
     }
-}
+};
 
 /**
  * Adds a path to the tree as a recursive list of child nodes. If
@@ -3731,7 +3731,7 @@ RapidContext.Widget.Tree.prototype.addPath = function (path) {
         node = child;
     }
     return node;
-}
+};
 
 /**
  * Creates a new tree node widget.
@@ -3769,7 +3769,7 @@ RapidContext.Widget.TreeNode = function (attrs/*, ...*/) {
     icon.onclick = RapidContext.Widget._eventHandler("TreeNode", "toggle");
     div.onclick = RapidContext.Widget._eventHandler("TreeNode", "select");
     return o;
-}
+};
 
 /**
  * Returns and/or creates the child container DOM node. If a child
@@ -3793,7 +3793,7 @@ RapidContext.Widget.TreeNode.prototype._container = function (create) {
     } else {
         return null;
     }
-}
+};
 
 /**
  * Updates the widget or HTML DOM node attributes.
@@ -3850,7 +3850,7 @@ RapidContext.Widget.TreeNode.prototype.setAttrs = function (attrs) {
         this.firstChild.title = locals.tooltip;
     }
     MochiKit.DOM.updateNodeAttributes(this, attrs);
-}
+};
 
 /**
  * Returns an array with all child tree node widgets. Note that the
@@ -3865,7 +3865,7 @@ RapidContext.Widget.TreeNode.prototype.getChildNodes = function () {
     } else {
         return MochiKit.Base.extend([], container.childNodes);
     }
-}
+};
 
 /**
  * Adds a single child tree node widget to this widget.
@@ -3877,7 +3877,7 @@ RapidContext.Widget.TreeNode.prototype.addChildNode = function (child) {
         throw new Error("TreeNode widget can only have TreeNode children");
     }
     this._container(true).appendChild(child);
-}
+};
 
 /**
  * Removes a single child tree node widget from this widget.
@@ -3889,7 +3889,7 @@ RapidContext.Widget.TreeNode.prototype.removeChildNode = function (child) {
     if (container != null) {
         container.removeChild(child);
     }
-}
+};
 
 /**
  * Removes all tree nodes that are marked as unmodified. When adding
@@ -3908,7 +3908,7 @@ RapidContext.Widget.TreeNode.prototype.removeAllMarked = function () {
             children[i].removeAllMarked();
         }
     }
-}
+};
 
 /**
  * Marks all tree nodes as unmodified. When adding or updating nodes,
@@ -3924,7 +3924,7 @@ RapidContext.Widget.TreeNode.prototype.markAll = function () {
     for (var i = 0; i < children.length; i++) {
         children[i].markAll();
     }
-}
+};
 
 /**
  * Checks if this node is a folder.
@@ -3934,7 +3934,7 @@ RapidContext.Widget.TreeNode.prototype.markAll = function () {
  */
 RapidContext.Widget.TreeNode.prototype.isFolder = function () {
     return this._container() != null;
-}
+};
 
 /**
  * Checks if this folder node is expanded.
@@ -3946,7 +3946,7 @@ RapidContext.Widget.TreeNode.prototype.isExpanded = function () {
     var container = this._container();
     return container != null &&
            !MochiKit.DOM.hasElementClass(container, "widgetHidden");
-}
+};
 
 /**
  * Checks if this node is selected.
@@ -3956,7 +3956,7 @@ RapidContext.Widget.TreeNode.prototype.isExpanded = function () {
  */
 RapidContext.Widget.TreeNode.prototype.isSelected = function () {
     return MochiKit.DOM.hasElementClass(this.firstChild, "selected");
-}
+};
 
 /**
  * Returns the ancestor tree widget.
@@ -3974,7 +3974,7 @@ RapidContext.Widget.TreeNode.prototype.tree = function () {
     } else {
         return null;
     }
-}
+};
 
 /**
  * Returns the parent tree node widget.
@@ -3989,7 +3989,7 @@ RapidContext.Widget.TreeNode.prototype.parent = function () {
     } else {
         return null;
     }
-}
+};
 
 /**
  * Returns the path to this tree node.
@@ -4005,7 +4005,7 @@ RapidContext.Widget.TreeNode.prototype.path = function () {
         path.push(this.name);
         return path;
     }
-}
+};
 
 /**
  * Finds a child tree node with the specified name.
@@ -4023,7 +4023,7 @@ RapidContext.Widget.TreeNode.prototype.findChild = function (name) {
         }
     }
     return null;
-}
+};
 
 /**
  * Searches for a descendant tree node from the specified path.
@@ -4040,7 +4040,7 @@ RapidContext.Widget.TreeNode.prototype.findByPath = function (path) {
         node = node.findChild(path[i]);
     }
     return node;
-}
+};
 
 /**
  * Selects this tree node.
@@ -4052,7 +4052,7 @@ RapidContext.Widget.TreeNode.prototype.select = function () {
         tree._handleSelect(this);
     }
     this.expand();
-}
+};
 
 /**
  * Unselects this tree node.
@@ -4065,7 +4065,7 @@ RapidContext.Widget.TreeNode.prototype.unselect = function () {
             tree._handleSelect(null);
         }
     }
-}
+};
 
 /**
  * Expands this node to display any child nodes. If the parent node
@@ -4086,7 +4086,7 @@ RapidContext.Widget.TreeNode.prototype.expand = function () {
             tree._emitExpand(this);
         }
     }
-}
+};
 
 /**
  * Recursively expands this node and all its children. If a depth is
@@ -4103,7 +4103,7 @@ RapidContext.Widget.TreeNode.prototype.expandAll = function (depth) {
     for (var i = 0; depth > 0 && i < children.length; i++) {
         children[i].expandAll(depth - 1);
     }
-}
+};
 
 /**
  * Collapses this node to hide any child nodes.
@@ -4119,7 +4119,7 @@ RapidContext.Widget.TreeNode.prototype.collapse = function () {
             tree._emitExpand(this);
         }
     }
-}
+};
 
 /**
  * Recursively collapses this node and all its children. If a depth
@@ -4138,7 +4138,7 @@ RapidContext.Widget.TreeNode.prototype.collapseAll = function (depth) {
     for (var i = 0; i < children.length; i++) {
         children[i].collapseAll(depth - 1);
     }
-}
+};
 
 /**
  * Toggles expand and collapse for this node.
@@ -4152,7 +4152,7 @@ RapidContext.Widget.TreeNode.prototype.toggle = function (evt) {
     } else {
         this.expand();
     }
-}
+};
 
 /**
  * Creates a new wizard widget.
@@ -4215,7 +4215,7 @@ RapidContext.Widget.Wizard = function (attrs/*, ... */) {
     o._updateStatus();
     o.addAll(MochiKit.Base.extend(null, arguments, 1));
     return o;
-}
+};
 
 /**
  * Returns an array with all child pane widgets. Note that the array
@@ -4225,7 +4225,7 @@ RapidContext.Widget.Wizard = function (attrs/*, ... */) {
  */
 RapidContext.Widget.Wizard.prototype.getChildNodes = function () {
     return MochiKit.Base.extend([], this.childNodes, 2);
-}
+};
 
 /**
  * Adds a single child page widget to this widget. The child widget
@@ -4249,7 +4249,7 @@ RapidContext.Widget.Wizard.prototype.addChildNode = function (child) {
     } else {
         this._updateStatus();
     }
-}
+};
 
 // TODO: handle removes by possibly selecting new page...
 
@@ -4295,7 +4295,7 @@ RapidContext.Widget.Wizard.prototype._updateStatus = function () {
     bDone.disabled = !status.next;
     info = MochiKit.DOM.SPAN({ "class": "widgetWizardInfo" }, info);
     MochiKit.DOM.replaceChildNodes(h3, icon, title, info);
-}
+};
 
 /**
  * Returns the active page.
@@ -4309,7 +4309,7 @@ RapidContext.Widget.Wizard.prototype.activePage = function () {
     } else {
         return null;
     }
-}
+};
 
 /**
  * Returns the active page index.
@@ -4319,7 +4319,7 @@ RapidContext.Widget.Wizard.prototype.activePage = function () {
  */
 RapidContext.Widget.Wizard.prototype.activePageIndex = function () {
     return this._selectedIndex;
-}
+};
 
 /**
  * Activates a new page.
@@ -4355,15 +4355,15 @@ RapidContext.Widget.Wizard.prototype.activatePage = function (indexOrPage) {
         var cleanup = function () {
             oldPage.hide();
             MochiKit.Style.setElementPosition(oldPage, { x: 0 });
-        }
+        };
         var opts = { duration: 0.5, x: -offset, afterFinish: cleanup };
         MochiKit.Visual.Move(oldPage, opts);
         MochiKit.Visual.Move(page, opts);
     } else {
         page._handleEnter({ validateReset: true });
     }
-        RapidContext.Widget.emitSignal(this, "onchange", index, page);
-}
+    RapidContext.Widget.emitSignal(this, "onchange", index, page);
+};
 
 /**
  * Cancels the active page operation. This method will also reset
@@ -4373,7 +4373,7 @@ RapidContext.Widget.Wizard.prototype.cancel = function () {
     var page = this.activePage();
     page.setAttrs({ pageStatus: RapidContext.Widget.Pane.ANY });
     RapidContext.Widget.emitSignal(this, "oncancel");
-}
+};
 
 /**
  * Moves the wizard backward to the previous page.
@@ -4382,7 +4382,7 @@ RapidContext.Widget.Wizard.prototype.previous = function () {
     if (this._selectedIndex > 0) {
         this.activatePage(this._selectedIndex - 1);
     }
-}
+};
 
 /**
  * Moves the wizard forward to the next page. The page will not be
@@ -4392,7 +4392,7 @@ RapidContext.Widget.Wizard.prototype.next = function () {
     if (this._selectedIndex < this.getChildNodes().length - 1) {
         this.activatePage(this._selectedIndex + 1);
     }
-}
+};
 
 /**
  * Sends the wizard onclose signal when the user presses the finish
@@ -4407,7 +4407,7 @@ RapidContext.Widget.Wizard.prototype.done = function () {
         }
     }
     RapidContext.Widget.emitSignal(this, "onclose");
-}
+};
 
 /**
  * Resizes the current wizard page. This method need not be called
@@ -4420,7 +4420,7 @@ RapidContext.Widget.Wizard.prototype.resizeContent = function () {
     if (page != null) {
         RapidContext.Util.resizeElements(page);
     }
-}
+};
 
 
 /**

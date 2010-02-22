@@ -36,7 +36,7 @@ RapidContext.Procedure = function (name) {
     this.name = name;
     this.arguments = null;
     this._deferred = null;
-}
+};
 
 /**
  * Creates a new procedure caller for each key-value-pair in the specified
@@ -52,7 +52,7 @@ RapidContext.Procedure.mapAll = function (obj) {
         res[k] = new RapidContext.Procedure(obj[k]);
     }
     return res;
-}
+};
 
 /**
  * Emitted when the procedure is called. Each call corresponds to exactly one
@@ -118,7 +118,7 @@ RapidContext.Procedure.mapAll = function (obj) {
 RapidContext.Procedure.prototype.call = function (/*...*/) {
     this.arguments = MochiKit.Base.extend(null, arguments);
     return this.recall();
-}
+};
 
 /**
  * Calls the procedure with the same arguments as used in the last call. The
@@ -139,7 +139,7 @@ RapidContext.Procedure.prototype.recall = function () {
     this._deferred = RapidContext.App.callProc(this.name, this.arguments);
     this._deferred.addBoth(MochiKit.Base.bind("_callback", this));
     return this._deferred;
-}
+};
 
 /**
  * The procedure deferred callback handler. Dispatches the appropriate signals
@@ -158,7 +158,7 @@ RapidContext.Procedure.prototype._callback = function (res) {
         MochiKit.Signal.signal(this, "onsuccess", res);
     }
     return res;
-}
+};
 
 /**
  * Cancels any current execution of this procedure. This method does nothing if
@@ -171,7 +171,7 @@ RapidContext.Procedure.prototype.cancel = function () {
     } else {
         return false;
     }
-}
+};
 
 /**
  * Cancels any current execution and removes the reference to the arguments of
@@ -180,4 +180,4 @@ RapidContext.Procedure.prototype.cancel = function () {
 RapidContext.Procedure.prototype.reset = function () {
     this.cancel();
     this.arguments = null;
-}
+};

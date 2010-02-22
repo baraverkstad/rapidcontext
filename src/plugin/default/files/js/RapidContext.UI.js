@@ -54,7 +54,7 @@ RapidContext.UI.showError = function () {
     }
     alert("Error: " + msg);
     return arguments[arguments.length - 1];
-}
+};
 
 /**
  * Creates a tree of widgets from a parsed XML document. This
@@ -92,7 +92,7 @@ RapidContext.UI.buildUI = function (node, ids) {
     }
     // TODO: handling of CDATA nodes to escape text?
     return null;
-}
+};
 
 /**
  * Creates a widget from a parsed XML element. This function will
@@ -158,7 +158,7 @@ RapidContext.UI._buildUIElem = function (node, ids) {
         }
     }
     return widget;
-}
+};
 
 /**
  * Connects the default UI signals for a procedure. This includes a default
@@ -181,4 +181,4 @@ RapidContext.UI.connectProc = function (proc, loadingIcon, reloadIcon) {
         MochiKit.Signal.connect(proc, "onresponse", reloadIcon, "show");
         MochiKit.Signal.connect(reloadIcon, "onclick", proc, "recall");
     }
-}
+};

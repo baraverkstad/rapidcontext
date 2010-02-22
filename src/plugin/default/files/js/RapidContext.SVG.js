@@ -185,7 +185,7 @@ RapidContext.SVG.moveToTop = function (node) {
             parent.appendChild(node);
         }
     }
-}
+};
 
 /**
  * Moves a node to the bottom of the SVG drawing order (i.e. z-index).
@@ -203,7 +203,7 @@ RapidContext.SVG.moveToBottom = function (node) {
             parent.insertBefore(node, parent.firstChild);
         }
     }
-}
+};
 
 /**
  * Adds a rotation transform to a SVG DOM node. Any previous
@@ -225,4 +225,4 @@ RapidContext.SVG.rotate = function (node, angle, x, y) {
     }
     str += "rotate(" + angle + "," + x + "," + y + ")";
     MochiKit.DOM.setNodeAttribute(node, "transform", str);
-}
+};

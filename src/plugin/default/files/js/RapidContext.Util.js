@@ -41,7 +41,7 @@ RapidContext.Util._logOnce = function(level, message) {
         func.loggedMsg[message] = true
         MochiKit.Logging.logger.baseLog(level, message);
     }
-}
+};
 
 /**
  * Checks if the specified value corresponds to false. This function
@@ -60,7 +60,7 @@ RapidContext.Util.isFalse = function (value) {
               "MochiKit.Base.bool instead.";
     RapidContext.Util._logOnce('DEBUG', msg);
     return !MochiKit.Base.bool(value);
-}
+};
 
 /**
  * Returns the first function argument that is not undefined.
@@ -77,7 +77,7 @@ RapidContext.Util.defaultValue = function (/* ... */) {
         }
     }
     return undefined;
-}
+};
 
 /**
  * Creates a dictionary object from a list of keys and values. It
@@ -121,7 +121,7 @@ RapidContext.Util.dict = function (itemsOrKeys, values) {
         }
     }
     return o;
-}
+};
 
 /**
  * Creates a new object by copying keys and values from another
@@ -157,7 +157,7 @@ RapidContext.Util.select = function (src, keys) {
         }
     }
     return res;
-}
+};
 
 /**
  * Filters an object by removing a list of keys. A list of key names
@@ -195,7 +195,7 @@ RapidContext.Util.mask = function (src, keys) {
         }
     }
     return res;
-}
+};
 
 /**
  * Returns a truncated copy of a string or an array. If the string
@@ -217,7 +217,7 @@ RapidContext.Util.truncate = function (obj, maxLength, tail) {
               "MochiKit.Text.truncate instead.";
     RapidContext.Util._logOnce('DEBUG', msg);
     return MochiKit.Text.truncate(obj, maxLength, tail);
-}
+};
 
 /**
  * Converts a string to a title-cased string, i.e. all words are
@@ -242,7 +242,7 @@ RapidContext.Util.toTitleCase = function (str) {
         str = str.charAt(0).toUpperCase() + str.substring(1);
     }
     return str;
-}
+};
 
 /**
  * Finds the index of an object in a list having a specific property
@@ -271,7 +271,7 @@ RapidContext.Util.findProperty = function (lst, key, value, start, end) {
         }
     }
     return -1;
-}
+};
 
 /**
  * Returns the name of a function. This is often useful for debugging
@@ -294,7 +294,7 @@ RapidContext.Util.functionName = function (func) {
     } else {
         return func.NAME;
     }
-}
+};
 
 /**
  * Registers function names for debugging or logging. This is useful
@@ -333,7 +333,7 @@ RapidContext.Util.registerFunctionNames = function (obj, name, stack) {
        RapidContext.Util.registerFunctionNames(obj.prototype, str, stack);
        stack.pop();
    }
-}
+};
 
 /**
  * Returns the current execution stack trace. The stack trace is an
@@ -378,7 +378,7 @@ RapidContext.Util.stackTrace = function (maxDepth) {
         func = func.caller;
     }
     return res;
-}
+};
 
 /**
  * Injects a stack trace for a function. This method is useful for
@@ -399,7 +399,7 @@ RapidContext.Util.injectStackTrace = function (stackTrace, func) {
             delete func.$stackTrace;
         }
     }
-}
+};
 
 /**
  * Resolves a relative URI to an absolute URI. This function will
@@ -435,7 +435,7 @@ RapidContext.Util.resolveURI = function (uri, base) {
         base = base.substring(0, pos + 1);
         return base + uri;
     }
-}
+};
 
 /**
  * Formats a number using two digits, i.e. pads with a leading zero
@@ -489,7 +489,7 @@ RapidContext.Util.TimePeriod = function (millis) {
         seconds: Math.floor(millis / RapidContext.Util.MILLIS_PER_SECOND) % 60,
         millis: millis % 1000
     };
-}
+};
 
 /**
  * Converts a number of milliseconds to an approximate time period.
@@ -514,7 +514,7 @@ RapidContext.Util.toApproxPeriod = function (millis) {
     } else {
         return p.millis + " milliseconds";
     }
-}
+};
 
 
 // DOM utility functions
@@ -541,7 +541,7 @@ RapidContext.Util.isDOM = function (obj) {
     return obj != null &&
            typeof(obj.nodeType) === "number" &&
            obj.nodeType > 0;
-}
+};
 
 /**
  * Returns true if the specified object looks like an HTML or XHTML
@@ -558,7 +558,7 @@ RapidContext.Util.isHTML = function (obj) {
     var ns = RapidContext.Util.NS.HTML;
     return RapidContext.Util.isDOM(obj) &&
            MochiKit.Base.findIdentical(ns, obj.namespaceURI) >= 0;
-}
+};
 
 /**
  * Creates a programmers debug representation of a DOM node. This
@@ -595,7 +595,7 @@ RapidContext.Util.reprDOM = function (node) {
     } else {
         return node.toString();
     }
-}
+};
 
 /**
  * Returns an array with DOM node attribute name and value pairs.
@@ -617,7 +617,7 @@ RapidContext.Util.attributeArray = function (node) {
         }
     }
     return res;
-}
+};
 
 /**
  * Returns an immediate child node from a parent DOM node. This
@@ -646,7 +646,7 @@ RapidContext.Util.childNode = function (parent, indexOrNode) {
         }
         return (node == null || node === parent) ? null : node;
     }
-}
+};
 
 /**
  * Creates a DOM node with a namespace.
@@ -665,7 +665,7 @@ RapidContext.Util.createDOMExt = function (ns, tag, attrs/*, ...*/) {
     var children = MochiKit.Base.extend([], arguments, 3);
     MochiKit.DOM.appendChildNodes(node, children);
     return node;
-}
+};
 
 /**
  * Creates a DOM text node from the specified text. This is a
@@ -678,7 +678,7 @@ RapidContext.Util.createDOMExt = function (ns, tag, attrs/*, ...*/) {
  */
 RapidContext.Util.createTextNode = function (text) {
     return MochiKit.DOM.currentDocument().createTextNode(text);
-}
+};
 
 /**
  * Returns a function for creating a specific kind of DOM nodes. The
@@ -714,7 +714,7 @@ RapidContext.Util.createDOMFuncExt = function (ns, tag, args, attrs/*, ...*/) {
         MochiKit.Base.extend(myChildren, arguments, args.length + 1);
         return RapidContext.Util.createDOMExt(ns, tag, myAttrs, myChildren);
     }
-}
+};
 
 /**
  * Returns the scroll offset for an HTML DOM node.
@@ -729,7 +729,7 @@ RapidContext.Util.getScrollOffset = function (node) {
     var x = node.scrollLeft || 0;
     var y = node.scrollTop || 0;
     return new MochiKit.Style.Coordinates(x, y);
-}
+};
 
 /**
  * Sets the scroll offset for an HTML DOM node.
@@ -742,7 +742,7 @@ RapidContext.Util.setScrollOffset = function (node, offset) {
     node = MochiKit.DOM.getElement(node);
     node.scrollLeft = offset.x;
     node.scrollTop = offset.y;
-}
+};
 
 /**
  * Resets the scroll offsets to zero for for an HTML DOM node.
@@ -765,7 +765,7 @@ RapidContext.Util.resetScrollOffset = function (node, recursive) {
             node = node.nextSibling;
         }
     }
-}
+};
 
 /**
  * Adjusts the scroll offsets for an HTML DOM node to ensure optimal
@@ -797,7 +797,7 @@ RapidContext.Util.adjustScrollOffset = function (node, box) {
     if (!isNaN(yMin) && node.scrollTop > yMin) {
         node.scrollTop = yMin;
     }
-}
+};
 
 /**
  * Returns the margin sizes for an HTML DOM node. The margin sizes
@@ -815,7 +815,7 @@ RapidContext.Util.getMarginBox = function (node) {
              b: px(getStyle(node, "margin-bottom")),
              l: px(getStyle(node, "margin-left")),
              r: px(getStyle(node, "margin-right")) };
-}
+};
 
 /**
  * Returns the border widths for an HTML DOM node. The widths for
@@ -833,7 +833,7 @@ RapidContext.Util.getBorderBox = function (node) {
              b: px(getStyle(node, "border-width-bottom")),
              l: px(getStyle(node, "border-width-left")),
              r: px(getStyle(node, "border-width-right")) };
-}
+};
 
 /**
  * Returns the padding sizes for an HTML DOM node. The sizes for all
@@ -851,7 +851,7 @@ RapidContext.Util.getPaddingBox = function (node) {
              b: px(getStyle(node, "padding-bottom")),
              l: px(getStyle(node, "padding-left")),
              r: px(getStyle(node, "padding-right")) };
-}
+};
 
 /**
  * Converts a style pixel value to the corresponding integer. If the
@@ -872,7 +872,7 @@ RapidContext.Util.toPixels = function (value) {
         }
     }
     return (value == null || isNaN(value)) ? null : value;
-}
+};
 
 /**
  * Blurs (unfocuses) a specified DOM node and all relevant child
@@ -893,7 +893,7 @@ RapidContext.Util.blurAll = function (node) {
             }
         }
     }
-}
+};
 
 /**
  * Registers algebraic constraints for an element width, height and
@@ -946,7 +946,7 @@ RapidContext.Util.registerSizeConstraints = function (node, width, height, aspec
         var code = "return " + aspect.replace(/%/g, "*0.01*w/h") + ";";
         sc.a = new Function("w", "h", code);
     }
-}
+};
 
 /**
  * Resizes a list of DOM nodes using their parent element sizes and
@@ -987,7 +987,7 @@ RapidContext.Util.resizeElements = function (/* ... */) {
             }
         }
     }
-}
+};
 
 /**
  * Evaluates the size constraint functions with a refeence dimension
@@ -1047,4 +1047,4 @@ RapidContext.Util._evalConstraints = function (sc, ref) {
         h = Math.floor(h);
     }
     return new MochiKit.Style.Dimensions(w, h);
-}
+};
