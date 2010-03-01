@@ -862,7 +862,7 @@ RapidContext.Widget.Field.prototype.setAttrs = function (attrs) {
     }
     if (typeof(locals.value) != "undefined") {
         var str = this.value = locals.value;
-        if (str == null || str == "") {
+        if (str == null || str === "") {
             str = "";
         } else if (this.format) {
             str = MochiKit.Text.format(this.format, str);
