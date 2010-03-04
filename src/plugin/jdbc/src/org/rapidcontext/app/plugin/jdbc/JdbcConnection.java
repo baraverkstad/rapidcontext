@@ -18,6 +18,8 @@
 
 package org.rapidcontext.app.plugin.jdbc;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.sql.Connection;
 import java.sql.Driver;
@@ -453,6 +455,7 @@ public class JdbcConnection implements AdapterConnection {
 
         boolean  flagColumnNames = hasFlag(flags, "column-names", true);
         boolean  flagNativeTypes = hasFlag(flags, "native-types", true);
+        boolean  flagBinaryData = hasFlag(flags, "binary-data", false);
         boolean  flagSingleRow = hasFlag(flags, "single-row", false);
         int      colCount;
         Data     rows = new Data(10);
@@ -464,7 +467,7 @@ public class JdbcConnection implements AdapterConnection {
             while (rs.next()) {
                 obj = flagColumnNames ? new Data() : new Data(colCount);
                 for (int i = 0; i < colCount; i++) {
-                    value = createValue(meta, rs, i + 1, flagNativeTypes);
+                    value = createValue(meta, rs, i + 1, flagNativeTypes, flagBinaryData);
                     if (flagColumnNames) {
                         obj.add(meta.getColumnLabel(i + 1).toLowerCase(), value);
                     } else {
@@ -495,12 +498,15 @@ public class JdbcConnection implements AdapterConnection {
      * Converts a specific row column value to a scriptable object. Normally
      * this means returning a simple string containing the value. If the native
      * types flag is set, SQL types will be converted into their native Java
-     * object types by the JDBC driver.
+     * object types by the JDBC driver. If the binary data flag is set, any
+     * binary data will be returned in a byte[] instead of converted to a
+     * string.
      *
      * @param meta           the result set meta-data
      * @param rs             the result set to convert
      * @param column         the column index
      * @param nativeTypes    the native value types flag
+     * @param binaryData     the binary data support flag
      *
      * @return the scriptable object with the column value
      *
@@ -509,7 +515,8 @@ public class JdbcConnection implements AdapterConnection {
     protected Object createValue(ResultSetMetaData meta,
                                  ResultSet rs,
                                  int column,
-                                 boolean nativeTypes)
+                                 boolean nativeTypes,
+                                 boolean binaryData)
         throws AdapterException {
 
         try {
@@ -523,6 +530,22 @@ public class JdbcConnection implements AdapterConnection {
                     //       dates being '0000-00-00' and such
                     return null;
                 }
+            case Types.BINARY:
+            case Types.BLOB:
+            case Types.LONGVARBINARY:
+            case Types.VARBINARY:
+                if (binaryData) {
+                    ByteArrayOutputStream os = new ByteArrayOutputStream();
+                    InputStream is = rs.getBinaryStream(column);
+                    int count;
+                    byte[] buffer = new byte[16384];
+                    while ((count = is.read(buffer)) > 0 && os.size() < 1000000) {
+                        os.write(buffer, 0, count);
+                    }
+                    return os.toByteArray();
+                } else {
+                    return rs.getString(column);
+                }
             default:
                 if (nativeTypes) {
                     Object value = rs.getObject(column);
@@ -531,7 +554,7 @@ public class JdbcConnection implements AdapterConnection {
                     return rs.getString(column);
                 }
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new AdapterException("failed to extract query result value " +
                                        "for column " + column + ": " +
                                        e.getMessage());
