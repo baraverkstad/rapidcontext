@@ -101,7 +101,7 @@ AdminApplet.prototype.start = function () {
     }
 
     // Initialize data
-    this.proc.appletList.call();
+    this.proc.appletList();
     this._showProcedure();
     this._stopBatch();
 }
@@ -140,7 +140,7 @@ AdminApplet.prototype._launchApplet = function () {
  */
 AdminApplet.prototype.loadPlugins = function () {
     MochiKit.Signal.disconnectAll(this.ui.pluginTab, "onenter");
-    return this.proc.plugInList.call();
+    return this.proc.plugInList();
 }
 
 /**
@@ -951,7 +951,7 @@ AdminApplet.prototype._callbackBatch = function (res) {
  */
 AdminApplet.prototype.loadUsers = function () {
     MochiKit.Signal.disconnectAll(this.ui.userTab, "onenter");
-    this.proc.userList.call();
+    this.proc.userList();
 }
 
 /**
@@ -982,13 +982,13 @@ AdminApplet.prototype._editUser = function () {
 AdminApplet.prototype._saveUser = function () {
     var data = this.ui.userForm.valueMap();
     if (this.ui.userForm.validate()) {
-        this.proc.userChange.call(data.name,
-                                  data.description,
-                                  data.enabled ? "1" : "0",
-                                  data.password,
-                                  data.ntlmUser,
-                                  data.ntlmDomain,
-                                  data.roles);
+        this.proc.userChange(data.name,
+                             data.description,
+                             data.enabled ? "1" : "0",
+                             data.password,
+                             data.ntlmUser,
+                             data.ntlmDomain,
+                             data.roles);
     }
 }
 

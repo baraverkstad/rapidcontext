@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2009 Per Cederberg.
+ * Copyright (c) 2009-2010 Per Cederberg.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -19,23 +19,31 @@ if (typeof(RapidContext) == "undefined") {
 }
 
 /**
- * Creates a new procedure caller. This class provides a simplified way of
- * calling a procedure and connecting with UI elements through signals. This
- * function can be called either as a plain function or as a constructor with
- * identical results.
+ * Creates a new procedure caller function. The returned function provides a
+ * simplified way of calling a procedure and connecting with UI elements
+ * through signals. The actual call is performed with the arguments supplied,
+ * just as a normal function. But the call is asynchronous, so only a deferred
+ * object will be returned and results are best collected through the
+ * "onsuccess" signal. Differing from normal functions, the returned function
+ * will ensure that only a single call is in progress at any time,
+ * automatically cancelling any previous call if needed.
  *
  * @constructor
- * @param {String} name the procedure name
- * @property {String} name The procedure name.
+ * @param {String} procedure the procedure name
+ * @property {String} procedure The procedure name.
  * @property {Array} arguments The arguments used in the last call.
  */
-RapidContext.Procedure = function (name) {
-    if (!(this instanceof arguments.callee)) {
-        return new arguments.callee(name);
+RapidContext.Procedure = function (procedure) {
+    var proc = function () {
+        var self = arguments.callee;
+        self.arguments = MochiKit.Base.extend(null, arguments);
+        return self.recall();
     }
-    this.name = name;
-    this.arguments = null;
-    this._deferred = null;
+    MochiKit.Base.setdefault(proc, RapidContext.Procedure.prototype);
+    proc.procedure = procedure;
+    proc.arguments = null;
+    proc._deferred = null;
+    return proc;
 };
 
 /**
@@ -104,23 +112,6 @@ RapidContext.Procedure.mapAll = function (obj) {
  */
 
 /**
- * Calls the procedure with the specified arguments. The call is asynchronous,
- * so results will not be returned by this method. Instead the results will be
- * available through the "onsuccess" signal, for example. Note that any
- * previously running call will automatically be cancelled, since only a single
- * call can be processed at any time.
- *
- * @param {Object} [...] the procedure call arguments
- *
- * @return {Deferred} a MochiKit.Async.Deferred object that will
- *         callback with the response data or error
- */
-RapidContext.Procedure.prototype.call = function (/*...*/) {
-    this.arguments = MochiKit.Base.extend(null, arguments);
-    return this.recall();
-};
-
-/**
  * Calls the procedure with the same arguments as used in the last call. The
  * call is asynchronous, so results will not be returned by this method.
  * Instead the results will be available through the "onsuccess" signal, for
@@ -132,11 +123,11 @@ RapidContext.Procedure.prototype.call = function (/*...*/) {
  */
 RapidContext.Procedure.prototype.recall = function () {
     if (this.arguments === null) {
-        throw new Error("No arguments supplied for procedure call to " + this.name);
+        throw new Error("No arguments supplied for procedure call to " + this.procedure);
     }
     this.cancel();
     MochiKit.Signal.signal(this, "oncall");
-    this._deferred = RapidContext.App.callProc(this.name, this.arguments);
+    this._deferred = RapidContext.App.callProc(this.procedure, this.arguments);
     this._deferred.addBoth(MochiKit.Base.bind("_callback", this));
     return this._deferred;
 };
