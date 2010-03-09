@@ -31,17 +31,17 @@ if (typeof(RapidContext) == "undefined") {
  * @constructor
  * @param {String} procedure the procedure name
  * @property {String} procedure The procedure name.
- * @property {Array} arguments The arguments used in the last call.
+ * @property {Array} args The arguments used in the last call.
  */
 RapidContext.Procedure = function (procedure) {
     var proc = function () {
         var self = arguments.callee;
-        self.arguments = MochiKit.Base.extend(null, arguments);
+        self.args = MochiKit.Base.extend(null, arguments);
         return self.recall();
     }
     MochiKit.Base.setdefault(proc, RapidContext.Procedure.prototype);
     proc.procedure = procedure;
-    proc.arguments = null;
+    proc.args = null;
     proc._deferred = null;
     return proc;
 };
@@ -68,6 +68,16 @@ RapidContext.Procedure.mapAll = function (obj) {
  * event data will be sent.
  *
  * @name RapidContext.Procedure#oncall
+ * @event
+ */
+
+/**
+ * Emitted if a partial procedure result is available. This event will only be
+ * emitted when performing a multi-call, along with the  "oncall" and
+ * "onresponse" events (for each call). The partial procedure result will be
+ * sent as the event data.
+ *
+ * @name RapidContext.Procedure#onupdate
  * @event
  */
 
@@ -122,12 +132,12 @@ RapidContext.Procedure.mapAll = function (obj) {
  *         callback with the response data or error
  */
 RapidContext.Procedure.prototype.recall = function () {
-    if (this.arguments === null) {
+    if (this.args === null) {
         throw new Error("No arguments supplied for procedure call to " + this.procedure);
     }
     this.cancel();
     MochiKit.Signal.signal(this, "oncall");
-    this._deferred = RapidContext.App.callProc(this.procedure, this.arguments);
+    this._deferred = RapidContext.App.callProc(this.procedure, this.args);
     this._deferred.addBoth(MochiKit.Base.bind("_callback", this));
     return this._deferred;
 };
@@ -152,6 +162,73 @@ RapidContext.Procedure.prototype._callback = function (res) {
 };
 
 /**
+ * Calls the procedure multiple times with different arguments (supplied as
+ * an array of argument arrays). The calls are asynchronous, so results will
+ * not be returned by this method. Instead an array with the results will be
+ * available through the "onupdate" and "onsuccess" signals, for example. Note
+ * that any previously running call will automatically be cancelled, since
+ * only a single call can be processed at any time. A result transform
+ * function can be supplied to transform each individual result or throwing an
+ * exception to omit a particular result.
+ *
+ * @param {Array} args the array of argument arrays
+ * @param {Function} [transform] the optional result transform function
+ *
+ * @return {Deferred} a MochiKit.Async.Deferred object that will
+ *         callback with the response data or error
+ */
+RapidContext.Procedure.prototype.multicall = function (args, transform) {
+    this.cancel();
+    this._mapArgs = args;
+    this._mapPos = 0;
+    this._mapRes = [];
+    this._mapTransform = transform
+    this._nextCall();
+}
+
+/**
+ * The multicall deferred callback handler. Dispatches the appropriate signals
+ * depending on the result.
+ *
+ * @param {Object/Error} res the procedure result object
+ */
+RapidContext.Procedure.prototype._nextCall = function (res) {
+    this._deferred = null;
+    if (typeof(res) != "undefined") {
+        MochiKit.Signal.signal(this, "onresponse", res);
+        if (res instanceof MochiKit.Async.CancelledError) {
+            MochiKit.Signal.signal(this, "oncancel");
+            return res;
+        } else if (res instanceof Error) {
+            MochiKit.Signal.signal(this, "onerror", res);
+            return res;
+        } else {
+            if (this._mapTransform == null) {
+                this._mapRes.push(res);
+            } else {
+                try {
+                    res = this._mapTransform(res);
+                    this._mapRes.push(res);
+                } catch (ignore) {
+                    // Skip results with mapping errors
+                }
+            }
+            MochiKit.Signal.signal(this, "onupdate", this._mapRes);
+        }
+    }
+    if (this._mapPos < this._mapArgs.length) {
+        this.args = this._mapArgs[this._mapPos++];
+        MochiKit.Signal.signal(this, "oncall");
+        this._deferred = RapidContext.App.callProc(this.procedure, this.args);
+        this._deferred.addBoth(MochiKit.Base.bind("_nextCall", this));
+        return this._deferred;
+    } else {
+        MochiKit.Signal.signal(this, "onsuccess", this._mapRes);
+        return this._mapRes;
+    }
+}
+
+/**
  * Cancels any current execution of this procedure. This method does nothing if
  * no procedure call was currently executing.
  */
@@ -170,5 +247,5 @@ RapidContext.Procedure.prototype.cancel = function () {
  */
 RapidContext.Procedure.prototype.reset = function () {
     this.cancel();
-    this.arguments = null;
+    this.args = null;
 };
