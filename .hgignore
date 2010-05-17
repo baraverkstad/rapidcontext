@@ -1,0 +1,36 @@
+syntax: regexp
+^classes/.*$
+
+syntax: regexp
+^doc/LICENSE\.txt$
+syntax: regexp
+^doc/README\.txt$
+syntax: regexp
+^doc/java/.*$
+syntax: regexp
+^doc/js/.*$
+
+syntax: regexp
+^lib/rapidcontext-[0-9.]*\.jar$
+
+syntax: regexp
+^plugins/.*$
+
+syntax: regexp
+^rapidcontext-[0-9.]*\.zip$
+syntax: regexp
+^rapidcontext\.war$
+
+syntax: regexp
+^src/plugin/[a-z0-9_-]*/build\.number$
+syntax: regexp
+^src/plugin/[a-z0-9_-]*/classes/.*$
+syntax: regexp
+^src/plugin/[a-z0-9_-]*/[a-z0-9_-]*-[0-9.]*\.zip$
+syntax: regexp
+^src/plugin/cmdline/lib/cmdline-[0-9.]*\.jar$
+syntax: regexp
+^src/plugin/http/lib/http-[0-9.]*\.jar$
+syntax: regexp
+^src/plugin/jdbc/lib/jdbc-[0-9.]*\.jar$
+
