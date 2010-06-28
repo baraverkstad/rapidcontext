@@ -138,6 +138,10 @@ public class ApplicationContext {
      * Initializes the application context by loading the plug-ins, procedures
      * and the environment configuration. If the context has already been
      * initialized, no action is taken.
+     *
+     * @param baseDir        the base application directory
+     *
+     * @return the application context created or found
      */
     protected static synchronized ApplicationContext init(File baseDir) {
         if (instance == null) {
