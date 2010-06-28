@@ -81,6 +81,10 @@ public class ServerApplication {
      *         zero (0) if none of the suggestions worked
      */
     private static int findAvailablePort() {
+        int port = ApplicationContext.getInstance().getConfig().getInt("port", 0);
+        if (port > 0 && isPortAvailable(port)) {
+            return port;
+        }
         for (int i = 0; i < PORTS.length; i++) {
             if (isPortAvailable(PORTS[i])) {
                 return PORTS[i];
