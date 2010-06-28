@@ -74,7 +74,7 @@ start() {
         # rotate log file
         touch $LOGFILE
         chown -R $USER:$GROUP $VARDIR
-        su -c "$BASEDIR/bin/startserver.sh" - $USER >$LOGFILE 2>&1 &
+        su -s "/bin/sh" -c "$BASEDIR/bin/startserver.sh" - $USER >$LOGFILE 2>&1 &
         sleep 3
         if is_running; then
             echo "OK"
