@@ -25,10 +25,13 @@ if [ $# != 1 ] ; then
     echo $USAGE >&2
     exit 1
 fi
-PROGRAM=`readlink $0`
-if [ "$PROGRAM" = "" ] ; then
-    PROGRAM=$0
-fi
+PROGRAM="$0"
+SYMLINK="$PROGRAM"
+while [ "$SYMLINK" != "" ] ; do
+    cd `dirname $SYMLINK`
+    PROGRAM=`pwd -P`/`basename $SYMLINK`
+    SYMLINK=`readlink $PROGRAM`
+done
 COMMAND="$1"
 
 
