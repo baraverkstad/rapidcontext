@@ -40,8 +40,9 @@ COMMAND="$1"
 #
 cd `dirname $PROGRAM`/..
 BASEDIR=`pwd -P`
-USER=`stat -c %U $BASEDIR`
-GROUP=`stat -c %G $BASEDIR`
+FILEATTR=(`ls -l plugins/default/plugin.properties`)
+USER=${FILEATTR[2]}
+GROUP=${FILEATTR[3]}
 VARDIR=$BASEDIR/var
 PIDFILE=$VARDIR/server.pid
 LOGFILE=$VARDIR/server.`date +"%Y%m%d"`.log
@@ -77,7 +78,7 @@ start() {
         # rotate log file
         touch $LOGFILE
         chown -R $USER:$GROUP $VARDIR
-        su -s "/bin/sh" -c "$BASEDIR/bin/startserver.sh" - $USER >$LOGFILE 2>&1 &
+        su - $USER -c "$BASEDIR/bin/startserver.sh" >$LOGFILE 2>&1 &
         sleep 3
         if is_running; then
             echo "OK"
