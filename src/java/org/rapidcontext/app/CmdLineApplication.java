@@ -75,8 +75,7 @@ public class CmdLineApplication {
             System.err.println("         -d     -- Adds a delay between each command.");
             return;
         }
-        ctx = new ApplicationContext(new File("."));
-        ctx.init();
+        ctx = ApplicationContext.init(new File("."));
         try {
             SecurityContext.auth(System.getProperty("user.name"));
         } catch (SecurityException e) {
@@ -89,7 +88,7 @@ public class CmdLineApplication {
         } else {
             exec(ctx, args, trace);
         }
-        ctx.destroy();
+        ApplicationContext.destroy();
     }
 
     /**

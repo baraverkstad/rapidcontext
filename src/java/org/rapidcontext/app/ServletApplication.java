@@ -69,8 +69,7 @@ public class ServletApplication extends HttpServlet {
      */
     public void init() throws ServletException {
         super.init();
-        ctx = new ApplicationContext(getBaseDir());
-        ctx.init();
+        ctx = ApplicationContext.init(getBaseDir());
         tempDir = new File(getBaseDir(), "temp");
         tempDir.mkdir();
         tempDir.deleteOnExit();
@@ -80,7 +79,7 @@ public class ServletApplication extends HttpServlet {
      * Uninitializes this servlet.
      */
     public void destroy() {
-        ctx.destroy();
+        ApplicationContext.destroy();
         super.destroy();
     }
 

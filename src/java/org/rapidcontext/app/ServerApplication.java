@@ -55,6 +55,7 @@ public class ServerApplication {
         Context  root;
         int      port;
 
+        ApplicationContext.init(new File("."));
         server = new Server(findAvailablePort());
         root = new Context(server, "/", Context.SESSIONS);
         root.setResourceBase(".");

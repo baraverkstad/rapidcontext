@@ -135,6 +135,29 @@ public class ApplicationContext {
     private Map threadContext = Collections.synchronizedMap(new HashMap());
 
     /**
+     * Initializes the application context by loading the plug-ins, procedures
+     * and the environment configuration. If the context has already been
+     * initialized, no action is taken.
+     */
+    protected static synchronized ApplicationContext init(File baseDir) {
+        if (instance == null) {
+            instance = new ApplicationContext(baseDir);
+            instance.initAll();
+        }
+        return instance;
+    }
+
+    /**
+     * Destroys the application context and frees all resources used.
+     */
+    protected static synchronized void destroy() {
+        if (instance != null) {
+            instance.destroyAll();
+            instance = null;
+        }
+    }
+
+    /**
      * Returns the singleton application context instance.
      *
      * @return the singleton application context instance
@@ -150,7 +173,7 @@ public class ApplicationContext {
      *
      * @param baseDir        the base application directory
      */
-    public ApplicationContext(File baseDir) {
+    private ApplicationContext(File baseDir) {
         this.pluginDir = new File(baseDir, "plugins");
         this.dataStore = new PluginDataStore(this.pluginDir);
         this.library = new Library(this.dataStore);
@@ -161,7 +184,7 @@ public class ApplicationContext {
      * Initializes this context by loading the plug-ins, procedures
      * and the environment configuration.
      */
-    public void init() {
+    private void initAll() {
         try {
             config = dataStore.readData(null, "config");
         } catch (DataStoreException e) {
@@ -184,7 +207,7 @@ public class ApplicationContext {
     /**
      * Initializes the library in this context.
      */
-    public void initLibrary() {
+    private void initLibrary() {
         Interceptor  i;
 
         // Register default procedure types
@@ -258,7 +281,7 @@ public class ApplicationContext {
     /**
      * Destroys this context and frees all resources.
      */
-    public void destroy() {
+    private void destroyAll() {
         if (env != null) {
             env.removeAllPools();
             env = null;
@@ -291,8 +314,8 @@ public class ApplicationContext {
      * Resets this context and reloads all resources.
      */
     public void reset() {
-        destroy();
-        init();
+        destroyAll();
+        initAll();
     }
 
     /**
