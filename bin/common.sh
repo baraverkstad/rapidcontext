@@ -45,7 +45,9 @@ function is_java_dir {
 
 # Setup JAVA_HOME variable
 if is_java_dir $JAVA_HOME ; then
-    :
+    JAVA=$JAVA_HOME/bin/java
+elif [[ `which java` != "" ]] ; then
+    JAVA=`which java`
 else
     JAVA_HOME=
     for JAVA_EXE in `locate bin/java | grep java$ | xargs echo` ; do
@@ -57,12 +59,13 @@ else
             JAVA_HOME=
         fi
     done
+    if [[ "$JAVA_HOME" == "" ]] ; then
+        echo "ERROR: Failed to find java version 1.4 or higher." >&2
+        exit 1
+    fi
+    JAVA=$JAVA_HOME/bin/java
 fi
-if [[ "$JAVA_HOME" == "" ]] ; then
-    echo "ERROR: Failed to find java version 1.4 or higher." >&2
-    exit 1
-fi
-export JAVA_HOME
+export JAVA
 
 # Setup JAVA_OPTS variable
 JAVA_OPTS="-Xbootclasspath/p:lib/js.jar $JAVA_OPTS"
