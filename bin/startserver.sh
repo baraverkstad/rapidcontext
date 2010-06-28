@@ -5,4 +5,6 @@ echo "JAVA_HOME:  $JAVA_HOME"
 echo "JAVA_OPTS:  $JAVA_OPTS"
 echo "CLASSPATH:  $CLASSPATH"
 echo
-"$JAVA_HOME/bin/java" $JAVA_OPTS org.rapidcontext.app.ServerApplication "$@"
+mkdir -p var
+echo $$ > var/server.pid
+exec "$JAVA_HOME/bin/java" $JAVA_OPTS org.rapidcontext.app.ServerApplication "$@"
