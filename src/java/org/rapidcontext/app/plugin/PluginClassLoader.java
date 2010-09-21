@@ -42,7 +42,7 @@ public class PluginClassLoader extends URLClassLoader {
     /**
      * The name of the lib folder under each plug-in directory.
      */
-    private static final String LIB_DIR = "lib";
+    public static final String LIB_DIR = "lib";
 
     /**
      * Creates a new plug-in class loader.
