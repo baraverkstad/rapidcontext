@@ -65,11 +65,20 @@ public interface DataStore {
     File findFile(String path, boolean exist);
 
     /**
+     * Lists all data type names currently in use in this store. Note
+     * that type names may be returned even if there are no actual
+     * data objects of that type.
+     *
+     * @return an array of type names
+     */
+    String[] findTypes();
+
+    /**
      * Finds all data object identifiers of a certain type.
      *
      * @param type           the type name, or null for generic
      *
-     * @return an array or data object identifiers
+     * @return an array of data object identifiers
      */
     String[] findDataIds(String type);
 

@@ -110,11 +110,30 @@ public class PropertiesStore implements DataStore {
     }
 
     /**
+     * Lists all data type names currently in use in this store. Note
+     * that type names may be returned even if there are no actual
+     * data objects of that type.
+     *
+     * @return an array of type names
+     */
+    public String[] findTypes() {
+        ArrayList  list = new ArrayList();
+        File[]     files = getDataDir(null).listFiles();
+
+        for (int i = 0; i < files.length; i++) {
+            if (files[i].isDirectory() && !this.fileDir.equals(files[i])) {
+                list.add(files[i].getName());
+            }
+        }
+        return (String[]) list.toArray(new String[list.size()]);
+    }
+
+    /**
      * Finds all data object identifiers of a certain type.
      *
      * @param type           the type name, or null for generic
      *
-     * @return an array or data object identifiers
+     * @return an array of data object identifiers
      */
     public String[] findDataIds(String type) {
         File       dir;

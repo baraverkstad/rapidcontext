@@ -223,11 +223,32 @@ public class PluginDataStore implements DataStore {
     }
 
     /**
+     * Lists all data type names currently in use in this store. Note
+     * that type names may be returned even if there are no actual
+     * data objects of that type.
+     *
+     * @return an array of type names
+     */
+    public String[] findTypes() {
+        Iterator       iter = this.stores.values().iterator();
+        DataStore      store;
+        LinkedHashSet  set = new LinkedHashSet();
+
+        while (iter.hasNext()) {
+            store = (DataStore) iter.next();
+            set.addAll(Arrays.asList(store.findTypes()));
+        }
+        set.addAll(Arrays.asList(this.defaultStore.findTypes()));
+        set.remove(PluginClassLoader.LIB_DIR);
+        return (String[]) set.toArray(new String[set.size()]);
+    }
+
+    /**
      * Finds all data object identifiers of a certain type.
      *
      * @param type           the type name, or null for generic
      *
-     * @return an array or data object identifiers
+     * @return an array of data object identifiers
      */
     public String[] findDataIds(String type) {
         Iterator       iter = this.stores.values().iterator();
