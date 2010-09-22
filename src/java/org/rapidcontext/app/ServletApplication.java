@@ -555,6 +555,9 @@ public class ServletApplication extends HttpServlet {
                 html.append("<td class='active-end'>&nbsp;</td>\n");
                 html.append("</tr>\n</table>\n<hr/>\n");
                 html.append(HtmlSerializer.serialize(res));
+                html.append("<hr/><p><strong>Data Formats:</strong>");
+                html.append(" &nbsp;<a href='?mimeType=text/javascript'>JSON</a>");
+                html.append(" &nbsp;<a href='?mimeType=text/xml'>XML</a></p>");                
                 html.append("</div>\n</body>\n</html>\n");
                 request.sendData("text/html", html.toString());
             }
