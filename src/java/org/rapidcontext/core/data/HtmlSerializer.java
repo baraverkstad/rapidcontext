@@ -97,7 +97,7 @@ public class HtmlSerializer {
                 serialize(data.get(keys[i]), buffer);
                 buffer.append("</td>\n</tr>\n");
             }
-            buffer.append("<tbody>\n<table>\n");
+            buffer.append("</tbody>\n</table>\n");
         }
     }
 
