@@ -33,6 +33,7 @@ import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.core.data.Data;
 import org.rapidcontext.core.data.DataQuery;
 import org.rapidcontext.core.data.HtmlSerializer;
+import org.rapidcontext.core.data.XmlSerializer;
 import org.rapidcontext.core.js.JsSerializer;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.SecurityContext;
@@ -503,6 +504,8 @@ public class ServletApplication extends HttpServlet {
             // Render result as JSON, XML or HTML
             if (isMimeMatch(request, MIME_JSON)) {
                 request.sendData("text/javascript", JsSerializer.serialize(res));
+            } else if (isMimeMatch(request, MIME_XML)) {
+                request.sendData("text/xml", XmlSerializer.serialize(res));
             } else {
                 StringBuffer html = new StringBuffer();
                 html.append("<html>\n<head>\n<link rel='stylesheet' href='");
@@ -546,6 +549,8 @@ public class ServletApplication extends HttpServlet {
             res.set("error", e.getMessage());
             if (isMimeMatch(request, MIME_JSON)) {
                 request.sendData("text/javascript", JsSerializer.serialize(res));
+            } else if (isMimeMatch(request, MIME_XML)) {
+                request.sendData("text/xml", XmlSerializer.serialize(res));
             } else {
                 request.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                                   "text/plain",
