@@ -28,7 +28,7 @@ import org.rapidcontext.core.data.Data;
 import org.rapidcontext.core.env.AdapterConnection;
 
 /**
- * An object serializer and unserializer for theJavaScript object
+ * An object serializer and unserializer for the JavaScript object
  * notation (JSON) format. This class also provides methods for
  * wrapping data objects for execution inside the JavaScript engine.
  * The data object mapping to JavaScript is not exact, and may omit
