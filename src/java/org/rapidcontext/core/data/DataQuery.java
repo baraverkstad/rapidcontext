@@ -63,4 +63,15 @@ public class DataQuery {
     public boolean isRoot() {
         return isIndex && path.length == 0;
     }
+
+    /**
+     * Returns the query depth. The root index is on depth 0 and any
+     * additional indices traversed, will add 1 to the depth.
+     * Non-index leafs in the query tree will not affect the depth.
+     *
+     * @return the (hierarchical) query depth
+     */
+    public int depth() {
+        return path.length - (isIndex ? 0 : 1);
+    }
 }
