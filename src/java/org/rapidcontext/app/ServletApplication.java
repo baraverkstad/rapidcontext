@@ -502,7 +502,7 @@ public class ServletApplication extends HttpServlet {
 
             // Render result as JSON, XML or HTML
             if (isMimeMatch(request, MIME_JSON)) {
-                request.sendData("text/javascript", JsSerializer.serialize(res));                
+                request.sendData("text/javascript", JsSerializer.serialize(res));
             } else {
                 StringBuffer html = new StringBuffer();
                 html.append("<html>\n<head>\n<link rel='stylesheet' href='");
@@ -542,10 +542,10 @@ public class ServletApplication extends HttpServlet {
             }
         } catch (Exception e) {
             // TODO: How do users want their error messages?
+            res = new Data();
+            res.set("error", e.getMessage());
             if (isMimeMatch(request, MIME_JSON)) {
-                res = new Data();
-                res.set("error", e.getMessage());
-                request.sendData("text/javascript", JsSerializer.serialize(res));                                
+                request.sendData("text/javascript", JsSerializer.serialize(res));
             } else {
                 request.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                                   "text/plain",
