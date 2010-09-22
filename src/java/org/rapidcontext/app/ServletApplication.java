@@ -462,6 +462,7 @@ public class ServletApplication extends HttpServlet {
         Data       dir = null;
         Data       obj = null;
         String[]   list;
+        boolean    createLinks;
 
         try {
             // TODO: Implement security authentication for data queries
@@ -473,16 +474,26 @@ public class ServletApplication extends HttpServlet {
             }
 
             // TODO: Extend data lookup via plug-ins and/or standardized QL
+            createLinks = !isMimeMatch(request, MIME_JSON) &&
+                          !isMimeMatch(request, MIME_XML);
             if (query.isRoot()) {
                 dir = new Data();
                 list = ctx.getDataStore().findTypes();
                 for (int i = 0; i < list.length; i++) {
-                    dir.add("http:" + list[i] + "/");
+                    if (createLinks) {
+                        dir.add("http:" + list[i] + "/");
+                    } else {
+                        dir.add(list[i]);
+                    }
                 }
                 obj = new Data();
                 list = ctx.getDataStore().findDataIds(null);
                 for (int i = 0; i < list.length; i++) {
-                    obj.add("http:" + list[i]);
+                    if (createLinks) {
+                        obj.add("http:" + list[i]);
+                    } else {
+                        obj.add(list[i]);
+                    }
                 }
                 res = new Data();
                 res.set("directories", dir);
@@ -491,7 +502,11 @@ public class ServletApplication extends HttpServlet {
                 obj = new Data();
                 list = ctx.getDataStore().findDataIds(query.path[0]);
                 for (int i = 0; i < list.length; i++) {
-                    obj.add("http:" + list[i]);
+                    if (createLinks) {
+                        obj.add("http:" + list[i]);
+                    } else {
+                        obj.add(list[i]);
+                    }
                 }
                 res = new Data();
                 res.set("objects", obj);
