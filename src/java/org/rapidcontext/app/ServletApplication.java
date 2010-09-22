@@ -29,8 +29,12 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.fileupload.FileItemHeaders;
 import org.apache.commons.fileupload.FileItemStream;
+import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.core.data.Data;
+import org.rapidcontext.core.data.DataQuery;
+import org.rapidcontext.core.data.HtmlSerializer;
 import org.rapidcontext.core.js.JsSerializer;
+import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.security.User;
 import org.rapidcontext.core.web.Request;
@@ -51,6 +55,26 @@ public class ServletApplication extends HttpServlet {
      */
     private static final Logger LOG =
         Logger.getLogger(ServletApplication.class.getName());
+
+    /**
+     * The MIME types commonly used for requesting JSON data.
+     */
+    private static final String[] MIME_JSON = {
+        "application/json",
+        "application/x-javascript",
+        "text/json",
+        "text/x-json",
+        "text/javascript",
+        "text/x-javascript"
+    };
+
+    /**
+     * The MIME type commonly used for requesting XML data.
+     */
+    private static final String[] MIME_XML = {
+        "application/xml",
+        "text/xml"
+    };
 
     /**
      * The context to use for process execution.
@@ -259,7 +283,7 @@ public class ServletApplication extends HttpServlet {
 
         if (isRoot && !request.getUrl().endsWith("/")) {
             request.sendRedirect(request.getUrl() + "/");
-        } else if (isRoot || lowerPath.startsWith("index.htm")) {
+        } else if (isRoot || lowerPath.startsWith("/index.htm")) {
             processDownload(request, "index.html", false);
         } else if (lowerPath.startsWith("/rapidcontext/")) {
             path = path.substring(14);
@@ -269,6 +293,8 @@ public class ServletApplication extends HttpServlet {
                 processDownload(request, path.substring(8), true);
             } else if (path.startsWith("upload")) {
                 processUpload(request, path.substring(6));
+            } else if (path.startsWith("query/")) {
+                processQuery(request, path.substring(6));
             }
         } else {
             processDownload(request, path.substring(1), false);
@@ -421,6 +447,136 @@ public class ServletApplication extends HttpServlet {
             res.set("trace", trace.toString());
         }
         request.sendData("text/javascript", JsSerializer.serialize(res));
+    }
+
+    /**
+     * Processes a query API servlet request.
+     *
+     * @param request        the request to process
+     * @param path           the query path
+     */
+    private void processQuery(Request request, String path) {
+        DataQuery  query = new DataQuery(path);
+        Data       res = null;
+        Data       dir = null;
+        Data       obj = null;
+        String[]   list;
+
+        try {
+            // TODO: Implement security authentication for data queries
+            if (!SecurityContext.hasAdmin()) {
+                LOG.info("permission denied to Query API from " +
+                         request.getRemoteAddr() + " for user " +
+                         SecurityContext.currentUser());
+               throw new ProcedureException("Permission denied");
+            }
+
+            // TODO: Extend data lookup via plug-ins and/or standardized QL
+            if (query.isRoot()) {
+                dir = new Data();
+                list = ctx.getDataStore().findTypes();
+                for (int i = 0; i < list.length; i++) {
+                    dir.add("http:" + list[i] + "/");
+                }
+                obj = new Data();
+                list = ctx.getDataStore().findDataIds(null);
+                for (int i = 0; i < list.length; i++) {
+                    obj.add("http:" + list[i]);
+                }
+                res = new Data();
+                res.set("directories", dir);
+                res.set("objects", obj);
+            } else if (query.isIndex) {
+                obj = new Data();
+                list = ctx.getDataStore().findDataIds(query.path[0]);
+                for (int i = 0; i < list.length; i++) {
+                    obj.add("http:" + list[i]);
+                }
+                res = new Data();
+                res.set("objects", obj);
+            } else if (query.path.length == 1) {
+                res = ctx.getDataStore().readData(null, query.path[0]);
+            } else {
+                res = ctx.getDataStore().readData(query.path[0], query.path[1]);
+            }
+
+            // Render result as JSON, XML or HTML
+            if (isMimeMatch(request, MIME_JSON)) {
+                request.sendData("text/javascript", JsSerializer.serialize(res));                
+            } else {
+                StringBuffer html = new StringBuffer();
+                html.append("<html>\n<head>\n<link rel='stylesheet' href='");
+                html.append(request.getRootPath());
+                html.append("css/style.css' type='text/css' />\n");
+                html.append("<title>RapidContext Query Response</title>\n");
+                html.append("</head>\n<body>\n<div class='query'>\n");
+                html.append("<h1>RapidContext Query API</h1>\n");
+                html.append("<table class='navigation'>\n<tr>\n");
+                if (query.isRoot()) {
+                    html.append("<td class='active'>Start</td>\n");
+                } else {
+                    html.append("<td class='prev'><a href='");
+                    html.append(StringUtils.repeat("../", query.depth()));
+                    html.append(".'>Start</a></td>\n");
+                }
+                for (int i = 0; i < query.path.length; i++) {
+                    if (i + 1 < query.path.length) {
+                        html.append("<td class='prev-prev'>&nbsp;</td>\n");
+                        html.append("<td class='prev'><a href='");
+                        html.append(StringUtils.repeat("../", query.depth() - i - 1));
+                        html.append(".'>");
+                        html.append(query.path[i]);
+                        html.append("</a>");
+                    } else {
+                        html.append("<td class='prev-active'>&nbsp;</td>\n");
+                        html.append("<td class='active'>");
+                        html.append(query.path[i]);
+                    }
+                    html.append("</td>\n");
+                }
+                html.append("<td class='active-end'>&nbsp;</td>\n");
+                html.append("</tr>\n</table>\n<hr/>\n");
+                html.append(HtmlSerializer.serialize(res));
+                html.append("</div>\n</body>\n</html>\n");
+                request.sendData("text/html", html.toString());
+            }
+        } catch (Exception e) {
+            // TODO: How do users want their error messages?
+            if (isMimeMatch(request, MIME_JSON)) {
+                res = new Data();
+                res.set("error", e.getMessage());
+                request.sendData("text/javascript", JsSerializer.serialize(res));                                
+            } else {
+                request.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                                  "text/plain",
+                                  e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * Checks if the request accepts one of the listed MIME types as
+     * response. Note that this method only accepts exact matches, as
+     * it will ignore wildcards and types with quality values.
+     *
+     * @param request        the request to analyze
+     * @param mime           the MIME types to check for
+     *
+     * @return true if one of the MIME types is accepted, or
+     *         false otherwise
+     */
+    private boolean isMimeMatch(Request request, String[] mime) {
+        String    param = request.getParameter("mimeType");
+        String    header = request.getHeader("Accept");
+        String[]  accept = StringUtils.defaultString(param, header).split(",");
+        for (int i = 0; i < accept.length; i++) {
+            for (int j = 0; j < mime.length; j++) {
+                if (accept[i].equals(mime[j])) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**

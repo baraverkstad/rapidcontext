@@ -33,6 +33,13 @@ h3 {
     font-size: 12px;
 }
 
+hr {
+    margin: 12px 0;
+    border: none;
+    border-bottom: 1px solid #cccccc;
+    width: 100%;
+}
+
 p {
     page-break-inside: avoid;
 }
@@ -107,6 +114,73 @@ dd {
     padding-left: 16px;
 }
 
+
+/**
+ * Query API styles
+ */
+div.query {
+    margin: 30px 40px;
+}
+.query pre {
+    color: #666666;
+}
+.query ol {
+    padding: 0 20px;
+}
+.query table {
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+}
+.query th {
+    padding: 2px 10px 2px 4px;
+    background: #e3edfa;
+}
+.query td {
+    padding: 2px 10px 2px 4px;
+    background: white;
+}
+.query table.navigation {
+    border: none;
+    font-size: 12px;
+}
+.query table.navigation td {
+    height: 26px;
+    padding: 5px 15px 0 15px;
+}
+.query table.navigation td.prev {
+    background: url(../images/backgrounds/navigation-bg-prev.gif) repeat-x;
+}
+.query table.navigation td.active {
+    background: url(../images/backgrounds/navigation-bg-active.gif) repeat-x;
+    font-weight: bold;
+}
+.query table.navigation td.prev-prev,
+.query table.navigation td.prev-active,
+.query table.navigation td.active-next,
+.query table.navigation td.active-end,
+.query table.navigation td.next-next,
+.query table.navigation td.next-end {
+    width: 22px;
+    padding: 0;
+}
+.query table.navigation td.prev-prev {
+    background: url(../images/backgrounds/navigation-prev-prev.gif) no-repeat;
+}
+.query table.navigation td.prev-active {
+    background: url(../images/backgrounds/navigation-prev-active.gif) no-repeat;
+}
+.query table.navigation td.active-next {
+    background: url(../images/backgrounds/navigation-active-next.gif) no-repeat;
+}
+.query table.navigation td.active-end {
+    background: url(../images/backgrounds/navigation-active-end.gif) no-repeat;
+}
+.query table.navigation td.next-next {
+    background: url(../images/backgrounds/navigation-next-next.gif) no-repeat;
+}
+.query table.navigation td.next-end {
+    background: url(../images/backgrounds/navigation-next-end.gif) no-repeat;
+}
 
 
 /**
