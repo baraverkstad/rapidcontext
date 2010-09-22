@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg.
+ * Copyright (c) 2007-2010 Per Cederberg.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -32,6 +32,7 @@ import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * A request wrapper class. This class encapsulates the HTTP servlet
@@ -219,6 +220,18 @@ public class Request {
         String  path = request.getPathInfo();
 
         return (path == null) ? "" : path;
+    }
+
+    /**
+     * Returns the relative path to the servlet root. This method
+     * will add an "../" part for each directory in the current path
+     * so that site-relative links can be created easily.
+     *
+     * @return the relative path to the servlet root
+     */
+    public String getRootPath() {
+        int count = StringUtils.countMatches(getPath(), "/");
+        return StringUtils.repeat("../", count - 1);
     }
 
     /**
