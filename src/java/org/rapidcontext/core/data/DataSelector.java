@@ -19,31 +19,36 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * A data query representation. This class handles parsing of data
- * queries and provides simple meta-data about them.
+ * A data selector representation. This class encapsulates a data
+ * query or search path, providing simple access to information about
+ * the query itself.
  *
  * @author Per Cederberg
  * @version 1.0
  */
-public class DataQuery {
+public class DataSelector {
 
     /**
-     * The index query flag. Will be set if the query requests an
-     * index of data objects.
+     * The index flag. This flag is set if the selector corresponds
+     * to an index or list of data objects.
      */
     public boolean isIndex = false;
 
     /**
-     * The path components of the query.
+     * The path components. The last element in the path array is the
+     * object id, and any previous elements correspond to parent
+     * indices (data type or path). The root index will have a zero
+     * length path.
      */
     public String[] path = null;
 
     /**
-     * Parses a query string into a data query.
+     * Creates a new data selector from a query string (similar to
+     * an file system path for example).
      *
      * @param query          the query string to parse
      */
-    public DataQuery(String query) {
+    public DataSelector(String query) {
         query = StringUtils.stripStart(query, "/");
         this.isIndex = query.equals("") || query.endsWith("/");
         query = StringUtils.stripEnd(query, "/");
@@ -55,9 +60,9 @@ public class DataQuery {
     }
 
     /**
-     * Checks if this query corresponds to the root index.
+     * Checks if this selector corresponds to the root index.
      *
-     * @return true if the query is for the root index, or
+     * @return true if the selector is for the root index, or
      *         false otherwise
      */
     public boolean isRoot() {
@@ -65,11 +70,12 @@ public class DataQuery {
     }
 
     /**
-     * Returns the query depth. The root index is on depth 0 and any
-     * additional indices traversed, will add 1 to the depth.
-     * Non-index leafs in the query tree will not affect the depth.
+     * Returns the selector depth. The root index, and any objects
+     * accessible there, have depth zero (0). For each additional
+     * index (directory) traversed, the depth increases by one (1).
+     * Non-index leafs in the data tree will not affect the depth.
      *
-     * @return the (hierarchical) query depth
+     * @return the selector depth
      */
     public int depth() {
         return path.length - (isIndex ? 0 : 1);

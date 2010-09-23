@@ -31,7 +31,7 @@ import org.apache.commons.fileupload.FileItemHeaders;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.core.data.Data;
-import org.rapidcontext.core.data.DataQuery;
+import org.rapidcontext.core.data.DataSelector;
 import org.rapidcontext.core.data.HtmlSerializer;
 import org.rapidcontext.core.data.XmlSerializer;
 import org.rapidcontext.core.js.JsSerializer;
@@ -457,12 +457,12 @@ public class ServletApplication extends HttpServlet {
      * @param path           the query path
      */
     private void processQuery(Request request, String path) {
-        DataQuery  query = new DataQuery(path);
-        Data       res = null;
-        Data       dir = null;
-        Data       obj = null;
-        String[]   list;
-        boolean    createLinks;
+        DataSelector  selector = new DataSelector(path);
+        Data          res = null;
+        Data          dir = null;
+        Data          obj = null;
+        String[]      list;
+        boolean       createLinks;
 
         try {
             // TODO: Implement security authentication for data queries
@@ -476,7 +476,7 @@ public class ServletApplication extends HttpServlet {
             // TODO: Extend data lookup via plug-ins and/or standardized QL
             createLinks = !isMimeMatch(request, MIME_JSON) &&
                           !isMimeMatch(request, MIME_XML);
-            if (query.isRoot()) {
+            if (selector.isRoot()) {
                 dir = new Data();
                 list = ctx.getDataStore().findTypes();
                 for (int i = 0; i < list.length; i++) {
@@ -498,9 +498,9 @@ public class ServletApplication extends HttpServlet {
                 res = new Data();
                 res.set("directories", dir);
                 res.set("objects", obj);
-            } else if (query.isIndex) {
+            } else if (selector.isIndex) {
                 obj = new Data();
-                list = ctx.getDataStore().findDataIds(query.path[0]);
+                list = ctx.getDataStore().findDataIds(selector.path[0]);
                 for (int i = 0; i < list.length; i++) {
                     if (createLinks) {
                         obj.add("http:" + list[i]);
@@ -510,10 +510,10 @@ public class ServletApplication extends HttpServlet {
                 }
                 res = new Data();
                 res.set("objects", obj);
-            } else if (query.path.length == 1) {
-                res = ctx.getDataStore().readData(null, query.path[0]);
+            } else if (selector.path.length == 1) {
+                res = ctx.getDataStore().readData(null, selector.path[0]);
             } else {
-                res = ctx.getDataStore().readData(query.path[0], query.path[1]);
+                res = ctx.getDataStore().readData(selector.path[0], selector.path[1]);
             }
 
             // Render result as JSON, XML or HTML
@@ -530,25 +530,25 @@ public class ServletApplication extends HttpServlet {
                 html.append("</head>\n<body>\n<div class='query'>\n");
                 html.append("<h1>RapidContext Query API</h1>\n");
                 html.append("<table class='navigation'>\n<tr>\n");
-                if (query.isRoot()) {
+                if (selector.isRoot()) {
                     html.append("<td class='active'>Start</td>\n");
                 } else {
                     html.append("<td class='prev'><a href='");
-                    html.append(StringUtils.repeat("../", query.depth()));
+                    html.append(StringUtils.repeat("../", selector.depth()));
                     html.append(".'>Start</a></td>\n");
                 }
-                for (int i = 0; i < query.path.length; i++) {
-                    if (i + 1 < query.path.length) {
+                for (int i = 0; i < selector.path.length; i++) {
+                    if (i + 1 < selector.path.length) {
                         html.append("<td class='prev-prev'>&nbsp;</td>\n");
                         html.append("<td class='prev'><a href='");
-                        html.append(StringUtils.repeat("../", query.depth() - i - 1));
+                        html.append(StringUtils.repeat("../", selector.depth() - i - 1));
                         html.append(".'>");
-                        html.append(query.path[i]);
+                        html.append(selector.path[i]);
                         html.append("</a>");
                     } else {
                         html.append("<td class='prev-active'>&nbsp;</td>\n");
                         html.append("<td class='active'>");
-                        html.append(query.path[i]);
+                        html.append(selector.path[i]);
                     }
                     html.append("</td>\n");
                 }
