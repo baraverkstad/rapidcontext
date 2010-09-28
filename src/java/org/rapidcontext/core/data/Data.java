@@ -95,7 +95,7 @@ public class Data implements Cloneable {
                 buffer.append(": ");
                 buffer.append(this.props.get(keys[i]));
             }
-            if (this.list.size() > 3) {
+            if (keys.length > 3) {
                 buffer.append(", ...");
             }
             buffer.append(" }");
