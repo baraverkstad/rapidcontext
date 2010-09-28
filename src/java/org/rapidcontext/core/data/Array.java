@@ -524,7 +524,7 @@ public class Array {
     public void sort(String key)
         throws UnsupportedOperationException, ClassCastException {
 
-        sort(new DataComparator(key));
+        sort(new DictComparator(key));
     }
 
     /**
