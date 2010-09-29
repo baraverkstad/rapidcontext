@@ -31,7 +31,7 @@ import org.apache.commons.fileupload.FileItemHeaders;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.core.data.Array;
-import org.rapidcontext.core.data.DataSelector;
+import org.rapidcontext.core.data.Path;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.HtmlSerializer;
 import org.rapidcontext.core.data.XmlSerializer;
@@ -455,15 +455,15 @@ public class ServletApplication extends HttpServlet {
      * Processes a query API servlet request.
      *
      * @param request        the request to process
-     * @param path           the query path
+     * @param query          the query path
      */
-    private void processQuery(Request request, String path) {
-        DataSelector  selector = new DataSelector(path);
-        Dict          res = null;
-        Array         dir = null;
-        Array         obj = null;
-        String[]      list;
-        boolean       createLinks;
+    private void processQuery(Request request, String query) {
+        Path      path = new Path(query);
+        Dict      res = null;
+        Array     dir = null;
+        Array     obj = null;
+        String[]  list;
+        boolean   createLinks;
 
         try {
             // TODO: Implement security authentication for data queries
@@ -477,7 +477,7 @@ public class ServletApplication extends HttpServlet {
             // TODO: Extend data lookup via plug-ins and/or standardized QL
             createLinks = !isMimeMatch(request, MIME_JSON) &&
                           !isMimeMatch(request, MIME_XML);
-            if (selector.isRoot()) {
+            if (path.isRoot()) {
                 dir = new Array();
                 list = ctx.getDataStore().findTypes();
                 for (int i = 0; i < list.length; i++) {
@@ -499,9 +499,9 @@ public class ServletApplication extends HttpServlet {
                 res = new Dict();
                 res.set("directories", dir);
                 res.set("objects", obj);
-            } else if (selector.isIndex) {
+            } else if (path.isIndex()) {
                 obj = new Array();
-                list = ctx.getDataStore().findDataIds(selector.path[0]);
+                list = ctx.getDataStore().findDataIds(path.name(0));
                 for (int i = 0; i < list.length; i++) {
                     if (createLinks) {
                         obj.add("http:" + list[i]);
@@ -511,10 +511,10 @@ public class ServletApplication extends HttpServlet {
                 }
                 res = new Dict();
                 res.set("objects", obj);
-            } else if (selector.path.length == 1) {
-                res = ctx.getDataStore().readData(null, selector.path[0]);
+            } else if (path.depth() == 0) {
+                res = ctx.getDataStore().readData(null, path.name());
             } else {
-                res = ctx.getDataStore().readData(selector.path[0], selector.path[1]);
+                res = ctx.getDataStore().readData(path.name(0), path.name());
             }
 
             // Render result as JSON, XML or HTML
@@ -531,25 +531,25 @@ public class ServletApplication extends HttpServlet {
                 html.append("</head>\n<body>\n<div class='query'>\n");
                 html.append("<h1>RapidContext Query API</h1>\n");
                 html.append("<table class='navigation'>\n<tr>\n");
-                if (selector.isRoot()) {
+                if (path.isRoot()) {
                     html.append("<td class='active'>Start</td>\n");
                 } else {
                     html.append("<td class='prev'><a href='");
-                    html.append(StringUtils.repeat("../", selector.depth()));
+                    html.append(StringUtils.repeat("../", path.depth()));
                     html.append(".'>Start</a></td>\n");
                 }
-                for (int i = 0; i < selector.path.length; i++) {
-                    if (i + 1 < selector.path.length) {
+                for (int i = 0; i < path.length(); i++) {
+                    if (i + 1 < path.length()) {
                         html.append("<td class='prev-prev'>&nbsp;</td>\n");
                         html.append("<td class='prev'><a href='");
-                        html.append(StringUtils.repeat("../", selector.depth() - i - 1));
+                        html.append(StringUtils.repeat("../", path.depth() - i - 1));
                         html.append(".'>");
-                        html.append(selector.path[i]);
+                        html.append(path.name(i));
                         html.append("</a>");
                     } else {
                         html.append("<td class='prev-active'>&nbsp;</td>\n");
                         html.append("<td class='active'>");
-                        html.append(selector.path[i]);
+                        html.append(path.name(i));
                     }
                     html.append("</td>\n");
                 }
