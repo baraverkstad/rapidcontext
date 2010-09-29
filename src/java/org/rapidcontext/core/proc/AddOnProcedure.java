@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -15,7 +15,7 @@
 
 package org.rapidcontext.core.proc;
 
-import org.rapidcontext.core.data.Data;
+import org.rapidcontext.core.data.Dict;
 
 /**
  * An add-on procedure base class. All procedures that are not
@@ -39,7 +39,7 @@ import org.rapidcontext.core.data.Data;
  *     transparently by the framework.
  * </ul>
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public abstract class AddOnProcedure implements Procedure {
@@ -47,7 +47,7 @@ public abstract class AddOnProcedure implements Procedure {
     /**
      * The procedure data object.
      */
-    private Data data = new Data();
+    private Dict data = new Dict();
 
     /**
      * The last modification time for the procedure.
@@ -84,7 +84,7 @@ public abstract class AddOnProcedure implements Procedure {
      *
      * @return the procedure data object
      */
-    public Data getData() {
+    public Dict getData() {
         return data;
     }
 
@@ -96,9 +96,9 @@ public abstract class AddOnProcedure implements Procedure {
      *
      * @param data           the procedure data object
      */
-    public void setData(Data data) {
+    public void setData(Dict data) {
         this.data = data;
-        this.bindings = new Bindings(defaults, data.getData("binding"));
+        this.bindings = new Bindings(defaults, data.getArray("binding"));
         this.lastModified = System.currentTimeMillis();
     }
 

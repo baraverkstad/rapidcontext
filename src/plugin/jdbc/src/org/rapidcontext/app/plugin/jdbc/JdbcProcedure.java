@@ -1,6 +1,6 @@
 /*
  * RapidContext JDBC plug-in <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2010 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 
-import org.rapidcontext.core.data.Data;
+import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.env.AdapterException;
 import org.rapidcontext.core.proc.AddOnProcedure;
 import org.rapidcontext.core.proc.Bindings;
@@ -362,8 +362,8 @@ public abstract class JdbcProcedure extends AddOnProcedure {
                 // since some JDBC drivers have issues with them
                 // (Oracle JDBC protocol violations for example)
                 return cond(column, operator, literal((String) value));
-            } else if (value instanceof Data) {
-                return bindData((Data) value, params);
+            } else if (value instanceof Array) {
+                return bindData((Array) value, params);
             } else if (value instanceof Date) {
                 params.add(new java.sql.Timestamp(((Date) value).getTime()));
                 return cond(column, operator, "?");
@@ -374,14 +374,14 @@ public abstract class JdbcProcedure extends AddOnProcedure {
         }
 
         /**
-         * Binds the specified data list to this field.
+         * Binds the specified array to this field.
          *
-         * @param value      the data list to bind
+         * @param value      the array to bind
          * @param params     the array of SQL parameters
          *
          * @return the new SQL text for the field
          */
-        private String bindData(Data value, ArrayList params) {
+        private String bindData(Array value, ArrayList params) {
             String  op;
 
             if (operator == null) {
@@ -393,7 +393,7 @@ public abstract class JdbcProcedure extends AddOnProcedure {
             } else {
                 op = operator;
             }
-            if (value.arraySize() <= 0) {
+            if (value.size() <= 0) {
                 return bindNull();
             } else {
                 return cond(column, op, literal(value));
@@ -510,15 +510,15 @@ public abstract class JdbcProcedure extends AddOnProcedure {
         /**
          * Returns an SQL parenthesized list of literal values.
          *
-         * @param list           the list to convert
+         * @param list           the array to convert
          *
          * @return the corresponding SQL list of literals
          */
-        private String literal(Data list) {
+        private String literal(Array list) {
             StringBuffer  buffer = new StringBuffer();
 
             buffer.append("(");
-            for (int i = 0; i < list.arraySize(); i++) {
+            for (int i = 0; i < list.size(); i++) {
                 if (i > 0) {
                     buffer.append(",");
                 }

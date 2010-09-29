@@ -1,6 +1,6 @@
 /*
  * RapidContext JDBC plug-in <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2010 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@ package org.rapidcontext.app.plugin.jdbc;
 
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.app.plugin.PluginClassLoader;
-import org.rapidcontext.core.data.Data;
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.PropertiesSerializer;
 import org.rapidcontext.core.env.Adapter;
 import org.rapidcontext.core.env.AdapterConnection;
@@ -176,7 +176,7 @@ public class JdbcAdapter implements Adapter {
      * @throws AdapterException if the connection couldn't be created
      *             properly
      */
-    public AdapterConnection createConnection(Data params)
+    public AdapterConnection createConnection(Dict params)
         throws AdapterException {
 
         PluginClassLoader  loader;

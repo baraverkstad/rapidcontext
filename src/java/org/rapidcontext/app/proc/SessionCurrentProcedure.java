@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -21,7 +21,7 @@ import java.util.Iterator;
 
 import javax.servlet.http.HttpSession;
 
-import org.rapidcontext.core.data.Data;
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
@@ -35,7 +35,7 @@ import org.rapidcontext.util.DateUtil;
 /**
  * The built-in current session info procedure.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class SessionCurrentProcedure implements Procedure, Restricted {
@@ -130,10 +130,10 @@ public class SessionCurrentProcedure implements Procedure, Restricted {
      *
      * @return a data object with session information
      */
-    public static Data getSessionData(HttpSession session) {
-        Data            res = new Data();
-        Data            files = new Data();
-        Data            data;
+    public static Dict getSessionData(HttpSession session) {
+        Dict            res = new Dict();
+        Dict            files = new Dict();
+        Dict            data;
         Date            date;
         SessionFileMap  fileMap;
         Iterator        iter;
@@ -151,8 +151,7 @@ public class SessionCurrentProcedure implements Procedure, Restricted {
         data = null;
         name = SessionManager.getUser(session);
         if (name != null) {
-            data = SecurityContext.getUser(name).getData();
-            data = (Data) data.clone();
+            data = SecurityContext.getUser(name).getData().copy();
             data.remove("password");
         }
         res.set("user", data);
@@ -165,7 +164,7 @@ public class SessionCurrentProcedure implements Procedure, Restricted {
             while (iter.hasNext()) {
                 name = (String) iter.next();
                 file = fileMap.getFile(name);
-                data = new Data();
+                data = new Dict();
                 data.set("name", file.getName());
                 data.set("size", String.valueOf(file.length()));
                 data.set("mimeType",

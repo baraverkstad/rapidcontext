@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -15,7 +15,8 @@
 
 package org.rapidcontext.app.proc;
 
-import org.rapidcontext.core.data.Data;
+import org.rapidcontext.core.data.Array;
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
@@ -26,10 +27,12 @@ import org.rapidcontext.core.security.SecurityContext;
 /**
  * The built-in user list procedure.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class UserListProcedure implements Procedure, Restricted {
+
+    // TODO: Replace this procedure with Query API?
 
     /**
      * The procedure name constant.
@@ -108,15 +111,14 @@ public class UserListProcedure implements Procedure, Restricted {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        Data      res;
-        Data      obj;
+        Array     res;
+        Dict      obj;
         String[]  names;
 
         names = SecurityContext.getUserNames();
-        res = new Data(names.length);
+        res = new Array(names.length);
         for (int i = 0; i < names.length; i++) {
-            obj = SecurityContext.getUser(names[i]).getData();
-            obj = (Data) obj.clone();
+            obj = SecurityContext.getUser(names[i]).getData().copy();
             obj.remove("password");
             res.add(obj);
         }

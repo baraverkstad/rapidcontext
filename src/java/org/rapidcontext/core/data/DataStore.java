@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -20,7 +20,7 @@ import java.io.File;
 /**
  * A generic data storage and retrieval interface.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public interface DataStore {
@@ -97,26 +97,26 @@ public interface DataStore {
     long findDataTimeStamp(String type, String id);
 
     /**
-     * Reads an identified data object of a certain type.
+     * Reads an identified dictionary of a certain type.
      *
      * @param type           the type name, or null for generic
      * @param id             the unique object id
      *
-     * @return the data object read, or
+     * @return the dictionary read, or
      *         null if not found
      *
-     * @throws DataStoreException if the data couldn't be read
+     * @throws DataStoreException if the dictionary couldn't be read
      */
-    Data readData(String type, String id) throws DataStoreException;
+    Dict readData(String type, String id) throws DataStoreException;
 
     /**
-     * Writes a data object of a certain type.
+     * Writes a dictionary of a certain type.
      *
      * @param type           the type name, or null for generic
      * @param id             the unique object id
-     * @param data           the data to write
+     * @param dict           the dictionary to write
      *
-     * @throws DataStoreException if the data couldn't be written
+     * @throws DataStoreException if the dictionary couldn't be written
      */
-    void writeData(String type, String id, Data data) throws DataStoreException;
+    void writeData(String type, String id, Dict dict) throws DataStoreException;
 }

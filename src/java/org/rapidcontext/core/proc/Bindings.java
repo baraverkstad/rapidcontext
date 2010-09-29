@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -17,7 +17,8 @@ package org.rapidcontext.core.proc;
 
 import java.util.LinkedHashSet;
 
-import org.rapidcontext.core.data.Data;
+import org.rapidcontext.core.data.Array;
+import org.rapidcontext.core.data.Dict;
 
 /**
  * A procedure bindings container. The procedure bindings contain
@@ -31,7 +32,7 @@ import org.rapidcontext.core.data.Data;
  * sealed, thereby protecting the particular bindings instance from
  * further modifications (it can still be inherited, though).
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class Bindings {
@@ -66,9 +67,9 @@ public class Bindings {
     private Bindings parent = null;
 
     /**
-     * The bindings data object.
+     * The bindings array.
      */
-    private Data data;
+    private Array data;
 
     /**
      * Returns the type name corresponding to a binding type constant.
@@ -114,11 +115,11 @@ public class Bindings {
      * Creates a new bindings container with the specified data.
      *
      * @param parent         the parent bindings container, or null
-     * @param data           the data object to use, or null
+     * @param arr            the data array to use, or null
      */
-    public Bindings(Bindings parent, Data data) {
+    public Bindings(Bindings parent, Array arr) {
         this.parent = parent;
-        this.data = (data == null) ? new Data() : data;
+        this.data = (arr == null) ? new Array() : arr;
     }
 
     /**
@@ -158,13 +159,13 @@ public class Bindings {
      * @return the input name set
      */
     private LinkedHashSet getNames(LinkedHashSet set) {
-        Data  bind;
+        Dict  bind;
 
         if (parent != null) {
             parent.getNames(set);
         }
-        for (int i = 0; i < data.arraySize(); i++) {
-            bind = data.getData(i);
+        for (int i = 0; i < data.size(); i++) {
+            bind = data.getDict(i);
             set.add(bind.getString("name", null));
         }
         return set;
@@ -290,20 +291,20 @@ public class Bindings {
     public void set(String name, int type, Object value, String description)
         throws ProcedureException {
 
-        Data  bind;
+        Dict  bind;
         int   index;
 
         index = findLocal(name);
         try {
             if (index <= 0) {
-                bind = new Data();
+                bind = new Dict();
                 bind.set("name", name);
                 bind.set("type", toTypeName(type));
                 bind.set("value", value);
                 bind.set("description", description);
                 data.add(bind);
             } else {
-                bind = data.getData(index);
+                bind = data.getDict(index);
                 bind.set("type", toTypeName(type));
                 bind.set("value", value);
                 bind.set("description", description);
@@ -334,11 +335,11 @@ public class Bindings {
      * @throws ProcedureException if the binding name wasn't found
      *             in the hierarchy
      */
-    private Data find(String name) throws ProcedureException {
+    private Dict find(String name) throws ProcedureException {
         int  index = findLocal(name);
 
         if (index >= 0) {
-            return data.getData(index);
+            return data.getDict(index);
         } else if (parent != null) {
             return parent.find(name);
         } else {
@@ -355,10 +356,10 @@ public class Bindings {
      *         -1 if not found
      */
     private int findLocal(String name) {
-        Data  bind;
+        Dict  bind;
 
-        for (int i = 0; i < data.arraySize(); i++) {
-            bind = data.getData(i);
+        for (int i = 0; i < data.size(); i++) {
+            bind = data.getDict(i);
             if (name.equals(bind.getString("name", null))) {
                 return i;
             }

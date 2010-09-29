@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -26,7 +26,7 @@ import java.util.logging.Logger;
  * This class will read and write to standard Java property files in
  * a specified directory.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class PropertiesStore implements DataStore {
@@ -177,19 +177,17 @@ public class PropertiesStore implements DataStore {
     }
 
     /**
-     * Reads an identified data object of a certain type.
+     * Reads an identified dictionary of a certain type.
      *
      * @param type           the type name, or null for generic
      * @param id             the unique object id
      *
-     * @return the data object read, or
+     * @return the dictionary read, or
      *         null if not found
      *
-     * @throws DataStoreException if the data couldn't be read
+     * @throws DataStoreException if the dictionary couldn't be read
      */
-    public Data readData(String type, String id)
-        throws DataStoreException {
-
+    public Dict readData(String type, String id) throws DataStoreException {
         File    file;
         String  msg;
 
@@ -213,15 +211,15 @@ public class PropertiesStore implements DataStore {
     }
 
     /**
-     * Writes a data object of a certain type.
+     * Writes a dictionary of a certain type.
      *
      * @param type           the type name, or null for generic
      * @param id             the unique object id
-     * @param data           the data to write
+     * @param dict           the dictionary to write
      *
-     * @throws DataStoreException if the data couldn't be written
+     * @throws DataStoreException if the dictionary couldn't be written
      */
-    public void writeData(String type, String id, Data data)
+    public void writeData(String type, String id, Dict dict)
         throws DataStoreException {
 
         File    dir;
@@ -234,7 +232,7 @@ public class PropertiesStore implements DataStore {
         }
         file = new File(dir, id + ".properties");
         try {
-            PropertiesSerializer.write(file, data);
+            PropertiesSerializer.write(file, dict);
         } catch (IOException e) {
             msg = "failed to write file " + file.toString() + ": " +
                   e.getMessage();

@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -16,7 +16,7 @@
 package org.rapidcontext.app.proc;
 
 import org.rapidcontext.app.ApplicationContext;
-import org.rapidcontext.core.data.Data;
+import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
@@ -27,7 +27,7 @@ import org.rapidcontext.core.security.SecurityContext;
 /**
  * The built-in thread creation procedure.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class ThreadCreateProcedure implements Procedure, Restricted {
@@ -126,14 +126,14 @@ public class ThreadCreateProcedure implements Procedure, Restricted {
         Object[]  args;
         String    source;
         String    name;
-        Data      data;
+        Array     data;
         Object    obj;
 
         proc = bindings.getValue("procedure").toString();
         obj = bindings.getValue("arguments");
-        if (obj instanceof Data) {
-            data = (Data) obj;
-            args = new Object[data.arraySize()];
+        if (obj instanceof Array) {
+            data = (Array) obj;
+            args = new Object[data.size()];
             for (int i = 0; i < args.length; i++) {
                 args[i] = data.get(i);
             }

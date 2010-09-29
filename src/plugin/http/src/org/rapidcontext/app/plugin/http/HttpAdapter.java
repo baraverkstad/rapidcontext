@@ -1,6 +1,6 @@
 /**
  * RapidContext HTTP plug-in <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,7 +15,7 @@
 
 package org.rapidcontext.app.plugin.http;
 
-import org.rapidcontext.core.data.Data;
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.env.Adapter;
 import org.rapidcontext.core.env.AdapterConnection;
 import org.rapidcontext.core.env.AdapterException;
@@ -28,7 +28,7 @@ import org.rapidcontext.core.env.AdapterException;
  * unless the number of concurrent connections needs to be
  * controlled.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class HttpAdapter implements Adapter {
@@ -130,7 +130,7 @@ public class HttpAdapter implements Adapter {
      * @throws AdapterException if the connection couldn't be created
      *             properly
      */
-    public AdapterConnection createConnection(Data params)
+    public AdapterConnection createConnection(Dict params)
         throws AdapterException {
 
         return new HttpConnection(params);

@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -15,7 +15,8 @@
 
 package org.rapidcontext.core.security;
 
-import org.rapidcontext.core.data.Data;
+import org.rapidcontext.core.data.Array;
+import org.rapidcontext.core.data.Dict;
 
 /**
  * A user security role. Each role is identified by a unique name.
@@ -28,15 +29,15 @@ import org.rapidcontext.core.data.Data;
  * matching is based on "type", "name" (or "regexp") and optionally
  * a "caller" (i.e. a calling procedure).
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class Role {
 
     /**
-     * The user data object.
+     * The user dictionary object.
      */
-    private Data data;
+    private Dict data;
 
     /**
      * Creates a new role with the specified name.
@@ -44,7 +45,7 @@ public class Role {
      * @param name           the unique role name
      */
     public Role(String name) {
-        this.data = new Data();
+        this.data = new Dict();
         this.data.set("name", name);
     }
 
@@ -54,7 +55,7 @@ public class Role {
      * @param data           the role data object
      */
     // TODO: Make this method package internal.
-    public Role(Data data) {
+    public Role(Dict data) {
         this.data = data;
     }
 
@@ -68,12 +69,12 @@ public class Role {
     }
 
     /**
-     * Returns the role data object. Note that changes to the data
-     * object will also affect this role object.
+     * Returns the role dictionary. Note that changes to the
+     * dictionary will also affect this role object.
      *
      * @return the role data object
      */
-    public Data getData() {
+    public Dict getData() {
         return this.data;
     }
 
@@ -115,14 +116,14 @@ public class Role {
      *         false otherwise
      */
     public boolean hasAccess(String type, String name, String caller) {
-        Data list = this.data.getData("access");
-        Data match;
+        Array  list = this.data.getArray("access");
+        Dict   match;
 
         if (list == null) {
             return false;
         }
-        for (int i = 0; i < list.arraySize(); i++) {
-            match = list.getData(i);
+        for (int i = 0; i < list.size(); i++) {
+            match = list.getDict(i);
             if (matches(match, type, name, caller)) {
                 return match.getBoolean("allow", true);
             }
@@ -141,7 +142,7 @@ public class Role {
      * @return true if the data matches, or
      *         false otherwise
      */
-    private boolean matches(Data m, String type, String name, String caller) {
+    private boolean matches(Dict m, String type, String name, String caller) {
         String  str;
 
         if (!m.getString("type", "").equals(type)) {

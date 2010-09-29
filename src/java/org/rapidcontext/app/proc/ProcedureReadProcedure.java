@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -15,7 +15,8 @@
 
 package org.rapidcontext.app.proc;
 
-import org.rapidcontext.core.data.Data;
+import org.rapidcontext.core.data.Array;
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.AddOnProcedure;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
@@ -27,7 +28,7 @@ import org.rapidcontext.core.security.SecurityContext;
 /**
  * The built-in procedure read procedure.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class ProcedureReadProcedure implements Procedure, Restricted {
@@ -133,10 +134,10 @@ public class ProcedureReadProcedure implements Procedure, Restricted {
      * @throws ProcedureException if the bindings data access
      *             failed
      */
-    static Data getProcedureData(Procedure proc) throws ProcedureException {
-        Data  res;
+    static Dict getProcedureData(Procedure proc) throws ProcedureException {
+        Dict  res;
 
-        res = new Data();
+        res = new Dict();
         res.set("name", proc.getName());
         if (proc instanceof AddOnProcedure) {
             res.set("type", ((AddOnProcedure) proc).getType());
@@ -158,13 +159,13 @@ public class ProcedureReadProcedure implements Procedure, Restricted {
      * @throws ProcedureException if the bindings data access
      *             failed
      */
-    static Data getBindingsData(Bindings bindings) throws ProcedureException {
+    static Array getBindingsData(Bindings bindings) throws ProcedureException {
         String[]  names = bindings.getNames();
-        Data      res = new Data(names.length);
-        Data      obj;
+        Array     res = new Array(names.length);
+        Dict      obj;
 
         for (int i = 0; i < names.length; i++) {
-            obj = new Data();
+            obj = new Dict();
             obj.set("name", names[i]);
             obj.set("type", bindings.getTypeName(names[i]));
             obj.set("value", bindings.getValue(names[i], ""));

@@ -18,19 +18,18 @@ package org.rapidcontext.core.data;
 import org.apache.commons.lang.StringEscapeUtils;
 
 /**
- * A data object serializer for XML. This class currently only
- * attempts to render a machine-readable version of a data object,
- * without any efforts of parsing input data. The following basic
- * requirements must be met in order to serialize a data object:<p>
+ * A data serializer for XML. This class currently only attempts to
+ * render a machine-readable version of a data object, without any
+ * efforts of parsing input data. The following basic requirements
+ * must be met in order to serialize an object:<p>
  *
  * <ul>
  *   <li>No circular references are permitted.
- *   <li>String, Integer, Boolean and Data objects are supported.
- *   <li>Any Data object should be either an array or a map.
+ *   <li>String, Integer, Boolean, Array and Dict objects are supported.
  *   <li>Key names must only consist of valid XML tag characters.
  * </ul>
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class XmlSerializer {
@@ -59,46 +58,51 @@ public class XmlSerializer {
     private static void serialize(Object obj, StringBuilder buffer) {
         if (obj == null) {
             buffer.append("<null/>");
-        } else if (obj instanceof Data) {
-            serialize((Data) obj, buffer);
+        } else if (obj instanceof Dict) {
+            serialize((Dict) obj, buffer);
+        } else if (obj instanceof Array) {
+            serialize((Array) obj, buffer);
         } else {
             serialize(obj.toString(), buffer);
         }
     }
 
     /**
-     * Serializes a data object into an XML representation. If the
-     * data contains array data, only the array values will be used.
-     * Otherwise the key-value pairs will be used.
+     * Serializes a dictionary into an XML representation.
      *
-     * @param data           the data object to convert
+     * @param dict           the dictionary to convert
      * @param buffer         the string buffer to append into
      */
-    private static void serialize(Data data, StringBuilder buffer) {
-        String[]  keys;
+    private static void serialize(Dict dict, StringBuilder buffer) {
+        String[]  keys = dict.keys();
 
-        if (data == null) {
-            buffer.append("<null/>");
-        } else if (data.arraySize() >= 0) {
-            for (int i = 0; i < data.arraySize(); i++) {
-                buffer.append("<arrayitem>");
-                serialize(data.get(i), buffer);
-                buffer.append("</arrayitem>");
-            }
-        } else {
-            keys = data.keys();
-            buffer.append("<object>");
-            for (int i = 0; i < keys.length; i++) {
-                buffer.append("<");
-                buffer.append(keys[i]);
-                buffer.append(">");
-                serialize(data.get(keys[i]), buffer);
-                buffer.append("</");
-                buffer.append(keys[i]);
-                buffer.append(">");
-            }
-            buffer.append("</object>");
+        buffer.append("<object>");
+        for (int i = 0; i < keys.length; i++) {
+            buffer.append("<");
+            buffer.append(keys[i]);
+            buffer.append(">");
+            serialize(dict.get(keys[i]), buffer);
+            buffer.append("</");
+            buffer.append(keys[i]);
+            buffer.append(">");
         }
+        buffer.append("</object>");
+    }
+
+    /**
+     * Serializes an array into an XML representation.
+     *
+     * @param arr            the array to convert
+     * @param buffer         the string buffer to append into
+     */
+    private static void serialize(Array arr, StringBuilder buffer) {
+        buffer.append("<array>");
+        for (int i = 0; i < arr.size(); i++) {
+            buffer.append("<item>");
+            serialize(arr.get(i), buffer);
+            buffer.append("</item>");
+        }
+        buffer.append("</array>");
     }
 
     /**

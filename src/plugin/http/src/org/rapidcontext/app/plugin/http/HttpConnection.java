@@ -1,6 +1,6 @@
 /**
  * RapidContext HTTP plug-in <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,7 +18,7 @@ package org.rapidcontext.app.plugin.http;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.rapidcontext.core.data.Data;
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.env.AdapterConnection;
 import org.rapidcontext.core.env.AdapterException;
 import org.rapidcontext.core.proc.ProcedureException;
@@ -28,7 +28,7 @@ import org.rapidcontext.core.proc.ProcedureException;
  * connection and allows execution of arbitrary SQL queries or
  * statements.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class HttpConnection implements AdapterConnection {
@@ -37,14 +37,14 @@ public class HttpConnection implements AdapterConnection {
      * The HTTP connection parameters. Indexed with the configuration
      * keys specified in the HTTP adapter.
      */
-    private Data params = null;
+    private Dict params = null;
 
     /**
      * Creates a new HTTP connection.
      *
      * @param params            the HTTP connection parameters
      */
-    HttpConnection(Data params) {
+    HttpConnection(Dict params) {
         this.params = params;
     }
 

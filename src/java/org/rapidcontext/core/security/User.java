@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -19,13 +19,14 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Logger;
 
-import org.rapidcontext.core.data.Data;
+import org.rapidcontext.core.data.Array;
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.util.ArrayUtil;
 
 /**
  * An application user.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class User {
@@ -39,7 +40,7 @@ public class User {
     /**
      * The user data object.
      */
-    private Data data;
+    private Dict data;
 
     /**
      * Creates a new user with the specified name.
@@ -47,7 +48,7 @@ public class User {
      * @param name           the unique user name
      */
     public User(String name) {
-        this.data = new Data();
+        this.data = new Dict();
         this.data.set("name", name);
     }
 
@@ -57,7 +58,7 @@ public class User {
      * @param data           the user data object
      */
     // TODO: Make this method package internal.
-    public User(Data data) {
+    public User(Dict data) {
         this.data = data;
     }
 
@@ -78,7 +79,7 @@ public class User {
      *
      * @return the user data object
      */
-    public Data getData() {
+    public Dict getData() {
         return this.data;
     }
 
@@ -282,7 +283,7 @@ public class User {
      *         false otherwise
      */
     public boolean hasRole(String name) {
-        Data  roles = this.data.getData("role");
+        Array  roles = this.data.getArray("role");
 
         return roles != null && roles.containsValue(name);
     }
@@ -293,14 +294,14 @@ public class User {
      * @return an array with all the roles
      */
     public String[] getRoles() {
-        Data      roles = this.data.getData("role");
+        Array     roles = this.data.getArray("role");
         String[]  res;
 
-        if (roles == null || roles.arraySize() <= 0) {
+        if (roles == null || roles.size() <= 0) {
             return new String[0];
         } else {
-            res = new String[roles.arraySize()];
-            for (int i = 0; i < roles.arraySize(); i++) {
+            res = new String[roles.size()];
+            for (int i = 0; i < roles.size(); i++) {
                 res[i] = roles.get(i).toString();
             }
             return res;
@@ -313,14 +314,14 @@ public class User {
      * @param roles          the array with all roles
      */
     public void setRoles(String[] roles) {
-        Data    list = this.data.getData("role");
+        Array   list = this.data.getArray("role");
         String  name;
 
         if (list == null) {
-            list = new Data();
+            list = new Array();
             this.data.set("role", list);
         }
-        for (int i = 0; i < list.arraySize(); i++) {
+        for (int i = 0; i < list.size(); i++) {
             if (ArrayUtil.indexOf(roles, list.getString(i, "")) < 0) {
                 list.remove(i);
                 i--;
@@ -330,10 +331,8 @@ public class User {
             name = roles[i].trim();
             if (name.length() <= 0) {
                 // Skip whitespace
-            } else if (list.arraySize() <= 0) {
-                list.set(0, name);
             } else if (!list.containsValue(name)) {
-                list.set(list.arraySize(), name);
+                list.add(name);
             }
         }
     }

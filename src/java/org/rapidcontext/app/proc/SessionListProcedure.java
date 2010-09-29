@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -19,7 +19,7 @@ import java.util.Iterator;
 
 import javax.servlet.http.HttpSession;
 
-import org.rapidcontext.core.data.Data;
+import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
@@ -31,7 +31,7 @@ import org.rapidcontext.core.web.SessionManager;
 /**
  * The built-in session list procedure.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class SessionListProcedure implements Procedure, Restricted {
@@ -113,7 +113,7 @@ public class SessionListProcedure implements Procedure, Restricted {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        Data         res = new Data(40);
+        Array        res = new Array(40);
         Iterator     iter;
         HttpSession  session;
 

@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -16,7 +16,8 @@
 package org.rapidcontext.app.proc;
 
 import org.rapidcontext.app.ApplicationContext;
-import org.rapidcontext.core.data.Data;
+import org.rapidcontext.core.data.Array;
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
@@ -27,7 +28,7 @@ import org.rapidcontext.core.security.SecurityContext;
 /**
  * The built-in thread list procedure.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class ThreadListProcedure implements Procedure, Restricted {
@@ -109,7 +110,7 @@ public class ThreadListProcedure implements Procedure, Restricted {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        Data         res = new Data(40);
+        Array         res = new Array(100);
         ThreadGroup  root;
 
         root = Thread.currentThread().getThreadGroup().getParent();
@@ -127,18 +128,18 @@ public class ThreadListProcedure implements Procedure, Restricted {
      * @param group          the thread group to visit
      * @param list           the data list
      */
-    private void listThreads(ThreadGroup group, Data list) {
+    private void listThreads(ThreadGroup group, Array list) {
         Thread[]       threads;
         ThreadGroup[]  groups;
         int            size;
-        Data           data;
+        Dict           data;
         CallContext    cx;
 
         size = group.activeCount();
         threads = new Thread[size * 2];
         size = group.enumerate(threads, false);
         for (int i = 0; i < size; i++) {
-            data = new Data();
+            data = new Dict();
             data.setInt("id", threads[i].hashCode());
             data.set("name", threads[i].getName());
             data.setInt("priority", threads[i].getPriority());

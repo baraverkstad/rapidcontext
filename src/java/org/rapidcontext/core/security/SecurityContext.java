@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -18,9 +18,9 @@ package org.rapidcontext.core.security;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
-import org.rapidcontext.core.data.Data;
 import org.rapidcontext.core.data.DataStore;
 import org.rapidcontext.core.data.DataStoreException;
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.util.ArrayUtil;
 
@@ -36,7 +36,7 @@ import org.rapidcontext.util.ArrayUtil;
  * specially. The built-in roles "Admin" and "Default" are also
  * handled in a special way.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class SecurityContext {
@@ -359,7 +359,7 @@ public class SecurityContext {
         throws DataStoreException, SecurityException {
 
         String  name = role.getName().toLowerCase();
-        Data    data;
+        Dict    data;
 
         try {
             if (!hasAdmin()) {
@@ -448,7 +448,7 @@ public class SecurityContext {
         throws DataStoreException, SecurityException {
 
         String  name = user.getName();
-        Data    data;
+        Dict    data;
 
         try {
             if (!hasAdmin()) {

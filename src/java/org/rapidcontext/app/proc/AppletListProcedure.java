@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -17,7 +17,7 @@ package org.rapidcontext.app.proc;
 
 import java.util.logging.Logger;
 
-import org.rapidcontext.core.data.Data;
+import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.DataStore;
 import org.rapidcontext.core.data.DataStoreException;
 import org.rapidcontext.core.proc.Bindings;
@@ -29,7 +29,7 @@ import org.rapidcontext.core.security.Restricted;
 /**
  * The built-in applet list procedure.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class AppletListProcedure implements Procedure, Restricted {
@@ -119,10 +119,10 @@ public class AppletListProcedure implements Procedure, Restricted {
 
         DataStore  store = cx.getDataStore();
         String[]   ids;
-        Data       list;
+        Array      list;
 
         ids = store.findDataIds("applet");
-        list = new Data(ids.length);
+        list = new Array(ids.length);
         for (int i = 0; i < ids.length; i++) {
             try {
                 list.add(store.readData("applet", ids[i]));

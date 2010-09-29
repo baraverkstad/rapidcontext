@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -20,16 +20,17 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.logging.Logger;
 
-import org.rapidcontext.core.data.Data;
+import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.DataStore;
 import org.rapidcontext.core.data.DataStoreException;
+import org.rapidcontext.core.data.Dict;
 
 /**
  * An external connectivity environment. The environment contains a
  * list of adapter connection pool, each with their own set of
  * configuration parameter values.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class Environment {
@@ -68,12 +69,12 @@ public class Environment {
      */
     public static Environment init(DataStore store) throws EnvironmentException {
         String[]     ids;
-        Data         data;
-        Data         list;
-        Data         pool;
+        Dict         data;
+        Array        list;
+        Dict         pool;
         Environment  env;
         Adapter      adapter;
-        Data         params;
+        Dict         params;
         String       poolName;
         String       str;
 
@@ -96,9 +97,9 @@ public class Environment {
         }
         env = new Environment(data.getString("name", ""),
                               data.getString("description", ""));
-        list = data.getData("pool");
-        for (int i = 0; list != null && i < list.arraySize(); i++) {
-            pool = list.getData(i);
+        list = data.getArray("pool");
+        for (int i = 0; list != null && i < list.size(); i++) {
+            pool = list.getDict(i);
             poolName = pool.getString("name", null);
             if (poolName != null) {
                 str = pool.getString("adapter", "");
@@ -110,7 +111,7 @@ public class Environment {
                     LOG.warning(str);
                     throw new EnvironmentException(str);
                 }
-                params = pool.getData("param");
+                params = pool.getDict("param");
                 try {
                     env.addPool(new Pool(poolName, adapter, params));
                 } catch (AdapterException e) {

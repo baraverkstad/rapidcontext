@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -55,9 +55,10 @@ import org.rapidcontext.app.proc.UserChangeProcedure;
 import org.rapidcontext.app.proc.UserCheckAccessProcedure;
 import org.rapidcontext.app.proc.UserListProcedure;
 import org.rapidcontext.app.proc.UserPasswordChangeProcedure;
-import org.rapidcontext.core.data.Data;
+import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.DataStore;
 import org.rapidcontext.core.data.DataStoreException;
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.env.Environment;
 import org.rapidcontext.core.env.EnvironmentException;
 import org.rapidcontext.core.js.JsCompileInterceptor;
@@ -76,7 +77,7 @@ import org.rapidcontext.util.FileUtil;
  * provides simple procedure execution and resource and plug-in
  * initialization and deinitialization.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class ApplicationContext {
@@ -100,7 +101,7 @@ public class ApplicationContext {
     /**
      * The application configuration.
      */
-    private Data config;
+    private Dict config;
 
     /**
      * The map of plug-in instances. The map is indexed by the
@@ -266,11 +267,11 @@ public class ApplicationContext {
      * plug-in "lib" directories.
      */
     private void initPlugins() {
-        Data    list;
+        Array   list;
         String  pluginId;
 
-        list = config.getData("plugins");
-        for (int i = 0; i < list.arraySize(); i++) {
+        list = config.getArray("plugins");
+        for (int i = 0; i < list.size(); i++) {
             try {
                 pluginId = list.getString(i, null);
                 loadPlugin(pluginId);
@@ -327,7 +328,7 @@ public class ApplicationContext {
      *
      * @return the application configuration
      */
-    public Data getConfig() {
+    public Dict getConfig() {
         return this.config;
     }
 
@@ -462,8 +463,8 @@ public class ApplicationContext {
      */
     public void loadPlugin(String pluginId) throws PluginException {
         DataStore    pluginStore;
-        Data         pluginData;
-        Data         pluginList;
+        Dict         pluginData;
+        Array        pluginList;
         String       className;
         Class        cls;
         Object       obj;
@@ -530,7 +531,7 @@ public class ApplicationContext {
             throw new PluginException(msg);
         }
         plugins.put(pluginId, plugin);
-        pluginList = config.getData("plugins");
+        pluginList = config.getArray("plugins");
         if (!pluginList.containsValue(pluginId)) {
             pluginList.add(pluginId);
             try {
@@ -552,7 +553,7 @@ public class ApplicationContext {
      * @throws PluginException if the plug-in deinitialization failed
      */
     public void unloadPlugin(String pluginId) throws PluginException {
-        Data    pluginList;
+        Array   pluginList;
         int     pos;
         String  msg;
 
@@ -563,7 +564,7 @@ public class ApplicationContext {
             throw new PluginException(msg);
         }
         destroyPlugin(pluginId);
-        pluginList = config.getData("plugins");
+        pluginList = config.getArray("plugins");
         pos = pluginList.indexOf(pluginId);
         if (pos >= 0) {
             pluginList.remove(pos);

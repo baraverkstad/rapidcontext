@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -17,22 +17,25 @@ package org.rapidcontext.core.js;
 
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
-import org.rapidcontext.core.data.Data;
+import org.rapidcontext.core.data.Array;
+import org.rapidcontext.core.data.Dict;
 
 /**
  * A JavaScript data object wrapper. This class encapsulates a
  * generic data object and forwards all reads and modifications to
  * the data object.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 class DataWrapper implements Scriptable {
 
+    // TODO: Split this object into one DictWrapper and one ArrayWrapper...
+
     /**
-     * The encapsulated data object.
+     * The encapsulated object.
      */
-    private Data data;
+    private Object data;
 
     /**
      * The object prototype.
@@ -50,9 +53,9 @@ class DataWrapper implements Scriptable {
      * @param data           the data object
      * @param parentScope    the object parent scope
      */
-    public DataWrapper(Data data, Scriptable parentScope) {
+    public DataWrapper(Object data, Scriptable parentScope) {
         this.data = data;
-        if (data.arraySize() >= 0) {
+        if (data instanceof Array) {
             this.prototype = ScriptableObject.getClassPrototype(parentScope, "Array");
         } else {
             this.prototype = ScriptableObject.getObjectPrototype(parentScope);
@@ -65,7 +68,7 @@ class DataWrapper implements Scriptable {
      *
      * @return the encapsulated data object
      */
-    public Data getData() {
+    public Object getData() {
         return this.data;
     }
 
@@ -88,13 +91,16 @@ class DataWrapper implements Scriptable {
      *         NOT_FOUND if not found
      */
     public Object get(String name, Scriptable start) {
-        if (this.data.arraySize() >= 0 && name.equals("length")) {
-            return new Integer(this.data.arraySize());
-        } else if (!this.data.containsKey(name)) {
-            return NOT_FOUND;
-        } else {
-            return JsSerializer.wrap(this.data.get(name), this);
+        if (data instanceof Array) {
+            if (name.equals("length")) {
+                return new Integer(((Array) data).size());
+            }
+        } else if (data instanceof Dict) {
+            if (((Dict) data).containsKey(name)) {
+                return JsSerializer.wrap(((Dict) data).get(name), this);
+            }
         }
+        return NOT_FOUND;
     }
 
     /**
@@ -107,11 +113,12 @@ class DataWrapper implements Scriptable {
      *         NOT_FOUND if not found
      */
     public Object get(int index, Scriptable start) {
-        if (!this.data.containsIndex(index)) {
-            return NOT_FOUND;
-        } else {
-            return JsSerializer.wrap(this.data.get(index), this);
+        if (data instanceof Array) {
+            if (((Array) data).containsIndex(index)) {
+                return JsSerializer.wrap(((Array) data).get(index), this);
+            }
         }
+        return NOT_FOUND;
     }
 
     /**
@@ -124,11 +131,14 @@ class DataWrapper implements Scriptable {
      *         false otherwise
      */
     public boolean has(String name, Scriptable start) {
-        if (this.data.arraySize() >= 0 && name.equals("length")) {
-            return true;
-        } else {
-            return this.data.containsKey(name);
+        if (data instanceof Array) {
+            if (name.equals("length")) {
+                return true;
+            }
+        } else if (data instanceof Dict) {
+            return (((Dict) data).containsKey(name));
         }
+        return false;
     }
 
     /**
@@ -141,7 +151,7 @@ class DataWrapper implements Scriptable {
      *         false otherwise
      */
     public boolean has(int index, Scriptable start) {
-        return this.data.containsIndex(index);
+        return data instanceof Array && (((Array) data).containsIndex(index));
     }
 
     /**
@@ -152,18 +162,18 @@ class DataWrapper implements Scriptable {
      * @param value          the value to set
      */
     public void put(String name, Scriptable start, Object value) {
-        if (this.data.arraySize() >= 0 && name.equals("length")) {
-            if (value instanceof Number) {
+        if (data instanceof Array) {
+            if (name.equals("length") && value instanceof Number) {
                 int len = ((Number) value).intValue();
-                while (this.data.arraySize() < len) {
-                    this.data.add(null);
+                while (((Array) data).size() < len) {
+                    ((Array) data).add(null);
                 }
-                while (this.data.arraySize() > len) {
-                    this.data.remove(this.data.arraySize() - 1);
+                while (((Array) data).size() > len) {
+                    ((Array) data).remove(((Array) data).size() - 1);
                 }
             }
-        } else {
-            this.data.set(name, JsSerializer.unwrap(value));
+        } else if (data instanceof Dict) {
+            ((Dict) data).set(name, JsSerializer.unwrap(value));
         }
     }
 
@@ -175,7 +185,9 @@ class DataWrapper implements Scriptable {
      * @param value          the value to set
      */
     public void put(int index, Scriptable start, Object value) {
-        this.data.set(index, JsSerializer.unwrap(value));
+        if (data instanceof Array) {
+            ((Array) data).set(index, JsSerializer.unwrap(value));
+        }
     }
 
     /**
@@ -184,7 +196,9 @@ class DataWrapper implements Scriptable {
      * @param name           the name of the property
      */
     public void delete(String name) {
-        this.data.remove(name);
+        if (data instanceof Dict) {
+            ((Dict) data).remove(name);
+        }
     }
 
     /**
@@ -193,8 +207,10 @@ class DataWrapper implements Scriptable {
      * @param index          the index of the property
      */
     public void delete(int index) {
-        // Emulates JS semantics by not renumbering array
-        this.data.set(index, null);
+        if (data instanceof Array) {
+            // Emulates JS semantics by not renumbering array
+            ((Array) data).set(index, null);
+        }
     }
 
     /**
@@ -239,7 +255,13 @@ class DataWrapper implements Scriptable {
      * @return an array of defined property keys
      */
     public Object[] getIds() {
-        return this.data.keys();
+        if (data instanceof Array) {
+            return new String[] { "length" };
+        } else if (data instanceof Dict) {
+            return ((Dict) data).keys();
+        } else {
+            return new Object[0];
+        }
     }
 
     /**

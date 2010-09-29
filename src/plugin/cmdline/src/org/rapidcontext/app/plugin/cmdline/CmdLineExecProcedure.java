@@ -1,6 +1,6 @@
 /**
  * RapidContext command-line plug-in <http://www.rapidcontext.com/>
- * Copyright (c) 2008-2009 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2008-2010 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.rapidcontext.app.ApplicationContext;
-import org.rapidcontext.core.data.Data;
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.AddOnProcedure;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
@@ -35,7 +35,7 @@ import org.rapidcontext.core.proc.ProcedureException;
  * functionality of executing local command-line programs and
  * capturing their output.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class CmdLineExecProcedure extends AddOnProcedure {
@@ -131,7 +131,7 @@ public class CmdLineExecProcedure extends AddOnProcedure {
         File      dir;
         String[]  env = null;
         String    str;
-        Data      res;
+        Dict      res;
 
         dir = ApplicationContext.getInstance().getPluginDir();
         str = bindings.getValue(BINDING_COMMAND).toString();
@@ -199,10 +199,10 @@ public class CmdLineExecProcedure extends AddOnProcedure {
      *
      * @throws IOException if the stream reading failed
      */
-    private static Data waitFor(Process process, CallContext cx)
+    private static Dict waitFor(Process process, CallContext cx)
         throws IOException {
 
-        Data          res = new Data();
+        Dict          res = new Dict();
         boolean       running = true;
         int           exitValue = 0;
         StringBuffer  output = new StringBuffer();

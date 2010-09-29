@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -30,8 +30,9 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.fileupload.FileItemHeaders;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.lang.StringUtils;
-import org.rapidcontext.core.data.Data;
+import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.DataSelector;
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.HtmlSerializer;
 import org.rapidcontext.core.data.XmlSerializer;
 import org.rapidcontext.core.js.JsSerializer;
@@ -46,7 +47,7 @@ import org.rapidcontext.core.web.SessionManager;
  * The main application servlet. This servlet handles all incoming
  * web requests.
  *
- * @author Per Cederberg, Dynabyte AB
+ * @author Per Cederberg
  * @version  1.0
  */
 public class ServletApplication extends HttpServlet {
@@ -417,7 +418,7 @@ public class ServletApplication extends HttpServlet {
      * @param name           the function name
      */
     private void processProcedure(Request request, String name) {
-        Data          res = new Data();
+        Dict          res = new Dict();
         ArrayList     argList = new ArrayList();
         Object[]      args;
         StringBuffer  trace = null;
@@ -458,9 +459,9 @@ public class ServletApplication extends HttpServlet {
      */
     private void processQuery(Request request, String path) {
         DataSelector  selector = new DataSelector(path);
-        Data          res = null;
-        Data          dir = null;
-        Data          obj = null;
+        Dict          res = null;
+        Array         dir = null;
+        Array         obj = null;
         String[]      list;
         boolean       createLinks;
 
@@ -477,7 +478,7 @@ public class ServletApplication extends HttpServlet {
             createLinks = !isMimeMatch(request, MIME_JSON) &&
                           !isMimeMatch(request, MIME_XML);
             if (selector.isRoot()) {
-                dir = new Data();
+                dir = new Array();
                 list = ctx.getDataStore().findTypes();
                 for (int i = 0; i < list.length; i++) {
                     if (createLinks) {
@@ -486,7 +487,7 @@ public class ServletApplication extends HttpServlet {
                         dir.add(list[i]);
                     }
                 }
-                obj = new Data();
+                obj = new Array();
                 list = ctx.getDataStore().findDataIds(null);
                 for (int i = 0; i < list.length; i++) {
                     if (createLinks) {
@@ -495,11 +496,11 @@ public class ServletApplication extends HttpServlet {
                         obj.add(list[i]);
                     }
                 }
-                res = new Data();
+                res = new Dict();
                 res.set("directories", dir);
                 res.set("objects", obj);
             } else if (selector.isIndex) {
-                obj = new Data();
+                obj = new Array();
                 list = ctx.getDataStore().findDataIds(selector.path[0]);
                 for (int i = 0; i < list.length; i++) {
                     if (createLinks) {
@@ -508,7 +509,7 @@ public class ServletApplication extends HttpServlet {
                         obj.add(list[i]);
                     }
                 }
-                res = new Data();
+                res = new Dict();
                 res.set("objects", obj);
             } else if (selector.path.length == 1) {
                 res = ctx.getDataStore().readData(null, selector.path[0]);
@@ -563,7 +564,7 @@ public class ServletApplication extends HttpServlet {
             }
         } catch (Exception e) {
             // TODO: How do users want their error messages?
-            res = new Data();
+            res = new Dict();
             res.set("error", e.getMessage());
             if (isMimeMatch(request, MIME_JSON)) {
                 request.sendData("text/javascript", JsSerializer.serialize(res));

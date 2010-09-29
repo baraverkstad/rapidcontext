@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -15,7 +15,7 @@
 
 package org.rapidcontext.app.plugin;
 
-import org.rapidcontext.core.data.Data;
+import org.rapidcontext.core.data.Dict;
 
 /**
  * The base plug-in class. A plug-in may extend this class in order
@@ -23,7 +23,7 @@ import org.rapidcontext.core.data.Data;
  * not declare an overriding implementation, a default instance of
  * this class is created instead.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class Plugin {
@@ -31,7 +31,7 @@ public class Plugin {
     /**
      * The plug-in configuration data.
      */
-    private Data data = null;
+    private Dict data = null;
 
     /**
      * Creates a new plug-in instance.
@@ -46,7 +46,7 @@ public class Plugin {
      *
      * @return the plug-in definition data
      */
-    public final Data getData() {
+    public final Dict getData() {
         return this.data;
     }
 
@@ -56,7 +56,7 @@ public class Plugin {
      *
      * @param data           the plug-in definition data
      */
-    public final void setData(Data data) {
+    public final void setData(Dict data) {
         this.data = data;
     }
 

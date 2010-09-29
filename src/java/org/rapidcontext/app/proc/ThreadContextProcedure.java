@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -18,7 +18,8 @@ package org.rapidcontext.app.proc;
 import java.util.Date;
 
 import org.rapidcontext.app.ApplicationContext;
-import org.rapidcontext.core.data.Data;
+import org.rapidcontext.core.data.Array;
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.CallStack;
@@ -32,7 +33,7 @@ import org.rapidcontext.util.DateUtil;
 /**
  * The built-in thread context retrieval procedure.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class ThreadContextProcedure implements Procedure, Restricted {
@@ -148,8 +149,8 @@ public class ThreadContextProcedure implements Procedure, Restricted {
      *
      * @return the data object
      */
-    static Data getContextData(CallContext cx) {
-        Data          res = new Data();
+    static Dict getContextData(CallContext cx) {
+        Dict          res = new Dict();
         Procedure     proc;
         Date          startTime;
         Date          endTime;
@@ -158,7 +159,7 @@ public class ThreadContextProcedure implements Procedure, Restricted {
         StringBuffer  log;
         CallStack     stack = cx.getCallStack();
         Procedure[]   procs;
-        Data          list;
+        Array         list;
 
         proc = (Procedure) cx.getAttribute(CallContext.ATTRIBUTE_PROCEDURE);
         if (proc == null) {
@@ -206,7 +207,7 @@ public class ThreadContextProcedure implements Procedure, Restricted {
         log = (StringBuffer) cx.getAttribute(CallContext.ATTRIBUTE_LOG_BUFFER);
         res.set("log", (log == null) ? "" : log.toString());
         procs = stack.toArray();
-        list = new Data(procs.length);
+        list = new Array(procs.length);
         for (int i = 0; i < procs.length; i++) {
             list.add(procs[i].getName());
         }

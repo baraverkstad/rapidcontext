@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -15,7 +15,7 @@
 
 package org.rapidcontext.app.proc;
 
-import org.rapidcontext.core.data.Data;
+import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
@@ -26,7 +26,7 @@ import org.rapidcontext.core.security.SecurityContext;
 /**
  * The built-in role list procedure.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class RoleListProcedure implements Procedure, Restricted {
@@ -108,11 +108,11 @@ public class RoleListProcedure implements Procedure, Restricted {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        Data      res;
+        Array     res;
         String[]  names;
 
         names = SecurityContext.getRoleNames();
-        res = new Data(names.length);
+        res = new Array(names.length);
         for (int i = 0; i < names.length; i++) {
             res.add(SecurityContext.getRole(names[i]).getData());
         }

@@ -1,6 +1,6 @@
 /*
  * RapidContext JDBC plug-in <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2010 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,7 +32,8 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Properties;
 
-import org.rapidcontext.core.data.Data;
+import org.rapidcontext.core.data.Array;
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.env.AdapterConnection;
 import org.rapidcontext.core.env.AdapterException;
 import org.rapidcontext.util.DateUtil;
@@ -195,11 +196,11 @@ public class JdbcConnection implements AdapterConnection {
      *
      * @param sql            the SQL statement to execute
      *
-     * @return the data list with generated keys
+     * @return the array with generated keys
      *
      * @throws AdapterException if the execution failed
      */
-    public Data executeStatement(String sql) throws AdapterException {
+    public Array executeStatement(String sql) throws AdapterException {
         return executeStatement(prepare(sql, null));
     }
 
@@ -209,14 +210,14 @@ public class JdbcConnection implements AdapterConnection {
      *
      * @param stmt           the prepared SQL statement to execute
      *
-     * @return the data list with generated keys
+     * @return the array with generated keys
      *
      * @throws AdapterException if the execution failed
      */
-    public Data executeStatement(PreparedStatement stmt)
+    public Array executeStatement(PreparedStatement stmt)
         throws AdapterException {
 
-        Data       res = new Data(10);
+        Array      res = new Array(10);
         ResultSet  set = null;
 
         try {
@@ -252,11 +253,11 @@ public class JdbcConnection implements AdapterConnection {
      *
      * @param sql            the SQL query to execute
      *
-     * @return the data object with all the result data
+     * @return the object with the result data
      *
      * @throws AdapterException if the execution failed
      */
-    public Data executeQuery(String sql) throws AdapterException {
+    public Object executeQuery(String sql) throws AdapterException {
         return executeQuery(prepare(sql, null));
     }
 
@@ -266,11 +267,11 @@ public class JdbcConnection implements AdapterConnection {
      * @param sql            the SQL query to execute
      * @param flags          the processing and mapping flags
      *
-     * @return the data object with all the result data
+     * @return the object with the result data
      *
      * @throws AdapterException if the execution failed
      */
-    public Data executeQuery(String sql, String flags) throws AdapterException {
+    public Object executeQuery(String sql, String flags) throws AdapterException {
         return executeQuery(prepare(sql, null), flags);
     }
 
@@ -282,11 +283,11 @@ public class JdbcConnection implements AdapterConnection {
      *
      * @param stmt           the prepared SQL query to execute
      *
-     * @return the data object with all the result data
+     * @return the object with the result data
      *
      * @throws AdapterException if the execution failed
      */
-    public Data executeQuery(PreparedStatement stmt)
+    public Object executeQuery(PreparedStatement stmt)
         throws AdapterException {
 
         return executeQuery(stmt, "");
@@ -299,11 +300,11 @@ public class JdbcConnection implements AdapterConnection {
      * @param stmt           the prepared SQL query to execute
      * @param flags          the processing and mapping flags
      *
-     * @return the data object with all the result data
+     * @return the object with the result data
      *
      * @throws AdapterException if the execution failed
      */
-    public Data executeQuery(PreparedStatement stmt, String flags)
+    public Object executeQuery(PreparedStatement stmt, String flags)
         throws AdapterException {
 
         ResultSet  set = null;
@@ -378,12 +379,12 @@ public class JdbcConnection implements AdapterConnection {
      *
      * @throws AdapterException if the result data couldn't be read
      */
-    protected Data createResults(ResultSet rs, String flags)
+    protected Object createResults(ResultSet rs, String flags)
         throws AdapterException {
 
         boolean            flagMetadata = hasFlag(flags, "metadata", false);
         ResultSetMetaData  meta;
-        Data               res;
+        Dict               dict;
 
         try {
             meta = rs.getMetaData();
@@ -392,13 +393,13 @@ public class JdbcConnection implements AdapterConnection {
                                        e.getMessage());
         }
         if (flagMetadata) {
-            res = new Data();
-            res.set("columns", createColumnData(meta, flags));
-            res.set("rows", createRowData(meta, rs, flags));
+            dict = new Dict();
+            dict.set("columns", createColumnData(meta, flags));
+            dict.set("rows", createRowData(meta, rs, flags));
+            return dict;
         } else {
-            res = createRowData(meta, rs, flags);
+            return createRowData(meta, rs, flags);
         }
-        return res;
     }
 
     /**
@@ -407,22 +408,22 @@ public class JdbcConnection implements AdapterConnection {
      * @param meta           the result set meta-data to convert
      * @param flags          the processing and mapping flags
      *
-     * @return the data array object with all the column information
+     * @return the array of column information
      *
      * @throws AdapterException if the result data couldn't be read
      */
-    protected Data createColumnData(ResultSetMetaData meta, String flags)
+    protected Array createColumnData(ResultSetMetaData meta, String flags)
         throws AdapterException {
 
-        Data  cols;
-        Data  obj;
-        int   colCount;
+        Array  cols;
+        Dict   obj;
+        int    colCount;
 
         try {
             colCount = meta.getColumnCount();
-            cols = new Data(colCount);
+            cols = new Array(colCount);
             for (int i = 0; i < colCount; i++) {
-                obj = new Data();
+                obj = new Dict();
                 obj.set("name", meta.getColumnLabel(i + 1).toLowerCase());
                 obj.set("catalog", meta.getCatalogName(i + 1));
                 obj.set("type", meta.getColumnTypeName(i + 1));
@@ -440,17 +441,18 @@ public class JdbcConnection implements AdapterConnection {
     }
 
     /**
-     * Converts the query result set into an array of row data objects.
+     * Converts the query result set into an array or a dictionary
+     * (depending on flags).
      *
      * @param meta           the result set meta-data
      * @param rs             the result set to convert
      * @param flags          the processing and mapping flags
      *
-     * @return the data array object with all the result data
+     * @return the array of rows or dictionary of a single row
      *
      * @throws AdapterException if the result data couldn't be read
      */
-    protected Data createRowData(ResultSetMetaData meta, ResultSet rs, String flags)
+    protected Object createRowData(ResultSetMetaData meta, ResultSet rs, String flags)
         throws AdapterException {
 
         boolean  flagColumnNames = hasFlag(flags, "column-names", true);
@@ -458,37 +460,43 @@ public class JdbcConnection implements AdapterConnection {
         boolean  flagBinaryData = hasFlag(flags, "binary-data", false);
         boolean  flagSingleRow = hasFlag(flags, "single-row", false);
         int      colCount;
-        Data     rows = new Data(10);
-        Data     obj;
+        Array    rows = new Array(10);
+        Dict     rowDict;
+        Array    rowArr;
         Object   value;
 
         try {
             colCount = meta.getColumnCount();
             while (rs.next()) {
-                obj = flagColumnNames ? new Data() : new Data(colCount);
-                for (int i = 0; i < colCount; i++) {
-                    value = createValue(meta, rs, i + 1, flagNativeTypes, flagBinaryData);
-                    if (flagColumnNames) {
-                        obj.add(meta.getColumnLabel(i + 1).toLowerCase(), value);
-                    } else {
-                        obj.add(value);
+                if (flagColumnNames) {
+                    rowDict = new Dict();
+                    for (int i = 0; i < colCount; i++) {
+                        value = createValue(meta, rs, i + 1, flagNativeTypes, flagBinaryData);
+                        rowDict.add(meta.getColumnLabel(i + 1).toLowerCase(), value);
                     }
+                    rows.add(rowDict);
+                } else {
+                    rowArr = new Array(colCount);
+                    for (int i = 0; i < colCount; i++) {
+                        value = createValue(meta, rs, i + 1, flagNativeTypes, flagBinaryData);
+                        rowArr.add(value);
+                    }
+                    rows.add(rowArr);
                 }
-                rows.add(obj);
             }
         } catch (SQLException e) {
             throw new AdapterException("failed to extract query results: " +
                                        e.getMessage());
         }
         if (flagSingleRow) {
-            if (rows.arraySize() < 1) {
+            if (rows.size() < 1) {
                 return null;
-            } else if (rows.arraySize() == 1) {
-                return rows.getData(0);
+            } else if (rows.size() == 1) {
+                return rows.get(0);
             } else {
                 throw new AdapterException("too many rows in query results; " +
                                            "expected 1, but found " +
-                                           rows.arraySize());
+                                           rows.size());
             }
         }
         return rows;

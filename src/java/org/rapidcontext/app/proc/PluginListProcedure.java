@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -19,9 +19,10 @@ import java.io.File;
 
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.app.plugin.PluginDataStore;
-import org.rapidcontext.core.data.Data;
+import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.DataStore;
 import org.rapidcontext.core.data.DataStoreException;
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
@@ -32,8 +33,8 @@ import org.rapidcontext.core.security.SecurityContext;
 /**
  * The built-in plug-in list procedure.
  *
- * @author   Jonas Ekstrand, Dynabyte AB
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Jonas Ekstrand
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class PluginListProcedure implements Procedure, Restricted {
@@ -119,10 +120,10 @@ public class PluginListProcedure implements Procedure, Restricted {
         DataStore           ds;
         File[]              files;
         String              id;
-        Data                res;
-        Data                data;
+        Array               res;
+        Dict                data;
 
-        res = new Data(ids.length);
+        res = new Array(ids.length);
         for (int i = 0; i < ids.length; i++) {
             ds = store.getPlugin(ids[i]);
             data = null;
@@ -132,7 +133,7 @@ public class PluginListProcedure implements Procedure, Restricted {
                 // Read errors are handled below
             }
             if (data == null) {
-                data = new Data();
+                data = new Dict();
                 data.set("id", ids[i]);
             }
             data.setBoolean("loaded", true);

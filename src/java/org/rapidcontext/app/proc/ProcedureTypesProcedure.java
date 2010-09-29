@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -15,7 +15,7 @@
 
 package org.rapidcontext.app.proc;
 
-import org.rapidcontext.core.data.Data;
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Library;
@@ -27,7 +27,7 @@ import org.rapidcontext.core.security.SecurityContext;
 /**
  * The built-in procedure type list procedure.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class ProcedureTypesProcedure implements Procedure, Restricted {
@@ -109,16 +109,16 @@ public class ProcedureTypesProcedure implements Procedure, Restricted {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        Data      res = new Data();
+        Dict      res = new Dict();
         String[]  names;
         Bindings  defs;
-        Data      obj;
+        Dict      obj;
 
         names = Library.getTypes();
         for (int i = 0; i < names.length; i++) {
             defs = Library.getDefaultBindings(names[i]);
             if (defs != null) {
-                obj = new Data();
+                obj = new Dict();
                 obj.set("type", names[i]);
                 obj.set("bindings", ProcedureReadProcedure.getBindingsData(defs));
                 res.set(names[i], obj);

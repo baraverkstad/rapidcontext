@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -15,7 +15,7 @@
 
 package org.rapidcontext.app.proc;
 
-import org.rapidcontext.core.data.Data;
+import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Library;
@@ -27,7 +27,7 @@ import org.rapidcontext.core.security.SecurityContext;
 /**
  * The built-in procedure list procedure.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class ProcedureListProcedure implements Procedure, Restricted {
@@ -111,10 +111,10 @@ public class ProcedureListProcedure implements Procedure, Restricted {
 
         Library   library = cx.getLibrary();
         String[]  names;
-        Data      list;
+        Array     list;
 
         names = library.getProcedureNames();
-        list = new Data(names.length);
+        list = new Array(names.length);
         for (int i = 0; i < names.length; i++) {
             if (SecurityContext.hasAccess("procedure", names[i], "")) {
                 list.add(names[i]);

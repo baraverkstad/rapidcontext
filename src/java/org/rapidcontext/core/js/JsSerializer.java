@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -24,24 +24,24 @@ import org.mozilla.javascript.NativeArray;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.Undefined;
 import org.mozilla.javascript.WrappedException;
-import org.rapidcontext.core.data.Data;
+import org.rapidcontext.core.data.Array;
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.env.AdapterConnection;
 
 /**
  * An object serializer and unserializer for the JavaScript object
  * notation (JSON) format. This class also provides methods for
- * wrapping data objects for execution inside the JavaScript engine.
- * The data object mapping to JavaScript is not exact, and may omit
- * serialization of data in some cases. The following basic
- * requirements must be met in order to serialize a data object:<p>
+ * wrapping dictionary and array object for access inside the
+ * JavaScript engine. The object mapping to JavaScript is not exact,
+ * and may omit serialization of data in some cases. The following
+ * basic requirements must be met in order to serialize an object:<p>
  *
  * <ul>
  *   <li>No circular references are permitted.
- *   <li>String, Integer, Boolean and Data objects are supported.
- *   <li>Any Data object should be either an array or a map.
+ *   <li>String, Integer, Boolean, Array or Dict objects are supported.
  * </ul>
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class JsSerializer {
@@ -80,8 +80,10 @@ public class JsSerializer {
     private static void serialize(Object obj, StringBuffer buffer) {
         if (obj == null) {
             buffer.append("null");
-        } else if (obj instanceof Data) {
-            serialize((Data) obj, buffer);
+        } else if (obj instanceof Dict) {
+            serialize((Dict) obj, buffer);
+        } else if (obj instanceof Array) {
+            serialize((Array) obj, buffer);
         } else if (obj instanceof Boolean) {
             buffer.append(obj.toString());
         } else if (obj instanceof Number) {
@@ -92,43 +94,51 @@ public class JsSerializer {
     }
 
     /**
-     * Serializes a data object into a JavaScript literal. I.e. the
+     * Serializes a dictionary into a JavaScript literal. I.e. the
      * serialized result can be used as a constant inside JavaScript
      * code. The serialized result will be written into the specified
      * string buffer.
      *
-     * @param data           the data object to convert, or null
+     * @param dict           the dictionary to convert
      * @param buffer         the string buffer to append into
      */
-    private static void serialize(Data data, StringBuffer buffer) {
-        String[]  keys;
-
-        if (data == null) {
-            buffer.append("null");
-        } else if (data.arraySize() >= 0) {
-            buffer.append("[");
-            for (int i = 0; i < data.arraySize(); i++) {
-                if (i > 0) {
-                    buffer.append(", ");
-                }
-                serialize(data.get(i), buffer);
+    private static void serialize(Dict dict, StringBuffer buffer) {
+        String[]  keys = dict.keys();
+        
+        buffer.append("{");
+        for (int i = 0; i < keys.length; i++) {
+            if (i > 0) {
+                buffer.append(",");
             }
-            buffer.append("]");
-        } else if (data.mapSize() <= 0) {
-            buffer.append("{}");
-        } else {
-            keys = data.keys();
-            buffer.append("{");
-            for (int i = 0; i < keys.length; i++) {
-                if (i > 0) {
-                    buffer.append(", ");
-                }
-                serialize(keys[i], buffer);
-                buffer.append(": ");
-                serialize(data.get(keys[i]), buffer);
-            }
-            buffer.append(" }");
+            buffer.append(" ");
+            serialize(keys[i], buffer);
+            buffer.append(": ");
+            serialize(dict.get(keys[i]), buffer);
         }
+        if (keys.length > 0) {
+            buffer.append(" ");
+        }
+        buffer.append("}");
+    }
+
+    /**
+     * Serializes an array into a JavaScript literal. I.e. the
+     * serialized result can be used as a constant inside JavaScript
+     * code. The serialized result will be written into the specified
+     * string buffer.
+     *
+     * @param arr            the array to convert
+     * @param buffer         the string buffer to append into
+     */
+    private static void serialize(Array arr, StringBuffer buffer) {
+        buffer.append("[");
+        for (int i = 0; i < arr.size(); i++) {
+            if (i > 0) {
+                buffer.append(", ");
+            }
+            serialize(arr.get(i), buffer);
+        }
+        buffer.append("]");
     }
 
     /**
@@ -241,11 +251,12 @@ public class JsSerializer {
      *
      * @return the wrapped object
      *
-     * @see org.rapidcontext.core.data.Data
+     * @see org.rapidcontext.core.data.Array
+     * @see org.rapidcontext.core.data.Dict
      */
     public static Object wrap(Object obj, Scriptable scope) {
-        if (obj instanceof Data) {
-            return new DataWrapper((Data) obj, scope);
+        if (obj instanceof Dict || obj instanceof Array) {
+            return new DataWrapper(obj, scope);
         } else if (obj instanceof AdapterConnection) {
             return new ConnectionWrapper((AdapterConnection) obj, scope);
         } else {
@@ -264,43 +275,37 @@ public class JsSerializer {
      *
      * @return the unwrapped object
      *
-     * @see org.rapidcontext.core.data.Data
+     * @see org.rapidcontext.core.data.Array
+     * @see org.rapidcontext.core.data.Dict
      */
     public static Object unwrap(Object obj) {
-        Data         data;
-        NativeArray  arr;
-        Scriptable   scr;
-        int          length;
-        Object[]     keys;
-        Object       value;
-        String       str;
-
         if (obj instanceof DataWrapper) {
             return ((DataWrapper) obj).getData();
         } else if (obj instanceof ConnectionWrapper) {
             return ((ConnectionWrapper) obj).getConnection();
         } else if (obj instanceof NativeArray) {
-            arr = (NativeArray) obj;
-            length = (int) arr.getLength();
-            data = new Data(length);
+            NativeArray nativeArr = (NativeArray) obj;
+            int length = (int) nativeArr.getLength();
+            Array arr = new Array(length);
             for (int i = 0; i < length; i++) {
-                data.set(i, unwrap(arr.get(i, arr)));
+                arr.set(i, unwrap(nativeArr.get(i, nativeArr)));
             }
-            return data;
+            return arr;
         } else if (obj instanceof Scriptable) {
-            scr = (Scriptable) obj;
-            data = new Data();
-            keys = scr.getIds();
+            Scriptable scr = (Scriptable) obj;
+            Object[] keys = scr.getIds();
+            Dict dict = new Dict(keys.length);
             for (int i = 0; i < keys.length; i++) {
-                str = keys[i].toString();
+                String str = keys[i].toString();
+                Object value = null;
                 if (keys[i] instanceof Integer) {
                     value = scr.get(((Integer) keys[i]).intValue(), scr);
                 } else {
                     value = scr.get(str, scr);
                 }
-                data.set(str, unwrap(value));
+                dict.set(str, unwrap(value));
             }
-            return data;
+            return dict;
         } else if (obj instanceof Undefined || obj == Scriptable.NOT_FOUND) {
             return null;
         } else {

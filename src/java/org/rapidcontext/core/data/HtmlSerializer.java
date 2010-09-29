@@ -18,19 +18,18 @@ package org.rapidcontext.core.data;
 import org.apache.commons.lang.StringEscapeUtils;
 
 /**
- * A data object serializer for HTML. This class only attempts to
- * render a human-readable version of a data object, without any
- * efforts of making the result machine readable. It is only useful
- * for debugging or similar. The following basic requirements must be
- * met in order to serialize a data object:<p>
+ * A data serializer for HTML. This class only attempts to render a
+ * human-readable version of a data object, without any efforts of
+ * making the result machine readable. It is only useful for
+ * debugging or similar. The following basic requirements must be met
+ * in order to serialize an object:<p>
  *
  * <ul>
  *   <li>No circular references are permitted.
- *   <li>String, Integer, Boolean and Data objects are supported.
- *   <li>Any Data object should be either an array or a map.
+ *   <li>String, Integer, Boolean, Array and Dict objects are supported.
  * </ul>
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class HtmlSerializer {
@@ -59,46 +58,49 @@ public class HtmlSerializer {
     private static void serialize(Object obj, StringBuilder buffer) {
         if (obj == null) {
             buffer.append("<code>N/A</code>");
-        } else if (obj instanceof Data) {
-            serialize((Data) obj, buffer);
+        } else if (obj instanceof Dict) {
+            serialize((Dict) obj, buffer);
+        } else if (obj instanceof Array) {
+            serialize((Array) obj, buffer);
         } else {
             serialize(obj.toString(), buffer);
         }
     }
 
     /**
-     * Serializes a data object into an HTML representation. If the
-     * data contains array data, only the array values will be used.
-     * Otherwise the key-value pairs will be listed in a table.
+     * Serializes a dictionary into an HTML representation.
      *
-     * @param data           the data object to convert
+     * @param dict           the dictionary to convert
      * @param buffer         the string buffer to append into
      */
-    private static void serialize(Data data, StringBuilder buffer) {
-        String[]  keys;
+    private static void serialize(Dict dict, StringBuilder buffer) {
+        String[]  keys = dict.keys();
 
-        if (data == null) {
-            buffer.append("<code>N/A</code>");
-        } else if (data.arraySize() >= 0) {
-            buffer.append("<ol>\n");
-            for (int i = 0; i < data.arraySize(); i++) {
-                buffer.append("<li>");
-                serialize(data.get(i), buffer);
-                buffer.append("</li>\n");
-            }
-            buffer.append("</ol>\n");
-        } else {
-            keys = data.keys();
-            buffer.append("<table>\n<tbody>\n");
-            for (int i = 0; i < keys.length; i++) {
-                buffer.append("<tr>\n<th>");
-                serialize(keys[i], buffer);
-                buffer.append("</th>\n<td>");
-                serialize(data.get(keys[i]), buffer);
-                buffer.append("</td>\n</tr>\n");
-            }
-            buffer.append("</tbody>\n</table>\n");
+        buffer.append("<table>\n<tbody>\n");
+        for (int i = 0; i < keys.length; i++) {
+            buffer.append("<tr>\n<th>");
+            serialize(keys[i], buffer);
+            buffer.append("</th>\n<td>");
+            serialize(dict.get(keys[i]), buffer);
+            buffer.append("</td>\n</tr>\n");
         }
+        buffer.append("</tbody>\n</table>\n");
+    }
+
+    /**
+     * Serializes an array into an HTML representation.
+     *
+     * @param arr            the array to convert
+     * @param buffer         the string buffer to append into
+     */
+    private static void serialize(Array arr, StringBuilder buffer) {
+        buffer.append("<ol>\n");
+        for (int i = 0; i < arr.size(); i++) {
+            buffer.append("<li>");
+            serialize(arr.get(i), buffer);
+            buffer.append("</li>\n");
+        }
+        buffer.append("</ol>\n");
     }
 
     /**

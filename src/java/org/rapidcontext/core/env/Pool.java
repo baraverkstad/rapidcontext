@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -22,14 +22,14 @@ import java.util.logging.Logger;
 
 import org.apache.commons.pool.PoolableObjectFactory;
 import org.apache.commons.pool.impl.GenericObjectPool;
-import org.rapidcontext.core.data.Data;
+import org.rapidcontext.core.data.Dict;
 
 /**
  * An adapter connection pool. The connection pool contains all the
  * configuration parameters for creating new connections, as well as
  * an optional pool of previously used connections.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class Pool {
@@ -74,7 +74,7 @@ public class Pool {
     /**
      * The configuration parameters to user for creating connections.
      */
-    private Data params;
+    private Dict params;
 
     /**
      * The adapter connection pool.
@@ -90,7 +90,7 @@ public class Pool {
      *
      * @throws AdapterException if the pool configuration was invalid
      */
-    public Pool(String name, Adapter adapter, Data params)
+    public Pool(String name, Adapter adapter, Dict params)
         throws AdapterException {
 
         String  str;
@@ -166,7 +166,7 @@ public class Pool {
      *
      * @return the configuration parameter values for this pool
      */
-    public Data getParameters() {
+    public Dict getParameters() {
         return params;
     }
 

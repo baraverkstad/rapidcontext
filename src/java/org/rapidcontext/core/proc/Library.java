@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -20,9 +20,9 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.logging.Logger;
 
-import org.rapidcontext.core.data.Data;
 import org.rapidcontext.core.data.DataStore;
 import org.rapidcontext.core.data.DataStoreException;
+import org.rapidcontext.core.data.Dict;
 
 /**
  * A procedure library. This class contains the set of loaded and
@@ -31,7 +31,7 @@ import org.rapidcontext.core.data.DataStoreException;
  * the data store is modified, the library cache must be cleared or
  * inconsistencies will result.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class Library {
@@ -273,7 +273,7 @@ public class Library {
         throws ProcedureException {
 
         AddOnProcedure  proc;
-        Data            data;
+        Dict            data;
         String          msg;
 
         try {
@@ -303,7 +303,7 @@ public class Library {
      * @throws ProcedureException if the procedure couldn't be
      *             created or written to the data store
      */
-    public Procedure storeProcedure(Data data) throws ProcedureException {
+    public Procedure storeProcedure(Dict data) throws ProcedureException {
         AddOnProcedure  proc;
         String          msg;
 
@@ -327,7 +327,7 @@ public class Library {
      * @throws ProcedureException if the procedure couldn't be
      *             created due to errors in the data object
      */
-    private AddOnProcedure createProcedure(Data data) throws ProcedureException {
+    private AddOnProcedure createProcedure(Dict data) throws ProcedureException {
         AddOnProcedure  proc;
         String          name;
         String          type;

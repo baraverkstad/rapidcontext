@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -15,14 +15,14 @@
 
 package org.rapidcontext.core.env;
 
-import org.rapidcontext.core.data.Data;
+import org.rapidcontext.core.data.Dict;
 
 /**
  * An external connectivity adapter. An adapter handles the creation
  * of external connections, some of which may be pooled or managed
  * for reutilization.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public interface Adapter {
@@ -87,6 +87,6 @@ public interface Adapter {
      * @throws AdapterException if the connection couldn't be created
      *             properly
      */
-    public AdapterConnection createConnection(Data params)
+    public AdapterConnection createConnection(Dict params)
         throws AdapterException;
 }

@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -15,7 +15,7 @@
 
 package org.rapidcontext.app.proc;
 
-import org.rapidcontext.core.data.Data;
+import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.DataStoreException;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
@@ -28,7 +28,7 @@ import org.rapidcontext.core.security.User;
 /**
  * The built-in user modification procedure.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class UserChangeProcedure implements Procedure, Restricted {
@@ -134,7 +134,7 @@ public class UserChangeProcedure implements Procedure, Restricted {
         String    ntlmUser;
         String    ntlmDomain;
         String[]  roles;
-        Data      list;
+        Array     list;
         String    str;
         Object    obj;
 
@@ -156,10 +156,10 @@ public class UserChangeProcedure implements Procedure, Restricted {
         ntlmUser = bindings.getValue("ntlmUser").toString();
         ntlmDomain = bindings.getValue("ntlmDomain").toString();
         obj = bindings.getValue("roles");
-        if (obj instanceof Data) {
-            list = (Data) obj;
-            roles = new String[list.arraySize()];
-            for (int i = 0; i < list.arraySize(); i++) {
+        if (obj instanceof Array) {
+            list = (Array) obj;
+            roles = new String[list.size()];
+            for (int i = 0; i < list.size(); i++) {
                 roles[i] = list.get(i).toString();
             }
         } else {

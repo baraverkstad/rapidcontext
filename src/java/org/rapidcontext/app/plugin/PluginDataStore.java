@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -21,9 +21,9 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 
-import org.rapidcontext.core.data.Data;
 import org.rapidcontext.core.data.DataStore;
 import org.rapidcontext.core.data.DataStoreException;
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.PropertiesStore;
 
 /**
@@ -34,7 +34,7 @@ import org.rapidcontext.core.data.PropertiesStore;
  * for the "local" and "default" plug-ins that will always be first
  * and last in the plug-in data store list.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class PluginDataStore implements DataStore {
@@ -302,10 +302,10 @@ public class PluginDataStore implements DataStore {
      *
      * @throws DataStoreException if the data couldn't be read
      */
-    public Data readData(String type, String id) throws DataStoreException {
+    public Dict readData(String type, String id) throws DataStoreException {
         Iterator   iter = this.stores.values().iterator();
         DataStore  store;
-        Data       data;
+        Dict       data;
 
         while (iter.hasNext()) {
             store = (DataStore) iter.next();
@@ -326,7 +326,7 @@ public class PluginDataStore implements DataStore {
      *
      * @throws DataStoreException if the data couldn't be written
      */
-    public void writeData(String type, String id, Data data)
+    public void writeData(String type, String id, Dict data)
         throws DataStoreException {
 
         this.localStore.writeData(type, id, data);
