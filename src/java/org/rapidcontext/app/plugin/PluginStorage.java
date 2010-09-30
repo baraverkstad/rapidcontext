@@ -18,9 +18,9 @@ import java.io.File;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 
-import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.FileStorage;
+import org.rapidcontext.core.data.Index;
 import org.rapidcontext.core.data.Path;
 import org.rapidcontext.core.data.Storage;
 import org.rapidcontext.core.data.StorageException;
@@ -203,55 +203,19 @@ public class PluginStorage implements Storage {
         Iterator   iter = plugins.values().iterator();
         Storage    storage;
         Object     res;
-        Dict       index = null;
+        Index      idx = null;
 
         while (iter.hasNext()) {
             storage = (Storage) iter.next();
             res = storage.load(path);
-            if (path.isIndex()) {
-                index = mergeIndex(index, (Dict) res);
+            if (res instanceof Index) {
+                idx = Index.merge(idx, (Index) res);
             } else if (res != null) {
                 return res;
             }
         }
         res = defaultPlugin.load(path);
-        return path.isIndex() ? mergeIndex(index, (Dict) res) : res;
-    }
-
-    /**
-     * Merges two index dictionaries.
-     *
-     * @param base           the base index dictionary
-     * @param tmp            the index dictionary to add
-     *
-     * @return the merged index
-     */
-    private Dict mergeIndex(Dict base, Dict tmp) {
-        if (base == null) {
-            return tmp;
-        } else if (tmp == null) {
-            return base;
-        } else {
-            merge(base.getArray("directories"), tmp.getArray("directories"));
-            merge(base.getArray("objects"), tmp.getArray("objects"));
-            return base;
-        }
-    }
-
-    /**
-     * Merges two arrays by adding all missing values from the second
-     * array to the first one.
-     *
-     * @param base           the base array
-     * @param tmp            the array to add elements from
-     */
-    private void merge(Array base, Array tmp) {
-        for (int i = 0; i < tmp.size(); i++) {
-            String name = tmp.getString(i, null);
-            if (!base.containsValue(name)) {
-                base.add(name);
-            }
-        }
+        return (res instanceof Index) ? Index.merge(idx, (Index) res) : res;
     }
 
     /**

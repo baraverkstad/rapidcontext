@@ -103,23 +103,20 @@ public class FileStorage implements Storage {
     public Object load(Path path) throws StorageException {
         File  file = locateFile(path);
 
-        if (path.isIndex()) {
-            Array dirs = new Array();
-            Array objs = new Array();
+        if (file == null) {
+            return path.isIndex() ? new Index(path) : null;
+        } else if (path.isIndex()) {
+            Index idx = new Index(path);
             File[] files = file.listFiles();
             for (int i = 0; i < files.length; i++) {
                 String name = files[i].getName();
                 if (files[i].isDirectory()) {
-                    dirs.add(name);
+                    idx.addIndex(name);
                 } else {
-                    objs.add(StringUtils.removeEnd(name, SUFFIX_PROPS));
+                    idx.addObject(StringUtils.removeEnd(name, SUFFIX_PROPS));
                 }
             }
-            Dict res = new Dict(3);
-            res.add("type", "index");
-            res.add("directories", dirs);
-            res.add("objects", objs);
-            return res;
+            return idx;
         } else if (file.getName().endsWith(SUFFIX_PROPS)) {
             try {
                 return PropertiesSerializer.read(file);
