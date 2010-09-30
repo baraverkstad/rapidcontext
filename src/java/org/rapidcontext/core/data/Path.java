@@ -29,12 +29,6 @@ import org.apache.commons.lang.StringUtils;
 public class Path {
 
     /**
-     * The index flag. This flag is set if the path corresponds
-     * to an index (a directory, a list of objects and files).
-     */
-    private boolean index = false;
-
-    /**
      * The path components. The last element in this array is the
      * object name, and any previous elements correspond to parent
      * indices (i.e. the parent path). The root index has a zero
@@ -43,20 +37,55 @@ public class Path {
     private String[] parts = null;
 
     /**
-     * Creates a new data selector from a query string (similar to
-     * an file system path for example).
-     *
-     * @param query          the query string to parse
+     * The index flag. This flag is set if the path corresponds
+     * to an index (a directory, a list of objects and files).
      */
-    public Path(String query) {
-        query = StringUtils.stripStart(query, "/");
-        this.index = query.equals("") || query.endsWith("/");
-        query = StringUtils.stripEnd(query, "/");
-        if (query.equals("")) {
-            this.parts = ArrayUtils.EMPTY_STRING_ARRAY;
-        } else {
-            this.parts = query.split("/");
+    private boolean index = false;
+
+    /**
+     * Creates a new path from a string representation (similar to
+     * a file system path).
+     *
+     * @param path           the string path to parse
+     */
+    public Path(String path) {
+        this(null, path);
+    }
+
+    /**
+     * Creates a new path from a parent and a child string
+     * representation (similar to a file system path).
+     *
+     * @param parent         the parent index path
+     * @param path           the string path to parse
+     */
+    public Path(Path parent, String path) {
+        this.parts = (parent == null) ? ArrayUtils.EMPTY_STRING_ARRAY : parent.parts;
+        path = StringUtils.stripStart(path, "/");
+        this.index = path.equals("") || path.endsWith("/");
+        path = StringUtils.stripEnd(path, "/");
+        if (!path.equals("")) {
+            String[] child = path.split("/");
+            String[] res = new String[this.parts.length + child.length];
+            for (int i = 0; i < this.parts.length; i ++) {
+                res[i] = this.parts[i];
+            }
+            for (int i = 0; i < child.length; i++) {
+                res[this.parts.length + i] = child[i];
+            }
+            this.parts = res;
         }
+    }
+
+    /**
+     * Creates a new path from the specified parts.
+     *
+     * @param parts          the array of path components
+     * @param isIndex        the index flag
+     */
+    public Path(String[] parts, boolean isIndex) {
+        this.parts = parts;
+        this.index = isIndex;
     }
 
     /**
@@ -149,5 +178,39 @@ public class Path {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Creates a new path to the parent index.
+     *
+     * @return a new path to the parent index
+     */
+    public Path parent() {
+        if (isRoot()) {
+            return this;
+        } else {
+            String[] newParts = new String[parts.length - 1];
+            for (int i = 0; i < parts.length - 1; i++) {
+                newParts[i] = parts[i];
+            }
+            return new Path(newParts, true);
+        }
+    }
+
+    /**
+     * Creates a new path to a child index or object.
+     *
+     * @param name           the child name
+     * @param isIndex        the index flag
+     *
+     * @return a new path to a child index or object
+     */
+    public Path child(String name, boolean isIndex) {
+        String[] newParts = new String[parts.length + 1];
+        for (int i = 0; i < parts.length; i++) {
+            newParts[i] = parts[i];
+        }
+        newParts[newParts.length - 1] = name;
+        return new Path(newParts, isIndex);
     }
 }
