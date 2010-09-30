@@ -18,9 +18,12 @@ package org.rapidcontext.core.security;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
-import org.rapidcontext.core.data.DataStore;
-import org.rapidcontext.core.data.DataStoreException;
+import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
+import org.rapidcontext.core.data.Index;
+import org.rapidcontext.core.data.Path;
+import org.rapidcontext.core.data.Storage;
+import org.rapidcontext.core.data.StorageException;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.util.ArrayUtil;
 
@@ -48,10 +51,20 @@ public class SecurityContext {
         Logger.getLogger(SecurityContext.class.getName());
 
     /**
-     * The data store used for reading and writing configuration
+     * The user object storage path.
+     */
+    public static final Path USER_PATH = new Path("/user/");
+
+    /**
+     * The role object storage path.
+     */
+    public static final Path ROLE_PATH = new Path("/role/");
+
+    /**
+     * The data storage used for reading and writing configuration
      * data.
      */
-    private static DataStore dataStore = null;
+    private static Storage dataStorage = null;
 
     /**
      * The map of all roles. The map is indexed by the role names and
@@ -82,38 +95,38 @@ public class SecurityContext {
     /**
      * Initializes the security context. It can be called multiple
      * times in order to re-read the configuration data from the
-     * data store. The data store specified will be used for reading
-     * and writing users and roles both during initialization and
-     * later.
+     * data storage. The data store specified will be used for
+     * reading and writing users and roles both during initialization
+     * and later.
      *
-     * @param store          the data store to use
+     * @param storage        the data storage to use
      *
-     * @throws DataStoreException if the data store couldn't be read
-     *             or written
+     * @throws StorageException if the storage couldn't be read or
+     *             written
      */
-    public static void init(DataStore store) throws DataStoreException {
-        String[]  names;
-        Role      role;
-        User      user;
+    public static void init(Storage storage) throws StorageException {
+        Array   arr;
+        Role    role;
+        User    user;
 
-        dataStore = store;
+        dataStorage = storage;
         roles.clear();
         users.clear();
         userNtlm.clear();
-        names = dataStore.findDataIds("role");
-        for (int pos = 0; pos < names.length; pos++) {
-            role = new Role(dataStore.readData("role", names[pos]));
+        arr = ((Index) dataStorage.load(ROLE_PATH)).objects();
+        for (int i = 0; i < arr.size(); i++) {
+            role = loadRole(arr.getString(i, null));
             roles.put(role.getName().toLowerCase(), role);
         }
         // TODO: Create default/anonymous role?
         // TODO: What if there are many users?
-        names = dataStore.findDataIds("user");
-        for (int pos = 0; pos < names.length; pos++) {
-            user = new User(dataStore.readData("user", names[pos]));
+        arr = ((Index) dataStorage.load(USER_PATH)).objects();
+        for (int i = 0; i < arr.size(); i++) {
+            user = loadUser(arr.getString(i, null));
             users.put(user.getName(), user);
             userNtlm.put(user.getNtlmName(), user.getName());
         }
-        if (names.length <= 0) {
+        if (arr.size() <= 0) {
             createUser("admin", "Default administrator user", "Admin");
         }
         // TODO: create default system user?
@@ -350,16 +363,14 @@ public class SecurityContext {
      *
      * @param role           the role to save
      *
-     * @throws DataStoreException if the data store couldn't be
-     *             written
+     * @throws StorageException if the data couldn't be written
      * @throws SecurityException if the current user doesn't have
      *             admin access
      */
     public static void saveRole(Role role)
-        throws DataStoreException, SecurityException {
+        throws StorageException, SecurityException {
 
         String  name = role.getName().toLowerCase();
-        Dict    data;
 
         try {
             if (!hasAdmin()) {
@@ -372,14 +383,13 @@ public class SecurityContext {
                          ": role is built-in and read-only");
                 throw new SecurityException("Permission denied");
             }
-            dataStore.writeData("role", name, role.getData());
+            storeRole(role);
         } finally {
-            data = dataStore.readData("role", name);
-            if (data == null) {
+            Role newRole = loadRole(name);
+            if (newRole == null) {
                 roles.remove(name);
             } else {
-                role = new Role(data);
-                roles.put(name, role);
+                roles.put(name, newRole);
             }
         }
     }
@@ -414,11 +424,10 @@ public class SecurityContext {
      * @param descr          the default description
      * @param roleNames      the role names, separated by " "
      *
-     * @throws DataStoreException if the data store couldn't be
-     *             written
+     * @throws StorageException if the data couldn't be written
      */
     private static void createUser(String name, String descr, String roleNames)
-        throws DataStoreException {
+        throws StorageException {
 
         User  user;
 
@@ -429,7 +438,7 @@ public class SecurityContext {
             user.setEnabled(true);
             user.setPasswordHash("");
             user.setRoles(roleNames.split(" "));
-            dataStore.writeData("user", name, user.getData());
+            storeUser(user);
             users.put(name, user);
         }
     }
@@ -439,16 +448,14 @@ public class SecurityContext {
      *
      * @param user           the user to save
      *
-     * @throws DataStoreException if the data store couldn't be
-     *             written
+     * @throws StorageException if the data couldn't be written
      * @throws SecurityException if the current user doesn't have
      *             admin access
      */
     public static void saveUser(User user)
-        throws DataStoreException, SecurityException {
+        throws StorageException, SecurityException {
 
         String  name = user.getName();
-        Dict    data;
 
         try {
             if (!hasAdmin()) {
@@ -457,16 +464,15 @@ public class SecurityContext {
                          " lacks admin privileges");
                 throw new SecurityException("Permission denied");
             }
-            dataStore.writeData("user", name, user.getData());
+            storeUser(user);
         } finally {
-            data = dataStore.readData("user", name);
-            if (data == null) {
+            User newUser = loadUser(name);
+            if (newUser == null) {
                 user.setEnabled(false);
                 users.remove(name);
             } else {
-                user = new User(data);
-                users.put(name, user);
-                userNtlm.put(user.getNtlmName(), name);
+                users.put(name, newUser);
+                userNtlm.put(newUser.getNtlmName(), name);
             }
         }
     }
@@ -476,12 +482,11 @@ public class SecurityContext {
      *
      * @param password       the new user password
      *
-     * @throws DataStoreException if the data store couldn't be
-     *             written
+     * @throws StorageException if the data couldn't be written
      * @throws SecurityException if the current user isn't logged in
      */
     public static void updatePassword(String password)
-        throws DataStoreException, SecurityException {
+        throws StorageException, SecurityException {
 
         User  user = SecurityContext.currentUser();
 
@@ -490,6 +495,62 @@ public class SecurityContext {
             throw new SecurityException("Permission denied");
         }
         user.setPassword(password);
-        dataStore.writeData("user", user.getName(), user.getData());
+        storeUser(user);
+    }
+
+    /**
+     * Loads a user object.
+     *
+     * @param name           the user name
+     *
+     * @return the user object, or
+     *         null if not found
+     *
+     * @throws StorageException if the data couldn't be read
+     */
+    private static User loadUser(String name) throws StorageException {
+        Path path = USER_PATH.child(name, false);
+        Dict dict = (Dict) dataStorage.load(path);
+        return (dict == null) ? null : new User(dict);
+    }
+
+    /**
+     * Stores a user object.
+     *
+     * @param user           the user to store
+     *
+     * @throws StorageException if the data couldn't be written
+     */
+    private static void storeUser(User user) throws StorageException {
+        Path path = USER_PATH.child(user.getName(), false);
+        dataStorage.store(path, user.getData());
+    }
+
+    /**
+     * Loads a role object.
+     *
+     * @param name           the role name
+     *
+     * @return the role object, or
+     *         null if not found
+     *
+     * @throws StorageException if the data couldn't be read
+     */
+    private static Role loadRole(String name)  throws StorageException {
+        Path path = ROLE_PATH.child(name, false);
+        Dict dict = (Dict) dataStorage.load(path);
+        return (dict == null) ? null : new Role(dict);
+    }
+
+    /**
+     * Stores a role object.
+     *
+     * @param role           the role to store
+     *
+     * @throws StorageException if the data couldn't be written
+     */
+    private static void storeRole(Role role) throws StorageException {
+        Path path = ROLE_PATH.child(role.getName(), false);
+        dataStorage.store(path, role.getData());
     }
 }

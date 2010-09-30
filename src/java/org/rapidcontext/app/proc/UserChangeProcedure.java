@@ -16,7 +16,7 @@
 package org.rapidcontext.app.proc;
 
 import org.rapidcontext.core.data.Array;
-import org.rapidcontext.core.data.DataStoreException;
+import org.rapidcontext.core.data.StorageException;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
@@ -183,7 +183,7 @@ public class UserChangeProcedure implements Procedure, Restricted {
         user.setRoles(roles);
         try {
             SecurityContext.saveUser(user);
-        } catch (DataStoreException e) {
+        } catch (StorageException e) {
             throw new ProcedureException(e.getMessage());
         } catch (SecurityException e) {
             throw new ProcedureException(e.getMessage());

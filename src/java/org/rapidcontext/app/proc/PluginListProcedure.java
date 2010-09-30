@@ -18,11 +18,11 @@ package org.rapidcontext.app.proc;
 import java.io.File;
 
 import org.rapidcontext.app.ApplicationContext;
-import org.rapidcontext.app.plugin.PluginDataStore;
+import org.rapidcontext.app.plugin.PluginStorage;
 import org.rapidcontext.core.data.Array;
-import org.rapidcontext.core.data.DataStore;
-import org.rapidcontext.core.data.DataStoreException;
 import org.rapidcontext.core.data.Dict;
+import org.rapidcontext.core.data.Storage;
+import org.rapidcontext.core.data.StorageException;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
@@ -115,42 +115,42 @@ public class PluginListProcedure implements Procedure, Restricted {
         throws ProcedureException {
 
         ApplicationContext  ctx = ApplicationContext.getInstance();
-        PluginDataStore     store = ctx.getDataStore();
-        String[]            ids = store.listPlugins();
-        DataStore           ds;
+        PluginStorage       storage = ctx.getStorage();
+        String[]            ids = storage.listPlugins();
+        Storage             ds;
         File[]              files;
         String              id;
         Array               res;
-        Dict                data;
+        Dict                dict;
 
         res = new Array(ids.length);
         for (int i = 0; i < ids.length; i++) {
-            ds = store.getPlugin(ids[i]);
-            data = null;
+            ds = storage.getPlugin(ids[i]);
+            dict = null;
             try {
-                data = ds.readData(null, "plugin");
-            } catch (DataStoreException ignore) {
+                dict = (Dict) ds.load(ApplicationContext.PATH_PLUGIN);
+            } catch (StorageException ignore) {
                 // Read errors are handled below
             }
-            if (data == null) {
-                data = new Dict();
-                data.set("id", ids[i]);
+            if (dict == null) {
+                dict = new Dict();
+                dict.set("id", ids[i]);
             }
-            data.setBoolean("loaded", true);
-            res.add(data);
+            dict.setBoolean("loaded", true);
+            res.add(dict);
         }
         files = ctx.getPluginDir().listFiles();
         for (int i = 0; i < files.length; i++) {
             id = files[i].getName();
-            if (store.getPlugin(id) == null && files[i].isDirectory()) {
-                ds = store.createStore(id);
+            if (storage.getPlugin(id) == null && files[i].isDirectory()) {
+                ds = storage.createStorage(id);
                 try {
-                    data = ds.readData(null, "plugin");
-                    if (data != null) {
-                        data.setBoolean("loaded", false);
-                        res.add(data);
+                    dict = (Dict) ds.load(ApplicationContext.PATH_PLUGIN);
+                    if (dict != null) {
+                        dict.setBoolean("loaded", false);
+                        res.add(dict);
                     }
-                } catch (DataStoreException ignore) {
+                } catch (StorageException ignore) {
                     // Skip plug-ins with invalid file
                 }
             }

@@ -29,8 +29,8 @@ import java.util.zip.ZipFile;
 
 import org.rapidcontext.app.plugin.Plugin;
 import org.rapidcontext.app.plugin.PluginClassLoader;
-import org.rapidcontext.app.plugin.PluginDataStore;
 import org.rapidcontext.app.plugin.PluginException;
+import org.rapidcontext.app.plugin.PluginStorage;
 import org.rapidcontext.app.proc.AppletListProcedure;
 import org.rapidcontext.app.proc.PluginInstallProcedure;
 import org.rapidcontext.app.proc.PluginListProcedure;
@@ -56,9 +56,10 @@ import org.rapidcontext.app.proc.UserCheckAccessProcedure;
 import org.rapidcontext.app.proc.UserListProcedure;
 import org.rapidcontext.app.proc.UserPasswordChangeProcedure;
 import org.rapidcontext.core.data.Array;
-import org.rapidcontext.core.data.DataStore;
-import org.rapidcontext.core.data.DataStoreException;
 import org.rapidcontext.core.data.Dict;
+import org.rapidcontext.core.data.Path;
+import org.rapidcontext.core.data.Storage;
+import org.rapidcontext.core.data.StorageException;
 import org.rapidcontext.core.env.Environment;
 import org.rapidcontext.core.env.EnvironmentException;
 import org.rapidcontext.core.js.JsCompileInterceptor;
@@ -89,14 +90,24 @@ public class ApplicationContext {
         Logger.getLogger(ApplicationContext.class.getName());
 
     /**
+     * The path to the global configuration.
+     */
+    public static final Path PATH_CONFIG = new Path("/config");
+
+    /**
+     * The path to the local plugin configuration.
+     */
+    public static final Path PATH_PLUGIN = new Path("/plugin");
+
+    /**
      * The singleton application context instance.
      */
     private static ApplicationContext instance = null;
 
     /**
-     * The configuration data store.
+     * The configuration data storage.
      */
-    private PluginDataStore dataStore;
+    private PluginStorage storage;
 
     /**
      * The application configuration.
@@ -180,8 +191,8 @@ public class ApplicationContext {
      */
     private ApplicationContext(File baseDir) {
         this.pluginDir = new File(baseDir, "plugins");
-        this.dataStore = new PluginDataStore(this.pluginDir);
-        this.library = new Library(this.dataStore);
+        this.storage = new PluginStorage(this.pluginDir);
+        this.library = new Library(this.storage);
         instance = this;
     }
 
@@ -191,20 +202,20 @@ public class ApplicationContext {
      */
     private void initAll() {
         try {
-            config = dataStore.readData(null, "config");
-        } catch (DataStoreException e) {
+            config = (Dict) storage.load(PATH_CONFIG);
+        } catch (StorageException e) {
             LOG.severe("failed to load application config: " + e.getMessage());
         }
         initLibrary();
         initPlugins();
         try {
-            env = Environment.init(dataStore);
+            env = Environment.init(storage);
         } catch (EnvironmentException e) {
             LOG.severe("Failed to load environment: " + e.getMessage());
         }
         try {
-            SecurityContext.init(dataStore);
-        } catch (DataStoreException e) {
+            SecurityContext.init(storage);
+        } catch (StorageException e) {
             LOG.severe("Failed to load security config: " + e.getMessage());
         }
     }
@@ -293,7 +304,7 @@ public class ApplicationContext {
         }
         destroyPlugins();
         Library.unregisterType("javascript");
-        library = new Library(this.dataStore);
+        library = new Library(this.storage);
     }
 
     /**
@@ -339,8 +350,8 @@ public class ApplicationContext {
      *
      * @return the application data store
      */
-    public PluginDataStore getDataStore() {
-        return this.dataStore;
+    public PluginStorage getStorage() {
+        return this.storage;
     }
 
     /**
@@ -462,7 +473,7 @@ public class ApplicationContext {
      *             or if the plug-in initialization failed
      */
     public void loadPlugin(String pluginId) throws PluginException {
-        DataStore    pluginStore;
+        Storage      pluginStore;
         Dict         pluginData;
         Array        pluginList;
         String       className;
@@ -471,20 +482,20 @@ public class ApplicationContext {
         Plugin       plugin;
         String       msg;
 
-        if (PluginDataStore.DEFAULT_PLUGIN.equals(pluginId) ||
-            PluginDataStore.LOCAL_PLUGIN.equals(pluginId)) {
+        if (PluginStorage.DEFAULT_PLUGIN.equals(pluginId) ||
+            PluginStorage.LOCAL_PLUGIN.equals(pluginId)) {
 
             msg = "cannot force loading of default or local plug-ins";
             throw new PluginException(msg);
         }
-        pluginStore = dataStore.addPlugin(pluginId);
+        pluginStore = storage.addPlugin(pluginId);
         try {
-            pluginData = pluginStore.readData(null, "plugin");
+            pluginData = (Dict) pluginStore.load(PATH_PLUGIN);
             if (pluginData == null) {
-                throw new DataStoreException("file not found");
+                throw new StorageException("file not found");
             }
-        } catch (DataStoreException e) {
-            dataStore.removePlugin(pluginId);
+        } catch (StorageException e) {
+            storage.removePlugin(pluginId);
             msg = "couldn't load " + pluginId + " plugin config file: " +
                   e.getMessage();
             LOG.warning(msg);
@@ -535,8 +546,8 @@ public class ApplicationContext {
         if (!pluginList.containsValue(pluginId)) {
             pluginList.add(pluginId);
             try {
-                dataStore.writeData(null, "config", config);
-            } catch (DataStoreException e) {
+                storage.store(PATH_CONFIG, config);
+            } catch (StorageException e) {
                 msg = "failed to update application config: " +
                       e.getMessage();
                 throw new PluginException(msg);
@@ -557,8 +568,8 @@ public class ApplicationContext {
         int     pos;
         String  msg;
 
-        if (PluginDataStore.DEFAULT_PLUGIN.equals(pluginId) ||
-            PluginDataStore.LOCAL_PLUGIN.equals(pluginId)) {
+        if (PluginStorage.DEFAULT_PLUGIN.equals(pluginId) ||
+            PluginStorage.LOCAL_PLUGIN.equals(pluginId)) {
 
             msg = "cannot unload default or local plug-ins";
             throw new PluginException(msg);
@@ -569,8 +580,8 @@ public class ApplicationContext {
         if (pos >= 0) {
             pluginList.remove(pos);
             try {
-                dataStore.writeData(null, "config", config);
-            } catch (DataStoreException e) {
+                storage.store(PATH_CONFIG, config);
+            } catch (StorageException e) {
                 msg = "failed to update application config: " +
                       e.getMessage();
                 throw new PluginException(msg);
@@ -595,7 +606,7 @@ public class ApplicationContext {
         if (plugin != null) {
             plugin.destroy();
         }
-        dataStore.removePlugin(pluginId);
+        storage.removePlugin(pluginId);
         plugins.remove(pluginId);
         library.clearCache();
     }
@@ -619,7 +630,7 @@ public class ApplicationContext {
                           StringBuffer trace)
         throws ProcedureException {
 
-        CallContext  cx = new CallContext(dataStore, env, library);
+        CallContext  cx = new CallContext(storage, env, library);
 
         threadContext.put(Thread.currentThread(), cx);
         cx.setAttribute(CallContext.ATTRIBUTE_USER,
@@ -647,7 +658,7 @@ public class ApplicationContext {
      * @param source         the call source information
      */
     public void executeAsync(String name, Object[] args, String source) {
-        CallContext  cx = new CallContext(dataStore, env, library);
+        CallContext  cx = new CallContext(storage, env, library);
         Object       res;
 
         threadContext.put(Thread.currentThread(), cx);

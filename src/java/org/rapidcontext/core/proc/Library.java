@@ -15,14 +15,16 @@
 
 package org.rapidcontext.core.proc;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.logging.Logger;
 
-import org.rapidcontext.core.data.DataStore;
-import org.rapidcontext.core.data.DataStoreException;
+import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
+import org.rapidcontext.core.data.Index;
+import org.rapidcontext.core.data.Path;
+import org.rapidcontext.core.data.Storage;
+import org.rapidcontext.core.data.StorageException;
 
 /**
  * A procedure library. This class contains the set of loaded and
@@ -43,9 +45,9 @@ public class Library {
         Logger.getLogger(Library.class.getName());
 
     /**
-     * The procedure data type used in the data store.
+     * The procedure object storage path.
      */
-    private static final String PROC_TYPE = "procedure";
+    public static final Path PATH_PROC = new Path("/procedure/");
 
     /**
      * The map of procedure type names and implementation classes.
@@ -53,9 +55,9 @@ public class Library {
     private static HashMap types = new HashMap();
 
     /**
-     * The data store to use for loading and listing procedures.
+     * The data storage to use for loading and listing procedures.
      */
-    private DataStore store = null;
+    private Storage storage = null;
 
     /**
      * The map of built-in procedures. The map is indexed by the
@@ -158,10 +160,10 @@ public class Library {
     /**
      * Creates a new procedure library.
      *
-     * @param store          the data store to use
+     * @param storage        the data storage to use
      */
-    public Library(DataStore store) {
-        this.store = store;
+    public Library(Storage storage) {
+        this.storage = storage;
     }
 
     /**
@@ -181,16 +183,22 @@ public class Library {
      * Returns an array with the names of all loaded procedures.
      *
      * @return an array with the names of all loaded procedures
+     *
+     * @throws ProcedureException if the procedures couldn't be listed
      */
-    public String[] getProcedureNames() {
-        LinkedHashSet  set = new LinkedHashSet(builtIns.keySet());
-        String[]       res;
-
-        set.addAll(Arrays.asList(store.findDataIds(PROC_TYPE)));
-        res = new String[set.size()];
-        set.toArray(res);
-        return res;
-    }
+    public String[] getProcedureNames() throws ProcedureException {
+        LinkedHashSet set = new LinkedHashSet(builtIns.keySet());
+        Array arr;
+        try {
+            arr = ((Index) storage.load(PATH_PROC)).objects();
+        } catch (StorageException e) {
+            String msg = "failed to list procedures: " + e.getMessage();
+            throw new ProcedureException(msg);
+        }
+        for (int i = 0; i < arr.size(); i++) {
+            set.add(arr.getString(i, null));
+        }
+        return (String[]) set.toArray(new String[set.size()]);    }
 
     /**
      * Returns a loaded procedure.
@@ -204,6 +212,7 @@ public class Library {
      */
     public Procedure getProcedure(String name) throws ProcedureException {
         AddOnProcedure  proc;
+        Dict            meta;
         long            modified;
 
         // TODO: remove this legacy conversion before 1.0
@@ -214,14 +223,20 @@ public class Library {
             return (Procedure) builtIns.get(name);
         }
         proc = (AddOnProcedure) cache.get(name);
-        modified = store.findDataTimeStamp(PROC_TYPE, name);
+        try {
+            meta = storage.lookup(PATH_PROC.child(name, false));
+        } catch (StorageException e) {
+            String msg = "failed to lookup procedure data: " + e.getMessage();
+            throw new ProcedureException(msg);
+        }
+        if (meta == null) {
+            throw new ProcedureException("no procedure '" + name + "' found");
+        }
+        modified = ((Long) meta.get(Storage.KEY_MODIFIED)).longValue();
         if (proc != null && modified > 0 && modified <= proc.getLastModified()) {
             return proc;
-        } else if (store.hasData(PROC_TYPE, name)) {
-            return loadProcedure(name);
         } else {
-            throw new ProcedureException("no procedure '" + name +
-                                         "' found");
+            return loadProcedure(name);
         }
     }
 
@@ -277,12 +292,12 @@ public class Library {
         String          msg;
 
         try {
-            data = store.readData(PROC_TYPE, name);
+            data = (Dict) storage.load(PATH_PROC.child(name, false));
             if (data == null) {
                 msg = "no procedure '" + name + "' found";
                 throw new ProcedureException(msg);
             }
-        } catch (DataStoreException e) {
+        } catch (StorageException e) {
             msg = "failed to read procedure data: " + e.getMessage();
             throw new ProcedureException(msg);
         }
@@ -309,8 +324,8 @@ public class Library {
 
         proc = createProcedure(data);
         try {
-            store.writeData(PROC_TYPE, proc.getName(), proc.getData());
-        } catch (DataStoreException e) {
+            storage.store(PATH_PROC.child(proc.getName(), false), proc.getData());
+        } catch (StorageException e) {
             msg = "failed to write procedure data: " + e.getMessage();
             throw new ProcedureException(msg);
         }

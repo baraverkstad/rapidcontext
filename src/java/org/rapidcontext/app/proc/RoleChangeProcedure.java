@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -15,7 +15,7 @@
 
 package org.rapidcontext.app.proc;
 
-import org.rapidcontext.core.data.DataStoreException;
+import org.rapidcontext.core.data.StorageException;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
@@ -27,7 +27,7 @@ import org.rapidcontext.core.security.SecurityContext;
 /**
  * The built-in role modification procedure.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class RoleChangeProcedure implements Procedure, Restricted {
@@ -136,7 +136,7 @@ public class RoleChangeProcedure implements Procedure, Restricted {
                 SecurityContext.saveRole(role);
                 return role.getName() + " modified";
             }
-        } catch (DataStoreException e) {
+        } catch (StorageException e) {
             throw new ProcedureException(e.getMessage());
         } catch (SecurityException e) {
             throw new ProcedureException(e.getMessage());

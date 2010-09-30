@@ -18,6 +18,7 @@ package org.rapidcontext.app;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,9 +32,12 @@ import org.apache.commons.fileupload.FileItemHeaders;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.core.data.Array;
+import org.rapidcontext.core.data.Index;
 import org.rapidcontext.core.data.Path;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.HtmlSerializer;
+import org.rapidcontext.core.data.Storage;
+import org.rapidcontext.core.data.StorageException;
 import org.rapidcontext.core.data.XmlSerializer;
 import org.rapidcontext.core.js.JsSerializer;
 import org.rapidcontext.core.proc.ProcedureException;
@@ -42,6 +46,7 @@ import org.rapidcontext.core.security.User;
 import org.rapidcontext.core.web.Request;
 import org.rapidcontext.core.web.SessionFileMap;
 import org.rapidcontext.core.web.SessionManager;
+import org.rapidcontext.util.DateUtil;
 
 /**
  * The main application servlet. This servlet handles all incoming
@@ -57,6 +62,11 @@ public class ServletApplication extends HttpServlet {
      */
     private static final Logger LOG =
         Logger.getLogger(ServletApplication.class.getName());
+
+    /**
+     * The web files storage path.
+     */
+    public static final Path PATH_FILES = new Path("/files/");
 
     /**
      * The MIME types commonly used for requesting JSON data.
@@ -311,7 +321,7 @@ public class ServletApplication extends HttpServlet {
      * @param dynamic        the dynamic processing file flag
      */
     private void processDownload(Request request, String path, boolean dynamic) {
-        File     file;
+        File     file = null;
         String   fileName = request.getParameter("fileName", path);
         String   fileData = request.getParameter("fileData");
         String   mimeType = request.getParameter("mimeType");
@@ -319,7 +329,11 @@ public class ServletApplication extends HttpServlet {
         String   str;
 
         if (request.hasMethod("GET")) {
-            file = ctx.getDataStore().findFile(path, true);
+            try {
+                file = (File) ctx.getStorage().load(new Path(PATH_FILES, path));
+            } catch (StorageException e) {
+                LOG.warning("failed to locate file in storage: " + e.getMessage());
+            }
             if (file == null && path.startsWith("doc/")) {
                 // TODO: perhaps the docs should be in the data store?
                 file = new File(this.getBaseDir(), path);
@@ -459,11 +473,11 @@ public class ServletApplication extends HttpServlet {
      */
     private void processQuery(Request request, String query) {
         Path      path = new Path(query);
-        Dict      res = null;
-        Array     dir = null;
-        Array     obj = null;
-        String[]  list;
-        boolean   createLinks;
+        Dict      meta = null;
+        Object    res = null;
+        Dict      dict;
+        Array     arr;
+        boolean   createHtml;
 
         try {
             // TODO: Implement security authentication for data queries
@@ -473,48 +487,40 @@ public class ServletApplication extends HttpServlet {
                          SecurityContext.currentUser());
                throw new ProcedureException("Permission denied");
             }
-
+            createHtml = !isMimeMatch(request, MIME_JSON) &&
+                         !isMimeMatch(request, MIME_XML);
             // TODO: Extend data lookup via plug-ins and/or standardized QL
-            createLinks = !isMimeMatch(request, MIME_JSON) &&
-                          !isMimeMatch(request, MIME_XML);
-            if (path.isRoot()) {
-                dir = new Array();
-                list = ctx.getDataStore().findTypes();
-                for (int i = 0; i < list.length; i++) {
-                    if (createLinks) {
-                        dir.add("http:" + list[i] + "/");
-                    } else {
-                        dir.add(list[i]);
-                    }
+            meta = ctx.getStorage().lookup(path);
+            res = ctx.getStorage().load(path);
+            if (res instanceof Index) {
+                dict = new Dict();
+                dict.set(Storage.KEY_TYPE, Storage.TYPE_INDEX);
+                arr = ((Index) res).indices();
+                for (int i = 0; createHtml && i < arr.size(); i++) {
+                    arr.set(i, "http:" + arr.getString(i, null) + "/");
                 }
-                obj = new Array();
-                list = ctx.getDataStore().findDataIds(null);
-                for (int i = 0; i < list.length; i++) {
-                    if (createLinks) {
-                        obj.add("http:" + list[i]);
-                    } else {
-                        obj.add(list[i]);
-                    }
+                dict.set("directories", arr);
+                arr = ((Index) res).objects();
+                for (int i = 0; createHtml && i < arr.size(); i++) {
+                    arr.set(i, "http:" + arr.getString(i, null));
                 }
-                res = new Dict();
-                res.set("directories", dir);
-                res.set("objects", obj);
-            } else if (path.isIndex()) {
-                obj = new Array();
-                list = ctx.getDataStore().findDataIds(path.name(0));
-                for (int i = 0; i < list.length; i++) {
-                    if (createLinks) {
-                        obj.add("http:" + list[i]);
-                    } else {
-                        obj.add(list[i]);
-                    }
+                dict.set("objects", arr);
+                res = dict;
+            } else if (res instanceof File) {
+                File file = (File) res;
+                dict = new Dict();
+                dict.set(Storage.KEY_TYPE, Storage.TYPE_FILE);
+                dict.set("name", file.getName());
+                dict.set("mimeType", getServletContext().getMimeType(file.getName()));
+                dict.set("size", new Long(file.length()));
+                dict.set("lastModified",
+                         DateUtil.formatIsoDateTime(new Date(file.lastModified())));
+                String url = StringUtils.removeEnd(request.getUrl(), request.getPath()) +
+                             StringUtils.removeStart(path.toString(), "/files");
+                if (query.startsWith("/files") || query.startsWith("files")) {
+                    dict.set("url", url);
                 }
-                res = new Dict();
-                res.set("objects", obj);
-            } else if (path.depth() == 0) {
-                res = ctx.getDataStore().readData(null, path.name());
-            } else {
-                res = ctx.getDataStore().readData(path.name(0), path.name());
+                res = dict;
             }
 
             // Render result as JSON, XML or HTML
@@ -564,8 +570,9 @@ public class ServletApplication extends HttpServlet {
             }
         } catch (Exception e) {
             // TODO: How do users want their error messages?
-            res = new Dict();
-            res.set("error", e.getMessage());
+            meta = new Dict();
+            meta.set("error", e.getMessage());
+            res = meta;
             if (isMimeMatch(request, MIME_JSON)) {
                 request.sendData("text/javascript", JsSerializer.serialize(res));
             } else if (isMimeMatch(request, MIME_XML)) {

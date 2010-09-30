@@ -18,8 +18,10 @@ package org.rapidcontext.app.proc;
 import java.util.logging.Logger;
 
 import org.rapidcontext.core.data.Array;
-import org.rapidcontext.core.data.DataStore;
-import org.rapidcontext.core.data.DataStoreException;
+import org.rapidcontext.core.data.Index;
+import org.rapidcontext.core.data.Path;
+import org.rapidcontext.core.data.Storage;
+import org.rapidcontext.core.data.StorageException;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
@@ -39,6 +41,11 @@ public class AppletListProcedure implements Procedure, Restricted {
      */
     private static final Logger LOG =
         Logger.getLogger(AppletListProcedure.class.getName());
+
+    /**
+     * The applet object storage path.
+     */
+    public static final Path PATH_APPLET = new Path("/applet/");
 
     /**
      * The procedure name constant.
@@ -117,21 +124,22 @@ public class AppletListProcedure implements Procedure, Restricted {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        DataStore  store = cx.getDataStore();
-        String[]   ids;
+        Storage    storage = cx.getStorage();
         Array      list;
+        String     name = null;
 
-        ids = store.findDataIds("applet");
-        list = new Array(ids.length);
-        for (int i = 0; i < ids.length; i++) {
-            try {
-                list.add(store.readData("applet", ids[i]));
-            } catch (DataStoreException e) {
-                LOG.warning("Failed to read applet '" + ids[i] +
-                            "':" + e.getMessage());
+        try {
+            list = ((Index) storage.load(PATH_APPLET)).objects();
+            for (int i = 0; i < list.size(); i++) {
+                name = list.getString(i, null);
+                list.set(i, storage.load(PATH_APPLET.child(name, false)));
             }
+            list.sort("name");
+            return list;
+        } catch (StorageException e) {
+            LOG.warning("Failed to load applets:" + e.getMessage());
+            throw new ProcedureException("Failed to load applets:" +
+                                         e.getMessage());
         }
-        list.sort("name");
-        return list;
     }
 }

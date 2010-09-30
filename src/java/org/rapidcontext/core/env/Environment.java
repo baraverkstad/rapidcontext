@@ -21,9 +21,11 @@ import java.util.LinkedHashMap;
 import java.util.logging.Logger;
 
 import org.rapidcontext.core.data.Array;
-import org.rapidcontext.core.data.DataStore;
-import org.rapidcontext.core.data.DataStoreException;
 import org.rapidcontext.core.data.Dict;
+import org.rapidcontext.core.data.Index;
+import org.rapidcontext.core.data.Path;
+import org.rapidcontext.core.data.Storage;
+import org.rapidcontext.core.data.StorageException;
 
 /**
  * An external connectivity environment. The environment contains a
@@ -40,6 +42,11 @@ public class Environment {
      */
     private static final Logger LOG =
         Logger.getLogger(Environment.class.getName());
+
+    /**
+     * The environment object storage path.
+     */
+    public static final Path PATH_ENV = new Path("/environment/");
 
     /**
      * The environment name.
@@ -59,7 +66,7 @@ public class Environment {
     /**
      * Creates an environment from the first environment found.
      *
-     * @param store          the data store to use
+     * @param storage        the data storage to use
      *
      * @return the loaded environment, or
      *         null if no environment could be found
@@ -67,8 +74,9 @@ public class Environment {
      * @throws EnvironmentException if the environment couldn't be
      *             loaded successfully
      */
-    public static Environment init(DataStore store) throws EnvironmentException {
-        String[]     ids;
+    public static Environment init(Storage storage) throws EnvironmentException {
+        Index        idx;
+        String       name;
         Dict         data;
         Array        list;
         Dict         pool;
@@ -78,14 +86,21 @@ public class Environment {
         String       poolName;
         String       str;
 
-        ids = store.findDataIds("environment");
-        if (ids.length <= 0) {
+        try {
+            idx = (Index) storage.load(PATH_ENV);
+        } catch (StorageException e) {
+            str = "failed to list environments: " + e.getMessage();
+            LOG.warning(str);
+            throw new EnvironmentException(str);
+        }
+        if (idx == null || idx.objects().size() <= 0) {
             return null;
         }
+        name = idx.objects().getString(0, null);
         try {
-            data = store.readData("environment", ids[0]);
-        } catch (DataStoreException e) {
-            str = "failed to read environment " + ids[0] + ": " +
+            data = (Dict) storage.load(PATH_ENV.child(name, false));
+        } catch (StorageException e) {
+            str = "failed to read environment " + name + ": " +
                   e.getMessage();
             LOG.warning(str);
             throw new EnvironmentException(str);

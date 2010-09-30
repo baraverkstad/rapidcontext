@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -16,8 +16,8 @@
 package org.rapidcontext.app.proc;
 
 import org.rapidcontext.app.ApplicationContext;
-import org.rapidcontext.app.plugin.PluginDataStore;
 import org.rapidcontext.app.plugin.PluginException;
+import org.rapidcontext.app.plugin.PluginStorage;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
@@ -28,7 +28,7 @@ import org.rapidcontext.core.security.SecurityContext;
 /**
  * The built-in plug-in loading procedure.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class PluginLoadProcedure implements Procedure, Restricted {
@@ -113,12 +113,12 @@ public class PluginLoadProcedure implements Procedure, Restricted {
         throws ProcedureException {
 
         ApplicationContext  ctx = ApplicationContext.getInstance();
-        PluginDataStore     store = ctx.getDataStore();
+        PluginStorage       storage = ctx.getStorage();
         String              id;
         String              msg;
 
         id = (String) bindings.getValue("pluginId");
-        if (store.getPlugin(id) != null) {
+        if (storage.getPlugin(id) != null) {
             msg = "failed to load plug-in '" + id + "': " +
                   "plug-in is already loaded";
             throw new ProcedureException(msg);

@@ -15,8 +15,9 @@
 
 package org.rapidcontext.app.proc;
 
-import org.rapidcontext.core.data.DataStoreException;
 import org.rapidcontext.core.data.Dict;
+import org.rapidcontext.core.data.Path;
+import org.rapidcontext.core.data.StorageException;
 import org.rapidcontext.core.env.Environment;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
@@ -37,6 +38,11 @@ public class StatusProcedure implements Procedure, Restricted {
      * The procedure name constant.
      */
     public static final String NAME = "System.Status";
+
+    /**
+     * The platform object storage path.
+     */
+    public static final Path PATH_APP = new Path("/platform");
 
     /**
      * The default bindings.
@@ -113,8 +119,8 @@ public class StatusProcedure implements Procedure, Restricted {
         Dict  res;
 
         try {
-            res = cx.getDataStore().readData(null, "platform");
-        } catch (DataStoreException e) {
+            res = (Dict) cx.getStorage().load(PATH_APP);
+        } catch (StorageException e) {
             throw new ProcedureException(e.getMessage());
         }
         res.set("environment", getEnvironmentData(cx.getEnvironment()));

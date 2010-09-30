@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -21,7 +21,7 @@ import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.rapidcontext.core.data.DataStore;
+import org.rapidcontext.core.data.Storage;
 import org.rapidcontext.core.env.AdapterConnection;
 import org.rapidcontext.core.env.AdapterException;
 import org.rapidcontext.core.env.Environment;
@@ -34,7 +34,7 @@ import org.rapidcontext.util.DateUtil;
  * of the call stack and other information relevant to the procedure
  * call.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class CallContext {
@@ -116,9 +116,9 @@ public class CallContext {
     private Thread thread;
 
     /**
-     * The data store to use.
+     * The data storage to use.
      */
-    private DataStore dataStore;
+    private Storage storage;
 
     /**
      * The connectivity environment to use.
@@ -167,24 +167,24 @@ public class CallContext {
     /**
      * Creates a new procedure call context.
      *
-     * @param dataStore      the data store to use
+     * @param storage        the data storage to use
      * @param env            the environment to use
      * @param library        the procedure library to use
      */
-    public CallContext(DataStore dataStore, Environment env, Library library) {
+    public CallContext(Storage storage, Environment env, Library library) {
         this.thread = Thread.currentThread();
-        this.dataStore = dataStore;
+        this.storage = storage;
         this.env = env;
         this.library = library;
     }
 
     /**
-     * Returns the data store used by this context.
+     * Returns the data storage used by this context.
      *
-     * @return the data store used by this context
+     * @return the data storage used by this context
      */
-    public DataStore getDataStore() {
-        return dataStore;
+    public Storage getStorage() {
+        return storage;
     }
 
     /**
