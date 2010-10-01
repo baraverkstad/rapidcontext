@@ -191,6 +191,48 @@ public class Array {
     }
 
     /**
+     * Checks if all of the values in the specified array is
+     * contained in this array. Note that equals() comparison is
+     * used, so only simple values may be checked. If the specified
+     * array is empty or null, true will be returned.
+     *
+     * @param arr            the array with values to check
+     *
+     * @return true if all values exist, or
+     *         false otherwise
+     */
+    public boolean containsAll(Array arr) {
+        int sz = (arr == null) ? 0 : arr.size();
+        for (int i = 0; i < sz; i++) {
+            if (!containsValue(arr.get(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Checks if one or more of the values in the specified array is
+     * contained in this array. Note that equals() comparison is
+     * used, so only simple values may be checked. If the specified
+     * array is empty or null, false will be returned.
+     *
+     * @param arr            the array with values to check
+     *
+     * @return true if at least one value exists, or
+     *         false otherwise
+     */
+    public boolean containsAny(Array arr) {
+        int sz = (arr == null) ? 0 : arr.size();
+        for (int i = 0; i < sz; i++) {
+            if (containsValue(arr.get(i))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Returns the first array index having the specified value. Note
      * that equals() comparison is used, so only simple values may be
      * checked.
@@ -466,6 +508,24 @@ public class Array {
     }
 
     /**
+     * Adds all entries from another array into this one.
+     *
+     * @param arr            the array to add elements from
+     */
+    public void addAll(Array arr) {
+        if (arr != null && arr.size() > 0) {
+            if (list == null) {
+                list = new ArrayList(arr.size());
+            } else {
+                list.ensureCapacity(list.size() + arr.size());
+            }
+            for (int i = 0; i < arr.size(); i++) {
+                add(arr.get(i));
+            }
+        }
+    }
+
+    /**
      * Deletes the specified array index and its value. All
      * subsequent array values will be shifted forward by one step.
      *
@@ -481,6 +541,86 @@ public class Array {
         }
         if (containsIndex(index)) {
             list.remove(index);
+        }
+    }
+
+    /**
+     * Returns the relative complement of this array and another
+     * array. The resulting array will contain all elements from the
+     * other array that weren't found in this one. None of the two
+     * arrays will be modified, but a new array will only be created
+     * if some elements exist in both arrays.
+     *
+     * @param arr            the array to filter
+     *
+     * @return the complement of this array, or
+     *         null if the specified array was null
+     */
+    public Array complement(Array arr) {
+        if (size() <= 0 || !containsAny(arr)) {
+            return arr;
+        } else {
+            Array res = new Array(arr.size());
+            for (int i = 0; i < arr.size(); i++) {
+                Object value = arr.get(i);
+                if (!containsValue(value)) {
+                    res.add(value);
+                }
+            }
+            return res;
+        }
+    }
+
+    /**
+     * Returns the intersection of this array and another array. The
+     * resulting array will only contain those elements that were
+     * found in both arrays. None of the two arrays will be modified,
+     * but a new array will not be created if either is empty.
+     *
+     * @param arr            the array to intersect with
+     *
+     * @return the intersection of the two arrays, or
+     *         null if the specified array was null
+     */
+    public Array intersection(Array arr) {
+        if (arr == null || arr.size() <= 0) {
+            return arr;
+        } else if (size() <= 0) {
+            return this;
+        } else {
+            Array res = new Array(Math.min(size(), arr.size()));
+            for (int i = 0; i < arr.size(); i++) {
+                Object value = arr.get(i);
+                if (containsValue(value)) {
+                    res.add(value);
+                }
+            }
+            return res;
+        }
+    }
+
+    /**
+     * Returns the union of this array and another array. The
+     * resulting array will contain all elements from this array and
+     * all elements from the other array that weren't in this one.
+     * None of the two arrays will be modified, but a new array will
+     * not be created if either is empty or the overlap is 100%.
+     *
+     * @param arr            the array to combine with
+     *
+     * @return the union of the two arrays
+     */
+    public Array union(Array arr) {
+        Array comp = complement(arr);
+        if (comp == null || comp.size() <= 0) {
+            return this;
+        } else if (size() <= 0) {
+            return comp;
+        } else {
+            Array res = new Array(size() + comp.size());
+            res.addAll(this);
+            res.addAll(comp);
+            return res;
         }
     }
 
