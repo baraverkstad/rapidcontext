@@ -496,13 +496,19 @@ public class ServletApplication extends HttpServlet {
                 dict = new Dict();
                 dict.set(Storage.KEY_TYPE, Storage.TYPE_INDEX);
                 arr = ((Index) res).indices();
-                for (int i = 0; createHtml && i < arr.size(); i++) {
-                    arr.set(i, "http:" + arr.getString(i, null) + "/");
+                if (createHtml) {
+                    arr = arr.copy();
+                    for (int i = 0; i < arr.size(); i++) {
+                        arr.set(i, "http:" + arr.getString(i, null) + "/");
+                    }
                 }
                 dict.set("directories", arr);
                 arr = ((Index) res).objects();
-                for (int i = 0; createHtml && i < arr.size(); i++) {
-                    arr.set(i, "http:" + arr.getString(i, null));
+                if (createHtml) {
+                    arr = arr.copy();
+                    for (int i = 0; i < arr.size(); i++) {
+                        arr.set(i, "http:" + arr.getString(i, null));
+                    }
                 }
                 dict.set("objects", arr);
                 res = dict;
