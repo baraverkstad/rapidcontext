@@ -25,7 +25,7 @@ package org.rapidcontext.core.data;
 public interface Storage {
 
     /**
-     * The meta-data key for object type. The value is stored as a
+     * The meta-data key for the object type. The value stored is a
      * string, using one of the predefined constant type values.
      *
      * @see #TYPE_INDEX
@@ -35,8 +35,14 @@ public interface Storage {
     public static final String KEY_TYPE = "type";
 
     /**
-     * The meta-data key for last modified date. The value is stored
-     * as a Long in the dictionary.
+     * The meta-data key for the Java class of the object. The value
+     * stored is the actual Class of the object.
+     */
+    public static final String KEY_CLASS = "class";
+
+    /**
+     * The meta-data key for the last modified date. The value stored
+     * is a Long representing the epoch time in milliseconds.
      */
     public static final String KEY_MODIFIED = "lastModified";
 

@@ -77,10 +77,13 @@ public class FileStorage implements Storage {
             dict = new Dict();
             if (file.isDirectory()) {
                 dict.set(KEY_TYPE, TYPE_INDEX);
+                dict.set(KEY_CLASS, Index.class);
             } else if (file.getName().endsWith(SUFFIX_PROPS)) {
                 dict.set(KEY_TYPE, TYPE_OBJECT);
+                dict.set(KEY_CLASS, Dict.class);
             } else {
                 dict.set(KEY_TYPE, TYPE_FILE);
+                dict.set(KEY_CLASS, File.class);
             }
             dict.set(KEY_MODIFIED, new Long(file.lastModified()));
         }
