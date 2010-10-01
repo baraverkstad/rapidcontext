@@ -14,6 +14,8 @@
 
 package org.rapidcontext.core.data;
 
+import java.util.Arrays;
+
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -104,6 +106,35 @@ public class Path {
             buffer.append("/");
         }
         return buffer.toString();
+    }
+
+    /**
+     * Checks if this path is identical to another path. The two
+     * paths will be considered equal if they have the same length,
+     * all elements are equal and the index flag is identical.
+     *
+     * @param obj            the object to compare with
+     *
+     * @return true if the two paths are equal, or
+     *         false otherwise
+     */
+    public boolean equals(Object obj) {
+        return obj instanceof Path &&
+               index == ((Path) obj).index &&
+               Arrays.equals(parts, ((Path) obj).parts);
+    }
+
+    /**
+     * Returns a hash code for this object.
+     *
+     * @return a hash code for this object
+     */
+    public int hashCode() {
+        int result = 1;
+        for (int i = 0; i < parts.length; i++) {
+            result = 31 * result + parts[i].hashCode();
+        }
+        return result;
     }
 
     /**
