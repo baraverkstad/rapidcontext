@@ -16,7 +16,11 @@ package org.rapidcontext.core.data;
 
 /**
  * An index dictionary. An index is an object containing the names
- * of objects and sub-indices.
+ * of objects and sub-indices.<p>
+ *
+ * IMPORTANT: The index objects shouldn't be modified directly by
+ * outside the owning storage implementation. Use the copy() method
+ * to create a copy if changes need to be made elsewhere.
  *
  * @author   Per Cederberg
  * @version  1.0
@@ -111,20 +115,78 @@ public class Index extends Dict {
     }
 
     /**
-     * Adds a sub-index name.
+     * Adds a sub-index name. The name will only be added only if not
+     * already in the index.
      *
      * @param name           the index name
+     *
+     * @return true if the name was added to the index, or
+     *         false otherwise
      */
-    public void addIndex(String name) {
-        indices().add(name);
+    public boolean addIndex(String name) {
+        Array arr = indices();
+        if (!arr.containsValue(name)) {
+            arr.add(name);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
-     * Adds an object name.
+     * Adds an object name. The name will only be added only if not
+     * already in the index.
      *
      * @param name           the object name
+     *
+     * @return true if the name was added to the index, or
+     *         false otherwise
      */
-    public void addObject(String name) {
-        objects().add(name);
+    public boolean addObject(String name) {
+        Array arr = objects();
+        if (!arr.containsValue(name)) {
+            arr.add(name);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Removes a sub-index name.
+     *
+     * @param name           the index name
+     *
+     * @return true if the name was removed from the index, or
+     *         false otherwise
+     */
+    public boolean removeIndex(String name) {
+        Array arr = indices();
+        int pos = arr.indexOf(name);
+        if (arr.containsIndex(pos)) {
+            arr.remove(pos);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Removes an object name.
+     *
+     * @param name           the object name
+     *
+     * @return true if the name was removed from the index, or
+     *         false otherwise
+     */
+    public boolean removeObject(String name) {
+        Array arr = objects();
+        int pos = arr.indexOf(name);
+        if (arr.containsIndex(pos)) {
+            arr.remove(pos);
+            return true;
+        } else {
+            return false;
+        }
     }
 }
