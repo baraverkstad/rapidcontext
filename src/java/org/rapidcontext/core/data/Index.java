@@ -53,8 +53,9 @@ public class Index extends Dict {
         } else if (two == null) {
             return one;
         } else {
-            one.add(two);
-            return one;
+            Array idxs = one.indices().union(two.indices());
+            Array objs = one.objects().union(two.objects());
+            return new Index(one.path(), idxs, objs);
         }
     }
 
@@ -64,11 +65,22 @@ public class Index extends Dict {
      * @param path           the index path
      */
     public Index(Path path) {
+        this(path, new Array(), new Array());
+    }
+
+    /**
+     * Creates a new index dictionary with the specified entries.
+     *
+     * @param path           the index path
+     * @param indices        the initial index array
+     * @param objects        the initial object array
+     */
+    public Index(Path path, Array indices, Array objects) {
         super(4);
         add("type", "index");
         add(KEY_PATH, path);
-        add(KEY_IDXS, new Array());
-        add(KEY_OBJS, new Array());
+        add(KEY_IDXS, indices);
+        add(KEY_OBJS, objects);
     }
 
     /**
@@ -114,31 +126,5 @@ public class Index extends Dict {
      */
     public void addObject(String name) {
         objects().add(name);
-    }
-
-    /**
-     * Adds all the names from an index to this one.
-     *
-     * @param idx            the index to merge with
-     */
-    public void add(Index idx) {
-        addNames(indices(), idx.indices());
-        addNames(objects(), idx.objects());    
-    }
-
-    /**
-     * Merges two arrays by adding all missing values from the second
-     * array to the first one.
-     *
-     * @param base           the base array
-     * @param tmp            the array to add elements from
-     */
-    private void addNames(Array base, Array tmp) {
-        for (int i = 0; i < tmp.size(); i++) {
-            String name = tmp.getString(i, null);
-            if (!base.containsValue(name)) {
-                base.add(name);
-            }
-        }
     }
 }
