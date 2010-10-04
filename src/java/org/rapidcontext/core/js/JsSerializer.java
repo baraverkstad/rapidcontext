@@ -88,6 +88,8 @@ public class JsSerializer {
             buffer.append(obj.toString());
         } else if (obj instanceof Number) {
             serialize((Number) obj, buffer);
+        } else if (obj instanceof Class) {
+            serialize(((Class) obj).getName(), buffer);
         } else {
             serialize(obj.toString(), buffer);
         }

@@ -62,6 +62,8 @@ public class HtmlSerializer {
             serialize((Dict) obj, buffer);
         } else if (obj instanceof Array) {
             serialize((Array) obj, buffer);
+        } else if (obj instanceof Class) {
+            serialize(((Class) obj).getName(), buffer);
         } else {
             serialize(obj.toString(), buffer);
         }
