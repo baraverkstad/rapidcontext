@@ -120,10 +120,20 @@ public class MemoryStorage implements Storage {
             throw new StorageException(msg);
         }
         if (data == null) {
+            Object obj = null;
+            if (objects.containsKey(path)) {
+                obj = objects.get(path);
+            }
             objects.remove(path);
             meta.remove(path);
             indexRemove(path);
+            if (obj instanceof Storable) {
+                ((Storable) obj).destroy();
+            }
         } else {
+            if (data instanceof Storable) {
+                ((Storable) data).init();
+            }
             objects.put(path, data);
             meta.put(path, createMeta(path, data));
             indexInsert(path);
