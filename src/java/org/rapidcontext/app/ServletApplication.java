@@ -165,8 +165,6 @@ public class ServletApplication extends HttpServlet {
     private void process(Request request)
         throws ServletException, IOException {
 
-        long  time = System.currentTimeMillis();
-
         try {
             processAuth(request);
             if (!request.hasResponse()) {
@@ -181,9 +179,9 @@ public class ServletApplication extends HttpServlet {
         } catch (IOException e) {
             LOG.info("IO error when processing request: " + request);
         }
-        time = System.currentTimeMillis() - time;
         LOG.fine(ip(request) + "Request to " + request.getPath() +
-                 " processed in " + time + " millisecs");
+                 " processed in " + request.getProcessTime() +
+                 " millisecs");
         request.dispose();
     }
 
@@ -527,6 +525,10 @@ public class ServletApplication extends HttpServlet {
                     dict.set("url", url);
                 }
                 res = dict;
+            }
+            if (meta != null) {
+                meta = meta.copy();
+                meta.set("processTime", new Long(request.getProcessTime()));
             }
 
             // Render result as JSON, XML or HTML

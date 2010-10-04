@@ -1,7 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg.
- * All rights reserved.
+ * Copyright (c) 2007-2010 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -39,7 +38,7 @@ import org.apache.commons.lang.StringUtils;
  * request and response objects for simplified handling. It also
  * provides limited support for file uploads.
  *
- * @author   Per Cederberg, <per at percederberg dot net>
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class Request {
@@ -83,6 +82,11 @@ public class Request {
      * data string may be set when sending this response.
      */
     private static final int ERROR_RESPONSE = 5;
+
+    /**
+     * The system time when creating this request.
+     */
+    private long requestTime = System.currentTimeMillis();
 
     /**
      * The servlet request.
@@ -414,6 +418,17 @@ public class Request {
         SessionManager.manage(session);
         SessionManager.connectThread(session);
         return session;
+    }
+
+    /**
+     * Returns the time in milliseconds since this request wrapper
+     * was created. The number returned will always be one (1) or
+     * greater.
+     *
+     * @return the approximate request processing time
+     */
+    public long getProcessTime() {
+        return Math.max(System.currentTimeMillis() - requestTime, 1);
     }
 
     /**
