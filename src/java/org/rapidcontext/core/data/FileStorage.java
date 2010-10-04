@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang.StringUtils;
+import org.rapidcontext.util.FileUtil;
 
 /**
  * A persistent data storage and retrieval handler based on the file
@@ -139,40 +140,38 @@ public class FileStorage implements Storage {
     }
 
     /**
-     * Stores or removes an object at the specified location. The
-     * path must locate a particular object or file, since direct
-     * manipulation of indices is not supported. Any previous data
-     * at the specified path will be overwritten or removed without
-     * any notice. The data types supported for storage are files
-     * and dictionaries.
+     * Stores an object at the specified location. The path must
+     * locate a particular object or file, since direct manipulation
+     * of indices is not supported. Any previous data at the
+     * specified path will be overwritten or removed. Note that only
+     * dictionaries and files can be stored in a file storage.
      *
      * @param path           the storage location
-     * @param data           the data to store, or null to delete
+     * @param data           the data to store
      *
      * @throws StorageException if the data couldn't be written
      */
     public void store(Path path, Object data) throws StorageException {
-        File  file;
+        String  msg;
+        File    file;
 
         if (path.isIndex()) {
-            String msg = "cannot write to index " + path.toString();
+            msg = "cannot write to index " + path;
+            LOG.warning(msg);
+            throw new StorageException(msg);
+        } else if (data == null) {
+            msg = "cannot store null data, use remove() instead: " + path;
             LOG.warning(msg);
             throw new StorageException(msg);
         }
-        if (data == null) {
-            file = locateFile(path);
-            if (file.canWrite()) {
-                file.delete();
-            }
-        } else if (data instanceof Dict) {
+        if (data instanceof Dict) {
             file = locateDir(path);
             file.mkdirs();
             file = new File(file, path.name() + SUFFIX_PROPS);
             try {
                 PropertiesSerializer.write(file, (Dict) data);
             } catch (IOException e) {
-                String msg = "failed to write file " + file.toString() +
-                             ": " + e.getMessage();
+                msg = "failed to write file " + file + ": " + e.getMessage();
                 LOG.warning(msg);
                 throw new StorageException(msg);
             }
@@ -183,6 +182,35 @@ public class FileStorage implements Storage {
             ((File) data).renameTo(file);
         } else {
             throw new StorageException("cannot store unsupported data type");
+        }
+    }
+
+    /**
+     * Removes an object or an index at the specified location. If
+     * the path refers to an index, all contained objects and indices
+     * will be removed recursively.
+     *
+     * @param path           the storage location
+     *
+     * @throws StorageException if the data couldn't be removed
+     */
+    public void remove(Path path) throws StorageException {
+        String  msg;
+        File    file;
+
+        file = locateFile(path);
+        if (file != null) {
+            try {
+                if (path.isRoot()) {
+                    FileUtil.deleteContents(file);
+                } else {
+                    FileUtil.delete(file);
+                }
+            } catch (IOException e) {
+                msg = "failed to remove " + file + ": " + e.getMessage();
+                LOG.warning(msg);
+                throw new StorageException(msg);
+            }
         }
     }
 

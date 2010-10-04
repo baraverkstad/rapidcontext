@@ -219,20 +219,30 @@ public class PluginStorage implements Storage {
     }
 
     /**
-     * Stores or removes an object at the specified location. The
-     * path must locate a particular object or file, since direct
-     * manipulation of indices is not supported. Any previous data
-     * at the specified path will be overwritten or removed without
-     * any notice. The data types supported for storage depends on
-     * implementation, but normally files and dictionaries are
-     * accepted.
+     * Stores an object at the specified location. The path must
+     * locate a particular object or file, since direct manipulation
+     * of indices is not supported. Any previous data at the
+     * specified path will be overwritten or removed.
      *
      * @param path           the storage location
-     * @param data           the data to store, or null to delete
+     * @param data           the data to store
      *
      * @throws StorageException if the data couldn't be written
      */
     public void store(Path path, Object data) throws StorageException {
         localPlugin.store(path, data);
+    }
+
+    /**
+     * Removes an object or an index at the specified location. If
+     * the path refers to an index, all contained objects and indices
+     * will be removed recursively.
+     *
+     * @param path           the storage location
+     *
+     * @throws StorageException if the data couldn't be removed
+     */
+    public void remove(Path path) throws StorageException {
+        localPlugin.remove(path);
     }
 }

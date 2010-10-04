@@ -102,42 +102,37 @@ public class MemoryStorage implements Storage {
     }
 
     /**
-     * Stores or removes an object at the specified location. The
-     * path must locate a particular object or file, since direct
-     * manipulation of indices is not supported. Any previous data
-     * at the specified path will be overwritten or removed without
-     * any notice.
+     * Stores an object at the specified location. The path must
+     * locate a particular object or file, since direct manipulation
+     * of indices is not supported. Any previous data at the
+     * specified path will be overwritten or removed.
      *
      * @param path           the storage location
-     * @param data           the data to store, or null to delete
+     * @param data           the data to store
      *
      * @throws StorageException if the data couldn't be written
      */
     public void store(Path path, Object data) throws StorageException {
+        String  msg;
+
         if (path.isIndex()) {
-            String msg = "cannot write to index " + path.toString();
+            msg = "cannot write to index " + path;
+            LOG.warning(msg);
+            throw new StorageException(msg);
+        } else if (data == null) {
+            msg = "cannot store null data, use remove() instead: " + path;
             LOG.warning(msg);
             throw new StorageException(msg);
         }
-        if (data == null) {
-            Object obj = null;
-            if (objects.containsKey(path)) {
-                obj = objects.get(path);
-            }
-            objects.remove(path);
-            meta.remove(path);
-            indexRemove(path);
-            if (obj instanceof Storable) {
-                ((Storable) obj).destroy(this);
-            }
-        } else {
-            if (data instanceof Storable) {
-                ((Storable) data).init(this);
-            }
-            objects.put(path, data);
-            meta.put(path, createMeta(path, data));
-            indexInsert(path);
+        if (objects.containsKey(path)) {
+            remove(path);
         }
+        if (data instanceof Storable) {
+            ((Storable) data).init(this);
+        }
+        objects.put(path, data);
+        meta.put(path, createMeta(path, data));
+        indexInsert(path);
     }
 
     /**
@@ -155,6 +150,56 @@ public class MemoryStorage implements Storage {
         dict.set(KEY_CLASS, data.getClass());
         dict.set(KEY_MODIFIED, new Long(System.currentTimeMillis()));
         return dict;
+    }
+
+    /**
+     * Removes an object or an index at the specified location. If
+     * the path refers to an index, all contained objects and indices
+     * will be removed recursively.
+     *
+     * @param path           the storage location
+     *
+     * @throws StorageException if the data couldn't be removed
+     */
+    public void remove(Path path) throws StorageException {
+        remove(path, true);
+    }
+
+    /**
+     * Removes an object or an index at the specified location. If
+     * the path refers to an index, all contained objects and indices
+     * will be removed recursively.
+     *
+     * @param path           the storage location
+     * @param updateParent   the parent index update flag
+     *
+     * @throws StorageException if the data couldn't be removed
+     */
+    private void remove(Path path, boolean updateParent) throws StorageException {
+        Object  obj = meta.get(path);
+        Index   idx;
+        Array   arr;
+
+        if (path.isIndex() && obj instanceof Index) {
+            idx = (Index) obj;
+            arr = idx.indices();
+            for (int i = 0; i < arr.size(); i++) {
+                remove(path.child(arr.getString(i, null), true), false);
+            }
+            arr = idx.objects();
+            for (int i = 0; i < arr.size(); i++) {
+                remove(path.child(arr.getString(i, null), false), false);
+            }
+        }
+        obj = objects.get(path);
+        objects.remove(path);
+        meta.remove(path);
+        if (updateParent) {
+            indexRemove(path);
+        }
+        if (obj instanceof Storable) {
+            ((Storable) obj).destroy(this);
+        }
     }
 
     /**
