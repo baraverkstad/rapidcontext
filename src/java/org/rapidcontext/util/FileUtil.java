@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -26,29 +26,49 @@ import java.util.zip.ZipFile;
 /**
  * A set of utility methods for handling files.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class FileUtil {
 
     /**
-     * Deletes a file or a directory tree. This function will delete
-     * all files and sub-directories inside a directory recursively.
+     * Deletes a file or a directory. This function will delete all
+     * files and sub-directories inside a directory recursively.
      *
      * @param file           the file or directory to delete
      *
-     * @throws IOException if the file couldn't be deleted
+     * @throws IOException if some file couldn't be deleted
      */
-    public static void deleteTree(File file) throws IOException {
-        if (file.isDirectory()) {
+    public static void delete(File file) throws IOException {
+        if (file != null && file.isDirectory()) {
             File[] files = file.listFiles();
             if (files != null) {
                 for (int i = 0; i < files.length; i++) {
-                    deleteTree(files[i]);
+                    delete(files[i]);
                 }
             }
         }
-        file.delete();
+        if (file != null && !file.delete()) {
+            throw new IOException("failed to delete " + file);
+        }
+    }
+
+    /**
+     * Deletes the contents of a directory. This function will delete all
+     * files and sub-directories inside a directory recursively. The parent
+     * directory won't be deleted.
+     *
+     * @param dir            the directory to clean
+     *
+     * @throws IOException if some file couldn't be deleted
+     */
+    public static void deleteContents(File dir) throws IOException {
+        if (dir != null && dir.isDirectory()) {
+            File[] files = dir.listFiles();
+            for (int i = 0; files != null && i < files.length; i++) {
+                delete(files[i]);
+            }
+        }
     }
 
     /**

@@ -441,7 +441,7 @@ public class ApplicationContext {
             if (dir.exists()) {
                 unloadPlugin(pluginId);
                 // TODO: perhaps backup the old directory instead?
-                FileUtil.deleteTree(dir);
+                FileUtil.delete(dir);
             }
             FileUtil.unpackZip(zip, dir);
             loadPlugin(pluginId);
