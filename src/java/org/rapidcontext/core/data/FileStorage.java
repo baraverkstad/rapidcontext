@@ -108,6 +108,7 @@ public class FileStorage implements Storage {
         File  file = locateFile(path);
 
         if (file == null) {
+            // TODO: Replace this hack with a proper StorageIterator instead...
             return path.isIndex() ? new Index(path) : null;
         } else if (path.isIndex()) {
             Index idx = new Index(path);
