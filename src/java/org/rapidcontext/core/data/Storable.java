@@ -30,9 +30,11 @@ public interface Storable {
      * storage. This method will be called exactly once before the
      * object is made accessible in a storage.
      *
+     * @param storage        the storage the object is added to
+     *
      * @throws StorageException if the initialization failed
      */
-    void init() throws StorageException;
+    void init(Storage storage) throws StorageException;
 
     /**
      * Destroys this object. This method is used to free any
@@ -40,9 +42,11 @@ public interface Storable {
      * the storage. This method will be called exactly once after the
      * object is no longer accessible in a storage.
      *
+     * @param storage        the storage the object is removed from
+     *
      * @throws StorageException if the destruction failed
      */
-    void destroy() throws StorageException;
+    void destroy(Storage storage) throws StorageException;
 
     /**
      * Returns a serialized representation of this object. Used when

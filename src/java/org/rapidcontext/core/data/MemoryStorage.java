@@ -128,11 +128,11 @@ public class MemoryStorage implements Storage {
             meta.remove(path);
             indexRemove(path);
             if (obj instanceof Storable) {
-                ((Storable) obj).destroy();
+                ((Storable) obj).destroy(this);
             }
         } else {
             if (data instanceof Storable) {
-                ((Storable) data).init();
+                ((Storable) data).init(this);
             }
             objects.put(path, data);
             meta.put(path, createMeta(path, data));
