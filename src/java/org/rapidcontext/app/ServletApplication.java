@@ -531,9 +531,15 @@ public class ServletApplication extends HttpServlet {
 
             // Render result as JSON, XML or HTML
             if (isMimeMatch(request, MIME_JSON)) {
-                request.sendData("text/javascript", JsSerializer.serialize(res));
+                dict = new Dict();
+                dict.set("metadata", meta);
+                dict.set("data", res);
+                request.sendData("text/javascript", JsSerializer.serialize(dict));
             } else if (isMimeMatch(request, MIME_XML)) {
-                request.sendData("text/xml", XmlSerializer.serialize(res));
+                dict = new Dict();
+                dict.set("metadata", meta);
+                dict.set("data", res);
+                request.sendData("text/xml", XmlSerializer.serialize(dict));
             } else {
                 StringBuffer html = new StringBuffer();
                 html.append("<html>\n<head>\n<link rel='stylesheet' href='");
@@ -567,6 +573,11 @@ public class ServletApplication extends HttpServlet {
                 }
                 html.append("<td class='active-end'>&nbsp;</td>\n");
                 html.append("</tr>\n</table>\n<hr/>\n");
+                html.append("<div class='metadata'>\n");
+                html.append("<h2>Query Metadata</h2>\n");
+                html.append(HtmlSerializer.serialize(meta));
+                html.append("</div>\n");
+                html.append("<h2>Query Results</h2>");
                 html.append(HtmlSerializer.serialize(res));
                 html.append("<hr/><p><strong>Data Formats:</strong>");
                 html.append(" &nbsp;<a href='?mimeType=text/javascript'>JSON</a>");

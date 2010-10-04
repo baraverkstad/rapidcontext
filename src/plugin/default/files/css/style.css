@@ -38,6 +38,7 @@ hr {
     border: none;
     border-bottom: 1px solid #cccccc;
     width: 100%;
+    clear: both;
 }
 
 p {
@@ -121,6 +122,9 @@ dd {
 div.query {
     margin: 30px 40px;
 }
+.query h2 {
+    margin-top: 0;
+}
 .query pre {
     color: #666666;
 }
@@ -180,6 +184,10 @@ div.query {
 }
 .query table.navigation td.next-end {
     background: url(../images/backgrounds/navigation-next-end.gif) no-repeat;
+}
+.query .metadata {
+    float: right;
+    margin: 0 20px 12px 20px;
 }
 
 
