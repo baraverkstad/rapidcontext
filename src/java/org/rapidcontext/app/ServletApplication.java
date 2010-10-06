@@ -18,7 +18,6 @@ package org.rapidcontext.app;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -46,7 +45,6 @@ import org.rapidcontext.core.security.User;
 import org.rapidcontext.core.web.Request;
 import org.rapidcontext.core.web.SessionFileMap;
 import org.rapidcontext.core.web.SessionManager;
-import org.rapidcontext.util.DateUtil;
 
 /**
  * The main application servlet. This servlet handles all incoming
@@ -517,8 +515,6 @@ public class ServletApplication extends HttpServlet {
                 dict.set("name", file.getName());
                 dict.set("mimeType", getServletContext().getMimeType(file.getName()));
                 dict.set("size", new Long(file.length()));
-                dict.set("lastModified",
-                         DateUtil.formatIsoDateTime(new Date(file.lastModified())));
                 String url = StringUtils.removeEnd(request.getUrl(), request.getPath()) +
                              StringUtils.removeStart(path.toString(), "/files");
                 if (query.startsWith("/files") || query.startsWith("files")) {
