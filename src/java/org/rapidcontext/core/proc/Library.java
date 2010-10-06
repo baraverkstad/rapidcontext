@@ -15,6 +15,7 @@
 
 package org.rapidcontext.core.proc;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.logging.Logger;
@@ -213,7 +214,7 @@ public class Library {
     public Procedure getProcedure(String name) throws ProcedureException {
         AddOnProcedure  proc;
         Dict            meta;
-        long            modified;
+        Date            modified;
 
         // TODO: remove this legacy conversion before 1.0
         if (name.startsWith("ReTracer.")) {
@@ -232,11 +233,11 @@ public class Library {
         if (meta == null) {
             throw new ProcedureException("no procedure '" + name + "' found");
         }
-        modified = ((Long) meta.get(Storage.KEY_MODIFIED)).longValue();
-        if (proc != null && modified > 0 && modified <= proc.getLastModified()) {
-            return proc;
-        } else {
+        modified = (Date) meta.get(Storage.KEY_MODIFIED);
+        if (proc == null || modified == null || modified.after(proc.getLastModified())) {
             return loadProcedure(name);
+        } else {
+            return proc;
         }
     }
 

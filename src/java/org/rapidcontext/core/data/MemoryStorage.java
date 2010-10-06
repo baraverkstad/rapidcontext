@@ -14,6 +14,7 @@
 
 package org.rapidcontext.core.data;
 
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.logging.Logger;
 
@@ -155,7 +156,7 @@ public class MemoryStorage implements Storage {
         Dict dict = new Dict();
         dict.set(KEY_TYPE, TYPE_OBJECT);
         dict.set(KEY_CLASS, data.getClass());
-        dict.set(KEY_MODIFIED, new Long(System.currentTimeMillis()));
+        dict.set(KEY_MODIFIED, new Date());
         return dict;
     }
 
@@ -232,7 +233,7 @@ public class MemoryStorage implements Storage {
             modified = idx.addObject(path.name());
         }
         if (modified) {
-            idx.set(KEY_MODIFIED, new Long(System.currentTimeMillis()));
+            idx.set(KEY_MODIFIED, new Date());
             if (!meta.containsKey(parent)) {
                 meta.put(parent, idx);
                 if (!parent.isRoot()) {
@@ -263,7 +264,7 @@ public class MemoryStorage implements Storage {
                 modified = idx.removeObject(path.name());
             }
             if (modified) {
-                idx.set(KEY_MODIFIED, new Long(System.currentTimeMillis()));
+                idx.set(KEY_MODIFIED, new Date());
                 if (idx.indices().size() <= 0 && idx.objects().size() <= 0) {
                     meta.remove(parent);
                     if (!parent.isRoot()) {

@@ -17,6 +17,7 @@ package org.rapidcontext.core.data;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Date;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang.StringUtils;
@@ -95,7 +96,7 @@ public class FileStorage implements Storage {
                 dict.set(KEY_TYPE, TYPE_FILE);
                 dict.set(KEY_CLASS, File.class);
             }
-            dict.set(KEY_MODIFIED, new Long(file.lastModified()));
+            dict.set(KEY_MODIFIED, new Date(file.lastModified()));
         }
         return dict;
     }

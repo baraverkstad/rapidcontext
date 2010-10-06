@@ -14,6 +14,7 @@
 
 package org.rapidcontext.core.data;
 
+import java.util.Date;
 import java.util.logging.Logger;
 
 /**
@@ -250,11 +251,11 @@ public class VirtualStorage implements Storage {
                     if (meta != null) {
                         if (meta.getString(KEY_TYPE, "").equals(TYPE_INDEX)) {
                             if (idx != null) {
-                                long mod1 = ((Long) idx.get(KEY_MODIFIED)).longValue();
-                                long mod2 = ((Long) meta.get(KEY_MODIFIED)).longValue();
-                                long mod3 = Math.max(mod1, mod2);
+                                Date mod1 = (Date) idx.get(KEY_MODIFIED);
+                                Date mod2 = (Date) meta.get(KEY_MODIFIED);
+                                Date mod3 = mod1.after(mod2) ? mod1 : mod2;
                                 meta = meta.copy();
-                                meta.set(KEY_MODIFIED, new Long(mod3));
+                                meta.set(KEY_MODIFIED, mod3);
                             }
                             idx = meta;
                         } else {
@@ -443,10 +444,9 @@ public class VirtualStorage implements Storage {
         public int compareTo(Object obj) {
             MountPoint  other = (MountPoint) obj;
             int         cmp1 = getPrio() - other.getPrio();
-            long        cmp2 = getMountTime() - other.getMountTime();
+            int         cmp2 = getMountTime().compareTo(other.getMountTime());
 
-            cmp2 = Math.max(Math.min(cmp2, 1L), -1L);
-            return (cmp1 != 0) ? -cmp1 : (int) cmp2;
+            return (cmp1 != 0) ? -cmp1 : cmp2;
         }
 
         /**
@@ -482,8 +482,8 @@ public class VirtualStorage implements Storage {
          *
          * @return the last mount time (in milliseconds)
          */
-        public long getMountTime() {
-            return ((Long) get("mountTime")).longValue();
+        public Date getMountTime() {
+            return (Date) get("mountTime");
         }
 
         /**
@@ -520,7 +520,7 @@ public class VirtualStorage implements Storage {
             setBoolean("readWrite", readWrite);
             setBoolean("overlay", overlay);
             setInt("prio", overlay ? prio : -1);
-            set("mountTime", new Long(lastMountTime));
+            set("mountTime", new Date(lastMountTime));
         }
     }
 }

@@ -15,6 +15,8 @@
 
 package org.rapidcontext.core.proc;
 
+import java.util.Date;
+
 import org.rapidcontext.core.data.Dict;
 
 /**
@@ -52,7 +54,7 @@ public abstract class AddOnProcedure implements Procedure {
     /**
      * The last modification time for the procedure.
      */
-    private long lastModified = 0L;
+    private Date lastModified = null;
 
     /**
      * The default procedure bindings. These are normally modified
@@ -74,7 +76,7 @@ public abstract class AddOnProcedure implements Procedure {
      * @throws ProcedureException if the initialization failed
      */
     public AddOnProcedure() throws ProcedureException {
-        this.lastModified = System.currentTimeMillis();
+        this.lastModified = new Date();
     }
 
     /**
@@ -99,7 +101,7 @@ public abstract class AddOnProcedure implements Procedure {
     public void setData(Dict data) {
         this.data = data;
         this.bindings = new Bindings(defaults, data.getArray("binding"));
-        this.lastModified = System.currentTimeMillis();
+        this.lastModified = new Date();
     }
 
     /**
@@ -137,7 +139,7 @@ public abstract class AddOnProcedure implements Procedure {
      *
      * @return the timestamp for the last modification
      */
-    public long getLastModified() {
+    public Date getLastModified() {
         return lastModified;
     }
 
