@@ -17,22 +17,25 @@ package org.rapidcontext.core.data;
 import java.util.logging.Logger;
 
 /**
- * An overlay storage providing a unified view of other storages. The
- * sub-storages are mounted to specific paths, but may also be
- * overlaid over the root path. The overlay mechanism supports
- * multiple writable storages and the unified root path can be
- * controlled by setting storage priorities.
+ * A virtual storage handler that provides a unified view of other
+ * storages. The sub-storages are mounted to specific storage paths
+ * and may also be merged together to form a unified storage with
+ * data and files from all storages mixed (in a prioritized order).
+ * The unified storage tree provides an overlay of all storages for
+ * reading, but only a single storage will be used for writing. Any
+ * mounted storage can be accessed directly from its mounted path,
+ * however.
  *
  * @author   Per Cederberg
  * @version  1.0
  */
-public class OverlayStorage implements Storage {
+public class VirtualStorage implements Storage {
 
     /**
      * The class logger.
      */
     private static final Logger LOG =
-        Logger.getLogger(OverlayStorage.class.getName());
+        Logger.getLogger(VirtualStorage.class.getName());
 
     /**
      * The meta-data storage for mount points and parent indices.
@@ -49,18 +52,15 @@ public class OverlayStorage implements Storage {
     private Array mountpoints = new Array();
 
     /**
-     * Creates a new overlay storage. The specified path will be used
-     * to provide an data object with information about the mount
-     * points and storages.
-     *
-     * @param metaInfoPath   the storage location for meta-data
+     * Creates a new overlay storage.
      */
-    public OverlayStorage(Path metaInfoPath) {
+    public VirtualStorage() {
         try {
             Dict dict = new Dict(2);
-            dict.set(KEY_TYPE, "storageMapping");
-            dict.set("mounts", mountpoints);
-            metaStorage.store(metaInfoPath, dict);
+            dict.set("type", "storage");
+            dict.set("subtype", "virtual");
+            dict.set("storages", mountpoints);
+            metaStorage.store(new Path("/storageinfo"), dict);
         } catch (StorageException e) {
             LOG.severe("error while initializing overlay storage: " +
                        e.getMessage());
@@ -235,7 +235,14 @@ public class OverlayStorage implements Storage {
             }
             return meta;
         } else {
-            idx = metaStorage.lookup(path);
+            meta = metaStorage.lookup(path);
+            if (meta != null && meta.getString(KEY_TYPE, "").equals(TYPE_INDEX)) {
+                idx = meta;
+            } else if (meta != null) {
+                meta = meta.copy();
+                meta.set("storage", new Path(""));
+                return meta;
+            }
             for (int i = 0; i < mountpoints.size(); i++) {
                 mount = (MountPoint) mountpoints.get(i);
                 if (mount.isOverlay()) {
@@ -392,6 +399,7 @@ public class OverlayStorage implements Storage {
                           boolean overlay,
                           int prio) {
 
+            set("type", "storage");
             set("storage", storage);
             set("path", path);
             update(readWrite, overlay, prio);
