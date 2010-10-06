@@ -15,6 +15,7 @@
 
 package org.rapidcontext.core.js;
 
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -88,6 +89,8 @@ public class JsSerializer {
             buffer.append(obj.toString());
         } else if (obj instanceof Number) {
             serialize((Number) obj, buffer);
+        } else if (obj instanceof Date) {
+            buffer.append(((Date) obj).getTime());
         } else if (obj instanceof Class) {
             serialize(((Class) obj).getName(), buffer);
         } else {

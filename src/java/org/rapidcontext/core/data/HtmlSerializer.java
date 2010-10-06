@@ -15,7 +15,10 @@
 
 package org.rapidcontext.core.data;
 
+import java.util.Date;
+
 import org.apache.commons.lang.StringEscapeUtils;
+import org.rapidcontext.util.DateUtil;
 
 /**
  * A data serializer for HTML. This class only attempts to render a
@@ -62,6 +65,8 @@ public class HtmlSerializer {
             serialize((Dict) obj, buffer);
         } else if (obj instanceof Array) {
             serialize((Array) obj, buffer);
+        } else if (obj instanceof Date) {
+            buffer.append(DateUtil.formatIsoDateTime((Date) obj));
         } else if (obj instanceof Class) {
             serialize(((Class) obj).getName(), buffer);
         } else {

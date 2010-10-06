@@ -15,6 +15,8 @@
 
 package org.rapidcontext.core.data;
 
+import java.util.Date;
+
 import org.apache.commons.lang.StringEscapeUtils;
 
 /**
@@ -62,7 +64,9 @@ public class XmlSerializer {
             serialize((Dict) obj, buffer);
         } else if (obj instanceof Array) {
             serialize((Array) obj, buffer);
-        } else if (obj instanceof Class) {
+        } else if (obj instanceof Date) {
+            buffer.append(((Date) obj).getTime());
+       } else if (obj instanceof Class) {
             serialize(((Class) obj).getName(), buffer);
         } else {
             serialize(obj.toString(), buffer);
