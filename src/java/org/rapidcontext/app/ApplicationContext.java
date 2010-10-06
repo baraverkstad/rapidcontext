@@ -58,7 +58,6 @@ import org.rapidcontext.app.proc.UserPasswordChangeProcedure;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.Path;
-import org.rapidcontext.core.data.Storage;
 import org.rapidcontext.core.data.StorageException;
 import org.rapidcontext.core.env.Environment;
 import org.rapidcontext.core.env.EnvironmentException;
@@ -93,11 +92,6 @@ public class ApplicationContext {
      * The path to the global configuration.
      */
     public static final Path PATH_CONFIG = new Path("/config");
-
-    /**
-     * The path to the local plugin configuration.
-     */
-    public static final Path PATH_PLUGIN = new Path("/plugin");
 
     /**
      * The singleton application context instance.
@@ -391,6 +385,20 @@ public class ApplicationContext {
     }
 
     /**
+     * Checks if the specified plug-in is currently loaded.
+     *
+     * @param pluginId       the unique plug-in id
+     *
+     * @return true if the plug-in was loaded, or
+     *         false otherwise
+     */
+    public boolean isPluginLoaded(String pluginId) {
+        return plugins.containsKey(pluginId) ||
+               PluginStorage.DEFAULT_PLUGIN.equals(pluginId) ||
+               PluginStorage.LOCAL_PLUGIN.equals(pluginId);
+    }
+
+    /**
      * Installs a plug-in from the specified file. If an existing
      * plug-in with the same id already exists, it will be
      * replaced without warning. After installation, the new plug-in
@@ -440,10 +448,12 @@ public class ApplicationContext {
             dir = new File(pluginDir, pluginId);
             if (dir.exists()) {
                 unloadPlugin(pluginId);
+                storage.destroyPlugin(pluginId);
                 // TODO: perhaps backup the old directory instead?
                 FileUtil.delete(dir);
             }
             FileUtil.unpackZip(zip, dir);
+            storage.createPlugin(pluginId);
             loadPlugin(pluginId);
         } catch (IOException e) {
             msg = "IO error while reading zip file " + file.getName() + ": " +
@@ -473,14 +483,14 @@ public class ApplicationContext {
      *             or if the plug-in initialization failed
      */
     public void loadPlugin(String pluginId) throws PluginException {
-        Storage      pluginStore;
-        Dict         pluginData;
-        Array        pluginList;
-        String       className;
-        Class        cls;
-        Object       obj;
-        Plugin       plugin;
-        String       msg;
+        Path    pluginPath = PluginStorage.PATH_PLUGIN.child(pluginId, true);
+        Dict    pluginData;
+        Array   pluginList;
+        String  className;
+        Class   cls;
+        Object  obj;
+        Plugin  plugin;
+        String  msg;
 
         if (PluginStorage.DEFAULT_PLUGIN.equals(pluginId) ||
             PluginStorage.LOCAL_PLUGIN.equals(pluginId)) {
@@ -488,19 +498,18 @@ public class ApplicationContext {
             msg = "cannot force loading of default or local plug-ins";
             throw new PluginException(msg);
         }
-        pluginStore = storage.addPlugin(pluginId);
         try {
-            pluginData = (Dict) pluginStore.load(PATH_PLUGIN);
+            pluginData = (Dict) storage.load(pluginPath.child("plugin", false));
             if (pluginData == null) {
                 throw new StorageException("file not found");
             }
         } catch (StorageException e) {
-            storage.removePlugin(pluginId);
             msg = "couldn't load " + pluginId + " plugin config file: " +
                   e.getMessage();
             LOG.warning(msg);
             throw new PluginException(msg);
         }
+        storage.loadPlugin(pluginId);
         pluginClassLoader.addPluginJars(new File(this.pluginDir, pluginId));
         className = pluginData.getString("className", null);
         if (className == null || className.trim().length() <= 0) {
@@ -606,7 +615,7 @@ public class ApplicationContext {
         if (plugin != null) {
             plugin.destroy();
         }
-        storage.removePlugin(pluginId);
+        storage.unloadPlugin(pluginId);
         plugins.remove(pluginId);
         library.clearCache();
     }

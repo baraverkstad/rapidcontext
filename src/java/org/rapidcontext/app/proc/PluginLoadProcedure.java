@@ -17,7 +17,6 @@ package org.rapidcontext.app.proc;
 
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.app.plugin.PluginException;
-import org.rapidcontext.app.plugin.PluginStorage;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
@@ -113,12 +112,11 @@ public class PluginLoadProcedure implements Procedure, Restricted {
         throws ProcedureException {
 
         ApplicationContext  ctx = ApplicationContext.getInstance();
-        PluginStorage       storage = ctx.getStorage();
         String              id;
         String              msg;
 
         id = (String) bindings.getValue("pluginId");
-        if (storage.getPlugin(id) != null) {
+        if (ctx.isPluginLoaded(id)) {
             msg = "failed to load plug-in '" + id + "': " +
                   "plug-in is already loaded";
             throw new ProcedureException(msg);

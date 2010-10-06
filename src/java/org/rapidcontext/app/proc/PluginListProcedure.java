@@ -15,13 +15,11 @@
 
 package org.rapidcontext.app.proc;
 
-import java.io.File;
-
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.app.plugin.PluginStorage;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.data.Storage;
+import org.rapidcontext.core.data.Path;
 import org.rapidcontext.core.data.StorageException;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
@@ -116,43 +114,37 @@ public class PluginListProcedure implements Procedure, Restricted {
 
         ApplicationContext  ctx = ApplicationContext.getInstance();
         PluginStorage       storage = ctx.getStorage();
-        String[]            ids = storage.listPlugins();
-        Storage             ds;
-        File[]              files;
+        Dict                dict;
+        Array               arr;
+        Path                path;
         String              id;
         Array               res;
-        Dict                dict;
 
-        res = new Array(ids.length);
-        for (int i = 0; i < ids.length; i++) {
-            ds = storage.getPlugin(ids[i]);
-            dict = null;
-            try {
-                dict = (Dict) ds.load(ApplicationContext.PATH_PLUGIN);
-            } catch (StorageException ignore) {
-                // Read errors are handled below
-            }
-            if (dict == null) {
-                dict = new Dict();
-                dict.set("id", ids[i]);
-            }
-            dict.setBoolean("loaded", true);
-            res.add(dict);
+        try {
+            dict = (Dict) storage.load(new Path("/storageinfo"));
+            arr = dict.getArray("storages");
+        } catch (StorageException e) {
+            throw new ProcedureException(e.getMessage());
         }
-        files = ctx.getPluginDir().listFiles();
-        for (int i = 0; i < files.length; i++) {
-            id = files[i].getName();
-            if (storage.getPlugin(id) == null && files[i].isDirectory()) {
-                ds = storage.createStorage(id);
+        res = new Array(arr.size());
+        for (int i = 0; i < arr.size(); i++) {
+            path = (Path) arr.getDict(i).get("path");
+            if (path.startsWith(PluginStorage.PATH_PLUGIN) && path.isIndex()) {
+                id = path.name();
+                dict = null;
                 try {
-                    dict = (Dict) ds.load(ApplicationContext.PATH_PLUGIN);
-                    if (dict != null) {
-                        dict.setBoolean("loaded", false);
-                        res.add(dict);
-                    }
+                    dict = (Dict) storage.load(path.child("plugin", false));
                 } catch (StorageException ignore) {
-                    // Skip plug-ins with invalid file
+                    // Read errors are handled below
                 }
+                if (dict == null) {
+                    dict = new Dict();
+                    dict.set("id", id);
+                } else {
+                    dict = dict.copy();
+                }
+                dict.setBoolean("loaded", ctx.isPluginLoaded(id));
+                res.add(dict);
             }
         }
         return res;

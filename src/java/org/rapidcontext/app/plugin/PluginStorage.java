@@ -15,12 +15,10 @@
 package org.rapidcontext.app.plugin;
 
 import java.io.File;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.FileStorage;
-import org.rapidcontext.core.data.Index;
+import org.rapidcontext.core.data.VirtualStorage;
 import org.rapidcontext.core.data.Path;
 import org.rapidcontext.core.data.Storage;
 import org.rapidcontext.core.data.StorageException;
@@ -39,6 +37,16 @@ import org.rapidcontext.core.data.StorageException;
 public class PluginStorage implements Storage {
 
     /**
+     * The root mount storage path.
+     */
+    public static final Path PATH_STORAGE = new Path("/storage/");
+
+    /**
+     * The plug-in mount storage path.
+     */
+    public static final Path PATH_PLUGIN = PATH_STORAGE.child("plugin", true);
+
+    /**
      * The identifier of the default plug-in.
      */
     public static final String DEFAULT_PLUGIN = "default";
@@ -54,19 +62,9 @@ public class PluginStorage implements Storage {
     private File pluginDir;
 
     /**
-     * The file storage for the default plug-in.
+     * The storage used for plug-ins.
      */
-    private Storage defaultPlugin;
-
-    /**
-     * The file storage for the local plug-in.
-     */
-    private Storage localPlugin;
-
-    /**
-     * The list of plug-in file storages.
-     */
-    private LinkedHashMap plugins = new LinkedHashMap();
+    private VirtualStorage storage;
 
     /**
      * Creates a new plug-in storage.
@@ -75,80 +73,103 @@ public class PluginStorage implements Storage {
      */
     public PluginStorage(File pluginDir) {
         this.pluginDir = pluginDir;
-        this.defaultPlugin = createStorage(DEFAULT_PLUGIN);
-        this.localPlugin = createStorage(LOCAL_PLUGIN);
-        this.plugins.put(LOCAL_PLUGIN, this.localPlugin);
-    }
-
-    /**
-     * Creates a plug-in data storage. This is similar to
-     * addPlugin(), but doesn't link the created data storage to the
-     * lookup list (hence not loading the plug-in).
-     *
-     * @param id             the plug-in identifier
-     *
-     * @return the plug-in data storage
-     */
-    public Storage createStorage(String id) {
-        File  dir = new File(this.pluginDir, id);
-
-        if (!dir.exists()) {
-            dir.mkdir();
+        this.storage = new VirtualStorage();
+        File[] files = pluginDir.listFiles();
+        for (int i = 0; i < files.length; i++) {
+            if (files[i].isDirectory()) {
+                try {
+                    createPlugin(files[i].getName());
+                } catch (PluginException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
         }
-        return new FileStorage(dir);
-    }
-
-    /**
-     * Returns an array of all loaded plug-in identifiers.
-     *
-     * @return an array of all plug-in identifiers
-     */
-    public String[] listPlugins() {
-        String[]  ids = new String[plugins.size() + 1];
-
-        plugins.keySet().toArray(ids);
-        ids[ids.length - 1] = DEFAULT_PLUGIN;
-        return ids;
-    }
-
-    /**
-     * Returns the plug-in storage for a loaded plug-in.
-     *
-     * @param id             the plug-in identifier
-     *
-     * @return the data storage for the specified plug-in
-     */
-    public Storage getPlugin(String id) {
-        if (DEFAULT_PLUGIN.equals(id)) {
-            return this.defaultPlugin;
-        } else {
-            return (Storage) plugins.get(id);
+        try {
+            loadPlugin(DEFAULT_PLUGIN);
+        } catch (PluginException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        try {
+            loadPlugin(LOCAL_PLUGIN);
+        } catch (PluginException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
     }
 
     /**
-     * Adds a plug-in to this storage. This will create the file
-     * storage for the plug-in itself and add it to the list of
-     * loaded plug-in file storages.
+     * Creates and mounts a plug-in file storage. This is the first
+     * step when installing a plug-in, allowing access to the plug-in
+     * files without overlaying then on the root index.
      *
      * @param id             the plug-in identifier
      *
-     * @return the data store for the specified plug-in
+     * @return the plug-in file storage created
+     *
+     * @throws PluginException if the plug-in hadn't been mounted
      */
-    public Storage addPlugin(String id) {
-        Storage  storage = createStorage(id);
+    public Storage createPlugin(String id) throws PluginException {
+        FileStorage  fs = new FileStorage(new File(this.pluginDir, id));
 
-        plugins.put(id, storage);
-        return storage;
+        try {
+            storage.mount(fs, PATH_PLUGIN.child(id, true), false, false, 0);
+        } catch (StorageException e) {
+            throw new PluginException(e.getMessage());
+        }
+        return fs;
     }
 
     /**
-     * Removes a plug-in from the data store.
+     * Destroys and unmounts a plug-in file storage. This is only
+     * needed when a new plug-in will be installed over a previous
+     * one, otherwise the unloadPlugin() method is sufficient.
      *
      * @param id             the plug-in identifier
+     *
+     * @throws PluginException if the plug-in hadn't been mounted
      */
-    public void removePlugin(String id) {
-        plugins.remove(id);
+    public void destroyPlugin(String id) throws PluginException {
+        try {
+            storage.unmount(PATH_PLUGIN.child(id, true));
+        } catch (StorageException e) {
+            throw new PluginException(e.getMessage());
+        }
+    }
+
+    /**
+     * Adds a plug-in overlay to the root index. This means that the
+     * plug-in configuration files are now generally accessible.
+     *
+     * @param id             the plug-in identifier
+     *
+     * @throws PluginException if the plug-in hadn't been mounted
+     */
+    public void loadPlugin(String id) throws PluginException {
+        boolean  readWrite = LOCAL_PLUGIN.equals(id);
+        int      prio = DEFAULT_PLUGIN.equals(id) ? 0 : 100;
+
+        try {
+            storage.remount(PATH_PLUGIN.child(id, true), readWrite, true, prio);
+        } catch (StorageException e) {
+            throw new PluginException(e.getMessage());
+        }
+    }
+
+    /**
+     * Removes a plug-in overlay to the root index.
+     *
+     * @param id             the plug-in identifier
+     *
+     * @throws PluginException if the plug-in hadn't been mounted
+     */
+    public void unloadPlugin(String id) throws PluginException {
+        try {
+            storage.remount(PATH_PLUGIN.child(id, true), false, true, 0);
+        } catch (StorageException e) {
+            throw new PluginException(e.getMessage());
+        }
     }
 
     /**
@@ -164,26 +185,7 @@ public class PluginStorage implements Storage {
      * @throws StorageException if the storage couldn't be accessed
      */
     public Dict lookup(Path path) throws StorageException {
-        Iterator   iter = plugins.keySet().iterator();
-        String     plugin;
-        Storage    storage;
-        Dict       meta = null;
-
-        while (iter.hasNext()) {
-            plugin = (String) iter.next();
-            storage = (Storage) plugins.get(plugin);
-            meta = storage.lookup(path);
-            if (meta != null) {
-                // TODO: Should merge meta-data for indices...
-                meta.set("plugin", plugin);
-                return meta;
-            }
-        }
-        meta = defaultPlugin.lookup(path);
-        if (meta != null) {
-            meta.set("plugin", DEFAULT_PLUGIN);
-        }
-        return meta;
+        return storage.lookup(path);
     }
 
     /**
@@ -200,22 +202,7 @@ public class PluginStorage implements Storage {
      * @throws StorageException if the data couldn't be read
      */
     public Object load(Path path) throws StorageException {
-        Iterator   iter = plugins.values().iterator();
-        Storage    storage;
-        Object     res;
-        Index      idx = null;
-
-        while (iter.hasNext()) {
-            storage = (Storage) iter.next();
-            res = storage.load(path);
-            if (res instanceof Index) {
-                idx = Index.merge(idx, (Index) res);
-            } else if (res != null) {
-                return res;
-            }
-        }
-        res = defaultPlugin.load(path);
-        return (res instanceof Index) ? Index.merge(idx, (Index) res) : res;
+        return storage.load(path);
     }
 
     /**
@@ -230,7 +217,7 @@ public class PluginStorage implements Storage {
      * @throws StorageException if the data couldn't be written
      */
     public void store(Path path, Object data) throws StorageException {
-        localPlugin.store(path, data);
+        storage.store(path, data);
     }
 
     /**
@@ -243,6 +230,6 @@ public class PluginStorage implements Storage {
      * @throws StorageException if the data couldn't be removed
      */
     public void remove(Path path) throws StorageException {
-        localPlugin.remove(path);
+        storage.remove(path);
     }
 }
