@@ -14,8 +14,6 @@
 
 package org.rapidcontext.core.data;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.logging.Logger;
 
 /**
@@ -37,20 +35,90 @@ public class OverlayStorage implements Storage {
         Logger.getLogger(OverlayStorage.class.getName());
 
     /**
-     * The sorted list of mount points. This list should be sorted
-     * whenever the mount points are modified.
+     * The meta-data storage for mount points and parent indices.
+     * The mount point objects will be added to this storage under
+     * their corresponding path (slightly modified to form an object
+     * path instead of an index path).
      */
-    private ArrayList mountpoints = new ArrayList();
+    private MemoryStorage metaStorage = new MemoryStorage();
 
     /**
-     * The memory storage containing meta-data for the mount points.
-     * The mount points will be added to this storage with their
-     * mount path slightly adapted to form a valid object path.
+     * The sorted array of mount points. This array is sorted every
+     * time a mount point is added or modified.
      */
-    private MemoryStorage pathInfo = new MemoryStorage();
+    private Array mountpoints = new Array();
 
-    // TODO: retrieve individual storage
-    // TODO: retrieve mount points
+    /**
+     * Creates a new overlay storage. The specified path will be used
+     * to provide an data object with information about the mount
+     * points and storages.
+     *
+     * @param metaInfoPath   the storage location for meta-data
+     */
+    public OverlayStorage(Path metaInfoPath) {
+        try {
+            Dict dict = new Dict(2);
+            dict.set(KEY_TYPE, "storageMapping");
+            dict.set("mounts", mountpoints);
+            metaStorage.store(metaInfoPath, dict);
+        } catch (StorageException e) {
+            LOG.severe("error while initializing overlay storage: " +
+                       e.getMessage());
+        }
+    }
+
+    /**
+     * Returns the mount point at a specific storage location. If the
+     * specified path does not match an existing mount point exactly,
+     * null will be returned.
+     *
+     * @param path           the mount storage location
+     *
+     * @return the mount point found, or
+     *         null if not found
+     */
+    private MountPoint getMountPoint(Path path) {
+        return (MountPoint) metaStorage.load(path.child("storage", false));
+    }
+
+    /**
+     * Removes a mount point at a specific storage location.
+     *
+     * @param path           the mount storage location
+     * @param mount          the mount point, or null to remove
+     *
+     * @throws StorageException if the data couldn't be written
+     */
+    private void setMountPoint(Path path, MountPoint mount)
+    throws StorageException {
+
+        path = path.child("storage", false);
+        if (mount == null) {
+            metaStorage.remove(path);
+        } else {
+            metaStorage.store(path, mount);
+        }
+    }
+
+    /**
+     * Returns the parent mount point for a storage location. All
+     * mount points will be searched in order to find a matching
+     * parent mount point (if one exists).
+     *
+     * @param path           the storage location
+     *
+     * @return the parent mount point found, or
+     *         null if not found
+     */
+    private MountPoint getParentMountPoint(Path path) {
+        for (int i = 0; i < mountpoints.size(); i++) {
+            MountPoint mount = (MountPoint) mountpoints.get(i);
+            if (path.startsWith(mount.getPath())) {
+                return mount;
+            }
+        }
+        return null;
+    }
 
     /**
      * Mounts a storage to a unique path. The path may not collide
@@ -76,7 +144,6 @@ public class OverlayStorage implements Storage {
                       int prio)
     throws StorageException {
 
-        Path        storagePath = path.child("storage", false);
         MountPoint  mount;
         String      msg;
 
@@ -84,15 +151,15 @@ public class OverlayStorage implements Storage {
             msg = "cannot mount storage to a non-index path: " + path;
             LOG.warning(msg);
             throw new StorageException(msg);
-        } else if (pathInfo.lookup(storagePath) != null) {
+        } else if (metaStorage.lookup(path) != null) {
             msg = "storage mount path conflicts with another mount: " + path;
             LOG.warning(msg);
             throw new StorageException(msg);
         }
-        mount = new MountPoint(storage, path, readWrite, overlay ? prio : -1);
-        pathInfo.store(storagePath, mount);
+        mount = new MountPoint(storage, path, readWrite, overlay, prio);
+        setMountPoint(path, mount);
         mountpoints.add(mount);
-        Collections.sort(mountpoints);
+        mountpoints.sort();
     }
 
     /**
@@ -110,8 +177,7 @@ public class OverlayStorage implements Storage {
     public void remount(Path path, boolean readWrite, boolean overlay, int prio)
     throws StorageException {
 
-        Path        storagePath = path.child("storage", false);
-        MountPoint  mount = (MountPoint) pathInfo.load(storagePath);
+        MountPoint  mount = getMountPoint(path);
         String      msg;
 
         if (mount == null) {
@@ -119,8 +185,8 @@ public class OverlayStorage implements Storage {
             LOG.warning(msg);
             throw new StorageException(msg);
         }
-        mount.update(readWrite, overlay ? prio : -1);
-        Collections.sort(mountpoints);
+        mount.update(readWrite, overlay, prio);
+        mountpoints.sort();
     }
 
     /**
@@ -132,8 +198,7 @@ public class OverlayStorage implements Storage {
      * @throws StorageException if the storage couldn't be unmounted
      */
     public void unmount(Path path) throws StorageException {
-        Path        storagePath = path.child("storage", false);
-        MountPoint  mount = (MountPoint) pathInfo.load(storagePath);
+        MountPoint  mount = getMountPoint(path);
         String      msg;
 
         if (mount == null) {
@@ -141,8 +206,8 @@ public class OverlayStorage implements Storage {
             LOG.warning(msg);
             throw new StorageException(msg);
         }
-        mountpoints.remove(mount);
-        pathInfo.remove(storagePath);
+        mountpoints.remove(mountpoints.indexOf(mount));
+        setMountPoint(path, null);
     }
 
     /**
@@ -158,18 +223,23 @@ public class OverlayStorage implements Storage {
      * @throws StorageException if the storage couldn't be accessed
      */
     public Dict lookup(Path path) throws StorageException {
-        MountPoint  mount = findMountPoint(path);
+        MountPoint  mount = getParentMountPoint(path);
         Dict        meta = null;
         Dict        idx = null;
 
         if (mount != null) {
-            return mount.storage.lookup(path.subPath(mount.path.length()));
+            meta = mount.getStorage().lookup(path.subPath(mount.getPath().length()));
+            if (meta != null) {
+                meta = meta.copy();
+                meta.set("storage", mount.getPath());
+            }
+            return meta;
         } else {
-            idx = pathInfo.lookup(path);
+            idx = metaStorage.lookup(path);
             for (int i = 0; i < mountpoints.size(); i++) {
                 mount = (MountPoint) mountpoints.get(i);
                 if (mount.isOverlay()) {
-                    meta = mount.storage.lookup(path);
+                    meta = mount.getStorage().lookup(path);
                     if (meta != null) {
                         if (meta.getString(KEY_TYPE, "").equals(TYPE_INDEX)) {
                             if (idx != null) {
@@ -182,7 +252,7 @@ public class OverlayStorage implements Storage {
                             idx = meta;
                         } else {
                             meta = meta.copy();
-                            meta.set("storage", mount.path);
+                            meta.set("storage", mount.getPath());
                             return meta;
                         }
                     }
@@ -206,18 +276,23 @@ public class OverlayStorage implements Storage {
      * @throws StorageException if the data couldn't be read
      */
     public Object load(Path path) throws StorageException {
-        MountPoint  mount = findMountPoint(path);
+        MountPoint  mount = getParentMountPoint(path);
         Object      res;
         Index       idx = null;
 
         if (mount != null) {
-            return mount.storage.load(path.subPath(mount.path.length()));
+            return mount.getStorage().load(path.subPath(mount.getPath().length()));
         } else {
-            idx = (Index) pathInfo.load(path);
+            res = metaStorage.load(path);
+            if (res instanceof Index) {
+                idx = (Index) res;
+            } else if (res != null) {
+                return res;
+            }
             for (int i = 0; i < mountpoints.size(); i++) {
                 mount = (MountPoint) mountpoints.get(i);
                 if (mount.isOverlay()) {
-                    res = mount.storage.load(path);
+                    res = mount.getStorage().load(path);
                     if (res instanceof Index) {
                         idx = Index.merge(idx, (Index) res);
                     } else if (res != null) {
@@ -241,21 +316,21 @@ public class OverlayStorage implements Storage {
      * @throws StorageException if the data couldn't be written
      */
     public void store(Path path, Object data) throws StorageException {
-        MountPoint  mount = findMountPoint(path);
+        MountPoint  mount = getParentMountPoint(path);
         String      msg;
 
         if (mount != null) {
-            if (!mount.readWrite) {
-                msg = "cannot write to read-only storage at " + mount.path;
+            if (!mount.isReadWrite()) {
+                msg = "cannot write to read-only storage at " + mount.getPath();
                 LOG.warning(msg);
                 throw new StorageException(msg);
             }
-            mount.storage.store(path.subPath(mount.path.length()), data);
+            mount.getStorage().store(path.subPath(mount.getPath().length()), data);
         } else {
             for (int i = 0; i < mountpoints.size(); i++) {
                 mount = (MountPoint) mountpoints.get(i);
-                if (mount.isOverlay() && mount.readWrite) {
-                    mount.storage.store(path, data);
+                if (mount.isOverlay() && mount.isReadWrite()) {
+                    mount.getStorage().store(path, data);
                     return;
                 }
             }
@@ -273,37 +348,18 @@ public class OverlayStorage implements Storage {
      * @throws StorageException if the data couldn't be removed
      */
     public void remove(Path path) throws StorageException {
-        MountPoint  mount = findMountPoint(path);
+        MountPoint  mount = getParentMountPoint(path);
 
         if (mount != null) {
-            mount.storage.remove(path.subPath(mount.path.length()));
+            mount.getStorage().remove(path.subPath(mount.getPath().length()));
         } else {
             for (int i = 0; i < mountpoints.size(); i++) {
                 mount = (MountPoint) mountpoints.get(i);
-                if (mount.isOverlay() && mount.readWrite) {
-                    mount.storage.remove(path);
+                if (mount.isOverlay() && mount.isReadWrite()) {
+                    mount.getStorage().remove(path);
                 }
             }
         }
-    }
-
-    /**
-     * Searches for a partially matching mount point. If the path
-     * starts with a mounted path, that mount point will be returned.
-     *
-     * @param path           the storage location
-     *
-     * @return the mount point found, or
-     *         null if not found
-     */
-    private MountPoint findMountPoint(Path path) {
-        for (int i = 0; i < mountpoints.size(); i++) {
-            MountPoint mount = (MountPoint) mountpoints.get(i);
-            if (path.startsWith(mount.path)) {
-                return mount;
-            }
-        }
-        return null;
     }
 
 
@@ -312,7 +368,8 @@ public class OverlayStorage implements Storage {
      * relevant meta-data and allows sorting the mount points in
      * overlay priority order.
      */
-    private static class MountPoint implements Comparable {
+    // TODO: export mount point class properly!
+    private static class MountPoint extends Dict implements Comparable {
 
         /**
          * The system time of the last mount or remount operation.
@@ -320,49 +377,24 @@ public class OverlayStorage implements Storage {
         private static long lastMountTime = 0L;
 
         /**
-         * The storage mounted.
-         */
-        public Storage storage;
-
-        /**
-         * The storage location.
-         */
-        public Path path;
-
-        /**
-         * The read-write flag.
-         */
-        public boolean readWrite;
-
-        /**
-         * The overlay priority. Higher values have precedence over
-         * lower values, meaning that those storages will be
-         * consulted before others.
-         */
-        public int overlayPrio;
-
-        /**
-         * The system time of the mount or remount operation.
-         */
-        public long mountTime;
-
-        /**
          * Creates a new mount point.
          *
          * @param storage        the storage mounted
          * @param path           the storage location
          * @param readWrite      the read-write flag
-         * @param overlayPrio    the overlay priority, negative for
-         *                       no overlay
+         * @param overlay        the root overlay flag
+         * @param prio           the root overlay search priority (higher
+         *                       numbers are searched before lower numbers)
          */
         public MountPoint(Storage storage,
                           Path path,
                           boolean readWrite,
-                          int overlayPrio) {
+                          boolean overlay,
+                          int prio) {
 
-            this.storage = storage;
-            this.path = path;
-            update(readWrite, overlayPrio);
+            set("storage", storage);
+            set("path", path);
+            update(readWrite, overlay, prio);
         }
 
         /**
@@ -402,11 +434,58 @@ public class OverlayStorage implements Storage {
          */
         public int compareTo(Object obj) {
             MountPoint  other = (MountPoint) obj;
-            int         cmp1 = overlayPrio - other.overlayPrio;
-            long        cmp2 = mountTime - other.mountTime;
+            int         cmp1 = getPrio() - other.getPrio();
+            long        cmp2 = getMountTime() - other.getMountTime();
 
-            cmp2 = Math.max(Math.min(cmp2, -1L), 1L);
+            cmp2 = Math.max(Math.min(cmp2, 1L), -1L);
             return (cmp1 != 0) ? -cmp1 : (int) cmp2;
+        }
+
+        /**
+         * Returns the mounted storage.
+         *
+         * @return the mounted storage
+         */
+        public Storage getStorage() {
+            return (Storage) get("storage");
+        }
+
+        /**
+         * Returns the mount path.
+         *
+         * @return the mount path
+         */
+        public Path getPath() {
+            return (Path) get("path");
+        }
+
+        /**
+         * Returns the root overlay priority from this mount point.
+         *
+         * @return the root overlay priority, or
+         *         -1 if no root overlay should be used
+         */
+        public int getPrio() {
+            return getInt("prio", -1);
+        }
+
+        /**
+         * Returns the last mount or remount time for this mount point.
+         *
+         * @return the last mount time (in milliseconds)
+         */
+        public long getMountTime() {
+            return ((Long) get("mountTime")).longValue();
+        }
+
+        /**
+         * Checks if this mount point is writable.
+         *
+         * @return true if this mount point is writable, or
+         *         false otherwise
+         */
+        public boolean isReadWrite() {
+            return getBoolean("readWrite", false);
         }
 
         /**
@@ -417,21 +496,23 @@ public class OverlayStorage implements Storage {
          *         false otherwise
          */
         public boolean isOverlay() {
-            return this.overlayPrio >= 0;
+            return getBoolean("overlay", false);
         }
 
         /**
          * Updates the mount point flags.
          *
-         * @param readWrite      the read-write flag
-         * @param overlayPrio    the overlay priority, negative for
-         *                       no overlay
+         * @param readWrite      the read-write flag, use false for read-only
+         * @param overlay        the root overlay flag
+         * @param prio           the root overlay search priority (higher
+         *                       numbers are searched before lower numbers)
          */
-        public void update(boolean readWrite, int overlayPrio) {
+        public void update(boolean readWrite, boolean overlay, int prio) {
             lastMountTime = Math.max(System.currentTimeMillis(), lastMountTime + 1);
-            this.readWrite = readWrite;
-            this.overlayPrio = overlayPrio;
-            this.mountTime = lastMountTime;
+            setBoolean("readWrite", readWrite);
+            setBoolean("overlay", overlay);
+            setInt("prio", overlay ? prio : -1);
+            set("mountTime", new Long(lastMountTime));
         }
     }
 }
