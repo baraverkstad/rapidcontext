@@ -61,6 +61,15 @@ public class FileStorage implements Storage {
     }
 
     /**
+     * Returns a string representation of this object.
+     *
+     * @return a string representation of this object
+     */
+    public String toString() {
+        return "fileStorage";
+    }
+
+    /**
      * Searches for an object at the specified location and returns
      * meta-data about the object if found. The path may locate
      * either an index or a specific object. 
