@@ -158,6 +158,36 @@ public class Path {
     }
 
     /**
+     * Checks if this path starts with the specified path. All the
+     * path elements must match up to the length of the specified
+     * path. As a special case, this method will return true if the
+     * two paths are identical. It will also return true for a null
+     * path.
+     *
+     * @param path           the path to compare with
+     *
+     * @return true if this path starts with the specified path, or
+     *         false otherwise
+     */
+    public boolean startsWith(Path path) {
+        if (path == null) {
+            return true;
+        } else if (parts.length < path.parts.length) {
+            return false;
+        }
+        for (int i = 0; i < path.parts.length; i++) {
+            if (!parts[i].equals(path.parts[i])) {
+                return false;
+            }
+        }
+        if (parts.length == path.parts.length) {
+            return index == path.index;
+        } else {
+            return path.index;
+        }
+    }
+
+    /**
      * Returns the directory depth. The root index, and any objects
      * located directly there, have depth zero (0). For each
      * additional sub-level traversed, the depth is increased by
@@ -243,5 +273,23 @@ public class Path {
         }
         newParts[newParts.length - 1] = name;
         return new Path(newParts, isIndex);
+    }
+
+    /**
+     * Creates a new path that starts at the specified position in
+     * this path. I.e. this method removes a path prefix.
+     *
+     * @param pos            the position, 0 <= pos < length()
+     *
+     * @return a new path with the prefix removed, or
+     *         a root path if the position was out of range
+     */
+    public Path subPath(int pos) {
+        int len = Math.max(Math.min(parts.length - pos, parts.length), 0);
+        String[] newParts = new String[len];
+        for (int i = 0; i < len; i++) {
+            newParts[i] = parts[i + pos];
+        }
+        return new Path(newParts, index || len == 0);
     }
 }
