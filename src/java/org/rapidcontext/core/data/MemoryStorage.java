@@ -58,6 +58,15 @@ public class MemoryStorage implements Storage {
     }
 
     /**
+     * Returns a string representation of this object.
+     *
+     * @return a string representation of this object
+     */
+    public String toString() {
+        return "memoryStorage";
+    }
+
+    /**
      * Searches for an object at the specified location and returns
      * meta-data about the object if found. The path may locate
      * either an index or a specific object. 
@@ -67,7 +76,7 @@ public class MemoryStorage implements Storage {
      * @return the meta-data dictionary for the object, or
      *         null if not found
      */
-    public Dict lookup(Path path) throws StorageException {
+    public Dict lookup(Path path) {
         Dict dict = (Dict) meta.get(path);
         if (dict instanceof Index) {
             Object modified = dict.get(KEY_MODIFIED);
@@ -89,10 +98,8 @@ public class MemoryStorage implements Storage {
      *
      * @return the data read, or
      *         null if not found
-     *
-     * @throws StorageException if the data couldn't be read
      */
-    public Object load(Path path) throws StorageException {
+    public Object load(Path path) {
         if (path.isIndex()) {
             Object obj = meta.get(path);
             return (obj instanceof Index) ? obj : null;
