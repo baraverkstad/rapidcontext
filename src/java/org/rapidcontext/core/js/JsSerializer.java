@@ -27,6 +27,7 @@ import org.mozilla.javascript.Undefined;
 import org.mozilla.javascript.WrappedException;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
+import org.rapidcontext.core.data.DynamicObject;
 import org.rapidcontext.core.env.AdapterConnection;
 
 /**
@@ -93,6 +94,8 @@ public class JsSerializer {
             buffer.append(((Date) obj).getTime());
         } else if (obj instanceof Class) {
             serialize(((Class) obj).getName(), buffer);
+        } else if (obj instanceof DynamicObject) {
+            serialize(((DynamicObject) obj).serialize(), buffer);
         } else {
             serialize(obj.toString(), buffer);
         }

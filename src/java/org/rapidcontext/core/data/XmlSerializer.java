@@ -66,8 +66,10 @@ public class XmlSerializer {
             serialize((Array) obj, buffer);
         } else if (obj instanceof Date) {
             buffer.append(((Date) obj).getTime());
-       } else if (obj instanceof Class) {
+        } else if (obj instanceof Class) {
             serialize(((Class) obj).getName(), buffer);
+        } else if (obj instanceof DynamicObject) {
+            serialize(((DynamicObject) obj).serialize(), buffer);
         } else {
             serialize(obj.toString(), buffer);
         }
