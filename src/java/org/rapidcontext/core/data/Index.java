@@ -27,12 +27,7 @@ import java.util.Date;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class Index extends Dict {
-
-    /**
-     * The dictionary key for the path.
-     */
-    public static final String KEY_PATH = "path";
+public class Index extends DynamicObject {
 
     /**
      * The dictionary key for the last modified date. The value stored
@@ -67,42 +62,28 @@ public class Index extends Dict {
         } else {
             Array idxs = one.indices().union(two.indices());
             Array objs = one.objects().union(two.objects());
-            return new Index(one.path(), idxs, objs);
+            return new Index(idxs, objs);
         }
     }
 
     /**
-     * Creates a new index dictionary.
-     *
-     * @param path           the index path
+     * Creates a new empty index.
      */
-    public Index(Path path) {
-        this(path, new Array(), new Array());
+    public Index() {
+        this(new Array(), new Array());
     }
 
     /**
-     * Creates a new index dictionary with the specified entries.
+     * Creates a new index with the specified entries.
      *
-     * @param path           the index path
      * @param indices        the initial index array
      * @param objects        the initial object array
      */
-    public Index(Path path, Array indices, Array objects) {
-        super(4);
-        add("type", "index");
-        add(KEY_PATH, path);
-        add(KEY_IDXS, indices);
-        add(KEY_OBJS, objects);
+    public Index(Array indices, Array objects) {
+        super("index");
         updateLastModified(null);
-    }
-
-    /**
-     * Returns the index path.
-     *
-     * @return the index path
-     */
-    public Path path() {
-        return (Path) get(KEY_PATH);
+        dict.set(KEY_IDXS, indices);
+        dict.set(KEY_OBJS, objects);
     }
 
     /**
@@ -111,7 +92,7 @@ public class Index extends Dict {
      * @return the last modified date
      */
     public Date lastModified() {
-        return (Date) get(KEY_MODIFIED);
+        return (Date) dict.get(KEY_MODIFIED);
     }
 
     /**
@@ -120,7 +101,7 @@ public class Index extends Dict {
      * @param date           the date to set, or null for now
      */
     public void updateLastModified(Date date) {
-        set(KEY_MODIFIED, (date == null) ? new Date() : date);
+        dict.set(KEY_MODIFIED, (date == null) ? new Date() : date);
     }
 
     /**
@@ -129,7 +110,7 @@ public class Index extends Dict {
      * @return an array of sub-index names
      */
     public Array indices() {
-        return (Array) get(KEY_IDXS);
+        return (Array) dict.get(KEY_IDXS);
     }
 
     /**
@@ -138,7 +119,7 @@ public class Index extends Dict {
      * @return an array of object names
      */
     public Array objects() {
-        return (Array) get(KEY_OBJS);
+        return (Array) dict.get(KEY_OBJS);
     }
 
     /**

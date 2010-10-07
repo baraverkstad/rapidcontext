@@ -116,9 +116,9 @@ public class FileStorage implements Storage {
 
         if (file == null) {
             // TODO: Replace this hack with a proper StorageIterator instead...
-            return path.isIndex() ? new Index(path) : null;
+            return path.isIndex() ? new Index() : null;
         } else if (path.isIndex()) {
-            Index idx = new Index(path);
+            Index idx = new Index();
             File[] files = file.listFiles();
             for (int i = 0; i < files.length; i++) {
                 String name = files[i].getName();

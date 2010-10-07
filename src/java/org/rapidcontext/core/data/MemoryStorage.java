@@ -204,7 +204,7 @@ public class MemoryStorage implements Storage {
         boolean  modified = false;
 
         if (idx == null) {
-            idx = new Index(parent);
+            idx = new Index();
         }
         if (path.isIndex()) {
             modified = idx.addIndex(path.name());
