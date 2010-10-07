@@ -40,6 +40,11 @@ public class VirtualStorage extends Storage {
         Logger.getLogger(VirtualStorage.class.getName());
 
     /**
+     * The storage information path.
+     */
+    public static final Path PATH_STORAGEINFO = new Path("/storageinfo");
+
+    /**
      * The dictionary key for the overlay flag.
      */
     private static final String KEY_OVERLAY = "overlay";
@@ -83,7 +88,7 @@ public class VirtualStorage extends Storage {
         super("virtual", path, readWrite);
         dict.set("storages", storages);
         try {
-            metaStorage.store(new Path("/storageinfo"), dict);
+            metaStorage.store(PATH_STORAGEINFO, dict);
         } catch (StorageException e) {
             LOG.severe("error while initializing virtual storage: " +
                        e.getMessage());
