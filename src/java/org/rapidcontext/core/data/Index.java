@@ -14,6 +14,8 @@
 
 package org.rapidcontext.core.data;
 
+import java.util.Date;
+
 /**
  * An index dictionary. An index is an object containing the names
  * of objects and sub-indices.<p>
@@ -31,6 +33,12 @@ public class Index extends Dict {
      * The dictionary key for the path.
      */
     public static final String KEY_PATH = "path";
+
+    /**
+     * The dictionary key for the last modified date. The value stored
+     * is a Date object.
+     */
+    public static final String KEY_MODIFIED = "lastModified";
 
     /**
      * The dictionary key for the array of indices.
@@ -85,6 +93,7 @@ public class Index extends Dict {
         add(KEY_PATH, path);
         add(KEY_IDXS, indices);
         add(KEY_OBJS, objects);
+        updateLastModified(null);
     }
 
     /**
@@ -94,6 +103,24 @@ public class Index extends Dict {
      */
     public Path path() {
         return (Path) get(KEY_PATH);
+    }
+
+    /**
+     * Returns the last modified date.
+     *
+     * @return the last modified date
+     */
+    public Date lastModified() {
+        return (Date) get(KEY_MODIFIED);
+    }
+
+    /**
+     * Updates the last modified date.
+     *
+     * @param date           the date to set, or null for now
+     */
+    public void updateLastModified(Date date) {
+        set(KEY_MODIFIED, (date == null) ? new Date() : date);
     }
 
     /**
@@ -127,6 +154,7 @@ public class Index extends Dict {
         Array arr = indices();
         if (!arr.containsValue(name)) {
             arr.add(name);
+            updateLastModified(null);
             return true;
         } else {
             return false;
@@ -146,6 +174,7 @@ public class Index extends Dict {
         Array arr = objects();
         if (!arr.containsValue(name)) {
             arr.add(name);
+            updateLastModified(null);
             return true;
         } else {
             return false;
@@ -165,6 +194,7 @@ public class Index extends Dict {
         int pos = arr.indexOf(name);
         if (arr.containsIndex(pos)) {
             arr.remove(pos);
+            updateLastModified(null);
             return true;
         } else {
             return false;
@@ -184,6 +214,7 @@ public class Index extends Dict {
         int pos = arr.indexOf(name);
         if (arr.containsIndex(pos)) {
             arr.remove(pos);
+            updateLastModified(null);
             return true;
         } else {
             return false;
