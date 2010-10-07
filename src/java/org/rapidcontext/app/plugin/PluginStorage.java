@@ -117,7 +117,7 @@ public class PluginStorage extends Storage {
         Storage  fs = new FileStorage(new File(this.pluginDir, id), path, false);
 
         try {
-            storage.mount(fs, path, false, false, 0);
+            storage.mount(fs, false, false, 0);
         } catch (StorageException e) {
             throw new PluginException(e.getMessage());
         }
@@ -169,7 +169,7 @@ public class PluginStorage extends Storage {
      */
     public void unloadPlugin(String id) throws PluginException {
         try {
-            storage.remount(PATH_PLUGIN.child(id, true), false, true, 0);
+            storage.remount(PATH_PLUGIN.child(id, true), false, false, 0);
         } catch (StorageException e) {
             throw new PluginException(e.getMessage());
         }

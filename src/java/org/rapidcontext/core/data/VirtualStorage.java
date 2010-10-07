@@ -14,6 +14,7 @@
 
 package org.rapidcontext.core.data;
 
+import java.util.Comparator;
 import java.util.Date;
 import java.util.logging.Logger;
 
@@ -39,6 +40,26 @@ public class VirtualStorage extends Storage {
         Logger.getLogger(VirtualStorage.class.getName());
 
     /**
+     * The dictionary key for the overlay flag.
+     */
+    private static final String KEY_OVERLAY = "overlay";
+
+    /**
+     * The dictionary key for the overlay priority.
+     */
+    private static final String KEY_OVERLAY_PRIO = "prio";
+
+    /**
+     * The dictionary key for the mount timestamp.
+     */
+    private static final String KEY_MOUNT_TIME = "mountTime";
+
+    /**
+     * The system time of the last mount or remount operation.
+     */
+    private static long lastMountTime = 0L;
+
+    /**
      * The meta-data storage for mount points and parent indices.
      * The mount point objects will be added to this storage under
      * their corresponding path (slightly modified to form an object
@@ -47,11 +68,10 @@ public class VirtualStorage extends Storage {
     private MemoryStorage metaStorage = new MemoryStorage(Path.ROOT, true);
 
     /**
-     * The sorted array of mount points. This array is sorted every
-     * time a mount point is added or modified.
+     * The sorted array of mounted storages. This array is sorted
+     * every time a mount point is added or modified.
      */
-    // TODO: rename!
-    private Array mountpoints = new Array();
+    private Array storages = new Array();
 
     /**
      * Creates a new overlay storage.
@@ -61,7 +81,7 @@ public class VirtualStorage extends Storage {
      */
     public VirtualStorage(Path path, boolean readWrite) {
         super("virtual", path, readWrite);
-        dict.set("storages", mountpoints);
+        dict.set("storages", storages);
         try {
             metaStorage.store(new Path("/storageinfo"), dict);
         } catch (StorageException e) {
@@ -71,56 +91,89 @@ public class VirtualStorage extends Storage {
     }
 
     /**
-     * Returns the mount point at a specific storage location. If the
-     * specified path does not match an existing mount point exactly,
-     * null will be returned.
+     * Returns the storage at a specific storage location. If the
+     * path does not exactly match an existing mount point, null will
+     * be returned.
      *
-     * @param path           the mount storage location
+     * @param path           the storage mount path
      *
-     * @return the mount point found, or
+     * @return the storage found, or
      *         null if not found
      */
-    private MountPoint getMountPoint(Path path) {
-        return (MountPoint) metaStorage.load(path.child("storage", false));
+    private Storage getMountedStorage(Path path) {
+        return (Storage) metaStorage.load(path.child("storageinfo", false));
     }
 
     /**
-     * Removes a mount point at a specific storage location.
+     * Sets or removes a storage at a specific storage location.
      *
-     * @param path           the mount storage location
-     * @param mount          the mount point, or null to remove
+     * @param path           the storage mount path
+     * @param storage        the storage to add, or null to remove
      *
      * @throws StorageException if the data couldn't be written
      */
-    private void setMountPoint(Path path, MountPoint mount)
+    private void setMountedStorage(Path path, Storage storage)
     throws StorageException {
 
-        path = path.child("storage", false);
-        if (mount == null) {
+        path = path.child("storageinfo", false);
+        if (storage == null) {
             metaStorage.remove(path);
         } else {
-            metaStorage.store(path, mount);
+            metaStorage.store(path, storage);
         }
     }
 
     /**
-     * Returns the parent mount point for a storage location. All
-     * mount points will be searched in order to find a matching
-     * parent mount point (if one exists).
+     * Returns the parent storage for a storage location. All mounted
+     * storages will be searched in order to find a matching parent
+     * (if one exists).
      *
      * @param path           the storage location
      *
-     * @return the parent mount point found, or
+     * @return the parent storage found, or
      *         null if not found
      */
-    private MountPoint getParentMountPoint(Path path) {
-        for (int i = 0; i < mountpoints.size(); i++) {
-            MountPoint mount = (MountPoint) mountpoints.get(i);
-            if (path.startsWith(mount.getPath())) {
-                return mount;
+    private Storage getParentStorage(Path path) {
+        for (int i = 0; i < storages.size(); i++) {
+            Storage storage = (Storage) storages.get(i);
+            if (path.startsWith(storage.path())) {
+                return storage;
             }
         }
         return null;
+    }
+
+    /**
+     * Checks if the specified storage has the root overlay flag set.
+     *
+     * @param storage        the storage to check
+     *
+     * @return true if the root overlay flag is set, or
+     *         false otherwise
+     */
+    private boolean isOverlay(Storage storage) {
+        return storage.dict.getBoolean(KEY_OVERLAY, false);
+    }
+
+    /**
+     * Updates the mount information in a storage object.
+     *
+     * @param storage        the storage to update
+     * @param readWrite      the read write flag
+     * @param overlay        the root overlay flag
+     * @param prio           the root overlay search priority (higher numbers
+     *                       are searched before lower numbers)
+     */
+    private void updateMountInfo(Storage storage,
+                                 boolean readWrite,
+                                 boolean overlay,
+                                 int prio) {
+
+        lastMountTime = Math.max(System.currentTimeMillis(), lastMountTime + 1);
+        storage.dict.setBoolean(KEY_READWRITE, readWrite);
+        storage.dict.setBoolean(KEY_OVERLAY, overlay);
+        storage.dict.setInt(KEY_OVERLAY_PRIO, overlay ? prio : -1);
+        storage.dict.set(KEY_MOUNT_TIME, new Date(lastMountTime));
     }
 
     /**
@@ -132,8 +185,7 @@ public class VirtualStorage extends Storage {
      * directly to the root path.
      *
      * @param storage        the storage to mount
-     * @param path           the mount path (must be an index)
-     * @param readWrite      the read-write flag, use false for read-only
+     * @param readWrite      the read write flag
      * @param overlay        the root overlay flag
      * @param prio           the root overlay search priority (higher numbers
      *                       are searched before lower numbers)
@@ -141,28 +193,27 @@ public class VirtualStorage extends Storage {
      * @throws StorageException if the storage couldn't be mounted
      */
     public void mount(Storage storage,
-                      Path path,
                       boolean readWrite,
                       boolean overlay,
                       int prio)
     throws StorageException {
 
-        MountPoint  mount;
-        String      msg;
+        String  msg;
 
-        if (!path.isIndex()) {
-            msg = "cannot mount storage to a non-index path: " + path;
+        if (!storage.path().isIndex()) {
+            msg = "cannot mount storage to a non-index path: " + storage.path();
             LOG.warning(msg);
             throw new StorageException(msg);
-        } else if (metaStorage.lookup(path) != null) {
-            msg = "storage mount path conflicts with another mount: " + path;
+        } else if (metaStorage.lookup(storage.path()) != null) {
+            msg = "storage mount path conflicts with another mount: " +
+                  storage.path();
             LOG.warning(msg);
             throw new StorageException(msg);
         }
-        mount = new MountPoint(storage, path, readWrite, overlay, prio);
-        setMountPoint(path, mount);
-        mountpoints.add(mount);
-        mountpoints.sort();
+        updateMountInfo(storage, readWrite, overlay, prio);
+        setMountedStorage(storage.path(), storage);
+        storages.add(storage);
+        storages.sort(StorageComparator.INSTANCE);
     }
 
     /**
@@ -170,7 +221,7 @@ public class VirtualStorage extends Storage {
      * are not modified, but only the mounting options.
      *
      * @param path           the mount path
-     * @param readWrite      the read-write flag, use false for read-only
+     * @param readWrite      the read write flag
      * @param overlay        the root overlay flag
      * @param prio           the root overlay search priority (higher numbers
      *                       are searched before lower numbers)
@@ -180,16 +231,16 @@ public class VirtualStorage extends Storage {
     public void remount(Path path, boolean readWrite, boolean overlay, int prio)
     throws StorageException {
 
-        MountPoint  mount = getMountPoint(path);
-        String      msg;
+        Storage  storage = getMountedStorage(path);
+        String   msg;
 
-        if (mount == null) {
+        if (storage == null) {
             msg = "no mounted storage found matching path: " + path;
             LOG.warning(msg);
             throw new StorageException(msg);
         }
-        mount.update(readWrite, overlay, prio);
-        mountpoints.sort();
+        updateMountInfo(storage, readWrite, overlay, prio);
+        storages.sort(StorageComparator.INSTANCE);
     }
 
     /**
@@ -201,16 +252,16 @@ public class VirtualStorage extends Storage {
      * @throws StorageException if the storage couldn't be unmounted
      */
     public void unmount(Path path) throws StorageException {
-        MountPoint  mount = getMountPoint(path);
-        String      msg;
+        Storage  storage = getMountedStorage(path);
+        String   msg;
 
-        if (mount == null) {
+        if (storage == null) {
             msg = "no mounted storage found matching path: " + path;
             LOG.warning(msg);
             throw new StorageException(msg);
         }
-        mountpoints.remove(mountpoints.indexOf(mount));
-        setMountPoint(path, null);
+        storages.remove(storages.indexOf(storage));
+        setMountedStorage(path, null);
     }
 
     /**
@@ -226,12 +277,12 @@ public class VirtualStorage extends Storage {
      * @throws StorageException if the storage couldn't be accessed
      */
     public Metadata lookup(Path path) throws StorageException {
-        MountPoint  mount = getParentMountPoint(path);
-        Metadata    meta = null;
-        Metadata    idx = null;
+        Storage   storage = getParentStorage(path);
+        Metadata  meta = null;
+        Metadata  idx = null;
 
-        if (mount != null) {
-            return mount.getStorage().lookup(mount.getStorage().localPath(path));
+        if (storage != null) {
+            return storage.lookup(storage.localPath(path));
         } else {
             meta = metaStorage.lookup(path);
             if (meta != null && meta.isIndex()) {
@@ -239,10 +290,10 @@ public class VirtualStorage extends Storage {
             } else if (meta != null) {
                 return meta;
             }
-            for (int i = 0; i < mountpoints.size(); i++) {
-                mount = (MountPoint) mountpoints.get(i);
-                if (mount.isOverlay()) {
-                    meta = mount.getStorage().lookup(path);
+            for (int i = 0; i < storages.size(); i++) {
+                storage = (Storage) storages.get(i);
+                if (isOverlay(storage)) {
+                    meta = storage.lookup(path);
                     if (meta != null && meta.isIndex()) {
                         idx = Metadata.lastModified(idx, meta);
                     } else if (meta != null) {
@@ -268,12 +319,12 @@ public class VirtualStorage extends Storage {
      * @throws StorageException if the data couldn't be read
      */
     public Object load(Path path) throws StorageException {
-        MountPoint  mount = getParentMountPoint(path);
-        Object      res;
-        Index       idx = null;
+        Storage  storage = getParentStorage(path);
+        Object   res;
+        Index    idx = null;
 
-        if (mount != null) {
-            return mount.getStorage().load(mount.getStorage().localPath(path));
+        if (storage != null) {
+            return storage.load(storage.localPath(path));
         } else {
             res = metaStorage.load(path);
             if (res instanceof Index) {
@@ -281,10 +332,10 @@ public class VirtualStorage extends Storage {
             } else if (res != null) {
                 return res;
             }
-            for (int i = 0; i < mountpoints.size(); i++) {
-                mount = (MountPoint) mountpoints.get(i);
-                if (mount.isOverlay()) {
-                    res = mount.getStorage().load(path);
+            for (int i = 0; i < storages.size(); i++) {
+                storage = (Storage) storages.get(i);
+                if (isOverlay(storage)) {
+                    res = storage.load(path);
                     if (res instanceof Index) {
                         idx = Index.merge(idx, (Index) res);
                     } else if (res != null) {
@@ -308,21 +359,21 @@ public class VirtualStorage extends Storage {
      * @throws StorageException if the data couldn't be written
      */
     public void store(Path path, Object data) throws StorageException {
-        MountPoint  mount = getParentMountPoint(path);
-        String      msg;
+        Storage  storage = getParentStorage(path);
+        String   msg;
 
-        if (mount != null) {
-            if (!mount.isReadWrite()) {
-                msg = "cannot write to read-only storage at " + mount.getPath();
+        if (storage != null) {
+            if (!storage.isReadWrite()) {
+                msg = "cannot write to read-only storage at " + storage.path();
                 LOG.warning(msg);
                 throw new StorageException(msg);
             }
-            mount.getStorage().store(mount.getStorage().localPath(path), data);
+            storage.store(storage.localPath(path), data);
         } else {
-            for (int i = 0; i < mountpoints.size(); i++) {
-                mount = (MountPoint) mountpoints.get(i);
-                if (mount.isOverlay() && mount.isReadWrite()) {
-                    mount.getStorage().store(path, data);
+            for (int i = 0; i < storages.size(); i++) {
+                storage = (Storage) storages.get(i);
+                if (isOverlay(storage) && storage.isReadWrite()) {
+                    storage.store(path, data);
                     return;
                 }
             }
@@ -340,15 +391,15 @@ public class VirtualStorage extends Storage {
      * @throws StorageException if the data couldn't be removed
      */
     public void remove(Path path) throws StorageException {
-        MountPoint  mount = getParentMountPoint(path);
+        Storage  storage = getParentStorage(path);
 
-        if (mount != null) {
-            mount.getStorage().remove(mount.getStorage().localPath(path));
+        if (storage != null) {
+            storage.remove(storage.localPath(path));
         } else {
-            for (int i = 0; i < mountpoints.size(); i++) {
-                mount = (MountPoint) mountpoints.get(i);
-                if (mount.isOverlay() && mount.isReadWrite()) {
-                    mount.getStorage().remove(path);
+            for (int i = 0; i < storages.size(); i++) {
+                storage = (Storage) storages.get(i);
+                if (isOverlay(storage) && storage.isReadWrite()) {
+                    storage.remove(path);
                 }
             }
         }
@@ -356,155 +407,58 @@ public class VirtualStorage extends Storage {
 
 
     /**
-     * A storage mount point. This class encapsulates all the
-     * relevant meta-data and allows sorting the mount points in
-     * overlay priority order.
+     * A mounted storage comparator. The comparison is based on the
+     * overlay priority order and the mount time.
      */
-    // TODO: export mount point class properly!
-    private static class MountPoint extends Dict implements Comparable {
+    private static class StorageComparator implements Comparator {
 
         /**
-         * The system time of the last mount or remount operation.
+         * The comparator instance.
          */
-        private static long lastMountTime = 0L;
+        public static final StorageComparator INSTANCE = new StorageComparator();
 
         /**
-         * Creates a new mount point.
+         * Compares two storages with one another.
          *
-         * @param storage        the storage mounted
-         * @param path           the storage location
-         * @param readWrite      the read-write flag
-         * @param overlay        the root overlay flag
-         * @param prio           the root overlay search priority (higher
-         *                       numbers are searched before lower numbers)
-         */
-        public MountPoint(Storage storage,
-                          Path path,
-                          boolean readWrite,
-                          boolean overlay,
-                          int prio) {
-
-            set("type", "storage");
-            set("storage", storage);
-            set("path", path);
-            update(readWrite, overlay, prio);
-        }
-
-        /**
-         * Checks if this object is equal to another.
-         *
-         * @param obj            the object to compare with
-         *
-         * @return true if the objects are equal, or
-         *         false otherwise
-         */
-        public boolean equals(Object obj) {
-            return obj instanceof MountPoint && compareTo(obj) == 0;
-        }
-
-        /**
-         * Returns a hash code for this object.
-         *
-         * @return a hash code for this object
-         */
-        public int hashCode() {
-            // Correct, since equals() ensures that the only objects
-            // being equal are also identical (see mountTime).
-            return super.hashCode();
-        }
-
-        /**
-         * Compared this object with another.
-         *
-         * @param obj            the object to compare with
+         * @param o1             the first object
+         * @param o2             the second object
          *
          * @return a negative integer, zero, or a positive integer as
-         *         this object is less than, equal to, or greater than
-         *         the specified one
+         *         the first argument is less than, equal to, or
+         *         greater than the second
          *
-         * @throws ClassCastException if the specified object wasn't
-         *             a mount point
+         * @throws ClassCastException if the values were not comparable
          */
-        public int compareTo(Object obj) {
-            MountPoint  other = (MountPoint) obj;
-            int         cmp1 = getPrio() - other.getPrio();
-            int         cmp2 = getMountTime().compareTo(other.getMountTime());
+        public int compare(Object o1, Object o2) {
+            Storage  s1 = (Storage) o1;
+            Storage  s2 = (Storage) o2;
+            int      cmp1 = prio(s1) - prio(s2);
+            int      cmp2 = mountTime(s2).compareTo(mountTime(s2));
 
             return (cmp1 != 0) ? -cmp1 : cmp2;
         }
 
         /**
-         * Returns the mounted storage.
+         * Returns the overlay priority for a specified storage.
          *
-         * @return the mounted storage
+         * @param storage        the storage object
+         *
+         * @return the storage overlay priority, or
+         *         -1 if no overlay is enabled
          */
-        public Storage getStorage() {
-            return (Storage) get("storage");
+        private int prio(Storage storage) {
+            return storage.dict.getInt(KEY_OVERLAY_PRIO, -1);
         }
 
         /**
-         * Returns the mount path.
+         * Returns the last mount time for a specified storage.
          *
-         * @return the mount path
-         */
-        public Path getPath() {
-            return (Path) get("path");
-        }
-
-        /**
-         * Returns the root overlay priority from this mount point.
+         * @param storage        the storage object
          *
-         * @return the root overlay priority, or
-         *         -1 if no root overlay should be used
+         * @return the last mount time
          */
-        public int getPrio() {
-            return getInt("prio", -1);
-        }
-
-        /**
-         * Returns the last mount or remount time for this mount point.
-         *
-         * @return the last mount time (in milliseconds)
-         */
-        public Date getMountTime() {
-            return (Date) get("mountTime");
-        }
-
-        /**
-         * Checks if this mount point is writable.
-         *
-         * @return true if this mount point is writable, or
-         *         false otherwise
-         */
-        public boolean isReadWrite() {
-            return getBoolean("readWrite", false);
-        }
-
-        /**
-         * Checks if the storage should also be overlaid over the
-         * root directory.
-         *
-         * @return true if the storage is overlaid, or
-         *         false otherwise
-         */
-        public boolean isOverlay() {
-            return getBoolean("overlay", false);
-        }
-
-        /**
-         * Updates the mount point flags.
-         *
-         * @param readWrite      the read-write flag, use false for read-only
-         * @param overlay        the root overlay flag
-         * @param prio           the root overlay search priority (higher
-         *                       numbers are searched before lower numbers)
-         */
-        public void update(boolean readWrite, boolean overlay, int prio) {
-            lastMountTime = Math.max(System.currentTimeMillis(), lastMountTime + 1);
-            setBoolean("readWrite", readWrite);
-            setBoolean("overlay", overlay);
-            setInt("prio", overlay ? prio : -1);
-            set("mountTime", new Date(lastMountTime));
+        private Date mountTime(Storage storage) {
+            return (Date) storage.dict.get(KEY_MOUNT_TIME);
         }
     }
 }

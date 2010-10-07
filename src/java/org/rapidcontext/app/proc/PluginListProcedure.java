@@ -20,6 +20,7 @@ import org.rapidcontext.app.plugin.PluginStorage;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.Path;
+import org.rapidcontext.core.data.Storage;
 import org.rapidcontext.core.data.StorageException;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
@@ -41,6 +42,11 @@ public class PluginListProcedure implements Procedure, Restricted {
      * The procedure name constant.
      */
     public static final String NAME = "System.PlugIn.List";
+
+    /**
+     * The plug-in configuration path.
+     */
+    private static final Path PATH_PLUGIN_CONFIG = new Path("/plugin");
 
     /**
      * The default bindings.
@@ -113,7 +119,7 @@ public class PluginListProcedure implements Procedure, Restricted {
         throws ProcedureException {
 
         ApplicationContext  ctx = ApplicationContext.getInstance();
-        PluginStorage       storage = ctx.getStorage();
+        Storage             storage = ctx.getStorage();
         Dict                dict;
         Array               arr;
         Path                path;
@@ -128,12 +134,13 @@ public class PluginListProcedure implements Procedure, Restricted {
         }
         res = new Array(arr.size());
         for (int i = 0; i < arr.size(); i++) {
-            path = (Path) arr.getDict(i).get("path");
+            storage = (Storage) arr.get(i);
+            path = storage.path();
             if (path.startsWith(PluginStorage.PATH_PLUGIN) && path.isIndex()) {
                 id = path.name();
                 dict = null;
                 try {
-                    dict = (Dict) storage.load(path.child("plugin", false));
+                    dict = (Dict) storage.load(PATH_PLUGIN_CONFIG);
                 } catch (StorageException ignore) {
                     // Read errors are handled below
                 }
