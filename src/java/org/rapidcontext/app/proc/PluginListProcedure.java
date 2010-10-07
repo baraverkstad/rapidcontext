@@ -22,6 +22,7 @@ import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.Path;
 import org.rapidcontext.core.data.Storage;
 import org.rapidcontext.core.data.StorageException;
+import org.rapidcontext.core.data.VirtualStorage;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
@@ -127,7 +128,7 @@ public class PluginListProcedure implements Procedure, Restricted {
         Array               res;
 
         try {
-            dict = (Dict) storage.load(new Path("/storageinfo"));
+            dict = (Dict) storage.load(VirtualStorage.PATH_STORAGEINFO);
             arr = dict.getArray("storages");
         } catch (StorageException e) {
             throw new ProcedureException(e.getMessage());
