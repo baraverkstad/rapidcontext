@@ -44,7 +44,7 @@ public abstract class DynamicObject {
      *
      * @param type           the type name
      */
-    public DynamicObject(String type) {
+    protected DynamicObject(String type) {
         dict.add(KEY_TYPE, type);
     }
 
