@@ -283,6 +283,24 @@ public class Path {
     }
 
     /**
+     * Creates a new path to a descendant index or object.
+     *
+     * @param subpath        the relative descendant path
+     *
+     * @return a new path to a descendant index or object
+     */
+    public Path descendant(Path subpath) {
+        String[] newParts = new String[parts.length + subpath.parts.length];
+        for (int i = 0; i < parts.length; i++) {
+            newParts[i] = parts[i];
+        }
+        for (int i = 0; i < subpath.parts.length; i++) {
+            newParts[parts.length + i] = subpath.parts[i];
+        }
+        return new Path(newParts, subpath.index);        
+    }
+
+    /**
      * Creates a new path that starts at the specified position in
      * this path. I.e. this method removes a path prefix.
      *
