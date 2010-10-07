@@ -19,61 +19,24 @@ package org.rapidcontext.core.data;
  * interface is implemented by services offering persistent
  * storage and lookup of files and objects.
  *
- * @author Per Cederberg
- * @version 1.0
+ * @author   Per Cederberg
+ * @version  1.0
  */
 public interface Storage {
 
     /**
-     * The meta-data key for the object type. The value stored is a
-     * string, using one of the predefined constant type values.
-     *
-     * @see #TYPE_INDEX
-     * @see #TYPE_OBJECT
-     * @see #TYPE_FILE
-     */
-    public static final String KEY_TYPE = "type";
-
-    /**
-     * The meta-data key for the Java class of the object. The value
-     * stored is the actual Class of the object.
-     */
-    public static final String KEY_CLASS = "class";
-
-    /**
-     * The meta-data key for the last modified date. The value stored
-     * is a Long representing the epoch time in milliseconds.
-     */
-    public static final String KEY_MODIFIED = "lastModified";
-
-    /**
-     * The meta-data value for the index type.
-     */
-    public static final String TYPE_INDEX = "index";
-
-    /**
-     * The meta-data value for the object type.
-     */
-    public static final String TYPE_OBJECT = "object";
-
-    /**
-     * The meta-data value for the file type.
-     */
-    public static final String TYPE_FILE = "file";
-
-    /**
      * Searches for an object at the specified location and returns
-     * meta-data about the object if found. The path may locate
-     * either an index or a specific object. 
+     * metadata about the object if found. The path may locate either
+     * an index or a specific object. 
      *
      * @param path           the storage location
      *
-     * @return the meta-data dictionary for the object, or
+     * @return the metadata for the object, or
      *         null if not found
      *
      * @throws StorageException if the storage couldn't be accessed
      */
-    Dict lookup(Path path) throws StorageException;
+    Metadata lookup(Path path) throws StorageException;
 
     /**
      * Loads an object from the specified location. The path may

@@ -14,7 +14,6 @@
 
 package org.rapidcontext.core.data;
 
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.logging.Logger;
 
@@ -44,10 +43,10 @@ public class MemoryStorage implements Storage {
     private LinkedHashMap objects = new LinkedHashMap();
 
     /**
-     * The meta-data storage map. Indexed by the storage path. This
-     * map contains a dictionary with meta-data for each data object.
-     * It will also contain all the parent indices, all the way back
-     * to the root index.
+     * The metadata storage map. Indexed by the storage path. This
+     * map contains metadata objects corresponding to each data
+     * object. It will also contain all the parent indices, all the
+     * way back to the root index.
      */
     private LinkedHashMap meta = new LinkedHashMap();
 
@@ -69,24 +68,21 @@ public class MemoryStorage implements Storage {
 
     /**
      * Searches for an object at the specified location and returns
-     * meta-data about the object if found. The path may locate
-     * either an index or a specific object. 
+     * metadata about the object if found. The path may locate either
+     * an index or a specific object. 
      *
      * @param path           the storage location
      *
-     * @return the meta-data dictionary for the object, or
+     * @return the metadata for the object, or
      *         null if not found
      */
-    public Dict lookup(Path path) {
-        Dict dict = (Dict) meta.get(path);
-        if (dict instanceof Index) {
-            Object modified = dict.get(KEY_MODIFIED);
-            dict = new Dict();
-            dict.set(KEY_TYPE, TYPE_INDEX);
-            dict.set(KEY_CLASS, Index.class);
-            dict.set(KEY_MODIFIED, modified);
+    public Metadata lookup(Path path) {
+        Object obj = meta.get(path);
+        if (obj instanceof Index) {
+            return new Metadata((Index) obj);
+        } else {
+            return (Metadata) obj;
         }
-        return dict;
     }
 
     /**
@@ -139,25 +135,8 @@ public class MemoryStorage implements Storage {
             ((Storable) data).init(this);
         }
         objects.put(path, data);
-        meta.put(path, createMeta(path, data));
+        meta.put(path, new Metadata(data));
         indexInsert(path);
-    }
-
-    /**
-     * Creates a meta-data representation of the specified data
-     * object.
-     *
-     * @param path           the storage location
-     * @param data           the data stored
-     *
-     * @return the created meta-data dictionary
-     */
-    private Dict createMeta(Path path, Object data) {
-        Dict dict = new Dict();
-        dict.set(KEY_TYPE, TYPE_OBJECT);
-        dict.set(KEY_CLASS, data.getClass());
-        dict.set(KEY_MODIFIED, new Date());
-        return dict;
     }
 
     /**
@@ -233,7 +212,6 @@ public class MemoryStorage implements Storage {
             modified = idx.addObject(path.name());
         }
         if (modified) {
-            idx.set(KEY_MODIFIED, new Date());
             if (!meta.containsKey(parent)) {
                 meta.put(parent, idx);
                 if (!parent.isRoot()) {
@@ -264,7 +242,6 @@ public class MemoryStorage implements Storage {
                 modified = idx.removeObject(path.name());
             }
             if (modified) {
-                idx.set(KEY_MODIFIED, new Date());
                 if (idx.indices().size() <= 0 && idx.objects().size() <= 0) {
                     meta.remove(parent);
                     if (!parent.isRoot()) {

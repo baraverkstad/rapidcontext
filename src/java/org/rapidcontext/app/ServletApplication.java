@@ -32,10 +32,10 @@ import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Index;
+import org.rapidcontext.core.data.Metadata;
 import org.rapidcontext.core.data.Path;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.HtmlSerializer;
-import org.rapidcontext.core.data.Storage;
 import org.rapidcontext.core.data.StorageException;
 import org.rapidcontext.core.data.XmlSerializer;
 import org.rapidcontext.core.js.JsSerializer;
@@ -469,7 +469,7 @@ public class ServletApplication extends HttpServlet {
      */
     private void processQuery(Request request, String query) {
         Path      path = new Path(query);
-        Dict      meta = null;
+        Object    meta = null;
         Object    res = null;
         Dict      dict;
         Array     arr;
@@ -490,7 +490,7 @@ public class ServletApplication extends HttpServlet {
             res = ctx.getStorage().load(path);
             if (res instanceof Index) {
                 dict = new Dict();
-                dict.set(Storage.KEY_TYPE, Storage.TYPE_INDEX);
+                dict.set("type", "index");
                 arr = ((Index) res).indices();
                 if (createHtml) {
                     arr = arr.copy();
@@ -511,7 +511,7 @@ public class ServletApplication extends HttpServlet {
             } else if (res instanceof File) {
                 File file = (File) res;
                 dict = new Dict();
-                dict.set(Storage.KEY_TYPE, Storage.TYPE_FILE);
+                dict.set("type", "file");
                 dict.set("name", file.getName());
                 dict.set("mimeType", getServletContext().getMimeType(file.getName()));
                 dict.set("size", new Long(file.length()));
@@ -522,9 +522,10 @@ public class ServletApplication extends HttpServlet {
                 }
                 res = dict;
             }
-            if (meta != null) {
-                meta = meta.copy();
-                meta.set("processTime", new Long(request.getProcessTime()));
+            if (meta instanceof Metadata) {
+                dict = ((Metadata) meta).serialize().copy();
+                dict.set("processTime", new Long(request.getProcessTime()));
+                meta = dict;
             }
 
             // Render result as JSON, XML or HTML
@@ -585,9 +586,9 @@ public class ServletApplication extends HttpServlet {
             }
         } catch (Exception e) {
             // TODO: How do users want their error messages?
-            meta = new Dict();
-            meta.set("error", e.getMessage());
-            res = meta;
+            dict = new Dict();
+            dict.set("error", e.getMessage());
+            res = dict;
             if (isMimeMatch(request, MIME_JSON)) {
                 request.sendData("text/javascript", JsSerializer.serialize(res));
             } else if (isMimeMatch(request, MIME_XML)) {

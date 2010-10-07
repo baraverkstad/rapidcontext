@@ -16,8 +16,8 @@ package org.rapidcontext.app.plugin;
 
 import java.io.File;
 
-import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.FileStorage;
+import org.rapidcontext.core.data.Metadata;
 import org.rapidcontext.core.data.VirtualStorage;
 import org.rapidcontext.core.data.Path;
 import org.rapidcontext.core.data.Storage;
@@ -174,17 +174,17 @@ public class PluginStorage implements Storage {
 
     /**
      * Searches for an object at the specified location and returns
-     * meta-data about the object if found. The path may locate
-     * either an index or a specific object. 
+     * metadata about the object if found. The path may locate either
+     * an index or a specific object. 
      *
      * @param path           the storage location
      *
-     * @return the meta-data dictionary for the object, or
+     * @return the metadata for the object, or
      *         null if not found
      *
      * @throws StorageException if the storage couldn't be accessed
      */
-    public Dict lookup(Path path) throws StorageException {
+    public Metadata lookup(Path path) throws StorageException {
         return storage.lookup(path);
     }
 

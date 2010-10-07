@@ -72,33 +72,30 @@ public class FileStorage implements Storage {
 
     /**
      * Searches for an object at the specified location and returns
-     * meta-data about the object if found. The path may locate
-     * either an index or a specific object. 
+     * metadata about the object if found. The path may locate either
+     * an index or a specific object. 
      *
      * @param path           the storage location
      *
-     * @return the meta-data dictionary for the object, or
+     * @return the metadata for the object, or
      *         null if not found
      */
-    public Dict lookup(Path path) {
+    public Metadata lookup(Path path) {
         File  file = locateFile(path);
-        Dict  dict = null;
 
-        if (file != null) {
-            dict = new Dict();
-            if (file.isDirectory()) {
-                dict.set(KEY_TYPE, TYPE_INDEX);
-                dict.set(KEY_CLASS, Index.class);
-            } else if (file.getName().endsWith(SUFFIX_PROPS)) {
-                dict.set(KEY_TYPE, TYPE_OBJECT);
-                dict.set(KEY_CLASS, Dict.class);
-            } else {
-                dict.set(KEY_TYPE, TYPE_FILE);
-                dict.set(KEY_CLASS, File.class);
-            }
-            dict.set(KEY_MODIFIED, new Date(file.lastModified()));
+        if (file == null) {
+            return null;
+        } else if (file.isDirectory()) {
+            return new Metadata(Metadata.CATEGORY_INDEX,
+                                Index.class,
+                                new Date(file.lastModified()));
+        } else if (file.getName().endsWith(SUFFIX_PROPS)) {
+            return new Metadata(Metadata.CATEGORY_OBJECT,
+                                Dict.class,
+                                new Date(file.lastModified()));
+        } else {
+            return new Metadata(file);
         }
-        return dict;
     }
 
     /**
@@ -131,6 +128,7 @@ public class FileStorage implements Storage {
                     idx.addObject(StringUtils.removeEnd(name, SUFFIX_PROPS));
                 }
             }
+            idx.updateLastModified(new Date(file.lastModified()));
             return idx;
         } else if (file.getName().endsWith(SUFFIX_PROPS)) {
             try {

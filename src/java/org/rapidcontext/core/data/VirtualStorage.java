@@ -213,56 +213,38 @@ public class VirtualStorage implements Storage {
 
     /**
      * Searches for an object at the specified location and returns
-     * meta-data about the object if found. The path may locate
-     * either an index or a specific object. 
+     * metadata about the object if found. The path may locate either
+     * an index or a specific object. 
      *
      * @param path           the storage location
      *
-     * @return the meta-data dictionary for the object, or
+     * @return the metadata for the object, or
      *         null if not found
      *
      * @throws StorageException if the storage couldn't be accessed
      */
-    public Dict lookup(Path path) throws StorageException {
+    public Metadata lookup(Path path) throws StorageException {
         MountPoint  mount = getParentMountPoint(path);
-        Dict        meta = null;
-        Dict        idx = null;
+        Metadata    meta = null;
+        Metadata    idx = null;
 
         if (mount != null) {
-            meta = mount.getStorage().lookup(path.subPath(mount.getPath().length()));
-            if (meta != null) {
-                meta = meta.copy();
-                meta.set("storage", mount.getPath());
-            }
-            return meta;
+            return mount.getStorage().lookup(path.subPath(mount.getPath().length()));
         } else {
             meta = metaStorage.lookup(path);
-            if (meta != null && meta.getString(KEY_TYPE, "").equals(TYPE_INDEX)) {
+            if (meta != null && meta.isIndex()) {
                 idx = meta;
             } else if (meta != null) {
-                meta = meta.copy();
-                meta.set("storage", new Path(""));
                 return meta;
             }
             for (int i = 0; i < mountpoints.size(); i++) {
                 mount = (MountPoint) mountpoints.get(i);
                 if (mount.isOverlay()) {
                     meta = mount.getStorage().lookup(path);
-                    if (meta != null) {
-                        if (meta.getString(KEY_TYPE, "").equals(TYPE_INDEX)) {
-                            if (idx != null) {
-                                Date mod1 = (Date) idx.get(KEY_MODIFIED);
-                                Date mod2 = (Date) meta.get(KEY_MODIFIED);
-                                Date mod3 = mod1.after(mod2) ? mod1 : mod2;
-                                meta = meta.copy();
-                                meta.set(KEY_MODIFIED, mod3);
-                            }
-                            idx = meta;
-                        } else {
-                            meta = meta.copy();
-                            meta.set("storage", mount.getPath());
-                            return meta;
-                        }
+                    if (meta != null && meta.isIndex()) {
+                        idx = Metadata.lastModified(idx, meta);
+                    } else if (meta != null) {
+                        return meta;
                     }
                 }
             }
