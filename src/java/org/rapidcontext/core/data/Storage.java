@@ -81,7 +81,7 @@ public abstract class Storage extends DynamicObject {
      * @return the local storage path
      */
     protected Path localPath(Path path) {
-        if (path != null && path.startsWith(path())) {
+        if (path != null && !path.isRoot() && path.startsWith(path())) {
             return path.subPath(path().length());
         } else {
             return path;

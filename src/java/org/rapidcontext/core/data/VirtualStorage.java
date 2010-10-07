@@ -231,7 +231,7 @@ public class VirtualStorage extends Storage {
         Metadata    idx = null;
 
         if (mount != null) {
-            return mount.getStorage().lookup(path.subPath(mount.getPath().length()));
+            return mount.getStorage().lookup(mount.getStorage().localPath(path));
         } else {
             meta = metaStorage.lookup(path);
             if (meta != null && meta.isIndex()) {
@@ -273,7 +273,7 @@ public class VirtualStorage extends Storage {
         Index       idx = null;
 
         if (mount != null) {
-            return mount.getStorage().load(path.subPath(mount.getPath().length()));
+            return mount.getStorage().load(mount.getStorage().localPath(path));
         } else {
             res = metaStorage.load(path);
             if (res instanceof Index) {
@@ -317,7 +317,7 @@ public class VirtualStorage extends Storage {
                 LOG.warning(msg);
                 throw new StorageException(msg);
             }
-            mount.getStorage().store(path.subPath(mount.getPath().length()), data);
+            mount.getStorage().store(mount.getStorage().localPath(path), data);
         } else {
             for (int i = 0; i < mountpoints.size(); i++) {
                 mount = (MountPoint) mountpoints.get(i);
@@ -343,7 +343,7 @@ public class VirtualStorage extends Storage {
         MountPoint  mount = getParentMountPoint(path);
 
         if (mount != null) {
-            mount.getStorage().remove(path.subPath(mount.getPath().length()));
+            mount.getStorage().remove(mount.getStorage().localPath(path));
         } else {
             for (int i = 0; i < mountpoints.size(); i++) {
                 mount = (MountPoint) mountpoints.get(i);
