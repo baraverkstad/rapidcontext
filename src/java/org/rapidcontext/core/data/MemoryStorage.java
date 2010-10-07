@@ -73,7 +73,7 @@ public class MemoryStorage extends Storage {
     public Metadata lookup(Path path) {
         Object obj = meta.get(path);
         if (obj instanceof Index) {
-            return new Metadata((Index) obj);
+            return new Metadata(path().descendant(path), (Index) obj);
         } else {
             return (Metadata) obj;
         }
@@ -133,7 +133,7 @@ public class MemoryStorage extends Storage {
             ((Storable) data).init(this);
         }
         objects.put(path, data);
-        meta.put(path, new Metadata(data));
+        meta.put(path, new Metadata(path().descendant(path), data));
         indexInsert(path);
     }
 

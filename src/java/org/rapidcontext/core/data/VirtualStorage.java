@@ -295,7 +295,10 @@ public class VirtualStorage extends Storage {
                 if (isOverlay(storage)) {
                     meta = storage.lookup(path);
                     if (meta != null && meta.isIndex()) {
-                        idx = Metadata.lastModified(idx, meta);
+                        idx = new Metadata(Metadata.CATEGORY_INDEX,
+                                           Index.class,
+                                           path().descendant(path),
+                                           Metadata.lastModified(idx, meta));
                     } else if (meta != null) {
                         return meta;
                     }

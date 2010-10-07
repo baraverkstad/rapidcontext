@@ -44,6 +44,12 @@ public class Metadata extends DynamicObject {
     public static final String KEY_CLASS = "class";
 
     /**
+     * The dictionary key for the absolute object path. The values
+     * stored is the path object.
+     */
+    public static final String KEY_PATH = "path";
+
+    /**
      * The dictionary key for the last modified date. The value stored
      * is a Date object.
      */
@@ -65,50 +71,53 @@ public class Metadata extends DynamicObject {
     public static final String CATEGORY_FILE = "file";
 
     /**
-     * Returns the last modified of two metadata objects.
+     * Returns the last modified date of two metadata objects.
      *
      * @param meta1          the first metadata object
      * @param meta2          the second metadata object
      *
-     * @return the metadata object with the latest modified date
+     * @return the last modified date of the two objects
      */
-    public static Metadata lastModified(Metadata meta1, Metadata meta2) {
+    public static Date lastModified(Metadata meta1, Metadata meta2) {
         if (meta1 == null) {
-            return meta2;
+            return meta2.lastModified();
         } else if (meta2 == null) {
-            return meta1;
+            return meta1.lastModified();
         } else if (meta2.lastModified().after(meta1.lastModified())) {
-            return meta2;
+            return meta2.lastModified();
         } else {
-            return meta1;
+            return meta1.lastModified();
         }
     }
 
     /**
      * Creates a new metadata container for an index.
      *
+     * @param path           the absolute object path
      * @param idx            the index to inspect
      */
-    public Metadata(Index idx) {
-        this(CATEGORY_INDEX, Index.class, idx.lastModified());
+    public Metadata(Path path, Index idx) {
+        this(CATEGORY_INDEX, Index.class, path, idx.lastModified());
     }
 
     /**
      * Creates a new metadata container for a file.
      *
+     * @param path           the absolute object path
      * @param file           the file to inspect
      */
-    public Metadata(File file) {
-        this(CATEGORY_FILE, File.class, new Date(file.lastModified()));
+    public Metadata(Path path, File file) {
+        this(CATEGORY_FILE, File.class, path, new Date(file.lastModified()));
     }
 
     /**
      * Creates a new metadata container for a generic object.
      *
+     * @param path           the absolute object path
      * @param obj            the object to inspect
      */
-    public Metadata(Object obj) {
-        this(CATEGORY_OBJECT, obj.getClass(), new Date());
+    public Metadata(Path path, Object obj) {
+        this(CATEGORY_OBJECT, obj.getClass(), path, new Date());
     }
 
     /**
@@ -116,16 +125,18 @@ public class Metadata extends DynamicObject {
      *
      * @param category       the object category
      * @param clazz          the object class
-     * @param lastModified   the last modified date, or null for now
+     * @param path           the absolute object path
+     * @param modified       the last modified date, or null for now
      */
-    public Metadata(String category, Class clazz, Object lastModified) {
+    public Metadata(String category, Class clazz, Path path, Object modified) {
         super("metadata");
         dict.set(KEY_CATEGORY, category);
         dict.set(KEY_CLASS, clazz);
-        if (lastModified instanceof Date) {
-            dict.set(KEY_MODIFIED, lastModified);
-        } else if (lastModified instanceof Long) {
-            dict.set(KEY_MODIFIED, new Date(((Long) lastModified).longValue()));
+        dict.set(KEY_PATH, path);
+        if (modified instanceof Date) {
+            dict.set(KEY_MODIFIED, modified);
+        } else if (modified instanceof Long) {
+            dict.set(KEY_MODIFIED, new Date(((Long) modified).longValue()));
         } else {
             dict.set(KEY_MODIFIED, new Date());
         }
@@ -190,6 +201,15 @@ public class Metadata extends DynamicObject {
      */
     public String className() {
         return classInstance().getName();
+    }
+
+    /**
+     * Returns the absolute object path.
+     *
+     * @return the absolute object path
+     */
+    public Path path() {
+        return (Path) dict.get(KEY_PATH);
     }
 
     /**
