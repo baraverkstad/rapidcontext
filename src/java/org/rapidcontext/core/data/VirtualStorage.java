@@ -30,7 +30,7 @@ import java.util.logging.Logger;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class VirtualStorage implements Storage {
+public class VirtualStorage extends Storage {
 
     /**
      * The class logger.
@@ -44,26 +44,28 @@ public class VirtualStorage implements Storage {
      * their corresponding path (slightly modified to form an object
      * path instead of an index path).
      */
-    private MemoryStorage metaStorage = new MemoryStorage();
+    private MemoryStorage metaStorage = new MemoryStorage(Path.ROOT, true);
 
     /**
      * The sorted array of mount points. This array is sorted every
      * time a mount point is added or modified.
      */
+    // TODO: rename!
     private Array mountpoints = new Array();
 
     /**
      * Creates a new overlay storage.
+     *
+     * @param path           the base storage path
+     * @param readWrite      the read write flag
      */
-    public VirtualStorage() {
+    public VirtualStorage(Path path, boolean readWrite) {
+        super("virtual", path, readWrite);
+        dict.set("storages", mountpoints);
         try {
-            Dict dict = new Dict(2);
-            dict.set("type", "storage");
-            dict.set("subtype", "virtual");
-            dict.set("storages", mountpoints);
             metaStorage.store(new Path("/storageinfo"), dict);
         } catch (StorageException e) {
-            LOG.severe("error while initializing overlay storage: " +
+            LOG.severe("error while initializing virtual storage: " +
                        e.getMessage());
         }
     }

@@ -29,7 +29,7 @@ import java.util.logging.Logger;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class MemoryStorage implements Storage {
+public class MemoryStorage extends Storage {
 
     /**
      * The class logger.
@@ -52,18 +52,12 @@ public class MemoryStorage implements Storage {
 
     /**
      * Creates a new memory storage.
-     */
-    public MemoryStorage() {
-        // Nothing to do here
-    }
-
-    /**
-     * Returns a string representation of this object.
      *
-     * @return a string representation of this object
+     * @param path           the base storage path
+     * @param readWrite      the read write flag
      */
-    public String toString() {
-        return "memoryStorage";
+    public MemoryStorage(Path path, boolean readWrite) {
+        super("memory", path, readWrite);
     }
 
     /**

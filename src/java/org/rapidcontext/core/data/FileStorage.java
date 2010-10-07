@@ -33,7 +33,7 @@ import org.rapidcontext.util.FileUtil;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class FileStorage implements Storage {
+public class FileStorage extends Storage {
 
     /**
      * The class logger.
@@ -56,18 +56,12 @@ public class FileStorage implements Storage {
      * Creates a new file storage.
      *
      * @param dir            the base data directory to use
+     * @param path           the base storage path
+     * @param readWrite      the read write flag
      */
-    public FileStorage(File dir) {
+    public FileStorage(File dir, Path path, boolean readWrite) {
+        super("file", path, readWrite);
         this.baseDir = dir;
-    }
-
-    /**
-     * Returns a string representation of this object.
-     *
-     * @return a string representation of this object
-     */
-    public String toString() {
-        return "fileStorage";
     }
 
     /**

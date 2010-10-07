@@ -15,14 +15,88 @@
 package org.rapidcontext.core.data;
 
 /**
- * The persistent data storage and retrieval interface. This
- * interface is implemented by services offering persistent
- * storage and lookup of files and objects.
+ * The persistent data storage and retrieval class. This base class
+ * is extended by storage services to provide actual data lookup and
+ * storage.
  *
  * @author   Per Cederberg
  * @version  1.0
  */
-public interface Storage {
+public abstract class Storage extends DynamicObject {
+
+    /**
+     * The dictionary key for the storage type.
+     */
+    public static final String KEY_STORAGE_TYPE = "storageType";
+
+    /**
+     * The dictionary key for the base storage path.
+     */
+    public static final String KEY_PATH = "path";
+
+    /**
+     * The dictionary key for the read-write flag.
+     */
+    public static final String KEY_READWRITE = "readWrite";
+
+    /**
+     * Creates a new storage.
+     *
+     * @param storageType    the storage type name
+     * @param path           the base storage path
+     * @param readWrite      the read write flag
+     */
+    protected Storage(String storageType, Path path, boolean readWrite) {
+        super("storage");
+        dict.set(KEY_STORAGE_TYPE, storageType);
+        dict.set(KEY_PATH, path);
+        dict.setBoolean(KEY_READWRITE, readWrite);
+    }
+
+    /**
+     * Returns the storage type name.
+     *
+     * @return the storage type name
+     */
+    public String storageType() {
+        return dict.getString(KEY_STORAGE_TYPE, null);
+    }
+
+    /**
+     * Returns the base storage path.
+     *
+     * @return the base storage path
+     */
+    public Path path() {
+        return (Path) dict.get(KEY_PATH);
+    }
+
+    /**
+     * Returns a local storage path by removing an optional base
+     * storage path. If the specified path does not have the base
+     * path prefix, it is returned unmodified.
+     *
+     * @param path           the path to adjust
+     *
+     * @return the local storage path
+     */
+    protected Path localPath(Path path) {
+        if (path != null && path.startsWith(path())) {
+            return path.subPath(path().length());
+        } else {
+            return path;
+        }
+    }
+
+    /**
+     * Returns the read-write flag.
+     *
+     * @return true if the storage is writable, or
+     *         false otherwise
+     */
+    public boolean isReadWrite() {
+        return dict.getBoolean(KEY_READWRITE, false);
+    }
 
     /**
      * Searches for an object at the specified location and returns
@@ -36,7 +110,7 @@ public interface Storage {
      *
      * @throws StorageException if the storage couldn't be accessed
      */
-    Metadata lookup(Path path) throws StorageException;
+    public abstract Metadata lookup(Path path) throws StorageException;
 
     /**
      * Loads an object from the specified location. The path may
@@ -51,7 +125,7 @@ public interface Storage {
      *
      * @throws StorageException if the data couldn't be read
      */
-    Object load(Path path) throws StorageException;
+    public abstract Object load(Path path) throws StorageException;
 
     /**
      * Stores an object at the specified location. The path must
@@ -64,7 +138,7 @@ public interface Storage {
      *
      * @throws StorageException if the data couldn't be written
      */
-    void store(Path path, Object data) throws StorageException;
+    public abstract void store(Path path, Object data) throws StorageException;
 
     /**
      * Removes an object or an index at the specified location. If
@@ -75,5 +149,5 @@ public interface Storage {
      *
      * @throws StorageException if the data couldn't be removed
      */
-    void remove(Path path) throws StorageException;
+    public abstract void remove(Path path) throws StorageException;
 }

@@ -34,7 +34,8 @@ import org.rapidcontext.core.data.StorageException;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class PluginStorage implements Storage {
+// TODO: Replace this storage with a plug-in utility class or similar.
+public class PluginStorage extends Storage {
 
     /**
      * The root mount storage path.
@@ -72,8 +73,9 @@ public class PluginStorage implements Storage {
      * @param pluginDir      the base plug-in directory
      */
     public PluginStorage(File pluginDir) {
+        super("plugin", Path.ROOT, true);
         this.pluginDir = pluginDir;
-        this.storage = new VirtualStorage();
+        this.storage = new VirtualStorage(Path.ROOT, true);
         File[] files = pluginDir.listFiles();
         for (int i = 0; i < files.length; i++) {
             if (files[i].isDirectory()) {
@@ -111,10 +113,11 @@ public class PluginStorage implements Storage {
      * @throws PluginException if the plug-in hadn't been mounted
      */
     public Storage createPlugin(String id) throws PluginException {
-        FileStorage  fs = new FileStorage(new File(this.pluginDir, id));
+        Path     path = PATH_PLUGIN.child(id, true);
+        Storage  fs = new FileStorage(new File(this.pluginDir, id), path, false);
 
         try {
-            storage.mount(fs, PATH_PLUGIN.child(id, true), false, false, 0);
+            storage.mount(fs, path, false, false, 0);
         } catch (StorageException e) {
             throw new PluginException(e.getMessage());
         }
