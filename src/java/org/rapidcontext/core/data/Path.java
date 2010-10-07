@@ -31,6 +31,13 @@ import org.apache.commons.lang.StringUtils;
 public class Path {
 
     /**
+     * A root path constant. Note that several paths may be root
+     * paths, so this is not a unique instance. It is only here
+     * for convenience.
+     */
+    public static final Path ROOT = new Path("");
+
+    /**
      * The path components. The last element in this array is the
      * object name, and any previous elements correspond to parent
      * indices (i.e. the parent path). The root index has a zero
