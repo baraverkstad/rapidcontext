@@ -392,8 +392,14 @@ public class VirtualStorage extends Storage {
      */
     public void remove(Path path) throws StorageException {
         Storage  storage = getParentStorage(path);
+        String   msg;
 
         if (storage != null) {
+            if (!storage.isReadWrite()) {
+                msg = "cannot remove from read-only storage at " + storage.path();
+                LOG.warning(msg);
+                throw new StorageException(msg);
+            }
             storage.remove(storage.localPath(path));
         } else {
             for (int i = 0; i < storages.size(); i++) {

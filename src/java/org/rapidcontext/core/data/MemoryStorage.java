@@ -121,6 +121,10 @@ public class MemoryStorage extends Storage {
             msg = "cannot store null data, use remove() instead: " + path;
             LOG.warning(msg);
             throw new StorageException(msg);
+        } else if (!isReadWrite()) {
+            msg = "cannot store to read-only storage at " + path();
+            LOG.warning(msg);
+            throw new StorageException(msg);
         }
         if (objects.containsKey(path)) {
             remove(path);
@@ -143,6 +147,11 @@ public class MemoryStorage extends Storage {
      * @throws StorageException if the data couldn't be removed
      */
     public void remove(Path path) throws StorageException {
+        if (!isReadWrite()) {
+            String msg = "cannot remove from read-only storage at " + path();
+            LOG.warning(msg);
+            throw new StorageException(msg);
+        }
         remove(path, true);
     }
 

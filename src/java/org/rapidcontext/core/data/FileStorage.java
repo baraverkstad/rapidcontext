@@ -166,6 +166,10 @@ public class FileStorage extends Storage {
             msg = "cannot store null data, use remove() instead: " + path;
             LOG.warning(msg);
             throw new StorageException(msg);
+        } else if (!isReadWrite()) {
+            msg = "cannot store to read-only storage at " + path();
+            LOG.warning(msg);
+            throw new StorageException(msg);
         }
         if (data instanceof Dict) {
             file = locateDir(path);
@@ -201,6 +205,11 @@ public class FileStorage extends Storage {
         String  msg;
         File    file;
 
+        if (!isReadWrite()) {
+            msg = "cannot remove from read-only storage at " + path();
+            LOG.warning(msg);
+            throw new StorageException(msg);
+        }
         file = locateFile(path);
         if (file != null) {
             try {
