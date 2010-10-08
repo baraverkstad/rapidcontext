@@ -19,7 +19,6 @@
 package org.rapidcontext.app.plugin.jdbc;
 
 import org.rapidcontext.app.ApplicationContext;
-import org.rapidcontext.app.plugin.PluginClassLoader;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.PropertiesSerializer;
 import org.rapidcontext.core.env.Adapter;
@@ -179,13 +178,13 @@ public class JdbcAdapter implements Adapter {
     public AdapterConnection createConnection(Dict params)
         throws AdapterException {
 
-        PluginClassLoader  loader;
-        Class              driverClass;
-        Driver             driver;
-        Properties         props;
-        String             msg;
-        boolean            autoCommit;
-        int                timeout;
+        ClassLoader  loader;
+        Class        driverClass;
+        Driver       driver;
+        Properties   props;
+        String       msg;
+        boolean      autoCommit;
+        int          timeout;
 
         try {
             loader = ApplicationContext.getInstance().getClassLoader();
