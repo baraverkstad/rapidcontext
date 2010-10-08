@@ -133,7 +133,7 @@ public class CmdLineExecProcedure extends AddOnProcedure {
         String    str;
         Dict      res;
 
-        dir = ApplicationContext.getInstance().getPluginDir();
+        dir = ApplicationContext.getInstance().getBaseDir();
         str = bindings.getValue(BINDING_COMMAND).toString();
         cmd = replaceArguments(str, bindings);
         str = (String) bindings.getValue(BINDING_DIRECTORY, "");

@@ -16,21 +16,14 @@
 package org.rapidcontext.app;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Properties;
 import java.util.logging.Logger;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
-import org.rapidcontext.app.plugin.Plugin;
-import org.rapidcontext.app.plugin.PluginClassLoader;
 import org.rapidcontext.app.plugin.PluginException;
-import org.rapidcontext.app.plugin.PluginStorage;
+import org.rapidcontext.app.plugin.PluginManager;
 import org.rapidcontext.app.proc.AppletListProcedure;
 import org.rapidcontext.app.proc.PluginInstallProcedure;
 import org.rapidcontext.app.proc.PluginListProcedure;
@@ -58,7 +51,9 @@ import org.rapidcontext.app.proc.UserPasswordChangeProcedure;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.Path;
+import org.rapidcontext.core.data.Storage;
 import org.rapidcontext.core.data.StorageException;
+import org.rapidcontext.core.data.VirtualStorage;
 import org.rapidcontext.core.env.Environment;
 import org.rapidcontext.core.env.EnvironmentException;
 import org.rapidcontext.core.js.JsCompileInterceptor;
@@ -69,7 +64,6 @@ import org.rapidcontext.core.proc.Library;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.security.SecurityInterceptor;
-import org.rapidcontext.util.FileUtil;
 
 /**
  * The application context. This is a singleton object that contains
@@ -99,31 +93,19 @@ public class ApplicationContext {
     private static ApplicationContext instance = null;
 
     /**
-     * The configuration data storage.
+     * The application root storage.
      */
-    private PluginStorage storage;
+    private VirtualStorage storage;
+
+    /**
+     * The plug-in manager.
+     */
+    private PluginManager pluginManager;
 
     /**
      * The application configuration.
      */
     private Dict config;
-
-    /**
-     * The map of plug-in instances. The map is indexed by the
-     * plug-in identifier.
-     */
-    private HashMap plugins = new HashMap();
-
-    /**
-     * The plug-in directory. This is the base directory from which
-     * plug-ins are loaded.
-     */
-    private File pluginDir = null;
-
-    /**
-     * The plug-in class loader.
-     */
-    private PluginClassLoader pluginClassLoader = new PluginClassLoader();
 
     /**
      * The active environment.
@@ -184,8 +166,9 @@ public class ApplicationContext {
      * @param baseDir        the base application directory
      */
     private ApplicationContext(File baseDir) {
-        this.pluginDir = new File(baseDir, "plugins");
-        this.storage = new PluginStorage(this.pluginDir);
+        File pluginDir = new File(baseDir, "plugins");
+        this.storage = new VirtualStorage(Path.ROOT, true);
+        this.pluginManager = new PluginManager(pluginDir, storage);
         this.library = new Library(this.storage);
         instance = this;
     }
@@ -296,28 +279,9 @@ public class ApplicationContext {
             env.removeAllPools();
             env = null;
         }
-        destroyPlugins();
+        pluginManager.unloadAll();
         Library.unregisterType("javascript");
         library = new Library(this.storage);
-    }
-
-    /**
-     * Destroys all loaded plug-ins.
-     */
-    private void destroyPlugins() {
-        String[]  ids;
-
-        ids = new String[plugins.size()];
-        plugins.keySet().toArray(ids);
-        for (int i = 0; i < ids.length; i++) {
-            try {
-                destroyPlugin(ids[i]);
-            } catch (PluginException e) {
-                LOG.warning("failed to unload " + ids[i] +
-                            " plugin: " + e.getMessage());
-            }
-        }
-        pluginClassLoader = new PluginClassLoader();
     }
 
     /**
@@ -338,13 +302,13 @@ public class ApplicationContext {
     }
 
     /**
-     * Returns the application data store. This is the global data
-     * store that contains all loaded plug-ins and maps requests to
+     * Returns the application data storage. This is the global data
+     * storage that contains all loaded plug-ins and maps requests to
      * them in order.
      *
      * @return the application data store
      */
-    public PluginStorage getStorage() {
+    public Storage getStorage() {
         return this.storage;
     }
 
@@ -367,12 +331,12 @@ public class ApplicationContext {
     }
 
     /**
-     * Returns the plug-in base directory.
+     * Returns the application base directory.
      *
-     * @return the plug-in base directory
+     * @return the application base directory
      */
-    public File getPluginDir() {
-        return pluginDir;
+    public File getBaseDir() {
+        return pluginManager.pluginDir;
     }
 
     /**
@@ -380,8 +344,8 @@ public class ApplicationContext {
      *
      * @return the plug-in class loader
      */
-    public PluginClassLoader getClassLoader() {
-        return pluginClassLoader;
+    public ClassLoader getClassLoader() {
+        return pluginManager.classLoader;
     }
 
     /**
@@ -393,9 +357,7 @@ public class ApplicationContext {
      *         false otherwise
      */
     public boolean isPluginLoaded(String pluginId) {
-        return plugins.containsKey(pluginId) ||
-               PluginStorage.DEFAULT_PLUGIN.equals(pluginId) ||
-               PluginStorage.LOCAL_PLUGIN.equals(pluginId);
+        return pluginManager.isLoaded(pluginId);
     }
 
     /**
@@ -413,62 +375,8 @@ public class ApplicationContext {
      *             correctly
      */
     public String installPlugin(File file) throws PluginException {
-        ZipFile      zip = null;
-        ZipEntry     entry;
-        Properties   props;
-        InputStream  is;
-        String       pluginId;
-        File         dir;
-        String       msg;
-
-        try {
-            zip = new ZipFile(file);
-            entry = zip.getEntry("plugin.properties");
-            if (entry == null) {
-                msg = "missing plugin.properties inside zip file " + file.getName();
-                LOG.warning(msg);
-                throw new PluginException(msg);
-            }
-            is = zip.getInputStream(entry);
-            props = new Properties();
-            try {
-                props.load(is);
-            } finally {
-                try {
-                    is.close();
-                } catch (Exception ignore) {
-                    // Ignore exception on closing file
-                }
-            }
-            pluginId = props.getProperty("id");
-            if (pluginId == null || pluginId.trim().length() < 0) {
-                msg = "missing plug-in identifier in plugin.properties";
-                throw new PluginException(msg);
-            }
-            dir = new File(pluginDir, pluginId);
-            if (dir.exists()) {
-                unloadPlugin(pluginId);
-                storage.destroyPlugin(pluginId);
-                // TODO: perhaps backup the old directory instead?
-                FileUtil.delete(dir);
-            }
-            FileUtil.unpackZip(zip, dir);
-            storage.createPlugin(pluginId);
-            loadPlugin(pluginId);
-        } catch (IOException e) {
-            msg = "IO error while reading zip file " + file.getName() + ": " +
-                  e.getMessage();
-            LOG.warning(msg);
-            throw new PluginException(msg);
-        } finally {
-            if (zip != null) {
-                try {
-                    zip.close();
-                } catch (IOException ignore) {
-                    // Do nothing
-                }
-            }
-        }
+        String pluginId = pluginManager.install(file);
+        loadPlugin(pluginId);
         return pluginId;
     }
 
@@ -483,74 +391,10 @@ public class ApplicationContext {
      *             or if the plug-in initialization failed
      */
     public void loadPlugin(String pluginId) throws PluginException {
-        Path    pluginPath = PluginStorage.PATH_PLUGIN.child(pluginId, true);
-        Dict    pluginData;
         Array   pluginList;
-        String  className;
-        Class   cls;
-        Object  obj;
-        Plugin  plugin;
         String  msg;
 
-        if (PluginStorage.DEFAULT_PLUGIN.equals(pluginId) ||
-            PluginStorage.LOCAL_PLUGIN.equals(pluginId)) {
-
-            msg = "cannot force loading of default or local plug-ins";
-            throw new PluginException(msg);
-        }
-        try {
-            pluginData = (Dict) storage.load(pluginPath.child("plugin", false));
-            if (pluginData == null) {
-                throw new StorageException("file not found");
-            }
-        } catch (StorageException e) {
-            msg = "couldn't load " + pluginId + " plugin config file: " +
-                  e.getMessage();
-            LOG.warning(msg);
-            throw new PluginException(msg);
-        }
-        storage.loadPlugin(pluginId);
-        pluginClassLoader.addPluginJars(new File(this.pluginDir, pluginId));
-        className = pluginData.getString("className", null);
-        if (className == null || className.trim().length() <= 0) {
-            plugin = new Plugin();
-        } else {
-            try {
-                cls = getClassLoader().loadClass(className);
-            } catch (Throwable e) {
-                msg = "couldn't load " + pluginId + " plugin class " +
-                      className + ": " + e.getMessage();
-                LOG.warning(msg);
-                throw new PluginException(msg);
-            }
-            try {
-                obj = cls.newInstance();
-            } catch (Throwable e) {
-                msg = "couldn't create " + pluginId +
-                      " plugin instance for " + className + ": " +
-                      e.getMessage();
-                LOG.warning(msg);
-                throw new PluginException(msg);
-            }
-            if (obj instanceof Plugin) {
-                plugin = (Plugin) obj;
-            } else {
-                msg = pluginId + " plugin class " + className +
-                      " doesn't implement the Plugin interface";
-                LOG.warning(msg);
-                throw new PluginException(msg);
-            }
-        }
-        plugin.setData(pluginData);
-        try {
-            plugin.init();
-        } catch (Throwable e) {
-            msg = pluginId + " plugin class " + className +
-                  " threw exception on init: " + e.getMessage();
-            LOG.warning(msg);
-            throw new PluginException(msg);
-        }
-        plugins.put(pluginId, plugin);
+        pluginManager.load(pluginId);
         pluginList = config.getArray("plugins");
         if (!pluginList.containsValue(pluginId)) {
             pluginList.add(pluginId);
@@ -574,50 +418,18 @@ public class ApplicationContext {
      */
     public void unloadPlugin(String pluginId) throws PluginException {
         Array   pluginList;
-        int     pos;
         String  msg;
 
-        if (PluginStorage.DEFAULT_PLUGIN.equals(pluginId) ||
-            PluginStorage.LOCAL_PLUGIN.equals(pluginId)) {
-
-            msg = "cannot unload default or local plug-ins";
+        pluginManager.unload(pluginId);
+        library.clearCache();
+        pluginList = config.getArray("plugins");
+        pluginList.remove(pluginList.indexOf(pluginId));
+        try {
+            storage.store(PATH_CONFIG, config);
+        } catch (StorageException e) {
+            msg = "failed to update application config: " + e.getMessage();
             throw new PluginException(msg);
         }
-        destroyPlugin(pluginId);
-        pluginList = config.getArray("plugins");
-        pos = pluginList.indexOf(pluginId);
-        if (pos >= 0) {
-            pluginList.remove(pos);
-            try {
-                storage.store(PATH_CONFIG, config);
-            } catch (StorageException e) {
-                msg = "failed to update application config: " +
-                      e.getMessage();
-                throw new PluginException(msg);
-            }
-        }
-    }
-
-
-    /**
-     * Destroys a plug-in (as a part of the unloading). The plug-in
-     * will only be stopped and removed from in-memory data
-     * structures by this method.
-     *
-     * @param pluginId       the unique plug-in id
-     *
-     * @throws PluginException if the plug-in deinitialization failed
-     */
-    private void destroyPlugin(String pluginId) throws PluginException {
-        Plugin  plugin;
-
-        plugin = (Plugin) plugins.get(pluginId);
-        if (plugin != null) {
-            plugin.destroy();
-        }
-        storage.unloadPlugin(pluginId);
-        plugins.remove(pluginId);
-        library.clearCache();
     }
 
     /**

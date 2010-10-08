@@ -16,7 +16,7 @@
 package org.rapidcontext.app.proc;
 
 import org.rapidcontext.app.ApplicationContext;
-import org.rapidcontext.app.plugin.PluginStorage;
+import org.rapidcontext.app.plugin.PluginManager;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.Path;
@@ -43,11 +43,6 @@ public class PluginListProcedure implements Procedure, Restricted {
      * The procedure name constant.
      */
     public static final String NAME = "System.PlugIn.List";
-
-    /**
-     * The plug-in configuration path.
-     */
-    private static final Path PATH_PLUGIN_CONFIG = new Path("/plugin");
 
     /**
      * The default bindings.
@@ -124,7 +119,7 @@ public class PluginListProcedure implements Procedure, Restricted {
         Dict                dict;
         Array               arr;
         Path                path;
-        String              id;
+        String              pluginId;
         Array               res;
 
         try {
@@ -135,23 +130,22 @@ public class PluginListProcedure implements Procedure, Restricted {
         }
         res = new Array(arr.size());
         for (int i = 0; i < arr.size(); i++) {
-            storage = (Storage) arr.get(i);
-            path = storage.path();
-            if (path.startsWith(PluginStorage.PATH_PLUGIN) && path.isIndex()) {
-                id = path.name();
+            path = ((Storage) arr.get(i)).path();
+            if (path.startsWith(PluginManager.PATH_STORAGE) && path.isIndex()) {
+                pluginId = path.name();
                 dict = null;
                 try {
-                    dict = (Dict) storage.load(PATH_PLUGIN_CONFIG);
+                    dict = (Dict) storage.load(PluginManager.configPath(pluginId));
                 } catch (StorageException ignore) {
                     // Read errors are handled below
                 }
                 if (dict == null) {
                     dict = new Dict();
-                    dict.set("id", id);
+                    dict.set("id", pluginId);
                 } else {
                     dict = dict.copy();
                 }
-                dict.setBoolean("loaded", ctx.isPluginLoaded(id));
+                dict.setBoolean("loaded", ctx.isPluginLoaded(pluginId));
                 res.add(dict);
             }
         }
