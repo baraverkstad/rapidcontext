@@ -131,7 +131,7 @@ public class PluginListProcedure implements Procedure, Restricted {
         res = new Array(arr.size());
         for (int i = 0; i < arr.size(); i++) {
             path = ((Storage) arr.get(i)).path();
-            if (path.startsWith(PluginManager.PATH_STORAGE) && path.isIndex()) {
+            if (path.startsWith(PluginManager.PATH_STORAGE_PLUGIN)) {
                 pluginId = path.name();
                 dict = null;
                 try {

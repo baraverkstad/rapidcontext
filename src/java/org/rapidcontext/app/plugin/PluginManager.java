@@ -17,14 +17,17 @@ package org.rapidcontext.app.plugin;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.FileStorage;
+import org.rapidcontext.core.data.Index;
+import org.rapidcontext.core.data.MemoryStorage;
 import org.rapidcontext.core.data.Path;
 import org.rapidcontext.core.data.Storage;
 import org.rapidcontext.core.data.StorageException;
@@ -47,9 +50,19 @@ public class PluginManager {
         Logger.getLogger(PluginManager.class.getName());
 
     /**
-     * The storage path to the mounted plug-in storages.
+     * The storage path to the in-memory storage.
      */
-    public static final Path PATH_STORAGE = new Path("/storage/plugin/");
+    public static final Path PATH_STORAGE_MEMORY = new Path("/storage/memory/");
+
+    /**
+     * The storage path to the mounted plug-in file storages.
+     */
+    public static final Path PATH_STORAGE_PLUGIN = new Path("/storage/plugin/");
+
+    /**
+     * The storage path to the loaded plug-in objects.
+     */
+    public static final Path PATH_PLUGIN = new Path("/plugin/");
 
     /**
      * The identifier of the default plug-in.
@@ -73,13 +86,6 @@ public class PluginManager {
     public VirtualStorage storage;
 
     /**
-     * The map of plug-in instances. The map is indexed by the
-     * plug-in identifier.
-     */
-    // TODO: replace with memory storage
-    private HashMap plugins = new HashMap();
-
-    /**
      * The plug-in class loader.
      */
     public PluginClassLoader classLoader = new PluginClassLoader();
@@ -92,7 +98,7 @@ public class PluginManager {
      * @return the plug-in storage path
      */
     public static Path storagePath(String pluginId) {
-        return PATH_STORAGE.child(pluginId, true);
+        return PATH_STORAGE_PLUGIN.child(pluginId, true);
     }
 
     /**
@@ -108,6 +114,18 @@ public class PluginManager {
     }
 
     /**
+     * Returns the plug-in instance path for a specified plug-in id.
+     *
+     * @param pluginId       the unique plug-in id
+     *
+     * @return the plug-in instance path
+     */
+    public static Path pluginPath(String pluginId) {
+        Path rootRelative = PATH_PLUGIN.child(pluginId, false);
+        return PATH_STORAGE_MEMORY.descendant(rootRelative);
+    }
+
+    /**
      * Creates a new plug-in storage.
      *
      * @param pluginDir      the base plug-in directory
@@ -116,6 +134,12 @@ public class PluginManager {
     public PluginManager(File pluginDir, VirtualStorage storage) {
         this.pluginDir = pluginDir;
         this.storage = storage;
+        try {
+            MemoryStorage memory = new MemoryStorage(PATH_STORAGE_MEMORY, true);
+            storage.mount(memory, true, true, 50);
+        } catch (StorageException e) {
+            LOG.log(Level.SEVERE, "failed to create memory storage", e);
+        }
         File[] files = pluginDir.listFiles();
         for (int i = 0; i < files.length; i++) {
             if (files[i].isDirectory()) {
@@ -147,9 +171,14 @@ public class PluginManager {
      *         false otherwise
      */
     public boolean isLoaded(String pluginId) {
-        return plugins.containsKey(pluginId) ||
-               DEFAULT_PLUGIN.equals(pluginId) ||
-               LOCAL_PLUGIN.equals(pluginId);
+        try {
+            return storage.lookup(pluginPath(pluginId)) != null ||
+                   DEFAULT_PLUGIN.equals(pluginId) ||
+                   LOCAL_PLUGIN.equals(pluginId);
+        } catch (StorageException e) {
+            LOG.log(Level.SEVERE, "failed to search memory storage", e);
+            return false;
+        }
     }
 
     /**
@@ -171,10 +200,9 @@ public class PluginManager {
         try {
             storage.mount(fs, false, false, 0);
         } catch (StorageException e) {
-            String msg = "failed to create " + pluginId + " plug-in storage: " +
-                         e.getMessage();
-            LOG.severe(msg);
-            throw new PluginException(msg);
+            String msg = "failed to create " + pluginId + " plug-in storage";
+            LOG.log(Level.SEVERE, msg, e);
+            throw new PluginException(msg + ": " + e.getMessage());
         }
         return fs;
     }
@@ -192,10 +220,9 @@ public class PluginManager {
         try {
             storage.unmount(storagePath(pluginId));
         } catch (StorageException e) {
-            String msg = "failed to remove " + pluginId + " plug-in storage: " +
-                         e.getMessage();
-            LOG.severe(msg);
-            throw new PluginException(msg);
+            String msg = "failed to remove " + pluginId + " plug-in storage";
+            LOG.log(Level.SEVERE, msg, e);
+            throw new PluginException(msg + ": " + e.getMessage());
         }
     }
 
@@ -224,7 +251,8 @@ public class PluginManager {
             zip = new ZipFile(file);
             entry = zip.getEntry("plugin.properties");
             if (entry == null) {
-                msg = "missing plugin.properties inside zip file " + file.getName();
+                msg = "missing plugin.properties inside zip file " +
+                      file.getName();
                 LOG.warning(msg);
                 throw new PluginException(msg);
             }
@@ -298,10 +326,9 @@ public class PluginManager {
                 throw new StorageException("file not found");
             }
         } catch (StorageException e) {
-            msg = "couldn't load " + pluginId + " plugin config file: " +
-                  e.getMessage();
-            LOG.warning(msg);
-            throw new PluginException(msg);
+            msg = "couldn't load " + pluginId + " plugin config file";
+            LOG.log(Level.WARNING, msg, e);
+            throw new PluginException(msg + ": " + e.getMessage());
         }
 
         // Add to root overlay
@@ -317,17 +344,17 @@ public class PluginManager {
                 cls = classLoader.loadClass(className);
             } catch (Throwable e) {
                 msg = "couldn't load " + pluginId + " plugin class " +
-                      className + ": " + e.getMessage();
-                LOG.warning(msg);
-                throw new PluginException(msg);
+                      className;
+                LOG.log(Level.WARNING, msg, e);
+                throw new PluginException(msg + ": " + e.getMessage());
             }
             try {
                 obj = cls.newInstance();
             } catch (Throwable e) {
                 msg = "couldn't create " + pluginId + " plugin instance for " +
-                      className + ": " + e.getMessage();
-                LOG.warning(msg);
-                throw new PluginException(msg);
+                      className;
+                LOG.log(Level.WARNING, msg, e);
+                throw new PluginException(msg + ": " + e.getMessage());
             }
             if (obj instanceof Plugin) {
                 plugin = (Plugin) obj;
@@ -342,14 +369,13 @@ public class PluginManager {
         // Initialize plug-in instance
         plugin.setData(dict);
         try {
+            storage.store(pluginPath(pluginId), plugin);
             plugin.init();
         } catch (Throwable e) {
-            msg = "plugin class " + className + " threw exception on init: " +
-                  e.getMessage();
-            LOG.warning(msg);
-            throw new PluginException(msg);
+            msg = "plugin class " + className + " threw exception on init";
+            LOG.log(Level.WARNING, msg, e);
+            throw new PluginException(msg + ": " + e.getMessage());
         }
-        plugins.put(pluginId, plugin);
     }
 
     /**
@@ -369,10 +395,9 @@ public class PluginManager {
         try {
             storage.remount(storagePath(pluginId), readWrite, true, prio);
         } catch (StorageException e) {
-            msg = "failed to overlay " + pluginId + " plug-in storage: " +
-                  e.getMessage();
-            LOG.severe(msg);
-            throw new PluginException(msg);
+            msg = "failed to overlay " + pluginId + " plug-in storage";
+            LOG.log(Level.SEVERE, msg, e);
+            throw new PluginException(msg + ": " + e.getMessage());
         }
     }
 
@@ -385,27 +410,37 @@ public class PluginManager {
      * @throws PluginException if the plug-in unloading failed
      */
     public void unload(String pluginId) throws PluginException {
-        Plugin  plugin = (Plugin) plugins.get(pluginId);
+        Plugin  plugin;
         String  msg;
 
         if (DEFAULT_PLUGIN.equals(pluginId) || LOCAL_PLUGIN.equals(pluginId)) {
             msg = "cannot unload default or local plug-ins";
             throw new PluginException(msg);
         }
-        if (plugin != null) {
-            plugin.destroy();
-        } else {
-            LOG.severe("skipping destroy on plugin: " + pluginId);
+        try {
+            plugin = (Plugin) storage.load(pluginPath(pluginId));
+            if (plugin != null) {
+                plugin.destroy();
+            } else {
+                LOG.severe("skipping destroy on plugin: " + pluginId);
+            }
+        } catch (StorageException e) {
+            msg = "failed memory storage lookup of " + pluginId + " plugin";
+            LOG.log(Level.SEVERE, msg, e);
+        }
+        try {
+            storage.remove(pluginPath(pluginId));
+        } catch (StorageException e) {
+            msg = "failed destroy call on " + pluginId + " plugin";
+            LOG.log(Level.SEVERE, msg, e);
         }
         try {
             storage.remount(storagePath(pluginId), false, false, 0);
         } catch (StorageException e) {
-            msg = "plugin " + pluginId + " storage remount failed:" +
-                  e.getMessage();
-            LOG.warning(msg);
-            throw new PluginException(msg);
+            msg = "plugin " + pluginId + " storage remount failed";
+            LOG.log(Level.WARNING, msg, e);
+            throw new PluginException(msg + ": " + e.getMessage());
         }
-        plugins.remove(pluginId);
     }
 
     /**
@@ -415,15 +450,23 @@ public class PluginManager {
      * this.
      */
     public void unloadAll() {
-        String[]  ids = new String[plugins.size()];
+        Array   ids;
+        String  pluginId;
+        String  msg;
 
-        plugins.keySet().toArray(ids);
-        for (int i = 0; i < ids.length; i++) {
+        try {
+            ids = ((Index) storage.load(PATH_PLUGIN)).objects().copy();
+        } catch (StorageException e) {
+            msg = "failed lookup of loaded plugins";
+            LOG.log(Level.SEVERE, msg, e);
+            return;
+        }
+        for (int i = 0; i < ids.size(); i++) {
+            pluginId = ids.getString(i, null);
             try {
-                unload(ids[i]);
+                unload(pluginId);
             } catch (PluginException e) {
-                LOG.warning("failed to unload " + ids[i] + " plugin: " +
-                            e.getMessage());
+                LOG.warning("failed to unload " + pluginId + " plugin");
             }
         }
         classLoader = new PluginClassLoader();
