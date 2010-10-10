@@ -19,7 +19,7 @@ import java.util.Date;
 
 /**
  * An object metadata container. Used for basic introspection of
- * objects inside storages. 
+ * objects inside storages.
  *
  * @author   Per Cederberg
  * @version  1.0

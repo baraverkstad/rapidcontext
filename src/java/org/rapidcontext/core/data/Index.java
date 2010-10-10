@@ -44,7 +44,7 @@ public class Index extends DynamicObject {
      * The dictionary key for the array of objects.
      */
     public static final String KEY_OBJS = "objects";
- 
+
     /**
      * Merges two index dictionaries. Note that this may modify one
      * of the two directories.

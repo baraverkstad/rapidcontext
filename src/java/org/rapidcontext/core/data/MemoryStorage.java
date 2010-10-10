@@ -63,7 +63,7 @@ public class MemoryStorage extends Storage {
     /**
      * Searches for an object at the specified location and returns
      * metadata about the object if found. The path may locate either
-     * an index or a specific object. 
+     * an index or a specific object.
      *
      * @param path           the storage location
      *

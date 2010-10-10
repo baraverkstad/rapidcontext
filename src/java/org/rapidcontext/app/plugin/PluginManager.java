@@ -347,7 +347,7 @@ public class PluginManager {
                 msg = pluginId + " plugin class " + className +
                       " isn't a subclass of the Plugin class";
                 LOG.warning(msg);
-                throw new PluginException(msg);                
+                throw new PluginException(msg);
             }
             try {
                 constr = cls.getConstructor(new Class[] { Dict.class});

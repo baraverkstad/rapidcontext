@@ -22,7 +22,7 @@ import org.apache.commons.lang.ArrayUtils;
 /**
  * A general data dictionary. Compared to the standard Map interface,
  * this class provides a number of improvements;
- * 
+ *
  * <ul>
  *   <li><strong>Access Methods</strong> -- Methods to provide easy
  *       access to integer, boolean and string values without casting.

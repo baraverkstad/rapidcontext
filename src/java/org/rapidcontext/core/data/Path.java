@@ -297,7 +297,7 @@ public class Path {
         for (int i = 0; i < subpath.parts.length; i++) {
             newParts[parts.length + i] = subpath.parts[i];
         }
-        return new Path(newParts, subpath.index);        
+        return new Path(newParts, subpath.index);
     }
 
     /**

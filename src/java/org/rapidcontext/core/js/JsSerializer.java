@@ -112,7 +112,7 @@ public class JsSerializer {
      */
     private static void serialize(Dict dict, StringBuffer buffer) {
         String[]  keys = dict.keys();
-        
+
         buffer.append("{");
         for (int i = 0; i < keys.length; i++) {
             if (i > 0) {
