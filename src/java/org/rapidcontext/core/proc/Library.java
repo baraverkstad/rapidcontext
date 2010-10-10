@@ -199,7 +199,8 @@ public class Library {
         for (int i = 0; i < arr.size(); i++) {
             set.add(arr.getString(i, null));
         }
-        return (String[]) set.toArray(new String[set.size()]);    }
+        return (String[]) set.toArray(new String[set.size()]);
+    }
 
     /**
      * Returns a loaded procedure.
