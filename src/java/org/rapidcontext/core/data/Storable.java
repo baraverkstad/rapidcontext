@@ -47,17 +47,4 @@ public interface Storable {
      * @throws StorageException if the destruction failed
      */
     void destroy(Storage storage) throws StorageException;
-
-    /**
-     * Returns a serialized representation of this object. Used when
-     * accessing the object storage from outside pure Java. Ideally
-     * the dictionary returned should contain all the data required
-     * to recreate this object, but it may also be treated as a way
-     * to introspect this object.
-     *
-     * @return the serialized representation of this object
-     *
-     * @throws StorageException if serialization is not supported
-     */
-    Dict serialize() throws StorageException;
 }
