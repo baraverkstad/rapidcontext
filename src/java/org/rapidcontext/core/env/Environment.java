@@ -22,7 +22,6 @@ import java.util.logging.Logger;
 
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.data.Index;
 import org.rapidcontext.core.data.Path;
 import org.rapidcontext.core.data.Storage;
 
@@ -74,8 +73,7 @@ public class Environment {
      *             loaded successfully
      */
     public static Environment init(Storage storage) throws EnvironmentException {
-        Index        idx;
-        String       name;
+        Object[]     objs;
         Dict         data;
         Array        list;
         Dict         pool;
@@ -85,12 +83,11 @@ public class Environment {
         String       poolName;
         String       str;
 
-        idx = (Index) storage.load(PATH_ENV);
-        if (idx == null || idx.objects().size() <= 0) {
+        objs = storage.loadAll(PATH_ENV);
+        if (objs.length <= 0) {
             return null;
         }
-        name = idx.objects().getString(0, null);
-        data = (Dict) storage.load(PATH_ENV.child(name, false));
+        data = (Dict) objs[0];
         if (data.getString("name", null) == null) {
             str = "failed to find required environment property 'name'";
             LOG.warning(str);

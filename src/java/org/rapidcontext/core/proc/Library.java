@@ -19,9 +19,7 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.logging.Logger;
 
-import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.data.Index;
 import org.rapidcontext.core.data.Metadata;
 import org.rapidcontext.core.data.Path;
 import org.rapidcontext.core.data.Storage;
@@ -189,9 +187,9 @@ public class Library {
      */
     public String[] getProcedureNames() throws ProcedureException {
         LinkedHashSet set = new LinkedHashSet(builtIns.keySet());
-        Array arr = ((Index) storage.load(PATH_PROC)).objects();
-        for (int i = 0; i < arr.size(); i++) {
-            set.add(arr.getString(i, null));
+        Metadata[] objs = storage.lookupAll(PATH_PROC);
+        for (int i = 0; i < objs.length; i++) {
+            set.add(objs[i].path().name());
         }
         return (String[]) set.toArray(new String[set.size()]);
     }

@@ -18,9 +18,7 @@ package org.rapidcontext.core.security;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
-import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.data.Index;
 import org.rapidcontext.core.data.Path;
 import org.rapidcontext.core.data.Storage;
 import org.rapidcontext.core.data.StorageException;
@@ -105,28 +103,32 @@ public class SecurityContext {
      *             written
      */
     public static void init(Storage storage) throws StorageException {
-        Array   arr;
-        Role    role;
-        User    user;
+        Object[]  objs;
+        Role      role;
+        User      user;
 
         dataStorage = storage;
         roles.clear();
         users.clear();
         userNtlm.clear();
-        arr = ((Index) dataStorage.load(ROLE_PATH)).objects();
-        for (int i = 0; i < arr.size(); i++) {
-            role = loadRole(arr.getString(i, null));
-            roles.put(role.getName().toLowerCase(), role);
+        objs = dataStorage.loadAll(ROLE_PATH);
+        for (int i = 0; i < objs.length; i++) {
+            if (objs[i] instanceof Dict) {
+                role = new Role((Dict) objs[i]);
+                roles.put(role.getName().toLowerCase(), role);
+            }
         }
         // TODO: Create default/anonymous role?
         // TODO: What if there are many users?
-        arr = ((Index) dataStorage.load(USER_PATH)).objects();
-        for (int i = 0; i < arr.size(); i++) {
-            user = loadUser(arr.getString(i, null));
-            users.put(user.getName(), user);
-            userNtlm.put(user.getNtlmName(), user.getName());
+        objs = dataStorage.loadAll(USER_PATH);
+        for (int i = 0; i < objs.length; i++) {
+            if (objs[i] instanceof Dict) {
+                user = new User((Dict) objs[i]);
+                users.put(user.getName(), user);
+                userNtlm.put(user.getNtlmName(), user.getName());
+            }
         }
-        if (arr.size() <= 0) {
+        if (users.size() <= 0) {
             createUser("admin", "Default administrator user", "Admin");
         }
         // TODO: create default system user?

@@ -16,7 +16,6 @@
 package org.rapidcontext.app.proc;
 
 import org.rapidcontext.core.data.Array;
-import org.rapidcontext.core.data.Index;
 import org.rapidcontext.core.data.Path;
 import org.rapidcontext.core.data.Storage;
 import org.rapidcontext.core.proc.Bindings;
@@ -116,15 +115,15 @@ public class AppletListProcedure implements Procedure, Restricted {
         throws ProcedureException {
 
         Storage    storage = cx.getStorage();
-        Array      list;
-        String     name = null;
+        Object[]   list;
+        Array      res;
 
-        list = ((Index) storage.load(PATH_APPLET)).objects();
-        for (int i = 0; i < list.size(); i++) {
-            name = list.getString(i, null);
-            list.set(i, storage.load(PATH_APPLET.child(name, false)));
+        list = storage.loadAll(PATH_APPLET);
+        res = new Array(list.length);
+        for (int i = 0; i < list.length; i++) {
+            res.add(list[i]);
         }
-        list.sort("name");
-        return list;
+        res.sort("name");
+        return res;
     }
 }

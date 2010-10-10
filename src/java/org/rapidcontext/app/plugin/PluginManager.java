@@ -25,10 +25,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import org.apache.commons.lang.ClassUtils;
-import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.FileStorage;
-import org.rapidcontext.core.data.Index;
 import org.rapidcontext.core.data.MemoryStorage;
 import org.rapidcontext.core.data.Path;
 import org.rapidcontext.core.data.Storage;
@@ -264,7 +262,7 @@ public class PluginManager {
                     // Ignore exception on closing file
                 }
             }
-            pluginId = props.getProperty("id");
+            pluginId = props.getProperty(Plugin.KEY_ID);
             if (pluginId == null || pluginId.trim().length() < 0) {
                 msg = "missing plug-in identifier in plugin.properties";
                 throw new PluginException(msg);
@@ -333,7 +331,7 @@ public class PluginManager {
 
         // Create plug-in instance
         classLoader.addPluginJars(new File(this.pluginDir, pluginId));
-        className = dict.getString("className", null);
+        className = dict.getString(Plugin.KEY_CLASSNAME, null);
         if (className == null || className.trim().length() <= 0) {
             plugin = new Plugin(dict);
         } else {
@@ -439,16 +437,18 @@ public class PluginManager {
      * this.
      */
     public void unloadAll() {
-        Array   ids;
-        String  pluginId;
+        Object[]  objs;
+        String    pluginId;
 
-        ids = ((Index) storage.load(PATH_PLUGIN)).objects().copy();
-        for (int i = 0; i < ids.size(); i++) {
-            pluginId = ids.getString(i, null);
-            try {
-                unload(pluginId);
-            } catch (PluginException e) {
-                LOG.warning("failed to unload " + pluginId + " plugin");
+        objs = storage.loadAll(PATH_PLUGIN);
+        for (int i = 0; i < objs.length; i++) {
+            if (objs[i] instanceof Plugin) {
+                pluginId = ((Plugin) objs[i]).id();
+                try {
+                    unload(pluginId);
+                } catch (PluginException e) {
+                    LOG.warning("failed to unload " + pluginId + " plugin");
+                }
             }
         }
         classLoader = new PluginClassLoader();
