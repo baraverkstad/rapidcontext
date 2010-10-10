@@ -36,7 +36,7 @@ public abstract class DynamicObject {
      * The dictionary containing the serializable data for this
      * object.
      */
-    public Dict dict = new Dict();
+    public Dict dict = null;
 
     /**
      * Creates a new dynamic object. This constructor is used to
@@ -45,7 +45,33 @@ public abstract class DynamicObject {
      * @param type           the type name
      */
     protected DynamicObject(String type) {
-        dict.add(KEY_TYPE, type);
+        this.dict = new Dict();
+        this.dict.add(KEY_TYPE, type);
+    }
+
+    /**
+     * Creates a new dynamic object from a serialized representation.
+     * The key-value pairs from the specified dictionary will be
+     * copied (shallow copy) into this object dictionary. Only
+     * subclasses wishing to provide unserialization support should
+     * call this constructor.
+     *
+     * @param type           the type name
+     * @param dict           the serialized representation
+     */
+    protected DynamicObject(String type, Dict dict) {
+        this.dict = new Dict(dict.size() + 1);
+        this.dict.add(KEY_TYPE, type);
+        this.dict.setAll(dict);
+    }
+
+    /**
+     * Returns the object type name.
+     *
+     * @return the object type name
+     */
+    public String type() {
+        return dict.getString(KEY_TYPE, "");
     }
 
     /**
