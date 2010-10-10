@@ -17,12 +17,14 @@ package org.rapidcontext.app.plugin;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Constructor;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import org.apache.commons.lang.ClassUtils;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.FileStorage;
@@ -308,12 +310,12 @@ public class PluginManager {
      * @throws PluginException if the plug-in loading failed
      */
     public void load(String pluginId) throws PluginException {
-        Plugin  plugin;
-        Dict    dict;
-        String  className;
-        Class   cls;
-        Object  obj;
-        String  msg;
+        Plugin       plugin;
+        Dict         dict;
+        String       className;
+        Class        cls;
+        Constructor  constr;
+        String       msg;
 
         // Load plug-in configuration
         if (DEFAULT_PLUGIN.equals(pluginId) || LOCAL_PLUGIN.equals(pluginId)) {
@@ -338,7 +340,7 @@ public class PluginManager {
         classLoader.addPluginJars(new File(this.pluginDir, pluginId));
         className = dict.getString("className", null);
         if (className == null || className.trim().length() <= 0) {
-            plugin = new Plugin();
+            plugin = new Plugin(dict);
         } else {
             try {
                 cls = classLoader.loadClass(className);
@@ -348,26 +350,31 @@ public class PluginManager {
                 LOG.log(Level.WARNING, msg, e);
                 throw new PluginException(msg + ": " + e.getMessage());
             }
+            if (!ClassUtils.getAllSuperclasses(cls).contains(Plugin.class)) {
+                msg = pluginId + " plugin class " + className +
+                      " isn't a subclass of the Plugin class";
+                LOG.warning(msg);
+                throw new PluginException(msg);                
+            }
             try {
-                obj = cls.newInstance();
+                constr = cls.getConstructor(new Class[] { Dict.class});
+            } catch (Throwable e) {
+                msg = pluginId + " plugin class " + className +
+                      " missing constructor with valid signature";
+                LOG.log(Level.WARNING, msg, e);
+                throw new PluginException(msg + ": " + e.getMessage());
+            }
+            try {
+                plugin = (Plugin) constr.newInstance(new Object[] { dict });
             } catch (Throwable e) {
                 msg = "couldn't create " + pluginId + " plugin instance for " +
                       className;
                 LOG.log(Level.WARNING, msg, e);
                 throw new PluginException(msg + ": " + e.getMessage());
             }
-            if (obj instanceof Plugin) {
-                plugin = (Plugin) obj;
-            } else {
-                msg = pluginId + " plugin class " + className +
-                      " doesn't implement the Plugin interface";
-                LOG.warning(msg);
-                throw new PluginException(msg);
-            }
         }
 
         // Initialize plug-in instance
-        plugin.setData(dict);
         try {
             storage.store(pluginPath(pluginId), plugin);
             plugin.init();

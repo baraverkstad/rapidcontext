@@ -16,6 +16,7 @@
 package org.rapidcontext.app.plugin;
 
 import org.rapidcontext.core.data.Dict;
+import org.rapidcontext.core.data.DynamicObject;
 
 /**
  * The base plug-in class. A plug-in may extend this class in order
@@ -26,38 +27,17 @@ import org.rapidcontext.core.data.Dict;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class Plugin {
+public class Plugin extends DynamicObject {
 
     /**
-     * The plug-in configuration data.
-     */
-    private Dict data = null;
-
-    /**
-     * Creates a new plug-in instance.
-     */
-    public Plugin() {
-        // Nothing to do here
-    }
-
-    /**
-     * Returns the plug-in data object. This object contains all the
-     * required plug-in definition data.
+     * Creates a new plug-in instance with the specified plug-in
+     * configuration data. All subclasses must provide a constructor
+     * matching this signature.
      *
-     * @return the plug-in definition data
+     * @param dict           the plug-in configuration data
      */
-    public final Dict getData() {
-        return this.data;
-    }
-
-    /**
-     * Sets the plug-in data object. This object contains all the
-     * required plug-in definition data.
-     *
-     * @param data           the plug-in definition data
-     */
-    public final void setData(Dict data) {
-        this.data = data;
+    public Plugin(Dict dict) {
+        super("plugin", dict);
     }
 
     /**

@@ -1,6 +1,6 @@
 /**
  * RapidContext command-line plug-in <http://www.rapidcontext.com/>
- * Copyright (c) 2008-2009 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2008-2010 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,6 +18,7 @@ package org.rapidcontext.app.plugin.cmdline;
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.app.plugin.Plugin;
 import org.rapidcontext.app.plugin.PluginException;
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Library;
 import org.rapidcontext.core.proc.ProcedureException;
 
@@ -25,16 +26,19 @@ import org.rapidcontext.core.proc.ProcedureException;
  * The command-line plug-in. This class handles the initialization and
  * removal of command-line execution functionality to the application.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class CmdLinePlugin extends Plugin {
 
     /**
-     * Creates a new plug-in instance.
+     * Creates a new plug-in instance with the specified plug-in
+     * configuration data.
+     *
+     * @param dict           the plug-in configuration data
      */
-    public CmdLinePlugin() {
-        super();
+    public CmdLinePlugin(Dict dict) {
+        super(dict);
     }
 
     /**
