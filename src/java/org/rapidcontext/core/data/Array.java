@@ -405,7 +405,7 @@ public class Array {
         throws IndexOutOfBoundsException, UnsupportedOperationException {
 
         if (sealed) {
-            String msg = "cannot modify sealed data object";
+            String msg = "cannot modify sealed array";
             throw new UnsupportedOperationException(msg);
         }
         if (list == null) {
@@ -468,7 +468,7 @@ public class Array {
         int index = size();
 
         if (sealed) {
-            String msg = "cannot modify sealed data object";
+            String msg = "cannot modify sealed array";
             throw new UnsupportedOperationException(msg);
         }
         set(index, value);
@@ -511,8 +511,15 @@ public class Array {
      * Adds all entries from another array into this one.
      *
      * @param arr            the array to add elements from
+     *
+     * @throws UnsupportedOperationException if this object has been
+     *             sealed
      */
     public void addAll(Array arr) {
+        if (sealed) {
+            String msg = "cannot modify sealed array";
+            throw new UnsupportedOperationException(msg);
+        }
         if (arr != null && arr.size() > 0) {
             if (list == null) {
                 list = new ArrayList(arr.size());
@@ -536,7 +543,7 @@ public class Array {
      */
     public void remove(int index) throws UnsupportedOperationException {
         if (sealed) {
-            String msg = "cannot modify sealed data object";
+            String msg = "cannot modify sealed array";
             throw new UnsupportedOperationException(msg);
         }
         if (containsIndex(index)) {
@@ -681,7 +688,7 @@ public class Array {
         throws UnsupportedOperationException, ClassCastException {
 
         if (sealed) {
-            String msg = "cannot modify sealed data object";
+            String msg = "cannot modify sealed array";
             throw new UnsupportedOperationException(msg);
         }
         if (list != null) {
