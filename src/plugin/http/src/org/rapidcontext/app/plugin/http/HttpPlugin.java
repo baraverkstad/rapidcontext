@@ -17,8 +17,9 @@ package org.rapidcontext.app.plugin.http;
 
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.app.plugin.Plugin;
-import org.rapidcontext.app.plugin.PluginException;
 import org.rapidcontext.core.data.Dict;
+import org.rapidcontext.core.data.Storage;
+import org.rapidcontext.core.data.StorageException;
 import org.rapidcontext.core.env.AdapterException;
 import org.rapidcontext.core.env.AdapterRegistry;
 import org.rapidcontext.core.proc.Library;
@@ -44,37 +45,39 @@ public class HttpPlugin extends Plugin {
     }
 
     /**
-     * Initializes the plug-in. This will load any resources required
-     * by the plug-in and register classes and interfaces to expose
-     * the plug-in functionality to the application.
+     * Initializes the plug-in. This method should load or initialize
+     * any resources required by the plug-in, such as adding
+     * additional handlers to the provided in-memory storage.
      *
-     * @throws PluginException if the plug-in failed to initialize
-     *             properly
+     * @param storage        the storage the object is added to
+     *
+     * @throws StorageException if the initialization failed
      */
-    public void init() throws PluginException {
+    public void init(Storage storage) throws StorageException {
         Library  lib = ApplicationContext.getInstance().getLibrary();
 
         try {
             AdapterRegistry.register("http", new HttpAdapter());
         } catch (AdapterException e) {
-            throw new PluginException(e.getMessage());
+            throw new StorageException(e.getMessage());
         }
         try {
             Library.registerType("http.post", HttpPostProcedure.class);
             lib.addBuiltIn(new HttpPostBuiltInProcedure());
         } catch (ProcedureException e) {
-            throw new PluginException(e.getMessage());
+            throw new StorageException(e.getMessage());
         }
     }
 
     /**
-     * Uninitializes the plug-in. This will free any resources
-     * previously loaded by the plug-in.
+     * Uninitializes the plug-in. This method should free any
+     * resources previously loaded or stored by the plug-in.
      *
-     * @throws PluginException if the plug-in failed to uninitialize
-     *             properly
+     * @param storage        the storage the object is removed from
+     *
+     * @throws StorageException if the destruction failed
      */
-    public void destroy() throws PluginException {
+    public void destroy(Storage storage) throws StorageException {
         Library  lib = ApplicationContext.getInstance().getLibrary();
 
         lib.removeBuiltIn(HttpPostBuiltInProcedure.NAME);
@@ -82,7 +85,7 @@ public class HttpPlugin extends Plugin {
         try {
             AdapterRegistry.unregister("http");
         } catch (AdapterException e) {
-            throw new PluginException(e.getMessage());
+            throw new StorageException(e.getMessage());
         }
     }
 }

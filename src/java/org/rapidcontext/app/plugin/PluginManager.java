@@ -377,7 +377,6 @@ public class PluginManager {
         // Initialize plug-in instance
         try {
             storage.store(pluginPath(pluginId), plugin);
-            plugin.init();
         } catch (Throwable e) {
             msg = "plugin class " + className + " threw exception on init";
             LOG.log(Level.WARNING, msg, e);
@@ -417,23 +416,11 @@ public class PluginManager {
      * @throws PluginException if the plug-in unloading failed
      */
     public void unload(String pluginId) throws PluginException {
-        Plugin  plugin;
         String  msg;
 
         if (DEFAULT_PLUGIN.equals(pluginId) || LOCAL_PLUGIN.equals(pluginId)) {
             msg = "cannot unload default or local plug-ins";
             throw new PluginException(msg);
-        }
-        try {
-            plugin = (Plugin) storage.load(pluginPath(pluginId));
-            if (plugin != null) {
-                plugin.destroy();
-            } else {
-                LOG.severe("skipping destroy on plugin: " + pluginId);
-            }
-        } catch (StorageException e) {
-            msg = "failed memory storage lookup of " + pluginId + " plugin";
-            LOG.log(Level.SEVERE, msg, e);
         }
         try {
             storage.remove(pluginPath(pluginId));

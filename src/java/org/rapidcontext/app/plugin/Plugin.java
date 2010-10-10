@@ -17,6 +17,9 @@ package org.rapidcontext.app.plugin;
 
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.DynamicObject;
+import org.rapidcontext.core.data.Storable;
+import org.rapidcontext.core.data.Storage;
+import org.rapidcontext.core.data.StorageException;
 
 /**
  * The base plug-in class. A plug-in may extend this class in order
@@ -27,7 +30,7 @@ import org.rapidcontext.core.data.DynamicObject;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class Plugin extends DynamicObject {
+public class Plugin extends DynamicObject implements Storable {
 
     /**
      * Creates a new plug-in instance with the specified plug-in
@@ -41,25 +44,27 @@ public class Plugin extends DynamicObject {
     }
 
     /**
-     * Initializes the plug-in. This will load any resources required
-     * by the plug-in and register classes and interfaces to expose
-     * the plug-in functionality to the application.
+     * Initializes the plug-in. This method should load or initialize
+     * any resources required by the plug-in, such as adding
+     * additional handlers to the provided in-memory storage.
      *
-     * @throws PluginException if the plug-in failed to initialize
-     *             properly
+     * @param storage        the storage the object is added to
+     *
+     * @throws StorageException if the initialization failed
      */
-    public void init() throws PluginException {
-        // Nothing to do here
+    public void init(Storage storage) throws StorageException {
+        // Nothing done here by default
     }
 
     /**
-     * Uninitializes the plug-in. This will free any resources
-     * previously loaded by the plug-in.
+     * Uninitializes the plug-in. This method should free any
+     * resources previously loaded or stored by the plug-in.
      *
-     * @throws PluginException if the plug-in failed to uninitialize
-     *             properly
+     * @param storage        the storage the object is removed from
+     *
+     * @throws StorageException if the destruction failed
      */
-    public void destroy() throws PluginException {
-        // Nothing to do here
+    public void destroy(Storage storage) throws StorageException {
+        // Nothing done here by default
     }
 }
