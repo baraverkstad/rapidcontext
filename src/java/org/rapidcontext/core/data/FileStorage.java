@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Date;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang.StringUtils;
@@ -105,11 +106,10 @@ public class FileStorage extends Storage {
      *
      * @return the data read, or
      *         null if not found
-     *
-     * @throws StorageException if the data couldn't be read
      */
-    public Object load(Path path) throws StorageException {
-        File  file = locateFile(path);
+    public Object load(Path path) {
+        File    file = locateFile(path);
+        String  msg;
 
         if (file == null) {
             // TODO: Replace this hack with a proper StorageIterator instead...
@@ -131,14 +131,13 @@ public class FileStorage extends Storage {
             try {
                 return PropertiesSerializer.read(file);
             } catch (FileNotFoundException e) {
-                String msg = "failed to find file " + file.toString();
-                LOG.warning(msg);
-                throw new StorageException(msg);
+                msg = "failed to find file " + file.toString();
+                LOG.log(Level.SEVERE, msg, e);
+                return null;
             } catch (IOException e) {
-                String msg = "failed to read file " + file.toString() +
-                             ": " + e.getMessage();
-                LOG.warning(msg);
-                throw new StorageException(msg);
+                msg = "failed to read file " + file.toString();
+                LOG.log(Level.SEVERE, msg, e);
+                return null;
             }
         } else {
             return file;
