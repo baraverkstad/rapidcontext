@@ -112,8 +112,7 @@ public class FileStorage extends Storage {
         String  msg;
 
         if (file == null) {
-            // TODO: Replace this hack with a proper StorageIterator instead...
-            return path.isIndex() ? new Index() : null;
+            return null;
         } else if (path.isIndex()) {
             Index idx = new Index();
             File[] files = file.listFiles();
