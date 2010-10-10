@@ -407,7 +407,7 @@ public class Dict {
         String  msg;
 
         if (sealed) {
-            msg = "cannot modify sealed data object";
+            msg = "cannot modify sealed dictionary";
             throw new UnsupportedOperationException(msg);
         }
         if (key == null || key.length() == 0) {
@@ -454,6 +454,26 @@ public class Dict {
         throws NullPointerException, UnsupportedOperationException {
 
         set(key, Integer.valueOf(value));
+    }
+
+    /**
+     * Modifies or defines all keys from another dictionary. If one
+     * of the keys already exists, it will be overwritten with the
+     * value from the specified dictionary.
+     *
+     * @param dict           the dictionary to copy from
+     *
+     * @throws UnsupportedOperationException if this object has been
+     *             sealed
+     */
+    public void setAll(Dict dict) {
+        if (dict != null && dict.size() > 0) {
+            Iterator iter = dict.map.keySet().iterator();
+            while (iter.hasNext()) {
+                String key = (String) iter.next();
+                set(key, dict.map.get(key));
+            }
+        }
     }
 
     /**
@@ -525,6 +545,27 @@ public class Dict {
     }
 
     /**
+     * Adds all key-value pairs from another dictionary to this one.
+     * If one of the keys are already in use, a new unique key will
+     * be generated instead. This will ensure that existing values
+     * will not be overwritten.
+     *
+     * @param dict           the dictionary to add from
+     *
+     * @throws UnsupportedOperationException if this object has been
+     *             sealed
+     */
+    public void addAll(Dict dict) {
+        if (dict != null && dict.size() > 0) {
+            Iterator iter = dict.map.keySet().iterator();
+            while (iter.hasNext()) {
+                String key = (String) iter.next();
+                add(key, dict.map.get(key));
+            }
+        }
+    }
+
+    /**
      * Deletes the specified dictionary key and its value.
      *
      * @param key            the dictionary key name
@@ -534,7 +575,7 @@ public class Dict {
      */
     public void remove(String key) throws UnsupportedOperationException {
         if (sealed) {
-            String msg = "cannot modify sealed data object";
+            String msg = "cannot modify sealed dictionary";
             throw new UnsupportedOperationException(msg);
         }
         if (map != null) {
