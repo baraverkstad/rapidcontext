@@ -16,6 +16,7 @@
 package org.rapidcontext.app.proc;
 
 import org.rapidcontext.app.ApplicationContext;
+import org.rapidcontext.app.plugin.Plugin;
 import org.rapidcontext.app.plugin.PluginManager;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
@@ -131,7 +132,7 @@ public class PluginListProcedure implements Procedure, Restricted {
                 dict = (Dict) storage.load(PluginManager.configPath(pluginId));
                 if (dict == null) {
                     dict = new Dict();
-                    dict.set("id", pluginId);
+                    dict.set(Plugin.KEY_ID, pluginId);
                 } else {
                     dict = dict.copy();
                 }

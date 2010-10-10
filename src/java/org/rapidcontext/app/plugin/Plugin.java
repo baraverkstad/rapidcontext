@@ -33,6 +33,16 @@ import org.rapidcontext.core.data.StorageException;
 public class Plugin extends DynamicObject implements Storable {
 
     /**
+     * The dictionary key for the unique plug-in identifier.
+     */
+    public static final String KEY_ID = "id";
+
+    /**
+     * The dictionary key for the optional plug-in class name.
+     */
+    public static final String KEY_CLASSNAME = "className";
+
+    /**
      * Creates a new plug-in instance with the specified plug-in
      * configuration data. All subclasses must provide a constructor
      * matching this signature.
@@ -41,6 +51,15 @@ public class Plugin extends DynamicObject implements Storable {
      */
     public Plugin(Dict dict) {
         super("plugin", dict);
+    }
+
+    /**
+     * Returns the unique plug-in identifier.
+     *
+     * @return the unique plug-in identifier
+     */
+    public String id() {
+        return dict.getString(KEY_ID, null);
     }
 
     /**
