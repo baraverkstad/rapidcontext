@@ -178,10 +178,9 @@ public class ApplicationContext {
      * and the environment configuration.
      */
     private void initAll() {
-        try {
-            config = (Dict) storage.load(PATH_CONFIG);
-        } catch (StorageException e) {
-            LOG.severe("failed to load application config: " + e.getMessage());
+        config = (Dict) storage.load(PATH_CONFIG);
+        if (config == null) {
+            LOG.severe("failed to load application config");
         }
         initLibrary();
         initPlugins();

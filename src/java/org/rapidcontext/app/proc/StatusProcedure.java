@@ -17,7 +17,6 @@ package org.rapidcontext.app.proc;
 
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.Path;
-import org.rapidcontext.core.data.StorageException;
 import org.rapidcontext.core.env.Environment;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
@@ -118,10 +117,9 @@ public class StatusProcedure implements Procedure, Restricted {
 
         Dict  res;
 
-        try {
-            res = (Dict) cx.getStorage().load(PATH_APP);
-        } catch (StorageException e) {
-            throw new ProcedureException(e.getMessage());
+        res = (Dict) cx.getStorage().load(PATH_APP);
+        if (res == null) {
+            return null;
         }
         res.set("environment", getEnvironmentData(cx.getEnvironment()));
         return res;

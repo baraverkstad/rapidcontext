@@ -101,16 +101,14 @@ public abstract class Storage extends DynamicObject {
     /**
      * Searches for an object at the specified location and returns
      * metadata about the object if found. The path may locate either
-     * an index or a specific object. 
+     * an index or a specific object.
      *
      * @param path           the storage location
      *
      * @return the metadata for the object, or
      *         null if not found
-     *
-     * @throws StorageException if the storage couldn't be accessed
      */
-    public abstract Metadata lookup(Path path) throws StorageException;
+    public abstract Metadata lookup(Path path);
 
     /**
      * Loads an object from the specified location. The path may
@@ -122,10 +120,8 @@ public abstract class Storage extends DynamicObject {
      *
      * @return the data read, or
      *         null if not found
-     *
-     * @throws StorageException if the data couldn't be read
      */
-    public abstract Object load(Path path) throws StorageException;
+    public abstract Object load(Path path);
 
     /**
      * Stores an object at the specified location. The path must

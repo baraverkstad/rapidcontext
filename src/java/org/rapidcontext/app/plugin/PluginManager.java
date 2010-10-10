@@ -173,14 +173,9 @@ public class PluginManager {
      *         false otherwise
      */
     public boolean isLoaded(String pluginId) {
-        try {
-            return storage.lookup(pluginPath(pluginId)) != null ||
-                   DEFAULT_PLUGIN.equals(pluginId) ||
-                   LOCAL_PLUGIN.equals(pluginId);
-        } catch (StorageException e) {
-            LOG.log(Level.SEVERE, "failed to search memory storage", e);
-            return false;
-        }
+        return storage.lookup(pluginPath(pluginId)) != null ||
+               DEFAULT_PLUGIN.equals(pluginId) ||
+               LOCAL_PLUGIN.equals(pluginId);
     }
 
     /**
@@ -446,15 +441,8 @@ public class PluginManager {
     public void unloadAll() {
         Array   ids;
         String  pluginId;
-        String  msg;
 
-        try {
-            ids = ((Index) storage.load(PATH_PLUGIN)).objects().copy();
-        } catch (StorageException e) {
-            msg = "failed lookup of loaded plugins";
-            LOG.log(Level.SEVERE, msg, e);
-            return;
-        }
+        ids = ((Index) storage.load(PATH_PLUGIN)).objects().copy();
         for (int i = 0; i < ids.size(); i++) {
             pluginId = ids.getString(i, null);
             try {

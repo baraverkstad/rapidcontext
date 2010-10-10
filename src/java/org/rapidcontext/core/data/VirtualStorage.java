@@ -278,10 +278,8 @@ public class VirtualStorage extends Storage {
      *
      * @return the metadata for the object, or
      *         null if not found
-     *
-     * @throws StorageException if the storage couldn't be accessed
      */
-    public Metadata lookup(Path path) throws StorageException {
+    public Metadata lookup(Path path) {
         Storage   storage = getParentStorage(path);
         Metadata  meta = null;
         Metadata  idx = null;
@@ -323,10 +321,8 @@ public class VirtualStorage extends Storage {
      *
      * @return the data read, or
      *         null if not found
-     *
-     * @throws StorageException if the data couldn't be read
      */
-    public Object load(Path path) throws StorageException {
+    public Object load(Path path) {
         Storage  storage = getParentStorage(path);
         Object   res;
         Index    idx = null;

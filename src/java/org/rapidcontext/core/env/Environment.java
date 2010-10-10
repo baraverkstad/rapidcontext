@@ -25,7 +25,6 @@ import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.Index;
 import org.rapidcontext.core.data.Path;
 import org.rapidcontext.core.data.Storage;
-import org.rapidcontext.core.data.StorageException;
 
 /**
  * An external connectivity environment. The environment contains a
@@ -86,25 +85,12 @@ public class Environment {
         String       poolName;
         String       str;
 
-        try {
-            idx = (Index) storage.load(PATH_ENV);
-        } catch (StorageException e) {
-            str = "failed to list environments: " + e.getMessage();
-            LOG.warning(str);
-            throw new EnvironmentException(str);
-        }
+        idx = (Index) storage.load(PATH_ENV);
         if (idx == null || idx.objects().size() <= 0) {
             return null;
         }
         name = idx.objects().getString(0, null);
-        try {
-            data = (Dict) storage.load(PATH_ENV.child(name, false));
-        } catch (StorageException e) {
-            str = "failed to read environment " + name + ": " +
-                  e.getMessage();
-            LOG.warning(str);
-            throw new EnvironmentException(str);
-        }
+        data = (Dict) storage.load(PATH_ENV.child(name, false));
         if (data.getString("name", null) == null) {
             str = "failed to find required environment property 'name'";
             LOG.warning(str);

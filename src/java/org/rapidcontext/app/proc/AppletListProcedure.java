@@ -15,13 +15,10 @@
 
 package org.rapidcontext.app.proc;
 
-import java.util.logging.Logger;
-
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Index;
 import org.rapidcontext.core.data.Path;
 import org.rapidcontext.core.data.Storage;
-import org.rapidcontext.core.data.StorageException;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
@@ -35,12 +32,6 @@ import org.rapidcontext.core.security.Restricted;
  * @version  1.0
  */
 public class AppletListProcedure implements Procedure, Restricted {
-
-    /**
-     * The class logger.
-     */
-    private static final Logger LOG =
-        Logger.getLogger(AppletListProcedure.class.getName());
 
     /**
      * The applet object storage path.
@@ -128,18 +119,12 @@ public class AppletListProcedure implements Procedure, Restricted {
         Array      list;
         String     name = null;
 
-        try {
-            list = ((Index) storage.load(PATH_APPLET)).objects();
-            for (int i = 0; i < list.size(); i++) {
-                name = list.getString(i, null);
-                list.set(i, storage.load(PATH_APPLET.child(name, false)));
-            }
-            list.sort("name");
-            return list;
-        } catch (StorageException e) {
-            LOG.warning("Failed to load applets:" + e.getMessage());
-            throw new ProcedureException("Failed to load applets:" +
-                                         e.getMessage());
+        list = ((Index) storage.load(PATH_APPLET)).objects();
+        for (int i = 0; i < list.size(); i++) {
+            name = list.getString(i, null);
+            list.set(i, storage.load(PATH_APPLET.child(name, false)));
         }
+        list.sort("name");
+        return list;
     }
 }

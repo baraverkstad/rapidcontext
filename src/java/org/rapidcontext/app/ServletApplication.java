@@ -36,7 +36,6 @@ import org.rapidcontext.core.data.Metadata;
 import org.rapidcontext.core.data.Path;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.HtmlSerializer;
-import org.rapidcontext.core.data.StorageException;
 import org.rapidcontext.core.data.XmlSerializer;
 import org.rapidcontext.core.js.JsSerializer;
 import org.rapidcontext.core.proc.ProcedureException;
@@ -325,11 +324,7 @@ public class ServletApplication extends HttpServlet {
         String   str;
 
         if (request.hasMethod("GET")) {
-            try {
-                file = (File) ctx.getStorage().load(new Path(PATH_FILES, path));
-            } catch (StorageException e) {
-                LOG.warning("failed to locate file in storage: " + e.getMessage());
-            }
+            file = (File) ctx.getStorage().load(new Path(PATH_FILES, path));
             if (file == null && path.startsWith("doc/")) {
                 // TODO: perhaps the docs should be in the data store?
                 file = new File(this.getBaseDir(), path);

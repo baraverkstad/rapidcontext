@@ -189,13 +189,7 @@ public class Library {
      */
     public String[] getProcedureNames() throws ProcedureException {
         LinkedHashSet set = new LinkedHashSet(builtIns.keySet());
-        Array arr;
-        try {
-            arr = ((Index) storage.load(PATH_PROC)).objects();
-        } catch (StorageException e) {
-            String msg = "failed to list procedures: " + e.getMessage();
-            throw new ProcedureException(msg);
-        }
+        Array arr = ((Index) storage.load(PATH_PROC)).objects();
         for (int i = 0; i < arr.size(); i++) {
             set.add(arr.getString(i, null));
         }
@@ -224,12 +218,7 @@ public class Library {
             return (Procedure) builtIns.get(name);
         }
         proc = (AddOnProcedure) cache.get(name);
-        try {
-            meta = storage.lookup(PATH_PROC.child(name, false));
-        } catch (StorageException e) {
-            String msg = "failed to lookup procedure data: " + e.getMessage();
-            throw new ProcedureException(msg);
-        }
+        meta = storage.lookup(PATH_PROC.child(name, false));
         if (meta == null) {
             throw new ProcedureException("no procedure '" + name + "' found");
         }
@@ -291,14 +280,9 @@ public class Library {
         Dict            data;
         String          msg;
 
-        try {
-            data = (Dict) storage.load(PATH_PROC.child(name, false));
-            if (data == null) {
-                msg = "no procedure '" + name + "' found";
-                throw new ProcedureException(msg);
-            }
-        } catch (StorageException e) {
-            msg = "failed to read procedure data: " + e.getMessage();
+        data = (Dict) storage.load(PATH_PROC.child(name, false));
+        if (data == null) {
+            msg = "no procedure '" + name + "' found";
             throw new ProcedureException(msg);
         }
         proc = createProcedure(data);
