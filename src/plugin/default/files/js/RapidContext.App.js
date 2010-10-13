@@ -551,51 +551,28 @@ RapidContext.App.loadXHR = function (url, params, options) {
  *         callback when the script has been loaded
  */
 RapidContext.App.loadScript = function (url) {
-    var stack = RapidContext.Util.stackTrace();
-    var d = new MochiKit.Async.Deferred();
-    var head = document.getElementsByTagName("head")[0];
-    var scripts = head.getElementsByTagName("script");
     var absoluteUrl = RapidContext.Util.resolveURI(url, window.location.href);
-    for (var i = 0; i < scripts.length; i++) {
-        if (scripts[i].src.indexOf(url) == 0 ||
-            scripts[i].src.indexOf(absoluteUrl) == 0) {
-            LOG.trace("Script already loaded, skipping", url);
-            d.callback();
-            return d;
-        }
+    var selector1 = 'script[src^="' + url + '"]';
+    var selector2 = 'script[src^="' + absoluteUrl + '"]';
+    var elems = MochiKit.Selector.findDocElements(selector1, selector2);
+    if (elems.length > 0) {
+        LOG.trace("Script already loaded, skipping", url);
+        var d = new MochiKit.Async.Deferred();
+        d.callback();
+        return d;
     }
-    var nonCachedUrl = RapidContext.App._nonCachedUrl(url);
-    var script = MochiKit.DOM.createDOM("script", { type: "text/javascript", src: nonCachedUrl });
-    script.onload = function () {
+    LOG.trace("Starting script loading", url);
+    var stack = RapidContext.Util.stackTrace();
+    var d = MochiKit.Async.loadScript(RapidContext.App._nonCachedUrl(url));
+    d.addCallback(function () {
         RapidContext.Util.injectStackTrace(stack);
         LOG.trace("Completed loading script", url);
-        script.onload = null;
-        script.onerror = null;
-        script.onreadystatechange = null;
-        d.callback();
-    };
-    script.onerror = function (msg) {
-        if (script.onerror != null) {
-            RapidContext.Util.injectStackTrace(stack);
-            LOG.warning("Failed loading script", url + ": " + msg);
-            script.onload = null;
-            script.onerror = null;
-            script.onreadystatechange = null;
-            msg = "Failed to load script at " + url + ": " + msg;
-            d.errback(new URIError(msg, url));
-        }
-    };
-    script.onreadystatechange = function () {
+    });
+    d.addErrback(function (e) {
         RapidContext.Util.injectStackTrace(stack);
-        LOG.trace("Script loading status", url + ": " + script.readyState);
-        if (script.readyState == "loaded" || script.readyState == "complete") {
-            script.onload();
-        } else {
-            MochiKit.Async.callLater(10, script.onerror, "Script loading timed out")
-        }
-    };
-    LOG.trace("Starting script loading", url);
-    head.appendChild(script);
+        LOG.warning("Failed loading script", url + ": " + e.message);
+        return e;
+    });
     RapidContext.App._addErrbackLogger(d);
     return d;
 };
