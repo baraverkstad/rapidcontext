@@ -810,6 +810,7 @@ RapidContext.Widget.Dialog.prototype._stopDrag = function (evt) {
  *            to an empty string
  * @param {String} [attrs.format] the field format string, defaults
  *            to "{:s}"
+ * @param {Function} [attrs.formatter] the value formatter function
  * @param {Number} [attrs.maxLength] the maximum data length,
  *            overflow will be displayed as a tooltip, defaults to
  *            -1 (unlimited)
@@ -842,6 +843,7 @@ RapidContext.Widget.Field = function (attrs) {
  * @param {String} [attrs.name] the field name
  * @param {String} [attrs.value] the field value
  * @param {String} [attrs.format] the field format string
+ * @param {Function} [attrs.formatter] the value formatter function
  * @param {Number} [attrs.maxLength] the maximum data length,
  *            overflow will be displayed as a tooltip
  *
@@ -850,19 +852,28 @@ RapidContext.Widget.Field = function (attrs) {
  */
 RapidContext.Widget.Field.prototype.setAttrs = function (attrs) {
     attrs = MochiKit.Base.update({}, attrs);
-    var locals = RapidContext.Util.mask(attrs, ["name", "value", "format", "maxLength"]);
+    var locals = RapidContext.Util.mask(attrs, ["name", "value", "format", "formatter", "maxLength"]);
     if (typeof(locals.name) != "undefined") {
         this.name = locals.name;
     }
     if (typeof(locals.format) != "undefined") {
         this.format = locals.format;
     }
+    if (typeof(locals.formatter) != "undefined") {
+        this.formatter = locals.formatter;
+    }
     if (typeof(locals.maxLength) != "undefined") {
         this.maxLength = parseInt(locals.maxLength);
     }
     if (typeof(locals.value) != "undefined") {
         var str = this.value = locals.value;
-        if (str == null || str === "") {
+        if (this.formatter) {
+            try {
+                str = this.formatter(str);
+            } catch (e) {
+                str = e.message;
+            }
+        } else if (str == null || str === "") {
             str = "";
         } else if (this.format) {
             str = MochiKit.Text.format(this.format, str);
