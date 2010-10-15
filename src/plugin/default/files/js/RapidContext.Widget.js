@@ -1548,6 +1548,10 @@ MochiKit.Base.update(RapidContext.Widget.Icon, {
     OK: { url: "ok.gif", tooltip: "OK" },
     /** The cancel icon definition. */
     CANCEL: { url: "cancel.gif", tooltip: "Cancel" },
+    /** The yes icon definition. */
+    YES: { url: "yes.gif", tooltip: "Yes" },
+    /** The no icon definition. */
+    NO: { url: "no.gif", tooltip: "No" },
     /** The help icon definition. */
     HELP: { url: "help.gif", tooltip: "Help" },
     /** The error icon definition. */
@@ -3107,6 +3111,8 @@ RapidContext.Widget.TableColumn.prototype._render = function (obj) {
     var value = obj[this.field];
     if (typeof(this.renderer) === "function") {
         this.renderer(td, value, obj.$data);
+    } else if (typeof(value) == "boolean") {
+        td.appendChild(RapidContext.Widget.Icon({ ref: value ? "YES" : "NO" }));
     } else {
         if (value == null || (typeof(value) == "number" && isNaN(value))) {
             value = "";
