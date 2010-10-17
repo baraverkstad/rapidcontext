@@ -290,6 +290,7 @@ RapidContext.App.stopApplet = function (applet) {
     for (var n in applet) {
         delete applet[n];
     }
+    MochiKit.Signal.disconnectAllTo(applet);
     return RapidContext.App._startAuto(false);
 };
 
