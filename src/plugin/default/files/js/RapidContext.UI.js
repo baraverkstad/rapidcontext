@@ -170,6 +170,7 @@ RapidContext.UI._buildUIElem = function (node, ids) {
  * @param {Icon} [reloadIcon] the reload icon, or null
  */
 RapidContext.UI.connectProc = function (proc, loadingIcon, reloadIcon) {
+    // TODO: error signal not automatically cleaned up on stop()...
     MochiKit.Signal.connect(proc, "onerror", RapidContext.UI, "showError");
     if (loadingIcon) {
         MochiKit.Signal.connect(proc, "oncall", loadingIcon, "show");
