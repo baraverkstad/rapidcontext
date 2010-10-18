@@ -108,7 +108,9 @@ AdminApplet.prototype.start = function () {
  * Stops the applet.
  */
 AdminApplet.prototype.stop = function () {
-    // Nothing to do here
+    for (var name in this.proc) {
+        MochiKit.Signal.disconnectAll(this.proc[name]);
+    }
 }
 
 /**
