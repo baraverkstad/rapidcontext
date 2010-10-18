@@ -77,6 +77,11 @@ public class Pool {
     private Dict params;
 
     /**
+     * The number of connections currently reserved from this pool.
+     */
+    private int reservedCount = 0;
+
+    /**
      * The adapter connection pool.
      */
     private GenericObjectPool pool = null;
@@ -171,6 +176,36 @@ public class Pool {
     }
 
     /**
+     * Returns the maximum number of connections of this pool.
+     *
+     * @return the maximum size of this pool, or
+     *         zero (0) if the pool has no maximum
+     */
+    public int getMaxSize() {
+        return (pool == null) ? 0 : pool.getMaxActive();
+    }
+
+    /**
+     * Returns the current number of connections in this pool.
+     *
+     * @return the current size of this pool, or
+     *         zero (0) if no connections are currently open
+     */
+    public int getCurrentSize() {
+        return reservedCount + ((pool == null) ? 0 : pool.getNumIdle());
+    }
+
+    /**
+     * Returns the current number of reserved (active) connections in
+     * this pool.
+     *
+     * @return the current reserved connection count
+     */
+    public int getActiveSize() {
+        return reservedCount;
+    }
+
+    /**
      * Reserves a connection from this pool. This will either create
      * a new connection or reserve an existing connection from the
      * pool. Any method reserving a connection from this method MUST
@@ -184,17 +219,21 @@ public class Pool {
      * @see #releaseConnection(AdapterConnection)
      */
     public AdapterConnection reserveConnection() throws AdapterException {
+        AdapterConnection  con;
+
         if (pool == null) {
-            return adapter.createConnection(params);
+            con = adapter.createConnection(params);
         } else {
             try {
-                return (AdapterConnection) pool.borrowObject();
+                con = (AdapterConnection) pool.borrowObject();
             } catch (AdapterException e) {
                 throw e;
             } catch (Exception e) {
                 throw new AdapterException(e.getMessage());
             }
         }
+        reservedCount++;
+        return con;
     }
 
     /**
@@ -206,6 +245,7 @@ public class Pool {
     public void releaseConnection(AdapterConnection con) {
         String  msg;
 
+        reservedCount--;
         if (pool == null) {
             try {
                 con.close();
