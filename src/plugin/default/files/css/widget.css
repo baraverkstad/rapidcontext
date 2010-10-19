@@ -134,6 +134,70 @@ a .widgetIcon {
 
 
 /**
+ * NavigationBar Style
+ */
+.widgetNavigationBar {
+    border: none;
+    font-size: 12px;
+    border-collapse: collapse;
+}
+.widgetNavigationBar td {
+    height: 26px;
+    padding: 5px 15px 0 15px;
+    font-weight: bold;
+}
+.widgetNavigationBar td.prev {
+    background: url(../images/backgrounds/navigation-bg-prev.gif) repeat-x;
+    cursor: pointer;
+}
+.widgetNavigationBar td.active {
+    background: url(../images/backgrounds/navigation-bg-active.gif) repeat-x;
+}
+.widgetNavigationBar td.next {
+    background: url(../images/backgrounds/navigation-bg-next.gif) repeat-x;
+}
+.widgetNavigationBar td.prev-prev,
+.widgetNavigationBar td.prev-active,
+.widgetNavigationBar td.prev-next,
+.widgetNavigationBar td.prev-end,
+.widgetNavigationBar td.active-prev,
+.widgetNavigationBar td.active-next,
+.widgetNavigationBar td.active-end,
+.widgetNavigationBar td.next-next,
+.widgetNavigationBar td.next-end {
+    width: 22px;
+    padding: 0;
+}
+.widgetNavigationBar td.prev-prev {
+    background: url(../images/backgrounds/navigation-prev-prev.gif) no-repeat;
+}
+.widgetNavigationBar td.prev-active {
+    background: url(../images/backgrounds/navigation-prev-active.gif) no-repeat;
+}
+.widgetNavigationBar td.prev-next {
+    background: url(../images/backgrounds/navigation-prev-next.gif) no-repeat;
+}
+.widgetNavigationBar td.prev-end {
+    background: url(../images/backgrounds/navigation-prev-end.gif) no-repeat;
+}
+.widgetNavigationBar td.active-prev {
+    background: url(../images/backgrounds/navigation-active-prev.gif) no-repeat;
+}
+.widgetNavigationBar td.active-next {
+    background: url(../images/backgrounds/navigation-active-next.gif) no-repeat;
+}
+.widgetNavigationBar td.active-end {
+    background: url(../images/backgrounds/navigation-active-end.gif) no-repeat;
+}
+.widgetNavigationBar td.next-next {
+    background: url(../images/backgrounds/navigation-next-next.gif) no-repeat;
+}
+.widgetNavigationBar td.next-end {
+    background: url(../images/backgrounds/navigation-next-end.gif) no-repeat;
+}
+
+
+/**
  * Overlay Style
  */
 .widgetOverlay {
