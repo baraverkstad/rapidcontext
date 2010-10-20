@@ -638,6 +638,7 @@ RapidContext.Widget.Dialog.prototype.show = function () {
         this.parentNode.appendChild(this._modalNode);
     }
     this.removeClass("widgetHidden");
+    this.moveTo(0, 0);
     var dim = MochiKit.Style.getElementDimensions(this);
     this.resizeTo(dim.w, dim.h);
     if (this.center) {
