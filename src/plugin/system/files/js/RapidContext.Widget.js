@@ -32,7 +32,7 @@ RapidContext.Widget = function () {
  *
  * @return {Number} the next number in the sequence
  */
-RapidContext.Widget._id = MochiKit.Base.counter();
+RapidContext.Widget._nextId = MochiKit.Base.counter();
 
 /**
  * Checks if the specified object is a widget. Any non-null object
@@ -222,6 +222,20 @@ RapidContext.Widget.emitSignal = function (node, sig/*, ...*/) {
 };
 
 /**
+ * Returns the unique identifier for this DOM node. If a node id has
+ * already been set, that id will be returned. Otherwise a new id
+ * will be generated and assigned to the widget DOM node.
+ *
+ * @return {String} the the unique DOM node identifier
+ */
+RapidContext.Widget.prototype.id = function () {
+    if (this.id == null) {
+        this.id = "widget" + RapidContext.Widget._nextId();
+    }
+    return this.id;
+};
+
+/**
  * The internal widget destructor function. This method should only
  * be called by destroyWidget() and may be overridden by subclasses.
  * By default this method does nothing.
@@ -366,7 +380,7 @@ RapidContext.Widget.prototype.hide = function () {
  * widget.animate({ effect: "Move", transition: "spring", y: 300 });
  */
 RapidContext.Widget.prototype.animate = function (opts) {
-    var queue = { scope: this._animQueueId(), position: "replace" };
+    var queue = { scope: this.id(), position: "replace" };
     opts = MochiKit.Base.updatetree({ queue: queue }, opts);
     if (typeof(opts.queue) == "string") {
         queue.position = opts.queue;
@@ -376,18 +390,6 @@ RapidContext.Widget.prototype.animate = function (opts) {
     if (typeof(func) == "function") {
         func.call(null, this, opts);
     }
-};
-
-/**
- * Returns the default visual effect queue identifier.
- *
- * @return {String} the the default queue identifier
- */
-RapidContext.Widget.prototype._animQueueId = function () {
-    if (this._queueId == null) {
-        this._queueId = this.id || "widget" + RapidContext.Widget._id();
-    }
-    return this._queueId;
 };
 
 /**
