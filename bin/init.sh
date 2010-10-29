@@ -40,7 +40,7 @@ COMMAND="$1"
 #
 cd `dirname $PROGRAM`/..
 BASEDIR=`pwd -P`
-FILEATTR=(`ls -l plugins/default/plugin.properties`)
+FILEATTR=(`ls -l plugins/system/plugin.properties`)
 USER=${FILEATTR[2]}
 GROUP=${FILEATTR[3]}
 VARDIR=$BASEDIR/var

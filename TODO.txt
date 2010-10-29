@@ -21,7 +21,6 @@ Known Issues
 
 Concern: Legacy Cleanup
 =======================
- * Rename "default" plug-in to "system"
  * Rename "applet" to "app" everywhere
  * Remove all old and deprecated API and widgets
  * Move RapidContext.Util into MochiKit 1.5 as much as possible

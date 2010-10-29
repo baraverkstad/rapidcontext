@@ -8,8 +8,8 @@
     <meta http-equiv="Content-Type" content="text/xhtml; charset=UTF-8" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
     <meta http-equiv="Content-Language" content="en" />
-    <link rel="icon" type="image/gif" href="../plugins/default/files/images/favicon.gif" />
-    <link rel="stylesheet" href="../plugins/default/files/css/style.css" type="text/css" />
+    <link rel="icon" type="image/gif" href="../plugins/system/files/images/favicon.gif" />
+    <link rel="stylesheet" href="../plugins/system/files/css/style.css" type="text/css" />
     <title>RapidContext :: Command-Line Plug-In</title>
   </head>
 
@@ -47,7 +47,7 @@ execution can easily be tested. Below follows some simple command examples
 (using a Unix or Cygwin environment):</p>
 
 <pre class="box code">PlugIn.CmdLine.Exec('dir', '', '')
-  <span class="comment">--> { exitValue: 0, output: 'cmdline default http jdbc ...' }</span>
+  <span class="comment">--> { exitValue: 0, output: 'cmdline http jdbc ...' }</span>
 
 PlugIn.CmdLine.Exec('test 0 -eq 1', '', '')
   <span class="comment">--> { exitValue: 1, output: '' }</span>

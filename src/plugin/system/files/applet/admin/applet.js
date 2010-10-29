@@ -156,7 +156,7 @@ AdminApplet.prototype._showPlugin = function () {
         this.ui.pluginLoad.show();
         this.ui.pluginUnload.hide();
     }
-    if (data.id === "default" || data.id === "local") {
+    if (data.id === "system" || data.id === "local") {
         this.ui.pluginUnload.hide();
     }
 }

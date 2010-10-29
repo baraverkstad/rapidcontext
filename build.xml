@@ -69,11 +69,11 @@ build.date=${build.date}
   </macrodef>
 
   <target name="compile-plugins">
+    <buildplugin id="system" />
+    <buildplugin id="local" />
     <buildplugin id="cmdline" />
-    <buildplugin id="default" />
     <buildplugin id="http" />
     <buildplugin id="jdbc" />
-    <buildplugin id="local" />
     <buildplugin id="test" />
   </target>
 
@@ -117,7 +117,7 @@ build.date=${build.date}
 
   <target name="doc-js">
     <property name="jsdoc.dir" value="${basedir}/tools/jsdoc-toolkit" />
-    <property name="js.dir" value="${basedir}/src/plugin/default/files/js" />
+    <property name="js.dir" value="${basedir}/src/plugin/system/files/js" />
     <java jar="${jsdoc.dir}/jsrun.jar" fork="true">
       <sysproperty key="jsdoc.dir" value="${jsdoc.dir}" />
       <arg value="${jsdoc.dir}/app/run.js" />

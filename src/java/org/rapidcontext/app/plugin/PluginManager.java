@@ -65,9 +65,9 @@ public class PluginManager {
     public static final Path PATH_PLUGIN = new Path("/plugin/");
 
     /**
-     * The identifier of the default plug-in.
+     * The identifier of the system plug-in.
      */
-    public static final String DEFAULT_PLUGIN = "default";
+    public static final String SYSTEM_PLUGIN = "system";
 
     /**
      * The identifier of the local plug-in.
@@ -151,7 +151,7 @@ public class PluginManager {
             }
         }
         try {
-            loadOverlay(DEFAULT_PLUGIN);
+            loadOverlay(SYSTEM_PLUGIN);
         } catch (PluginException ignore) {
             // Error already logged, ignored here
         }
@@ -172,7 +172,7 @@ public class PluginManager {
      */
     public boolean isLoaded(String pluginId) {
         return storage.lookup(pluginPath(pluginId)) != null ||
-               DEFAULT_PLUGIN.equals(pluginId) ||
+               SYSTEM_PLUGIN.equals(pluginId) ||
                LOCAL_PLUGIN.equals(pluginId);
     }
 
@@ -311,8 +311,8 @@ public class PluginManager {
         String       msg;
 
         // Load plug-in configuration
-        if (DEFAULT_PLUGIN.equals(pluginId) || LOCAL_PLUGIN.equals(pluginId)) {
-            msg = "cannot force loading of default or local plug-ins";
+        if (SYSTEM_PLUGIN.equals(pluginId) || LOCAL_PLUGIN.equals(pluginId)) {
+            msg = "cannot force loading of system or local plug-ins";
             throw new PluginException(msg);
         }
         try {
@@ -388,7 +388,7 @@ public class PluginManager {
      */
     private void loadOverlay(String pluginId) throws PluginException {
         boolean  readWrite = LOCAL_PLUGIN.equals(pluginId);
-        int      prio = DEFAULT_PLUGIN.equals(pluginId) ? 0 : 100;
+        int      prio = SYSTEM_PLUGIN.equals(pluginId) ? 0 : 100;
         String   msg;
 
         try {
@@ -411,8 +411,8 @@ public class PluginManager {
     public void unload(String pluginId) throws PluginException {
         String  msg;
 
-        if (DEFAULT_PLUGIN.equals(pluginId) || LOCAL_PLUGIN.equals(pluginId)) {
-            msg = "cannot unload default or local plug-ins";
+        if (SYSTEM_PLUGIN.equals(pluginId) || LOCAL_PLUGIN.equals(pluginId)) {
+            msg = "cannot unload system or local plug-ins";
             throw new PluginException(msg);
         }
         try {
