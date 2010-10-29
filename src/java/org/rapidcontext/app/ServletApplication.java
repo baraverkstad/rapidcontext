@@ -271,7 +271,7 @@ public class ServletApplication extends HttpServlet {
             str = "Basic authentication for user " + name;
             LOG.fine(ip(request) + "Received " + str);
             SecurityContext.authPassword(name, password);
-            LOG.info(ip(request) + "Valid " + str);
+            LOG.fine(ip(request) + "Valid " + str);
         } else {
             LOG.info(ip(request) + "Basic authentication invalid: " + str);
             throw new SecurityException("Invalid basic authentication");

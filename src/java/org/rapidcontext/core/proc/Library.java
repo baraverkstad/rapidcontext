@@ -105,7 +105,7 @@ public class Library {
             throw new ProcedureException(msg);
         }
         types.put(type, cls);
-        LOG.info("registered procedure type " + type +
+        LOG.fine("registered procedure type " + type +
                  " with class " + cls.getName());
     }
 
@@ -120,7 +120,7 @@ public class Library {
      */
     public static void unregisterType(String type) {
         types.remove(type);
-        LOG.info("unregistered procedure type " + type);
+        LOG.fine("unregistered procedure type " + type);
     }
 
     /**
