@@ -167,14 +167,14 @@ Concern: Data Storage
 
 Concern: Security & Authentication
 ==================================
- o Display logged in users
- o Enable forced logout of users (session termination)
- o Enforce permission control on any object type
- o Allow form-based login
- o Support anonymous usage if permitted by security settings
- o Allow persistent cookies with login information
- o Re-enable Windows NTLM login if possible
- o Support challenge-response authentication:
+ * Display logged in users
+ * Enable forced logout of users (session termination)
+ * Enforce permission control on any object type
+ * Allow form-based login
+ * Support anonymous usage if permitted by security settings
+ * Allow persistent cookies with login information
+ * Re-enable Windows NTLM login if possible
+ * Support challenge-response authentication:
     1. The client sends a challenge request to the server
     2. The server generates a random challenge (sequence of characters)
     3. The server uses the challenge as salt to re-hash the password
@@ -186,8 +186,26 @@ Concern: Security & Authentication
     9. The server can compare the value sent with its own result
 
 
+Concern: Widgets 2.0
+====================
+ * Modular JS file and widget registration
+ * Solution to CSS import issues:
+    o Importing CSS files/snipplets dynamically?
+    o Change to CSS via JS?
+    o Convert to LastCSS?
+ * Embed buildUI and XML serialization into widget base
+ * Investigate "onpropertychange" and similar for catching changes:
+    o Use single set() and get() methods for all attributes?
+    o Hide the two above via clever tricks?
+ * Proper event handling, based on MochiKit events:
+    o http://dean.edwards.name/weblog/2009/03/callbacks-vs-events/
+    o Use setTimeout or similar to handle errors?
+ * Icons as one big image map (using DIV instead of IMG)
+
+
 Concern: Data Mapping & Transformation
 ======================================
+ * Import jpath or similar XPath library
  * Declarative data transformations for procedures and JavaScript
  * Possibility to perform merge two data sources
     o Example: Join two arrays of objects on some identical keys
