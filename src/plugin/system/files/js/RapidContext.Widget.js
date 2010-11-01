@@ -228,7 +228,7 @@ RapidContext.Widget.emitSignal = function (node, sig/*, ...*/) {
  *
  * @return {String} the the unique DOM node identifier
  */
-RapidContext.Widget.prototype.id = function () {
+RapidContext.Widget.prototype.uid = function () {
     if (this.id == null) {
         this.id = "widget" + RapidContext.Widget._nextId();
     }
@@ -380,7 +380,7 @@ RapidContext.Widget.prototype.hide = function () {
  * widget.animate({ effect: "Move", transition: "spring", y: 300 });
  */
 RapidContext.Widget.prototype.animate = function (opts) {
-    var queue = { scope: this.id(), position: "replace" };
+    var queue = { scope: this.uid(), position: "replace" };
     opts = MochiKit.Base.updatetree({ queue: queue }, opts);
     if (typeof(opts.queue) == "string") {
         queue.position = opts.queue;
