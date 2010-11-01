@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.4: http://docutils.sourceforge.net/" />
+<meta name="generator" content="Docutils 0.7: http://docutils.sourceforge.net/" />
 <title></title>
 
 <link rel="stylesheet" href="../../../include/css/documentation.css" type="text/css" />
@@ -12,7 +12,7 @@
 <script type="text/javascript" src="../../js/toc.js"></script>
 </head>
 <body>
-<a href="http://mochikit.com"><img id="mainlink" src="../../../include/_img/g_logo_doc.gif" alt="MochiKit" /></a>
+<a href="http://mochikit.com"><img id="mainlink" src="../../../include/img/g_logo_doc.gif" alt="MochiKit" /></a>
 <a class='indexlink' href='index.html'>Back to docs index</a>
 <div class="document">
 <p>2009-XX-YY      v1.5</p>
@@ -29,7 +29,46 @@ via MochiKit.DOM.getElement.</li>
 rounding errors and other issues (#333).</li>
 <li>Fixed MochiKit.Style.getElementPosition when using a 0,0 relative
 position (#332).</li>
+<li>Fixed bug with empty iterators in MochiKit.Iter.chain (#2).</li>
+<li>Modified MochiKit.DateTime.toISOTime() to handle the previously
+undocumented <tt class="docutils literal">realISO</tt> argument correctly.</li>
 <li>Added new MochiKit.Text module to eventually replace MochiKit.Format.</li>
+<li>Added the MochiKit.Base.bool() function.</li>
+<li>Added MochiKit.Visual.Transitions.spring for creating &quot;springy&quot; effects</li>
+<li>Changed MochiKit.Visual to support specifying transitions a strings.</li>
+<li>Added new 'replace' queue position to MochiKit.Visual for cancelling
+existing effects instead of completing them (as 'break' does).</li>
+<li>Removed MochiKit.Visual.Color and getElementsComputedStyle compatibility
+aliases (obsolete since version 1.1, see #337).</li>
+<li>Added the MochiKit.Async.Deferred.prototype.setFinalizer() function.</li>
+<li>Added &quot;rowSpan&quot; attribute mapping in MochiKit.DOM for IE (#357).</li>
+<li>Added MochiKit.DOM.NBSP string constant (#246).</li>
+<li>Added the MochiKit.Signal.connectOnce() function.</li>
+<li>Added the MochiKit.Base.isValue() function.</li>
+<li>Added MochiKit.Async.loadScript() function.</li>
+<li>New optional error argument to Deferred.prototype.cancel().</li>
+<li>Improved speed of MochiKit.Selector by using querySelectorAll() if possible.</li>
+<li>Added MochiKit.Base.serializeJSON() support for toJSON() methods.
+Note that this affects Date object serialization is some browsers.</li>
+<li>Added state() method for MochiKit.Async.Deferred. Also clarified docs on
+available properties.</li>
+<li>Added MochiKit.DOM.IFRAME, LINK and SCRIPT functions.</li>
+<li>Removed MochiKit.Style dependency from MochiKit.Signal. This also subtly
+changes the mouse event coordinate values, but should be compatible.</li>
+<li>Added new MochiKit.Base.module() and moduleExport() functions.</li>
+</ul>
+<p>2009-XX-YY      v1.4.3 (bug fix release)</p>
+<ul class="simple">
+<li>Fixed MochiKit.Logging usage of map without a namespace (#338).</li>
+<li>Fixed MochiKit.Color.Color.prototype.isLight() and isDark() to not
+return constant false and true values (#341).</li>
+<li>Fixed incorrect z-index restore after MochiKit.DragAndDrop usage (#339).</li>
+<li>Fixed MochiKit.Async.wait() handling of missing optional value (#345).</li>
+<li>Fixed MochiKit.Signal.signal() re-entrancy locking when observers
+both disconnect other observers and signal new events (#346).</li>
+<li>Fixed possible exception throwing in MochiKit.Base.repr() (#353).</li>
+<li>Added MochiKit.Signal.Event.prototype.mouse() support for HTML5
+drag events (#354).</li>
 </ul>
 <p>2008-11-27      v1.4.2 (bug fix release)</p>
 <ul class="simple">
@@ -64,14 +103,14 @@ the source if they were previously bound.</li>
 <li>Fixed MochiKit.Signal.signal re-entrancy bug that could cause recently
 disconnected slots to get signaled.</li>
 <li>MochiKit.Base.evalJSON will now evaluate JSON that is wrapped in a
-<tt class="docutils literal"><span class="pre">/*</span> <span class="pre">comment</span> <span class="pre">block</span> <span class="pre">*/</span></tt>.</li>
+<tt class="docutils literal">/* comment block */</tt>.</li>
 <li>MochiKit.Color's HSV to RGB conversion code fixed to return the correct
 value (hsv.v for RGB values) in cases where saturation === 0.</li>
 <li>doXHR workaround for a Mozilla bug when calling XMLHttpRequest in certain
 situations. Always wraps call in a callLater(0, doXHR, url, opts).</li>
 <li>parseQueryString will now parse values with embedded &quot;=&quot;</li>
 <li>Workaround for a Safari DOM crash when using MochiKit.Iter.list.
-<a class="reference" href="http://bugs.webkit.org/show_bug.cgi?id=12191">http://bugs.webkit.org/show_bug.cgi?id=12191</a></li>
+<a class="reference external" href="http://bugs.webkit.org/show_bug.cgi?id=12191">http://bugs.webkit.org/show_bug.cgi?id=12191</a></li>
 <li>New removeNodeAttribute function in MochiKit.DOM.</li>
 <li>MochiKit.Async.doXHR and dependent functions now accept 201 CREATED and
 204 NO CONTENT as valid.</li>
@@ -212,7 +251,7 @@ compatibility</li>
 height of an element in the document</li>
 <li>MochiKit.DOM's initialization is now compatible with
 HTMLUnit + JWebUnit + Rhino</li>
-<li>MochiKit.LoggingPane will now re-use a <tt class="docutils literal"><span class="pre">_MochiKit_LoggingPane</span></tt> DIV element
+<li>MochiKit.LoggingPane will now re-use a <tt class="docutils literal">_MochiKit_LoggingPane</tt> DIV element
 currently in the document instead of always creating one.</li>
 <li>MochiKit.Base now has operator.mul</li>
 <li>MochiKit.DOM.formContents correctly handles unchecked checkboxes that have
