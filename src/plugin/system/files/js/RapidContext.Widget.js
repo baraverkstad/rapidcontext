@@ -1794,7 +1794,7 @@ RapidContext.Widget.Overlay.prototype.setAttrs = function (attrs) {
     if (typeof(locals.message) != "undefined") {
         this.message = locals.message;
     }
-    if (typeof(this.showLoading) != "undefined") {
+    if (this.showLoading) {
         var icon = new RapidContext.Widget.Icon({ ref: "LOADING_LARGE" });
         icon.setStyle({ "padding-right": "20px" });
     }
