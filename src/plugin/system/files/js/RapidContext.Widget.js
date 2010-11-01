@@ -229,7 +229,7 @@ RapidContext.Widget.emitSignal = function (node, sig/*, ...*/) {
  * @return {String} the the unique DOM node identifier
  */
 RapidContext.Widget.prototype.uid = function () {
-    if (this.id == null) {
+    if (!this.id) {
         this.id = "widget" + RapidContext.Widget._nextId();
     }
     return this.id;
