@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Simple init script for managing a Rapid Context server.
+# Simple init script for managing a RapidContext server.
 #
 # Install with symlink:
 #   ln -s /opt/rapidcontext/bin/init.sh /etc/init.d/rapidcontext
@@ -68,7 +68,7 @@ is_running() {
 # Starts the server if it isn't running
 #
 start() {
-    echo -n $"Starting Rapid Context... "
+    echo -n $"Starting RapidContext... "
     if is_running ; then
         echo "FAILED, process already running"
         return 1
@@ -95,7 +95,7 @@ start() {
 # Stops the server if it is running
 #
 stop() {
-    echo -n $"Stopping Rapid Context... "
+    echo -n $"Stopping RapidContext... "
     if is_running ; then
         PID=`cat $PIDFILE`
         kill $PID
@@ -128,7 +128,7 @@ stop() {
 # Checks the status of the server
 #
 status() {
-    echo -n $"Rapid Context... "
+    echo -n $"RapidContext... "
     if is_running ; then
         echo "RUNNING"
         return 0
