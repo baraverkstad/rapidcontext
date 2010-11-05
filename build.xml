@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<project name="rapidcontext" default="package">
+<project default="package">
 
 <!-- INITIALIZATION -->
-  <property name="build.name" value="${ant.project.name}" />
-  <property name="build.title" value="RapidContext" />
+  <property file="build.properties" />
   <tstamp>
     <format property="build.date" pattern="yyyy-MM-dd" />
   </tstamp>
   <property name="build.version" value="${DSTAMP}" />
-  <property name="build.package" value="org.rapidcontext" />
   <path id="build.classpath">
     <fileset dir="lib" includes="**/*.jar" />
   </path>
@@ -44,10 +42,11 @@
       <!-- TODO: Remove this hack once Java behaves properly -->
       <compilerarg value="-Xbootclasspath/p:${basedir}/lib/js.jar" />
     </javac>
-    <echo file="classes/org/rapidcontext/app/build.properties">
-build.version=${build.version}
-build.date=${build.date}
-    </echo>
+  	<copy file="build.properties" tofile="classes/org/rapidcontext/app/build.properties"/>
+  	<propertyfile file="classes/org/rapidcontext/app/build.properties">
+  	  <entry key="build.version" value="${build.version}"/>
+      <entry key="build.date" value="${build.date}"/>
+  	</propertyfile>
   </target>
 
   <macrodef name="buildplugin">
