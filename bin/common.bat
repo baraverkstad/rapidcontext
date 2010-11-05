@@ -3,7 +3,6 @@
 ::Backup environment vars
 set _JAVA_HOME=%JAVA_HOME%
 set _JAVA_OPTS=%JAVA_OPTS%
-set _CLASSPATH=%CLASSPATH%
 
 ::Check for existing JAVA_HOME
 if exist "%JAVA_HOME%\bin\java.exe" goto OPTIONS
@@ -31,13 +30,13 @@ if not exist "%JAVA_HOME%\bin\java.exe" goto ERROR
 :OPTIONS
 set JAVA_OPTS=-Xbootclasspath/p:lib/js.jar %JAVA_OPTS%
 echo %JAVA_OPTS% | find "DDEBUG" > reg1.txt
-if errorlevel 1 goto FIXCP
+if errorlevel 1 goto FINDJAR
 set JAVA_OPTS=%JAVA_OPTS% -Djava.util.logging.config.file=lib\debug.properties
 
-::Setup the classpath variable
-:FIXCP
+::Setup the JARFILE variable
+:FINDJAR
 del reg1.txt 2> nul
-for %%x in (lib\*.jar) do call bin\cpappend.bat %%~x
+for %%x in (lib\rapidcontext-*.jar) do set JARFILE=%%~x
 goto DONE
 
 :ERROR

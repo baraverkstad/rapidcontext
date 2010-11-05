@@ -3,8 +3,7 @@
 echo "Base Dir:  " `pwd`
 echo "JAVA:       $JAVA"
 echo "JAVA_OPTS:  $JAVA_OPTS"
-echo "CLASSPATH:  $CLASSPATH"
 echo
 mkdir -p var
 echo $$ > var/server.pid
-exec "$JAVA" $JAVA_OPTS org.rapidcontext.app.ServerApplication "$@"
+exec "$JAVA" $JAVA_OPTS -jar lib/rapidcontext-*.jar "$@"

@@ -19,14 +19,12 @@ if errorlevel 1 goto DONE
 echo Base Dir:   %CD%
 echo JAVA_HOME:  %JAVA_HOME%
 echo JAVA_OPTS:  %JAVA_OPTS%
-echo CLASSPATH:  %CLASSPATH%
 echo.
-start "RapidContext Server -- Close window to shutdown" /MIN "%JAVA_HOME%\bin\java.exe" %JAVA_OPTS% org.rapidcontext.app.ServerApplication %1 %2 %3 %4 %5 %6 %7 %8 %9
+start "RapidContext Server -- Close window to shutdown" /MIN "%JAVA_HOME%\bin\java.exe" %JAVA_OPTS% -jar %JARFILE% %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 ::Restore environment vars
 set JAVA_HOME=%_JAVA_HOME%
 set JAVA_OPTS=%_JAVA_OPTS%
-set CLASSPATH=%_CLASSPATH%
 
 ::Open web browser
 echo Waiting for RapidContext Server to start (in separate window)...
@@ -37,17 +35,14 @@ echo Launching web browser...
 for /f %%x in (var\server.port) do set PORT=%%x
 if "%PORT%" == "80" goto :NOPORT
 start http://localhost:%PORT%/
-goto CLEANUP
+goto DONE
 :NOPORT
 start http://localhost/
-goto CLEANUP
+goto DONE
 
 :ERRWIN9X
 del reg1.txt 2> nul
 echo ERROR: Windows 98 or previous is not supported.
 
-:CLEANUP
-set CLASSPATH=%_CLASSPATH%
-echo Done
-
 :DONE
+echo Done

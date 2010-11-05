@@ -75,6 +75,3 @@ case "$JAVA_OPTS" in
     ;;
 esac
 export JAVA_OPTS
-
-# Setup CLASSPATH variable
-export CLASSPATH=`find "lib" -name *.jar | xargs | sed -e "s/ /:/g"`
