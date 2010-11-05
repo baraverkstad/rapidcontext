@@ -11,6 +11,7 @@
   <path id="build.classpath">
     <fileset dir="lib" includes="**/*.jar" />
   </path>
+  <property name="build.sysclasspath" value="ignore" />
 
 
 <!-- COMPILATION TARGETS -->
