@@ -17,7 +17,17 @@
   <target name="compile"
           depends="compile-clean,compile-java,compile-plugins"
           description="Compiles the application source code">
+    <pathconvert property="manifest.classpath" pathsep=" " refid="build.classpath">
+      <mapper type="flatten"/>
+    </pathconvert>
     <jar jarfile="lib/${build.name}-${build.version}.jar">
+      <manifest>
+        <attribute name="Package-Title" value="${build.name}"/>
+        <attribute name="Package-Version" value="${build.version}"/>
+        <attribute name="Package-Date" value="${build.date}"/>
+        <attribute name="Class-Path" value="${manifest.classpath}"/>
+        <attribute name="Main-Class" value="${build.mainclass}"/>
+      </manifest>
       <fileset dir="classes" />
       <fileset dir="src/java" />
     </jar>
