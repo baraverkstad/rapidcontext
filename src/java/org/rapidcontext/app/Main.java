@@ -14,6 +14,7 @@
 
 package org.rapidcontext.app;
 
+import java.io.File;
 import java.io.PrintWriter;
 
 import org.apache.commons.cli.CommandLine;
@@ -74,6 +75,9 @@ public class Main {
         opt.setArgName("secs");
         options.addOption(opt);
         options.addOption("t", "trace", false, "Print detailed execution trace (script mode).");
+        opt = new Option("u", "user", true, "Authenticate as a another user (script mode).");
+        opt.setArgName("name");
+        options.addOption(opt);
         options.addOption(null, "stdin", false, "Read commands from stdin (script mode).");
         opt = new Option("f", "file", true, "Read commands from a file (script mode).");
         opt.setArgName("file");
@@ -82,8 +86,8 @@ public class Main {
         // Parse command-line arguments
         try {
             cli = new DefaultParser().parse(options, args);
-            if (cli.hasOption("h")) {
-                exitHelp(options, null);
+            if (cli.hasOption("help")) {
+                exit(options, null);
             }
             args = cli.getArgs();
             if (cli.hasOption("app")) {
@@ -98,7 +102,7 @@ public class Main {
                 runScript(cli, args, options);
             }
         } catch (ParseException e) {
-            exitHelp(options, e.getMessage());
+            exit(options, e.getMessage());
         }
     }
 
@@ -111,10 +115,10 @@ public class Main {
      */
     private static void runApp(CommandLine cli, String[] args, Options opts) {
         if (args.length > 0) {
-            exitHelp(opts, "No arguments supported for app launch mode.");
+            exit(opts, "No arguments supported for app launch mode.");
         }
         // TODO:
-        exitHelp(opts, "The app launch mode isn't implemented yet.");
+        exit(opts, "The app launch mode isn't implemented yet.");
     }
 
     /**
@@ -128,15 +132,15 @@ public class Main {
         int  port = 0;
 
         if (args.length > 0) {
-            exitHelp(opts, "No arguments supported for server launch mode.");
+            exit(opts, "No arguments supported for server launch mode.");
         }
         try {
-            port = Integer.parseInt(cli.getOptionValue("p", "0"));
+            port = Integer.parseInt(cli.getOptionValue("port", "0"));
         } catch (Exception e) {
-            exitHelp(opts, "Invalid port number: " + cli.getOptionValue("p"));
+            exit(opts, "Invalid port number: " + cli.getOptionValue("port"));
         }
         if (port < 0 || port > 65535) {
-            exitHelp(opts, "Invalid port number, must be between 0 and 65535");
+            exit(opts, "Invalid port number, must be between 0 and 65535");
         }
         ServerApplication.run(port);
     }
@@ -149,47 +153,52 @@ public class Main {
      * @param opts           the command-line options object
      */
     private static void runScript(CommandLine cli, String[] args, Options opts) {
-        //boolean  trace = cli.hasOption("t");
-        int      delay = 0;
+        ScriptApplication  app = new ScriptApplication();
 
-        if (cli.hasOption("d")) {
-            try {
-                delay = Integer.parseInt(cli.getOptionValue("d"));
-            } catch (Exception e) {
-                exitHelp(opts, "Invalid delay number: " + cli.getOptionValue("d"));
-            }
-            if (delay < 0 || delay > 3600) {
-                exitHelp(opts, "Invalid delay number, must be between 0 and 3600");
-            }
+        // TODO: fix app dir!
+        app.user = cli.getOptionValue("user", System.getProperty("user.name"));
+        try {
+            app.delay = Integer.parseInt(cli.getOptionValue("delay", "0"));
+        } catch (Exception e) {
+            exit(opts, "Invalid delay number: " + cli.getOptionValue("delay"));
         }
-        /*
-        cli.hasOption("stdin");
-        cli.hasOption("file");
-        if (args.length > 0) {
-            
-        }*/
-        // TODO:
-        exitHelp(opts, "The script launch mode isn't implemented yet.");
+        if (app.delay < 0 || app.delay > 3600) {
+            exit(opts, "Invalid delay number, must be between 0 and 3600");
+        }
+        app.trace = cli.hasOption("trace");
+        try {
+            if (cli.hasOption("stdin")) {
+                app.runStdin(args);
+            } else if (cli.hasOption("file")) {
+                app.runFile(args, new File(cli.getOptionValue("file")));
+            } else {
+                app.runSingle(args);
+            }
+        } catch (Exception e) {
+            exit(null, e.getMessage());
+        }
     }
 
     /**
-     * Exits the application with a help message and an optional
-     * error message. This method WILL NOT RETURN.
+     * Exits the application with optional help and/or error messages.
+     * This method WILL NOT RETURN.
      *
-     * @param options        the command-line options to print
-     * @param error          the error message
+     * @param options        the command-line options, or null
+     * @param error          the error message, or null
      */
-    private static void exitHelp(Options options, String error) {
+    private static void exit(Options options, String error) {
         PrintWriter    out = new PrintWriter(System.err);
         HelpFormatter  fmt = new HelpFormatter();
 
-        out.println(USAGE);
-        out.println();
-        out.println("Options:");
-        fmt.setOptionComparator(null);
-        fmt.printOptions(out, 74, options, 2, 3);
-        if (error != null && error.length() > 0) {
+        if (options != null) {
+            out.println(USAGE);
             out.println();
+            out.println("Options:");
+            fmt.setOptionComparator(null);
+            fmt.printOptions(out, 74, options, 2, 3);
+            out.println();
+        }
+        if (error != null && error.length() > 0) {
             out.println("ERROR:");
             out.print("    ");
             out.println(error);
