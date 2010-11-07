@@ -6,4 +6,4 @@ echo "JAVA_OPTS:  $JAVA_OPTS"
 echo
 mkdir -p var
 echo $$ > var/server.pid
-exec "$JAVA" $JAVA_OPTS -jar lib/rapidcontext-*.jar "$@"
+exec "$JAVA" $JAVA_OPTS -jar lib/rapidcontext-*.jar --server "$@"

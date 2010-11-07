@@ -50,13 +50,12 @@ public class ServerApplication {
     /**
      * Runs the stand-alone server application.
      *
-     * @param args           the command-line parameters
+     * @param port           the default port number
      */
-    public static void main(String[] args) {
+    public static void run(int port) {
         File     dir = findAppDir();
         Server   server;
         Context  root;
-        int      port;
 
         if (dir == null) {
             LOG.severe("Failed to locate application directory.");
@@ -64,7 +63,7 @@ public class ServerApplication {
         }
         dir = dir.getAbsoluteFile();
         ApplicationContext.init(dir);
-        server = new Server(findAvailablePort());
+        server = new Server(findAvailablePort(port));
         root = new Context(server, "/", Context.SESSIONS);
         root.setResourceBase(dir.toString());
         root.getSessionHandler().getSessionManager().setMaxInactiveInterval(240 * 60);
@@ -140,11 +139,16 @@ public class ServerApplication {
     /**
      * Searches for an available server port to use.
      *
+     * @param port           the initial port number to test
+     *
      * @return the suggested port number, or
      *         zero (0) if none of the suggestions worked
      */
-    private static int findAvailablePort() {
-        int port = ApplicationContext.getInstance().getConfig().getInt("port", 0);
+    private static int findAvailablePort(int port) {
+        if (port > 0 && isPortAvailable(port)) {
+            return port;
+        }
+        port = ApplicationContext.getInstance().getConfig().getInt("port", 0);
         if (port > 0 && isPortAvailable(port)) {
             return port;
         }

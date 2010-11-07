@@ -13,5 +13,6 @@
 	<classpathentry kind="lib" path="lib/commons-fileupload-1.2.1.jar"/>
 	<classpathentry kind="lib" path="lib/commons-lang-2.5.jar"/>
 	<classpathentry kind="lib" path="lib/commons-collections-3.2.1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-cli-1.2.patched.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

@@ -14,7 +14,7 @@ echo Base Dir:   %CD%
 echo JAVA_HOME:  %JAVA_HOME%
 echo JAVA_OPTS:  %JAVA_OPTS%
 echo.
-start "RapidContext Server -- Close window to shutdown" /MIN "%JAVA_HOME%\bin\java.exe" %JAVA_OPTS% -jar %JARFILE% %1 %2 %3 %4 %5 %6 %7 %8 %9
+start "RapidContext Server -- Close window to shutdown" /MIN "%JAVA_HOME%\bin\java.exe" %JAVA_OPTS% -jar %JARFILE% --server %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 ::Restore environment vars
 set JAVA_HOME=%_JAVA_HOME%
