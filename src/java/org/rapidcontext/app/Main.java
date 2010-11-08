@@ -24,6 +24,8 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.lang.SystemUtils;
+import org.rapidcontext.util.ClassLoaderUtil;
 
 /**
  * The application start point, handling command-line parsing and
@@ -129,20 +131,38 @@ public class Main {
      * @param opts           the command-line options object
      */
     private static void runServer(CommandLine cli, String[] args, Options opts) {
-        int  port = 0;
+        ServerApplication  app = new ServerApplication();
 
         if (args.length > 0) {
             exit(opts, "No arguments supported for server launch mode.");
         }
+        app.appDir = locateAppDir();
+        if (app.appDir == null) {
+            exit(opts, "Failed to locate application directory.");
+        }
         try {
-            port = Integer.parseInt(cli.getOptionValue("port", "0"));
+            app.port = Integer.parseInt(cli.getOptionValue("port", "0"));
         } catch (Exception e) {
             exit(opts, "Invalid port number: " + cli.getOptionValue("port"));
         }
-        if (port < 0 || port > 65535) {
+        if (app.port < 0 || app.port > 65535) {
             exit(opts, "Invalid port number, must be between 0 and 65535");
         }
-        ServerApplication.run(port);
+        try {
+            app.start();
+        } catch (Exception e) {
+            exit(null, e.getMessage());
+        }
+        System.out.println();
+        System.out.print("Server started on http://localhost");
+        if (app.port != 80) {
+            System.out.print(":");
+            System.out.print(app.port);
+        }
+        System.out.println("/");
+        System.out.println();
+        System.out.println("Press Ctrl-C to shutdown (or terminate process by other means).");
+        System.out.println();
     }
 
     /**
@@ -155,7 +175,7 @@ public class Main {
     private static void runScript(CommandLine cli, String[] args, Options opts) {
         ScriptApplication  app = new ScriptApplication();
 
-        // TODO: fix app dir!
+        app.appDir = locateAppDir();
         app.user = cli.getOptionValue("user", System.getProperty("user.name"));
         try {
             app.delay = Integer.parseInt(cli.getOptionValue("delay", "0"));
@@ -206,5 +226,60 @@ public class Main {
         }
         out.flush();
         System.exit(error == null ? 0 : 1);
+    }
+
+    /**
+     * Attempts to locate the application directory based on the
+     * current working directory and the class path.
+     *
+     * @return the application directory found, or
+     *         null otherwise
+     */
+    private static File locateAppDir() {
+        File[] dirs = { new File("."),
+                        SystemUtils.getUserDir(),
+                        ClassLoaderUtil.getLocation(ServerApplication.class) };
+
+        for (int i = 0; i < dirs.length; i++) {
+            File file = dirs[i];
+            for (int j = 0; file != null && j < 4; j++) {
+                if (isAppDir(file)) {
+                    return file;
+                }
+                file = file.getParentFile();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Checks if the specified file is the application directory.
+     *
+     * @param file           the file to check
+     *
+     * @return true if the file matches, or
+     *         false otherwise
+     */
+    private static boolean isAppDir(File file) {
+        return file != null &&
+               isDir(file, true) &&
+               isDir(new File(file, "plugins"), true) &&
+               isDir(new File(file, "doc"), false);
+    }
+
+    /**
+     * Checks if the specified file is a readable directory.
+     *
+     * @param file           the file to check
+     * @param write          the write check flag
+     *
+     * @return true if the file is a directory, or
+     *         false otherwise
+     */
+    private static boolean isDir(File file, boolean write) {
+        return file != null &&
+               file.isDirectory() &&
+               file.canRead() &&
+               (!write || file.canWrite());
     }
 }
