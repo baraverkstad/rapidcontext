@@ -25,6 +25,7 @@ import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.lang.SystemUtils;
+import org.rapidcontext.app.ui.ControlPanel;
 import org.rapidcontext.util.ClassLoaderUtil;
 
 /**
@@ -46,6 +47,12 @@ public class Main {
         "\n" +
         "Alternative [1] is assumed when no (other) arguments are used.\n" +
         "Alternative [3] is assumed when options or arguments are used.";
+
+    // Static initializer (fix for Mac UI)
+    static {
+        String str = "com.apple.mrj.application.apple.menu.about.name";
+        System.setProperty(str, "RapidContext");
+    }
 
     /**
      * Application entry point.
@@ -98,7 +105,7 @@ public class Main {
                 runServer(cli, args, options);
             } else if (cli.hasOption("script")) {
                 runScript(cli, args, options);
-            } else if (args.length == 0) {
+            } else if (args.length == 0 && !SystemUtils.isJavaAwtHeadless()) {
                 runApp(cli, args, options);
             } else {
                 runScript(cli, args, options);
@@ -116,11 +123,22 @@ public class Main {
      * @param opts           the command-line options object
      */
     private static void runApp(CommandLine cli, String[] args, Options opts) {
+        ServerApplication  app = new ServerApplication();
+        ControlPanel       panel;
+
         if (args.length > 0) {
             exit(opts, "No arguments supported for app launch mode.");
         }
-        // TODO:
-        exit(opts, "The app launch mode isn't implemented yet.");
+        if (SystemUtils.isJavaAwtHeadless()) {
+            exit(opts, "Cannot launch app without graphical display.");
+        }
+        app.appDir = locateAppDir();
+        if (app.appDir == null) {
+            exit(null, "Failed to locate application directory.");
+        }
+        panel = new ControlPanel(app);
+        panel.setVisible(true);
+        panel.start();
     }
 
     /**
@@ -136,17 +154,17 @@ public class Main {
         if (args.length > 0) {
             exit(opts, "No arguments supported for server launch mode.");
         }
-        app.appDir = locateAppDir();
-        if (app.appDir == null) {
-            exit(opts, "Failed to locate application directory.");
-        }
         try {
             app.port = Integer.parseInt(cli.getOptionValue("port", "0"));
         } catch (Exception e) {
             exit(opts, "Invalid port number: " + cli.getOptionValue("port"));
         }
         if (app.port < 0 || app.port > 65535) {
-            exit(opts, "Invalid port number, must be between 0 and 65535");
+            exit(opts, "Invalid port number, must be between 0 and 65535.");
+        }
+        app.appDir = locateAppDir();
+        if (app.appDir == null) {
+            exit(null, "Failed to locate application directory.");
         }
         try {
             app.start();
@@ -181,7 +199,7 @@ public class Main {
             exit(opts, "Invalid delay number: " + cli.getOptionValue("delay"));
         }
         if (app.delay < 0 || app.delay > 3600) {
-            exit(opts, "Invalid delay number, must be between 0 and 3600");
+            exit(opts, "Invalid delay number, must be between 0 and 3600.");
         }
         app.trace = cli.hasOption("trace");
         try {
@@ -189,6 +207,8 @@ public class Main {
                 app.runStdin(args);
             } else if (cli.hasOption("file")) {
                 app.runFile(args, new File(cli.getOptionValue("file")));
+            } else if (args.length <= 0) {
+                exit(opts, "No command specified for --script mode.");
             } else {
                 app.runSingle(args);
             }
