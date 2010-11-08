@@ -53,20 +53,21 @@ else
     fi
     JAVA=$JAVA_HOME/bin/java
 fi
-export JAVA
 
 # Setup JAVA_OPTS variable
 JAVA_OPTS="-Xbootclasspath/p:lib/js.jar $JAVA_OPTS"
 case "$JAVA_OPTS" in
-*-DDEBUG*)
+(*-DDEBUG*)
     JAVA_OPTS="$JAVA_OPTS -Djava.util.logging.config.file=lib/debug.properties"
     echo "Base Dir:  " `pwd`
     echo "JAVA:       $JAVA"
     echo "JAVA_OPTS:  $JAVA_OPTS"
     echo
     ;;
+(*)
+    JAVA_OPTS="$JAVA_OPTS -Djava.util.logging.config.file=lib/logging.properties"
+    ;;
 esac
-export JAVA_OPTS
 
 # Create PID file for server mode
 case "$@" in
