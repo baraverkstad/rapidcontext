@@ -153,14 +153,12 @@ public class Main {
         } catch (Exception e) {
             exit(null, e.getMessage());
         }
-        System.out.println();
-        System.out.print("Server started on http://localhost");
+        System.out.print("Server started -- http://localhost");
         if (app.port != 80) {
             System.out.print(":");
             System.out.print(app.port);
         }
         System.out.println("/");
-        System.out.println();
         System.out.println("Press Ctrl-C to shutdown (or terminate process by other means).");
         System.out.println();
     }
