@@ -34,3 +34,5 @@ syntax: regexp
 syntax: regexp
 ^src/plugin/jdbc/lib/jdbc-[0-9.]*\.jar$
 
+syntax: regexp
+^var/.*$
