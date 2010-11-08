@@ -3,7 +3,7 @@
 # Simple init script for managing a RapidContext server.
 #
 # Install with symlink:
-#   ln -s /opt/rapidcontext/bin/init.sh /etc/init.d/rapidcontext
+#   ln -s /opt/rapidcontext/bin/init /etc/init.d/rapidcontext
 #
 # The symlink created above is used to determine the location of
 # the server base directory. If installed some other way, make
@@ -78,7 +78,7 @@ start() {
         # rotate log file
         touch $LOGFILE
         chown -R $USER:$GROUP $VARDIR
-        su - $USER -c "$BASEDIR/bin/startserver.sh" >$LOGFILE 2>&1 &
+        su - $USER -c "$BASEDIR/bin/rapidcontext --server" >$LOGFILE 2>&1 &
         sleep 3
         if is_running; then
             echo "OK"

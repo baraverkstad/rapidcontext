@@ -53,11 +53,11 @@
       <!-- TODO: Remove this hack once Java behaves properly -->
       <compilerarg value="-Xbootclasspath/p:${basedir}/lib/js.jar" />
     </javac>
-  	<copy file="build.properties" tofile="classes/org/rapidcontext/app/build.properties"/>
-  	<propertyfile file="classes/org/rapidcontext/app/build.properties">
-  	  <entry key="build.version" value="${build.version}"/>
+    <copy file="build.properties" tofile="classes/org/rapidcontext/app/build.properties"/>
+    <propertyfile file="classes/org/rapidcontext/app/build.properties">
+      <entry key="build.version" value="${build.version}"/>
       <entry key="build.date" value="${build.date}"/>
-  	</propertyfile>
+    </propertyfile>
   </target>
 
   <macrodef name="buildplugin">
@@ -175,7 +175,8 @@
       <zipfileset dir="${basedir}"
                   prefix="${build.name}-${build.version}"
                   filemode="755">
-        <include name="bin/*.sh" />
+        <include name="bin/*" />
+        <exclude name="bin/*.bat" />
       </zipfileset>
       <zipfileset dir="${basedir}"
                   prefix="${build.name}-${build.version}">
