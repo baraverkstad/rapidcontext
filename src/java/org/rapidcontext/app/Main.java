@@ -52,6 +52,7 @@ public class Main {
     static {
         String str = "com.apple.mrj.application.apple.menu.about.name";
         System.setProperty(str, "RapidContext");
+        System.setProperty("apple.awt.brushMetalLook", "true");
     }
 
     /**
