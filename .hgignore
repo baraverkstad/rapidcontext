@@ -20,6 +20,8 @@ syntax: regexp
 ^rapidcontext-[0-9.]*\.zip$
 syntax: regexp
 ^rapidcontext\.war$
+syntax: regexp
+^RapidContext\.app/.*$
 
 syntax: regexp
 ^src/plugin/[a-z0-9_-]*/build\.number$
