@@ -15,11 +15,8 @@
 package org.rapidcontext.app;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
-import java.util.logging.Logger;
 
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.Context;
@@ -32,12 +29,6 @@ import org.mortbay.jetty.servlet.ServletHolder;
  * @version  1.0
  */
 public class ServerApplication {
-
-    /**
-     * The class logger.
-     */
-    private static final Logger LOG =
-        Logger.getLogger(ServerApplication.class.getName());
 
     /**
      * The array of default ports to attempt using.
@@ -139,7 +130,6 @@ public class ServerApplication {
         root.addServlet(new ServletHolder(new ServletApplication()), "/*");
         server.setStopAtShutdown(true);
         port = server.getConnectors()[0].getPort();
-        writePortFile(appDir, port);
         try {
             server.start();
         } catch (Exception e) {
@@ -159,28 +149,5 @@ public class ServerApplication {
             server.stop();
             server = null;
         }
-    }
-
-    /**
-     * Creates a file containing the current server port number.
-     *
-     * @param baseDir        the base directory
-     * @param port           the port number
-     */
-    private void writePortFile(File baseDir, int port) {
-        File         dir = new File(baseDir, "var");
-        File         file;
-        PrintWriter  os;
-
-        dir.mkdir();
-        file = new File(dir, "server.port");
-        try {
-            os = new PrintWriter(new FileWriter(file, false));
-            os.println(port);
-            os.close();
-        } catch (IOException e) {
-            LOG.severe("Failed to create " + file + ": " + e.getMessage());
-        }
-        file.deleteOnExit();
     }
 }

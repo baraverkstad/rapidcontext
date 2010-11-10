@@ -15,6 +15,8 @@
 package org.rapidcontext.app;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 
 import org.apache.commons.cli.CommandLine;
@@ -169,6 +171,7 @@ public class Main {
         }
         try {
             app.start();
+            writePortFile(app.appDir, app.port);
         } catch (Exception e) {
             exit(null, e.getMessage());
         }
@@ -300,5 +303,28 @@ public class Main {
                file.isDirectory() &&
                file.canRead() &&
                (!write || file.canWrite());
+    }
+
+    /**
+     * Creates a file containing the current server port number.
+     *
+     * @param baseDir        the base directory
+     * @param port           the port number
+     */
+    private static void writePortFile(File baseDir, int port) {
+        File         dir = new File(baseDir, "var");
+        File         file;
+        PrintWriter  os;
+
+        dir.mkdir();
+        file = new File(dir, "server.port");
+        try {
+            os = new PrintWriter(new FileWriter(file, false));
+            os.println(port);
+            os.close();
+            file.deleteOnExit();
+        } catch (IOException ignore) {
+            // Ignore errors writing port file
+        }
     }
 }
