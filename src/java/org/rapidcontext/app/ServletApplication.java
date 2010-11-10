@@ -103,9 +103,17 @@ public class ServletApplication extends HttpServlet {
     public void init() throws ServletException {
         super.init();
         ctx = ApplicationContext.init(getBaseDir());
-        tempDir = new File(getBaseDir(), "temp");
-        tempDir.mkdir();
-        tempDir.deleteOnExit();
+        tempDir = (File) getServletContext().getAttribute("javax.servlet.context.tempdir");
+        if (tempDir == null) {
+            try {
+                tempDir = File.createTempFile("rapidcontext", String.valueOf(System.currentTimeMillis()));
+                tempDir.delete();
+            } catch (IOException e) {
+                tempDir = new File(getBaseDir(), "temp");
+            }
+            tempDir.mkdir();
+            tempDir.deleteOnExit();
+        }
     }
 
     /**
