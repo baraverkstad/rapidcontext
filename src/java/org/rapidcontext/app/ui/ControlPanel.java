@@ -18,6 +18,7 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Menu;
 import java.awt.MenuBar;
@@ -31,6 +32,7 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -80,6 +82,11 @@ public class ControlPanel extends JFrame {
     protected JButton stopButton = new JButton("Stop");
 
     /**
+     * The application logotype image.
+     */
+    protected Image logotype = null;
+
+    /**
      * Creates a new control panel frame.
      *
      * @param server         the server to control
@@ -112,17 +119,27 @@ public class ControlPanel extends JFrame {
         try {
             // TODO: hardcoded
             File file = new File(server.appDir, "plugins/system/files/images/rapidcontext.png");
-            setIconImage(ImageIO.read(file));
+            logotype = ImageIO.read(file);
+            setIconImage(logotype);
             if (SystemUtils.IS_OS_MAC_OSX) {
-                MacApplication.get().setDockIconImage(ImageIO.read(file));
+                MacApplication.get().setDockIconImage(logotype);
             }
         } catch (Exception ignore) {
             // Again, we only do our best effort here
         }
 
+        // Add logotype
+        c = new GridBagConstraints();
+        c.gridheight = 3;
+        c.insets = new Insets(3, 3, 3, 3);
+        c.anchor = GridBagConstraints.NORTHWEST;
+        Image small = logotype.getScaledInstance(128, 128, Image.SCALE_SMOOTH);
+        getContentPane().add(new JLabel(new ImageIcon(small)), c);
+
         // Add link label
         c = new GridBagConstraints();
-        c.insets = new Insets(6, 10, 2, 10);
+        c.gridx = 1;
+        c.insets = new Insets(20, 10, 4, 10);
         c.anchor = GridBagConstraints.WEST;
         getContentPane().add(new JLabel("Server URL:"), c);
 
@@ -144,20 +161,21 @@ public class ControlPanel extends JFrame {
             }
         });
         c = new GridBagConstraints();
-        c.gridx = 1;
+        c.gridx = 2;
         c.weightx = 1.0;
         c.anchor = GridBagConstraints.WEST;
-        c.insets = new Insets(6, 0, 2, 10);
+        c.insets = new Insets(20, 0, 4, 10);
         getContentPane().add(linkButton, c);
 
         // Add status label
         c = new GridBagConstraints();
+        c.gridx = 1;
         c.gridy = 1;
         c.anchor = GridBagConstraints.WEST;
         c.insets = new Insets(0, 10, 6, 10);
         getContentPane().add(new JLabel("Status:"), c);
         c = new GridBagConstraints();
-        c.gridx = 1;
+        c.gridx = 2;
         c.gridy = 1;
         c.anchor = GridBagConstraints.WEST;
         c.insets = new Insets(0, 0, 6, 10);
@@ -170,6 +188,7 @@ public class ControlPanel extends JFrame {
             }
         });
         c = new GridBagConstraints();
+        c.gridx = 1;
         c.gridy = 2;
         getContentPane().add(startButton, c);
         stopButton.addActionListener(new ActionListener() {
@@ -178,13 +197,14 @@ public class ControlPanel extends JFrame {
             }
         });
         c = new GridBagConstraints();
+        c.gridx = 2;
         c.gridy = 2;
         getContentPane().add(stopButton, c);
 
         // Set size & position
         pack();
         bounds = this.getBounds();
-        bounds.width = 300;
+        bounds.width = 450;
         bounds.x = 100;
         bounds.y = 100;
         setBounds(bounds);
@@ -254,7 +274,7 @@ public class ControlPanel extends JFrame {
             statusLabel.setForeground(Color.GREEN.darker().darker());
         } else {
             statusLabel.setText("Not Running");
-            statusLabel.setForeground(Color.RED.darker().darker());
+            statusLabel.setForeground(Color.RED.darker());
         }
         startButton.setEnabled(!server.isRunning());
         stopButton.setEnabled(server.isRunning());
