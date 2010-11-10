@@ -180,8 +180,8 @@ public class ControlPanel extends JFrame {
         size = Toolkit.getDefaultToolkit().getScreenSize();
         bounds = this.getBounds();
         bounds.width = 300;
-        bounds.x = size.width - bounds.width - 100;
-        bounds.y = size.height - bounds.height - 100;
+        bounds.x = 100;
+        bounds.y = 100;
         setBounds(bounds);
     }
 
