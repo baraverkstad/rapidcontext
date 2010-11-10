@@ -27,10 +27,9 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
+import java.io.File;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -110,6 +109,16 @@ public class ControlPanel extends JFrame {
         setMenuBar(menuBar);
         initializeMenu();
         getContentPane().setLayout(new GridBagLayout());
+        try {
+            // TODO: hardcoded
+            File file = new File(server.appDir, "plugins/system/files/images/rapidcontext.png");
+            setIconImage(ImageIO.read(file));
+            if (SystemUtils.IS_OS_MAC_OSX) {
+                MacApplication.get().setDockIconImage(ImageIO.read(file));
+            }
+        } catch (Exception ignore) {
+            // Again, we only do our best effort here
+        }
 
         // Add link label
         c = new GridBagConstraints();
@@ -203,7 +212,11 @@ public class ControlPanel extends JFrame {
 
         // Fix Mac OS specific menus
         if (SystemUtils.IS_OS_MAC_OSX) {
-            new MacApplication();
+            try {
+                MacApplication.get().setPreferencesHandler(null);
+            } catch (Exception ignore) {
+                // Errors are ignored
+            }
         }
     }
 
@@ -269,112 +282,5 @@ public class ControlPanel extends JFrame {
             // Not much to be done
         }
         System.exit(0);
-    }
-
-
-    /**
-     * A Mac app helper class.
-     */
-    private class MacApplication implements InvocationHandler {
-
-        /**
-         * Creates a new Mac app helper.
-         */
-        public MacApplication() {
-            try {
-                Class cls = Class.forName("com.apple.eawt.Application");
-                Object app = call(cls, "getApplication");
-                Object handler = proxy("com.apple.eawt.AboutHandler");
-                call(app, "setAboutHandler", handler);
-                call(app, "setPreferencesHandler", null);
-            } catch (Exception e) {
-                System.err.println("Failed to initialize Mac OS Application:");
-                e.printStackTrace();
-            }
-        }
-
-        /**
-         * Finds a method with a specified name.
-         *
-         * @param cls            the class to search
-         * @param name           the method name (must be unique)
-         *
-         * @return the method found, or
-         *         null if not found
-         */
-        Method find(Class cls, String name) {
-            Method[]  methods = cls.getMethods();
-            for (int i = 0; i < methods.length; i++) {
-                if (methods[i].getName().equals(name)) {
-                    return methods[i];
-                }
-            }
-            return null;
-        }
-
-        /**
-         * Calls a static class method without arguments.
-         *
-         * @param cls            the class object
-         * @param name           the method name (must be unique)
-         *
-         * @return the call result, or
-         *         null if none was provided
-         *
-         * @throws Exception if a reflection error occurred
-         */
-        Object call(Class cls, String name) throws Exception {
-            return find(cls, name).invoke(null, new Object[] {});
-        }
-
-        /**
-         * Calls a method with a single argument.
-         *
-         * @param obj            the object instance
-         * @param name           the method name (must be unique)
-         * @param arg            the argument value
-         *
-         * @return the call result, or
-         *         null if none was provided
-         *
-         * @throws Exception if a reflection error occurred
-         */
-        Object call(Object obj, String name, Object arg) throws Exception {
-            return find(obj.getClass(), name).invoke(obj, new Object[] { arg });
-        }
-
-        /**
-         * Creates a proxy object for the specified class. The calls
-         * will be delegated to the local invoke() method.
-         *
-         * @param className      the interface class name
-         *
-         * @return the proxy object to use in reflection calls
-         *
-         * @throws ClassNotFoundException if the class couldn't be found
-         */
-        private Object proxy(String className) throws ClassNotFoundException {
-            ClassLoader loader = getClass().getClassLoader();
-            Class cls = Class.forName(className);
-            return Proxy.newProxyInstance(loader, new Class[] { cls }, this);
-        }
-
-        /**
-         * Handles calls on registered listener interfaces.
-         *
-         * @param p              the proxy object
-         * @param m              the method being called
-         * @param args           the call arguments
-         *
-         * @return the call response
-         *
-         * @throws Exception if an error occurred
-         */
-        public Object invoke(Object p, Method m, Object[] args) throws Exception {
-            if (m.getName().equals("handleAbout")) {
-                //frame.showAbout();
-            }
-            return null;
-        }
     }
 }
