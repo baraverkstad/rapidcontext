@@ -228,7 +228,7 @@
       </fileset>
     </copy>
     <chmod file="${build.title}.app/Contents/MacOS/start" perm="ugo+x" />
-  	<chmod file="${build.title}.app/Contents/Resources/bin/rapidcontext" perm="ugo+x" />
+    <chmod file="${build.title}.app/Contents/Resources/bin/rapidcontext" perm="ugo+x" />
   </target>
 
 </project>
