@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleName</key>
+    <string>@build.title@</string>
+    <key>CFBundleDisplayName</key>
+    <string>@build.title@</string>
+    <key>CFBundleIdentifier</key>
+    <string>@build.package@</string>
+    <key>CFBundleVersion</key>
+    <string>@build.version@</string>
+    <key>CFBundleShortVersionString</key>
+    <string>@build.version@</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleExecutable</key>
+    <string>start</string>
+    <key>CFBundleIconFile</key>
+    <string>rapidcontext.icns</string>
+</dict>
+</plist>

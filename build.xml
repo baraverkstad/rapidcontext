@@ -145,11 +145,17 @@
 
 <!-- PACKAGING TARGETS -->
   <target name="package"
-          depends="compile,doc"
+          depends="compile,doc,package-clean,package-war,package-zip,package-dmg"
           description="Builds and packages the application for distribution">
+  </target>
+
+  <target name="package-clean">
     <delete>
-      <fileset dir="." includes="${build.name}.war" />
-      <fileset dir="." includes="${build.name}-*.zip" />
+      <fileset dir=".">
+        <include name="${build.name}.war" />
+        <include name="${build.name}-*.zip" />
+        <include name="${build.title}.app" />
+      </fileset>
     </delete>
     <fixcrlf srcdir="." eol="unix" eof="remove" tab="remove">
       <include name="**/*.txt" />
@@ -162,6 +168,9 @@
       <include name="**/*.properties" />
       <exclude name="tools/**" />
     </fixcrlf>
+  </target>
+
+  <target name="package-war">
     <war destfile="${build.name}.war"
          webxml="src/web/WEB-INF/web.xml">
       <lib dir="lib">
@@ -171,6 +180,9 @@
       <zipfileset dir="doc" prefix="doc" />
       <zipfileset dir="plugins" prefix="plugins" />
     </war>
+  </target>
+
+  <target name="package-zip">
     <zip destfile="${build.name}-${build.version}.zip">
       <zipfileset dir="${basedir}"
                   prefix="${build.name}-${build.version}"
@@ -192,6 +204,31 @@
         <exclude name="src/plugin/**/classes/**" />
       </zipfileset>
     </zip>
+  </target>
+
+  <target name="package-dmg">
+    <mkdir dir="${build.title}.app" />
+    <copy todir="${build.title}.app">
+      <fileset dir="src/mac/app" excludes="**/*.plist"/>
+    </copy>
+    <copy todir="${build.title}.app">
+      <fileset dir="src/mac/app" includes="**/*.plist"/>
+      <filterset filtersfile="build.properties" />
+      <filterset>
+        <filter token="build.version" value="${build.version}"/>
+        <filter token="build.date" value="${build.date}"/>
+      </filterset>
+    </copy>
+    <copy todir="${build.title}.app/Contents/Resources">
+      <fileset dir=".">
+        <include name="bin/rapidcontext" />
+        <include name="doc/**" />
+        <include name="lib/**" />
+        <include name="plugins/**" />
+      </fileset>
+    </copy>
+    <chmod file="${build.title}.app/Contents/MacOS/start" perm="ugo+x" />
+  	<chmod file="${build.title}.app/Contents/Resources/bin/rapidcontext" perm="ugo+x" />
   </target>
 
 </project>
