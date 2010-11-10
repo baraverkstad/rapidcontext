@@ -16,7 +16,6 @@ package org.rapidcontext.app.ui;
 
 import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -25,7 +24,6 @@ import java.awt.MenuBar;
 import java.awt.MenuItem;
 import java.awt.MenuShortcut;
 import java.awt.Rectangle;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -97,7 +95,6 @@ public class ControlPanel extends JFrame {
      */
     private void initialize() {
         Rectangle           bounds = new Rectangle();
-        Dimension           size;
         GridBagConstraints  c;
 
         // Set system UI looks
@@ -177,7 +174,6 @@ public class ControlPanel extends JFrame {
 
         // Set size & position
         pack();
-        size = Toolkit.getDefaultToolkit().getScreenSize();
         bounds = this.getBounds();
         bounds.width = 300;
         bounds.x = 100;
