@@ -4,4 +4,4 @@
 #
 
 cd `dirname $0`/../Resources
-exec bin/rapidcontext --app
+exec bin/rapidcontext --app --local ~/Library/Application\ Support/RapidContext
