@@ -17,7 +17,7 @@ syntax: regexp
 ^plugin/.*$
 
 syntax: regexp
-^rapidcontext-[0-9.]*\.zip$
+^rapidcontext-[0-9.]*(-[a-zA-Z]+)?\.zip$
 syntax: regexp
 ^rapidcontext\.war$
 syntax: regexp
