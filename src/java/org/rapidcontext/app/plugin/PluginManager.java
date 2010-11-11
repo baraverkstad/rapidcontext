@@ -303,10 +303,12 @@ public class PluginManager {
                 msg = "missing plug-in identifier in plugin.properties";
                 throw new PluginException(msg);
             }
-            dir = new File(pluginDir, pluginId);
-            if (dir.exists()) {
+            if (isAvailable(pluginId)) {
                 unload(pluginId);
                 destroyStorage(pluginId);
+            }
+            dir = new File(pluginDir, pluginId);
+            if (dir.exists()) {
                 // TODO: perhaps backup the old directory instead?
                 FileUtil.delete(dir);
             }
