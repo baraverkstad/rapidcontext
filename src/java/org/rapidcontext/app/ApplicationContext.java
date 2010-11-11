@@ -166,7 +166,7 @@ public class ApplicationContext {
      * @param baseDir        the base application directory
      */
     private ApplicationContext(File baseDir) {
-        File pluginDir = new File(baseDir, "plugins");
+        File pluginDir = new File(baseDir, "plugin");
         this.storage = new VirtualStorage(Path.ROOT, true);
         this.pluginManager = new PluginManager(pluginDir, storage);
         this.library = new Library(this.storage);

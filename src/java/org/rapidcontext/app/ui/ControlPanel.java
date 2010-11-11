@@ -118,7 +118,7 @@ public class ControlPanel extends JFrame {
         getContentPane().setLayout(new GridBagLayout());
         try {
             // TODO: hardcoded
-            File file = new File(server.appDir, "plugins/system/files/images/rapidcontext.png");
+            File file = new File(server.appDir, "plugin/system/files/images/rapidcontext.png");
             logotype = ImageIO.read(file);
             setIconImage(logotype);
             if (SystemUtils.IS_OS_MAC_OSX) {

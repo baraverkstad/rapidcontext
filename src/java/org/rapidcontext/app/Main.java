@@ -285,7 +285,7 @@ public class Main {
     private static boolean isAppDir(File file) {
         return file != null &&
                isDir(file, true) &&
-               isDir(new File(file, "plugins"), true) &&
+               isDir(new File(file, "plugin"), true) &&
                isDir(new File(file, "doc"), false);
     }
 

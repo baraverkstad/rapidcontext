@@ -14,7 +14,7 @@ syntax: regexp
 ^lib/rapidcontext-[0-9.]*\.jar$
 
 syntax: regexp
-^plugins/.*$
+^plugin/.*$
 
 syntax: regexp
 ^rapidcontext-[0-9.]*\.zip$

@@ -70,9 +70,9 @@
       <ant dir="src/plugin/@{id}" antfile="../plugin-build.xml">
         <property name="java.class.path" value="${toString:plugin.classpath}" />
       </ant>
-      <delete dir="plugins/@{id}" quiet="true" />
-      <mkdir dir="plugins/@{id}" />
-      <unzip dest="plugins/@{id}">
+      <delete dir="plugin/@{id}" quiet="true" />
+      <mkdir dir="plugin/@{id}" />
+      <unzip dest="plugin/@{id}">
         <fileset dir="src/plugin/@{id}" includes="@{id}*.zip" />
       </unzip>
     </sequential>
@@ -178,7 +178,7 @@
         <exclude name="jetty-*.jar" />
       </lib>
       <zipfileset dir="doc" prefix="doc" />
-      <zipfileset dir="plugins" prefix="plugins" />
+      <zipfileset dir="plugin" prefix="plugin" />
     </war>
   </target>
 
@@ -197,7 +197,7 @@
         <include name="bin/*.bat" />
         <include name="*.war" />
         <include name="lib/**" />
-        <include name="plugins/**" />
+        <include name="plugin/**" />
         <include name="doc/**" />
         <include name="src/**" />
         <exclude name="src/plugin/**/build.number" />
@@ -224,7 +224,7 @@
         <include name="bin/rapidcontext" />
         <include name="doc/**" />
         <include name="lib/**" />
-        <include name="plugins/**" />
+        <include name="plugin/**" />
       </fileset>
     </copy>
     <chmod file="${build.title}.app/Contents/MacOS/start" perm="ugo+x" />
