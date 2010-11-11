@@ -103,7 +103,7 @@
 
   <target name="doc-license">
     <copy todir="doc">
-      <fileset dir=".">
+      <fileset dir="${basedir}">
         <include name="README.txt" />
         <include name="LICENSE.txt" />
       </fileset>
@@ -145,19 +145,19 @@
 
 <!-- PACKAGING TARGETS -->
   <target name="package"
-          depends="compile,doc,package-clean,package-war,package-zip,package-dmg"
+          depends="compile,doc,package-clean,package-war,package-zip,package-mac"
           description="Builds and packages the application for distribution">
   </target>
 
   <target name="package-clean">
     <delete>
-      <fileset dir=".">
+      <fileset dir="${basedir}">
         <include name="${build.name}.war" />
         <include name="${build.name}-*.zip" />
         <include name="${build.title}.app/**" />
       </fileset>
     </delete>
-    <fixcrlf srcdir="." eol="unix" eof="remove" tab="remove">
+    <fixcrlf srcdir="${basedir}" eol="unix" eof="remove" tab="remove">
       <include name="**/*.txt" />
       <include name="**/*.sh" />
       <include name="**/*.css" />
@@ -206,7 +206,7 @@
     </zip>
   </target>
 
-  <target name="package-dmg">
+  <target name="package-mac">
     <mkdir dir="${build.title}.app" />
     <copy todir="${build.title}.app">
       <fileset dir="src/mac/app" excludes="**/*.plist"/>
@@ -220,7 +220,7 @@
       </filterset>
     </copy>
     <copy todir="${build.title}.app/Contents/Resources">
-      <fileset dir=".">
+      <fileset dir="${basedir}">
         <include name="bin/rapidcontext" />
         <include name="doc/**" />
         <include name="lib/**" />
@@ -229,6 +229,17 @@
     </copy>
     <chmod file="${build.title}.app/Contents/MacOS/start" perm="ugo+x" />
     <chmod file="${build.title}.app/Contents/Resources/bin/rapidcontext" perm="ugo+x" />
+    <zip destfile="${build.name}-${build.version}-mac.zip">
+      <zipfileset dir="${basedir}" filemode="755">
+        <include name="${build.title}.app/**/MacOS/*" />
+        <include name="${build.title}.app/**/bin/*" />
+      </zipfileset>
+      <zipfileset dir="${basedir}">
+        <include name="${build.title}.app/**" />
+        <exclude name="${build.title}.app/**/MacOS/*" />
+        <exclude name="${build.title}.app/**/bin/*" />
+      </zipfileset>
+    </zip>
   </target>
 
 </project>
