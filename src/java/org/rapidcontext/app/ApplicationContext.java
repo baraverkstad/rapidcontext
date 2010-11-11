@@ -123,17 +123,25 @@ public class ApplicationContext {
     private Map threadContext = Collections.synchronizedMap(new HashMap());
 
     /**
-     * Initializes the application context by loading the plug-ins, procedures
-     * and the environment configuration. If the context has already been
-     * initialized, no action is taken.
+     * Creates and initializes the application context. If the start
+     * flag is set, all plug-ins will be loaded along with procedures
+     * and the environment configuration. Otherwise only the storages
+     * will be initialized. Note that if the context has already been
+     * created, it will not be recreated.
      *
      * @param baseDir        the base application directory
+     * @param localDir       the local add-on directory
+     * @param start          the initialize plug-ins flag
      *
      * @return the application context created or found
      */
-    protected static synchronized ApplicationContext init(File baseDir) {
+    protected static synchronized ApplicationContext init(File baseDir,
+                                                          File localDir,
+                                                          boolean start) {
         if (instance == null) {
-            instance = new ApplicationContext(baseDir);
+            instance = new ApplicationContext(baseDir, localDir);
+        }
+        if (start) {
             instance.initAll();
         }
         return instance;
@@ -164,13 +172,18 @@ public class ApplicationContext {
      * the instance created.
      *
      * @param baseDir        the base application directory
+     * @param localDir       the local add-on directory
      */
-    private ApplicationContext(File baseDir) {
-        File pluginDir = new File(baseDir, "plugin");
+    private ApplicationContext(File baseDir, File localDir) {
+        File builtinDir = new File(baseDir, "plugin");
+        File pluginDir = new File(localDir, "plugin");
         this.storage = new VirtualStorage(Path.ROOT, true);
-        this.pluginManager = new PluginManager(pluginDir, storage);
+        this.pluginManager = new PluginManager(builtinDir, pluginDir, storage);
         this.library = new Library(this.storage);
-        instance = this;
+        this.config = (Dict) storage.load(PATH_CONFIG);
+        if (this.config == null) {
+            LOG.severe("failed to load application config");
+        }
     }
 
     /**
@@ -178,10 +191,6 @@ public class ApplicationContext {
      * and the environment configuration.
      */
     private void initAll() {
-        config = (Dict) storage.load(PATH_CONFIG);
-        if (config == null) {
-            LOG.severe("failed to load application config");
-        }
         initLibrary();
         initPlugins();
         try {

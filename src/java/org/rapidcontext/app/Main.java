@@ -139,6 +139,7 @@ public class Main {
         if (app.appDir == null) {
             exit(null, "Failed to locate application directory.");
         }
+        app.localDir = app.appDir;
         panel = new ControlPanel(app);
         panel.setVisible(true);
         panel.start();
@@ -169,6 +170,7 @@ public class Main {
         if (app.appDir == null) {
             exit(null, "Failed to locate application directory.");
         }
+        app.localDir = app.appDir;
         try {
             app.start();
             writePortFile(app.appDir, app.port);
@@ -196,6 +198,10 @@ public class Main {
         ScriptApplication  app = new ScriptApplication();
 
         app.appDir = locateAppDir();
+        if (app.appDir == null) {
+            exit(null, "Failed to locate application directory.");
+        }
+        app.localDir = app.appDir;
         app.user = cli.getOptionValue("user", System.getProperty("user.name"));
         try {
             app.delay = Integer.parseInt(cli.getOptionValue("delay", "0"));

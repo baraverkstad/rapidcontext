@@ -75,6 +75,12 @@ public class PluginManager {
     public static final String LOCAL_PLUGIN = "local";
 
     /**
+     * The built-in plug-in directory. This is the base directory from
+     * which built-in plug-ins are loaded.
+     */
+    public File builtinDir = null;
+
+    /**
      * The plug-in directory. This is the base directory from which
      * plug-ins are loaded.
      */
@@ -128,10 +134,12 @@ public class PluginManager {
     /**
      * Creates a new plug-in storage.
      *
+     * @param builtinDir     the built-in plug-in directory
      * @param pluginDir      the base plug-in directory
      * @param storage        the storage to use for plug-ins
      */
-    public PluginManager(File pluginDir, VirtualStorage storage) {
+    public PluginManager(File builtinDir, File pluginDir, VirtualStorage storage) {
+        this.builtinDir = builtinDir;
         this.pluginDir = pluginDir;
         this.storage = storage;
         try {
@@ -140,16 +148,8 @@ public class PluginManager {
         } catch (StorageException e) {
             LOG.log(Level.SEVERE, "failed to create memory storage", e);
         }
-        File[] files = pluginDir.listFiles();
-        for (int i = 0; i < files.length; i++) {
-            if (files[i].isDirectory()) {
-                try {
-                    createStorage(files[i].getName());
-                } catch (PluginException ignore) {
-                    // Error already logged, ignored here
-                }
-            }
-        }
+        initStorages(pluginDir);
+        initStorages(builtinDir);
         try {
             loadOverlay(SYSTEM_PLUGIN);
         } catch (PluginException ignore) {
@@ -160,6 +160,41 @@ public class PluginManager {
         } catch (PluginException ignore) {
             // Error already logged, ignored here
         }
+    }
+
+    /**
+     * Initializes the plug-in storages found in a base plug-in
+     * directory. Any errors will be logged and ignored. If a storage
+     * has already been mounted (from another base directory), it
+     * will be omitted.
+     *
+     * @param baseDir        the base plug-in directory
+     */
+    private void initStorages(File baseDir) {
+        File[] files = baseDir.listFiles();
+        for (int i = 0; i < files.length; i++) {
+            String pluginId = files[i].getName();
+            if (files[i].isDirectory() && !isAvailable(pluginId)) {
+                try {
+                    createStorage(baseDir, pluginId);
+                } catch (PluginException ignore) {
+                    // Error already logged, ignored here
+                }
+            }
+        }
+    }
+
+    /**
+     * Checks if the specified plug-in is currently available, i.e.
+     * if it has been mounted to the plug-in storage.
+     *
+     * @param pluginId       the unique plug-in id
+     *
+     * @return true if the plug-in was available, or
+     *         false otherwise
+     */
+    public boolean isAvailable(String pluginId) {
+        return storage.lookup(storagePath(pluginId)) != null;
     }
 
     /**
@@ -181,15 +216,16 @@ public class PluginManager {
      * step when installing a plug-in, allowing access to the plug-in
      * files without overlaying then on the root index.
      *
+     * @param baseDir        the base plug-in directory
      * @param pluginId       the unique plug-in id
      *
      * @return the plug-in file storage created
      *
      * @throws PluginException if the plug-in had already been mounted
      */
-    private Storage createStorage(String pluginId) throws PluginException {
+    private Storage createStorage(File baseDir, String pluginId) throws PluginException {
         Path     path = storagePath(pluginId);
-        File     dir = new File(this.pluginDir, pluginId);
+        File     dir = new File(baseDir, pluginId);
         Storage  fs = new FileStorage(dir, path, false);
 
         try {
@@ -289,7 +325,7 @@ public class PluginManager {
                 }
             }
         }
-        createStorage(pluginId);
+        createStorage(pluginDir, pluginId);
         return pluginId;
     }
 
@@ -305,6 +341,7 @@ public class PluginManager {
     public void load(String pluginId) throws PluginException {
         Plugin       plugin;
         Dict         dict;
+        File         dir;
         String       className;
         Class        cls;
         Constructor  constr;
@@ -330,7 +367,11 @@ public class PluginManager {
         loadOverlay(pluginId);
 
         // Create plug-in instance
-        classLoader.addPluginJars(new File(this.pluginDir, pluginId));
+        dir = new File(this.pluginDir, pluginId);
+        if (!dir.isDirectory()) {
+            dir = new File(this.builtinDir, pluginId);
+        }
+        classLoader.addPluginJars(dir);
         className = dict.getString(Plugin.KEY_CLASSNAME, null);
         if (className == null || className.trim().length() <= 0) {
             plugin = new Plugin(dict);

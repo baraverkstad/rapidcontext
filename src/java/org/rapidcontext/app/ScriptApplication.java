@@ -38,10 +38,16 @@ import org.rapidcontext.core.security.SecurityContext;
 public class ScriptApplication {
 
     /**
-     * The base application directory. Default to the current
+     * The base application directory. Defaults to the current
      * directory.
      */
     public File appDir = new File(".");
+
+    /**
+     * The local add-on directory. Defaults to the current
+     * directory.
+     */
+    public File localDir = new File(".");
 
     /**
      * The user name used for authentication. Defaults to the
@@ -76,7 +82,7 @@ public class ScriptApplication {
     public void runSingle(String[] params) throws SecurityException {
         ApplicationContext  ctx;
 
-        ctx = ApplicationContext.init(appDir);
+        ctx = ApplicationContext.init(appDir, localDir, true);
         SecurityContext.auth(user);
         exec(ctx, new LinkedList(Arrays.asList(params)));
         ApplicationContext.destroy();
@@ -172,7 +178,7 @@ public class ScriptApplication {
         double              d;
         LinkedList          params;
 
-        ctx = ApplicationContext.init(appDir);
+        ctx = ApplicationContext.init(appDir, localDir, true);
         SecurityContext.auth(user);
         startTime = System.currentTimeMillis();
         while ((line = reader.readLine()) != null) {

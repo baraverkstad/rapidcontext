@@ -102,7 +102,7 @@ public class ServletApplication extends HttpServlet {
      */
     public void init() throws ServletException {
         super.init();
-        ctx = ApplicationContext.init(getBaseDir());
+        ctx = ApplicationContext.init(getBaseDir(), getBaseDir(), true);
         tempDir = (File) getServletContext().getAttribute("javax.servlet.context.tempdir");
         if (tempDir == null) {
             try {

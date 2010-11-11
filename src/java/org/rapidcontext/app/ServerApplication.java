@@ -36,10 +36,16 @@ public class ServerApplication {
     public static final int[] PORTS = { 80, 8080, 8180, 8081, 8082, 8888 };
 
     /**
-     * The base application directory. Default to the current
+     * The base application directory. Defaults to the current
      * directory.
      */
     public File appDir = new File(".");
+
+    /**
+     * The local add-on directory. Defaults to the current
+     * directory.
+     */
+    public File localDir = new File(".");
 
     /**
      * The port number to use.
@@ -122,7 +128,7 @@ public class ServerApplication {
             stop();
         }
         appDir = appDir.getAbsoluteFile();
-        ApplicationContext.init(appDir);
+        ApplicationContext.init(appDir, localDir, false);
         server = new Server(findAvailablePort(port));
         Context root = new Context(server, "/", Context.SESSIONS);
         root.setResourceBase(appDir.toString());
