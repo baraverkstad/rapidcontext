@@ -154,7 +154,7 @@
       <fileset dir=".">
         <include name="${build.name}.war" />
         <include name="${build.name}-*.zip" />
-        <include name="${build.title}.app" />
+        <include name="${build.title}.app/**" />
       </fileset>
     </delete>
     <fixcrlf srcdir="." eol="unix" eof="remove" tab="remove">
