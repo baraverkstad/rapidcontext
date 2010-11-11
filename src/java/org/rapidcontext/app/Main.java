@@ -80,7 +80,10 @@ public class Main {
 
         // Create other command-line options
         options.addOption("h", "help", false, "Displays this help message,");
-        opt = new Option("p", "port", true, "Use a specified port number (server mode).");
+        opt = new Option("l", "local", true, "Use a specified local app directory.");
+        opt.setArgName("dir");
+        options.addOption(opt);
+        opt = new Option("p", "port", true, "Use a specified port number (non-script mode).");
         opt.setArgName("number");
         options.addOption(opt);
         opt = new Option("d", "delay", true, "Add a delay after each command (script mode).");
@@ -126,7 +129,7 @@ public class Main {
      * @param opts           the command-line options object
      */
     private static void runApp(CommandLine cli, String[] args, Options opts) {
-        ServerApplication  app = new ServerApplication();
+        ServerApplication  app = createServer(cli, opts);
         ControlPanel       panel;
 
         if (args.length > 0) {
@@ -135,11 +138,6 @@ public class Main {
         if (SystemUtils.isJavaAwtHeadless()) {
             exit(opts, "Cannot launch app without graphical display.");
         }
-        app.appDir = locateAppDir();
-        if (app.appDir == null) {
-            exit(null, "Failed to locate application directory.");
-        }
-        app.localDir = app.appDir;
         panel = new ControlPanel(app);
         panel.setVisible(true);
         panel.start();
@@ -153,24 +151,11 @@ public class Main {
      * @param opts           the command-line options object
      */
     private static void runServer(CommandLine cli, String[] args, Options opts) {
-        ServerApplication  app = new ServerApplication();
+        ServerApplication  app = createServer(cli, opts);
 
         if (args.length > 0) {
             exit(opts, "No arguments supported for server launch mode.");
         }
-        try {
-            app.port = Integer.parseInt(cli.getOptionValue("port", "0"));
-        } catch (Exception e) {
-            exit(opts, "Invalid port number: " + cli.getOptionValue("port"));
-        }
-        if (app.port < 0 || app.port > 65535) {
-            exit(opts, "Invalid port number, must be between 0 and 65535.");
-        }
-        app.appDir = locateAppDir();
-        if (app.appDir == null) {
-            exit(null, "Failed to locate application directory.");
-        }
-        app.localDir = app.appDir;
         try {
             app.start();
             writePortFile(app.appDir, app.port);
@@ -196,12 +181,10 @@ public class Main {
      */
     private static void runScript(CommandLine cli, String[] args, Options opts) {
         ScriptApplication  app = new ScriptApplication();
+        ServerApplication  server = createServer(cli, opts);
 
-        app.appDir = locateAppDir();
-        if (app.appDir == null) {
-            exit(null, "Failed to locate application directory.");
-        }
-        app.localDir = app.appDir;
+        app.appDir = server.appDir;
+        app.localDir = server.localDir;
         app.user = cli.getOptionValue("user", System.getProperty("user.name"));
         try {
             app.delay = Integer.parseInt(cli.getOptionValue("delay", "0"));
@@ -225,6 +208,44 @@ public class Main {
         } catch (Exception e) {
             exit(null, e.getMessage());
         }
+    }
+
+    /**
+     * Creates a server application instance from the command-line
+     * arguments.
+     *
+     * @param cli            the parsed command line
+     * @param opts           the command-line options object
+     *
+     * @return the server application created (not started)
+     */
+    private static ServerApplication createServer(CommandLine cli, Options opts) {
+        ServerApplication  app = new ServerApplication();
+
+        try {
+            app.port = Integer.parseInt(cli.getOptionValue("port", "0"));
+        } catch (Exception e) {
+            exit(opts, "Invalid port number: " + cli.getOptionValue("port"));
+        }
+        if (app.port < 0 || app.port > 65535) {
+            exit(opts, "Invalid port number, must be between 0 and 65535.");
+        }
+        app.appDir = locateAppDir();
+        if (app.appDir == null) {
+            exit(null, "Failed to locate application directory.");
+        }
+        app.localDir = app.appDir;
+        if (cli.hasOption("local")) {
+            app.localDir = new File(cli.getOptionValue("local"));
+            if (!app.localDir.exists()) {
+                app.localDir.mkdirs();
+            }
+            if (!isDir(app.localDir, true)) {
+                exit(null, "Cannot write to local directory: " + app.localDir);
+            }
+            new File(app.localDir, "plugin").mkdir();
+        }
+        return app;
     }
 
     /**
