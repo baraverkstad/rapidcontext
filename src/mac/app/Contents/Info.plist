@@ -17,6 +17,6 @@
     <key>CFBundleExecutable</key>
     <string>start</string>
     <key>CFBundleIconFile</key>
-    <string>rapidcontext.icns</string>
+    <string>logotype.icns</string>
 </dict>
 </plist>
