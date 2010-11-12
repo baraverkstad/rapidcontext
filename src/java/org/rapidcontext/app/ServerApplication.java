@@ -127,7 +127,6 @@ public class ServerApplication {
         if (isRunning()) {
             stop();
         }
-        appDir = appDir.getAbsoluteFile();
         ApplicationContext.init(appDir, localDir, false);
         server = new Server(findAvailablePort(port));
         Context root = new Context(server, "/", Context.SESSIONS);

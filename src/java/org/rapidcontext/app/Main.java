@@ -29,6 +29,7 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.lang.SystemUtils;
 import org.rapidcontext.app.ui.ControlPanel;
 import org.rapidcontext.util.ClassLoaderUtil;
+import org.rapidcontext.util.FileUtil;
 
 /**
  * The application start point, handling command-line parsing and
@@ -234,6 +235,7 @@ public class Main {
         if (app.appDir == null) {
             exit(null, "Failed to locate application directory.");
         }
+        app.appDir = app.appDir.getAbsoluteFile();
         app.localDir = app.appDir;
         if (cli.hasOption("local")) {
             app.localDir = new File(cli.getOptionValue("local"));
@@ -243,7 +245,12 @@ public class Main {
             if (!isDir(app.localDir, true)) {
                 exit(null, "Cannot write to local directory: " + app.localDir);
             }
-            new File(app.localDir, "plugin").mkdir();
+            app.localDir = app.localDir.getAbsoluteFile();
+            try {
+                setupLocalAppDir(app.appDir, app.localDir);
+            } catch (IOException e) {
+                exit(null, "Failed to setup local directory: " + e.getMessage());
+            }
         }
         return app;
     }
@@ -299,6 +306,27 @@ public class Main {
             }
         }
         return null;
+    }
+
+    /**
+     * Sets up the local application directory if it is different
+     * from the built-in application directory.
+     *
+     * @param appDir         the built-in application directory
+     * @param localDir       the local application directory
+     *
+     * @throws IOException if the local directory couldn't be created
+     */
+    private static void setupLocalAppDir(File appDir, File localDir)
+        throws IOException {
+
+        if (!appDir.equals(localDir)) {
+            appDir = new File(appDir, "plugin/local");
+            localDir = new File(localDir, "plugin/local");
+            if (!localDir.exists()) {
+                FileUtil.copy(appDir, localDir);
+            }
+        }
     }
 
     /**

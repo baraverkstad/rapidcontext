@@ -16,6 +16,7 @@
 package org.rapidcontext.util;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,6 +31,30 @@ import java.util.zip.ZipFile;
  * @version  1.0
  */
 public class FileUtil {
+
+    /**
+     * Copies a file or a directory. Directories are copied
+     * recursively and file modification dates are kept.
+     *
+     * @param src            the source file or directory
+     * @param dst            the destination file or directory
+     *
+     * @throws IOException if some file couldn't be copied
+     */
+    public static void copy(File src, File dst) throws IOException {
+        if (src.isDirectory()) {
+            dst.mkdirs();
+            File[] files = src.listFiles();
+            for (int i = 0; i < files.length; i++) {
+                copy(files[i], new File(dst, files[i].getName()));
+            }
+        } else {
+            writeStream(new FileInputStream(src), dst);
+            dst.setWritable(src.canWrite());
+            dst.setExecutable(src.canExecute());
+        }
+        dst.setLastModified(src.lastModified());
+    }
 
     /**
      * Deletes a file or a directory. This function will delete all
