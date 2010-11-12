@@ -16,6 +16,7 @@ package org.rapidcontext.app.ui;
 
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
@@ -103,6 +104,8 @@ public class ControlPanel extends JFrame {
     private void initialize() {
         Rectangle           bounds = new Rectangle();
         GridBagConstraints  c;
+        JLabel              label;
+        Font                font;
         Properties          info;
         String              str;
 
@@ -140,7 +143,7 @@ public class ControlPanel extends JFrame {
         // Add link label
         c = new GridBagConstraints();
         c.gridx = 1;
-        c.insets = new Insets(20, 10, 4, 10);
+        c.insets = new Insets(10, 10, 2, 10);
         c.anchor = GridBagConstraints.WEST;
         getContentPane().add(new JLabel("Server URL:"), c);
         linkButton.setText("http://localhost:" + server.port + "/");
@@ -162,34 +165,47 @@ public class ControlPanel extends JFrame {
         c = new GridBagConstraints();
         c.gridx = 2;
         c.weightx = 1.0;
-        c.insets = new Insets(20, 0, 4, 10);
+        c.insets = new Insets(10, 0, 2, 10);
         c.anchor = GridBagConstraints.WEST;
         getContentPane().add(linkButton, c);
+
+        // Add login info label
+        label = new JLabel("Login as 'admin' on new installs.");
+        font = label.getFont();
+        font = font.deriveFont(Font.ITALIC, font.getSize() - 2);
+        label.setFont(font);
+        c = new GridBagConstraints();
+        c.gridx = 2;
+        c.gridy = 1;
+        c.gridwidth = 2;
+        c.insets = new Insets(0, 0, 6, 10);
+        c.anchor = GridBagConstraints.WEST;
+        getContentPane().add(label, c);
 
         // Add status label
         c = new GridBagConstraints();
         c.gridx = 1;
-        c.gridy = 1;
-        c.insets = new Insets(0, 10, 4, 10);
+        c.gridy = 2;
+        c.insets = new Insets(0, 10, 6, 10);
         c.anchor = GridBagConstraints.WEST;
         getContentPane().add(new JLabel("Status:"), c);
         c = new GridBagConstraints();
         c.gridx = 2;
-        c.gridy = 1;
-        c.insets = new Insets(0, 0, 4, 10);
+        c.gridy = 2;
+        c.insets = new Insets(0, 0, 6, 10);
         c.anchor = GridBagConstraints.WEST;
         getContentPane().add(statusLabel, c);
 
         // Add version label
         c = new GridBagConstraints();
         c.gridx = 1;
-        c.gridy = 2;
+        c.gridy = 3;
         c.insets = new Insets(0, 10, 6, 10);
         c.anchor = GridBagConstraints.WEST;
         getContentPane().add(new JLabel("Version:"), c);
         c = new GridBagConstraints();
         c.gridx = 2;
-        c.gridy = 2;
+        c.gridy = 3;
         c.insets = new Insets(0, 0, 6, 10);
         c.anchor = GridBagConstraints.WEST;
         info = Main.buildInfo();
@@ -205,9 +221,9 @@ public class ControlPanel extends JFrame {
         });
         c = new GridBagConstraints();
         c.gridx = 1;
-        c.gridy = 3;
+        c.gridy = 4;
         c.weighty = 1.0;
-        c.insets = new Insets(0, 0, 6, 0);
+        c.insets = new Insets(0, 0, 10, 0);
         c.anchor = GridBagConstraints.SOUTHWEST;
         getContentPane().add(startButton, c);
         stopButton.addActionListener(new ActionListener() {
@@ -217,9 +233,9 @@ public class ControlPanel extends JFrame {
         });
         c = new GridBagConstraints();
         c.gridx = 2;
-        c.gridy = 3;
+        c.gridy = 4;
         c.weighty = 1.0;
-        c.insets = new Insets(0, 0, 6, 0);
+        c.insets = new Insets(0, 0, 10, 0);
         c.anchor = GridBagConstraints.SOUTHWEST;
         getContentPane().add(stopButton, c);
 
