@@ -171,7 +171,7 @@ public class ControlPanel extends JFrame {
         getContentPane().add(linkButton, c);
 
         // Add login info label
-        label = new JLabel("Login as 'admin' on new installs.");
+        label = new JLabel("Login as 'admin' on a new server.");
         font = label.getFont();
         font = font.deriveFont(Font.ITALIC, font.getSize() - 2);
         label.setFont(font);
