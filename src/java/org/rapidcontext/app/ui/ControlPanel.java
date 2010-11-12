@@ -131,7 +131,7 @@ public class ControlPanel extends JFrame {
         // Add logotype
         c = new GridBagConstraints();
         c.gridheight = 3;
-        c.insets = new Insets(3, 3, 3, 3);
+        c.insets = new Insets(6, 15, 10, 3);
         c.anchor = GridBagConstraints.NORTHWEST;
         Image small = logotype.getScaledInstance(128, 128, Image.SCALE_SMOOTH);
         getContentPane().add(new JLabel(new ImageIcon(small)), c);
