@@ -28,7 +28,6 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.io.File;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -117,9 +116,7 @@ public class ControlPanel extends JFrame {
         initializeMenu();
         getContentPane().setLayout(new GridBagLayout());
         try {
-            // TODO: hardcoded
-            File file = new File(server.appDir, "plugin/system/files/images/rapidcontext.png");
-            logotype = ImageIO.read(file);
+            logotype = ImageIO.read(getClass().getResource("logotype.png"));
             setIconImage(logotype);
             if (SystemUtils.IS_OS_MAC_OSX) {
                 MacApplication.get().setDockIconImage(logotype);
