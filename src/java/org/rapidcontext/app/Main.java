@@ -17,7 +17,9 @@ package org.rapidcontext.app;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.Properties;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
@@ -381,5 +383,27 @@ public class Main {
         } catch (IOException ignore) {
             // Ignore errors writing port file
         }
+    }
+
+    /**
+     * Returns the build information for the application.
+     *
+     * @return the build information
+     */
+    public static Properties buildInfo() {
+        Properties info = new Properties();
+        InputStream is = Main.class.getResourceAsStream("build.properties");
+        try {
+            info.load(is);
+        } catch (IOException ignore) {
+            // Ignore exception on loading properties
+        } finally {
+            try {
+                is.close();
+            } catch (Exception ignore) {
+                // Ignore exception on closing file
+            }
+        }
+        return info;
     }
 }

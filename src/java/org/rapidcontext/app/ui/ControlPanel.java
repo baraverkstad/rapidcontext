@@ -28,6 +28,7 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.util.Properties;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -40,6 +41,7 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
 import org.apache.commons.lang.SystemUtils;
+import org.rapidcontext.app.Main;
 import org.rapidcontext.app.ServerApplication;
 
 /**
@@ -101,6 +103,8 @@ public class ControlPanel extends JFrame {
     private void initialize() {
         Rectangle           bounds = new Rectangle();
         GridBagConstraints  c;
+        Properties          info;
+        String              str;
 
         // Set system UI looks
         try {
@@ -127,7 +131,7 @@ public class ControlPanel extends JFrame {
 
         // Add logotype
         c = new GridBagConstraints();
-        c.gridheight = 3;
+        c.gridheight = 5;
         c.insets = new Insets(6, 15, 10, 3);
         c.anchor = GridBagConstraints.NORTHWEST;
         Image small = logotype.getScaledInstance(128, 128, Image.SCALE_SMOOTH);
@@ -139,8 +143,6 @@ public class ControlPanel extends JFrame {
         c.insets = new Insets(20, 10, 4, 10);
         c.anchor = GridBagConstraints.WEST;
         getContentPane().add(new JLabel("Server URL:"), c);
-
-        // Add link
         linkButton.setText("http://localhost:" + server.port + "/");
         linkButton.setHorizontalAlignment(SwingConstants.LEFT);
         linkButton.setBorder(BorderFactory.createEmptyBorder(0, 0, 1, 0));
@@ -160,23 +162,40 @@ public class ControlPanel extends JFrame {
         c = new GridBagConstraints();
         c.gridx = 2;
         c.weightx = 1.0;
-        c.anchor = GridBagConstraints.WEST;
         c.insets = new Insets(20, 0, 4, 10);
+        c.anchor = GridBagConstraints.WEST;
         getContentPane().add(linkButton, c);
 
         // Add status label
         c = new GridBagConstraints();
         c.gridx = 1;
         c.gridy = 1;
+        c.insets = new Insets(0, 10, 4, 10);
         c.anchor = GridBagConstraints.WEST;
-        c.insets = new Insets(0, 10, 6, 10);
         getContentPane().add(new JLabel("Status:"), c);
         c = new GridBagConstraints();
         c.gridx = 2;
         c.gridy = 1;
+        c.insets = new Insets(0, 0, 4, 10);
         c.anchor = GridBagConstraints.WEST;
-        c.insets = new Insets(0, 0, 6, 10);
         getContentPane().add(statusLabel, c);
+
+        // Add version label
+        c = new GridBagConstraints();
+        c.gridx = 1;
+        c.gridy = 2;
+        c.insets = new Insets(0, 10, 6, 10);
+        c.anchor = GridBagConstraints.WEST;
+        getContentPane().add(new JLabel("Version:"), c);
+        c = new GridBagConstraints();
+        c.gridx = 2;
+        c.gridy = 2;
+        c.insets = new Insets(0, 0, 6, 10);
+        c.anchor = GridBagConstraints.WEST;
+        info = Main.buildInfo();
+        str = info.getProperty("build.version") + " (" +
+              info.getProperty("build.date") + ")";
+        getContentPane().add(new JLabel(str), c);
 
         // Add buttons
         startButton.addActionListener(new ActionListener() {
@@ -186,7 +205,10 @@ public class ControlPanel extends JFrame {
         });
         c = new GridBagConstraints();
         c.gridx = 1;
-        c.gridy = 2;
+        c.gridy = 3;
+        c.weighty = 1.0;
+        c.insets = new Insets(0, 0, 6, 0);
+        c.anchor = GridBagConstraints.SOUTHWEST;
         getContentPane().add(startButton, c);
         stopButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
@@ -195,7 +217,10 @@ public class ControlPanel extends JFrame {
         });
         c = new GridBagConstraints();
         c.gridx = 2;
-        c.gridy = 2;
+        c.gridy = 3;
+        c.weighty = 1.0;
+        c.insets = new Insets(0, 0, 6, 0);
+        c.anchor = GridBagConstraints.SOUTHWEST;
         getContentPane().add(stopButton, c);
 
         // Set size & position
