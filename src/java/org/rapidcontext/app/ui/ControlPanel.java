@@ -267,11 +267,25 @@ public class ControlPanel extends JFrame {
             });
             menu.add(item);
             menuBar.add(menu);
+            menu = new Menu("Help");
+            item = new MenuItem("About");
+            item.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    about();
+                }
+            });
+            menu.add(item);
+            menuBar.add(menu);
         }
 
         // Fix Mac OS specific menus
         if (SystemUtils.IS_OS_MAC_OSX) {
             try {
+                MacApplication.get().setAboutHandler(new ActionListener() {
+                    public void actionPerformed(ActionEvent evt) {
+                        about();
+                    }
+                });
                 MacApplication.get().setPreferencesHandler(null);
             } catch (Exception ignore) {
                 // Errors are ignored
@@ -325,6 +339,13 @@ public class ControlPanel extends JFrame {
         }
         startButton.setEnabled(!server.isRunning());
         stopButton.setEnabled(server.isRunning());
+    }
+
+    /**
+     * Displays the about dialog.
+     */
+    public void about() {
+        new AboutDialog(this, Main.buildInfo()).setVisible(true);
     }
 
     /**
