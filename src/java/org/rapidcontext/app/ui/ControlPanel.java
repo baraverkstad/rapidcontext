@@ -29,6 +29,7 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.net.InetAddress;
 import java.util.Properties;
 
 import javax.imageio.ImageIO;
@@ -209,7 +210,7 @@ public class ControlPanel extends JFrame {
         c.insets = new Insets(0, 0, 6, 10);
         c.anchor = GridBagConstraints.WEST;
         info = Main.buildInfo();
-        str = info.getProperty("build.version") + " (" +
+        str = info.getProperty("build.version") + " (built " +
               info.getProperty("build.date") + ")";
         getContentPane().add(new JLabel(str), c);
 
@@ -242,7 +243,7 @@ public class ControlPanel extends JFrame {
         // Set size & position
         pack();
         bounds = this.getBounds();
-        bounds.width = 450;
+        bounds.width = 470;
         bounds.x = 100;
         bounds.y = 100;
         setBounds(bounds);
@@ -306,7 +307,15 @@ public class ControlPanel extends JFrame {
      * Updates the UI with the current server status.
      */
     public void update() {
-        linkButton.setText("http://localhost:" + server.port + "/");
+        String  str;
+
+        try {
+            str = "http://" + InetAddress.getLocalHost().getHostAddress() +
+                  ":" + server.port + "/";
+        } catch (Exception e) {
+            str = "http://localhost:" + server.port + "/";
+        }
+        linkButton.setText(str);
         if (server.isRunning()) {
             statusLabel.setText("Running");
             statusLabel.setForeground(Color.GREEN.darker().darker());
