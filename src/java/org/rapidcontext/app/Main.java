@@ -43,12 +43,12 @@ public class Main {
      * The command-line usage information.
      */
     public static final String USAGE =
-        "Usage: [1] rapidcontext [--app]\n" +
+        "Usage: [1] rapidcontext [--app] [<options>]\n" +
         "       [2] rapidcontext --server [<options>]\n" +
         "       [3] rapidcontext [--script] [<options>] [<procedure> [<arg1> ...]]\n" +
         "\n" +
-        "Alternative [1] is assumed when no (other) arguments are used.\n" +
-        "Alternative [3] is assumed when options or arguments are used.";
+        "Alternative [1] is assumed when no procedure is specified.\n" +
+        "Alternative [3] is assumed when a procedure is specified.";
 
     // Static initializer (fix for Mac UI)
     static {
