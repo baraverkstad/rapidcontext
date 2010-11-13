@@ -73,7 +73,7 @@ public class AboutDialog extends JDialog {
         // Add logotype
         c = new GridBagConstraints();
         c.gridheight = 8;
-        c.insets = new Insets(6, 15, 10, 3);
+        c.insets = new Insets(10, 15, 15, 10);
         c.anchor = GridBagConstraints.NORTHWEST;
         getContentPane().add(new JLabel(new ImageIcon(parent.logotype)), c);
 

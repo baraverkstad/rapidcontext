@@ -127,7 +127,8 @@ public class ControlPanel extends JFrame {
             logotype = ImageIO.read(getClass().getResource("logotype.png"));
             setIconImage(logotype);
             if (SystemUtils.IS_OS_MAC_OSX) {
-                MacApplication.get().setDockIconImage(logotype);
+                Image img = ImageIO.read(getClass().getResource("logotype-circle.png"));
+                MacApplication.get().setDockIconImage(img);
             }
         } catch (Exception ignore) {
             // Again, we only do our best effort here
@@ -136,7 +137,7 @@ public class ControlPanel extends JFrame {
         // Add logotype
         c = new GridBagConstraints();
         c.gridheight = 5;
-        c.insets = new Insets(6, 15, 10, 3);
+        c.insets = new Insets(6, 15, 10, 10);
         c.anchor = GridBagConstraints.NORTHWEST;
         Image small = logotype.getScaledInstance(128, 128, Image.SCALE_SMOOTH);
         getContentPane().add(new JLabel(new ImageIcon(small)), c);
