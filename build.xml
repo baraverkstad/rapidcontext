@@ -35,7 +35,7 @@
   </target>
 
   <target name="compile-clean">
-    <delete quiet="true">
+    <delete quiet="true" includeemptydirs="true">
       <fileset dir="classes" />
       <fileset dir="lib" includes="${build.name}*.jar" />
     </delete>
@@ -58,8 +58,11 @@
       <entry key="build.version" value="${build.version}"/>
       <entry key="build.date" value="${build.date}"/>
     </propertyfile>
-    <copy file="src/plugin/system/files/images/logotype.png"
-          todir="classes/org/rapidcontext/app/ui/"/>
+    <copy todir="classes/org/rapidcontext/app/ui/">
+      <fileset dir="src/plugin/system/files/images">
+        <include name="*.png"/>
+      </fileset>
+    </copy>
   </target>
 
   <macrodef name="buildplugin">
@@ -72,7 +75,7 @@
       <ant dir="src/plugin/@{id}" antfile="../plugin-build.xml">
         <property name="java.class.path" value="${toString:plugin.classpath}" />
       </ant>
-      <delete dir="plugin/@{id}" quiet="true" />
+      <delete dir="plugin/@{id}" quiet="true" includeemptydirs="true" />
       <mkdir dir="plugin/@{id}" />
       <unzip dest="plugin/@{id}">
         <fileset dir="src/plugin/@{id}" includes="@{id}*.zip" />
@@ -97,8 +100,8 @@
   </target>
 
   <target name="doc-clean">
-    <delete dir="doc/java" quiet="true" />
-    <delete dir="doc/js" quiet="true" />
+    <delete dir="doc/java" quiet="true" includeemptydirs="true" />
+    <delete dir="doc/js" quiet="true" includeemptydirs="true" />
     <mkdir dir="doc/java" />
     <mkdir dir="doc/js" />
   </target>
@@ -152,12 +155,12 @@
   </target>
 
   <target name="package-clean">
-    <delete>
+    <delete quiet="true" includeemptydirs="true">
       <fileset dir="${basedir}">
         <include name="${build.name}.war" />
         <include name="${build.name}-*.zip" />
-        <include name="${build.title}.app/**" />
       </fileset>
+      <fileset dir="${build.title}.app" />
     </delete>
     <fixcrlf srcdir="${basedir}" eol="unix" eof="remove" tab="remove">
       <include name="**/*.txt" />
