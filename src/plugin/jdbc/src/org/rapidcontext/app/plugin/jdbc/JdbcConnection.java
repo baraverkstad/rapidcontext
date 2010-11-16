@@ -27,6 +27,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
@@ -45,9 +46,25 @@ import org.rapidcontext.util.DateUtil;
 public class JdbcConnection implements AdapterConnection {
 
     /**
+     * The class logger.
+     */
+    private static final Logger LOG =
+        Logger.getLogger(JdbcConnection.class.getName());
+
+    /**
+     * The instance counter, used to identify JDBC connections.
+     */
+    private static int counter = 0;
+
+    /**
      * The encapsulated JDBC connection.
      */
     protected Connection con;
+
+    /**
+     * The JDBC connection id.
+     */
+    protected String prefix;
 
     /**
      * The SQL ping query.
@@ -81,17 +98,21 @@ public class JdbcConnection implements AdapterConnection {
 
         String  msg;
 
+        this.prefix = "[JDBC:" + (++counter) + "] ";
+        this.sqlPing = sqlPing;
+        this.timeout = timeout;
         try {
+            LOG.info(prefix + "creating connection for " + url);
             DriverManager.setLoginTimeout(timeout);
             con = driver.connect(url, props);
             con.setAutoCommit(autoCommit);
+            LOG.fine(prefix + "done creating connection for " + url);
         } catch (SQLException e) {
             msg = "failed to connect to " + url + " with username '" +
                   props.getProperty("user") + "': " + e.getMessage();
+            LOG.warning(prefix + msg);
             throw new AdapterException(msg);
         }
-        this.timeout = timeout;
-        this.sqlPing = sqlPing;
     }
 
     /**
@@ -197,7 +218,15 @@ public class JdbcConnection implements AdapterConnection {
      * @throws AdapterException if the execution failed
      */
     public Array executeStatement(String sql) throws AdapterException {
-        return executeStatement(prepare(sql, null));
+        try {
+            LOG.fine(prefix + "executing statement: " + sql);
+            Array res = executeStatement(prepare(sql, null));
+            LOG.fine(prefix + "done executing statement: " + sql);
+            return res;
+        } catch (AdapterException e) {
+            LOG.warning(prefix + e.getMessage());
+            throw e;
+        }
     }
 
     /**
@@ -210,7 +239,7 @@ public class JdbcConnection implements AdapterConnection {
      *
      * @throws AdapterException if the execution failed
      */
-    public Array executeStatement(PreparedStatement stmt)
+    protected Array executeStatement(PreparedStatement stmt)
         throws AdapterException {
 
         Array      res = new Array(10);
@@ -254,7 +283,7 @@ public class JdbcConnection implements AdapterConnection {
      * @throws AdapterException if the execution failed
      */
     public Object executeQuery(String sql) throws AdapterException {
-        return executeQuery(prepare(sql, null));
+        return executeQuery(sql, "");
     }
 
     /**
@@ -268,7 +297,15 @@ public class JdbcConnection implements AdapterConnection {
      * @throws AdapterException if the execution failed
      */
     public Object executeQuery(String sql, String flags) throws AdapterException {
-        return executeQuery(prepare(sql, null), flags);
+        try {
+            LOG.fine(prefix + "executing query: " + sql);
+            Object res = executeQuery(prepare(sql, null), flags);
+            LOG.fine(prefix + "done executing query: " + sql);
+            return res;
+        } catch (AdapterException e) {
+            LOG.warning(prefix + e.getMessage());
+            throw e;
+        }
     }
 
     /**
@@ -283,7 +320,7 @@ public class JdbcConnection implements AdapterConnection {
      *
      * @throws AdapterException if the execution failed
      */
-    public Object executeQuery(PreparedStatement stmt)
+    protected Object executeQuery(PreparedStatement stmt)
         throws AdapterException {
 
         return executeQuery(stmt, "");
@@ -300,7 +337,7 @@ public class JdbcConnection implements AdapterConnection {
      *
      * @throws AdapterException if the execution failed
      */
-    public Object executeQuery(PreparedStatement stmt, String flags)
+    protected Object executeQuery(PreparedStatement stmt, String flags)
         throws AdapterException {
 
         ResultSet  set = null;
@@ -333,7 +370,7 @@ public class JdbcConnection implements AdapterConnection {
      *
       @throws AdapterException if the statement couldn't be prepared
      */
-    public PreparedStatement prepare(String sql, ArrayList params)
+    protected PreparedStatement prepare(String sql, ArrayList params)
         throws AdapterException {
 
         PreparedStatement  stmt;
