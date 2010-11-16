@@ -173,7 +173,7 @@ class DataWrapper implements Scriptable {
                 }
             }
         } else if (data instanceof Dict) {
-            ((Dict) data).set(name, JsSerializer.unwrap(value));
+            ((Dict) data).set(name, value);
         }
     }
 
@@ -186,7 +186,7 @@ class DataWrapper implements Scriptable {
      */
     public void put(int index, Scriptable start, Object value) {
         if (data instanceof Array) {
-            ((Array) data).set(index, JsSerializer.unwrap(value));
+            ((Array) data).set(index, value);
         }
     }
 

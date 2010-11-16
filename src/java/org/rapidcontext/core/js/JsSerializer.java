@@ -275,9 +275,11 @@ public class JsSerializer {
     /**
      * Removes all JavaScript classes and replaces them with the
      * corresponding Java objects. This method will use instances of
-     * Data replace native JavaScript objects and arrays. Also, it
-     * will replace both JavaScript "null" and "undefined" with
-     * null. Other objects will be returned as-is.
+     * Dict and Array to replace native JavaScript objects and arrays.
+     * Also, it will replace both JavaScript "null" and "undefined"
+     * with null. Any Dict or Array object encountered will be
+     * traversed and modified in-place recursively. Other objects
+     * will be returned as-is.
      *
      * @param obj            the object to unwrap
      *
@@ -316,6 +318,20 @@ public class JsSerializer {
             return dict;
         } else if (obj instanceof Undefined || obj == Scriptable.NOT_FOUND) {
             return null;
+        } else if (obj instanceof Array) {
+            Array arr = (Array) obj;
+            for (int i = 0; i < arr.size(); i++) {
+                arr.set(i, unwrap(arr.get(i)));
+            }
+            return arr;
+        } else if (obj instanceof Dict) {
+            Dict dict = (Dict) obj;
+            String[] keys = dict.keys();
+            for (int i = 0; i < keys.length; i++) {
+                String key = keys[i].toString();
+                dict.set(key, unwrap(dict.get(key)));
+            }
+            return dict;
         } else {
             return obj;
         }
