@@ -37,7 +37,7 @@ public class Pool {
     /**
      * The class logger.
      */
-    private static final Logger LOG =
+    protected static final Logger LOG =
         Logger.getLogger(Pool.class.getName());
 
     /**
@@ -133,7 +133,7 @@ public class Pool {
             pool.setMinEvictableIdleTimeMillis(maxIdleSecs * 1000L);
             pool.setTestOnBorrow(false);
             pool.setTestOnReturn(false);
-            pool.setTestWhileIdle(false);
+            pool.setTestWhileIdle(true);
             pool.setWhenExhaustedAction(GenericObjectPool.WHEN_EXHAUSTED_BLOCK);
             Evictor.startThread();
         }
@@ -220,15 +220,33 @@ public class Pool {
      */
     public AdapterConnection reserveConnection() throws AdapterException {
         AdapterConnection  con;
+        String             msg;
 
         if (pool == null) {
-            con = adapter.createConnection(params);
+            try {
+                LOG.fine("creating non-pooled connection in " + name);
+                con = adapter.createConnection(params);
+                LOG.fine("done creating non-pooled connection in " + name);
+            } catch (AdapterException e) {
+                msg = "failed to create non-pooled connection in " + name +
+                       ": " + e.getMessage();
+                LOG.warning(msg);
+                throw e;
+            }
         } else {
             try {
+                LOG.fine("reserving pooled connection in " + name);
                 con = (AdapterConnection) pool.borrowObject();
+                LOG.fine("done reserving pooled connection in " + name);
             } catch (AdapterException e) {
+                msg = "failed to reserve pooled connection in " + name +
+                       ": " + e.getMessage();
+                LOG.warning(msg);
                 throw e;
             } catch (Exception e) {
+                msg = "failed to reserve pooled connection in " + name +
+                      ": " + e.getMessage();
+                LOG.warning(msg);
                 throw new AdapterException(e.getMessage());
             }
         }
@@ -248,7 +266,9 @@ public class Pool {
         reservedCount--;
         if (pool == null) {
             try {
+                LOG.fine("closing non-pooled connection in " + name);
                 con.close();
+                LOG.fine("done closing non-pooled connection in " + name);
             } catch (AdapterException e) {
                 msg = "failed to close non-pooled connection in " + name +
                       ": " + e.getMessage();
@@ -256,7 +276,9 @@ public class Pool {
             }
         } else {
             try {
+                LOG.fine("returning pooled connection in " + name);
                 pool.returnObject(con);
+                LOG.fine("done returning pooled connection in " + name);
             } catch (Exception e) {
                 msg = "failed to return pooled connection in " + name +
                       ": " + e.getMessage();
@@ -282,7 +304,9 @@ public class Pool {
      */
     public void evict() {
         try {
+            LOG.fine("starting connection pool eviction on " + name);
             pool.evict();
+            LOG.fine("done connection pool eviction on " + name);
         } catch (Exception e) {
             LOG.warning("failed to evict pooled connection in " +
                         name + ": " + e.getMessage());
@@ -296,7 +320,9 @@ public class Pool {
     public void close() {
         if (pool != null) {
             try {
+                LOG.fine("closing all pooled connections in " + name);
                 pool.close();
+                LOG.fine("done closing all pooled connections in " + name);
             } catch (Exception e) {
                 LOG.warning("failed to close all pooled connections in " +
                             name + ": " + e.getMessage());
@@ -354,6 +380,9 @@ public class Pool {
          *         false otherwise
          */
         public boolean validateObject(Object obj) {
+            return true;
+            /* TODO: replace with real validate implementation, since activate
+             *       and passivate are already called by GenericPool...
             try {
                 ((AdapterConnection) obj).activate();
                 ((AdapterConnection) obj).passivate();
@@ -361,6 +390,7 @@ public class Pool {
             } catch (AdapterException e) {
                 return false;
             }
+            */
         }
 
         /**
@@ -440,6 +470,7 @@ public class Pool {
          * Runs the evictor thread until no adapter connection pools remain.
          */
         public void run() {
+            LOG.fine("started connection pool evictor thread");
             while (true) {
                 synchronized (lock) {
                     if (poolInstances.size() <= 0) {
@@ -454,6 +485,7 @@ public class Pool {
                     // Do nothing
                 }
             }
+            LOG.fine("terminated connection pool evictor thread");
         }
 
         /**
