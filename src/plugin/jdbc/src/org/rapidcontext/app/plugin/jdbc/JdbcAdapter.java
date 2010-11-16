@@ -55,12 +55,14 @@ public class JdbcAdapter implements Adapter {
     protected static final String JDBC_PASSWORD = "password";
 
     /**
-     * The JDBC SQL ping configuration parameter name.
+     * The JDBC SQL ping configuration parameter name (optional,
+     * defaults to 'SELECT 1').
      */
     protected static final String JDBC_PING = "sqlping";
 
     /**
-     * The JDBC auto-commit configuration parameter name.
+     * The JDBC auto-commit configuration parameter name (optional,
+     * defaults to false).
      */
     protected static final String JDBC_AUTOCOMMIT = "autocommit";
 
@@ -175,29 +177,38 @@ public class JdbcAdapter implements Adapter {
         throws AdapterException {
 
         ClassLoader  loader;
-        Class        driverClass;
+        String       driverClass;
         Driver       driver;
-        Properties   props;
-        String       msg;
+        String       url;
+        String       ping;
         boolean      autoCommit;
         int          timeout;
+        Properties   props;
+        String       msg;
 
+        driverClass = params.getString(JDBC_DRIVER, "");
         try {
             loader = ApplicationContext.getInstance().getClassLoader();
-            driverClass = loader.loadClass(params.getString(JDBC_DRIVER, ""));
-            driver = (Driver) driverClass.newInstance();
+            driver = (Driver) loader.loadClass(driverClass).newInstance();
         } catch (ClassNotFoundException e) {
-            msg = "couldn't find or load JDBC driver class " +
-                  params.getString(JDBC_DRIVER, "") + ": " + e.getMessage();
+            msg = "couldn't find or load JDBC driver class " + driverClass +
+                  ": " + e.getMessage();
             throw new AdapterException(msg);
         } catch (ClassCastException e) {
             msg = "couldn't load JDBC driver, must be an instance of " +
-                  "java.sql.Driver: " + params.getString(JDBC_DRIVER, "");
+                  "java.sql.Driver: " + driverClass;
             throw new AdapterException(msg);
         } catch (Exception e) {
-            msg = "couldn't create JDBC driver instance of " +
-                  params.getString(JDBC_DRIVER, "") + ": " + e.getMessage();
+            msg = "couldn't create JDBC driver instance of " + driverClass +
+                  ": " + e.getMessage();
             throw new AdapterException(msg);
+        }
+        url = params.getString(JDBC_URL, "");
+        ping = params.getString(JDBC_PING, null);
+        if (ping == null && url.toLowerCase().startsWith("jdbc:oracle:")) {
+            ping = "SELECT * FROM dual";
+        } else if (ping == null) {
+            ping = "SELECT 1";
         }
         autoCommit = params.getBoolean(JDBC_AUTOCOMMIT, false);
         try {
@@ -207,12 +218,7 @@ public class JdbcAdapter implements Adapter {
                                        params.getString(JDBC_TIMEOUT, ""));
         }
         props = PropertiesSerializer.toProperties(params);
-        return createConnection(driver,
-                                params.getString(JDBC_URL, ""),
-                                props,
-                                params.getString(JDBC_PING, ""),
-                                autoCommit,
-                                timeout);
+        return createConnection(driver, url, props, ping, autoCommit, timeout);
     }
 
     /**
