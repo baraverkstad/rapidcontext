@@ -278,8 +278,8 @@ public class JsSerializer {
      * Dict and Array to replace native JavaScript objects and arrays.
      * Also, it will replace both JavaScript "null" and "undefined"
      * with null. Any Dict or Array object encountered will be
-     * traversed and modified in-place recursively. Other objects
-     * will be returned as-is.
+     * traversed and copied recursively. Other objects will be
+     * returned as-is.
      *
      * @param obj            the object to unwrap
      *
@@ -319,19 +319,21 @@ public class JsSerializer {
         } else if (obj instanceof Undefined || obj == Scriptable.NOT_FOUND) {
             return null;
         } else if (obj instanceof Array) {
-            Array arr = (Array) obj;
-            for (int i = 0; i < arr.size(); i++) {
-                arr.set(i, unwrap(arr.get(i)));
+            Array oldArr = (Array) obj;
+            Array newArr = new Array(oldArr.size());
+            for (int i = 0; i < oldArr.size(); i++) {
+                newArr.set(i, unwrap(oldArr.get(i)));
             }
-            return arr;
+            return newArr;
         } else if (obj instanceof Dict) {
-            Dict dict = (Dict) obj;
-            String[] keys = dict.keys();
+            Dict oldDict = (Dict) obj;
+            Dict newDict = new Dict(oldDict.size());
+            String[] keys = oldDict.keys();
             for (int i = 0; i < keys.length; i++) {
                 String key = keys[i].toString();
-                dict.set(key, unwrap(dict.get(key)));
+                newDict.set(key, unwrap(oldDict.get(key)));
             }
-            return dict;
+            return newDict;
         } else {
             return obj;
         }
