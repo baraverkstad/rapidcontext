@@ -24,12 +24,12 @@ Concern: Legacy Cleanup
  * Rename "applet" to "app" everywhere
  * Remove all old and deprecated API and widgets
  * Move RapidContext.Util into MochiKit 1.5 as much as possible
+ * Update about dialog with new logotype & copyrights
 
 
 Concern: Install & Startup
 ==========================
  * Non-Installer Packages:
-    o Improve packaging and start-up on Mac OS X
     o Investigate packaging and start-up on Linux & Windows
  * Installer Packages:
     o Handling of both first time and update installs
