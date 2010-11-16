@@ -118,9 +118,7 @@ public class JdbcConnection implements AdapterConnection {
     /**
      * Activates the connection. This method is called just before a
      * connection is to be used, i.e. when a new connection has been
-     * created or when fetched from a resource pool. It can also be
-     * called to trigger a "ping" of a connection, if such
-     * functionality is implemented by the adapter.
+     * created or when fetched from a resource pool.
      *
      * @throws AdapterException if the connection couldn't be
      *             activated (connection will be closed)
@@ -128,18 +126,16 @@ public class JdbcConnection implements AdapterConnection {
     public void activate() throws AdapterException {
         String  msg;
 
-        if (sqlPing != null) {
-            executeQuery(sqlPing);
-        } else {
-            try {
-                if (con.isClosed()) {
-                    msg = "failed to activate, connection already closed";
-                    throw new AdapterException(msg);
-                }
-            } catch (SQLException e) {
-                msg = "failed to activate: " + e.getMessage();
+        try {
+            if (con.isClosed()) {
+                msg = "failed to activate, connection already closed";
+                LOG.fine(prefix + msg);
                 throw new AdapterException(msg);
             }
+        } catch (SQLException e) {
+            msg = "failed to activate: " + e.getMessage();
+            LOG.fine(prefix + msg);
+            throw new AdapterException(msg);
         }
     }
 
@@ -154,7 +150,22 @@ public class JdbcConnection implements AdapterConnection {
      *             passivated (connection will be closed)
      */
     public void passivate() throws AdapterException {
-        commit();
+        // Nothing to do here
+    }
+
+    /**
+     * Validates the connection. This method is called before using
+     * a connection and regularly when it is idle in the pool. It can
+     * be used to trigger a "ping" of a connection, if implemented by
+     * the adapter. An empty implementation is acceptable.
+     *
+     * @throws AdapterException if the connection didn't validate
+     *             correctly
+     */
+    public void validate() throws AdapterException {
+        if (sqlPing != null) {
+            executeQuery(sqlPing);
+        }
     }
 
     /**
@@ -167,8 +178,11 @@ public class JdbcConnection implements AdapterConnection {
      */
     public void close() throws AdapterException {
         try {
+            LOG.info(prefix + "closing connection");
             con.close();
+            LOG.fine(prefix + "done closing connection");
         } catch (SQLException e) {
+            LOG.warning(prefix + "failed to close connection: " + e.getMessage());
             throw new AdapterException(e.getMessage());
         }
     }

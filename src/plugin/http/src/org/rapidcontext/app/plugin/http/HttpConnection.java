@@ -51,9 +51,7 @@ public class HttpConnection implements AdapterConnection {
     /**
      * Activates the connection. This method is called just before a
      * connection is to be used, i.e. when a new connection has been
-     * created or when fetched from a resource pool. It can also be
-     * called to trigger a "ping" of a connection, if such
-     * functionality is implemented by the adapter.
+     * created or when fetched from a resource pool.
      *
      * @throws AdapterException if the connection couldn't be
      *             activated (connection will be closed)
@@ -73,6 +71,19 @@ public class HttpConnection implements AdapterConnection {
      *             passivated (connection will be closed)
      */
     public void passivate() throws AdapterException {
+        // Nothing to do here
+    }
+
+    /**
+     * Validates the connection. This method is called before using
+     * a connection and regularly when it is idle in the pool. It can
+     * be used to trigger a "ping" of a connection, if implemented by
+     * the adapter. An empty implementation is acceptable.
+     *
+     * @throws AdapterException if the connection didn't validate
+     *             correctly
+     */
+    public void validate() throws AdapterException {
         // Nothing to do here
     }
 

@@ -131,8 +131,8 @@ public class Pool {
             pool.setMinIdle(0);
             pool.setMaxWait(MAX_ACQUIRE_WAIT);
             pool.setMinEvictableIdleTimeMillis(maxIdleSecs * 1000L);
-            pool.setTestOnBorrow(false);
-            pool.setTestOnReturn(false);
+            pool.setTestOnBorrow(true);
+            pool.setTestOnReturn(true);
             pool.setTestWhileIdle(true);
             pool.setWhenExhaustedAction(GenericObjectPool.WHEN_EXHAUSTED_BLOCK);
             Evictor.startThread();
@@ -380,17 +380,12 @@ public class Pool {
          *         false otherwise
          */
         public boolean validateObject(Object obj) {
-            return true;
-            /* TODO: replace with real validate implementation, since activate
-             *       and passivate are already called by GenericPool...
             try {
-                ((AdapterConnection) obj).activate();
-                ((AdapterConnection) obj).passivate();
+                ((AdapterConnection) obj).validate();
                 return true;
             } catch (AdapterException e) {
                 return false;
             }
-            */
         }
 
         /**

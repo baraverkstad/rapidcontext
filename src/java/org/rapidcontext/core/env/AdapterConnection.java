@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -21,7 +21,7 @@ package org.rapidcontext.core.env;
  * similar. The adapter connection is created by the adapter, but
  * managed by a connection pool for improved resource utilization.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public interface AdapterConnection {
@@ -29,9 +29,7 @@ public interface AdapterConnection {
     /**
      * Activates the connection. This method is called just before a
      * connection is to be used, i.e. when a new connection has been
-     * created or when fetched from a resource pool. It can also be
-     * called to trigger a "ping" of a connection, if such
-     * functionality is implemented by the adapter.
+     * created or when fetched from a resource pool.
      *
      * @throws AdapterException if the connection couldn't be
      *             activated (connection will be closed)
@@ -49,6 +47,17 @@ public interface AdapterConnection {
      *             passivated (connection will be closed)
      */
     public void passivate() throws AdapterException;
+
+    /**
+     * Validates the connection. This method is called before using
+     * a connection and regularly when it is idle in the pool. It can
+     * be used to trigger a "ping" of a connection, if implemented by
+     * the adapter. An empty implementation is acceptable.
+     *
+     * @throws AdapterException if the connection didn't validate
+     *             correctly
+     */
+    public void validate() throws AdapterException;
 
     /**
      * Closes the connection. This method is used to free any
