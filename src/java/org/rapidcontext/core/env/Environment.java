@@ -15,13 +15,14 @@
 
 package org.rapidcontext.core.env;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.logging.Logger;
 
-import org.rapidcontext.core.data.Array;
+import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.core.data.Dict;
+import org.rapidcontext.core.data.Metadata;
 import org.rapidcontext.core.data.Path;
 import org.rapidcontext.core.data.Storage;
 
@@ -42,9 +43,24 @@ public class Environment {
         Logger.getLogger(Environment.class.getName());
 
     /**
+     * The connection object storage path.
+     */
+    public static final Path PATH_CON = new Path("/connection/");
+
+    /**
      * The environment object storage path.
      */
     public static final Path PATH_ENV = new Path("/environment/");
+
+    /**
+     * The map of connection pools. The pools are indexed by name.
+     */
+    private static LinkedHashMap connections = new LinkedHashMap();
+
+    /**
+     * The map of environments. The environments are indexed by name.
+     */
+    private static LinkedHashMap environments = new LinkedHashMap();
 
     /**
      * The environment name.
@@ -62,66 +78,137 @@ public class Environment {
     private LinkedHashMap pools = new LinkedHashMap();
 
     /**
-     * Creates an environment from the first environment found.
+     * Initializes all environments and connections found in the
+     * storage.
      *
      * @param storage        the data storage to use
      *
-     * @return the loaded environment, or
-     *         null if no environment could be found
-     *
-     * @throws EnvironmentException if the environment couldn't be
-     *             loaded successfully
+     * @return one of the loaded environments, or
+     *         null if no environments could be found
      */
-    public static Environment init(Storage storage) throws EnvironmentException {
-        Object[]     objs;
-        Dict         data;
-        Array        list;
-        Dict         pool;
-        Environment  env;
-        Adapter      adapter;
-        Dict         params;
-        String       poolName;
-        String       str;
+    public static Environment init(Storage storage) {
+        Metadata[]   metas;
+        Object       obj;
+        Dict         dict;
+        String       name;
+        Environment  env = null;
 
-        objs = storage.loadAll(PATH_ENV);
-        if (objs.length <= 0) {
-            return null;
-        }
-        data = (Dict) objs[0];
-        if (data.getString("name", null) == null) {
-            str = "failed to find required environment property 'name'";
-            LOG.warning(str);
-            throw new EnvironmentException(str);
-        }
-        env = new Environment(data.getString("name", ""),
-                              data.getString("description", ""));
-        list = data.getArray("pool");
-        for (int i = 0; list != null && i < list.size(); i++) {
-            pool = list.getDict(i);
-            poolName = pool.getString("name", null);
-            if (poolName != null) {
-                str = pool.getString("adapter", "");
-                adapter = AdapterRegistry.find(str);
-                if (adapter == null) {
-                    str = "failed to create pool '" + poolName +
-                          "' in environment '" + env.getName() + "': " +
-                          "no adapter '" + str + "' found";
-                    LOG.warning(str);
-                    throw new EnvironmentException(str);
-                }
-                params = pool.getDict("param");
-                try {
-                    env.addPool(new Pool(poolName, adapter, params));
-                } catch (AdapterException e) {
-                    str = "failed to create pool '" + poolName +
-                          "' in environment '" + env.getName() + "': " +
-                          e.getMessage();
-                    LOG.warning(str);
-                    throw new EnvironmentException(str);
-                }
+        // Initialize connections
+        metas = storage.lookupAll(PATH_CON);
+        for (int i = 0; i < metas.length; i++) {
+            obj = storage.load(metas[i].path());
+            if (obj instanceof Dict) {
+                dict = (Dict) obj;
+                name = metas[i].path().subPath(PATH_CON.length()).toString();
+                name = StringUtils.removeStart(name, "/");
+                initPool(name, dict);
             }
         }
+
+        // Initialize environment
+        metas = storage.lookupAll(PATH_ENV);
+        for (int i = 0; i < metas.length; i++) {
+            obj = storage.load(metas[i].path());
+            if (obj instanceof Dict) {
+                dict = (Dict) obj;
+                name = metas[i].path().subPath(PATH_ENV.length()).toString();
+                name = StringUtils.removeStart(name, "/");
+                env = initEnv(name, dict);
+            }
+        }
+
+        // TODO: Remove the single environment reference
         return env;
+    }
+
+    /**
+     * Initializes a new connection pool from the specified name
+     * and configuration dictionary.
+     *
+     * @param name           the connection pool name
+     * @param dict           the configuration dictionary
+     */
+    protected static void initPool(String name, Dict dict) {
+        String   type;
+        Adapter  adapter;
+        Dict     config;
+        String   msg;
+
+        type = dict.getString("type", "connection");
+        adapter = AdapterRegistry.find(dict.getString("adapter", ""));
+        config = dict.getDict("config");
+        if (config == null) {
+            config = new Dict();
+        }
+        if (!type.equals("connection")) {
+            msg = "invalid object type for connection/" + name + ": " + type;
+            LOG.warning(msg);
+        } else if (adapter == null) {
+            msg = "failed to create connection " + name + ": no adapter '" +
+                  dict.getString("adapter", "") + "' found";
+            LOG.warning(msg);
+        } else {
+            try {
+                connections.put(name, new Pool(name, adapter, config));
+            } catch (AdapterException e) {
+                msg = "failed to create connection " + name + ": " +
+                      e.getMessage();
+                LOG.warning(msg);
+            }
+        }
+    }
+
+    /**
+     * Initializes a new environment from the specified name and
+     * dictionary.
+     *
+     * @param name           the environment name
+     * @param dict           the configuration dictionary
+     *
+     * @return the environment created, or
+     *         null if it was invalid
+     */
+    protected static Environment initEnv(String name, Dict dict) {
+        Environment  env = null;
+        String       type;
+        String       prefix;
+        String       msg;
+
+        type = dict.getString("type", "environment");
+        if (!type.equals("environment")) {
+            msg = "invalid object type for environment/" + name + ": " + type;
+            LOG.warning(msg);
+        } else {
+            env = new Environment(name, dict.getString("description", ""));
+            prefix = dict.getString("connections", null);
+            if (prefix != null) {
+                Iterator iter = connections.keySet().iterator();
+                while (iter.hasNext()) {
+                    name = iter.next().toString();
+                    if (name.startsWith(prefix)) {
+                        env.addPool((Pool) connections.get(name));
+                    }
+                }
+            }
+            environments.put(name, env);
+        }
+        // TODO: Don't return environment
+        return env;
+    }
+
+    /**
+     * Destroys all loaded environments and connections. This will
+     * free all resources currently used.
+     */
+    public static void destroy() {
+        Iterator  iter;
+
+        iter = connections.values().iterator();
+        while (iter.hasNext()) {
+            ((Pool) iter.next()).close();
+        }
+        connections.clear();
+        environments.clear();
     }
 
     /**
@@ -221,26 +308,6 @@ public class Environment {
      * @param poolName       the connection pool name.
      */
     public void removePool(String poolName) {
-        Pool  pool;
-
-        pool = findPool(poolName);
         pools.remove(poolName);
-        if (pool != null) {
-            pool.close();
-        }
-    }
-
-    /**
-     * Removes all pools from the environment. This will free all
-     * resources currently used by this environment, such as open
-     * connections or similar.
-     */
-    public void removeAllPools() {
-        ArrayList  list = new ArrayList();
-
-        list.addAll(pools.keySet());
-        for (int i = 0; i < list.size(); i++) {
-            removePool(list.get(i).toString());
-        }
     }
 }

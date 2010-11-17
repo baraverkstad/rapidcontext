@@ -55,7 +55,6 @@ import org.rapidcontext.core.data.Storage;
 import org.rapidcontext.core.data.StorageException;
 import org.rapidcontext.core.data.VirtualStorage;
 import org.rapidcontext.core.env.Environment;
-import org.rapidcontext.core.env.EnvironmentException;
 import org.rapidcontext.core.js.JsCompileInterceptor;
 import org.rapidcontext.core.js.JsProcedure;
 import org.rapidcontext.core.proc.CallContext;
@@ -193,11 +192,7 @@ public class ApplicationContext {
     private void initAll() {
         initLibrary();
         initPlugins();
-        try {
-            env = Environment.init(storage);
-        } catch (EnvironmentException e) {
-            LOG.severe("Failed to load environment: " + e.getMessage());
-        }
+        env = Environment.init(storage);
         try {
             SecurityContext.init(storage);
         } catch (StorageException e) {
@@ -283,10 +278,7 @@ public class ApplicationContext {
      * Destroys this context and frees all resources.
      */
     private void destroyAll() {
-        if (env != null) {
-            env.removeAllPools();
-            env = null;
-        }
+        Environment.destroy();
         pluginManager.unloadAll();
         Library.unregisterType("javascript");
         library = new Library(this.storage);
