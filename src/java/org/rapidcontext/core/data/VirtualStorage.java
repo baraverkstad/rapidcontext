@@ -300,7 +300,8 @@ public class VirtualStorage extends Storage {
                     if (meta != null && meta.isIndex()) {
                         idx = new Metadata(Metadata.CATEGORY_INDEX,
                                            Index.class,
-                                           path().descendant(path),
+                                           path,
+                                           path(),
                                            Metadata.lastModified(idx, meta));
                     } else if (meta != null) {
                         return meta;

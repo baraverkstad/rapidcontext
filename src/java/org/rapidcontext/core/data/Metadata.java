@@ -44,10 +44,16 @@ public class Metadata extends DynamicObject {
     public static final String KEY_CLASS = "class";
 
     /**
-     * The dictionary key for the absolute object path. The values
+     * The dictionary key for the absolute object path. The value
      * stored is the path object.
      */
     public static final String KEY_PATH = "path";
+
+    /**
+     * The dictionary key for the absolute storage path. This is the
+     * path to the storage containing the object.
+     */
+    public static final String KEY_STORAGEPATH = "storagePath";
 
     /**
      * The dictionary key for the last modified date. The value stored
@@ -94,30 +100,33 @@ public class Metadata extends DynamicObject {
      * Creates a new metadata container for an index.
      *
      * @param path           the absolute object path
+     * @param storagePath    the absolute storage path
      * @param idx            the index to inspect
      */
-    public Metadata(Path path, Index idx) {
-        this(CATEGORY_INDEX, Index.class, path, idx.lastModified());
+    public Metadata(Path path, Path storagePath, Index idx) {
+        this(CATEGORY_INDEX, Index.class, path, storagePath, idx.lastModified());
     }
 
     /**
      * Creates a new metadata container for a file.
      *
      * @param path           the absolute object path
+     * @param storagePath    the absolute storage path
      * @param file           the file to inspect
      */
-    public Metadata(Path path, File file) {
-        this(CATEGORY_FILE, File.class, path, new Date(file.lastModified()));
+    public Metadata(Path path, Path storagePath, File file) {
+        this(CATEGORY_FILE, File.class, path, storagePath, new Date(file.lastModified()));
     }
 
     /**
      * Creates a new metadata container for a generic object.
      *
      * @param path           the absolute object path
+     * @param storagePath    the absolute storage path
      * @param obj            the object to inspect
      */
-    public Metadata(Path path, Object obj) {
-        this(CATEGORY_OBJECT, obj.getClass(), path, new Date());
+    public Metadata(Path path, Path storagePath, Object obj) {
+        this(CATEGORY_OBJECT, obj.getClass(), path, storagePath, new Date());
     }
 
     /**
@@ -126,13 +135,15 @@ public class Metadata extends DynamicObject {
      * @param category       the object category
      * @param clazz          the object class
      * @param path           the absolute object path
+     * @param storagePath    the absolute storage path
      * @param modified       the last modified date, or null for now
      */
-    public Metadata(String category, Class clazz, Path path, Object modified) {
+    public Metadata(String category, Class clazz, Path path, Path storagePath, Object modified) {
         super("metadata");
         dict.set(KEY_CATEGORY, category);
         dict.set(KEY_CLASS, clazz);
         dict.set(KEY_PATH, path);
+        dict.set(KEY_STORAGEPATH, storagePath);
         if (modified instanceof Date) {
             dict.set(KEY_MODIFIED, modified);
         } else if (modified instanceof Long) {
@@ -210,6 +221,16 @@ public class Metadata extends DynamicObject {
      */
     public Path path() {
         return (Path) dict.get(KEY_PATH);
+    }
+
+    /**
+     * Returns the absolute storage path. This is the path to the
+     * storage containing the object.
+     *
+     * @return the absolute storage path
+     */
+    public Path storagePath() {
+        return (Path) dict.get(KEY_STORAGEPATH);
     }
 
     /**

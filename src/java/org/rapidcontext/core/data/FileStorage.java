@@ -77,22 +77,23 @@ public class FileStorage extends Storage {
      */
     public Metadata lookup(Path path) {
         File  file = locateFile(path);
-        Path  absolutePath = path().descendant(path);
 
         if (file == null) {
             return null;
         } else if (file.isDirectory()) {
             return new Metadata(Metadata.CATEGORY_INDEX,
                                 Index.class,
-                                absolutePath,
+                                path,
+                                path(),
                                 new Date(file.lastModified()));
         } else if (file.getName().endsWith(SUFFIX_PROPS)) {
             return new Metadata(Metadata.CATEGORY_OBJECT,
                                 Dict.class,
-                                absolutePath,
+                                path,
+                                path(),
                                 new Date(file.lastModified()));
         } else {
-            return new Metadata(absolutePath, file);
+            return new Metadata(path, path(), file);
         }
     }
 
