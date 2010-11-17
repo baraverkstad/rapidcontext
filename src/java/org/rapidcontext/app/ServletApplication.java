@@ -66,6 +66,16 @@ public class ServletApplication extends HttpServlet {
     public static final Path PATH_FILES = new Path("/files/");
 
     /**
+     * The MIME type commonly used for requesting HTML data.
+     */
+    private static final String[] MIME_HTML = {
+        "text/html",
+        "text/xhtml",
+        "application/xhtml",
+        "application/xhtml+xml"
+    };
+
+    /**
      * The MIME types commonly used for requesting JSON data.
      */
     private static final String[] MIME_JSON = {
@@ -476,7 +486,7 @@ public class ServletApplication extends HttpServlet {
         Object    res = null;
         Dict      dict;
         Array     arr;
-        boolean   createHtml;
+        boolean   isHtml;
 
         try {
             // TODO: Implement security authentication for data queries
@@ -486,8 +496,9 @@ public class ServletApplication extends HttpServlet {
                          SecurityContext.currentUser());
                throw new ProcedureException("Permission denied");
             }
-            createHtml = !isMimeMatch(request, MIME_JSON) &&
-                         !isMimeMatch(request, MIME_XML);
+            isHtml = isMimeMatch(request, MIME_HTML) ||
+                     (!isMimeMatch(request, MIME_JSON) &&
+                      !isMimeMatch(request, MIME_XML));
             // TODO: Extend data lookup via plug-ins and/or standardized QL
             meta = ctx.getStorage().lookup(path);
             res = ctx.getStorage().load(path);
@@ -495,7 +506,7 @@ public class ServletApplication extends HttpServlet {
                 dict = new Dict();
                 dict.set("type", "index");
                 arr = ((Index) res).indices();
-                if (createHtml) {
+                if (isHtml) {
                     arr = arr.copy();
                     for (int i = 0; i < arr.size(); i++) {
                         arr.set(i, "http:" + arr.getString(i, null) + "/");
@@ -503,7 +514,7 @@ public class ServletApplication extends HttpServlet {
                 }
                 dict.set("directories", arr);
                 arr = ((Index) res).objects();
-                if (createHtml) {
+                if (isHtml) {
                     arr = arr.copy();
                     for (int i = 0; i < arr.size(); i++) {
                         arr.set(i, "http:" + arr.getString(i, null));
@@ -532,12 +543,12 @@ public class ServletApplication extends HttpServlet {
             }
 
             // Render result as JSON, XML or HTML
-            if (isMimeMatch(request, MIME_JSON)) {
+            if (isMimeMatch(request, MIME_JSON) && !isHtml) {
                 dict = new Dict();
                 dict.set("metadata", meta);
                 dict.set("data", res);
                 request.sendData("text/javascript", JsSerializer.serialize(dict));
-            } else if (isMimeMatch(request, MIME_XML)) {
+            } else if (isMimeMatch(request, MIME_XML) && !isHtml) {
                 dict = new Dict();
                 dict.set("metadata", meta);
                 dict.set("data", res);
