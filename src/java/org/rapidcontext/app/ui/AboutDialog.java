@@ -148,7 +148,7 @@ public class AboutDialog extends JDialog {
         c.gridwidth = 2;
         c.anchor = GridBagConstraints.WEST;
         c.insets = new Insets(10, 15, 0, 15);
-        getContentPane().add(new JLabel("Copyright © 2007-2010 by Per Cederberg."), c);
+        getContentPane().add(new JLabel("Copyright \u00A9 2007-2010 by Per Cederberg."), c);
         c = new GridBagConstraints();
         c.gridx = 1;
         c.gridy = 4;
