@@ -15,7 +15,6 @@
 package org.rapidcontext.app.ui;
 
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -24,12 +23,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Properties;
 
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.SwingConstants;
 
 /**
  * The about dialog.
@@ -60,6 +57,7 @@ public class AboutDialog extends JDialog {
     private void initialize(final ControlPanel parent, Properties buildInfo) {
         JLabel              label;
         JButton             button;
+        HyperLink           link;
         GridBagConstraints  c;
         String              str;
 
@@ -117,14 +115,8 @@ public class AboutDialog extends JDialog {
         label = new JLabel("License:");
         label.setFont(label.getFont().deriveFont(Font.BOLD));
         getContentPane().add(label, c);
-        button = new JButton("BSD License");
-        button.setHorizontalAlignment(SwingConstants.LEFT);
-        button.setBorder(BorderFactory.createEmptyBorder(0, 0, 1, 0));
-        button.setOpaque(false);
-        button.setForeground(Color.BLUE);
-        button.setBackground(getBackground());
-        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        button.addActionListener(new ActionListener() {
+        link = new HyperLink("BSD License");
+        link.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 try {
                     AppUtils.openURL("http://www.rapidcontext.com/doc/LICENSE.txt");
@@ -139,7 +131,7 @@ public class AboutDialog extends JDialog {
         c.weightx = 1.0;
         c.anchor = GridBagConstraints.WEST;
         c.insets = new Insets(6, 0, 0, 15);
-        getContentPane().add(button, c);
+        getContentPane().add(link, c);
 
         // Add copyright
         c = new GridBagConstraints();
@@ -166,14 +158,8 @@ public class AboutDialog extends JDialog {
         c.anchor = GridBagConstraints.WEST;
         c.insets = new Insets(10, 15, 0, 15);
         getContentPane().add(label, c);
-        button = new JButton("http://www.rapidcontext.com/");
-        button.setHorizontalAlignment(SwingConstants.LEFT);
-        button.setBorder(BorderFactory.createEmptyBorder(0, 0, 1, 0));
-        button.setOpaque(false);
-        button.setForeground(Color.BLUE);
-        button.setBackground(getBackground());
-        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        button.addActionListener(new ActionListener() {
+        link = new HyperLink("http://www.rapidcontext.com/");
+        link.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 try {
                     AppUtils.openURL("http://www.rapidcontext.com/");
@@ -188,7 +174,7 @@ public class AboutDialog extends JDialog {
         c.gridwidth = 2;
         c.anchor = GridBagConstraints.WEST;
         c.insets = new Insets(0, 15, 0, 15);
-        getContentPane().add(button, c);
+        getContentPane().add(link, c);
 
         // Add close button
         button = new JButton("Close");

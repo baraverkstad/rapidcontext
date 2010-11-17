@@ -15,7 +15,6 @@
 package org.rapidcontext.app.ui;
 
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -33,13 +32,11 @@ import java.net.InetAddress;
 import java.util.Properties;
 
 import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
 import org.apache.commons.lang.SystemUtils;
@@ -67,7 +64,7 @@ public class ControlPanel extends JFrame {
     /**
      * The server URL link.
      */
-    protected JButton linkButton = new JButton("http://...");
+    protected HyperLink serverLink = new HyperLink("http://...");
 
     /**
      * The status label.
@@ -111,10 +108,12 @@ public class ControlPanel extends JFrame {
         String              str;
 
         // Set system UI looks
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception ignore) {
-            // Ah well... at least we tried.
+        if (SystemUtils.IS_OS_MAC_OSX || SystemUtils.IS_OS_WINDOWS) {
+            try {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } catch (Exception ignore) {
+                // Ah well... at least we tried.
+            }
         }
 
         // Set title, menu & layout
@@ -148,17 +147,11 @@ public class ControlPanel extends JFrame {
         c.insets = new Insets(10, 10, 2, 10);
         c.anchor = GridBagConstraints.WEST;
         getContentPane().add(new JLabel("Server URL:"), c);
-        linkButton.setText("http://localhost:" + server.port + "/");
-        linkButton.setHorizontalAlignment(SwingConstants.LEFT);
-        linkButton.setBorder(BorderFactory.createEmptyBorder(0, 0, 1, 0));
-        linkButton.setOpaque(false);
-        linkButton.setForeground(Color.BLUE);
-        linkButton.setBackground(getBackground());
-        linkButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        linkButton.addActionListener(new ActionListener() {
+        serverLink.setText("http://localhost:" + server.port + "/");
+        serverLink.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 try {
-                    AppUtils.openURL(linkButton.getText());
+                    AppUtils.openURL(serverLink.getText());
                 } catch (Exception e) {
                     error(e.getMessage());
                 }
@@ -169,7 +162,7 @@ public class ControlPanel extends JFrame {
         c.weightx = 1.0;
         c.insets = new Insets(10, 0, 2, 10);
         c.anchor = GridBagConstraints.WEST;
-        getContentPane().add(linkButton, c);
+        getContentPane().add(serverLink, c);
 
         // Add login info label
         label = new JLabel("Login as 'admin' on a new server.");
@@ -225,8 +218,8 @@ public class ControlPanel extends JFrame {
         c.gridx = 1;
         c.gridy = 4;
         c.weighty = 1.0;
-        c.insets = new Insets(0, 0, 10, 0);
-        c.anchor = GridBagConstraints.SOUTHWEST;
+        c.insets = new Insets(0, 10, 10, 10);
+        c.anchor = GridBagConstraints.SOUTH;
         getContentPane().add(startButton, c);
         stopButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
@@ -330,7 +323,7 @@ public class ControlPanel extends JFrame {
         } catch (Exception e) {
             str = "http://localhost:" + server.port + "/";
         }
-        linkButton.setText(str);
+        serverLink.setText(str);
         if (server.isRunning()) {
             statusLabel.setText("Running");
             statusLabel.setForeground(Color.GREEN.darker().darker());
