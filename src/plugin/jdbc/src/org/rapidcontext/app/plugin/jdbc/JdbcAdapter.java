@@ -85,6 +85,53 @@ public class JdbcAdapter implements Adapter {
     };
 
     /**
+     * Creates a normalized copy of the JDBC configuration parameters.
+     * This will fill in any default values and set the JDBC driver
+     * class if only a JDBC url is set.
+     *
+     * @param params         the config parameters
+     *
+     * @return the normalized copy of the parameters
+     */
+    protected static Dict normalize(Dict params) {
+        Dict    res = params.copy();
+        String  driver;
+        String  url;
+        String  ping;
+
+        driver = params.getString(JDBC_DRIVER, "").trim();
+        url = params.getString(JDBC_URL, "").trim().toLowerCase();
+        ping = params.getString(JDBC_PING, "").trim();
+        if (driver.isEmpty()) {
+            if (url.startsWith("jdbc:odbc")) {
+                res.set(JDBC_DRIVER, "sun.jdbc.odbc.JdbcOdbcDriver");
+            } else if (url.startsWith("jdbc:mysql:")) {
+                res.set(JDBC_DRIVER, "com.mysql.jdbc.Driver");
+            } else if (url.startsWith("jdbc:postgresql:")) {
+                res.set(JDBC_DRIVER, "org.postgresql.Driver");
+            } else if (url.startsWith("jdbc:oracle:")) {
+                res.set(JDBC_DRIVER, "oracle.jdbc.driver.OracleDriver");
+            } else if (url.startsWith("jdbc:db2:")) {
+                res.set(JDBC_DRIVER, "COM.ibm.db2.jdbc.app.DB2Driver");
+            } else if (url.startsWith("jdbc:microsoft:")) {
+                res.set(JDBC_DRIVER, "com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            }
+        }
+        if (ping.isEmpty() && url.startsWith("jdbc:oracle:")) {
+            res.set(JDBC_PING, "SELECT * FROM dual");
+        } else if (ping.isEmpty()) {
+            res.set(JDBC_PING, "SELECT 1");
+        }
+        res.setBoolean(JDBC_AUTOCOMMIT, params.getBoolean(JDBC_AUTOCOMMIT, false));
+        try {
+            res.setInt(JDBC_TIMEOUT, params.getInt(JDBC_TIMEOUT, 30));
+        } catch (Exception ignore) {
+            // Exception handled when creating connection
+        }
+        return res;
+    }
+
+    /**
      * Default constructor, required by the Adapter interface.
      */
     public JdbcAdapter() {
@@ -186,6 +233,7 @@ public class JdbcAdapter implements Adapter {
         Properties   props;
         String       msg;
 
+        params = normalize(params);
         driverClass = params.getString(JDBC_DRIVER, "");
         try {
             loader = ApplicationContext.getInstance().getClassLoader();
@@ -205,11 +253,6 @@ public class JdbcAdapter implements Adapter {
         }
         url = params.getString(JDBC_URL, "");
         ping = params.getString(JDBC_PING, null);
-        if (ping == null && url.toLowerCase().startsWith("jdbc:oracle:")) {
-            ping = "SELECT * FROM dual";
-        } else if (ping == null) {
-            ping = "SELECT 1";
-        }
         autoCommit = params.getBoolean(JDBC_AUTOCOMMIT, false);
         try {
             timeout = params.getInt(JDBC_TIMEOUT, 30);

@@ -126,7 +126,7 @@ public class JdbcConnectionListProcedure implements Procedure, Restricted {
                 if (pool.getAdapter() instanceof JdbcAdapter) {
                     dict = new Dict();
                     dict.set("name", pool.getName());
-                    dict.addAll(pool.getParameters());
+                    dict.addAll(JdbcAdapter.normalize(pool.getParameters()));
                     // TODO: revisit the decision to omit passwords for security...
                     dict.remove("password");
                     dict.setInt("maxConnections", pool.getMaxSize());
