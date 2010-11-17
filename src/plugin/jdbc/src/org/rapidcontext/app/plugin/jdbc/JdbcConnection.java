@@ -163,7 +163,7 @@ public class JdbcConnection implements AdapterConnection {
      *             correctly
      */
     public void validate() throws AdapterException {
-        if (sqlPing != null) {
+        if (sqlPing != null && !sqlPing.trim().isEmpty()) {
             executeQuery(sqlPing);
         }
     }
