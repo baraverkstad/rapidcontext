@@ -20,18 +20,18 @@
 <p>RapidContext server programming is based on Java, JavaScript and the specific
 languages used for communication with external systems (such as SQL). Server
 functionality is added by <em>plug-ins</em>, a ZIP file containing Java
-libraries, procedures, applets, configuration or file data. The API:s exposed
+libraries, procedures, apps, configuration or file data. The API:s exposed
 by the server to the client is file retrieval (HTTP GET), file upload (HTTP
 POST to a specific URL) and a set of callable <em>procedures</em>.</p>
 
 
 <h2>1. Plug-in Installation &amp; Restarts</h2>
 
-<p>Plug-ins are installed or updated by using the built-in Admin application.
+<p>Plug-ins are installed or updated by using the built-in Admin app.
 The steps below explains how to install or update a plug-in:</p>
 
 <ol class="box">
-  <li>Choose the "Plug-Ins" tab in the Admin application</li>
+  <li>Choose the "Plug-Ins" tab in the Admin app</li>
   <li>Locate the "Software Install &amp; Update" pane at the top (see
       screenshot)</li>
   <p style="text-align: center;">
@@ -45,15 +45,15 @@ The steps below explains how to install or update a plug-in:</p>
 </ol>
 
 <p>Plug-ins can also easily be loaded and unloaded through the built-in
-Admin application. Once unloaded, the plug-in directory under
+Admin app. Once unloaded, the plug-in directory under
 <code>plugin</code> can be removed to completely uninstall it. In certain
 circumstances, the web browser and/or the server must also be restarted
 for the plug-in loading or unloading to have effect:</p>
 
 <ul class="box">
   <li><strong>Client Restarts:</strong> Once a new plug-in has been
-      installed, it is normally possible to use any applets in it
-      immediately. The list of displayed applets on the start page is not
+      installed, it is normally possible to use any apps in it
+      immediately. The list of displayed apps on the start page is not
       automatically updated, however. So sometimes a restart of the web
       browser (using Ctrl-R for a forced page reload) might be necessary.</li>
   <li><strong>Server Restarts:</strong> The server is automatically
@@ -96,7 +96,7 @@ in the same way. The list below explains the standard files and directories:</p>
 plugin.properties <span class="comment">-- The plug-in manifest file (see below)</span>
 files/            <span class="comment">-- Contains all files mapped to URL:s</span>
 lib/              <span class="comment">-- Contains Java JAR libraries to load</span>
-applet/           <span class="comment">-- Contains applet configuration files</span>
+app/              <span class="comment">-- Contains app configuration files</span>
 procedure/        <span class="comment">-- Contains procedure configuration files</span>
 environment/      <span class="comment">-- Contains environment configuration file(s)</span>
 role/             <span class="comment">-- Contains role configuration files</span>
@@ -105,7 +105,7 @@ user/             <span class="comment">-- Contains user configuration files</sp
 
 <p>The <code>files</code> sub-directory is special in that it automatically
 maps the files inside onto URL:s. This is the standard way to provide
-JavaScript source files, images and other resources needed by the applets
+JavaScript source files, images and other resources needed by the apps
 running in the web browser.</p>
 
 
@@ -184,8 +184,8 @@ procedure types are listed below:</p>
 
 <p>By installing additional plug-ins, more procedure types can become
 available. It is possible to edit or create new procedures of any registered
-procedure type in the Admin applet. Below is a screenshot showing the
-location of the add and edit procedure buttons:</p>
+procedure type in the Admin app. Below is a screenshot showing the location
+of the add and edit procedure buttons:</p>
 
 <p style="text-align: center;">
   <img src="screenshot-procedure-buttons.png" />
@@ -213,14 +213,14 @@ a specific type, as listed below:</p>
 </ol>
 
 <p>Editing the procedure and the procedure configuration parameters is
-easy in the Admin applet, as shown in the screenshot below:</p>
+easy in the Admin app, as shown in the screenshot below:</p>
 
 <p style="text-align: center;">
   <img src="screenshot-procedure-edit.png" />
 </p>
 
-<p>Once created or modified, the procedures edited in the Admin applet
-are stored in the <code>local</code> plug-in, in the <code>procedures</code>
+<p>Once created or modified, the procedures edited in the Admin app are
+stored in the <code>local</code> plug-in, in the <code>procedures</code>
 directory. From that location the files may be copied into the corresponding
 plug-in development folder for procedures.</p>
 
@@ -270,7 +270,7 @@ in sequence.</p>
 
 <p class="box"><strong>Note:</strong> A RapidContext server may only have a
 single environment loaded. This environment (and all its connections) is
-shared between all applets, procedures and users on the server. If several
+shared between all apps, procedures and users on the server. If several
 environment are required, separate RapidContext server instances must be
 used.</p>
 

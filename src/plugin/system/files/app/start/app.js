@@ -1,14 +1,14 @@
 /**
- * Creates a new start applet.
+ * Creates a new start app.
  */
-function StartApplet() {
+function StartApp() {
     this.inlinePanes = false;
 }
 
 /**
- * Starts the applet and initializes the UI.
+ * Starts the app and initializes the UI.
  */
-StartApplet.prototype.start = function () {
+StartApp.prototype.start = function () {
     MochiKit.Signal.connect(this.ui.tourButton, "onclick", this, "tourStart");
     MochiKit.Signal.connect(this.ui.tourWizard, "onclose", this, "tourStop");
     MochiKit.Signal.connect(this.ui.tourWizard, "onchange", this, "tourChange");
@@ -21,27 +21,27 @@ StartApplet.prototype.start = function () {
     MochiKit.Signal.connect(this.ui.tourAdminLogLocate, "onclick", this, "tourLocateAdminLogs");
     MochiKit.Signal.connect(this.ui.tourAdminUserLocate, "onclick", this, "tourLocateAdminUsers");
     MochiKit.Signal.connect(this.ui.tourAdminPluginLocate, "onclick", this, "tourLocateAdminPlugins");
-    var a = RapidContext.App.applets();
+    var a = RapidContext.App.apps();
     var help = null;
     var admin = null;
     var manualLaunch = { manual: true, auto: true };
     for (var i = 0; i < a.length; i++) {
-        if (a[i].className === "HelpApplet") {
+        if (a[i].className === "HelpApp") {
             help = a[i];
-        } else if (a[i].className === "AdminApplet") {
+        } else if (a[i].className === "AdminApp") {
             admin = a[i];
         } else if (a[i].launch in manualLaunch) {
-            this.addApplet(a[i]);
+            this.addApp(a[i]);
         } else if (a[i].startPage) {
-            this.startApplet(a[i].className,
+            this.startApp(a[i].className,
                              this._createInlinePane(a[i].name, a[i].startPage));
         }
     }
     if (help) {
-        this.addApplet(help);
+        this.addApp(help);
     }
     if (admin) {
-        this.addApplet(admin);
+        this.addApp(admin);
     }
     if (MochiKit.Base.findValue(RapidContext.App.user().role, "Admin") < 0) {
         this.ui.tourWizard.removeChildNode(this.ui.tourWizard.lastChild);
@@ -50,43 +50,43 @@ StartApplet.prototype.start = function () {
 }
 
 /**
- * Stops the applet.
+ * Stops the app.
  */
-StartApplet.prototype.stop = function () {
+StartApp.prototype.stop = function () {
     // Nothing to do here
 }
 
 /**
- * Adds the specified applet launcher to the list of available
- * applets.
+ * Adds the specified app launcher to the list of available
+ * apps.
  *
- * @param {Object} applet the applet launcher to add
+ * @param {Object} app the app launcher to add
  */
-StartApplet.prototype.addApplet = function (applet) {
-    var launcher = MochiKit.Base.bind("startApplet", this, applet.className, null);
-    if (applet.icon) {
-        var imgLink = MochiKit.DOM.A({ href: "#" }, MochiKit.DOM.IMG({ src: applet.icon }));
+StartApp.prototype.addApp = function (app) {
+    var launcher = MochiKit.Base.bind("startApp", this, app.className, null);
+    if (app.icon) {
+        var imgLink = MochiKit.DOM.A({ href: "#" }, MochiKit.DOM.IMG({ src: app.icon }));
         MochiKit.Signal.connect(imgLink, "onclick", launcher);
     }
-    var nameLink = MochiKit.DOM.A({ href: "#" }, applet.name);
+    var nameLink = MochiKit.DOM.A({ href: "#" }, app.name);
     MochiKit.Signal.connect(nameLink, "onclick", launcher);
     var attrs = { style: { "padding-right": "10px", "padding-bottom": "10px" } };
     var tr = MochiKit.DOM.TR(null,
                              MochiKit.DOM.TD(attrs, imgLink),
-                             MochiKit.DOM.TD(attrs, nameLink, " - ", applet.description));
-    this.ui.appletTable.appendChild(tr);
+                             MochiKit.DOM.TD(attrs, nameLink, " - ", app.description));
+    this.ui.appTable.appendChild(tr);
 }
 
 /**
- * Starts an applet with the specified class name.
+ * Starts an app with the specified class name.
  *
- * @param {String} className the applet class name
+ * @param {String} className the app class name
  * @param {Widget} [container] the optional container widget
  * @param {Event} [evt] the optional mouse click event
  */
-StartApplet.prototype.startApplet = function (className, container, evt) {
+StartApp.prototype.startApp = function (className, container, evt) {
     try {
-        var d = RapidContext.App.startApplet(className, container);
+        var d = RapidContext.App.startApp(className, container);
         d.addErrback(RapidContext.UI.showError);
     } catch (e) {
         RapidContext.UI.showError(e);
@@ -104,7 +104,7 @@ StartApplet.prototype.startApplet = function (className, container, evt) {
  *
  * @return {Widget} the widget DOM node
  */
-StartApplet.prototype._createInlinePane = function (name, position) {
+StartApp.prototype._createInlinePane = function (name, position) {
     if (!this.inlinePanes) {
         this.inlinePanes = true;
         MochiKit.DOM.replaceChildNodes(this.ui.inlineArea);
@@ -121,7 +121,7 @@ StartApplet.prototype._createInlinePane = function (name, position) {
     return pane;
 }
 
-StartApplet.prototype.tourStart = function () {
+StartApp.prototype.tourStart = function () {
     if (this.ui.tourDialog.isHidden()) {
         document.body.appendChild(this.ui.tourDialog);
         var title = this.ui.tourDialog.firstChild;
@@ -143,19 +143,19 @@ StartApplet.prototype.tourStart = function () {
 /**
  * Starts the guided tour.
  */
-StartApplet.prototype.tourStop = function () {
+StartApp.prototype.tourStop = function () {
     this.ui.tourDialog.hide();
 }
 
 /**
  * Stops the guided tour.
  */
-StartApplet.prototype.tourChange = function () {
+StartApp.prototype.tourChange = function () {
     var d = MochiKit.Async.wait(1);
     switch (this.ui.tourWizard.activePageIndex()) {
     case 1:
         d.addBoth(function() {
-            return RapidContext.App.callApplet("StartApplet", "tourLocateStart");
+            return RapidContext.App.callApp("StartApp", "tourLocateStart");
         });
         break;
     case 2:
@@ -163,7 +163,7 @@ StartApplet.prototype.tourChange = function () {
         break;
     case 3:
         d.addBoth(function() {
-            return RapidContext.App.callApplet("HelpApplet", "loadTopics");
+            return RapidContext.App.callApp("HelpApp", "loadTopics");
         });
         d.addBoth(function() {
             return MochiKit.Async.wait(1);
@@ -175,7 +175,7 @@ StartApplet.prototype.tourChange = function () {
         break;
     case 5:
         d.addBoth(function() {
-            return RapidContext.App.callApplet("AdminApplet", "loadProcedures");
+            return RapidContext.App.callApp("AdminApp", "loadProcedures");
         });
         d.addBoth(function() {
             return MochiKit.Async.wait(1);
@@ -199,16 +199,16 @@ StartApplet.prototype.tourChange = function () {
 }
 
 /**
- * Locates the start application.
+ * Locates the start app.
  */
-StartApplet.prototype.tourLocateStart = function () {
-    this.tourLocate(this.ui.appletTable);
+StartApp.prototype.tourLocateStart = function () {
+    this.tourLocate(this.ui.appTable);
 }
 
 /**
  * Locates the user menu.
  */
-StartApplet.prototype.tourLocateUser = function () {
+StartApp.prototype.tourLocateUser = function () {
     var menu = RapidContext.App._UI.menu;
     if (menu.isHidden()) {
         RapidContext.App._UI.menu.show();
@@ -221,9 +221,9 @@ StartApplet.prototype.tourLocateUser = function () {
 }
 
 /**
- * Locates the help application.
+ * Locates the help app.
  */
-StartApplet.prototype.tourLocateHelp = function () {
+StartApp.prototype.tourLocateHelp = function () {
     var tab = RapidContext.App._UI.container.selectedChild();
     var box = this.getBoundingBox(tab.firstChild.nextSibling);
     var diag = this.getBoundingBox(this.ui.tourDialog);
@@ -232,9 +232,9 @@ StartApplet.prototype.tourLocateHelp = function () {
 }
 
 /**
- * Locates the application tabs.
+ * Locates the app tabs.
  */
-StartApplet.prototype.tourLocateTabs = function () {
+StartApp.prototype.tourLocateTabs = function () {
     var tabs = RapidContext.App._UI.container.firstChild;
     var box = this.getBoundingBox(tabs.firstChild, tabs.lastChild);
     box.h += 30;
@@ -242,9 +242,9 @@ StartApplet.prototype.tourLocateTabs = function () {
 }
 
 /**
- * Locates the admin application.
+ * Locates the admin app.
  */
-StartApplet.prototype.tourLocateAdmin = function () {
+StartApp.prototype.tourLocateAdmin = function () {
     var tab = RapidContext.App._UI.container.selectedChild();
     var box = this.getBoundingBox(tab);
     var diag = this.getBoundingBox(this.ui.tourDialog);
@@ -255,7 +255,7 @@ StartApplet.prototype.tourLocateAdmin = function () {
 /**
  * Locates the admin procedures.
  */
-StartApplet.prototype.tourLocateAdminProcs = function () {
+StartApp.prototype.tourLocateAdminProcs = function () {
     var res = this.tourGetAdminTab(2);
     res.container.selectChild(res.tab);
     var tree = res.tab.firstChild.lastChild;
@@ -270,7 +270,7 @@ StartApplet.prototype.tourLocateAdminProcs = function () {
 /**
  * Locates the admin logs.
  */
-StartApplet.prototype.tourLocateAdminLogs = function () {
+StartApp.prototype.tourLocateAdminLogs = function () {
     var res = this.tourGetAdminTab(5);
     res.container.selectChild(res.tab);
     var box = this.getBoundingBox(res.tab.firstChild.nextSibling);
@@ -282,7 +282,7 @@ StartApplet.prototype.tourLocateAdminLogs = function () {
 /**
  * Locates the admin users.
  */
-StartApplet.prototype.tourLocateAdminUsers = function () {
+StartApp.prototype.tourLocateAdminUsers = function () {
     var res = this.tourGetAdminTab(4);
     res.container.selectChild(res.tab);
     var box = this.getBoundingBox(res.tab);
@@ -294,7 +294,7 @@ StartApplet.prototype.tourLocateAdminUsers = function () {
 /**
  * Locates the admin plug-ins.
  */
-StartApplet.prototype.tourLocateAdminPlugins = function () {
+StartApp.prototype.tourLocateAdminPlugins = function () {
     var res = this.tourGetAdminTab(1);
     res.container.selectChild(res.tab);
     var box = this.getBoundingBox(res.tab.firstChild);
@@ -308,7 +308,7 @@ StartApplet.prototype.tourLocateAdminPlugins = function () {
  *
  * @param {Node} ... the DOM node elements to locate
  */
-StartApplet.prototype.tourLocate = function () {
+StartApp.prototype.tourLocate = function () {
     document.body.appendChild(this.ui.tourLocator);
     this.ui.tourLocator.animate({ effect: "cancel" });
     var box = this.getBoundingBox(this.ui.tourDialog);
@@ -325,15 +325,15 @@ StartApplet.prototype.tourLocate = function () {
 }
 
 /**
- * Returns a UI tab from the admin application.
+ * Returns a UI tab from the admin app.
  *
  * @param {Number} idx the tab index
  *
  * @return {Object} a result object with 'tab' and 'container'
  *             properties
  */
-StartApplet.prototype.tourGetAdminTab = function (idx) {
-    // TODO: this accesses internal UI from the applet...
+StartApp.prototype.tourGetAdminTab = function (idx) {
+    // TODO: this accesses internal UI from the app...
     var tab = RapidContext.App._UI.container.selectedChild();
     var container = tab.lastChild;
     var children = container.getChildNodes();
@@ -354,7 +354,7 @@ StartApplet.prototype.tourGetAdminTab = function (idx) {
  *
  * @return {Object} the bounding box
  */
-StartApplet.prototype.getBoundingBox = function () {
+StartApp.prototype.getBoundingBox = function () {
     var box = null;
     for (var i = 0; i < arguments.length; i++) {
         var elem = arguments[i];

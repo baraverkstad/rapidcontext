@@ -1,7 +1,7 @@
 /**
- * Creates a new admin applet.
+ * Creates a new admin app.
  */
-function AdminApplet() {
+function AdminApp() {
     this._defaults = { operatorId: RapidContext.App.user().name };
     this._currentProc = null;
     this._batch = { running: false, delay: 5, queue: [],
@@ -10,12 +10,12 @@ function AdminApplet() {
 }
 
 /**
- * Starts the applet and initializes the UI.
+ * Starts the app and initializes the UI.
  */
-AdminApplet.prototype.start = function () {
+AdminApp.prototype.start = function () {
     // Create procedure callers
     this.proc = RapidContext.Procedure.mapAll({
-        appletList: "System.Applet.List",
+        appList: "System.App.List",
         plugInList: "System.PlugIn.List",
         procList: "System.Procedure.List",
         userList: "System.User.List",
@@ -23,10 +23,10 @@ AdminApplet.prototype.start = function () {
     });
     // Initialize event signals
     MochiKit.Signal.connect(this.ui.root, "onenter", MochiKit.Base.bind("selectChild", this.ui.tabContainer, null));
-    RapidContext.UI.connectProc(this.proc.appletList, this.ui.appletLoading, this.ui.appletReload);
-    MochiKit.Signal.connect(this.proc.appletList, "onsuccess", this.ui.appletTable, "setData");
-    MochiKit.Signal.connect(this.ui.appletTable, "onselect", this, "_showApplet");
-    MochiKit.Signal.connect(this.ui.appletLaunch, "onclick", this, "_launchApplet");
+    RapidContext.UI.connectProc(this.proc.appList, this.ui.appLoading, this.ui.appReload);
+    MochiKit.Signal.connect(this.proc.appList, "onsuccess", this.ui.appTable, "setData");
+    MochiKit.Signal.connect(this.ui.appTable, "onselect", this, "_showApp");
+    MochiKit.Signal.connect(this.ui.appLaunch, "onclick", this, "_launchApp");
     MochiKit.Signal.connect(this.ui.pluginTab, "onenter", this, "_pluginUploadInit");
     MochiKit.Signal.connectOnce(this.ui.pluginTab, "onenter", this, "loadPlugins");
     MochiKit.Signal.connect(this.ui.pluginFile, "onselect", this, "_pluginUploadStart");
@@ -99,53 +99,53 @@ AdminApplet.prototype.start = function () {
     }
 
     // Initialize data
-    this.proc.appletList();
+    this.proc.appList();
     this._showProcedure();
     this._stopBatch();
 }
 
 /**
- * Stops the applet.
+ * Stops the app.
  */
-AdminApplet.prototype.stop = function () {
+AdminApp.prototype.stop = function () {
     for (var name in this.proc) {
         MochiKit.Signal.disconnectAll(this.proc[name]);
     }
 }
 
 /**
- * Shows detailed applet information.
+ * Shows detailed app information.
  */
-AdminApplet.prototype._showApplet = function () {
-    var data = this.ui.appletTable.getSelectedData();
-    this.ui.appletForm.reset();
-    this.ui.appletForm.update(data);
-    MochiKit.DOM.replaceChildNodes(this.ui.appletResources);
+AdminApp.prototype._showApp = function () {
+    var data = this.ui.appTable.getSelectedData();
+    this.ui.appForm.reset();
+    this.ui.appForm.update(data);
+    MochiKit.DOM.replaceChildNodes(this.ui.appResources);
     for (var i = 0; i < data.resources.length; i++) {
         var res = data.resources[i];
-        MochiKit.DOM.appendChildNodes(this.ui.appletResources, res.url, MochiKit.DOM.BR());
+        MochiKit.DOM.appendChildNodes(this.ui.appResources, res.url, MochiKit.DOM.BR());
     }
 }
 
 /**
- * Launches the currently selected applet.
+ * Launches the currently selected app.
  */
-AdminApplet.prototype._launchApplet = function () {
-    var data = this.ui.appletTable.getSelectedData();
-    RapidContext.App.startApplet(data.className);
+AdminApp.prototype._launchApp = function () {
+    var data = this.ui.appTable.getSelectedData();
+    RapidContext.App.startApp(data.className);
 }
 
 /**
  * Loads the table of available plug-ins.
  */
-AdminApplet.prototype.loadPlugins = function () {
+AdminApp.prototype.loadPlugins = function () {
     return this.proc.plugInList();
 }
 
 /**
  * Shows the details for the currently selected plug-in.
  */
-AdminApplet.prototype._showPlugin = function () {
+AdminApp.prototype._showPlugin = function () {
     var data = this.ui.pluginTable.getSelectedData();
     this.ui.pluginForm.reset();
     this.ui.pluginForm.update(data);
@@ -164,7 +164,7 @@ AdminApplet.prototype._showPlugin = function () {
 /**
  * Loads or unloads the currently selected plug-in.
  */
-AdminApplet.prototype._togglePlugin = function () {
+AdminApp.prototype._togglePlugin = function () {
     this.ui.pluginReload.hide();
     this.ui.pluginLoading.show();
     var data = this.ui.pluginTable.getSelectedData();
@@ -185,7 +185,7 @@ AdminApplet.prototype._togglePlugin = function () {
 /**
  * Initializes the plug-in file upload and installation interface.
  */
-AdminApplet.prototype._pluginUploadInit = function () {
+AdminApp.prototype._pluginUploadInit = function () {
     this.ui.pluginFile.show();
     this.ui.pluginProgress.hide();
     this.ui.pluginFileInfo.hide();
@@ -195,7 +195,7 @@ AdminApplet.prototype._pluginUploadInit = function () {
 /**
  * Handles the plug-in file upload init.
  */
-AdminApplet.prototype._pluginUploadStart = function () {
+AdminApp.prototype._pluginUploadStart = function () {
     this.ui.pluginFile.hide();
     this.ui.pluginProgress.show();
     this.ui.pluginProgress.setAttrs({ min: 0, max: 100 });
@@ -208,7 +208,7 @@ AdminApplet.prototype._pluginUploadStart = function () {
  *
  * @param {Object} [res] the optional session data object
  */
-AdminApplet.prototype._pluginUploadProgress = function (res) {
+AdminApp.prototype._pluginUploadProgress = function (res) {
     var selfCallback = MochiKit.Base.bind("_pluginUploadProgress", this);
     function pluginLoadStatus() {
         var d = RapidContext.App.callProc("System.Session.Current");
@@ -229,7 +229,7 @@ AdminApplet.prototype._pluginUploadProgress = function (res) {
  *
  * @param {Object} file the session file data object
  */
-AdminApplet.prototype._pluginUploadInfo = function (file) {
+AdminApp.prototype._pluginUploadInfo = function (file) {
     this.ui.pluginFile.hide();
     this.ui.pluginProgress.hide();
     this.ui.pluginFileInfo.show();
@@ -248,7 +248,7 @@ AdminApplet.prototype._pluginUploadInfo = function (file) {
 /**
  * Performs a plug-in installation.
  */
-AdminApplet.prototype._pluginInstall = function () {
+AdminApp.prototype._pluginInstall = function () {
     var self = this;
     var id;
     this.ui.overlay.setAttrs({ message: "Installing..." });
@@ -274,7 +274,7 @@ AdminApplet.prototype._pluginInstall = function () {
 /**
  * Sends a server reset (restart) request.
  */
-AdminApplet.prototype.resetServer = function (e) {
+AdminApp.prototype.resetServer = function (e) {
     var d = RapidContext.App.callProc("System.Reset");
     if (e instanceof MochiKit.Signal.Event) {
         d.addCallback(function (data) { alert("Server reset complete"); });
@@ -288,7 +288,7 @@ AdminApplet.prototype.resetServer = function (e) {
  *
  * @param {Object} res the result object
  */
-AdminApplet.prototype._callbackProcedures = function (res) {
+AdminApp.prototype._callbackProcedures = function (res) {
     this.ui.procTree.markAll();
     for (var i = 0; i < res.length; i++) {
         var path = res[i].split(".");
@@ -304,7 +304,7 @@ AdminApplet.prototype._callbackProcedures = function (res) {
  *
  * @param {String} name the procedure name
  */
-AdminApplet.prototype.showProcedure = function (name) {
+AdminApp.prototype.showProcedure = function (name) {
     var node = this.ui.procTree.findByPath(name.split("."));
     if (node == null) {
         throw new Error("failed to find procedure '" + name + "'");
@@ -318,7 +318,7 @@ AdminApplet.prototype.showProcedure = function (name) {
 /**
  * Loads detailed procedure information.
  */
-AdminApplet.prototype._showProcedure = function () {
+AdminApp.prototype._showProcedure = function () {
     var node = this.ui.procTree.selectedChild();
     this.ui.procForm.reset();
     this.ui.procEdit.hide();
@@ -341,7 +341,7 @@ AdminApplet.prototype._showProcedure = function () {
  *
  * @param {Object} res the result object or error
  */
-AdminApplet.prototype._callbackShowProcedure = function (res) {
+AdminApp.prototype._callbackShowProcedure = function (res) {
     this.ui.procReload.show();
     this.ui.procLoading.hide();
     if (res instanceof Error) {
@@ -385,7 +385,7 @@ AdminApplet.prototype._callbackShowProcedure = function (res) {
  *
  * @return {Array} the procedure arguments
  */
-AdminApplet.prototype._getProcArgs = function () {
+AdminApp.prototype._getProcArgs = function () {
     var args = [];
     var rows = this.ui.procArgTable.childNodes;
     for (var i = 0; i < rows.length; i++) {
@@ -403,7 +403,7 @@ AdminApplet.prototype._getProcArgs = function () {
  *
  * @param {Number} idx the argument index
  */
-AdminApplet.prototype._editProcArg = function (idx) {
+AdminApp.prototype._editProcArg = function (idx) {
     var args = this._getProcArgs();
     this.ui.procArgForm.update(args[idx]);
     this.ui.procArgForm.argumentIndex = idx;
@@ -413,7 +413,7 @@ AdminApplet.prototype._editProcArg = function (idx) {
 /**
  * Updates a procedure argument after editing in the dialog.
  */
-AdminApplet.prototype._updateProcArg = function () {
+AdminApp.prototype._updateProcArg = function () {
     var form = this.ui.procArgForm.valueMap();
     var idx = this.ui.procArgForm.argumentIndex;
     var tr = this.ui.procArgTable.childNodes[idx];
@@ -450,7 +450,7 @@ AdminApplet.prototype._updateProcArg = function () {
 /**
  * Opens the procedure editing dialog for a new procedure.
  */
-AdminApplet.prototype._addProcedure = function () {
+AdminApp.prototype._addProcedure = function () {
     var data = { name: "", type: "javascript", description: "",
                  bindings: {}, defaults: {} };
     var d = this._initProcEdit(data);
@@ -460,7 +460,7 @@ AdminApplet.prototype._addProcedure = function () {
 /**
  * Opens the procedure editing dialog for an existing procedure.
  */
-AdminApplet.prototype._editProcedure = function () {
+AdminApp.prototype._editProcedure = function () {
     var p = this._currentProc;
     var data = { name: p.name, type: p.type, description: p.description,
                  bindings: {}, defaults: {} };
@@ -478,7 +478,7 @@ AdminApplet.prototype._editProcedure = function () {
 /**
  * Initializes the procedure editing dialog.
  */
-AdminApplet.prototype._initProcEdit = function (data) {
+AdminApp.prototype._initProcEdit = function (data) {
     this.ui.procEditDialog.data = data;
     var select = this.ui.procEditType;
     var d = RapidContext.App.callProc("System.Procedure.Types");
@@ -503,7 +503,7 @@ AdminApplet.prototype._initProcEdit = function (data) {
  * Renders the procedure editing form from the data object stored in
  * the dialog.
  */
-AdminApplet.prototype._renderProcEdit = function () {
+AdminApp.prototype._renderProcEdit = function () {
     var data = this.ui.procEditDialog.data;
     RapidContext.Widget.destroyWidget(this.ui.procEditConns.childNodes);
     RapidContext.Widget.destroyWidget(this.ui.procEditData.childNodes);
@@ -562,7 +562,7 @@ AdminApplet.prototype._renderProcEdit = function () {
 /**
  * Adds a procedure binding from the input control.
  */
-AdminApplet.prototype._addProcBinding = function () {
+AdminApp.prototype._addProcBinding = function () {
     var data = this.ui.procEditDialog.data;
     var type = this.ui.procEditAddType.value;
     var name = MochiKit.Format.strip(this.ui.procEditAddName.getValue());
@@ -587,7 +587,7 @@ AdminApplet.prototype._addProcBinding = function () {
  * or modification of the procedure type. It will also trigger
  * re-rendering of the form.
  */
-AdminApplet.prototype._updateProcEdit = function () {
+AdminApp.prototype._updateProcEdit = function () {
     var data = this.ui.procEditDialog.data;
     var values = this.ui.procEditForm.valueMap();
     data.name = values.name;
@@ -622,7 +622,7 @@ AdminApplet.prototype._updateProcEdit = function () {
 /**
  * Saves the procedure from the procedure edit dialog.
  */
-AdminApplet.prototype._saveProcedure = function () {
+AdminApp.prototype._saveProcedure = function () {
     var data = this.ui.procEditDialog.data;
     this._updateProcEdit();
     var bindings = [];
@@ -647,7 +647,7 @@ AdminApplet.prototype._saveProcedure = function () {
 /**
  * Executes a procedure call for the current procedure.
  */
-AdminApplet.prototype._executeProcedure = function () {
+AdminApp.prototype._executeProcedure = function () {
     var proc = this._currentProc;
     var args = [];
     var values = this._getProcArgs();
@@ -681,7 +681,7 @@ AdminApplet.prototype._executeProcedure = function () {
  *
  * @param {Object} res the response data or error
  */
-AdminApplet.prototype._callbackExecute = function (res) {
+AdminApp.prototype._callbackExecute = function (res) {
     this.ui.procExecLoading.hide();
     this.ui.procExec.disabled = false;
     this.ui.procBatch.disabled = false;
@@ -700,7 +700,7 @@ AdminApplet.prototype._callbackExecute = function (res) {
  * @param {Node} node the tree node (or tree) widget
  * @param {Object} [data] the data object to add
  */
-AdminApplet.prototype._showExecData = function (node, data) {
+AdminApp.prototype._showExecData = function (node, data) {
     function typeName(value) {
         if (typeof(value) == "object") {
             if (value == null) {
@@ -782,7 +782,7 @@ AdminApplet.prototype._showExecData = function (node, data) {
 /**
  * Creates a new set of batch calls for the current procedure.
  */
-AdminApplet.prototype._createBatch = function () {
+AdminApp.prototype._createBatch = function () {
     var proc = this._currentProc;
     var args = [];
     var count = null;
@@ -841,7 +841,7 @@ AdminApplet.prototype._createBatch = function () {
 /**
  * Configure the batch delay.
  */
-AdminApplet.prototype._configBatchDelay = function () {
+AdminApp.prototype._configBatchDelay = function () {
     var value;
 
     value = prompt("Enter order processing delay (in seconds):",
@@ -857,7 +857,7 @@ AdminApplet.prototype._configBatchDelay = function () {
 /**
  * Starts the batch processing if not already running.
  */
-AdminApplet.prototype._startBatch = function () {
+AdminApp.prototype._startBatch = function () {
     if (!this._batch.running) {
         this._batch.running = true;
         this._batch.stat.success = 0;
@@ -873,7 +873,7 @@ AdminApplet.prototype._startBatch = function () {
 /**
  * Stops the batch processing if running.
  */
-AdminApplet.prototype._stopBatch = function () {
+AdminApp.prototype._stopBatch = function () {
     this._batch.running = false;
     MochiKit.DOM.replaceChildNodes(this.ui.batchResume, "Resume");
     this.ui.batchLoading.hide();
@@ -882,7 +882,7 @@ AdminApplet.prototype._stopBatch = function () {
 /**
  * Toggles the batch processing.
  */
-AdminApplet.prototype._toggleBatch = function () {
+AdminApp.prototype._toggleBatch = function () {
     if (this._batch.running) {
         this._stopBatch();
     } else {
@@ -893,7 +893,7 @@ AdminApplet.prototype._toggleBatch = function () {
 /**
  * Stops the batch processing and clears the queue.
  */
-AdminApplet.prototype._clearBatch = function () {
+AdminApp.prototype._clearBatch = function () {
     this._stopBatch();
     this._batch.queue = [];
     this._batch.stat.success = 0;
@@ -905,7 +905,7 @@ AdminApplet.prototype._clearBatch = function () {
 /**
  * Processes the first item in the batch queue.
  */
-AdminApplet.prototype._processBatch = function () {
+AdminApp.prototype._processBatch = function () {
     var item;
 
     if (this._batch.running) {
@@ -924,7 +924,7 @@ AdminApplet.prototype._processBatch = function () {
  *
  * @param {Object} res the call result data or error
  */
-AdminApplet.prototype._callbackBatch = function (res) {
+AdminApp.prototype._callbackBatch = function (res) {
     var delay;
     if (res instanceof Error) {
         this._batch.stat.failed++;
@@ -948,14 +948,14 @@ AdminApplet.prototype._callbackBatch = function (res) {
 /**
  * Loads the list of users.
  */
-AdminApplet.prototype.loadUsers = function () {
+AdminApp.prototype.loadUsers = function () {
     this.proc.userList();
 }
 
 /**
  * Modifies the user form for adding a new user.
  */
-AdminApplet.prototype._addUser = function () {
+AdminApp.prototype._addUser = function () {
     this.ui.userForm.reset();
     this.ui.userForm.update({ enabled: true,
                               passwordHint: "Minimum 6 characters" });
@@ -965,7 +965,7 @@ AdminApplet.prototype._addUser = function () {
 /**
  * Modifies the user form for editing an existing user.
  */
-AdminApplet.prototype._editUser = function () {
+AdminApp.prototype._editUser = function () {
     var data = this.ui.userTable.getSelectedData();
     this.ui.userForm.reset();
     var extra = { roles: (data.role) ? data.role.join(" ") : "",
@@ -977,7 +977,7 @@ AdminApplet.prototype._editUser = function () {
 /**
  * Saves the user modification form.
  */
-AdminApplet.prototype._saveUser = function () {
+AdminApp.prototype._saveUser = function () {
     var data = this.ui.userForm.valueMap();
     if (this.ui.userForm.validate()) {
         this.proc.userChange(data.name,
@@ -993,7 +993,7 @@ AdminApplet.prototype._saveUser = function () {
 /**
  * Sets a new log level.
  */
-AdminApplet.prototype.setLogLevel = function (level) {
+AdminApp.prototype.setLogLevel = function (level) {
     this.ui.logForm.update({ level: level });
     LOG.enabled[LOG.TRACE] = (level == LOG.TRACE);
     LOG.enabled[LOG.INFO] = (level == LOG.TRACE || level == LOG.INFO);
@@ -1004,7 +1004,7 @@ AdminApplet.prototype.setLogLevel = function (level) {
 /**
  * Clears the log.
  */
-AdminApplet.prototype._clearLogs = function () {
+AdminApp.prototype._clearLogs = function () {
     LOG.clear();
     this.ui.logTable.setData([]);
     MochiKit.DOM.replaceChildNodes(this.ui.logStack);
@@ -1014,7 +1014,7 @@ AdminApplet.prototype._clearLogs = function () {
 /**
  * Refreshes the log levels and table.
  */
-AdminApplet.prototype._showLogs = function () {
+AdminApp.prototype._showLogs = function () {
     if (LOG.enabled[LOG.TRACE]) {
         this.ui.logForm.update({ level: LOG.TRACE });
     } else if (LOG.enabled[LOG.INFO]) {
@@ -1030,7 +1030,7 @@ AdminApplet.prototype._showLogs = function () {
 /**
  * Show log details for the selected log data.
  */
-AdminApplet.prototype._showLogDetails = function () {
+AdminApp.prototype._showLogDetails = function () {
     var data = this.ui.logTable.getSelectedData();
     var text;
     if (data == null || data.stackTrace == null) {

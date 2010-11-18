@@ -67,7 +67,7 @@ RapidContext LICENSE
     o Silk Icons by FamFamFam (http://www.famfamfam.com/lab/icons/silk/),
       copyright (c) Mark James, used for small widget icons
     o FastIcon.com (http://fasticon.com/),
-      copyright (c) Dirceu Veiga, used for icons for built-in applets
+      copyright (c) Dirceu Veiga, used for icons for built-in apps
     o Stock Photography (http://www.sxc.hu/photo/875775),
       copyright (c) 2007 Sachin Ghodke, used for about dialog
     o The Dojo Toolkit (http://dojotoolkit.org/),

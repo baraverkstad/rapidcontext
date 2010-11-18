@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 
 import org.rapidcontext.app.plugin.PluginException;
 import org.rapidcontext.app.plugin.PluginManager;
-import org.rapidcontext.app.proc.AppletListProcedure;
+import org.rapidcontext.app.proc.AppListProcedure;
 import org.rapidcontext.app.proc.PluginInstallProcedure;
 import org.rapidcontext.app.proc.PluginListProcedure;
 import org.rapidcontext.app.proc.PluginLoadProcedure;
@@ -222,7 +222,7 @@ public class ApplicationContext {
 
         // Add default built-in procedures
         try {
-            library.addBuiltIn(new AppletListProcedure());
+            library.addBuiltIn(new AppListProcedure());
             library.addBuiltIn(new PluginInstallProcedure());
             library.addBuiltIn(new PluginListProcedure());
             library.addBuiltIn(new PluginLoadProcedure());

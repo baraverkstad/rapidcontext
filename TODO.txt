@@ -2,7 +2,7 @@ Known Issues
 ============
  * BUG: Plug-in update with JAR file breaks in Windows due to file locks
    (JVM locks the JAR file until shutdown)
- * BUG: Quick tour broken if focus is moved from Admin applet
+ * BUG: Quick tour broken if focus is moved from Admin app
  * BUG: In Windows if Java path is not "Program Files", the bat-file breaks.
  * BUGS in IE 7:
     o FileStreamer initialization is broken
@@ -14,14 +14,13 @@ Known Issues
  * Verify with IE 8 & 9.
  * Add ChromeFrame to remove IE 6 issues.
  * Fix issues with Chrome:
-    - Random widget init issues (Admin applet, plug-in tables....) ???
+    - Random widget init issues (Admin app, plug-in tables....) ???
  * Document Web Browser Support
  * Investigate potential issues with memory leaks
 
 
 Concern: Legacy Cleanup
 =======================
- * Rename "applet" to "app" everywhere
  * Remove all old and deprecated API and widgets
  * Move RapidContext.Util into MochiKit 1.5 as much as possible
  * Update about dialog with new logotype & copyrights
@@ -54,7 +53,7 @@ Concern: Developer Support
     o Remove legacy.js (by replacing logging functionality)
     o Improve context/stacktrace when triggering calls from signals
     o Add Library support for tracking all created defereds and
-      connecting them to each applet instance
+      connecting them to each app instance
     o Update MochiKit deferred impl. to throw and/or log errors
       when not caught (see Closure.js impl)
  * Help & Documentation:
@@ -63,7 +62,7 @@ Concern: Developer Support
     o Add support for uploading images
     o More example code for RapidContext.Widget components
  * User Interface (ui.xml) Builder
-    o New application for creating ui.xml
+    o New app for creating ui.xml
     o Allow editing existing ui.xml files
     o Store ui.xml files into local plug-in?
 
@@ -76,7 +75,7 @@ Concern: Server Administration
     o Support deferred request cancellation all the way down to the db
  * Admin App:
     o Create new UI structure based on SidePane widget
-       - Apps - for applications, web mappings & plug-ins
+       - Apps - for apps, web mappings & plug-ins
        - Objects - for server files, procedures, environment
        - Users - for server users and groups
        - Monitor - for local logs, server threads & connections
@@ -115,7 +114,7 @@ Concern: Client Programming API
     o Create new SidePane widget (or similar)
     o Create new FileUpload widget
     o Change RapidContext.UI namespace to contain helper functions
-      for the RapidContext applets and default UI
+      for the RapidContext apps and default UI
     o Add graphical diagram and plot widget
     o Table Widget: Remember selected line and reselect it on reload
     o Simple API for speedy Tree widget creating child DOM nodes
@@ -251,7 +250,7 @@ Concern: Server Logging
 Concern: Web Server
 ===================
  * Enable virtual hosting
-    o Connect applications to virtual host(s)
+    o Connect apps to virtual host(s)
     o Expose API:s to plug-ins
  * Improve URL resource mapping
     o Allow redirects, 404 handlers, virtual resources, etc

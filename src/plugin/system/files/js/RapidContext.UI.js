@@ -21,7 +21,7 @@ if (typeof(RapidContext) == "undefined") {
 /**
  * @name RapidContext.UI
  * @namespace Provides functions for creating and handling the
- *     user interface of an application.
+ *     user interface of an app.
  */
 if (typeof(RapidContext.UI) == "undefined") {
     RapidContext.UI = {};

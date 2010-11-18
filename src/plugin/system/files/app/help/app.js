@@ -1,15 +1,15 @@
 /**
- * Creates a new applet instance.
+ * Creates a new app instance.
  */
-function HelpApplet() {
+function HelpApp() {
     this._current = null;
     this._scrollName = null;
 }
 
 /**
- * Starts the applet and initializes the UI.
+ * Starts the app and initializes the UI.
  */
-HelpApplet.prototype.start = function() {
+HelpApp.prototype.start = function() {
     this.clearContent();
     MochiKit.Signal.connect(this.ui.topicReload, "onclick", this, "loadTopics");
     MochiKit.Signal.connect(this.ui.topicTree, "onselect", this, "loadContent");
@@ -19,33 +19,33 @@ HelpApplet.prototype.start = function() {
 }
 
 /**
- * Stops the applet.
+ * Stops the app.
  */
-HelpApplet.prototype.stop = function() {
+HelpApp.prototype.stop = function() {
     // Nothing to do here
 }
 
 /**
  * Loads all available topics and displays them in the topic tree
  * view. Currently this method does not fetch any topic list from
- * the server, but only unifies the topic data from applets and the
+ * the server, but only unifies the topic data from apps and the
  * constant platform docs.
  */
-HelpApplet.prototype.loadTopics = function() {
+HelpApp.prototype.loadTopics = function() {
     this.ui.topicTree.removeAll();
-    var apps = RapidContext.App.applets();
+    var apps = RapidContext.App.apps();
     for (var i = 0; i < apps.length; i++) {
         for (var j = 0; j < apps[i].resources.length; j++) {
             var res = apps[i].resources[j];
             if (res.topic != null) {
                 var data = MochiKit.Base.clone(res);
-                data.source = apps[i].name + " (Applet)";
+                data.source = apps[i].name + " (App)";
                 this._addTopic(data);
             }
         }
     }
-    for (var i = 0; i < HelpApplet.TOPICS.length; i++) {
-        this._addTopic(HelpApplet.TOPICS[i]);
+    for (var i = 0; i < HelpApp.TOPICS.length; i++) {
+        this._addTopic(HelpApp.TOPICS[i]);
     }
     this.ui.topicTree.expandAll(1);
     if (this._current != null) {
@@ -63,7 +63,7 @@ HelpApplet.prototype.loadTopics = function() {
  *
  * @param {Object} data the topic data object
  */
-HelpApplet.prototype._addTopic = function(data) {
+HelpApp.prototype._addTopic = function(data) {
     var path = data.topic.split("/");
     var node = this.ui.topicTree.addPath(path);
     node.data = data;
@@ -76,7 +76,7 @@ HelpApplet.prototype._addTopic = function(data) {
  * @param {Array} nodes the tree nodes to search
  * @param {String} url the URL to search for
  */
-HelpApplet.prototype.findTopicByUrl = function(nodes, url) {
+HelpApp.prototype.findTopicByUrl = function(nodes, url) {
     for (var i = 0; nodes != null && i < nodes.length; i++) {
         var node = nodes[i];
         if (node.data != null && url.indexOf(node.data.url) == 0) {
@@ -93,7 +93,7 @@ HelpApplet.prototype.findTopicByUrl = function(nodes, url) {
 /**
  * Clears the content view from any loaded topic data.
  */
-HelpApplet.prototype.clearContent = function() {
+HelpApp.prototype.clearContent = function() {
     this._current = null;
     this.ui.contentReload.hide();
     this.ui.contentLoading.hide();
@@ -110,7 +110,7 @@ HelpApplet.prototype.clearContent = function() {
  *
  * @param {String} [url] the optional content data URL
  */
-HelpApplet.prototype.loadContent = function(url) {
+HelpApp.prototype.loadContent = function(url) {
     this.clearContent();
     if (typeof(url) != "string") {
         url = null;
@@ -146,7 +146,7 @@ HelpApplet.prototype.loadContent = function(url) {
 /**
  * Callback function for content HTML document retrieval.
  */
-HelpApplet.prototype._callbackContent = function(data) {
+HelpApp.prototype._callbackContent = function(data) {
     this.ui.contentReload.show();
     this.ui.contentLoading.hide();
     if (data instanceof Error) {
@@ -177,7 +177,7 @@ HelpApplet.prototype._callbackContent = function(data) {
  *
  * @param {String} html the HTML data to display
  */
-HelpApplet.prototype._showContentHtml = function(html) {
+HelpApp.prototype._showContentHtml = function(html) {
     var m = html.match(/<body[^>]*>([\s\S]*)<\/body>/im);
     if (m != null) {
         html = m[1];
@@ -227,7 +227,7 @@ HelpApplet.prototype._showContentHtml = function(html) {
  *
  * @param {String} name the link name attribute
  */
-HelpApplet.prototype._scrollLink = function(name) {
+HelpApp.prototype._scrollLink = function(name) {
     var nodes = this.ui.contentText.getElementsByTagName("a");
     for (var i = 0; i < nodes.length; i++) {
         if (nodes[i].name == name) {
@@ -245,7 +245,7 @@ HelpApplet.prototype._scrollLink = function(name) {
  * Opens a new window with the contents of the content pane. This is
  * primarily useful for printing documents.
  */
-HelpApplet.prototype._openWindow = function() {
+HelpApp.prototype._openWindow = function() {
     var node = this.ui.topicTree.selectedChild();
     var win = window.open("", "_blank");
     var doc = win.document;

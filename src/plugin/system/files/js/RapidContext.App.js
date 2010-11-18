@@ -55,7 +55,7 @@ RapidContext.App.init = function () {
         RapidContext.App._UI.init();
         var list = [ RapidContext.App.callProc("System.Status"),
                      RapidContext.App.callProc("System.Session.Current"),
-                     RapidContext.App.callProc("System.Applet.List") ];
+                     RapidContext.App.callProc("System.App.List") ];
         return MochiKit.Async.gatherResults(list);
     });
     d.addCallback(MochiKit.Base.bind("updateInfo", RapidContext.App._UI));
@@ -92,32 +92,32 @@ RapidContext.App.user = function () {
 };
 
 /**
- * Returns an array with applet launchers. The array returned is an
+ * Returns an array with app launchers. The array returned is an
  * internal datastructure and should not be modified directly.
  *
- * @return {Array} the loaded applet launchers (read-only)
+ * @return {Array} the loaded app launchers (read-only)
  */
-RapidContext.App.applets = function () {
+RapidContext.App.apps = function () {
     // TODO: use deep clone, but copy instance array content
-    return RapidContext.App._Cache.applets;
+    return RapidContext.App._Cache.apps;
 };
 
 /**
- * Finds the applet launcher from an applet instance, class name or
+ * Finds the app launcher from an app instance, class name or
  * launcher. In the last case, the matching cached launcher will be
  * returned.
  *
- * @param {String/Object} applet the applet instance, class name or
+ * @param {String/Object} app the app instance, class name or
  *        launcher
  *
- * @return {Object} the read-only applet launcher, or
+ * @return {Object} the read-only app launcher, or
  *         null if not found
  */
-RapidContext.App.findApplet = function (applet) {
-    var applets = RapidContext.App.applets();
-    for (var i = 0; i < applets.length; i++) {
-        var l = applets[i];
-        if (l.className == applet || l.className == applet.className) {
+RapidContext.App.findApp = function (app) {
+    var apps = RapidContext.App.apps();
+    for (var i = 0; i < apps.length; i++) {
+        var l = apps[i];
+        if (l.className == app || l.className == app.className) {
             return l;
         }
     }
@@ -125,24 +125,24 @@ RapidContext.App.findApplet = function (applet) {
 };
 
 /**
- * Creates and starts applets on startup or when no other applets are
+ * Creates and starts apps on startup or when no other apps are
  * active.
  *
  * @param {Boolean} startup the initial startup flag
  *
  * @return {Deferred} a MochiKit.Async.Deferred object that will
- *         callback when the applets have been started
+ *         callback when the apps have been started
  */
 RapidContext.App._startAuto = function (startup) {
     var stack = RapidContext.Util.stackTrace();
     var d = new MochiKit.Async.Deferred();
-    var applets = RapidContext.App.applets();
+    var apps = RapidContext.App.apps();
     var autoLaunch = { auto: true, once: true };
     var instances = 0;
-    for (var i = 0; i < applets.length; i++) {
-        instances += applets[i].instances.length;
-        if (startup && applets[i].launch in autoLaunch) {
-            var fun = MochiKit.Base.partial(RapidContext.App.startApplet, applets[i]);
+    for (var i = 0; i < apps.length; i++) {
+        instances += apps[i].instances.length;
+        if (startup && apps[i].launch in autoLaunch) {
+            var fun = MochiKit.Base.partial(RapidContext.App.startApp, apps[i]);
             RapidContext.Util.injectStackTrace(stack, fun);
             d.addBoth(fun);
             d.addErrback(RapidContext.UI.showError);
@@ -150,7 +150,7 @@ RapidContext.App._startAuto = function (startup) {
         }
     }
     if (instances == 0) {
-        var fun = MochiKit.Base.partial(RapidContext.App.startApplet, "AdminApplet");
+        var fun = MochiKit.Base.partial(RapidContext.App.startApp, "AdminApp");
         RapidContext.Util.injectStackTrace(stack, fun);
         d.addCallback(fun);
         d.addErrback(RapidContext.UI.showError);
@@ -165,20 +165,20 @@ RapidContext.App._startAuto = function (startup) {
 };
 
 /**
- * Creates and starts an applet instance.
+ * Creates and starts an app instance.
  *
- * @param {String/Object} applet the applet class name or launcher
- * @param {Widget} [container] the applet container widget, defaults
+ * @param {String/Object} app the app class name or launcher
+ * @param {Widget} [container] the app container widget, defaults
  *            to create a new pane in the overall tab container
  *
  * @return {Deferred} a MochiKit.Async.Deferred object that will
- *         callback with the applet instance
+ *         callback with the app instance
  */
-RapidContext.App.startApplet = function (applet, container) {
+RapidContext.App.startApp = function (app, container) {
     var stack = RapidContext.Util.stackTrace();
     var d = new MochiKit.Async.Deferred();
     var instance = null;
-    var launcher = RapidContext.App.findApplet(applet);
+    var launcher = RapidContext.App.findApp(app);
     if (container == null) {
         container = RapidContext.App._UI.createTab(launcher.name, launcher.launch != "once");
     }
@@ -187,11 +187,11 @@ RapidContext.App.startApplet = function (applet, container) {
     MochiKit.DOM.replaceChildNodes(container, overlay);
     MochiKit.Signal.connect(container, "onclose", d, "cancel");
     if (launcher == null) {
-        LOG.error("No matching applet launcher found", applet);
-        throw new Error("No matching applet launcher found");
+        LOG.error("No matching app launcher found", app);
+        throw new Error("No matching app launcher found");
     }
     if (launcher.creator == null) {
-        LOG.info("Loading applet " + launcher.name, launcher);
+        LOG.info("Loading app " + launcher.name, launcher);
         launcher.resourceMap = {};
         for (var i = 0; i < launcher.resources.length; i++) {
             var res = launcher.resources[i];
@@ -211,15 +211,15 @@ RapidContext.App.startApplet = function (applet, container) {
             RapidContext.Util.injectStackTrace(stack);
             launcher.creator = this[launcher.className] || window[launcher.className];
             if (launcher.creator == null) {
-                LOG.error("Applet constructor not defined", launcher);
-                throw new Error("Applet constructor " + launcher.className + " not defined");
+                LOG.error("App constructor not defined", launcher);
+                throw new Error("App constructor " + launcher.className + " not defined");
             }
             RapidContext.Util.registerFunctionNames(launcher.creator, launcher.className);
         });
     }
     d.addCallback(function () {
         RapidContext.Util.injectStackTrace(stack);
-        LOG.info("Starting applet " + launcher.name, launcher);
+        LOG.info("Starting app " + launcher.name, launcher);
         var fun = launcher.creator;
         instance = new fun();
         launcher.instances.push(instance);
@@ -228,7 +228,7 @@ RapidContext.App.startApplet = function (applet, container) {
         instance.ui = { root: container, overlay: overlay };
         MochiKit.Signal.disconnectAll(container, "onclose");
         MochiKit.Signal.connect(container, "onclose",
-                                MochiKit.Base.partial(RapidContext.App.stopApplet, instance));
+                                MochiKit.Base.partial(RapidContext.App.stopApp, instance));
         if (launcher.ui != null) {
             var widgets = RapidContext.UI.buildUI(launcher.ui, instance.ui);
             MochiKit.DOM.appendChildNodes(container, widgets);
@@ -236,7 +236,7 @@ RapidContext.App.startApplet = function (applet, container) {
         }
         overlay.hide();
         overlay.setAttrs({ message: "Working..." });
-        return RapidContext.App.callApplet(instance, "start");
+        return RapidContext.App.callApp(instance, "start");
     });
     d.addErrback(function (err) {
         if (err instanceof MochiKit.Async.CancelledError) {
@@ -258,76 +258,76 @@ RapidContext.App.startApplet = function (applet, container) {
 };
 
 /**
- * Stops an applet instance. If only the class name or launcher is
+ * Stops an app instance. If only the class name or launcher is
  * specified, the most recently created instance will be stopped.
  *
- * @param {String/Object} applet the applet instance, class name or
+ * @param {String/Object} app the app instance, class name or
  *        launcher
  *
  * @return {Deferred} a MochiKit.Async.Deferred object that will
- *         callback when the applet has been stopped
+ *         callback when the app has been stopped
  */
-RapidContext.App.stopApplet = function (applet) {
-    var launcher = RapidContext.App.findApplet(applet);
+RapidContext.App.stopApp = function (app) {
+    var launcher = RapidContext.App.findApp(app);
     if (launcher == null || launcher.instances.length <= 0) {
-        LOG.error("No running applet instance found", applet);
-        throw new Error("No running applet instance found");
+        LOG.error("No running app instance found", app);
+        throw new Error("No running app instance found");
     }
-    LOG.info("Stopping applet " + launcher.name);
-    var pos = MochiKit.Base.findIdentical(launcher.instances, applet);
+    LOG.info("Stopping app " + launcher.name);
+    var pos = MochiKit.Base.findIdentical(launcher.instances, app);
     if (pos < 0) {
-        applet = launcher.instances.pop();
+        app = launcher.instances.pop();
     } else {
         launcher.instances.splice(pos, 1);
     }
-    applet.stop();
-    if (applet.ui.root != null) {
-        RapidContext.Widget.destroyWidget(applet.ui.root);
+    app.stop();
+    if (app.ui.root != null) {
+        RapidContext.Widget.destroyWidget(app.ui.root);
     }
-    for (var n in applet.ui) {
-        delete applet.ui[n];
+    for (var n in app.ui) {
+        delete app.ui[n];
     }
-    for (var n in applet) {
-        delete applet[n];
+    for (var n in app) {
+        delete app[n];
     }
-    MochiKit.Signal.disconnectAllTo(applet);
+    MochiKit.Signal.disconnectAllTo(app);
     return RapidContext.App._startAuto(false);
 };
 
 /**
- * Performs an asynchronous call to a method in an applet. If only
+ * Performs an asynchronous call to a method in an app. If only
  * the class name or launcher is specified, the most recently
  * created instance will be used. If no instance is running, one
- * will be started. Also, before calling the applet method, the
- * applet UI will be focused.
+ * will be started. Also, before calling the app method, the
+ * app UI will be focused.
  *
- * @param {String/Object} applet the applet instance, class name or
+ * @param {String/Object} app the app instance, class name or
  *        launcher
- * @param {String} method the applet method name
+ * @param {String} method the app method name
  * @param {Mixed} [args] additional parameters sent to method
  *
  * @return {Deferred} a MochiKit.Async.Deferred object that will
  *         callback with the result of the call on success
  */
-RapidContext.App.callApplet = function (applet, method) {
+RapidContext.App.callApp = function (app, method) {
     var stack = RapidContext.Util.stackTrace();
     var args = MochiKit.Base.extend([], arguments, 2);
-    var launcher = RapidContext.App.findApplet(applet);
+    var launcher = RapidContext.App.findApp(app);
     var d;
     if (launcher == null) {
-        LOG.error("No matching applet launcher found", applet);
-        throw new Error("No matching applet launcher found");
+        LOG.error("No matching app launcher found", app);
+        throw new Error("No matching app launcher found");
     }
     if (launcher.instances.length <= 0) {
-        d = RapidContext.App.startApplet(applet);
+        d = RapidContext.App.startApp(app);
     } else {
         d = new MochiKit.Async.Deferred();
         RapidContext.App._addErrbackLogger(d);
-        var pos = MochiKit.Base.findIdentical(launcher.instances, applet);
+        var pos = MochiKit.Base.findIdentical(launcher.instances, app);
         if (pos < 0) {
             d.callback(launcher.instances[launcher.instances.length - 1]);
         } else {
-            d.callback(applet);
+            d.callback(app);
         }
     }
     d.addCallback(function (instance) {
@@ -338,10 +338,10 @@ RapidContext.App.callApplet = function (applet, method) {
             parent.selectChild(child);
         }
         var methodName = launcher.className + "." + method;
-        LOG.trace("Calling applet method " + methodName, args);
+        LOG.trace("Calling app method " + methodName, args);
         if (instance == null || instance[method] == null) {
-            LOG.error("No applet method " + methodName + " found");
-            throw new Error("No applet method " + methodName + " found");
+            LOG.error("No app method " + methodName + " found");
+            throw new Error("No app method " + methodName + " found");
         }
         RapidContext.Util.injectStackTrace([]);
         try {
@@ -660,7 +660,7 @@ RapidContext.App._addErrbackLogger = function (d) {
 RapidContext.App._Cache = {
     status: null,
     user: null,
-    applets: [],
+    apps: [],
     // Compares two object on the 'name' property
     compareName: function (a, b) {
         // TODO: replace with MochiKit.Base.keyComparator once #331 is fixed
@@ -693,7 +693,7 @@ RapidContext.App._Cache = {
                 LOG.info("Updated cached user", this.user);
             }
             break;
-        case "System.Applet.List":
+        case "System.App.List":
             for (var i = 0; i < data.length; i++) {
                 // TODO: use deep clone
                 var launcher = MochiKit.Base.update(null, data[i]);
@@ -706,16 +706,16 @@ RapidContext.App._Cache = {
                         launcher.icon = launcher.resources[j].url;
                     }
                 }
-                var pos = RapidContext.Util.findProperty(this.applets, "className", launcher.className);
+                var pos = RapidContext.Util.findProperty(this.apps, "className", launcher.className);
                 if (pos < 0) {
                      launcher.instances = [];
-                     this.applets.push(launcher);
+                     this.apps.push(launcher);
                 } else {
-                     launcher.instances = this.applets[pos].instances;
-                     this.applets[pos] = launcher;
+                     launcher.instances = this.apps[pos].instances;
+                     this.apps[pos] = launcher;
                 }
             }
-            LOG.info("Updated cached applets", this.applets);
+            LOG.info("Updated cached apps", this.apps);
             break;
         }
     }
@@ -748,10 +748,10 @@ RapidContext.App._UI = {
         MochiKit.Signal.connect(this.menu, "onmouseleave", this.menu, "hide");
         MochiKit.Signal.connect(this.menuAbout, "onclick", this.about, "show");
         MochiKit.Signal.connect(this.menuAbout, "onclick", this, "hideMenu");
-        var func = MochiKit.Base.partial(RapidContext.App.startApplet, "HelpApplet", null);
+        var func = MochiKit.Base.partial(RapidContext.App.startApp, "HelpApp", null);
         MochiKit.Signal.connect(this.menuHelp, "onclick", func);
         MochiKit.Signal.connect(this.menuHelp, "onclick", this, "hideMenu");
-        var func = MochiKit.Base.partial(RapidContext.App.startApplet, "AdminApplet", null);
+        var func = MochiKit.Base.partial(RapidContext.App.startApp, "AdminApp", null);
         MochiKit.Signal.connect(this.menuAdmin, "onclick", func);
         MochiKit.Signal.connect(this.menuAdmin, "onclick", this, "hideMenu");
         MochiKit.Signal.connect(this.aboutClose, "onclick", this.about, "hide");
@@ -785,7 +785,7 @@ RapidContext.App._UI = {
         var version = MochiKit.Text.format("{version} ({date})", status);
         MochiKit.DOM.replaceChildNodes(this.aboutVersion, version);
     },
-    // Creates and adds a new applet tab
+    // Creates and adds a new app tab
     createTab: function (title, closeable) {
         var style = { position: "relative" };
         var attrs = { pageTitle: title, pageCloseable: closeable, style: style };

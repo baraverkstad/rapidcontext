@@ -2,14 +2,14 @@
 
 <ui>
   <p style="position: absolute; left: 0px; bottom: 0px;">
-    <span class="label">Application icons by: </span>
+    <span class="label">App icons by: </span>
     <a href="http://fasticon.com/" target="_blank">FastIcon.com</a>
   </p>
   <div style="float: left; width: 30%; height: 100%; border-right: solid 1px #6290d2; padding-right: 6px;">
-    <h3>Applications:</h3>
+    <h3>Apps:</h3>
     <div w="100%" h="100%-50" style="overflow-y: auto;">
       <table>
-        <tbody id="appletTable">
+        <tbody id="appTable">
         </tbody>
       </table>
     </div>
@@ -23,7 +23,7 @@
         <tbody>
           <tr>
             <td style="vertical-align: middle; padding-right: 20px;">
-              <img src="applet/start/tour.png" />
+              <img src="app/start/tour.png" />
             </td>
             <td>
               <h2>Quick Tour</h2>
@@ -44,12 +44,12 @@
               <Icon url="close-red.gif" /> icon on this dialog.</li>
         </ul>
       </Pane>
-      <Pane pageTitle="The Start Application">
+      <Pane pageTitle="The Start App">
         <ul>
-          <li>The built-in Start application is normally launched directly on
+          <li>The built-in Start app is normally launched directly on
               startup.</li>
           <li>It provides convenient launchers for all available
-              applications (that the user has permission to run).</li>
+              apps (that the user has permission to run).</li>
           <li>It also provides an information area which can be configured
               by the installed plug-ins.</li>
         </ul>
@@ -60,30 +60,30 @@
           <li>At the top right corner of the screen is the user and environment
               information.</li>
           <li>Hovering over it with the mouse reveals the User Menu.</li>
-          <li>This menu provides quick launchers for the built-in applications.</li>
+          <li>This menu provides quick launchers for the built-in apps.</li>
         </ul>
         <Button id="tourUserLocate"><Icon ref="HELP" /> Locate</Button>
       </Pane>
       <Pane pageTitle="Using Help &amp; Docs">
         <ul>
-          <li>This is the <strong>Help &amp; Docs</strong> application.</li>
+          <li>This is the <strong>Help &amp; Docs</strong> app.</li>
           <li>Here you'll find the complete user manual for RapidContext.</li>
           <li>It also contains all the developer documentation, including the
               MochiKit API:s.</li>
         </ul>
         <Button id="tourHelpLocate"><Icon ref="HELP" /> Locate</Button>
       </Pane>
-      <Pane pageTitle="Application Switching &amp; Tabs">
+      <Pane pageTitle="App Switching &amp; Tabs">
         <ul>
-          <li>Several applications can be run in parallel, each using a separate tab.</li>
-          <li>Switching and closing applications is easy using the tab control bar.</li>
-          <li>Multiple instances of a single application is also possible.</li>
+          <li>Several apps can be run in parallel, each using a separate tab.</li>
+          <li>Switching and closing apps is easy using the tab control bar.</li>
+          <li>Multiple instances of a single app is also possible.</li>
         </ul>
         <Button id="tourTabsLocate"><Icon ref="HELP" /> Locate</Button>
       </Pane>
-      <Pane pageTitle="The Admin Application">
+      <Pane pageTitle="The Admin App">
         <ul>
-          <li>This is the <strong>Admin</strong> application.</li>
+          <li>This is the <strong>Admin</strong> app.</li>
           <li>Here you can monitor and change many aspects of RapidContext.</li>
           <li>It also provides a number of development tools.</li>
         </ul>
@@ -93,7 +93,7 @@
         <ul>
           <li>Server-side calls are executed with something called a
               <strong>procedure</strong>.</li>
-          <li>The <strong>Admin</strong> application makes it possible to
+          <li>The <strong>Admin</strong> app makes it possible to
               view, edit and test all installed procedures.</li>
           <li>Try executing the <code>System.Session.Current</code> for example!</li>
         </ul>
@@ -104,14 +104,14 @@
           <li>All calls from the client to the server can be logged and
               traced.</li>
           <li>The log level is dynamic and can be changed at any time.</li>
-          <li>Errors and warnings from the various applications also end up
+          <li>Errors and warnings from the various apps also end up
               here.</li>
         </ul>
         <Button id="tourAdminLogLocate"><Icon ref="HELP" /> Locate</Button>
       </Pane>
       <Pane pageTitle="Managing Users">
         <ul>
-          <li>The <strong>Admin</strong> application also makes it easy to
+          <li>The <strong>Admin</strong> app also makes it easy to
               add or modify users.</li>
           <li>New users can be created by the <Icon ref="ADD" /> icon.</li>
           <li>Permissions are controlled by the roles that a user has
@@ -123,7 +123,7 @@
         <ul>
           <li>New functionality can easily be added by installing new or
               updated plug-ins.</li>
-          <li>A plug-in can provide any type of functionality, from applications
+          <li>A plug-in can provide any type of functionality, from apps
               via default configuration to connectivity API:s.</li>
           <li>It is also possible to unload plug-ins to disable them without
               removing them completely.</li>

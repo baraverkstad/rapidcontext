@@ -25,22 +25,22 @@ import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.Restricted;
 
 /**
- * The built-in applet list procedure.
+ * The built-in app list procedure.
  *
  * @author   Per Cederberg
  * @version  1.0
  */
-public class AppletListProcedure implements Procedure, Restricted {
+public class AppListProcedure implements Procedure, Restricted {
 
     /**
-     * The applet object storage path.
+     * The app object storage path.
      */
-    public static final Path PATH_APPLET = new Path("/applet/");
+    public static final Path PATH_APP = new Path("/app/");
 
     /**
      * The procedure name constant.
      */
-    public static final String NAME = "System.Applet.List";
+    public static final String NAME = "System.App.List";
 
     /**
      * The default bindings.
@@ -48,9 +48,9 @@ public class AppletListProcedure implements Procedure, Restricted {
     private Bindings defaults = new Bindings();
 
     /**
-     * Creates a new applet list procedure.
+     * Creates a new app list procedure.
      */
-    public AppletListProcedure() {
+    public AppListProcedure() {
         this.defaults.seal();
     }
 
@@ -80,7 +80,7 @@ public class AppletListProcedure implements Procedure, Restricted {
      * @return the procedure description
      */
     public String getDescription() {
-        return "List all available applets.";
+        return "List all available apps.";
     }
 
     /**
@@ -118,7 +118,7 @@ public class AppletListProcedure implements Procedure, Restricted {
         Object[]   list;
         Array      res;
 
-        list = storage.loadAll(PATH_APPLET);
+        list = storage.loadAll(PATH_APP);
         res = new Array(list.length);
         for (int i = 0; i < list.length; i++) {
             res.add(list[i]);

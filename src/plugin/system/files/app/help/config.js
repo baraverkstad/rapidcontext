@@ -1,7 +1,7 @@
 /**
  * The static documentation topics.
  */
-HelpApplet.TOPICS = [
+HelpApp.TOPICS = [
     { topic: "RapidContext/1. Overview",
       url: "doc/platform.html",
       source: "RapidContext Platform Documentation" },

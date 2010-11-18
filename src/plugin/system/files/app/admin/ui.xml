@@ -2,15 +2,15 @@
 
 <ui>
   <TabContainer id="tabContainer" w="100%" h="100%">
-    <Pane pageTitle="Applets">
+    <Pane pageTitle="Apps">
       <div w="35%" h="100%" style="float: left; padding-right: 20px;">
-        <h3>Applet Names: <Icon id="appletReload" ref="RELOAD" /><Icon id="appletLoading" ref="LOADING" /></h3>
-        <Table id="appletTable" w="100%" h="100%-22">
+        <h3>App Names: <Icon id="appReload" ref="RELOAD" /><Icon id="appLoading" ref="LOADING" /></h3>
+        <Table id="appTable" w="100%" h="100%-22">
           <TableColumn title="Name" field="name" sort="asc" key="true" />
         </Table>
       </div>
-      <Form id="appletForm" w="65%-30" h="100%" style="float: left;">
-        <h3>Applet Details: <Icon ref="BLANK" /></h3>
+      <Form id="appForm" w="65%-30" h="100%" style="float: left;">
+        <h3>App Details: <Icon ref="BLANK" /></h3>
         <table>
           <tbody>
             <tr>
@@ -39,11 +39,11 @@
             </tr>
             <tr>
               <th class="label" style="padding-right: 4px;">Resources:</th>
-              <td id="appletResources"></td>
+              <td id="appResources"></td>
             </tr>
             <tr>
               <td colspan="2" style="padding-top: 4px;">
-                <Button id="appletLaunch" style="margin-right: 6px"><Icon ref="OK" /> Launch</Button>
+                <Button id="appLaunch" style="margin-right: 6px"><Icon ref="OK" /> Launch</Button>
               </td>
             </tr>
           </tbody>

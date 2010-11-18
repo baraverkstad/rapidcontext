@@ -1,31 +1,31 @@
 /**
- * Creates a new applet instance.
+ * Creates a new app instance.
  */
-function ExampleApplet() {
+function ExampleApp() {
     // Set instance variables here:
     // this.abc = 123;
 }
 
 /**
- * Starts the applet and initializes the UI.
+ * Starts the app and initializes the UI.
  */
-ExampleApplet.prototype.start = function() {
+ExampleApp.prototype.start = function() {
     MochiKit.Signal.connect(this.ui.reload, "onclick", this, "loadProcList");
     MochiKit.Signal.connect(this.ui.table, "onclick", this, "showProc");
     this.loadProcList();
 }
 
 /**
- * Stops the applet.
+ * Stops the app.
  */
-ExampleApplet.prototype.stop = function() {
+ExampleApp.prototype.stop = function() {
     // Usually not much to do here
 }
 
 /**
  * Loads the list of procedures.
  */
-ExampleApplet.prototype.loadProcList = function() {
+ExampleApp.prototype.loadProcList = function() {
     this.ui.loading.show();
     this.ui.table.clear();
     var args = [];
@@ -38,7 +38,7 @@ ExampleApplet.prototype.loadProcList = function() {
  *
  * @param {Object/Error} res the procedure result or error
  */
-ExampleApplet.prototype.callbackProcList = function(res) {
+ExampleApp.prototype.callbackProcList = function(res) {
     this.ui.loading.hide();
     if (res instanceof Error) {
         RapidContext.UI.showError(res);
@@ -52,6 +52,6 @@ ExampleApplet.prototype.callbackProcList = function(res) {
 /**
  * Shows details for the selected procedure.
  */
-ExampleApplet.prototype.showProc = function() {
+ExampleApp.prototype.showProc = function() {
     // TODO: implement this method
 }

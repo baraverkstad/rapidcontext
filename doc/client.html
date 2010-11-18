@@ -18,8 +18,8 @@
 <h1>Client Programming</h1>
 
 <p>RapidContext client programming is based on JavaScript, HTML, CSS and
-DOM (i.e. AJAX without XML). Client applications are called "applets"
-and executes in the web browser. Care must therefore be taken to follow
+DOM (i.e. AJAX without XML). Client applications are called an "app" and
+executes in the web browser. Care must therefore be taken to follow
 appropriate web standards in order to remain compatible with all
 targeted browsers.</p>
 
@@ -52,70 +52,70 @@ references below for more information:</p>
 </ul>
 
 
-<h2>2. Applet Declaration</h2>
+<h2>2. App Declaration</h2>
 
-<p>Applet source code and resources are stored on the server, but will be
+<p>The app source code and resources are stored on the server, but will be
 transferred to the client web browser upon launch. The client can also list
-available applets through the built-in <code>System.Applet.List</code>
-procedure. This procedure will return a list of all declared applets and
-their respective configuration settings. If an applet is not properly
+available apps through the built-in <code>System.App.List</code>
+procedure. This procedure will return a list of all declared apps and
+their respective configuration settings. If an app is not properly
 declared in a configuration file, it will not be visible to the client
 and the standard launch mechanisms won't work.</p>
 
-<p>The applet configuration file is normally placed in the
-<code>plugin/local/applet</code> directory (for the <code>local</code>
-plug-in). The file name should match <code>&lt;applet id&gt;.properties</code>,
-replacing the unique applet identifier for the <code>&lt;applet id&gt;</code>
+<p>The app configuration file is normally placed in the
+<code>plugin/local/app</code> directory (for the <code>local</code>
+plug-in). The file name should match <code>&lt;app id&gt;.properties</code>,
+replacing the unique app identifier for the <code>&lt;app id&gt;</code>
 part. In the file, generic configuration parameters are specified along with
-a list of URL resources required to load the applet. Below follows a simple
+a list of URL resources required to load the app. Below follows a simple
 example:</p>
 
 <pre class="box code">
 <span class="comment"># General properties</span>
-name = Example Applet
-description = A small example applet.
-className = ExampleApplet
+name = Example App
+description = A small example app.
+className = ExampleApp
 
 <span class="comment"># Resources array</span>
-resources.0.url = example/applet.js
+resources.0.url = example/app.js
 resources.0.type = code
 resources.1.url = example/icon.png
 resources.1.type = icon
 </pre>
 
 <p>In the example above, the two files <code>icon.png</code> and
-<code>applet.js</code> are referenced and should be available in the plug-in
-file area (more on that later). The applet resources of type <code>code</code>
-are dynamically loaded as JavaScript files into the web page when the applet
+<code>app.js</code> are referenced and should be available in the plug-in
+file area (more on that later). The app resources of type <code>code</code>
+are dynamically loaded as JavaScript files into the web page when the app
 is first launched and is thereafter reused without reloading on subsequent
 launches. The available configuration parameters and their meaning is as
 follows:</p>
 
 <ul class="box">
-  <li><code>name</code> &mdash; The applet name as presented to the user.
+  <li><code>name</code> &mdash; The app name as presented to the user.
       This name is shown in various places in the default user interface.</li>
-  <li><code>description</code> &mdash; The optional applet description that
+  <li><code>description</code> &mdash; The optional app description that
       may be presented to the user.</li>
-  <li><code>className</code> &mdash; The applet JavaScript class name. This
-      name must be unique and refer to a constructor function for the applet
+  <li><code>className</code> &mdash; The app JavaScript class name. This
+      name must be unique and refer to a constructor function for the app
       instance (see below for more details). The class name must be unique
-      in order to avoid collisions with other applets being executed in the
+      in order to avoid collisions with other apps being executed in the
       same web page. The source code for the class should be placed in one
       of the <code>code</code> resources listed.</li>
-  <li><code>launch</code> &mdash; The optional applet launch setting. Can have
+  <li><code>launch</code> &mdash; The optional app launch setting. Can have
       one of the following values:</li>
   <ul>
-    <li><code>manual</code> (default) &mdash; The applet is manually started
+    <li><code>manual</code> (default) &mdash; The app is manually started
         and stopped by the user (when clicking on icons or similar).</li>
-    <li><code>auto</code> &mdash; The applet is started automatically when
+    <li><code>auto</code> &mdash; The app is started automatically when
         a new user session starts, but can also be started and stopped
         manually by the user.</li>
-    <li><code>once</code> &mdash; The applet is started automatically when
+    <li><code>once</code> &mdash; The app is started automatically when
         a new user session starts and can thereafter neither be started nor
         stopped by the user.</li>
-    <li><code>limited</code> &mdash; The applet is hidden from the user to
+    <li><code>limited</code> &mdash; The app is hidden from the user to
         avoid manual starting and stopping in the default user interface.
-        The applet can still be started programmatically by other applets
+        The app can still be started programmatically by other apps
         through the RapidContext client API:s.</li>
   </ul>
   <li><code>resources.#.url</code> &mdash; The resource local URL. The actual
@@ -127,112 +127,112 @@ follows:</p>
       text string, but the following values have a defined meaning:</li>
   <ul>
     <li><code>code</code> &mdash; A JavaScript source code file that must be
-        loaded before applet launch.</li>
+        loaded before app launch.</li>
     <li><code>ui</code> &mdash; A user interface XML definition file (see
         below). The interface specified in this file will be automatically
-        created each time the applet is launched.</li>
-    <li><code>icon</code> &mdash; An applet icon displayed in the default
-        user interface for launching the applet. Should be a transparent
+        created each time the app is launched.</li>
+    <li><code>icon</code> &mdash; An app icon displayed in the default
+        user interface for launching the app. Should be a transparent
         GIF or PNG image in 48x48 size for optimal viewing.</li>
     <li><code>file</code> &mdash; A generic file resource with no special
         handling.</li>
   </ul>
   <li><code>resource.#.id</code> &mdash; The optional resource identifier. All
-      resources with an identifier are easily accessible from the applet
+      resources with an identifier are easily accessible from the app
       JavaScript code, using a <code>this.resource.&lt;id&gt;</code> construct.
       This is useful for providing URL:s to icons, images or files used by
-      the applet.</li>
+      the app.</li>
   <li><code>resources.#.topic</code> &mdash; The optional resource help topic
       name. Use only if the resource file contains a HTML help document for
-      the applet. The topic name may contain <code>/</code> characters to
+      the app. The topic name may contain <code>/</code> characters to
       indicate directories.</li>
 </ul>
 
 
-<h2>3. Applet Implementation</h2>
+<h2>3. App Implementation</h2>
 
-<p>All applets are implemented as JavaScript objects with a common constructor
-function (i.e. as JavaScript "classes"). Upon applet launch, the applet
-constructor function is called and a new applet instance object is supposed
+<p>All apps are implemented as JavaScript objects with a common constructor
+function (i.e. as JavaScript "classes"). Upon launch, the app
+constructor function is called and a new app instance object is supposed
 to be created. In the default user interface it is possible to launch multiple
-instances of a single applet, so usage of global variables or similar should
-be avoided in applet implementations.</p>
+instances of a single app, so usage of global variables or similar should
+be avoided in app implementations.</p>
 
 <p>Normally a single <code>code</code> resource contains the source code file
-for the applet. By declaring multiple <code>code</code> resources, several
+for the app. By declaring multiple <code>code</code> resources, several
 source code files can be loaded to provide helper functions, configuration
 code, etc.</p>
 
-<p>The JavaScript constructor function for an applet must be named
+<p>The JavaScript constructor function for an app must be named
 <strong>exactly</strong> as specified by the <code>className</code> property
-in the <code>&lt;applet id&gt;.properties</code> file. The created objects
+in the <code>&lt;app id&gt;.properties</code> file. The created objects
 must also contain two methods &mdash; <code>start()</code> and
-<code>stop()</code> &mdash; that handles the applet lifecycle. Below is an
-example JavaScript file that implements a minimal example applet:</p>
+<code>stop()</code> &mdash; that handles the app lifecycle. Below is an
+example JavaScript file that implements a minimal example app:</p>
 
 <pre class="box code">
 <span class="comment">/**
- * Creates a new ExampleApplet instance. This function is called once all
- * applet JavaScript resources have been loaded. It is called as a
+ * Creates a new ExampleApp instance. This function is called once all
+ * app JavaScript resources have been loaded. It is called as a
  * constructor function, so it will create a new object with the prototype
  * inherited from the function.
  */</span>
-function ExampleApplet() {
+function ExampleApp() {
 <span class="comment">    // Constructor code. No user interface or external calls here.</span>
 }
 
 <span class="comment">/**
- * Starts the applet execution. This function is called when the user
+ * Starts the app execution. This function is called when the user
  * interface has been created (if available).
  */</span>
-ExampleApplet.prototype.start = function() {
-<span class="comment">    // this.className -- the applet className property value
+ExampleApp.prototype.start = function() {
+<span class="comment">    // this.className -- the app className property value
     // this.ui -- a map of identifiers from the user interface XML
     // this.ui.root -- the user interface parent container widget
-    // this.ui.overlay -- the default overlay widget for the applet
+    // this.ui.overlay -- the default overlay widget for the app
     // this.resource -- a map of resource URL:s</span>
 }
 
 <span class="comment">/**
- * Stops the applet execution. This function is called when the user
- * has terminated the applet, but before the user interface is
- * destroyed. The applet should kill any asynchronous requests
+ * Stops the app execution. This function is called when the user
+ * has terminated the app, but before the user interface is
+ * destroyed. The app should kill any asynchronous requests
  * currently executing when this method is called.
  */</span>
-ExampleApplet.prototype.stop = function() {
+ExampleApp.prototype.stop = function() {
 <span class="comment">    // stop async requests and other pending actions</span>
 }
 </pre>
 
-<p>The <code>RapidContext.App.startApplet()</code> function is responsible for
-applet loading, instance creation and calling the <code>start()</code> method
+<p>The <code>RapidContext.App.startApp()</code> function is responsible for
+app loading, instance creation and calling the <code>start()</code> method
 once the user interface has been created. A number of instance variables will
-also be provided to all applet instances:</p>
+also be provided to all app instances:</p>
 
 <ul class="box">
-  <li><code>this.className</code> &mdash; The applet class name value.</li>
+  <li><code>this.className</code> &mdash; The app class name value.</li>
   <li><code>this.ui</code> &mdash; Contains an <code>Object</code> with
       properties for any user interface widget with an <code>id</code>
       attribute. The property value is set to the UI widget or DOM node.</li>
   <li><code>this.ui.root</code> &mdash; Contains the parent container widget
-      for the applet user interface, normally an instance of
+      for the app user interface, normally an instance of
       <code>RapidContext.Widget.Pane</code>.</li>
   <li><code>this.ui.overlay</code> &mdash; Contains a
-      <code>RapidContext.Widget.Overlay</code> widget for the whole applet user
-      interface. This overlay is used while loading the applet resources,
-      but may thereafter be used by the applet to display various messages
+      <code>RapidContext.Widget.Overlay</code> widget for the whole app user
+      interface. This overlay is used while loading the app resources,
+      but may thereafter be used by the app to display various messages
       while blocking the user interface for input.</li>
   <li><code>this.resource</code> &mdash; Contains an <code>Object</code>
-      with properties for any applet resource with an <code>id</code>
-      attribute in the <code>.applet</code> file. The value is a string with
+      with properties for any app resource with an <code>id</code>
+      attribute in the <code>.app</code> file. The value is a string with
       the resource URL.</li>
 </ul>
 
 
 <h2>4. User Interface XML</h2>
 
-<p>The user interface for an applet is normally contained inside a
-<code>RapidContext.Widget.TabContainer</code> widget. The applet itself is
+<p>The user interface for an app is normally contained inside a
+<code>RapidContext.Widget.TabContainer</code> widget. The app itself is
 assigned a <code>RapidContext.Widget.Pane</code> widget inside which it is
 responsible for creating and managing its own user interface.</p>
 
@@ -240,9 +240,9 @@ responsible for creating and managing its own user interface.</p>
 however, by providing an optional mechanism for automatically creating the
 user interface from a serialized XML format. The user interface XML is
 normally stored in a <code>ui.xml</code> file in the same location as the
-applet JavaScript source code and other resources. To trigger the automatic
+app JavaScript source code and other resources. To trigger the automatic
 loading and creation of the user interface from this file, it must be
-specified as an applet resource as follows:</p>
+specified as an app resource as follows:</p>
 
 <pre class="box code">
 ...
@@ -276,12 +276,12 @@ interpreted as follows:</p>
       corresponding HTML DOM node.</li>
   <li><strong>The <code>id</code> Attribute</strong> &mdash; The <code>id</code>
       attribute is not set on the HTML DOM node created. Instead it is used
-      to map the DOM node in the returned applet <code>this.ui</code> lookup
+      to map the DOM node in the returned app <code>this.ui</code> lookup
       object. The benefit of this solution is that any identified DOM nodes
       are immediately available, without going through the DOM API of
       <code>document.getElementById</code>. Also, this solution avoids
-      identifier collisions when the same applet is launched twice or when
-      multiple applets use the same identifiers.</li>
+      identifier collisions when the same app is launched twice or when
+      multiple apps use the same identifiers.</li>
   <li><strong>The <code>class</code> Attribute</strong> &mdash;
       The <code>class</code> attribute value is set on the HTML DOM node
       created (similar to in HTML files). Note that widgets will have more
@@ -323,7 +323,7 @@ of the possibilities for user interface styling:</p>
       style the user interface is by loading additional an additional CSS
       file. Ideally such a file should not modify styles for all elements,
       but only those with specific <code>class</code> names. Otherwise,
-      applets or widgets might break in various ways. To override specific
+      apps or widgets might break in various ways. To override specific
       default styles, the normal CSS cascading and priority order can also
       be used (although this is not recommended).</li>
   <li><strong>Replace Default CSS Files</strong> &mdash; The default CSS files
