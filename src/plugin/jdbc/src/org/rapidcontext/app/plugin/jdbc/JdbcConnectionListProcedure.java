@@ -114,26 +114,23 @@ public class JdbcConnectionListProcedure implements Procedure, Restricted {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        Environment  env = cx.getEnvironment();
         Iterator     iter;
         Array        res = new Array();
         Dict         dict;
 
-        if (env != null) {
-            iter = env.getPoolNames().iterator();
-            while (iter.hasNext()) {
-                Pool pool = env.findPool((String) iter.next());
-                if (pool.getAdapter() instanceof JdbcAdapter) {
-                    dict = new Dict();
-                    dict.set("name", pool.getName());
-                    dict.addAll(JdbcAdapter.normalize(pool.getParameters()));
-                    // TODO: revisit the decision to omit passwords for security...
-                    dict.remove("password");
-                    dict.setInt("maxConnections", pool.getMaxSize());
-                    dict.setInt("openConnections", pool.getCurrentSize());
-                    dict.setInt("usedConnections", pool.getActiveSize());
-                    res.add(dict);
-                }
+        iter = Environment.poolNames().iterator();
+        while (iter.hasNext()) {
+            Pool pool = Environment.pool((String) iter.next());
+            if (pool.getAdapter() instanceof JdbcAdapter) {
+                dict = new Dict();
+                dict.set("name", pool.getName());
+                dict.addAll(JdbcAdapter.normalize(pool.getParameters()));
+                // TODO: revisit the decision to omit passwords for security...
+                dict.remove("password");
+                dict.setInt("maxConnections", pool.getMaxSize());
+                dict.setInt("openConnections", pool.getCurrentSize());
+                dict.setInt("usedConnections", pool.getActiveSize());
+                res.add(dict);
             }
         }
         return res;

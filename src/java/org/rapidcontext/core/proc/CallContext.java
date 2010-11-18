@@ -25,6 +25,7 @@ import org.rapidcontext.core.data.Storage;
 import org.rapidcontext.core.env.AdapterConnection;
 import org.rapidcontext.core.env.AdapterException;
 import org.rapidcontext.core.env.Environment;
+import org.rapidcontext.core.env.Pool;
 import org.rapidcontext.util.DateUtil;
 
 /**
@@ -478,22 +479,19 @@ public class CallContext {
     public AdapterConnection connectionReserve(String poolName)
         throws ProcedureException {
 
-        AdapterConnection  con;
-        String             msg;
+        Pool    pool;
+        String  msg;
 
         if (poolName != null && !connections.containsKey(poolName)) {
             if (isTracing()) {
                 log("Reserving adapter connection on '" + poolName + "'");
             }
             if (env == null) {
-                msg = "failed to reserve adapter connection on '" +
-                      poolName + "': no environment loaded";
-                if (isTracing()) {
-                    log("ERROR: " + msg);
-                }
-                LOG.warning(msg);
-                throw new ProcedureException(msg);
-            } else if (env.findPool(poolName) == null) {
+                pool = Environment.pool(poolName);
+            } else {
+                pool = env.findPool(poolName);
+            }
+            if (pool == null) {
                 msg = "failed to reserve adapter connection: " +
                       "no adapter pool '" + poolName + "' found";
                 if (isTracing()) {
@@ -503,8 +501,7 @@ public class CallContext {
                 throw new ProcedureException(msg);
             }
             try {
-                con = env.findPool(poolName).reserveConnection();
-                connections.put(poolName, con);
+                connections.put(poolName, pool.reserveConnection());
             } catch (AdapterException e) {
                 msg = "failed to reserve adapter connection on '" +
                       poolName + "': " + e.getMessage();
@@ -548,7 +545,11 @@ public class CallContext {
                 msg += " connection '" + poolName + "': " + e.getMessage();
                 LOG.warning(msg);
             }
-            env.findPool(poolName).releaseConnection(con);
+            if (env == null) {
+                Environment.pool(poolName).releaseConnection(con);
+            } else {
+                env.findPool(poolName).releaseConnection(con);
+            }
         }
         connections.clear();
     }

@@ -140,21 +140,24 @@ public class Pool {
     }
 
     /**
+     * Checks if this pool matches the specified name.
+     *
+     * @param name           the name to check for
+     *
+     * @return true if the name matches, or
+     *         false otherwise
+     */
+    public boolean hasName(String name) {
+        return this.name.equals(name);
+    }
+
+    /**
      * Returns the unique pool name.
      *
      * @return the unique pool name
      */
     public String getName() {
         return name;
-    }
-
-    /**
-     * Sets the unique pool name.
-     *
-     * @param name           the unique pool name
-     */
-    public void setName(String name) {
-        this.name = name;
     }
 
     /**

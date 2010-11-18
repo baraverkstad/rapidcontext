@@ -134,6 +134,7 @@ public class Environment {
         Dict     config;
         String   msg;
 
+        // TODO: add support for connection aliases
         type = dict.getString("type", "connection");
         adapter = AdapterRegistry.find(dict.getString("adapter", ""));
         config = dict.getDict("config");
@@ -212,6 +213,75 @@ public class Environment {
     }
 
     /**
+     * Returns a named environment.
+     *
+     * @param envName        the environment name
+     *
+     * @return the environment found, or
+     *         null if not found
+     */
+    public static Environment environment(String envName) {
+        return (Environment) environments.get(envName);
+    }
+
+    /**
+     * Returns a collection with all the environment names.
+     *
+     * @return a collection with all the environment names
+     */
+    public static Collection environmentNames() {
+        return environments.keySet();
+    }
+
+    /**
+     * Returns a named connection pool.
+     *
+     * @param poolName       the connection pool name
+     *
+     * @return the connection pool found, or
+     *         null if not found
+     */
+    public static Pool pool(String poolName) {
+        Pool res = (Pool) connections.get(poolName);
+
+        if (res == null) {
+            res = poolAlias(connections.values(), poolName);
+        }
+        return res;
+    }
+
+    /**
+     * Returns a collection with all the connection pool names.
+     *
+     * @return a collection with all the connection pool names
+     */
+    public static Collection poolNames() {
+        return connections.keySet();
+    }
+
+    /**
+     * Searches for a connection pool with a matching alias.
+     *
+     * @param pools          the pools to search
+     * @param poolName       the pool name to search for
+     *
+     * @return the connection pool found, or
+     *         null if not found
+     */
+    protected static Pool poolAlias(Collection pools, String poolName) {
+        Iterator  iter = pools.iterator();
+        Pool      p;
+
+        while (iter.hasNext()) {
+            p = (Pool) iter.next();
+            if (p.hasName(poolName)) {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Creates a new environment with the specified name and
      * description.
      *
@@ -269,15 +339,6 @@ public class Environment {
     }
 
     /**
-     * Returns a collection with all the pool names.
-     *
-     * @return a collection with all the pool names
-     */
-    public Collection getPoolNames() {
-        return pools.keySet();
-    }
-
-    /**
      * Searches for a connection pool with the specified name.
      *
      * @param poolName       the pool name to search for
@@ -286,7 +347,15 @@ public class Environment {
      *         null if not found
      */
     public Pool findPool(String poolName) {
-        return (Pool) pools.get(poolName);
+        Pool res = (Pool) connections.get(poolName);
+
+        if (res == null) {
+            res = poolAlias(connections.values(), poolName);
+        }
+        if (res == null) {
+            res = pool(poolName);
+        }
+        return res;
     }
 
     /**
@@ -295,8 +364,7 @@ public class Environment {
      *
      * @param pool           the connection pool to add
      */
-    public void addPool(Pool pool) {
-        removePool(pool.getName());
+    protected void addPool(Pool pool) {
         pools.put(pool.getName(), pool);
     }
 
@@ -307,7 +375,7 @@ public class Environment {
      *
      * @param poolName       the connection pool name.
      */
-    public void removePool(String poolName) {
+    protected void removePool(String poolName) {
         pools.remove(poolName);
     }
 }
