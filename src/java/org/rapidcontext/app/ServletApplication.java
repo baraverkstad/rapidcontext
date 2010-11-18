@@ -508,6 +508,7 @@ public class ServletApplication extends HttpServlet {
                 arr = ((Index) res).indices();
                 if (isHtml) {
                     arr = arr.copy();
+                    arr.sort();
                     for (int i = 0; i < arr.size(); i++) {
                         arr.set(i, "http:" + arr.getString(i, null) + "/");
                     }
@@ -516,6 +517,7 @@ public class ServletApplication extends HttpServlet {
                 arr = ((Index) res).objects();
                 if (isHtml) {
                     arr = arr.copy();
+                    arr.sort();
                     for (int i = 0; i < arr.size(); i++) {
                         arr.set(i, "http:" + arr.getString(i, null));
                     }
