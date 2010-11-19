@@ -601,6 +601,7 @@ public class ServletApplication extends HttpServlet {
                 request.sendData("text/html", html.toString());
             }
         } catch (Exception e) {
+            LOG.log(Level.WARNING, "failed to process query", e);
             // TODO: How do users want their error messages?
             dict = new Dict();
             dict.set("error", e.getMessage());
@@ -612,7 +613,7 @@ public class ServletApplication extends HttpServlet {
             } else {
                 request.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                                   "text/plain",
-                                  e.getMessage());
+                                  "HTTP 500 Internal Server Error: " + e.getMessage());
             }
         }
     }
