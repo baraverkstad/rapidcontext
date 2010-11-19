@@ -26,12 +26,12 @@ import java.util.zip.ZipFile;
 
 import org.apache.commons.lang.ClassUtils;
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.data.FileStorage;
-import org.rapidcontext.core.data.MemoryStorage;
-import org.rapidcontext.core.data.Path;
-import org.rapidcontext.core.data.Storage;
-import org.rapidcontext.core.data.StorageException;
-import org.rapidcontext.core.data.VirtualStorage;
+import org.rapidcontext.core.storage.FileStorage;
+import org.rapidcontext.core.storage.MemoryStorage;
+import org.rapidcontext.core.storage.Path;
+import org.rapidcontext.core.storage.Storage;
+import org.rapidcontext.core.storage.StorageException;
+import org.rapidcontext.core.storage.VirtualStorage;
 import org.rapidcontext.util.FileUtil;
 
 /**

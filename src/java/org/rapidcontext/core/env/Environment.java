@@ -22,9 +22,9 @@ import java.util.logging.Logger;
 
 import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.data.Metadata;
-import org.rapidcontext.core.data.Path;
-import org.rapidcontext.core.data.Storage;
+import org.rapidcontext.core.storage.Metadata;
+import org.rapidcontext.core.storage.Path;
+import org.rapidcontext.core.storage.Storage;
 
 /**
  * An external connectivity environment. The environment contains a

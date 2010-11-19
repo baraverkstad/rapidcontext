@@ -50,10 +50,6 @@ import org.rapidcontext.app.proc.UserListProcedure;
 import org.rapidcontext.app.proc.UserPasswordChangeProcedure;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.data.Path;
-import org.rapidcontext.core.data.Storage;
-import org.rapidcontext.core.data.StorageException;
-import org.rapidcontext.core.data.VirtualStorage;
 import org.rapidcontext.core.env.Environment;
 import org.rapidcontext.core.js.JsCompileInterceptor;
 import org.rapidcontext.core.js.JsProcedure;
@@ -63,6 +59,10 @@ import org.rapidcontext.core.proc.Library;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.security.SecurityInterceptor;
+import org.rapidcontext.core.storage.Path;
+import org.rapidcontext.core.storage.Storage;
+import org.rapidcontext.core.storage.StorageException;
+import org.rapidcontext.core.storage.VirtualStorage;
 
 /**
  * The application context. This is a singleton object that contains

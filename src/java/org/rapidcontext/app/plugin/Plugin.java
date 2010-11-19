@@ -17,9 +17,9 @@ package org.rapidcontext.app.plugin;
 
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.DynamicObject;
-import org.rapidcontext.core.data.Storable;
-import org.rapidcontext.core.data.Storage;
-import org.rapidcontext.core.data.StorageException;
+import org.rapidcontext.core.storage.Storable;
+import org.rapidcontext.core.storage.Storage;
+import org.rapidcontext.core.storage.StorageException;
 
 /**
  * The base plug-in class. A plug-in may extend this class in order

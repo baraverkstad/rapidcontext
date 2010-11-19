@@ -12,7 +12,7 @@
  * See the RapidContext LICENSE.txt file for more details.
  */
 
-package org.rapidcontext.core.data;
+package org.rapidcontext.core.storage;
 
 import java.util.Arrays;
 

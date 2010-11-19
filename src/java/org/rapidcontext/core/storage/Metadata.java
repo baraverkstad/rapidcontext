@@ -12,10 +12,12 @@
  * See the RapidContext LICENSE.txt file for more details.
  */
 
-package org.rapidcontext.core.data;
+package org.rapidcontext.core.storage;
 
 import java.io.File;
 import java.util.Date;
+
+import org.rapidcontext.core.data.DynamicObject;
 
 /**
  * An object metadata container. Used for basic introspection of

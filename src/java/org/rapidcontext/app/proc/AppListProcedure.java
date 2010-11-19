@@ -16,13 +16,13 @@
 package org.rapidcontext.app.proc;
 
 import org.rapidcontext.core.data.Array;
-import org.rapidcontext.core.data.Path;
-import org.rapidcontext.core.data.Storage;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.Restricted;
+import org.rapidcontext.core.storage.Path;
+import org.rapidcontext.core.storage.Storage;
 
 /**
  * The built-in app list procedure.

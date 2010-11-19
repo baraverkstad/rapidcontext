@@ -21,11 +21,11 @@ import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.rapidcontext.core.data.Storage;
 import org.rapidcontext.core.env.AdapterConnection;
 import org.rapidcontext.core.env.AdapterException;
 import org.rapidcontext.core.env.Environment;
 import org.rapidcontext.core.env.Pool;
+import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.util.DateUtil;
 
 /**

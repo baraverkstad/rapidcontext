@@ -12,7 +12,7 @@
  * See the RapidContext LICENSE.txt file for more details.
  */
 
-package org.rapidcontext.core.data;
+package org.rapidcontext.core.storage;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -22,6 +22,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang.StringUtils;
+import org.rapidcontext.core.data.Dict;
+import org.rapidcontext.core.data.PropertiesSerializer;
 import org.rapidcontext.util.FileUtil;
 
 /**

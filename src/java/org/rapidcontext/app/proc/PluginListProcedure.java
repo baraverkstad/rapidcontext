@@ -20,15 +20,15 @@ import org.rapidcontext.app.plugin.Plugin;
 import org.rapidcontext.app.plugin.PluginManager;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.data.Path;
-import org.rapidcontext.core.data.Storage;
-import org.rapidcontext.core.data.VirtualStorage;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.Restricted;
 import org.rapidcontext.core.security.SecurityContext;
+import org.rapidcontext.core.storage.Path;
+import org.rapidcontext.core.storage.Storage;
+import org.rapidcontext.core.storage.VirtualStorage;
 
 /**
  * The built-in plug-in list procedure.

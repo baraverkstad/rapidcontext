@@ -12,9 +12,12 @@
  * See the RapidContext LICENSE.txt file for more details.
  */
 
-package org.rapidcontext.core.data;
+package org.rapidcontext.core.storage;
 
 import java.util.Date;
+
+import org.rapidcontext.core.data.Array;
+import org.rapidcontext.core.data.DynamicObject;
 
 /**
  * An index dictionary. An index is an object containing the names

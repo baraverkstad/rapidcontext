@@ -12,11 +12,13 @@
  * See the RapidContext LICENSE.txt file for more details.
  */
 
-package org.rapidcontext.core.data;
+package org.rapidcontext.core.storage;
 
 import java.util.Comparator;
 import java.util.Date;
 import java.util.logging.Logger;
+
+import org.rapidcontext.core.data.Array;
 
 /**
  * A virtual storage handler that provides a unified view of other

@@ -20,10 +20,10 @@ import java.util.LinkedHashSet;
 import java.util.logging.Logger;
 
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.data.Metadata;
-import org.rapidcontext.core.data.Path;
-import org.rapidcontext.core.data.Storage;
-import org.rapidcontext.core.data.StorageException;
+import org.rapidcontext.core.storage.Metadata;
+import org.rapidcontext.core.storage.Path;
+import org.rapidcontext.core.storage.Storage;
+import org.rapidcontext.core.storage.StorageException;
 
 /**
  * A procedure library. This class contains the set of loaded and

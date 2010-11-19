@@ -15,7 +15,6 @@
 
 package org.rapidcontext.app.proc;
 
-import org.rapidcontext.core.data.StorageException;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
@@ -23,6 +22,7 @@ import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.Restricted;
 import org.rapidcontext.core.security.Role;
 import org.rapidcontext.core.security.SecurityContext;
+import org.rapidcontext.core.storage.StorageException;
 
 /**
  * The built-in role modification procedure.

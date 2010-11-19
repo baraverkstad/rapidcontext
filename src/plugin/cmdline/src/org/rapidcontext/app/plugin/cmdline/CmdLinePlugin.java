@@ -18,10 +18,10 @@ package org.rapidcontext.app.plugin.cmdline;
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.app.plugin.Plugin;
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.data.Storage;
-import org.rapidcontext.core.data.StorageException;
 import org.rapidcontext.core.proc.Library;
 import org.rapidcontext.core.proc.ProcedureException;
+import org.rapidcontext.core.storage.Storage;
+import org.rapidcontext.core.storage.StorageException;
 
 /**
  * The command-line plug-in. This class handles the initialization and

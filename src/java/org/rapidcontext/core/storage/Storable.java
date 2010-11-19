@@ -12,7 +12,8 @@
  * See the RapidContext LICENSE.txt file for more details.
  */
 
-package org.rapidcontext.core.data;
+package org.rapidcontext.core.storage;
+
 
 /**
  * A storable object interface. Any object implementing this
