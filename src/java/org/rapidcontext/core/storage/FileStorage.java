@@ -77,8 +77,16 @@ public class FileStorage extends Storage {
      *         null if not found
      */
     public Metadata lookup(Path path) {
-        File  file = locateFile(path);
+        File  file;
 
+        if (PATH_STORAGEINFO.equals(path)) {
+            return new Metadata(Metadata.CATEGORY_OBJECT,
+                                Dict.class,
+                                path,
+                                path(),
+                                mountTime());
+        }
+        file = locateFile(path);
         if (file == null) {
             return null;
         } else if (file.isDirectory()) {
@@ -110,13 +118,20 @@ public class FileStorage extends Storage {
      *         null if not found
      */
     public Object load(Path path) {
-        File    file = locateFile(path);
+        File    file;
         String  msg;
 
+        if (PATH_STORAGEINFO.equals(path)) {
+            return dict;
+        }
+        file = locateFile(path);
         if (file == null) {
             return null;
         } else if (path.isIndex()) {
             Index idx = new Index(path);
+            if (path.isRoot()) {
+                idx.addObject(PATH_STORAGEINFO.name());
+            }
             File[] files = file.listFiles();
             for (int i = 0; i < files.length; i++) {
                 String name = files[i].getName();
@@ -173,6 +188,10 @@ public class FileStorage extends Storage {
             msg = "cannot store to read-only storage at " + path();
             LOG.warning(msg);
             throw new StorageException(msg);
+        } else if (PATH_STORAGEINFO.equals(path)) {
+            msg = "storage info is read-only: " + path;
+            LOG.warning(msg);
+            throw new StorageException(msg);
         }
         if (data instanceof Dict) {
             file = locateDir(path);
@@ -210,6 +229,10 @@ public class FileStorage extends Storage {
 
         if (!isReadWrite()) {
             msg = "cannot remove from read-only storage at " + path();
+            LOG.warning(msg);
+            throw new StorageException(msg);
+        } else if (PATH_STORAGEINFO.equals(path)) {
+            msg = "storage info is read-only: " + path;
             LOG.warning(msg);
             throw new StorageException(msg);
         }

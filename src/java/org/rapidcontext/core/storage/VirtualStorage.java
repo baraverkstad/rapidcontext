@@ -42,11 +42,6 @@ public class VirtualStorage extends Storage {
         Logger.getLogger(VirtualStorage.class.getName());
 
     /**
-     * The storage information path.
-     */
-    public static final Path PATH_STORAGEINFO = new Path("/storageinfo");
-
-    /**
      * The dictionary key for the overlay flag.
      */
     private static final String KEY_OVERLAY = "overlay";
@@ -55,11 +50,6 @@ public class VirtualStorage extends Storage {
      * The dictionary key for the overlay priority.
      */
     private static final String KEY_OVERLAY_PRIO = "prio";
-
-    /**
-     * The dictionary key for the mount timestamp.
-     */
-    private static final String KEY_MOUNT_TIME = "mountTime";
 
     /**
      * The system time of the last mount or remount operation.
@@ -176,10 +166,10 @@ public class VirtualStorage extends Storage {
                                  int prio) {
 
         lastMountTime = Math.max(System.currentTimeMillis(), lastMountTime + 1);
+        storage.dict.set(KEY_MOUNT_TIME, new Date(lastMountTime));
         storage.dict.setBoolean(KEY_READWRITE, readWrite);
         storage.dict.setBoolean(KEY_OVERLAY, overlay);
         storage.dict.setInt(KEY_OVERLAY_PRIO, overlay ? prio : -1);
-        storage.dict.set(KEY_MOUNT_TIME, new Date(lastMountTime));
     }
 
     /**

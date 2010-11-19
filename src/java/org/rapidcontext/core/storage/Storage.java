@@ -15,6 +15,7 @@
 package org.rapidcontext.core.storage;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.rapidcontext.core.data.Array;
 
@@ -45,6 +46,19 @@ public abstract class Storage extends StorableObject {
     public static final String KEY_MOUNT_PATH = "mountPath";
 
     /**
+     * The dictionary key for the mount timestamp. The value stored
+     * is a Date object, using the current system time as default.
+     */
+    public static final String KEY_MOUNT_TIME = "mountTime";
+
+    /**
+     * The storage information path. Each storage implementation
+     * should provide introspection abilities by returning it's
+     * own dictionary when queried for this path.
+     */
+    public static final Path PATH_STORAGEINFO = new Path("/storageinfo");
+
+    /**
      * Creates a new storage.
      *
      * @param storageType    the storage type name
@@ -56,6 +70,7 @@ public abstract class Storage extends StorableObject {
         dict.set(KEY_STORAGE_TYPE, storageType);
         dict.setBoolean(KEY_READWRITE, readWrite);
         dict.set(KEY_MOUNT_PATH, Path.ROOT);
+        dict.set(KEY_MOUNT_TIME, new Date());
     }
 
     /**
@@ -101,6 +116,15 @@ public abstract class Storage extends StorableObject {
      */
     public boolean isReadWrite() {
         return dict.getBoolean(KEY_READWRITE, false);
+    }
+
+    /**
+     * Returns the storage mount or creation time.
+     *
+     * @return the storage mount or creation time
+     */
+    public Date mountTime() {
+        return (Date) dict.get(KEY_MOUNT_TIME);
     }
 
     /**
