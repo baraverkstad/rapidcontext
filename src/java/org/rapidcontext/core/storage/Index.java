@@ -17,7 +17,6 @@ package org.rapidcontext.core.storage;
 import java.util.Date;
 
 import org.rapidcontext.core.data.Array;
-import org.rapidcontext.core.data.DynamicObject;
 
 /**
  * An index dictionary. An index is an object containing the names
@@ -30,7 +29,13 @@ import org.rapidcontext.core.data.DynamicObject;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class Index extends DynamicObject {
+public class Index extends StorableObject {
+
+    /**
+     * The dictionary key for the storage path. The value stored is a
+     * Path object.
+     */
+    public static final String KEY_PATH = "path";
 
     /**
      * The dictionary key for the last modified date. The value stored
@@ -65,28 +70,42 @@ public class Index extends DynamicObject {
         } else {
             Array idxs = one.indices().union(two.indices());
             Array objs = one.objects().union(two.objects());
-            return new Index(idxs, objs);
+            return new Index(one.path(), idxs, objs);
         }
     }
 
     /**
      * Creates a new empty index.
+     *
+     * @param path           the storage path for the index
      */
-    public Index() {
-        this(new Array(), new Array());
+    public Index(Path path) {
+        this(path, new Array(), new Array());
     }
 
     /**
      * Creates a new index with the specified entries.
      *
+     * @param path           the storage path for the index
      * @param indices        the initial index array
      * @param objects        the initial object array
      */
-    public Index(Array indices, Array objects) {
-        super("index");
+    public Index(Path path, Array indices, Array objects) {
+        super(null, "index");
+        dict.remove(KEY_ID);
+        dict.set(KEY_PATH, path);
         updateLastModified(null);
         dict.set(KEY_IDXS, indices);
         dict.set(KEY_OBJS, objects);
+    }
+
+    /**
+     * Returns the storage path for the index.
+     *
+     * @return the storage path for the index
+     */
+    public Path path() {
+        return (Path) dict.get(KEY_PATH);
     }
 
     /**

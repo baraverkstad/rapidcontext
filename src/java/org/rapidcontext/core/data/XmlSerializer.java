@@ -18,6 +18,7 @@ package org.rapidcontext.core.data;
 import java.util.Date;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.rapidcontext.core.storage.StorableObject;
 
 /**
  * A data serializer for XML. This class currently only attempts to
@@ -68,8 +69,8 @@ public class XmlSerializer {
             buffer.append(((Date) obj).getTime());
         } else if (obj instanceof Class) {
             serialize(((Class) obj).getName(), buffer);
-        } else if (obj instanceof DynamicObject) {
-            serialize(((DynamicObject) obj).serialize(), buffer);
+        } else if (obj instanceof StorableObject) {
+            serialize(((StorableObject) obj).serialize(), buffer);
         } else {
             serialize(obj.toString(), buffer);
         }

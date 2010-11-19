@@ -18,6 +18,7 @@ package org.rapidcontext.core.data;
 import java.util.Date;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.util.DateUtil;
 
 /**
@@ -69,8 +70,8 @@ public class HtmlSerializer {
             buffer.append(DateUtil.formatIsoDateTime((Date) obj));
         } else if (obj instanceof Class) {
             serialize(((Class) obj).getName(), buffer);
-        } else if (obj instanceof DynamicObject) {
-            serialize(((DynamicObject) obj).serialize(), buffer);
+        } else if (obj instanceof StorableObject) {
+            serialize(((StorableObject) obj).serialize(), buffer);
         } else {
             serialize(obj.toString(), buffer);
         }

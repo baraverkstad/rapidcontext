@@ -16,9 +16,7 @@
 package org.rapidcontext.app.plugin;
 
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.data.DynamicObject;
-import org.rapidcontext.core.storage.Storable;
-import org.rapidcontext.core.storage.Storage;
+import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.core.storage.StorageException;
 
 /**
@@ -30,12 +28,7 @@ import org.rapidcontext.core.storage.StorageException;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class Plugin extends DynamicObject implements Storable {
-
-    /**
-     * The dictionary key for the unique plug-in identifier.
-     */
-    public static final String KEY_ID = "id";
+public class Plugin extends StorableObject {
 
     /**
      * The dictionary key for the optional plug-in class name.
@@ -50,16 +43,8 @@ public class Plugin extends DynamicObject implements Storable {
      * @param dict           the plug-in configuration data
      */
     public Plugin(Dict dict) {
-        super("plugin", dict);
-    }
-
-    /**
-     * Returns the unique plug-in identifier.
-     *
-     * @return the unique plug-in identifier
-     */
-    public String id() {
-        return dict.getString(KEY_ID, null);
+        // TODO: change constructor signature once automatic init works
+        super(null, "plugin", dict);
     }
 
     /**
@@ -67,23 +52,21 @@ public class Plugin extends DynamicObject implements Storable {
      * any resources required by the plug-in, such as adding
      * additional handlers to the provided in-memory storage.
      *
-     * @param storage        the storage the object is added to
-     *
      * @throws StorageException if the initialization failed
      */
-    public void init(Storage storage) throws StorageException {
-        // Nothing done here by default
+    public void init() throws StorageException {
+        // TODO: Remove these public methods once init is handled inside
+        //       storage package.
     }
 
     /**
      * Uninitializes the plug-in. This method should free any
      * resources previously loaded or stored by the plug-in.
      *
-     * @param storage        the storage the object is removed from
-     *
      * @throws StorageException if the destruction failed
      */
-    public void destroy(Storage storage) throws StorageException {
-        // Nothing done here by default
+    public void destroy() throws StorageException {
+        // TODO: Remove these public methods once destroy is handled inside
+        //       storage package.
     }
 }

@@ -143,8 +143,8 @@ public class PluginManager {
         this.pluginDir = pluginDir;
         this.storage = storage;
         try {
-            MemoryStorage memory = new MemoryStorage(PATH_STORAGE_MEMORY, true);
-            storage.mount(memory, true, true, 50);
+            MemoryStorage memory = new MemoryStorage(true);
+            storage.mount(memory, PATH_STORAGE_MEMORY, true, true, 50);
         } catch (StorageException e) {
             LOG.log(Level.SEVERE, "failed to create memory storage", e);
         }
@@ -224,12 +224,11 @@ public class PluginManager {
      * @throws PluginException if the plug-in had already been mounted
      */
     private Storage createStorage(File baseDir, String pluginId) throws PluginException {
-        Path     path = storagePath(pluginId);
         File     dir = new File(baseDir, pluginId);
-        Storage  fs = new FileStorage(dir, path, false);
+        Storage  fs = new FileStorage(dir, false);
 
         try {
-            storage.mount(fs, false, false, 0);
+            storage.mount(fs, storagePath(pluginId), false, false, 0);
         } catch (StorageException e) {
             String msg = "failed to create " + pluginId + " plug-in storage";
             LOG.log(Level.SEVERE, msg, e);
@@ -412,6 +411,8 @@ public class PluginManager {
 
         // Initialize plug-in instance
         try {
+            // TODO: plug-in initialization should be handled by storage
+            plugin.init();
             storage.store(pluginPath(pluginId), plugin);
         } catch (Throwable e) {
             msg = "plugin class " + className + " threw exception on init";
@@ -452,6 +453,8 @@ public class PluginManager {
      * @throws PluginException if the plug-in unloading failed
      */
     public void unload(String pluginId) throws PluginException {
+        Path    path = pluginPath(pluginId);
+        Plugin  plugin;
         String  msg;
 
         if (SYSTEM_PLUGIN.equals(pluginId) || LOCAL_PLUGIN.equals(pluginId)) {
@@ -459,7 +462,10 @@ public class PluginManager {
             throw new PluginException(msg);
         }
         try {
-            storage.remove(pluginPath(pluginId));
+            plugin = (Plugin) storage.load(path);
+            storage.remove(path);
+            // TODO: plug-in destruction should be handled by storage
+            plugin.destroy();
         } catch (StorageException e) {
             msg = "failed destroy call on " + pluginId + " plugin";
             LOG.log(Level.SEVERE, msg, e);

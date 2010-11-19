@@ -59,11 +59,10 @@ public class FileStorage extends Storage {
      * Creates a new file storage.
      *
      * @param dir            the base data directory to use
-     * @param path           the base storage path
      * @param readWrite      the read write flag
      */
-    public FileStorage(File dir, Path path, boolean readWrite) {
-        super("file", path, readWrite);
+    public FileStorage(File dir, boolean readWrite) {
+        super("file", readWrite);
         this.baseDir = dir;
     }
 
@@ -117,7 +116,7 @@ public class FileStorage extends Storage {
         if (file == null) {
             return null;
         } else if (path.isIndex()) {
-            Index idx = new Index();
+            Index idx = new Index(path);
             File[] files = file.listFiles();
             for (int i = 0; i < files.length; i++) {
                 String name = files[i].getName();

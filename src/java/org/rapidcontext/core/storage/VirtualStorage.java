@@ -72,7 +72,7 @@ public class VirtualStorage extends Storage {
      * their corresponding path (slightly modified to form an object
      * path instead of an index path).
      */
-    private MemoryStorage metaStorage = new MemoryStorage(Path.ROOT, true);
+    private MemoryStorage metaStorage = new MemoryStorage(true);
 
     /**
      * The sorted array of mounted storages. This array is sorted
@@ -83,11 +83,10 @@ public class VirtualStorage extends Storage {
     /**
      * Creates a new overlay storage.
      *
-     * @param path           the base storage path
      * @param readWrite      the read write flag
      */
-    public VirtualStorage(Path path, boolean readWrite) {
-        super("virtual", path, readWrite);
+    public VirtualStorage(boolean readWrite) {
+        super("virtual", readWrite);
         dict.set("storages", storages);
         try {
             metaStorage.store(PATH_STORAGEINFO, dict);
@@ -108,7 +107,7 @@ public class VirtualStorage extends Storage {
      *         null if not found
      */
     private Storage getMountedStorage(Path path) {
-        return (Storage) metaStorage.load(path.child("storageinfo", false));
+        return (Storage) metaStorage.load(path.child("storage", false));
     }
 
     /**
@@ -122,7 +121,7 @@ public class VirtualStorage extends Storage {
     private void setMountedStorage(Path path, Storage storage)
     throws StorageException {
 
-        path = path.child("storageinfo", false);
+        path = path.child("storage", false);
         if (storage == null) {
             metaStorage.remove(path);
         } else {
@@ -188,10 +187,11 @@ public class VirtualStorage extends Storage {
      * with a previously mounted storage, such that it would hide or
      * be hidden by the other storage. Overlapping parent indices
      * will be merged automatically. In addition to adding the
-     * storage to the specified path, it may also be overlaid
-     * directly to the root path.
+     * storage to the specified path, it's contents may also be
+     * overlaid directly on the root path.
      *
      * @param storage        the storage to mount
+     * @param path           the mount path
      * @param readWrite      the read write flag
      * @param overlay        the root overlay flag
      * @param prio           the root overlay search priority (higher numbers
@@ -200,6 +200,7 @@ public class VirtualStorage extends Storage {
      * @throws StorageException if the storage couldn't be mounted
      */
     public void mount(Storage storage,
+                      Path path, 
                       boolean readWrite,
                       boolean overlay,
                       int prio)
@@ -207,18 +208,18 @@ public class VirtualStorage extends Storage {
 
         String  msg;
 
-        if (!storage.path().isIndex()) {
-            msg = "cannot mount storage to a non-index path: " + storage.path();
+        if (!path.isIndex()) {
+            msg = "cannot mount storage to a non-index path: " + path;
             LOG.warning(msg);
             throw new StorageException(msg);
-        } else if (metaStorage.lookup(storage.path()) != null) {
-            msg = "storage mount path conflicts with another mount: " +
-                  storage.path();
+        } else if (metaStorage.lookup(path) != null) {
+            msg = "storage mount path conflicts with another mount: " + path;
             LOG.warning(msg);
             throw new StorageException(msg);
         }
+        storage.dict.set(KEY_MOUNT_PATH, path);
         updateMountInfo(storage, readWrite, overlay, prio);
-        setMountedStorage(storage.path(), storage);
+        setMountedStorage(path, storage);
         storages.add(storage);
         storages.sort(StorageComparator.INSTANCE);
     }
@@ -269,6 +270,7 @@ public class VirtualStorage extends Storage {
         }
         storages.remove(storages.indexOf(storage));
         setMountedStorage(path, null);
+        storage.dict.set(KEY_MOUNT_PATH, Path.ROOT);
     }
 
     /**
@@ -367,14 +369,8 @@ public class VirtualStorage extends Storage {
      */
     public void store(Path path, Object data) throws StorageException {
         Storage  storage = getParentStorage(path);
-        String   msg;
 
         if (storage != null) {
-            if (!storage.isReadWrite()) {
-                msg = "cannot write to read-only storage at " + storage.path();
-                LOG.warning(msg);
-                throw new StorageException(msg);
-            }
             storage.store(storage.localPath(path), data);
         } else {
             for (int i = 0; i < storages.size(); i++) {
@@ -399,14 +395,8 @@ public class VirtualStorage extends Storage {
      */
     public void remove(Path path) throws StorageException {
         Storage  storage = getParentStorage(path);
-        String   msg;
 
         if (storage != null) {
-            if (!storage.isReadWrite()) {
-                msg = "cannot remove from read-only storage at " + storage.path();
-                LOG.warning(msg);
-                throw new StorageException(msg);
-            }
             storage.remove(storage.localPath(path));
         } else {
             for (int i = 0; i < storages.size(); i++) {

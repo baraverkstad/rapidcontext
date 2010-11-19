@@ -176,7 +176,7 @@ public class ApplicationContext {
     private ApplicationContext(File baseDir, File localDir) {
         File builtinDir = new File(baseDir, "plugin");
         File pluginDir = new File(localDir, "plugin");
-        this.storage = new VirtualStorage(Path.ROOT, true);
+        this.storage = new VirtualStorage(true);
         this.pluginManager = new PluginManager(builtinDir, pluginDir, storage);
         this.library = new Library(this.storage);
         this.config = (Dict) storage.load(PATH_CONFIG);

@@ -17,7 +17,6 @@ package org.rapidcontext.core.storage;
 import java.util.ArrayList;
 
 import org.rapidcontext.core.data.Array;
-import org.rapidcontext.core.data.DynamicObject;
 
 /**
  * The persistent data storage and retrieval class. This base class
@@ -27,7 +26,7 @@ import org.rapidcontext.core.data.DynamicObject;
  * @author   Per Cederberg
  * @version  1.0
  */
-public abstract class Storage extends DynamicObject {
+public abstract class Storage extends StorableObject {
 
     /**
      * The dictionary key for the storage type.
@@ -35,27 +34,28 @@ public abstract class Storage extends DynamicObject {
     public static final String KEY_STORAGE_TYPE = "storageType";
 
     /**
-     * The dictionary key for the base storage path.
-     */
-    public static final String KEY_PATH = "path";
-
-    /**
      * The dictionary key for the read-write flag.
      */
     public static final String KEY_READWRITE = "readWrite";
 
     /**
+     * The dictionary key for the mount path. The value stored is a
+     * path object, using the root path by default.
+     */
+    public static final String KEY_MOUNT_PATH = "mountPath";
+
+    /**
      * Creates a new storage.
      *
      * @param storageType    the storage type name
-     * @param path           the base storage path
      * @param readWrite      the read write flag
      */
-    protected Storage(String storageType, Path path, boolean readWrite) {
-        super("storage");
+    protected Storage(String storageType, boolean readWrite) {
+        super(null, "storage");
+        dict.remove(KEY_ID);
         dict.set(KEY_STORAGE_TYPE, storageType);
-        dict.set(KEY_PATH, path);
         dict.setBoolean(KEY_READWRITE, readWrite);
+        dict.set(KEY_MOUNT_PATH, Path.ROOT);
     }
 
     /**
@@ -68,12 +68,12 @@ public abstract class Storage extends DynamicObject {
     }
 
     /**
-     * Returns the base storage path.
+     * Returns the storage mount path.
      *
-     * @return the base storage path
+     * @return the storage mount path
      */
     public Path path() {
-        return (Path) dict.get(KEY_PATH);
+        return (Path) dict.get(KEY_MOUNT_PATH);
     }
 
     /**

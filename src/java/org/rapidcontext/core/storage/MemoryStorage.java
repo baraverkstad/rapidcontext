@@ -55,11 +55,10 @@ public class MemoryStorage extends Storage {
     /**
      * Creates a new memory storage.
      *
-     * @param path           the base storage path
      * @param readWrite      the read write flag
      */
-    public MemoryStorage(Path path, boolean readWrite) {
-        super("memory", path, readWrite);
+    public MemoryStorage(boolean readWrite) {
+        super("memory", readWrite);
     }
 
     /**
@@ -131,9 +130,6 @@ public class MemoryStorage extends Storage {
         if (objects.containsKey(path)) {
             remove(path);
         }
-        if (data instanceof Storable) {
-            ((Storable) data).init(this);
-        }
         objects.put(path, data);
         meta.put(path, new Metadata(path, path(), data));
         indexInsert(path);
@@ -189,9 +185,6 @@ public class MemoryStorage extends Storage {
         if (updateParent) {
             indexRemove(path);
         }
-        if (obj instanceof Storable) {
-            ((Storable) obj).destroy(this);
-        }
     }
 
     /**
@@ -209,7 +202,7 @@ public class MemoryStorage extends Storage {
         boolean  modified = false;
 
         if (idx == null) {
-            idx = new Index();
+            idx = new Index(parent);
         }
         if (path.isIndex()) {
             modified = idx.addIndex(path.name());

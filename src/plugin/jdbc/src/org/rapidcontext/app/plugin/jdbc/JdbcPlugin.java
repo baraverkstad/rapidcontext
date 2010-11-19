@@ -21,7 +21,6 @@ import org.rapidcontext.core.env.AdapterException;
 import org.rapidcontext.core.env.AdapterRegistry;
 import org.rapidcontext.core.proc.Library;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.storage.StorageException;
 
 /**
@@ -48,11 +47,9 @@ public class JdbcPlugin extends Plugin {
      * any resources required by the plug-in, such as adding
      * additional handlers to the provided in-memory storage.
      *
-     * @param storage        the storage the object is added to
-     *
      * @throws StorageException if the initialization failed
      */
-    public void init(Storage storage) throws StorageException {
+    public void init() throws StorageException {
         Library  lib = ApplicationContext.getInstance().getLibrary();
 
         try {
@@ -77,11 +74,9 @@ public class JdbcPlugin extends Plugin {
      * Uninitializes the plug-in. This method should free any
      * resources previously loaded or stored by the plug-in.
      *
-     * @param storage        the storage the object is removed from
-     *
      * @throws StorageException if the destruction failed
      */
-    public void destroy(Storage storage) throws StorageException {
+    public void destroy() throws StorageException {
         Library  lib = ApplicationContext.getInstance().getLibrary();
 
         lib.removeBuiltIn(JdbcConnectionListProcedure.NAME);

@@ -17,8 +17,6 @@ package org.rapidcontext.core.storage;
 import java.io.File;
 import java.util.Date;
 
-import org.rapidcontext.core.data.DynamicObject;
-
 /**
  * An object metadata container. Used for basic introspection of
  * objects inside storages.
@@ -26,7 +24,7 @@ import org.rapidcontext.core.data.DynamicObject;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class Metadata extends DynamicObject {
+public class Metadata extends StorableObject {
 
     /**
      * The dictionary key for the object category, i.e. the type of
@@ -141,7 +139,8 @@ public class Metadata extends DynamicObject {
      * @param modified       the last modified date, or null for now
      */
     public Metadata(String category, Class clazz, Path path, Path storagePath, Object modified) {
-        super("metadata");
+        super(null, "metadata");
+        dict.remove(KEY_ID);
         dict.set(KEY_CATEGORY, category);
         dict.set(KEY_CLASS, clazz);
         dict.set(KEY_PATH, path);
