@@ -62,13 +62,13 @@ public class RootStorage extends Storage {
      * their corresponding mount path (appended to form an object
      * path instead of an index path).
      */
-    private MemoryStorage metaStorage = new MemoryStorage(true);
+    private MemoryStorage metadata = new MemoryStorage(true);
 
     /**
      * The sorted array of mounted storages. This array is sorted
      * every time a mount point is added or modified.
      */
-    private Array storages = new Array();
+    private Array mountedStorages = new Array();
 
     /**
      * Creates a new root storage.
@@ -77,9 +77,9 @@ public class RootStorage extends Storage {
      */
     public RootStorage(boolean readWrite) {
         super("root", readWrite);
-        dict.set("storages", storages);
+        dict.set("storages", mountedStorages);
         try {
-            metaStorage.store(PATH_STORAGEINFO, dict);
+            metadata.store(PATH_STORAGEINFO, dict);
         } catch (StorageException e) {
             LOG.severe("error while initializing virtual storage: " +
                        e.getMessage());
@@ -88,16 +88,28 @@ public class RootStorage extends Storage {
 
     /**
      * Returns the storage at a specific storage location. If the
-     * path does not exactly match an existing mount point, null will
-     * be returned.
+     * exact match flag is set, the path must exactly match the mount
+     * point of a storage. If exact matching is not required, the
+     * parent storage for the path will be returned.
      *
-     * @param path           the storage mount path
+     * @param path           the storage location
+     * @param exact          the exact match flag
      *
      * @return the storage found, or
      *         null if not found
      */
-    private Storage getMountedStorage(Path path) {
-        return (Storage) metaStorage.load(path.child("storage", false));
+    private Storage getMountedStorage(Path path, boolean exact) {
+        if (exact) {
+            return (Storage) metadata.load(path.child("storage", false));
+        } else {
+            for (int i = 0; i < mountedStorages.size(); i++) {
+                Storage storage = (Storage) mountedStorages.get(i);
+                if (path.startsWith(storage.path())) {
+                    return storage;
+                }
+            }
+            return null;
+        }
     }
 
     /**
@@ -113,30 +125,10 @@ public class RootStorage extends Storage {
 
         path = path.child("storage", false);
         if (storage == null) {
-            metaStorage.remove(path);
+            metadata.remove(path);
         } else {
-            metaStorage.store(path, storage);
+            metadata.store(path, storage);
         }
-    }
-
-    /**
-     * Returns the parent storage for a storage location. All mounted
-     * storages will be searched in order to find a matching parent
-     * (if one exists).
-     *
-     * @param path           the storage location
-     *
-     * @return the parent storage found, or
-     *         null if not found
-     */
-    private Storage getParentStorage(Path path) {
-        for (int i = 0; i < storages.size(); i++) {
-            Storage storage = (Storage) storages.get(i);
-            if (path.startsWith(storage.path())) {
-                return storage;
-            }
-        }
-        return null;
     }
 
     /**
@@ -190,7 +182,7 @@ public class RootStorage extends Storage {
             msg = "cannot mount storage to a non-index path: " + path;
             LOG.warning(msg);
             throw new StorageException(msg);
-        } else if (metaStorage.lookup(path) != null) {
+        } else if (metadata.lookup(path) != null) {
             msg = "storage mount path conflicts with another mount: " + path;
             LOG.warning(msg);
             throw new StorageException(msg);
@@ -198,8 +190,8 @@ public class RootStorage extends Storage {
         storage.dict.set(KEY_MOUNT_PATH, path);
         updateMountInfo(storage, readWrite, overlay, prio);
         setMountedStorage(path, storage);
-        storages.add(storage);
-        storages.sort();
+        mountedStorages.add(storage);
+        mountedStorages.sort();
     }
 
     /**
@@ -217,7 +209,7 @@ public class RootStorage extends Storage {
     public void remount(Path path, boolean readWrite, boolean overlay, int prio)
     throws StorageException {
 
-        Storage  storage = getMountedStorage(path);
+        Storage  storage = getMountedStorage(path, true);
         String   msg;
 
         if (storage == null) {
@@ -226,7 +218,7 @@ public class RootStorage extends Storage {
             throw new StorageException(msg);
         }
         updateMountInfo(storage, readWrite, overlay, prio);
-        storages.sort();
+        mountedStorages.sort();
     }
 
     /**
@@ -238,7 +230,7 @@ public class RootStorage extends Storage {
      * @throws StorageException if the storage couldn't be unmounted
      */
     public void unmount(Path path) throws StorageException {
-        Storage  storage = getMountedStorage(path);
+        Storage  storage = getMountedStorage(path, true);
         String   msg;
 
         if (storage == null) {
@@ -246,7 +238,7 @@ public class RootStorage extends Storage {
             LOG.warning(msg);
             throw new StorageException(msg);
         }
-        storages.remove(storages.indexOf(storage));
+        mountedStorages.remove(mountedStorages.indexOf(storage));
         setMountedStorage(path, null);
         storage.dict.set(KEY_MOUNT_PATH, Path.ROOT);
     }
@@ -262,21 +254,21 @@ public class RootStorage extends Storage {
      *         null if not found
      */
     public Metadata lookup(Path path) {
-        Storage   storage = getParentStorage(path);
+        Storage   storage = getMountedStorage(path, false);
         Metadata  meta = null;
         Metadata  idx = null;
 
         if (storage != null) {
             return storage.lookup(storage.localPath(path));
         } else {
-            meta = metaStorage.lookup(path);
+            meta = metadata.lookup(path);
             if (meta != null && meta.isIndex()) {
                 idx = meta;
             } else if (meta != null) {
                 return meta;
             }
-            for (int i = 0; i < storages.size(); i++) {
-                storage = (Storage) storages.get(i);
+            for (int i = 0; i < mountedStorages.size(); i++) {
+                storage = (Storage) mountedStorages.get(i);
                 if (storage.mountOverlay()) {
                     meta = storage.lookup(path);
                     if (meta != null && meta.isIndex()) {
@@ -306,21 +298,21 @@ public class RootStorage extends Storage {
      *         null if not found
      */
     public Object load(Path path) {
-        Storage  storage = getParentStorage(path);
+        Storage  storage = getMountedStorage(path, false);
         Object   res;
         Index    idx = null;
 
         if (storage != null) {
             return storage.load(storage.localPath(path));
         } else {
-            res = metaStorage.load(path);
+            res = metadata.load(path);
             if (res instanceof Index) {
                 idx = (Index) res;
             } else if (res != null) {
                 return res;
             }
-            for (int i = 0; i < storages.size(); i++) {
-                storage = (Storage) storages.get(i);
+            for (int i = 0; i < mountedStorages.size(); i++) {
+                storage = (Storage) mountedStorages.get(i);
                 if (storage.mountOverlay()) {
                     res = storage.load(path);
                     if (res instanceof Index) {
@@ -346,13 +338,13 @@ public class RootStorage extends Storage {
      * @throws StorageException if the data couldn't be written
      */
     public void store(Path path, Object data) throws StorageException {
-        Storage  storage = getParentStorage(path);
+        Storage  storage = getMountedStorage(path, false);
 
         if (storage != null) {
             storage.store(storage.localPath(path), data);
         } else {
-            for (int i = 0; i < storages.size(); i++) {
-                storage = (Storage) storages.get(i);
+            for (int i = 0; i < mountedStorages.size(); i++) {
+                storage = (Storage) mountedStorages.get(i);
                 if (storage.isReadWrite() && storage.mountOverlay()) {
                     storage.store(path, data);
                     return;
@@ -372,13 +364,13 @@ public class RootStorage extends Storage {
      * @throws StorageException if the data couldn't be removed
      */
     public void remove(Path path) throws StorageException {
-        Storage  storage = getParentStorage(path);
+        Storage  storage = getMountedStorage(path, false);
 
         if (storage != null) {
             storage.remove(storage.localPath(path));
         } else {
-            for (int i = 0; i < storages.size(); i++) {
-                storage = (Storage) storages.get(i);
+            for (int i = 0; i < mountedStorages.size(); i++) {
+                storage = (Storage) mountedStorages.get(i);
                 if (storage.isReadWrite() && storage.mountOverlay()) {
                     storage.remove(path);
                 }
