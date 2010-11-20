@@ -454,7 +454,6 @@ public class PluginManager {
      */
     public void unload(String pluginId) throws PluginException {
         Path    path = pluginPath(pluginId);
-        Plugin  plugin;
         String  msg;
 
         if (SYSTEM_PLUGIN.equals(pluginId) || LOCAL_PLUGIN.equals(pluginId)) {
@@ -462,10 +461,7 @@ public class PluginManager {
             throw new PluginException(msg);
         }
         try {
-            plugin = (Plugin) storage.load(path);
             storage.remove(path);
-            // TODO: plug-in destruction should be handled by storage
-            plugin.destroy();
         } catch (StorageException e) {
             msg = "failed destroy call on " + pluginId + " plugin";
             LOG.log(Level.SEVERE, msg, e);
