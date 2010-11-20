@@ -193,6 +193,9 @@ public class FileStorage extends Storage {
             LOG.warning(msg);
             throw new StorageException(msg);
         }
+        if (data instanceof StorableObject) {
+            data = ((StorableObject) data).serialize();
+        }
         if (data instanceof Dict) {
             file = locateDir(path);
             file.mkdirs();
