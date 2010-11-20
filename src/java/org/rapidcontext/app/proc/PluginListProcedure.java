@@ -28,7 +28,6 @@ import org.rapidcontext.core.security.Restricted;
 import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.Storage;
-import org.rapidcontext.core.storage.VirtualStorage;
 
 /**
  * The built-in plug-in list procedure.
@@ -122,7 +121,7 @@ public class PluginListProcedure implements Procedure, Restricted {
         String              pluginId;
         Array               res;
 
-        dict = (Dict) storage.load(VirtualStorage.PATH_STORAGEINFO);
+        dict = (Dict) storage.load(Storage.PATH_STORAGEINFO);
         arr = dict.getArray("storages");
         res = new Array(arr.size());
         for (int i = 0; i < arr.size(); i++) {
