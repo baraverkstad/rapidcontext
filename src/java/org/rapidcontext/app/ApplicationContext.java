@@ -62,7 +62,7 @@ import org.rapidcontext.core.security.SecurityInterceptor;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.storage.StorageException;
-import org.rapidcontext.core.storage.VirtualStorage;
+import org.rapidcontext.core.storage.RootStorage;
 
 /**
  * The application context. This is a singleton object that contains
@@ -94,7 +94,7 @@ public class ApplicationContext {
     /**
      * The application root storage.
      */
-    private VirtualStorage storage;
+    private RootStorage storage;
 
     /**
      * The plug-in manager.
@@ -176,7 +176,7 @@ public class ApplicationContext {
     private ApplicationContext(File baseDir, File localDir) {
         File builtinDir = new File(baseDir, "plugin");
         File pluginDir = new File(localDir, "plugin");
-        this.storage = new VirtualStorage(true);
+        this.storage = new RootStorage(true);
         this.pluginManager = new PluginManager(builtinDir, pluginDir, storage);
         this.library = new Library(this.storage);
         this.config = (Dict) storage.load(PATH_CONFIG);

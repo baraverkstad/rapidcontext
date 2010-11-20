@@ -31,7 +31,7 @@ import org.rapidcontext.core.storage.MemoryStorage;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.storage.StorageException;
-import org.rapidcontext.core.storage.VirtualStorage;
+import org.rapidcontext.core.storage.RootStorage;
 import org.rapidcontext.util.FileUtil;
 
 /**
@@ -89,7 +89,7 @@ public class PluginManager {
     /**
      * The storage to use when loading and unloading plug-ins.
      */
-    public VirtualStorage storage;
+    public RootStorage storage;
 
     /**
      * The plug-in class loader.
@@ -138,7 +138,7 @@ public class PluginManager {
      * @param pluginDir      the base plug-in directory
      * @param storage        the storage to use for plug-ins
      */
-    public PluginManager(File builtinDir, File pluginDir, VirtualStorage storage) {
+    public PluginManager(File builtinDir, File pluginDir, RootStorage storage) {
         this.builtinDir = builtinDir;
         this.pluginDir = pluginDir;
         this.storage = storage;

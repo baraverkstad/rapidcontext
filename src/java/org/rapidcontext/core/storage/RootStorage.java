@@ -21,25 +21,36 @@ import java.util.logging.Logger;
 import org.rapidcontext.core.data.Array;
 
 /**
- * A virtual storage handler that provides a unified view of other
- * storages. The sub-storages are mounted to specific storage paths
- * and may also be merged together to form a unified storage with
- * data and files from all storages mixed (in a prioritized order).
- * The unified storage tree provides an overlay of all storages for
- * reading, but only a single storage will be used for writing. Any
- * mounted storage can be accessed directly from its mounted path,
- * however.
+ * The root storage that provides a unified view of other storages.
+ * This class provides a number of unique storage services:
+ *
+ * <ul>
+ *   <li><strong>Mounting</strong> -- Sub-storages can be mounted
+ *       on a "storage/..." subpath, providing a global namespace
+ *       for objects. Storage paths are automatically converted to
+ *       local paths for all storage operations.
+ *   <li><strong>Unification</strong> -- Mounted storages can also
+ *       be overlaid or unified with the root path, providing a
+ *       storage view where objects from all storages are mixed. The
+ *       mount order defines which object names take priority, in
+ *       case several objects have the same paths.
+ *   <li><strong>Object Initialization</strong> -- Dictionary objects
+ *       will be inspected upon retrieval from a mounted and unified
+ *       storage. If a matching type handler or class can be located,
+ *       the corresponding object will be created, initialized and
+ *       cached for future references.
+ * </ul>
  *
  * @author   Per Cederberg
  * @version  1.0
  */
-public class VirtualStorage extends Storage {
+public class RootStorage extends Storage {
 
     /**
      * The class logger.
      */
     private static final Logger LOG =
-        Logger.getLogger(VirtualStorage.class.getName());
+        Logger.getLogger(RootStorage.class.getName());
 
     /**
      * The dictionary key for the overlay flag.
@@ -58,8 +69,8 @@ public class VirtualStorage extends Storage {
 
     /**
      * The meta-data storage for mount points and parent indices.
-     * The mount point objects will be added to this storage under
-     * their corresponding path (slightly modified to form an object
+     * The mounted storages will be added to this storage under
+     * their corresponding mount path (appended to form an object
      * path instead of an index path).
      */
     private MemoryStorage metaStorage = new MemoryStorage(true);
@@ -71,11 +82,11 @@ public class VirtualStorage extends Storage {
     private Array storages = new Array();
 
     /**
-     * Creates a new overlay storage.
+     * Creates a new root storage.
      *
      * @param readWrite      the read write flag
      */
-    public VirtualStorage(boolean readWrite) {
+    public RootStorage(boolean readWrite) {
         super("virtual", readWrite);
         dict.set("storages", storages);
         try {
