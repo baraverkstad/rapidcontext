@@ -27,7 +27,7 @@ import org.rapidcontext.core.data.Array;
  * @author   Per Cederberg
  * @version  1.0
  */
-public abstract class Storage extends StorableObject {
+public abstract class Storage extends StorableObject implements Comparable {
 
     /**
      * The dictionary key for the storage type.
@@ -52,6 +52,22 @@ public abstract class Storage extends StorableObject {
     public static final String KEY_MOUNT_TIME = "mountTime";
 
     /**
+     * The dictionary key for the mount overlay flag. The value
+     * stored is a boolean indicating if the storage has been mounted
+     * as a global overlay or not. If the storage has not been
+     * mounted at all, this key is not set.
+     */
+    public static final String KEY_MOUNT_OVERLAY = "mountOverlay";
+
+    /**
+     * The dictionary key for the mount overlay priority. The value
+     * stored is an integer indicating the mount overlay priority,
+     * higher numbers corresponding to higher priority. If the
+     * storage has not been mounted at all, this key is not set.
+     */
+    public static final String KEY_MOUNT_OVERLAY_PRIO = "mountOverlayPrio";
+
+    /**
      * The storage information path. Each storage implementation
      * should provide introspection abilities by returning it's
      * own dictionary when queried for this path.
@@ -71,6 +87,31 @@ public abstract class Storage extends StorableObject {
         dict.setBoolean(KEY_READWRITE, readWrite);
         dict.set(KEY_MOUNT_PATH, Path.ROOT);
         dict.set(KEY_MOUNT_TIME, new Date());
+    }
+
+    /**
+     * Compares this storage with another.
+     *
+     * @param obj            the object to compare with
+     *
+     * @return a negative integer, zero, or a positive integer as
+     *         this object is less than, equal to, or greater than
+     *         the specified one
+     *
+     * @throws ClassCastException if the object wasn't comparable
+     */
+    public int compareTo(Object obj) throws ClassCastException {
+        Storage  other = (Storage) obj;
+        int      cmp1 = mountOverlayPrio() - other.mountOverlayPrio();
+        int      cmp2 = mountTime().compareTo(other.mountTime());
+
+        if (cmp1 != 0) {
+            return -cmp1;
+        } else if (cmp2 != 0) {
+            return cmp2;
+        } else {
+            return (this == other) ? 0 : -1;
+        }
     }
 
     /**
@@ -125,6 +166,29 @@ public abstract class Storage extends StorableObject {
      */
     public Date mountTime() {
         return (Date) dict.get(KEY_MOUNT_TIME);
+    }
+
+    /**
+     * Returns the mount overlay flag. This flag is set if the
+     * storage has been mounted as a global overlay. If the storage
+     * has not been mounted at all, false will be returned.
+     *
+     * @return true if the storage is mounted as a global overlay, or
+     *         false otherwise
+     */
+    public boolean mountOverlay() {
+        return dict.getBoolean(KEY_MOUNT_OVERLAY, false);
+    }
+
+    /**
+     * Returns the mount overlay priority. Higher numbers correspond
+     * to higher priority.
+     *
+     * @return the mount overlay priority, or
+     *         -1 if not mounted
+     */
+    public int mountOverlayPrio() {
+        return dict.getInt(KEY_MOUNT_OVERLAY_PRIO, -1);
     }
 
     /**

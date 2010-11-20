@@ -14,7 +14,6 @@
 
 package org.rapidcontext.core.storage;
 
-import java.util.Comparator;
 import java.util.Date;
 import java.util.logging.Logger;
 
@@ -53,16 +52,6 @@ public class RootStorage extends Storage {
         Logger.getLogger(RootStorage.class.getName());
 
     /**
-     * The dictionary key for the overlay flag.
-     */
-    private static final String KEY_OVERLAY = "overlay";
-
-    /**
-     * The dictionary key for the overlay priority.
-     */
-    private static final String KEY_OVERLAY_PRIO = "prio";
-
-    /**
      * The system time of the last mount or remount operation.
      */
     private static long lastMountTime = 0L;
@@ -87,7 +76,7 @@ public class RootStorage extends Storage {
      * @param readWrite      the read write flag
      */
     public RootStorage(boolean readWrite) {
-        super("virtual", readWrite);
+        super("root", readWrite);
         dict.set("storages", storages);
         try {
             metaStorage.store(PATH_STORAGEINFO, dict);
@@ -151,18 +140,6 @@ public class RootStorage extends Storage {
     }
 
     /**
-     * Checks if the specified storage has the root overlay flag set.
-     *
-     * @param storage        the storage to check
-     *
-     * @return true if the root overlay flag is set, or
-     *         false otherwise
-     */
-    private boolean isOverlay(Storage storage) {
-        return storage.dict.getBoolean(KEY_OVERLAY, false);
-    }
-
-    /**
      * Updates the mount information in a storage object.
      *
      * @param storage        the storage to update
@@ -179,8 +156,8 @@ public class RootStorage extends Storage {
         lastMountTime = Math.max(System.currentTimeMillis(), lastMountTime + 1);
         storage.dict.set(KEY_MOUNT_TIME, new Date(lastMountTime));
         storage.dict.setBoolean(KEY_READWRITE, readWrite);
-        storage.dict.setBoolean(KEY_OVERLAY, overlay);
-        storage.dict.setInt(KEY_OVERLAY_PRIO, overlay ? prio : -1);
+        storage.dict.setBoolean(KEY_MOUNT_OVERLAY, overlay);
+        storage.dict.setInt(KEY_MOUNT_OVERLAY_PRIO, overlay ? prio : -1);
     }
 
     /**
@@ -222,7 +199,7 @@ public class RootStorage extends Storage {
         updateMountInfo(storage, readWrite, overlay, prio);
         setMountedStorage(path, storage);
         storages.add(storage);
-        storages.sort(StorageComparator.INSTANCE);
+        storages.sort();
     }
 
     /**
@@ -249,7 +226,7 @@ public class RootStorage extends Storage {
             throw new StorageException(msg);
         }
         updateMountInfo(storage, readWrite, overlay, prio);
-        storages.sort(StorageComparator.INSTANCE);
+        storages.sort();
     }
 
     /**
@@ -300,7 +277,7 @@ public class RootStorage extends Storage {
             }
             for (int i = 0; i < storages.size(); i++) {
                 storage = (Storage) storages.get(i);
-                if (isOverlay(storage)) {
+                if (storage.mountOverlay()) {
                     meta = storage.lookup(path);
                     if (meta != null && meta.isIndex()) {
                         idx = new Metadata(Metadata.CATEGORY_INDEX,
@@ -344,7 +321,7 @@ public class RootStorage extends Storage {
             }
             for (int i = 0; i < storages.size(); i++) {
                 storage = (Storage) storages.get(i);
-                if (isOverlay(storage)) {
+                if (storage.mountOverlay()) {
                     res = storage.load(path);
                     if (res instanceof Index) {
                         idx = Index.merge(idx, (Index) res);
@@ -376,7 +353,7 @@ public class RootStorage extends Storage {
         } else {
             for (int i = 0; i < storages.size(); i++) {
                 storage = (Storage) storages.get(i);
-                if (isOverlay(storage) && storage.isReadWrite()) {
+                if (storage.isReadWrite() && storage.mountOverlay()) {
                     storage.store(path, data);
                     return;
                 }
@@ -402,56 +379,10 @@ public class RootStorage extends Storage {
         } else {
             for (int i = 0; i < storages.size(); i++) {
                 storage = (Storage) storages.get(i);
-                if (isOverlay(storage) && storage.isReadWrite()) {
+                if (storage.isReadWrite() && storage.mountOverlay()) {
                     storage.remove(path);
                 }
             }
-        }
-    }
-
-
-    /**
-     * A mounted storage comparator. The comparison is based on the
-     * overlay priority order and the mount time.
-     */
-    private static class StorageComparator implements Comparator {
-
-        /**
-         * The comparator instance.
-         */
-        public static final StorageComparator INSTANCE = new StorageComparator();
-
-        /**
-         * Compares two storages with one another.
-         *
-         * @param o1             the first object
-         * @param o2             the second object
-         *
-         * @return a negative integer, zero, or a positive integer as
-         *         the first argument is less than, equal to, or
-         *         greater than the second
-         *
-         * @throws ClassCastException if the values were not comparable
-         */
-        public int compare(Object o1, Object o2) {
-            Storage  s1 = (Storage) o1;
-            Storage  s2 = (Storage) o2;
-            int      cmp1 = prio(s1) - prio(s2);
-            int      cmp2 = s1.mountTime().compareTo(s2.mountTime());
-
-            return (cmp1 != 0) ? -cmp1 : cmp2;
-        }
-
-        /**
-         * Returns the overlay priority for a specified storage.
-         *
-         * @param storage        the storage object
-         *
-         * @return the storage overlay priority, or
-         *         -1 if no overlay is enabled
-         */
-        private int prio(Storage storage) {
-            return storage.dict.getInt(KEY_OVERLAY_PRIO, -1);
         }
     }
 }
