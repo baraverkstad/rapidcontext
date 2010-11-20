@@ -15,6 +15,7 @@
 package org.rapidcontext.core.storage;
 
 import java.util.LinkedHashMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.rapidcontext.core.data.Array;
@@ -59,6 +60,17 @@ public class MemoryStorage extends Storage {
      */
     public MemoryStorage(boolean readWrite) {
         super("memory", readWrite);
+    }
+
+    /**
+     * Destroys this storage and all objects stored in it.
+     */
+    public void destroy() {
+        remove(Path.ROOT, false);
+        objects.clear();
+        meta.clear();
+        objects = null;
+        meta = null;
     }
 
     /**
@@ -160,10 +172,8 @@ public class MemoryStorage extends Storage {
      *
      * @param path           the storage location
      * @param updateParent   the parent index update flag
-     *
-     * @throws StorageException if the data couldn't be removed
      */
-    private void remove(Path path, boolean updateParent) throws StorageException {
+    private void remove(Path path, boolean updateParent) {
         Object  obj = meta.get(path);
         Index   idx;
         Array   arr;
@@ -180,6 +190,13 @@ public class MemoryStorage extends Storage {
             }
         }
         obj = objects.get(path);
+        if (obj instanceof StorableObject) {
+            try {
+                ((StorableObject) obj).destroy();
+            } catch (StorageException e) {
+                LOG.log(Level.WARNING, "failed to destroy object at " + path, e);
+            }
+        }
         objects.remove(path);
         meta.remove(path);
         if (updateParent) {
