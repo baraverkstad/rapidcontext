@@ -437,7 +437,7 @@ public class RootStorage extends Storage {
             Storage  s1 = (Storage) o1;
             Storage  s2 = (Storage) o2;
             int      cmp1 = prio(s1) - prio(s2);
-            int      cmp2 = mountTime(s2).compareTo(mountTime(s2));
+            int      cmp2 = s1.mountTime().compareTo(s2.mountTime());
 
             return (cmp1 != 0) ? -cmp1 : cmp2;
         }
@@ -452,17 +452,6 @@ public class RootStorage extends Storage {
          */
         private int prio(Storage storage) {
             return storage.dict.getInt(KEY_OVERLAY_PRIO, -1);
-        }
-
-        /**
-         * Returns the last mount time for a specified storage.
-         *
-         * @param storage        the storage object
-         *
-         * @return the last mount time
-         */
-        private Date mountTime(Storage storage) {
-            return (Date) storage.dict.get(KEY_MOUNT_TIME);
         }
     }
 }
