@@ -15,6 +15,9 @@
 package org.rapidcontext.core.storage;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.rapidcontext.core.data.Array;
@@ -69,6 +72,13 @@ public class RootStorage extends Storage {
      * every time a mount point is added or modified.
      */
     private Array mountedStorages = new Array();
+
+    /**
+     * The map of cache memory storages. For each mounted and
+     * overlaid storage, a corresponding cache storage is created to
+     * contain any StorableObject instances.
+     */
+    private HashMap cacheStorages = new HashMap();
 
     /**
      * Creates a new root storage.
@@ -153,6 +163,27 @@ public class RootStorage extends Storage {
     }
 
     /**
+     * Creates or removes a cache memory storage for the specified
+     * path.
+     *
+     * @param path           the storage mount path
+     * @param exist          the create or remove flag
+     */
+    private void updateStorageCache(Path path, boolean exist) {
+        MemoryStorage  cache;
+
+        if (exist && !cacheStorages.containsKey(path)) {
+            cache = new MemoryStorage(true);
+            cache.dict.set(KEY_MOUNT_PATH, path);
+            cacheStorages.put(path, cache);
+        } else if (!exist && cacheStorages.containsKey(path)) {
+            cache = (MemoryStorage) cacheStorages.get(path);
+            cache.destroy();
+            cacheStorages.remove(path);
+        }
+    }
+
+    /**
      * Mounts a storage to a unique path. The path may not collide
      * with a previously mounted storage, such that it would hide or
      * be hidden by the other storage. Overlapping parent indices
@@ -192,6 +223,7 @@ public class RootStorage extends Storage {
         setMountedStorage(path, storage);
         mountedStorages.add(storage);
         mountedStorages.sort();
+        updateStorageCache(path, overlay);
     }
 
     /**
@@ -219,6 +251,7 @@ public class RootStorage extends Storage {
         }
         updateMountInfo(storage, readWrite, overlay, prio);
         mountedStorages.sort();
+        updateStorageCache(path, overlay);
     }
 
     /**
@@ -238,6 +271,7 @@ public class RootStorage extends Storage {
             LOG.warning(msg);
             throw new StorageException(msg);
         }
+        updateStorageCache(path, false);
         mountedStorages.remove(mountedStorages.indexOf(storage));
         setMountedStorage(path, null);
         storage.dict.set(KEY_MOUNT_PATH, Path.ROOT);
@@ -259,7 +293,7 @@ public class RootStorage extends Storage {
         Metadata  idx = null;
 
         if (storage != null) {
-            return storage.lookup(storage.localPath(path));
+            return lookupObject(storage, storage.localPath(path));
         } else {
             meta = metadata.lookup(path);
             if (meta != null && meta.isIndex()) {
@@ -270,7 +304,7 @@ public class RootStorage extends Storage {
             for (int i = 0; i < mountedStorages.size(); i++) {
                 storage = (Storage) mountedStorages.get(i);
                 if (storage.mountOverlay()) {
-                    meta = storage.lookup(path);
+                    meta = lookupObject(storage, path);
                     if (meta != null && meta.isIndex()) {
                         idx = new Metadata(Metadata.CATEGORY_INDEX,
                                            Index.class,
@@ -284,6 +318,44 @@ public class RootStorage extends Storage {
             }
         }
         return idx;
+    }
+
+    /**
+     * Searches for an object in a specified storage. The object will
+     * be searched for in both the cache and the actual storage,
+     * returning the most recent version of the object metadata. If
+     * the object in the storage can be initialized dynamically, the
+     * corresponding class metadata will be returned.
+     *
+     * @param storage        the storage to search in
+     * @param path           the storage location
+     *
+     * @return the metadata for the object, or
+     *         null if not found
+     */
+    private Metadata lookupObject(Storage storage, Path path) {
+        MemoryStorage  cache;
+        Metadata       cacheMeta = null;
+        Metadata       storeMeta = null;
+        boolean        cacheValid;
+
+        cache = (MemoryStorage) cacheStorages.get(storage.path());
+        if (cache != null) {
+            cacheMeta = cache.lookup(path);
+            if (cacheMeta != null && !cacheMeta.isObject()) {
+                cacheMeta = null;
+            }
+        }
+        storeMeta = storage.lookup(path);
+        cacheValid = cacheMeta != null &&
+                     storeMeta != null &&
+                     !cacheMeta.lastModified().before(storeMeta.lastModified());
+        if (!cacheValid) {
+            // TODO: convert class to actual type class... (if overlay)
+            return storeMeta;
+        } else {
+            return cacheMeta;
+        }
     }
 
     /**
@@ -303,7 +375,8 @@ public class RootStorage extends Storage {
         Index    idx = null;
 
         if (storage != null) {
-            return storage.load(storage.localPath(path));
+            path = storage.localPath(path);
+            return loadObject(storage, path);
         } else {
             res = metadata.load(path);
             if (res instanceof Index) {
@@ -314,7 +387,7 @@ public class RootStorage extends Storage {
             for (int i = 0; i < mountedStorages.size(); i++) {
                 storage = (Storage) mountedStorages.get(i);
                 if (storage.mountOverlay()) {
-                    res = storage.load(path);
+                    res = loadObject(storage, path);
                     if (res instanceof Index) {
                         idx = Index.merge(idx, (Index) res);
                     } else if (res != null) {
@@ -324,6 +397,38 @@ public class RootStorage extends Storage {
             }
         }
         return idx;
+    }
+
+    /**
+     * Loads an object from the specified storage. The storage cache
+     * will be used primarily, if it exists. If an object is found in
+     * the storage that can be cached, it will be initialized and
+     * cached by this method.
+     *
+     * @param storage        the storage to load from
+     * @param path           the storage location
+     *
+     * @return the data read, or
+     *         null if not found
+     */
+    private Object loadObject(Storage storage, Path path) {
+        MemoryStorage  cache;
+        Object         res = null;
+
+        cache = (MemoryStorage) cacheStorages.get(storage.path());
+        if (cache != null) {
+            res = cache.load(path);
+            if (res instanceof Index) {
+                res = null;
+            }
+        }
+        if (res == null) {
+            res = storage.load(path);
+            // TODO: initialize objects and store to memory (if overlay)
+        } else {
+            // TODO: verify that cached object is recent enough
+        }
+        return res;
     }
 
     /**
@@ -341,16 +446,41 @@ public class RootStorage extends Storage {
         Storage  storage = getMountedStorage(path, false);
 
         if (storage != null) {
-            storage.store(storage.localPath(path), data);
+            flushSingle(storage.path(), storage.localPath(path));
+            storeObject(storage, storage.localPath(path), data);
         } else {
+            flushAll(path);
             for (int i = 0; i < mountedStorages.size(); i++) {
                 storage = (Storage) mountedStorages.get(i);
                 if (storage.isReadWrite() && storage.mountOverlay()) {
-                    storage.store(path, data);
+                    storeObject(storage, path, data);
                     return;
                 }
             }
             throw new StorageException("no writable storage found for " + path);
+        }
+    }
+
+    /**
+     * Stores an object in a specified storage. If the object is a
+     * StorableObject, it will also be stored in the memory cache for
+     * the specified storage.
+     *
+     * @param storage        the storage to use
+     * @param path           the storage location
+     * @param data           the data to store
+     *
+     * @throws StorageException if the data couldn't be written
+     */
+    private void storeObject(Storage storage, Path path, Object data)
+        throws StorageException {
+
+        MemoryStorage  cache;
+
+        storage.store(path, data);
+        cache = (MemoryStorage) cacheStorages.get(storage.path());
+        if (data instanceof StorableObject && cache != null) {
+            cache.store(path, data);
         }
     }
 
@@ -367,14 +497,72 @@ public class RootStorage extends Storage {
         Storage  storage = getMountedStorage(path, false);
 
         if (storage != null) {
+            flushSingle(storage.path(), storage.localPath(path));
             storage.remove(storage.localPath(path));
         } else {
+            flushAll(path);
             for (int i = 0; i < mountedStorages.size(); i++) {
                 storage = (Storage) mountedStorages.get(i);
                 if (storage.isReadWrite() && storage.mountOverlay()) {
                     storage.remove(path);
                 }
             }
+        }
+    }
+
+    /**
+     * Destroys any cached objects for the specified location.
+     *
+     * @param path           the storage location
+     */
+    public void flush(Path path) {
+        Storage  storage = getMountedStorage(path, false);
+
+        if (storage != null) {
+            flushSingle(storage.path(), storage.localPath(path));
+        } else {
+            flushAll(path);
+        }
+    }
+
+    /**
+     * Destroys any cached objects for the specified location in a
+     * specific memory storage.
+     *
+     * @param storagePath    the mounted storage path
+     * @param path           the storage location to clear
+     */
+    private void flushSingle(Path storagePath, Path path) {
+        MemoryStorage  cache;
+
+        cache = (MemoryStorage) cacheStorages.get(storagePath);
+        if (cache != null) {
+            try {
+                if (path == null) {
+                    cache.remove(Path.ROOT);
+                } else {
+                    cache.remove(path);
+                }
+            } catch (StorageException e) {
+                LOG.log(Level.WARNING, "failed to flush object", e);
+            }
+        }
+    }
+
+    /**
+     * Destroys any cached objects for the specified location in all
+     * of the memory storages.
+     *
+     * @param path           the storage location
+     */
+    private void flushAll(Path path) {
+        Iterator  iter;
+        Path      storagePath;
+
+        iter = cacheStorages.keySet().iterator();
+        while (iter.hasNext()) {
+            storagePath = (Path) iter.next();
+            flushSingle(storagePath, path);
         }
     }
 }
