@@ -51,6 +51,7 @@ import org.rapidcontext.app.proc.UserPasswordChangeProcedure;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.env.Environment;
+import org.rapidcontext.core.env.Type;
 import org.rapidcontext.core.js.JsCompileInterceptor;
 import org.rapidcontext.core.js.JsProcedure;
 import org.rapidcontext.core.proc.CallContext;
@@ -190,6 +191,7 @@ public class ApplicationContext {
      * and the environment configuration.
      */
     private void initAll() {
+        Type.initAll(storage);
         initLibrary();
         initPlugins();
         env = Environment.initAll(storage);
@@ -278,6 +280,7 @@ public class ApplicationContext {
      * Destroys this context and frees all resources.
      */
     private void destroyAll() {
+        Type.destroyAll(storage);
         Environment.destroyAll();
         pluginManager.unloadAll();
         Library.unregisterType("javascript");

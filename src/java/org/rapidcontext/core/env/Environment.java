@@ -18,7 +18,6 @@ package org.rapidcontext.core.env;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang.StringUtils;
@@ -27,7 +26,6 @@ import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.core.storage.Storage;
-import org.rapidcontext.core.storage.StorageException;
 
 /**
  * An external connectivity environment. The environment contains a
@@ -99,11 +97,6 @@ public class Environment extends StorableObject {
         }
 
         // Initialize environments
-        try {
-            Storage.registerInitializer("environment", Environment.class);
-        } catch (StorageException e) {
-            LOG.log(Level.SEVERE, "failed to set environment initializer in storage", e);
-        }
         Object[] envs = storage.loadAll(PATH_ENV);
 
         // TODO: Remove the single environment reference
