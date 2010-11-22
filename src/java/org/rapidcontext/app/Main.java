@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
@@ -41,6 +43,12 @@ import org.rapidcontext.util.FileUtil;
  * @version  1.0
  */
 public class Main {
+
+    /**
+     * The class logger.
+     */
+    private static final Logger LOG =
+        Logger.getLogger(Main.class.getName());
 
     /**
      * The command-line usage information.
@@ -163,6 +171,7 @@ public class Main {
             app.start();
             writePortFile(app.appDir, app.port);
         } catch (Exception e) {
+            LOG.log(Level.SEVERE, "error starting server", e);
             exit(null, e.getMessage());
         }
         System.out.print("Server started -- http://localhost");
@@ -209,6 +218,7 @@ public class Main {
                 app.runSingle(args);
             }
         } catch (Exception e) {
+            LOG.log(Level.SEVERE, "error running script", e);
             exit(null, e.getMessage());
         }
     }
@@ -320,7 +330,7 @@ public class Main {
      * @throws IOException if the local directory couldn't be created
      */
     private static void setupLocalAppDir(File appDir, File localDir)
-        throws IOException {
+    throws IOException {
 
         if (!appDir.equals(localDir)) {
             appDir = new File(appDir, "plugin/local");
