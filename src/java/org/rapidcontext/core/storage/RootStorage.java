@@ -409,20 +409,24 @@ public class RootStorage extends Storage {
         String         id;
         String         msg;
 
+        LOG.fine("loading " + path + " from " + storage.path());
         cache = (MemoryStorage) cacheStorages.get(storage.path());
         if (cache != null) {
             res = cache.load(path);
-            if (res instanceof StorableObject) {
+            if (res instanceof StorableObject && !(res instanceof Index)) {
+                LOG.fine("loaded " + path + " value from cache: " + res);
                 return res;
             }
         }
         res = storage.load(path);
+        LOG.fine("loaded " + path + " value: " + res);
         if (cache != null && res instanceof Dict) {
             id = StringUtils.removeStart(path.subPath(1).toString(), "/");
             res = initialize(id, (Dict) res);
             if (res instanceof StorableObject) {
                 try {
                     cache.store(path, res);
+                    LOG.fine("initialized object for " + path + ": " + res);
                 } catch (StorageException e) {
                     msg = "failed to store object in storage cache " +
                           cache.path();
