@@ -107,6 +107,15 @@ public class StorableObject {
     }
 
     /**
+     * Returns a string representation of this object.
+     *
+     * @return a string representation of this object
+     */
+    public String toString() {
+        return type() + " " + id();
+    }
+
+    /**
      * Returns the object identifier.
      *
      * @return the object identifier
