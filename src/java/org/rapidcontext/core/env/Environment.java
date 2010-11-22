@@ -18,13 +18,16 @@ package org.rapidcontext.core.env;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
+import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.core.storage.Storage;
+import org.rapidcontext.core.storage.StorageException;
 
 /**
  * An external connectivity environment. The environment contains a
@@ -34,13 +37,24 @@ import org.rapidcontext.core.storage.Storage;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class Environment {
+public class Environment extends StorableObject {
 
     /**
      * The class logger.
      */
     private static final Logger LOG =
         Logger.getLogger(Environment.class.getName());
+
+    /**
+     * The dictionary key for the environment description.
+     */
+    public static final String KEY_DESCRIPTION = "description";
+
+    /**
+     * The dictionary key for the environment connection path. The
+     * value stored will be a path object.
+     */
+    public static final String KEY_CONNECTIONS = "connections";
 
     /**
      * The connection object storage path.
@@ -58,26 +72,6 @@ public class Environment {
     private static LinkedHashMap connections = new LinkedHashMap();
 
     /**
-     * The map of environments. The environments are indexed by name.
-     */
-    private static LinkedHashMap environments = new LinkedHashMap();
-
-    /**
-     * The environment name.
-     */
-    private String name;
-
-    /**
-     * The environment description.
-     */
-    private String description;
-
-    /**
-     * The list of connection pools. The pools are indexed by name.
-     */
-    private LinkedHashMap pools = new LinkedHashMap();
-
-    /**
      * Initializes all environments and connections found in the
      * storage.
      *
@@ -86,12 +80,11 @@ public class Environment {
      * @return one of the loaded environments, or
      *         null if no environments could be found
      */
-    public static Environment init(Storage storage) {
+    public static Environment initAll(Storage storage) {
         Metadata[]   metas;
         Object       obj;
         Dict         dict;
         String       name;
-        Environment  env = null;
 
         // Initialize connections
         metas = storage.lookupAll(PATH_CON);
@@ -105,20 +98,20 @@ public class Environment {
             }
         }
 
-        // Initialize environment
-        metas = storage.lookupAll(PATH_ENV);
-        for (int i = 0; i < metas.length; i++) {
-            obj = storage.load(metas[i].path());
-            if (obj instanceof Dict) {
-                dict = (Dict) obj;
-                name = metas[i].path().subPath(PATH_ENV.length()).toString();
-                name = StringUtils.removeStart(name, "/");
-                env = initEnv(name, dict);
-            }
+        // Initialize environments
+        try {
+            Storage.registerInitializer("environment", Environment.class);
+        } catch (StorageException e) {
+            LOG.log(Level.SEVERE, "failed to set environment initializer in storage", e);
         }
+        Object[] envs = storage.loadAll(PATH_ENV);
 
         // TODO: Remove the single environment reference
-        return env;
+        if (envs.length > 0 && envs[0] instanceof Environment) {
+            return (Environment) envs[0];
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -160,48 +153,10 @@ public class Environment {
     }
 
     /**
-     * Initializes a new environment from the specified name and
-     * dictionary.
-     *
-     * @param name           the environment name
-     * @param dict           the configuration dictionary
-     *
-     * @return the environment created, or
-     *         null if it was invalid
-     */
-    protected static Environment initEnv(String name, Dict dict) {
-        Environment  env = null;
-        String       type;
-        String       prefix;
-        String       msg;
-
-        type = dict.getString("type", "environment");
-        if (!type.equals("environment")) {
-            msg = "invalid object type for environment/" + name + ": " + type;
-            LOG.warning(msg);
-        } else {
-            env = new Environment(name, dict.getString("description", ""));
-            prefix = dict.getString("connections", null);
-            if (prefix != null) {
-                Iterator iter = connections.keySet().iterator();
-                while (iter.hasNext()) {
-                    name = iter.next().toString();
-                    if (name.startsWith(prefix)) {
-                        env.addPool((Pool) connections.get(name));
-                    }
-                }
-            }
-            environments.put(name, env);
-        }
-        // TODO: Don't return environment
-        return env;
-    }
-
-    /**
      * Destroys all loaded environments and connections. This will
      * free all resources currently used.
      */
-    public static void destroy() {
+    public static void destroyAll() {
         Iterator  iter;
 
         iter = connections.values().iterator();
@@ -209,28 +164,6 @@ public class Environment {
             ((Pool) iter.next()).close();
         }
         connections.clear();
-        environments.clear();
-    }
-
-    /**
-     * Returns a named environment.
-     *
-     * @param envName        the environment name
-     *
-     * @return the environment found, or
-     *         null if not found
-     */
-    public static Environment environment(String envName) {
-        return (Environment) environments.get(envName);
-    }
-
-    /**
-     * Returns a collection with all the environment names.
-     *
-     * @return a collection with all the environment names
-     */
-    public static Collection environmentNames() {
-        return environments.keySet();
     }
 
     /**
@@ -245,7 +178,7 @@ public class Environment {
         Pool res = (Pool) connections.get(poolName);
 
         if (res == null) {
-            res = poolAlias(connections.values(), poolName);
+            res = poolAlias(poolName);
         }
         return res;
     }
@@ -262,14 +195,13 @@ public class Environment {
     /**
      * Searches for a connection pool with a matching alias.
      *
-     * @param pools          the pools to search
      * @param poolName       the pool name to search for
      *
      * @return the connection pool found, or
      *         null if not found
      */
-    protected static Pool poolAlias(Collection pools, String poolName) {
-        Iterator  iter = pools.iterator();
+    protected static Pool poolAlias(String poolName) {
+        Iterator  iter = connections.values().iterator();
         Pool      p;
 
         while (iter.hasNext()) {
@@ -282,42 +214,14 @@ public class Environment {
     }
 
     /**
-     * Creates a new environment with the specified name and
-     * description.
+     * Creates a new environment from a serialized representation.
      *
-     * @param name           the name to use
-     * @param description    the description to use
+     * @param id             the object identifier
+     * @param type           the object type name
+     * @param dict           the serialized representation
      */
-    public Environment(String name, String description) {
-        this.name = name;
-        this.description = description;
-    }
-
-    /**
-     * Returns a string representation of this environment.
-     *
-     * @return a string representation of this environment
-     */
-    public String toString() {
-        return name;
-    }
-
-    /**
-     * Returns the environment name.
-     *
-     * @return the environment name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Sets the environment name.
-     *
-     * @param name           the new name
-     */
-    public void setName(String name) {
-        this.name = name;
+    public Environment(String id, String type, Dict dict) {
+        super(id, type, dict);
     }
 
     /**
@@ -325,17 +229,26 @@ public class Environment {
      *
      * @return the environment description.
      */
-    public String getDescription() {
-        return description;
+    public String description() {
+        return dict.getString(KEY_DESCRIPTION, "");
     }
 
     /**
-     * Sets the environment description.
+     * Returns the default connection path for this environment.
      *
-     * @param description    the new description
+     * @return the default connection path for this environment
      */
-    public void setDescription(String description) {
-        this.description = description;
+    public String connectionPath() {
+        String prefix;
+
+        prefix = dict.getString(KEY_CONNECTIONS, null);
+        if (prefix != null) {
+            prefix = StringUtils.removeStart(prefix, "/");
+            if (!prefix.endsWith("/")) {
+                prefix += "/";
+            }
+        }
+        return prefix;
     }
 
     /**
@@ -347,35 +260,18 @@ public class Environment {
      *         null if not found
      */
     public Pool findPool(String poolName) {
-        Pool res = (Pool) connections.get(poolName);
+        String  prefix = connectionPath();
+        Pool    res = null;
 
+        if (prefix != null) {
+            res = (Pool) connections.get(prefix + poolName);
+        }
         if (res == null) {
-            res = poolAlias(connections.values(), poolName);
+            res = poolAlias(prefix + poolName);
         }
         if (res == null) {
             res = pool(poolName);
         }
         return res;
-    }
-
-    /**
-     * Adds a connection pool to the environment. Any existing pool
-     * with the specified name will first be removed.
-     *
-     * @param pool           the connection pool to add
-     */
-    protected void addPool(Pool pool) {
-        pools.put(pool.getName(), pool);
-    }
-
-    /**
-     * Removes a connection pool from the environment. This will
-     * close the connection pool and free any resources currently
-     * used by the pool, such as any open connections or similar.
-     *
-     * @param poolName       the connection pool name.
-     */
-    protected void removePool(String poolName) {
-        pools.remove(poolName);
     }
 }

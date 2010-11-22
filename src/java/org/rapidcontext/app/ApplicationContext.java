@@ -192,7 +192,7 @@ public class ApplicationContext {
     private void initAll() {
         initLibrary();
         initPlugins();
-        env = Environment.init(storage);
+        env = Environment.initAll(storage);
         try {
             SecurityContext.init(storage);
         } catch (StorageException e) {
@@ -278,7 +278,7 @@ public class ApplicationContext {
      * Destroys this context and frees all resources.
      */
     private void destroyAll() {
-        Environment.destroy();
+        Environment.destroyAll();
         pluginManager.unloadAll();
         Library.unregisterType("javascript");
         library = new Library(this.storage);

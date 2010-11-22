@@ -137,8 +137,8 @@ public class StatusProcedure implements Procedure, Restricted {
 
         if (env != null) {
             res = new Dict();
-            res.set("name", env.getName());
-            res.set("description", env.getDescription());
+            res.set("name", env.id());
+            res.set("description", env.description());
             return res;
         } else {
             return null;
