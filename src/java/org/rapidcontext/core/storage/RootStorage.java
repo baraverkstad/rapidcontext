@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 
@@ -323,10 +324,8 @@ public class RootStorage extends Storage {
 
     /**
      * Searches for an object in a specified storage. The object will
-     * be searched for in both the cache and the actual storage,
-     * returning the most recent version of the object metadata. If
-     * the object in the storage can be initialized dynamically, the
-     * corresponding class metadata will be returned.
+     * be looked up primarily in the cache and thereafter in the
+     * actual storage.
      *
      * @param storage        the storage to search in
      * @param path           the storage location
@@ -336,28 +335,19 @@ public class RootStorage extends Storage {
      */
     private Metadata lookupObject(Storage storage, Path path) {
         MemoryStorage  cache;
-        Metadata       cacheMeta = null;
-        Metadata       storeMeta = null;
-        boolean        cacheValid;
+        Metadata       meta = null;
 
         cache = (MemoryStorage) cacheStorages.get(storage.path());
         if (cache != null) {
-            cacheMeta = cache.lookup(path);
-            if (cacheMeta != null && !cacheMeta.isObject()) {
-                cacheMeta = null;
+            meta = cache.lookup(path);
+            if (meta != null && meta.isObject()) {
+                return meta;
             }
         }
-        storeMeta = storage.lookup(path);
-        cacheValid = cacheMeta != null &&
-                     storeMeta != null &&
-                     !cacheMeta.lastModified().before(storeMeta.lastModified());
-        if (!cacheValid) {
-            // TODO: convert class to actual type class... (if overlay)
-            //       ... but wouldn't that require loading the data?!?
-            return storeMeta;
-        } else {
-            return cacheMeta;
-        }
+        // FIXME: The storage metadata will report Dict as the class
+        //        for some objects. Should we load these objects in
+        //        order to surely return the correct class?
+        return storage.lookup(path);
     }
 
     /**
@@ -416,33 +406,29 @@ public class RootStorage extends Storage {
     private Object loadObject(Storage storage, Path path) {
         MemoryStorage  cache;
         Object         res = null;
-        Dict           dict;
+        String         id;
         String         msg;
 
         cache = (MemoryStorage) cacheStorages.get(storage.path());
         if (cache != null) {
             res = cache.load(path);
-            if (res instanceof Index) {
-                res = null;
+            if (res instanceof StorableObject) {
+                return res;
             }
         }
-        if (res == null) {
-            res = storage.load(path);
-            if (cache != null && res instanceof Dict) {
-                dict = (Dict) res;
-                res = initialize(path.subPath(1).toString(), dict);
-                if (res instanceof StorableObject) {
-                    try {
-                        cache.store(path, res);
-                    } catch (StorageException e) {
-                        msg = "failed to store object in storage cache " +
-                              cache.path();
-                        LOG.log(Level.WARNING, msg, e);
-                    }
+        res = storage.load(path);
+        if (cache != null && res instanceof Dict) {
+            id = StringUtils.removeStart(path.subPath(1).toString(), "/");
+            res = initialize(id, (Dict) res);
+            if (res instanceof StorableObject) {
+                try {
+                    cache.store(path, res);
+                } catch (StorageException e) {
+                    msg = "failed to store object in storage cache " +
+                          cache.path();
+                    LOG.log(Level.WARNING, msg, e);
                 }
             }
-        } else {
-            // TODO: verify that cached object is recent enough
         }
         return res;
     }
