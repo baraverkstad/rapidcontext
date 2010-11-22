@@ -14,10 +14,15 @@
 
 package org.rapidcontext.core.storage;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.rapidcontext.core.data.Array;
+import org.rapidcontext.core.data.Dict;
 
 /**
  * The persistent data storage and retrieval class. This base class
@@ -28,6 +33,12 @@ import org.rapidcontext.core.data.Array;
  * @version  1.0
  */
 public abstract class Storage extends StorableObject implements Comparable {
+
+    /**
+     * The class logger.
+     */
+    private static final Logger LOG =
+        Logger.getLogger(Storage.class.getName());
 
     /**
      * The dictionary key for the storage type.
@@ -73,6 +84,127 @@ public abstract class Storage extends StorableObject implements Comparable {
      * own dictionary when queried for this path.
      */
     public static final Path PATH_STORAGEINFO = new Path("/storageinfo");
+
+    /**
+     * The storable object initializer constructor arguments.
+     */
+    private static final Class[] CONSTRUCTOR_ARGS = new Class[] {
+        String.class, String.class, Dict.class
+    };
+
+    /**
+     * The map of object initializer classes. This maps object types
+     * to their corresponding Java classes. The map is indexed by the
+     * type identifier.
+     */
+    private static HashMap initializers = new HashMap();
+
+    /**
+     * Returns the initializer class for a specified object type.
+     *
+     * @param typeId         the object type identifier
+     *
+     * @return the initializer class found, or
+     *         null if not found
+     */
+    public static Class initializer(String typeId) {
+        return (Class) initializers.get(typeId);
+    }
+
+    /**
+     * Returns the initializer class for a specified dictionary.
+     *
+     * @param dict           the dictionary data
+     *
+     * @return the initializer class found, or
+     *         null if not found
+     */
+    public static Class initializer(Dict dict) {
+        if (dict == null) {
+            return null;
+        }
+        return initializer(dict.getString(KEY_TYPE, null));
+    }
+
+    /**
+     * Initializes an object if a proper initializer is found. If no
+     * initializer was found or if an error occurred, the input
+     * dictionary data is returned.
+     *
+     * @param id             the object identifier
+     * @param dict           the dictionary data
+     *
+     * @return the initialized StorableObject instance, or
+     *         the specified dictionary
+     */
+    public static Object initialize(String id, Dict dict) {
+        String          typeId = dict.getString(KEY_TYPE, null);
+        Class           cls = initializer(dict);
+        Constructor     constr;
+        Object[]        args;
+        StorableObject  obj;
+        String          msg;
+
+        if (cls == null) {
+            return dict;
+        }
+        try {
+            constr = cls.getConstructor(CONSTRUCTOR_ARGS);
+            args = new Object[] { id, typeId, dict };
+            obj = (StorableObject) constr.newInstance(args);
+            obj.init();
+            return obj;
+        } catch (Exception e) {
+            msg = "failed to create instance of " + cls.getName() +
+                  " for object " + id + " of type " + typeId;
+            LOG.log(Level.WARNING, msg, e);
+            return dict;
+        }
+    }
+
+    /**
+     * Registers an initializer class for the specified object type.
+     * The initializer class must be a StorableObject subclass and
+     * provided the proper constructor (both checked by this method).
+     *
+     * @param typeId         the object type identifier
+     * @param cls            the initializer class
+     *
+     * @throws StorageException if the initializer class wasn't
+     *             valid
+     */
+    public static void registerInitializer(String typeId, Class cls)
+    throws StorageException {
+
+        String  msg;
+
+        if (!StorableObject.class.isAssignableFrom(cls)) {
+            msg = "invalid initializer class for type " + typeId + ": " +
+                  "class " + cls.getName() + " is not a subclass of " +
+                  "StorableObject";
+            LOG.warning(msg);
+            throw new StorageException(msg);
+        }
+        try {
+            cls.getConstructor(CONSTRUCTOR_ARGS);
+        } catch (Exception e) {
+            msg = "invalid initializer class for type " + typeId + ": " +
+                  "no constructor " + cls.getName() +
+                  "(String, String, Dict) found";
+            LOG.warning(msg);
+            throw new StorageException(msg);
+        }
+        initializers.put(typeId, cls);
+    }
+
+    /**
+     * Removes a previously registered initializer class.
+     *
+     * @param typeId         the object type identifier
+     */
+    public static void unregisterInitializer(String typeId) {
+        initializers.remove(typeId);
+    }
 
     /**
      * Creates a new storage.

@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.rapidcontext.core.data.Array;
+import org.rapidcontext.core.data.Dict;
 
 /**
  * The root storage that provides a unified view of other storages.
@@ -352,6 +353,7 @@ public class RootStorage extends Storage {
                      !cacheMeta.lastModified().before(storeMeta.lastModified());
         if (!cacheValid) {
             // TODO: convert class to actual type class... (if overlay)
+            //       ... but wouldn't that require loading the data?!?
             return storeMeta;
         } else {
             return cacheMeta;
@@ -414,6 +416,8 @@ public class RootStorage extends Storage {
     private Object loadObject(Storage storage, Path path) {
         MemoryStorage  cache;
         Object         res = null;
+        Dict           dict;
+        String         msg;
 
         cache = (MemoryStorage) cacheStorages.get(storage.path());
         if (cache != null) {
@@ -424,7 +428,19 @@ public class RootStorage extends Storage {
         }
         if (res == null) {
             res = storage.load(path);
-            // TODO: initialize objects and store to memory (if overlay)
+            if (cache != null && res instanceof Dict) {
+                dict = (Dict) res;
+                res = initialize(path.subPath(1).toString(), dict);
+                if (res instanceof StorableObject) {
+                    try {
+                        cache.store(path, res);
+                    } catch (StorageException e) {
+                        msg = "failed to store object in storage cache " +
+                              cache.path();
+                        LOG.log(Level.WARNING, msg, e);
+                    }
+                }
+            }
         } else {
             // TODO: verify that cached object is recent enough
         }
@@ -479,7 +495,7 @@ public class RootStorage extends Storage {
 
         storage.store(path, data);
         cache = (MemoryStorage) cacheStorages.get(storage.path());
-        if (data instanceof StorableObject && cache != null) {
+        if (cache != null && data instanceof StorableObject) {
             cache.store(path, data);
         }
     }
