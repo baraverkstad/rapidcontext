@@ -33,7 +33,7 @@ import java.util.Properties;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class JdbcAdapter extends Connection {
+public class JdbcConnection extends Connection {
 
     /**
      * The JDBC driver configuration parameter name.
@@ -79,7 +79,7 @@ public class JdbcAdapter extends Connection {
      * @param type           the object type name
      * @param dict           the serialized representation
      */
-    public JdbcAdapter(String id, String type, Dict dict) {
+    public JdbcConnection(String id, String type, Dict dict) {
         super(id, type, dict);
     }
 

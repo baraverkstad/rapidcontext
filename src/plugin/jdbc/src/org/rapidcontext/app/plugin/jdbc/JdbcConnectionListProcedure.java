@@ -122,7 +122,7 @@ public class JdbcConnectionListProcedure implements Procedure, Restricted {
         iter = Environment.connectionNames().iterator();
         while (iter.hasNext()) {
             con = Environment.connection((String) iter.next());
-            if (con instanceof JdbcAdapter) {
+            if (con instanceof JdbcConnection) {
                 dict = new Dict();
                 // TODO: use only serialization, not name attribute
                 dict.set("name", con.id());

@@ -90,7 +90,7 @@ public class JdbcChannel extends Channel {
      *
      * @throws ConnectionException if a connection couldn't be established
      */
-    protected JdbcChannel(JdbcAdapter parent,
+    protected JdbcChannel(JdbcConnection parent,
                           Driver driver,
                           String url,
                           Properties props,
