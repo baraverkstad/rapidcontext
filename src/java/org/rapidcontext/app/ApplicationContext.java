@@ -280,7 +280,6 @@ public class ApplicationContext {
      * Destroys this context and frees all resources.
      */
     private void destroyAll() {
-        Environment.destroyAll(storage);
         pluginManager.unloadAll();
         Type.destroyAll(storage);
         Library.unregisterType("javascript");

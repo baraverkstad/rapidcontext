@@ -15,14 +15,12 @@
 
 package org.rapidcontext.core.env;
 
-import java.util.Collection;
-import java.util.LinkedHashMap;
-
 import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.RootStorage;
 import org.rapidcontext.core.storage.StorableObject;
+import org.rapidcontext.core.storage.Storage;
 
 /**
  * An external connectivity environment. The environment contains a
@@ -46,19 +44,9 @@ public class Environment extends StorableObject {
     public static final String KEY_CONNECTIONS = "connections";
 
     /**
-     * The connection object storage path.
-     */
-    public static final Path PATH_CON = new Path("/connection/");
-
-    /**
      * The environment object storage path.
      */
     public static final Path PATH_ENV = new Path("/environment/");
-
-    /**
-     * The map of connection pools. The pools are indexed by name.
-     */
-    private static LinkedHashMap connections = new LinkedHashMap();
 
     /**
      * Initializes all environments and connections found in the
@@ -70,19 +58,9 @@ public class Environment extends StorableObject {
      *         null if no environments could be found
      */
     public static Environment initAll(RootStorage storage) {
-        Object[]    objs;
-        Connection  con;
+        Object[]  objs;
 
         // TODO: remove this initialization entirely, shouldn't be needed!
-
-        // Initialize connections
-        objs = storage.loadAll(PATH_CON);
-        for (int i = 0; i < objs.length; i++) {
-            if (objs[i] instanceof Connection) {
-                con = (Connection) objs[i];
-                connections.put(con.id(), con);
-            }
-        }
 
         // Initialize environments
         objs = storage.loadAll(PATH_ENV);
@@ -93,58 +71,6 @@ public class Environment extends StorableObject {
         } else {
             return null;
         }
-    }
-
-    /**
-     * Destroys all loaded environments and connections. This will
-     * free all resources currently used.
-     *
-     * @param storage        the data storage to use
-     */
-    public static void destroyAll(RootStorage storage) {
-        // TODO: this internal object cache should be removed
-        connections.clear();
-        storage.flush(PATH_CON);
-        storage.flush(PATH_ENV);
-    }
-
-    /**
-     * Searches for a connection.
-     *
-     * @param id             the connection identifier
-     *
-     * @return the connection found, or
-     *         null if not found
-     */
-    public static Connection connection(String id) {
-        Connection res = (Connection) connections.get(id);
-
-        if (res == null) {
-            res = connectionAlias(id);
-        }
-        return res;
-    }
-
-    /**
-     * Returns a collection with all the connection identifiers.
-     *
-     * @return a collection with all the connection identifiers
-     */
-    public static Collection connectionNames() {
-        return connections.keySet();
-    }
-
-    /**
-     * Searches for a connection with a matching alias.
-     *
-     * @param alias          the connection alias to search for
-     *
-     * @return the connection found, or
-     *         null if not found
-     */
-    protected static Connection connectionAlias(String alias) {
-        // TODO: implement connection alias names
-        return null;
     }
 
     /**
@@ -188,23 +114,21 @@ public class Environment extends StorableObject {
     /**
      * Searches for a connection with the specified id.
      *
+     * @param storage        the storage to search in
      * @param id             the connection id to search for
      *
      * @return the connection found, or
      *         null if not found
      */
-    public Connection findConnection(String id) {
+    public Connection findConnection(Storage storage, String id) {
         String      prefix = connectionPath();
         Connection  res = null;
 
         if (prefix != null) {
-            res = (Connection) connections.get(prefix + id);
+            res = Connection.find(storage, prefix + id);
         }
         if (res == null) {
-            res = connectionAlias(prefix + id);
-        }
-        if (res == null) {
-            res = connection(id);
+            res = Connection.find(storage, id);
         }
         return res;
     }

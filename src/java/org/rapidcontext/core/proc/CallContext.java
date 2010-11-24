@@ -486,9 +486,9 @@ public class CallContext {
                 log("Reserving connection channel on '" + id + "'");
             }
             if (env == null) {
-                con = Environment.connection(id);
+                con = Connection.find(storage, id);
             } else {
-                con = env.findConnection(id);
+                con = env.findConnection(storage, id);
             }
             if (con == null) {
                 msg = "failed to reserve connection channel: " +

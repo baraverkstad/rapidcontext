@@ -23,7 +23,9 @@ import java.util.logging.Logger;
 import org.apache.commons.pool.PoolableObjectFactory;
 import org.apache.commons.pool.impl.GenericObjectPool;
 import org.rapidcontext.core.data.Dict;
+import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.StorableObject;
+import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.storage.StorageException;
 
 /**
@@ -70,6 +72,11 @@ public abstract class Connection extends StorableObject {
     public static final String KEY_MAX_IDLE_SECS = "maxIdleSecs";
 
     /**
+     * The connection object storage path.
+     */
+    public static final Path PATH = new Path("/connection/");
+
+    /**
      * The maximum time to wait for acquiring an object from the pool.
      */
     private static int MAX_ACQUIRE_WAIT = 500;
@@ -86,6 +93,40 @@ public abstract class Connection extends StorableObject {
      * supporting it will be returned (others immediately destroyed).
      */
     private GenericObjectPool channelPool = null;
+
+    /**
+     * Searches for a specific connection in the storage.
+     *
+     * @param storage        the storage to search in
+     * @param id             the connection identifier
+     *
+     * @return the connection found, or
+     *         null if not found
+     */
+    public static Connection find(Storage storage, String id) {
+        Object  obj = storage.load(PATH.descendant(new Path(id)));
+
+        return (obj instanceof Connection) ? (Connection) obj : null;
+    }
+
+    /**
+     * Searches for all connections in the storage.
+     *
+     * @param storage        the storage to search in
+     *
+     * @return an array of all connections found
+     */
+    public static Connection[] findAll(Storage storage) {
+        Object[]   objs = storage.loadAll(PATH);
+        ArrayList  list = new ArrayList(objs.length);
+
+        for (int i = 0; i < objs.length; i++) {
+            if (objs[i] instanceof Connection) {
+                list.add(objs[i]);
+            }
+        }
+        return (Connection[]) list.toArray(new Connection[list.size()]);
+    }
 
     /**
      * Creates a new connection from a serialized representation.
