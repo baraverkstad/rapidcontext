@@ -50,7 +50,7 @@ public class ProcedureWriteProcedure implements Procedure, Restricted {
         defaults.set("name", Bindings.ARGUMENT, "", "The procedure name");
         defaults.set("type", Bindings.ARGUMENT, "", "The procedure type name");
         defaults.set("description", Bindings.ARGUMENT, "", "The procedure description");
-        defaults.set("bindings", Bindings.ARGUMENT, "", "The array of proceure bindings");
+        defaults.set("bindings", Bindings.ARGUMENT, "", "The array of procedure bindings");
         defaults.seal();
     }
 
