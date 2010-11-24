@@ -14,12 +14,9 @@
 
 package org.rapidcontext.app.plugin.jdbc;
 
-import java.util.Iterator;
-
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.env.Connection;
-import org.rapidcontext.core.env.Environment;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
@@ -114,24 +111,22 @@ public class JdbcConnectionListProcedure implements Procedure, Restricted {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        Iterator    iter;
-        Connection  con;
-        Array       res = new Array();
-        Dict        dict;
+        Connection[]  connections;
+        Array         res = new Array();
+        Dict          dict;
 
-        iter = Environment.connectionNames().iterator();
-        while (iter.hasNext()) {
-            con = Environment.connection((String) iter.next());
-            if (con instanceof JdbcConnection) {
+        connections = Connection.findAll(cx.getStorage());
+        for (int i = 0; i < connections.length; i++) {
+            if (connections[i] instanceof JdbcConnection) {
                 dict = new Dict();
                 // TODO: use only serialization, not name attribute
-                dict.set("name", con.id());
-                dict.addAll(con.serialize());
+                dict.set("name", connections[i].id());
+                dict.addAll(connections[i].serialize());
                 // TODO: revisit the decision to omit passwords for security...
                 dict.remove("password");
-                dict.setInt("maxConnections", con.maxActive());
-                dict.setInt("openConnections", con.activeChannels());
-                dict.setInt("usedConnections", con.reservedChannels());
+                dict.setInt("maxConnections", connections[i].maxActive());
+                dict.setInt("openConnections", connections[i].activeChannels());
+                dict.setInt("usedConnections", connections[i].reservedChannels());
                 res.add(dict);
             }
         }
