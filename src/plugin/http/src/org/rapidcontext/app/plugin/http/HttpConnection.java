@@ -30,7 +30,7 @@ import org.rapidcontext.core.env.ConnectionException;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class HttpAdapter extends Connection {
+public class HttpConnection extends Connection {
 
     /**
      * The HTTP base URL configuration parameter name.
@@ -49,7 +49,7 @@ public class HttpAdapter extends Connection {
      * @param type           the object type name
      * @param dict           the serialized representation
      */
-    public HttpAdapter(String id, String type, Dict dict) {
+    public HttpConnection(String id, String type, Dict dict) {
         super(id, type, dict);
     }
 

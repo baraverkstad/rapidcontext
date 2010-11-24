@@ -44,7 +44,7 @@ public class HttpChannel extends Channel {
      * @param con            the parent connection
      * @param params            the HTTP connection parameters
      */
-    HttpChannel(HttpAdapter con, Dict params) {
+    HttpChannel(HttpConnection con, Dict params) {
         super(con);
         this.params = params;
     }
@@ -126,7 +126,7 @@ public class HttpChannel extends Channel {
      * @throws ProcedureException if the base URL was malformed
      */
     public URL getUrl() throws ProcedureException {
-        String  str = this.params.getString(HttpAdapter.HTTP_URL, "");
+        String  str = this.params.getString(HttpConnection.HTTP_URL, "");
         try {
             return new URL(str);
         } catch (MalformedURLException e) {
@@ -141,6 +141,6 @@ public class HttpChannel extends Channel {
      *         an empty string if not set
      */
     public String getHeaders() {
-        return this.params.getString(HttpAdapter.HTTP_HEADER, "");
+        return this.params.getString(HttpConnection.HTTP_HEADER, "");
     }
 }
