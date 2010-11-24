@@ -1,7 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
- * All rights reserved.
+ * Copyright (c) 2007-2010 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -15,10 +14,11 @@
 
 package org.rapidcontext.core.type;
 
+import java.util.ArrayList;
+
 import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.storage.Path;
-import org.rapidcontext.core.storage.RootStorage;
 import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.core.storage.Storage;
 
@@ -46,31 +46,40 @@ public class Environment extends StorableObject {
     /**
      * The environment object storage path.
      */
-    public static final Path PATH_ENV = new Path("/environment/");
+    public static final Path PATH = new Path("/environment/");
 
     /**
-     * Initializes all environments and connections found in the
-     * storage.
+     * Searches for a specific environment in the storage.
      *
-     * @param storage        the data storage to use
+     * @param storage        the storage to search in
+     * @param id             the environment identifier
      *
-     * @return one of the loaded environments, or
-     *         null if no environments could be found
+     * @return the environment found, or
+     *         null if not found
      */
-    public static Environment initAll(RootStorage storage) {
-        Object[]  objs;
+    public static Environment find(Storage storage, String id) {
+        Object  obj = storage.load(PATH.descendant(new Path(id)));
 
-        // TODO: remove this initialization entirely, shouldn't be needed!
+        return (obj instanceof Environment) ? (Environment) obj : null;
+    }
 
-        // Initialize environments
-        objs = storage.loadAll(PATH_ENV);
+    /**
+     * Searches for all environments in the storage.
+     *
+     * @param storage        the storage to search in
+     *
+     * @return an array of all environments found
+     */
+    public static Environment[] findAll(Storage storage) {
+        Object[]   objs = storage.loadAll(PATH);
+        ArrayList  list = new ArrayList(objs.length);
 
-        // TODO: Remove the single environment reference
-        if (objs.length > 0 && objs[0] instanceof Environment) {
-            return (Environment) objs[0];
-        } else {
-            return null;
+        for (int i = 0; i < objs.length; i++) {
+            if (objs[i] instanceof Environment) {
+                list.add(objs[i]);
+            }
         }
+        return (Environment[]) list.toArray(new Environment[list.size()]);
     }
 
     /**

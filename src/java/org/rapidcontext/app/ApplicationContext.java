@@ -194,7 +194,9 @@ public class ApplicationContext {
         Type.initAll(storage);
         initLibrary();
         initPlugins();
-        env = Environment.initAll(storage);
+        // TODO: Remove singleton environment reference
+        Environment[] envs = Environment.findAll(storage);
+        env = (envs.length > 0) ? envs[0] : null;
         try {
             SecurityContext.init(storage);
         } catch (StorageException e) {
