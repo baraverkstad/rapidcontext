@@ -109,6 +109,8 @@ public abstract class Connection extends StorableObject {
      * @throws StorageException if the initialization failed
      */
     protected void init() throws StorageException {
+        dict.setInt(KEY_MAX_ACTIVE, maxActive());
+        dict.setInt(KEY_MAX_IDLE_SECS, maxIdleSeconds());
         channelPool = new GenericObjectPool(new ChannelFactory());
         channelPool.setMaxActive(maxActive());
         channelPool.setMaxIdle(maxActive());
