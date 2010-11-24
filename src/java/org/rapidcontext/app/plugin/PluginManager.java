@@ -412,7 +412,7 @@ public class PluginManager {
 
         // Initialize plug-in instance
         try {
-            storage.loadAll(storagePath(pluginId).descendant(Type.PATH_TYPE));
+            storage.loadAll(storagePath(pluginId).descendant(Type.PATH));
             // TODO: plug-in initialization should be handled by storage
             plugin.init();
             storage.store(pluginPath(pluginId), plugin);

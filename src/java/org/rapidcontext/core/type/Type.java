@@ -51,7 +51,7 @@ public class Type extends StorableObject {
     /**
      * The connection object storage path.
      */
-    public static final Path PATH_TYPE = new Path("/type/");
+    public static final Path PATH = new Path("/type/");
 
     /**
      * Initializes all type mappings found in the storage.
@@ -64,7 +64,7 @@ public class Type extends StorableObject {
         } catch (StorageException e) {
             LOG.log(Level.SEVERE, "failed to set type initializer in storage", e);
         }
-        storage.loadAll(PATH_TYPE);
+        storage.loadAll(PATH);
     }
 
     /**
@@ -73,7 +73,7 @@ public class Type extends StorableObject {
      * @param storage        the root storage
      */
     public static void destroyAll(RootStorage storage) {
-        storage.flush(PATH_TYPE);
+        storage.flush(PATH);
     }
 
     /**
