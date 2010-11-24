@@ -137,35 +137,65 @@ public class ServletApplication extends HttpServlet {
     /**
      * Handles HTTP GET requests.
      *
-     * @param request        the servlet request
-     * @param response       the servlet response
+     * @param req            the servlet request
+     * @param resp           the servlet response
      *
      * @throws ServletException if an internal error occurred when processing
      *             the request
      * @throws IOException if an IO error occurred when processing the request
      */
-    protected void doGet(HttpServletRequest request,
-                         HttpServletResponse response)
-        throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+    throws ServletException, IOException {
 
-        process(new Request(request, response));
+        process(new Request(req, resp));
     }
 
     /**
      * Handles HTTP POST requests.
      *
-     * @param request        the servlet request
-     * @param response       the servlet response
+     * @param req            the servlet request
+     * @param resp           the servlet response
      *
      * @throws ServletException if an internal error occurred when processing
      *             the request
      * @throws IOException if an IO error occurred when processing the request
      */
-    protected void doPost(HttpServletRequest request,
-                          HttpServletResponse response)
-        throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+    throws ServletException, IOException {
 
-        process(new Request(request, response));
+        process(new Request(req, resp));
+    }
+
+    /**
+     * Handles HTTP PUT requests.
+     *
+     * @param req            the servlet request
+     * @param resp           the servlet response
+     *
+     * @throws ServletException if an internal error occurred when processing
+     *             the request
+     * @throws IOException if an IO error occurred when processing the request
+     */
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp)
+    throws ServletException, IOException {
+
+        process(new Request(req, resp));
+    }
+
+    /**
+     * Handles HTTP DELETE requests.
+     *
+     * @param req            the servlet request
+     * @param resp           the servlet response
+     *
+     * @throws ServletException if an internal error occurred when processing
+     *             the request
+     * @throws IOException if an IO error occurred when processing the request
+     */
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
+    throws ServletException, IOException {
+
+        process(new Request(req, resp));
     }
 
     /**
@@ -314,10 +344,22 @@ public class ServletApplication extends HttpServlet {
             path = path.substring(14);
             if (path.startsWith("procedure/") && request.hasMethod("POST")) {
                 processProcedure(request, path.substring(10));
+            } else if (path.startsWith("procedure/")) {
+                request.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED,
+                                  "text/plain",
+                                  "HTTP 405 Method Not Allowed");
+                request.setResponseHeader("Allow", "POST");
             } else if (path.startsWith("download")) {
                 processDownload(request, path.substring(8), true);
-            } else if (path.startsWith("upload")) {
+            } else if (path.startsWith("upload") &&
+                       (request.hasMethod("POST") || request.hasMethod("PUT"))) {
+
                 processUpload(request, path.substring(6));
+            } else if (path.startsWith("upload")) {
+                request.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED,
+                                  "text/plain",
+                                  "HTTP 405 Method Not Allowed");
+                request.setResponseHeader("Allow", "POST PUT");
             } else if (path.startsWith("query/")) {
                 processQuery(request, path.substring(6));
             }
@@ -357,6 +399,16 @@ public class ServletApplication extends HttpServlet {
             if (fileData != null) {
                 request.sendData(mimeType, fileData);
             }
+        } else {
+            request.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED,
+                              "text/plain",
+                              "HTTP 405 Method Not Allowed");
+            if (dynamic) {
+                request.setResponseHeader("Allow", "GET POST");
+            } else {
+                request.setResponseHeader("Allow", "GET");
+            }
+            return;
         }
         if (request.hasResponse() && request.getParameter("download") != null) {
             str = fileName;
@@ -488,6 +540,13 @@ public class ServletApplication extends HttpServlet {
         Array     arr;
         boolean   isHtml;
 
+        if (!request.hasMethod("GET")) {
+            request.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED,
+                              "text/plain",
+                              "HTTP 405 Method Not Allowed");
+            request.setResponseHeader("Allow", "GET");
+            return;
+        }
         try {
             // TODO: Implement security authentication for data queries
             if (!SecurityContext.hasAdmin()) {
