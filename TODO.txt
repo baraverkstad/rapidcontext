@@ -143,12 +143,11 @@ Concern: Server Programming API
 
 Concern: Data Storage
 =====================
- * Use memory storage:
+ * Use storage:
+    o Add procedure types to storage
+    o Remove registry for procedures (Library class)
     o Add built-in procedures to storage
-    o Add proceduretypes to storage
-    o Add adapters to storage
-    o Add pools to storage
-    o Remove server object registry for procedures, etc
+    o Move plug-in initialization to storage
  * Other storages:
     o Add threads to new dynamic storage
     o Add LDAP gateway?
