@@ -14,6 +14,7 @@
 
 package org.rapidcontext.core.storage;
 
+import java.lang.reflect.Constructor;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -23,6 +24,7 @@ import java.util.logging.Logger;
 import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
+import org.rapidcontext.core.type.Type;
 
 /**
  * The root storage that provides a unified view of other storages.
@@ -422,7 +424,7 @@ public class RootStorage extends Storage {
         LOG.fine("loaded " + path + " value: " + res);
         if (cache != null && res instanceof Dict) {
             id = StringUtils.removeStart(path.subPath(1).toString(), "/");
-            res = initialize(id, (Dict) res);
+            res = initObject(id, (Dict) res);
             if (res instanceof StorableObject) {
                 try {
                     cache.store(path, res);
@@ -435,6 +437,41 @@ public class RootStorage extends Storage {
             }
         }
         return res;
+    }
+
+    /**
+     * Initializes an object with the corresponding object type (if
+     * found).
+     *
+     * @param id             the object id
+     * @param dict           the dictionary data
+     *
+     * @return the StorableObject instance created, or
+     *         the input dictionary if no type matched
+     */
+    private Object initObject(String id, Dict dict) {
+        String          typeId = dict.getString(KEY_TYPE, null);
+        Constructor     constr = null;
+        Object[]        args;
+        StorableObject  obj;
+        String          msg;
+
+        if (typeId != null) {
+            constr = Type.constructor(this, dict);
+        }
+        if (constr != null) {
+            args = new Object[] { id, typeId, dict };
+            try {
+                obj = (StorableObject) constr.newInstance(args);
+                obj.init();
+                return obj;
+            } catch (Exception e) {
+                msg = "failed to create instance of " + constr.getClass().getName() +
+                      " for object " + id + " of type " + typeId;
+                LOG.log(Level.WARNING, msg, e);
+            }
+        }
+        return dict;
     }
 
     /**

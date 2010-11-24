@@ -14,13 +14,13 @@
 
 package org.rapidcontext.core.type;
 
+import java.lang.reflect.Constructor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.storage.Path;
-import org.rapidcontext.core.storage.RootStorage;
 import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.storage.StorageException;
@@ -54,26 +54,66 @@ public class Type extends StorableObject {
     public static final Path PATH = new Path("/type/");
 
     /**
-     * Initializes all type mappings found in the storage.
-     *
-     * @param storage        the root storage
+     * The storable object initializer constructor arguments.
      */
-    public static void initAll(RootStorage storage) {
-        try {
-            Storage.registerInitializer("type", Type.class);
-        } catch (StorageException e) {
-            LOG.log(Level.SEVERE, "failed to set type initializer in storage", e);
-        }
-        storage.loadAll(PATH);
+    private static final Class[] CONSTRUCTOR_ARGS = new Class[] {
+        String.class, String.class, Dict.class
+    };
+
+    /**
+     * Searches for a specific type in the storage.
+     *
+     * @param storage        the storage to search in
+     * @param id             the type identifier
+     *
+     * @return the type found, or
+     *         null if not found
+     */
+    public static Type find(Storage storage, String id) {
+        Object  obj = storage.load(PATH.descendant(new Path(id)));
+
+        return (obj instanceof Type) ? (Type) obj : null;
     }
 
     /**
-     * Removes all type mappings found in the storage.
+     * Returns a constructor for creating a Java object instance. If
+     * no object type or initializer was found, or if an error
+     * occurred, null is returned. This method will lookup the
+     * corresponding type in the storage dynamically.
      *
-     * @param storage        the root storage
+     * @param storage        the storage to use for type lookups
+     * @param dict           the dictionary data
+     *
+     * @return the Java object constructor, or
+     *         null if not found
      */
-    public static void destroyAll(RootStorage storage) {
-        storage.flush(PATH);
+    public static Constructor constructor(Storage storage, Dict dict) {
+        String          typeId = dict.getString(KEY_TYPE, null);
+        Type            type;
+        Class           cls = null;
+        String          msg;
+
+        if (typeId == null) {
+            return null;
+        } else if (typeId.equals("type")) {
+            cls = Type.class;
+        } else {
+            type = find(storage, typeId);
+            if (type != null) {
+                cls = type.initializer();
+            }
+        }
+        if (cls != null) {
+            try {
+                return cls.getConstructor(CONSTRUCTOR_ARGS);
+            } catch (Exception e) {
+                msg = "invalid initializer class for type " + typeId +
+                      ": no constructor " + cls.getName() +
+                      "(String, String, Dict) found";
+                LOG.log(Level.WARNING, msg, e);
+            }
+        }
+        return null;
     }
 
     /**
@@ -94,18 +134,26 @@ public class Type extends StorableObject {
      * @throws StorageException if the initialization failed
      */
     protected void init() throws StorageException {
-        Class  cls = initializer();
+        Class   cls = initializer();
+        String  msg;
 
         if (cls != null) {
-            Storage.registerInitializer(id(), cls);
+            if (!StorableObject.class.isAssignableFrom(cls)) {
+                msg = "invalid initializer class for " + this + ": class " +
+                      cls.getName() + " is not a subclass of StorableObject";
+                LOG.warning(msg);
+                throw new StorageException(msg);
+            }
+            try {
+                cls.getConstructor(CONSTRUCTOR_ARGS);
+            } catch (Exception e) {
+                msg = "invalid initializer class for " + this +
+                      ": no constructor " + cls.getName() +
+                      "(String, String, Dict) found";
+                LOG.warning(msg);
+                throw new StorageException(msg);
+            }
         }
-    }
-
-    /**
-     * Destroys this type mapping by unregistering it.
-     */
-    protected void destroy() {
-        Storage.unregisterInitializer(id());
     }
 
     /**

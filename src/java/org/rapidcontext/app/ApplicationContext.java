@@ -63,7 +63,6 @@ import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.storage.StorageException;
 import org.rapidcontext.core.storage.RootStorage;
 import org.rapidcontext.core.type.Environment;
-import org.rapidcontext.core.type.Type;
 
 /**
  * The application context. This is a singleton object that contains
@@ -191,7 +190,6 @@ public class ApplicationContext {
      * and the environment configuration.
      */
     private void initAll() {
-        Type.initAll(storage);
         initLibrary();
         initPlugins();
         // TODO: Remove singleton environment reference
@@ -283,7 +281,6 @@ public class ApplicationContext {
      */
     private void destroyAll() {
         pluginManager.unloadAll();
-        Type.destroyAll(storage);
         Library.unregisterType("javascript");
         library = new Library(this.storage);
     }
