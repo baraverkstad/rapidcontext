@@ -26,6 +26,7 @@ import java.util.zip.ZipFile;
 
 import org.apache.commons.lang.ClassUtils;
 import org.rapidcontext.core.data.Dict;
+import org.rapidcontext.core.env.Type;
 import org.rapidcontext.core.storage.FileStorage;
 import org.rapidcontext.core.storage.MemoryStorage;
 import org.rapidcontext.core.storage.Path;
@@ -411,6 +412,7 @@ public class PluginManager {
 
         // Initialize plug-in instance
         try {
+            storage.loadAll(storagePath(pluginId).descendant(Type.PATH_TYPE));
             // TODO: plug-in initialization should be handled by storage
             plugin.init();
             storage.store(pluginPath(pluginId), plugin);
