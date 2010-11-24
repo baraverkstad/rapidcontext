@@ -14,13 +14,13 @@
 
 package org.rapidcontext.app.plugin.jdbc;
 
-import org.rapidcontext.core.env.ConnectionException;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.Restricted;
 import org.rapidcontext.core.security.SecurityContext;
+import org.rapidcontext.core.type.ConnectionException;
 
 /**
  * The built-in JDBC SQL query procedure. This procedure supports

@@ -27,8 +27,8 @@ import org.mozilla.javascript.Undefined;
 import org.mozilla.javascript.WrappedException;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.env.Channel;
 import org.rapidcontext.core.storage.StorableObject;
+import org.rapidcontext.core.type.Channel;
 
 /**
  * An object serializer and unserializer for the JavaScript object

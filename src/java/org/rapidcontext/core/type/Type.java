@@ -12,7 +12,7 @@
  * See the RapidContext LICENSE.txt file for more details.
  */
 
-package org.rapidcontext.core.env;
+package org.rapidcontext.core.type;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

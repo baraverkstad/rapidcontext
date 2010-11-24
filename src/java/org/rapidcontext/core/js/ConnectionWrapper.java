@@ -23,7 +23,7 @@ import org.mozilla.javascript.EvaluatorException;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
-import org.rapidcontext.core.env.Channel;
+import org.rapidcontext.core.type.Channel;
 
 /**
  * A JavaScript connection wrapper. This class encapsulates a

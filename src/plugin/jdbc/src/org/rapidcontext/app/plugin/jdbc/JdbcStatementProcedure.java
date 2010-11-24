@@ -16,8 +16,8 @@ package org.rapidcontext.app.plugin.jdbc;
 
 import java.sql.PreparedStatement;
 
-import org.rapidcontext.core.env.ConnectionException;
 import org.rapidcontext.core.proc.ProcedureException;
+import org.rapidcontext.core.type.ConnectionException;
 
 /**
  * A JDBC SQL statement procedure. This procedure encapsulates the

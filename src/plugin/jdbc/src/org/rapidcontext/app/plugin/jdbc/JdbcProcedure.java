@@ -20,11 +20,11 @@ import java.util.Collections;
 import java.util.Date;
 
 import org.rapidcontext.core.data.Array;
-import org.rapidcontext.core.env.ConnectionException;
 import org.rapidcontext.core.proc.AddOnProcedure;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
+import org.rapidcontext.core.type.ConnectionException;
 
 /**
  * A base JDBC procedure. This procedure provides common methods for

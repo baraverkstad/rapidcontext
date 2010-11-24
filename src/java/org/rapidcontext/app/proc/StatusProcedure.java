@@ -16,7 +16,6 @@
 package org.rapidcontext.app.proc;
 
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.env.Environment;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
@@ -24,6 +23,7 @@ import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.Restricted;
 import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Path;
+import org.rapidcontext.core.type.Environment;
 
 /**
  * The built-in status information procedure.

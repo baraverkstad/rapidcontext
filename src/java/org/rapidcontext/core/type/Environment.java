@@ -13,7 +13,7 @@
  * See the RapidContext LICENSE.txt file for more details.
  */
 
-package org.rapidcontext.core.env;
+package org.rapidcontext.core.type;
 
 import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.core.data.Dict;

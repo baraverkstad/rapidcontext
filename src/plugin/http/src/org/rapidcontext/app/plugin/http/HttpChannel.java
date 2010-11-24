@@ -19,8 +19,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.env.Channel;
 import org.rapidcontext.core.proc.ProcedureException;
+import org.rapidcontext.core.type.Channel;
 
 /**
  * An HTTP connection channel. This is not a real HTTP connection,

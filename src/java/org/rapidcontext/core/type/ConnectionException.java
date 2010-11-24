@@ -12,7 +12,7 @@
  * See the RapidContext LICENSE.txt file for more details.
  */
 
-package org.rapidcontext.core.env;
+package org.rapidcontext.core.type;
 
 /**
  * A general connection or channel exception. This class encapsulates

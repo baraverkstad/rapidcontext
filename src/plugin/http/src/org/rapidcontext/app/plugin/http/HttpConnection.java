@@ -16,9 +16,9 @@
 package org.rapidcontext.app.plugin.http;
 
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.env.Channel;
-import org.rapidcontext.core.env.Connection;
-import org.rapidcontext.core.env.ConnectionException;
+import org.rapidcontext.core.type.Channel;
+import org.rapidcontext.core.type.Connection;
+import org.rapidcontext.core.type.ConnectionException;
 
 /**
  * A virtual HTTP connection. This class allows storing HTTP

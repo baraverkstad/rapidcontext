@@ -30,8 +30,8 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.rapidcontext.core.env.Channel;
-import org.rapidcontext.core.env.ConnectionException;
+import org.rapidcontext.core.type.Channel;
+import org.rapidcontext.core.type.ConnectionException;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.util.DateUtil;
