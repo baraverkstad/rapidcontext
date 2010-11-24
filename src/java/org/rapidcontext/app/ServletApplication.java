@@ -559,8 +559,8 @@ public class ServletApplication extends HttpServlet {
                      (!isMimeMatch(request, MIME_JSON) &&
                       !isMimeMatch(request, MIME_XML));
             // TODO: Extend data lookup via plug-ins and/or standardized QL
-            meta = ctx.getStorage().lookup(path);
             res = ctx.getStorage().load(path);
+            meta = ctx.getStorage().lookup(path);
             if (res instanceof Index) {
                 dict = new Dict();
                 dict.set("type", "index");
