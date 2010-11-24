@@ -16,7 +16,7 @@ package org.rapidcontext.app.plugin.jdbc;
 
 import java.sql.PreparedStatement;
 
-import org.rapidcontext.core.env.AdapterException;
+import org.rapidcontext.core.env.ConnectionException;
 import org.rapidcontext.core.proc.ProcedureException;
 
 /**
@@ -49,14 +49,14 @@ public class JdbcStatementProcedure extends JdbcProcedure {
      * @throws ProcedureException if the SQL couldn't be executed
      *             correctly
      */
-    protected Object execute(JdbcConnection con,
+    protected Object execute(JdbcChannel con,
                              PreparedStatement stmt,
                              String flags)
         throws ProcedureException {
 
         try {
             return con.executeStatement(stmt);
-        } catch (AdapterException e) {
+        } catch (ConnectionException e) {
             throw new ProcedureException(e.getMessage());
         }
     }

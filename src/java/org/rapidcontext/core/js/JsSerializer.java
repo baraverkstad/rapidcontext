@@ -27,7 +27,7 @@ import org.mozilla.javascript.Undefined;
 import org.mozilla.javascript.WrappedException;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.env.AdapterConnection;
+import org.rapidcontext.core.env.Channel;
 import org.rapidcontext.core.storage.StorableObject;
 
 /**
@@ -265,8 +265,8 @@ public class JsSerializer {
     public static Object wrap(Object obj, Scriptable scope) {
         if (obj instanceof Dict || obj instanceof Array) {
             return new DataWrapper(obj, scope);
-        } else if (obj instanceof AdapterConnection) {
-            return new ConnectionWrapper((AdapterConnection) obj, scope);
+        } else if (obj instanceof Channel) {
+            return new ConnectionWrapper((Channel) obj, scope);
         } else {
             return obj;
         }

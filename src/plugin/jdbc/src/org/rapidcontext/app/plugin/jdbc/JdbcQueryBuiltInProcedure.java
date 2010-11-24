@@ -14,7 +14,7 @@
 
 package org.rapidcontext.app.plugin.jdbc;
 
-import org.rapidcontext.core.env.AdapterException;
+import org.rapidcontext.core.env.ConnectionException;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
@@ -49,7 +49,7 @@ public class JdbcQueryBuiltInProcedure implements Procedure, Restricted {
      */
     public JdbcQueryBuiltInProcedure() throws ProcedureException {
         defaults.set(JdbcProcedure.BINDING_DB, Bindings.ARGUMENT, "",
-                     "The JDBC connection pool name.");
+                     "The JDBC connection identifier.");
         defaults.set(JdbcProcedure.BINDING_SQL, Bindings.ARGUMENT, "",
                      "The SQL query string.");
         defaults.set(JdbcProcedure.BINDING_FLAGS, Bindings.ARGUMENT, "",
@@ -119,7 +119,7 @@ public class JdbcQueryBuiltInProcedure implements Procedure, Restricted {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        JdbcConnection  con = JdbcProcedure.getConnection(cx, bindings);
+        JdbcChannel  con = JdbcProcedure.getConnection(cx, bindings);
         String          sql;
         String          flags;
 
@@ -127,7 +127,7 @@ public class JdbcQueryBuiltInProcedure implements Procedure, Restricted {
         flags = (String) bindings.getValue(JdbcProcedure.BINDING_FLAGS);
         try {
             return con.executeQuery(sql, flags);
-        } catch (AdapterException e) {
+        } catch (ConnectionException e) {
             throw new ProcedureException(e.getMessage());
         }
     }

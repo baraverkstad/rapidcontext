@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.Date;
 
 import org.rapidcontext.core.data.Array;
-import org.rapidcontext.core.env.AdapterException;
+import org.rapidcontext.core.env.ConnectionException;
 import org.rapidcontext.core.proc.AddOnProcedure;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
@@ -57,7 +57,7 @@ public abstract class JdbcProcedure extends AddOnProcedure {
      */
     protected JdbcProcedure() throws ProcedureException {
         defaults.set(BINDING_DB, Bindings.CONNECTION, "",
-                     "The JDBC connection pool name.");
+                     "The JDBC connection identifier.");
         defaults.set(BINDING_SQL, Bindings.DATA, "",
                      "The SQL text, optionally containing arguments with " +
                      "a ':' prefix.");
@@ -87,7 +87,7 @@ public abstract class JdbcProcedure extends AddOnProcedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        JdbcConnection  con = getConnection(cx, bindings);
+        JdbcChannel  con = getConnection(cx, bindings);
         String          flags;
 
         flags = (String) bindings.getValue(BINDING_FLAGS, "");
@@ -107,7 +107,7 @@ public abstract class JdbcProcedure extends AddOnProcedure {
      * @throws ProcedureException if the SQL couldn't be executed
      *             correctly
      */
-    protected abstract Object execute(JdbcConnection con,
+    protected abstract Object execute(JdbcChannel con,
                                       PreparedStatement stmt,
                                       String flags)
         throws ProcedureException;
@@ -122,7 +122,7 @@ public abstract class JdbcProcedure extends AddOnProcedure {
      *
      * @throws ProcedureException if no JDBC connection was found
      */
-    protected static JdbcConnection getConnection(CallContext cx, Bindings bindings)
+    protected static JdbcChannel getConnection(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
         String  str;
@@ -132,11 +132,11 @@ public abstract class JdbcProcedure extends AddOnProcedure {
         if (obj instanceof String) {
             obj = cx.connectionReserve((String) obj);
         }
-        if (!JdbcConnection.class.isInstance(obj)) {
+        if (!JdbcChannel.class.isInstance(obj)) {
             str = "connection not of JDBC type: " + obj.getClass().getName();
             throw new ProcedureException(str);
         }
-        return (JdbcConnection) obj;
+        return (JdbcChannel) obj;
     }
 
     /**
@@ -152,7 +152,7 @@ public abstract class JdbcProcedure extends AddOnProcedure {
      * @throws ProcedureException if the SQL referred to an argument
      *             that wasn't defined in the bindings
      */
-    protected static PreparedStatement prepare(JdbcConnection con,
+    protected static PreparedStatement prepare(JdbcChannel con,
                                                CallContext cx,
                                                Bindings bindings)
         throws ProcedureException {
@@ -189,7 +189,7 @@ public abstract class JdbcProcedure extends AddOnProcedure {
         try {
             cx.log(buffer.toString());
             return con.prepare(buffer.toString(), params);
-        } catch (AdapterException e) {
+        } catch (ConnectionException e) {
             throw new ProcedureException(e.getMessage());
         }
     }
@@ -199,7 +199,7 @@ public abstract class JdbcProcedure extends AddOnProcedure {
      * to a value, which may cause minor changes to the SQL syntax
      * around the actual variable.
      *
-     * @author   Per Cederberg, Dynabyte AB
+     * @author   Per Cederberg
      * @version  1.0
      */
     private static class SqlField implements Comparable {

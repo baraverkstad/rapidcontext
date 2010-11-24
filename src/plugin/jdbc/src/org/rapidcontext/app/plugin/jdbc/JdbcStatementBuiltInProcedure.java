@@ -14,7 +14,7 @@
 
 package org.rapidcontext.app.plugin.jdbc;
 
-import org.rapidcontext.core.env.AdapterException;
+import org.rapidcontext.core.env.ConnectionException;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
@@ -48,7 +48,7 @@ public class JdbcStatementBuiltInProcedure implements Procedure, Restricted {
      */
     public JdbcStatementBuiltInProcedure() throws ProcedureException {
         defaults.set(JdbcProcedure.BINDING_DB, Bindings.ARGUMENT, "",
-                     "The JDBC connection pool name.");
+                     "The JDBC connection identifier.");
         defaults.set(JdbcProcedure.BINDING_SQL, Bindings.ARGUMENT, "",
                      "The SQL statement string.");
         this.defaults.seal();
@@ -114,13 +114,13 @@ public class JdbcStatementBuiltInProcedure implements Procedure, Restricted {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        JdbcConnection  con = JdbcProcedure.getConnection(cx, bindings);
+        JdbcChannel  con = JdbcProcedure.getConnection(cx, bindings);
         String          sql;
 
         sql = (String) bindings.getValue(JdbcProcedure.BINDING_SQL);
         try {
             return con.executeStatement(sql);
-        } catch (AdapterException e) {
+        } catch (ConnectionException e) {
             throw new ProcedureException(e.getMessage());
         }
     }

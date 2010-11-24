@@ -16,16 +16,13 @@
 package org.rapidcontext.core.env;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.logging.Logger;
 
 import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
+import org.rapidcontext.core.storage.RootStorage;
 import org.rapidcontext.core.storage.StorableObject;
-import org.rapidcontext.core.storage.Storage;
 
 /**
  * An external connectivity environment. The environment contains a
@@ -36,12 +33,6 @@ import org.rapidcontext.core.storage.Storage;
  * @version  1.0
  */
 public class Environment extends StorableObject {
-
-    /**
-     * The class logger.
-     */
-    private static final Logger LOG =
-        Logger.getLogger(Environment.class.getName());
 
     /**
      * The dictionary key for the environment description.
@@ -78,131 +69,81 @@ public class Environment extends StorableObject {
      * @return one of the loaded environments, or
      *         null if no environments could be found
      */
-    public static Environment initAll(Storage storage) {
-        Metadata[]   metas;
-        Object       obj;
-        Dict         dict;
-        String       name;
+    public static Environment initAll(RootStorage storage) {
+        Object[]    objs;
+        Connection  con;
+
+        // TODO: remove this initialization entirely, shouldn't be needed!
 
         // Initialize connections
-        metas = storage.lookupAll(PATH_CON);
-        for (int i = 0; i < metas.length; i++) {
-            obj = storage.load(metas[i].path());
-            if (obj instanceof Dict) {
-                dict = (Dict) obj;
-                name = metas[i].path().subPath(PATH_CON.length()).toString();
-                name = StringUtils.removeStart(name, "/");
-                initPool(name, dict);
+        objs = storage.loadAll(PATH_CON);
+        for (int i = 0; i < objs.length; i++) {
+            if (objs[i] instanceof Connection) {
+                con = (Connection) objs[i];
+                connections.put(con.id(), con);
             }
         }
 
         // Initialize environments
-        Object[] envs = storage.loadAll(PATH_ENV);
+        objs = storage.loadAll(PATH_ENV);
 
         // TODO: Remove the single environment reference
-        if (envs.length > 0 && envs[0] instanceof Environment) {
-            return (Environment) envs[0];
+        if (objs.length > 0 && objs[0] instanceof Environment) {
+            return (Environment) objs[0];
         } else {
             return null;
         }
     }
 
     /**
-     * Initializes a new connection pool from the specified name
-     * and configuration dictionary.
-     *
-     * @param name           the connection pool name
-     * @param dict           the configuration dictionary
-     */
-    protected static void initPool(String name, Dict dict) {
-        String   type;
-        Adapter  adapter;
-        Dict     config;
-        String   msg;
-
-        // TODO: add support for connection aliases
-        type = dict.getString("type", "connection");
-        adapter = AdapterRegistry.find(dict.getString("adapter", ""));
-        config = dict.getDict("config");
-        if (config == null) {
-            config = new Dict();
-        }
-        if (!type.equals("connection")) {
-            msg = "invalid object type for connection/" + name + ": " + type;
-            LOG.warning(msg);
-        } else if (adapter == null) {
-            msg = "failed to create connection " + name + ": no adapter '" +
-                  dict.getString("adapter", "") + "' found";
-            LOG.warning(msg);
-        } else {
-            try {
-                connections.put(name, new Pool(name, adapter, config));
-            } catch (AdapterException e) {
-                msg = "failed to create connection " + name + ": " +
-                      e.getMessage();
-                LOG.warning(msg);
-            }
-        }
-    }
-
-    /**
      * Destroys all loaded environments and connections. This will
      * free all resources currently used.
+     *
+     * @param storage        the data storage to use
      */
-    public static void destroyAll() {
-        Iterator  iter;
-
-        iter = connections.values().iterator();
-        while (iter.hasNext()) {
-            ((Pool) iter.next()).close();
-        }
+    public static void destroyAll(RootStorage storage) {
+        // TODO: this internal object cache should be removed
         connections.clear();
+        storage.flush(PATH_CON);
+        storage.flush(PATH_ENV);
     }
 
     /**
-     * Returns a named connection pool.
+     * Searches for a connection.
      *
-     * @param poolName       the connection pool name
+     * @param id             the connection identifier
      *
-     * @return the connection pool found, or
+     * @return the connection found, or
      *         null if not found
      */
-    public static Pool pool(String poolName) {
-        Pool res = (Pool) connections.get(poolName);
+    public static Connection connection(String id) {
+        Connection res = (Connection) connections.get(id);
 
         if (res == null) {
-            res = poolAlias(poolName);
+            res = connectionAlias(id);
         }
         return res;
     }
 
     /**
-     * Returns a collection with all the connection pool names.
+     * Returns a collection with all the connection identifiers.
      *
-     * @return a collection with all the connection pool names
+     * @return a collection with all the connection identifiers
      */
-    public static Collection poolNames() {
+    public static Collection connectionNames() {
         return connections.keySet();
     }
 
     /**
-     * Searches for a connection pool with a matching alias.
+     * Searches for a connection with a matching alias.
      *
-     * @param poolName       the pool name to search for
+     * @param alias          the connection alias to search for
      *
-     * @return the connection pool found, or
+     * @return the connection found, or
      *         null if not found
      */
-    protected static Pool poolAlias(String poolName) {
-        Iterator  iter = connections.values().iterator();
-        Pool      p;
-
-        while (iter.hasNext()) {
-            p = (Pool) iter.next();
-            if (p.hasName(poolName)) {
-                return p;
-            }
-        }
+    protected static Connection connectionAlias(String alias) {
+        // TODO: implement connection alias names
         return null;
     }
 
@@ -245,25 +186,25 @@ public class Environment extends StorableObject {
     }
 
     /**
-     * Searches for a connection pool with the specified name.
+     * Searches for a connection with the specified id.
      *
-     * @param poolName       the pool name to search for
+     * @param id             the connection id to search for
      *
-     * @return the connection pool found, or
+     * @return the connection found, or
      *         null if not found
      */
-    public Pool findPool(String poolName) {
-        String  prefix = connectionPath();
-        Pool    res = null;
+    public Connection findConnection(String id) {
+        String      prefix = connectionPath();
+        Connection  res = null;
 
         if (prefix != null) {
-            res = (Pool) connections.get(prefix + poolName);
+            res = (Connection) connections.get(prefix + id);
         }
         if (res == null) {
-            res = poolAlias(prefix + poolName);
+            res = connectionAlias(prefix + id);
         }
         if (res == null) {
-            res = pool(poolName);
+            res = connection(id);
         }
         return res;
     }

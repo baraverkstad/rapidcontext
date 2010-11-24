@@ -102,11 +102,11 @@ public class HttpPostProcedure extends AddOnProcedure {
         Object  obj;
 
         obj = bindings.getValue(BINDING_CONNECTION, null);
-        if (obj != null && !HttpConnection.class.isInstance(obj)) {
+        if (obj != null && !HttpChannel.class.isInstance(obj)) {
             str = "connection not of HTTP type: " + obj.getClass().getName();
             throw new ProcedureException(str);
         }
-        return execCall(cx, (HttpConnection) obj, bindings);
+        return execCall(cx, (HttpChannel) obj, bindings);
     }
 
     /**
@@ -123,7 +123,7 @@ public class HttpPostProcedure extends AddOnProcedure {
      * @throws ProcedureException if the call execution caused an
      *             error
      */
-    static Object execCall(CallContext cx, HttpConnection con, Bindings bindings)
+    static Object execCall(CallContext cx, HttpChannel con, Bindings bindings)
         throws ProcedureException {
 
         URL             url;

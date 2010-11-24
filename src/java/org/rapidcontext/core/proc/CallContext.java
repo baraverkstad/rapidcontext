@@ -21,10 +21,10 @@ import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.rapidcontext.core.env.AdapterConnection;
-import org.rapidcontext.core.env.AdapterException;
+import org.rapidcontext.core.env.Channel;
+import org.rapidcontext.core.env.Connection;
+import org.rapidcontext.core.env.ConnectionException;
 import org.rapidcontext.core.env.Environment;
-import org.rapidcontext.core.env.Pool;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.util.DateUtil;
 
@@ -139,10 +139,10 @@ public class CallContext {
     private Interceptor interceptor = null;
 
     /**
-     * The map of reserved connections. Before executing a procedure
-     * tree, all the required adapter connections are reserved and
-     * stored here. The adapter connections stored in this map are
-     * indexed by their pool name.
+     * The map of reserved connection channels. Before executing a
+     * procedure tree, all the required connection channels are
+     * reserved and stored here. The channels stored in this map are
+     * indexed by their connection id.
      */
     private HashMap connections = new HashMap();
 
@@ -463,37 +463,36 @@ public class CallContext {
     }
 
     /**
-     * Reserves an adapter connection for the specified pool. The
-     * reserved connection will be stored in this context until all
-     * connections are released.
+     * Reserves a connection channel. The reserved channel will be
+     * stored in this context until all channels are released.
      *
-     * @param poolName       the adapter pool name
+     * @param id             the connection identifier
      *
-     * @return the adapter connection for the specified pool
+     * @return the reserved connection channel
      *
-     * @throws ProcedureException if the connection couldn't be
+     * @throws ProcedureException if the channel couldn't be
      *             reserved
      *
      * @see #connectionReleaseAll(boolean)
      */
-    public AdapterConnection connectionReserve(String poolName)
+    public Channel connectionReserve(String id)
         throws ProcedureException {
 
-        Pool    pool;
-        String  msg;
+        Connection  con;
+        String      msg;
 
-        if (poolName != null && !connections.containsKey(poolName)) {
+        if (id != null && !connections.containsKey(id)) {
             if (isTracing()) {
-                log("Reserving adapter connection on '" + poolName + "'");
+                log("Reserving connection channel on '" + id + "'");
             }
             if (env == null) {
-                pool = Environment.pool(poolName);
+                con = Environment.connection(id);
             } else {
-                pool = env.findPool(poolName);
+                con = env.findConnection(id);
             }
-            if (pool == null) {
-                msg = "failed to reserve adapter connection: " +
-                      "no adapter pool '" + poolName + "' found";
+            if (con == null) {
+                msg = "failed to reserve connection channel: " +
+                      "no connection '" + id + "' found";
                 if (isTracing()) {
                     log("ERROR: " + msg);
                 }
@@ -501,10 +500,10 @@ public class CallContext {
                 throw new ProcedureException(msg);
             }
             try {
-                connections.put(poolName, pool.reserveConnection());
-            } catch (AdapterException e) {
-                msg = "failed to reserve adapter connection on '" +
-                      poolName + "': " + e.getMessage();
+                connections.put(id, con.reserve());
+            } catch (ConnectionException e) {
+                msg = "failed to reserve connection channel on '" + id +
+                      "': " + e.getMessage();
                 if (isTracing()) {
                     log("ERROR: " + msg);
                 }
@@ -512,7 +511,7 @@ public class CallContext {
                 throw new ProcedureException(msg);
             }
         }
-        return (AdapterConnection) connections.get(poolName);
+        return (Channel) connections.get(id);
     }
 
     /**
@@ -525,31 +524,17 @@ public class CallContext {
      * @see #connectionReserve(String)
      */
     public void connectionReleaseAll(boolean commit) {
-        Iterator           iter = connections.keySet().iterator();
-        String             poolName;
-        AdapterConnection  con;
-        String             msg;
+        Iterator  iter = connections.values().iterator();
+        Channel   channel;
 
         while (iter.hasNext()) {
-            poolName = (String) iter.next();
-            con = (AdapterConnection) connections.get(poolName);
-            try {
-                if (commit) {
-                    con.commit();
-                } else {
-                    con.rollback();
-                }
-            } catch (AdapterException e) {
-                msg = "failed to ";
-                msg += (commit) ? "commit" : "rollback";
-                msg += " connection '" + poolName + "': " + e.getMessage();
-                LOG.warning(msg);
-            }
-            if (env == null) {
-                Environment.pool(poolName).releaseConnection(con);
+            channel = (Channel) iter.next();
+            if (commit) {
+                channel.commit();
             } else {
-                env.findPool(poolName).releaseConnection(con);
+                channel.rollback();
             }
+            channel.getConnection().release(channel);
         }
         connections.clear();
     }

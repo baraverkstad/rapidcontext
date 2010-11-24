@@ -17,9 +17,10 @@ package org.rapidcontext.app.plugin.jdbc;
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.PropertiesSerializer;
-import org.rapidcontext.core.env.Adapter;
-import org.rapidcontext.core.env.AdapterConnection;
-import org.rapidcontext.core.env.AdapterException;
+import org.rapidcontext.core.env.Channel;
+import org.rapidcontext.core.env.Connection;
+import org.rapidcontext.core.env.ConnectionException;
+import org.rapidcontext.core.storage.StorageException;
 
 import java.sql.Driver;
 import java.util.Properties;
@@ -32,7 +33,7 @@ import java.util.Properties;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class JdbcAdapter implements Adapter {
+public class JdbcAdapter extends Connection {
 
     /**
      * The JDBC driver configuration parameter name.
@@ -72,157 +73,70 @@ public class JdbcAdapter implements Adapter {
     protected static final String JDBC_TIMEOUT = "timeout";
 
     /**
-     * The array of all parameters.
+     * Creates a new JDBC connection from a serialized representation.
+     *
+     * @param id             the object identifier
+     * @param type           the object type name
+     * @param dict           the serialized representation
      */
-    protected static final String[] PARAMS = {
-        JDBC_DRIVER,
-        JDBC_URL,
-        JDBC_USER,
-        JDBC_PASSWORD,
-        JDBC_PING,
-        JDBC_AUTOCOMMIT,
-        JDBC_TIMEOUT
-    };
+    public JdbcAdapter(String id, String type, Dict dict) {
+        super(id, type, dict);
+    }
 
     /**
-     * Creates a normalized copy of the JDBC configuration parameters.
-     * This will fill in any default values and set the JDBC driver
-     * class if only a JDBC url is set.
+     * Initializes this connection after loading it from a storage.
+     * Any object initialization that may fail or that causes the
+     * object to interact with any other part of the system (or
+     * external systems) should be implemented here.
      *
-     * @param params         the config parameters
-     *
-     * @return the normalized copy of the parameters
+     * @throws StorageException if the initialization failed
      */
-    protected static Dict normalize(Dict params) {
-        Dict    res = params.copy();
+    protected void init() throws StorageException {
         String  driver;
         String  url;
         String  ping;
 
-        driver = params.getString(JDBC_DRIVER, "").trim();
-        url = params.getString(JDBC_URL, "").trim().toLowerCase();
-        ping = params.getString(JDBC_PING, "").trim();
+        driver = dict.getString(JDBC_DRIVER, "").trim();
+        url = dict.getString(JDBC_URL, "").trim().toLowerCase();
+        ping = dict.getString(JDBC_PING, "").trim();
         if (driver.isEmpty()) {
             if (url.startsWith("jdbc:odbc")) {
-                res.set(JDBC_DRIVER, "sun.jdbc.odbc.JdbcOdbcDriver");
+                dict.set(JDBC_DRIVER, "sun.jdbc.odbc.JdbcOdbcDriver");
             } else if (url.startsWith("jdbc:mysql:")) {
-                res.set(JDBC_DRIVER, "com.mysql.jdbc.Driver");
+                dict.set(JDBC_DRIVER, "com.mysql.jdbc.Driver");
             } else if (url.startsWith("jdbc:postgresql:")) {
-                res.set(JDBC_DRIVER, "org.postgresql.Driver");
+                dict.set(JDBC_DRIVER, "org.postgresql.Driver");
             } else if (url.startsWith("jdbc:oracle:")) {
-                res.set(JDBC_DRIVER, "oracle.jdbc.driver.OracleDriver");
+                dict.set(JDBC_DRIVER, "oracle.jdbc.driver.OracleDriver");
             } else if (url.startsWith("jdbc:db2:")) {
-                res.set(JDBC_DRIVER, "COM.ibm.db2.jdbc.app.DB2Driver");
+                dict.set(JDBC_DRIVER, "COM.ibm.db2.jdbc.app.DB2Driver");
             } else if (url.startsWith("jdbc:microsoft:")) {
-                res.set(JDBC_DRIVER, "com.microsoft.sqlserver.jdbc.SQLServerDriver");
+                dict.set(JDBC_DRIVER, "com.microsoft.sqlserver.jdbc.SQLServerDriver");
             }
         }
         if (ping.isEmpty() && url.startsWith("jdbc:oracle:")) {
-            res.set(JDBC_PING, "SELECT * FROM dual");
+            dict.set(JDBC_PING, "SELECT * FROM dual");
         } else if (ping.isEmpty()) {
-            res.set(JDBC_PING, "SELECT 1");
+            dict.set(JDBC_PING, "SELECT 1");
         }
-        res.setBoolean(JDBC_AUTOCOMMIT, params.getBoolean(JDBC_AUTOCOMMIT, false));
+        dict.setBoolean(JDBC_AUTOCOMMIT, dict.getBoolean(JDBC_AUTOCOMMIT, false));
         try {
-            res.setInt(JDBC_TIMEOUT, params.getInt(JDBC_TIMEOUT, 30));
+            dict.setInt(JDBC_TIMEOUT, dict.getInt(JDBC_TIMEOUT, 30));
         } catch (Exception ignore) {
             // Exception handled when creating connection
         }
-        return res;
+        super.init();
     }
 
     /**
-     * Default constructor, required by the Adapter interface.
-     */
-    public JdbcAdapter() {
-        // Nothing to do here
-    }
-
-    /**
-     * Initializes this adapter. This method is used to perform any
-     * initialization required before creating any connections to
-     * external systems. This method will be called exactly once for
-     * each adapter.
-     */
-    public void init() {
-        // Nothing to do here
-    }
-
-    /**
-     * Destroys this adapter. This method is used to free any
-     * resources that are common to all adapter connections created.
-     * After this method has been called, no further calls will be
-     * made to either the adapter or any connections created by it.
-     */
-    public void destroy() {
-        // Nothing to do here
-    }
-
-    /**
-     * Returns an array with all configuration parameter names. The
-     * order of the parameters will control how the they are
-     * requested from the user in a GUI or similar.
+     * Creates a new connection channel.
      *
-     * @return an array with configuration parameter names
-     */
-    public String[] getParameterNames() {
-        return PARAMS;
-    }
-
-    /**
-     * Returns the default value for a configuration parameter.
+     * @return the channel created
      *
-     * @param name           the configuration parameter name
-     *
-     * @return the default parameter value, or
-     *         null if no default is available
-     */
-    public String getParameterDefault(String name) {
-        return null;
-    }
-
-    /**
-     * Returns the description for a configuration parameter.
-     *
-     * @param name           the configuration parameter name
-     *
-     * @return the parameter description, or
-     *         null if no description is available
-     */
-    public String getParameterDescription(String name) {
-        if (JDBC_DRIVER.equals(name)) {
-            return "The JDBC driver class";
-        } else if (JDBC_URL.equals(name)) {
-            return "The JDBC connection URL";
-        } else if (JDBC_USER.equals(name)) {
-            return "The database user name";
-        } else if (JDBC_PASSWORD.equals(name)) {
-            return "The database user password";
-        } else if (JDBC_PING.equals(name)) {
-            return "The SQL ping query for checking connections";
-        } else if (JDBC_AUTOCOMMIT.equals(name)) {
-            return "The auto-commit on each SQL statement flag (defaults to false)";
-        } else if (JDBC_TIMEOUT.equals(name)) {
-            return "The connection and query timeout (in secs)";
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Creates a new adapter connection. The input parameters contain
-     * all the parameter names and values.
-     *
-     * @param params         the configuration parameters
-     *
-     * @return the adapter connection created
-     *
-     * @throws AdapterException if the connection couldn't be created
+     * @throws ConnectionException if the channel couldn't be created
      *             properly
      */
-    public AdapterConnection createConnection(Dict params)
-        throws AdapterException {
-
+    protected Channel createChannel() throws ConnectionException {
         ClassLoader  loader;
         String       driverClass;
         Driver       driver;
@@ -233,62 +147,47 @@ public class JdbcAdapter implements Adapter {
         Properties   props;
         String       msg;
 
-        params = normalize(params);
-        driverClass = params.getString(JDBC_DRIVER, "");
+        driverClass = dict.getString(JDBC_DRIVER, "");
         try {
             loader = ApplicationContext.getInstance().getClassLoader();
             driver = (Driver) loader.loadClass(driverClass).newInstance();
         } catch (ClassNotFoundException e) {
             msg = "couldn't find or load JDBC driver class " + driverClass +
                   ": " + e.getMessage();
-            throw new AdapterException(msg);
+            throw new ConnectionException(msg);
         } catch (ClassCastException e) {
             msg = "couldn't load JDBC driver, must be an instance of " +
                   "java.sql.Driver: " + driverClass;
-            throw new AdapterException(msg);
+            throw new ConnectionException(msg);
         } catch (Exception e) {
             msg = "couldn't create JDBC driver instance of " + driverClass +
                   ": " + e.getMessage();
-            throw new AdapterException(msg);
+            throw new ConnectionException(msg);
         }
-        url = params.getString(JDBC_URL, "");
-        ping = params.getString(JDBC_PING, null);
-        autoCommit = params.getBoolean(JDBC_AUTOCOMMIT, false);
+        url = dict.getString(JDBC_URL, "");
+        ping = dict.getString(JDBC_PING, null);
+        autoCommit = dict.getBoolean(JDBC_AUTOCOMMIT, false);
         try {
-            timeout = params.getInt(JDBC_TIMEOUT, 30);
+            timeout = dict.getInt(JDBC_TIMEOUT, 30);
         } catch (Exception e) {
-            throw new AdapterException("failed to parse timeout value: " +
-                                       params.getString(JDBC_TIMEOUT, ""));
+            throw new ConnectionException("failed to parse timeout value: " +
+                                          dict.getString(JDBC_TIMEOUT, ""));
         }
-        props = PropertiesSerializer.toProperties(params);
-        return createConnection(driver, url, props, ping, autoCommit, timeout);
+        props = PropertiesSerializer.toProperties(dict);
+        props.remove(KEY_ID);
+        props.remove(KEY_TYPE);
+        props.remove(KEY_MAX_ACTIVE);
+        props.remove(KEY_MAX_IDLE_SECS);
+        return new JdbcChannel(this, driver, url, props, ping, autoCommit, timeout);
     }
 
     /**
-     * Creates a new JDBC connection. This method exists to simplify the
-     * creation of subclass implementation of the standard JDBC connection.
-     * This method is called by the createConnection(Data) method that performs
-     * parameter validations.
+     * Destroys a connection channel, freeing any resources used
+     * (such as database connections, networking sockets, etc).
      *
-     * @param driver            the JDBC driver
-     * @param url               the connection URL
-     * @param props             the connection properties (user and password)
-     * @param sqlPing           the SQL ping query
-     * @param autoCommit        the auto-commit flag
-     * @param timeout           the request timeout (in secs)
-     *
-     * @return the JDBC connection created
-     *
-     * @throws AdapterException if a connection couldn't be established
+     * @param channel        the channel to destroy
      */
-    protected JdbcConnection createConnection(Driver driver,
-                                              String url,
-                                              Properties props,
-                                              String sqlPing,
-                                              boolean autoCommit,
-                                              int timeout)
-        throws AdapterException {
-
-        return new JdbcConnection(driver, url, props, sqlPing, autoCommit, timeout);
+    protected void destroyChannel(Channel channel) {
+        ((JdbcChannel) channel).close();
     }
 }

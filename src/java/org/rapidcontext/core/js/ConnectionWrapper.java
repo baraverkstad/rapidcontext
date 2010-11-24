@@ -23,22 +23,21 @@ import org.mozilla.javascript.EvaluatorException;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
-import org.rapidcontext.core.env.AdapterConnection;
+import org.rapidcontext.core.env.Channel;
 
 /**
- * A JavaScript connection wrapper. This class encapsulates an
- * adapter connection object and forwards calls to the connection
- * methods.
+ * A JavaScript connection wrapper. This class encapsulates a
+ * connection channel and forwards calls to the Java methods.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class ConnectionWrapper implements Scriptable {
 
     /**
-     * The encapsulated adapter connection object.
+     * The encapsulated connection channel.
      */
-    private AdapterConnection con;
+    private Channel channel;
 
     /**
      * The object prototype.
@@ -51,13 +50,13 @@ public class ConnectionWrapper implements Scriptable {
     private Scriptable parentScope;
 
     /**
-     * Creates a new JavaScript data object wrapper.
+     * Creates a new JavaScript connection wrapper.
      *
-     * @param con            the adapter connection object
+     * @param channel        the connection channel
      * @param parentScope    the object parent scope
      */
-    public ConnectionWrapper(AdapterConnection con, Scriptable parentScope) {
-        this.con = con;
+    public ConnectionWrapper(Channel channel, Scriptable parentScope) {
+        this.channel = channel;
         this.prototype = ScriptableObject.getObjectPrototype(parentScope);
         this.parentScope = parentScope;
     }
@@ -67,8 +66,8 @@ public class ConnectionWrapper implements Scriptable {
      *
      * @return the encapsulated adapter connection
      */
-    public AdapterConnection getConnection() {
-        return this.con;
+    public Channel getConnection() {
+        return this.channel;
     }
 
     /**
@@ -120,11 +119,11 @@ public class ConnectionWrapper implements Scriptable {
      *         false otherwise
      */
     public boolean has(String name, Scriptable start) {
-        Method[]  methods = con.getClass().getMethods();
+        Method[]  methods = channel.getClass().getMethods();
 
-        if (name.equals("activate") ||
-            name.equals("passivate") ||
-            name.equals("close")) {
+        if (name.equals("getConnection") ||
+            name.equals("validate") ||
+            name.equals("invalidate")) {
             // Hide internal methods for connection handling
             return false;
         }
@@ -259,12 +258,12 @@ public class ConnectionWrapper implements Scriptable {
 
 
     /**
-     * A JavaScript connection method wrapper. This class
-     * encapsulates a method in an adapter connection object. Any
-     * call will be forwarded to the best matching connection method
-     * and all objects will be unwrapped from JavaScript.
+     * A JavaScript connection channel method wrapper. This class
+     * encapsulates a method in a channel. Any call will be forwarded
+     * to the best matching method and all objects will be unwrapped
+     * from JavaScript.
      *
-     * @author   Per Cederberg, Dynabyte AB
+     * @author   Per Cederberg
      * @version  1.0
      */
     private class ConnectionMethodWrapper implements Function {

@@ -27,29 +27,30 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.rapidcontext.core.env.Channel;
+import org.rapidcontext.core.env.ConnectionException;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.env.AdapterConnection;
-import org.rapidcontext.core.env.AdapterException;
 import org.rapidcontext.util.DateUtil;
 
 /**
- * A JDBC adapter connection. This class encapsulates a JDBC
+ * A JDBC communications channel. This class encapsulates a JDBC
  * connection and allows execution of arbitrary SQL queries or
  * statements.
  *
  * @author   Per Cederberg
  * @version  1.0
  */
-public class JdbcConnection implements AdapterConnection {
+public class JdbcChannel extends Channel {
 
     /**
      * The class logger.
      */
     private static final Logger LOG =
-        Logger.getLogger(JdbcConnection.class.getName());
+        Logger.getLogger(JdbcChannel.class.getName());
 
     /**
      * The instance counter, used to identify JDBC connections.
@@ -77,8 +78,9 @@ public class JdbcConnection implements AdapterConnection {
     protected int timeout;
 
     /**
-     * Creates a new JDBC connection.
+     * Creates a new JDBC communications channel.
      *
+     * @param parent            the parent JDBC connection
      * @param driver            the JDBC driver
      * @param url               the connection URL
      * @param props             the connection properties (user and password)
@@ -86,18 +88,18 @@ public class JdbcConnection implements AdapterConnection {
      * @param autoCommit        the auto-commit flag
      * @param timeout           the request timeout (in secs)
      *
-     * @throws AdapterException if a connection couldn't be established
+     * @throws ConnectionException if a connection couldn't be established
      */
-    protected JdbcConnection(Driver driver,
-                             String url,
-                             Properties props,
-                             String sqlPing,
-                             boolean autoCommit,
-                             int timeout)
-        throws AdapterException {
+    protected JdbcChannel(JdbcAdapter parent,
+                          Driver driver,
+                          String url,
+                          Properties props,
+                          String sqlPing,
+                          boolean autoCommit,
+                          int timeout)
+        throws ConnectionException {
 
-        String  msg;
-
+        super(parent);
         this.prefix = "[JDBC:" + (++counter) + "] ";
         this.sqlPing = sqlPing;
         this.timeout = timeout;
@@ -108,117 +110,118 @@ public class JdbcConnection implements AdapterConnection {
             con.setAutoCommit(autoCommit);
             LOG.fine(prefix + "done creating connection for " + url);
         } catch (SQLException e) {
-            msg = "failed to connect to " + url + " with username '" +
+            String msg = "failed to connect to " + url + " with username '" +
                   props.getProperty("user") + "': " + e.getMessage();
             LOG.warning(prefix + msg);
-            throw new AdapterException(msg);
+            throw new ConnectionException(msg);
         }
     }
 
     /**
-     * Activates the connection. This method is called just before a
-     * connection is to be used, i.e. when a new connection has been
-     * created or when fetched from a resource pool.
+     * Checks if this channel can be pooled (i.e. reused). This
+     * method should return the same value for all instances of a
+     * specific channel subclass.
      *
-     * @throws AdapterException if the connection couldn't be
-     *             activated (connection will be closed)
+     * @return true if the channel can be pooled and reused, or
+     *         false otherwise
      */
-    public void activate() throws AdapterException {
+    protected boolean isPoolable() {
+        return true;
+    }
+
+    /**
+     * Reserves and activates the channel. This method is called just
+     * before a channel is to be used, i.e. when a new channel has
+     * been created or fetched from a resource pool.
+     *
+     * @throws ConnectionException if the channel couldn't be
+     *             reserved (channel will be destroyed)
+     */
+    protected void reserve() throws ConnectionException {
         String  msg;
 
         try {
             if (con.isClosed()) {
-                msg = "failed to activate, connection already closed";
+                msg = "failed to reserve, connection channel already closed";
                 LOG.fine(prefix + msg);
-                throw new AdapterException(msg);
+                throw new ConnectionException(msg);
             }
         } catch (SQLException e) {
-            msg = "failed to activate: " + e.getMessage();
+            msg = "failed to reserve: " + e.getMessage();
             LOG.fine(prefix + msg);
-            throw new AdapterException(msg);
+            throw new ConnectionException(msg);
         }
     }
 
     /**
-     * Passivates the connection. This method is called just after a
-     * connection has been used and will be returned to the pool.
-     * This operation should clear or reset the connection, so that
-     * it can safely be used again at a later time without affecting
-     * previous results or operations.
-     *
-     * @throws AdapterException if the connection couldn't be
-     *             passivated (connection will be closed)
+     * Releases and passivates the channel. This method is called
+     * just after a channel has been used and returned. This should
+     * clear or reset the channel, so that it can safely be used
+     * again without affecting previous results or operations (if
+     * the channel is pooled).
      */
-    public void passivate() throws AdapterException {
+    protected void release() {
         // Nothing to do here
     }
 
     /**
-     * Validates the connection. This method is called before using
-     * a connection and regularly when it is idle in the pool. It can
-     * be used to trigger a "ping" of a connection, if implemented by
-     * the adapter. An empty implementation is acceptable.
+     * Checks if the channel connection is still valid. This method
+     * is called before using a channel and regularly when it is idle
+     * in the pool. It can be used to trigger a "ping" for a channel.
+     * This method can only mark a valid channel as invalid, never
+     * the other way around.
      *
-     * @throws AdapterException if the connection didn't validate
-     *             correctly
+     * @see #isValid()
+     * @see #invalidate()
      */
-    public void validate() throws AdapterException {
+    public void validate() {
         if (sqlPing != null && !sqlPing.trim().isEmpty()) {
-            executeQuery(sqlPing);
+            try {
+                executeQuery(sqlPing);
+            } catch (Exception e) {
+                LOG.log(Level.WARNING, prefix + "validation failure", e);
+                invalidate();
+            }
         }
     }
 
     /**
      * Closes the connection. This method is used to free any
-     * resources used by the connection.  After this method has been
-     * called, no further calls will be made to this connection.
-     *
-     * @throws AdapterException if the connection couldn't be closed
-     *             properly (connection discarded anyway)
+     * resources used by the connection.
      */
-    public void close() throws AdapterException {
+    protected void close() {
         try {
             LOG.info(prefix + "closing connection");
             con.close();
             LOG.fine(prefix + "done closing connection");
         } catch (SQLException e) {
-            LOG.warning(prefix + "failed to close connection: " + e.getMessage());
-            throw new AdapterException(e.getMessage());
+            LOG.log(Level.WARNING, prefix + "failed to close connection", e);
         }
     }
 
     /**
      * Commits any pending changes. This method is called after each
      * successful procedure tree execution that included this
-     * connection. This method may be implemented as a no-op, if
-     * the adapter does not support commit and rollback semantics.
-     *
-     * @throws AdapterException if the pending changes couldn't be
-     *             committed to permanent storage (connection will be
-     *             closed)
+     * connection.
      */
-    public void commit() throws AdapterException {
+    public void commit() {
         try {
             con.commit();
         } catch (SQLException e) {
-            throw new AdapterException(e.getMessage());
+            LOG.log(Level.WARNING, prefix + "failed to commit connection", e);
         }
     }
 
     /**
      * Rolls any pending changes back. This method is called after an
      * unsuccessful procedure tree execution that included this
-     * connection. This method may be implemented as a no-op, if the
-     * adapter does not support commit and rollback semantics.
-     *
-     * @throws AdapterException if the pending changes couldn't be
-     *             rolled back (connection will be closed)
+     * connection.
      */
-    public void rollback() throws AdapterException {
+    public void rollback() {
         try {
             con.rollback();
         } catch (SQLException e) {
-            throw new AdapterException(e.getMessage());
+            LOG.log(Level.WARNING, prefix + "failed to rollback connection", e);
         }
     }
 
@@ -229,15 +232,15 @@ public class JdbcConnection implements AdapterConnection {
      *
      * @return the array with generated keys
      *
-     * @throws AdapterException if the execution failed
+     * @throws ConnectionException if the execution failed
      */
-    public Array executeStatement(String sql) throws AdapterException {
+    public Array executeStatement(String sql) throws ConnectionException {
         try {
             LOG.fine(prefix + "executing statement: " + sql);
             Array res = executeStatement(prepare(sql, null));
             LOG.fine(prefix + "done executing statement: " + sql);
             return res;
-        } catch (AdapterException e) {
+        } catch (ConnectionException e) {
             LOG.warning(prefix + e.getMessage());
             throw e;
         }
@@ -251,10 +254,10 @@ public class JdbcConnection implements AdapterConnection {
      *
      * @return the array with generated keys
      *
-     * @throws AdapterException if the execution failed
+     * @throws ConnectionException if the execution failed
      */
     protected Array executeStatement(PreparedStatement stmt)
-        throws AdapterException {
+    throws ConnectionException {
 
         Array      res = new Array(10);
         ResultSet  set = null;
@@ -271,8 +274,8 @@ public class JdbcConnection implements AdapterConnection {
             }
             return res;
         } catch (SQLException e) {
-            throw new AdapterException("failed to execute statement: " +
-                                       e.getMessage());
+            throw new ConnectionException("failed to execute statement: " +
+                                          e.getMessage());
         } finally {
             try {
                 if (set != null) {
@@ -294,9 +297,9 @@ public class JdbcConnection implements AdapterConnection {
      *
      * @return the object with the result data
      *
-     * @throws AdapterException if the execution failed
+     * @throws ConnectionException if the execution failed
      */
-    public Object executeQuery(String sql) throws AdapterException {
+    public Object executeQuery(String sql) throws ConnectionException {
         return executeQuery(sql, "");
     }
 
@@ -308,15 +311,17 @@ public class JdbcConnection implements AdapterConnection {
      *
      * @return the object with the result data
      *
-     * @throws AdapterException if the execution failed
+     * @throws ConnectionException if the execution failed
      */
-    public Object executeQuery(String sql, String flags) throws AdapterException {
+    public Object executeQuery(String sql, String flags)
+    throws ConnectionException {
+
         try {
             LOG.fine(prefix + "executing query: " + sql);
             Object res = executeQuery(prepare(sql, null), flags);
             LOG.fine(prefix + "done executing query: " + sql);
             return res;
-        } catch (AdapterException e) {
+        } catch (ConnectionException e) {
             LOG.warning(prefix + e.getMessage());
             throw e;
         }
@@ -332,10 +337,10 @@ public class JdbcConnection implements AdapterConnection {
      *
      * @return the object with the result data
      *
-     * @throws AdapterException if the execution failed
+     * @throws ConnectionException if the execution failed
      */
     protected Object executeQuery(PreparedStatement stmt)
-        throws AdapterException {
+    throws ConnectionException {
 
         return executeQuery(stmt, "");
     }
@@ -349,10 +354,10 @@ public class JdbcConnection implements AdapterConnection {
      *
      * @return the object with the result data
      *
-     * @throws AdapterException if the execution failed
+     * @throws ConnectionException if the execution failed
      */
     protected Object executeQuery(PreparedStatement stmt, String flags)
-        throws AdapterException {
+    throws ConnectionException {
 
         ResultSet  set = null;
 
@@ -360,8 +365,8 @@ public class JdbcConnection implements AdapterConnection {
             set = stmt.executeQuery();
             return createResults(set, flags);
         } catch (SQLException e) {
-            throw new AdapterException("failed to execute query: " +
-                                       e.getMessage());
+            throw new ConnectionException("failed to execute query: " +
+                                          e.getMessage());
         } finally {
             try {
                 if (set != null) {
@@ -382,10 +387,10 @@ public class JdbcConnection implements AdapterConnection {
      *
      * @return the prepared SQL statement
      *
-      @throws AdapterException if the statement couldn't be prepared
+      @throws ConnectionException if the statement couldn't be prepared
      */
     protected PreparedStatement prepare(String sql, ArrayList params)
-        throws AdapterException {
+    throws ConnectionException {
 
         PreparedStatement  stmt;
         Object             obj;
@@ -412,7 +417,7 @@ public class JdbcConnection implements AdapterConnection {
             return stmt;
         } catch (SQLException e) {
             str = "failed to prepare SQL: " + e.getMessage();
-            throw new AdapterException(str);
+            throw new ConnectionException(str);
         }
     }
 
@@ -424,10 +429,10 @@ public class JdbcConnection implements AdapterConnection {
      *
      * @return the data object with all the result data
      *
-     * @throws AdapterException if the result data couldn't be read
+     * @throws ConnectionException if the result data couldn't be read
      */
     protected Object createResults(ResultSet rs, String flags)
-        throws AdapterException {
+    throws ConnectionException {
 
         boolean            flagMetadata = hasFlag(flags, "metadata", false);
         ResultSetMetaData  meta;
@@ -436,8 +441,8 @@ public class JdbcConnection implements AdapterConnection {
         try {
             meta = rs.getMetaData();
         } catch (SQLException e) {
-            throw new AdapterException("failed to retrieve query result meta-data: " +
-                                       e.getMessage());
+            throw new ConnectionException("failed to retrieve query result meta-data: " +
+                                          e.getMessage());
         }
         if (flagMetadata) {
             dict = new Dict();
@@ -457,10 +462,10 @@ public class JdbcConnection implements AdapterConnection {
      *
      * @return the array of column information
      *
-     * @throws AdapterException if the result data couldn't be read
+     * @throws ConnectionException if the result data couldn't be read
      */
     protected Array createColumnData(ResultSetMetaData meta, String flags)
-        throws AdapterException {
+    throws ConnectionException {
 
         Array  cols;
         Dict   obj;
@@ -481,7 +486,7 @@ public class JdbcConnection implements AdapterConnection {
                 cols.add(obj);
             }
         } catch (SQLException e) {
-            throw new AdapterException("failed to extract query meta-data: " +
+            throw new ConnectionException("failed to extract query meta-data: " +
                                        e.getMessage());
         }
         return cols;
@@ -497,10 +502,10 @@ public class JdbcConnection implements AdapterConnection {
      *
      * @return the array of rows or dictionary of a single row
      *
-     * @throws AdapterException if the result data couldn't be read
+     * @throws ConnectionException if the result data couldn't be read
      */
     protected Object createRowData(ResultSetMetaData meta, ResultSet rs, String flags)
-        throws AdapterException {
+    throws ConnectionException {
 
         boolean  flagColumnNames = hasFlag(flags, "column-names", true);
         boolean  flagNativeTypes = hasFlag(flags, "native-types", true);
@@ -532,8 +537,8 @@ public class JdbcConnection implements AdapterConnection {
                 }
             }
         } catch (SQLException e) {
-            throw new AdapterException("failed to extract query results: " +
-                                       e.getMessage());
+            throw new ConnectionException("failed to extract query results: " +
+                                          e.getMessage());
         }
         if (flagSingleRow) {
             if (rows.size() < 1) {
@@ -541,9 +546,9 @@ public class JdbcConnection implements AdapterConnection {
             } else if (rows.size() == 1) {
                 return rows.get(0);
             } else {
-                throw new AdapterException("too many rows in query results; " +
-                                           "expected 1, but found " +
-                                           rows.size());
+                throw new ConnectionException("too many rows in query results; " +
+                                              "expected 1, but found " +
+                                              rows.size());
             }
         }
         return rows;
@@ -565,14 +570,14 @@ public class JdbcConnection implements AdapterConnection {
      *
      * @return the scriptable object with the column value
      *
-     * @throws AdapterException if the result data couldn't be read
+     * @throws ConnectionException if the result data couldn't be read
      */
     protected Object createValue(ResultSetMetaData meta,
                                  ResultSet rs,
                                  int column,
                                  boolean nativeTypes,
                                  boolean binaryData)
-        throws AdapterException {
+    throws ConnectionException {
 
         try {
             switch (meta.getColumnType(column)) {
@@ -610,9 +615,9 @@ public class JdbcConnection implements AdapterConnection {
                 }
             }
         } catch (Exception e) {
-            throw new AdapterException("failed to extract query result value " +
-                                       "for column " + column + ": " +
-                                       e.getMessage());
+            throw new ConnectionException("failed to extract query result value " +
+                                          "for column " + column + ": " +
+                                          e.getMessage());
         }
     }
 

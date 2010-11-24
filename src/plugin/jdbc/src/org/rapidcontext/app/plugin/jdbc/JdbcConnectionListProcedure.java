@@ -18,8 +18,8 @@ import java.util.Iterator;
 
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
+import org.rapidcontext.core.env.Connection;
 import org.rapidcontext.core.env.Environment;
-import org.rapidcontext.core.env.Pool;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
@@ -114,22 +114,24 @@ public class JdbcConnectionListProcedure implements Procedure, Restricted {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        Iterator     iter;
-        Array        res = new Array();
-        Dict         dict;
+        Iterator    iter;
+        Connection  con;
+        Array       res = new Array();
+        Dict        dict;
 
-        iter = Environment.poolNames().iterator();
+        iter = Environment.connectionNames().iterator();
         while (iter.hasNext()) {
-            Pool pool = Environment.pool((String) iter.next());
-            if (pool.getAdapter() instanceof JdbcAdapter) {
+            con = Environment.connection((String) iter.next());
+            if (con instanceof JdbcAdapter) {
                 dict = new Dict();
-                dict.set("name", pool.getName());
-                dict.addAll(JdbcAdapter.normalize(pool.getParameters()));
+                // TODO: use only serialization, not name attribute
+                dict.set("name", con.id());
+                dict.addAll(con.serialize());
                 // TODO: revisit the decision to omit passwords for security...
                 dict.remove("password");
-                dict.setInt("maxConnections", pool.getMaxSize());
-                dict.setInt("openConnections", pool.getCurrentSize());
-                dict.setInt("usedConnections", pool.getActiveSize());
+                dict.setInt("maxConnections", con.maxActive());
+                dict.setInt("openConnections", con.activeChannels());
+                dict.setInt("usedConnections", con.reservedChannels());
                 res.add(dict);
             }
         }

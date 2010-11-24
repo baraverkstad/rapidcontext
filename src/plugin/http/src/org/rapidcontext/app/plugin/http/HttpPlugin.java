@@ -18,8 +18,6 @@ package org.rapidcontext.app.plugin.http;
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.app.plugin.Plugin;
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.env.AdapterException;
-import org.rapidcontext.core.env.AdapterRegistry;
 import org.rapidcontext.core.proc.Library;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.storage.StorageException;
@@ -54,11 +52,6 @@ public class HttpPlugin extends Plugin {
         Library  lib = ApplicationContext.getInstance().getLibrary();
 
         try {
-            AdapterRegistry.register("http", new HttpAdapter());
-        } catch (AdapterException e) {
-            throw new StorageException(e.getMessage());
-        }
-        try {
             Library.registerType("http.post", HttpPostProcedure.class);
             lib.addBuiltIn(new HttpPostBuiltInProcedure());
         } catch (ProcedureException e) {
@@ -77,10 +70,5 @@ public class HttpPlugin extends Plugin {
 
         lib.removeBuiltIn(HttpPostBuiltInProcedure.NAME);
         Library.unregisterType("http.post");
-        try {
-            AdapterRegistry.unregister("http");
-        } catch (AdapterException e) {
-            throw new StorageException(e.getMessage());
-        }
     }
 }

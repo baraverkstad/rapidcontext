@@ -194,6 +194,8 @@ public class ApplicationContext {
         Type.initAll(storage);
         initLibrary();
         initPlugins();
+        // TODO: new types should be initialized upon plug-in load...
+        Type.initAll(storage);
         env = Environment.initAll(storage);
         try {
             SecurityContext.init(storage);
@@ -281,7 +283,7 @@ public class ApplicationContext {
      */
     private void destroyAll() {
         Type.destroyAll(storage);
-        Environment.destroyAll();
+        Environment.destroyAll(storage);
         pluginManager.unloadAll();
         Library.unregisterType("javascript");
         library = new Library(this.storage);

@@ -17,8 +17,6 @@ package org.rapidcontext.app.plugin.jdbc;
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.app.plugin.Plugin;
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.env.AdapterException;
-import org.rapidcontext.core.env.AdapterRegistry;
 import org.rapidcontext.core.proc.Library;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.storage.StorageException;
@@ -53,11 +51,6 @@ public class JdbcPlugin extends Plugin {
         Library  lib = ApplicationContext.getInstance().getLibrary();
 
         try {
-            AdapterRegistry.register("jdbc", new JdbcAdapter());
-        } catch (AdapterException e) {
-            throw new StorageException(e.getMessage());
-        }
-        try {
             Library.registerType("jdbc.query",
                                  JdbcQueryProcedure.class);
             Library.registerType("jdbc.statement",
@@ -84,10 +77,5 @@ public class JdbcPlugin extends Plugin {
         lib.removeBuiltIn(JdbcStatementBuiltInProcedure.NAME);
         Library.unregisterType("jdbc.query");
         Library.unregisterType("jdbc.statement");
-        try {
-            AdapterRegistry.unregister("jdbc");
-        } catch (AdapterException e) {
-            throw new StorageException(e.getMessage());
-        }
     }
 }
