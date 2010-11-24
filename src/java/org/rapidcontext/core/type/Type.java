@@ -96,10 +96,9 @@ public class Type extends StorableObject {
     protected void init() throws StorageException {
         Class  cls = initializer();
 
-        if (cls == null) {
-            throw new StorageException("missing initializer for " + this);
+        if (cls != null) {
+            Storage.registerInitializer(id(), cls);
         }
-        Storage.registerInitializer(id(), cls);
     }
 
     /**
