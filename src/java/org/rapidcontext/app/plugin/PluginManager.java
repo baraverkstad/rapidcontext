@@ -498,6 +498,7 @@ public class PluginManager {
                 }
             }
         }
+        storage.flush(null);
         classLoader = new PluginClassLoader();
     }
 }
