@@ -37,7 +37,7 @@ public class JdbcBuiltInConnectionListProcedure implements Procedure, Restricted
     /**
      * The procedure name constant.
      */
-    public static final String NAME = "PlugIn.Jdbc.ConnectionList";
+    public static final String NAME = "PlugIn.Jdbc.Connection.List";
 
     /**
      * The default bindings.
