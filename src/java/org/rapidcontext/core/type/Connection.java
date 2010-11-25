@@ -173,10 +173,8 @@ public abstract class Connection extends StorableObject {
      * resources used when this object is no longer used. This method
      * is called when an object is removed from the in-memory storage
      * (object cache).
-     *
-     * @throws StorageException if the destruction failed
      */
-    protected void destroy() throws StorageException {
+    protected void destroy() {
         try {
             LOG.fine("closing all connections in " + this);
             channelPool.close();
