@@ -14,28 +14,30 @@
 
 package org.rapidcontext.app.plugin.jdbc;
 
+import org.rapidcontext.core.data.Array;
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.Restricted;
 import org.rapidcontext.core.security.SecurityContext;
-import org.rapidcontext.core.type.ConnectionException;
+import org.rapidcontext.core.type.Connection;
 
 /**
- * The built-in JDBC SQL query procedure. This procedure supports
- * executing a generic SQL query and returning the results in a
- * structured format.
+ * The built-in JDBC connection list procedure. This procedure
+ * provides a list of all currently available JDBC connections,
+ * with some additional status information.
  *
  * @author   Per Cederberg
  * @version  1.0
  */
-public class JdbcQueryBuiltInProcedure implements Procedure, Restricted {
+public class JdbcBuiltInConnectionListProcedure implements Procedure, Restricted {
 
     /**
      * The procedure name constant.
      */
-    public static final String NAME = "PlugIn.Jdbc.Query";
+    public static final String NAME = "PlugIn.Jdbc.ConnectionList";
 
     /**
      * The default bindings.
@@ -43,19 +45,9 @@ public class JdbcQueryBuiltInProcedure implements Procedure, Restricted {
     private Bindings defaults = new Bindings();
 
     /**
-     * Creates a new JDBC SQL query procedure.
-     *
-     * @throws ProcedureException if the initialization failed
+     * Creates a new JDBC connection list procedure.
      */
-    public JdbcQueryBuiltInProcedure() throws ProcedureException {
-        defaults.set(JdbcProcedure.BINDING_DB, Bindings.ARGUMENT, "",
-                     "The JDBC connection identifier.");
-        defaults.set(JdbcProcedure.BINDING_SQL, Bindings.ARGUMENT, "",
-                     "The SQL query string.");
-        defaults.set(JdbcProcedure.BINDING_FLAGS, Bindings.ARGUMENT, "",
-                     "Optional execution flags, currently '[no-]metadata', " +
-                     "'[no-]column-names', '[no-]native-types', " +
-                     "'[no-]binary-data' and 'single-row' are supported.");
+    public JdbcBuiltInConnectionListProcedure() {
         this.defaults.seal();
     }
 
@@ -85,7 +77,7 @@ public class JdbcQueryBuiltInProcedure implements Procedure, Restricted {
      * @return the procedure description
      */
     public String getDescription() {
-        return "Executes an SQL query on a JDBC connection and returns the result.";
+        return "Lists all available JDBC connections and their current status.";
     }
 
     /**
@@ -117,18 +109,25 @@ public class JdbcQueryBuiltInProcedure implements Procedure, Restricted {
      *             error
      */
     public Object call(CallContext cx, Bindings bindings)
-        throws ProcedureException {
+    throws ProcedureException {
 
-        JdbcChannel  con = JdbcProcedure.getConnection(cx, bindings);
-        String          sql;
-        String          flags;
+        Connection[]  connections;
+        Array         res = new Array();
+        Dict          dict;
 
-        sql = (String) bindings.getValue(JdbcProcedure.BINDING_SQL);
-        flags = (String) bindings.getValue(JdbcProcedure.BINDING_FLAGS);
-        try {
-            return con.executeQuery(sql, flags);
-        } catch (ConnectionException e) {
-            throw new ProcedureException(e.getMessage());
+        connections = Connection.findAll(cx.getStorage());
+        for (int i = 0; i < connections.length; i++) {
+            if (connections[i] instanceof JdbcConnection) {
+                dict = new Dict();
+                dict.addAll(connections[i].serialize());
+                // TODO: revisit the decision to omit passwords for security...
+                dict.remove("password");
+                dict.setInt("maxConnections", connections[i].maxActive());
+                dict.setInt("openConnections", connections[i].activeChannels());
+                dict.setInt("usedConnections", connections[i].reservedChannels());
+                res.add(dict);
+            }
         }
+        return res;
     }
 }

@@ -51,6 +51,33 @@ public abstract class JdbcProcedure extends AddOnProcedure {
     public static final String BINDING_FLAGS = "flags";
 
     /**
+     * Finds or reserved the JDBC connection from the specified bindings.
+     *
+     * @param cx             the procedure call context
+     * @param bindings       the call bindings to use
+     *
+     * @return the JDBC connection channel reserved
+     *
+     * @throws ProcedureException if no JDBC connection was found
+     */
+    protected static JdbcChannel connectionReserve(CallContext cx, Bindings bindings)
+    throws ProcedureException {
+
+        String  str;
+        Object  obj;
+
+        obj = bindings.getValue(BINDING_DB);
+        if (obj instanceof String) {
+            obj = cx.connectionReserve((String) obj);
+        }
+        if (!JdbcChannel.class.isInstance(obj)) {
+            str = "connection not of JDBC type: " + obj.getClass().getName();
+            throw new ProcedureException(str);
+        }
+        return (JdbcChannel) obj;
+    }
+
+    /**
      * Creates a new JDBC procedure.
      *
      * @throws ProcedureException if the initialization failed
@@ -85,10 +112,10 @@ public abstract class JdbcProcedure extends AddOnProcedure {
      *             error
      */
     public Object call(CallContext cx, Bindings bindings)
-        throws ProcedureException {
+    throws ProcedureException {
 
-        JdbcChannel  con = getConnection(cx, bindings);
-        String          flags;
+        JdbcChannel  con = connectionReserve(cx, bindings);
+        String       flags;
 
         flags = (String) bindings.getValue(BINDING_FLAGS, "");
         return execute(con, prepare(con, cx, bindings), flags.toLowerCase());
@@ -110,34 +137,7 @@ public abstract class JdbcProcedure extends AddOnProcedure {
     protected abstract Object execute(JdbcChannel con,
                                       PreparedStatement stmt,
                                       String flags)
-        throws ProcedureException;
-
-    /**
-     * Finds the JDBC connection from the specified bindings.
-     *
-     * @param cx             the procedure call context
-     * @param bindings       the call bindings to use
-     *
-     * @return the JDBC connection
-     *
-     * @throws ProcedureException if no JDBC connection was found
-     */
-    protected static JdbcChannel getConnection(CallContext cx, Bindings bindings)
-        throws ProcedureException {
-
-        String  str;
-        Object  obj;
-
-        obj = bindings.getValue(BINDING_DB);
-        if (obj instanceof String) {
-            obj = cx.connectionReserve((String) obj);
-        }
-        if (!JdbcChannel.class.isInstance(obj)) {
-            str = "connection not of JDBC type: " + obj.getClass().getName();
-            throw new ProcedureException(str);
-        }
-        return (JdbcChannel) obj;
-    }
+    throws ProcedureException;
 
     /**
      * Prepares an SQL query or statement. The SQL code and
@@ -152,10 +152,10 @@ public abstract class JdbcProcedure extends AddOnProcedure {
      * @throws ProcedureException if the SQL referred to an argument
      *             that wasn't defined in the bindings
      */
-    protected static PreparedStatement prepare(JdbcChannel con,
-                                               CallContext cx,
-                                               Bindings bindings)
-        throws ProcedureException {
+    protected PreparedStatement prepare(JdbcChannel con,
+                                        CallContext cx,
+                                        Bindings bindings)
+    throws ProcedureException {
 
         String        sql = (String) bindings.getValue(BINDING_SQL);
         String[]      names = bindings.getNames();

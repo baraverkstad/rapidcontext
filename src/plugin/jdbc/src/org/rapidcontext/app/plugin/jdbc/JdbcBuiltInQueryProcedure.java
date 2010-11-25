@@ -23,18 +23,19 @@ import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.type.ConnectionException;
 
 /**
- * The built-in JDBC SQL statement procedure. This procedure supports
- * executing a generic SQL statement.
+ * The built-in JDBC SQL query procedure. This procedure supports
+ * executing a generic SQL query and returning the results in a
+ * structured format.
  *
  * @author   Per Cederberg
  * @version  1.0
  */
-public class JdbcStatementBuiltInProcedure implements Procedure, Restricted {
+public class JdbcBuiltInQueryProcedure implements Procedure, Restricted {
 
     /**
      * The procedure name constant.
      */
-    public static final String NAME = "PlugIn.Jdbc.Statement";
+    public static final String NAME = "PlugIn.Jdbc.Query";
 
     /**
      * The default bindings.
@@ -42,15 +43,19 @@ public class JdbcStatementBuiltInProcedure implements Procedure, Restricted {
     private Bindings defaults = new Bindings();
 
     /**
-     * Creates a new JDBC SQL statement procedure.
+     * Creates a new JDBC SQL query procedure.
      *
      * @throws ProcedureException if the initialization failed
      */
-    public JdbcStatementBuiltInProcedure() throws ProcedureException {
+    public JdbcBuiltInQueryProcedure() throws ProcedureException {
         defaults.set(JdbcProcedure.BINDING_DB, Bindings.ARGUMENT, "",
                      "The JDBC connection identifier.");
         defaults.set(JdbcProcedure.BINDING_SQL, Bindings.ARGUMENT, "",
-                     "The SQL statement string.");
+                     "The SQL query string.");
+        defaults.set(JdbcProcedure.BINDING_FLAGS, Bindings.ARGUMENT, "",
+                     "Optional execution flags, currently '[no-]metadata', " +
+                     "'[no-]column-names', '[no-]native-types', " +
+                     "'[no-]binary-data' and 'single-row' are supported.");
         this.defaults.seal();
     }
 
@@ -80,7 +85,7 @@ public class JdbcStatementBuiltInProcedure implements Procedure, Restricted {
      * @return the procedure description
      */
     public String getDescription() {
-        return "Executes an SQL statement on a JDBC connection.";
+        return "Executes an SQL query on a JDBC connection and returns the result.";
     }
 
     /**
@@ -112,14 +117,16 @@ public class JdbcStatementBuiltInProcedure implements Procedure, Restricted {
      *             error
      */
     public Object call(CallContext cx, Bindings bindings)
-        throws ProcedureException {
+    throws ProcedureException {
 
-        JdbcChannel  con = JdbcProcedure.getConnection(cx, bindings);
-        String          sql;
+        JdbcChannel  channel = JdbcProcedure.connectionReserve(cx, bindings);
+        String       sql;
+        String       flags;
 
         sql = (String) bindings.getValue(JdbcProcedure.BINDING_SQL);
+        flags = (String) bindings.getValue(JdbcProcedure.BINDING_FLAGS);
         try {
-            return con.executeStatement(sql);
+            return channel.executeQuery(sql, flags);
         } catch (ConnectionException e) {
             throw new ProcedureException(e.getMessage());
         }
