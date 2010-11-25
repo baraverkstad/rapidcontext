@@ -113,7 +113,9 @@ public class RootStorage extends Storage {
      *         null if not found
      */
     private Storage getMountedStorage(Path path, boolean exact) {
-        if (exact) {
+        if (path == null) {
+            return null;
+        } else if (exact) {
             return (Storage) metadata.load(path.child("storage", false));
         } else {
             for (int i = 0; i < mountedStorages.size(); i++) {
