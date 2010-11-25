@@ -550,8 +550,8 @@ RapidContext.Widget.Button.prototype.setAttrs = function (attrs) {
  */
 RapidContext.Widget.Dialog = function (attrs/*, ... */) {
     var title = MochiKit.DOM.DIV({ "class": "widgetDialogTitle" }, "Dialog");
-    var close = new RapidContext.Widget.Icon({ ref: "CLOSE", "class": "widgetDialogClose" });
-    var resize = new RapidContext.Widget.Icon({ ref: "RESIZE", "class": "widgetDialogResize" });
+    var close = RapidContext.Widget.Icon({ ref: "CLOSE", "class": "widgetDialogClose" });
+    var resize = RapidContext.Widget.Icon({ ref: "RESIZE", "class": "widgetDialogResize" });
     var content = MochiKit.DOM.DIV({ "class": "widgetDialogContent" });
     RapidContext.Util.registerSizeConstraints(content, "100% - 22", "100% - 44");
     var o = MochiKit.DOM.DIV({}, title, close, resize, content);
@@ -636,7 +636,7 @@ RapidContext.Widget.Dialog.prototype.show = function () {
     }
     if (this.modal) {
         var attrs = { loading: false, message: "", style: { "z-index": "99" } };
-        this._modalNode = new RapidContext.Widget.Overlay(attrs);
+        this._modalNode = RapidContext.Widget.Overlay(attrs);
         this.parentNode.appendChild(this._modalNode);
     }
     this.removeClass("widgetHidden");
@@ -1458,7 +1458,7 @@ RapidContext.Widget.FormValidator.prototype.addError = function (field, message)
         MochiKit.DOM.addElementClass(field, "widgetInvalid");
         if (this.display === "error") {
             var attrs = { ref: "ERROR", tooltip: this.message || message };
-            this.addAll(new RapidContext.Widget.Icon(attrs));
+            this.addAll(RapidContext.Widget.Icon(attrs));
             this.show();
         }
     }
@@ -1795,7 +1795,7 @@ RapidContext.Widget.Overlay.prototype.setAttrs = function (attrs) {
         this.message = locals.message;
     }
     if (this.showLoading) {
-        var icon = new RapidContext.Widget.Icon({ ref: "LOADING_LARGE" });
+        var icon = RapidContext.Widget.Icon({ ref: "LOADING_LARGE" });
         icon.setStyle({ "padding-right": "20px" });
     }
     MochiKit.DOM.replaceChildNodes(this.firstChild, icon, this.message);
@@ -2359,13 +2359,13 @@ RapidContext.Widget.TabContainer.prototype.getChildNodes = function () {
  */
 RapidContext.Widget.TabContainer.prototype.addChildNode = function (child) {
     if (!RapidContext.Widget.isWidget(child, "Pane")) {
-        child = new RapidContext.Widget.Pane(null, child);
+        child = RapidContext.Widget.Pane(null, child);
     }
     RapidContext.Util.registerSizeConstraints(child, "100%", "100%");
     child.hide();
     var text = MochiKit.DOM.SPAN(null, child.pageTitle);
     if (child.pageCloseable) {
-        var icon = new RapidContext.Widget.Icon({ ref: "CLOSE" });
+        var icon = RapidContext.Widget.Icon({ ref: "CLOSE" });
         // TODO: potential memory leak with stale child object references
         icon.onclick = RapidContext.Widget._eventHandler("TabContainer", "_handleClose", child);
     }
@@ -3524,7 +3524,7 @@ RapidContext.Widget.TextField.prototype.popup = function (create) {
         this.autocomplete = "off";
         this._popupCreated = true;
         var style = { "max-height": "300px", "width": "300px" };
-        var popup = new RapidContext.Widget.Popup({ style: style });
+        var popup = RapidContext.Widget.Popup({ style: style });
         MochiKit.DOM.insertSiblingNodesAfter(this, popup);
         MochiKit.Style.makePositioned(this.parentNode);
         var pos = { x: this.offsetLeft + 1,
@@ -3858,14 +3858,14 @@ RapidContext.Widget.Tree.prototype.addPath = function (path) {
     }
     var node = this.findRoot(path[0]);
     if (node == null) {
-        node = new RapidContext.Widget.TreeNode({ name: path[0] });
+        node = RapidContext.Widget.TreeNode({ name: path[0] });
         this.addChildNode(node);
     }
     node.marked = false;
     for (var i = 1; i < path.length; i++) {
         var child = node.findChild(path[i]);
         if (child == null) {
-            child = new RapidContext.Widget.TreeNode({ name: path[i] });
+            child = RapidContext.Widget.TreeNode({ name: path[i] });
             node.addChildNode(child);
         }
         child.marked = false;
@@ -3970,9 +3970,9 @@ RapidContext.Widget.TreeNode.prototype.setAttrs = function (attrs) {
         }
         if (iconNode == null && locals.icon != null) {
             if (typeof(locals.icon) === "string") {
-                locals.icon = new RapidContext.Widget.Icon({ ref: locals.icon });
+                locals.icon = RapidContext.Widget.Icon({ ref: locals.icon });
             } else if (!RapidContext.Widget.isWidget(locals.icon, "Icon")) {
-                locals.icon = new RapidContext.Widget.Icon(locals.icon);
+                locals.icon = RapidContext.Widget.Icon(locals.icon);
             }
             MochiKit.DOM.insertSiblingNodesAfter(imgNode, locals.icon);
         } else if (iconNode != null && locals.icon != null) {
@@ -4377,7 +4377,7 @@ RapidContext.Widget.Wizard.prototype.getChildNodes = function () {
  */
 RapidContext.Widget.Wizard.prototype.addChildNode = function (child) {
     if (!RapidContext.Widget.isWidget(child, "Pane")) {
-        child = new RapidContext.Widget.Pane(null, child);
+        child = RapidContext.Widget.Pane(null, child);
     }
     RapidContext.Util.registerSizeConstraints(child, "100%", "100%-65");
     child.hide();
