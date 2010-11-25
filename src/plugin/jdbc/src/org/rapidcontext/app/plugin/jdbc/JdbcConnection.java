@@ -85,9 +85,6 @@ public class JdbcConnection extends Connection {
 
     /**
      * Initializes this connection after loading it from a storage.
-     * Any object initialization that may fail or that causes the
-     * object to interact with any other part of the system (or
-     * external systems) should be implemented here.
      *
      * @throws StorageException if the initialization failed
      */
@@ -126,6 +123,14 @@ public class JdbcConnection extends Connection {
             // Exception handled when creating connection
         }
         super.init();
+    }
+
+    /**
+     * Destroys this connection. This method overrides the default to
+     * provide package access to it when testing connections.
+     */
+    protected void destroy() {
+        super.destroy();
     }
 
     /**
