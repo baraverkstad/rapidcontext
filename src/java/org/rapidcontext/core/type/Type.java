@@ -19,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.rapidcontext.app.ApplicationContext;
+import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.StorableObject;
@@ -174,5 +175,25 @@ public class Type extends StorableObject {
             LOG.warning(msg);
             return null;
         }
+    }
+
+    /**
+     * Returns an array of type properties. Each property should be a
+     * dictionary object containing property information.
+     *
+     * @return the array of type properties, or
+     *         an empty array if it didn't exist
+     */
+    public Array properties() {
+        Array   arr = null;
+        String  msg;
+
+        try {
+            arr = dict.getArray("property");
+        } catch (ClassCastException e) {
+            msg = this + " contains 'property' attribute that isn't a proper array";
+            LOG.warning(msg);
+        }
+        return (arr == null) ? new Array(0) : arr;
     }
 }
