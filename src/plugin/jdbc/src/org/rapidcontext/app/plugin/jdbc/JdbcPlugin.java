@@ -56,6 +56,7 @@ public class JdbcPlugin extends Plugin {
             Library.registerType("jdbc.statement",
                                  JdbcStatementProcedure.class);
             lib.addBuiltIn(new JdbcBuiltInConnectionListProcedure());
+            lib.addBuiltIn(new JdbcBuiltInConnectionWriteProcedure());
             lib.addBuiltIn(new JdbcBuiltInQueryProcedure());
             lib.addBuiltIn(new JdbcBuiltInStatementProcedure());
         } catch (ProcedureException e) {
