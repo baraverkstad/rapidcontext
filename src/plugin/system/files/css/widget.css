@@ -380,7 +380,7 @@ div.widgetTable.compact {
 }
 table.widgetTable {
     width: 100%;
-    border: 1px solid #ccc;
+    border: 1px solid #cccccc;
     border-collapse: collapse;
     cursor: default;
 }
@@ -398,10 +398,10 @@ table.widgetTable tr:hover td {
     background: #a6c2e7;
 }
 table.widgetTable tbody tr.selected td {
-    background: yellow;
+    background: #ffffaa;
 }
 table.widgetTable tbody tr.selected:hover td {
-    background: #ff9;
+    background: #ffeeaa;
 }
 
 
@@ -469,7 +469,7 @@ th.widgetTableColumn.sortDesc {
     cursor: pointer;
 }
 .widgetTreeNode .selected {
-    background: yellow;
+    background: #ffffaa;
     font-weight: bold;
 }
 .widgetTreeNodeLabel {
@@ -478,6 +478,9 @@ th.widgetTableColumn.sortDesc {
 }
 .widgetTreeNodeLabel:hover {
     background: #ddeeff;
+}
+.widgetTreeNodeLabel.selected:hover {
+    background: #ffeeaa;
 }
 .widgetTreeNodeText {
     padding-left: 3px;
