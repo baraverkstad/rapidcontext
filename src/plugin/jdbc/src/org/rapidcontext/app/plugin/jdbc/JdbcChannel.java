@@ -18,7 +18,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.sql.Connection;
-import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -81,37 +80,27 @@ public class JdbcChannel extends Channel {
      * Creates a new JDBC communications channel.
      *
      * @param parent            the parent JDBC connection
-     * @param driver            the JDBC driver
-     * @param url               the connection URL
      * @param props             the connection properties (user and password)
-     * @param sqlPing           the SQL ping query
-     * @param autoCommit        the auto-commit flag
-     * @param timeout           the request timeout (in secs)
      *
      * @throws ConnectionException if a connection couldn't be established
      */
-    protected JdbcChannel(JdbcConnection parent,
-                          Driver driver,
-                          String url,
-                          Properties props,
-                          String sqlPing,
-                          boolean autoCommit,
-                          int timeout)
-        throws ConnectionException {
+    protected JdbcChannel(JdbcConnection parent, Properties props)
+    throws ConnectionException {
 
         super(parent);
         this.prefix = "[JDBC:" + (++counter) + "] ";
-        this.sqlPing = sqlPing;
-        this.timeout = timeout;
+        this.sqlPing = parent.ping();
+        this.timeout = parent.timeout();
         try {
-            LOG.info(prefix + "creating connection for " + url);
+            LOG.info(prefix + "creating connection for " + parent.url());
             DriverManager.setLoginTimeout(timeout);
-            con = driver.connect(url, props);
-            con.setAutoCommit(autoCommit);
-            LOG.fine(prefix + "done creating connection for " + url);
+            con = parent.driver().connect(parent.url(), props);
+            con.setAutoCommit(parent.autoCommit());
+            LOG.fine(prefix + "done creating connection for " + parent.url());
         } catch (SQLException e) {
-            String msg = "failed to connect to " + url + " with username '" +
-                  props.getProperty("user") + "': " + e.getMessage();
+            String msg = "failed to connect to " + parent.url() +
+                  " with username '" + props.getProperty("user") + "': " +
+                  e.getMessage();
             LOG.warning(prefix + msg);
             throw new ConnectionException(msg);
         }

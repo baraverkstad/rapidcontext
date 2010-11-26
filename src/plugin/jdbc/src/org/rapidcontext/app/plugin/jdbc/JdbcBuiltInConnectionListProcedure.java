@@ -15,7 +15,6 @@
 package org.rapidcontext.app.plugin.jdbc;
 
 import org.rapidcontext.core.data.Array;
-import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
@@ -113,19 +112,11 @@ public class JdbcBuiltInConnectionListProcedure implements Procedure, Restricted
 
         Connection[]  connections;
         Array         res = new Array();
-        Dict          dict;
 
         connections = Connection.findAll(cx.getStorage());
         for (int i = 0; i < connections.length; i++) {
             if (connections[i] instanceof JdbcConnection) {
-                dict = new Dict();
-                dict.addAll(connections[i].serialize());
-                // TODO: revisit the decision to omit passwords for security...
-                dict.remove("password");
-                dict.setInt("maxConnections", connections[i].maxActive());
-                dict.setInt("openConnections", connections[i].activeChannels());
-                dict.setInt("usedConnections", connections[i].reservedChannels());
-                res.add(dict);
+                res.add(connections[i].serialize().copy());
             }
         }
         return res;

@@ -24,6 +24,7 @@ import org.rapidcontext.core.type.ConnectionException;
 
 import java.sql.Driver;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 /**
  * A JDBC connectivity adapter. This adapter allows execution of SQL
@@ -34,6 +35,12 @@ import java.util.Properties;
  * @version  1.0
  */
 public class JdbcConnection extends Connection {
+
+    /**
+     * The class logger.
+     */
+    private static final Logger LOG =
+        Logger.getLogger(JdbcConnection.class.getName());
 
     /**
      * The JDBC driver configuration parameter name.
@@ -98,30 +105,30 @@ public class JdbcConnection extends Connection {
         ping = dict.getString(JDBC_PING, "").trim();
         if (driver.isEmpty()) {
             if (url.startsWith("jdbc:odbc")) {
-                dict.set(JDBC_DRIVER, "sun.jdbc.odbc.JdbcOdbcDriver");
+                dict.set("_" + JDBC_DRIVER, "sun.jdbc.odbc.JdbcOdbcDriver");
             } else if (url.startsWith("jdbc:mysql:")) {
-                dict.set(JDBC_DRIVER, "com.mysql.jdbc.Driver");
+                dict.set("_" + JDBC_DRIVER, "com.mysql.jdbc.Driver");
             } else if (url.startsWith("jdbc:postgresql:")) {
-                dict.set(JDBC_DRIVER, "org.postgresql.Driver");
+                dict.set("_" + JDBC_DRIVER, "org.postgresql.Driver");
             } else if (url.startsWith("jdbc:oracle:")) {
-                dict.set(JDBC_DRIVER, "oracle.jdbc.driver.OracleDriver");
+                dict.set("_" + JDBC_DRIVER, "oracle.jdbc.driver.OracleDriver");
             } else if (url.startsWith("jdbc:db2:")) {
-                dict.set(JDBC_DRIVER, "COM.ibm.db2.jdbc.app.DB2Driver");
+                dict.set("_" + JDBC_DRIVER, "COM.ibm.db2.jdbc.app.DB2Driver");
             } else if (url.startsWith("jdbc:microsoft:")) {
-                dict.set(JDBC_DRIVER, "com.microsoft.sqlserver.jdbc.SQLServerDriver");
+                dict.set("_" + JDBC_DRIVER, "com.microsoft.sqlserver.jdbc.SQLServerDriver");
             }
+        } else {
+            dict.set("_" + JDBC_DRIVER, driver);
         }
         if (ping.isEmpty() && url.startsWith("jdbc:oracle:")) {
-            dict.set(JDBC_PING, "SELECT * FROM dual");
+            dict.set("_" + JDBC_PING, "SELECT * FROM dual");
         } else if (ping.isEmpty()) {
-            dict.set(JDBC_PING, "SELECT 1");
+            dict.set("_" + JDBC_PING, "SELECT 1");
+        } else {
+            dict.set("_" + JDBC_PING, ping);
         }
-        dict.setBoolean(JDBC_AUTOCOMMIT, dict.getBoolean(JDBC_AUTOCOMMIT, false));
-        try {
-            dict.setInt(JDBC_TIMEOUT, dict.getInt(JDBC_TIMEOUT, 30));
-        } catch (Exception ignore) {
-            // Exception handled when creating connection
-        }
+        dict.setBoolean("_" + JDBC_AUTOCOMMIT, autoCommit());
+        dict.setInt("_" + JDBC_TIMEOUT, timeout());
         super.init();
     }
 
@@ -134,28 +141,27 @@ public class JdbcConnection extends Connection {
     }
 
     /**
-     * Creates a new connection channel.
+     * Returns the JDBC driver class for this connection. The class
+     * will be loaded using the application context class loader.
      *
-     * @return the channel created
+     * @return the JDBC driver class
      *
-     * @throws ConnectionException if the channel couldn't be created
-     *             properly
+     * @throws ConnectionException if the class couldn't be found
+     *             or wasn't of the correct Java type
      */
-    protected Channel createChannel() throws ConnectionException {
+    public Driver driver() throws ConnectionException {
         ClassLoader  loader;
         String       driverClass;
-        Driver       driver;
-        String       url;
-        String       ping;
-        boolean      autoCommit;
-        int          timeout;
-        Properties   props;
         String       msg;
 
-        driverClass = dict.getString(JDBC_DRIVER, "");
+        if (dict.containsKey("_" + JDBC_DRIVER)) {
+            driverClass = dict.getString("_" + JDBC_DRIVER, "");
+        } else {
+            driverClass = dict.getString(JDBC_DRIVER, "");
+        }
         try {
             loader = ApplicationContext.getInstance().getClassLoader();
-            driver = (Driver) loader.loadClass(driverClass).newInstance();
+            return (Driver) loader.loadClass(driverClass).newInstance();
         } catch (ClassNotFoundException e) {
             msg = "couldn't find or load JDBC driver class " + driverClass +
                   ": " + e.getMessage();
@@ -169,21 +175,81 @@ public class JdbcConnection extends Connection {
                   ": " + e.getMessage();
             throw new ConnectionException(msg);
         }
-        url = dict.getString(JDBC_URL, "");
-        ping = dict.getString(JDBC_PING, null);
-        autoCommit = dict.getBoolean(JDBC_AUTOCOMMIT, false);
-        try {
-            timeout = dict.getInt(JDBC_TIMEOUT, 30);
-        } catch (Exception e) {
-            throw new ConnectionException("failed to parse timeout value: " +
-                                          dict.getString(JDBC_TIMEOUT, ""));
+    }
+
+    /**
+     * Returns the JDBC connection URL.
+     *
+     * @return the JDBC connection URL
+     */
+    public String url() {
+        return dict.getString(JDBC_URL, "");
+    }
+
+    /**
+     * Returns the SQL ping query.
+     *
+     * @return the SQL ping query, or
+     *         null if not configured
+     */
+    public String ping() {
+        if (dict.containsKey("_" + JDBC_PING)) {
+            return dict.getString("_" + JDBC_PING, null);
+        } else {
+            return dict.getString(JDBC_PING, null);
         }
+    }
+
+    /**
+     * Returns the auto-commit (after each SQL) flag.
+     * 
+     * @return the auto-commit flag
+     */
+    public boolean autoCommit() {
+        if (dict.containsKey("_" + JDBC_AUTOCOMMIT)) {
+            return dict.getBoolean("_" + JDBC_AUTOCOMMIT, false);
+        } else {
+            return dict.getBoolean(JDBC_AUTOCOMMIT, false);
+        }
+    }
+
+    /**
+     * Returns the connection and query timeout (in seconds).
+     *
+     * @return the connection and query timeout (in seconds)
+     */
+    public int timeout() {
+        try {
+            if (dict.containsKey("_" + JDBC_TIMEOUT)) {
+                return dict.getInt("_" + JDBC_TIMEOUT, 30);
+            } else {
+                return dict.getInt(JDBC_TIMEOUT, 30);
+            }
+        } catch (Exception e) {
+            LOG.warning(this + ": failed to parse timeout value: " +
+                        dict.get(JDBC_TIMEOUT));
+            dict.setInt("_" + JDBC_TIMEOUT, 30);
+            return 30;
+        }
+    }
+
+    /**
+     * Creates a new connection channel.
+     *
+     * @return the channel created
+     *
+     * @throws ConnectionException if the channel couldn't be created
+     *             properly
+     */
+    protected Channel createChannel() throws ConnectionException {
+        Properties   props;
+
         props = PropertiesSerializer.toProperties(dict);
         props.remove(KEY_ID);
         props.remove(KEY_TYPE);
-        props.remove(KEY_MAX_ACTIVE);
+        props.remove(KEY_MAX_OPEN);
         props.remove(KEY_MAX_IDLE_SECS);
-        return new JdbcChannel(this, driver, url, props, ping, autoCommit, timeout);
+        return new JdbcChannel(this, props);
     }
 
     /**

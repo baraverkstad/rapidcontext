@@ -62,9 +62,9 @@ public abstract class Connection extends StorableObject {
         Logger.getLogger(Connection.class.getName());
 
     /**
-     * The dictionary key for the maximum number of active channels.
+     * The dictionary key for the maximum number of open channels.
      */
-    public static final String KEY_MAX_ACTIVE = "maxActive";
+    public static final String KEY_MAX_OPEN = "maxOpen";
 
     /**
      * The dictionary key for the maximum idle time (in seconds).
@@ -150,14 +150,17 @@ public abstract class Connection extends StorableObject {
      * @throws StorageException if the initialization failed
      */
     protected void init() throws StorageException {
-        dict.setInt(KEY_MAX_ACTIVE, maxActive());
-        dict.setInt(KEY_MAX_IDLE_SECS, maxIdleSeconds());
+        int open = maxOpen();
+        int idle = maxIdleSeconds();
+
+        dict.setInt("_" + KEY_MAX_OPEN, open);
+        dict.setInt("_" + KEY_MAX_IDLE_SECS, idle);
         channelPool = new GenericObjectPool(new ChannelFactory());
-        channelPool.setMaxActive(maxActive());
-        channelPool.setMaxIdle(maxActive());
+        channelPool.setMaxActive(open);
+        channelPool.setMaxIdle(open);
         channelPool.setMinIdle(0);
         channelPool.setMaxWait(MAX_ACQUIRE_WAIT);
-        channelPool.setMinEvictableIdleTimeMillis(maxIdleSeconds() * 1000L);
+        channelPool.setMinEvictableIdleTimeMillis(idle * 1000L);
         channelPool.setLifo(false);
         channelPool.setTestOnBorrow(true);
         channelPool.setTestOnReturn(true);
@@ -189,18 +192,30 @@ public abstract class Connection extends StorableObject {
     }
 
     /**
-     * Returns the maximum number of active channels. If the
-     * configuration parameter hasn't been set, a default value of
-     * four (4) will be returned.
+     * Returns a serialized representation of this object. Used when
+     * accessing the object from outside pure Java.
      *
-     * @return the maximum number of active channels
+     * @return the serialized representation of this object
      */
-    public int maxActive() {
+    public Dict serialize() {
+        dict.setInt("_openChannels", openChannels());
+        dict.setInt("_usedChannels", usedChannels());
+        return dict;
+    }
+
+    /**
+     * Returns the maximum number of open channels. If the config
+     * parameter hasn't been set, a default value of four (4) will be
+     * returned.
+     *
+     * @return the maximum number of open channels
+     */
+    public int maxOpen() {
         try {
-            return dict.getInt(KEY_MAX_ACTIVE, 4);
+            return dict.getInt(KEY_MAX_OPEN, 4);
         } catch (NumberFormatException e) {
             String msg = this + ": invalid value for config parameter " +
-                         KEY_MAX_ACTIVE + ": " + dict.get(KEY_MAX_ACTIVE);
+                         KEY_MAX_OPEN + ": " + dict.get(KEY_MAX_OPEN);
             LOG.warning(msg);
             return 4;
         }
@@ -226,23 +241,23 @@ public abstract class Connection extends StorableObject {
     }
 
     /**
-     * Returns the total number of active channels. This is the
-     * number of reserved channels plus any idle channels in the pool
-     * (if any).
+     * Returns the total number of open channels. This is the number
+     * of reserved channels plus any idle channels in the pool (if
+     * any).
      *
-     * @return the total number of active channels, or
-     *         zero (0) if no channels are currently active
+     * @return the total number of open channels, or
+     *         zero (0) if no channels are currently open
      */
-    public int activeChannels() {
+    public int openChannels() {
         return channelPool.getNumActive() + channelPool.getNumIdle();
     }
 
     /**
-     * Returns the number of reserved (in use) channels.
+     * Returns the number of channels in use (reserved).
      *
-     * @return the number of reserved channels
+     * @return the number of channels in use
      */
-    public int reservedChannels() {
+    public int usedChannels() {
         return channelPool.getNumActive();
     }
 
@@ -530,7 +545,7 @@ public abstract class Connection extends StorableObject {
                 while (iter.hasNext()) {
                     con = (Connection) iter.next();
                     con.evict();
-                    active += con.activeChannels();
+                    active += con.openChannels();
                 }
                 return active;
             } catch (ConcurrentModificationException ignore) {
