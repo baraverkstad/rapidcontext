@@ -14,7 +14,8 @@
     display: none;
 }
 .widgetInvalid {
-    border: 1px solid #cc3333;
+    border: 1px solid #cc7777;
+    background: #fff0f0;
 }
 
 
@@ -118,6 +119,9 @@
     padding-left: 6px;
     font-weight: bold;
     color: #cc3333;
+}
+.widgetFormValidator .widgetIcon {
+    margin-right: 6px;
 }
 
 

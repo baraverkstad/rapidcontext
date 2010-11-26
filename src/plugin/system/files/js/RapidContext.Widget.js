@@ -1304,7 +1304,8 @@ RapidContext.Widget.Form.prototype._handleSubmit = function (evt) {
  * @param {String/RegExp} [attrs.regex] the regular expression to
  *            match the field value against, defaults to null
  * @param {String} [attrs.display] the validator display setting
- *            (either "none" or "error"), defaults to "error"
+ *            (either "none", "icon", "text" or "both"), defaults
+ *            to "both"
  * @param {String} [attrs.message] the message to display, defaults
  *            to the validator function error message
  * @param {Function} [attrs.validator] the validator function
@@ -1324,7 +1325,7 @@ RapidContext.Widget.FormValidator = function (attrs) {
     var o = MochiKit.DOM.SPAN();
     RapidContext.Widget._widgetMixin(o, arguments.callee);
     o.addClass("widgetFormValidator");
-    o.setAttrs(MochiKit.Base.update({ name: "", mandatory: true, display: "error", message: null, validator: null }, attrs));
+    o.setAttrs(MochiKit.Base.update({ name: "", mandatory: true, display: "both", message: null, validator: null }, attrs));
     o.fields = [];
     o.hide();
     return o;
@@ -1339,7 +1340,7 @@ RapidContext.Widget.FormValidator = function (attrs) {
  * @param {String/RegExp} [attrs.regex] the regular expression to
  *            match the field value against
  * @param {String} [attrs.display] the validator display setting
- *            (either "none" or "error")
+ *            (either "none", "icon", "text" or "both")
  * @param {String} [attrs.message] the message to display
  * @param {Function} [attrs.validator] the validator function
  */
@@ -1386,10 +1387,8 @@ RapidContext.Widget.FormValidator.prototype.reset = function () {
         MochiKit.DOM.removeElementClass(this.fields[i], "widgetInvalid");
     }
     this.fields = [];
-    if (this.display === "error") {
-        this.hide();
-        this.removeAll();
-    }
+    this.hide();
+    this.removeAll();
 };
 
 /**
@@ -1456,9 +1455,17 @@ RapidContext.Widget.FormValidator.prototype.addError = function (field, message)
     if (!MochiKit.DOM.hasElementClass(field, "widgetInvalid")) {
         this.fields.push(field);
         MochiKit.DOM.addElementClass(field, "widgetInvalid");
-        if (this.display === "error") {
-            var attrs = { ref: "ERROR", tooltip: this.message || message };
-            this.addAll(RapidContext.Widget.Icon(attrs));
+        if (this.display !== "none") {
+            message = this.message || message;
+            var span = null;
+            var icon = null;
+            if (this.display !== "icon") {
+                span = MochiKit.DOM.SPAN({}, message);
+            }
+            if (this.display !== "text") {
+                icon = RapidContext.Widget.Icon({ ref: "ERROR", tooltip: message });
+            }
+            this.addAll(icon, span);
             this.show();
         }
     }
