@@ -405,7 +405,7 @@ table.widgetTable tbody tr.selected td {
     background: #ffffaa;
 }
 table.widgetTable tbody tr.selected:hover td {
-    background: #ffeeaa;
+    background: #ffff00;
 }
 
 
@@ -484,7 +484,7 @@ th.widgetTableColumn.sortDesc {
     background: #ddeeff;
 }
 .widgetTreeNodeLabel.selected:hover {
-    background: #ffeeaa;
+    background: #ffff00;
 }
 .widgetTreeNodeText {
     padding-left: 3px;
