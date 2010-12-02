@@ -402,7 +402,7 @@ public class JdbcChannel extends Channel {
                 }
             }
             stmt.setQueryTimeout(timeout);
-            stmt.setFetchSize(Integer.MIN_VALUE);
+            //stmt.setFetchSize(Integer.MIN_VALUE);
             return stmt;
         } catch (SQLException e) {
             str = "failed to prepare SQL: " + e.getMessage();
