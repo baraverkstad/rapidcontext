@@ -58,7 +58,7 @@ public class AppUtils {
         if (SystemUtils.IS_OS_MAC_OSX) {
             Runtime.getRuntime().exec("open " + url);
         } else if (SystemUtils.IS_OS_WINDOWS) {
-            Runtime.getRuntime().exec("start " + url);
+            Runtime.getRuntime().exec("cmd.exe /C start " + url);
         } else if (hasCommand("xdg-open")) {
             Runtime.getRuntime().exec("xdg-open " + url);
         } else if (hasCommand("gnome-open")) {
