@@ -121,7 +121,7 @@ public class JdbcConnection extends Connection {
             dict.set("_" + JDBC_DRIVER, driver);
         }
         if (ping.isEmpty() && url.startsWith("jdbc:oracle:")) {
-            dict.set("_" + JDBC_PING, "SELECT * FROM dual");
+            dict.set("_" + JDBC_PING, "SELECT 1 FROM dual");
         } else if (ping.isEmpty()) {
             dict.set("_" + JDBC_PING, "SELECT 1");
         } else {
