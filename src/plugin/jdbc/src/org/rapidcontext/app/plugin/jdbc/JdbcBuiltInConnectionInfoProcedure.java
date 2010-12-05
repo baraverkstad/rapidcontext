@@ -115,7 +115,7 @@ public class JdbcBuiltInConnectionInfoProcedure implements Procedure, Restricted
         Dict         res = channel.getConnection().serialize().copy();
 
         try {
-            res.addAll(channel.metadata());
+            res.set("_metadata", channel.metadata());
         } catch (ConnectionException e) {
             throw new ProcedureException(e.getMessage());
         }
