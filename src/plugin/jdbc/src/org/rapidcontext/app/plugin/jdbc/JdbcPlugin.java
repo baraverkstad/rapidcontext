@@ -55,6 +55,7 @@ public class JdbcPlugin extends Plugin {
                                  JdbcQueryProcedure.class);
             Library.registerType("jdbc.statement",
                                  JdbcStatementProcedure.class);
+            lib.addBuiltIn(new JdbcBuiltInConnectionInfoProcedure());
             lib.addBuiltIn(new JdbcBuiltInConnectionListProcedure());
             lib.addBuiltIn(new JdbcBuiltInConnectionWriteProcedure());
             lib.addBuiltIn(new JdbcBuiltInQueryProcedure());
@@ -73,6 +74,7 @@ public class JdbcPlugin extends Plugin {
     public void destroy() throws StorageException {
         Library  lib = ApplicationContext.getInstance().getLibrary();
 
+        lib.removeBuiltIn(JdbcBuiltInConnectionInfoProcedure.NAME);
         lib.removeBuiltIn(JdbcBuiltInConnectionListProcedure.NAME);
         lib.removeBuiltIn(JdbcBuiltInQueryProcedure.NAME);
         lib.removeBuiltIn(JdbcBuiltInStatementProcedure.NAME);

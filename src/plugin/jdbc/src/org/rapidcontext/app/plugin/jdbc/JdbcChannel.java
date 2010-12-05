@@ -18,6 +18,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -211,6 +212,32 @@ public class JdbcChannel extends Channel {
             con.rollback();
         } catch (SQLException e) {
             LOG.log(Level.WARNING, prefix + "failed to rollback connection", e);
+        }
+    }
+
+    /**
+     * Extracts database meta-data from the connection.
+     *
+     * @return the database meta-data object
+     *
+     * @throws ConnectionException if the extraction failed
+     */
+    public Dict metadata() throws ConnectionException {
+        Dict  res = new Dict();
+
+        try {
+            DatabaseMetaData meta = con.getMetaData();
+            res.set("dbName", meta.getDatabaseProductName());
+            res.set("dbVersion", meta.getDatabaseProductVersion());
+            res.set("driverName", meta.getDriverName());
+            res.set("driverVersion", meta.getDriverVersion());
+            res.set("catalog", createResults(meta.getCatalogs(), null));
+            res.set("schema", createResults(meta.getSchemas(), null));
+            return res;
+        } catch (SQLException e) {
+            LOG.log(Level.WARNING, prefix + "failed to extract meta-data", e);
+            throw new ConnectionException("failed to extract meta-data: " +
+                                          e.getMessage());
         }
     }
 
