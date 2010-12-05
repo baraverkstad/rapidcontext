@@ -223,16 +223,30 @@ public class JdbcChannel extends Channel {
      * @throws ConnectionException if the extraction failed
      */
     public Dict metadata() throws ConnectionException {
-        Dict  res = new Dict();
+        Dict   res = new Dict();
+        Array  schemas = new Array();
+        Array  tmp;
 
         try {
             DatabaseMetaData meta = con.getMetaData();
             res.set("dbName", meta.getDatabaseProductName());
             res.set("dbVersion", meta.getDatabaseProductVersion());
+            res.setInt("dbVersionMajor", meta.getDatabaseMajorVersion());
+            res.setInt("dbVersionMinor", meta.getDatabaseMinorVersion());
             res.set("driverName", meta.getDriverName());
             res.set("driverVersion", meta.getDriverVersion());
-            res.set("catalog", createResults(meta.getCatalogs(), null));
-            res.set("schema", createResults(meta.getSchemas(), null));
+            res.setInt("driverVersionMajor", meta.getDriverMajorVersion());
+            res.setInt("driverVersionMinor", meta.getDriverMinorVersion());
+            res.set("schema", schemas);
+            tmp = (Array) createResults(meta.getCatalogs(), "no-column-names");
+            for (int i = 0; i < tmp.size(); i++) {
+                schemas.add(tmp.getArray(i).get(0));
+            }
+            tmp = (Array) createResults(meta.getSchemas(), "no-column-names");
+            for (int i = 0; i < tmp.size(); i++) {
+                Array row = tmp.getArray(i);
+                schemas.add(row.get(0) + "." + row.get(1));
+            }
             return res;
         } catch (SQLException e) {
             LOG.log(Level.WARNING, prefix + "failed to extract meta-data", e);
