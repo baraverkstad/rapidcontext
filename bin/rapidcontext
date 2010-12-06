@@ -7,7 +7,7 @@
 # and launching the application.
 #
 
-# Change to base app directory
+# Change to base application directory
 PROGRAM="$0"
 SYMLINK="$PROGRAM"
 while [ "$SYMLINK" != "" ] ; do
