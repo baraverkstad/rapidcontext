@@ -114,10 +114,15 @@ RapidContext.App.apps = function () {
  *         null if not found
  */
 RapidContext.App.findApp = function (app) {
+    if (app == null) {
+        return null;
+    }
     var apps = RapidContext.App.apps();
     for (var i = 0; i < apps.length; i++) {
         var l = apps[i];
-        if (l.className == app || l.className == app.className) {
+        if (l.className == null) {
+            LOG.error("Launcher does not have 'className' property", l);
+        } else if (l.className == app || l.className == app.className) {
             return l;
         }
     }
@@ -179,6 +184,10 @@ RapidContext.App.startApp = function (app, container) {
     var d = new MochiKit.Async.Deferred();
     var instance = null;
     var launcher = RapidContext.App.findApp(app);
+    if (launcher == null) {
+        LOG.error("No matching app launcher found", app);
+        throw new Error("No matching app launcher found");
+    }
     if (container == null) {
         container = RapidContext.App._UI.createTab(launcher.name, launcher.launch != "once");
     }
@@ -186,10 +195,6 @@ RapidContext.App.startApp = function (app, container) {
     var overlay = new RapidContext.Widget.Overlay({ message: msg });
     MochiKit.DOM.replaceChildNodes(container, overlay);
     MochiKit.Signal.connect(container, "onclose", d, "cancel");
-    if (launcher == null) {
-        LOG.error("No matching app launcher found", app);
-        throw new Error("No matching app launcher found");
-    }
     if (launcher.creator == null) {
         LOG.info("Loading app " + launcher.name, launcher);
         launcher.resourceMap = {};
@@ -706,13 +711,19 @@ RapidContext.App._Cache = {
                         launcher.icon = launcher.resources[j].url;
                     }
                 }
-                var pos = RapidContext.Util.findProperty(this.apps, "className", launcher.className);
-                if (pos < 0) {
-                     launcher.instances = [];
-                     this.apps.push(launcher);
+                if (launcher.className == null) {
+                    LOG.error("Launcher does not have 'className' property", launcher);
+                    launcher.instances = [];
+                    this.apps.push(launcher);
                 } else {
-                     launcher.instances = this.apps[pos].instances;
-                     this.apps[pos] = launcher;
+                    var pos = RapidContext.Util.findProperty(this.apps, "className", launcher.className);
+                    if (pos < 0) {
+                        launcher.instances = [];
+                        this.apps.push(launcher);
+                   } else {
+                        launcher.instances = this.apps[pos].instances;
+                        this.apps[pos] = launcher;
+                   }
                 }
             }
             LOG.info("Updated cached apps", this.apps);
