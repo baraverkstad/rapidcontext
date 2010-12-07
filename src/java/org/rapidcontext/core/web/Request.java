@@ -32,6 +32,7 @@ import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.lang.StringUtils;
+import org.rapidcontext.util.FileUtil;
 
 /**
  * A request wrapper class. This class encapsulates the HTTP servlet
@@ -688,7 +689,7 @@ public class Request {
         commitStaticHeaders(file.lastModified());
         mimeType = context.getMimeType(responseData);
         if (mimeType == null || mimeType.length() == 0) {
-            response.setContentType("application/octet-stream");
+            response.setContentType(FileUtil.mimeType(file));
         } else {
             response.setContentType(mimeType);
         }

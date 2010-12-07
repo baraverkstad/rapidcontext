@@ -44,6 +44,7 @@ import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.web.Request;
 import org.rapidcontext.core.web.SessionFileMap;
 import org.rapidcontext.core.web.SessionManager;
+import org.rapidcontext.util.FileUtil;
 
 /**
  * The main application servlet. This servlet handles all incoming
@@ -64,36 +65,6 @@ public class ServletApplication extends HttpServlet {
      * The web files storage path.
      */
     public static final Path PATH_FILES = new Path("/files/");
-
-    /**
-     * The MIME type commonly used for requesting HTML data.
-     */
-    private static final String[] MIME_HTML = {
-        "text/html",
-        "text/xhtml",
-        "application/xhtml",
-        "application/xhtml+xml"
-    };
-
-    /**
-     * The MIME types commonly used for requesting JSON data.
-     */
-    private static final String[] MIME_JSON = {
-        "application/json",
-        "application/x-javascript",
-        "text/json",
-        "text/x-json",
-        "text/javascript",
-        "text/x-javascript"
-    };
-
-    /**
-     * The MIME type commonly used for requesting XML data.
-     */
-    private static final String[] MIME_XML = {
-        "application/xml",
-        "text/xml"
-    };
 
     /**
      * The context to use for process execution.
@@ -538,6 +509,8 @@ public class ServletApplication extends HttpServlet {
         Object    res = null;
         Dict      dict;
         Array     arr;
+        boolean   isJson;
+        boolean   isXml;
         boolean   isHtml;
 
         if (!request.hasMethod("GET")) {
@@ -547,6 +520,9 @@ public class ServletApplication extends HttpServlet {
             request.setResponseHeader("Allow", "GET");
             return;
         }
+        isJson = isMimeMatch(request, FileUtil.MIME_JSON);
+        isXml = isMimeMatch(request, FileUtil.MIME_XML);
+        isHtml = (!isJson && !isXml) || isMimeMatch(request, FileUtil.MIME_HTML);
         try {
             // TODO: Implement security authentication for data queries
             if (!SecurityContext.hasAdmin()) {
@@ -555,9 +531,6 @@ public class ServletApplication extends HttpServlet {
                          SecurityContext.currentUser());
                throw new ProcedureException("Permission denied");
             }
-            isHtml = isMimeMatch(request, MIME_HTML) ||
-                     (!isMimeMatch(request, MIME_JSON) &&
-                      !isMimeMatch(request, MIME_XML));
             // TODO: Extend data lookup via plug-ins and/or standardized QL
             res = ctx.getStorage().load(path);
             meta = ctx.getStorage().lookup(path);
@@ -604,12 +577,12 @@ public class ServletApplication extends HttpServlet {
             }
 
             // Render result as JSON, XML or HTML
-            if (isMimeMatch(request, MIME_JSON) && !isHtml) {
+            if (isJson && !isHtml) {
                 dict = new Dict();
                 dict.set("metadata", meta);
                 dict.set("data", res);
                 request.sendData("text/javascript", JsSerializer.serialize(dict));
-            } else if (isMimeMatch(request, MIME_XML) && !isHtml) {
+            } else if (isXml && !isHtml) {
                 dict = new Dict();
                 dict.set("metadata", meta);
                 dict.set("data", res);
@@ -665,9 +638,9 @@ public class ServletApplication extends HttpServlet {
             dict = new Dict();
             dict.set("error", e.getMessage());
             res = dict;
-            if (isMimeMatch(request, MIME_JSON)) {
+            if (isJson) {
                 request.sendData("text/javascript", JsSerializer.serialize(res));
-            } else if (isMimeMatch(request, MIME_XML)) {
+            } else if (isXml) {
                 request.sendData("text/xml", XmlSerializer.serialize(res));
             } else {
                 request.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,

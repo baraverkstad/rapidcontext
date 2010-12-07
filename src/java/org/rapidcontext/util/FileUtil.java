@@ -33,6 +33,123 @@ import java.util.zip.ZipFile;
 public class FileUtil {
 
     /**
+     * The MIME types commonly used for HTML files.
+     */
+    public static final String[] MIME_HTML = {
+        "text/html",
+        "text/xhtml",
+        "application/xhtml",
+        "application/xhtml+xml"
+    };
+
+    /**
+     * The MIME types commonly used for CSS files.
+     */
+    public static final String[] MIME_CSS = {
+        "text/css"
+    };
+
+    /**
+     * The MIME types commonly used for JavaScript files.
+     */
+    public static final String[] MIME_JS = {
+        "text/javascript",
+        "text/x-javascript",
+        "application/x-javascript"
+    };
+
+    /**
+     * The MIME types commonly used for JSON files and data.
+     */
+    public static final String[] MIME_JSON = {
+        "application/json",
+        "application/x-javascript",
+        "text/json",
+        "text/x-json",
+        "text/javascript",
+        "text/x-javascript"
+    };
+
+    /**
+     * The MIME types commonly used for XML files.
+     */
+    public static final String[] MIME_XML = {
+        "text/xml",
+        "application/xml"
+    };
+
+    /**
+     * The MIME types commonly used for GIF images.
+     */
+    public static final String[] MIME_GIF = {
+        "image/gif"
+    };
+
+    /**
+     * The MIME types commonly used for JPEG images.
+     */
+    public static final String[] MIME_JPEG = {
+        "image/jpeg"
+    };
+
+    /**
+     * The MIME types commonly used for PNG images.
+     */
+    public static final String[] MIME_PNG = {
+        "image/png"
+    };
+
+    /**
+     * The MIME types commonly used for SVG images.
+     */
+    public static final String[] MIME_SVG = {
+        "image/svg+xml"
+    };
+
+    /**
+     * The MIME types commonly used for binary files and data.
+     */
+    public static final String[] MIME_BIN = {
+        "application/octet-stream"
+    };
+
+    /**
+     * Attempts to guess the MIME type for a file, based on the file
+     * name (extension). This method only recognizes a limited set of
+     * common MIME types. 
+     *
+     * @param file           the file to check
+     *
+     * @return the file MIME type, or
+     *         a binary MIME type if unknown
+     */
+    public static String mimeType(File file) {
+        String  name = file.getName().toLowerCase();
+
+        if (name.endsWith(".html") || name.endsWith(".htm")) {
+            return MIME_HTML[0];
+        } else if (name.endsWith(".css")) {
+            return MIME_CSS[0];
+        } else if (name.endsWith(".js")) {
+            return MIME_JS[0];
+        } else if (name.endsWith(".json")) {
+            return MIME_JSON[0];
+        } else if (name.endsWith(".xml")) {
+            return MIME_XML[0];
+        } else if (name.endsWith(".gif")) {
+            return MIME_GIF[0];
+        } else if (name.endsWith(".jpg") || name.endsWith(".jpeg")) {
+            return MIME_JPEG[0];
+        } else if (name.endsWith(".png")) {
+            return MIME_PNG[0];
+        } else if (name.endsWith(".svg")) {
+            return MIME_SVG[0];
+        } else {
+            return MIME_BIN[0];
+        }
+    }
+
+    /**
      * Copies a file or a directory. Directories are copied
      * recursively and file modification dates are kept.
      *
