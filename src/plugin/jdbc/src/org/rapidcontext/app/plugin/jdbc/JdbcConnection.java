@@ -103,7 +103,7 @@ public class JdbcConnection extends Connection {
         driver = dict.getString(JDBC_DRIVER, "").trim();
         url = dict.getString(JDBC_URL, "").trim().toLowerCase();
         ping = dict.getString(JDBC_PING, "").trim();
-        if (driver.isEmpty()) {
+        if (driver.length() == 0) {
             if (url.startsWith("jdbc:odbc")) {
                 dict.set("_" + JDBC_DRIVER, "sun.jdbc.odbc.JdbcOdbcDriver");
             } else if (url.startsWith("jdbc:mysql:")) {
@@ -120,9 +120,9 @@ public class JdbcConnection extends Connection {
         } else {
             dict.set("_" + JDBC_DRIVER, driver);
         }
-        if (ping.isEmpty() && url.startsWith("jdbc:oracle:")) {
+        if (ping.length() == 0 && url.startsWith("jdbc:oracle:")) {
             dict.set("_" + JDBC_PING, "SELECT 1 FROM dual");
-        } else if (ping.isEmpty()) {
+        } else if (ping.length() == 0) {
             dict.set("_" + JDBC_PING, "SELECT 1");
         } else {
             dict.set("_" + JDBC_PING, ping);

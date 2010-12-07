@@ -165,7 +165,7 @@ public class JdbcChannel extends Channel {
      * @see #invalidate()
      */
     public void validate() {
-        if (sqlPing != null && !sqlPing.trim().isEmpty()) {
+        if (sqlPing != null && sqlPing.trim().length() > 0) {
             try {
                 executeQuery(sqlPing);
             } catch (Exception e) {
