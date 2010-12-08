@@ -475,6 +475,16 @@ public class Request {
     }
 
     /**
+     * Returns the HTTP request object for direct access to the raw
+     * request data.
+     *
+     * @return the HTTP request object
+     */
+    public HttpServletRequest getHttpRequest() {
+        return request;
+    }
+
+    /**
      * Returns the time in milliseconds since this request wrapper
      * was created. The number returned will always be one (1) or
      * greater.
@@ -526,6 +536,25 @@ public class Request {
     public void sendData(String mimeType, String data) {
         sendClear();
         responseType = DATA_RESPONSE;
+        responseCode = HttpServletResponse.SC_OK;
+        responseMimeType = mimeType;
+        responseData = data;
+    }
+
+    /**
+     * Sends the specified data as the request response. Any previous
+     * response will be cleared.
+     *
+     * @param code           the HTTP response code to send
+     * @param mimeType       the data MIME type
+     * @param data           the data to send
+     *
+     * @see #sendClear()
+     */
+    public void sendData(int code, String mimeType, String data) {
+        sendClear();
+        responseType = DATA_RESPONSE;
+        responseCode = code;
         responseMimeType = mimeType;
         responseData = data;
     }
@@ -545,6 +574,7 @@ public class Request {
     public void sendFile(File file, boolean limitCache) {
         sendClear();
         responseType = FILE_RESPONSE;
+        responseCode = HttpServletResponse.SC_OK;
         responseMimeType = null;
         responseData = file.toString();
         if (limitCache) {
@@ -715,6 +745,7 @@ public class Request {
     private void commitData() throws IOException {
         PrintWriter  out;
 
+        response.setStatus(responseCode);
         commitDynamicHeaders();
         if (responseMimeType == null || responseMimeType.length() == 0) {
             response.setContentType("text/plain; charset=UTF-8");
@@ -748,6 +779,7 @@ public class Request {
             response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
             return;
         }
+        response.setStatus(responseCode);
         commitStaticHeaders(file.lastModified());
         response.setContentType(Mime.type(file));
         response.setContentLength((int) file.length());
@@ -786,16 +818,18 @@ public class Request {
     private void commitError() throws IOException {
         PrintWriter  out;
 
-        response.setStatus(responseCode);
         commitDynamicHeaders();
-        if (responseMimeType == null || responseMimeType.length() == 0) {
-            response.setContentType("text/plain; charset=UTF-8");
-        } else if (responseMimeType.indexOf("charset") > 0) {
-            response.setContentType(responseMimeType);
+        if (responseData == null) {
+            response.sendError(responseCode);
         } else {
-            response.setContentType(responseMimeType + "; charset=UTF-8");
-        }
-        if (responseData != null) {
+            response.setStatus(responseCode);
+            if (responseMimeType == null || responseMimeType.length() == 0) {
+                response.setContentType("text/plain; charset=UTF-8");
+            } else if (responseMimeType.indexOf("charset") > 0) {
+                response.setContentType(responseMimeType);
+            } else {
+                response.setContentType(responseMimeType + "; charset=UTF-8");
+            }
             out = response.getWriter();
             out.write(responseData);
             out.close();
