@@ -21,7 +21,6 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,7 +31,6 @@ import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.lang.StringUtils;
-import org.rapidcontext.util.FileUtil;
 
 /**
  * A request wrapper class. This class encapsulates the HTTP servlet
@@ -564,16 +562,12 @@ public class Request {
      * request, and should not be called in case no response has been
      * stored in the request.
      *
-     * @param context        the servlet context
-     *
      * @throws IOException if an IO error occurred while attempting to
      *             commit the response
      * @throws ServletException if a configuration error was
      *             encountered while sending the response
      */
-    public void commit(ServletContext context)
-        throws IOException, ServletException {
-
+    public void commit() throws IOException, ServletException {
         response.setHeader("Server", "RapidContext");
         response.setDateHeader("Date", System.currentTimeMillis());
         switch (responseType) {
@@ -584,7 +578,7 @@ public class Request {
             commitData();
             break;
         case FILE_RESPONSE:
-            commitFile(context);
+            commitFile();
             break;
         case REDIRECT_RESPONSE:
             commitRedirect();
@@ -664,17 +658,12 @@ public class Request {
     /**
      * Sends the file response to the underlying HTTP response object.
      *
-     * @param context        the servlet context
-     *
      * @throws IOException if an IO error occurred while attempting to
      *             commit the response
      */
-    private void commitFile(ServletContext context)
-        throws IOException {
-
+    private void commitFile() throws IOException {
         File             file;
         long             modified;
-        String           mimeType;
         FileInputStream  input;
         OutputStream     output;
         byte[]           buffer = new byte[4096];
@@ -687,12 +676,7 @@ public class Request {
             return;
         }
         commitStaticHeaders(file.lastModified());
-        mimeType = context.getMimeType(responseData);
-        if (mimeType == null || mimeType.length() == 0) {
-            response.setContentType(FileUtil.mimeType(file));
-        } else {
-            response.setContentType(mimeType);
-        }
+        response.setContentType(Mime.type(file));
         response.setContentLength((int) file.length());
         try {
             input = new FileInputStream(file);

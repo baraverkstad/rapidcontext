@@ -29,6 +29,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.fileupload.FileItemHeaders;
 import org.apache.commons.fileupload.FileItemStream;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
@@ -41,10 +42,10 @@ import org.rapidcontext.core.security.User;
 import org.rapidcontext.core.storage.Index;
 import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
+import org.rapidcontext.core.web.Mime;
 import org.rapidcontext.core.web.Request;
 import org.rapidcontext.core.web.SessionFileMap;
 import org.rapidcontext.core.web.SessionManager;
-import org.rapidcontext.util.FileUtil;
 
 /**
  * The main application servlet. This servlet handles all incoming
@@ -83,6 +84,7 @@ public class ServletApplication extends HttpServlet {
      */
     public void init() throws ServletException {
         super.init();
+        Mime.context = getServletContext();
         ctx = ApplicationContext.init(getBaseDir(), getBaseDir(), true);
         tempDir = (File) getServletContext().getAttribute("javax.servlet.context.tempdir");
         if (tempDir == null) {
@@ -191,7 +193,7 @@ public class ServletApplication extends HttpServlet {
                                   "text/plain",
                                   "HTTP 404 Not Found");
             }
-            request.commit(getServletContext());
+            request.commit();
         } catch (IOException e) {
             LOG.info("IO error when processing request: " + request);
         }
@@ -520,9 +522,9 @@ public class ServletApplication extends HttpServlet {
             request.setResponseHeader("Allow", "GET");
             return;
         }
-        isJson = isMimeMatch(request, FileUtil.MIME_JSON);
-        isXml = isMimeMatch(request, FileUtil.MIME_XML);
-        isHtml = (!isJson && !isXml) || isMimeMatch(request, FileUtil.MIME_HTML);
+        isJson = isMimeMatch(request, Mime.JSON);
+        isXml = isMimeMatch(request, Mime.XML);
+        isHtml = (!isJson && !isXml) || isMimeMatch(request, Mime.HTML);
         try {
             // TODO: Implement security authentication for data queries
             if (!SecurityContext.hasAdmin()) {
@@ -652,27 +654,22 @@ public class ServletApplication extends HttpServlet {
 
     /**
      * Checks if the request accepts one of the listed MIME types as
-     * response. Note that this method only accepts exact matches, as
-     * it will ignore wildcards and types with quality values.
+     * response.
      *
      * @param request        the request to analyze
-     * @param mime           the MIME types to check for
+     * @param mimes          the MIME types to check for
      *
      * @return true if one of the MIME types is accepted, or
      *         false otherwise
      */
-    private boolean isMimeMatch(Request request, String[] mime) {
-        String    param = request.getParameter("mimeType");
-        String    header = request.getHeader("Accept");
-        String[]  accept = StringUtils.defaultString(param, header).split(",");
-        for (int i = 0; i < accept.length; i++) {
-            for (int j = 0; j < mime.length; j++) {
-                if (accept[i].equals(mime[j])) {
-                    return true;
-                }
-            }
+    private boolean isMimeMatch(Request request, String[] mimes) {
+        String  param = request.getParameter("mimeType");
+
+        if (param != null) {
+            return ArrayUtils.contains(mimes, param);
+        } else {
+            return Mime.isMatch(request, mimes);
         }
-        return false;
     }
 
     /**
