@@ -29,6 +29,13 @@ import org.apache.commons.lang.ArrayUtils;
 public class Mime {
 
     /**
+     * The MIME types commonly used for text files.
+     */
+    public static final String[] TEXT = {
+        "text/plain"
+    };
+
+    /**
      * The MIME types commonly used for HTML files.
      */
     public static final String[] HTML = {
@@ -126,32 +133,46 @@ public class Mime {
      *         a binary MIME type if unknown
      */
     public static String type(File file) {
-        String  name = file.getName().toLowerCase();
-        String  mime;
+        return type(file.getName());
+    }
 
+    /**
+     * Attempts to guess the MIME type for a file name (extension).
+     * This method will always return a valid MIME type, defaulting
+     * to the binary MIME type if unknown.
+     *
+     * @param fileName           the file name to check
+     *
+     * @return the file MIME type, or
+     *         a binary MIME type if unknown
+     */
+    public static String type(String fileName) {
+        fileName = fileName.toLowerCase();
         if (context != null) {
-            mime = context.getMimeType(name);
+            String mime = context.getMimeType(fileName);
             if (mime != null && mime.trim().length() > 0) {
                 return mime;
             }
         }
-        if (name.endsWith(".html") || name.endsWith(".htm")) {
+        if (fileName.endsWith(".txt")) {
+            return TEXT[0];
+        } else if (fileName.endsWith(".html") || fileName.endsWith(".htm")) {
             return HTML[0];
-        } else if (name.endsWith(".css")) {
+        } else if (fileName.endsWith(".css")) {
             return CSS[0];
-        } else if (name.endsWith(".js")) {
+        } else if (fileName.endsWith(".js")) {
             return JS[0];
-        } else if (name.endsWith(".json")) {
+        } else if (fileName.endsWith(".json")) {
             return JSON[0];
-        } else if (name.endsWith(".xml")) {
+        } else if (fileName.endsWith(".xml")) {
             return XML[0];
-        } else if (name.endsWith(".gif")) {
+        } else if (fileName.endsWith(".gif")) {
             return GIF[0];
-        } else if (name.endsWith(".jpg") || name.endsWith(".jpeg")) {
+        } else if (fileName.endsWith(".jpg") || fileName.endsWith(".jpeg")) {
             return JPEG[0];
-        } else if (name.endsWith(".png")) {
+        } else if (fileName.endsWith(".png")) {
             return PNG[0];
-        } else if (name.endsWith(".svg")) {
+        } else if (fileName.endsWith(".svg")) {
             return SVG[0];
         } else {
             return BIN[0];

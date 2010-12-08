@@ -28,6 +28,7 @@ import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.Restricted;
 import org.rapidcontext.core.security.SecurityContext;
+import org.rapidcontext.core.web.Mime;
 import org.rapidcontext.core.web.SessionFileMap;
 import org.rapidcontext.core.web.SessionManager;
 import org.rapidcontext.util.DateUtil;
@@ -167,8 +168,7 @@ public class SessionCurrentProcedure implements Procedure, Restricted {
                 data = new Dict();
                 data.set("name", file.getName());
                 data.set("size", String.valueOf(file.length()));
-                data.set("mimeType",
-                         session.getServletContext().getMimeType(file.getName()));
+                data.set("mimeType", Mime.type(file));
                 date = new Date(file.lastModified());
                 data.set("creationMillis", String.valueOf(date.getTime()));
                 data.set("creationDate", DateUtil.formatIsoDateTime(date));

@@ -190,7 +190,7 @@ public class ServletApplication extends HttpServlet {
             }
             if (!request.hasResponse()) {
                 request.sendError(HttpServletResponse.SC_NOT_FOUND,
-                                  "text/plain",
+                                  Mime.TEXT[0],
                                   "HTTP 404 Not Found");
             }
             request.commit();
@@ -319,7 +319,7 @@ public class ServletApplication extends HttpServlet {
                 processProcedure(request, path.substring(10));
             } else if (path.startsWith("procedure/")) {
                 request.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED,
-                                  "text/plain",
+                                  Mime.TEXT[0],
                                   "HTTP 405 Method Not Allowed");
                 request.setResponseHeader("Allow", "POST");
             } else if (path.startsWith("download")) {
@@ -330,7 +330,7 @@ public class ServletApplication extends HttpServlet {
                 processUpload(request, path.substring(6));
             } else if (path.startsWith("upload")) {
                 request.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED,
-                                  "text/plain",
+                                  Mime.TEXT[0],
                                   "HTTP 405 Method Not Allowed");
                 request.setResponseHeader("Allow", "POST PUT");
             } else if (path.startsWith("query/")) {
@@ -367,14 +367,14 @@ public class ServletApplication extends HttpServlet {
             }
         } else if (dynamic && request.hasMethod("POST")) {
             if (mimeType == null) {
-                mimeType = getServletContext().getMimeType(fileName);
+                mimeType = Mime.type(fileName);
             }
             if (fileData != null) {
                 request.sendData(mimeType, fileData);
             }
         } else {
             request.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED,
-                              "text/plain",
+                              Mime.TEXT[0],
                               "HTTP 405 Method Not Allowed");
             if (dynamic) {
                 request.setResponseHeader("Allow", "GET POST");
@@ -415,7 +415,7 @@ public class ServletApplication extends HttpServlet {
             stream = request.getNextFile();
             if (stream == null) {
                 request.sendError(HttpServletResponse.SC_BAD_REQUEST,
-                                  "text/plain",
+                                  Mime.TEXT[0],
                                   "HTTP 400 Bad Request, missing file data");
                 return;
             }
@@ -450,11 +450,11 @@ public class ServletApplication extends HttpServlet {
             fileMap = SessionFileMap.getFiles(request.getSession(), true);
             trace = (request.getParameter("trace", null) != null);
             fileMap.addFile(id, file, size, stream.openStream(), trace ? 5 : 0);
-            request.sendData("text/plain", "Session file " + id + " uploaded");
+            request.sendData(Mime.TEXT[0], "Session file " + id + " uploaded");
         } catch (IOException e) {
             LOG.log(Level.WARNING, "failed to process file upload", e);
             request.sendError(HttpServletResponse.SC_BAD_REQUEST,
-                              "text/plain",
+                              Mime.TEXT[0],
                               "HTTP 400 Bad Request, " + e.getMessage());
         }
     }
@@ -496,7 +496,7 @@ public class ServletApplication extends HttpServlet {
         if (trace != null) {
             res.set("trace", trace.toString());
         }
-        request.sendData("text/javascript", JsSerializer.serialize(res));
+        request.sendData(Mime.JSON[0], JsSerializer.serialize(res));
     }
 
     /**
@@ -517,7 +517,7 @@ public class ServletApplication extends HttpServlet {
 
         if (!request.hasMethod("GET")) {
             request.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED,
-                              "text/plain",
+                              Mime.TEXT[0],
                               "HTTP 405 Method Not Allowed");
             request.setResponseHeader("Allow", "GET");
             return;
@@ -563,7 +563,7 @@ public class ServletApplication extends HttpServlet {
                 dict = new Dict();
                 dict.set("type", "file");
                 dict.set("name", file.getName());
-                dict.set("mimeType", getServletContext().getMimeType(file.getName()));
+                dict.set("mimeType", Mime.type(file));
                 dict.set("size", new Long(file.length()));
                 String url = StringUtils.removeEnd(request.getUrl(), request.getPath()) +
                              StringUtils.removeStart(path.toString(), "/files");
@@ -583,12 +583,12 @@ public class ServletApplication extends HttpServlet {
                 dict = new Dict();
                 dict.set("metadata", meta);
                 dict.set("data", res);
-                request.sendData("text/javascript", JsSerializer.serialize(dict));
+                request.sendData(Mime.JSON[0], JsSerializer.serialize(dict));
             } else if (isXml && !isHtml) {
                 dict = new Dict();
                 dict.set("metadata", meta);
                 dict.set("data", res);
-                request.sendData("text/xml", XmlSerializer.serialize(dict));
+                request.sendData(Mime.XML[0], XmlSerializer.serialize(dict));
             } else {
                 StringBuffer html = new StringBuffer();
                 html.append("<html>\n<head>\n<link rel='stylesheet' href='");
@@ -632,7 +632,7 @@ public class ServletApplication extends HttpServlet {
                 html.append(" &nbsp;<a href='?mimeType=text/javascript'>JSON</a>");
                 html.append(" &nbsp;<a href='?mimeType=text/xml'>XML</a></p>");
                 html.append("</div>\n</body>\n</html>\n");
-                request.sendData("text/html", html.toString());
+                request.sendData(Mime.HTML[0], html.toString());
             }
         } catch (Exception e) {
             LOG.log(Level.WARNING, "failed to process query", e);
@@ -641,12 +641,12 @@ public class ServletApplication extends HttpServlet {
             dict.set("error", e.getMessage());
             res = dict;
             if (isJson) {
-                request.sendData("text/javascript", JsSerializer.serialize(res));
+                request.sendData(Mime.JSON[0], JsSerializer.serialize(res));
             } else if (isXml) {
-                request.sendData("text/xml", XmlSerializer.serialize(res));
+                request.sendData(Mime.XML[0], XmlSerializer.serialize(res));
             } else {
                 request.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-                                  "text/plain",
+                                  Mime.TEXT[0],
                                   "HTTP 500 Internal Server Error: " + e.getMessage());
             }
         }
