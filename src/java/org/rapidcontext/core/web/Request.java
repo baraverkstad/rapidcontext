@@ -755,7 +755,9 @@ public class Request {
             response.setContentType(responseMimeType + "; charset=UTF-8");
         }
         out = response.getWriter();
-        out.write(responseData);
+        if (responseData != null) {
+            out.write(responseData);
+        }
         out.close();
     }
 
