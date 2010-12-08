@@ -592,7 +592,7 @@ public class ServletApplication extends HttpServlet {
             } else {
                 StringBuffer html = new StringBuffer();
                 html.append("<html>\n<head>\n<link rel='stylesheet' href='");
-                html.append(request.getRootPath());
+                html.append(relativeBackPath(request.getPath()));
                 html.append("css/style.css' type='text/css' />\n");
                 html.append("<title>RapidContext Query Response</title>\n");
                 html.append("</head>\n<body>\n<div class='query'>\n");
@@ -692,5 +692,20 @@ public class ServletApplication extends HttpServlet {
      */
     private File getBaseDir() {
         return new File(getServletContext().getRealPath("/"));
+    }
+
+    /**
+     * Returns the relative path to reverse the specified path. This
+     * method will add an "../" part for each directory in the
+     * current path so that site-relative links can be created
+     * easily.
+     *
+     * @param path           the path to reverse
+     *
+     * @return the relative reversed path
+     */
+    protected String relativeBackPath(String path) {
+        int count = StringUtils.countMatches(path, "/");
+        return StringUtils.repeat("../", count - 1);
     }
 }

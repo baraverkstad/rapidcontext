@@ -30,7 +30,6 @@ import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.commons.lang.StringUtils;
 
 /**
  * A request wrapper class. This class encapsulates the HTTP servlet
@@ -86,6 +85,13 @@ public class Request {
      * The system time when creating this request.
      */
     private long requestTime = System.currentTimeMillis();
+
+    /**
+     * The local request path. This is initially set to null, but may
+     * be modified during request processing to simplify or modify
+     * resource lookup.
+     */
+    private String requestPath = null;
 
     /**
      * The servlet request.
@@ -204,6 +210,44 @@ public class Request {
     }
 
     /**
+     * Returns the full request URL with protocol, hostname and path.
+     * No query parameters will be included in the URL, however.
+     *
+     * @return the full request URL
+     */
+    public String getUrl() {
+        return request.getRequestURL().toString();
+    }
+
+    /**
+     * Returns the protocol name in the request, i.e. "http" or
+     * "https".
+     *
+     * @return the protocol name
+     */
+    public String getProtocol() {
+        return request.getScheme();
+    }
+
+    /**
+     * Returns the host name in the request.
+     *
+     * @return the host name
+     */
+    public String getHost() {
+        return request.getServerName();
+    }
+
+    /**
+     * Returns the port number in the request.
+     *
+     * @return the port number
+     */
+    public int getPort() {
+        return request.getServerPort();
+    }
+
+    /**
      * Returns the request method name. Normally this is "GET" or
      * "POST", but other HTTP methods can also be used.
      *
@@ -214,37 +258,48 @@ public class Request {
     }
 
     /**
-     * Returns the request path with file name. This will NOT include
-     * the servlet portion of the path.
+     * Returns the full request path with file name. This path starts
+     * with a '/' character and contains the absolute request path,
+     * including the servlet path.
      *
-     * @return the request path with file name
+     * @return the full request path with file name
      */
-    public String getPath() {
+    public String getAbsolutePath() {
         String  path = request.getPathInfo();
 
-        return (path == null) ? "" : path;
+        if (path == null) {
+            return request.getContextPath();
+        } else {
+            return request.getContextPath() + path;
+        }
     }
 
     /**
-     * Returns the relative path to the servlet root. This method
-     * will add an "../" part for each directory in the current path
-     * so that site-relative links can be created easily.
+     * Returns the local request path with file name. This path has
+     * been shortened to ONLY include the relevant portions of the
+     * path, removing any initial mapping URL portions of the path.
+     * A root path may thus be an empty string.
      *
-     * @return the relative path to the servlet root
+     * @return the local request path
      */
-    public String getRootPath() {
-        int count = StringUtils.countMatches(getPath(), "/");
-        return StringUtils.repeat("../", count - 1);
+    public String getPath() {
+        if (requestPath != null) {
+            return requestPath;
+        } else {
+            String path = request.getPathInfo();
+            return (path == null) ? "" : path;
+        }
     }
 
     /**
-     * Returns the full request URL with protocol, hostname and path.
-     * No query parameters will be included in the URL, however.
+     * Sets the local request path. Use this method to shorten the
+     * request path from any additional prefixes. It can also be used
+     * to rewrite one request path into another.
      *
-     * @return the full request URL
+     * @param path           the new local path, or null to reset
      */
-    public String getUrl() {
-        return request.getRequestURL().toString();
+    public void setPath(String path) {
+        requestPath = path;
     }
 
     /**
@@ -514,12 +569,30 @@ public class Request {
     }
 
     /**
+     * Sends the specified error code. This method does not provide
+     * any visible error page to the user. Any previous response will
+     * be cleared.
+     *
+     * @param code           the HTTP response code to send
+     *
+     * @see #sendClear()
+     * @see #sendError(int, String, String)
+     */
+    public void sendError(int code) {
+        sendClear();
+        responseType = ERROR_RESPONSE;
+        responseCode = code;
+        responseMimeType = null;
+        responseData = null;
+    }
+
+    /**
      * Sends the specified error code and data as the request
      * response. Any previous response will be cleared.
      *
      * @param code           the HTTP response code to send
      * @param mimeType       the data MIME type
-     * @param data           the data to send
+     * @param data           the data to send (error page content)
      *
      * @see #sendClear()
      */
@@ -722,8 +795,10 @@ public class Request {
         } else {
             response.setContentType(responseMimeType + "; charset=UTF-8");
         }
-        out = response.getWriter();
-        out.write(responseData);
-        out.close();
+        if (responseData != null) {
+            out = response.getWriter();
+            out.write(responseData);
+            out.close();
+        }
     }
 }
