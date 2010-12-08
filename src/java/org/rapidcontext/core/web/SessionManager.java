@@ -77,7 +77,7 @@ public class SessionManager implements HttpSessionBindingListener {
     /**
      * Returns a collection of the currently active sessions.
      *
-     * @return the currently active sessions
+     * @return a collection of active HttpSessions
      */
     public static Collection getActiveSessions() {
         return sessions.values();
