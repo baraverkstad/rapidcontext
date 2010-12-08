@@ -18,6 +18,7 @@ import java.lang.reflect.Constructor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
@@ -193,7 +194,9 @@ public class Type extends StorableObject {
 
     /**
      * Returns an array of type properties. Each property should be a
-     * dictionary object containing property information.
+     * dictionary object containing property information. Note that
+     * parent type properties are normally also applicable, but must
+     * be retrieved separately.
      *
      * @return the array of type properties, or
      *         an empty array if it didn't exist
@@ -209,5 +212,28 @@ public class Type extends StorableObject {
             LOG.warning(msg);
         }
         return (arr == null) ? new Array(0) : arr;
+    }
+
+    /**
+     * Searches for the parent type in the type hierarchy. A parent
+     * type normally declares additional properties that may or may
+     * not be applicable also for this type.
+     *
+     * @param storage        the storage to search in
+     *
+     * @return the parent type, or
+     *         null if not found
+     */
+    public Type parentType(Storage storage) {
+        String[]  parts = id().split("/");
+        Type      type = null;
+
+        for (int i = parts.length - 1; i > 0; i++) {
+            type = find(storage, StringUtils.join(parts, '/', 0, i));
+            if (type != null) {
+                return type;
+            }
+        }
+        return null;
     }
 }
