@@ -211,7 +211,11 @@ public class FileStorage extends Storage {
             file = locateDir(path);
             file.mkdirs();
             file = new File(file, path.name());
-            ((File) data).renameTo(file);
+            if (!((File) data).renameTo(file)) {
+                msg = "failed to move " + data + " to file " + file;
+                LOG.warning(msg);
+                throw new StorageException(msg);
+            }
         } else {
             throw new StorageException("cannot store unsupported data type");
         }
@@ -294,6 +298,10 @@ public class FileStorage extends Storage {
                 file = new File(dir, path.name() + SUFFIX_PROPS);
             }
         }
-        return file.canRead() ? file : null;
+        if (file.isDirectory() != path.isIndex()) {
+            return null;
+        } else {
+            return file.canRead() ? file : null;
+        }
     }
 }
