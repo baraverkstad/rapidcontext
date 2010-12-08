@@ -45,6 +45,11 @@ public class Type extends StorableObject {
         Logger.getLogger(Type.class.getName());
 
     /**
+     * The dictionary key for the description text.
+     */
+    public static final String KEY_DESCRIPTION = "description";
+
+    /**
      * The dictionary key for the initializer class name.
      */
     public static final String KEY_INITIALIZER = "initializer";
@@ -155,6 +160,15 @@ public class Type extends StorableObject {
                 throw new StorageException(msg);
             }
         }
+    }
+
+    /**
+     * Returns the type description.
+     *
+     * @return the type description
+     */
+    public String description() {
+        return dict.getString(KEY_DESCRIPTION, "");
     }
 
     /**
