@@ -1,7 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg.
- * All rights reserved.
+ * Copyright (c) 2007-2009 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -26,7 +25,7 @@ import javax.servlet.http.HttpSessionBindingListener;
  * The session manager. This class allows keeping track of all active
  * sessions.
  *
- * @author   Per Cederberg, <per at percederberg dot net>
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class SessionManager implements HttpSessionBindingListener {

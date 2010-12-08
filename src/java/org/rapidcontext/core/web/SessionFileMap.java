@@ -1,7 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg.
- * All rights reserved.
+ * Copyright (c) 2007-2010 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -33,7 +32,7 @@ import javax.servlet.http.HttpSessionBindingListener;
  * invalidation event, in which case all remaining session files
  * will be deleted.
  *
- * @author   Per Cederberg, <per at percederberg dot net>
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class SessionFileMap implements HttpSessionBindingListener {
