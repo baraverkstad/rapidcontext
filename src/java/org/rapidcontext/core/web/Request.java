@@ -14,11 +14,13 @@
 
 package org.rapidcontext.core.web;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +31,7 @@ import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.rapidcontext.util.FileUtil;
 
 /**
  * A request wrapper class. This class encapsulates the HTTP servlet
@@ -39,6 +42,12 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
  * @version  1.0
  */
 public class Request {
+
+    /**
+     * The class logger.
+     */
+    private static final Logger LOG =
+        Logger.getLogger(Request.class.getName());
 
     /**
      * The no response type. This type is used when no request
@@ -497,6 +506,26 @@ public class Request {
      */
     public long getProcessTime() {
         return Math.max(System.currentTimeMillis() - requestTime, 1);
+    }
+
+    /**
+     * Returns the request input stream data as a string. Once this
+     * method has been called, the request input stream cannot be
+     * read again. Also, this method should only be called if the
+     * request data is required to be in text format.
+     *
+     * @return the request input stream data as a string
+     */
+    public String inputDataString() {
+        ByteArrayOutputStream  os = new ByteArrayOutputStream();
+
+        try {
+            FileUtil.copy(request.getInputStream(), os);
+            return os.toString("UTF-8");
+        } catch (IOException e) {
+            LOG.warning("failed to read request input data: " + e.getMessage());
+            return "";
+        }
     }
 
     /**
