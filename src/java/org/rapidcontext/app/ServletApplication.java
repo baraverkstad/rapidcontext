@@ -39,9 +39,12 @@ import org.rapidcontext.core.js.JsSerializer;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.security.User;
+import org.rapidcontext.core.storage.FileStorage;
 import org.rapidcontext.core.storage.Index;
 import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
+import org.rapidcontext.core.storage.RootStorage;
+import org.rapidcontext.core.storage.StorageException;
 import org.rapidcontext.core.web.Mime;
 import org.rapidcontext.core.web.Request;
 import org.rapidcontext.core.web.SessionFileMap;
@@ -93,6 +96,15 @@ public class ServletApplication extends HttpServlet {
         FileUtil.setTempDir(dir);
         Mime.context = getServletContext();
         ctx = ApplicationContext.init(getBaseDir(), getBaseDir(), true);
+        // TODO: move the doc directory into the system plug-in storage
+        File docDir = new File(getBaseDir(), "doc");
+        FileStorage docStore = new FileStorage(docDir, false);
+        RootStorage root = (RootStorage) ctx.getStorage();
+        try {
+            root.mount(docStore, PATH_FILES.child("doc", true), false, false, 0);
+        } catch (StorageException e) {
+            LOG.log(Level.SEVERE, "failed to mount doc storage", e);
+        }
     }
 
     /**
@@ -354,11 +366,7 @@ public class ServletApplication extends HttpServlet {
 
         if (request.hasMethod("GET")) {
             file = (File) ctx.getStorage().load(new Path(PATH_FILES, path));
-            if (file == null && path.startsWith("doc/")) {
-                // TODO: perhaps the docs should be in the data store?
-                file = new File(this.getBaseDir(), path);
-            }
-            if (file != null && !file.isDirectory()) {
+            if (file != null) {
                 request.sendFile(file, cache);
             }
         } else if (dynamic && request.hasMethod("POST")) {
