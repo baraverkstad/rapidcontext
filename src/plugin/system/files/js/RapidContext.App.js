@@ -606,7 +606,7 @@ RapidContext.App.downloadFile = function (url, data) {
         var name = MochiKit.DOM.INPUT({ name: "fileName", value: url });
         var file = MochiKit.DOM.INPUT({ name: "fileData", value: data });
         var flag = MochiKit.DOM.INPUT({ name: "download", value: "1" });
-        var attrs = { action: "RapidContext/download", method: "POST",
+        var attrs = { action: "rapidcontext/download", method: "POST",
                       target: "_blank", style: { display: "none" } };
         var form = MochiKit.DOM.FORM(attrs, name, file, flag);
         document.body.appendChild(form);
