@@ -20,6 +20,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * A set of utility methods for handling files.
  *
@@ -136,5 +138,37 @@ public abstract class FileUtil {
                 }
             }
         }
+    }
+
+    /**
+     * Creates a unique file that doesn't exist in the specified
+     * directory. The desired file name will be used if no name
+     * collisions are found. Otherwise, a counter will be inserted
+     * into the name to make it unique. The file name extension is
+     * guaranteed to be kept.
+     *
+     * @param dir            the directory to check
+     * @param name           the desired file name
+     *
+     * @return a file that doesn't already exist
+     */
+    public static File unique(File dir, String name) {
+        String  prefix = StringUtils.substringBeforeLast(name, ".");
+        String  suffix = StringUtils.substringAfterLast(name, ".");
+        File    file;
+        int     idx = 0;
+
+        if (prefix.length() <= 0) {
+            prefix = "file";
+        }
+        if (suffix.length() > 0) {
+            suffix = "." + suffix;
+        }
+        file = new File(dir, name);
+        while (file.exists()) {
+            idx++;
+            file = new File(dir, prefix + "-" + idx + suffix);
+        }
+        return file;
     }
 }

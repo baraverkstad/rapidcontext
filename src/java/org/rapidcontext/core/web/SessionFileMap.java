@@ -58,40 +58,6 @@ public class SessionFileMap implements HttpSessionBindingListener {
     private HashMap files = new HashMap();
 
     /**
-     * Creates a new unique file name in a directory. The original
-     * file name will be used if no collisions are found.
-     *
-     * @param dir            the directory to use
-     * @param baseName       the original file name
-     *
-     * @return a new unique file
-     */
-    public static File createNewFile(File dir, String baseName) {
-        File    file;
-        int     idx;
-        String  prefix;
-        String  suffix;
-
-        file = new File(dir, baseName);
-        if (file.exists()) {
-            idx = baseName.lastIndexOf(".");
-            if (idx < 0) {
-                prefix = baseName;
-                suffix = "";
-            } else {
-                prefix = baseName.substring(0, idx);
-                suffix = baseName.substring(idx);
-            }
-            idx = 0;
-            while (file.exists()) {
-                idx++;
-                file = new File(dir, prefix + "-" + idx + suffix);
-            }
-        }
-        return file;
-    }
-
-    /**
      * Returns the session file map included in a session. If none
      * exists, a new empty one may be created if desired.
      *

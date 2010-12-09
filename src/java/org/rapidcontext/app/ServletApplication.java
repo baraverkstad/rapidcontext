@@ -46,6 +46,7 @@ import org.rapidcontext.core.web.Mime;
 import org.rapidcontext.core.web.Request;
 import org.rapidcontext.core.web.SessionFileMap;
 import org.rapidcontext.core.web.SessionManager;
+import org.rapidcontext.util.FileUtil;
 
 /**
  * The main application servlet. This servlet handles all incoming
@@ -446,7 +447,7 @@ public class ServletApplication extends HttpServlet {
                     // Do nothing here
                 }
             }
-            file = SessionFileMap.createNewFile(tempDir, fileName);
+            file = FileUtil.unique(tempDir, fileName);
             fileMap = SessionFileMap.getFiles(request.getSession(), true);
             trace = (request.getParameter("trace", null) != null);
             fileMap.addFile(id, file, size, stream.openStream(), trace ? 5 : 0);
