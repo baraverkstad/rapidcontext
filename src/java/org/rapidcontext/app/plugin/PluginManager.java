@@ -34,6 +34,7 @@ import org.rapidcontext.core.storage.StorageException;
 import org.rapidcontext.core.storage.RootStorage;
 import org.rapidcontext.core.type.Type;
 import org.rapidcontext.util.FileUtil;
+import org.rapidcontext.util.ZipUtil;
 
 /**
  * A plug-in manager. This singleton class contains the utility
@@ -312,7 +313,7 @@ public class PluginManager {
                 // TODO: perhaps backup the old directory instead?
                 FileUtil.delete(dir);
             }
-            FileUtil.unpackZip(zip, dir);
+            ZipUtil.unpackZip(zip, dir);
         } catch (IOException e) {
             msg = "IO error while reading zip file " + file.getName() + ": " +
                   e.getMessage();

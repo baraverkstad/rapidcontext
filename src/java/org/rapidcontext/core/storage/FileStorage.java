@@ -247,7 +247,7 @@ public class FileStorage extends Storage {
         if (file != null) {
             try {
                 if (path.isRoot()) {
-                    FileUtil.deleteContents(file);
+                    FileUtil.deleteFiles(file);
                 } else {
                     FileUtil.delete(file);
                 }
