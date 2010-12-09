@@ -25,7 +25,7 @@ import java.net.URLDecoder;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class ClassLoaderUtil {
+public abstract class ClassLoaderUtil {
 
     /**
      * Returns the class loader for the specified class.
