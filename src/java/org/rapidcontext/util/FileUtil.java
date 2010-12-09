@@ -19,6 +19,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -74,12 +75,26 @@ public abstract class FileUtil {
      *             the destination file couldn't be written
      */
     public static void copy(InputStream is, File dst) throws IOException {
-        FileOutputStream  os = null;
-        byte[]            buffer = new byte[16384];
-        int               size;
+        copy(is, new FileOutputStream(dst));
+    }
+
+    /**
+     * Copies the data from an input stream to an output stream. Both
+     * the streams will be closed when this function returns.
+     *
+     * @param is             the input stream to read
+     * @param os             the output stream to write
+     *
+     * @throws IOException if the input stream couldn't be read or if
+     *             the output stream couldn't be written
+     */
+    public static void copy(InputStream is, OutputStream os)
+    throws IOException {
+
+        byte[]  buffer = new byte[16384];
+        int     size;
 
         try {
-            os = new FileOutputStream(dst);
             do {
                 size = is.read(buffer);
                 if (size > 0) {
@@ -88,16 +103,12 @@ public abstract class FileUtil {
             } while (size > 0);
         } finally {
             try {
-                if (is != null) {
-                    is.close();
-                }
+                is.close();
             } catch (IOException ignore) {
                 // Do nothing
             }
             try {
-                if (os != null) {
-                    os.close();
-                }
+                os.close();
             } catch (IOException ignore) {
                 // Do nothing
             }
