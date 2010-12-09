@@ -17,7 +17,8 @@ package org.rapidcontext.app;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,27 +28,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.fileupload.FileItemHeaders;
-import org.apache.commons.fileupload.FileItemStream;
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
-import org.rapidcontext.core.data.Array;
-import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.data.HtmlSerializer;
-import org.rapidcontext.core.data.XmlSerializer;
-import org.rapidcontext.core.js.JsSerializer;
-import org.rapidcontext.core.proc.ProcedureException;
+import org.rapidcontext.app.web.DownloadRequestHandler;
+import org.rapidcontext.app.web.FileRequestHandler;
+import org.rapidcontext.app.web.ProcedureRequestHandler;
+import org.rapidcontext.app.web.StorageRequestHandler;
+import org.rapidcontext.app.web.UploadRequestHandler;
 import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.security.User;
 import org.rapidcontext.core.storage.FileStorage;
-import org.rapidcontext.core.storage.Index;
-import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.RootStorage;
 import org.rapidcontext.core.storage.StorageException;
 import org.rapidcontext.core.web.Mime;
 import org.rapidcontext.core.web.Request;
-import org.rapidcontext.core.web.SessionFileMap;
+import org.rapidcontext.core.web.RequestHandler;
 import org.rapidcontext.core.web.SessionManager;
 import org.rapidcontext.util.FileUtil;
 
@@ -77,27 +72,39 @@ public class ServletApplication extends HttpServlet {
     private ApplicationContext ctx = null;
 
     /**
+     * The map of request handlers. Each handler is added with its
+     * mapped directory or file path as key.
+     */
+    private LinkedHashMap handlers = new LinkedHashMap();
+
+    /**
      * Initializes this servlet.
      *
      * @throws ServletException if the initialization failed
      */
     public void init() throws ServletException {
         super.init();
-        File dir = (File) getServletContext().getAttribute("javax.servlet.context.tempdir");
-        if (dir == null) {
+        File baseDir = new File(getServletContext().getRealPath("/"));
+        File tmpDir = (File) getServletContext().getAttribute("javax.servlet.context.tempdir");
+        if (tmpDir == null) {
             try {
-                dir = FileUtil.tempDir("rapidcontext", "");
+                tmpDir = FileUtil.tempDir("rapidcontext", "");
             } catch (IOException e) {
-                dir = new File(getBaseDir(), "temp");
-                dir.mkdir();
-                dir.deleteOnExit();
+                tmpDir = new File(baseDir, "temp");
+                tmpDir.mkdir();
+                tmpDir.deleteOnExit();
             }
         }
-        FileUtil.setTempDir(dir);
+        FileUtil.setTempDir(tmpDir);
         Mime.context = getServletContext();
-        ctx = ApplicationContext.init(getBaseDir(), getBaseDir(), true);
+        handlers.put("/rapidcontext/download", new DownloadRequestHandler());
+        handlers.put("/rapidcontext/upload", new UploadRequestHandler());
+        handlers.put("/rapidcontext/procedure/", new ProcedureRequestHandler());
+        handlers.put("/rapidcontext/storage/", new StorageRequestHandler());
+        handlers.put("/", new FileRequestHandler());
+        ctx = ApplicationContext.init(baseDir, baseDir, true);
         // TODO: move the doc directory into the system plug-in storage
-        File docDir = new File(getBaseDir(), "doc");
+        File docDir = new File(baseDir, "doc");
         FileStorage docStore = new FileStorage(docDir, false);
         RootStorage root = (RootStorage) ctx.getStorage();
         try {
@@ -112,94 +119,45 @@ public class ServletApplication extends HttpServlet {
      */
     public void destroy() {
         ApplicationContext.destroy();
+        handlers.clear();
         super.destroy();
-    }
-
-    /**
-     * Handles HTTP GET requests.
-     *
-     * @param req            the servlet request
-     * @param resp           the servlet response
-     *
-     * @throws ServletException if an internal error occurred when processing
-     *             the request
-     * @throws IOException if an IO error occurred when processing the request
-     */
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-    throws ServletException, IOException {
-
-        process(new Request(req, resp));
-    }
-
-    /**
-     * Handles HTTP POST requests.
-     *
-     * @param req            the servlet request
-     * @param resp           the servlet response
-     *
-     * @throws ServletException if an internal error occurred when processing
-     *             the request
-     * @throws IOException if an IO error occurred when processing the request
-     */
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-    throws ServletException, IOException {
-
-        process(new Request(req, resp));
-    }
-
-    /**
-     * Handles HTTP PUT requests.
-     *
-     * @param req            the servlet request
-     * @param resp           the servlet response
-     *
-     * @throws ServletException if an internal error occurred when processing
-     *             the request
-     * @throws IOException if an IO error occurred when processing the request
-     */
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp)
-    throws ServletException, IOException {
-
-        process(new Request(req, resp));
-    }
-
-    /**
-     * Handles HTTP DELETE requests.
-     *
-     * @param req            the servlet request
-     * @param resp           the servlet response
-     *
-     * @throws ServletException if an internal error occurred when processing
-     *             the request
-     * @throws IOException if an IO error occurred when processing the request
-     */
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
-    throws ServletException, IOException {
-
-        process(new Request(req, resp));
     }
 
     /**
      * Processes a servlet request.
      *
-     * @param request        the request to process
+     * @param req            the servlet request
+     * @param resp           the servlet response
      *
      * @throws ServletException if an internal error occurred when processing
      *             the request
      * @throws IOException if an IO error occurred when processing the request
      */
-    private void process(Request request)
-        throws ServletException, IOException {
+    protected void service(HttpServletRequest req, HttpServletResponse resp)
+    throws ServletException, IOException {
+
+        Request         request = new Request(req, resp);
+        Iterator        iter = handlers.keySet().iterator();
+        String          path = request.getPath();
+        String          handlerPath;
+        String          incompletePath;
+        RequestHandler  handler;
 
         try {
             processAuth(request);
-            if (!request.hasResponse()) {
-                processDefault(request);
+            while (!request.hasResponse() && iter.hasNext()) {
+                handlerPath = (String) iter.next();
+                incompletePath = StringUtils.removeEnd(handlerPath, "/");
+                handler = (RequestHandler) handlers.get(handlerPath);
+                if (path.startsWith(handlerPath)) {
+                    request.setPath(path.substring(handlerPath.length()));
+                    handler.process(request);
+                } else if (path.equals(incompletePath)) {
+                    request.sendRedirect(request.getUrl() + "/");
+                }
             }
             if (!request.hasResponse()) {
-                request.sendError(HttpServletResponse.SC_NOT_FOUND,
-                                  Mime.TEXT[0],
-                                  "HTTP 404 Not Found");
+                request.sendError(HttpServletResponse.SC_NOT_FOUND);
             }
             request.commit();
         } catch (IOException e) {
@@ -308,375 +266,6 @@ public class ServletApplication extends HttpServlet {
     }
 
     /**
-     * Processes an authenticated servlet request.
-     *
-     * @param request        the request to process
-     */
-    private void processDefault(Request request) {
-        String   path = request.getPath();
-        String   lowerPath = path.toLowerCase();
-        boolean  isRoot = path.equals("") || path.equals("/");
-
-        if (isRoot && !request.getUrl().endsWith("/")) {
-            request.sendRedirect(request.getUrl() + "/");
-        } else if (isRoot || lowerPath.startsWith("/index.htm")) {
-            processDownload(request, "index.html", false);
-        } else if (lowerPath.startsWith("/rapidcontext/")) {
-            path = path.substring(14);
-            if (path.startsWith("procedure/") && request.hasMethod("POST")) {
-                processProcedure(request, path.substring(10));
-            } else if (path.startsWith("procedure/")) {
-                request.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED,
-                                  Mime.TEXT[0],
-                                  "HTTP 405 Method Not Allowed");
-                request.setResponseHeader("Allow", "POST");
-            } else if (path.startsWith("download")) {
-                processDownload(request, path.substring(8), true);
-            } else if (path.startsWith("upload") &&
-                       (request.hasMethod("POST") || request.hasMethod("PUT"))) {
-
-                processUpload(request, path.substring(6));
-            } else if (path.startsWith("upload")) {
-                request.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED,
-                                  Mime.TEXT[0],
-                                  "HTTP 405 Method Not Allowed");
-                request.setResponseHeader("Allow", "POST PUT");
-            } else if (path.startsWith("query/")) {
-                processQuery(request, path.substring(6));
-            }
-        } else {
-            processDownload(request, path.substring(1), false);
-        }
-    }
-
-    /**
-     * Processes a file download request.
-     *
-     * @param request        the request to process
-     * @param path           the file path used
-     * @param dynamic        the dynamic processing file flag
-     */
-    private void processDownload(Request request, String path, boolean dynamic) {
-        File     file = null;
-        String   fileName = request.getParameter("fileName", path);
-        String   fileData = request.getParameter("fileData");
-        String   mimeType = request.getParameter("mimeType");
-        boolean  cache = ctx.getConfig().getBoolean("responseNoCache", false);
-        String   str;
-
-        if (request.hasMethod("GET")) {
-            file = (File) ctx.getStorage().load(new Path(PATH_FILES, path));
-            if (file != null) {
-                request.sendFile(file, cache);
-            }
-        } else if (dynamic && request.hasMethod("POST")) {
-            if (mimeType == null) {
-                mimeType = Mime.type(fileName);
-            }
-            if (fileData != null) {
-                request.sendData(mimeType, fileData);
-            }
-        } else {
-            request.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED,
-                              Mime.TEXT[0],
-                              "HTTP 405 Method Not Allowed");
-            if (dynamic) {
-                request.setResponseHeader("Allow", "GET POST");
-            } else {
-                request.setResponseHeader("Allow", "GET");
-            }
-            return;
-        }
-        if (request.hasResponse() && request.getParameter("download") != null) {
-            str = fileName;
-            if (str.indexOf("/") >= 0) {
-                str = str.substring(str.lastIndexOf("/") + 1);
-            }
-            if (str.length() > 0) {
-                str = "; filename=" + str;
-            }
-            request.setResponseHeader("Content-Disposition", "attachment" + str);
-        }
-    }
-
-    /**
-     * Processes a file upload request.
-     *
-     * @param request        the request to process
-     * @param id             the file id to use
-     */
-    private void processUpload(Request request, String id) {
-        SessionFileMap   fileMap;
-        FileItemStream   stream;
-        FileItemHeaders  headers;
-        String           fileName;
-        String           length = null;
-        int              size = -1;
-        File             file;
-        boolean          trace;
-
-        try {
-            stream = request.getNextFile();
-            if (stream == null) {
-                request.sendError(HttpServletResponse.SC_BAD_REQUEST,
-                                  Mime.TEXT[0],
-                                  "HTTP 400 Bad Request, missing file data");
-                return;
-            }
-            fileName = stream.getName();
-            if (fileName.lastIndexOf("/") >= 0) {
-                fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
-            }
-            if (fileName.lastIndexOf("\\") >= 0) {
-                fileName = fileName.substring(fileName.lastIndexOf("\\") + 1);
-            }
-            while (id != null && id.startsWith("/")) {
-                id = id.substring(1);
-            }
-            if (id == null || id.trim().length() == 0) {
-                id = fileName;
-            }
-            headers = stream.getHeaders();
-            if (headers != null) {
-                length = headers.getHeader("Content-Length");
-            }
-            if (length == null) {
-                length = request.getHeader("Content-Length");
-            }
-            if (length != null && length.length() > 0) {
-                try {
-                    size = Integer.parseInt(length);
-                } catch (NumberFormatException ignore) {
-                    // Do nothing here
-                }
-            }
-            file = FileUtil.tempFile(fileName);
-            fileMap = SessionFileMap.getFiles(request.getSession(), true);
-            trace = (request.getParameter("trace", null) != null);
-            fileMap.addFile(id, file, size, stream.openStream(), trace ? 5 : 0);
-            request.sendData(Mime.TEXT[0], "Session file " + id + " uploaded");
-        } catch (IOException e) {
-            LOG.log(Level.WARNING, "failed to process file upload", e);
-            request.sendError(HttpServletResponse.SC_BAD_REQUEST,
-                              Mime.TEXT[0],
-                              "HTTP 400 Bad Request, " + e.getMessage());
-        }
-    }
-
-    /**
-     * Processes a procedure call servlet request.
-     *
-     * @param request        the request to process
-     * @param name           the function name
-     */
-    private void processProcedure(Request request, String name) {
-        Dict          res = new Dict();
-        ArrayList     argList = new ArrayList();
-        Object[]      args;
-        StringBuffer  trace = null;
-        String        str = "";
-        Object        obj;
-
-        res.set("data", null);
-        res.set("trace", null);
-        res.set("error", null);
-        try {
-            for (int i = 0; str != null; i++) {
-                str = request.getParameter("arg" + i, null);
-                if (str != null) {
-                    argList.add(JsSerializer.unserialize(str));
-                }
-            }
-            args = argList.toArray();
-            if (request.getParameter("trace", null) != null) {
-                trace = new StringBuffer();
-            }
-            str = "web [" + request.getRemoteAddr() + "]";
-            obj = ctx.execute(name, args, str, trace);
-            res.set("data", obj);
-        } catch (Exception e) {
-            res.set("error", e.getMessage());
-        }
-        if (trace != null) {
-            res.set("trace", trace.toString());
-        }
-        request.sendData(Mime.JSON[0], JsSerializer.serialize(res));
-    }
-
-    /**
-     * Processes a query API servlet request.
-     *
-     * @param request        the request to process
-     * @param query          the query path
-     */
-    private void processQuery(Request request, String query) {
-        Path      path = new Path(query);
-        Object    meta = null;
-        Object    res = null;
-        Dict      dict;
-        Array     arr;
-        boolean   isJson;
-        boolean   isXml;
-        boolean   isHtml;
-
-        if (!request.hasMethod("GET")) {
-            request.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED,
-                              Mime.TEXT[0],
-                              "HTTP 405 Method Not Allowed");
-            request.setResponseHeader("Allow", "GET");
-            return;
-        }
-        isJson = isMimeMatch(request, Mime.JSON);
-        isXml = isMimeMatch(request, Mime.XML);
-        isHtml = (!isJson && !isXml) || isMimeMatch(request, Mime.HTML);
-        try {
-            // TODO: Implement security authentication for data queries
-            if (!SecurityContext.hasAdmin()) {
-                LOG.info("permission denied to Query API from " +
-                         request.getRemoteAddr() + " for user " +
-                         SecurityContext.currentUser());
-               throw new ProcedureException("Permission denied");
-            }
-            // TODO: Extend data lookup via plug-ins and/or standardized QL
-            res = ctx.getStorage().load(path);
-            meta = ctx.getStorage().lookup(path);
-            if (res instanceof Index) {
-                dict = new Dict();
-                dict.set("type", "index");
-                arr = ((Index) res).indices();
-                if (isHtml) {
-                    arr = arr.copy();
-                    arr.sort();
-                    for (int i = 0; i < arr.size(); i++) {
-                        arr.set(i, "http:" + arr.getString(i, null) + "/");
-                    }
-                }
-                dict.set("directories", arr);
-                arr = ((Index) res).objects();
-                if (isHtml) {
-                    arr = arr.copy();
-                    arr.sort();
-                    for (int i = 0; i < arr.size(); i++) {
-                        arr.set(i, "http:" + arr.getString(i, null));
-                    }
-                }
-                dict.set("objects", arr);
-                res = dict;
-            } else if (res instanceof File) {
-                File file = (File) res;
-                dict = new Dict();
-                dict.set("type", "file");
-                dict.set("name", file.getName());
-                dict.set("mimeType", Mime.type(file));
-                dict.set("size", new Long(file.length()));
-                String url = StringUtils.removeEnd(request.getUrl(), request.getPath()) +
-                             StringUtils.removeStart(path.toString(), "/files");
-                if (query.startsWith("/files") || query.startsWith("files")) {
-                    dict.set("url", url);
-                }
-                res = dict;
-            }
-            if (meta instanceof Metadata) {
-                dict = ((Metadata) meta).serialize().copy();
-                dict.set("processTime", new Long(request.getProcessTime()));
-                meta = dict;
-            }
-
-            // Render result as JSON, XML or HTML
-            if (isJson && !isHtml) {
-                dict = new Dict();
-                dict.set("metadata", meta);
-                dict.set("data", res);
-                request.sendData(Mime.JSON[0], JsSerializer.serialize(dict));
-            } else if (isXml && !isHtml) {
-                dict = new Dict();
-                dict.set("metadata", meta);
-                dict.set("data", res);
-                request.sendData(Mime.XML[0], XmlSerializer.serialize(dict));
-            } else {
-                StringBuffer html = new StringBuffer();
-                html.append("<html>\n<head>\n<link rel='stylesheet' href='");
-                html.append(relativeBackPath(request.getPath()));
-                html.append("css/style.css' type='text/css' />\n");
-                html.append("<title>RapidContext Query Response</title>\n");
-                html.append("</head>\n<body>\n<div class='query'>\n");
-                html.append("<h1>RapidContext Query API</h1>\n");
-                html.append("<table class='navigation'>\n<tr>\n");
-                if (path.isRoot()) {
-                    html.append("<td class='active'>Start</td>\n");
-                } else {
-                    html.append("<td class='prev'><a href='");
-                    html.append(StringUtils.repeat("../", path.depth()));
-                    html.append(".'>Start</a></td>\n");
-                }
-                for (int i = 0; i < path.length(); i++) {
-                    if (i + 1 < path.length()) {
-                        html.append("<td class='prev-prev'>&nbsp;</td>\n");
-                        html.append("<td class='prev'><a href='");
-                        html.append(StringUtils.repeat("../", path.depth() - i - 1));
-                        html.append(".'>");
-                        html.append(path.name(i));
-                        html.append("</a>");
-                    } else {
-                        html.append("<td class='prev-active'>&nbsp;</td>\n");
-                        html.append("<td class='active'>");
-                        html.append(path.name(i));
-                    }
-                    html.append("</td>\n");
-                }
-                html.append("<td class='active-end'>&nbsp;</td>\n");
-                html.append("</tr>\n</table>\n<hr/>\n");
-                html.append("<div class='metadata'>\n");
-                html.append("<h2>Query Metadata</h2>\n");
-                html.append(HtmlSerializer.serialize(meta));
-                html.append("</div>\n");
-                html.append("<h2>Query Results</h2>");
-                html.append(HtmlSerializer.serialize(res));
-                html.append("<hr/><p><strong>Data Formats:</strong>");
-                html.append(" &nbsp;<a href='?mimeType=text/javascript'>JSON</a>");
-                html.append(" &nbsp;<a href='?mimeType=text/xml'>XML</a></p>");
-                html.append("</div>\n</body>\n</html>\n");
-                request.sendData(Mime.HTML[0], html.toString());
-            }
-        } catch (Exception e) {
-            LOG.log(Level.WARNING, "failed to process query", e);
-            // TODO: How do users want their error messages?
-            dict = new Dict();
-            dict.set("error", e.getMessage());
-            res = dict;
-            if (isJson) {
-                request.sendData(Mime.JSON[0], JsSerializer.serialize(res));
-            } else if (isXml) {
-                request.sendData(Mime.XML[0], XmlSerializer.serialize(res));
-            } else {
-                request.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-                                  Mime.TEXT[0],
-                                  "HTTP 500 Internal Server Error: " + e.getMessage());
-            }
-        }
-    }
-
-    /**
-     * Checks if the request accepts one of the listed MIME types as
-     * response.
-     *
-     * @param request        the request to analyze
-     * @param mimes          the MIME types to check for
-     *
-     * @return true if one of the MIME types is accepted, or
-     *         false otherwise
-     */
-    private boolean isMimeMatch(Request request, String[] mimes) {
-        String  param = request.getParameter("mimeType");
-
-        if (param != null) {
-            return ArrayUtils.contains(mimes, param);
-        } else {
-            return Mime.isMatch(request, mimes);
-        }
-    }
-
-    /**
      * Returns an IP address tag suitable for logging.
      *
      * @param request        the request to use
@@ -685,31 +274,5 @@ public class ServletApplication extends HttpServlet {
      */
     private String ip(Request request) {
         return "[" + request.getRemoteAddr() + "] ";
-    }
-
-    /**
-     * Returns the base application directory. This is the directory
-     * containing all the application files (i.e. the corresponding
-     * webapps directory).
-     *
-     * @return the base application directory
-     */
-    private File getBaseDir() {
-        return new File(getServletContext().getRealPath("/"));
-    }
-
-    /**
-     * Returns the relative path to reverse the specified path. This
-     * method will add an "../" part for each directory in the
-     * current path so that site-relative links can be created
-     * easily.
-     *
-     * @param path           the path to reverse
-     *
-     * @return the relative reversed path
-     */
-    protected String relativeBackPath(String path) {
-        int count = StringUtils.countMatches(path, "/");
-        return StringUtils.repeat("../", count - 1);
     }
 }
