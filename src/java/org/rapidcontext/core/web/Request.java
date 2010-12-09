@@ -18,7 +18,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 
 import javax.servlet.ServletException;
@@ -123,6 +122,11 @@ public class Request {
      * The response data.
      */
     private String responseData = null;
+
+    /**
+     * The response headers only flag.
+     */
+    private boolean responseHeadersOnly = false;
 
     /**
      * The multi-part request file iterator.
@@ -503,6 +507,7 @@ public class Request {
         responseCode = HttpServletResponse.SC_OK;
         responseMimeType = null;
         responseData = null;
+        responseHeadersOnly = false;
     }
 
     /**
@@ -648,6 +653,17 @@ public class Request {
     }
 
     /**
+     * Sets or clears the response headers only flag. If set, only
+     * the HTTP response headers will be sent. No actual data will
+     * be transferred.
+     *
+     * @param value          the new flag value
+     */
+    public void setResponseHeadersOnly(boolean value) {
+        responseHeadersOnly = value;
+    }
+
+    /**
      * Disposes of all resources used by this request object. This
      * method shouldn't be called until a response has been sent to
      * the client.
@@ -675,7 +691,8 @@ public class Request {
         response.setDateHeader("Date", System.currentTimeMillis());
         switch (responseType) {
         case AUTH_RESPONSE:
-            commitAuthentication();
+            response.setHeader("WWW-Authenticate", responseData);
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             break;
         case DATA_RESPONSE:
             commitData();
@@ -684,10 +701,15 @@ public class Request {
             commitFile();
             break;
         case REDIRECT_RESPONSE:
-            commitRedirect();
+            commitDynamicHeaders();
+            response.sendRedirect(responseData);
             break;
         case ERROR_RESPONSE:
-            commitError();
+            if (responseData == null) {
+                response.sendError(responseCode);
+            } else {
+                commitData();
+            }
             break;
         default:
             throw new ServletException("No request response available: " +
@@ -725,26 +747,12 @@ public class Request {
     }
 
     /**
-     * Sends the NTLM authentication request response to the
-     * underlying HTTP response object.
-     *
-     * @throws IOException if an IO error occurred while attempting to
-     *             commit the response
-     */
-    private void commitAuthentication() throws IOException {
-        response.setHeader("WWW-Authenticate", responseData);
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-    }
-
-    /**
      * Sends the data response to the underlying HTTP response object.
      *
      * @throws IOException if an IO error occurred while attempting to
      *             commit the response
      */
     private void commitData() throws IOException {
-        PrintWriter  out;
-
         response.setStatus(responseCode);
         commitDynamicHeaders();
         if (responseMimeType == null || responseMimeType.length() == 0) {
@@ -754,11 +762,15 @@ public class Request {
         } else {
             response.setContentType(responseMimeType + "; charset=UTF-8");
         }
-        out = response.getWriter();
-        if (responseData != null) {
-            out.write(responseData);
+        if (responseData == null) {
+            response.setContentLength(0);
+        } else {
+            byte[] data = responseData.getBytes("UTF-8");
+            response.setContentLength(data.length);
+            OutputStream os = response.getOutputStream();
+            os.write(data);
+            os.close();
         }
-        out.close();
     }
 
     /**
@@ -785,56 +797,19 @@ public class Request {
         commitStaticHeaders(file.lastModified());
         response.setContentType(Mime.type(file));
         response.setContentLength((int) file.length());
-        try {
-            input = new FileInputStream(file);
-        } catch (IOException e) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
-        output = response.getOutputStream();
-        while ((length = input.read(buffer)) > 0) {
-            output.write(buffer, 0, length);
-        }
-        input.close();
-        output.close();
-    }
-
-    /**
-     * Sends the redirect response to the underlying HTTP response
-     * object.
-     *
-     * @throws IOException if an IO error occurred while attempting to
-     *             redirect the request
-     */
-    private void commitRedirect() throws IOException {
-        commitDynamicHeaders();
-        response.sendRedirect(responseData);
-    }
-
-    /**
-     * Sends the error response to the underlying HTTP response object.
-     *
-     * @throws IOException if an IO error occurred while attempting to
-     *             commit the response
-     */
-    private void commitError() throws IOException {
-        PrintWriter  out;
-
-        commitDynamicHeaders();
-        if (responseData == null) {
-            response.sendError(responseCode);
-        } else {
-            response.setStatus(responseCode);
-            if (responseMimeType == null || responseMimeType.length() == 0) {
-                response.setContentType("text/plain; charset=UTF-8");
-            } else if (responseMimeType.indexOf("charset") > 0) {
-                response.setContentType(responseMimeType);
-            } else {
-                response.setContentType(responseMimeType + "; charset=UTF-8");
+        if (!responseHeadersOnly) {
+            try {
+                input = new FileInputStream(file);
+            } catch (IOException e) {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                return;
             }
-            out = response.getWriter();
-            out.write(responseData);
-            out.close();
+            output = response.getOutputStream();
+            while ((length = input.read(buffer)) > 0) {
+                output.write(buffer, 0, length);
+            }
+            input.close();
+            output.close();
         }
     }
 }
