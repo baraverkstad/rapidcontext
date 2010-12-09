@@ -24,9 +24,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Enumeration;
+import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
 
+import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.util.StringUtil;
 
 /**
@@ -58,6 +61,37 @@ import org.rapidcontext.util.StringUtil;
  * @version  1.0
  */
 public class PropertiesSerializer {
+
+    /**
+     * Serializes an object into an properties representation. The
+     * string returned can be used as a properties.
+     *
+     * @param obj            the object to convert, or null
+     *
+     * @return an properties file representation
+     *
+     * @throws IOException if the data couldn't be serialized
+     */
+    public static String serialize(Object obj) throws IOException {
+        StringWriter  buffer = new StringWriter();
+        PrintWriter   os = new PrintWriter(buffer);
+        String        msg;
+
+        if (obj == null) {
+            // Nothing to write
+        } else if (obj instanceof Dict) {
+            write(os, "", (Dict) obj);
+        } else if (obj instanceof Array) {
+            write(os, "", (Array) obj);
+        } else if (obj instanceof StorableObject) {
+            write(os, "", ((StorableObject) obj).serialize());
+        } else {
+            msg = "Cannot serialize " + obj.getClass();
+            throw new InvalidPropertiesFormatException(msg);
+        }
+        os.close();
+        return buffer.toString();
+    }
 
     /**
      * Reads a file containing properties and returns the contents
