@@ -74,30 +74,25 @@ public class ServletApplication extends HttpServlet {
     private ApplicationContext ctx = null;
 
     /**
-     * The temporary file upload directory.
-     */
-    private File tempDir = null;
-
-    /**
      * Initializes this servlet.
      *
      * @throws ServletException if the initialization failed
      */
     public void init() throws ServletException {
         super.init();
+        File dir = (File) getServletContext().getAttribute("javax.servlet.context.tempdir");
+        if (dir == null) {
+            try {
+                dir = FileUtil.tempDir("rapidcontext", "");
+            } catch (IOException e) {
+                dir = new File(getBaseDir(), "temp");
+                dir.mkdir();
+                dir.deleteOnExit();
+            }
+        }
+        FileUtil.setTempDir(dir);
         Mime.context = getServletContext();
         ctx = ApplicationContext.init(getBaseDir(), getBaseDir(), true);
-        tempDir = (File) getServletContext().getAttribute("javax.servlet.context.tempdir");
-        if (tempDir == null) {
-            try {
-                tempDir = File.createTempFile("rapidcontext", String.valueOf(System.currentTimeMillis()));
-                tempDir.delete();
-            } catch (IOException e) {
-                tempDir = new File(getBaseDir(), "temp");
-            }
-            tempDir.mkdir();
-            tempDir.deleteOnExit();
-        }
     }
 
     /**
@@ -447,7 +442,7 @@ public class ServletApplication extends HttpServlet {
                     // Do nothing here
                 }
             }
-            file = FileUtil.unique(tempDir, fileName);
+            file = FileUtil.tempFile(fileName);
             fileMap = SessionFileMap.getFiles(request.getSession(), true);
             trace = (request.getParameter("trace", null) != null);
             fileMap.addFile(id, file, size, stream.openStream(), trace ? 5 : 0);

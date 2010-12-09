@@ -31,6 +31,11 @@ import org.apache.commons.lang.StringUtils;
 public abstract class FileUtil {
 
     /**
+     * The base temporary directory to use.
+     */
+    private static File tempDir = null;
+
+    /**
      * Copies a file or a directory. Directories are copied
      * recursively and file modification dates are kept. If the
      * read-only or executable bits are set on the source file,
@@ -141,34 +146,100 @@ public abstract class FileUtil {
     }
 
     /**
-     * Creates a unique file that doesn't exist in the specified
-     * directory. The desired file name will be used if no name
-     * collisions are found. Otherwise, a counter will be inserted
-     * into the name to make it unique. The file name extension is
-     * guaranteed to be kept.
+     * Creates a new temporary directory. If a temporary directory
+     * has been set, it will be used. Otherwise the default temporary
+     * directory will be used.
      *
-     * @param dir            the directory to check
+     * @param prefix         the directory name prefix
+     * @param suffix         the directory name suffix
+     *
+     * @return a new empty temporary directory
+     *
+     * @throws IOException if the temporary directory couldn't be created
+     */
+    public static File tempDir(String prefix, String suffix) throws IOException {
+        File dir = File.createTempFile(prefix, suffix, tempDir);
+        dir.delete();
+        dir.mkdir();
+        dir.deleteOnExit();
+        return dir;
+    }
+
+    /**
+     * Sets the temporary directory to use.
+     *
+     * @param dir            the new temporary directory
+     */
+    public static void setTempDir(File dir) {
+        tempDir = dir;
+    }
+
+    /**
+     * Creates a new temporary file. If a temporary directory has
+     * been set, it will be used. Otherwise the default temporary
+     * directory will be used. The generated file is guaranteed to
+     * keep the same file extension (suffix) as the specified one.
+     *
+     * @param prefix         the file name prefix
+     * @param suffix         the file name suffix (extension)
+     *
+     * @return a new empty temporary file
+     *
+     * @throws IOException if the temporary file couldn't be created
+     */
+    public static File tempFile(String prefix, String suffix) throws IOException {
+        File  file = null;
+
+        if (tempDir != null) {
+            file = new File(tempDir, prefix + suffix);
+            if (file.exists()) {
+                file = null;
+            } else {
+                file.createNewFile();
+            }
+        }
+        if (file == null) {
+            file = File.createTempFile(prefix, suffix, tempDir);
+        }
+        file.deleteOnExit();
+        return file;
+    }
+
+    /**
+     * Creates a new temporary file. If a temporary directory has
+     * been set, it will be used. Otherwise the default temporary
+     * directory will be used. The generated file is guaranteed to
+     * keep the same file extension as the desired file name.
+     *
      * @param name           the desired file name
      *
-     * @return a file that doesn't already exist
+     * @return a new empty temporary file
+     *
+     * @throws IOException if the temporary file couldn't be created
      */
-    public static File unique(File dir, String name) {
+    public static File tempFile(String name) throws IOException {
         String  prefix = StringUtils.substringBeforeLast(name, ".");
         String  suffix = StringUtils.substringAfterLast(name, ".");
-        File    file;
-        int     idx = 0;
+        File    file = null;
 
-        if (prefix.length() <= 0) {
+        if (prefix == null || prefix.length() <= 0) {
             prefix = "file";
         }
-        if (suffix.length() > 0) {
+        if (suffix != null && suffix.length() > 0) {
             suffix = "." + suffix;
         }
-        file = new File(dir, name);
-        while (file.exists()) {
-            idx++;
-            file = new File(dir, prefix + "-" + idx + suffix);
+        if (tempDir != null) {
+            file = new File(tempDir, name);
+            if (file.exists()) {
+                file = null;
+            } else {
+                file.createNewFile();
+            }
         }
+        if (file == null) {
+            file = File.createTempFile(prefix, suffix, tempDir);
+        }
+        file.deleteOnExit();
         return file;
     }
 }
