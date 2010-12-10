@@ -20,6 +20,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
@@ -158,6 +159,7 @@ public class Request {
                 // Do nothing
             }
         }
+        logRequest();
     }
 
     /**
@@ -568,11 +570,7 @@ public class Request {
      * @see #sendClear()
      */
     public void sendData(String mimeType, String data) {
-        sendClear();
-        responseType = DATA_RESPONSE;
-        responseCode = HttpServletResponse.SC_OK;
-        responseMimeType = mimeType;
-        responseData = data;
+        sendData(HttpServletResponse.SC_OK, mimeType, data);
     }
 
     /**
@@ -589,7 +587,13 @@ public class Request {
         sendClear();
         responseType = DATA_RESPONSE;
         responseCode = code;
-        responseMimeType = mimeType;
+        if (mimeType == null || mimeType.length() == 0) {
+            responseMimeType = "text/plain; charset=UTF-8";
+        } else if (mimeType.indexOf("charset") > 0) {
+            responseMimeType = mimeType;
+        } else {
+            responseMimeType = mimeType + "; charset=UTF-8";
+        }
         responseData = data;
     }
 
@@ -609,7 +613,7 @@ public class Request {
         sendClear();
         responseType = FILE_RESPONSE;
         responseCode = HttpServletResponse.SC_OK;
-        responseMimeType = null;
+        responseMimeType = Mime.type(file);
         responseData = file.toString();
         if (limitCache) {
             response.setHeader("Cache-Control", "private");
@@ -661,11 +665,8 @@ public class Request {
      * @see #sendClear()
      */
     public void sendError(int code, String mimeType, String data) {
-        sendClear();
+        sendData(code, mimeType, data);
         responseType = ERROR_RESPONSE;
-        responseCode = code;
-        responseMimeType = mimeType;
-        responseData = data;
     }
 
     /**
@@ -722,6 +723,7 @@ public class Request {
         case AUTH_RESPONSE:
             response.setHeader("WWW-Authenticate", responseData);
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            logResponse();
             break;
         case DATA_RESPONSE:
             commitData();
@@ -732,17 +734,19 @@ public class Request {
         case REDIRECT_RESPONSE:
             commitDynamicHeaders();
             response.sendRedirect(responseData);
+            logResponse();
             break;
         case ERROR_RESPONSE:
             if (responseData == null) {
                 response.sendError(responseCode);
+                logResponse();
             } else {
                 commitData();
             }
             break;
         default:
             throw new ServletException("No request response available: " +
-                                       this);
+                                       getUrl());
         }
     }
 
@@ -784,18 +788,14 @@ public class Request {
     private void commitData() throws IOException {
         response.setStatus(responseCode);
         commitDynamicHeaders();
-        if (responseMimeType == null || responseMimeType.length() == 0) {
-            response.setContentType("text/plain; charset=UTF-8");
-        } else if (responseMimeType.indexOf("charset") > 0) {
-            response.setContentType(responseMimeType);
-        } else {
-            response.setContentType(responseMimeType + "; charset=UTF-8");
-        }
+        response.setContentType(responseMimeType);
         if (responseData == null) {
             response.setContentLength(0);
+            logResponse();
         } else {
             byte[] data = responseData.getBytes("UTF-8");
             response.setContentLength(data.length);
+            logResponse();
             OutputStream os = response.getOutputStream();
             os.write(data);
             os.close();
@@ -820,12 +820,14 @@ public class Request {
         modified = request.getDateHeader("If-Modified-Since");
         if (modified != -1 && file.lastModified() < modified + 1000) {
             response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+            logResponse();
             return;
         }
         response.setStatus(responseCode);
         commitStaticHeaders(file.lastModified());
         response.setContentType(Mime.type(file));
         response.setContentLength((int) file.length());
+        logResponse();
         if (!responseHeadersOnly) {
             try {
                 input = new FileInputStream(file);
@@ -839,6 +841,60 @@ public class Request {
             }
             input.close();
             output.close();
+        }
+    }
+
+    /**
+     * Logs the request for debugging purposes.
+     */
+    private void logRequest() {
+        StringBuilder  buffer;
+
+        if (LOG.isLoggable(Level.FINE)) {
+            buffer = new StringBuilder();
+            buffer.append("[");
+            buffer.append(request.getRemoteAddr());
+            buffer.append("] ");
+            buffer.append(getUrl());
+            buffer.append("\n");
+            buffer.append(request);
+            LOG.fine(buffer.toString());
+        }
+    }
+
+    /**
+     * Logs the response for debugging purposes.
+     */
+    private void logResponse() {
+        StringBuilder  buffer;
+
+        if (LOG.isLoggable(Level.FINE)) {
+            buffer = new StringBuilder();
+            buffer.append("[");
+            buffer.append(request.getRemoteAddr());
+            buffer.append("] ");
+            buffer.append(getUrl());
+            buffer.append("\n");
+            buffer.append(response);
+            if (responseType == AUTH_RESPONSE) {
+                buffer.append("Type: Authentication Request\n");
+            } else if (responseType == DATA_RESPONSE) {
+                buffer.append("Type: Generated Data\n");
+            } else if (responseType == FILE_RESPONSE) {
+                buffer.append("Type: Static File\n");
+            } else if (responseType == REDIRECT_RESPONSE) {
+                buffer.append("Type: Redirect\n");
+            } else if (responseType == ERROR_RESPONSE) {
+                buffer.append("Type: Error\n");
+            }
+            if (responseHeadersOnly) {
+                buffer.append("Only HTTP headers in response.\n");
+            } else if (responseData != null) {
+                buffer.append("Data: ");
+                buffer.append(responseData);
+                buffer.append("\n");
+            }
+            LOG.fine(buffer.toString());
         }
     }
 }
