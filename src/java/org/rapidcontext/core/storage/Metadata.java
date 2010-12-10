@@ -130,6 +130,18 @@ public class Metadata extends StorableObject {
     }
 
     /**
+     * Creates a new metadata container for an index.
+     *
+     * @param path           the absolute object path
+     * @param meta           the metadata container to copy
+     */
+    public Metadata(Path path, Metadata meta) {
+        super(null, "metadata");
+        dict.addAll(meta.dict);
+        dict.set(KEY_PATH, path);
+    }
+
+    /**
      * Creates a new metadata container.
      *
      * @param category       the object category

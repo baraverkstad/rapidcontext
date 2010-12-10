@@ -145,6 +145,28 @@ public class Index extends StorableObject {
     }
 
     /**
+     * Returns an array of paths corresponding to all sub-indexes and
+     * objects in this index.
+     *
+     * @return an array of path objects
+     */
+    public Array paths() {
+        Array  res = new Array();
+        Path   path = path();
+        Array  arr;
+
+        arr = indices();
+        for (int i = 0; arr != null && i < arr.size(); i++) {
+            res.add(path.child(arr.getString(i, null), true));
+        }
+        arr = objects();
+        for (int i = 0; arr != null && i < arr.size(); i++) {
+            res.add(path.child(arr.getString(i, null), false));
+        }
+        return res;
+    }
+
+    /**
      * Adds a sub-index name. The name will only be added only if not
      * already in the index.
      *

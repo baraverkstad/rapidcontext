@@ -299,7 +299,8 @@ public class RootStorage extends Storage {
         Metadata  idx = null;
 
         if (storage != null) {
-            return lookupObject(storage, storage.localPath(path));
+            meta = lookupObject(storage, storage.localPath(path));
+            return new Metadata(path, meta);
         } else {
             meta = metadata.lookup(path);
             if (meta != null && meta.isIndex()) {
@@ -371,8 +372,13 @@ public class RootStorage extends Storage {
         Index    idx = null;
 
         if (storage != null) {
-            path = storage.localPath(path);
-            return loadObject(storage, path);
+            res = loadObject(storage, storage.localPath(path));
+            if (res instanceof Index) {
+                idx = (Index) res;
+                return new Index(path, idx.indices(), idx.objects());
+            } else {
+                return res;
+            }
         } else {
             res = metadata.load(path);
             if (res instanceof Index) {
