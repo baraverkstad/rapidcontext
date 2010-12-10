@@ -855,6 +855,8 @@ public class Request {
             buffer.append("[");
             buffer.append(request.getRemoteAddr());
             buffer.append("] ");
+            buffer.append(getMethod());
+            buffer.append(" ");
             buffer.append(getUrl());
             buffer.append("\n");
             buffer.append(request);
@@ -873,6 +875,8 @@ public class Request {
             buffer.append("[");
             buffer.append(request.getRemoteAddr());
             buffer.append("] ");
+            buffer.append(getMethod());
+            buffer.append(" ");
             buffer.append(getUrl());
             buffer.append("\n");
             buffer.append(response);
