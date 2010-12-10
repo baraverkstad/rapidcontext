@@ -15,6 +15,7 @@
 package org.rapidcontext.app.web;
 
 import java.io.File;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,6 +27,7 @@ import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.HtmlSerializer;
+import org.rapidcontext.core.data.PropertiesSerializer;
 import org.rapidcontext.core.data.XmlSerializer;
 import org.rapidcontext.core.js.JsSerializer;
 import org.rapidcontext.core.security.SecurityContext;
@@ -53,11 +55,47 @@ public class StorageRequestHandler extends RequestHandler {
         Logger.getLogger(StorageRequestHandler.class.getName());
 
     /**
+     * The WebDAV PROPFIND method constant.
+     */
+    public static final String METHOD_PROPFIND = "PROPFIND";
+
+    /**
+     * The WebDAV PROPPATCH method constant.
+     */
+    public static final String METHOD_PROPPATCH = "PROPPATCH";
+
+    /**
+     * The WebDAV MKCOL method constant.
+     */
+    public static final String METHOD_MKCOL = "MKCOL";
+
+    /**
+     * The WebDAV COPY method constant.
+     */
+    public static final String METHOD_COPY = "COPY";
+
+    /**
+     * The WebDAV MOVE method constant.
+     */
+    public static final String METHOD_MOVE = "MOVE";
+
+    /**
+     * The WebDAV LOCK method constant.
+     */
+    public static final String METHOD_LOCK = "LOCK";
+
+    /**
+     * The WebDAV UNLOCK method constant.
+     */
+    public static final String METHOD_UNLOCK = "UNLOCK";
+
+    /**
      * The supported HTTP methods.
      */
     protected static final String[] METHODS = {
-        "OPTIONS", "HEAD", "GET"
-        //TODO:, "POST", "PUT", "DELETE", "PROPFIND", "PROPPATCH", "MKCOL", "COPY", "MOVE"
+        HTTP_OPTIONS, HTTP_HEAD, HTTP_GET, HTTP_PUT, HTTP_DELETE,
+        METHOD_PROPFIND, METHOD_PROPPATCH, METHOD_MKCOL,
+        METHOD_COPY, METHOD_MOVE, METHOD_LOCK, METHOD_UNLOCK
     };
 
     /**
@@ -70,7 +108,7 @@ public class StorageRequestHandler extends RequestHandler {
      * @return the array of HTTP method names supported
      */
     public String[] methods(Request request) {
-        return GET_METHODS_ONLY;
+        return METHODS;
     }
 
     /**
@@ -80,9 +118,11 @@ public class StorageRequestHandler extends RequestHandler {
      * @param request the request to process
      */
     public void process(Request request) {
-        //request.setResponseHeader("DAV", "1 3");
+        request.setResponseHeader("DAV", "1 3");
         if (!SecurityContext.hasAdmin()) {
             errorUnauthorized(request);
+        } else if (request.hasMethod(METHOD_PROPFIND)) {
+            doPropFind(request);
         } else {
             super.process(request);
         }
@@ -104,12 +144,21 @@ public class StorageRequestHandler extends RequestHandler {
         Object              meta = null;
         Object              res = null;
         Dict                dict;
+        String              str;
 
         request.setPath(null);
         try {
             // TODO: Extend data lookup via standardized query language
-            res = ctx.getStorage().load(path);
-            meta = ctx.getStorage().lookup(path);
+            if (isDefault && path.name().endsWith(".properties")) {
+                str = StringUtils.removeEnd(path.name(), ".properties");
+                path = path.parent().child(str, false);
+                res = ctx.getStorage().load(path);
+                meta = ctx.getStorage().lookup(path);
+            }
+            if (res == null || meta == null) {
+                res = ctx.getStorage().load(path);
+                meta = ctx.getStorage().lookup(path);
+            }
             if (res instanceof Index) {
                 res = serializeIndex((Index) res, isHtml || isDefault);
             } else if (res instanceof File && !isDefault) {
@@ -119,9 +168,15 @@ public class StorageRequestHandler extends RequestHandler {
                 meta = serializeMetadata((Metadata) meta, request);
             }
 
-            // Render result as raw data, HTML, JSON or XML
-            if (isDefault && res instanceof File) {
+            // Render result as raw data, Properties, HTML, JSON or XML
+            if (res == null) {
+                errorNotFound(request);
+            } else if (isDefault && res instanceof File) {
                 request.sendFile((File) res, true); 
+            } else if (isDefault && request.getPath().endsWith(".properties")) {
+                str = StringUtils.substringAfterLast(request.getPath(), "/");
+                mimeType = StringUtils.defaultIfEmpty(mimeType, Mime.type(str));
+                request.sendData(mimeType, PropertiesSerializer.serialize(res));
             } else if (isDefault || isHtml) {
                 sendHtml(request, path, meta, res);
             } else if (isJson) {
@@ -320,8 +375,97 @@ public class StorageRequestHandler extends RequestHandler {
      *
      * @return the relative reversed path
      */
-    protected String relativeBackPath(String path) {
+    private String relativeBackPath(String path) {
         int count = StringUtils.countMatches(path, "/");
         return StringUtils.repeat("../", count - 1);
+    }
+
+    /**
+     * Processes a WebDAV PROPFIND request.
+     *
+     * @param request        the request to process
+     */
+    protected void doPropFind(Request request) {
+        ApplicationContext  ctx = ApplicationContext.getInstance();
+        Path                path = new Path(request.getPath());
+        WebDavRequest       davRequest;
+        Metadata            meta;
+        Object              data;
+        Index               idx;
+        Array               arr;
+        String              str;
+
+        try {
+            davRequest = new WebDavRequest(request);
+            if (davRequest.depth() < 0 || davRequest.depth() > 1) {
+                davRequest.sendErrorFiniteDepth();
+                return;
+            }
+            data = ctx.getStorage().load(path);
+            meta = ctx.getStorage().lookup(path);
+            if (data == null && path.name().endsWith(".properties")) {
+                str = StringUtils.removeEnd(path.name(), ".properties");
+                path = path.parent().child(str, false);
+                data = ctx.getStorage().load(path);
+                meta = ctx.getStorage().lookup(path);
+            }
+            if (data == null || meta == null) {
+                errorNotFound(request);
+                return;
+            }
+            addResource(davRequest, request.getAbsolutePath(), meta, data);
+            if (davRequest.depth() > 0 && data instanceof Index) {
+                idx = (Index) data;
+                arr = idx.paths();
+                LOG.fine("Paths: " + arr);
+                for (int i = 0; i < arr.size(); i++) {
+                    path = (Path) arr.get(i);
+                    data = ctx.getStorage().load(path);
+                    meta = ctx.getStorage().lookup(path);
+                    if (data != null && meta != null) {
+                        str = request.getAbsolutePath() + path.name();
+                        if (path.isIndex()) {
+                            str += "/";
+                        } else if (meta.isObject()) {
+                            str += ".properties";
+                        }
+                        addResource(davRequest, str, meta, data);
+                    }
+                }
+            }
+            davRequest.sendResponse();
+        } catch (Exception e) {
+            LOG.log(Level.WARNING, "failed to process WebDAV propfind request", e);
+            errorInternal(request, e.getMessage());
+        }
+    }
+
+    /**
+     * Adds a resource to the WebDAV response.
+     *
+     * @param request        the WebDAV request container
+     * @param href           the root-relative resource link
+     * @param meta           the resource meta-data
+     * @param data           the resource object
+     *
+     * @throws Exception if the resource couldn't be added
+     */
+    private void addResource(WebDavRequest request,
+                             String href,
+                             Metadata meta,
+                             Object data)
+    throws Exception {
+
+        Date modified = meta.lastModified();
+        if (data instanceof Index) {
+            request.addResource(href, modified, modified, 0);
+        } else if (data instanceof File) {
+            File file = (File) data;
+            request.addResource(href, modified, modified, file.length());
+        } else {
+            String str = PropertiesSerializer.serialize(data);
+            byte[] bytes = str.getBytes("ISO-8859-1");
+            request.addResource(href, modified, modified, bytes.length);
+        }
     }
 }
