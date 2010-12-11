@@ -300,7 +300,7 @@ public class RootStorage extends Storage {
 
         if (storage != null) {
             meta = lookupObject(storage, storage.localPath(path));
-            return new Metadata(path, meta);
+            return (meta == null) ? null : new Metadata(path, meta);
         } else {
             meta = metadata.lookup(path);
             if (meta != null && meta.isIndex()) {
