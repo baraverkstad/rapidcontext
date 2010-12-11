@@ -15,6 +15,8 @@
 package org.rapidcontext.app.web;
 
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,6 +24,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletResponse;
@@ -90,19 +93,74 @@ public class WebDavRequest {
      */
     public static final int SC_INSUFFICIENT_STORAGE = 507;
 
+    /**
+     * The WebDAV display name property constant.
+     */
     public static final String PROP_DISPLAY_NAME = "displayname";
+
+    /**
+     * The WebDAV creation date & time property constant.
+     */
     public static final String PROP_CREATION_DATE = "creationdate";
+
+    /**
+     * The WebDAV last modified date & time property constant.
+     */
     public static final String PROP_LAST_MODIFIED = "getlastmodified";
+
+    /**
+     * The WebDAV resource type property constant.
+     */
     public static final String PROP_RESOURCE_TYPE = "resourcetype";
+
+    /**
+     * The WebDAV MIME content type property constant.
+     */
     public static final String PROP_CONTENT_TYPE = "getcontenttype";
+
+    /**
+     * The WebDAV content length property constant.
+     */
     public static final String PROP_CONTENT_LENGTH = "getcontentlength";
+
+    /**
+     * The WebDAV ETag property constant.
+     */
     public static final String PROP_ETAG = "getetag";
+
+    /**
+     * The WebDAV supported lock property constant.
+     */
     public static final String PROP_SUPPORTED_LOCK = "supportedlock";
+
+    /**
+     * The WebDAV lock discovery property constant.
+     */
     public static final String PROP_LOCK_DISCOVERY = "lockdiscovery";
+
+    /**
+     * The WebDAV source property constant.
+     */
     public static final String PROP_SOURCE = "source";
+
+    /**
+     * The WebDAV quota property constant (non-standard).
+     */
     public static final String PROP_QUOTA = "quota";
+
+    /**
+     * The WebDAV quota used property constant (non standard).
+     */
     public static final String PROP_QUOTA_USED = "quotaused";
+
+    /**
+     * The WebDAV quota used bytes property constant (RFC 4331).
+     */
     public static final String PROP_QUOTA_USED_BYTES = "quota-used-bytes";
+
+    /**
+     * The WebDAV quota available bytes property constant (RFC 4331).
+     */
     public static final String PROP_QUOTA_AVAIL_BYTES = "quota-available-bytes";
 
     /**
@@ -127,6 +185,7 @@ public class WebDavRequest {
     public static final SimpleDateFormat LAST_MODIFIED_DATE_FORMAT =
         new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
 
+    // Static initializer for property collections and time zones
     static {
         PROPS_COLLECTION.put(PROP_DISPLAY_NAME, "");
         PROPS_COLLECTION.put(PROP_RESOURCE_TYPE, "");
@@ -553,9 +612,23 @@ public class WebDavRequest {
      * @param href           the root-relative resource link
      */
     private void xmlResponseBegin(StringBuilder buffer, String href) {
+        String[]  parts = href.split("/");
+
         xmlTagBegin(buffer, 1, "response");
-        // TODO: URL encode space characters here...
-        xmlTag(buffer, 2, "href", href, false);
+        buffer.append(StringUtils.repeat("  ", 2));
+        buffer.append("<D:href>");
+        for (int i = 0; i < parts.length; i++) {
+            if (i > 0) {
+                buffer.append("/");
+            }
+            try {
+                buffer.append(URLEncoder.encode(parts[i], "UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                LOG.log(Level.SEVERE, "unsupported character encoding", e);
+                buffer.append(StringEscapeUtils.escapeXml(parts[i]));
+            }
+        }
+        buffer.append("</D:href>\n");
     }
 
     /**
