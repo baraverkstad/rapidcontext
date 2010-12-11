@@ -93,9 +93,12 @@ public class StorageRequestHandler extends RequestHandler {
      * The supported HTTP methods.
      */
     protected static final String[] METHODS = {
-        HTTP_OPTIONS, HTTP_HEAD, HTTP_GET, HTTP_PUT, HTTP_DELETE,
-        METHOD_PROPFIND, METHOD_PROPPATCH, METHOD_MKCOL,
-        METHOD_COPY, METHOD_MOVE, METHOD_LOCK, METHOD_UNLOCK
+        HTTP_OPTIONS, HTTP_HEAD, HTTP_GET,
+        //HTTP_PUT, HTTP_DELETE,
+        METHOD_PROPFIND
+        //, METHOD_PROPPATCH, METHOD_MKCOL,
+        //METHOD_COPY, METHOD_MOVE
+        //, METHOD_LOCK, METHOD_UNLOCK
     };
 
     /**
@@ -118,7 +121,9 @@ public class StorageRequestHandler extends RequestHandler {
      * @param request the request to process
      */
     public void process(Request request) {
+        //request.setResponseHeader("DAV", "1 2 3");
         request.setResponseHeader("DAV", "1 3");
+        request.setResponseHeader("MS-Author-Via", "DAV");
         if (!SecurityContext.hasAdmin()) {
             errorUnauthorized(request);
         } else if (request.hasMethod(METHOD_PROPFIND)) {
