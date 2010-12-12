@@ -192,13 +192,16 @@ public class Mime {
      */
     public static boolean isMatch(Request request, String[] mimes) {
         String    header = request.getHeader("Accept");
-        String[]  accept = header.split(",");
+        String[]  accept;
         String    mime;
 
-        for (int i = 0; i < accept.length; i++) {
-            mime = accept[i].split(";")[0];
-            if (ArrayUtils.contains(mimes, mime)) {
-                return true;
+        if (header != null) {
+            accept = header.split(",");
+            for (int i = 0; i < accept.length; i++) {
+                mime = accept[i].split(";")[0];
+                if (ArrayUtils.contains(mimes, mime)) {
+                    return true;
+                }
             }
         }
         return false;
