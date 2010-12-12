@@ -32,6 +32,8 @@ import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.lang.StringUtils;
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.util.FileUtil;
 
 /**
@@ -327,38 +329,34 @@ public class Request {
     }
 
     /**
-     * Returns the authentication type of the request. This is the
-     * first word in the "Authorization" request header.
+     * Returns the parsed "Authorization" request header data. The
+     * authentication type will be stored with the "type" key. Other
+     * fields will be stored with their corresponding keys. Any
+     * unidentified data will be stored with the "data" key.
      *
-     * @return the authentication type, or
+     * @return the parsed authentication data, or
      *         null if not present
      */
-    public String getAuthenticationType() {
-        String  auth = request.getHeader("Authorization");
+    public Dict getAuthentication() {
+        String    auth = request.getHeader("Authorization");
+        String[]  pairs;
+        String[]  pair;
+        Dict      dict = new Dict();
 
         if (auth == null || !auth.contains(" ")) {
             return null;
         } else {
-            return auth.substring(0, auth.indexOf(" ")).trim();
-        }
-    }
-
-    /**
-     * Returns the authentication data of the request. This is the
-     * base-64 encoded text after the first word in the
-     * "Authorization" request header.
-     *
-     * @return the authentication data, or
-     *         null if not present
-     */
-    public byte[] getAuthenticationData() {
-        String  auth = request.getHeader("Authorization");
-
-        if (auth == null || !auth.contains(" ")) {
-            return null;
-        } else {
-            auth = auth.substring(auth.indexOf(" ") + 1);
-            return Base64Coder.decode(auth);
+            pairs = auth.split("[ \t\n\r,]");
+            dict.set("type", pairs[0]);
+            for (int i = 1; i < pairs.length; i++) {
+                pair = pairs[i].split("=");
+                if (pair.length == 2) {
+                    dict.set(pair[0], StringUtils.strip(pair[1], "\""));
+                } else {
+                    dict.set("data", pairs[i]);
+                }
+            }
+            return dict;
         }
     }
 
@@ -542,22 +540,19 @@ public class Request {
     }
 
     /**
-     * Sends an authentication request as the request response. The
-     * request may optionally contain a data payload, which will be
-     * base-64 encoded. Any previous response will be cleared.
+     * Sends a digest authentication request as the request response.
+     * Any previous response will be cleared.
      *
-     * @param type           the authentication type
-     * @param data           the authentication data, or null
+     * @param realm          the security realm to use
+     * @param nonce          the generated one-time code to use
      *
      * @see #sendClear()
      */
-    public void sendAuthenticationRequest(String type, byte[] data) {
+    public void sendAuthenticationRequest(String realm, String nonce) {
         sendClear();
         responseType = AUTH_RESPONSE;
-        responseData = type;
-        if (data != null) {
-            responseData += " " + new String(Base64Coder.encode(data)).trim();
-        }
+        responseData = "Digest realm=\"" + realm + "\", qop=\"auth\", " +
+                       "nonce=\"" + nonce+ "\"";
     }
 
     /**

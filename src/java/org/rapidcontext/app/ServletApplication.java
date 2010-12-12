@@ -34,6 +34,7 @@ import org.rapidcontext.app.web.FileRequestHandler;
 import org.rapidcontext.app.web.ProcedureRequestHandler;
 import org.rapidcontext.app.web.StorageRequestHandler;
 import org.rapidcontext.app.web.UploadRequestHandler;
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.security.User;
 import org.rapidcontext.core.storage.FileStorage;
@@ -44,6 +45,7 @@ import org.rapidcontext.core.web.Mime;
 import org.rapidcontext.core.web.Request;
 import org.rapidcontext.core.web.RequestHandler;
 import org.rapidcontext.core.web.SessionManager;
+import org.rapidcontext.util.BinaryUtil;
 import org.rapidcontext.util.FileUtil;
 
 /**
@@ -180,15 +182,12 @@ public class ServletApplication extends HttpServlet {
      */
     private void processAuth(Request request) {
         HttpSession  session;
-        String       authType;
-        byte[]       authData;
         String       userName = null;
         User         user = null;
+        Dict         authData;
 
         // Authenticate user if provided
         SecurityContext.authClear();
-        authType = request.getAuthenticationType();
-        authData = request.getAuthenticationData();
         try {
             if (request.hasSession()) {
                 session = request.getSession();
@@ -197,21 +196,21 @@ public class ServletApplication extends HttpServlet {
             }
             if (userName != null) {
                 SecurityContext.auth(userName);
-            } else if (isAuthRequired(request) && "Basic".equals(authType)) {
-                LOG.fine(ip(request) + "Received Basic authentication response");
-                processBasicResponse(request, authData);
-                user = SecurityContext.currentUser();
-                SessionManager.setUser(request.getSession(), user.getName());
+            } else if (isAuthRequired(request)) {
+                authData = request.getAuthentication();
+                if (authData != null) {
+                    processAuthResponse(request, authData);
+                }
             }
-        } catch (SecurityException e) {
+        } catch (Exception e) {
             LOG.info(ip(request) + e.getMessage());
         }
 
         // Check required authentication
         user = SecurityContext.currentUser();
         if (user == null && isAuthRequired(request)) {
-            LOG.fine(ip(request) + "Sending Basic authentication request");
-            request.sendAuthenticationRequest("Basic realm=\"RapidContext Basic Auth\"", null);
+            request.sendAuthenticationRequest(SecurityContext.REALM,
+                                              SecurityContext.nonce());
         }
     }
 
@@ -240,29 +239,31 @@ public class ServletApplication extends HttpServlet {
      * Processes a Basic authentication response.
      *
      * @param request        the request to process
-     * @param auth           the input authentication data
+     * @param auth           the authentication data
      *
-     * @throws SecurityException if the user authentication failed
+     * @throws Exception if the user authentication failed
      */
-    private void processBasicResponse(Request request, byte[] auth) {
-        String  name = null;
-        String  password = null;
-        int     pos;
-        String  str;
+    private void processAuthResponse(Request request, Dict auth)
+    throws Exception {
+        String  uri = auth.getString("uri", request.getAbsolutePath());
+        String  user = auth.getString("username", "");
+        String  realm = auth.getString("realm", "");
+        String  nonce = auth.getString("nonce", "");
+        String  nc = auth.getString("nc", "");
+        String  cnonce = auth.getString("cnonce", "");
+        String  response = auth.getString("response", "");
+        String  suffix;
 
-        str = new String(auth);
-        pos = str.indexOf(":");
-        if (pos > 0) {
-            name = str.substring(0, pos);
-            password = str.substring(pos + 1);
-            str = "Basic authentication for user " + name;
-            LOG.fine(ip(request) + "Received " + str);
-            SecurityContext.authPassword(name, password);
-            LOG.fine(ip(request) + "Valid " + str);
-        } else {
-            LOG.info(ip(request) + "Basic authentication invalid: " + str);
-            throw new SecurityException("Invalid basic authentication");
+        if (!SecurityContext.REALM.equals(realm)) {
+            LOG.info(ip(request) + "Invalid authentication realm: " + realm);
+            throw new SecurityException("Invalid authentication realm");
         }
+        SecurityContext.verifyNonce(nonce);
+        suffix = ":" + nonce + ":" + nc + ":" + cnonce + ":auth:" +
+                 BinaryUtil.hashMD5(request.getMethod() + ":" + uri);
+        SecurityContext.authHash(user, suffix, response);
+        LOG.fine(ip(request) + "Valid authentication for " + user);
+        SessionManager.setUser(request.getSession(), user);
     }
 
     /**

@@ -15,13 +15,12 @@
 
 package org.rapidcontext.core.security;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.logging.Logger;
 
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.util.ArrayUtil;
+import org.rapidcontext.util.BinaryUtil;
 
 /**
  * An application user.
@@ -130,86 +129,35 @@ public class User {
     }
 
     /**
-     * Checks if the specified password is correct. This method will
-     * hash and encode the specified password, and compare the
-     * result with the user password hash. If the user password hash
-     * is blank, this method will always return true.
+     * Returns the user password hash, encoded as a hexadecimal
+     * string.
      *
-     * @param password       the password to check
+     * @return the user password hash
      *
-     * @return true if the password is correct, or
-     *         false otherwise
+     * @see #setPassword(String)
      */
-    public boolean hasPassword(String password) {
-        return hasPasswordHash(createPasswordHash(password));
+    public String getPasswordHash() {
+        return this.data.getString("password", "");
     }
 
     /**
-     * Sets the user password. This method will hash and encode the
-     * specified password, which is an irreversible process.
+     * Sets the user password. This method will create a password
+     * MD5 hash from the string "user:realm:password" and store that
+     * result in the dictionary. This is an irreversible process, so
+     * the original password cannot be retrieved once this is
+     * performed.
      *
      * @param password       the user password
      */
     public void setPassword(String password) {
-        this.data.set("password", createPasswordHash(password));
-    }
+        String  str;
 
-    /**
-     * Checks if the specified password hash is correct. This method
-     * will compare the specified hash value with the user password
-     * hash. If the user password hash is blank, this method will
-     * always return true.
-     *
-     * @param hash           the password hash to check
-     *
-     * @return true if the password hash is correct, or
-     *         false otherwise
-     */
-    public boolean hasPasswordHash(String hash) {
-        String str = this.data.getString("password", "");
-        return str.equals("") || str.equals(hash);
-    }
-
-    /**
-     * Creates a password hash string (in ASCII). The hash value
-     * calculation is irreversible, and is calculated with the
-     * SHA-256 algorithm and encoded as a hexadecimal lower-case
-     * ASCII string. The password will also be salted with the user
-     * name, so that separate password cracking attempts must be
-     * made for each user.
-     *
-     * @param password       the password text
-     *
-     * @return the hash value as a hexadecimal string
-     */
-    protected String createPasswordHash(String password) {
-        StringBuffer   res = new StringBuffer();
-        MessageDigest  digest;
-        byte           bytes[];
-        String         str;
-
-        // Compute SHA-256 digest
+        str = getName() + ":" + SecurityContext.REALM + ":" + password;
         try {
-            str = getName() + ":" + password;
-            digest = MessageDigest.getInstance("SHA-256");
-            digest.reset();
-            digest.update(str.getBytes());
-            bytes = digest.digest();
-        } catch (NoSuchAlgorithmException e) {
-            LOG.severe("failed to create SHA-256 password hash: " +
-                       e.getMessage());
-            return "";
+            this.data.set("password", BinaryUtil.hashMD5(str));
+        } catch (Exception e) {
+            LOG.severe("failed to create MD5 password hash: " + e.getMessage());
         }
-
-        // Encode digest as hex string
-        for (int i = 0; i < bytes.length; i++) {
-            str = Integer.toHexString(bytes[i] & 0xFF);
-            if (str.length() < 2) {
-                res.append("0");
-            }
-            res.append(str);
-        }
-        return res.toString();
     }
 
     /**

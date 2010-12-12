@@ -24,6 +24,7 @@ import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.storage.StorageException;
 import org.rapidcontext.util.ArrayUtil;
+import org.rapidcontext.util.BinaryUtil;
 
 /**
  * The application security context. This class provides static
@@ -47,6 +48,12 @@ public class SecurityContext {
      */
     private static final Logger LOG =
         Logger.getLogger(SecurityContext.class.getName());
+
+    /**
+     * The user authentication realm.
+     */
+    // TODO: setup user realm in some non-hardcoded way
+    public static final String REALM = "RapidContext";
 
     /**
      * The user object storage path.
@@ -236,6 +243,28 @@ public class SecurityContext {
     }
 
     /**
+     * Creates a unique number to be used once for hashing.
+     *
+     * @return the unique hash number
+     */
+    public static String nonce() {
+        // TODO: proper nonce based on System.currentTimeMillis()
+        return "1234";
+    }
+
+    /**
+     * Verifies that the specified nonce is sufficiently recently
+     * generated to be acceptable.
+     *
+     * @param nonce          the nonce to check
+     *
+     * @throws SecurityException if the nonce was invalid
+     */
+    public static void verifyNonce(String nonce) throws SecurityException {
+        // TODO: proper verification
+    }
+
+    /**
      * Authenticates the specified user. This method will verify
      * that the user exists and is enabled. It should only be called
      * if a previous user authentication can be trusted, either via
@@ -264,21 +293,23 @@ public class SecurityContext {
     }
 
     /**
-     * Authenticates the specified used with a clear-text password.
+     * Authenticates the specified used with an MD5 two-step hash.
      * This method will verify that the user exists, is enabled and
-     * has the specified password (or really the same SHA-256 hash).
-     * After a successful authentication the current user will be
-     * set to the specified user.
+     * that the password hash plus the specified suffix will MD5 hash
+     * to the specified string, After a successful authentication the
+     * current user will be set to the specified user.
      *
      * @param name           the user name
-     * @param password       the user password
+     * @param suffix         the user password hash suffix to append
+     * @param hash           the expected hashed result
      *
-     * @throws SecurityException if the user failed authentication
+     * @throws Exception if the user failed authentication
      */
-    public static void authPassword(String name, String password)
-        throws SecurityException {
+    public static void authHash(String name, String suffix, String hash)
+    throws Exception {
 
         User    user = (User) users.get(name);
+        String  test;
         String  msg;
 
         if (user == null) {
@@ -289,10 +320,12 @@ public class SecurityContext {
             msg = "user " + name + " is disabled";
             LOG.info("failed authentication: " + msg);
             throw new SecurityException(msg);
-        } else if (!user.hasPassword(password)) {
+        }
+        test = BinaryUtil.hashMD5(user.getPasswordHash() + suffix);
+        if (user.getPasswordHash().length() > 0 && !test.equals(hash)) {
             msg = "invalid password for user " + name;
             LOG.info("failed authentication: " + msg +
-                     ", using hash " + user.createPasswordHash(password));
+                     ", expected: " + test + ", received: " + hash);
             throw new SecurityException(msg);
         }
         authUser.set(user);

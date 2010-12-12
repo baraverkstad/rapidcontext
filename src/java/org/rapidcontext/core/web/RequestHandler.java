@@ -230,10 +230,8 @@ public abstract class RequestHandler {
      */
     protected void errorUnauthorized(Request request) {
         if (SecurityContext.currentUser() == null) {
-            LOG.fine("[" + request.getRemoteAddr() + "] sending Basic " +
-                     "authentication request");
-            // TODO: choose authentication method in some way...
-            request.sendAuthenticationRequest("Basic realm=\"RapidContext Basic Auth\"", null);
+            request.sendAuthenticationRequest(SecurityContext.REALM,
+                                              SecurityContext.nonce());
         } else {
             errorForbidden(request);
         }
