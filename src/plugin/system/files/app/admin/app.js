@@ -958,7 +958,7 @@ AdminApp.prototype.loadUsers = function () {
 AdminApp.prototype._addUser = function () {
     this.ui.userForm.reset();
     this.ui.userForm.update({ enabled: true,
-                              passwordHint: "Minimum 6 characters" });
+                              passwordHint: "Minimum 5 characters" });
     this.ui.userName.disabled = false;
 }
 
