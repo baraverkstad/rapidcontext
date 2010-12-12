@@ -112,15 +112,18 @@ public class UserListProcedure implements Procedure, Restricted {
         throws ProcedureException {
 
         Array     res;
-        Dict      obj;
+        Dict      dict;
         String[]  names;
 
         names = SecurityContext.getUserNames();
         res = new Array(names.length);
         for (int i = 0; i < names.length; i++) {
-            obj = SecurityContext.getUser(names[i]).getData().copy();
-            obj.remove("password");
-            res.add(obj);
+            dict = SecurityContext.getUser(names[i]).getData().copy();
+            dict.remove("password");
+            if (!dict.containsKey("role")) {
+                dict.set("role", new Array(0));
+            }
+            res.add(dict);
         }
         res.sort("name");
         return res;

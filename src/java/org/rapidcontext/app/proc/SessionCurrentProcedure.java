@@ -21,6 +21,7 @@ import java.util.Iterator;
 
 import javax.servlet.http.HttpSession;
 
+import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
@@ -134,7 +135,7 @@ public class SessionCurrentProcedure implements Procedure, Restricted {
     public static Dict getSessionData(HttpSession session) {
         Dict            res = new Dict();
         Dict            files = new Dict();
-        Dict            data;
+        Dict            dict;
         Date            date;
         SessionFileMap  fileMap;
         Iterator        iter;
@@ -149,13 +150,16 @@ public class SessionCurrentProcedure implements Procedure, Restricted {
         res.set("lastAccessMillis", String.valueOf(date.getTime()));
         res.set("lastAccessDate", DateUtil.formatIsoDateTime(date));
         res.set("ip", SessionManager.getIp(session));
-        data = null;
+        dict = null;
         name = SessionManager.getUser(session);
         if (name != null) {
-            data = SecurityContext.getUser(name).getData().copy();
-            data.remove("password");
+            dict = SecurityContext.getUser(name).getData().copy();
+            dict.remove("password");
+            if (!dict.containsKey("role")) {
+                dict.set("role", new Array(0));
+            }
         }
-        res.set("user", data);
+        res.set("user", dict);
         fileMap = SessionFileMap.getFiles(session, false);
         if (fileMap != null) {
             if (fileMap.getProgress() < 1.0d) {
@@ -165,14 +169,14 @@ public class SessionCurrentProcedure implements Procedure, Restricted {
             while (iter.hasNext()) {
                 name = (String) iter.next();
                 file = fileMap.getFile(name);
-                data = new Dict();
-                data.set("name", file.getName());
-                data.set("size", String.valueOf(file.length()));
-                data.set("mimeType", Mime.type(file));
+                dict = new Dict();
+                dict.set("name", file.getName());
+                dict.set("size", String.valueOf(file.length()));
+                dict.set("mimeType", Mime.type(file));
                 date = new Date(file.lastModified());
-                data.set("creationMillis", String.valueOf(date.getTime()));
-                data.set("creationDate", DateUtil.formatIsoDateTime(date));
-                files.set(name, data);
+                dict.set("creationMillis", String.valueOf(date.getTime()));
+                dict.set("creationDate", DateUtil.formatIsoDateTime(date));
+                files.set(name, dict);
             }
         }
         res.set("files", files);
