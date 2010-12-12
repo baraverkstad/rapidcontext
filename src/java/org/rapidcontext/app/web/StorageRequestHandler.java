@@ -154,13 +154,8 @@ public class StorageRequestHandler extends RequestHandler {
         request.setPath(null);
         try {
             // TODO: Extend data lookup via standardized query language
-            if (isDefault && path.name().endsWith(".properties")) {
-                str = StringUtils.removeEnd(path.name(), ".properties");
-                path = path.parent().child(str, false);
-                res = ctx.getStorage().load(path);
-                meta = ctx.getStorage().lookup(path);
-            }
-            if (res == null || meta == null) {
+            path = normalizePath(path);
+            if (path != null) {
                 res = ctx.getStorage().load(path);
                 meta = ctx.getStorage().lookup(path);
             }
@@ -393,9 +388,10 @@ public class StorageRequestHandler extends RequestHandler {
     protected void doPropFind(Request request) {
         ApplicationContext  ctx = ApplicationContext.getInstance();
         Path                path = new Path(request.getPath());
+        String              href;
         WebDavRequest       davRequest;
-        Metadata            meta;
-        Object              data;
+        Metadata            meta = null;
+        Object              data = null;
         Index               idx;
         Array               arr;
         String              str;
@@ -406,11 +402,8 @@ public class StorageRequestHandler extends RequestHandler {
                 davRequest.sendErrorFiniteDepth();
                 return;
             }
-            data = ctx.getStorage().load(path);
-            meta = ctx.getStorage().lookup(path);
-            if (data == null && path.name().endsWith(".properties")) {
-                str = StringUtils.removeEnd(path.name(), ".properties");
-                path = path.parent().child(str, false);
+            path = normalizePath(path);
+            if (path != null) {
                 data = ctx.getStorage().load(path);
                 meta = ctx.getStorage().lookup(path);
             }
@@ -418,7 +411,11 @@ public class StorageRequestHandler extends RequestHandler {
                 errorNotFound(request);
                 return;
             }
-            addResource(davRequest, request.getAbsolutePath(), meta, data);
+            href = request.getAbsolutePath();
+            if (path.isIndex() && !href.endsWith("/")) {
+                href += "/";
+            }
+            addResource(davRequest, href, meta, data);
             if (davRequest.depth() > 0 && data instanceof Index) {
                 idx = (Index) data;
                 arr = idx.paths();
@@ -428,7 +425,7 @@ public class StorageRequestHandler extends RequestHandler {
                     data = ctx.getStorage().load(path);
                     meta = ctx.getStorage().lookup(path);
                     if (data != null && meta != null) {
-                        str = request.getAbsolutePath() + path.name();
+                        str = href + path.name();
                         if (path.isIndex()) {
                             str += "/";
                         } else if (meta.isObject()) {
@@ -472,5 +469,35 @@ public class StorageRequestHandler extends RequestHandler {
             byte[] bytes = str.getBytes("ISO-8859-1");
             request.addResource(href, modified, modified, bytes.length);
         }
+    }
+
+    /**
+     * Attempts to correct or normalize the specified path if no data
+     * can be found at the specified location. This is necessary in
+     * order to provide "*.properties" file access to data objects
+     * and to adjust for some WebDAV client bugs.
+     *
+     * @param path           the path to normalize
+     *
+     * @return the normalized path
+     */
+    private Path normalizePath(Path path) {
+        ApplicationContext  ctx = ApplicationContext.getInstance();
+        Path                testPath = path;
+        Metadata            meta;
+        String              str;
+
+        meta = ctx.getStorage().lookup(testPath);
+        if (meta == null && path.name().endsWith(".properties")) {
+            str = StringUtils.removeEnd(path.name(), ".properties");
+            testPath = path.parent().child(str, false);
+            meta = ctx.getStorage().lookup(testPath);
+        }
+        if (meta == null && !path.isIndex()) {
+            // Windows WebDAV fix
+            testPath = path.parent().child(path.name(), true);
+            meta = ctx.getStorage().lookup(testPath);
+        }
+        return (meta == null) ? null : testPath;
     }
 }
