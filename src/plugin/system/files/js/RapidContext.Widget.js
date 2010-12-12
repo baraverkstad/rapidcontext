@@ -2538,9 +2538,12 @@ RapidContext.Widget.Table = function (attrs/*, ...*/) {
     o._data = null;
     o._keyField = null;
     o._selected = [];
+    o._mouseX = 0;
+    o._mouseY = 0;
     o.setAttrs(MochiKit.Base.update({ select: "one" }, attrs));
     o.addAll(MochiKit.Base.extend(null, arguments, 1));
-    tbody.onmousedown = RapidContext.Widget._eventHandler("Table", "_handleSelect");
+    tbody.onmousedown = RapidContext.Widget._eventHandler("Table", "_handleMouseDown");
+    tbody.onmouseup = RapidContext.Widget._eventHandler("Table", "_handleMouseUp");
     return o;
 };
 
@@ -2975,15 +2978,35 @@ RapidContext.Widget.Table.prototype.removeSelectedIds = function () {
 };
 
 /**
- * Handles the mouse selection events.
+ * Handles the mouse up event by stopping text selection in some cases.
  *
  * @param {Event} evt the MochiKit.Signal.Event object
  */
-RapidContext.Widget.Table.prototype._handleSelect = function (evt) {
-    var tr = MochiKit.DOM.getFirstParentByTagAndClassName(evt.target(), "TR");
-    if (tr == null || tr.rowNo == null || !MochiKit.DOM.isChildNode(tr, this)) {
+RapidContext.Widget.Table.prototype._handleMouseDown = function (evt) {
+    this._mouseX = evt.mouse().page.x;
+    this._mouseY = evt.mouse().page.y;
+    if (evt.modifier().ctrl || evt.modifier().meta || evt.modifier().shift) {
         evt.stop();
         return false;
+    } else {
+        return true;
+    }
+}
+
+/**
+ * Handles the mouse up event by changing the selection if appropriate.
+ *
+ * @param {Event} evt the MochiKit.Signal.Event object
+ */
+RapidContext.Widget.Table.prototype._handleMouseUp = function (evt) {
+    var moveX = Math.abs(evt.mouse().page.x - this._mouseX);
+    var moveY = Math.abs(evt.mouse().page.y - this._mouseY);
+    var moveXY = Math.sqrt(moveX * moveX + moveY * moveY);
+    var tr = MochiKit.DOM.getFirstParentByTagAndClassName(evt.target(), "TR");
+    if (tr == null || tr.rowNo == null || !MochiKit.DOM.isChildNode(tr, this)) {
+        return true;
+    } else if (moveXY > 5.0) {
+        return true;
     }
     var row = tr.rowNo;
     if (this.select === "multiple") {
@@ -3023,9 +3046,13 @@ RapidContext.Widget.Table.prototype._handleSelect = function (evt) {
         this._selected = [row];
         this._markSelection(row);
     }
-    evt.stop();
     RapidContext.Widget.emitSignal(this, "onselect");
-    return false;
+    if (evt.modifier().ctrl || evt.modifier().meta || evt.modifier().shift) {
+        evt.stop();
+        return false;
+    } else {
+        return true;
+    }
 };
 
 /**
