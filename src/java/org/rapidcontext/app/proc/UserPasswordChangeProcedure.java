@@ -121,8 +121,8 @@ public class UserPasswordChangeProcedure implements Procedure, Restricted {
             throw new ProcedureException("user must be logged in");
         }
         pwd = bindings.getValue("password").toString();
-        if (pwd.length() < 6) {
-            throw new ProcedureException("password must be at least 6 characters");
+        if (pwd.length() < 5) {
+            throw new ProcedureException("password must be at least 5 characters");
         }
         try {
             SecurityContext.updatePassword(pwd);
