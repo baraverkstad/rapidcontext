@@ -116,7 +116,12 @@ public class ProcedureListProcedure implements Procedure, Restricted {
         names = library.getProcedureNames();
         list = new Array(names.length);
         for (int i = 0; i < names.length; i++) {
-            if (SecurityContext.hasAccess("procedure", names[i], "")) {
+            // TODO: This security check should be built-into SecurityContext
+            if (library.hasBuiltIn(names[i])) {
+                if (SecurityContext.hasAccess(library.getProcedure(names[i]))) {
+                    list.add(names[i]);
+                }
+            } else if (SecurityContext.hasAccess("procedure", names[i], "")) {
                 list.add(names[i]);
             }
         }

@@ -216,6 +216,8 @@ public class SecurityContext {
         if (hasAdmin()) {
             return true;
         } else if (currentUser() != null) {
+            // TODO: Should verify objects with Restricted interface here
+            //       (eg procedures), since users may have no roles...
             list = currentUser().getRoles();
             for (int i = 0; i < list.length; i++) {
                 role = getRole(list[i]);
