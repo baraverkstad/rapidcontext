@@ -57,10 +57,6 @@ public class UserChangeProcedure implements Procedure, Restricted {
                      "The enabled flag (0 or 1)");
         defaults.set("password", Bindings.ARGUMENT, "",
                      "The new password, or blank for unchanged");
-        defaults.set("ntlmUser", Bindings.ARGUMENT, "",
-                     "The optional NTLM user name");
-        defaults.set("ntlmDomain", Bindings.ARGUMENT, "",
-                     "The optional NTLM domain name");
         defaults.set("roles", Bindings.ARGUMENT, "",
                      "The list of roles (separated by spaces)");
         defaults.seal();
@@ -131,8 +127,6 @@ public class UserChangeProcedure implements Procedure, Restricted {
         String    descr;
         boolean   enabled;
         String    pwd;
-        String    ntlmUser;
-        String    ntlmDomain;
         String[]  roles;
         Array     list;
         String    str;
@@ -150,11 +144,9 @@ public class UserChangeProcedure implements Procedure, Restricted {
         str = bindings.getValue("enabled").toString();
         enabled = (!str.equals("") && !str.equals("false") && !str.equals("0"));
         pwd = bindings.getValue("password").toString();
-        if ((user == null || pwd.length() > 0) && pwd.length() < 6) {
-            throw new ProcedureException("password must be at least 6 characters");
+        if ((user == null || pwd.length() > 0) && pwd.length() < 5) {
+            throw new ProcedureException("password must be at least 5 characters");
         }
-        ntlmUser = bindings.getValue("ntlmUser").toString();
-        ntlmDomain = bindings.getValue("ntlmDomain").toString();
         obj = bindings.getValue("roles");
         if (obj instanceof Array) {
             list = (Array) obj;
@@ -178,8 +170,6 @@ public class UserChangeProcedure implements Procedure, Restricted {
         if (pwd.length() > 0) {
             user.setPassword(pwd);
         }
-        user.setNtlmUser(ntlmUser);
-        user.setNtlmDomain(ntlmDomain);
         user.setRoles(roles);
         try {
             SecurityContext.saveUser(user);

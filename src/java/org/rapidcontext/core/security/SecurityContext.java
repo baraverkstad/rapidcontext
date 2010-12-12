@@ -77,12 +77,6 @@ public class SecurityContext {
     private static HashMap users = new HashMap();
 
     /**
-     * The map of NTLM users. The map is indexed by the user NTLM id
-     * and contains user names.
-     */
-    private static HashMap userNtlm = new HashMap();
-
-    /**
      * The currently authenticated users. This is a thread-local
      * variable containing one user object per thread. If the value
      * is set to null, no user is currently authenticated for the
@@ -110,7 +104,6 @@ public class SecurityContext {
         dataStorage = storage;
         roles.clear();
         users.clear();
-        userNtlm.clear();
         objs = dataStorage.loadAll(ROLE_PATH);
         for (int i = 0; i < objs.length; i++) {
             if (objs[i] instanceof Dict) {
@@ -125,11 +118,16 @@ public class SecurityContext {
             if (objs[i] instanceof Dict) {
                 user = new User((Dict) objs[i]);
                 users.put(user.getName(), user);
-                userNtlm.put(user.getNtlmName(), user.getName());
             }
         }
         if (users.size() <= 0) {
-            createUser("admin", "Default administrator user", "Admin");
+            LOG.info("creating default 'admin' user");
+            user = new User("admin");
+            user.setDescription("Default administrator user.");
+            user.setEnabled(true);
+            user.setRoles(new String[] { "Admin" });
+            storeUser(user);
+            users.put("admin", user);
         }
         // TODO: create default system user?
     }
@@ -301,35 +299,6 @@ public class SecurityContext {
     }
 
     /**
-     * Authenticates a user with the specified NTLM user and domain
-     * name. This method will verify that the NTLM user exists and
-     * is enabled. It should only be called if the NTLM credentials
-     * can be trusted, since it will not verify any password or
-     * connect to a domain controller. After a successful
-     * authentication the current user will be set to the specified
-     * user.
-     *
-     * @param domain         the NTLM domain name
-     * @param name           the NTLM user name
-     *
-     * @throws SecurityException if the user failed authentication
-     */
-    public static void authNtlm(String domain, String name)
-        throws SecurityException {
-
-        String  ntlm = name + "\\" + domain;
-        String  str;
-
-        str = (String) userNtlm.get(ntlm);
-        if (str == null) {
-            str = "NTLM user " + name + "\\" + domain + " does not exist";
-            LOG.info("failed authentication: " + str);
-            throw new SecurityException(str);
-        }
-        auth(str);
-    }
-
-    /**
      * Removes any previous authentication. I.e. the current user
      * will be reset to the anonymous user.
      */
@@ -418,34 +387,6 @@ public class SecurityContext {
     }
 
     /**
-     * Creates a default user if not already existing. The user
-     * password hash will be initialized to an empty string, meaning
-     * that no password is required for login.
-     *
-     * @param name           the user name
-     * @param descr          the default description
-     * @param roleNames      the role names, separated by " "
-     *
-     * @throws StorageException if the data couldn't be written
-     */
-    private static void createUser(String name, String descr, String roleNames)
-        throws StorageException {
-
-        User  user;
-
-        if (!users.containsKey(name)) {
-            LOG.info("creating user " + name + ": " + descr);
-            user = new User(name);
-            user.setDescription(descr);
-            user.setEnabled(true);
-            user.setPasswordHash("");
-            user.setRoles(roleNames.split(" "));
-            storeUser(user);
-            users.put(name, user);
-        }
-    }
-
-    /**
      * Saves a user to the application data store.
      *
      * @param user           the user to save
@@ -474,7 +415,6 @@ public class SecurityContext {
                 users.remove(name);
             } else {
                 users.put(name, newUser);
-                userNtlm.put(newUser.getNtlmName(), name);
             }
         }
     }

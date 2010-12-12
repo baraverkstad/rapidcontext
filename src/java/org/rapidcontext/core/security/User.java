@@ -151,7 +151,7 @@ public class User {
      * @param password       the user password
      */
     public void setPassword(String password) {
-        setPasswordHash(createPasswordHash(password));
+        this.data.set("password", createPasswordHash(password));
     }
 
     /**
@@ -171,16 +171,6 @@ public class User {
     }
 
     /**
-     * Sets the user password hash. This method assumes that the
-     * specified password is already been hashed and encoded.
-     *
-     * @param hash           the new password hash
-     */
-    public void setPasswordHash(String hash) {
-        this.data.set("password", hash);
-    }
-
-    /**
      * Creates a password hash string (in ASCII). The hash value
      * calculation is irreversible, and is calculated with the
      * SHA-256 algorithm and encoded as a hexadecimal lower-case
@@ -192,7 +182,7 @@ public class User {
      *
      * @return the hash value as a hexadecimal string
      */
-    public String createPasswordHash(String password) {
+    protected String createPasswordHash(String password) {
         StringBuffer   res = new StringBuffer();
         MessageDigest  digest;
         byte           bytes[];
@@ -220,58 +210,6 @@ public class User {
             res.append(str);
         }
         return res.toString();
-    }
-
-    /**
-     * Returns the unique NTLM user identification (user\domain).
-     *
-     * @return the unique NTLM user identification, or
-     *         an empty string if not set
-     */
-    public String getNtlmName() {
-        if (this.data.containsKey("ntlmUser")) {
-            return getNtlmUser() + "\\" + getNtlmDomain();
-        } else {
-            return "";
-        }
-    }
-
-    /**
-     * Returns the NTLM user name.
-     *
-     * @return the NTLM user name, or
-     *         an empty string if not set
-     */
-    public String getNtlmUser() {
-        return this.data.getString("ntlmUser", "");
-    }
-
-    /**
-     * Sets the NTLM user name.
-     *
-     * @param name           the new NTLM user name
-     */
-    public void setNtlmUser(String name) {
-        this.data.set("ntlmUser", name);
-    }
-
-    /**
-     * Returns the NTLM domain name.
-     *
-     * @return the NTLM domain name, or
-     *         an empty string if not set
-     */
-    public String getNtlmDomain() {
-        return this.data.getString("ntlmDomain", "");
-    }
-
-    /**
-     * Sets the NTLM domain name.
-     *
-     * @param name           the new NTLM domain name
-     */
-    public void setNtlmDomain(String name) {
-        this.data.set("ntlmDomain", name);
     }
 
     /**

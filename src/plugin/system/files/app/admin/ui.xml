@@ -346,18 +346,6 @@
               </td>
             </tr>
             <tr>
-              <th class="label" style="padding-top: 4px; padding-right: 4px;">NTLM User:</th>
-              <td>
-                <TextField name="ntlmUser" />
-              </td>
-            </tr>
-            <tr>
-              <th class="label" style="padding-top: 4px; padding-right: 4px;">NTLM Domain:</th>
-              <td>
-                <TextField name="ntlmDomain" />
-              </td>
-            </tr>
-            <tr>
               <th class="label" style="padding-top: 4px; padding-right: 4px;">Roles:</th>
               <td>
                 <TextField name="roles" />

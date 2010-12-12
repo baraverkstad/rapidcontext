@@ -984,8 +984,6 @@ AdminApp.prototype._saveUser = function () {
                              data.description,
                              data.enabled ? "1" : "0",
                              data.password,
-                             data.ntlmUser,
-                             data.ntlmDomain,
                              data.roles);
     }
 }
