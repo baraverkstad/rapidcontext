@@ -159,8 +159,9 @@ Concern: Data Storage
     o Add storage browser inside Admin app
     o Modify Admin app to use storage instead of procedures
     o Remove all procedures for accessing storage objects
- * Other:
-   o WebDAV access could simplify file updates
+ * WebDAV Access:
+   o Documentation
+   o Add write support 
 
 
 Concern: Security & Authentication
@@ -171,17 +172,6 @@ Concern: Security & Authentication
  * Allow form-based login
  * Support anonymous usage if permitted by security settings
  * Allow persistent cookies with login information
- * Re-enable Windows NTLM login if possible
- * Support challenge-response authentication:
-    1. The client sends a challenge request to the server
-    2. The server generates a random challenge (sequence of characters)
-    3. The server uses the challenge as salt to re-hash the password
-    4. The result is stored in the users session on the server
-    5. The challenge sequence is sent back to the client
-    6. The browser first hashes the password with SHA-256
-    7. The browser then uses the challenge as salt to re-hash the result
-    8. The result is sent to the server as the challenge response
-    9. The server can compare the value sent with its own result
 
 
 Concern: Widgets 2.0
