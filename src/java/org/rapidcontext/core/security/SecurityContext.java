@@ -18,6 +18,7 @@ package org.rapidcontext.core.security;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.storage.Path;
@@ -250,8 +251,7 @@ public class SecurityContext {
      * @return the unique hash number
      */
     public static String nonce() {
-        // TODO: proper nonce based on System.currentTimeMillis()
-        return "1234";
+        return String.valueOf(System.currentTimeMillis());
     }
 
     /**
@@ -263,7 +263,16 @@ public class SecurityContext {
      * @throws SecurityException if the nonce was invalid
      */
     public static void verifyNonce(String nonce) throws SecurityException {
-        // TODO: proper verification
+        try {
+            long since = System.currentTimeMillis() - Long.parseLong(nonce);
+            if (since > DateUtils.MILLIS_PER_MINUTE * 5) {
+                LOG.info("stale authentication one-off number");
+                throw new SecurityException("stale authentication one-off number");
+            }
+        } catch (NumberFormatException e) {
+            LOG.info("invalid authentication one-off number");
+            throw new SecurityException("invalid authentication one-off number");
+        }
     }
 
     /**
