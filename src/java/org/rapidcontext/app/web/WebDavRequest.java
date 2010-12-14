@@ -296,7 +296,7 @@ public class WebDavRequest {
      * @throws Exception if the WebDAV request XML couldn't be parsed
      */
     public WebDavRequest(Request request) throws Exception {
-        String   xml = request.inputDataString();
+        String   xml = request.getInputString();
         boolean  isCollection = request.getPath().endsWith("/");
 
         LOG.fine(request.getMethod() + " XML:\n" + xml);

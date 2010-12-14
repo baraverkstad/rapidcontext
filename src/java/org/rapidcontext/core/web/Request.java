@@ -18,6 +18,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.logging.Level;
@@ -516,7 +517,7 @@ public class Request {
      *
      * @return the request input stream data as a string
      */
-    public String inputDataString() {
+    public String getInputString() {
         ByteArrayOutputStream  os = new ByteArrayOutputStream();
 
         try {
@@ -526,6 +527,20 @@ public class Request {
             LOG.warning("failed to read request input data: " + e.getMessage());
             return "";
         }
+    }
+
+    /**
+     * Returns the request input stream. Once the input stream has
+     * been read once, it cannot be read again. Also, this method
+     * should only be called if the request data is indeed in a
+     * binary format.
+     *
+     * @return the request input stream
+     *
+     * @throws IOException if the input stream couldn't be read
+     */
+    public InputStream getInputStream() throws IOException {
+        return request.getInputStream();
     }
 
     /**
