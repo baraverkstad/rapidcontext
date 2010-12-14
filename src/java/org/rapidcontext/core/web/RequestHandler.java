@@ -39,51 +39,51 @@ public abstract class RequestHandler {
     /**
      * The HTTP GET method constant.
      */
-    public static final String HTTP_GET = "GET";
+    public static final String METHOD_GET = "GET";
 
     /**
      * The HTTP POST method constant.
      */
-    public static final String HTTP_POST = "POST";
+    public static final String METHOD_POST = "POST";
 
     /**
      * The HTTP PUT method constant.
      */
-    public static final String HTTP_PUT = "PUT";
+    public static final String METHOD_PUT = "PUT";
 
     /**
      * The HTTP DELETE method constant.
      */
-    public static final String HTTP_DELETE = "DELETE";
+    public static final String METHOD_DELETE = "DELETE";
 
     /**
      * The HTTP OPTIONS method constant.
      */
-    public static final String HTTP_OPTIONS = "OPTIONS";
+    public static final String METHOD_OPTIONS = "OPTIONS";
 
     /**
      * The HTTP HEAD method constant.
      */
-    public static final String HTTP_HEAD = "HEAD";
+    public static final String METHOD_HEAD = "HEAD";
 
     /**
      * The HTTP TRACE method constant.
      */
-    public static final String HTTP_TRACE = "TRACE";
+    public static final String METHOD_TRACE = "TRACE";
 
     /**
      * The array of HTTP methods for a GET-only handler. This array
      * contains the OPTIONS, HEAD and GET methods.
      */
     protected static final String[] GET_METHODS_ONLY =
-        new String[] { HTTP_OPTIONS, HTTP_HEAD, HTTP_GET };
+        new String[] { METHOD_OPTIONS, METHOD_HEAD, METHOD_GET };
 
     /**
      * The array of HTTP methods for a POST-only handler. This array
      * contains the OPTIONS, POST methods.
      */
     protected static final String[] POST_METHODS_ONLY =
-        new String[] { HTTP_OPTIONS, HTTP_POST };
+        new String[] { METHOD_OPTIONS, METHOD_POST };
 
     /**
      * Returns the HTTP methods supported for the specified request
@@ -103,19 +103,19 @@ public abstract class RequestHandler {
      * @param request the request to process
      */
     public void process(Request request) {
-        if (request.hasMethod(HTTP_GET)) {
+        if (request.hasMethod(METHOD_GET)) {
             doGet(request);
-        } else if (request.hasMethod(HTTP_POST)) {
+        } else if (request.hasMethod(METHOD_POST)) {
             doPost(request);
-        } else if (request.hasMethod(HTTP_PUT)) {
+        } else if (request.hasMethod(METHOD_PUT)) {
             doPut(request);
-        } else if (request.hasMethod(HTTP_DELETE)) {
+        } else if (request.hasMethod(METHOD_DELETE)) {
             doDelete(request);
-        } else if (request.hasMethod(HTTP_OPTIONS)) {
+        } else if (request.hasMethod(METHOD_OPTIONS)) {
             doOptions(request);
-        } else if (request.hasMethod(HTTP_HEAD)) {
+        } else if (request.hasMethod(METHOD_HEAD)) {
             doHead(request);
-        } else if (request.hasMethod(HTTP_TRACE)) {
+        } else if (request.hasMethod(METHOD_TRACE)) {
             doTrace(request);
         } else {
             errorMethodNotAllowed(request);

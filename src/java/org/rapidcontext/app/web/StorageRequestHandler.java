@@ -93,8 +93,8 @@ public class StorageRequestHandler extends RequestHandler {
      * The supported HTTP methods.
      */
     protected static final String[] METHODS = {
-        HTTP_OPTIONS, HTTP_HEAD, HTTP_GET,
-        //HTTP_PUT, HTTP_DELETE,
+        METHOD_OPTIONS, METHOD_HEAD, METHOD_GET,
+        //METHOD_PUT, METHOD_DELETE,
         METHOD_PROPFIND
         //, METHOD_PROPPATCH, METHOD_MKCOL,
         //METHOD_COPY, METHOD_MOVE
