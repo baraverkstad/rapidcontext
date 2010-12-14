@@ -144,16 +144,6 @@ public class WebDavRequest {
     public static final String PROP_SOURCE = "source";
 
     /**
-     * The WebDAV quota property constant (non-standard).
-     */
-    public static final String PROP_QUOTA = "quota";
-
-    /**
-     * The WebDAV quota used property constant (non standard).
-     */
-    public static final String PROP_QUOTA_USED = "quotaused";
-
-    /**
      * The WebDAV quota used bytes property constant (RFC 4331).
      */
     public static final String PROP_QUOTA_USED_BYTES = "quota-used-bytes";
@@ -194,8 +184,6 @@ public class WebDavRequest {
         PROPS_COLLECTION.put(PROP_SUPPORTED_LOCK, "");
         PROPS_COLLECTION.put(PROP_LOCK_DISCOVERY, "");
         PROPS_COLLECTION.put(PROP_SOURCE, "");
-        PROPS_COLLECTION.put(PROP_QUOTA, "");
-        PROPS_COLLECTION.put(PROP_QUOTA_USED, "");
         PROPS_COLLECTION.put(PROP_QUOTA_USED_BYTES, "");
         PROPS_COLLECTION.put(PROP_QUOTA_AVAIL_BYTES, "");
         PROPS_FILE.putAll(PROPS_COLLECTION);
@@ -450,7 +438,7 @@ public class WebDavRequest {
                 props.put(PROP_RESOURCE_TYPE, "<D:collection/>");
             }            
             if (props.containsKey(PROP_CONTENT_LENGTH)) {
-                props.put(PROP_CONTENT_LENGTH, null);
+                props.put(PROP_CONTENT_LENGTH, "0");
             }
             if (props.containsKey(PROP_ETAG)) {
                 props.put(PROP_ETAG, null);
@@ -465,12 +453,6 @@ public class WebDavRequest {
             }
         }
         // Fake quota properties to enable read-write access
-        if (props.containsKey(PROP_QUOTA)) {
-            props.put(PROP_QUOTA, "1000000000");
-        }
-        if (props.containsKey(PROP_QUOTA_USED)) {
-            props.put(PROP_QUOTA_USED, "0");
-        }
         if (props.containsKey(PROP_QUOTA_USED_BYTES)) {
             props.put(PROP_QUOTA_USED_BYTES, "0");
         }
