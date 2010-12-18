@@ -15,8 +15,7 @@
 package org.rapidcontext.app.web;
 
 import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,7 +23,6 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.TimeZone;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletResponse;
@@ -33,6 +31,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.web.Mime;
 import org.rapidcontext.core.web.Request;
 import org.w3c.dom.Document;
@@ -92,6 +91,41 @@ public class WebDavRequest {
      * considered to be temporary.
      */
     public static final int SC_INSUFFICIENT_STORAGE = 507;
+
+    /**
+     * The WebDAV PROPFIND method constant.
+     */
+    public static final String METHOD_PROPFIND = "PROPFIND";
+
+    /**
+     * The WebDAV PROPPATCH method constant.
+     */
+    public static final String METHOD_PROPPATCH = "PROPPATCH";
+
+    /**
+     * The WebDAV MKCOL method constant.
+     */
+    public static final String METHOD_MKCOL = "MKCOL";
+
+    /**
+     * The WebDAV COPY method constant.
+     */
+    public static final String METHOD_COPY = "COPY";
+
+    /**
+     * The WebDAV MOVE method constant.
+     */
+    public static final String METHOD_MOVE = "MOVE";
+
+    /**
+     * The WebDAV LOCK method constant.
+     */
+    public static final String METHOD_LOCK = "LOCK";
+
+    /**
+     * The WebDAV UNLOCK method constant.
+     */
+    public static final String METHOD_UNLOCK = "UNLOCK";
 
     /**
      * The WebDAV display name property constant.
@@ -261,26 +295,89 @@ public class WebDavRequest {
     }
 
     /**
+     * Encodes a URL with proper URL encoding.
+     *
+     * @param href           the URL to encode
+     *
+     * @return the encoded URL
+     */
+    public static String encodeUrl(String href) {
+        // TODO: move to utility class
+        try {
+            if (href.contains(":")) {
+                String scheme = StringUtils.substringBefore(href, ":");
+                String ssp = StringUtils.substringAfter(href, ":");
+                return new URI(scheme, ssp, null).toASCIIString();
+            } else {
+                return new URI(null, href, null).toASCIIString();
+            }
+        } catch (Exception e) {
+            return href;
+        }
+    }
+
+    /**
+     * Decodes a URL from the URL encoding.
+     *
+     * @param href           the URL to decode
+     *
+     * @return the decoded URL
+     */
+    public static String decodeUrl(String href) {
+        StringBuilder  buffer = new StringBuilder();
+        URI            uri;
+
+        // TODO: move to utility class
+        try {
+            uri = new URI(href);
+            if (uri.getScheme() != null) {
+                buffer.append(uri.getScheme());
+                buffer.append("://");
+                buffer.append(uri.getAuthority());
+            }
+            if (uri.getPath() != null) {
+                buffer.append(uri.getPath());
+            }
+            if (uri.getQuery() != null) {
+                buffer.append("?");
+                buffer.append(uri.getQuery());
+            }
+            if (uri.getFragment() != null) {
+                buffer.append("#");
+                buffer.append(uri.getFragment());
+            }
+            return buffer.toString();
+        } catch (Exception e) {
+            return href;
+        }
+    }
+
+    /**
      * The HTTP request being wrapped.
      */
     private Request request;
 
     /**
-     * The query values flag. If set to true, the property values
+     * The property values flag. If set to true, the property values
      * should also be returned. Otherwise only the property names.
      */
-    private boolean queryValues;
+    private boolean propertyValues = true;
 
     /**
      * The properties found in the query. This will contain all
      * properties if the query doesn't specify any properties.
      */
-    private LinkedHashMap queryProperties = new LinkedHashMap();
+    private LinkedHashMap properties = new LinkedHashMap();
 
     /**
-     * The namespace URI to abbreviation map.
+     * The property namespace URI to abbreviation map.
      */
-    private LinkedHashMap namespaces = null;
+    private LinkedHashMap propertyNS = null;
+
+    /**
+     * The lock request information (if parsed and available).
+     */
+    private Dict lockInfo = null;
 
     /**
      * The array with result XML fragments. Each resource added will
@@ -301,15 +398,18 @@ public class WebDavRequest {
 
         LOG.fine(request.getMethod() + " XML:\n" + xml);
         this.request = request;
-        this.queryValues = true;
         if (xml != null && xml.trim().length() > 0) {
             Element root = parseDOM(xml);
-            if (parseChild(root, "propname") != null) {
-                queryValues = false;
+            if (request.hasMethod(METHOD_PROPFIND)) {
+                if (parseChild(root, "propname") != null) {
+                    propertyValues = false;
+                }
+                parsePropFind(parseChild(root, "prop"), isCollection);
+            } else if (request.hasMethod(METHOD_LOCK)) {
+                parseLockInfo(root);
             }
-            parseProperties(parseChild(root, "prop"), isCollection);
-        } else {
-            parseProperties(null, isCollection);
+        } else if (request.hasMethod(METHOD_PROPFIND)) {
+            parsePropFind(null, isCollection);
         }
     }
 
@@ -355,20 +455,20 @@ public class WebDavRequest {
     }
 
     /**
-     * Parses the requested properties. All properties found will be
+     * Parses a property find request. All properties found will be
      * added to the query properties map. If no properties node was
      * provided, all standard properties will be added.
      *
      * @param node           the properties node, or null
      * @param isCollection   the collection flag
      */
-    private void parseProperties(Element node, boolean isCollection) {
+    private void parsePropFind(Element node, boolean isCollection) {
         LinkedHashMap  defaults;
         String         name;
 
         defaults = isCollection ? PROPS_COLLECTION : PROPS_FILE;
         if (node == null) {
-            queryProperties.putAll(defaults);
+            properties.putAll(defaults);
         } else {
             Node child = node.getFirstChild();
             while (child != null) {
@@ -376,16 +476,47 @@ public class WebDavRequest {
                     // Ignore non-elements
                 } else if ("DAV:".equals(child.getNamespaceURI())) {
                     if (defaults.containsKey(child.getLocalName())) {
-                        queryProperties.put(child.getLocalName(), "");
+                        properties.put(child.getLocalName(), "");
                     } else {
-                        queryProperties.put(child.getLocalName(), null);
+                        properties.put(child.getLocalName(), null);
                     }
                 } else {
                     name = child.getNamespaceURI() + ":" + child.getLocalName();
-                    queryProperties.put(name, null);
+                    properties.put(name, null);
                 }
                 child = child.getNextSibling();
             }
+        }
+    }
+
+    /**
+     * Parses the lock request. The lock details will be set in the
+     * lock info dictionary.
+     *
+     * @param root           the XML document node
+     */
+    private void parseLockInfo(Element root) {
+        Element  node;
+
+        lockInfo = new Dict();
+        lockInfo.set("href", request.getAbsolutePath());
+        lockInfo.set("token", null);
+        lockInfo.setInt("depth", depth());
+        lockInfo.set("timeout", timeout());
+        node = parseChild(root, "lockscope");
+        if (parseChild(node, "exclusive") != null) {
+            lockInfo.set("scope", "exclusive");
+        } else if (parseChild(node, "shared") != null) {
+            lockInfo.set("scope", "shared");
+        } else {
+            lockInfo.set("scope", "unknown");
+        }
+        lockInfo.set("type", "write");
+        node = parseChild(root, "owner");
+        if (parseChild(node, "href") != null) {
+            lockInfo.set("owner", parseChild(node, "href").getTextContent());
+        } else {
+            lockInfo.set("owner", request.getHeader("User-Agent"));
         }
     }
 
@@ -404,6 +535,26 @@ public class WebDavRequest {
     }
 
     /**
+     * Returns the requested lock timeout value.
+     *
+     * @return the requested lock timeout value, or
+     *         null if not specified
+     */
+    public String timeout() {
+        return request.getHeader("Timeout");
+    }
+
+    /**
+     * Returns information about the requested lock (if applicable).
+     *
+     * @return the requested lock, or
+     *         null if the request wasn't a valid lock request
+     */
+    public Dict lockInfo() {
+        return lockInfo;
+    }
+
+    /**
      * Adds a resource to the result with the specified dates and size.
      *
      * @param href           the root-relative resource link
@@ -416,7 +567,7 @@ public class WebDavRequest {
         String         name;
         String         str;
 
-        props.putAll(queryProperties);
+        props.putAll(properties);
         name = StringUtils.removeEnd(href, "/");
         name = StringUtils.substringAfterLast(href, "/");
         if (props.containsKey(PROP_DISPLAY_NAME)) {
@@ -475,7 +626,8 @@ public class WebDavRequest {
         String         key;
         String         value;
 
-        xmlResponseBegin(buffer, href);
+        xmlTagBegin(buffer, 1, "response");
+        xmlTag(buffer, 2, "href", encodeUrl(href), false);
         xmlTagBegin(buffer, 2, "propstat");
         xmlTagBegin(buffer, 3, "prop");
         while (iter.hasNext()) {
@@ -483,7 +635,7 @@ public class WebDavRequest {
             value = (String) props.get(key);
             if (value == null) {
                 fails.add(key);
-            } else if (queryValues) {
+            } else if (propertyValues) {
                 xmlTag(buffer, 4, key, value, !value.startsWith("<"));
             } else {
                 xmlTag(buffer, 4, key);
@@ -518,7 +670,7 @@ public class WebDavRequest {
             xmlStatus(buffer, 3, HttpServletResponse.SC_NOT_FOUND);
             xmlTagEnd(buffer, 2, "propstat");
         }
-        xmlResponseEnd(buffer);
+        xmlTagEnd(buffer, 1, "response");
         results.add(buffer.toString());
     }
 
@@ -530,28 +682,73 @@ public class WebDavRequest {
      * @return the namespace abbreviation
      */
     private String namespace(String href) {
-        if (namespaces == null) {
-            namespaces = new LinkedHashMap();
+        if (propertyNS == null) {
+            propertyNS = new LinkedHashMap();
         }
-        if (!namespaces.containsKey(href)) {
-            char value = (char) ('E' + namespaces.size());
-            namespaces.put(href, String.valueOf(value));
-            LOG.fine("reserved namespace '" + namespaces.get(href) + "' for " + href);
+        if (!propertyNS.containsKey(href)) {
+            char value = (char) ('E' + propertyNS.size());
+            propertyNS.put(href, String.valueOf(value));
+            LOG.fine("reserved namespace '" + propertyNS.get(href) + "' for " + href);
         }
-        return (String) namespaces.get(href);
+        return (String) propertyNS.get(href);
     }
 
     /**
-     * Sends the added resources as the request response.
+     * Sends a lock response with the specified information.
+     *
+     * @param lockInfo       the lock information
+     * @param timeout        the lock timeout
      */
-    public void sendResponse() {
+    public void sendLockResponse(Dict lockInfo, int timeout) {
+        StringBuilder  buffer = new StringBuilder();
+        String         str;
+
+        buffer.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
+        buffer.append("<D:prop xmlns:D=\"DAV:\">\n");
+        xmlTagBegin(buffer, 1, "lockdiscovery");
+        xmlTagBegin(buffer, 2, "activelock");
+        xmlTagBegin(buffer, 3, "lockroot");
+        xmlTag(buffer, 4, "href", lockInfo.getString("href", ""), true);
+        xmlTagEnd(buffer, 3, "lockroot");
+        xmlTagBegin(buffer, 3, "locktoken");
+        xmlTag(buffer, 4, "href", lockInfo.getString("token", ""), true);
+        xmlTagEnd(buffer, 3, "locktoken");
+        if (lockInfo.getInt("depth", -1) < 0) {
+            xmlTag(buffer, 3, "depth", "infinity", true);
+        } else {
+            xmlTag(buffer, 3, "depth", lockInfo.getString("depth", ""), true);
+        }
+        str = "Seconds-" + timeout;
+        xmlTag(buffer, 3, "timeout", str, false);
+        str = "<D:" + lockInfo.get("type") + "/>";
+        xmlTag(buffer, 3, "locktype", str, false);
+        str = "<D:" + lockInfo.get("scope") + "/>";
+        xmlTag(buffer, 3, "lockscope", str, false);
+        xmlTagBegin(buffer, 3, "owner");
+        xmlTag(buffer, 4, "href", lockInfo.getString("owner", ""), true);
+        xmlTagEnd(buffer, 3, "owner");
+        xmlTagEnd(buffer, 2, "activelock");
+        xmlTagEnd(buffer, 1, "lockdiscovery");
+        xmlTagEnd(buffer, 0, "prop");
+        request.setResponseHeader("Lock-Token", "<" + lockInfo.getString("token", "") + ">");
+        request.sendData(HttpServletResponse.SC_OK, Mime.XML[0], buffer.toString());
+    }
+
+    /**
+     * Sends a multi-status response with the response fragments as
+     * the request response.
+     * 
+     * @see #addResource(String, Date, Date, long)
+     */
+    public void sendMultiResponse() {
         StringBuilder  buffer = new StringBuilder();
 
-        xmlMultiStatusBegin(buffer);
+        buffer.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
+        buffer.append("<D:multistatus xmlns:D=\"DAV:\">\n");
         for (int i = 0; i < results.size(); i++) {
             buffer.append(results.get(i));
         }
-        xmlMultiStatusEnd(buffer);
+        xmlTagEnd(buffer, 0, "multistatus");
         request.sendData(SC_MULTI_STATUS, Mime.XML[0], buffer.toString());
     }
 
@@ -568,60 +765,6 @@ public class WebDavRequest {
         request.sendError(HttpServletResponse.SC_FORBIDDEN, Mime.XML[0], buffer.toString());
     }
 
-    /**
-     * Writes an opening WebDAV multistatus tag to the specified buffer.
-     *
-     * @param buffer         the buffer to write to
-     */
-    private void xmlMultiStatusBegin(StringBuilder buffer) {
-        buffer.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
-        buffer.append("<D:multistatus xmlns:D=\"DAV:\">\n");
-    }
-
-    /**
-     * Writes a closing WebDAV multistatus tag to the specified buffer.
-     *
-     * @param buffer         the buffer to write to
-     */
-    private void xmlMultiStatusEnd(StringBuilder buffer) {
-        xmlTagEnd(buffer, 0, "multistatus");
-    }
-
-    /**
-     * Writes an opening WebDAV response tag to the specified buffer.
-     *
-     * @param buffer         the buffer to write to
-     * @param href           the root-relative resource link
-     */
-    private void xmlResponseBegin(StringBuilder buffer, String href) {
-        String[]  parts = href.split("/");
-
-        xmlTagBegin(buffer, 1, "response");
-        buffer.append(StringUtils.repeat("  ", 2));
-        buffer.append("<D:href>");
-        for (int i = 0; i < parts.length; i++) {
-            if (i > 0) {
-                buffer.append("/");
-            }
-            try {
-                buffer.append(URLEncoder.encode(parts[i], "UTF-8"));
-            } catch (UnsupportedEncodingException e) {
-                LOG.log(Level.SEVERE, "unsupported character encoding", e);
-                buffer.append(StringEscapeUtils.escapeXml(parts[i]));
-            }
-        }
-        buffer.append("</D:href>\n");
-    }
-
-    /**
-     * Writes a closing WebDAV response tag to the specified buffer.
-     *
-     * @param buffer         the buffer to write to
-     */
-    private void xmlResponseEnd(StringBuilder buffer) {
-        xmlTagEnd(buffer, 1, "response");
-    }
-    
     /**
      * Writes a WebDAV status tag to the specified buffer.
      *

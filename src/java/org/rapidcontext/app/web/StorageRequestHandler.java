@@ -37,6 +37,7 @@ import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.web.Mime;
 import org.rapidcontext.core.web.Request;
 import org.rapidcontext.core.web.RequestHandler;
+import org.rapidcontext.util.FileUtil;
 
 /**
  * A storage API request handler. This request handler supports both
@@ -57,48 +58,46 @@ public class StorageRequestHandler extends RequestHandler {
     /**
      * The WebDAV PROPFIND method constant.
      */
-    public static final String METHOD_PROPFIND = "PROPFIND";
+    public static final String METHOD_PROPFIND = WebDavRequest.METHOD_PROPFIND;
 
     /**
      * The WebDAV PROPPATCH method constant.
      */
-    public static final String METHOD_PROPPATCH = "PROPPATCH";
+    public static final String METHOD_PROPPATCH = WebDavRequest.METHOD_PROPPATCH;
 
     /**
      * The WebDAV MKCOL method constant.
      */
-    public static final String METHOD_MKCOL = "MKCOL";
+    public static final String METHOD_MKCOL = WebDavRequest.METHOD_MKCOL;
 
     /**
      * The WebDAV COPY method constant.
      */
-    public static final String METHOD_COPY = "COPY";
+    public static final String METHOD_COPY = WebDavRequest.METHOD_COPY;
 
     /**
      * The WebDAV MOVE method constant.
      */
-    public static final String METHOD_MOVE = "MOVE";
+    public static final String METHOD_MOVE = WebDavRequest.METHOD_MOVE;
 
     /**
      * The WebDAV LOCK method constant.
      */
-    public static final String METHOD_LOCK = "LOCK";
+    public static final String METHOD_LOCK = WebDavRequest.METHOD_LOCK;
 
     /**
      * The WebDAV UNLOCK method constant.
      */
-    public static final String METHOD_UNLOCK = "UNLOCK";
+    public static final String METHOD_UNLOCK = WebDavRequest.METHOD_UNLOCK;
 
     /**
      * The supported HTTP methods.
      */
     protected static final String[] METHODS = {
-        METHOD_OPTIONS, METHOD_HEAD, METHOD_GET,
-        //METHOD_PUT, METHOD_DELETE,
-        METHOD_PROPFIND
-        //, METHOD_PROPPATCH, METHOD_MKCOL,
-        //METHOD_COPY, METHOD_MOVE
-        //, METHOD_LOCK, METHOD_UNLOCK
+        METHOD_OPTIONS, METHOD_HEAD, METHOD_GET, METHOD_PUT, METHOD_DELETE,
+        METHOD_PROPFIND, METHOD_MKCOL, // METHOD_PROPPATCH, 
+        // METHOD_COPY, 
+        METHOD_MOVE, METHOD_LOCK, METHOD_UNLOCK
     };
 
     /**
@@ -121,13 +120,20 @@ public class StorageRequestHandler extends RequestHandler {
      * @param request the request to process
      */
     public void process(Request request) {
-        //request.setResponseHeader("DAV", "1 2 3");
-        request.setResponseHeader("DAV", "1 3");
+        request.setResponseHeader("DAV", "2");
         request.setResponseHeader("MS-Author-Via", "DAV");
         if (!SecurityContext.hasAdmin()) {
             errorUnauthorized(request);
         } else if (request.hasMethod(METHOD_PROPFIND)) {
             doPropFind(request);
+        } else if (request.hasMethod(METHOD_MKCOL)) {
+            doMkCol(request);
+        } else if (request.hasMethod(METHOD_MOVE)) {
+            doMove(request);
+        } else if (request.hasMethod(METHOD_LOCK)) {
+            doLock(request);
+        } else if (request.hasMethod(METHOD_UNLOCK)) {
+            doUnlock(request);
         } else {
             super.process(request);
         }
@@ -381,6 +387,74 @@ public class StorageRequestHandler extends RequestHandler {
     }
 
     /**
+     * Processes an HTTP PUT request.
+     *
+     * @param request        the request to process
+     */
+    protected void doPut(Request request) {
+        ApplicationContext  ctx = ApplicationContext.getInstance();
+        String              fileName;
+        File                file;
+        Path                path;
+        Dict                dict;
+
+        if (request.getHeader("Content-Range") != null) {
+            request.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED);
+            return;
+        }
+        try {
+            // TODO: check for existing parent path
+            // TODO: check that request path is for object
+            fileName = StringUtils.substringAfterLast(request.getPath(), "/");
+            file = FileUtil.tempFile(fileName);
+            FileUtil.copy(request.getInputStream(), file);
+            path = new Path(StringUtils.removeEnd(request.getPath(), ".properties"));
+            if (request.getPath().endsWith(".properties")) {
+                dict = PropertiesSerializer.read(file);
+                file.delete();
+                ctx.getStorage().store(path, dict);
+            } else {
+                ctx.getStorage().store(path, file);
+            }
+            // TODO: overwriting existing data should give 200
+            request.sendData(HttpServletResponse.SC_CREATED, null, null);
+        } catch (Exception e) {
+            LOG.log(Level.WARNING, "failed to write " + request.getPath(), e);
+        }
+    }
+
+    /**
+     * Processes an HTTP DELETE request.
+     *
+     * @param request        the request to process
+     */
+    protected void doDelete(Request request) {
+        ApplicationContext  ctx = ApplicationContext.getInstance();
+        Path                path = new Path(request.getPath());
+        Metadata            meta = null;
+
+        try {
+            path = normalizePath(path);
+            if (path != null) {
+                meta = ctx.getStorage().lookup(path);
+            }
+            if (meta == null) {
+                errorNotFound(request);
+                return;
+            }
+            ctx.getStorage().remove(path);
+            meta = ctx.getStorage().lookup(path);
+            if (meta == null) {
+                request.sendData(HttpServletResponse.SC_NO_CONTENT, null, null);
+            } else {
+                request.sendError(HttpServletResponse.SC_FORBIDDEN);
+            }
+        } catch (Exception e) {
+            LOG.log(Level.WARNING, "failed to delete " + request.getPath(), e);
+        }
+    }
+
+    /**
      * Processes a WebDAV PROPFIND request.
      *
      * @param request        the request to process
@@ -435,7 +509,7 @@ public class StorageRequestHandler extends RequestHandler {
                     }
                 }
             }
-            davRequest.sendResponse();
+            davRequest.sendMultiResponse();
         } catch (Exception e) {
             LOG.log(Level.WARNING, "failed to process WebDAV propfind request", e);
             errorInternal(request, e.getMessage());
@@ -469,6 +543,154 @@ public class StorageRequestHandler extends RequestHandler {
             byte[] bytes = str.getBytes("ISO-8859-1");
             request.addResource(href, modified, modified, bytes.length);
         }
+    }
+
+    /**
+     * Processes a WebDAV MKCOL request.
+     *
+     * @param request        the request to process
+     */
+    protected void doMkCol(Request request) {
+        ApplicationContext  ctx = ApplicationContext.getInstance();
+        Path                path;
+        Metadata            meta;
+
+        try {
+            path = new Path(request.getPath());
+            if (!path.isIndex()) {
+                path = path.parent().child(path.name(), true);
+            }
+            meta = ctx.getStorage().lookup(path);
+            if (meta != null) {
+                request.sendError(HttpServletResponse.SC_FORBIDDEN);
+            } else {
+                ctx.getStorage().store(path.child("dummy", false), new Dict());
+                ctx.getStorage().remove(path.child("dummy", false));
+                request.sendData(HttpServletResponse.SC_CREATED, null, null);
+            }
+        } catch (Exception e) {
+            LOG.log(Level.WARNING, "failed to create dir " + request.getPath(), e);
+            errorInternal(request, e.getMessage());
+        }
+    }
+
+    /**
+     * Processes a WebDAV MOVE request.
+     *
+     * @param request        the request to process
+     */
+    protected void doMove(Request request) {
+        ApplicationContext  ctx = ApplicationContext.getInstance();
+        Path                src;
+        Path                dst;
+        Object              data = null;
+        String              href;
+        String              prefix;
+        String              fileName;
+        File                file;
+
+        try {
+            prefix = StringUtils.substringBeforeLast(request.getUrl(), request.getPath());
+            if (prefix.endsWith("/")) {
+                prefix = StringUtils.substringBeforeLast(prefix, "/");
+            }
+            href = request.getHeader("Destination");
+            if (href == null) {
+                errorBadRequest(request, "missing Destination header");
+                return;
+            }
+            href = WebDavRequest.decodeUrl(href);
+            if (!href.startsWith(prefix)) {
+                request.sendError(HttpServletResponse.SC_BAD_GATEWAY);
+                return;
+            }
+            dst = new Path(href.substring(prefix.length()));
+            src = new Path(request.getPath());
+            src = normalizePath(src);
+            // TODO: verify destination path
+            if (src != null) {
+                data = ctx.getStorage().load(src);
+            }
+            if (data == null) {
+                errorNotFound(request);
+            } else if (data instanceof Index) {
+                // TODO: add support for collection moves
+                request.sendError(HttpServletResponse.SC_FORBIDDEN);
+            } else if (data instanceof File) {
+                fileName = StringUtils.substringAfterLast(request.getPath(), "/");
+                file = FileUtil.tempFile(fileName);
+                FileUtil.copy((File) data, file);
+                ctx.getStorage().store(dst, file);
+                ctx.getStorage().remove(src);
+                href = WebDavRequest.encodeUrl(prefix + dst.toString());
+                request.setResponseHeader("Location", href);
+                request.sendData(HttpServletResponse.SC_CREATED, null, null);
+            } else {
+                // TODO: add support for object moves
+                request.sendError(HttpServletResponse.SC_FORBIDDEN);
+            }
+        } catch (Exception e) {
+            LOG.log(Level.WARNING, "failed to move " + request.getPath(), e);
+            errorInternal(request, e.getMessage());
+        }
+    }
+
+    /**
+     * Processes a WebDAV LOCK request.
+     *
+     * @param request        the request to process
+     */
+    protected void doLock(Request request) {
+        ApplicationContext  ctx = ApplicationContext.getInstance();
+        Path                path = new Path(request.getPath());
+        String              href;
+        WebDavRequest       davRequest;
+        Dict                lockInfo;
+        Metadata            meta = null;
+
+        try {
+            davRequest = new WebDavRequest(request);
+            if (davRequest.depth() > 0) {
+                errorBadRequest(request, "invalid lock depth header");
+                return;
+            }
+            lockInfo = davRequest.lockInfo();
+            if (lockInfo == null) {
+                // TODO: allow lock refresh with missing body!
+                errorBadRequest(request, "missing DAV:lockinfo request body");
+                return;
+            }
+            path = normalizePath(path);
+            if (path != null) {
+                meta = ctx.getStorage().lookup(path);
+            }
+            if (meta == null) {
+                errorNotFound(request);
+                return;
+            }
+            href = request.getAbsolutePath();
+            if (path.isIndex() && !href.endsWith("/")) {
+                href += "/";
+            }
+            lockInfo.set("href", href);
+            lockInfo.set("token", "locktoken:" + System.currentTimeMillis());
+            // TODO: on lock fail, return multi-status response
+            // TODO: lock refresh...
+            davRequest.sendLockResponse(lockInfo, 60);
+        } catch (Exception e) {
+            LOG.log(Level.WARNING, "failed to process WebDAV lock request", e);
+            errorInternal(request, e.getMessage());
+        }
+    }
+
+    /**
+     * Processes a WebDAV UNLOCK request.
+     *
+     * @param request        the request to process
+     */
+    protected void doUnlock(Request request) {
+        // TODO: remove lock
+        request.sendData(HttpServletResponse.SC_NO_CONTENT, null, null);
     }
 
     /**
