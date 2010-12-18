@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -234,7 +235,31 @@ public class Request {
      * @return the full request URL
      */
     public String getUrl() {
-        return request.getRequestURL().toString();
+        StringBuilder  buffer = new StringBuilder();
+        URI            uri;
+
+        try {
+            uri = new URI(request.getRequestURL().toString());
+            if (uri.getScheme() != null) {
+                buffer.append(uri.getScheme());
+                buffer.append("://");
+                buffer.append(uri.getAuthority());
+            }
+            if (uri.getPath() != null) {
+                buffer.append(uri.getPath());
+            }
+            if (uri.getQuery() != null) {
+                buffer.append("?");
+                buffer.append(uri.getQuery());
+            }
+            if (uri.getFragment() != null) {
+                buffer.append("#");
+                buffer.append(uri.getFragment());
+            }
+            return buffer.toString();
+        } catch (Exception e) {
+            return request.getRequestURL().toString();
+        }
     }
 
     /**
