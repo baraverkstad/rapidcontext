@@ -37,6 +37,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.util.FileUtil;
+import org.rapidcontext.util.HttpUtil;
 
 /**
  * A request wrapper class. This class encapsulates the HTTP servlet
@@ -46,7 +47,7 @@ import org.rapidcontext.util.FileUtil;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class Request {
+public class Request implements HttpUtil {
 
     /**
      * The class logger.
@@ -125,7 +126,7 @@ public class Request {
     /**
      * The response HTTP code. Only used when sending error responses.
      */
-    private int responseCode = HttpServletResponse.SC_OK;
+    private int responseCode = STATUS.OK;
 
     /**
      * The response MIME type.
@@ -573,7 +574,7 @@ public class Request {
      */
     public void sendClear() {
         responseType = NO_RESPONSE;
-        responseCode = HttpServletResponse.SC_OK;
+        responseCode = STATUS.OK;
         responseMimeType = null;
         responseData = null;
         responseHeadersOnly = false;
@@ -605,7 +606,7 @@ public class Request {
      * @see #sendClear()
      */
     public void sendData(String mimeType, String data) {
-        sendData(HttpServletResponse.SC_OK, mimeType, data);
+        sendData(STATUS.OK, mimeType, data);
     }
 
     /**
@@ -647,11 +648,11 @@ public class Request {
     public void sendFile(File file, boolean limitCache) {
         sendClear();
         responseType = FILE_RESPONSE;
-        responseCode = HttpServletResponse.SC_OK;
+        responseCode = STATUS.OK;
         responseMimeType = Mime.type(file);
         responseData = file.toString();
         if (limitCache) {
-            response.setHeader("Cache-Control", "private");
+            response.setHeader(HEADER.CACHE_CONTROL, "private");
         }
     }
 
@@ -752,12 +753,12 @@ public class Request {
      *             encountered while sending the response
      */
     public void commit() throws IOException, ServletException {
-        response.setHeader("Server", "RapidContext");
-        response.setDateHeader("Date", System.currentTimeMillis());
+        response.setHeader(HEADER.SERVER, "RapidContext");
+        response.setDateHeader(HEADER.DATE, System.currentTimeMillis());
         switch (responseType) {
         case AUTH_RESPONSE:
-            response.setHeader("WWW-Authenticate", responseData);
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setHeader(HEADER.WWW_AUTHENTICATE, responseData);
+            response.sendError(STATUS.UNAUTHORIZED);
             logResponse();
             break;
         case DATA_RESPONSE:
@@ -790,9 +791,9 @@ public class Request {
      * will be used as the last modification time.
      */
     private void commitDynamicHeaders() {
-        response.setHeader("Cache-Control", "no-cache");
-        response.setHeader("Expires", "-1");
-        response.setDateHeader("Last-Modified", System.currentTimeMillis());
+        response.setHeader(HEADER.CACHE_CONTROL, "no-cache");
+        response.setHeader(HEADER.EXPIRES, "-1");
+        response.setDateHeader(HEADER.LAST_MODIFIED, System.currentTimeMillis());
     }
 
     /**
@@ -803,13 +804,13 @@ public class Request {
      *                       zero (0) for the current system time
      */
     private void commitStaticHeaders(long lastModified) {
-        if (!response.containsHeader("Cache-Control")) {
-            response.setHeader("Cache-Control", "public");
+        if (!response.containsHeader(HEADER.CACHE_CONTROL)) {
+            response.setHeader(HEADER.CACHE_CONTROL, "public");
         }
         if (lastModified > 0) {
-            response.setDateHeader("Last-Modified", lastModified);
+            response.setDateHeader(HEADER.LAST_MODIFIED, lastModified);
         } else {
-            response.setDateHeader("Last-Modified",
+            response.setDateHeader(HEADER.LAST_MODIFIED,
                                    System.currentTimeMillis());
         }
     }
@@ -852,9 +853,9 @@ public class Request {
         int              length;
 
         file = new File(responseData);
-        modified = request.getDateHeader("If-Modified-Since");
+        modified = request.getDateHeader(HEADER.IF_MODIFIED_SINCE);
         if (modified != -1 && file.lastModified() < modified + 1000) {
-            response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+            response.setStatus(STATUS.NOT_MODIFIED);
             logResponse();
             return;
         }
@@ -867,7 +868,7 @@ public class Request {
             try {
                 input = new FileInputStream(file);
             } catch (IOException e) {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                response.sendError(STATUS.NOT_FOUND);
                 return;
             }
             output = response.getOutputStream();

@@ -56,48 +56,13 @@ public class StorageRequestHandler extends RequestHandler {
         Logger.getLogger(StorageRequestHandler.class.getName());
 
     /**
-     * The WebDAV PROPFIND method constant.
-     */
-    public static final String METHOD_PROPFIND = WebDavRequest.METHOD_PROPFIND;
-
-    /**
-     * The WebDAV PROPPATCH method constant.
-     */
-    public static final String METHOD_PROPPATCH = WebDavRequest.METHOD_PROPPATCH;
-
-    /**
-     * The WebDAV MKCOL method constant.
-     */
-    public static final String METHOD_MKCOL = WebDavRequest.METHOD_MKCOL;
-
-    /**
-     * The WebDAV COPY method constant.
-     */
-    public static final String METHOD_COPY = WebDavRequest.METHOD_COPY;
-
-    /**
-     * The WebDAV MOVE method constant.
-     */
-    public static final String METHOD_MOVE = WebDavRequest.METHOD_MOVE;
-
-    /**
-     * The WebDAV LOCK method constant.
-     */
-    public static final String METHOD_LOCK = WebDavRequest.METHOD_LOCK;
-
-    /**
-     * The WebDAV UNLOCK method constant.
-     */
-    public static final String METHOD_UNLOCK = WebDavRequest.METHOD_UNLOCK;
-
-    /**
      * The supported HTTP methods.
      */
     protected static final String[] METHODS = {
-        METHOD_OPTIONS, METHOD_HEAD, METHOD_GET, METHOD_PUT, METHOD_DELETE,
-        METHOD_PROPFIND, METHOD_MKCOL, // METHOD_PROPPATCH, 
-        // METHOD_COPY, 
-        METHOD_MOVE, METHOD_LOCK, METHOD_UNLOCK
+        METHOD.OPTIONS, METHOD.HEAD, METHOD.GET, METHOD.PUT, METHOD.DELETE,
+        METHOD.PROPFIND, METHOD.MKCOL, // METHOD.PROPPATCH, 
+        // METHOD.COPY, 
+        METHOD.MOVE, METHOD.LOCK, METHOD.UNLOCK
     };
 
     /**
@@ -124,15 +89,15 @@ public class StorageRequestHandler extends RequestHandler {
         request.setResponseHeader("MS-Author-Via", "DAV");
         if (!SecurityContext.hasAdmin()) {
             errorUnauthorized(request);
-        } else if (request.hasMethod(METHOD_PROPFIND)) {
+        } else if (request.hasMethod(METHOD.PROPFIND)) {
             doPropFind(request);
-        } else if (request.hasMethod(METHOD_MKCOL)) {
+        } else if (request.hasMethod(METHOD.MKCOL)) {
             doMkCol(request);
-        } else if (request.hasMethod(METHOD_MOVE)) {
+        } else if (request.hasMethod(METHOD.MOVE)) {
             doMove(request);
-        } else if (request.hasMethod(METHOD_LOCK)) {
+        } else if (request.hasMethod(METHOD.LOCK)) {
             doLock(request);
-        } else if (request.hasMethod(METHOD_UNLOCK)) {
+        } else if (request.hasMethod(METHOD.UNLOCK)) {
             doUnlock(request);
         } else {
             super.process(request);

@@ -25,7 +25,6 @@ import java.util.Locale;
 import java.util.TimeZone;
 import java.util.logging.Logger;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -34,6 +33,7 @@ import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.web.Mime;
 import org.rapidcontext.core.web.Request;
+import org.rapidcontext.util.HttpUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -46,86 +46,13 @@ import org.xml.sax.InputSource;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class WebDavRequest {
+public class WebDavRequest implements HttpUtil {
 
     /**
      * The class logger.
      */
     private static final Logger LOG =
         Logger.getLogger(WebDavRequest.class.getName());
-
-    /**
-     * The WebDAV HTTP 207 (Multi-Status) status code provides status
-     * for multiple independent operations.
-     */
-    public static final int SC_MULTI_STATUS = 207;
-
-    /**
-     * The WebDAV HTTP 422 (Unprocessable Entity) status code means
-     * that both request content type and syntax is correct, but that
-     * the server is unable to process the contained instructions.
-     * For example, this error condition may occur if an XML request
-     * body contains well-formed (i.e., syntactically correct), but
-     * semantically erroneous, XML instructions.
-     */
-    public static final int SC_UNPROCESSABLE_ENTITY = 422;
-
-    /**
-     * The WebDAV HTTP 423 (Locked) status code means the source or
-     * destination resource of a method is locked.
-     */
-    public static final int SC_LOCKED = 423;
-
-    /**
-     * The WebDAV HTTP 424 (Failed Dependency) status code means that
-     * the method could not be performed on the resource because the
-     * requested action depended on another action and that action
-     * failed.
-     */
-    public static final int SC_FAILED_DEPENDENCY = 424;
-
-    /**
-     * The WebDAV HTTP 507 (Insufficient Storage) status code means
-     * that the server is unable to store the representation needed
-     * to successfully complete the request. This condition is
-     * considered to be temporary.
-     */
-    public static final int SC_INSUFFICIENT_STORAGE = 507;
-
-    /**
-     * The WebDAV PROPFIND method constant.
-     */
-    public static final String METHOD_PROPFIND = "PROPFIND";
-
-    /**
-     * The WebDAV PROPPATCH method constant.
-     */
-    public static final String METHOD_PROPPATCH = "PROPPATCH";
-
-    /**
-     * The WebDAV MKCOL method constant.
-     */
-    public static final String METHOD_MKCOL = "MKCOL";
-
-    /**
-     * The WebDAV COPY method constant.
-     */
-    public static final String METHOD_COPY = "COPY";
-
-    /**
-     * The WebDAV MOVE method constant.
-     */
-    public static final String METHOD_MOVE = "MOVE";
-
-    /**
-     * The WebDAV LOCK method constant.
-     */
-    public static final String METHOD_LOCK = "LOCK";
-
-    /**
-     * The WebDAV UNLOCK method constant.
-     */
-    public static final String METHOD_UNLOCK = "UNLOCK";
 
     /**
      * The WebDAV display name property constant.
@@ -226,72 +153,6 @@ public class WebDavRequest {
         PROPS_FILE.put(PROP_ETAG, "");
         CREATION_DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
         LAST_MODIFIED_DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
-    }
-
-    /**
-     * Returns the HTTP status name corresponding to a status code.
-     *
-     * @param status         the HTTP status code
-     *
-     * @return the corresponding HTTP status name
-     */
-    public static String httpStatus(int status) {
-        switch (status) {
-        case HttpServletResponse.SC_OK:
-            return "OK";
-        case HttpServletResponse.SC_CREATED:
-            return "Created";
-        case HttpServletResponse.SC_ACCEPTED:
-            return "Accepted";
-        case HttpServletResponse.SC_NO_CONTENT:
-            return "No Content";
-        case HttpServletResponse.SC_MOVED_PERMANENTLY:
-            return "Moved Permanently";
-        case HttpServletResponse.SC_MOVED_TEMPORARILY:
-            return "Moved Temporarily";
-        case HttpServletResponse.SC_NOT_MODIFIED:
-            return "Not Modified";
-        case HttpServletResponse.SC_BAD_REQUEST:
-            return "Bad Request";
-        case HttpServletResponse.SC_UNAUTHORIZED:
-            return "Unauthorized";
-        case HttpServletResponse.SC_FORBIDDEN:
-            return "Forbidden";
-        case HttpServletResponse.SC_NOT_FOUND:
-            return "Not Found";
-        case HttpServletResponse.SC_INTERNAL_SERVER_ERROR:
-            return "Internal Server Error";
-        case HttpServletResponse.SC_NOT_IMPLEMENTED:
-            return "Not Implemented";
-        case HttpServletResponse.SC_BAD_GATEWAY:
-            return "Bad Gateway";
-        case HttpServletResponse.SC_SERVICE_UNAVAILABLE:
-            return "Service Unavailable";
-        case HttpServletResponse.SC_CONTINUE:
-            return "Continue";
-        case HttpServletResponse.SC_METHOD_NOT_ALLOWED:
-            return "Method Not Allowed";
-        case HttpServletResponse.SC_CONFLICT:
-            return "Conflict";
-        case HttpServletResponse.SC_PRECONDITION_FAILED:
-            return "Precondition Failed";
-        case HttpServletResponse.SC_REQUEST_ENTITY_TOO_LARGE:
-            return "Request Entity Too Large";
-        case HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE:
-            return "Unsupported Media Type";
-        case SC_MULTI_STATUS:
-            return "Multi-Status";
-        case SC_UNPROCESSABLE_ENTITY:
-            return "Unprocessable Entity";
-        case SC_LOCKED:
-            return "Locked";
-        case SC_FAILED_DEPENDENCY:
-            return "Failed Dependency";
-        case SC_INSUFFICIENT_STORAGE:
-            return "Insufficient Storage";
-        default:
-            return "Unknown";
-        }
     }
 
     /**
@@ -400,15 +261,15 @@ public class WebDavRequest {
         this.request = request;
         if (xml != null && xml.trim().length() > 0) {
             Element root = parseDOM(xml);
-            if (request.hasMethod(METHOD_PROPFIND)) {
+            if (request.hasMethod(METHOD.PROPFIND)) {
                 if (parseChild(root, "propname") != null) {
                     propertyValues = false;
                 }
                 parsePropFind(parseChild(root, "prop"), isCollection);
-            } else if (request.hasMethod(METHOD_LOCK)) {
+            } else if (request.hasMethod(METHOD.LOCK)) {
                 parseLockInfo(root);
             }
-        } else if (request.hasMethod(METHOD_PROPFIND)) {
+        } else if (request.hasMethod(METHOD.PROPFIND)) {
             parsePropFind(null, isCollection);
         }
     }
@@ -516,7 +377,7 @@ public class WebDavRequest {
         if (parseChild(node, "href") != null) {
             lockInfo.set("owner", parseChild(node, "href").getTextContent());
         } else {
-            lockInfo.set("owner", request.getHeader("User-Agent"));
+            lockInfo.set("owner", request.getHeader(HEADER.USER_AGENT));
         }
     }
 
@@ -528,7 +389,7 @@ public class WebDavRequest {
      */
     public int depth() {
         try {
-            return Integer.parseInt(request.getHeader("Depth"));
+            return Integer.parseInt(request.getHeader(HEADER.DEPTH));
         } catch (NumberFormatException e) {
             return -1;
         }
@@ -541,7 +402,7 @@ public class WebDavRequest {
      *         null if not specified
      */
     public String timeout() {
-        return request.getHeader("Timeout");
+        return request.getHeader(HEADER.TIMEOUT);
     }
 
     /**
@@ -642,7 +503,7 @@ public class WebDavRequest {
             }
         }
         xmlTagEnd(buffer, 3, "prop");
-        xmlStatus(buffer, 3, HttpServletResponse.SC_OK);
+        xmlStatus(buffer, 3, STATUS.OK);
         xmlTagEnd(buffer, 2, "propstat");
         if (fails.size() > 0) {
             xmlTagBegin(buffer, 2, "propstat");
@@ -667,7 +528,7 @@ public class WebDavRequest {
                 }
             }
             xmlTagEnd(buffer, 3, "prop");
-            xmlStatus(buffer, 3, HttpServletResponse.SC_NOT_FOUND);
+            xmlStatus(buffer, 3, STATUS.NOT_FOUND);
             xmlTagEnd(buffer, 2, "propstat");
         }
         xmlTagEnd(buffer, 1, "response");
@@ -730,8 +591,9 @@ public class WebDavRequest {
         xmlTagEnd(buffer, 2, "activelock");
         xmlTagEnd(buffer, 1, "lockdiscovery");
         xmlTagEnd(buffer, 0, "prop");
-        request.setResponseHeader("Lock-Token", "<" + lockInfo.getString("token", "") + ">");
-        request.sendData(HttpServletResponse.SC_OK, Mime.XML[0], buffer.toString());
+        str = "<" + lockInfo.getString("token", "") + ">";
+        request.setResponseHeader(HEADER.LOCK_TOKEN, str);
+        request.sendData(STATUS.OK, Mime.XML[0], buffer.toString());
     }
 
     /**
@@ -749,7 +611,7 @@ public class WebDavRequest {
             buffer.append(results.get(i));
         }
         xmlTagEnd(buffer, 0, "multistatus");
-        request.sendData(SC_MULTI_STATUS, Mime.XML[0], buffer.toString());
+        request.sendData(STATUS.MULTI_STATUS, Mime.XML[0], buffer.toString());
     }
 
     /**
@@ -762,7 +624,7 @@ public class WebDavRequest {
         buffer.append("<D:error xmlns:D=\"DAV:\">\n");
         xmlTag(buffer, 1, "propfind-finite-depth");
         xmlTagEnd(buffer, 0, "error");
-        request.sendError(HttpServletResponse.SC_FORBIDDEN, Mime.XML[0], buffer.toString());
+        request.sendError(STATUS.FORBIDDEN, Mime.XML[0], buffer.toString());
     }
 
     /**
@@ -773,7 +635,7 @@ public class WebDavRequest {
      * @param status         the status code
      */
     private void xmlStatus(StringBuilder buffer, int indent, int status) {
-        String content = "HTTP/1.1 " + status + " " + httpStatus(status);
+        String content = "HTTP/1.1 " + status + " " + STATUS.asText(status);
         xmlTag(buffer, indent, "status", content, false);
     }
 

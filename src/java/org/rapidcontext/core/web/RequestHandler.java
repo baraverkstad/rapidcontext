@@ -16,10 +16,9 @@ package org.rapidcontext.core.web;
 
 import java.util.logging.Logger;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.core.security.SecurityContext;
+import org.rapidcontext.util.HttpUtil;
 
 /**
  * The base request handler class. A request handler is mapped to a
@@ -28,7 +27,7 @@ import org.rapidcontext.core.security.SecurityContext;
  * @author   Per Cederberg
  * @version  1.0
  */
-public abstract class RequestHandler {
+public abstract class RequestHandler implements HttpUtil {
 
     /**
      * The class logger.
@@ -37,53 +36,18 @@ public abstract class RequestHandler {
         Logger.getLogger(RequestHandler.class.getName());
 
     /**
-     * The HTTP GET method constant.
-     */
-    public static final String METHOD_GET = "GET";
-
-    /**
-     * The HTTP POST method constant.
-     */
-    public static final String METHOD_POST = "POST";
-
-    /**
-     * The HTTP PUT method constant.
-     */
-    public static final String METHOD_PUT = "PUT";
-
-    /**
-     * The HTTP DELETE method constant.
-     */
-    public static final String METHOD_DELETE = "DELETE";
-
-    /**
-     * The HTTP OPTIONS method constant.
-     */
-    public static final String METHOD_OPTIONS = "OPTIONS";
-
-    /**
-     * The HTTP HEAD method constant.
-     */
-    public static final String METHOD_HEAD = "HEAD";
-
-    /**
-     * The HTTP TRACE method constant.
-     */
-    public static final String METHOD_TRACE = "TRACE";
-
-    /**
      * The array of HTTP methods for a GET-only handler. This array
      * contains the OPTIONS, HEAD and GET methods.
      */
     protected static final String[] GET_METHODS_ONLY =
-        new String[] { METHOD_OPTIONS, METHOD_HEAD, METHOD_GET };
+        new String[] { METHOD.OPTIONS, METHOD.HEAD, METHOD.GET };
 
     /**
      * The array of HTTP methods for a POST-only handler. This array
      * contains the OPTIONS, POST methods.
      */
     protected static final String[] POST_METHODS_ONLY =
-        new String[] { METHOD_OPTIONS, METHOD_POST };
+        new String[] { METHOD.OPTIONS, METHOD.POST };
 
     /**
      * Returns the HTTP methods supported for the specified request
@@ -103,19 +67,19 @@ public abstract class RequestHandler {
      * @param request the request to process
      */
     public void process(Request request) {
-        if (request.hasMethod(METHOD_GET)) {
+        if (request.hasMethod(METHOD.GET)) {
             doGet(request);
-        } else if (request.hasMethod(METHOD_POST)) {
+        } else if (request.hasMethod(METHOD.POST)) {
             doPost(request);
-        } else if (request.hasMethod(METHOD_PUT)) {
+        } else if (request.hasMethod(METHOD.PUT)) {
             doPut(request);
-        } else if (request.hasMethod(METHOD_DELETE)) {
+        } else if (request.hasMethod(METHOD.DELETE)) {
             doDelete(request);
-        } else if (request.hasMethod(METHOD_OPTIONS)) {
+        } else if (request.hasMethod(METHOD.OPTIONS)) {
             doOptions(request);
-        } else if (request.hasMethod(METHOD_HEAD)) {
+        } else if (request.hasMethod(METHOD.HEAD)) {
             doHead(request);
-        } else if (request.hasMethod(METHOD_TRACE)) {
+        } else if (request.hasMethod(METHOD.TRACE)) {
             doTrace(request);
         } else {
             errorMethodNotAllowed(request);
@@ -206,7 +170,7 @@ public abstract class RequestHandler {
      */
     protected void headerAllow(Request request) {
         String str = StringUtils.join(methods(request), " ");
-        request.setResponseHeader("Allow", str);
+        request.setResponseHeader(HEADER.ALLOW, str);
     }
 
     /**
@@ -216,7 +180,7 @@ public abstract class RequestHandler {
      * @param message        the additional error message
      */
     protected void errorBadRequest(Request request, String message) {
-        request.sendError(HttpServletResponse.SC_BAD_REQUEST,
+        request.sendError(STATUS.BAD_REQUEST,
                           Mime.TEXT[0],
                           "HTTP 400 Bad Request: " + message);
     }
@@ -245,7 +209,7 @@ public abstract class RequestHandler {
     protected void errorForbidden(Request request) {
         LOG.info("[" + request.getRemoteAddr() + "] forbidden access to " +
                  request.getUrl());
-        request.sendError(HttpServletResponse.SC_FORBIDDEN);
+        request.sendError(STATUS.FORBIDDEN);
     }
 
     /**
@@ -254,7 +218,7 @@ public abstract class RequestHandler {
      * @param request        the request to process
      */
     protected void errorNotFound(Request request) {
-        request.sendError(HttpServletResponse.SC_NOT_FOUND);
+        request.sendError(STATUS.NOT_FOUND);
     }
 
     /**
@@ -264,7 +228,7 @@ public abstract class RequestHandler {
      */
     protected void errorMethodNotAllowed(Request request) {
         headerAllow(request);
-        request.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+        request.sendError(STATUS.METHOD_NOT_ALLOWED);
     }
 
     /**
@@ -274,7 +238,7 @@ public abstract class RequestHandler {
      * @param message        the additional error message
      */
     protected void errorInternal(Request request, String message) {
-        request.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+        request.sendError(STATUS.INTERNAL_SERVER_ERROR,
                           Mime.TEXT[0],
                           "HTTP 500 Internal Server Error: " + message);
     }
