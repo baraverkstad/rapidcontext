@@ -181,6 +181,7 @@
       <lib dir="lib">
         <exclude name="servlet-api.jar" />
         <exclude name="jetty-*.jar" />
+        <exclude name="slf4j-*.jar" />
       </lib>
       <zipfileset dir="doc" prefix="doc" />
       <zipfileset dir="plugin" prefix="plugin" />
