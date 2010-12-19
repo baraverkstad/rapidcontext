@@ -19,8 +19,6 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.app.ApplicationContext;
@@ -85,7 +83,7 @@ public class StorageRequestHandler extends RequestHandler {
      * @param request the request to process
      */
     public void process(Request request) {
-        request.setResponseHeader("DAV", "2");
+        request.setResponseHeader(HEADER.DAV, "2");
         request.setResponseHeader("MS-Author-Via", "DAV");
         if (!SecurityContext.hasAdmin()) {
             errorUnauthorized(request);
@@ -163,7 +161,7 @@ public class StorageRequestHandler extends RequestHandler {
                 mimeType = StringUtils.defaultIfEmpty(mimeType, Mime.XML[0]);
                 request.sendData(mimeType, XmlSerializer.serialize(dict));
             } else {
-                request.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE);
+                request.sendError(STATUS.NOT_ACCEPTABLE);
             }
         } catch (Exception e) {
             LOG.log(Level.WARNING, "failed to process storage request", e);
@@ -363,8 +361,8 @@ public class StorageRequestHandler extends RequestHandler {
         Path                path;
         Dict                dict;
 
-        if (request.getHeader("Content-Range") != null) {
-            request.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED);
+        if (request.getHeader(HEADER.CONTENT_RANGE) != null) {
+            request.sendError(STATUS.NOT_IMPLEMENTED);
             return;
         }
         try {
@@ -382,7 +380,7 @@ public class StorageRequestHandler extends RequestHandler {
                 ctx.getStorage().store(path, file);
             }
             // TODO: overwriting existing data should give 200
-            request.sendData(HttpServletResponse.SC_CREATED, null, null);
+            request.sendData(STATUS.CREATED, null, null);
         } catch (Exception e) {
             LOG.log(Level.WARNING, "failed to write " + request.getPath(), e);
         }
@@ -410,9 +408,9 @@ public class StorageRequestHandler extends RequestHandler {
             ctx.getStorage().remove(path);
             meta = ctx.getStorage().lookup(path);
             if (meta == null) {
-                request.sendData(HttpServletResponse.SC_NO_CONTENT, null, null);
+                request.sendData(STATUS.NO_CONTENT, null, null);
             } else {
-                request.sendError(HttpServletResponse.SC_FORBIDDEN);
+                request.sendError(STATUS.FORBIDDEN);
             }
         } catch (Exception e) {
             LOG.log(Level.WARNING, "failed to delete " + request.getPath(), e);
@@ -527,11 +525,11 @@ public class StorageRequestHandler extends RequestHandler {
             }
             meta = ctx.getStorage().lookup(path);
             if (meta != null) {
-                request.sendError(HttpServletResponse.SC_FORBIDDEN);
+                request.sendError(STATUS.FORBIDDEN);
             } else {
                 ctx.getStorage().store(path.child("dummy", false), new Dict());
                 ctx.getStorage().remove(path.child("dummy", false));
-                request.sendData(HttpServletResponse.SC_CREATED, null, null);
+                request.sendData(STATUS.CREATED, null, null);
             }
         } catch (Exception e) {
             LOG.log(Level.WARNING, "failed to create dir " + request.getPath(), e);
@@ -559,14 +557,14 @@ public class StorageRequestHandler extends RequestHandler {
             if (prefix.endsWith("/")) {
                 prefix = StringUtils.substringBeforeLast(prefix, "/");
             }
-            href = request.getHeader("Destination");
+            href = request.getHeader(HEADER.DESTINATION);
             if (href == null) {
                 errorBadRequest(request, "missing Destination header");
                 return;
             }
             href = WebDavRequest.decodeUrl(href);
             if (!href.startsWith(prefix)) {
-                request.sendError(HttpServletResponse.SC_BAD_GATEWAY);
+                request.sendError(STATUS.BAD_GATEWAY);
                 return;
             }
             dst = new Path(href.substring(prefix.length()));
@@ -580,7 +578,7 @@ public class StorageRequestHandler extends RequestHandler {
                 errorNotFound(request);
             } else if (data instanceof Index) {
                 // TODO: add support for collection moves
-                request.sendError(HttpServletResponse.SC_FORBIDDEN);
+                request.sendError(STATUS.FORBIDDEN);
             } else if (data instanceof File) {
                 fileName = StringUtils.substringAfterLast(request.getPath(), "/");
                 file = FileUtil.tempFile(fileName);
@@ -588,11 +586,11 @@ public class StorageRequestHandler extends RequestHandler {
                 ctx.getStorage().store(dst, file);
                 ctx.getStorage().remove(src);
                 href = WebDavRequest.encodeUrl(prefix + dst.toString());
-                request.setResponseHeader("Location", href);
-                request.sendData(HttpServletResponse.SC_CREATED, null, null);
+                request.setResponseHeader(HEADER.LOCATION, href);
+                request.sendData(STATUS.CREATED, null, null);
             } else {
                 // TODO: add support for object moves
-                request.sendError(HttpServletResponse.SC_FORBIDDEN);
+                request.sendError(STATUS.FORBIDDEN);
             }
         } catch (Exception e) {
             LOG.log(Level.WARNING, "failed to move " + request.getPath(), e);
@@ -655,7 +653,7 @@ public class StorageRequestHandler extends RequestHandler {
      */
     protected void doUnlock(Request request) {
         // TODO: remove lock
-        request.sendData(HttpServletResponse.SC_NO_CONTENT, null, null);
+        request.sendData(STATUS.NO_CONTENT, null, null);
     }
 
     /**
