@@ -14,6 +14,10 @@
 
 package org.rapidcontext.util;
 
+import java.net.URI;
+
+import org.apache.commons.lang.StringUtils;
+
 /**
  * A set of utility methods and constants for the HTTP protocol.
  *
@@ -29,49 +33,49 @@ public interface HttpUtil {
     public static interface METHOD {
 
         /** <tt>OPTIONS</tt> (HTTP/1.1 - RFC 2616) */
-        static final String OPTIONS = "OPTIONS";
+        public static final String OPTIONS = "OPTIONS";
 
         /** <tt>GET</tt> (HTTP/1.1 - RFC 2616) */
-        static final String GET = "GET";
+        public static final String GET = "GET";
 
         /** <tt>HEAD</tt> (HTTP/1.1 - RFC 2616) */
-        static final String HEAD = "HEAD";
+        public static final String HEAD = "HEAD";
 
         /** <tt>POST</tt> (HTTP/1.1 - RFC 2616) */
-        static final String POST = "POST";
+        public static final String POST = "POST";
 
         /** <tt>PUT</tt> (HTTP/1.1 - RFC 2616) */
-        static final String PUT = "PUT";
+        public static final String PUT = "PUT";
 
         /** <tt>DELETE</tt> (HTTP/1.1 - RFC 2616) */
-        static final String DELETE = "DELETE";
+        public static final String DELETE = "DELETE";
 
         /** <tt>TRACE</tt> (HTTP/1.1 - RFC 2616) */
-        static final String TRACE = "TRACE";
+        public static final String TRACE = "TRACE";
 
         /** <tt>CONNECT</tt> (HTTP/1.1 - RFC 2616) */
-        static final String CONNECT = "CONNECT";
+        public static final String CONNECT = "CONNECT";
 
         /** <tt>PROPFIND</tt> (WebDAV - RFC 4918) */
-        static final String PROPFIND = "PROPFIND";
+        public static final String PROPFIND = "PROPFIND";
 
         /** <tt>PROPPATCH</tt> (WebDAV - RFC 4918) */
-        static final String PROPPATCH = "PROPPATCH";
+        public static final String PROPPATCH = "PROPPATCH";
 
         /** <tt>MKCOL</tt> (WebDAV - RFC 4918) */
-        static final String MKCOL = "MKCOL";
+        public static final String MKCOL = "MKCOL";
 
         /** <tt>COPY</tt> (WebDAV - RFC 4918) */
-        static final String COPY = "COPY";
+        public static final String COPY = "COPY";
 
         /** <tt>MOVE</tt> (WebDAV - RFC 4918) */
-        static final String MOVE = "MOVE";
+        public static final String MOVE = "MOVE";
 
         /** <tt>LOCK</tt> (WebDAV - RFC 4918) */
-        static final String LOCK = "LOCK";
+        public static final String LOCK = "LOCK";
 
         /** <tt>UNLOCK</tt> (WebDAV - RFC 4918) */
-        static final String UNLOCK = "UNLOCK";
+        public static final String UNLOCK = "UNLOCK";
     }
 
 
@@ -460,5 +464,68 @@ public interface HttpUtil {
 
         /** RFC 1945 (HTTP/1.0) Section 10.16, RFC 2616 (HTTP/1.1) Section 14.47 */
         public static final String WWW_AUTHENTICATE = "WWW-Authenticate";
+    }
+
+
+    /**
+     * Some static utility methods for HTTP.
+     */
+    public abstract class Helper {
+
+        /**
+         * Encodes a URL with proper URL encoding.
+         *
+         * @param href           the URL to encode
+         *
+         * @return the encoded URL
+         */
+        public static String encodeUrl(String href) {
+            try {
+                if (href.contains(":")) {
+                    String scheme = StringUtils.substringBefore(href, ":");
+                    String ssp = StringUtils.substringAfter(href, ":");
+                    return new URI(scheme, ssp, null).toASCIIString();
+                } else {
+                    return new URI(null, href, null).toASCIIString();
+                }
+            } catch (Exception e) {
+                return href;
+            }
+        }
+
+        /**
+         * Decodes a URL from the URL encoding.
+         *
+         * @param href           the URL to decode
+         *
+         * @return the decoded URL
+         */
+        public static String decodeUrl(String href) {
+            StringBuilder  buffer = new StringBuilder();
+            URI            uri;
+
+            try {
+                uri = new URI(href);
+                if (uri.getScheme() != null) {
+                    buffer.append(uri.getScheme());
+                    buffer.append("://");
+                    buffer.append(uri.getAuthority());
+                }
+                if (uri.getPath() != null) {
+                    buffer.append(uri.getPath());
+                }
+                if (uri.getQuery() != null) {
+                    buffer.append("?");
+                    buffer.append(uri.getQuery());
+                }
+                if (uri.getFragment() != null) {
+                    buffer.append("#");
+                    buffer.append(uri.getFragment());
+                }
+                return buffer.toString();
+            } catch (Exception e) {
+                return href;
+            }
+        }
     }
 }

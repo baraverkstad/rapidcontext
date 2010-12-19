@@ -562,7 +562,7 @@ public class StorageRequestHandler extends RequestHandler {
                 errorBadRequest(request, "missing Destination header");
                 return;
             }
-            href = WebDavRequest.decodeUrl(href);
+            href = Helper.decodeUrl(href);
             if (!href.startsWith(prefix)) {
                 request.sendError(STATUS.BAD_GATEWAY);
                 return;
@@ -585,7 +585,7 @@ public class StorageRequestHandler extends RequestHandler {
                 FileUtil.copy((File) data, file);
                 ctx.getStorage().store(dst, file);
                 ctx.getStorage().remove(src);
-                href = WebDavRequest.encodeUrl(prefix + dst.toString());
+                href = Helper.encodeUrl(prefix + dst.toString());
                 request.setResponseHeader(HEADER.LOCATION, href);
                 request.sendData(STATUS.CREATED, null, null);
             } else {

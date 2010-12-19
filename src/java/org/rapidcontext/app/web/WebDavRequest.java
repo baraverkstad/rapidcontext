@@ -15,7 +15,6 @@
 package org.rapidcontext.app.web;
 
 import java.io.StringReader;
-import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -153,64 +152,6 @@ public class WebDavRequest implements HttpUtil {
         PROPS_FILE.put(PROP_ETAG, "");
         CREATION_DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
         LAST_MODIFIED_DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
-    }
-
-    /**
-     * Encodes a URL with proper URL encoding.
-     *
-     * @param href           the URL to encode
-     *
-     * @return the encoded URL
-     */
-    public static String encodeUrl(String href) {
-        // TODO: move to utility class
-        try {
-            if (href.contains(":")) {
-                String scheme = StringUtils.substringBefore(href, ":");
-                String ssp = StringUtils.substringAfter(href, ":");
-                return new URI(scheme, ssp, null).toASCIIString();
-            } else {
-                return new URI(null, href, null).toASCIIString();
-            }
-        } catch (Exception e) {
-            return href;
-        }
-    }
-
-    /**
-     * Decodes a URL from the URL encoding.
-     *
-     * @param href           the URL to decode
-     *
-     * @return the decoded URL
-     */
-    public static String decodeUrl(String href) {
-        StringBuilder  buffer = new StringBuilder();
-        URI            uri;
-
-        // TODO: move to utility class
-        try {
-            uri = new URI(href);
-            if (uri.getScheme() != null) {
-                buffer.append(uri.getScheme());
-                buffer.append("://");
-                buffer.append(uri.getAuthority());
-            }
-            if (uri.getPath() != null) {
-                buffer.append(uri.getPath());
-            }
-            if (uri.getQuery() != null) {
-                buffer.append("?");
-                buffer.append(uri.getQuery());
-            }
-            if (uri.getFragment() != null) {
-                buffer.append("#");
-                buffer.append(uri.getFragment());
-            }
-            return buffer.toString();
-        } catch (Exception e) {
-            return href;
-        }
     }
 
     /**
@@ -488,7 +429,7 @@ public class WebDavRequest implements HttpUtil {
         String         value;
 
         xmlTagBegin(buffer, 1, "response");
-        xmlTag(buffer, 2, "href", encodeUrl(href), false);
+        xmlTag(buffer, 2, "href", Helper.encodeUrl(href), false);
         xmlTagBegin(buffer, 2, "propstat");
         xmlTagBegin(buffer, 3, "prop");
         while (iter.hasNext()) {
