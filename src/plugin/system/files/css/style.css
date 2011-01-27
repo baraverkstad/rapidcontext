@@ -117,7 +117,7 @@ dd {
 
 
 /**
- * Query API styles
+ * Storage API styles
  */
 div.query {
     margin: 30px 40px;
@@ -192,6 +192,23 @@ div.query {
 
 
 /**
+ * Documentation styles
+ */
+.doc {
+    font-size: 12px;
+}
+.doc table {
+    font-size: 12px;
+}
+.doc code,
+.doc pre,
+.doc input,
+.doc textarea {
+    font-size: 13px;
+}
+
+
+/**
  * Documentation style for JSDoc
  */
 .doc .TableHeadingColor {
@@ -249,99 +266,110 @@ div.query {
     display: none;
 }
 .doc .classList {
-        list-style-type: none;
-        padding: 0;
-        margin: 0 0 0 8px;
-        font-family: arial, sans-serif;
-        font-size: 1em;
-        overflow: auto;
+    list-style-type: none;
+    padding: 0;
+    margin: 0 0 0 8px;
+    font-family: arial, sans-serif;
+    overflow: auto;
 }
 .doc .classList li {
-        padding: 0;
-        margin: 0 0 8px 0;
+    padding: 0;
+    margin: 0 0 8px 0;
 }
-.doc .summaryTable { width: 100%; }
+.doc .summaryTable {
+    width: 100%;
+}
 .doc h1.classTitle {
-        font-size:170%;
-        line-height:130%;
+    font-size: 170%;
+    line-height: 130%;
 }
-.doc h2 { font-size: 110%; }
+.doc h2 {
+    font-size: 110%;
+}
 .doc caption,
 .doc div.sectionTitle {
-        background-color: #7F8FB1;
-        color: #fff;
-        font-size:130%;
-        text-align: left;
-        padding: 2px 6px 2px 6px;
-        border: 1px #7F8FB1 solid;
+    background-color: #7F8FB1;
+    color: #fff;
+    font-size: 130%;
+    text-align: left;
+    padding: 2px 6px 2px 6px;
+    border: 1px #7F8FB1 solid;
 }
-.doc div.sectionTitle { margin-bottom: 8px; }
-.doc .summaryTable thead { display: none; }
+.doc div.sectionTitle {
+    margin-bottom: 8px;
+}
+.doc .summaryTable thead {
+    display: none;
+}
 .doc .summaryTable td {
-        vertical-align: top;
-        padding: 4px;
-        border-bottom: 1px #7F8FB1 solid;
-        border-right: 1px #7F8FB1 solid;
+    vertical-align: top;
+    padding: 4px;
+    border-bottom: 1px #7F8FB1 solid;
+    border-right: 1px #7F8FB1 solid;
 }
 .doc .summaryTable td.attributes {
-        border-left: 1px #7F8FB1 solid;
-        width: 140px;
-        text-align: right;
+    border-left: 1px #7F8FB1 solid;
+    width: 140px;
+    text-align: right;
 }
 .doc td.attributes,
 .doc .fixedFont {
-        line-height: 15px;
-        color: #002EBE;
-        font-family: "Courier New", Courier, monospace;
-        font-size: 13px;
+    line-height: 15px;
+    color: #002EBE;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 13px;
 }
 .doc .summaryTable td.nameDescription {
-        text-align: left;
-        font-size: 13px;
-        line-height: 15px;
+    text-align: left;
+    font-size: 13px;
+    line-height: 15px;
 }
 .doc .summaryTable td.nameDescription,
 .doc .description {
-        font: 13px Palatino,Garamond,serif;
-        line-height: 15px;
-        padding: 4px;
-        padding-left: 4px;
+    font: 13px Palatino,Garamond,serif;
+    line-height: 15px;
+    padding: 4px;
+    padding-left: 4px;
 }
-.doc .summaryTable { margin-bottom: 8px; }
+.doc .summaryTable {
+    margin-bottom: 8px;
+}
 .doc ul.inheritsList {
-        list-style: square;
-        margin-left: 20px;
-        padding-left: 0;
+    list-style: square;
+    margin-left: 20px;
+    padding-left: 0;
 }
 .doc .detailList {
-        margin-left: 20px;
-        line-height: 15px;
+    margin-left: 20px;
+    line-height: 15px;
 }
-.doc .detailList dt { margin-left: 20px; }
+.doc .detailList dt {
+    margin-left: 20px;
+}
 .doc .detailList .heading {
-        font-weight: bold;
-        padding-bottom: 6px;
-        margin-left: 0;
+    font-weight: bold;
+    padding-bottom: 6px;
+    margin-left: 0;
 }
 .doc .light,
 .doc td.attributes,
 .doc .light a:link,
 .doc .light a:visited {
-        color: #777;
-        font-style: italic;
+    color: #777;
+    font-style: italic;
 }
 .doc .fineprint {
-        text-align: right;
-        font-size: 10px;
+    text-align: right;
+    font-size: 10px;
 }
 .doc pre.code {
-        margin-top: 10px;
-        margin-bottom: 0px;
-        border-left: 3px solid #ffaacc;
-        padding: 6px 0px 6px 20px;
-        background: #ffeeee;
-        font-weight: bold;
-        font-size: 12px;
+    margin-top: 10px;
+    margin-bottom: 0px;
+    border-left: 3px solid #ffaacc;
+    padding: 6px 0px 6px 20px;
+    background: #ffeeee;
+    font-weight: bold;
+    font-size: 12px;
 }
 
 
@@ -415,7 +443,7 @@ pre.code .comment {
 /* Abbreviation */
 .abbreviation {
     font-weight: bold;
-    font-size: 9px;
+    font-size: 90%;
     color: #888;
 }
 
