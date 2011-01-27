@@ -194,6 +194,11 @@ div.query {
 /**
  * Documentation styles
  */
+body.doc {
+    width: 800px;
+    height: auto;
+    margin: 5% auto;
+}
 .doc {
     font-size: 12px;
 }
