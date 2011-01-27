@@ -260,7 +260,7 @@ HelpApp.prototype._openWindow = function() {
     doc.write("<link rel='stylesheet' href='css/style.css' type='text/css' />\n");
     doc.write("<title>Help &amp; Docs :: " + node.name + "</title>\n");
     doc.write("</head>\n");
-    doc.write("<body style='width: auto; height: auto; padding-top: 15px; padding-bottom: 15px; " +
+    doc.write("<body class='doc' style='width: auto; height: auto; padding-top: 15px; padding-bottom: 15px; " +
               "padding-left: 30px; padding-right: 30px;'>\n");
     doc.write(this.ui.contentScroll.innerHTML);
     doc.write("</body>\n</html>\n");
