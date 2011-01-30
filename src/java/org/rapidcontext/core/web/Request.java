@@ -500,6 +500,16 @@ public class Request implements HttpUtil {
     }
 
     /**
+     * Returns the HTTP response object for direct access to the raw
+     * response data.
+     *
+     * @return the HTTP response object
+     */
+    public HttpServletResponse getHttpResponse() {
+        return response;
+    }
+
+    /**
      * Returns the time in milliseconds since this request wrapper
      * was created. The number returned will always be one (1) or
      * greater.
