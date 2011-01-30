@@ -265,7 +265,7 @@ public class SecurityContext {
     public static void verifyNonce(String nonce) throws SecurityException {
         try {
             long since = System.currentTimeMillis() - Long.parseLong(nonce);
-            if (since > DateUtils.MILLIS_PER_MINUTE * 5) {
+            if (since > DateUtils.MILLIS_PER_MINUTE * 240) {
                 LOG.info("stale authentication one-off number");
                 throw new SecurityException("stale authentication one-off number");
             }
