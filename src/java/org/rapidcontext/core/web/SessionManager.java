@@ -31,16 +31,6 @@ import javax.servlet.http.HttpSessionBindingListener;
 public class SessionManager implements HttpSessionBindingListener {
 
     /**
-     * The list of user agents not supporting cookies. Any session
-     * created from one of these user agents should be immediately
-     * invalidated to avoid tracking a large number of session
-     * objects.
-     */
-    private static final String[] UNSUPPORTED_AGENTS = {
-        "WebDAVFS/", "WebDAVLib/"
-    };
-
-    /**
      * The session manager attribute constant. The session value
      * stored in this attribute should be the singleton instance of
      * this session manager.
@@ -135,12 +125,6 @@ public class SessionManager implements HttpSessionBindingListener {
                       oldAgent + "' to '" + agent + "', invalidating session";
                 session.invalidate();
                 throw new SecurityException(msg);
-            }
-            // Invalidate sessions for browsers not supporting cookies 
-            for (int i = 0; i < UNSUPPORTED_AGENTS.length; i++) {
-                if (agent.startsWith(UNSUPPORTED_AGENTS[i])) {
-                    session.invalidate();
-                }
             }
         }
     }

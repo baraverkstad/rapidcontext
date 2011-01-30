@@ -85,6 +85,11 @@ public class StorageRequestHandler extends RequestHandler {
     public void process(Request request) {
         request.setResponseHeader(HEADER.DAV, "2");
         request.setResponseHeader("MS-Author-Via", "DAV");
+        if (request.getSession().isNew()) {
+            // Invalidate new sessions, since WebDAV clients do not
+            // generally support cookie-based sessions
+            request.getSession().invalidate();
+        }
         if (!SecurityContext.hasAdmin()) {
             errorUnauthorized(request);
         } else if (request.hasMethod(METHOD.PROPFIND)) {
