@@ -26,7 +26,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.app.web.DownloadRequestHandler;
@@ -181,18 +180,15 @@ public class ServletApplication extends HttpServlet {
      * @param request        the request to process
      */
     private void processAuth(Request request) {
-        HttpSession  session;
-        String       userName = null;
-        User         user = null;
-        Dict         authData;
+        String  userName = null;
+        User    user = null;
+        Dict    authData;
 
         // Authenticate user if provided
         SecurityContext.authClear();
         try {
             if (request.hasSession()) {
-                session = request.getSession();
-                SessionManager.setIp(session, request.getRemoteAddr());
-                userName = SessionManager.getUser(session);
+                userName = SessionManager.getUser(request.getSession());
             }
             if (userName != null) {
                 SecurityContext.auth(userName);

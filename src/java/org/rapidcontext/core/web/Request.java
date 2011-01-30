@@ -479,12 +479,15 @@ public class Request implements HttpUtil {
      *
      * @return the new or existing request session
      *
+     * @throws SecurityException if the session was previously bound
+     *             to another IP address or user agent string
+     *
      * @see SessionManager
      */
     public HttpSession getSession() {
         HttpSession  session = request.getSession();
 
-        SessionManager.manage(session);
+        SessionManager.manage(session, getRemoteAddr(), getHeader("User-Agent"));
         SessionManager.connectThread(session);
         return session;
     }

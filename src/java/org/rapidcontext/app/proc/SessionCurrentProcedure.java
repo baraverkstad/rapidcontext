@@ -150,6 +150,7 @@ public class SessionCurrentProcedure implements Procedure, Restricted {
         res.set("lastAccessMillis", String.valueOf(date.getTime()));
         res.set("lastAccessDate", DateUtil.formatIsoDateTime(date));
         res.set("ip", SessionManager.getIp(session));
+        res.set("userAgent", SessionManager.getUserAgent(session));
         dict = null;
         name = SessionManager.getUser(session);
         if (name != null) {

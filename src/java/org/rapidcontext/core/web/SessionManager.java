@@ -45,6 +45,13 @@ public class SessionManager implements HttpSessionBindingListener {
     private static final String IP_ATTRIBUTE = "ip";
 
     /**
+     * The user agent attribute constant. The session value stored
+     * in this attribute should be a string containing the user agent
+     * of the browser.
+     */
+    private static final String USER_AGENT_ATTRIBUTE = "userAgent";
+
+    /**
      * The user attribute constant. The session value stored in this
      * attribute should be a string containing the user name.
      */
@@ -88,10 +95,37 @@ public class SessionManager implements HttpSessionBindingListener {
      * added. This method is safe to call multiple times.
      *
      * @param session         the HTTP session
+     * @param ip              the HTTP request IP address
+     * @param agent           the HTTP user agent string
+     *
+     * @throws SecurityException if the session was already bound to
+     *             another IP address or user agent string
      */
-    public static void manage(HttpSession session) {
+    public static void manage(HttpSession session, String ip, String agent)
+    throws SecurityException {
+
+        String  oldIp = getIp(session);
+        String  oldAgent = getUserAgent(session);
+        String  msg;
+
         if (session.getAttribute(MANAGER_ATTRIBUTE) == null) {
             session.setAttribute(MANAGER_ATTRIBUTE, getInstance());
+            if (oldIp == null) {
+                session.setAttribute(IP_ATTRIBUTE, ip);
+            } else if (!oldIp.equals(ip)) {
+                msg = "Attempt to re-bind HTTP session from IP '" + oldIp +
+                      "' to '" + ip + "', invalidating session";
+                session.invalidate();
+                throw new SecurityException(msg);
+            }
+            if (oldAgent == null) {
+                session.setAttribute(USER_AGENT_ATTRIBUTE, agent);
+            } else if (!oldAgent.equals(agent)) {
+                msg = "Attempt to re-bind HTTP session from user agent '" +
+                      oldAgent + "' to '" + agent + "', invalidating session";
+                session.invalidate();
+                throw new SecurityException(msg);
+            }
         }
     }
 
@@ -168,30 +202,15 @@ public class SessionManager implements HttpSessionBindingListener {
     }
 
     /**
-     * Sets the IP address connected to an HTTP session. This method
-     * will check for attempts to re-bind an HTTP session to a new
-     * IP address, which would be a security violation.
+     * Returns the browser user agent connected to an HTTP session.
      *
-     * @param session        the HTTP session
-     * @param ip             the IP address
+     * @param session         the HTTP session
      *
-     * @throws SecurityException if the session was already bound to
-     *             another IP address
+     * @return the browser user agent string, or
+     *         null if no user agent string has been stored
      */
-    public static void setIp(HttpSession session, String ip)
-        throws SecurityException {
-
-        String  old = getIp(session);
-        String  msg;
-
-        if (old != null && !old.equals(ip)) {
-            msg = "Attempt to re-bind HTTP session to new IP, " +
-                  "invalidating session";
-            session.invalidate();
-            throw new SecurityException(msg);
-        } else if (old == null) {
-            session.setAttribute(IP_ATTRIBUTE, ip);
-        }
+    public static String getUserAgent(HttpSession session) {
+        return (String) session.getAttribute(USER_AGENT_ATTRIBUTE);
     }
 
     /**
