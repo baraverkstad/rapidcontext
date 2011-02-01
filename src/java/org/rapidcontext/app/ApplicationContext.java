@@ -22,6 +22,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import com.eaio.uuid.UUID;
+
 import org.rapidcontext.app.plugin.PluginException;
 import org.rapidcontext.app.plugin.PluginManager;
 import org.rapidcontext.app.proc.AppListProcedure;
@@ -182,6 +184,13 @@ public class ApplicationContext {
         this.config = (Dict) storage.load(PATH_CONFIG);
         if (this.config == null) {
             LOG.severe("failed to load application config");
+        } else if (!this.config.containsKey("guid")) {
+            this.config.set("guid", new UUID().toString());
+            try {
+                storage.store(PATH_CONFIG, this.config);
+            } catch (Exception e) {
+                LOG.severe("failed to update application config with GUID");
+            }
         }
     }
 

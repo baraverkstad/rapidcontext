@@ -14,5 +14,6 @@
 	<classpathentry kind="lib" path="lib/commons-collections-3.2.1.jar"/>
 	<classpathentry kind="lib" path="lib/commons-cli-1.2.patched.jar"/>
 	<classpathentry kind="lib" path="lib/commons-pool-1.5.5.jar"/>
+	<classpathentry kind="lib" path="lib/uuid-2.1.5.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
