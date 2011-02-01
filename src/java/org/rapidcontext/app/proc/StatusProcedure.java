@@ -15,6 +15,7 @@
 
 package org.rapidcontext.app.proc;
 
+import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
@@ -115,12 +116,14 @@ public class StatusProcedure implements Procedure, Restricted {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        Dict  res;
+        ApplicationContext  ctx = ApplicationContext.getInstance();
+        Dict                res;
 
         res = (Dict) cx.getStorage().load(PATH_APP);
         if (res == null) {
             return null;
         }
+        res.set("serverGuid", ctx.getConfig().get("guid"));
         res.set("environment", getEnvironmentData(cx.getEnvironment()));
         return res;
     }
