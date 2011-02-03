@@ -197,7 +197,7 @@ RapidContext.App.startApp = function (app, container) {
     MochiKit.Signal.connect(container, "onclose", d, "cancel");
     if (launcher.creator == null) {
         LOG.info("Loading app " + launcher.name, launcher);
-        launcher.resourceMap = {};
+        launcher.resource = {};
         for (var i = 0; i < launcher.resources.length; i++) {
             var res = launcher.resources[i];
             if (res.type == "code") {
@@ -209,7 +209,7 @@ RapidContext.App.startApp = function (app, container) {
                 });
             }
             if (res.id != null) {
-                launcher.resourceMap[res.id] = res.url;
+                launcher.resource[res.id] = res.url;
             }
         }
         d.addCallback(function () {
@@ -228,13 +228,10 @@ RapidContext.App.startApp = function (app, container) {
         var fun = launcher.creator;
         instance = new fun();
         launcher.instances.push(instance);
-        var props = { resource: launcher.resourceMap,
-                      ui: { root: container, overlay: overlay } };
+        var props = { ui: { root: container, overlay: overlay } };
         var props = MochiKit.Base.update(null, launcher, props);
         delete props.creator;
         delete props.instances;
-        delete props.resources;
-        delete props.resourceMap;
         MochiKit.Base.setdefault(instance, props);
         MochiKit.Signal.disconnectAll(container, "onclose");
         MochiKit.Signal.connect(container, "onclose",
