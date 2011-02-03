@@ -228,9 +228,14 @@ RapidContext.App.startApp = function (app, container) {
         var fun = launcher.creator;
         instance = new fun();
         launcher.instances.push(instance);
-        instance.className = launcher.className;
-        instance.resource = launcher.resourceMap;
-        instance.ui = { root: container, overlay: overlay };
+        var props = { resource: launcher.resourceMap,
+                      ui: { root: container, overlay: overlay } };
+        var props = MochiKit.Base.update(null, launcher, props);
+        delete props.creator;
+        delete props.instances;
+        delete props.resources;
+        delete props.resourceMap;
+        MochiKit.Base.setdefault(instance, props);
         MochiKit.Signal.disconnectAll(container, "onclose");
         MochiKit.Signal.connect(container, "onclose",
                                 MochiKit.Base.partial(RapidContext.App.stopApp, instance));
