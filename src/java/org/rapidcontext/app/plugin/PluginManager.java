@@ -214,6 +214,18 @@ public class PluginManager {
     }
 
     /**
+     * Returns the specified plug-in configuration dictionary.
+     *
+     * @param pluginId       the unique plug-in id
+     *
+     * @return the plug-in configuration dictionary, or
+     *         null if not found
+     */
+    public Dict config(String pluginId) {
+        return (Dict) storage.load(configPath(pluginId));
+    }
+
+    /**
      * Creates and mounts a plug-in file storage. This is the first
      * step when installing a plug-in, allowing access to the plug-in
      * files without overlaying then on the root index.
@@ -355,15 +367,11 @@ public class PluginManager {
             msg = "cannot force loading of system or local plug-ins";
             throw new PluginException(msg);
         }
-        try {
-            dict = (Dict) storage.load(configPath(pluginId));
-            if (dict == null) {
-                throw new StorageException("file not found");
-            }
-        } catch (StorageException e) {
+        dict = config(pluginId);
+        if (dict == null) {
             msg = "couldn't load " + pluginId + " plugin config file";
-            LOG.log(Level.WARNING, msg, e);
-            throw new PluginException(msg + ": " + e.getMessage());
+            LOG.log(Level.WARNING, msg);
+            throw new PluginException(msg);
         }
 
         // Add to root overlay

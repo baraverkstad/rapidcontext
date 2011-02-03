@@ -128,7 +128,7 @@ public class PluginListProcedure implements Procedure, Restricted {
             path = ((Storage) arr.get(i)).path();
             if (path.startsWith(PluginManager.PATH_STORAGE_PLUGIN)) {
                 pluginId = path.name();
-                dict = (Dict) storage.load(PluginManager.configPath(pluginId));
+                dict = ctx.pluginConfig(pluginId);
                 if (dict == null) {
                     dict = new Dict();
                     dict.set(Plugin.KEY_ID, pluginId);
