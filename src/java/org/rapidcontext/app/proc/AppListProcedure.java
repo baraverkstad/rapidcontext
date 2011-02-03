@@ -15,12 +15,16 @@
 
 package org.rapidcontext.app.proc;
 
+import org.rapidcontext.app.ApplicationContext;
+import org.rapidcontext.app.plugin.Plugin;
 import org.rapidcontext.core.data.Array;
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.Restricted;
+import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.Storage;
 
@@ -114,14 +118,27 @@ public class AppListProcedure implements Procedure, Restricted {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        Storage    storage = cx.getStorage();
-        Object[]   list;
-        Array      res;
+        ApplicationContext  ctx = ApplicationContext.getInstance();
+        Storage             storage = cx.getStorage();
+        Dict                plugin;
+        Metadata[]          list;
+        Dict                dict;
+        Array               res;
 
-        list = storage.loadAll(PATH_APP);
+        list = storage.lookupAll(PATH_APP);
         res = new Array(list.length);
         for (int i = 0; i < list.length; i++) {
-            res.add(list[i]);
+            if (Dict.class.isAssignableFrom(list[i].classInstance())) {
+                plugin = ctx.pluginConfig(list[i].storagePath().name());
+                dict = new Dict();
+                dict.set("id", list[i].path().name());
+                if (plugin != null) {
+                    dict.set("plugin", plugin.get(Plugin.KEY_ID));
+                    dict.set("version", plugin.get("version"));
+                }
+                dict.addAll((Dict) storage.load(list[i].path()));
+                res.add(dict);
+            }
         }
         res.sort("name");
         return res;
