@@ -137,7 +137,8 @@ public class Metadata extends StorableObject {
      */
     public Metadata(Path path, Metadata meta) {
         super(null, "metadata");
-        dict.addAll(meta.dict);
+        dict.remove(KEY_ID);
+        dict.setAll(meta.dict);
         dict.set(KEY_PATH, path);
     }
 
