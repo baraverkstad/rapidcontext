@@ -69,7 +69,7 @@ RapidContext.App.init = function () {
 /**
  * Returns an object with status information about the platform and
  * currently loaded environment. The object returned is a copy of
- * the internal datastructure and can be modified without affecting
+ * the internal data structure and can be modified without affecting
  * the real data.
  *
  * @return {Object} the status data object
@@ -81,7 +81,7 @@ RapidContext.App.status = function () {
 
 /**
  * Returns an object with information about the user. The object
- * returned is a copy of the internal datastructure and can be
+ * returned is a copy of the internal data structure and can be
  * modified without affecting the real data.
  *
  * @return {Object} the user data object
@@ -93,7 +93,7 @@ RapidContext.App.user = function () {
 
 /**
  * Returns an array with app launchers. The array returned is an
- * internal datastructure and should not be modified directly.
+ * internal data structure and should not be modified directly.
  *
  * @return {Array} the loaded app launchers (read-only)
  */
@@ -191,7 +191,7 @@ RapidContext.App.startApp = function (app, container) {
     if (container == null) {
         container = RapidContext.App._UI.createTab(launcher.name, launcher.launch != "once");
     }
-    var msg = " Loading " + launcher.name + "...";
+    var msg = "Loading " + launcher.name + "...";
     var overlay = new RapidContext.Widget.Overlay({ message: msg });
     MochiKit.DOM.replaceChildNodes(container, overlay);
     MochiKit.Signal.connect(container, "onclose", d, "cancel");
@@ -220,6 +220,31 @@ RapidContext.App.startApp = function (app, container) {
                 throw new Error("App constructor " + launcher.className + " not defined");
             }
             RapidContext.Util.registerFunctionNames(launcher.creator, launcher.className);
+        });
+    }
+    if (typeof(launcher.license) == "string") {
+        var status = RapidContext.App.status();
+        var user = RapidContext.App.user();
+        var cbDefer = RapidContext.App._Callback.create();
+        var url = "http://api.rapidcontext.com/license/1?server=" +
+                  status.serverGuid + "&platform=" + status.version +
+                  "&plugin=" + launcher.plugin + "&app=" + launcher.id +
+                  "&version=" + launcher.version + "&user=" + user.name +
+                  "&cb=" + cbDefer.func.NAME;
+        d.addCallback(function () {
+            overlay.setAttrs({ message: "Verifying License..." });
+            var ld = MochiKit.Async.loadScript(url);
+            ld.addErrback(cbDefer.func);
+            return cbDefer;
+        });
+        cbDefer.addBoth(function (res) {
+            if (res instanceof Error) {
+                RapidContext.Util.injectStackTrace(stack);
+                LOG.error("License retrieval failed", res);
+            } else {
+                launcher.license = res;
+            }
+            return null;
         });
     }
     d.addCallback(function () {
@@ -659,6 +684,26 @@ RapidContext.App._addErrbackLogger = function (d) {
     };
     MochiKit.Async.callLater(0, adder);
 };
+
+RapidContext.App._Callback = {
+    nextId: MochiKit.Base.counter(),
+    create: function () {
+        var id = "cb" + this.nextId();
+        var d = new MochiKit.Async.Deferred();
+        var func = MochiKit.Base.bind("handle", this, id, d);
+        func.NAME = "RapidContext.App._Callback." + id;
+        this[id] = d.func = func;        
+        return d;
+    },
+    handle: function (id, d, data) {
+        delete this[id];
+        if (data instanceof Error) {
+            d.errback(data);
+        } else {
+            d.callback(data);
+        }
+    }
+}
 
 /**
  * The application data cache. Contains the most recently retrieved
