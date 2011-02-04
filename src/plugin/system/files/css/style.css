@@ -202,6 +202,14 @@ body.doc {
 .doc {
     font-size: 12px;
 }
+.doc h1 {
+    font-size: 20px;
+    font-family: Trebuchet MS, Verdana, sans-serif;
+}
+.doc h2 {
+    font-size: 16px;
+    font-family: Trebuchet MS, Verdana, sans-serif;
+}
 .doc table {
     font-size: 12px;
 }
@@ -287,9 +295,6 @@ body.doc {
 .doc h1.classTitle {
     font-size: 170%;
     line-height: 130%;
-}
-.doc h2 {
-    font-size: 110%;
 }
 .doc caption,
 .doc div.sectionTitle {
