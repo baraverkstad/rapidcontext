@@ -315,6 +315,7 @@ public class StorageRequestHandler extends RequestHandler {
         Dict  dict = new Dict();
 
         dict = meta.serialize().copy();
+        dict.remove(Metadata.KEY_TYPE);
         dict.set("processTime", new Long(request.getProcessTime()));
         return dict;
     }
