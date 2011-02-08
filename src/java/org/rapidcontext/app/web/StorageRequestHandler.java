@@ -29,6 +29,7 @@ import org.rapidcontext.core.data.PropertiesSerializer;
 import org.rapidcontext.core.data.XmlSerializer;
 import org.rapidcontext.core.js.JsSerializer;
 import org.rapidcontext.core.security.SecurityContext;
+import org.rapidcontext.core.storage.FileStorage;
 import org.rapidcontext.core.storage.Index;
 import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
@@ -147,7 +148,7 @@ public class StorageRequestHandler extends RequestHandler {
                 errorNotFound(request);
             } else if (isDefault && res instanceof File) {
                 request.sendFile((File) res, true); 
-            } else if (isDefault && request.getPath().endsWith(".properties")) {
+            } else if (isDefault && request.getPath().endsWith(FileStorage.SUFFIX_PROPS)) {
                 str = StringUtils.substringAfterLast(request.getPath(), "/");
                 mimeType = StringUtils.defaultIfEmpty(mimeType, Mime.type(str));
                 request.sendData(mimeType, PropertiesSerializer.serialize(res));
@@ -377,8 +378,8 @@ public class StorageRequestHandler extends RequestHandler {
             fileName = StringUtils.substringAfterLast(request.getPath(), "/");
             file = FileUtil.tempFile(fileName);
             FileUtil.copy(request.getInputStream(), file);
-            path = new Path(StringUtils.removeEnd(request.getPath(), ".properties"));
-            if (request.getPath().endsWith(".properties")) {
+            path = new Path(StringUtils.removeEnd(request.getPath(), FileStorage.SUFFIX_PROPS));
+            if (request.getPath().endsWith(FileStorage.SUFFIX_PROPS)) {
                 dict = PropertiesSerializer.read(file);
                 file.delete();
                 ctx.getStorage().store(path, dict);
@@ -472,7 +473,7 @@ public class StorageRequestHandler extends RequestHandler {
                         if (path.isIndex()) {
                             str += "/";
                         } else if (meta.isObject()) {
-                            str += ".properties";
+                            str += FileStorage.SUFFIX_PROPS;
                         }
                         addResource(davRequest, str, meta, data);
                     }
@@ -679,8 +680,8 @@ public class StorageRequestHandler extends RequestHandler {
         String              str;
 
         meta = ctx.getStorage().lookup(testPath);
-        if (meta == null && path.name().endsWith(".properties")) {
-            str = StringUtils.removeEnd(path.name(), ".properties");
+        if (meta == null && path.name().endsWith(FileStorage.SUFFIX_PROPS)) {
+            str = StringUtils.removeEnd(path.name(), FileStorage.SUFFIX_PROPS);
             testPath = path.parent().child(str, false);
             meta = ctx.getStorage().lookup(testPath);
         }
