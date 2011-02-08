@@ -96,6 +96,7 @@ public class ServletApplication extends HttpServlet {
                 tmpDir.deleteOnExit();
             }
         }
+        LOG.log(Level.FINE, "using temporary directory: " + tmpDir);
         FileUtil.setTempDir(tmpDir);
         Mime.context = getServletContext();
         handlers.put("/rapidcontext/download", new DownloadRequestHandler());
