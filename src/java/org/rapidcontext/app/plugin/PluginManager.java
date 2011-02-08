@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2011 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -18,6 +18,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -67,6 +70,11 @@ public class PluginManager {
     public static final Path PATH_PLUGIN = new Path("/plugin/");
 
     /**
+     * The library folder path in each plug-in.
+     */
+    private static final String PATH_LIB = "lib";
+
+    /**
      * The identifier of the system plug-in.
      */
     public static final String SYSTEM_PLUGIN = "system";
@@ -97,6 +105,12 @@ public class PluginManager {
      * The plug-in class loader.
      */
     public PluginClassLoader classLoader = new PluginClassLoader();
+
+    /**
+     * A list of all temporary files created. When destroying all
+     * plug-ins, all these files are deleted.
+     */
+    private ArrayList tempFiles = new ArrayList();
 
     /**
      * Returns the plug-in storage path for a specified plug-in id.
@@ -382,7 +396,7 @@ public class PluginManager {
         if (!dir.isDirectory()) {
             dir = new File(this.builtinDir, pluginId);
         }
-        classLoader.addPluginJars(dir);
+        loadJarFiles(new File(dir, PATH_LIB));
         className = dict.getString(Plugin.KEY_CLASSNAME, null);
         if (className == null || className.trim().length() <= 0) {
             plugin = new Plugin(dict);
@@ -493,13 +507,10 @@ public class PluginManager {
      * this.
      */
     public void unloadAll() {
-        Object[]  objs;
-        String    pluginId;
-
-        objs = storage.loadAll(PATH_PLUGIN);
+        Object[] objs = storage.loadAll(PATH_PLUGIN);
         for (int i = 0; i < objs.length; i++) {
             if (objs[i] instanceof Plugin) {
-                pluginId = ((Plugin) objs[i]).id();
+                String pluginId = ((Plugin) objs[i]).id();
                 try {
                     unload(pluginId);
                 } catch (PluginException e) {
@@ -509,5 +520,76 @@ public class PluginManager {
         }
         storage.flush(null);
         classLoader = new PluginClassLoader();
+        while (tempFiles.size() > 0) {
+            File file = (File) tempFiles.remove(tempFiles.size() - 1);
+            try {
+                file.delete();
+            } catch (Exception ignore) {
+                // File will be deleted on exit instead
+            }
+        }
+    }
+
+    /**
+     * Loads all JAR files found in the specified directory. All the
+     * files found will be copied to a temporary directory before 
+     * loading in order to avoid file locking and other issues.
+     *
+     * @param dir            the directory to search
+     */
+    private void loadJarFiles(File dir) {
+        if (dir.exists()) {
+            File[] files = dir.listFiles();
+            for (int i = 0; i < files.length; i++) {
+                if (files[i].getName().toLowerCase().endsWith(".jar")) {
+                    loadJarFile(files[i]);
+                }
+            }
+        }
+    }
+
+    /**
+     * Adds a JAR file to the plug-in class loader. The JAR file will
+     * be copied to a temporary directory to avoid file locking and
+     * other issues. This method will only log errors on failure and
+     * no error will be thrown.
+     *
+     * @param file           the JAR file to load
+     */
+    private void loadJarFile(File file) {
+        try {
+            LOG.fine("adding JAR to class loader: " + file);
+            File tmpFile = FileUtil.tempFile(file.getName());
+            tempFiles.add(tmpFile);
+            FileUtil.copy(file, tmpFile);
+            classLoader.addJar(tmpFile);
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, "failed to load JAR file: " + file, e);
+        }
+    }
+
+    /**
+     * Simple extension of URLClassLoader to be able to add new URL:s
+     * after creation.
+     */
+    public static class PluginClassLoader extends URLClassLoader {
+
+        /**
+         * Creates a new empty class loader.
+         */
+        public PluginClassLoader() {
+            super(new URL[0]);
+        }
+
+        /**
+         * Adds the specified JAR file to the class loader.
+         *
+         * @param file       the JAR file to add
+         *
+         * @throws IOException if the file couldn't be located
+         */
+        public void addJar(File file) throws IOException {
+            addURL(file.toURI().toURL());
+        }
     }
 }

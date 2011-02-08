@@ -1,7 +1,5 @@
 Known Issues
 ============
- * BUG: Plug-in update with JAR file breaks in Windows due to file locks
-   (JVM locks the JAR file until shutdown)
  * BUG: Quick tour broken if focus is moved from Admin app
  * BUGS in IE 7:
     o FileStreamer initialization is broken
