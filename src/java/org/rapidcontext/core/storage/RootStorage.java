@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2011 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -262,7 +262,8 @@ public class RootStorage extends Storage {
 
     /**
      * Unmounts a storage from the specified path. The path must have
-     * previously been used to mount a storage.
+     * previously been used to mount a storage, which will also be
+     * destroyed by this operation.
      *
      * @param path           the mount path
      *
@@ -279,8 +280,26 @@ public class RootStorage extends Storage {
         }
         updateStorageCache(path, false);
         mountedStorages.remove(mountedStorages.indexOf(storage));
+        // Removal of storage from metadata also cause its destruction
         setMountedStorage(path, null);
-        storage.dict.set(KEY_MOUNT_PATH, Path.ROOT);
+    }
+
+    /**
+     * Unmounts and destroys all mounted storages.
+     */
+    public void unmountAll() {
+        Storage  storage;
+        String   msg;
+
+        while (mountedStorages.size() > 0) {
+            storage = (Storage) mountedStorages.get(mountedStorages.size() - 1);
+            try {
+                unmount(storage.path());
+            } catch (Exception e) {
+                msg = "failed to unmount storage at " + storage.path();
+                LOG.log(Level.WARNING, msg, e);
+            }
+        }
     }
 
     /**
