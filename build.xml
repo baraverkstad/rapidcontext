@@ -97,9 +97,12 @@
   <target name="doc"
           depends="doc-clean,doc-license,doc-java,doc-js"
           description="Generates the application documentation">
+    <zip destfile="doc.zip" basedir="doc">
+    </zip>
   </target>
 
   <target name="doc-clean">
+    <delete file="doc.zip" quiet="true" />
     <delete dir="doc/java" quiet="true" includeemptydirs="true" />
     <delete dir="doc/js" quiet="true" includeemptydirs="true" />
     <mkdir dir="doc/java" />
@@ -228,7 +231,7 @@
     <copy todir="${build.title}.app/Contents/Resources">
       <fileset dir="${basedir}">
         <include name="bin/rapidcontext" />
-        <include name="doc/**" />
+        <include name="doc.zip" />
         <include name="lib/**" />
         <include name="plugin/**" />
       </fileset>

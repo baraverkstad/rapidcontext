@@ -36,10 +36,9 @@ import org.rapidcontext.app.web.UploadRequestHandler;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.security.User;
-import org.rapidcontext.core.storage.FileStorage;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.RootStorage;
-import org.rapidcontext.core.storage.StorageException;
+import org.rapidcontext.core.storage.ZipFileStorage;
 import org.rapidcontext.core.web.Mime;
 import org.rapidcontext.core.web.Request;
 import org.rapidcontext.core.web.RequestHandler;
@@ -106,12 +105,12 @@ public class ServletApplication extends HttpServlet {
         handlers.put("/", new FileRequestHandler());
         ctx = ApplicationContext.init(baseDir, baseDir, true);
         // TODO: move the doc directory into the system plug-in storage
-        File docDir = new File(baseDir, "doc");
-        FileStorage docStore = new FileStorage(docDir, false);
-        RootStorage root = (RootStorage) ctx.getStorage();
         try {
+            File docZip = new File(baseDir, "doc.zip");
+            ZipFileStorage docStore = new ZipFileStorage(docZip);
+            RootStorage root = (RootStorage) ctx.getStorage();
             root.mount(docStore, PATH_FILES.child("doc", true), false, false, 0);
-        } catch (StorageException e) {
+        } catch (Exception e) {
             LOG.log(Level.SEVERE, "failed to mount doc storage", e);
         }
     }
