@@ -154,6 +154,7 @@ public class ApplicationContext {
     protected static synchronized void destroy() {
         if (instance != null) {
             instance.destroyAll();
+            instance.storage.unmountAll();
             instance = null;
         }
     }
