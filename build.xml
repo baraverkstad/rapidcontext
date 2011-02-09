@@ -75,11 +75,13 @@
       <ant dir="src/plugin/@{id}" antfile="../plugin-build.xml">
         <property name="java.class.path" value="${toString:plugin.classpath}" />
       </ant>
-      <delete dir="plugin/@{id}" quiet="true" includeemptydirs="true" />
-      <mkdir dir="plugin/@{id}" />
-      <unzip dest="plugin/@{id}">
+      <delete quiet="true" includeemptydirs="true">
+        <fileset dir="plugin/@{id}" />
+        <fileset dir="plugin" includes="@{id}.zip" />
+      </delete>
+      <copy tofile="plugin/@{id}.zip">
         <fileset dir="src/plugin/@{id}" includes="@{id}*.zip" />
-      </unzip>
+      </copy>
     </sequential>
   </macrodef>
 
@@ -90,6 +92,9 @@
     <buildplugin id="http" />
     <buildplugin id="jdbc" />
     <buildplugin id="test" />
+    <mkdir dir="plugin/local" />
+    <unzip dest="plugin/local" src="plugin/local.zip" />
+    <delete file="plugin/local.zip" quiet="true" />
   </target>
 
 
