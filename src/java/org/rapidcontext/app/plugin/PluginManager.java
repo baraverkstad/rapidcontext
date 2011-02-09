@@ -16,16 +16,12 @@ package org.rapidcontext.app.plugin;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 import org.apache.commons.lang.ClassUtils;
 import org.rapidcontext.core.data.Binary;
@@ -40,7 +36,6 @@ import org.rapidcontext.core.storage.RootStorage;
 import org.rapidcontext.core.storage.ZipFileStorage;
 import org.rapidcontext.core.type.Type;
 import org.rapidcontext.util.FileUtil;
-import org.rapidcontext.util.ZipUtil;
 
 /**
  * A plug-in manager. This singleton class contains the utility
@@ -334,35 +329,19 @@ public class PluginManager {
      *             correctly
      */
     public String install(File file) throws PluginException {
-        ZipFile      zip = null;
-        ZipEntry     entry;
-        InputStream  is;
-        Properties   props;
-        String       pluginId;
-        File         dir;
-        String       msg;
+        ZipFileStorage  ps = null;
+        Dict            dict;
+        String          pluginId;
+        File            dst;
+        String          msg;
 
         try {
-            zip = new ZipFile(file);
-            entry = zip.getEntry("plugin.properties");
-            if (entry == null) {
-                msg = "missing plugin.properties inside zip file " +
-                      file.getName();
-                LOG.warning(msg);
-                throw new PluginException(msg);
+            ps = new ZipFileStorage(file);
+            dict = (Dict) ps.load(new Path("/plugin"));
+            if (dict == null) {
+                throw new PluginException("missing plugin.properties");
             }
-            is = zip.getInputStream(entry);
-            props = new Properties();
-            try {
-                props.load(is);
-            } finally {
-                try {
-                    is.close();
-                } catch (Exception ignore) {
-                    // Ignore exception on closing file
-                }
-            }
-            pluginId = props.getProperty(Plugin.KEY_ID);
+            pluginId = dict.getString(Plugin.KEY_ID, null);
             if (pluginId == null || pluginId.trim().length() < 0) {
                 msg = "missing plug-in identifier in plugin.properties";
                 throw new PluginException(msg);
@@ -371,23 +350,24 @@ public class PluginManager {
                 unload(pluginId);
                 destroyStorage(pluginId);
             }
-            dir = new File(pluginDir, pluginId);
-            if (dir.exists()) {
-                // TODO: perhaps backup the old directory instead?
-                FileUtil.delete(dir);
+            dst = new File(pluginDir, pluginId);
+            if (dst.exists()) {
+                FileUtil.delete(dst);
             }
-            // TODO: fix fix fix
-            ZipUtil.unpackZip(zip, dir);
-        } catch (IOException e) {
-            msg = "IO error while reading zip file " + file.getName() + ": " +
-                  e.getMessage();
-            LOG.warning(msg);
-            throw new PluginException(msg);
+            dst = new File(pluginDir, pluginId + ".zip");
+            if (dst.exists()) {
+                FileUtil.delete(dst);
+            }
+            FileUtil.copy(file, dst);
+        } catch (Exception e) {
+            msg = "invalid plug-in file " + file.getName();
+            LOG.log(Level.WARNING, msg, e);
+            throw new PluginException(msg + ": " + e.getMessage());
         } finally {
-            if (zip != null) {
+            if (ps != null) {
                 try {
-                    zip.close();
-                } catch (IOException ignore) {
+                    ps.destroy();
+                } catch (Exception ignore) {
                     // Do nothing
                 }
             }

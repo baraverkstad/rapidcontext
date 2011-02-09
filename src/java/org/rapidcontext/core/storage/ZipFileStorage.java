@@ -79,7 +79,7 @@ public class ZipFileStorage extends Storage {
      *
      * @throws StorageException if the destruction failed
      */
-    protected void destroy() throws StorageException {
+    public void destroy() throws StorageException {
         try {
             zip.close();
         } catch (Exception e) {
