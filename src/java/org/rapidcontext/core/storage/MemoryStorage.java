@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2011 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -86,7 +86,8 @@ public class MemoryStorage extends Storage {
     public Metadata lookup(Path path) {
         Object obj = meta.get(path);
         if (obj instanceof Index) {
-            return new Metadata(path, path(), (Index) obj);
+            Index idx = (Index) obj;
+            return new Metadata(Index.class, path, path(), idx.lastModified());
         } else {
             return (Metadata) obj;
         }
@@ -143,7 +144,7 @@ public class MemoryStorage extends Storage {
             remove(path);
         }
         objects.put(path, data);
-        meta.put(path, new Metadata(path, path(), data));
+        meta.put(path, new Metadata(data.getClass(), path, path(), -1));
         indexInsert(path);
     }
 

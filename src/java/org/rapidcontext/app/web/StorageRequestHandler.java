@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2011 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -23,6 +23,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.data.Array;
+import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.HtmlSerializer;
 import org.rapidcontext.core.data.PropertiesSerializer;
@@ -136,8 +137,8 @@ public class StorageRequestHandler extends RequestHandler {
             }
             if (res instanceof Index) {
                 res = serializeIndex((Index) res, isHtml || isDefault);
-            } else if (res instanceof File && !isDefault) {
-                res = serializeFile((File) res, request, path);
+            } else if (res instanceof Binary && !isDefault) {
+                res = serializeBinary((Binary) res, request, path);
             }
             if (meta instanceof Metadata) {
                 meta = serializeMetadata((Metadata) meta, request);
@@ -146,12 +147,12 @@ public class StorageRequestHandler extends RequestHandler {
             // Render result as raw data, Properties, HTML, JSON or XML
             if (res == null) {
                 errorNotFound(request);
-            } else if (isDefault && res instanceof File) {
-                request.sendFile((File) res, true); 
+            } else if (isDefault && res instanceof Binary) {
+                request.sendBinary((Binary) res, true); 
             } else if (isDefault && request.getPath().endsWith(FileStorage.SUFFIX_PROPS)) {
                 str = StringUtils.substringAfterLast(request.getPath(), "/");
                 mimeType = StringUtils.defaultIfEmpty(mimeType, Mime.type(str));
-                request.sendData(mimeType, PropertiesSerializer.serialize(res));
+                request.sendText(mimeType, PropertiesSerializer.serialize(res));
             } else if (isDefault || isHtml) {
                 sendHtml(request, path, meta, res);
             } else if (isJson) {
@@ -159,13 +160,13 @@ public class StorageRequestHandler extends RequestHandler {
                 dict.set("metadata", meta);
                 dict.set("data", res);
                 mimeType = StringUtils.defaultIfEmpty(mimeType, Mime.JSON[0]);
-                request.sendData(mimeType, JsSerializer.serialize(dict));
+                request.sendText(mimeType, JsSerializer.serialize(dict));
             } else if (isXml && !isHtml) {
                 dict = new Dict();
                 dict.set("metadata", meta);
                 dict.set("data", res);
                 mimeType = StringUtils.defaultIfEmpty(mimeType, Mime.XML[0]);
-                request.sendData(mimeType, XmlSerializer.serialize(dict));
+                request.sendText(mimeType, XmlSerializer.serialize(dict));
             } else {
                 request.sendError(STATUS.NOT_ACCEPTABLE);
             }
@@ -176,9 +177,9 @@ public class StorageRequestHandler extends RequestHandler {
             dict.set("error", e.getMessage());
             res = dict;
             if (isJson) {
-                request.sendData(Mime.JSON[0], JsSerializer.serialize(res));
+                request.sendText(Mime.JSON[0], JsSerializer.serialize(res));
             } else if (isXml) {
-                request.sendData(Mime.XML[0], XmlSerializer.serialize(res));
+                request.sendText(Mime.XML[0], XmlSerializer.serialize(res));
             } else {
                 errorInternal(request, e.getMessage());
             }
@@ -237,7 +238,7 @@ public class StorageRequestHandler extends RequestHandler {
         html.append(" &nbsp;<a href='?mimeType=text/javascript'>JSON</a>");
         html.append(" &nbsp;<a href='?mimeType=text/xml'>XML</a></p>");
         html.append("</div>\n</body>\n</html>\n");
-        request.sendData(Mime.HTML[0], html.toString());
+        request.sendText(Mime.HTML[0], html.toString());
     }
 
     /**
@@ -281,21 +282,21 @@ public class StorageRequestHandler extends RequestHandler {
     }
 
     /**
-     * Serializes a file to an external representation.
+     * Serializes a binary data object to an external representation.
      *
-     * @param file           the file object
+     * @param data           the binary data object
      * @param request        the web request
      * @param path           the storage path
      *
      * @return serialized representation of the file
      */
-    private Dict serializeFile(File file, Request request, Path path) {
+    private Dict serializeBinary(Binary data, Request request, Path path) {
         Dict  dict = new Dict();
 
         dict.set("type", "file");
-        dict.set("name", file.getName());
-        dict.set("mimeType", Mime.type(file));
-        dict.set("size", new Long(file.length()));
+        dict.set("name", path.name());
+        dict.set("mimeType", data.mimeType());
+        dict.set("size", new Long(data.size()));
         String url = StringUtils.removeEnd(request.getUrl(), request.getPath()) +
                      StringUtils.removeStart(path.toString(), "/files");
         if (path.name(0).equals("files")) {
@@ -387,7 +388,7 @@ public class StorageRequestHandler extends RequestHandler {
                 ctx.getStorage().store(path, file);
             }
             // TODO: overwriting existing data should give 200
-            request.sendData(STATUS.CREATED, null, null);
+            request.sendText(STATUS.CREATED, null, null);
         } catch (Exception e) {
             LOG.log(Level.WARNING, "failed to write " + request.getPath(), e);
         }
@@ -415,7 +416,7 @@ public class StorageRequestHandler extends RequestHandler {
             ctx.getStorage().remove(path);
             meta = ctx.getStorage().lookup(path);
             if (meta == null) {
-                request.sendData(STATUS.NO_CONTENT, null, null);
+                request.sendText(STATUS.NO_CONTENT, null, null);
             } else {
                 request.sendError(STATUS.FORBIDDEN);
             }
@@ -506,6 +507,7 @@ public class StorageRequestHandler extends RequestHandler {
         if (data instanceof Index) {
             request.addResource(href, modified, modified, 0);
         } else if (data instanceof File) {
+            // TODO: storage file
             File file = (File) data;
             request.addResource(href, modified, modified, file.length());
         } else {
@@ -536,7 +538,7 @@ public class StorageRequestHandler extends RequestHandler {
             } else {
                 ctx.getStorage().store(path.child("dummy", false), new Dict());
                 ctx.getStorage().remove(path.child("dummy", false));
-                request.sendData(STATUS.CREATED, null, null);
+                request.sendText(STATUS.CREATED, null, null);
             }
         } catch (Exception e) {
             LOG.log(Level.WARNING, "failed to create dir " + request.getPath(), e);
@@ -587,6 +589,7 @@ public class StorageRequestHandler extends RequestHandler {
                 // TODO: add support for collection moves
                 request.sendError(STATUS.FORBIDDEN);
             } else if (data instanceof File) {
+                // TODO: storage file
                 fileName = StringUtils.substringAfterLast(request.getPath(), "/");
                 file = FileUtil.tempFile(fileName);
                 FileUtil.copy((File) data, file);
@@ -594,7 +597,7 @@ public class StorageRequestHandler extends RequestHandler {
                 ctx.getStorage().remove(src);
                 href = Helper.encodeUrl(prefix + dst.toString());
                 request.setResponseHeader(HEADER.LOCATION, href);
-                request.sendData(STATUS.CREATED, null, null);
+                request.sendText(STATUS.CREATED, null, null);
             } else {
                 // TODO: add support for object moves
                 request.sendError(STATUS.FORBIDDEN);
@@ -660,7 +663,7 @@ public class StorageRequestHandler extends RequestHandler {
      */
     protected void doUnlock(Request request) {
         // TODO: remove lock
-        request.sendData(STATUS.NO_CONTENT, null, null);
+        request.sendText(STATUS.NO_CONTENT, null, null);
     }
 
     /**

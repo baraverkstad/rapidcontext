@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2011 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -15,8 +15,6 @@
 package org.rapidcontext.core.web;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -34,6 +32,7 @@ import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.lang.StringUtils;
+import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.util.FileUtil;
 import org.rapidcontext.util.HttpUtil;
@@ -68,17 +67,17 @@ public class Request implements HttpUtil {
     private static final int AUTH_RESPONSE = 1;
 
     /**
-     * The data response type. This type is used when a data string
-     * has been set as the request response.
+     * The text data response type. This type is used when a text
+     * string has been set as the request response.
      */
-    private static final int DATA_RESPONSE = 2;
+    private static final int TEXT_RESPONSE = 2;
 
     /**
-     * The file response type. This type is used when a file has been
-     * set as the request response. The response data contains the
-     * absolute file name when this type is set.
+     * The binary data response type. This type is used when a file
+     * or similar has been set as the request response. The response
+     * data contains the Binary object when this type is set.
      */
-    private static final int FILE_RESPONSE = 3;
+    private static final int BINARY_RESPONSE = 3;
 
     /**
      * The redirect response type. This type is used when a request
@@ -135,7 +134,7 @@ public class Request implements HttpUtil {
     /**
      * The response data.
      */
-    private String responseData = null;
+    private Object responseData = null;
 
     /**
      * The response headers only flag.
@@ -585,31 +584,31 @@ public class Request implements HttpUtil {
     }
 
     /**
-     * Sends the specified data as the request response. Any previous
-     * response will be cleared.
+     * Sends the specified text data as the request response. Any
+     * previous response will be cleared.
      *
      * @param mimeType       the data MIME type
-     * @param data           the data to send
+     * @param text           the text data to send
      *
      * @see #sendClear()
      */
-    public void sendData(String mimeType, String data) {
-        sendData(STATUS.OK, mimeType, data);
+    public void sendText(String mimeType, String text) {
+        sendText(STATUS.OK, mimeType, text);
     }
 
     /**
-     * Sends the specified data as the request response. Any previous
-     * response will be cleared.
+     * Sends the specified text data as the request response. Any
+     * previous response will be cleared.
      *
      * @param code           the HTTP response code to send
-     * @param mimeType       the data MIME type
-     * @param data           the data to send
+     * @param mimeType       the optional MIME type, null for default
+     * @param text           the text data to send
      *
      * @see #sendClear()
      */
-    public void sendData(int code, String mimeType, String data) {
+    public void sendText(int code, String mimeType, String text) {
         sendClear();
-        responseType = DATA_RESPONSE;
+        responseType = TEXT_RESPONSE;
         responseCode = code;
         if (mimeType == null || mimeType.length() == 0) {
             responseMimeType = "text/plain; charset=UTF-8";
@@ -618,7 +617,7 @@ public class Request implements HttpUtil {
         } else {
             responseMimeType = mimeType + "; charset=UTF-8";
         }
-        responseData = data;
+        responseData = text;
     }
 
     /**
@@ -628,17 +627,17 @@ public class Request implements HttpUtil {
      * limited to private by setting the limit cache header. Any
      * previous response will be cleared.
      *
-     * @param file           the file containing the response
+     * @param data           the file containing the response
      * @param limitCache     the limited cache flag
      *
      * @see #sendClear()
      */
-    public void sendFile(File file, boolean limitCache) {
+    public void sendBinary(Binary data, boolean limitCache) {
         sendClear();
-        responseType = FILE_RESPONSE;
+        responseType = BINARY_RESPONSE;
         responseCode = STATUS.OK;
-        responseMimeType = Mime.type(file);
-        responseData = file.toString();
+        responseMimeType = data.mimeType();
+        responseData = data;
         if (limitCache) {
             response.setHeader(HEADER.CACHE_CONTROL, "private");
         }
@@ -683,13 +682,13 @@ public class Request implements HttpUtil {
      * response. Any previous response will be cleared.
      *
      * @param code           the HTTP response code to send
-     * @param mimeType       the data MIME type
-     * @param data           the data to send (error page content)
+     * @param mimeType       the optional MIME type, null for default
+     * @param text           the text data to send (error page content)
      *
      * @see #sendClear()
      */
-    public void sendError(int code, String mimeType, String data) {
-        sendData(code, mimeType, data);
+    public void sendError(int code, String mimeType, String text) {
+        sendText(code, mimeType, text);
         responseType = ERROR_RESPONSE;
     }
 
@@ -745,19 +744,19 @@ public class Request implements HttpUtil {
         response.setDateHeader(HEADER.DATE, System.currentTimeMillis());
         switch (responseType) {
         case AUTH_RESPONSE:
-            response.setHeader(HEADER.WWW_AUTHENTICATE, responseData);
+            response.setHeader(HEADER.WWW_AUTHENTICATE, (String) responseData);
             response.sendError(STATUS.UNAUTHORIZED);
             logResponse();
             break;
-        case DATA_RESPONSE:
-            commitData();
+        case TEXT_RESPONSE:
+            commitText();
             break;
-        case FILE_RESPONSE:
-            commitFile();
+        case BINARY_RESPONSE:
+            commitBinary();
             break;
         case REDIRECT_RESPONSE:
             commitDynamicHeaders();
-            response.sendRedirect(responseData);
+            response.sendRedirect((String) responseData);
             logResponse();
             break;
         case ERROR_RESPONSE:
@@ -765,7 +764,7 @@ public class Request implements HttpUtil {
                 response.sendError(responseCode);
                 logResponse();
             } else {
-                commitData();
+                commitText();
             }
             break;
         default:
@@ -804,12 +803,13 @@ public class Request implements HttpUtil {
     }
 
     /**
-     * Sends the data response to the underlying HTTP response object.
+     * Sends the text data response to the underlying HTTP response
+     * object.
      *
-     * @throws IOException if an IO error occurred while attempting to
-     *             commit the response
+     * @throws IOException if an IO error occurred while attempting
+     *             to commit the response
      */
-    private void commitData() throws IOException {
+    private void commitText() throws IOException {
         response.setStatus(responseCode);
         commitDynamicHeaders();
         response.setContentType(responseMimeType);
@@ -817,7 +817,7 @@ public class Request implements HttpUtil {
             response.setContentLength(0);
             logResponse();
         } else {
-            byte[] data = responseData.getBytes("UTF-8");
+            byte[] data = ((String) responseData).getBytes("UTF-8");
             response.setContentLength(data.length);
             logResponse();
             OutputStream os = response.getOutputStream();
@@ -832,39 +832,32 @@ public class Request implements HttpUtil {
      * @throws IOException if an IO error occurred while attempting to
      *             commit the response
      */
-    private void commitFile() throws IOException {
-        File             file;
-        long             modified;
-        FileInputStream  input;
-        OutputStream     output;
-        byte[]           buffer = new byte[4096];
-        int              length;
+    private void commitBinary() throws IOException {
+        Binary       data = (Binary) responseData;
+        long         modified;
+        InputStream  is;
 
-        file = new File(responseData);
         modified = request.getDateHeader(HEADER.IF_MODIFIED_SINCE);
-        if (modified != -1 && file.lastModified() < modified + 1000) {
+        if (modified != -1 && data.lastModified() < modified + 1000) {
             response.setStatus(STATUS.NOT_MODIFIED);
             logResponse();
             return;
         }
         response.setStatus(responseCode);
-        commitStaticHeaders(file.lastModified());
-        response.setContentType(Mime.type(file));
-        response.setContentLength((int) file.length());
+        commitStaticHeaders(data.lastModified());
+        response.setContentType(data.mimeType());
+        if (data.size() >= 0) {
+            response.setContentLength((int) data.size());
+        }
         logResponse();
         if (!responseHeadersOnly) {
             try {
-                input = new FileInputStream(file);
-            } catch (IOException e) {
+                is = data.openStream();
+            } catch (Exception e) {
                 response.sendError(STATUS.NOT_FOUND);
                 return;
             }
-            output = response.getOutputStream();
-            while ((length = input.read(buffer)) > 0) {
-                output.write(buffer, 0, length);
-            }
-            input.close();
-            output.close();
+            FileUtil.copy(is, response.getOutputStream());
         }
     }
 
@@ -906,10 +899,10 @@ public class Request implements HttpUtil {
             buffer.append(response);
             if (responseType == AUTH_RESPONSE) {
                 buffer.append("Type: Authentication Request\n");
-            } else if (responseType == DATA_RESPONSE) {
-                buffer.append("Type: Generated Data\n");
-            } else if (responseType == FILE_RESPONSE) {
-                buffer.append("Type: Static File\n");
+            } else if (responseType == TEXT_RESPONSE) {
+                buffer.append("Type: Text Data\n");
+            } else if (responseType == BINARY_RESPONSE) {
+                buffer.append("Type: Binary Data\n");
             } else if (responseType == REDIRECT_RESPONSE) {
                 buffer.append("Type: Redirect\n");
             } else if (responseType == ERROR_RESPONSE) {

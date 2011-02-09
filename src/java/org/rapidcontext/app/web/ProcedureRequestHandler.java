@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2011 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -83,6 +83,6 @@ public class ProcedureRequestHandler extends RequestHandler {
         if (trace != null) {
             res.set("trace", trace.toString());
         }
-        request.sendData(Mime.JSON[0], JsSerializer.serialize(res));
+        request.sendText(Mime.JSON[0], JsSerializer.serialize(res));
     }
 }

@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2011 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -534,7 +534,7 @@ public class WebDavRequest implements HttpUtil {
         xmlTagEnd(buffer, 0, "prop");
         str = "<" + lockInfo.getString("token", "") + ">";
         request.setResponseHeader(HEADER.LOCK_TOKEN, str);
-        request.sendData(STATUS.OK, Mime.XML[0], buffer.toString());
+        request.sendText(STATUS.OK, Mime.XML[0], buffer.toString());
     }
 
     /**
@@ -552,7 +552,7 @@ public class WebDavRequest implements HttpUtil {
             buffer.append(results.get(i));
         }
         xmlTagEnd(buffer, 0, "multistatus");
-        request.sendData(STATUS.MULTI_STATUS, Mime.XML[0], buffer.toString());
+        request.sendText(STATUS.MULTI_STATUS, Mime.XML[0], buffer.toString());
     }
 
     /**

@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2011 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -22,6 +22,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang.StringUtils;
+import org.rapidcontext.core.data.Binary;
+import org.rapidcontext.core.data.BinaryFile;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.PropertiesSerializer;
 import org.rapidcontext.util.FileUtil;
@@ -80,29 +82,17 @@ public class FileStorage extends Storage {
         File  file;
 
         if (PATH_STORAGEINFO.equals(path)) {
-            return new Metadata(Metadata.CATEGORY_OBJECT,
-                                Dict.class,
-                                path,
-                                path(),
-                                mountTime());
+            return new Metadata(Dict.class, path, path(), mountTime());
         }
         file = locateFile(path);
         if (file == null) {
             return null;
         } else if (file.isDirectory()) {
-            return new Metadata(Metadata.CATEGORY_INDEX,
-                                Index.class,
-                                path,
-                                path(),
-                                new Date(file.lastModified()));
+            return new Metadata(Index.class, path, path(), file.lastModified());
         } else if (file.getName().endsWith(SUFFIX_PROPS)) {
-            return new Metadata(Metadata.CATEGORY_OBJECT,
-                                Dict.class,
-                                path,
-                                path(),
-                                new Date(file.lastModified()));
+            return new Metadata(Dict.class, path, path(), file.lastModified());
         } else {
-            return new Metadata(path, path(), file);
+            return new Metadata(Binary.class, path, path(), file.lastModified());
         }
     }
 
@@ -156,7 +146,7 @@ public class FileStorage extends Storage {
                 return null;
             }
         } else {
-            return file;
+            return new BinaryFile(file);
         }
     }
 

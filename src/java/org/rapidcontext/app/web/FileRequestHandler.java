@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2011 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -14,10 +14,9 @@
 
 package org.rapidcontext.app.web;
 
-import java.io.File;
-
 import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.app.ApplicationContext;
+import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.web.Request;
 import org.rapidcontext.core.web.RequestHandler;
@@ -75,12 +74,12 @@ public class FileRequestHandler extends RequestHandler {
         }
         if (obj == null) {
             errorNotFound(request);
-        } else if (obj instanceof File) {
+        } else if (obj instanceof Binary) {
             if (request.getParameter("download") != null) {
                 str = "attachment; filename=" + path.name();
                 request.setResponseHeader("Content-Disposition", str);
             }
-            request.sendFile((File) obj, cache);
+            request.sendBinary((Binary) obj, cache);
         } else {
             errorForbidden(request);
         }

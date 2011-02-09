@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2007-2011 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -22,12 +22,16 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Enumeration;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.util.StringUtil;
@@ -111,17 +115,60 @@ public class PropertiesSerializer {
      *             file
      */
     public static Dict read(File file)
-        throws FileNotFoundException, IOException {
+    throws FileNotFoundException, IOException {
 
-        Dict             res = new Dict();
-        FileInputStream  is;
-        BufferedReader   r;
-        Properties       props;
-        Enumeration      e;
-        String           str;
+        FileReader r = new FileReader(file);
+        return read(new FileInputStream(file), new BufferedReader(r));
+    }
+
+    /**
+     * Reads a ZIP file entry containing properties and returns the
+     * contents in a dictionary. The property names from the file are
+     * normally preserved, except for structural interpretation. Dot
+     * ('.') characters in names are interpreted as sub-object
+     * separators, and numbers are interpreted as an array indices.
+     * The dictionary values are stored as booleans, integers or
+     * strings.
+     *
+     * @param zip            the ZIP file
+     * @param entry          the ZIP file entry to load
+     *
+     * @return the dictionary read from the file
+     *
+     * @throws IOException if an error occurred while reading the
+     *             file
+     */
+    public static Dict read(ZipFile zip, ZipEntry entry) throws IOException {
+        InputStreamReader r = new InputStreamReader(zip.getInputStream(entry));
+        return read(zip.getInputStream(entry), new BufferedReader(r));
+    }
+
+    /**
+     * Reads an input stream and returns the contents in a
+     * dictionary. The property names from the file are normally
+     * preserved, except for structural interpretation. Dot ('.')
+     * characters in names are interpreted as sub-object separators,
+     * and numbers are interpreted as an array indices. The
+     * dictionary values are stored as booleans, integers or strings.
+     * Note that the input stream is read twice in order to preserve
+     * the same ordering as in the file.
+     *
+     * @param is             the input stream
+     * @param r              the input stream reader (used for order)
+     *
+     * @return the dictionary read from the file
+     *
+     * @throws IOException if an error occurred while reading
+     */
+    private static Dict read(InputStream is, BufferedReader r)
+    throws IOException {
+
+        Dict         res = new Dict();
+        Properties   props;
+        Enumeration  e;
+        String       str;
 
         // Read properties file (but doesn't preserve ordering)
-        is = new FileInputStream(file);
         props = new Properties();
         try {
             props.load(is);
@@ -134,7 +181,6 @@ public class PropertiesSerializer {
         }
 
         // Add properties in file order (uses simplified parsing)
-        r = new BufferedReader(new FileReader(file));
         try {
             while ((str = r.readLine()) != null) {
                 if (str.indexOf("=") > 0) {

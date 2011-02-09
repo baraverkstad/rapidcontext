@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2011 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -67,7 +67,7 @@ public class DownloadRequestHandler extends RequestHandler {
                 }
                 request.setResponseHeader("Content-Disposition", disp);
             }
-            request.sendData(mimeType, data);
+            request.sendText(mimeType, data);
         }
     }
 }

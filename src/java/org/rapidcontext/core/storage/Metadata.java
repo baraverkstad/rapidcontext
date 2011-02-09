@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2011 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -14,8 +14,9 @@
 
 package org.rapidcontext.core.storage;
 
-import java.io.File;
 import java.util.Date;
+
+import org.rapidcontext.core.data.Binary;
 
 /**
  * An object metadata container. Used for basic introspection of
@@ -33,7 +34,7 @@ public class Metadata extends StorableObject {
      *
      * @see #CATEGORY_INDEX
      * @see #CATEGORY_OBJECT
-     * @see #CATEGORY_FILE
+     * @see #CATEGORY_BINARY
      */
     public static final String KEY_CATEGORY = "category";
 
@@ -72,9 +73,28 @@ public class Metadata extends StorableObject {
     public static final String CATEGORY_OBJECT = "object";
 
     /**
-     * The file category value.
+     * The binary category value.
      */
-    public static final String CATEGORY_FILE = "file";
+    public static final String CATEGORY_BINARY = "binary";
+
+    /**
+     * Returns the object category based on the class. This method
+     * checks if the class inherits from the Index or Binary classes,
+     * otherwise it returns the object class.
+     *
+     * @param clazz          the object class
+     *
+     * @return the object category
+     */
+    public static String category(Class clazz) {
+        if (Index.class.isAssignableFrom(clazz)) {
+            return CATEGORY_INDEX;
+        } else if (Binary.class.isAssignableFrom(clazz)) {
+            return CATEGORY_BINARY;
+        } else {
+            return CATEGORY_OBJECT;
+        }
+    }
 
     /**
      * Returns the last modified date of two metadata objects.
@@ -97,40 +117,7 @@ public class Metadata extends StorableObject {
     }
 
     /**
-     * Creates a new metadata container for an index.
-     *
-     * @param path           the absolute object path
-     * @param storagePath    the absolute storage path
-     * @param idx            the index to inspect
-     */
-    public Metadata(Path path, Path storagePath, Index idx) {
-        this(CATEGORY_INDEX, Index.class, path, storagePath, idx.lastModified());
-    }
-
-    /**
-     * Creates a new metadata container for a file.
-     *
-     * @param path           the absolute object path
-     * @param storagePath    the absolute storage path
-     * @param file           the file to inspect
-     */
-    public Metadata(Path path, Path storagePath, File file) {
-        this(CATEGORY_FILE, File.class, path, storagePath, new Date(file.lastModified()));
-    }
-
-    /**
-     * Creates a new metadata container for a generic object.
-     *
-     * @param path           the absolute object path
-     * @param storagePath    the absolute storage path
-     * @param obj            the object to inspect
-     */
-    public Metadata(Path path, Path storagePath, Object obj) {
-        this(CATEGORY_OBJECT, obj.getClass(), path, storagePath, new Date());
-    }
-
-    /**
-     * Creates a new metadata container for an index.
+     * Creates a new metadata container with modified path information.
      *
      * @param path           the absolute object path
      * @param meta           the metadata container to copy
@@ -140,6 +127,30 @@ public class Metadata extends StorableObject {
         dict.remove(KEY_ID);
         dict.setAll(meta.dict);
         dict.set(KEY_PATH, path);
+    }
+
+    /**
+     * Creates a new metadata container.
+     *
+     * @param clazz          the object class
+     * @param path           the absolute object path
+     * @param storagePath    the absolute storage path
+     * @param modified       the last modified time, or negative for now
+     */
+    public Metadata(Class clazz, Path path, Path storagePath, long modified) {
+        this(category(clazz), clazz, path, storagePath, new Long(modified));
+    }
+
+    /**
+     * Creates a new metadata container.
+     *
+     * @param clazz          the object class
+     * @param path           the absolute object path
+     * @param storagePath    the absolute storage path
+     * @param modified       the last modified time
+     */
+    public Metadata(Class clazz, Path path, Path storagePath, Date modified) {
+        this(category(clazz), clazz, path, storagePath, modified);
     }
 
     /**
@@ -160,7 +171,7 @@ public class Metadata extends StorableObject {
         dict.set(KEY_STORAGEPATH, storagePath);
         if (modified instanceof Date) {
             dict.set(KEY_MODIFIED, modified);
-        } else if (modified instanceof Long) {
+        } else if (modified instanceof Long && ((Long) modified).longValue() > 0) {
             dict.set(KEY_MODIFIED, new Date(((Long) modified).longValue()));
         } else {
             dict.set(KEY_MODIFIED, new Date());
@@ -188,13 +199,13 @@ public class Metadata extends StorableObject {
     }
 
     /**
-     * Checks if the object category is a file.
+     * Checks if the object category is binary.
      *
-     * @return true if the object category is a file, or
+     * @return true if the object category is binary, or
      *         false otherwise
      */
-    public boolean isFile() {
-        return CATEGORY_FILE.equals(category());
+    public boolean isBinary() {
+        return CATEGORY_BINARY.equals(category());
     }
 
     /**
@@ -204,7 +215,7 @@ public class Metadata extends StorableObject {
      *
      * @see #CATEGORY_INDEX
      * @see #CATEGORY_OBJECT
-     * @see #CATEGORY_FILE
+     * @see #CATEGORY_BINARY
      */
     public String category() {
         return dict.getString(KEY_CATEGORY, null);

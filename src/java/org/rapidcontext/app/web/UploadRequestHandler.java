@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2011 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -108,7 +108,7 @@ public class UploadRequestHandler extends RequestHandler {
             fileMap = SessionFileMap.getFiles(request.getSession(), true);
             trace = (request.getParameter("trace", null) != null);
             fileMap.addFile(fileId, file, size, stream.openStream(), trace ? 5 : 0);
-            request.sendData(Mime.TEXT[0], "Session file " + fileId + " uploaded");
+            request.sendText(Mime.TEXT[0], "Session file " + fileId + " uploaded");
         } catch (IOException e) {
             LOG.log(Level.WARNING, "failed to process file upload", e);
             errorBadRequest(request, e.getMessage());
