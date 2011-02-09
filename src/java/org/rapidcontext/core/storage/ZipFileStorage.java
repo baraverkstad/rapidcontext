@@ -74,6 +74,20 @@ public class ZipFileStorage extends Storage {
     }
 
     /**
+     * Destroys this object. This method is used to free any
+     * resources used when this object is no longer used.
+     *
+     * @throws StorageException if the destruction failed
+     */
+    protected void destroy() throws StorageException {
+        try {
+            zip.close();
+        } catch (Exception e) {
+            LOG.log(Level.WARNING, "failed to closed zip file: " + file, e);
+        }
+    }
+
+    /**
      * Searches for an object at the specified location and returns
      * metadata about the object if found. The path may locate either
      * an index or a specific object.
