@@ -28,13 +28,16 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import org.apache.commons.lang.ClassUtils;
+import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.storage.FileStorage;
 import org.rapidcontext.core.storage.MemoryStorage;
+import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.storage.StorageException;
 import org.rapidcontext.core.storage.RootStorage;
+import org.rapidcontext.core.storage.ZipFileStorage;
 import org.rapidcontext.core.type.Type;
 import org.rapidcontext.util.FileUtil;
 import org.rapidcontext.util.ZipUtil;
@@ -70,9 +73,9 @@ public class PluginManager {
     public static final Path PATH_PLUGIN = new Path("/plugin/");
 
     /**
-     * The library folder path in each plug-in.
+     * The storage path to the JAR library files.
      */
-    private static final String PATH_LIB = "lib";
+    private static final Path PATH_LIB = new Path("/lib/");
 
     /**
      * The identifier of the system plug-in.
@@ -192,7 +195,7 @@ public class PluginManager {
             String pluginId = files[i].getName();
             if (files[i].isDirectory() && !isAvailable(pluginId)) {
                 try {
-                    createStorage(baseDir, pluginId);
+                    createStorage(pluginId);
                 } catch (PluginException ignore) {
                     // Error already logged, ignored here
                 }
@@ -240,29 +243,63 @@ public class PluginManager {
     }
 
     /**
+     * Finds the best matching plug-in storage file or directory for
+     * a plug-in identifier.
+     *
+     * @param pluginId       the unique plug-in id
+     *
+     * @return the readable plug-in file or directory, or
+     *         null if not found
+     */
+    private File storageFile(String pluginId) {
+        File[] files = {
+            new File(pluginDir, pluginId + ".zip"),
+            new File(pluginDir, pluginId),
+            new File(builtinDir, pluginId + ".zip"),
+            new File(builtinDir, pluginId)
+        };
+        for (int i = 0; i < files.length; i++) {
+            if (files[i].canRead()) {
+                return files[i];
+            }
+        }
+        return null;
+    }
+
+    /**
      * Creates and mounts a plug-in file storage. This is the first
      * step when installing a plug-in, allowing access to the plug-in
      * files without overlaying then on the root index.
      *
-     * @param baseDir        the base plug-in directory
      * @param pluginId       the unique plug-in id
      *
      * @return the plug-in file storage created
      *
      * @throws PluginException if the plug-in had already been mounted
      */
-    private Storage createStorage(File baseDir, String pluginId) throws PluginException {
-        File     dir = new File(baseDir, pluginId);
-        Storage  fs = new FileStorage(dir, false);
+    private Storage createStorage(String pluginId) throws PluginException {
+        File     file = storageFile(pluginId);
+        Storage  ps;
+        String   msg;
 
+        if (file == null) {
+            msg = "couldn't find " + pluginId + " plug-in storage";
+            LOG.log(Level.SEVERE, msg);
+            throw new PluginException(msg);
+        }
         try {
-            storage.mount(fs, storagePath(pluginId), false, false, 0);
-        } catch (StorageException e) {
-            String msg = "failed to create " + pluginId + " plug-in storage";
+            if (file.isDirectory()) {
+                ps = new FileStorage(file, false);
+            } else {
+                ps = new ZipFileStorage(file);
+            }
+            storage.mount(ps, storagePath(pluginId), false, false, 0);
+        } catch (Exception e) {
+            msg = "failed to create " + pluginId + " plug-in storage";
             LOG.log(Level.SEVERE, msg, e);
             throw new PluginException(msg + ": " + e.getMessage());
         }
-        return fs;
+        return ps;
     }
 
     /**
@@ -339,6 +376,7 @@ public class PluginManager {
                 // TODO: perhaps backup the old directory instead?
                 FileUtil.delete(dir);
             }
+            // TODO: fix fix fix
             ZipUtil.unpackZip(zip, dir);
         } catch (IOException e) {
             msg = "IO error while reading zip file " + file.getName() + ": " +
@@ -354,7 +392,7 @@ public class PluginManager {
                 }
             }
         }
-        createStorage(pluginDir, pluginId);
+        createStorage(pluginId);
         return pluginId;
     }
 
@@ -370,7 +408,6 @@ public class PluginManager {
     public void load(String pluginId) throws PluginException {
         Plugin       plugin;
         Dict         dict;
-        File         dir;
         String       className;
         Class        cls;
         Constructor  constr;
@@ -388,15 +425,11 @@ public class PluginManager {
             throw new PluginException(msg);
         }
 
-        // Add to root overlay
+        // Create overlay & load JAR files
         loadOverlay(pluginId);
+        loadJarFiles(pluginId);
 
         // Create plug-in instance
-        dir = new File(this.pluginDir, pluginId);
-        if (!dir.isDirectory()) {
-            dir = new File(this.builtinDir, pluginId);
-        }
-        loadJarFiles(new File(dir, PATH_LIB));
         className = dict.getString(Plugin.KEY_CLASSNAME, null);
         if (className == null || className.trim().length() <= 0) {
             plugin = new Plugin(dict);
@@ -531,40 +564,44 @@ public class PluginManager {
     }
 
     /**
-     * Loads all JAR files found in the specified directory. All the
-     * files found will be copied to a temporary directory before 
-     * loading in order to avoid file locking and other issues.
+     * Loads all JAR files found in the specified plug-in library
+     * path. All the files found will be copied to a temporary
+     * directory before loading in order to avoid file locking and
+     * other issues.
      *
-     * @param dir            the directory to search
+     * @param pluginId       the unique plug-in id
      */
-    private void loadJarFiles(File dir) {
-        if (dir.exists()) {
-            File[] files = dir.listFiles();
-            for (int i = 0; i < files.length; i++) {
-                if (files[i].getName().toLowerCase().endsWith(".jar")) {
-                    loadJarFile(files[i]);
-                }
+    private void loadJarFiles(String pluginId) {
+        Metadata[]  meta;
+        String      name;
+
+        meta = storage.lookupAll(storagePath(pluginId).descendant(PATH_LIB));
+        for (int i = 0; i < meta.length; i++) {
+            name = meta[i].path().name();
+            if (meta[i].isBinary() && name.toLowerCase().endsWith(".jar")) {
+                loadJarFile(meta[i].path());
             }
         }
     }
 
     /**
      * Adds a JAR file to the plug-in class loader. The JAR file will
-     * be copied to a temporary directory to avoid file locking and
-     * other issues. This method will only log errors on failure and
-     * no error will be thrown.
+     * be copied from storage to a temporary directory to avoid file
+     * locking and other issues. This method will only log errors on
+     * failure and no error will be thrown.
      *
-     * @param file           the JAR file to load
+     * @param path           the storage path to the JAR file
      */
-    private void loadJarFile(File file) {
+    private void loadJarFile(Path path) {
         try {
-            LOG.fine("adding JAR to class loader: " + file);
-            File tmpFile = FileUtil.tempFile(file.getName());
+            LOG.fine("adding JAR to class loader: " + path);
+            Binary data = (Binary) storage.load(path);
+            File tmpFile = FileUtil.tempFile(path.name());
             tempFiles.add(tmpFile);
-            FileUtil.copy(file, tmpFile);
+            FileUtil.copy(data.openStream(), tmpFile);
             classLoader.addJar(tmpFile);
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "failed to load JAR file: " + file, e);
+            LOG.log(Level.SEVERE, "failed to load JAR file: " + path, e);
         }
     }
 
