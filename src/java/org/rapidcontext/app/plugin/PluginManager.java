@@ -24,6 +24,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang.ClassUtils;
+import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.storage.FileStorage;
@@ -187,10 +188,10 @@ public class PluginManager {
     private void initStorages(File baseDir) {
         File[] files = baseDir.listFiles();
         for (int i = 0; i < files.length; i++) {
-            String pluginId = files[i].getName();
-            if (files[i].isDirectory() && !isAvailable(pluginId)) {
+            String id = pluginId(files[i]);
+            if (id != null && !isAvailable(id)) {
                 try {
-                    createStorage(pluginId);
+                    createStorage(id);
                 } catch (PluginException ignore) {
                     // Error already logged, ignored here
                 }
@@ -235,6 +236,26 @@ public class PluginManager {
      */
     public Dict config(String pluginId) {
         return (Dict) storage.load(configPath(pluginId));
+    }
+
+    /**
+     * Returns the plug-in identifier corresponding to a storage file
+     * or directory.
+     *
+     * @param file           the file to check
+     *
+     * @return the plug-in identifier, or
+     *         null if not a supported storage file
+     */
+    private String pluginId(File file) {
+        String name = file.getName();
+        if (file.isDirectory()) {
+            return name;
+        } else if (name.endsWith(".zip")) {
+            return StringUtils.removeEnd(name, ".zip");
+        } else {
+            return null;
+        }
     }
 
     /**
