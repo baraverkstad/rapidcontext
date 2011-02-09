@@ -16,13 +16,13 @@ RapidContext README
 
     #> unzip rapidcontext-<version>.zip
     #> cd rapidcontext-<version>
-    #> bin/serverstart.sh
+    #> bin/rapidcontext
 
   On Windows, perform the following steps:
 
     # Unpack rapidcontext-<version>.zip
     # Open the directory rapidcontext-<version>/bin
-    # Double-click serverstart.bat
+    # Double-click rapidcontext.bat
 
   Once the server has been started, a web browser pointing to one
   of the following addresses should be able to launch a client:
@@ -50,4 +50,4 @@ RapidContext README
   See the separate LICENSE.txt file for license details.
 
 _____________________________________________________________________
-Copyright (c) 2009 Per Cederberg & Dynabyte AB. All rights reserved.
+Copyright (c) 2007-2011 Per Cederberg. All rights reserved.
