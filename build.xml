@@ -80,7 +80,7 @@
         <fileset dir="plugin" includes="@{id}.zip" />
       </delete>
       <copy tofile="plugin/@{id}.zip">
-        <fileset dir="src/plugin/@{id}" includes="@{id}*.zip" />
+        <fileset dir="src/plugin/@{id}" includes="@{id}*.plugin" />
       </copy>
     </sequential>
   </macrodef>

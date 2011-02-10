@@ -60,7 +60,10 @@
   <target name="package" depends="compile"
           description="Packages the plugin files into proper format">
     <delete quiet="true">
-      <fileset dir="." includes="${plugin.id}-*.zip" />
+      <fileset dir=".">
+        <include name="${plugin.id}-*.zip" />
+        <include name="${plugin.id}-*.plugin" />
+      </fileset>
     </delete>
     <delete dir="tmp" quiet="true" />
     <mkdir dir="tmp" />
@@ -82,7 +85,7 @@
         <patternset refid="replace.files" />
       </fileset>
     </replaceregexp>
-    <zip destfile="${plugin.id}-${build.version}.zip">
+    <zip destfile="${plugin.id}-${build.version}.plugin">
       <fileset dir="tmp" />
       <fileset dir=".">
         <exclude name=".*" />

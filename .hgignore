@@ -2,6 +2,9 @@ syntax: regexp
 ^classes/.*$
 
 syntax: regexp
+^doc\.zip$
+
+syntax: regexp
 ^doc/LICENSE\.txt$
 syntax: regexp
 ^doc/README\.txt$
@@ -28,7 +31,7 @@ syntax: regexp
 syntax: regexp
 ^src/plugin/[a-z0-9_-]*/classes/.*$
 syntax: regexp
-^src/plugin/[a-z0-9_-]*/[a-z0-9_-]*-[0-9.]*\.zip$
+^src/plugin/[a-z0-9_-]*/[a-z0-9_-]*-[0-9.]*\.plugin$
 syntax: regexp
 ^src/plugin/cmdline/lib/cmdline-[0-9.]*\.jar$
 syntax: regexp
@@ -38,6 +41,3 @@ syntax: regexp
 
 syntax: regexp
 ^var/.*$
-
-syntax: regexp
-^doc\.zip$
