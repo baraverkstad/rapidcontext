@@ -1,0 +1,27 @@
+# Compile Target Files
+/classes
+/lib/rapidcontext-*.jar
+/plugin
+
+# Plug-In Compile Files
+/src/plugin/*/build.number
+/src/plugin/*/classes
+/src/plugin/*/*.plugin
+/src/plugin/cmdline/lib/cmdline-*.jar
+/src/plugin/http/lib/http-*.jar
+/src/plugin/jdbc/lib/jdbc-*.jar
+
+# Documentation Target Files
+/doc.zip
+/doc/LICENSE.txt
+/doc/README.txt
+/doc/java/
+/doc/js/
+
+# Package Target Files
+/rapidcontext.war
+/RapidContext.app
+/rapidcontext-*.zip
+
+# Run-Time Files
+/var
