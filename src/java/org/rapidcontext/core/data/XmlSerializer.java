@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg.
+ * Copyright (c) 2007-2011 Per Cederberg.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -17,7 +17,6 @@ package org.rapidcontext.core.data;
 
 import java.util.Date;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.rapidcontext.core.storage.StorableObject;
 
 /**
@@ -127,12 +126,32 @@ public class XmlSerializer {
     private static void serialize(String str, StringBuilder buffer) {
         if (str == null) {
             buffer.append("<null/>");
-        } else if (str.contains("\n")) {
-            buffer.append("<![CDATA[");
-            buffer.append(str);
-            buffer.append("]]>");
         } else {
-            buffer.append(StringEscapeUtils.escapeXml(str));
+            for (int i = 0; i < str.length(); i++) {
+                char chr = str.charAt(i);
+                switch (chr) {
+                case '<':
+                    buffer.append("&lt;");
+                    break;
+                case '>':
+                    buffer.append("&gt;");
+                    break;
+                case '&':
+                    buffer.append("&amp;");
+                    break;
+                case '"':
+                    buffer.append("&quot;");
+                    break;
+                default:
+                    if (32 <= chr && chr < 127) {
+                        buffer.append(chr);
+                    } else {
+                        buffer.append("&#");
+                        buffer.append((int) chr);
+                        buffer.append(";");
+                    }
+                }
+            }
         }
     }
 }

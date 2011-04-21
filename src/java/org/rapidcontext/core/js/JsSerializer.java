@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2007-2011 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -164,7 +164,8 @@ public class JsSerializer {
         } else {
             buffer.append("'");
             for (int i = 0; i < str.length(); i++) {
-                switch (str.charAt(i)) {
+                char chr = str.charAt(i);
+                switch (chr) {
                 case '\\':
                     buffer.append("\\\\");
                     break;
@@ -184,7 +185,19 @@ public class JsSerializer {
                     buffer.append("\\t");
                     break;
                 default:
-                    buffer.append(str.charAt(i));
+                    if (chr != '<' && 32 <= chr && chr < 127) {
+                        buffer.append(chr);
+                    } else {
+                        buffer.append("\\u");
+                        if (chr <= 0x000F) {
+                            buffer.append("000");
+                        } else if (chr <= 0x00FF) {
+                            buffer.append("00");
+                        } else if (chr <= 0x0FFF) {
+                            buffer.append("0");
+                        }
+                        buffer.append(Integer.toHexString(chr).toUpperCase());
+                    }
                 }
             }
             buffer.append("'");
