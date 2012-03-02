@@ -14,10 +14,18 @@
 
 package org.rapidcontext.app.web;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+
 import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.data.Binary;
+import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
+import org.rapidcontext.core.storage.Storage;
+import org.rapidcontext.core.web.Mime;
 import org.rapidcontext.core.web.Request;
 import org.rapidcontext.core.web.RequestHandler;
 
@@ -58,6 +66,7 @@ public class FileRequestHandler extends RequestHandler {
     protected void doGet(Request request) {
         ApplicationContext  ctx = ApplicationContext.getInstance();
         boolean             cache;
+        ArrayList           pathList = new ArrayList();
         Path                path;
         Object              obj = null;
         String              str;
@@ -65,15 +74,25 @@ public class FileRequestHandler extends RequestHandler {
         cache = ctx.getConfig().getBoolean("responseNoCache", false);
         path = new Path(PATH_FILES, request.getPath());
         if (path.isIndex()) {
-            obj = ctx.getStorage().load(path.child("index.html", false));
+            pathList.add(path.child("index.tmpl", false));
+            pathList.add(path.child("index.html", false));
         } else if (StringUtils.startsWithIgnoreCase(path.name(), "index.htm")) {
-            obj = ctx.getStorage().load(path.parent().child("index.html", false));
+            pathList.add(path.parent().child("index.tmpl", false));
+            pathList.add(path.parent().child("index.html", false));
         }
-        if (obj == null) {
+        pathList.add(path);
+        for (int i = 0; obj == null && i < pathList.size(); i++) {
+            path = (Path) pathList.get(i);
             obj = ctx.getStorage().load(path);
         }
         if (obj == null) {
             errorNotFound(request);
+        } else if (path.name().endsWith(".tmpl") && obj instanceof Binary) {
+            try {
+                processTemplate(request, ctx.getStorage(), (Binary) obj);
+            } catch (IOException e) {
+                errorNotFound(request);
+            }
         } else if (obj instanceof Binary) {
             if (request.getParameter("download") != null) {
                 str = "attachment; filename=" + path.name();
@@ -83,5 +102,52 @@ public class FileRequestHandler extends RequestHandler {
         } else {
             errorForbidden(request);
         }
+    }
+
+    /**
+     * Processes an HTML template file. The template variables will be
+     * replaced with their corresponding search results and values.
+     *
+     * @param request        the request to process
+     * @param storage        the storage to use
+     * @param bin            the binary template file
+     *
+     * @throws IOException if the template file couldn't be read properly
+     */
+    protected void processTemplate(Request request, Storage storage, Binary bin)
+    throws IOException {
+        StringBuilder   res = new StringBuilder();
+        BufferedReader  reader;
+        String          line;
+        Metadata[]      files;
+        String          name;
+
+        reader = new BufferedReader(new InputStreamReader(bin.openStream(), "UTF-8"));
+        while ((line = reader.readLine()) != null) {
+            if (line.contains("%JS_FILES%")) {
+                files = storage.lookupAll(PATH_FILES.child("js", true));
+                for (int i = 0; i < files.length; i++) {
+                    name = files[i].path().name();
+                    if (files[i].isBinary() && name.endsWith(".js")) {
+                        res.append(line.replace("%JS_FILES%", "js/" + name));
+                        res.append("\n");
+                    }
+                }
+            } else if (line.contains("%CSS_FILES%")) {
+                files = storage.lookupAll(PATH_FILES.child("css", true));
+                for (int i = 0; i < files.length; i++) {
+                    name = files[i].path().name();
+                    if (files[i].isBinary() && name.endsWith(".css")) {
+                        res.append(line.replace("%CSS_FILES%", "css/" + name));
+                        res.append("\n");
+                    }
+                }
+            } else {
+                res.append(line);
+                res.append("\n");
+            }
+        }
+        reader.close();
+        request.sendText(Mime.HTML[0], res.toString());
     }
 }
