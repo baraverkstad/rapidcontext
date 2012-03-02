@@ -33,5 +33,8 @@ retracer.call = function(name, args, method, obj, trackId) {
     }
 }
 
-// Register function names
-ReTracer.Util.registerFunctionNames(retracer, "retracer");
+// Alias for "ReTracer"
+if (typeof(RapidContext) == "undefined") {
+    RapidContext = {};
+}
+var ReTracer = RapidContext;

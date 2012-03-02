@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2007-2012 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -12,9 +12,6 @@
  *
  * See the RapidContext LICENSE.txt file for more details.
  */
-
-// Temporary "ReTracer" alias
-var ReTracer = RapidContext;
 
 /**
  * @namespace Provides functions for application and debug logging.
