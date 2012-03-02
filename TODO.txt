@@ -18,7 +18,6 @@ Known Issues
 
 Concern: Legacy Cleanup
 =======================
- * Remove all old and deprecated API and widgets
  * Move RapidContext.Util into MochiKit 1.5 as much as possible
  * Update about dialog with new logotype & copyrights
 
@@ -47,7 +46,7 @@ Concern: Developer Support
     o Support custom widgets with UI, JavaScript & CSS fragments
  * Logging:
     o Update MochiKit.Logging to support framework requirements
-    o Remove legacy.js (by replacing logging functionality)
+    o Remove log.js (with console.log functionality or similar)
     o Improve context/stacktrace when triggering calls from signals
     o Add Library support for tracking all created defereds and
       connecting them to each app instance
@@ -173,11 +172,8 @@ Concern: Security & Authentication
 
 Concern: Widgets 2.0
 ====================
- * Modular JS file and widget registration
  * Solution to CSS import issues:
-    o Importing CSS files/snipplets dynamically?
-    o Change to CSS via JS?
-    o Convert to LastCSS?
+    o Injecting CSS from ui.xml file (inline <style> tags)?
  * Embed buildUI and XML serialization into widget base
  * Investigate "onpropertychange" and similar for catching changes:
     o Use single set() and get() methods for all attributes?
