@@ -91,6 +91,7 @@
     <buildplugin id="cmdline" />
     <buildplugin id="http" />
     <buildplugin id="jdbc" />
+    <buildplugin id="legacy" />
     <buildplugin id="test" />
     <mkdir dir="plugin/local" />
     <unzip dest="plugin/local" src="plugin/local.zip" />
