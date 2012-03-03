@@ -124,7 +124,10 @@ public class FileRequestHandler extends RequestHandler {
 
         reader = new BufferedReader(new InputStreamReader(bin.openStream(), "UTF-8"));
         while ((line = reader.readLine()) != null) {
-            if (line.contains("%JS_FILES%")) {
+            if (line.contains("%BASE_URL%")) {
+                res.append(line.replace("%BASE_URL%", request.getRootUrl()));
+                res.append("\n");
+            } else if (line.contains("%JS_FILES%")) {
                 files = findFiles(storage, PATH_FILES.child("js", true), ".js");
                 for (int i = 0; i < files.size(); i++) {
                     res.append(line.replace("%JS_FILES%", files.getString(i, "")));
