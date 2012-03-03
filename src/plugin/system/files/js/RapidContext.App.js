@@ -573,10 +573,10 @@ RapidContext.App.loadXHR = function (url, params, options) {
  * data even on successful callback.<p>
  *
  * This method of script loading has the advantage that JavaScript
- * debuggers (such as FireBug) will be able to handle the code
+ * debuggers (such as Firebug) will be able to handle the code
  * properly (error messages, breakpoints, etc). If the script fails
- * to load due to errors however, the returned deferred object will
- * never callback (not even with an error).
+ * to load due to errors however, the returned deferred object may
+ * fail to errback in some cases.
  *
  * @param {String} url the URL to the script
  *
@@ -609,6 +609,57 @@ RapidContext.App.loadScript = function (url) {
     RapidContext.App._addErrbackLogger(d);
     return d;
 };
+
+/**
+ * Loads a CSS stylesheet to the the current page asynchronously and
+ * returns a deferred response. The stylesheet is loaded by inserting
+ * a LINK tag in the document head tag, which means that the deferred
+ * callback function will not be provided with any data.
+ *
+ * @param {String} url the URL to the stylesheet
+ *
+ * @return {Deferred} a MochiKit.Async.Deferred object that will
+ *         callback when the stylesheet has been loaded
+ */
+RapidContext.App.loadStyles = function (url) {
+    function findStylesheet(url) {
+        var styles = document.styleSheets;
+        for (var i = 0; i < styles.length; i++) {
+            if (MochiKit.Text.startsWith(url, styles[i].href)) {
+                return styles[i];
+            }
+        }
+        return null;
+    }
+    var d = new MochiKit.Async.Deferred();
+    var absoluteUrl = RapidContext.Util.resolveURI(url, window.location.href);
+    if (findStylesheet(url) || findStylesheet(absoluteUrl)) {
+        LOG.trace("Stylesheet already loaded, skipping", url);
+        d.callback();
+        return d;
+    }
+    var stack = RapidContext.Util.stackTrace();
+    LOG.trace("Starting stylesheet loading", url);
+    var loadUrl = RapidContext.App._nonCachedUrl(url);
+    var link = MochiKit.DOM.LINK({ rel: "stylesheet", type: "text/css", href: loadUrl });
+    document.getElementsByTagName("head")[0].appendChild(link);
+    var img = MochiKit.DOM.IMG();
+    img.onerror = function () {
+        RapidContext.Util.injectStackTrace(stack);
+        var sheet = findStylesheet(url) || findStylesheet(absoluteUrl);
+        if (sheet && sheet.cssRules && sheet.cssRules.length) {
+            LOG.trace("Completed loading stylesheet", url);
+            d.callback();
+        } else {
+            LOG.warning("Failed loading stylesheet", url);
+            msg = "Failed loading stylesheet " + url;
+            d.errback(new URIError(msg, url));
+        }
+    }
+    img.src = loadUrl;
+    RapidContext.App._addErrbackLogger(d);
+    return d;
+}
 
 /**
  * Downloads a file to the user desktop. This works by creating a new
