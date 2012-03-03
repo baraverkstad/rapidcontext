@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.rapidcontext.app.web.AppRequestHandler;
 import org.rapidcontext.app.web.DownloadRequestHandler;
 import org.rapidcontext.app.web.FileRequestHandler;
 import org.rapidcontext.app.web.ProcedureRequestHandler;
@@ -62,11 +63,6 @@ public class ServletApplication extends HttpServlet {
         Logger.getLogger(ServletApplication.class.getName());
 
     /**
-     * The web files storage path.
-     */
-    public static final Path PATH_FILES = new Path("/files/");
-
-    /**
      * The context to use for process execution.
      */
     private ApplicationContext ctx = null;
@@ -98,6 +94,7 @@ public class ServletApplication extends HttpServlet {
         LOG.log(Level.FINE, "using temporary directory: " + tmpDir);
         FileUtil.setTempDir(tmpDir);
         Mime.context = getServletContext();
+        handlers.put("/rapidcontext/app/", new AppRequestHandler());
         handlers.put("/rapidcontext/download", new DownloadRequestHandler());
         handlers.put("/rapidcontext/upload", new UploadRequestHandler());
         handlers.put("/rapidcontext/procedure/", new ProcedureRequestHandler());
@@ -109,7 +106,8 @@ public class ServletApplication extends HttpServlet {
             File docZip = new File(baseDir, "doc.zip");
             ZipFileStorage docStore = new ZipFileStorage(docZip);
             RootStorage root = (RootStorage) ctx.getStorage();
-            root.mount(docStore, PATH_FILES.child("doc", true), false, false, 0);
+            Path docPath = FileRequestHandler.PATH_FILES.child("doc", true);
+            root.mount(docStore, docPath, false, false, 0);
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "failed to mount doc storage", e);
         }

@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2011 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -14,19 +14,15 @@
 
 package org.rapidcontext.app.web;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.app.ApplicationContext;
-import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Binary;
-import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
-import org.rapidcontext.core.storage.Storage;
-import org.rapidcontext.core.web.Mime;
+import org.rapidcontext.core.storage.StorageException;
 import org.rapidcontext.core.web.Request;
 import org.rapidcontext.core.web.RequestHandler;
 
@@ -40,6 +36,12 @@ import org.rapidcontext.core.web.RequestHandler;
  * @version  1.0
  */
 public class FileRequestHandler extends RequestHandler {
+
+    /**
+     * The class logger.
+     */
+    private static final Logger LOG =
+        Logger.getLogger(FileRequestHandler.class.getName());
 
     /**
      * The web files storage path.
@@ -66,113 +68,37 @@ public class FileRequestHandler extends RequestHandler {
      */
     protected void doGet(Request request) {
         ApplicationContext  ctx = ApplicationContext.getInstance();
-        boolean             cache;
-        ArrayList           pathList = new ArrayList();
         Path                path;
         Object              obj = null;
+        boolean             isRoot;
+        boolean             cache;
         String              str;
 
-        cache = ctx.getConfig().getBoolean("responseNoCache", false);
-        path = new Path(PATH_FILES, request.getPath());
-        if (path.isIndex()) {
-            pathList.add(path.child("index.tmpl", false));
-            pathList.add(path.child("index.html", false));
-        } else if (StringUtils.startsWithIgnoreCase(path.name(), "index.htm")) {
-            pathList.add(path.parent().child("index.tmpl", false));
-            pathList.add(path.parent().child("index.html", false));
-        }
-        pathList.add(path);
-        for (int i = 0; obj == null && i < pathList.size(); i++) {
-            path = (Path) pathList.get(i);
-            obj = ctx.getStorage().load(path);
-        }
-        if (obj == null) {
-            errorNotFound(request);
-        } else if (path.name().endsWith(".tmpl") && obj instanceof Binary) {
+        str = request.getPath();
+        isRoot = "".equals(str) || StringUtils.startsWithIgnoreCase(str, "index.htm");
+        path = new Path(PATH_FILES, str);
+        obj = ctx.getStorage().load(path);
+        if (isRoot) {
             try {
-                processTemplate(request, ctx.getStorage(), (Binary) obj);
+                AppRequestHandler.processApp(request, null);
+            } catch (StorageException e) {
+                LOG.log(Level.WARNING, "failed to launch default starter app", e);
+                errorInternal(request, e.getMessage());
             } catch (IOException e) {
-                errorNotFound(request);
+                LOG.log(Level.WARNING, "failed to launch default starter app", e);
+                errorInternal(request, e.getMessage());
             }
+        } else if (obj == null) {
+            errorNotFound(request);
         } else if (obj instanceof Binary) {
             if (request.getParameter("download") != null) {
                 str = "attachment; filename=" + path.name();
                 request.setResponseHeader("Content-Disposition", str);
             }
+            cache = ctx.getConfig().getBoolean("responseNoCache", false);
             request.sendBinary((Binary) obj, cache);
         } else {
             errorForbidden(request);
         }
-    }
-
-    /**
-     * Processes an HTML template file. The template variables will be
-     * replaced with their corresponding search results and values.
-     *
-     * @param request        the request to process
-     * @param storage        the storage to use
-     * @param bin            the binary template file
-     *
-     * @throws IOException if the template file couldn't be read properly
-     */
-    protected void processTemplate(Request request, Storage storage, Binary bin)
-    throws IOException {
-        StringBuilder   res = new StringBuilder();
-        BufferedReader  reader;
-        String          line;
-        Array           files;
-
-        reader = new BufferedReader(new InputStreamReader(bin.openStream(), "UTF-8"));
-        while ((line = reader.readLine()) != null) {
-            if (line.contains("%BASE_URL%")) {
-                res.append(line.replace("%BASE_URL%", request.getRootUrl()));
-                res.append("\n");
-            } else if (line.contains("%JS_FILES%")) {
-                files = findFiles(storage, PATH_FILES.child("js", true), ".js");
-                for (int i = 0; i < files.size(); i++) {
-                    res.append(line.replace("%JS_FILES%", files.getString(i, "")));
-                    res.append("\n");
-                }
-            } else if (line.contains("%CSS_FILES%")) {
-                files = findFiles(storage, PATH_FILES.child("css", true), ".css");
-                for (int i = 0; i < files.size(); i++) {
-                    res.append(line.replace("%CSS_FILES%", files.getString(i, "")));
-                    res.append("\n");
-                }
-            } else {
-                res.append(line);
-                res.append("\n");
-            }
-        }
-        reader.close();
-        request.sendText(Mime.HTML[0], res.toString());
-    }
-
-    /**
-     * Finds matching files in a storage path. Only binary files with the
-     * specified suffix will be returned.
-     *
-     * @param storage        the storage to use
-     * @param path           the base storage (file) path to use
-     * @param suffix         the file suffix to require
-     *
-     * @return a sorted list of all matching file names (relative path
-     *     included)
-     */
-    protected Array findFiles(Storage storage, Path path, String suffix) {
-        Array       res = new Array();
-        String      root = PATH_FILES.toString();
-        Metadata[]  files;
-        String      file;
-
-        files = storage.lookupAll(path);
-        for (int i = 0; i < files.length; i++) {
-            file = StringUtils.removeStart(files[i].path().toString(), root);
-            if (files[i].isBinary() && file.endsWith(suffix)) {
-                res.add(file);
-            }
-        }
-        res.sort();
-        return res;
     }
 }
