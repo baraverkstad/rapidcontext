@@ -9,7 +9,7 @@
     <strong style="padding-left: 10px;">Environment: </strong>
     <span id="infoEnv" />
   </div>
-  <Popup id="menu" style="top: 26px; right: 10px; display: none; z-index: 10000;">
+  <Popup id="menu" style="top: 26px; right: 10px; display: none; z-index: 10000; overflow: hidden;">
     <h3 id="menuTitle">Anonymous User</h3>
     <div id="menuAbout" class="widgetPopupItem">&#187; About RapidContext</div>
     <div id="menuHelp" class="widgetPopupItem">&#187; Help &amp; Documentation</div>
