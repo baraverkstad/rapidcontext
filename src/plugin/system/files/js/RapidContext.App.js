@@ -31,12 +31,17 @@ if (typeof(RapidContext.App) == "undefined") {
 }
 
 /**
- * Initializes the application and UI.
+ * Initializes the platform, API:s and RapidContext UI. If an app
+ * identifier is provided, the default platform UI will not be
+ * created. Instead the app will be launched with the root document
+ * as its UI container.
+ *
+ * @param {String/Object} [app] the app id or class name to start
  *
  * @return {Deferred} a MochiKit.Async.Deferred object that will
  *         callback when the initialization has completed
  */
-RapidContext.App.init = function () {
+RapidContext.App.init = function (app) {
     var stack = ["RapidContext.App.init"];
     RapidContext.Util.injectStackTrace(stack);
     RapidContext.Util.registerFunctionNames(RapidContext, "RapidContext");
@@ -47,22 +52,34 @@ RapidContext.App.init = function () {
                                RapidContext.Util.isDOM,
                                RapidContext.Util.reprDOM);
     LOG.info("Initializing RapidContext");
-    var d = RapidContext.App.loadXML("ui/core.xml");
-    d.addCallback(function (ui) {
-        RapidContext.Util.injectStackTrace(stack);
-        var widgets = RapidContext.UI.buildUI(ui, RapidContext.App._UI);
-        MochiKit.DOM.appendChildNodes(document.body, widgets);
-        RapidContext.App._UI.init();
-        var list = [ RapidContext.App.callProc("System.Status"),
-                     RapidContext.App.callProc("System.Session.Current"),
-                     RapidContext.App.callProc("System.App.List") ];
-        return MochiKit.Async.gatherResults(list);
-    });
-    d.addCallback(MochiKit.Base.bind("updateInfo", RapidContext.App._UI));
+    var list = [ RapidContext.App.callProc("System.Status"),
+                 RapidContext.App.callProc("System.Session.Current"),
+                 RapidContext.App.callProc("System.App.List") ];
+    var d = MochiKit.Async.gatherResults(list);
+    if (app) {
+        var container = RapidContext.Widget.Pane({ style: { padding: "10px" } });
+        RapidContext.Util.registerSizeConstraints(container, "100%-20", "100%-20");
+        MochiKit.DOM.appendChildNodes(document.body, container);
+        var func = MochiKit.Base.partial(RapidContext.Util.resizeElements, document.body);
+        MochiKit.Signal.connect(window, "onresize", func);
+        RapidContext.Util.resizeElements(document.body);
+        d.addCallback(function () {
+            return RapidContext.App.startApp(app, container);
+        });
+    } else {
+        d.addCallback(function () {
+            return RapidContext.App.loadXML("ui/core.xml");
+        });
+        d.addCallback(function (ui) {
+            RapidContext.Util.injectStackTrace(stack);
+            var widgets = RapidContext.UI.buildUI(ui, RapidContext.App._UI);
+            MochiKit.DOM.appendChildNodes(document.body, widgets);
+            RapidContext.App._UI.init();
+            RapidContext.App._UI.updateInfo();
+            RapidContext.App._startAuto(true);
+        });
+    }
     d.addErrback(RapidContext.UI.showError);
-    var fun = MochiKit.Base.partial(RapidContext.App._startAuto, true);
-    RapidContext.Util.injectStackTrace(stack, fun);
-    d.addBoth(fun);
     return d;
 };
 
@@ -107,7 +124,7 @@ RapidContext.App.apps = function () {
  * launcher. In the last case, the matching cached launcher will be
  * returned.
  *
- * @param {String/Object} app the app instance, class name or
+ * @param {String/Object} app the app id, instance, class name or
  *        launcher
  *
  * @return {Object} the read-only app launcher, or
@@ -122,7 +139,7 @@ RapidContext.App.findApp = function (app) {
         var l = apps[i];
         if (l.className == null) {
             LOG.error("Launcher does not have 'className' property", l);
-        } else if (l.className == app || l.className == app.className) {
+        } else if (l.id == app || l.className == app || l.className == app.className) {
             return l;
         }
     }
@@ -172,7 +189,7 @@ RapidContext.App._startAuto = function (startup) {
 /**
  * Creates and starts an app instance.
  *
- * @param {String/Object} app the app class name or launcher
+ * @param {String/Object} app the app id, class name or launcher
  * @param {Widget} [container] the app container widget, defaults
  *            to create a new pane in the overall tab container
  *
@@ -295,7 +312,7 @@ RapidContext.App.startApp = function (app, container) {
  * Stops an app instance. If only the class name or launcher is
  * specified, the most recently created instance will be stopped.
  *
- * @param {String/Object} app the app instance, class name or
+ * @param {String/Object} app the app id, instance, class name or
  *        launcher
  *
  * @return {Deferred} a MochiKit.Async.Deferred object that will
@@ -335,7 +352,7 @@ RapidContext.App.stopApp = function (app) {
  * will be started. Also, before calling the app method, the
  * app UI will be focused.
  *
- * @param {String/Object} app the app instance, class name or
+ * @param {String/Object} app the app id, instance, class name or
  *        launcher
  * @param {String} method the app method name
  * @param {Mixed} [args] additional parameters sent to method
