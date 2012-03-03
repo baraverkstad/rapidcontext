@@ -202,6 +202,8 @@ RapidContext.App.startApp = function (app, container) {
             var res = launcher.resources[i];
             if (res.type == "code") {
                 d.addCallback(MochiKit.Base.partial(RapidContext.App.loadScript, res.url));
+            } else if (res.type == "style") {
+                d.addCallback(MochiKit.Base.partial(RapidContext.App.loadStyles, res.url));
             } else if (res.type == "ui") {
                 d.addCallback(MochiKit.Base.partial(RapidContext.App.loadXML, res.url));
                 d.addCallback(function (xmlDoc) {
