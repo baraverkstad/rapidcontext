@@ -115,7 +115,6 @@ Concern: Client Programming API
     o Table Widget: Remember selected line and reselect it on reload
     o Simple API for speedy Tree widget creating child DOM nodes
       only when expanded
-    o Support stand-alone apps (their own browser window/URL)
     o Constraints for fill-remaining-height/width
  * Other:
     o Add RapidContext.App.callProc() option for creating server thread
