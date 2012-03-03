@@ -131,7 +131,7 @@ public class SecurityContext {
         if (users.size() <= 0) {
             LOG.info("creating default 'admin' user");
             user = new User("admin");
-            user.setDescription("Default administrator user.");
+            user.setDescription("Default administrator user");
             user.setEnabled(true);
             user.setRoles(new String[] { "Admin" });
             storeUser(user);
