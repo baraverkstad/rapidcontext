@@ -149,10 +149,10 @@
       <arg value="-d=${basedir}/doc/js" />
       <arg value="${js.dir}/RapidContext.App.js" />
       <arg value="${js.dir}/RapidContext.Procedure.js" />
-      <arg value="${js.dir}/RapidContext.SVG.js" />
       <arg value="${js.dir}/RapidContext.UI.js" />
       <arg value="${js.dir}/RapidContext.Util.js" />
       <arg value="${js.dir}/RapidContext.Widget.js" />
+      <arg value="${js.dir}/zzz.RapidContext.SVG.js" />
     </java>
   </target>
 
