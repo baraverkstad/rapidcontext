@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.app.ApplicationContext;
+import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
@@ -119,28 +120,21 @@ public class FileRequestHandler extends RequestHandler {
         StringBuilder   res = new StringBuilder();
         BufferedReader  reader;
         String          line;
-        Metadata[]      files;
-        String          name;
+        Array           files;
 
         reader = new BufferedReader(new InputStreamReader(bin.openStream(), "UTF-8"));
         while ((line = reader.readLine()) != null) {
             if (line.contains("%JS_FILES%")) {
-                files = storage.lookupAll(PATH_FILES.child("js", true));
-                for (int i = 0; i < files.length; i++) {
-                    name = files[i].path().name();
-                    if (files[i].isBinary() && name.endsWith(".js")) {
-                        res.append(line.replace("%JS_FILES%", "js/" + name));
-                        res.append("\n");
-                    }
+                files = findFiles(storage, PATH_FILES.child("js", true), ".js");
+                for (int i = 0; i < files.size(); i++) {
+                    res.append(line.replace("%JS_FILES%", files.getString(i, "")));
+                    res.append("\n");
                 }
             } else if (line.contains("%CSS_FILES%")) {
-                files = storage.lookupAll(PATH_FILES.child("css", true));
-                for (int i = 0; i < files.length; i++) {
-                    name = files[i].path().name();
-                    if (files[i].isBinary() && name.endsWith(".css")) {
-                        res.append(line.replace("%CSS_FILES%", "css/" + name));
-                        res.append("\n");
-                    }
+                files = findFiles(storage, PATH_FILES.child("css", true), ".css");
+                for (int i = 0; i < files.size(); i++) {
+                    res.append(line.replace("%CSS_FILES%", files.getString(i, "")));
+                    res.append("\n");
                 }
             } else {
                 res.append(line);
@@ -149,5 +143,33 @@ public class FileRequestHandler extends RequestHandler {
         }
         reader.close();
         request.sendText(Mime.HTML[0], res.toString());
+    }
+
+    /**
+     * Finds matching files in a storage path. Only binary files with the
+     * specified suffix will be returned.
+     *
+     * @param storage        the storage to use
+     * @param path           the base storage (file) path to use
+     * @param suffix         the file suffix to require
+     *
+     * @return a sorted list of all matching file names (relative path
+     *     included)
+     */
+    protected Array findFiles(Storage storage, Path path, String suffix) {
+        Array       res = new Array();
+        String      root = PATH_FILES.toString();
+        Metadata[]  files;
+        String      file;
+
+        files = storage.lookupAll(path);
+        for (int i = 0; i < files.length; i++) {
+            file = StringUtils.removeStart(files[i].path().toString(), root);
+            if (files[i].isBinary() && file.endsWith(suffix)) {
+                res.add(file);
+            }
+        }
+        res.sort();
+        return res;
     }
 }
