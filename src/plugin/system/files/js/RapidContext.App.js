@@ -156,7 +156,7 @@ RapidContext.App.findApp = function (app) {
  */
 RapidContext.App._startAuto = function (startup) {
     var stack = RapidContext.Util.stackTrace();
-    var d = new MochiKit.Async.Deferred();
+    var d = MochiKit.Async.wait(0);
     var apps = RapidContext.App.apps();
     var autoLaunch = { auto: true, once: true };
     var instances = 0;
@@ -181,7 +181,6 @@ RapidContext.App._startAuto = function (startup) {
         d.addErrback(fun);
     }
     RapidContext.App._addErrbackLogger(d);
-    d.callback();
     return d;
 };
 
@@ -197,7 +196,7 @@ RapidContext.App._startAuto = function (startup) {
  */
 RapidContext.App.startApp = function (app, pane) {
     var stack = RapidContext.Util.stackTrace();
-    var d = new MochiKit.Async.Deferred();
+    var d = MochiKit.Async.wait(0.1);
     var instance = null;
     var launcher = RapidContext.App.findApp(app);
     if (launcher == null) {
@@ -297,7 +296,6 @@ RapidContext.App.startApp = function (app, pane) {
         return instance;
     });
     RapidContext.App._addErrbackLogger(d);
-    d.callback();
     return d;
 };
 
@@ -365,14 +363,10 @@ RapidContext.App.callApp = function (app, method) {
     if (launcher.instances.length <= 0) {
         d = RapidContext.App.startApp(app);
     } else {
-        d = new MochiKit.Async.Deferred();
-        RapidContext.App._addErrbackLogger(d);
         var pos = MochiKit.Base.findIdentical(launcher.instances, app);
-        if (pos < 0) {
-            d.callback(launcher.instances[launcher.instances.length - 1]);
-        } else {
-            d.callback(app);
-        }
+        var instance = (pos >= 0) ? app : launcher.instances[launcher.instances.length - 1];
+        d = MochiKit.Async.wait(0, instance);
+        RapidContext.App._addErrbackLogger(d);
     }
     d.addCallback(function (instance) {
         RapidContext.Util.injectStackTrace(stack);
@@ -602,9 +596,7 @@ RapidContext.App.loadScript = function (url) {
     var elems = MochiKit.Selector.findDocElements(selector1, selector2);
     if (elems.length > 0) {
         LOG.trace("Script already loaded, skipping", url);
-        var d = new MochiKit.Async.Deferred();
-        d.callback();
-        return d;
+        return MochiKit.Async.wait(0);
     }
     LOG.trace("Starting script loading", url);
     var stack = RapidContext.Util.stackTrace();
@@ -647,8 +639,7 @@ RapidContext.App.loadStyles = function (url) {
     var absoluteUrl = RapidContext.Util.resolveURI(url, window.location.href);
     if (findStylesheet(url) || findStylesheet(absoluteUrl)) {
         LOG.trace("Stylesheet already loaded, skipping", url);
-        d.callback();
-        return d;
+        return MochiKit.Async.wait(0);
     }
     var stack = RapidContext.Util.stackTrace();
     LOG.trace("Starting stylesheet loading", url);
