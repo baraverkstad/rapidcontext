@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <ui>
-  <TabContainer id="container" w="100%-20" h="100%-20" style="padding: 10px;">
+  <Pane id="paneContainer" w="100%-20" h="100%-20" class="widgetHidden" style="padding: 10px;">
+  </Pane>
+  <TabContainer id="tabContainer" w="100%-20" h="100%-20" class="widgetHidden" style="padding: 10px;">
   </TabContainer>
-  <div id="info" style="position: absolute; top: 10px; right: 12px;">
+  <Pane id="infoBar" class="widgetHidden" style="position: absolute; top: 10px; right: 12px;">
     <strong>User: </strong>
     <span id="infoUser" />
     <strong style="padding-left: 10px;">Environment: </strong>
     <span id="infoEnv" />
-  </div>
+  </Pane>
   <Popup id="menu" style="top: 26px; right: 10px; display: none; z-index: 10000; overflow: hidden;">
     <h3 id="menuTitle">Anonymous User</h3>
     <div id="menuAbout" class="widgetPopupItem">&#187; About RapidContext</div>

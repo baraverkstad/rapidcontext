@@ -56,28 +56,21 @@ RapidContext.App.init = function (app) {
                  RapidContext.App.callProc("System.Session.Current"),
                  RapidContext.App.callProc("System.App.List") ];
     var d = MochiKit.Async.gatherResults(list);
-    if (app) {
-        var container = RapidContext.Widget.Pane({ style: { padding: "10px" } });
-        RapidContext.Util.registerSizeConstraints(container, "100%-20", "100%-20");
-        MochiKit.DOM.appendChildNodes(document.body, container);
-        var func = MochiKit.Base.partial(RapidContext.Util.resizeElements, document.body);
-        MochiKit.Signal.connect(window, "onresize", func);
-        RapidContext.Util.resizeElements(document.body);
-        d.addCallback(function () {
-            return RapidContext.App.startApp(app, container);
-        });
-    } else {
-        d.addCallback(function () {
-            return RapidContext.App.loadXML("ui/core.xml");
-        });
-        d.addCallback(function (ui) {
-            RapidContext.Util.injectStackTrace(stack);
-            var widgets = RapidContext.UI.buildUI(ui, RapidContext.App._UI);
-            MochiKit.DOM.appendChildNodes(document.body, widgets);
-            RapidContext.App._UI.init();
-            RapidContext.App._startAuto(true);
-        });
-    }
+    d.addCallback(function () {
+        return RapidContext.App.loadXML("ui/core.xml");
+    });
+    d.addCallback(function (ui) {
+        RapidContext.Util.injectStackTrace(stack);
+        var widgets = RapidContext.UI.buildUI(ui, RapidContext.App._UI);
+        MochiKit.DOM.appendChildNodes(document.body, widgets);
+        if (app) {
+            RapidContext.App._UI.init(false);
+            return RapidContext.App.startApp(app);
+        } else {
+            RapidContext.App._UI.init(true);
+            return RapidContext.App._startAuto(true);
+        }
+    });
     d.addErrback(RapidContext.UI.showError);
     return d;
 };
@@ -837,8 +830,22 @@ RapidContext.App._Cache = {
  * Provides default application user interface handling.
  */
 RapidContext.App._UI = {
-    // Initializes the user interface.
-    init: function () {
+    // Initializes the core user interface
+    init: function (initAppSwitcher) {
+        if (initAppSwitcher) {
+            this.container = this.tabContainer;
+            this.container.show();
+            this.infoBar.show();
+        }
+        this.initMenu();
+        this.initAbout();
+        this.initSessionInfo();
+        var func = MochiKit.Base.partial(RapidContext.Util.resizeElements, document.body);
+        MochiKit.Signal.connect(window, "onresize", func);
+        RapidContext.Util.resizeElements(document.body);
+    },
+    // Initializes the popup menu
+    initMenu: function () {
         var show = { effect: "appear", duration: 0.2 };
         var hide = { effect: "fade", duration: 0.2, delay: 0.2 };
         this.menu.setAttrs({ showAnim: show, hideAnim: hide });
@@ -846,17 +853,8 @@ RapidContext.App._UI = {
             // TODO: MSIE 6.0 sets div width to 100%, so we hack the width
             this.menu.style.width = "250px";
         }
-        // TODO: review the following hacks on the about dialog...
-        MochiKit.Style.setElementPosition(this.about, { x: 0, y: 0});
-        var title = this.about.firstChild;
-        MochiKit.Style.setStyle(title, { background: "#70263e" });
-        var close = title.nextSibling;
-        close.setAttrs({ url: "close-red.gif" });
-        var div = this.about.lastChild;
-        MochiKit.Style.setStyle(div, { width: "auto", height: "auto", padding: "0px" });
-        RapidContext.Util.registerSizeConstraints(div, null, null, null);
-        MochiKit.Signal.connect(this.info, "onmousemove", this.menu, "show");
-        MochiKit.Signal.connect(this.info, "onmouseleave", this.menu, "hide");
+        MochiKit.Signal.connect(this.infoBar, "onmousemove", this.menu, "show");
+        MochiKit.Signal.connect(this.infoBar, "onmouseleave", this.menu, "hide");
         MochiKit.Signal.connect(this.menu, "onmouseleave", this.menu, "hide");
         MochiKit.Signal.connect(this.menuAbout, "onclick", this.about, "show");
         MochiKit.Signal.connect(this.menuAbout, "onclick", this, "hideMenu");
@@ -866,14 +864,22 @@ RapidContext.App._UI = {
         var func = MochiKit.Base.partial(RapidContext.App.startApp, "AdminApp", null);
         MochiKit.Signal.connect(this.menuAdmin, "onclick", func);
         MochiKit.Signal.connect(this.menuAdmin, "onclick", this, "hideMenu");
-        MochiKit.Signal.connect(this.aboutClose, "onclick", this.about, "hide");
-        var func = MochiKit.Base.partial(RapidContext.Util.resizeElements, document.body);
-        MochiKit.Signal.connect(window, "onresize", func);
-        RapidContext.Util.resizeElements(document.body);
-        this.initInfo();
     },
-    // Initializes UI information labels
-    initInfo: function () {
+    // Initializes the about dialog
+    initAbout: function () {
+        // TODO: review the following hacks on the about dialog...
+        MochiKit.Style.setElementPosition(this.about, { x: 0, y: 0});
+        var title = this.about.firstChild;
+        MochiKit.Style.setStyle(title, { background: "#70263e" });
+        var close = title.nextSibling;
+        close.setAttrs({ url: "close-red.gif" });
+        var div = this.about.lastChild;
+        MochiKit.Style.setStyle(div, { width: "auto", height: "auto", padding: "0px" });
+        RapidContext.Util.registerSizeConstraints(div, null, null, null);
+        MochiKit.Signal.connect(this.aboutClose, "onclick", this.about, "hide");
+    },
+    // Initializes information labels
+    initSessionInfo: function () {
         var user = RapidContext.App.user();
         if (user && user.name) {
             MochiKit.DOM.replaceChildNodes(this.infoUser, user.name);
@@ -905,8 +911,22 @@ RapidContext.App._UI = {
             var style = { position: "relative" };
             var attrs = { pageTitle: title, pageCloseable: closeable, style: style };
             pane = new RapidContext.Widget.Pane(attrs);
+            RapidContext.Util.registerSizeConstraints(pane, "100%", "100%");
+            if (!this.container) {
+                pane.setAttrs({ pageCloseable: false });
+                this.paneContainer.show();
+                this.container = this.paneContainer;
+            } else if (!RapidContext.Widget.isWidget(this.container, "TabContainer")) {
+                this.paneContainer.hide();
+                this.tabContainer.addAll(this.paneContainer.getChildNodes());
+                this.tabContainer.show();
+                this.infoBar.show();
+                this.container = this.tabContainer;
+            }
             this.container.addAll(pane);
-            this.container.selectChild(pane);
+            if (this.container.selectChild) {
+                this.container.selectChild(pane);
+            }
         }
         var msg = "Loading " + title + "...";
         var overlay = new RapidContext.Widget.Overlay({ message: msg });
