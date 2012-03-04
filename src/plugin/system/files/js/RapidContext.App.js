@@ -75,7 +75,6 @@ RapidContext.App.init = function (app) {
             var widgets = RapidContext.UI.buildUI(ui, RapidContext.App._UI);
             MochiKit.DOM.appendChildNodes(document.body, widgets);
             RapidContext.App._UI.init();
-            RapidContext.App._UI.updateInfo();
             RapidContext.App._startAuto(true);
         });
     }
@@ -190,13 +189,13 @@ RapidContext.App._startAuto = function (startup) {
  * Creates and starts an app instance.
  *
  * @param {String/Object} app the app id, class name or launcher
- * @param {Widget} [container] the app container widget, defaults
- *            to create a new pane in the overall tab container
+ * @param {Widget} [pane] the root app pane widget, defaults to
+ *            create a new pane in the overall tab container
  *
  * @return {Deferred} a MochiKit.Async.Deferred object that will
  *         callback with the app instance
  */
-RapidContext.App.startApp = function (app, container) {
+RapidContext.App.startApp = function (app, pane) {
     var stack = RapidContext.Util.stackTrace();
     var d = new MochiKit.Async.Deferred();
     var instance = null;
@@ -205,13 +204,8 @@ RapidContext.App.startApp = function (app, container) {
         LOG.error("No matching app launcher found", app);
         throw new Error("No matching app launcher found");
     }
-    if (container == null) {
-        container = RapidContext.App._UI.createTab(launcher.name, launcher.launch != "once");
-    }
-    var msg = "Loading " + launcher.name + "...";
-    var overlay = new RapidContext.Widget.Overlay({ message: msg });
-    MochiKit.DOM.replaceChildNodes(container, overlay);
-    MochiKit.Signal.connect(container, "onclose", d, "cancel");
+    var ui = RapidContext.App._UI.createAppPane(launcher.name, pane, launcher.launch != "once");
+    MochiKit.Signal.connect(ui.root, "onclose", d, "cancel");
     if (launcher.creator == null) {
         LOG.info("Loading app " + launcher.name, launcher);
         launcher.resource = {};
@@ -251,7 +245,7 @@ RapidContext.App.startApp = function (app, container) {
                   "&version=" + launcher.version + "&user=" + user.name +
                   "&cb=" + cbDefer.func.NAME;
         d.addCallback(function () {
-            overlay.setAttrs({ message: "Verifying License..." });
+            ui.overlay.setAttrs({ message: "Verifying License..." });
             var ld = MochiKit.Async.loadScript(url);
             ld.addErrback(cbDefer.func);
             return cbDefer;
@@ -272,31 +266,30 @@ RapidContext.App.startApp = function (app, container) {
         var fun = launcher.creator;
         instance = new fun();
         launcher.instances.push(instance);
-        var props = { ui: { root: container, overlay: overlay } };
-        var props = MochiKit.Base.update(null, launcher, props);
+        var props = MochiKit.Base.setdefault({ ui: ui }, launcher);
         delete props.creator;
         delete props.instances;
         MochiKit.Base.setdefault(instance, props);
-        MochiKit.Signal.disconnectAll(container, "onclose");
-        MochiKit.Signal.connect(container, "onclose",
+        MochiKit.Signal.disconnectAll(ui.root, "onclose");
+        MochiKit.Signal.connect(ui.root, "onclose",
                                 MochiKit.Base.partial(RapidContext.App.stopApp, instance));
         if (launcher.ui != null) {
-            var widgets = RapidContext.UI.buildUI(launcher.ui, instance.ui);
-            MochiKit.DOM.appendChildNodes(container, widgets);
-            RapidContext.Util.resizeElements(container);
+            var widgets = RapidContext.UI.buildUI(launcher.ui, ui);
+            MochiKit.DOM.appendChildNodes(ui.root, widgets);
+            RapidContext.Util.resizeElements(ui.root);
         }
-        overlay.hide();
-        overlay.setAttrs({ message: "Working..." });
+        ui.overlay.hide();
+        ui.overlay.setAttrs({ message: "Working..." });
         return RapidContext.App.callApp(instance, "start");
     });
     d.addErrback(function (err) {
         if (err instanceof MochiKit.Async.CancelledError) {
             // Ignore cancellation errors
         } else {
-            MochiKit.Signal.disconnectAll(container, "onclose");
+            MochiKit.Signal.disconnectAll(ui.root, "onclose");
             var label = MochiKit.DOM.STRONG(null, "Error: ");
-            MochiKit.DOM.appendChildNodes(container, label, err.message);
-            overlay.hide();
+            MochiKit.DOM.appendChildNodes(ui.root, label, err.message);
+            ui.overlay.hide();
         }
         return err;
     });
@@ -886,16 +879,12 @@ RapidContext.App._UI = {
         var func = MochiKit.Base.partial(RapidContext.Util.resizeElements, document.body);
         MochiKit.Signal.connect(window, "onresize", func);
         RapidContext.Util.resizeElements(document.body);
+        this.initInfo();
     },
-    hideMenu: function() {
-        this.menu.setAttrs({ hideAnim: { effect: "fade", duration: 0 } });
-        this.menu.hide();
-        this.menu.setAttrs({ hideAnim: { effect: "fade", duration: 0.2, delay: 0.2 } });
-    },
-    // Updates the information label.
-    updateInfo: function () {
+    // Initializes UI information labels
+    initInfo: function () {
         var user = RapidContext.App.user();
-        if (user != null && user.name != null) {
+        if (user && user.name) {
             MochiKit.DOM.replaceChildNodes(this.infoUser, user.name);
             MochiKit.DOM.replaceChildNodes(this.menuTitle, user.longName);
             MochiKit.DOM.replaceChildNodes(this.menuLogInOut, "\u00bb Logout");
@@ -908,18 +897,29 @@ RapidContext.App._UI = {
         }
         var status = RapidContext.App.status();
         var env = status.environment;
-        env = (env != null && env.name != null) ? env.name : "<none>";
+        env = (env && env.name) ? env.name : "<none>";
         MochiKit.DOM.replaceChildNodes(this.infoEnv, env);
         var version = MochiKit.Text.format("{version} ({date})", status);
         MochiKit.DOM.replaceChildNodes(this.aboutVersion, version);
     },
-    // Creates and adds a new app tab
-    createTab: function (title, closeable) {
-        var style = { position: "relative" };
-        var attrs = { pageTitle: title, pageCloseable: closeable, style: style };
-        var tab = new RapidContext.Widget.Pane(attrs);
-        this.container.addAll(tab);
-        this.container.selectChild(tab);
-        return tab;
+    // Hides the popup menu instantly
+    hideMenu: function() {
+        this.menu.setAttrs({ hideAnim: { effect: "fade", duration: 0 } });
+        this.menu.hide();
+        this.menu.setAttrs({ hideAnim: { effect: "fade", duration: 0.2, delay: 0.2 } });
+    },
+    // Initializes (and optionally creates) a new app pane
+    createAppPane: function (title, pane, closeable) {
+        if (pane == null) {
+            var style = { position: "relative" };
+            var attrs = { pageTitle: title, pageCloseable: closeable, style: style };
+            pane = new RapidContext.Widget.Pane(attrs);
+            this.container.addAll(pane);
+            this.container.selectChild(pane);
+        }
+        var msg = "Loading " + title + "...";
+        var overlay = new RapidContext.Widget.Overlay({ message: msg });
+        MochiKit.DOM.replaceChildNodes(pane, overlay);
+        return { root: pane, overlay: overlay };
     }
 };
