@@ -50,4 +50,4 @@ RapidContext README
   See the separate LICENSE.txt file for license details.
 
 _____________________________________________________________________
-Copyright (c) 2007-2011 Per Cederberg. All rights reserved.
+Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
