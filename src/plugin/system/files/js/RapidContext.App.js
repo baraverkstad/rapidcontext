@@ -869,10 +869,6 @@ RapidContext.App._UI = {
     initAbout: function () {
         // TODO: review the following hacks on the about dialog...
         MochiKit.Style.setElementPosition(this.about, { x: 0, y: 0});
-        var title = this.about.firstChild;
-        MochiKit.Style.setStyle(title, { background: "#70263e" });
-        var close = title.nextSibling;
-        close.setAttrs({ url: "close-red.gif" });
         var div = this.about.lastChild;
         MochiKit.Style.setStyle(div, { width: "auto", height: "auto", padding: "0px" });
         RapidContext.Util.registerSizeConstraints(div, null, null, null);

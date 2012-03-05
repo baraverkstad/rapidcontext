@@ -21,28 +21,27 @@
     <div id="menuLogInOut" class="widgetPopupItem widgetPopupDisabled">&#187; Login</div>
   </Popup>
   <Dialog id="about" title="About RapidContext" modal="false" resizeable="false">
-    <div style="position: relative; width: 600px; height: 500px; padding: 0px;
-                background: url(images/backgrounds/about.jpg) white; background-repeat: no-repeat;">
-      <div style="position: absolute; top: 20px; left: 290px; font-family: Trebuchet MS;">
+    <div class="about" style="width: 500px; height: 410px;">
+      <div style="position: absolute; top: 35px; left: 185px; font-family: Trebuchet MS;">
         <a href="http://www.rapidcontext.com/" target="_blank">
           <span style="font-size: 40px; color: white;">RapidContext</span><br/>
-          <span style="font-size: 18px; padding-left: 5px; color: #ffccdd;">Connecting Web Applications</span>
+          <span style="font-size: 19px; color: #88AACC;">Access &gt; Discovery &gt; Insight</span><br/>
+          <span style="font-size: 12px; color: #EEEEEE; letter-spacing: 6px; line-height: 24px;">www.rapidcontext.com</span><br/>
         </a>
       </div>
-      <div style="padding-top: 230px; padding-left: 20px; padding-right: 10px;">
+      <div style="padding-top: 140px;">
         <p><strong>Version: </strong><span id="aboutVersion">1.0.0</span><br/>
-        <strong>License: </strong><a href="doc/LICENSE.txt" target="_blank">BSD License</a></p>
+        <strong>License: </strong><a href="doc/LICENSE.txt" target="_blank">BSD License</a> (source code)</p>
 
-        <p>Copyright &#169; 2007-2010 by Per Cederberg &amp;
-        <a href="http://www.dynabyte.se/" target="_blank">Dynabyte AB</a>.
-        All rights reserved.<br/>
+        <p>Copyright &#169; 2007-2012 by Per Cederberg. All rights reserved.<br/>
+        Usage of the RapidContext name and logotype is restricted.<br/>
         Please visit the
-        <a href="http://www.rapidcontext.com/" target="_blank">RapidContext project</a>
-        web site for more information.</p>
+        <a href="http://www.rapidcontext.com/" target="_blank">RapidContext project web site</a>
+        for more information.</p>
 
         <p>This software would not be possible without the following software libraries;<br/>
         &#187; <a href="http://www.mochikit.com/" target="_blank">MochiKit</a>,
-        copyright &#169; 2005-2008 Bob Ippolito,<br/>
+        copyright &#169; Bob Ippolito,<br/>
         &#187; <a href="http://www.liquidx.net/plotkit/" target="_blank">PlotKit</a>,
         copyright &#169; Alastair Tse,<br/>
         &#187; <a href="http://www.mozilla.org/rhino/" target="_blank">Mozilla Rhino</a>,
@@ -50,21 +49,19 @@
         &#187; <a href="http://commons.apache.org/" target="_blank">Apache Commons</a>,
         copyright &#169; The Apache Software Foundation, and<br/>
         &#187; <a href="http://www.mortbay.org/jetty/" target="_blank">Jetty WebServer</a>,
-        copyright &#169; 1995-2008 Mort Bay Consulting.</p>
+        copyright &#169; Mort Bay Consulting.</p>
 
         <p>Images have kindly been provided and adapted from the following sources;<br/>
         &#187; <a href="http://www.famfamfam.com/lab/icons/silk/" target="_blank">Silk
         Icons by FamFamFam</a>, copyright &#169; Mark James (small widget icons),<br/>
         &#187; <a href="http://fasticon.com/" target="_blank">FastIcon.com</a>,
-        copyright &#169; Dirceu Veiga (icons for built-in apps),<br/>
-        &#187; <a href="http://www.sxc.hu/photo/875775" target="_blank">Stock Photography</a>,
-        copyright &#169; 2007 Sachin Ghodke (about dialog), and<br/>
+        copyright &#169; Dirceu Veiga (icons for built-in apps), and<br/>
         &#187; <a href="http://dojotoolkit.org/" target="_blank">The Dojo Toolkit</a>,
-        copyright &#169; The Dojo Foundation (Table and TabContainer backgrounds).</p>
+        copyright &#169; The Dojo Foundation (Table and TabContainer textures).</p>
       </div>
-    </div>
-    <div style="position: absolute; bottom: 10px; right: 10px;">
-      <Button id="aboutClose" style="margin-left: 6px;"><Icon ref="OK" /> Close</Button>
+      <div style="position: absolute; bottom: 15px; right: 15px;">
+        <Button id="aboutClose" style="margin-left: 6px;"><Icon ref="YES" /> Close</Button>
+      </div>
     </div>
   </Dialog>
 </ui>
