@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -27,6 +27,8 @@ import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.storage.StorageException;
+import org.rapidcontext.core.task.Scheduler;
+import org.rapidcontext.core.task.Task;
 
 /**
  * A connection to an external system. This is an abstract base
@@ -82,6 +84,11 @@ public abstract class Connection extends StorableObject {
     private static int MAX_ACQUIRE_WAIT = 500;
 
     /**
+     * The number of seconds the evictor thread sleeps between runs.
+     */
+    private static int EVICTOR_SLEEP_SECONDS = 30;
+
+    /**
      * The list of connection pool instances. Only the connections
      * using a connection pool will be added to this list.
      */
@@ -93,6 +100,17 @@ public abstract class Connection extends StorableObject {
      * supporting it will be returned (others immediately destroyed).
      */
     private GenericObjectPool channelPool = null;
+
+    // Static initializer that starts an evictor task.
+    static {
+        Task evictor = new Task("connection channel evictor") {
+            public void execute() {
+                evict();
+            }
+        };
+        long delay = EVICTOR_SLEEP_SECONDS * 1000L;
+        Scheduler.schedule(evictor, delay, delay);
+    }
 
     /**
      * Searches for a specific connection in the storage.
@@ -126,6 +144,23 @@ public abstract class Connection extends StorableObject {
             }
         }
         return (Connection[]) list.toArray(new Connection[list.size()]);
+    }
+
+    /**
+     * Evicts all expired channels from all connections. This also
+     * serves to keep channels live with "ping" calls. This method is
+     * called regularly as a background job.
+     */
+    protected static void evict() {
+        try {
+            Iterator iter = connectionPools.iterator();
+            while (iter.hasNext()) {
+                Connection con = (Connection) iter.next();
+                con.evictChannels();
+            }
+        } catch (ConcurrentModificationException ignore) {
+            // Skip reporting this, retry next run instead
+        }
     }
 
     /**
@@ -310,7 +345,6 @@ public abstract class Connection extends StorableObject {
             LOG.fine(msg);
             if (channel.isValid() && channel.isPoolable()) {
                 channelPool.returnObject(channel);
-                Evictor.startThread();
             } else {
                 channelPool.invalidateObject(channel);
             }
@@ -362,11 +396,10 @@ public abstract class Connection extends StorableObject {
     protected abstract void destroyChannel(Channel channel);
 
     /**
-     * Evicts any old connections from the pool. This method is
-     * normally called automatically by the evictor background
-     * thread.
+     * Evicts old connection channel from the pool. This method is
+     * normally called automatically by the evictor background job.
      */
-    protected void evict() {
+    protected void evictChannels() {
         try {
             LOG.fine("starting eviction on " + this);
             channelPool.evict();
@@ -449,109 +482,6 @@ public abstract class Connection extends StorableObject {
          */
         public void passivateObject(Object obj) throws Exception {
             ((Channel) obj).release();
-        }
-    }
-
-
-    /**
-     * A pool evictor. This is run in a separate thread to evict
-     * expired channels from all connections. This will also serve
-     * to keep channels live with "ping" calls.
-     *
-     * @author   Per Cederberg
-     * @version  1.0
-     */
-    private static class Evictor implements Runnable {
-
-        /**
-         * The class logger.
-         */
-        private static final Logger LOGGER =
-            Logger.getLogger(Evictor.class.getName());
-
-        /**
-         * The number of seconds the evictor thread sleeps between runs.
-         */
-        private static int EVICTOR_SLEEP_SECONDS = 30;
-
-        /**
-         * The synchronization lock to use.
-         */
-        private static Object lock = new Integer(1);
-
-        /**
-         * The singleton evictor instance. Used for synchronization
-         * so that only a single thread is started.
-         */
-        private static Evictor instance = null;
-
-        /**
-         * Starts a new background evictor thread if one isn't
-         * already running.
-         */
-        public static void startThread() {
-            Thread  thread;
-
-            synchronized (lock) {
-                if (instance == null) {
-                    instance = new Evictor();
-                    thread = new Thread(instance, "Connection Pool Evictor");
-                    thread.setDaemon(true);
-                    thread.start();
-                }
-            }
-        }
-
-        /**
-         * Creates a new evictor.
-         */
-        private Evictor() {
-            // Nothing to do here
-        }
-
-        /**
-         * Runs the evictor thread until no active channels remain.
-         */
-        public void run() {
-            LOGGER.fine("started connection pool evictor thread");
-            while (true) {
-                try {
-                    Thread.sleep(EVICTOR_SLEEP_SECONDS * 1000L);
-                } catch (InterruptedException e) {
-                    // Do nothing
-                }
-                int active = evict();
-                synchronized (lock) {
-                    if (active <= 0) {
-                        instance = null;
-                        break;
-                    }
-                }
-            }
-            LOGGER.fine("terminated connection pool evictor thread");
-        }
-
-        /**
-         * Evicts old connections from all the pools.
-         *
-         * @return the approximate number of active connections
-         */
-        private int evict() {
-            Iterator    iter = connectionPools.iterator();
-            Connection  con;
-            int         active = 0;
-
-            try {
-                while (iter.hasNext()) {
-                    con = (Connection) iter.next();
-                    con.evict();
-                    active += con.openChannels();
-                }
-                return active;
-            } catch (ConcurrentModificationException ignore) {
-                // Skip reporting this, retry will be attempted later
-                return 1;
-            }
         }
     }
 }
