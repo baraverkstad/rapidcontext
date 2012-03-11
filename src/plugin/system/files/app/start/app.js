@@ -2,6 +2,7 @@
  * Creates a new start app.
  */
 function StartApp() {
+    this.appStatus = {};
     this.inlinePanes = false;
 }
 
@@ -9,6 +10,8 @@ function StartApp() {
  * Starts the app and initializes the UI.
  */
 StartApp.prototype.start = function () {
+    MochiKit.Signal.connect(this.ui.root, "onenter", this, "initApps");
+    MochiKit.Signal.connect(this.ui.appTable, "onclick", this, "_handleAppLaunch");
     MochiKit.Signal.connect(this.ui.tourButton, "onclick", this, "tourStart");
     MochiKit.Signal.connect(this.ui.tourWizard, "onclose", this, "tourStop");
     MochiKit.Signal.connect(this.ui.tourWizard, "onchange", this, "tourChange");
@@ -21,32 +24,11 @@ StartApp.prototype.start = function () {
     MochiKit.Signal.connect(this.ui.tourAdminLogLocate, "onclick", this, "tourLocateAdminLogs");
     MochiKit.Signal.connect(this.ui.tourAdminUserLocate, "onclick", this, "tourLocateAdminUsers");
     MochiKit.Signal.connect(this.ui.tourAdminPluginLocate, "onclick", this, "tourLocateAdminPlugins");
-    var a = RapidContext.App.apps();
-    var help = null;
-    var admin = null;
-    var manualLaunch = { manual: true, auto: true };
-    for (var i = 0; i < a.length; i++) {
-        if (a[i].className === "HelpApp") {
-            help = a[i];
-        } else if (a[i].className === "AdminApp") {
-            admin = a[i];
-        } else if (a[i].launch in manualLaunch) {
-            this.addApp(a[i]);
-        } else if (a[i].startPage) {
-            this.startApp(a[i].className,
-                             this._createInlinePane(a[i].name, a[i].startPage));
-        }
-    }
-    if (help) {
-        this.addApp(help);
-    }
-    if (admin) {
-        this.addApp(admin);
-    }
     if (MochiKit.Base.findValue(RapidContext.App.user().role, "Admin") < 0) {
         this.ui.tourWizard.removeChildNode(this.ui.tourWizard.lastChild);
         this.ui.tourWizard.removeChildNode(this.ui.tourWizard.lastChild);
     }
+    this.initApps();
 }
 
 /**
@@ -57,68 +39,108 @@ StartApp.prototype.stop = function () {
 }
 
 /**
- * Adds the specified app launcher to the list of available
- * apps.
- *
- * @param {Object} app the app launcher to add
+ * Initializes the app launchers. If all the apps are already known,
+ * this method does nothing. Otherwise the app launcher table will be
+ * recreated and new start pane apps launched.
  */
-StartApp.prototype.addApp = function (app) {
-    var launcher = MochiKit.Base.bind("startApp", this, app.className, null);
-    if (app.icon) {
-        var imgLink = MochiKit.DOM.A({ href: "#" }, MochiKit.DOM.IMG({ src: app.icon }));
-        MochiKit.Signal.connect(imgLink, "onclick", launcher);
+StartApp.prototype.initApps = function () {
+    var apps = RapidContext.App.apps();
+    var launchers = [];
+    var help = null;
+    var admin = null;
+    var modified = false;
+    for (var i = 0; i < apps.length; i++) {
+        var app = apps[i];
+        if (!this.appStatus[app.id]) {
+            modified = true;
+        }
+        if (app.className === "HelpApp") {
+            help = app;
+        } else if (app.className === "AdminApp") {
+            admin = app;
+        } else if (app.launch == "manual" || app.launch == "auto") {
+            launchers.push(app);
+        } else if (app.startPage && !this.appStatus[app.id]) {
+            this.initStartupApp(app);
+        }
+        this.appStatus[app.id] = true;
     }
-    var nameLink = MochiKit.DOM.A({ href: "#" }, app.name);
-    MochiKit.Signal.connect(nameLink, "onclick", launcher);
-    var attrs = { style: { "padding-right": "10px", "padding-bottom": "10px" } };
-    var tr = MochiKit.DOM.TR(null,
-                             MochiKit.DOM.TD(attrs, imgLink),
-                             MochiKit.DOM.TD(attrs, nameLink, " - ", app.description));
-    this.ui.appTable.appendChild(tr);
+    if (help) {
+        launchers.push(help);
+    }
+    if (admin) {
+        launchers.push(admin);
+    }
+    if (modified) {
+        var rows = [];
+        for (var i = 0; i < launchers.length; i++) {
+            var app = launchers[i];
+            var attrs = { style: { "padding": "0 10px 10px 0", "cursor": "pointer" } };
+            var tdIcon = MochiKit.DOM.TD(attrs);
+            if (app.icon) {
+                var img = MochiKit.DOM.IMG({ src: app.icon });
+                MochiKit.DOM.replaceChildNodes(tdIcon, img);
+            }
+            var name = MochiKit.DOM.STRONG({}, app.name);
+            var tdName = MochiKit.DOM.TD(attrs, name, " - ", app.description);
+            rows.push(MochiKit.DOM.TR({ "data-appid": app.id }, tdIcon, tdName));
+        }
+        MochiKit.DOM.replaceChildNodes(this.ui.appTable, rows);
+    }
+}
+
+/**
+ * Initializes an inline pane auto-start app.
+ */
+StartApp.prototype.initStartupApp = function (app) {
+    if (!this.inlinePanes) {
+        this.inlinePanes = true;
+        this.ui.inlinePane.removeAll();
+    }
+    // TODO: use proper widget and container instead
+    var style = { "position": "relative", "float": app.startPage,
+                  "min-height": "200px", "border": "1px solid #BBBBBB",
+                  "padding": "5px" };
+    var attrs = { pageTitle: app.name, pageCloseable: true, style: style };
+    var pane = new RapidContext.Widget.Pane(attrs);
+    this.ui.inlinePane.addAll(pane);
+    RapidContext.Util.registerSizeConstraints(pane, "50%-15");
+    RapidContext.Util.resizeElements(pane);
+    this.startApp(app.className, pane);
+}
+
+/**
+ * Handles an app launch click.
+ *
+ * @param {Event} evt the click event
+ */
+StartApp.prototype._handleAppLaunch = function (evt) {
+    var tr = evt.target();
+    if (tr.tagName != "TR") {
+        tr = MochiKit.DOM.getFirstParentByTagAndClassName(tr, 'TR');
+    }
+    if (tr != null) {
+        var appId = MochiKit.DOM.getNodeAttribute(tr, "data-appid");
+        if (appId) {
+            this.startApp(appId);
+        }
+    }
+    evt.stop();
 }
 
 /**
  * Starts an app with the specified class name.
  *
- * @param {String} className the app class name
+ * @param {String} app the app id or class name
  * @param {Widget} [container] the optional container widget
- * @param {Event} [evt] the optional mouse click event
  */
-StartApp.prototype.startApp = function (className, container, evt) {
+StartApp.prototype.startApp = function (app, container) {
     try {
-        var d = RapidContext.App.startApp(className, container);
+        var d = RapidContext.App.startApp(app, container);
         d.addErrback(RapidContext.UI.showError);
     } catch (e) {
         RapidContext.UI.showError(e);
     }
-    if (evt) {
-        evt.stop();
-    }
-}
-
-/**
- * Creates a pane widget in the inline area.
- *
- * @param {String} title the widget title
- * @param {String} position the widget position ("left" or "right")
- *
- * @return {Widget} the widget DOM node
- */
-StartApp.prototype._createInlinePane = function (name, position) {
-    if (!this.inlinePanes) {
-        this.inlinePanes = true;
-        MochiKit.DOM.replaceChildNodes(this.ui.inlineArea);
-    }
-    // TODO: use proper widget and container instead
-    var style = { "position": "relative", "float": position,
-                  "min-height": "200px",
-                  "border": "1px solid #bbbbbb", "padding": "5px" };
-    var attrs = { pageTitle: name, pageCloseable: true, style: style };
-    var pane = new RapidContext.Widget.Pane(attrs);
-    this.ui.inlineArea.appendChild(pane);
-    RapidContext.Util.registerSizeConstraints(pane, "50%-15");
-    RapidContext.Util.resizeElements(pane);
-    return pane;
 }
 
 StartApp.prototype.tourStart = function () {

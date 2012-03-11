@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <ui>
-  <p style="position: absolute; left: 0px; bottom: 0px;">
+  <p style="position: absolute; left: 0px; bottom: 0px; margin: 0px;">
     <span class="label">App icons by: </span>
     <a href="http://fasticon.com/" target="_blank">FastIcon.com</a>
   </p>
@@ -14,7 +14,7 @@
       </table>
     </div>
   </div>
-  <div id="inlineArea" w="70%-14" h="100%" style="float: left; padding-left: 6px;">
+  <Pane id="inlinePane" w="70%-14" h="100%" style="float: left; padding-left: 6px;">
     <div style="padding-left: 20px">
       <h1 style="font-family: Trebuchet MS; font-size: 30px; font-weight; bold;">Welcome to RapidContext</h1>
       <p>RapidContext is a JavaScript application server that makes creating
@@ -34,7 +34,7 @@
         </tbody>
       </table>
     </div>
-  </div>
+  </Pane>
   <Dialog id="tourDialog" title="RapidContext Quick Tour" center="false" resizeable="false" w="80%" h="190" style="z-index: 1000;">
     <Wizard id="tourWizard" style="width: 100%; height: 100%; font-size: larger;">
       <Pane pageTitle="Welcome to the Quick Tour of RapidContext!">
