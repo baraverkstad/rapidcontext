@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2011 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -16,6 +16,7 @@ package org.rapidcontext.core.storage;
 
 import java.util.Date;
 
+import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Binary;
 
 /**
@@ -51,10 +52,11 @@ public class Metadata extends StorableObject {
     public static final String KEY_PATH = "path";
 
     /**
-     * The dictionary key for the absolute storage path. This is the
-     * path to the storage containing the object.
+     * The dictionary key for the absolute storage paths. This is an
+     * array with the root paths to all storages containing the
+     * object.
      */
-    public static final String KEY_STORAGEPATH = "storagePath";
+    public static final String KEY_STORAGEPATHS = "storagePaths";
 
     /**
      * The dictionary key for the last modified date. The value stored
@@ -97,22 +99,25 @@ public class Metadata extends StorableObject {
     }
 
     /**
-     * Returns the last modified date of two metadata objects.
+     * Merges two metadata containers. If either of the two values is
+     * null, the other will be returned. Otherwise, a new metadata
+     * container is created as a merged copy of two. The first will
+     * serve as the base, adding additional storage paths from the
+     * second as needed. For index objects, the last modified date
+     * will be adjusted to the maximum of the two objects.
      *
      * @param meta1          the first metadata object
      * @param meta2          the second metadata object
      *
-     * @return the last modified date of the two objects
+     * @return the merged metadata container
      */
-    public static Date lastModified(Metadata meta1, Metadata meta2) {
+    public static Metadata merge(Metadata meta1, Metadata meta2) {
         if (meta1 == null) {
-            return meta2.lastModified();
+            return meta2;
         } else if (meta2 == null) {
-            return meta1.lastModified();
-        } else if (meta2.lastModified().after(meta1.lastModified())) {
-            return meta2.lastModified();
+            return meta1;
         } else {
-            return meta1.lastModified();
+            return new Metadata(meta1, meta2);
         }
     }
 
@@ -127,6 +132,25 @@ public class Metadata extends StorableObject {
         dict.remove(KEY_ID);
         dict.setAll(meta.dict);
         dict.set(KEY_PATH, path);
+    }
+
+    /**
+     * Creates a new metadata container that is a merged copy of two
+     * others. The first will serve as the base, adding additional
+     * storage paths as needed. For index objects, the last modified
+     * date be adjusted to the maximum of the two objects.
+     *
+     * @param meta1          the first metadata object
+     * @param meta2          the second metadata object
+     */
+    private Metadata(Metadata meta1, Metadata meta2) {
+        super(null, "metadata");
+        dict.remove(KEY_ID);
+        dict.setAll(meta1.dict);
+        dict.set(KEY_STORAGEPATHS, meta1.storagePaths().union(meta2.storagePaths()));
+        if (isIndex() && meta2.lastModified().after(meta1.lastModified())) {
+            dict.set(KEY_MODIFIED, meta2.lastModified());
+        }
     }
 
     /**
@@ -168,7 +192,8 @@ public class Metadata extends StorableObject {
         dict.set(KEY_CATEGORY, category);
         dict.set(KEY_CLASS, clazz);
         dict.set(KEY_PATH, path);
-        dict.set(KEY_STORAGEPATH, storagePath);
+        dict.set(KEY_STORAGEPATHS, new Array());
+        dict.getArray(KEY_STORAGEPATHS).add(storagePath);
         if (modified instanceof Date) {
             dict.set(KEY_MODIFIED, modified);
         } else if (modified instanceof Long && ((Long) modified).longValue() > 0) {
@@ -249,13 +274,13 @@ public class Metadata extends StorableObject {
     }
 
     /**
-     * Returns the absolute storage path. This is the path to the
-     * storage containing the object.
+     * Returns an array with the root paths to all storages
+     * containing this object.
      *
-     * @return the absolute storage path
+     * @return an array with storage paths (as Path objects)
      */
-    public Path storagePath() {
-        return (Path) dict.get(KEY_STORAGEPATH);
+    public Array storagePaths() {
+        return (Array) dict.get(KEY_STORAGEPATHS);
     }
 
     /**

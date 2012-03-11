@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2011 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -315,35 +315,20 @@ public class RootStorage extends Storage {
     public Metadata lookup(Path path) {
         Storage   storage = getMountedStorage(path, false);
         Metadata  meta = null;
-        Metadata  idx = null;
 
         if (storage != null) {
             meta = lookupObject(storage, storage.localPath(path));
             return (meta == null) ? null : new Metadata(path, meta);
         } else {
             meta = metadata.lookup(path);
-            if (meta != null && meta.isIndex()) {
-                idx = meta;
-            } else if (meta != null) {
-                return meta;
-            }
             for (int i = 0; i < mountedStorages.size(); i++) {
                 storage = (Storage) mountedStorages.get(i);
                 if (storage.mountOverlay()) {
-                    meta = lookupObject(storage, path);
-                    if (meta != null && meta.isIndex()) {
-                        idx = new Metadata(Metadata.CATEGORY_INDEX,
-                                           Index.class,
-                                           path,
-                                           path(),
-                                           Metadata.lastModified(idx, meta));
-                    } else if (meta != null) {
-                        return meta;
-                    }
+                    meta = Metadata.merge(meta, lookupObject(storage, path));
                 }
             }
+            return meta;
         }
-        return idx;
     }
 
     /**

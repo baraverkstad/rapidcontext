@@ -1,7 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
- * All rights reserved.
+ * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -123,13 +122,15 @@ public class AppListProcedure implements Procedure, Restricted {
         Dict                plugin;
         Metadata[]          list;
         Dict                dict;
+        Path                path;
         Array               res;
 
         list = storage.lookupAll(PATH_APP);
         res = new Array(list.length);
         for (int i = 0; i < list.length; i++) {
             if (Dict.class.isAssignableFrom(list[i].classInstance())) {
-                plugin = ctx.pluginConfig(list[i].storagePath().name());
+                path = (Path) list[i].storagePaths().get(0);
+                plugin = ctx.pluginConfig(path.name());
                 dict = new Dict();
                 dict.set("id", list[i].path().name());
                 if (plugin != null) {
