@@ -15,7 +15,6 @@ StartApp.prototype.start = function () {
     });
 
     // Initialize app pane
-    MochiKit.Signal.connect(this.ui.root, "onenter", this, "initApps");
     RapidContext.UI.connectProc(this.proc.appList, this.ui.appLoading, this.ui.appReload);
     MochiKit.Signal.connect(this.proc.appList, "onsuccess", this, "initApps");
     MochiKit.Signal.connect(this.ui.appTable, "onclick", this, "_handleAppLaunch");
@@ -59,12 +58,10 @@ StartApp.prototype.initApps = function () {
     var launchers = [];
     var help = null;
     var admin = null;
-    var modified = false;
+
+    // Sort the app launcher list
     for (var i = 0; i < apps.length; i++) {
         var app = apps[i];
-        if (!this.appStatus[app.id]) {
-            modified = true;
-        }
         if (app.className === "HelpApp") {
             help = app;
         } else if (app.className === "AdminApp") {
@@ -82,22 +79,22 @@ StartApp.prototype.initApps = function () {
     if (admin) {
         launchers.push(admin);
     }
-    if (modified) {
-        var rows = [];
-        for (var i = 0; i < launchers.length; i++) {
-            var app = launchers[i];
-            var attrs = { style: { "padding": "0 10px 10px 0", "cursor": "pointer" } };
-            var tdIcon = MochiKit.DOM.TD(attrs);
-            if (app.icon) {
-                var img = MochiKit.DOM.IMG({ src: app.icon });
-                MochiKit.DOM.replaceChildNodes(tdIcon, img);
-            }
-            var name = MochiKit.DOM.STRONG({}, app.name);
-            var tdName = MochiKit.DOM.TD(attrs, name, " - ", app.description);
-            rows.push(MochiKit.DOM.TR({ "data-appid": app.id }, tdIcon, tdName));
+
+    // Redraw the app launcher table
+    var rows = [];
+    for (var i = 0; i < launchers.length; i++) {
+        var app = launchers[i];
+        var attrs = { style: { "padding": "0 10px 10px 0", "cursor": "pointer" } };
+        var tdIcon = MochiKit.DOM.TD(attrs);
+        if (app.icon) {
+            var img = MochiKit.DOM.IMG({ src: app.icon });
+            MochiKit.DOM.replaceChildNodes(tdIcon, img);
         }
-        MochiKit.DOM.replaceChildNodes(this.ui.appTable, rows);
+        var name = MochiKit.DOM.STRONG({}, app.name);
+        var tdName = MochiKit.DOM.TD(attrs, name, " - ", app.description);
+        rows.push(MochiKit.DOM.TR({ "data-appid": app.id }, tdIcon, tdName));
     }
+    MochiKit.DOM.replaceChildNodes(this.ui.appTable, rows);
 }
 
 /**
