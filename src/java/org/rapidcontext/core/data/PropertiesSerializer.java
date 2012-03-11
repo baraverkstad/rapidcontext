@@ -27,6 +27,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
@@ -321,6 +322,8 @@ public class PropertiesSerializer {
             return Boolean.valueOf(value);
         } else if (StringUtil.isNumber(value)) {
             return Integer.valueOf(value);
+        } else if (value.startsWith("@") && StringUtil.isNumber(value.substring(1))) {
+            return new Date(Long.parseLong(value.substring(1)));
         } else {
             return value;
         }

@@ -91,7 +91,7 @@ public class JsSerializer {
         } else if (obj instanceof Number) {
             serialize((Number) obj, buffer);
         } else if (obj instanceof Date) {
-            buffer.append(((Date) obj).getTime());
+            serialize("@" + ((Date) obj).getTime(), buffer);
         } else if (obj instanceof Class) {
             serialize(((Class) obj).getName(), buffer);
         } else if (obj instanceof StorableObject) {

@@ -65,7 +65,7 @@ public class XmlSerializer {
         } else if (obj instanceof Array) {
             serialize((Array) obj, buffer);
         } else if (obj instanceof Date) {
-            buffer.append(((Date) obj).getTime());
+            buffer.append("@" + ((Date) obj).getTime());
         } else if (obj instanceof Class) {
             serialize(((Class) obj).getName(), buffer);
         } else if (obj instanceof StorableObject) {

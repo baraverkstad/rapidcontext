@@ -14,6 +14,7 @@
 
 package org.rapidcontext.core.data;
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 
@@ -297,6 +298,8 @@ public class Dict {
             return defaultValue;
         } else if (value instanceof String) {
             return (String) value;
+        } else if (value instanceof Date) {
+            return "@" + ((Date) value).getTime();
         } else {
             return value.toString();
         }
@@ -357,6 +360,42 @@ public class Dict {
             return ((Number) value).intValue();
         } else {
             return Integer.parseInt(value.toString());
+        }
+    }
+
+    /**
+     * Returns the dictionary date value for the specified key. If
+     * the key is not defined or if the value is set to null, a
+     * default value will be returned instead. If the value object
+     * is not a date, a numeric conversion of the string value
+     * (excluding any '@' prefix) will be attempted.
+     *
+     * @param key            the dictionary key name
+     * @param defaultValue   the default value
+     *
+     * @return the dictionary key value, or
+     *         the default value if the key is not defined
+     *
+     * @throws NumberFormatException if the value didn't contain a
+     *             valid date, number or numeric string
+     */
+    public Date getDate(String key, Date defaultValue)
+        throws NumberFormatException {
+
+        Object  value = get(key);
+
+        if (value == null) {
+            return defaultValue;
+        } else if (value instanceof Date) {
+            return (Date) value;
+        } else if (value instanceof Number) {
+            return new Date(((Number) value).longValue());
+        } else {
+            String str = value.toString();
+            if (str.startsWith("@")) {
+                str = str.substring(1);
+            }
+            return new Date(Long.parseLong(str));
         }
     }
 
