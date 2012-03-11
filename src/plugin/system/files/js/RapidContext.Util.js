@@ -266,7 +266,7 @@ RapidContext.Util.findProperty = function (lst, key, value, start, end) {
     }
     var cmp = MochiKit.Base.compare;
     for (var i = start; lst != null && i < end; i++) {
-        if (lst[i] != null && cmp(lst[i][name], value) === 0) {
+        if (lst[i] != null && cmp(lst[i][key], value) === 0) {
             return i;
         }
     }
