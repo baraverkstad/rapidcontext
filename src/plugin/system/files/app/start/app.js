@@ -10,8 +10,17 @@ function StartApp() {
  * Starts the app and initializes the UI.
  */
 StartApp.prototype.start = function () {
+    this.proc = RapidContext.Procedure.mapAll({
+        appList: "System.App.List"
+    });
+
+    // Initialize app pane
     MochiKit.Signal.connect(this.ui.root, "onenter", this, "initApps");
+    RapidContext.UI.connectProc(this.proc.appList, this.ui.appLoading, this.ui.appReload);
+    MochiKit.Signal.connect(this.proc.appList, "onsuccess", this, "initApps");
     MochiKit.Signal.connect(this.ui.appTable, "onclick", this, "_handleAppLaunch");
+
+    // Initialize tour
     MochiKit.Signal.connect(this.ui.tourButton, "onclick", this, "tourStart");
     MochiKit.Signal.connect(this.ui.tourWizard, "onclose", this, "tourStop");
     MochiKit.Signal.connect(this.ui.tourWizard, "onchange", this, "tourChange");
@@ -28,7 +37,9 @@ StartApp.prototype.start = function () {
         this.ui.tourWizard.removeChildNode(this.ui.tourWizard.lastChild);
         this.ui.tourWizard.removeChildNode(this.ui.tourWizard.lastChild);
     }
-    this.initApps();
+
+    // Init app list
+    this.proc.appList();
 }
 
 /**

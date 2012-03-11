@@ -6,7 +6,11 @@
     <a href="http://fasticon.com/" target="_blank">FastIcon.com</a>
   </p>
   <div style="float: left; width: 30%; height: 100%; border-right: solid 1px #6290d2; padding-right: 6px;">
-    <h3>Apps:</h3>
+    <h3>
+      Apps:
+      <Icon id="appReload" ref="RELOAD" />
+      <Icon id="appLoading" ref="LOADING" />
+    </h3>
     <div w="100%" h="100%-50" style="overflow-y: auto;">
       <table>
         <tbody id="appTable">
