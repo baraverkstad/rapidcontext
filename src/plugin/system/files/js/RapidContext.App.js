@@ -793,6 +793,11 @@ RapidContext.App._Cache = {
             }
             break;
         case "System.App.List":
+            for (var i = 0; i < this.apps.length; i++) {
+                if (this.apps[i].instances.length <= 0) {
+                    this.apps.splice(i--, 1);
+                }
+            }
             for (var i = 0; i < data.length; i++) {
                 // TODO: use deep clone
                 var launcher = MochiKit.Base.update(null, data[i]);
