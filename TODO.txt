@@ -18,6 +18,7 @@ Known Issues
 
 Concern: Legacy Cleanup
 =======================
+ * Split RapidContext.Widget into several files.
  * Move RapidContext.Util into MochiKit 1.5 as much as possible
 
 
