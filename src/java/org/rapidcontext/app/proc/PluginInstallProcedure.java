@@ -1,7 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
- * All rights reserved.
+ * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -17,8 +16,6 @@ package org.rapidcontext.app.proc;
 
 import java.io.File;
 
-import javax.servlet.http.HttpSession;
-
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.app.plugin.PluginException;
 import org.rapidcontext.core.proc.Bindings;
@@ -27,13 +24,12 @@ import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.Restricted;
 import org.rapidcontext.core.security.SecurityContext;
-import org.rapidcontext.core.web.SessionFileMap;
-import org.rapidcontext.core.web.SessionManager;
+import org.rapidcontext.core.type.Session;
 
 /**
  * The built-in plug-in installer procedure.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class PluginInstallProcedure implements Procedure, Restricted {
@@ -117,22 +113,22 @@ public class PluginInstallProcedure implements Procedure, Restricted {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        HttpSession         session = SessionManager.getCurrentSession();
         ApplicationContext  ctx = ApplicationContext.getInstance();
+        Session             session = (Session) Session.activeSession.get();
         String              fileId;
         File                file;
         String              pluginId;
         String              msg;
 
         fileId = (String) bindings.getValue("sessionFileId");
-        file = SessionFileMap.getFiles(session, true).getFile(fileId);
+        file = session.file(fileId);
         if (file == null || !file.canRead()) {
             msg = "failed to read session file with id '" + fileId + "'";
             throw new ProcedureException(msg);
         }
         try {
             pluginId = ctx.installPlugin(file);
-            SessionFileMap.getFiles(session, true).removeFile(fileId);
+            session.removeFile(fileId);
             return pluginId;
         } catch (PluginException e) {
             msg = "failed to install plug-in file '" + file.getName() + "': " +

@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2011 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -19,12 +19,11 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.fileupload.FileItemHeaders;
 import org.apache.commons.fileupload.FileItemStream;
+import org.rapidcontext.core.type.Session;
 import org.rapidcontext.core.web.Mime;
 import org.rapidcontext.core.web.Request;
 import org.rapidcontext.core.web.RequestHandler;
-import org.rapidcontext.core.web.SessionFileMap;
 import org.rapidcontext.util.FileUtil;
 
 /**
@@ -61,16 +60,13 @@ public class UploadRequestHandler extends RequestHandler {
      * @param request        the request to process
      */
     protected void doPost(Request request) {
-        SessionFileMap   fileMap;
+        Session          session = (Session) Session.activeSession.get();
         FileItemStream   stream;
-        FileItemHeaders  headers;
         String           fileId = request.getPath();
         String           fileName;
-        String           length = null;
-        int              size = -1;
         File             file;
-        boolean          trace;
 
+        // TODO: ensure that we have a valid session...
         try {
             stream = request.getNextFile();
             if (stream == null) {
@@ -90,24 +86,9 @@ public class UploadRequestHandler extends RequestHandler {
             if (fileId == null || fileId.trim().length() == 0) {
                 fileId = fileName;
             }
-            headers = stream.getHeaders();
-            if (headers != null) {
-                length = headers.getHeader("Content-Length");
-            }
-            if (length == null) {
-                length = request.getHeader("Content-Length");
-            }
-            if (length != null && length.length() > 0) {
-                try {
-                    size = Integer.parseInt(length);
-                } catch (NumberFormatException ignore) {
-                    // Do nothing here
-                }
-            }
             file = FileUtil.tempFile(fileName);
-            fileMap = SessionFileMap.getFiles(request.getSession(), true);
-            trace = (request.getParameter("trace", null) != null);
-            fileMap.addFile(fileId, file, size, stream.openStream(), trace ? 5 : 0);
+            FileUtil.copy(stream.openStream(), file);
+            session.addFile(fileId, file);
             request.sendText(Mime.TEXT[0], "Session file " + fileId + " uploaded");
         } catch (IOException e) {
             LOG.log(Level.WARNING, "failed to process file upload", e);

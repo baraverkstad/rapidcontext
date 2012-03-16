@@ -1,7 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
- * All rights reserved.
+ * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -15,22 +14,20 @@
 
 package org.rapidcontext.app.proc;
 
-import javax.servlet.http.HttpSession;
-
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.Restricted;
 import org.rapidcontext.core.security.SecurityContext;
-import org.rapidcontext.core.web.SessionManager;
+import org.rapidcontext.core.type.Session;
 
 /**
  * The built-in session termination procedure. This can be used to
  * logout the currently authenticated session or to force the logout
  * of another user.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class SessionTerminateProcedure implements Procedure, Restricted {
@@ -116,15 +113,15 @@ public class SessionTerminateProcedure implements Procedure, Restricted {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        HttpSession  session;
-        String       id;
-        String       msg;
+        Session  session;
+        String   id;
+        String   msg;
 
         id = (String) bindings.getValue("sessionId", "");
         if (id == null || id.trim().equals("")) {
-            session = SessionManager.getCurrentSession();
+            session = (Session) Session.activeSession.get();
         } else if (SecurityContext.hasAdmin()){
-            session = SessionManager.getSession(id);
+            session = Session.find(cx.getStorage(), id);
         } else {
             msg = "only admin users can terminate other sessions";
             throw new ProcedureException(msg);

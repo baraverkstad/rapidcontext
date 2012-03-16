@@ -1,7 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
- * All rights reserved.
+ * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -17,11 +16,7 @@ package org.rapidcontext.app.proc;
 
 import java.io.File;
 import java.util.Date;
-import java.util.Iterator;
 
-import javax.servlet.http.HttpSession;
-
-import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
@@ -29,9 +24,8 @@ import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.Restricted;
 import org.rapidcontext.core.security.SecurityContext;
+import org.rapidcontext.core.type.Session;
 import org.rapidcontext.core.web.Mime;
-import org.rapidcontext.core.web.SessionFileMap;
-import org.rapidcontext.core.web.SessionManager;
 import org.rapidcontext.util.DateUtil;
 
 /**
@@ -119,68 +113,56 @@ public class SessionCurrentProcedure implements Procedure, Restricted {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        HttpSession  session;
-
-        session = SessionManager.getCurrentSession();
-        return (session == null) ? null : getSessionData(session);
+        Session session = (Session) Session.activeSession.get();
+        return (session == null) ? null : serialize(session);
     }
 
     /**
-     * Creates a data object with information about a session.
+     * Serializes a session for usage in a procedure response.
      *
-     * @param session        the HTTP session
+     * @param session        the session object
      *
-     * @return a data object with session information
+     * @return the serialized session dictionary
      */
-    public static Dict getSessionData(HttpSession session) {
-        Dict            res = new Dict();
-        Dict            files = new Dict();
-        Dict            dict;
-        Date            date;
-        SessionFileMap  fileMap;
-        Iterator        iter;
-        String          name;
-        File            file;
+    public static Dict serialize(Session session) {
+        Dict      res = session.serialize().copy();
+        Dict      dict;
+        String    userId;
+        String[]  ids;
 
-        res.set("id", session.getId());
-        date = new Date(session.getCreationTime());
-        res.set("creationMillis", String.valueOf(date.getTime()));
-        res.set("creationDate", DateUtil.formatIsoDateTime(date));
-        date = new Date(session.getLastAccessedTime());
-        res.set("lastAccessMillis", String.valueOf(date.getTime()));
-        res.set("lastAccessDate", DateUtil.formatIsoDateTime(date));
-        res.set("ip", SessionManager.getIp(session));
-        res.set("userAgent", SessionManager.getUserAgent(session));
-        dict = null;
-        name = SessionManager.getUser(session);
-        if (name != null) {
-            dict = SecurityContext.getUser(name).getData().copy();
-            dict.remove("password");
-            if (!dict.containsKey("role")) {
-                dict.set("role", new Array(0));
-            }
+        res.set("creationDate", DateUtil.formatIsoDateTime(session.createTime()));
+        res.set("lastAccessDate", DateUtil.formatIsoDateTime(session.accessTime()));
+        res.set("user", null);
+        userId = session.userId();
+        if (userId != null) {
+            dict = UserListProcedure.serialize(SecurityContext.getUser(userId));
+            res.set("user", dict);
         }
-        res.set("user", dict);
-        fileMap = SessionFileMap.getFiles(session, false);
-        if (fileMap != null) {
-            if (fileMap.getProgress() < 1.0d) {
-                files.set("progress", String.valueOf(fileMap.getProgress()));
-            }
-            iter = fileMap.getAllFiles().keySet().iterator();
-            while (iter.hasNext()) {
-                name = (String) iter.next();
-                file = fileMap.getFile(name);
-                dict = new Dict();
-                dict.set("name", file.getName());
-                dict.set("size", String.valueOf(file.length()));
-                dict.set("mimeType", Mime.type(file));
-                date = new Date(file.lastModified());
-                dict.set("creationMillis", String.valueOf(date.getTime()));
-                dict.set("creationDate", DateUtil.formatIsoDateTime(date));
-                files.set(name, dict);
-            }
+        dict = new Dict();
+        ids = session.files().keys();
+        for (int i = 0; i < ids.length; i++) {
+            dict.set(ids[i], serialize(session.file(ids[i])));
         }
-        res.set("files", files);
+        res.remove(Session.KEY_FILES);
+        res.set("files", dict);
         return res;
+    }
+
+    /**
+     * Serializes a file for usage in a procedure response.
+     *
+     * @param file           the file object
+     *
+     * @return the serialized file dictionary
+     */
+    public static Dict serialize(File file) {
+        Dict dict = new Dict();
+        dict.set("name", file.getName());
+        dict.set("size", String.valueOf(file.length()));
+        dict.set("mimeType", Mime.type(file));
+        Date date = new Date(file.lastModified());
+        dict.set("creationTime", date);
+        dict.set("creationDate", DateUtil.formatIsoDateTime(date));
+        return dict;
     }
 }

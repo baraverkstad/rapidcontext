@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2011 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -87,11 +87,6 @@ public class StorageRequestHandler extends RequestHandler {
     public void process(Request request) {
         request.setResponseHeader(HEADER.DAV, "2");
         request.setResponseHeader("MS-Author-Via", "DAV");
-        if (request.getSession().isNew()) {
-            // Invalidate new sessions, since WebDAV clients do not
-            // generally support cookie-based sessions
-            request.getSession().invalidate();
-        }
         if (!SecurityContext.hasAdmin()) {
             errorUnauthorized(request);
         } else if (request.hasMethod(METHOD.PROPFIND)) {

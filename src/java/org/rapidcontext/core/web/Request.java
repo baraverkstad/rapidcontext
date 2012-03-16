@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2011 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -23,9 +23,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
@@ -52,6 +52,11 @@ public class Request implements HttpUtil {
      */
     private static final Logger LOG =
         Logger.getLogger(Request.class.getName());
+
+    /**
+     * The session cookie name.
+     */
+    public static final String SESSION_COOKIE = "sessionid";
 
     /**
      * The no response type. This type is used when no request
@@ -202,19 +207,6 @@ public class Request implements HttpUtil {
      */
     public boolean hasMethod(String method) {
         return getMethod().equals(method);
-    }
-
-    /**
-     * Checks if this request was sent in a session. If a new session
-     * was created as a result of processing, this method will still
-     * return false.
-     *
-     * @return true if the request had an associated session, or
-     *         false otherwise
-     */
-    public boolean hasSession() {
-        return request.getSession(false) != null
-            && !request.getSession().isNew();
     }
 
     /**
@@ -483,23 +475,19 @@ public class Request implements HttpUtil {
     }
 
     /**
-     * Returns the HTTP session. If no session existed a new one
-     * will be created. All sessions returned are automatically
-     * managed with the SessionManager class.
+     * Returns the request session id (as sent in an HTTP cookie).
      *
-     * @return the new or existing request session
-     *
-     * @throws SecurityException if the session was previously bound
-     *             to another IP address or user agent string
-     *
-     * @see SessionManager
+     * @return the session id from the cookie, or
+     *         null if no session cookie was present
      */
-    public HttpSession getSession() {
-        HttpSession  session = request.getSession();
-
-        SessionManager.manage(session, getRemoteAddr(), getHeader("User-Agent"));
-        SessionManager.connectThread(session);
-        return session;
+    public String getSessionId() {
+        Cookie[] cookies = request.getCookies();
+        for (int i = 0; cookies != null && i < cookies.length; i++) {
+            if (SESSION_COOKIE.equals(cookies[i].getName())) {
+                return cookies[i].getValue();
+            }
+        }
+        return null;
     }
 
     /**
@@ -568,7 +556,9 @@ public class Request implements HttpUtil {
     }
 
     /**
-     * Clears any previously sent but non-committed response.
+     * Clears any previously sent but non-committed response. Note
+     * that this method DOES NOT clear any response headers or
+     * cookies already set.
      */
     public void sendClear() {
         responseType = NO_RESPONSE;
@@ -728,12 +718,28 @@ public class Request implements HttpUtil {
     }
 
     /**
+     * Sets the session id cookie in the HTTP response. This method
+     * can also be used to clear the session cookie in the web
+     * browser (by setting a null value).
+     *
+     * @param sessionId      the session identifier
+     * @param expiry         the maximum age of the cookie in seconds
+     */
+    public void setSessionId(String sessionId, int expiry) {
+        String value = (sessionId == null) ? "deleted" : sessionId;
+        Cookie cookie = new Cookie(SESSION_COOKIE, value);
+        cookie.setPath(request.getContextPath() + "/");
+        cookie.setSecure(request.isSecure());
+        cookie.setMaxAge((sessionId == null) ? 0 : expiry);
+        response.addCookie(cookie);
+    }
+
+    /**
      * Disposes of all resources used by this request object. This
      * method shouldn't be called until a response has been sent to
      * the client.
      */
     public void dispose() {
-        SessionManager.disconnectThread(request.getSession(false));
         request = null;
         response = null;
         responseData = null;

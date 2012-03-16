@@ -1,7 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
- * All rights reserved.
+ * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -40,10 +39,10 @@ import org.rapidcontext.core.security.User;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.RootStorage;
 import org.rapidcontext.core.storage.ZipFileStorage;
+import org.rapidcontext.core.type.Session;
 import org.rapidcontext.core.web.Mime;
 import org.rapidcontext.core.web.Request;
 import org.rapidcontext.core.web.RequestHandler;
-import org.rapidcontext.core.web.SessionManager;
 import org.rapidcontext.util.BinaryUtil;
 import org.rapidcontext.util.FileUtil;
 
@@ -166,6 +165,7 @@ public class ServletApplication extends HttpServlet {
                  " processed in " + request.getProcessTime() +
                  " millisecs");
         request.dispose();
+        Session.activeSession.set(null);
     }
 
     /**
@@ -178,18 +178,27 @@ public class ServletApplication extends HttpServlet {
      * @param request        the request to process
      */
     private void processAuth(Request request) {
-        String  userName = null;
-        User    user = null;
-        Dict    authData;
+        String   sessionId = request.getSessionId();
+        Session  session = null;
+        String   userId = null;
+        User     user = null;
+        Dict     authData;
 
-        // Authenticate user if provided
+        // Authenticate user if session or digest provided
         SecurityContext.authClear();
         try {
-            if (request.hasSession()) {
-                userName = SessionManager.getUser(request.getSession());
+            if (sessionId != null) {
+                session = Session.find(ctx.getStorage(), sessionId);
             }
-            if (userName != null) {
-                SecurityContext.auth(userName);
+            if (session != null) {
+                Session.activeSession.set(session);
+                session.updateAccessTime();
+                session.validate(request.getRemoteAddr(),
+                                 request.getHeader("User-Agent"));
+                userId = session.userId();
+            }
+            if (userId != null) {
+                SecurityContext.auth(userId);
             } else if (isAuthRequired(request)) {
                 authData = request.getAuthentication();
                 if (authData != null) {
@@ -200,8 +209,14 @@ public class ServletApplication extends HttpServlet {
             LOG.info(ip(request) + e.getMessage());
         }
 
-        // Check required authentication
+        // Update session and request authentication (if needed)
         user = SecurityContext.currentUser();
+        if (user == null) {
+            request.setSessionId(null, 0);
+        }
+        if (session != null && !session.isValid()) {
+            Session.remove(ctx.getStorage(), session.id());
+        }
         if (user == null && isAuthRequired(request)) {
             request.sendAuthenticationRequest(SecurityContext.REALM,
                                               SecurityContext.nonce());
@@ -230,7 +245,7 @@ public class ServletApplication extends HttpServlet {
     }
 
     /**
-     * Processes a Basic authentication response.
+     * Processes a digest authentication response.
      *
      * @param request        the request to process
      * @param auth           the authentication data
@@ -248,6 +263,7 @@ public class ServletApplication extends HttpServlet {
         String  response = auth.getString("response", "");
         String  suffix;
 
+        // Verify authentication response
         if (!SecurityContext.REALM.equals(realm)) {
             LOG.info(ip(request) + "Invalid authentication realm: " + realm);
             throw new SecurityException("Invalid authentication realm");
@@ -257,7 +273,24 @@ public class ServletApplication extends HttpServlet {
                  BinaryUtil.hashMD5(request.getMethod() + ":" + uri);
         SecurityContext.authHash(user, suffix, response);
         LOG.fine(ip(request) + "Valid authentication for " + user);
-        SessionManager.setUser(request.getSession(), user);
+
+        // Create new session (if applicable)
+        String client = request.getHeader("User-Agent");
+        // TODO: Improve logic for when to use sessions
+        if (client.contains("Mozilla") || client.contains("MSIE")) {
+            String ip = request.getRemoteAddr();
+            Session session = new Session(user, ip, client);
+            Session.activeSession.set(session);
+            try {
+                Session.store(ctx.getStorage(), session);
+                long destroy = session.destroyTime().getTime();
+                long now = System.currentTimeMillis();
+                int expiry = (int) ((destroy - now) / 1000);
+                request.setSessionId(session.id(), expiry);
+            } catch (Exception e) {
+                LOG.log(Level.WARNING, ip(request) + "Failed to store session", e);
+            }
+        }
     }
 
     /**

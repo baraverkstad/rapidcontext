@@ -1,7 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
- * All rights reserved.
+ * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -23,6 +22,7 @@ import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.Restricted;
 import org.rapidcontext.core.security.SecurityContext;
+import org.rapidcontext.core.security.User;
 
 /**
  * The built-in user list procedure.
@@ -112,20 +112,30 @@ public class UserListProcedure implements Procedure, Restricted {
         throws ProcedureException {
 
         Array     res;
-        Dict      dict;
         String[]  names;
 
         names = SecurityContext.getUserNames();
         res = new Array(names.length);
         for (int i = 0; i < names.length; i++) {
-            dict = SecurityContext.getUser(names[i]).getData().copy();
-            dict.remove("password");
-            if (!dict.containsKey("role")) {
-                dict.set("role", new Array(0));
-            }
-            res.add(dict);
+            res.add(serialize(SecurityContext.getUser(names[i])));
         }
         res.sort("name");
         return res;
+    }
+
+    /**
+     * Serializes a user object to a dictionary.
+     *
+     * @param user           the user to serialize
+     *
+     * @return the serialized dictionary for the user
+     */
+    public static Dict serialize(User user) {
+        Dict dict = user.getData().copy();
+        dict.remove("password");
+        if (!dict.containsKey("role")) {
+            dict.set("role", new Array(0));
+        }
+        return dict;
     }
 }
