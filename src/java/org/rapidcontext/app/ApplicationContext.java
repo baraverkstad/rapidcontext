@@ -39,7 +39,6 @@ import org.rapidcontext.app.proc.ResetProcedure;
 import org.rapidcontext.app.proc.RoleChangeProcedure;
 import org.rapidcontext.app.proc.RoleListProcedure;
 import org.rapidcontext.app.proc.SessionCurrentProcedure;
-import org.rapidcontext.app.proc.SessionListProcedure;
 import org.rapidcontext.app.proc.SessionTerminateProcedure;
 import org.rapidcontext.app.proc.StatusProcedure;
 import org.rapidcontext.app.proc.ThreadContextProcedure;
@@ -247,7 +246,6 @@ public class ApplicationContext {
             library.addBuiltIn(new RoleChangeProcedure());
             library.addBuiltIn(new RoleListProcedure());
             library.addBuiltIn(new SessionCurrentProcedure());
-            library.addBuiltIn(new SessionListProcedure());
             library.addBuiltIn(new SessionTerminateProcedure());
             library.addBuiltIn(new StatusProcedure());
             library.addBuiltIn(new ThreadContextProcedure());
