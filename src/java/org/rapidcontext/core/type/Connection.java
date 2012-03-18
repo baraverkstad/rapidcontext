@@ -15,8 +15,7 @@
 package org.rapidcontext.core.type;
 
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
-import java.util.Iterator;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,8 +26,6 @@ import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.storage.StorageException;
-import org.rapidcontext.core.task.Scheduler;
-import org.rapidcontext.core.task.Task;
 
 /**
  * A connection to an external system. This is an abstract base
@@ -84,33 +81,16 @@ public abstract class Connection extends StorableObject {
     private static int MAX_ACQUIRE_WAIT = 500;
 
     /**
-     * The number of seconds the evictor thread sleeps between runs.
-     */
-    private static int EVICTOR_SLEEP_SECONDS = 30;
-
-    /**
-     * The list of connection pool instances. Only the connections
-     * using a connection pool will be added to this list.
-     */
-    protected static ArrayList connectionPools = new ArrayList();
-
-    /**
      * The connection channel pool used for managing objects. The
      * pool will be used to create all objects, but only ones
      * supporting it will be returned (others immediately destroyed).
      */
     private GenericObjectPool channelPool = null;
 
-    // Static initializer that starts an evictor task.
-    static {
-        Task evictor = new Task("connection channel evictor") {
-            public void execute() {
-                evict();
-            }
-        };
-        long delay = EVICTOR_SLEEP_SECONDS * 1000L;
-        Scheduler.schedule(evictor, delay, delay);
-    }
+    /**
+     * The timestamp (in milliseconds) of the last usage time.
+     */
+    protected long lastUsedTime = System.currentTimeMillis();
 
     /**
      * Searches for a specific connection in the storage.
@@ -147,23 +127,6 @@ public abstract class Connection extends StorableObject {
     }
 
     /**
-     * Evicts all expired channels from all connections. This also
-     * serves to keep channels live with "ping" calls. This method is
-     * called regularly as a background job.
-     */
-    protected static void evict() {
-        try {
-            Iterator iter = connectionPools.iterator();
-            while (iter.hasNext()) {
-                Connection con = (Connection) iter.next();
-                con.evictChannels();
-            }
-        } catch (ConcurrentModificationException ignore) {
-            // Skip reporting this, retry next run instead
-        }
-    }
-
-    /**
      * Creates a new connection from a serialized representation.
      *
      * @param id             the object identifier
@@ -174,6 +137,19 @@ public abstract class Connection extends StorableObject {
      */
     protected Connection(String id, String type, Dict dict) {
         super(id, type, dict);
+    }
+
+    /**
+     * Checks if this object is in active use. This method will
+     * return true if the object haven't been used for 60 seconds and
+     * no channels remain open.
+     *
+     * @return true if the object is considered active, or
+     *         false otherwise
+     */
+    protected boolean isActive() {
+        return System.currentTimeMillis() - lastUsedTime <= 60000L &&
+               openChannels() > 0;
     }
 
     /**
@@ -190,6 +166,7 @@ public abstract class Connection extends StorableObject {
 
         dict.setInt("_" + KEY_MAX_OPEN, open);
         dict.setInt("_" + KEY_MAX_IDLE_SECS, idle);
+        dict.set("_lastUsedTime", new Date(lastUsedTime));
         channelPool = new GenericObjectPool(new ChannelFactory());
         channelPool.setMaxActive(open);
         channelPool.setMaxIdle(open);
@@ -201,9 +178,6 @@ public abstract class Connection extends StorableObject {
         channelPool.setTestOnReturn(true);
         channelPool.setTestWhileIdle(true);
         channelPool.setWhenExhaustedAction(GenericObjectPool.WHEN_EXHAUSTED_BLOCK);
-        synchronized (connectionPools) {
-            connectionPools.add(this);
-        }
     }
 
     /**
@@ -221,8 +195,20 @@ public abstract class Connection extends StorableObject {
             LOG.warning("failed to close all connections in " +
                         this + ": " + e.getMessage());
         }
-        synchronized (connectionPools) {
-            connectionPools.remove(this);
+    }
+
+    /**
+     * Attempts to deactivate this object. This method will evict old
+     * connection channels from the pool and should only be called
+     * from a background job.
+     */
+    protected void passivate() {
+        try {
+            LOG.fine("starting eviction on " + this);
+            channelPool.evict();
+            LOG.fine("done eviction on " + this);
+        } catch (Exception e) {
+            LOG.log(Level.WARNING, "failed to evict in " + this, e);
         }
     }
 
@@ -310,6 +296,7 @@ public abstract class Connection extends StorableObject {
         Channel  channel = null;
         String   msg = null;
 
+        lastUsedTime = System.currentTimeMillis();
         try {
             // TODO: handle shared channels
             msg = "reserving connection channel in " + this;
@@ -339,6 +326,7 @@ public abstract class Connection extends StorableObject {
     public void release(Channel channel) {
         String  msg = null;
 
+        lastUsedTime = System.currentTimeMillis();
         try {
             // TODO: handle shared channels
             msg = "returning pooled connection in " + this;
@@ -394,20 +382,6 @@ public abstract class Connection extends StorableObject {
      * @param channel        the channel to destroy
      */
     protected abstract void destroyChannel(Channel channel);
-
-    /**
-     * Evicts old connection channel from the pool. This method is
-     * normally called automatically by the evictor background job.
-     */
-    protected void evictChannels() {
-        try {
-            LOG.fine("starting eviction on " + this);
-            channelPool.evict();
-            LOG.fine("done eviction on " + this);
-        } catch (Exception e) {
-            LOG.log(Level.WARNING, "failed to evict in " + this, e);
-        }
-    }
 
 
     /**
