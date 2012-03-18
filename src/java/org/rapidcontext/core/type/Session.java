@@ -39,7 +39,6 @@ import com.eaio.uuid.UUID;
  * @version  1.0
  */
 public class Session extends StorableObject {
-    // TODO: Remove session instances from memory after 10 mins
     // TODO: Remove sessions from persistent storage after expiry
     // TODO: Store "dirty" sessions to persistent storage automatically
 
@@ -174,6 +173,18 @@ public class Session extends StorableObject {
         dict.set(KEY_IP, ip);
         dict.set(KEY_CLIENT, client);
         dict.set(KEY_FILES, new Dict());
+    }
+
+    /**
+     * Checks if this object is in active use. This method returns
+     * true during 600 seconds after the last access, thereafter
+     * false.
+     *
+     * @return true if the object is active, or
+     *         false otherwise
+     */
+    protected boolean isActive() {
+        return System.currentTimeMillis() - accessTime().getTime() <= 600000L;        
     }
 
     /**
