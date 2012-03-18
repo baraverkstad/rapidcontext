@@ -15,6 +15,7 @@
 package org.rapidcontext.core.storage;
 
 import java.util.LinkedHashMap;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -71,6 +72,27 @@ public class MemoryStorage extends Storage {
         meta.clear();
         objects = null;
         meta = null;
+    }
+
+    /**
+     * Returns the number of objects currently in this storage. This
+     * number does not include indexes or metadata objects, since
+     * those are dynamically inserted and removed.
+     *
+     * @return the number of objects in the storage
+     */
+    public int objectCount() {
+        return objects.size();
+    }
+
+    /**
+     * Returns a read-only set of all object paths in this storage.
+     * This is useful to easily iterate over all objects.
+     *
+     * @return a set of all object paths in the storage
+     */
+    public Set objectPaths() {
+        return objects.keySet();
     }
 
     /**
