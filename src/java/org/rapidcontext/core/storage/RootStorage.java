@@ -24,6 +24,8 @@ import java.util.logging.Logger;
 import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
+import org.rapidcontext.core.task.Scheduler;
+import org.rapidcontext.core.task.Task;
 import org.rapidcontext.core.type.Type;
 
 /**
@@ -57,6 +59,12 @@ public class RootStorage extends Storage {
      */
     private static final Logger LOG =
         Logger.getLogger(RootStorage.class.getName());
+
+    /**
+     * The number of seconds between each run of the object cache
+     * cleaner job.
+     */
+    private static final int PASSIVATE_INTERVAL_SECS = 30;
 
     /**
      * The system time of the last mount or remount operation.
@@ -98,6 +106,13 @@ public class RootStorage extends Storage {
             LOG.severe("error while initializing virtual storage: " +
                        e.getMessage());
         }
+        Task cacheCleaner = new Task("storage cache cleaner") {
+            public void execute() {
+                flushInactive();
+            }
+        };
+        long delay = PASSIVATE_INTERVAL_SECS * 1000L;
+        Scheduler.schedule(cacheCleaner, delay, delay);
     }
 
     /**
@@ -429,6 +444,7 @@ public class RootStorage extends Storage {
             res = cache.load(path);
             if (res instanceof StorableObject && !(res instanceof Index)) {
                 LOG.fine("loaded " + path + " value from cache: " + res);
+                ((StorableObject) res).activate();
                 return res;
             }
         }
@@ -476,6 +492,7 @@ public class RootStorage extends Storage {
             try {
                 obj = (StorableObject) constr.newInstance(args);
                 obj.init();
+                obj.activate();
                 return obj;
             } catch (Exception e) {
                 msg = "failed to create instance of " + constr.getClass().getName() +
@@ -581,6 +598,23 @@ public class RootStorage extends Storage {
     }
 
     /**
+     * Destroys any cached objects for the specified location in all
+     * of the memory storages.
+     *
+     * @param path           the storage location
+     */
+    private void flushAll(Path path) {
+        Iterator  iter;
+        Path      storagePath;
+
+        iter = cacheStorages.keySet().iterator();
+        while (iter.hasNext()) {
+            storagePath = (Path) iter.next();
+            flushSingle(storagePath, path);
+        }
+    }
+
+    /**
      * Destroys any cached objects for the specified location in a
      * specific memory storage.
      *
@@ -605,19 +639,41 @@ public class RootStorage extends Storage {
     }
 
     /**
-     * Destroys any cached objects for the specified location in all
-     * of the memory storages.
-     *
-     * @param path           the storage location
+     * Destroys all cached inactive objects. The objects will first
+     * be passivated and thereafter queried for their status. This
+     * method is called regularly from a background job.
      */
-    private void flushAll(Path path) {
-        Iterator  iter;
-        Path      storagePath;
+    public void flushInactive() {
+        Iterator cacheIter = cacheStorages.keySet().iterator();
+        while (cacheIter.hasNext()) {
+            Path storagePath = (Path) cacheIter.next();
+            MemoryStorage cache = (MemoryStorage) cacheStorages.get(storagePath);
+            Iterator objectIter = cache.objectPaths().iterator();
+            while (objectIter.hasNext()) {
+                flushInactive(cache, (Path) objectIter.next());
+            }
+        }
+    }
 
-        iter = cacheStorages.keySet().iterator();
-        while (iter.hasNext()) {
-            storagePath = (Path) iter.next();
-            flushSingle(storagePath, path);
+    /**
+     * Destroys any inactive object for the specified storage and path.
+     *
+     * @param cache          the cache memory storage
+     * @param path           the storage location to clear
+     */
+    private void flushInactive(MemoryStorage cache, Path path) {
+        Object obj = cache.load(path);
+        if (obj instanceof StorableObject) {
+            StorableObject storable = (StorableObject) obj;
+            storable.passivate();
+            if (!storable.isActive()) {
+                try {
+                    cache.remove(path);
+                    LOG.fine("flushed inactive object: " + path);
+                } catch (StorageException e) {
+                    LOG.log(Level.WARNING, "failed to flush inactive object", e);
+                }
+            }
         }
     }
 }

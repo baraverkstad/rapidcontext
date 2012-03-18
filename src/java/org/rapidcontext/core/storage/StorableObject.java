@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -17,38 +17,35 @@ package org.rapidcontext.core.storage;
 import org.rapidcontext.core.data.Dict;
 
 /**
- * The base class for all storable Java objects. This class
- * implements a number of basic services required for object
- * storage:
+ * The base class for all storable Java objects. This class provides
+ * a number of basic services required for managing objects in the
+ * storage subsystem:
  *
  * <ul>
  *   <li><strong>Object Type</strong> -- The object type identifies
  *       the kind of object, e.g. "index", "file", "plugin", etc. By
  *       registering a Java class corresponding to an object type,
- *       the instance creation can be handled automatically when the
+ *       the instance creation is handled automatically when a new
  *       object is loaded from storage.
  *   <li><strong>Object Id</strong> -- The object identifier is used
  *       to locate the object in a storage. The full object storage
  *       path is normally formed as "&lt;type&gt;/&lt;id&gt;". Note
  *       that the object id may contain additional "/" characters.
- *   <li><strong>Data Dictionary</strong> -- A dictionary instance
- *       is provided for storing all serializable values in the
- *       object.
- *   <li><strong>Serialization</strong> -- The default serialization
- *       simply returns the data dictionary, as it is assumed to
- *       contain all relevant data. Unserialization is likewise also
- *       provided via default constructors.
- *   <li><strong>Lifecycle Handling</strong> -- The object
- *       initialization and destruction is controllable via instance
- *       methods in this class.
+ *   <li><strong>Serialization</strong> -- A data dictionary instance
+ *       is encapsulated to enable simple and efficient serialization
+ *       and unserialization of object instances. It is recommended
+ *       to store all persistent data in this dictionary, although
+ *       both serialization and unserialization can be overridden.
+ *   <li><strong>Life-cycle Handling</strong> -- Object instances are
+ *       initialized, destroyed and cached automatically by the root
+ *       storage. Whenever an instance reports being inactive, it is
+ *       eligible for automatic removal (destruction) from the cache.
  * </ul>
  *
  * @author   Per Cederberg
  * @version  1.0
  */
 public class StorableObject {
-
-    // TODO: transient interface to add?
 
     /**
      * The dictionary key for the object identifier. The value stored
@@ -116,6 +113,20 @@ public class StorableObject {
     }
 
     /**
+     * Checks if this object is in active use. This method should
+     * return true if the object is in use, was used recently, or is
+     * likely to be requested again shortly. The outcome is used to
+     * remove non-active object instances from the storage cache. By
+     * default, this method always returns true.
+     *
+     * @return true if the object is active, or
+     *         false otherwise
+     */
+    protected boolean isActive() {
+        return true;
+    }
+
+    /**
      * Returns the object identifier.
      *
      * @return the object identifier
@@ -176,9 +187,31 @@ public class StorableObject {
     }
 
     /**
+     * Activates this object. This method is called whenever the
+     * object instance is returned from storage and may be called by
+     * several threads in parallel. The default implementation does
+     * nothing.
+     */
+    protected void activate() {
+        // Default implementation does nothing
+    }
+
+    /**
+     * Attempts to deactivate this object. This method is called by a
+     * background task, roughly every 30 seconds for all object
+     * instances in the storage cache. It may be called earlier on
+     * the first invocation, since all objects share a common timer.
+     * The default implementation does nothing.
+     */
+    protected void passivate() {
+        // Default implementation does nothing
+    }
+
+    /**
      * Returns a serialized representation of this object. Used when
-     * accessing the object from outside pure Java. By default this
-     * method will return the contained dictionary.
+     * persisting to permanent storage or when accessing the object
+     * from outside pure Java. By default this method will return the
+     * contained dictionary.
      *
      * @return the serialized representation of this object
      */
