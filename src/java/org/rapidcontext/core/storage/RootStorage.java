@@ -15,6 +15,7 @@
 package org.rapidcontext.core.storage;
 
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -648,7 +649,9 @@ public class RootStorage extends Storage {
         while (cacheIter.hasNext()) {
             Path storagePath = (Path) cacheIter.next();
             MemoryStorage cache = (MemoryStorage) cacheStorages.get(storagePath);
-            Iterator objectIter = cache.objectPaths().iterator();
+            ArrayList copy = new ArrayList();
+            copy.addAll(cache.objectPaths());
+            Iterator objectIter = copy.iterator();
             while (objectIter.hasNext()) {
                 flushInactive(cache, (Path) objectIter.next());
             }
