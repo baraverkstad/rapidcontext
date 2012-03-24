@@ -40,7 +40,6 @@ import com.eaio.uuid.UUID;
  */
 public class Session extends StorableObject {
     // TODO: Remove sessions from persistent storage after expiry
-    // TODO: Store "dirty" sessions to persistent storage automatically
 
     /**
      * The class logger.
@@ -101,6 +100,11 @@ public class Session extends StorableObject {
     // TODO: Remove this variable and use some other mechanism to
     //       store request, session and context information.
     public static ThreadLocal activeSession = new ThreadLocal();
+
+    /**
+     * The modified data flag.
+     */
+    private boolean modified = false;
 
     /**
      * Searches for a specific session in the storage.
@@ -188,6 +192,17 @@ public class Session extends StorableObject {
     }
 
     /**
+     * Checks if this object has been modified since initialized from
+     * storage.
+     *
+     * @return true if the object has been modified, or
+     *         false otherwise
+     */
+    protected boolean isModified() {
+        return modified;
+    }
+
+    /**
      * Destroys this session. This method is used to free resources
      * used when the session is no longer in active use. It is called
      * when the session instance is removed from in-memory storage
@@ -195,6 +210,13 @@ public class Session extends StorableObject {
      */
     protected void destroy() {
         removeAllFiles();
+    }
+
+    /**
+     * Discards the modified flag for this object.
+     */
+    protected void passivate() {
+        modified = false;
     }
 
     /**
@@ -259,6 +281,7 @@ public class Session extends StorableObject {
      * system time.
      */
     public void updateAccessTime() {
+        modified = true;
         dict.set(KEY_ACCESS_TIME, new Date());
     }
 

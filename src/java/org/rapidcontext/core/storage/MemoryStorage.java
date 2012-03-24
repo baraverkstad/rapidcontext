@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2011 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -15,8 +15,6 @@
 package org.rapidcontext.core.storage;
 
 import java.util.LinkedHashMap;
-import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.rapidcontext.core.data.Array;
@@ -64,10 +62,10 @@ public class MemoryStorage extends Storage {
     }
 
     /**
-     * Destroys this storage and all objects stored in it.
+     * Destroys this storage. Note that the objects in the storage
+     * will NOT be destroyed by this method.
      */
     public void destroy() {
-        remove(Path.ROOT, false);
         objects.clear();
         meta.clear();
         objects = null;
@@ -81,18 +79,8 @@ public class MemoryStorage extends Storage {
      *
      * @return the number of objects in the storage
      */
-    public int objectCount() {
+    public int count() {
         return objects.size();
-    }
-
-    /**
-     * Returns a read-only set of all object paths in this storage.
-     * This is useful to easily iterate over all objects.
-     *
-     * @return a set of all object paths in the storage
-     */
-    public Set objectPaths() {
-        return objects.keySet();
     }
 
     /**
@@ -210,14 +198,6 @@ public class MemoryStorage extends Storage {
             arr = idx.objects();
             for (int i = 0; i < arr.size(); i++) {
                 remove(path.child(arr.getString(i, null), false), false);
-            }
-        }
-        obj = objects.get(path);
-        if (obj instanceof StorableObject) {
-            try {
-                ((StorableObject) obj).destroy();
-            } catch (StorageException e) {
-                LOG.log(Level.WARNING, "failed to destroy object at " + path, e);
             }
         }
         objects.remove(path);

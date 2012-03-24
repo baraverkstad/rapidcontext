@@ -15,7 +15,6 @@
 package org.rapidcontext.core.storage;
 
 import java.lang.reflect.Constructor;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -109,7 +108,7 @@ public class RootStorage extends Storage {
         }
         Task cacheCleaner = new Task("storage cache cleaner") {
             public void execute() {
-                flushInactive();
+                cacheClean(false);
             }
         };
         long delay = PASSIVATE_INTERVAL_SECS * 1000L;
@@ -200,6 +199,7 @@ public class RootStorage extends Storage {
             cacheStorages.put(path, cache);
         } else if (!exist && cacheStorages.containsKey(path)) {
             cache = (MemoryStorage) cacheStorages.get(path);
+            cacheRemove(cache, Path.ROOT, false, true);
             cache.destroy();
             cacheStorages.remove(path);
         }
@@ -516,44 +516,49 @@ public class RootStorage extends Storage {
      * @throws StorageException if the data couldn't be written
      */
     public void store(Path path, Object data) throws StorageException {
-        Storage  storage = getMountedStorage(path, false);
+        store(getMountedStorage(path, false), path, data, true);
+    }
+
+    /**
+     * Stores an object at the specified location. The path must
+     * locate a particular object or file, since direct manipulation
+     * of indices is not supported. Any previous data at the
+     * specified path will be overwritten or removed. If the caching
+     * flag is not set, no updates will be made to the storage cache.
+     *
+     * @param storage        the storage to write to (or null)
+     * @param path           the storage location
+     * @param data           the data to store
+     * @param caching        the caching update flag
+     *
+     * @throws StorageException if the data couldn't be written
+     */
+    private void store(Storage storage, Path path, Object data, boolean caching)
+        throws StorageException {
 
         if (storage != null) {
-            flushSingle(storage.path(), storage.localPath(path));
-            storeObject(storage, storage.localPath(path), data);
+            if (caching) {
+                cacheRemove(storage.path(), storage.localPath(path));
+            }
+            storage.store(storage.localPath(path), data);
+            if (caching) {
+                cacheAdd(storage.path(), storage.localPath(path), data);
+            }
         } else {
-            flushAll(path);
+            if (caching) {
+                cacheRemove(null, path);
+            }
             for (int i = 0; i < mountedStorages.size(); i++) {
                 storage = (Storage) mountedStorages.get(i);
                 if (storage.isReadWrite() && storage.mountOverlay()) {
-                    storeObject(storage, path, data);
+                    storage.store(path, data);
+                    if (caching) {
+                        cacheAdd(storage.path(), path, data);
+                    }
                     return;
                 }
             }
             throw new StorageException("no writable storage found for " + path);
-        }
-    }
-
-    /**
-     * Stores an object in a specified storage. If the object is a
-     * StorableObject, it will also be stored in the memory cache for
-     * the specified storage.
-     *
-     * @param storage        the storage to use
-     * @param path           the storage location
-     * @param data           the data to store
-     *
-     * @throws StorageException if the data couldn't be written
-     */
-    private void storeObject(Storage storage, Path path, Object data)
-        throws StorageException {
-
-        MemoryStorage  cache;
-
-        storage.store(path, data);
-        cache = (MemoryStorage) cacheStorages.get(storage.path());
-        if (cache != null && data instanceof StorableObject) {
-            cache.store(path, data);
         }
     }
 
@@ -567,13 +572,33 @@ public class RootStorage extends Storage {
      * @throws StorageException if the data couldn't be removed
      */
     public void remove(Path path) throws StorageException {
-        Storage  storage = getMountedStorage(path, false);
+        remove(getMountedStorage(path, false), path, true);        
+    }
+
+    /**
+     * Removes an object or an index at the specified location. If
+     * the path refers to an index, all contained objects and indices
+     * will be removed recursively. If the caching flag is not set,
+     * no updates will be made to the storage cache.
+     *
+     * @param storage        the storage to write to (or null)
+     * @param path           the storage location
+     * @param caching        the caching update flag
+     *
+     * @throws StorageException if the data couldn't be removed
+     */
+    private void remove(Storage storage, Path path, boolean caching)
+        throws StorageException {
 
         if (storage != null) {
-            flushSingle(storage.path(), storage.localPath(path));
+            if (caching) {
+                cacheRemove(storage.path(), storage.localPath(path));
+            }
             storage.remove(storage.localPath(path));
         } else {
-            flushAll(path);
+            if (caching) {
+                cacheRemove(null, path);
+            }
             for (int i = 0; i < mountedStorages.size(); i++) {
                 storage = (Storage) mountedStorages.get(i);
                 if (storage.isReadWrite() && storage.mountOverlay()) {
@@ -584,99 +609,118 @@ public class RootStorage extends Storage {
     }
 
     /**
-     * Destroys any cached objects for the specified location.
+     * Adds an object to a storage cache (if possible). The object
+     * will only be added if it is an instance of  StorableObject and
+     * a memory cache exists for the specified storage path.
      *
-     * @param path           the storage location
+     * @param storagePath    the storage path to cache for
+     * @param path           the object location
+     * @param data           the object to store
      */
-    public void flush(Path path) {
-        Storage  storage = getMountedStorage(path, false);
-
-        if (storage != null) {
-            flushSingle(storage.path(), storage.localPath(path));
-        } else {
-            flushAll(path);
-        }
-    }
-
-    /**
-     * Destroys any cached objects for the specified location in all
-     * of the memory storages.
-     *
-     * @param path           the storage location
-     */
-    private void flushAll(Path path) {
-        Iterator  iter;
-        Path      storagePath;
-
-        iter = cacheStorages.keySet().iterator();
-        while (iter.hasNext()) {
-            storagePath = (Path) iter.next();
-            flushSingle(storagePath, path);
-        }
-    }
-
-    /**
-     * Destroys any cached objects for the specified location in a
-     * specific memory storage.
-     *
-     * @param storagePath    the mounted storage path
-     * @param path           the storage location to clear
-     */
-    private void flushSingle(Path storagePath, Path path) {
-        MemoryStorage  cache;
-
-        cache = (MemoryStorage) cacheStorages.get(storagePath);
-        if (cache != null) {
+    private void cacheAdd(Path storagePath, Path path, Object data) {
+        MemoryStorage cache = (MemoryStorage) cacheStorages.get(storagePath);
+        if (cache != null && data instanceof StorableObject) {
             try {
-                if (path == null) {
-                    cache.remove(Path.ROOT);
-                } else {
-                    cache.remove(path);
-                }
+                cache.store(path, data);
             } catch (StorageException e) {
-                LOG.log(Level.WARNING, "failed to flush object", e);
+                LOG.log(Level.WARNING, "failed to cache object", e);
             }
         }
     }
 
     /**
-     * Destroys all cached inactive objects. The objects will first
-     * be passivated and thereafter queried for their status. This
-     * method is called regularly from a background job.
-     */
-    public void flushInactive() {
-        Iterator cacheIter = cacheStorages.keySet().iterator();
-        while (cacheIter.hasNext()) {
-            Path storagePath = (Path) cacheIter.next();
-            MemoryStorage cache = (MemoryStorage) cacheStorages.get(storagePath);
-            ArrayList copy = new ArrayList();
-            copy.addAll(cache.objectPaths());
-            Iterator objectIter = copy.iterator();
-            while (objectIter.hasNext()) {
-                flushInactive(cache, (Path) objectIter.next());
-            }
-        }
-    }
-
-    /**
-     * Destroys any inactive object for the specified storage and path.
+     * Removes one or more objects from the storage cache. All the
+     * objects removed will be destroyed, but not persisted if
+     * modified.
      *
-     * @param cache          the cache memory storage
-     * @param path           the storage location to clear
+     * @param storagePath    the storage path or null for all
+     * @param path           the path to remove
      */
-    private void flushInactive(MemoryStorage cache, Path path) {
-        Object obj = cache.load(path);
-        if (obj instanceof StorableObject) {
-            StorableObject storable = (StorableObject) obj;
-            storable.passivate();
-            if (!storable.isActive()) {
+    private void cacheRemove(Path storagePath, Path path) {
+        if (storagePath == null) {
+            Iterator iter = cacheStorages.keySet().iterator();
+            while (iter.hasNext()) {
+                cacheRemove((Path) iter.next(), path);
+            }
+        } else {
+            MemoryStorage cache = (MemoryStorage) cacheStorages.get(storagePath);
+            if (cache != null) {
+                cacheRemove(cache, path, false, true);
+            }
+        }
+    }
+
+    /**
+     * Removes one or more objects from a storage cache. All objects
+     * removed will be either persisted (if modified) and/or removed
+     * depending on the store and force removal flags.
+     *
+     * @param cache          the storage cache to modify
+     * @param basePath       the object path to remove
+     * @param store          the persist modified objects flag
+     * @param force          the forced removal flag
+     */
+    private void cacheRemove(MemoryStorage cache,
+                             Path basePath,
+                             boolean store,
+                             boolean force) {
+
+        Metadata[] metas = cache.lookupAll(basePath);
+        for (int i = 0; i < metas.length; i++) {
+            Path path = metas[i].path();
+            Object obj = cache.load(path);
+            if (obj instanceof StorableObject) {
+                StorableObject storable = (StorableObject) obj;
+                if (store && storable.isModified()) {
+                    try {
+                        store(null, path, storable, false);
+                        LOG.fine("persisted cached object: " + path);
+                    } catch (StorageException e) {
+                        LOG.log(Level.WARNING, "failed to persist cached object", e);
+                    }
+                }
+                storable.passivate();
+                if (force || !storable.isActive()) {
+                    try {
+                        storable.destroy();
+                    } catch (StorageException e) {
+                        LOG.log(Level.WARNING, "failed to destroy cached object", e);
+                    }
+                    try {
+                        cache.remove(path);
+                        LOG.fine("removed cached object: " + path);
+                    } catch (StorageException e) {
+                        LOG.log(Level.WARNING, "failed to remove cached object", e);
+                    }
+                }
+            } else {
                 try {
                     cache.remove(path);
-                    LOG.fine("flushed inactive object: " + path);
+                    LOG.fine("removed cached data: " + path);
                 } catch (StorageException e) {
-                    LOG.log(Level.WARNING, "failed to flush inactive object", e);
+                    LOG.log(Level.WARNING, "failed to remove cached data", e);
                 }
             }
+        }
+    }
+
+    /**
+     * Destroys all cached objects. The objects will first be
+     * passivated and thereafter queried for their status. All
+     * modified objects will be stored persistently if possible, but
+     * errors will only be logged. If the force clean flag is set,
+     * all objects in the cache will be destroyed. Otherwise only
+     * inactive objects.<p>
+     *
+     * This method is called regularly from a background job in
+     * order to destroy inactive objects.
+     *
+     * @param force          the forced clean flag
+     */
+    public void cacheClean(boolean force) {
+        Iterator iter = cacheStorages.values().iterator();
+        while (iter.hasNext()) {
+            cacheRemove((MemoryStorage) iter.next(), Path.ROOT, true, force);
         }
     }
 }

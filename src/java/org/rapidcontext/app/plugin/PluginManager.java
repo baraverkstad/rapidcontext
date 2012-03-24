@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2011 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -552,7 +552,7 @@ public class PluginManager {
                 }
             }
         }
-        storage.flush(null);
+        storage.cacheClean(true);
         classLoader = new PluginClassLoader();
         while (tempFiles.size() > 0) {
             File file = (File) tempFiles.remove(tempFiles.size() - 1);

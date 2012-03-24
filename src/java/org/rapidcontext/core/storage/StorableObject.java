@@ -127,6 +127,20 @@ public class StorableObject {
     }
 
     /**
+     * Checks if this object has been modified since initialized from
+     * storage. This method is used to allow "dirty" objects to be
+     * written back to persistent storage before being evicted from
+     * the in-memory cache. By default this method always returns
+     * false.
+     *
+     * @return true if the object has been modified, or
+     *         false otherwise
+     */
+    protected boolean isModified() {
+        return false;
+    }
+
+    /**
      * Returns the object identifier.
      *
      * @return the object identifier
