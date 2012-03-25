@@ -15,7 +15,6 @@
 package org.rapidcontext.core.storage;
 
 import java.lang.reflect.Constructor;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.logging.Level;
@@ -65,11 +64,6 @@ public class RootStorage extends Storage {
      * cleaner job.
      */
     private static final int PASSIVATE_INTERVAL_SECS = 30;
-
-    /**
-     * The system time of the last mount or remount operation.
-     */
-    private static long lastMountTime = 0L;
 
     /**
      * The meta-data storage for mount points and parent indices.
@@ -163,27 +157,6 @@ public class RootStorage extends Storage {
     }
 
     /**
-     * Updates the mount information in a storage object.
-     *
-     * @param storage        the storage to update
-     * @param readWrite      the read write flag
-     * @param overlay        the root overlay flag
-     * @param prio           the root overlay search priority (higher numbers
-     *                       are searched before lower numbers)
-     */
-    private void updateMountInfo(Storage storage,
-                                 boolean readWrite,
-                                 boolean overlay,
-                                 int prio) {
-
-        lastMountTime = Math.max(System.currentTimeMillis(), lastMountTime + 1);
-        storage.dict.set(KEY_MOUNT_TIME, new Date(lastMountTime));
-        storage.dict.setBoolean(KEY_READWRITE, readWrite);
-        storage.dict.setBoolean(KEY_MOUNT_OVERLAY, overlay);
-        storage.dict.setInt(KEY_MOUNT_OVERLAY_PRIO, overlay ? prio : -1);
-    }
-
-    /**
      * Creates or removes a cache memory storage for the specified
      * path.
      *
@@ -195,7 +168,7 @@ public class RootStorage extends Storage {
 
         if (exist && !cacheStorages.containsKey(path)) {
             cache = new MemoryStorage(true);
-            cache.dict.set(KEY_MOUNT_PATH, path);
+            cache.setMountInfo(path, true, true, 1);
             cacheStorages.put(path, cache);
         } else if (!exist && cacheStorages.containsKey(path)) {
             cache = (MemoryStorage) cacheStorages.get(path);
@@ -240,8 +213,7 @@ public class RootStorage extends Storage {
             LOG.warning(msg);
             throw new StorageException(msg);
         }
-        storage.dict.set(KEY_MOUNT_PATH, path);
-        updateMountInfo(storage, readWrite, overlay, prio);
+        storage.setMountInfo(path, readWrite, overlay, prio);
         setMountedStorage(path, storage);
         mountedStorages.add(storage);
         mountedStorages.sort();
@@ -271,7 +243,7 @@ public class RootStorage extends Storage {
             LOG.warning(msg);
             throw new StorageException(msg);
         }
-        updateMountInfo(storage, readWrite, overlay, prio);
+        storage.setMountInfo(storage.path(), readWrite, overlay, prio);
         mountedStorages.sort();
         updateStorageCache(path, overlay);
     }

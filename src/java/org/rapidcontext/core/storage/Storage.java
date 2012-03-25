@@ -75,6 +75,13 @@ public abstract class Storage extends StorableObject implements Comparable {
     public static final Path PATH_STORAGEINFO = new Path("/storageinfo");
 
     /**
+     * The system time of the last mount info update. This value is
+     * tracked here in order to ensure a unique timestamp for each
+     * storage mount, making them deterministically comparable.
+     */
+    private static long lastMountTime = 0L;
+
+    /**
      * Creates a new storage.
      *
      * @param storageType    the storage type name
@@ -189,6 +196,28 @@ public abstract class Storage extends StorableObject implements Comparable {
      */
     public int mountOverlayPrio() {
         return dict.getInt(KEY_MOUNT_OVERLAY_PRIO, -1);
+    }
+
+    /**
+     * Updates the mount information for this storage. This method
+     * will update the mount time to the current timestamp.
+     *
+     * @param path           the mount path (or storage root path)
+     * @param readWrite      the storage read-write flag
+     * @param overlay        the mount overlay flag
+     * @param prio           the mount overlay priority
+     */
+    public void setMountInfo(Path path,
+                             boolean readWrite,
+                             boolean overlay,
+                             int prio) {
+
+        lastMountTime = Math.max(System.currentTimeMillis(), lastMountTime + 1);
+        dict.set(KEY_MOUNT_PATH, path == null ? Path.ROOT : path);
+        dict.set(KEY_MOUNT_TIME, new Date(lastMountTime));
+        dict.setBoolean(KEY_READWRITE, readWrite);
+        dict.setBoolean(KEY_MOUNT_OVERLAY, overlay);
+        dict.setInt(KEY_MOUNT_OVERLAY_PRIO, overlay ? prio : -1);
     }
 
     /**
