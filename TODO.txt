@@ -20,6 +20,7 @@ Concern: Legacy Cleanup
 =======================
  * Split RapidContext.Widget into several files.
  * Move RapidContext.Util into MochiKit 1.5 as much as possible
+ * Proper plug-in version control in legacy storage wrapper
 
 
 Concern: Install & Startup
@@ -156,8 +157,8 @@ Concern: Data Storage
     o Modify Admin app to use storage instead of procedures
     o Remove all procedures for accessing storage objects
  * WebDAV Access:
-   o Documentation
-   o Add write support 
+    o Documentation
+    o Add write support 
 
 
 Concern: Security & Authentication

@@ -309,6 +309,9 @@ public class PluginManager {
             } else {
                 ps = new ZipFileStorage(file);
             }
+            if (LegacyPluginStorage.isLegacyPlugin(ps)) {
+                ps = new LegacyPluginStorage(ps);
+            }
             storage.mount(ps, storagePath(pluginId), false, false, 0);
         } catch (Exception e) {
             msg = "failed to create " + pluginId + " plug-in storage";
