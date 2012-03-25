@@ -8,6 +8,7 @@
     <format property="build.date" pattern="yyyy-MM-dd" />
   </tstamp>
   <property name="build.version" value="${DSTAMP}" />
+  <property name="build.platform" value="${build.version}" />
   <path id="build.classpath">
     <fileset dir="lib" includes="**/*.jar" />
   </path>

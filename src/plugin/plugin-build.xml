@@ -80,6 +80,11 @@
         <patternset refid="replace.files" />
       </fileset>
     </replaceregexp>
+    <replaceregexp match="platform\s*=[ \t]*" replace="platform = ${build.platform}">
+      <fileset dir="tmp">
+        <patternset refid="replace.files" />
+      </fileset>
+    </replaceregexp>
     <replaceregexp match="date\s*=.*" replace="date = ${build.date}">
       <fileset dir="tmp">
         <patternset refid="replace.files" />
