@@ -1,7 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
- * All rights reserved.
+ * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -36,8 +35,6 @@ import org.rapidcontext.app.proc.ProcedureReadProcedure;
 import org.rapidcontext.app.proc.ProcedureTypesProcedure;
 import org.rapidcontext.app.proc.ProcedureWriteProcedure;
 import org.rapidcontext.app.proc.ResetProcedure;
-import org.rapidcontext.app.proc.RoleChangeProcedure;
-import org.rapidcontext.app.proc.RoleListProcedure;
 import org.rapidcontext.app.proc.SessionCurrentProcedure;
 import org.rapidcontext.app.proc.SessionTerminateProcedure;
 import org.rapidcontext.app.proc.StatusProcedure;
@@ -243,8 +240,6 @@ public class ApplicationContext {
             library.addBuiltIn(new ProcedureTypesProcedure());
             library.addBuiltIn(new ProcedureWriteProcedure());
             library.addBuiltIn(new ResetProcedure());
-            library.addBuiltIn(new RoleChangeProcedure());
-            library.addBuiltIn(new RoleListProcedure());
             library.addBuiltIn(new SessionCurrentProcedure());
             library.addBuiltIn(new SessionTerminateProcedure());
             library.addBuiltIn(new StatusProcedure());

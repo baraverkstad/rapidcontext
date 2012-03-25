@@ -139,6 +139,7 @@ Concern: Server Programming API
 Concern: Data Storage
 =====================
  * Use storage:
+    o Add user type to storage
     o Add procedure types to storage
     o Remove registry for procedures (Library class)
     o Add built-in procedures to storage
@@ -166,7 +167,6 @@ Concern: Security & Authentication
  * Enforce permission control on any object type
  * Allow form-based login
  * Support anonymous usage if permitted by security settings
- * Allow persistent cookies with login information
 
 
 Concern: Widgets 2.0

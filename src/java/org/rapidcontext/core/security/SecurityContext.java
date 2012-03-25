@@ -1,7 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
- * All rights reserved.
+ * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -24,6 +23,7 @@ import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.storage.StorageException;
+import org.rapidcontext.core.type.Role;
 import org.rapidcontext.util.ArrayUtil;
 import org.rapidcontext.util.BinaryUtil;
 
@@ -62,21 +62,10 @@ public class SecurityContext {
     public static final Path USER_PATH = new Path("/user/");
 
     /**
-     * The role object storage path.
-     */
-    public static final Path ROLE_PATH = new Path("/role/");
-
-    /**
      * The data storage used for reading and writing configuration
      * data.
      */
     private static Storage dataStorage = null;
-
-    /**
-     * The map of all roles. The map is indexed by the role names and
-     * contains role objects.
-     */
-    private static HashMap roles = new HashMap();
 
     /**
      * The map of all users. The map is indexed by the user names and
@@ -106,20 +95,10 @@ public class SecurityContext {
      */
     public static void init(Storage storage) throws StorageException {
         Object[]  objs;
-        Role      role;
         User      user;
 
         dataStorage = storage;
-        roles.clear();
         users.clear();
-        objs = dataStorage.loadAll(ROLE_PATH);
-        for (int i = 0; i < objs.length; i++) {
-            if (objs[i] instanceof Dict) {
-                role = new Role((Dict) objs[i]);
-                roles.put(role.getName().toLowerCase(), role);
-            }
-        }
-        // TODO: Create default/anonymous role?
         // TODO: What if there are many users?
         objs = dataStorage.loadAll(USER_PATH);
         for (int i = 0; i < objs.length; i++) {
@@ -217,18 +196,16 @@ public class SecurityContext {
         if (hasAdmin()) {
             return true;
         } else if (currentUser() != null) {
-            // TODO: Should verify objects with Restricted interface here
-            //       (eg procedures), since users may have no roles...
             list = currentUser().getRoles();
             for (int i = 0; i < list.length; i++) {
-                role = getRole(list[i]);
+                role = Role.find(dataStorage, list[i]);
                 if (role != null && role.hasAccess(type, name, caller)) {
                     return true;
                 }
             }
             return false;
         } else {
-            // TODO: support anonymous access (Default role)
+            // TODO: support anonymous access
             return false;
         }
     }
@@ -351,65 +328,6 @@ public class SecurityContext {
     }
 
     /**
-     * Returns all role names.
-     *
-     * @return all role names
-     */
-    public static String[] getRoleNames() {
-        return ArrayUtil.stringKeys(roles);
-    }
-
-    /**
-     * Returns the role for the specified name.
-     *
-     * @param name           the role name
-     *
-     * @return the role object, or
-     *         null if not found
-     */
-    public static Role getRole(String name) {
-        return (Role) roles.get(name.toLowerCase());
-    }
-
-    /**
-     * Saves a role to the application data store. This method will
-     * verify that the current user has the Admin role before writing
-     * the role data.
-     *
-     * @param role           the role to save
-     *
-     * @throws StorageException if the data couldn't be written
-     * @throws SecurityException if the current user doesn't have
-     *             admin access
-     */
-    public static void saveRole(Role role)
-        throws StorageException, SecurityException {
-
-        String  name = role.getName().toLowerCase();
-
-        try {
-            if (!hasAdmin()) {
-                LOG.info("failed to modify role " + role.getName() +
-                         ": user " + SecurityContext.currentUser() +
-                         " lacks admin privileges");
-                throw new SecurityException("Permission denied");
-            } else if (name.equals("admin")) {
-                LOG.info("failed to modify role " + role.getName() +
-                         ": role is built-in and read-only");
-                throw new SecurityException("Permission denied");
-            }
-            storeRole(role);
-        } finally {
-            Role newRole = loadRole(name);
-            if (newRole == null) {
-                roles.remove(name);
-            } else {
-                roles.put(name, newRole);
-            }
-        }
-    }
-
-    /**
      * Returns all user names.
      *
      * @return all user names
@@ -510,33 +428,5 @@ public class SecurityContext {
     private static void storeUser(User user) throws StorageException {
         Path path = USER_PATH.child(user.getName(), false);
         dataStorage.store(path, user.getData());
-    }
-
-    /**
-     * Loads a role object.
-     *
-     * @param name           the role name
-     *
-     * @return the role object, or
-     *         null if not found
-     *
-     * @throws StorageException if the data couldn't be read
-     */
-    private static Role loadRole(String name)  throws StorageException {
-        Path path = ROLE_PATH.child(name, false);
-        Dict dict = (Dict) dataStorage.load(path);
-        return (dict == null) ? null : new Role(dict);
-    }
-
-    /**
-     * Stores a role object.
-     *
-     * @param role           the role to store
-     *
-     * @throws StorageException if the data couldn't be written
-     */
-    private static void storeRole(Role role) throws StorageException {
-        Path path = ROLE_PATH.child(role.getName(), false);
-        dataStorage.store(path, role.getData());
     }
 }
