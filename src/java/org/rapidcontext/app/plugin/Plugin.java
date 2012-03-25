@@ -31,6 +31,11 @@ import org.rapidcontext.core.storage.StorageException;
 public class Plugin extends StorableObject {
 
     /**
+     * The dictionary key for the optimal platform version.
+     */
+    public static final String KEY_PLATFORM = "platform";
+
+    /**
      * The dictionary key for the optional plug-in class name.
      */
     public static final String KEY_CLASSNAME = "className";
