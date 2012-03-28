@@ -33,11 +33,7 @@ import org.rapidcontext.util.BinaryUtil;
  * the currently authenticated user in a thread-local storage, so
  * user credentials must be provided separately for each execution
  * thread. It is important that the manager is initialized before
- * any authentication calls are made, or they will fail.<p>
- *
- * The security context handles the anonymous and "system" users
- * specially. The built-in roles "Admin" and "Default" are also
- * handled in a special way.
+ * any authentication calls are made, or they will fail.
  *
  * @author   Per Cederberg
  * @version  1.0
@@ -112,7 +108,7 @@ public class SecurityContext {
             user = new User("admin");
             user.setDescription("Default administrator user");
             user.setEnabled(true);
-            user.setRoles(new String[] { "Admin" });
+            user.setRoles(new String[] { "admin" });
             storeUser(user);
             users.put("admin", user);
         }
