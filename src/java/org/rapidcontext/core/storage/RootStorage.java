@@ -43,9 +43,10 @@ import org.rapidcontext.core.type.Type;
  *       case several objects have the same paths.
  *   <li><strong>Object Initialization</strong> -- Dictionary objects
  *       will be inspected upon retrieval from a mounted and unified
- *       storage. If a matching type handler or class can be located,
- *       the corresponding object will be created, initialized and
- *       cached for future references.
+ *       path (i.e. not when retrieved directly from the storage).
+ *       If a matching type handler or class can be located, the
+ *       corresponding object will be created, initialized and cached
+ *       for future references.
  * </ul>
  *
  * @author   Per Cederberg
@@ -305,7 +306,7 @@ public class RootStorage extends Storage {
         Metadata  meta = null;
 
         if (storage != null) {
-            meta = lookupObject(storage, storage.localPath(path));
+            meta = storage.lookup(storage.localPath(path));
             return (meta == null) ? null : new Metadata(path, meta);
         } else {
             meta = metadata.lookup(path);
@@ -341,9 +342,6 @@ public class RootStorage extends Storage {
                 return meta;
             }
         }
-        // FIXME: The storage metadata will report Dict as the class
-        //        for some objects. Should we load these objects in
-        //        order to surely return the correct class?
         return storage.lookup(path);
     }
 
@@ -364,7 +362,7 @@ public class RootStorage extends Storage {
         Index    idx = null;
 
         if (storage != null) {
-            res = loadObject(storage, storage.localPath(path));
+            res = storage.load(storage.localPath(path));
             if (res instanceof Index) {
                 idx = (Index) res;
                 return new Index(path, idx.indices(), idx.objects());
