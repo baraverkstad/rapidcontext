@@ -137,7 +137,7 @@ public class Session extends StorableObject {
     public static void store(Storage storage, Session session)
         throws StorageException {
 
-        storage.store(PATH.child(session.id(), false), session);        
+        storage.store(PATH.child(session.id(), false), session);
     }
 
     /**
