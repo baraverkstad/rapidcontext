@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 
 import com.eaio.uuid.UUID;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.rapidcontext.app.plugin.PluginException;
 import org.rapidcontext.app.plugin.PluginManager;
 import org.rapidcontext.app.proc.AppListProcedure;
@@ -60,7 +61,10 @@ import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.storage.StorageException;
 import org.rapidcontext.core.storage.RootStorage;
+import org.rapidcontext.core.task.Scheduler;
+import org.rapidcontext.core.task.Task;
 import org.rapidcontext.core.type.Environment;
+import org.rapidcontext.core.type.Session;
 
 /**
  * The application context. This is a singleton object that contains
@@ -83,6 +87,12 @@ public class ApplicationContext {
      * The path to the global configuration.
      */
     public static final Path PATH_CONFIG = new Path("/config");
+
+    /**
+     * The number of milliseconds between each run of the expired
+     * session cleaner job.
+     */
+    private static final long CLEANER_INTERVAL_MILLIS = DateUtils.MILLIS_PER_DAY;
 
     /**
      * The singleton application context instance.
@@ -140,6 +150,13 @@ public class ApplicationContext {
         }
         if (start) {
             instance.initAll();
+            Task sessionCleaner = new Task("storage session cleaner") {
+                public void execute() {
+                    Session.removeExpired(getInstance().getStorage());
+                }
+            };
+            long delay = CLEANER_INTERVAL_MILLIS;
+            Scheduler.schedule(sessionCleaner, delay, delay);
         }
         return instance;
     }

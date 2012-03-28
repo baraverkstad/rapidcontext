@@ -19,7 +19,9 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.rapidcontext.core.data.Dict;
+import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.core.storage.Storage;
@@ -39,7 +41,6 @@ import com.eaio.uuid.UUID;
  * @version  1.0
  */
 public class Session extends StorableObject {
-    // TODO: Remove sessions from persistent storage after expiry
 
     /**
      * The class logger.
@@ -92,7 +93,12 @@ public class Session extends StorableObject {
     /**
      * The default maximum session age (30 days).
      */
-    public static final long MAX_AGE_MILLIS = 30L * 24L * 60L * 60L * 1000L;
+    public static final long MAX_AGE_MILLIS = 30L * DateUtils.MILLIS_PER_DAY;
+
+    /**
+     * The default active session time (10 minutes).
+     */
+    public static final long ACTIVE_MILLIS = 10L * DateUtils.MILLIS_PER_MINUTE;
 
     /**
      * The currently active session (for the current thread).
@@ -149,6 +155,28 @@ public class Session extends StorableObject {
     }
 
     /**
+     * Removes all expired sessions from the provided storage. This
+     * method will load and examine all sessions that have not been
+     * modified in a few days.
+     *
+     * @param storage        the storage to use
+     */
+    public static void removeExpired(Storage storage) {
+        long        now = System.currentTimeMillis();
+        Date        oldDate = new Date(now - 5L * DateUtils.MILLIS_PER_DAY);
+        Metadata[]  meta = storage.lookupAll(PATH);
+
+        for (int i = 0; i < meta.length; i++) {
+            if (meta[i].lastModified().before(oldDate)) {
+                Session session = find(storage, meta[i].id());
+                if (!session.isValid()) {
+                    remove(storage, session.id());
+                }
+            }
+        }
+    }
+
+    /**
      * Creates a new session from a serialized representation.
      *
      * @param id             the object identifier
@@ -169,11 +197,11 @@ public class Session extends StorableObject {
      */
     public Session(String user, String ip, String client) {
         super(new UUID().toString(), "session");
-        Date now = new Date();
+        long now = System.currentTimeMillis();
         dict.set(KEY_USER, user);
-        dict.set(KEY_CREATE_TIME, now);
-        dict.set(KEY_DESTROY_TIME, new Date(now.getTime() + MAX_AGE_MILLIS));
-        dict.set(KEY_ACCESS_TIME, now);
+        dict.set(KEY_CREATE_TIME, new Date(now));
+        dict.set(KEY_DESTROY_TIME, new Date(now + MAX_AGE_MILLIS));
+        dict.set(KEY_ACCESS_TIME, new Date(now));
         dict.set(KEY_IP, ip);
         dict.set(KEY_CLIENT, client);
         dict.set(KEY_FILES, new Dict());
@@ -188,7 +216,9 @@ public class Session extends StorableObject {
      *         false otherwise
      */
     protected boolean isActive() {
-        return System.currentTimeMillis() - accessTime().getTime() <= 600000L;        
+        long now = System.currentTimeMillis();
+        long lastActive = accessTime().getTime() + ACTIVE_MILLIS;
+        return now <= lastActive;
     }
 
     /**
@@ -255,7 +285,7 @@ public class Session extends StorableObject {
      * @return the session creation date & time.
      */
     public Date createTime() {
-        return dict.getDate(KEY_CREATE_TIME, new Date());
+        return dict.getDate(KEY_CREATE_TIME, new Date(0));
     }
 
     /**
@@ -273,7 +303,7 @@ public class Session extends StorableObject {
      * @return the session last access date & time.
      */
     public Date accessTime() {
-        return dict.getDate(KEY_ACCESS_TIME, new Date());
+        return dict.getDate(KEY_ACCESS_TIME, new Date(0));
     }
 
     /**
