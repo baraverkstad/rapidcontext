@@ -198,7 +198,7 @@ public class SecurityContext {
         } else if (currentUser() != null) {
             list = currentUser().getRoles();
             for (int i = 0; i < list.length; i++) {
-                role = Role.find(dataStorage, list[i]);
+                role = Role.find(dataStorage, list[i], true);
                 if (role != null && role.hasAccess(type, name, caller)) {
                     return true;
                 }

@@ -32,6 +32,11 @@ import org.rapidcontext.core.storage.Storage;
 public class Role extends StorableObject {
 
     /**
+     * The dictionary key for the role name.
+     */
+    public static final String KEY_NAME = "name";
+
+    /**
      * The dictionary key for the role description.
      */
     public static final String KEY_DESCRIPTION = "description";
@@ -48,18 +53,20 @@ public class Role extends StorableObject {
     public static final Path PATH = new Path("/role/");
 
     /**
-     * Searches for a specific role in the storage.
+     * Searches for a specific role in the storage. If the
+     * case-insensitive search flag is set, a fallback search for the
+     * lower-case name will be performed.
      *
      * @param storage        the storage to search in
      * @param id             the role identifier
+     * @param search         the search case-insensitive flag
      *
      * @return the role found, or
      *         null if not found
      */
-    public static Role find(Storage storage, String id) {
+    public static Role find(Storage storage, String id, boolean search) {
         Object obj = storage.load(PATH.descendant(new Path(id)));
-        if (obj == null && !id.equals(id.toLowerCase())) {
-            // TODO: Remove the backwards-compat fallback
+        if (obj == null && search && !id.equals(id.toLowerCase())) {
             obj = storage.load(PATH.descendant(new Path(id.toLowerCase())));
         }
         return (obj instanceof Role) ? (Role) obj : null;
@@ -93,6 +100,15 @@ public class Role extends StorableObject {
      */
     public Role(String id, String type, Dict dict) {
         super(id, type, dict);
+    }
+
+    /**
+     * Returns the role name.
+     *
+     * @return the role name.
+     */
+    public String name() {
+        return dict.getString(KEY_NAME, "");
     }
 
     /**
