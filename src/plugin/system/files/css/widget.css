@@ -437,6 +437,7 @@ th.widgetTableColumn.sortDesc {
 .widgetTextArea {
     font-family: "Courier New", Courier, monospace;
     font-size: 11px;
+    resize: none;
 }
 .widgetTextAreaHelp {
     color: #888;
