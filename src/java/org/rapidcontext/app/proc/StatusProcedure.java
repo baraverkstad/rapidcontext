@@ -117,7 +117,7 @@ public class StatusProcedure implements Procedure, Restricted {
         if (res == null) {
             return null;
         }
-        res.set("serverGuid", ctx.getConfig().get("guid"));
+        res.set("guid", ctx.getConfig().get("guid"));
         res.set("environment", getEnvironmentData(cx.getEnvironment()));
         return res;
     }
