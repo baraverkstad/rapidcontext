@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -15,9 +15,12 @@
 package org.rapidcontext.util;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.util.jar.JarFile;
+import java.util.jar.Manifest;
 
 /**
  * A set of utility methods for working with class loaders.
@@ -54,6 +57,51 @@ public abstract class ClassLoaderUtil {
     public static URL getResource(Class cls) {
         String  name = cls.getName().replace('.', '/') + ".class";
         return getClassLoader(cls).getResource(name);
+    }
+
+    /**
+     * Returns the JAR manifest corresponding to the specified class.
+     *
+     * @param cls            the class to check
+     *
+     * @return the JAR manifest data, or
+     *         null if not found
+     */
+    public static Manifest getManifest(Class cls) {
+        JarFile file = null;
+        try {
+            file = new JarFile(getLocation(cls));
+            return file.getManifest();
+        } catch (IOException e) {
+            // Ignored, happens if no manifest is found
+        } finally {
+            try {
+                if (file != null) {
+                    file.close();
+                }
+            } catch (Throwable e) {
+                // Ignored
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Returns a JAR manifest main attribute. The JAR manifest will
+     * be located from the specified class.
+     *
+     * @param cls            the class to check
+     * @param name           the main attribute name
+     *
+     * @return the attribute value, or
+     *         null if not found
+     */
+    public static String getManifestAttribute(Class cls, String name) {
+        Manifest mf = getManifest(cls);
+        if (mf != null) {
+            return mf.getMainAttributes().getValue(name);
+        }
+        return null;
     }
 
     /**
