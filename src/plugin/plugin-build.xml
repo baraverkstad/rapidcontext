@@ -26,6 +26,13 @@
     <pathelement path="${java.class.path}" />
     <fileset dir="lib" includes="**/*.jar" erroronmissingdir="false" />
   </path>
+  <patternset id="pattern.srcfiles">
+    <include name="**/*.css" />
+    <include name="**/*.java" />
+    <include name="**/*.js" />
+    <include name="**/*.properties" />
+    <include name="**/*.xml" />
+  </patternset>
 
 
 <!-- COMPILATION TARGETS -->
@@ -43,14 +50,22 @@
       <fileset dir="lib" includes="${plugin.id}-*.jar" />
     </delete>
     <mkdir dir="classes" />
+    <fixcrlf srcdir="." eol="unix" eof="remove" tab="remove">
+      <patternset refid="pattern.srcfiles" />
+    </fixcrlf>
+    <replaceregexp match="\s+$" replace="" flags="g" byline="true">
+      <fileset dir=".">
+        <patternset refid="pattern.srcfiles" />
+      </fileset>
+    </replaceregexp>
   </target>
 
   <target name="compile-java" if="build.java">
     <javac srcdir="src"
            destdir="classes"
            classpathref="build.classpath"
-           target="1.4"
-           source="1.4"
+           target="1.5"
+           source="1.5"
            debug="on"
            deprecation="on" />
   </target>

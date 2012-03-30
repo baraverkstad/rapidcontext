@@ -47,8 +47,8 @@
     <javac srcdir="src/java"
            destdir="classes"
            classpathref="build.classpath"
-           target="1.4"
-           source="1.4"
+           target="1.5"
+           source="1.5"
            debug="on"
            deprecation="on">
       <!-- TODO: Remove this hack once Java behaves properly -->
