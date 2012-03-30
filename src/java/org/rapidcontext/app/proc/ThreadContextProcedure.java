@@ -1,7 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
- * All rights reserved.
+ * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -27,7 +26,7 @@ import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.Restricted;
 import org.rapidcontext.core.security.SecurityContext;
-import org.rapidcontext.core.security.User;
+import org.rapidcontext.core.type.User;
 import org.rapidcontext.util.DateUtil;
 
 /**
@@ -199,7 +198,7 @@ public class ThreadContextProcedure implements Procedure, Restricted {
         if (user == null) {
             res.set("user", null);
         } else {
-            res.set("user", user.getName());
+            res.set("user", user.id());
         }
         res.set("source", cx.getAttribute(CallContext.ATTRIBUTE_SOURCE));
         res.set("result", cx.getAttribute(CallContext.ATTRIBUTE_RESULT));

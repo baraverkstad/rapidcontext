@@ -1,7 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
- * All rights reserved.
+ * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -22,8 +21,8 @@ import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.Restricted;
 import org.rapidcontext.core.security.SecurityContext;
-import org.rapidcontext.core.security.User;
 import org.rapidcontext.core.storage.StorageException;
+import org.rapidcontext.core.type.User;
 
 /**
  * The built-in user modification procedure.
@@ -49,10 +48,12 @@ public class UserChangeProcedure implements Procedure, Restricted {
      * @throws ProcedureException if the initialization failed
      */
     public UserChangeProcedure() throws ProcedureException {
+        defaults.set("id", Bindings.ARGUMENT, "",
+                     "The unique user id");
         defaults.set("name", Bindings.ARGUMENT, "",
-                     "The unique user name");
+                     "The user real name");
         defaults.set("description", Bindings.ARGUMENT, "",
-                     "The user description text");
+                     "The user description");
         defaults.set("enabled", Bindings.ARGUMENT, "",
                      "The enabled flag (0 or 1)");
         defaults.set("password", Bindings.ARGUMENT, "",
@@ -123,6 +124,7 @@ public class UserChangeProcedure implements Procedure, Restricted {
         throws ProcedureException {
 
         User      user;
+        String    id;
         String    name;
         String    descr;
         boolean   enabled;
@@ -133,13 +135,14 @@ public class UserChangeProcedure implements Procedure, Restricted {
         Object    obj;
 
         // Validate arguments
-        name = bindings.getValue("name").toString();
-        if (name.equals("")) {
-            throw new ProcedureException("user name cannot be blank");
-        } else if (!name.matches("^[a-zA-Z][a-zA-Z0-9_]*$")) {
-            throw new ProcedureException("user name contains invalid character");
+        id = bindings.getValue("id").toString();
+        if (id.equals("")) {
+            throw new ProcedureException("user id cannot be blank");
+        } else if (!id.matches("^[a-zA-Z][a-zA-Z0-9_]*$")) {
+            throw new ProcedureException("user id contains invalid character");
         }
-        user = SecurityContext.getUser(name);
+        user = User.find(cx.getStorage(), id);
+        name = bindings.getValue("name").toString();
         descr = bindings.getValue("description").toString();
         str = bindings.getValue("enabled").toString();
         enabled = (!str.equals("") && !str.equals("false") && !str.equals("0"));
@@ -155,16 +158,17 @@ public class UserChangeProcedure implements Procedure, Restricted {
                 roles[i] = list.get(i).toString();
             }
         } else {
-            roles = obj.toString().split(" ");
+            roles = obj.toString().split("[ ,]+");
         }
 
         // Create or modify user
         if (user == null) {
-            user = new User(name);
-            str = user.getName() + " created";
+            user = new User(id);
+            str = user.id() + " created";
         } else {
-            str = user.getName() + " modified";
+            str = user.id() + " modified";
         }
+        user.setName(name);
         user.setDescription(descr);
         user.setEnabled(enabled);
         if (pwd.length() > 0) {

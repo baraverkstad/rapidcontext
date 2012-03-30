@@ -1,7 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
- * All rights reserved.
+ * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -184,7 +183,7 @@ public class ThreadCreateProcedure implements Procedure, Restricted {
          * @param source         the call source information
          */
         public ProcedureExecutor(String name, Object[] args, String source) {
-            this.userName = SecurityContext.currentUser().getName();
+            this.userName = SecurityContext.currentUser().id();
             this.proc = name;
             this.args = args;
             this.source = source;

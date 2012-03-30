@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2011 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 
 import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.core.security.SecurityContext;
+import org.rapidcontext.core.type.User;
 import org.rapidcontext.util.HttpUtil;
 
 /**
@@ -194,7 +195,7 @@ public abstract class RequestHandler implements HttpUtil {
      */
     protected void errorUnauthorized(Request request) {
         if (SecurityContext.currentUser() == null) {
-            request.sendAuthenticationRequest(SecurityContext.REALM,
+            request.sendAuthenticationRequest(User.DEFAULT_REALM,
                                               SecurityContext.nonce());
         } else {
             errorForbidden(request);

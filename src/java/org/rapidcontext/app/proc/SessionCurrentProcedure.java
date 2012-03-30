@@ -23,8 +23,9 @@ import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.Restricted;
-import org.rapidcontext.core.security.SecurityContext;
+import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.type.Session;
+import org.rapidcontext.core.type.User;
 import org.rapidcontext.core.web.Mime;
 import org.rapidcontext.util.DateUtil;
 
@@ -114,17 +115,18 @@ public class SessionCurrentProcedure implements Procedure, Restricted {
         throws ProcedureException {
 
         Session session = (Session) Session.activeSession.get();
-        return (session == null) ? null : serialize(session);
+        return (session == null) ? null : serialize(cx.getStorage(), session);
     }
 
     /**
      * Serializes a session for usage in a procedure response.
      *
+     * @param storage        the storage to use for lookups
      * @param session        the session object
      *
      * @return the serialized session dictionary
      */
-    public static Dict serialize(Session session) {
+    public static Dict serialize(Storage storage, Session session) {
         Dict      res = session.serialize().copy();
         Dict      dict;
         String    userId;
@@ -135,8 +137,10 @@ public class SessionCurrentProcedure implements Procedure, Restricted {
         res.set("user", null);
         userId = session.userId();
         if (userId != null) {
-            dict = UserListProcedure.serialize(SecurityContext.getUser(userId));
-            res.set("user", dict);
+            User user = User.find(storage, userId);
+            if (user != null) {
+                res.set("user", UserListProcedure.serialize(user));
+            }
         }
         dict = new Dict();
         ids = session.files().keys();

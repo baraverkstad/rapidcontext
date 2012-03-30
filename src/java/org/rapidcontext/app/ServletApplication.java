@@ -35,11 +35,11 @@ import org.rapidcontext.app.web.StorageRequestHandler;
 import org.rapidcontext.app.web.UploadRequestHandler;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.security.SecurityContext;
-import org.rapidcontext.core.security.User;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.RootStorage;
 import org.rapidcontext.core.storage.ZipFileStorage;
 import org.rapidcontext.core.type.Session;
+import org.rapidcontext.core.type.User;
 import org.rapidcontext.core.web.Mime;
 import org.rapidcontext.core.web.Request;
 import org.rapidcontext.core.web.RequestHandler;
@@ -218,7 +218,7 @@ public class ServletApplication extends HttpServlet {
             Session.remove(ctx.getStorage(), session.id());
         }
         if (user == null && isAuthRequired(request)) {
-            request.sendAuthenticationRequest(SecurityContext.REALM,
+            request.sendAuthenticationRequest(User.DEFAULT_REALM,
                                               SecurityContext.nonce());
         }
     }
@@ -264,7 +264,7 @@ public class ServletApplication extends HttpServlet {
         String  suffix;
 
         // Verify authentication response
-        if (!SecurityContext.REALM.equals(realm)) {
+        if (!User.DEFAULT_REALM.equals(realm)) {
             LOG.info(ip(request) + "Invalid authentication realm: " + realm);
             throw new SecurityException("Invalid authentication realm");
         }

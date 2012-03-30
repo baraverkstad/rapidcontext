@@ -1,7 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
- * All rights reserved.
+ * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -21,8 +20,8 @@ import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.Restricted;
 import org.rapidcontext.core.security.SecurityContext;
-import org.rapidcontext.core.security.User;
 import org.rapidcontext.core.storage.StorageException;
+import org.rapidcontext.core.type.User;
 
 /**
  * The built-in user password modification procedure.
@@ -113,14 +112,11 @@ public class UserPasswordChangeProcedure implements Procedure, Restricted {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        User    user;
-        String  pwd;
-
-        user = SecurityContext.currentUser();
+        User user = SecurityContext.currentUser();
         if (user == null) {
             throw new ProcedureException("user must be logged in");
         }
-        pwd = bindings.getValue("password").toString();
+        String pwd = bindings.getValue("password").toString();
         if (pwd.length() < 5) {
             throw new ProcedureException("password must be at least 5 characters");
         }
@@ -131,6 +127,6 @@ public class UserPasswordChangeProcedure implements Procedure, Restricted {
         } catch (SecurityException e) {
             throw new ProcedureException(e.getMessage());
         }
-        return user.getName() + " password changed";
+        return user.id() + " password changed";
     }
 }

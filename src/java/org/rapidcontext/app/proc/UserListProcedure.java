@@ -22,7 +22,9 @@ import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.Restricted;
 import org.rapidcontext.core.security.SecurityContext;
-import org.rapidcontext.core.security.User;
+import org.rapidcontext.core.storage.Metadata;
+import org.rapidcontext.core.storage.Storage;
+import org.rapidcontext.core.type.User;
 
 /**
  * The built-in user list procedure.
@@ -111,15 +113,20 @@ public class UserListProcedure implements Procedure, Restricted {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        Array     res;
-        String[]  names;
+        Storage     storage = cx.getStorage();
+        Metadata[]  meta;
+        Array       res;
+        Object      obj;
 
-        names = SecurityContext.getUserNames();
-        res = new Array(names.length);
-        for (int i = 0; i < names.length; i++) {
-            res.add(serialize(SecurityContext.getUser(names[i])));
+        meta = storage.lookupAll(User.PATH);
+        res = new Array(meta.length);
+        for (int i = 0; i < meta.length; i++) {
+            obj = storage.load(meta[i].path());
+            if (obj instanceof User) {
+                res.add(serialize((User) obj));
+            }
         }
-        res.sort("name");
+        res.sort("id");
         return res;
     }
 
@@ -131,7 +138,7 @@ public class UserListProcedure implements Procedure, Restricted {
      * @return the serialized dictionary for the user
      */
     public static Dict serialize(User user) {
-        Dict dict = user.getData().copy();
+        Dict dict = user.serialize().copy();
         dict.remove("password");
         if (!dict.containsKey("role")) {
             dict.set("role", new Array(0));
