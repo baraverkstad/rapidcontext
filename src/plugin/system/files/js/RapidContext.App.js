@@ -234,7 +234,7 @@ RapidContext.App.startApp = function (app, pane) {
         var url = "http://api.rapidcontext.com/license/1?server=" +
                   status.serverGuid + "&platform=" + status.version +
                   "&plugin=" + launcher.plugin + "&app=" + launcher.id +
-                  "&version=" + launcher.version + "&user=" + user.name +
+                  "&version=" + launcher.version + "&user=" + user.id +
                   "&cb=" + cbDefer.func.NAME;
         d.addCallback(function () {
             ui.overlay.setAttrs({ message: "Verifying License..." });
@@ -761,15 +761,15 @@ RapidContext.App._Cache = {
     user: null,
     apps: [],
     // Compares two object on the 'name' property
-    compareName: function (a, b) {
+    compareId: function (a, b) {
         // TODO: replace with MochiKit.Base.keyComparator once #331 is fixed
         if (a == null || b == null) {
             return MochiKit.Base.compare(a, b);
         } else {
-            return this._cmpName(a, b);
+            return this._cmpId(a, b);
         }
     },
-    _cmpName: MochiKit.Base.keyComparator("name"),
+    _cmpId: MochiKit.Base.keyComparator("id"),
     // Updates the cache data with the results from a procedure.
     update: function (proc, data) {
         switch (proc) {
@@ -780,13 +780,13 @@ RapidContext.App._Cache = {
             LOG.info("Updated cached status", this.status);
             break;
         case "System.Session.Current":
-            if (this.compareName(this.user, data.user) != 0) {
+            if (this.compareId(this.user, data.user) != 0) {
                 // TODO: use deep clone
                 data = MochiKit.Base.update(null, data.user);
-                if (data.description != "") {
-                    data.longName = data.description + " (" + data.name + ")";
+                if (data.name != "") {
+                    data.longName = data.name + " (" + data.id + ")";
                 } else {
-                    data.longName = data.name;
+                    data.longName = data.id;
                 }
                 this.user = data;
                 LOG.info("Updated cached user", this.user);
@@ -882,8 +882,8 @@ RapidContext.App._UI = {
     // Initializes information labels
     initSessionInfo: function () {
         var user = RapidContext.App.user();
-        if (user && user.name) {
-            MochiKit.DOM.replaceChildNodes(this.infoUser, user.name);
+        if (user && user.id) {
+            MochiKit.DOM.replaceChildNodes(this.infoUser, user.name || user.id);
             MochiKit.DOM.replaceChildNodes(this.menuTitle, user.longName);
             MochiKit.DOM.replaceChildNodes(this.menuLogInOut, "\u00bb Logout");
             MochiKit.DOM.removeElementClass(this.menuAdmin, "disabled");

@@ -308,28 +308,36 @@
       </Form>
     </Pane>
     <Pane id="userTab" pageTitle="Users">
-      <div w="35%" h="100%" style="float: left; padding-right: 20px;">
+      <div w="50%" h="100%" style="float: left; padding-right: 20px;">
         <h3>User List: <Icon id="userReload" ref="RELOAD" /><Icon id="userLoading" ref="LOADING" /></h3>
         <Table id="userTable" w="100%" h="100%-22">
-          <TableColumn title="Name" field="name" sort="asc" key="true" />
-          <TableColumn title="Description" field="description" />
+          <TableColumn title="Id" field="id" sort="asc" key="true" />
+          <TableColumn title="Name" field="name" />
+          <TableColumn title="Enabled" field="enabled" type="boolean" />
+          <TableColumn title="Description" field="description" maxLength="40" />
         </Table>
       </div>
-      <Form id="userForm" w="65%-30" h="100%" style="float: left;">
+      <Form id="userForm" w="50%-30" h="100%" style="float: left;">
         <h3>Edit User: <Icon id="userAdd" ref="ADD" /></h3>
-        <table>
-          <tbody>
+        <table style="width: 100%;">
+          <tbody style="width: 100%;">
+            <tr>
+              <th class="label" style="padding-top: 4px; padding-right: 4px;" w="65">Id:</th>
+              <td w="100%-70">
+                <TextField id="userId" name="id" size="30" />
+                <FormValidator name="id" message="User id cannot be empty" />
+              </td>
+            </tr>
             <tr>
               <th class="label" style="padding-top: 4px; padding-right: 4px;">Name:</th>
               <td>
-                <TextField id="userName" name="name" />
-                <FormValidator name="name" message="User name cannot be empty" />
+                <TextField name="name" w="100%-20" />
               </td>
             </tr>
             <tr>
               <th class="label" style="padding-top: 4px; padding-right: 4px;">Description:</th>
               <td>
-                <TextField name="description" />
+                <TextArea name="description" rows="3" w="100%-20" />
               </td>
             </tr>
             <tr>
@@ -341,14 +349,14 @@
             <tr>
               <th class="label" style="padding-top: 4px; padding-right: 4px;">Password:</th>
               <td>
-                <input type="password" name="password" />
+                <input type="password" name="password" size="30" />
                 <Field name="passwordHint" style="padding-left: 10px;" />
               </td>
             </tr>
             <tr>
               <th class="label" style="padding-top: 4px; padding-right: 4px;">Roles:</th>
               <td>
-                <TextField name="roles" />
+                <TextField name="roles" w="100%-20" />
               </td>
             </tr>
             <tr>

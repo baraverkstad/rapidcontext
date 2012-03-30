@@ -2,7 +2,7 @@
  * Creates a new admin app.
  */
 function AdminApp() {
-    this._defaults = { operatorId: RapidContext.App.user().name };
+    this._defaults = { operatorId: RapidContext.App.user().id };
     this._currentProc = null;
     this._batch = { running: false, delay: 5, queue: [],
                     stat: { success: 0, failed: 0 },
@@ -82,7 +82,8 @@ AdminApp.prototype.start = function () {
     };
     this.ui.pluginTable.getChildNodes()[0].setAttrs({ renderer: func });
     this.ui.procExecLoading.hide();
-    if (MochiKit.Base.findValue(RapidContext.App.user().role, "Admin") < 0) {
+    // TODO: Security test should be made on access, not role name
+    if (MochiKit.Base.findValue(RapidContext.App.user().role, "admin") < 0) {
         this.ui.procAdd.hide();
         this.ui.tabContainer.removeChildNode(this.ui.pluginTab);
         this.ui.tabContainer.removeChildNode(this.ui.userTab);
@@ -959,7 +960,7 @@ AdminApp.prototype._addUser = function () {
     this.ui.userForm.reset();
     this.ui.userForm.update({ enabled: true,
                               passwordHint: "Minimum 5 characters" });
-    this.ui.userName.disabled = false;
+    this.ui.userId.disabled = false;
 }
 
 /**
@@ -971,7 +972,7 @@ AdminApp.prototype._editUser = function () {
     var extra = { roles: (data.role) ? data.role.join(" ") : "",
                   passwordHint: "Leave blank for unmodified" };
     this.ui.userForm.update(MochiKit.Base.update(extra, data));
-    this.ui.userName.disabled = true;
+    this.ui.userId.disabled = true;
 }
 
 /**
@@ -980,7 +981,8 @@ AdminApp.prototype._editUser = function () {
 AdminApp.prototype._saveUser = function () {
     var data = this.ui.userForm.valueMap();
     if (this.ui.userForm.validate()) {
-        this.proc.userChange(data.name,
+        this.proc.userChange(data.id,
+                             data.name,
                              data.description,
                              data.enabled ? "1" : "0",
                              data.password,
