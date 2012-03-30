@@ -1,7 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
- * All rights reserved.
+ * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -16,6 +15,7 @@
 package org.rapidcontext.app.proc;
 
 import org.rapidcontext.app.ApplicationContext;
+import org.rapidcontext.app.plugin.PluginManager;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
@@ -23,7 +23,6 @@ import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.Restricted;
 import org.rapidcontext.core.security.SecurityContext;
-import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.type.Environment;
 
 /**
@@ -38,11 +37,6 @@ public class StatusProcedure implements Procedure, Restricted {
      * The procedure name constant.
      */
     public static final String NAME = "System.Status";
-
-    /**
-     * The platform object storage path.
-     */
-    public static final Path PATH_APP = new Path("/platform");
 
     /**
      * The default bindings.
@@ -119,7 +113,7 @@ public class StatusProcedure implements Procedure, Restricted {
         ApplicationContext  ctx = ApplicationContext.getInstance();
         Dict                res;
 
-        res = (Dict) cx.getStorage().load(PATH_APP);
+        res = (Dict) cx.getStorage().load(PluginManager.PATH_INFO);
         if (res == null) {
             return null;
         }

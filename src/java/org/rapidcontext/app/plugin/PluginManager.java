@@ -69,6 +69,11 @@ public class PluginManager {
     public static final Path PATH_PLUGIN = new Path("/plugin/");
 
     /**
+     * The platform information path.
+     */
+    public static final Path PATH_INFO = new Path("/platform");
+
+    /**
      * The storage path to the JAR library files.
      */
     private static final Path PATH_LIB = new Path("/lib/");
@@ -99,6 +104,11 @@ public class PluginManager {
      * The storage to use when loading and unloading plug-ins.
      */
     public RootStorage storage;
+
+    /**
+     * The platform information dictionary.
+     */
+    public Dict platformInfo;
 
     /**
      * The plug-in class loader.
@@ -163,13 +173,15 @@ public class PluginManager {
         } catch (StorageException e) {
             LOG.log(Level.SEVERE, "failed to create memory storage", e);
         }
-        initStorages(pluginDir);
-        initStorages(builtinDir);
         try {
+            createStorage(SYSTEM_PLUGIN);
             loadOverlay(SYSTEM_PLUGIN);
         } catch (PluginException ignore) {
             // Error already logged, ignored here
         }
+        this.platformInfo = (Dict) storage.load(PATH_INFO);
+        initStorages(pluginDir);
+        initStorages(builtinDir);
         try {
             loadOverlay(LOCAL_PLUGIN);
         } catch (PluginException ignore) {
@@ -224,6 +236,26 @@ public class PluginManager {
         return storage.lookup(pluginPath(pluginId)) != null ||
                SYSTEM_PLUGIN.equals(pluginId) ||
                LOCAL_PLUGIN.equals(pluginId);
+    }
+
+    /**
+     * Checks if the specified plug-in storage may contain legacy
+     * data.
+     *
+     * @param pluginId       the unique plug-in id
+     * @param storage        the storage to check
+     *
+     * @return true if the storage is considered legacy, or
+     *         false otherwise
+     */
+    private boolean isLegacyPlugin(String pluginId, Storage storage) {
+        Dict dict = (Dict) storage.load(new Path("/plugin"));
+        String version = "";
+        if (dict != null) {
+            version = dict.getString(Plugin.KEY_PLATFORM, "");
+        }
+        return !SYSTEM_PLUGIN.equals(pluginId) &&
+               !version.equals(this.platformInfo.getString("version", ""));
     }
 
     /**
@@ -293,7 +325,8 @@ public class PluginManager {
      *
      * @throws PluginException if the plug-in had already been mounted
      */
-    private Storage createStorage(String pluginId) throws PluginException {
+    private Storage createStorage(String pluginId)
+    throws PluginException {
         File     file = storageFile(pluginId);
         Storage  ps;
         String   msg;
@@ -309,8 +342,8 @@ public class PluginManager {
             } else {
                 ps = new ZipFileStorage(file);
             }
-            if (LegacyPluginStorage.isLegacyPlugin(ps)) {
-                ps = new LegacyPluginStorage(ps);
+            if (isLegacyPlugin(pluginId, ps)) {
+                ps = new PluginUpgradeStorage(ps);
             }
             storage.mount(ps, storagePath(pluginId), false, false, 0);
         } catch (Exception e) {

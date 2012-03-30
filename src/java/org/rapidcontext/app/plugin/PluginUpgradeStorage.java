@@ -14,44 +14,32 @@
 
 package org.rapidcontext.app.plugin;
 
+import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.storage.WrappedStorage;
 import org.rapidcontext.core.type.Role;
+import org.rapidcontext.core.type.User;
 
 /**
- * A legacy plug-in storage wrapper. This class performs a number of
- * dynamic transformations to the storage of an old legacy plug-in.
- * This enabled newer version of the platform to load old plug-ins
- * without requiring changes.
+ * A storage wrapper for plug-ins. This class performs a number of
+ * optional and dynamic transformations to the data loaded from a
+ * plug-in storage.  This enables newer version of the platform to
+ * load data from old plug-ins (with some caveats).
  *
  * @author   Per Cederberg
  * @version  1.0
  */
-public class LegacyPluginStorage extends WrappedStorage {
+public class PluginUpgradeStorage extends WrappedStorage {
 
     /**
-     * Checks if the specified storage belongs to a legacy plug-in.
-     *
-     * @param storage        the storage to check
-     *
-     * @return true if the storage is considered legacy, or
-     *         false otherwise
-     */
-    public static boolean isLegacyPlugin(Storage storage) {
-        Dict dict = (Dict) storage.load(new Path("/plugin"));
-        // TODO: Perform proper platform version check
-        return dict.getString(Plugin.KEY_PLATFORM, "").equals("");
-    }
-
-    /**
-     * Creates a new legacy plug-in storage.
+     * Creates a new version 0 plug-in storage.
      *
      * @param backend        the storage to wrap
      */
-    public LegacyPluginStorage(Storage backend) {
-        super("legacyPlugin/" + backend.storageType(), backend);
+    public PluginUpgradeStorage(Storage backend) {
+        super("pluginUpgrade/" + backend.storageType(), backend);
     }
 
     /**
@@ -68,21 +56,33 @@ public class LegacyPluginStorage extends WrappedStorage {
     public Object load(Path path) {
         Object obj = super.load(path);
         if (obj instanceof Dict) {
-            fixMissingObjectType(path, (Dict) obj);
+            transform(path, (Dict) obj);
         }
         return obj;
     }
 
     /**
-     * Adds missing object type fields to some results. This method
-     * will modify the specified dictionary data.
+     * Transforms a loaded dictionary object, if needed. This method
+     * will only modify dictionary data from some paths and in some
+     * cases.
      *
      * @param path           the storage location
-     * @param dict           the dictionary data found
+     * @param dict           the dictionary data loaded
      */
-    private void fixMissingObjectType(Path path, Dict dict) {
-        if (!dict.containsKey(KEY_TYPE) && path.startsWith(Role.PATH)) {
+    private void transform(Path path, Dict dict) {
+        boolean hasType = dict.containsKey(KEY_TYPE);
+        if (!hasType && path.startsWith(Role.PATH)) {
             dict.set(KEY_TYPE, path.name(0));
+            dict.set(KEY_ID, path.name());
+        } else if (!hasType && path.startsWith(User.PATH)) {    
+            dict.set(KEY_TYPE, path.name(0));
+            dict.set(KEY_ID, path.name());
+            dict.set(User.KEY_NAME, dict.getString(User.KEY_DESCRIPTION, ""));
+            dict.set(User.KEY_DESCRIPTION, "");
+            Array list = dict.getArray(User.KEY_ROLE);
+            for (int i = 0; i < list.size(); i++) {
+                list.set(i, list.getString(i, "").toLowerCase());
+            }
         }
     }
 }
