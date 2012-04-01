@@ -13,6 +13,17 @@
     <fileset dir="lib" includes="**/*.jar" />
   </path>
   <property name="build.sysclasspath" value="ignore" />
+  <patternset id="pattern.srcfiles">
+    <include name="**/*.css" />
+    <include name="**/*.html" />
+    <include name="**/*.java" />
+    <include name="**/*.js" />
+    <include name="**/*.properties" />
+    <include name="**/*.sh" />
+    <include name="**/*.txt" />
+    <include name="**/*.xml" />
+    <exclude name="tools/**" />
+  </patternset>
 
 
 <!-- COMPILATION TARGETS -->
@@ -41,6 +52,14 @@
       <fileset dir="lib" includes="${build.name}*.jar" />
     </delete>
     <mkdir dir="classes" />
+    <fixcrlf srcdir="." eol="unix" eof="remove" tab="remove">
+      <patternset refid="pattern.srcfiles" />
+    </fixcrlf>
+    <replaceregexp match="\s+$" replace="" flags="g" byline="true">
+      <fileset dir=".">
+        <patternset refid="pattern.srcfiles" />
+      </fileset>
+    </replaceregexp>
   </target>
 
   <target name="compile-java">
@@ -172,17 +191,6 @@
       </fileset>
       <fileset dir="${build.title}.app" />
     </delete>
-    <fixcrlf srcdir="${basedir}" eol="unix" eof="remove" tab="remove">
-      <include name="**/*.txt" />
-      <include name="**/*.sh" />
-      <include name="**/*.css" />
-      <include name="**/*.java" />
-      <include name="**/*.js" />
-      <include name="**/*.html" />
-      <include name="**/*.xml" />
-      <include name="**/*.properties" />
-      <exclude name="tools/**" />
-    </fixcrlf>
   </target>
 
   <target name="package-war">
