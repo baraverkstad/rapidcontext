@@ -21,12 +21,27 @@ AdminApp.prototype.start = function () {
         userList: "System.User.List",
         userChange: "System.User.Change"
     });
-    // Initialize event signals
+
+    // Tab switcher
     MochiKit.Signal.connect(this.ui.root, "onenter", MochiKit.Base.bind("selectChild", this.ui.tabContainer, null));
+
+    // App view
     RapidContext.UI.connectProc(this.proc.appList, this.ui.appLoading, this.ui.appReload);
     MochiKit.Signal.connect(this.proc.appList, "onsuccess", this.ui.appTable, "setData");
     MochiKit.Signal.connect(this.ui.appTable, "onselect", this, "_showApp");
     MochiKit.Signal.connect(this.ui.appLaunch, "onclick", this, "_launchApp");
+    var func = function (td, data) {
+        if (data) {
+            var styles = { marginLeft: "6px" };
+            var attrs = { ref: "EXPAND", tooltip: "Open in new window", style: styles };
+            var img = RapidContext.Widget.Icon(attrs);
+            var link = MochiKit.DOM.A({ href: data, target: "_blank" }, data, img);
+            td.appendChild(link);
+        }
+    };
+    this.ui.appResourceTable.getChildNodes()[1].setAttrs({ renderer: func });
+
+    // Plug-in view
     MochiKit.Signal.connect(this.ui.pluginTab, "onenter", this, "_pluginUploadInit");
     MochiKit.Signal.connectOnce(this.ui.pluginTab, "onenter", this, "loadPlugins");
     MochiKit.Signal.connect(this.ui.pluginFile, "onselect", this, "_pluginUploadStart");
@@ -38,6 +53,16 @@ AdminApp.prototype.start = function () {
     MochiKit.Signal.connect(this.ui.pluginTable, "onselect", this, "_showPlugin");
     MochiKit.Signal.connect(this.ui.pluginLoad, "onclick", this, "_togglePlugin");
     MochiKit.Signal.connect(this.ui.pluginUnload, "onclick", this, "_togglePlugin");
+    var func = function (td, data) {
+        if (data) {
+            td.appendChild(RapidContext.Widget.Icon({ ref: "OK", tooltip: "Loaded" }));
+        } else {
+            td.appendChild(RapidContext.Widget.Icon({ ref: "ERROR", tooltip: "Not loaded" }));
+        }
+    };
+    this.ui.pluginTable.getChildNodes()[0].setAttrs({ renderer: func });
+
+    // Procedure view
     MochiKit.Signal.connectOnce(this.ui.procTab, "onenter", this.proc.procList, "call");
     RapidContext.UI.connectProc(this.proc.procList, this.ui.procTreeLoading, this.ui.procTreeReload);
     MochiKit.Signal.connect(this.proc.procList, "onsuccess", this, "_callbackProcedures");
@@ -54,9 +79,19 @@ AdminApp.prototype.start = function () {
     MochiKit.Signal.connect(this.ui.procExecResult, "onexpand", this, "_showExecData");
     MochiKit.Signal.connect(this.ui.procArgCancel, "onclick", this.ui.procArgDialog, "hide");
     MochiKit.Signal.connect(this.ui.procArgSave, "onclick", this, "_updateProcArg");
+    this.ui.procExecLoading.hide();
+    this.ui.procExecResult.resizeContent = function () {
+        var pos = MochiKit.Style.getElementPosition(this, this.parentNode);
+        var dim = MochiKit.Style.getElementDimensions(this.parentNode);
+        MochiKit.Style.setElementDimensions(this, { h: dim.h - pos.y });
+    }
+
+    // Batch view
     MochiKit.Signal.connect(this.ui.batchDelete, "onclick", this, "_clearBatch");
     MochiKit.Signal.connect(this.ui.batchDelay, "onclick", this, "_configBatchDelay");
     MochiKit.Signal.connect(this.ui.batchResume, "onclick", this, "_toggleBatch");
+
+    // User view
     MochiKit.Signal.connectOnce(this.ui.userTab, "onenter", this, "loadUsers");
     RapidContext.UI.connectProc(this.proc.userList, this.ui.userLoading, this.ui.userReload);
     MochiKit.Signal.connect(this.proc.userList, "onsuccess", this.ui.userTable, "setData");
@@ -65,6 +100,8 @@ AdminApp.prototype.start = function () {
     MochiKit.Signal.connect(this.ui.userSave, "onclick", this, "_saveUser");
     RapidContext.UI.connectProc(this.proc.userChange);
     MochiKit.Signal.connect(this.proc.userChange, "onsuccess", this.proc.userList, "recall");
+
+    // Log view
     MochiKit.Signal.connect(this.ui.logTab, "onenter", this, "_showLogs");
     MochiKit.Signal.connect(this.ui.logError, "onclick", MochiKit.Base.bind("setLogLevel", this, LOG.ERROR));
     MochiKit.Signal.connect(this.ui.logWarning, "onclick", MochiKit.Base.bind("setLogLevel", this, LOG.WARNING));
@@ -73,15 +110,7 @@ AdminApp.prototype.start = function () {
     MochiKit.Signal.connect(this.ui.logClear, "onclick", this, "_clearLogs");
     MochiKit.Signal.connect(this.ui.logReload, "onclick", this, "_showLogs");
     MochiKit.Signal.connect(this.ui.logTable, "onselect", this, "_showLogDetails");
-    var func = function (td, data) {
-        if (data) {
-            td.appendChild(RapidContext.Widget.Icon({ ref: "OK", tooltip: "Loaded" }));
-        } else {
-            td.appendChild(RapidContext.Widget.Icon({ ref: "ERROR", tooltip: "Not loaded" }));
-        }
-    };
-    this.ui.pluginTable.getChildNodes()[0].setAttrs({ renderer: func });
-    this.ui.procExecLoading.hide();
+
     // TODO: Security test should be made on access, not role name
     if (MochiKit.Base.findValue(RapidContext.App.user().role, "admin") < 0) {
         this.ui.procAdd.hide();
@@ -91,12 +120,6 @@ AdminApp.prototype.start = function () {
         RapidContext.Widget.destroyWidget(this.ui.userTab);
         this.ui.pluginTab = null;
         this.ui.userTab = null;
-    }
-    // Special resize procedure to adjust to available height
-    this.ui.procExecResult.resizeContent = function () {
-        var pos = MochiKit.Style.getElementPosition(this, this.parentNode);
-        var dim = MochiKit.Style.getElementDimensions(this.parentNode);
-        MochiKit.Style.setElementDimensions(this, { h: dim.h - pos.y });
     }
 
     // Initialize data
@@ -121,13 +144,13 @@ AdminApp.prototype._showApp = function () {
     var data = this.ui.appTable.getSelectedData();
     this.ui.appForm.reset();
     this.ui.appForm.update(data);
+    this.ui.appResourceTable.show();
+    this.ui.appResourceTable.setData(data.resources);
     MochiKit.DOM.removeElementClass(this.ui.appLink, "hidden");
     this.ui.appLink.href = "/rapidcontext/storage/app/" + data.id;
     var img = null;
-    MochiKit.DOM.replaceChildNodes(this.ui.appResources);
     for (var i = 0; i < data.resources.length; i++) {
         var res = data.resources[i];
-        MochiKit.DOM.appendChildNodes(this.ui.appResources, res.url, MochiKit.DOM.BR());
         if (res.type == "icon") {
             img = MochiKit.DOM.IMG({ src: res.url });
         }
@@ -336,6 +359,7 @@ AdminApp.prototype._showProcedure = function () {
     this.ui.procExec.disabled = true;
     this.ui.procBatch.disabled = true;
     this.ui.procExecResult.removeAll();
+    RapidContext.Util.resizeElements(this.ui.procExecResult);
     if (node != null && node.data != null) {
         var args = [node.data];
         var d = RapidContext.App.callProc("System.Procedure.Read", args);

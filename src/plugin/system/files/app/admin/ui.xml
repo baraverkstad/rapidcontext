@@ -53,10 +53,16 @@
             </tr>
             <tr>
               <th class="label" style="padding-right: 4px;">Resources:</th>
-              <td id="appResources"></td>
+              <td>
+                <Table id="appResourceTable" class="widgetHidden">
+                  <TableColumn title="Type" field="type" />
+                  <TableColumn title="URL" field="url" />
+                  <TableColumn title="Id" field="id" />
+                </Table>
+              </td>
             </tr>
             <tr>
-              <td colspan="2" style="padding-top: 4px;">
+              <td colspan="2" style="padding-top: 10px;">
                 <Button id="appLaunch" style="margin-right: 6px"><Icon ref="OK" /> Launch</Button>
               </td>
             </tr>
