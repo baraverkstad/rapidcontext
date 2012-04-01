@@ -121,11 +121,16 @@ AdminApp.prototype._showApp = function () {
     var data = this.ui.appTable.getSelectedData();
     this.ui.appForm.reset();
     this.ui.appForm.update(data);
+    var img = null;
     MochiKit.DOM.replaceChildNodes(this.ui.appResources);
     for (var i = 0; i < data.resources.length; i++) {
         var res = data.resources[i];
         MochiKit.DOM.appendChildNodes(this.ui.appResources, res.url, MochiKit.DOM.BR());
+        if (res.type == "icon") {
+            img = MochiKit.DOM.IMG({ src: res.url });
+        }
     }
+    MochiKit.DOM.replaceChildNodes(this.ui.appIcon, img);
 }
 
 /**
