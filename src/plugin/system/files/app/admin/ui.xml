@@ -63,7 +63,8 @@
             </tr>
             <tr>
               <td colspan="2" style="padding-top: 10px;">
-                <Button id="appLaunch" style="margin-right: 6px"><Icon ref="OK" /> Launch</Button>
+                <Button id="appLaunch" class="widgetHidden" style="margin-right: 6px"><Icon ref="OK" /> Launch</Button>
+                <Button id="appLaunchWindow" class="widgetHidden"><Icon ref="EXPAND" /> Launch in new window</Button>
               </td>
             </tr>
           </tbody>

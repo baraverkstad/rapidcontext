@@ -30,6 +30,7 @@ AdminApp.prototype.start = function () {
     MochiKit.Signal.connect(this.proc.appList, "onsuccess", this.ui.appTable, "setData");
     MochiKit.Signal.connect(this.ui.appTable, "onselect", this, "_showApp");
     MochiKit.Signal.connect(this.ui.appLaunch, "onclick", this, "_launchApp");
+    MochiKit.Signal.connect(this.ui.appLaunchWindow, "onclick", this, "_launchAppWindow");
     var func = function (td, data) {
         if (data) {
             var styles = { marginLeft: "6px" };
@@ -144,10 +145,6 @@ AdminApp.prototype._showApp = function () {
     var data = this.ui.appTable.getSelectedData();
     this.ui.appForm.reset();
     this.ui.appForm.update(data);
-    this.ui.appResourceTable.show();
-    this.ui.appResourceTable.setData(data.resources);
-    MochiKit.DOM.removeElementClass(this.ui.appLink, "hidden");
-    this.ui.appLink.href = "/rapidcontext/storage/app/" + data.id;
     var img = null;
     for (var i = 0; i < data.resources.length; i++) {
         var res = data.resources[i];
@@ -156,6 +153,12 @@ AdminApp.prototype._showApp = function () {
         }
     }
     MochiKit.DOM.replaceChildNodes(this.ui.appIcon, img);
+    MochiKit.DOM.removeElementClass(this.ui.appLink, "hidden");
+    this.ui.appLink.href = "/rapidcontext/storage/app/" + data.id;
+    this.ui.appResourceTable.show();
+    this.ui.appResourceTable.setData(data.resources);
+    this.ui.appLaunch.show();
+    this.ui.appLaunchWindow.show();
 }
 
 /**
@@ -164,6 +167,16 @@ AdminApp.prototype._showApp = function () {
 AdminApp.prototype._launchApp = function () {
     var data = this.ui.appTable.getSelectedData();
     RapidContext.App.startApp(data.className);
+}
+
+/**
+ * Launches the currently selected app in separate window.
+ */
+AdminApp.prototype._launchAppWindow = function () {
+    var data = this.ui.appTable.getSelectedData();
+    var url = "rapidcontext/app/" + data.id;
+    var base = document.baseURI || document.location.href;
+    window.open(RapidContext.Util.resolveURI(url, base));
 }
 
 /**
