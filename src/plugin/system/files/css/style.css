@@ -457,6 +457,11 @@ ul.compact {
     padding-right: 1px;
 }
 
+/* Hidden elements */
+.hidden {
+    display: none;
+}
+
 /* Code style */
 pre.code {
     color: rgb(212,94,138);

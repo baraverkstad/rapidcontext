@@ -121,6 +121,8 @@ AdminApp.prototype._showApp = function () {
     var data = this.ui.appTable.getSelectedData();
     this.ui.appForm.reset();
     this.ui.appForm.update(data);
+    MochiKit.DOM.removeElementClass(this.ui.appLink, "hidden");
+    this.ui.appLink.href = "/rapidcontext/storage/app/" + data.id;
     var img = null;
     MochiKit.DOM.replaceChildNodes(this.ui.appResources);
     for (var i = 0; i < data.resources.length; i++) {

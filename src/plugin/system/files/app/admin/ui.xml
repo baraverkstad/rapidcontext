@@ -34,6 +34,9 @@
               <th class="label" style="padding-right: 4px;">Storage:</th>
               <td>
                 <Field name="*" format="/storage/plugin/{plugin}/app/{id}" />
+                <a id="appLink" href="#" target="_blank" class="hidden" style="margin-left: 6px;">
+                  <Icon ref="EXPAND" tooltip="Open storage view" />
+                </a>
               </td>
             </tr>
             <tr>
