@@ -178,25 +178,46 @@ RapidContext.App._startAuto = function (startup) {
 };
 
 /**
- * Creates and starts an app instance.
+ * Creates and starts an app instance. Normally apps are started in
+ * the default app tab container or in a provided widget DOM node. By
+ * specifying a newly created window object as the parent container,
+ * apps can also be launched into separate windows. Note that when a
+ * new window is used, the returned deferred will callback
+ * immediately with a null app instance (normal app communication is
+ * not possible cross-window).
  *
  * @param {String/Object} app the app id, class name or launcher
- * @param {Widget} [pane] the root app pane widget, defaults to
- *            create a new pane in the overall tab container
+ * @param {Widget/Window} [container] the app container widget or
+ *            window, defaults to create a new pane in the app tab
+ *            container
  *
  * @return {Deferred} a MochiKit.Async.Deferred object that will
- *         callback with the app instance
+ *         callback with the app instance (or null if not available)
+ *
+ * @example
+ * // Starts the help app in a new tab
+ * RapidContext.App.startApp('help');
+ *
+ * // Starts the help app in a new window
+ * RapidContext.App.startApp('help', window.open());
  */
-RapidContext.App.startApp = function (app, pane) {
-    var stack = RapidContext.Util.stackTrace();
+RapidContext.App.startApp = function (app, container) {
     var d = MochiKit.Async.wait(0.1);
-    var instance = null;
     var launcher = RapidContext.App.findApp(app);
     if (launcher == null) {
         LOG.error("No matching app launcher found", app);
         throw new Error("No matching app launcher found");
     }
-    var ui = RapidContext.App._UI.createAppPane(launcher.name, pane, launcher.launch != "once");
+    // TODO: Better detection of Window objects...
+    if (container && typeof(container.location) == "object") {
+        var base = document.baseURI || document.location.href;
+        var url = "rapidcontext/app/" + launcher.id;
+        container.location.href = RapidContext.Util.resolveURI(url, base);
+        return d;
+    }
+    var stack = RapidContext.Util.stackTrace();
+    var instance = null;
+    var ui = RapidContext.App._UI.createAppPane(launcher.name, container, launcher.launch != "once");
     MochiKit.Signal.connect(ui.root, "onclose", d, "cancel");
     if (launcher.creator == null) {
         LOG.info("Loading app " + launcher.name, launcher);
