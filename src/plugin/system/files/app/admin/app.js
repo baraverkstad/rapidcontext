@@ -166,7 +166,7 @@ AdminApp.prototype._showApp = function () {
  */
 AdminApp.prototype._launchApp = function () {
     var data = this.ui.appTable.getSelectedData();
-    RapidContext.App.startApp(data.className);
+    RapidContext.App.startApp(data.id);
 }
 
 /**
@@ -174,9 +174,7 @@ AdminApp.prototype._launchApp = function () {
  */
 AdminApp.prototype._launchAppWindow = function () {
     var data = this.ui.appTable.getSelectedData();
-    var url = "rapidcontext/app/" + data.id;
-    var base = document.baseURI || document.location.href;
-    window.open(RapidContext.Util.resolveURI(url, base));
+    RapidContext.App.startApp(data.id, window.open());
 }
 
 /**
