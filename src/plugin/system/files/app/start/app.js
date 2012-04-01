@@ -130,7 +130,7 @@ StartApp.prototype._handleAppLaunch = function (evt) {
     if (tr != null) {
         var appId = MochiKit.DOM.getNodeAttribute(tr, "data-appid");
         if (appId) {
-            this.startApp(appId);
+            this.startApp(appId, evt.modifier().any ? window.open() : null);
         }
     }
     evt.stop();
