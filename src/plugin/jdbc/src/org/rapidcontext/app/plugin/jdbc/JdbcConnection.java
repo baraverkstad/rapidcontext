@@ -202,7 +202,7 @@ public class JdbcConnection extends Connection {
 
     /**
      * Returns the auto-commit (after each SQL) flag.
-     * 
+     *
      * @return the auto-commit flag
      */
     public boolean autoCommit() {
