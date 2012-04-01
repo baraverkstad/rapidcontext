@@ -74,7 +74,7 @@ public class PluginUpgradeStorage extends WrappedStorage {
         if (!hasType && path.startsWith(Role.PATH)) {
             dict.set(KEY_TYPE, path.name(0));
             dict.set(KEY_ID, path.name());
-        } else if (!hasType && path.startsWith(User.PATH)) {    
+        } else if (!hasType && path.startsWith(User.PATH)) {
             dict.set(KEY_TYPE, path.name(0));
             dict.set(KEY_ID, path.name());
             dict.set(User.KEY_NAME, dict.getString(User.KEY_DESCRIPTION, ""));

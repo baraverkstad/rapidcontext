@@ -139,7 +139,7 @@ Table.prototype.getIdKey = function() {
  * method will regenerate all row identifiers if the table already
  * contains data.
  *
- * @param {String} key the new key column field name 
+ * @param {String} key the new key column field name
  */
 Table.prototype.setIdKey = function(key) {
     this._keyField = key;
@@ -513,7 +513,7 @@ Table.prototype._unmarkSelection = function(indexOrNull) {
     } else {
         var tbody = this.domNode.firstChild.lastChild;
         var tr = tbody.childNodes[indexOrNull];
-        MochiKit.DOM.removeElementClass(tr, "selected"); 
+        MochiKit.DOM.removeElementClass(tr, "selected");
     }
 }
 
@@ -526,8 +526,8 @@ Table.prototype._unmarkSelection = function(indexOrNull) {
  * @config {String} title        the column title
  * @config {String} field        the data property name
  * @config {String} type         the data property type, defaults to "string"
- * @config {String} sort         the initial sort direction, use "none" to disable 
- * @config {String} maxLength    the maximum data length, overflow will be 
+ * @config {String} sort         the initial sort direction, use "none" to disable
+ * @config {String} maxLength    the maximum data length, overflow will be
  *                               displayed as a tooltip
  * @config {Boolean} key         the unique key identifier column flag,
  *                               only to be set for one column
@@ -571,13 +571,13 @@ TableColumn.prototype._destroy = function() {
 TableColumn.prototype._setSort = function(sort) {
     this.sort = sort;
     if (sort == null || sort == "none") {
-        MochiKit.DOM.removeElementClass(this.domNode, "sortAsc"); 
-        MochiKit.DOM.removeElementClass(this.domNode, "sortDesc"); 
+        MochiKit.DOM.removeElementClass(this.domNode, "sortAsc");
+        MochiKit.DOM.removeElementClass(this.domNode, "sortDesc");
     } else if (sort == "desc") {
-        MochiKit.DOM.removeElementClass(this.domNode, "sortAsc"); 
+        MochiKit.DOM.removeElementClass(this.domNode, "sortAsc");
         MochiKit.DOM.addElementClass(this.domNode, "sortDesc");
     } else {
-        MochiKit.DOM.removeElementClass(this.domNode, "sortDesc"); 
+        MochiKit.DOM.removeElementClass(this.domNode, "sortDesc");
         MochiKit.DOM.addElementClass(this.domNode, "sortAsc");
     }
 }

@@ -1688,7 +1688,7 @@ RapidContext.Widget.NavigationBar.prototype.setAttrs = function (attrs) {
 
 /**
  * Resets the position and maximum position counters and moves to
- * the first step in the path. 
+ * the first step in the path.
  */
 RapidContext.Widget.NavigationBar.prototype.reset = function () {
     this.position = 0;
@@ -1725,7 +1725,7 @@ RapidContext.Widget.NavigationBar.prototype.moveTo = function (pos, path) {
  *
  * @param {Number} pos the position to render
  *
- * @return {String} the CSS class corresponding to the position 
+ * @return {String} the CSS class corresponding to the position
  */
 RapidContext.Widget.NavigationBar.prototype._posClass = function (pos) {
     if (pos >= this.path.length) {

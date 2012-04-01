@@ -59,7 +59,7 @@ Tree.prototype.setStyle = function(style) {
 
 /**
  * Searches for a tree node from the specified path.
- * 
+ *
  * @param path               the tree node path (array of names)
  *
  * @return the descendant tree node found, or
@@ -76,7 +76,7 @@ Tree.prototype.findByPath = function(path) {
  *         null if no node is selected
  */
 Tree.prototype.getSelectedNode = function() {
-    return this._selected;    
+    return this._selected;
 }
 
 /**
@@ -186,7 +186,7 @@ Tree.prototype.onSelect = function(node) {
  *
  * @param node               the node expanded or collapsed
  *
- * @signal Emitted when a tree node is expanded or collapsed 
+ * @signal Emitted when a tree node is expanded or collapsed
  */
 Tree.prototype.onExpand = function(node) {
 }
@@ -209,7 +209,7 @@ function TreeNode(name, folder) {
     this.tree = null;
     this.parent = null;
     this.children = (folder) ? [] : null;
-    this.icon = null;    
+    this.icon = null;
     this._init();
 }
 
@@ -238,7 +238,7 @@ TreeNode.prototype._init = function() {
             window.event.cancelBubble = true;
         }
     }
-    this.domNode.appendChild(this.imgNode);   
+    this.domNode.appendChild(this.imgNode);
     this.textNode = document.createElement("span");
     this.textNode.appendChild(document.createTextNode(this.name));
     this.textNode.style.cursor = "pointer";

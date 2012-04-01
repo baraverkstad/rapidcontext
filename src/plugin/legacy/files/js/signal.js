@@ -22,7 +22,7 @@ Signal.connect = function(src, signal, destOrFunc, funcOrStr) {
     }
     slot = Signal._createSlot(destOrFunc, funcOrStr);
     this._connectDispatcher(src, signal);
-    src[signal].postFuncs.push(slot); 
+    src[signal].postFuncs.push(slot);
 }
 
 /**
@@ -43,7 +43,7 @@ Signal.connectBefore = function(src, signal, destOrFunc, funcOrStr) {
     }
     slot = Signal._createSlot(destOrFunc, funcOrStr);
     this._connectDispatcher(src, signal);
-    src[signal].preFuncs.push(slot); 
+    src[signal].preFuncs.push(slot);
 }
 
 /**

@@ -5,7 +5,7 @@ Validator = {};
 
 /**
  * The non-empty text field validator function. This validator
- * trims the field value and checks if the field text is empty. 
+ * trims the field value and checks if the field text is empty.
  */
 Validator.NOT_EMPTY = function(widget) {
     var text = widget.getText();

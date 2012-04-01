@@ -48,7 +48,7 @@ public class MacApplication {
     /**
      * Returns the Mac application wrapper instance.
      *
-     * @return the Mac application wrapper instance 
+     * @return the Mac application wrapper instance
      *
      * @throws Exception if the Apple-specific classes weren't found
      */

@@ -199,7 +199,7 @@ DynamicTree.prototype._transformData = function(data) {
 
 /**
  * Searches for a tree node from the specified path string.
- * 
+ *
  * @param path               the tree node path string
  *
  * @return the descendant tree node found, or

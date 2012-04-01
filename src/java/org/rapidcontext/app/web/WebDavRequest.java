@@ -389,7 +389,7 @@ public class WebDavRequest implements HttpUtil {
         if (href.endsWith("/")) {
             if (props.containsKey(PROP_RESOURCE_TYPE)) {
                 props.put(PROP_RESOURCE_TYPE, "<D:collection/>");
-            }            
+            }
             if (props.containsKey(PROP_CONTENT_LENGTH)) {
                 props.put(PROP_CONTENT_LENGTH, "0");
             }
@@ -540,7 +540,7 @@ public class WebDavRequest implements HttpUtil {
     /**
      * Sends a multi-status response with the response fragments as
      * the request response.
-     * 
+     *
      * @see #addResource(String, Date, Date, long)
      */
     public void sendMultiResponse() {

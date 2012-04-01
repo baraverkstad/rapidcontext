@@ -141,7 +141,7 @@ public class ZipFileStorage extends Storage {
             idx.addObject(PATH_STORAGEINFO.name());
             locateEntries(null, idx);
             idx.updateLastModified(new Date(file.lastModified()));
-            return idx;            
+            return idx;
         } else if (entry == null) {
             return null;
         } else if (path.isIndex()) {

@@ -60,8 +60,8 @@ public class StorageRequestHandler extends RequestHandler {
      */
     protected static final String[] METHODS = {
         METHOD.OPTIONS, METHOD.HEAD, METHOD.GET, METHOD.PUT, METHOD.DELETE,
-        METHOD.PROPFIND, METHOD.MKCOL, // METHOD.PROPPATCH, 
-        // METHOD.COPY, 
+        METHOD.PROPFIND, METHOD.MKCOL, // METHOD.PROPPATCH,
+        // METHOD.COPY,
         METHOD.MOVE, METHOD.LOCK, METHOD.UNLOCK
     };
 
@@ -143,7 +143,7 @@ public class StorageRequestHandler extends RequestHandler {
             if (res == null) {
                 errorNotFound(request);
             } else if (isDefault && res instanceof Binary) {
-                request.sendBinary((Binary) res, true); 
+                request.sendBinary((Binary) res, true);
             } else if (isDefault && request.getPath().endsWith(FileStorage.SUFFIX_PROPS)) {
                 str = StringUtils.substringAfterLast(request.getPath(), "/");
                 mimeType = StringUtils.defaultIfEmpty(mimeType, Mime.type(str));
@@ -319,12 +319,12 @@ public class StorageRequestHandler extends RequestHandler {
 
     /**
      * Checks if the request accepts one of the listed MIME types as response.
-     * 
+     *
      * @param request
      *            the request to analyze
      * @param mimes
      *            the MIME types to check for
-     * 
+     *
      * @return true if one of the MIME types is accepted, or false otherwise
      */
     private boolean isMimeMatch(Request request, String[] mimes) {

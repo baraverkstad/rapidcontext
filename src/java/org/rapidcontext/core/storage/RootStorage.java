@@ -197,7 +197,7 @@ public class RootStorage extends Storage {
      * @throws StorageException if the storage couldn't be mounted
      */
     public void mount(Storage storage,
-                      Path path, 
+                      Path path,
                       boolean readWrite,
                       boolean overlay,
                       int prio)
@@ -542,7 +542,7 @@ public class RootStorage extends Storage {
      * @throws StorageException if the data couldn't be removed
      */
     public void remove(Path path) throws StorageException {
-        remove(getMountedStorage(path, false), path, true);        
+        remove(getMountedStorage(path, false), path, true);
     }
 
     /**

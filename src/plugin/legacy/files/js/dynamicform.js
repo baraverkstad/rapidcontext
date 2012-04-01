@@ -247,7 +247,7 @@ DynamicForm.prototype.removeAll = function() {
  * with the field (widget) object whenever the field value is
  * visited or upon form validation. The function should return null
  * if validation was ok, or a short error message on failure.
- * 
+ *
  * @param name               the field name
  * @param validator          the validator function
  */

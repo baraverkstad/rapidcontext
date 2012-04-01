@@ -236,7 +236,7 @@ RapidContext.App.startApp = function (app, pane) {
                   "&version=" + launcher.version +
                   "&plugin=" + launcher.plugin +
                   "&platform=" + status.version +
-                  "&server=" + status.guid + 
+                  "&server=" + status.guid +
                   "&user=" + user.id +
                   "&cb=" + cbDefer.func.NAME;
         d.addCallback(function () {
@@ -742,7 +742,7 @@ RapidContext.App._Callback = {
         var d = new MochiKit.Async.Deferred();
         var func = MochiKit.Base.bind("handle", this, id, d);
         func.NAME = "RapidContext.App._Callback." + id;
-        this[id] = d.func = func;        
+        this[id] = d.func = func;
         return d;
     },
     handle: function (id, d, data) {

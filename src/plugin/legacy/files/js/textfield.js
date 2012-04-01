@@ -169,7 +169,7 @@ TextField.prototype.onChange = function() {
 /**
  * Handles the focus event.
  *
- * @param {Event} evt the MochiKit.Signal.Event object 
+ * @param {Event} evt the MochiKit.Signal.Event object
  *
  * @private
  */
@@ -183,7 +183,7 @@ TextField.prototype._handleOnFocus = function(evt) {
  * Handles the blur event and attempts to check for events caused by
  * clicks inside the auto-completion box.
  *
- * @param {Event} evt the MochiKit.Signal.Event object 
+ * @param {Event} evt the MochiKit.Signal.Event object
  *
  * @private
  */
@@ -199,7 +199,7 @@ TextField.prototype._handleOnBlur = function(evt) {
     }
     var inside = pos != null && dim != null && evtPos != null &&
                  pos.x <= evtPos.x && evtPos.x <= pos.x + dim.w &&
-                 pos.y <= evtPos.y && evtPos.y <= pos.y + dim.h; 
+                 pos.y <= evtPos.y && evtPos.y <= pos.y + dim.h;
     if (inside) {
         // Only IE provides mouse coordinates for blur events.
         // If the position was inside auto-complete we move the
@@ -234,7 +234,7 @@ TextField.prototype._handleOnChange = function() {
 /**
  * Handles the key down event.
  *
- * @param {Event} evt the MochiKit.Signal.Event object 
+ * @param {Event} evt the MochiKit.Signal.Event object
  *
  * @private
  */
@@ -287,7 +287,7 @@ TextField.prototype._handleKeyDown = function(evt) {
 /**
  * Handles the key up event.
  *
- * @param {Event} evt the MochiKit.Signal.Event object 
+ * @param {Event} evt the MochiKit.Signal.Event object
  *
  * @private
  */
@@ -308,7 +308,7 @@ TextField.prototype._scrollVisible = function(node) {
 /**
  * Handles the key press event.
  *
- * @param {Event} evt the MochiKit.Signal.Event object 
+ * @param {Event} evt the MochiKit.Signal.Event object
  *
  * @private
  */
@@ -328,7 +328,7 @@ TextField.prototype._handleKeyPress = function(evt) {
 /**
  * Handles the mouse over event for the dropdown list.
  *
- * @param {Event} evt the MochiKit.Signal.Event object 
+ * @param {Event} evt the MochiKit.Signal.Event object
  *
  * @private
  */
@@ -348,7 +348,7 @@ TextField.prototype._handleMouseOver = function(evt) {
 /**
  * Handles the mouse click event for the dropdown list.
  *
- * @param {Event} evt the MochiKit.Signal.Event object 
+ * @param {Event} evt the MochiKit.Signal.Event object
  *
  * @private
  */

@@ -85,7 +85,7 @@ public class AppRequestHandler extends RequestHandler {
      * variables with their corresponding search results and values.
      *
      * @param request        the request to process
-     * @param appId          the app identifier to launch (or null) 
+     * @param appId          the app identifier to launch (or null)
      *
      * @throws StorageException if the app template couln't be found
      * @throws IOException if the template file couldn't be read properly

@@ -120,7 +120,7 @@ dd {
  * About dialog styles
  */
 div.about {
-    position: relative; 
+    position: relative;
     padding: 20px;
     background: url(../images/backgrounds/about.png);
     color: #EEEEEE;

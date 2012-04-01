@@ -6,7 +6,7 @@
     diff against the source tree, not this file.
 
     For more information, <http://www.liquidx.net/plotkit/>.
-    
+
     Copyright (c) 2006. Alastair Tse.
 
 ***/
