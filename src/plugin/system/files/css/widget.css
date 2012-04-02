@@ -349,18 +349,6 @@
     font-size: 13px;
     color: #444444;
 }
-.widgetTabContainerLabel div {
-    padding-top: 4px;
-    padding-bottom: 4px;
-    padding-left: 6px;
-    padding-right: 15px;
-}
-.widgetTabContainerLabel .widgetIcon {
-    margin-left: 10px;
-    margin-right: -10px;
-    cursor: default;
-    vertical-align: text-bottom;
-}
 .widgetTabContainerLabel:hover,
 .widgetTabContainerLabel.selected {
     border-top: 1px solid #6290D2;
@@ -372,8 +360,23 @@
     background-image: linear-gradient(top, #E0F0F8, #FFFFFF);
     color: black;
 }
+.widgetTabContainerLabel div {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-left: 6px;
+    padding-right: 15px;
+}
 .widgetTabContainerLabel.selected div {
     padding-bottom: 5px;
+}
+.widgetTabContainerLabel .widgetIcon {
+    margin-left: 10px;
+    margin-right: -10px;
+    vertical-align: text-bottom;
+    background-position: -208px -32px;
+}
+.widgetTabContainerLabel .widgetIcon:hover {
+    background-position: -208px -16px;
 }
 .widgetTabContainerContent {
     position: relative;

@@ -80,7 +80,7 @@ RapidContext.Widget.TabContainer.prototype.addChildNode = function (child) {
     child.hide();
     var text = MochiKit.DOM.SPAN(null, child.pageTitle);
     if (child.pageCloseable) {
-        var icon = RapidContext.Widget.Icon({ ref: "CLOSE" });
+        var icon = RapidContext.Widget.Icon({ ref: "DEFAULT" });
         // TODO: potential memory leak with stale child object references
         icon.onclick = RapidContext.Widget._eventHandler("TabContainer", "_handleClose", child);
     }
