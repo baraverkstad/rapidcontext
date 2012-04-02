@@ -19,7 +19,7 @@
               <td id="appIcon" style="padding-bottom: 6px;"></td>
               <td>
                 <h2 style="margin: 0;"><Field name="name" /></h2>
-                <span style="while-space: pre-line;">
+                <span style="white-space: pre-line;">
                   <Field name="description" />
                 </span>
               </td>
