@@ -103,7 +103,7 @@ StartApp.prototype.initApps = function () {
             var img = MochiKit.DOM.IMG({ src: app.icon });
             MochiKit.DOM.replaceChildNodes(tdIcon, img);
         }
-        var style = { paddingLeft: "6px" };
+        var style = { marginLeft: "6px" };
         var iconAttrs = { ref: "EXPAND", tooltip: "Open in new window",
                           style: style };
         var expIcon = RapidContext.Widget.Icon(iconAttrs);
