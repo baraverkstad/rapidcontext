@@ -113,7 +113,8 @@ AdminApp.prototype.start = function () {
     MochiKit.Signal.connect(this.ui.logTable, "onselect", this, "_showLogDetails");
 
     // TODO: Security test should be made on access, not role name
-    if (MochiKit.Base.findValue(RapidContext.App.user().role, "admin") < 0) {
+    var user = RapidContext.App.user();
+    if (!user || !user.role || MochiKit.Base.findValue(user.role, "admin") < 0) {
         this.ui.procAdd.hide();
         this.ui.tabContainer.removeChildNode(this.ui.pluginTab);
         this.ui.tabContainer.removeChildNode(this.ui.userTab);

@@ -40,7 +40,9 @@ StartApp.prototype.start = function () {
     MochiKit.Signal.connect(this.ui.tourAdminLogLocate, "onclick", this, "tourLocateAdminLogs");
     MochiKit.Signal.connect(this.ui.tourAdminUserLocate, "onclick", this, "tourLocateAdminUsers");
     MochiKit.Signal.connect(this.ui.tourAdminPluginLocate, "onclick", this, "tourLocateAdminPlugins");
-    if (MochiKit.Base.findValue(RapidContext.App.user().role, "Admin") < 0) {
+    // TODO: Security test should be made on access, not role name
+    var user = RapidContext.App.user();
+    if (!user || !user.role || MochiKit.Base.findValue(user.role, "admin") < 0) {
         this.ui.tourWizard.removeChildNode(this.ui.tourWizard.lastChild);
         this.ui.tourWizard.removeChildNode(this.ui.tourWizard.lastChild);
     }
