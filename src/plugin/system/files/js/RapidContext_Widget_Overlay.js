@@ -69,7 +69,7 @@ RapidContext.Widget.Overlay.prototype.setAttrs = function (attrs) {
     }
     if (this.showLoading) {
         var icon = RapidContext.Widget.Icon({ ref: "LOADING_LARGE" });
-        icon.setStyle({ "padding-right": "20px" });
+        icon.setStyle({ "margin-right": "20px" });
     }
     MochiKit.DOM.replaceChildNodes(this.firstChild, icon, this.message);
     MochiKit.DOM.updateNodeAttributes(this, attrs);
