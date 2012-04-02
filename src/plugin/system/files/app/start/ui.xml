@@ -12,7 +12,7 @@
       <Icon id="appLoading" ref="LOADING" />
     </h3>
     <div w="100%" h="100%-50" style="overflow-y: auto;">
-      <table>
+      <table style="border-collapse: collapse;">
         <tbody id="appTable">
         </tbody>
       </table>

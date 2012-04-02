@@ -3,6 +3,8 @@
  */
 function StartApp() {
     this.appStatus = {};
+    this.focused = true;
+    this.showingModifiers = false;
     this.inlinePanes = false;
 }
 
@@ -14,12 +16,18 @@ StartApp.prototype.start = function () {
         appList: "System.App.List"
     });
 
-    // Initialize app pane
+    // General events
+    MochiKit.Signal.connect(document, "onkeydown", this, "_handleKeyEvent");
+    MochiKit.Signal.connect(document, "onkeyup", this, "_handleKeyEvent");
+    MochiKit.Signal.connect(this.ui.root, "onenter", this, "_focusGained");
+    MochiKit.Signal.connect(this.ui.root, "onexit", this, "_focusLost");
+
+    // App pane
     RapidContext.UI.connectProc(this.proc.appList, this.ui.appLoading, this.ui.appReload);
     MochiKit.Signal.connect(this.proc.appList, "onsuccess", this, "initApps");
     MochiKit.Signal.connect(this.ui.appTable, "onclick", this, "_handleAppLaunch");
 
-    // Initialize tour
+    // Tour wizard
     MochiKit.Signal.connect(this.ui.tourButton, "onclick", this, "tourStart");
     MochiKit.Signal.connect(this.ui.tourWizard, "onclose", this, "tourStop");
     MochiKit.Signal.connect(this.ui.tourWizard, "onchange", this, "tourChange");
@@ -45,7 +53,9 @@ StartApp.prototype.start = function () {
  * Stops the app.
  */
 StartApp.prototype.stop = function () {
-    // Nothing to do here
+    for (var name in this.proc) {
+        MochiKit.Signal.disconnectAll(this.proc[name]);
+    }
 }
 
 /**
@@ -84,15 +94,25 @@ StartApp.prototype.initApps = function () {
     var rows = [];
     for (var i = 0; i < launchers.length; i++) {
         var app = launchers[i];
-        var attrs = { style: { "padding": "0 10px 10px 0", "cursor": "pointer" } };
+        // TODO: Should use a template widget...
+        var attrs = { style: { "padding": "4px 6px 6px 6px" } };
         var tdIcon = MochiKit.DOM.TD(attrs);
         if (app.icon) {
             var img = MochiKit.DOM.IMG({ src: app.icon });
             MochiKit.DOM.replaceChildNodes(tdIcon, img);
         }
-        var name = MochiKit.DOM.STRONG({}, app.name);
-        var tdName = MochiKit.DOM.TD(attrs, name, " - ", app.description);
-        rows.push(MochiKit.DOM.TR({ "data-appid": app.id }, tdIcon, tdName));
+        var style = { paddingLeft: "6px" };
+        var iconAttrs = { ref: "EXPAND", tooltip: "Open in new window",
+                          style: style };
+        var expIcon = RapidContext.Widget.Icon(iconAttrs);
+        expIcon.hide();
+        var style = { margin: "0", lineHeight: "18px", color: "#1E466E" };
+        var title = MochiKit.DOM.H3({ style: style }, app.name, expIcon);
+        var style = { whiteSpace: "pre-line" };
+        var desc = MochiKit.DOM.SPAN({ style: style }, app.description);
+        var tdName = MochiKit.DOM.TD(attrs, title, desc);
+        var attrs = { "class": "clickable", "data-appid": app.id };
+        rows.push(MochiKit.DOM.TR(attrs, tdIcon, tdName));
     }
     MochiKit.DOM.replaceChildNodes(this.ui.appTable, rows);
 }
@@ -118,6 +138,52 @@ StartApp.prototype.initStartupApp = function (app) {
 }
 
 /**
+ * Event handler for the focus gain event (onenter).
+ */
+StartApp.prototype._focusGained = function (evt) {
+    this.focused = true;
+}
+
+/**
+ * Event handler for the focus lost event (onexit).
+ */
+StartApp.prototype._focusLost = function (evt) {
+    this.focused = false;
+    this._showAppModifiers(false);
+}
+
+/**
+ * Handles global key events. This handler only processes events if
+ * the app is currently in focus (as far as can be determined). It
+ * currently only handles the launcher modifier keys.
+ */
+StartApp.prototype._handleKeyEvent = function (evt) {
+    if (evt.type() == "keydown" && evt.modifier().any && this.focused && !this.showingModifiers) {
+        this.showingModifiers = true;
+        this._showAppModifiers(true);
+    } else if (evt.type() == "keyup" && this.showingModifiers) {
+        this.showingModifiers = false;
+        this._showAppModifiers(false);
+    }
+}
+
+/**
+ * Shows or hides the application launcher modifier icons.
+ *
+ * @param {Boolean} visible the visible flag
+ */
+StartApp.prototype._showAppModifiers = function (visible) {
+    var icons = MochiKit.DOM.getElementsByTagAndClassName(null, "widgetIcon", this.ui.appTable);
+    for (var i = 0; i < icons.length; i++) {
+        if (visible) {
+            icons[i].show();
+        } else {
+            icons[i].hide();
+        }
+    }
+}
+
+/**
  * Handles an app launch click.
  *
  * @param {Event} evt the click event
@@ -131,6 +197,7 @@ StartApp.prototype._handleAppLaunch = function (evt) {
         var appId = MochiKit.DOM.getNodeAttribute(tr, "data-appid");
         if (appId) {
             this.startApp(appId, evt.modifier().any ? window.open() : null);
+            this._showAppModifiers(false);
         }
     }
     evt.stop();
