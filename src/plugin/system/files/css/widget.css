@@ -129,13 +129,17 @@
  * Icon Style
  */
 .widgetIcon {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    background-repeat: no-repeat;
+    background-position: 0px 0px;
     cursor: pointer;
     vertical-align: -30%;
 }
-a .widgetIcon {
-    border: none;
+.widgetIcon.widgetHidden {
+    display: none;
 }
-
 
 /**
  * NavigationBar Style
@@ -351,7 +355,7 @@ a .widgetIcon {
     padding-left: 6px;
     padding-right: 15px;
 }
-.widgetTabContainerLabel img {
+.widgetTabContainerLabel .widgetIcon {
     margin-left: 10px;
     margin-right: -10px;
     cursor: default;
