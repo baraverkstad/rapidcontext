@@ -57,7 +57,7 @@
         &#187; <a href="http://fasticon.com/" target="_blank">FastIcon.com</a>,
         copyright &#169; Dirceu Veiga (icons for built-in apps), and<br/>
         &#187; <a href="http://dojotoolkit.org/" target="_blank">The Dojo Toolkit</a>,
-        copyright &#169; The Dojo Foundation (Table and TabContainer textures).</p>
+        copyright &#169; The Dojo Foundation (Table widget textures).</p>
       </div>
       <div style="position: absolute; bottom: 15px; right: 15px;">
         <Button id="aboutClose" style="margin-left: 6px;"><Icon ref="YES" /> Close</Button>

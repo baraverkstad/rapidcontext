@@ -72,8 +72,7 @@ RapidContext LICENSE
     o FastIcon.com (http://fasticon.com/),
       copyright (c) Dirceu Veiga, used for icons for built-in apps
     o The Dojo Toolkit (http://dojotoolkit.org/),
-      copyright (c) The Dojo Foundation, used for Table and TabContainer
-      textures
+      copyright (c) The Dojo Foundation, used for Table widget textures
 
   Each of the above libraries and images is distributed under their own
   respective license. Please visit the links provided for details before

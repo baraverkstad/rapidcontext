@@ -240,7 +240,7 @@ a .widgetIcon {
     position: absolute;
     overflow: auto;
     z-index: 20;
-    border: 1px solid #6290d2;
+    border: 1px solid #6290D2;
     padding: 2px;
     background: #e3edfa;
     color: rgb(30, 70, 110);
@@ -330,18 +330,26 @@ a .widgetIcon {
 }
 .widgetTabContainerLabel {
     float: left;
+    margin-right: 2px;
     padding-left: 9px;
-    background: url(../images/backgrounds/tab-inactive-left.gif) no-repeat left top;
+    border-top: 1px solid #999999;
+    border-left: 1px solid #999999;
+    border-right: 1px solid #999999;
+    border-radius: 6px 6px 0 0;
+    background: #EEEEEE;
+    background-image: -moz-linear-gradient(top, #E8E8E8, #EEEEEE);
+    background-image: -webkit-linear-gradient(top, #E8E8E8, #EEEEEE);
+    background-image: linear-gradient(top, #E8E8E8, #EEEEEE);
     cursor: pointer;
     white-space: nowrap;
     font-size: 13px;
+    color: #444444;
 }
 .widgetTabContainerLabel div {
     padding-top: 4px;
     padding-bottom: 4px;
     padding-left: 6px;
     padding-right: 15px;
-    background: url(../images/backgrounds/tab-inactive-right.gif) no-repeat right top;
 }
 .widgetTabContainerLabel img {
     margin-left: 10px;
@@ -349,19 +357,24 @@ a .widgetIcon {
     cursor: default;
     vertical-align: text-bottom;
 }
+.widgetTabContainerLabel:hover,
 .widgetTabContainerLabel.selected {
-    background: url(../images/backgrounds/tab-active-left.gif) no-repeat left top;
-    border: 0; /* Fix for IE 6 */
-    color: black; /* Fix for IE 6 */
+    border-top: 1px solid #6290D2;
+    border-left: 1px solid #6290D2;
+    border-right: 1px solid #6290D2;
+    background: #FFFFFF;
+    background-image: -moz-linear-gradient(top, #E0F0F8, #FFFFFF);
+    background-image: -webkit-linear-gradient(top, #E0F0F8, #FFFFFF);
+    background-image: linear-gradient(top, #E0F0F8, #FFFFFF);
+    color: black;
 }
 .widgetTabContainerLabel.selected div {
     padding-bottom: 5px;
-    background: url(../images/backgrounds/tab-active-right.gif) no-repeat right top;
 }
 .widgetTabContainerContent {
     position: relative;
     top: -1px;
-    border: 1px solid #6290d2;
+    border: 1px solid #6290D2;
     padding-top: 10px;
     padding-bottom: 10px;
     padding-left: 10px;
@@ -503,7 +516,7 @@ th.widgetTableColumn.sortDesc {
     overflow: hidden;
 }
 .widgetWizardTitle {
-    border-bottom: 1px solid #6290d2;
+    border-bottom: 1px solid #6290D2;
     padding-bottom: 3px;
 }
 .widgetWizardInfo {
