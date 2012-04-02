@@ -161,18 +161,16 @@
 
   <target name="doc-js">
     <property name="jsdoc.dir" value="${basedir}/tools/jsdoc-toolkit" />
-    <property name="js.dir" value="${basedir}/src/plugin/system/files/js" />
+    <fileset id="js.files"
+             dir="${basedir}/src/plugin/system/files/js"
+             includes="RapidContext*.js" />
+    <pathconvert property="jsdoc.files" pathsep=" " refid="js.files" />
     <java jar="${jsdoc.dir}/jsrun.jar" fork="true">
       <sysproperty key="jsdoc.dir" value="${jsdoc.dir}" />
       <arg value="${jsdoc.dir}/app/run.js" />
       <arg value="-t=${jsdoc.dir}/templates/jsdoc" />
       <arg value="-d=${basedir}/doc/js" />
-      <arg value="${js.dir}/RapidContext.App.js" />
-      <arg value="${js.dir}/RapidContext.Procedure.js" />
-      <arg value="${js.dir}/RapidContext.UI.js" />
-      <arg value="${js.dir}/RapidContext.Util.js" />
-      <arg value="${js.dir}/RapidContext.Widget.js" />
-      <arg value="${js.dir}/zzz.RapidContext.SVG.js" />
+      <arg line="${jsdoc.files}" />
     </java>
   </target>
 
