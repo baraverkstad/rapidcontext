@@ -167,8 +167,8 @@
       <div w="65%-30" h="100%" style="float: left;">
         <Form id="procForm" style="width: 100%; height: 100%;">
           <h3>Procedure Details:
-            <Icon id="procAdd" ref="ADD" style="padding-right: 3px;" />
-            <Icon id="procEdit" ref="EDIT" style="padding-right: 3px;" />
+            <Icon id="procAdd" ref="ADD" style="margin-right: 3px;" />
+            <Icon id="procEdit" ref="EDIT" style="margin-right: 3px;" />
             <Icon id="procReload" ref="RELOAD" />
             <Icon id="procLoading" ref="LOADING" />
           </h3>
@@ -295,8 +295,8 @@
     <Pane id="batchTab" pageTitle="Batch">
       <Form id="batchForm">
         <h3>Batch Control:
-          <Icon id="batchDelete" ref="DELETE" style="padding-right: 3px;" />
-          <Icon id="batchDelay" ref="DELAY" style="padding-right: 3px;" />
+          <Icon id="batchDelete" ref="DELETE" style="margin-right: 3px;" />
+          <Icon id="batchDelay" ref="DELAY" style="margin-right: 3px;" />
           <Icon id="batchLoading" ref="LOADING" />
         </h3>
         <table>
@@ -402,7 +402,7 @@
       </div>
       <div w="100%-120" h="60%" style="float: left; padding-bottom: 6px;">
         <h3>Log Entries:
-          <Icon id="logClear" ref="DELETE" style="padding-right: 3px;" />
+          <Icon id="logClear" ref="DELETE" style="margin-right: 3px;" />
           <Icon id="logReload" ref="RELOAD" />
         </h3>
         <Table id="logTable" w="100%" h="100%-22">
