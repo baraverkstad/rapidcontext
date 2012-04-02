@@ -400,7 +400,7 @@ body.doc {
 
 
 /**
- * Additional styles
+ * Markup display styles
  */
 
 /* Box style */
@@ -443,25 +443,6 @@ ul.compact {
     color: #666;
 }
 
-/* Text tooltip */
-.tooltip {
-    cursor: pointer;
-}
-
-/* Disabled text box */
-.disabled {
-    background: #eee;
-    color: #444;
-    border: 1px dashed #aaa;
-    padding-left: 1px;
-    padding-right: 1px;
-}
-
-/* Hidden elements */
-.hidden {
-    display: none;
-}
-
 /* Code style */
 pre.code {
     color: rgb(212,94,138);
@@ -487,4 +468,36 @@ pre.code .comment {
 /* Unimportant style */
 .unimportant {
     color: #888;
+}
+
+
+/**
+ * Interactive UI styles
+ */
+
+/* Text tooltip */
+.tooltip {
+    cursor: pointer;
+}
+
+/* Clickable elements (showing hovering effects) */
+.clickable {
+    cursor: pointer;
+}
+.clickable:hover {
+    background: #EEF8FF;
+}
+
+/* Disabled element (text box) */
+.disabled {
+    background: #eee;
+    color: #444;
+    border: 1px dashed #aaa;
+    padding-left: 1px;
+    padding-right: 1px;
+}
+
+/* Hidden element */
+.hidden {
+    display: none;
 }
