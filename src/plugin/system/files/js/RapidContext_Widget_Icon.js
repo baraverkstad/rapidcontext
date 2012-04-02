@@ -66,15 +66,20 @@ RapidContext.Widget.Icon.prototype.setAttrs = function (attrs) {
         MochiKit.Base.setdefault(attrs,
                                  RapidContext.Widget.Icon[attrs.ref],
                                  RapidContext.Widget.Icon.DEFAULT);
-    } else {
-        MochiKit.Base.setdefault(attrs, RapidContext.Widget.Icon.DEFAULT);
     }
     var locals = RapidContext.Util.mask(attrs, ["ref", "url", "position", "width", "height", "tooltip"]);
-    var styles = { backgroundImage: 'url("' + locals.url + '")',
-                   width: locals.width + "px",
-                   height: locals.height + "px" };
+    var styles = {};
+    if (locals.url) {
+        styles.backgroundImage = 'url("' + locals.url + '")';
+    }
     if (locals.position) {
         styles.backgroundPosition = locals.position;
+    }
+    if (locals.width) {
+        styles.width = locals.width + "px";
+    }
+    if (locals.height != null) {
+        styles.height = locals.height + "px";
     }
     this.setStyle(styles);
     if (typeof(locals.tooltip) != "undefined") {
