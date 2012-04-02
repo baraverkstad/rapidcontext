@@ -457,8 +457,10 @@ RapidContext.App.callProc = function (name, args) {
     });
     if (name.indexOf("System.") == 0) {
         d.addCallback(function (res) {
-            RapidContext.Util.injectStackTrace(stack);
-            RapidContext.App._Cache.update(name, res);
+            if (res) {
+                RapidContext.Util.injectStackTrace(stack);
+                RapidContext.App._Cache.update(name, res);
+            }
             return res;
         });
     }
