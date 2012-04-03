@@ -16,7 +16,7 @@
 if (typeof(RapidContext) == "undefined") {
     RapidContext = {};
 }
-RapidContext.Widget = RapidContext.Widget || { Classes: {}};
+RapidContext.Widget = RapidContext.Widget || { Classes: {}};
 
 /**
  * Creates a new progress bar widget.

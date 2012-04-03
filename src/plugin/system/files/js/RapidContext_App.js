@@ -210,7 +210,7 @@ RapidContext.App.startApp = function (app, container) {
     }
     // TODO: Better detection of Window objects...
     if (container && typeof(container.location) == "object") {
-        var base = document.baseURI || document.location.href;
+        var base = document.baseURI || document.location.href;
         var url = "rapidcontext/app/" + launcher.id;
         container.location.href = RapidContext.Util.resolveURI(url, base);
         return d;
