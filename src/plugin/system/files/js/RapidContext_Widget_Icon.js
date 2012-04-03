@@ -62,9 +62,9 @@ RapidContext.Widget.Classes.Icon = RapidContext.Widget.Icon;
  */
 RapidContext.Widget.Icon.prototype.setAttrs = function (attrs) {
     attrs = MochiKit.Base.update({}, attrs);
-    if (attrs.ref) {
+    if (attrs.ref || attrs.url) {
         MochiKit.Base.setdefault(attrs,
-                                 RapidContext.Widget.Icon[attrs.ref],
+                                 RapidContext.Widget.Icon[attrs.ref] || {},
                                  RapidContext.Widget.Icon.DEFAULT);
     }
     var locals = RapidContext.Util.mask(attrs, ["ref", "url", "position", "width", "height", "tooltip"]);
@@ -93,15 +93,15 @@ RapidContext.Widget.Icon.prototype.setAttrs = function (attrs) {
  */
 MochiKit.Base.update(RapidContext.Widget.Icon, {
     /** The default icon definition, inherited by all others. */
-    DEFAULT: { url: "images/icons/icon_16x16.png", width: 16, height: 16 },
+    DEFAULT: { url: "images/icons/icons_16x16.png", width: 16, height: 16 },
     /** The blank icon definition. */
-    BLANK: { position: "16px 0px", style: { cursor: "default" } },
+    BLANK: { position: "0px 0px", style: { cursor: "default" } },
     /** The close icon definition. */
     CLOSE: { url: "images/icons/close.gif" },
     /** The resize icon definition. */
     RESIZE: { url: "images/icons/resize-handle.gif", style: { cursor: "se-resize" } },
     /** The ok icon definition. */
-    OK: { position: "0px 0px", tooltip: "OK" },
+    OK: { position: "-16px 0px", tooltip: "OK" },
     /** The cancel icon definition. */
     CANCEL: { url: "images/icons/cancel.gif", tooltip: "Cancel" },
     /** The yes icon definition. */
@@ -111,7 +111,7 @@ MochiKit.Base.update(RapidContext.Widget.Icon, {
     /** The help icon definition. */
     HELP: { url: "images/icons/help.gif", tooltip: "Help" },
     /** The error icon definition. */
-    ERROR: { position: "-64px -1224px", tooltip: "Error" },
+    ERROR: { position: "-16px -16px", tooltip: "Error" },
     /** The plus icon definition. */
     PLUS: { url: "images/icons/plus.gif", tooltip: "Show" },
     /** The minus icon definition. */
@@ -167,9 +167,9 @@ MochiKit.Base.update(RapidContext.Widget.Icon, {
     /** The automatic icon definition. */
     AUTOMATIC: { url: "images/icons/automatic.gif", tooltip: "Automatic Processing" },
     /** The plugin icon definition. */
-    PLUGIN: { position: "-144px 0px", tooltip: "Plug-in" },
+    PLUGIN: { position: "-32px 0px", tooltip: "Plug-in" },
     /** The plugin icon definition. */
-    PLUGIN_INACTIVE: { position: "-144px -48px", tooltip: "Inactive Plug-in" },
+    PLUGIN_INACTIVE: { position: "-32px -48px", tooltip: "Inactive Plug-in" },
     /** The folder icon definition. */
     FOLDER: { url: "images/icons/folder.gif" },
     /** The document icon definition. */
