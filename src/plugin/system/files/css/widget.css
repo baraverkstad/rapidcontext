@@ -48,6 +48,12 @@
     right: 5px;
     z-index: 1;
 }
+.widgetDialogClose.widgetIcon {
+    background-position: 0px -32px;
+}
+.widgetDialogClose.widgetIcon:hover {
+    background-position: 0px -48px;
+}
 .widgetDialogResize {
     position: absolute;
     bottom: 0px;
@@ -373,10 +379,10 @@
     margin-left: 10px;
     margin-right: -10px;
     vertical-align: text-bottom;
-    background-position: -208px -32px;
+    background-position: 0px -16px;
 }
 .widgetTabContainerLabel .widgetIcon:hover {
-    background-position: -208px -16px;
+    background-position: 0px -48px;
 }
 .widgetTabContainerContent {
     position: relative;
