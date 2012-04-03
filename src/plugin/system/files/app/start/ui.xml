@@ -45,7 +45,7 @@
         <ul>
           <li>In this tour you'll see some of the basic functionality in RapidContext.</li>
           <li>The tour can be cancelled at any time by pressing the
-              <Icon url="close-red.gif" /> icon on this dialog.</li>
+              <Icon url="images/icons/close-red.gif" /> icon on this dialog.</li>
         </ul>
       </Pane>
       <Pane pageTitle="The Start App">

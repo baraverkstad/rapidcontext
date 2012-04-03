@@ -226,7 +226,7 @@ StartApp.prototype.tourStart = function () {
         var title = this.ui.tourDialog.firstChild;
         MochiKit.Style.setStyle(title, { background: "#70263e" });
         var close = title.nextSibling;
-        close.setAttrs({ url: "close-red.gif" });
+        close.setAttrs({ url: "images/icons/close-red.gif" });
         var div = this.ui.tourDialog.lastChild;
         MochiKit.Style.setStyle(div, { background: "#ffddee" });
         var dim = MochiKit.Style.getViewportDimensions();
