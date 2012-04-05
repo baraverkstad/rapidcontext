@@ -126,6 +126,15 @@
               </td>
             </tr>
             <tr>
+              <th class="label" style="padding-right: 4px;">Storage:</th>
+              <td>
+                <a id="pluginLink" href="#" target="_blank" class="hidden">
+                  <Field name="*" format="/storage/plugin/{id}/" />
+                  <Icon ref="EXPAND" tooltip="Open storage view" style="margin-left: 6px;" />
+                </a>
+              </td>
+            </tr>
+            <tr>
               <th class="label" style="padding-right: 4px;">Name:</th>
               <td>
                 <Field name="name" />
@@ -134,13 +143,13 @@
             <tr>
               <th class="label" style="padding-right: 4px;">Description:</th>
               <td>
-                <Field name="description" style="white-space: pre;" />
+                <Field name="description" style="white-space: pre-wrap;" />
               </td>
             </tr>
             <tr>
               <th class="label" style="padding-right: 4px;">Copyright:</th>
               <td>
-                <Field name="copyright" style="white-space: pre;" />
+                <Field name="copyright" style="white-space: pre-wrap;" />
               </td>
             </tr>
             <tr>
