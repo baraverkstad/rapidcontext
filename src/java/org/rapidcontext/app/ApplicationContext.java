@@ -31,6 +31,7 @@ import org.rapidcontext.app.proc.PluginInstallProcedure;
 import org.rapidcontext.app.proc.PluginListProcedure;
 import org.rapidcontext.app.proc.PluginLoadProcedure;
 import org.rapidcontext.app.proc.PluginUnloadProcedure;
+import org.rapidcontext.app.proc.ProcedureDeleteProcedure;
 import org.rapidcontext.app.proc.ProcedureListProcedure;
 import org.rapidcontext.app.proc.ProcedureReadProcedure;
 import org.rapidcontext.app.proc.ProcedureTypesProcedure;
@@ -257,6 +258,7 @@ public class ApplicationContext {
             library.addBuiltIn(new ProcedureReadProcedure());
             library.addBuiltIn(new ProcedureTypesProcedure());
             library.addBuiltIn(new ProcedureWriteProcedure());
+            library.addBuiltIn(new ProcedureDeleteProcedure());
             library.addBuiltIn(new ResetProcedure());
             library.addBuiltIn(new SessionCurrentProcedure());
             library.addBuiltIn(new SessionTerminateProcedure());

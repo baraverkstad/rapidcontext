@@ -332,17 +332,35 @@ public class Library {
      *             created or written to the data store
      */
     public Procedure storeProcedure(Dict data) throws ProcedureException {
-        AddOnProcedure  proc;
-        String          msg;
-
-        proc = createProcedure(data);
+        AddOnProcedure proc = createProcedure(data);
         try {
+            cache.remove(proc.getName());
             storage.store(PATH_PROC.child(proc.getName(), false), proc.getData());
         } catch (StorageException e) {
-            msg = "failed to write procedure data: " + e.getMessage();
+            String msg = "failed to write procedure data: " + e.getMessage();
             throw new ProcedureException(msg);
         }
         return proc;
+    }
+
+    /**
+     * Removes a procedure from the storage (if possible). Normally,
+     * only procedures in the local plug-in can be removed this way.
+     * Built-in procedures will remain unaffected by this.
+     *
+     * @param name           the name of the procedure
+     *
+     * @throws ProcedureException if an error occurred while removing
+     *             the procedure from storage
+     */
+    public void deleteProcedure(String name) throws ProcedureException {
+        try {
+            cache.remove(name);
+            storage.remove(PATH_PROC.child(name, false));
+        } catch (StorageException e) {
+            String msg = "failed to remove procedure: " + e.getMessage();
+            throw new ProcedureException(msg);
+        }
     }
 
     /**
