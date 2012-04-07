@@ -426,6 +426,7 @@ AdminApp.prototype._callbackShowProcedure = function (res) {
         this.ui.procExec.disabled = false;
         this.ui.procBatch.disabled = false;
         this.ui.procExecResult.removeAll();
+        RapidContext.Util.resizeElements(this.ui.procExecResult);
     }
 }
 
