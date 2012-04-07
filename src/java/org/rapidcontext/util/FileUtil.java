@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -151,6 +151,33 @@ public abstract class FileUtil {
             if (files != null) {
                 for (int i = 0; i < files.length; i++) {
                     delete(files[i]);
+                }
+            }
+        }
+    }
+
+    /**
+     * Deletes all empty directories in a directory, but leaves the
+     * directory itself unmodified. This method will remove any empty
+     * directories recursively, making it possible to remove a tree
+     * of empty directories.
+     *
+     * @param dir            the directory to clean
+     *
+     * @throws IOException if some files couldn't be deleted
+     *
+     * @see #deleteFiles(File)
+     */
+    public static void deleteEmptyDirs(File dir) throws IOException {
+        File[] files = dir.listFiles();
+        if (files != null) {
+            for (int i = 0; i < files.length; i++) {
+                if (files[i].isDirectory()) {
+                    deleteEmptyDirs(files[i]);
+                    File[] subfiles = files[i].listFiles();
+                    if (subfiles == null || subfiles.length == 0) {
+                        delete(files[i]);
+                    }
                 }
             }
         }
