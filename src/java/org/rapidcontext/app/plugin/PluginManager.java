@@ -27,6 +27,7 @@ import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
+import org.rapidcontext.core.proc.Library;
 import org.rapidcontext.core.storage.FileStorage;
 import org.rapidcontext.core.storage.MemoryStorage;
 import org.rapidcontext.core.storage.Metadata;
@@ -467,6 +468,7 @@ public class PluginManager {
         loadJarFiles(pluginId);
 
         // Create plug-in instance
+        Library.builtInPlugin = pluginId;
         className = dict.getString(Plugin.KEY_CLASSNAME, null);
         if (className == null || className.trim().length() <= 0) {
             plugin = new Plugin(dict);
@@ -514,6 +516,7 @@ public class PluginManager {
             LOG.log(Level.WARNING, msg, e);
             throw new PluginException(msg + ": " + e.getMessage());
         }
+        Library.builtInPlugin = SYSTEM_PLUGIN;
     }
 
     /**

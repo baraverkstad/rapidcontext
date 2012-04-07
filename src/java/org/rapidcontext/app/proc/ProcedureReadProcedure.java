@@ -1,7 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
- * All rights reserved.
+ * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -20,6 +19,7 @@ import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.AddOnProcedure;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
+import org.rapidcontext.core.proc.Library;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.Restricted;
@@ -121,7 +121,7 @@ public class ProcedureReadProcedure implements Procedure, Restricted {
         if (!SecurityContext.hasAccess(proc, "")) {
             throw new ProcedureException("no procedure '" + name + "' found");
         }
-        return getProcedureData(proc);
+        return getProcedureData(cx.getLibrary(), proc);
     }
 
     /**
@@ -134,16 +134,16 @@ public class ProcedureReadProcedure implements Procedure, Restricted {
      * @throws ProcedureException if the bindings data access
      *             failed
      */
-    static Dict getProcedureData(Procedure proc) throws ProcedureException {
-        Dict  res;
-
-        res = new Dict();
+    static Dict getProcedureData(Library library, Procedure proc)
+    throws ProcedureException {
+        Dict res = new Dict();
         res.set("name", proc.getName());
         if (proc instanceof AddOnProcedure) {
             res.set("type", ((AddOnProcedure) proc).getType());
         } else {
             res.set("type", "built-in");
         }
+        res.set("plugin", library.getProcedurePluginId(proc.getName()));
         res.set("description", proc.getDescription());
         res.set("bindings", getBindingsData(proc.getBindings()));
         return res;

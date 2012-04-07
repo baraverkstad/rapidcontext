@@ -1,7 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
- * All rights reserved.
+ * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -54,6 +53,11 @@ public class Library {
     private static HashMap types = new HashMap();
 
     /**
+     * The identifier of the currently loading plug-in.
+     */
+    public static String builtInPlugin = null;
+
+    /**
      * The data storage to use for loading and listing procedures.
      */
     private Storage storage = null;
@@ -67,6 +71,13 @@ public class Library {
      * @see #removeBuiltIn(String)
      */
     private HashMap builtIns = new HashMap();
+
+    /**
+     * The map of built-in procedure plugin identifiers. The map is
+     * indexed by the procedure name and contains the plug-in
+     * identifier for the procedure.
+     */
+    private HashMap builtInPlugins = new HashMap();
 
     /**
      * The map of cached procedures. The map is indexed by the
@@ -228,6 +239,24 @@ public class Library {
     }
 
     /**
+     * Returns the plug-in identifier of the specified procedure.
+     *
+     * @param name           the procedure name
+     *
+     * @return the plug-in identifier, or
+     *         null if not found
+     */
+    public String getProcedurePluginId(String name) {
+        Metadata meta = storage.lookup(PATH_PROC.child(name, false));
+        if (builtInPlugins.containsKey(name)) {
+            return (String) builtInPlugins.get(name);
+        } else if (meta != null) {
+            return ((Path) meta.storagePaths().get(0)).name();
+        }
+        return null;
+    }
+
+    /**
      * Adds a new built-in procedure to the library.
      *
      * @param proc           the procedure definition
@@ -242,6 +271,7 @@ public class Library {
                                          "' already exists");
         }
         builtIns.put(proc.getName(), proc);
+        builtInPlugins.put(proc.getName(), builtInPlugin);
     }
 
     /**
@@ -251,6 +281,7 @@ public class Library {
      */
     public void removeBuiltIn(String name) {
         builtIns.remove(name);
+        builtInPlugins.remove(name);
     }
 
     /**

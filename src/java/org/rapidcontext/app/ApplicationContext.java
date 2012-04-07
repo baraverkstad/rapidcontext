@@ -213,6 +213,7 @@ public class ApplicationContext {
      * and the environment configuration.
      */
     private void initAll() {
+        Library.builtInPlugin = PluginManager.SYSTEM_PLUGIN;
         initLibrary();
         initPlugins();
         // TODO: Remove singleton environment reference
