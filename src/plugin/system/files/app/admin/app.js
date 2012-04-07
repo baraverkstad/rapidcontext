@@ -18,6 +18,7 @@ AdminApp.prototype.start = function () {
         appList: "System.App.List",
         plugInList: "System.PlugIn.List",
         procList: "System.Procedure.List",
+        procDelete: "System.Procedure.Delete",
         userList: "System.User.List",
         userChange: "System.User.Change"
     });
@@ -33,7 +34,7 @@ AdminApp.prototype.start = function () {
     MochiKit.Signal.connect(this.ui.appLaunchWindow, "onclick", this, "_launchAppWindow");
     var func = function (td, data) {
         if (data) {
-            var styles = { marginLeft: "6px" };
+            var styles = { marginLeft: "3px" };
             var attrs = { ref: "EXPAND", tooltip: "Open in new window", style: styles };
             var img = RapidContext.Widget.Icon(attrs);
             var link = MochiKit.DOM.A({ href: data, target: "_blank" }, data, img);
@@ -67,8 +68,13 @@ AdminApp.prototype.start = function () {
     MochiKit.Signal.connectOnce(this.ui.procTab, "onenter", this.proc.procList, "call");
     RapidContext.UI.connectProc(this.proc.procList, this.ui.procTreeLoading, this.ui.procTreeReload);
     MochiKit.Signal.connect(this.proc.procList, "onsuccess", this, "_callbackProcedures");
+    RapidContext.UI.connectProc(this.proc.procDelete);
+    MochiKit.Signal.connect(this.proc.procDelete, "oncall", this.ui.overlay, "show");
+    MochiKit.Signal.connect(this.proc.procDelete, "onresponse", this.ui.overlay, "hide");
+    MochiKit.Signal.connect(this.proc.procDelete, "onsuccess", this.proc.procList, "recall");
     MochiKit.Signal.connect(this.ui.procTree, "onselect", this, "_showProcedure");
     MochiKit.Signal.connect(this.ui.procAdd, "onclick", this, "_addProcedure");
+    MochiKit.Signal.connect(this.ui.procRemove, "onclick", this, "_removeProcedure");
     MochiKit.Signal.connect(this.ui.procEdit, "onclick", this, "_editProcedure");
     MochiKit.Signal.connect(this.ui.procEditType, "onchange", this, "_updateProcEdit");
     MochiKit.Signal.connect(this.ui.procEditAdd, "onclick", this, "_addProcBinding");
@@ -346,6 +352,7 @@ AdminApp.prototype._callbackProcedures = function (res) {
         node.data = res[i];
     }
     this.ui.procTree.removeAllMarked();
+    this._showProcedure();
 }
 
 /**
@@ -371,6 +378,7 @@ AdminApp.prototype.showProcedure = function (name) {
 AdminApp.prototype._showProcedure = function () {
     var node = this.ui.procTree.selectedChild();
     this.ui.procForm.reset();
+    this.ui.procRemove.hide();
     this.ui.procEdit.hide();
     this.ui.procReload.hide();
     this.ui.procLoading.hide();
@@ -399,6 +407,9 @@ AdminApp.prototype._callbackShowProcedure = function (res) {
         RapidContext.UI.showError(res);
     } else {
         this._currentProc = res;
+        if (res.plugin == "local") {
+            this.ui.procRemove.show();
+        }
         if (res.type != "built-in") {
             this.ui.procEdit.show();
         }
@@ -507,6 +518,18 @@ AdminApp.prototype._addProcedure = function () {
                  bindings: {}, defaults: {} };
     var d = this._initProcEdit(data);
     d.addCallback(MochiKit.Base.bind("_updateProcEdit", this));
+}
+
+/**
+ * Removes the currently shown procedure (if in the local plug-in).
+ */
+AdminApp.prototype._removeProcedure = function () {
+    var p = this._currentProc;
+    var msg = "Do you really want to delete the\nprocedure '" + p.name + "'?";
+    if (confirm(msg)) {
+        this.ui.overlay.setAttrs({ message: "Deleting..." });
+        this.proc.procDelete(p.name);
+    }
 }
 
 /**
