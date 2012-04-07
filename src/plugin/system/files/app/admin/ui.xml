@@ -196,6 +196,12 @@
                 </td>
               </tr>
               <tr>
+                <th class="label" style="padding-right: 4px;">Plug-In:</th>
+                <td>
+                  <Field name="plugin" />
+                </td>
+              </tr>
+              <tr>
                 <th class="label" style="padding-right: 4px;">Description:</th>
                 <td>
                   <Field name="description" />
