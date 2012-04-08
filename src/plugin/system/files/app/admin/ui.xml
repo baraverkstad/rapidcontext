@@ -4,7 +4,11 @@
   <TabContainer id="tabContainer" w="100%" h="100%">
     <Pane pageTitle="Connections">
       <div w="55%" h="100%" style="float: left; padding-right: 20px;">
-        <h3>Configured Connections: <Icon id="cxnReload" ref="RELOAD" /><Icon id="cxnLoading" ref="LOADING" /></h3>
+        <h3>
+          Configured Connections:
+          <Icon id="cxnReload" ref="RELOAD" style="margin-left: 3px;" />
+          <Icon id="cxnLoading" ref="LOADING" style="margin-left: 3px;" />
+        </h3>
         <Table id="cxnTable" w="100%" h="100%-22">
           <TableColumn title="Id" field="id" sort="asc" key="true" />
           <TableColumn title="Type" field="type" />
@@ -17,7 +21,11 @@
     </Pane>
     <Pane id="appTab" pageTitle="Apps">
       <div w="35%" h="100%" style="float: left; padding-right: 20px;">
-        <h3>Installed Apps: <Icon id="appReload" ref="RELOAD" /><Icon id="appLoading" ref="LOADING" /></h3>
+        <h3>
+          Installed Apps:
+          <Icon id="appReload" ref="RELOAD" style="margin-left: 3px;" />
+          <Icon id="appLoading" ref="LOADING" style="margin-left: 3px;" />
+        </h3>
         <Table id="appTable" w="100%" h="100%-22">
           <TableColumn title="Id" field="id" sort="asc" key="true" />
           <TableColumn title="Name" field="name" />
@@ -76,8 +84,12 @@
             </tr>
             <tr>
               <td colspan="2" style="padding-top: 10px;">
-                <Button id="appLaunch" class="widgetHidden" style="margin-right: 10px"><Icon ref="OK" /> Launch</Button>
-                <Button id="appLaunchWindow" class="widgetHidden"><Icon ref="EXPAND" /> Launch in new window</Button>
+                <Button id="appLaunch" icon="OK" class="widgetHidden" style="margin-right: 10px">
+                  Launch
+                </Button>
+                <Button id="appLaunchWindow" icon="EXPAND" class="widgetHidden">
+                  Launch in new window
+                </Button>
               </td>
             </tr>
           </tbody>
@@ -104,11 +116,19 @@
             </tr>
           </tbody>
         </table>
-        <Button id="pluginInstall" style="margin-top: 4px;"><Icon ref="PLUGIN" /> Install / Update Plug-In</Button>
-        <Button id="pluginReset" style="margin-top: 4px; margin-left: 10px;"><Icon ref="RELOAD" /> Reset Server</Button>
+        <Button id="pluginInstall" icon="PLUGIN" style="margin-top: 4px;">
+          Install / Update Plug-In
+        </Button>
+        <Button id="pluginReset" icon="RELOAD" style="margin-top: 4px; margin-left: 10px;">
+          Reset Server
+        </Button>
       </Form>
       <div w="45%" h="100%-100" style="float: left; padding-right: 20px;">
-        <h3>Installed Plug-Ins: <Icon id="pluginReload" ref="RELOAD" /><Icon id="pluginLoading" ref="LOADING" /></h3>
+        <h3>
+          Installed Plug-Ins:
+          <Icon id="pluginReload" ref="RELOAD" style="margin-left: 3px;" />
+          <Icon id="pluginLoading" ref="LOADING" style="margin-left: 3px;" />
+        </h3>
         <Table id="pluginTable" w="100%" h="100%-22">
           <TableColumn title="Status" field="loaded" type="boolean" />
           <TableColumn title="Identifier" field="id" key="true" />
@@ -173,8 +193,12 @@
             </tr>
             <tr>
               <td colspan="2" style="padding-top: 4px;">
-                <Button id="pluginLoad" style="margin-right: 10px"><Icon ref="OK" tooltip="Load" /> Load</Button>
-                <Button id="pluginUnload" style="margin-right: 10px"><Icon ref="ERROR" tooltip="Unload" /> Unload</Button>
+                <Button id="pluginLoad" icon="OK" style="margin-right: 10px">
+                  Load
+                </Button>
+                <Button id="pluginUnload" icon="ERROR" style="margin-right: 10px">
+                  Unload
+                </Button>
               </td>
             </tr>
           </tbody>
@@ -183,17 +207,22 @@
     </Pane>
     <Pane id="procTab" pageTitle="Procedures">
       <div w="35%" h="100%" style="float: left; padding-right: 20px;">
-        <h3>Procedure Names: <Icon id="procTreeReload" ref="RELOAD" /><Icon id="procTreeLoading" ref="LOADING" /></h3>
+        <h3>
+          Procedure Names:
+          <Icon id="procTreeReload" ref="RELOAD" style="margin-left: 3px;" />
+          <Icon id="procTreeLoading" ref="LOADING" style="margin-left: 3px;" />
+        </h3>
         <Tree id="procTree" w="100%" h="100%-22" />
       </div>
       <div w="65%-30" h="100%" style="float: left;">
         <Form id="procForm" style="width: 100%; height: 100%;">
-          <h3>Procedure Details:
-            <Icon id="procAdd" ref="ADD" style="margin-right: 3px;" />
-            <Icon id="procRemove" ref="REMOVE" style="margin-right: 3px;" />
-            <Icon id="procEdit" ref="EDIT" style="margin-right: 3px;" />
-            <Icon id="procReload" ref="RELOAD" />
-            <Icon id="procLoading" ref="LOADING" />
+          <h3>
+            Procedure Details:
+            <Icon id="procAdd" ref="ADD" style="margin-left: 3px;" />
+            <Icon id="procRemove" ref="REMOVE" style="margin-left: 3px;" />
+            <Icon id="procEdit" ref="EDIT" style="margin-left: 3px;" />
+            <Icon id="procReload" ref="RELOAD" style="margin-left: 3px;" />
+            <Icon id="procLoading" ref="LOADING" style="margin-left: 3px;" />
           </h3>
           <table>
             <tbody>
@@ -223,8 +252,9 @@
               </tr>
             </tbody>
           </table>
-          <h3 style="margin-top: 6px;">Procedure Call:
-            <Icon id="procExecLoading" ref="LOADING" />
+          <h3 style="margin-top: 6px;">
+            Procedure Call:
+            <Icon id="procExecLoading" ref="LOADING" style="margin-left: 3px;" />
             <Icon ref="BLANK" />
           </h3>
           <table>
@@ -232,8 +262,12 @@
             </tbody>
           </table>
           <div style="margin-top: 6px;">
-            <Button id="procExec" disabled="true" style="margin-right: 10px;"><Icon ref="OK" /> Execute</Button>
-            <Button id="procBatch" disabled="true"><Icon ref="DELAY" /> Execute Batch</Button>
+            <Button id="procExec" icon="OK" disabled="true" style="margin-right: 10px;">
+              Execute
+            </Button>
+            <Button id="procBatch" icon="DELAY" disabled="true">
+              Execute Batch
+            </Button>
           </div>
           <Tree id="procExecResult" w="100%" h="10%" style="margin-top: 6px;">
           </Tree>
@@ -254,8 +288,12 @@
           </div>
           <TextArea name="value" w="100%-5" h="100%-65" />
           <div style="position: absolute; bottom: 10px; right: 10px;">
-            <Button id="procArgCancel" style="margin-left: 10px;"><Icon ref="CANCEL" /> Cancel</Button>
-            <Button id="procArgSave" style="margin-left: 10px;"><Icon ref="OK" /> Save</Button>
+            <Button id="procArgCancel" icon="CANCEL" style="margin-left: 10px;">
+              Cancel
+            </Button>
+            <Button id="procArgSave" icon="OK" style="margin-left: 10px;">
+              Save
+            </Button>
           </div>
         </Form>
       </Dialog>
@@ -308,25 +346,30 @@
                     <option value="procedure">Procedure</option>
                     <option value="argument">Argument</option>
                   </select>
-                  <TextField id="procEditAddName" helpText="&lt; Enter new name &gt;" style="margin-right: 6px;" />
-                  <Icon id="procEditAdd" ref="ADD" />
+                  <TextField id="procEditAddName" helpText="&lt; Enter new name &gt;" />
+                  <Icon id="procEditAdd" ref="ADD" style="margin-left: 6px;" />
                 </td>
               </tr>
             </tbody>
           </table>
         </Form>
         <div style="position: absolute; bottom: 10px; right: 10px;">
-          <Button id="procEditCancel" style="margin-left: 10px;"><Icon ref="CANCEL" /> Cancel</Button>
-          <Button id="procEditSave" style="margin-left: 10px;"><Icon ref="OK" /> Save</Button>
+          <Button id="procEditCancel" icon="CANCEL" style="margin-left: 10px;">
+            Cancel
+          </Button>
+          <Button id="procEditSave" icon="OK" style="margin-left: 10px;">
+            Save
+          </Button>
         </div>
       </Dialog>
     </Pane>
     <Pane id="batchTab" pageTitle="Batch">
       <Form id="batchForm">
-        <h3>Batch Control:
-          <Icon id="batchDelete" ref="DELETE" style="margin-right: 3px;" />
-          <Icon id="batchDelay" ref="DELAY" style="margin-right: 3px;" />
-          <Icon id="batchLoading" ref="LOADING" />
+        <h3>
+          Batch Control:
+          <Icon id="batchDelete" ref="DELETE" style="margin-left: 3px;" />
+          <Icon id="batchDelay" ref="DELAY" style="margin-left: 3px;" />
+          <Icon id="batchLoading" ref="LOADING" style="margin-left: 3px;" />
         </h3>
         <table>
           <tbody>
@@ -359,7 +402,11 @@
     </Pane>
     <Pane id="userTab" pageTitle="Users">
       <div w="50%" h="100%" style="float: left; padding-right: 20px;">
-        <h3>User List: <Icon id="userReload" ref="RELOAD" /><Icon id="userLoading" ref="LOADING" /></h3>
+        <h3>
+          User List:
+          <Icon id="userReload" ref="RELOAD" style="margin-left: 3px;" />
+          <Icon id="userLoading" ref="LOADING" style="margin-left: 3px;" />
+        </h3>
         <Table id="userTable" w="100%" h="100%-22">
           <TableColumn title="Id" field="id" sort="asc" key="true" />
           <TableColumn title="Name" field="name" />
@@ -368,7 +415,10 @@
         </Table>
       </div>
       <Form id="userForm" w="50%-30" h="100%" style="float: left;">
-        <h3>Edit User: <Icon id="userAdd" ref="ADD" /></h3>
+        <h3>
+          Edit User:
+          <Icon id="userAdd" ref="ADD" style="margin-left: 3px;" />
+        </h3>
         <table style="width: 100%;">
           <tbody style="width: 100%;">
             <tr>
@@ -411,7 +461,9 @@
             </tr>
             <tr>
               <td colspan="2" style="padding-top: 4px;">
-                <Button id="userSave" style="margin-right: 10px"><Icon ref="OK" /> Save</Button>
+                <Button id="userSave" icon="OK" style="margin-right: 10px">
+                  Save
+                </Button>
               </td>
             </tr>
           </tbody>
@@ -430,9 +482,10 @@
         </Form>
       </div>
       <div w="100%-120" h="60%" style="float: left; padding-bottom: 6px;">
-        <h3>Log Entries:
-          <Icon id="logClear" ref="DELETE" style="margin-right: 3px;" />
-          <Icon id="logReload" ref="RELOAD" />
+        <h3>
+          Log Entries:
+          <Icon id="logClear" ref="DELETE" style="margin-left: 3px;" />
+          <Icon id="logReload" ref="RELOAD" style="margin-left: 3px;" />
         </h3>
         <Table id="logTable" w="100%" h="100%-22">
           <TableColumn title="Id" field="id" type="number" sort="desc" key="true" />
