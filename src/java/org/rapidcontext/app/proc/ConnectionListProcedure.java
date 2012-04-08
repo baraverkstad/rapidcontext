@@ -107,8 +107,8 @@ public class ConnectionListProcedure implements Procedure, Restricted {
      */
     public Object call(CallContext cx, Bindings bindings)
     throws ProcedureException {
-        Array res = new Array();
         Connection[] connections = Connection.findAll(cx.getStorage());
+        Array res = new Array(connections.length);
         for (int i = 0; i < connections.length; i++) {
             res.add(connections[i].serialize().copy());
         }
