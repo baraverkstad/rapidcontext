@@ -57,18 +57,15 @@ RapidContext.Widget.Wizard = function (attrs/*, ... */) {
     o.addClass("widgetWizard");
     o._selectedIndex = -1;
     o.appendChild(MochiKit.DOM.H3({ "class": "widgetWizardTitle" }));
-    var bCancel = RapidContext.Widget.Button({ style: { "margin-right": "10px" } },
-                                         RapidContext.Widget.Icon({ ref: "CANCEL" }),
-                                         " Cancel");
-    var bPrev = RapidContext.Widget.Button({ style: { "margin-right": "10px" } },
-                                       RapidContext.Widget.Icon({ ref: "PREVIOUS" }),
-                                       " Previous");
+    var bCancel = RapidContext.Widget.Button({ icon:"CANCEL", style: { "margin-right": "10px" }},
+                                             "Cancel");
+    var bPrev = RapidContext.Widget.Button({ icon: "PREVIOUS", style: { "margin-right": "10px" }},
+                                           "Previous");
     var bNext = RapidContext.Widget.Button({},
-                                       "Next ",
-                                       RapidContext.Widget.Icon({ ref: "NEXT" }));
-    var bDone = RapidContext.Widget.Button({ highlight: true },
-                                       RapidContext.Widget.Icon({ ref: "OK" }),
-                                       " Finish");
+                                           "Next",
+                                           RapidContext.Widget.Icon({ ref: "NEXT", style: { margin: "0 0 0 6px" }}));
+    var bDone = RapidContext.Widget.Button({ icon: "OK", highlight: true },
+                                           "Finish");
     bCancel.hide();
     o.appendChild(MochiKit.DOM.DIV({ "class": "widgetWizardButtons" },
                                    bCancel, bPrev, bNext, bDone));
