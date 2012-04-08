@@ -8,8 +8,8 @@
   <div style="float: left; width: 30%; height: 100%; border-right: solid 1px #6290d2; padding-right: 6px;">
     <h3>
       Apps:
-      <Icon id="appReload" ref="RELOAD" />
-      <Icon id="appLoading" ref="LOADING" />
+      <Icon id="appReload" ref="RELOAD" style="margin-left: 3px;" />
+      <Icon id="appLoading" ref="LOADING" style="margin-left: 3px;" />
     </h3>
     <div w="100%" h="100%-50" style="overflow-y: auto;">
       <table style="border-collapse: collapse;">
@@ -57,7 +57,7 @@
           <li>It also provides an information area which can be configured
               by the installed plug-ins.</li>
         </ul>
-        <Button id="tourStartLocate"><Icon ref="HELP" /> Locate</Button>
+        <Button id="tourStartLocate" icon="HELP">Locate</Button>
       </Pane>
       <Pane pageTitle="The User Menu">
         <ul>
@@ -66,7 +66,7 @@
           <li>Hovering over it with the mouse reveals the User Menu.</li>
           <li>This menu provides quick launchers for the built-in apps.</li>
         </ul>
-        <Button id="tourUserLocate"><Icon ref="HELP" /> Locate</Button>
+        <Button id="tourUserLocate" icon="HELP">Locate</Button>
       </Pane>
       <Pane pageTitle="Using Help &amp; Docs">
         <ul>
@@ -75,7 +75,7 @@
           <li>It also contains all the developer documentation, including the
               MochiKit API:s.</li>
         </ul>
-        <Button id="tourHelpLocate"><Icon ref="HELP" /> Locate</Button>
+        <Button id="tourHelpLocate" icon="HELP">Locate</Button>
       </Pane>
       <Pane pageTitle="App Switching &amp; Tabs">
         <ul>
@@ -83,7 +83,7 @@
           <li>Switching and closing apps is easy using the tab control bar.</li>
           <li>Multiple instances of a single app is also possible.</li>
         </ul>
-        <Button id="tourTabsLocate"><Icon ref="HELP" /> Locate</Button>
+        <Button id="tourTabsLocate" icon="HELP">Locate</Button>
       </Pane>
       <Pane pageTitle="The Admin App">
         <ul>
@@ -91,7 +91,7 @@
           <li>Here you can monitor and change many aspects of RapidContext.</li>
           <li>It also provides a number of development tools.</li>
         </ul>
-        <Button id="tourAdminLocate"><Icon ref="HELP" /> Locate</Button>
+        <Button id="tourAdminLocate" icon="HELP">Locate</Button>
       </Pane>
       <Pane pageTitle="Editing &amp; Testing Procedures">
         <ul>
@@ -101,7 +101,7 @@
               view, edit and test all installed procedures.</li>
           <li>Try executing the <code>System.Session.Current</code> for example!</li>
         </ul>
-        <Button id="tourAdminProcLocate"><Icon ref="HELP" /> Locate</Button>
+        <Button id="tourAdminProcLocate" icon="HELP">Locate</Button>
       </Pane>
       <Pane pageTitle="Monitoring Client &amp; Server Activity">
         <ul>
@@ -111,7 +111,7 @@
           <li>Errors and warnings from the various apps also end up
               here.</li>
         </ul>
-        <Button id="tourAdminLogLocate"><Icon ref="HELP" /> Locate</Button>
+        <Button id="tourAdminLogLocate" icon="HELP">Locate</Button>
       </Pane>
       <Pane pageTitle="Managing Users">
         <ul>
@@ -121,7 +121,7 @@
           <li>Permissions are controlled by the roles that a user has
               (role "<strong>Admin</strong>" gives full access).</li>
         </ul>
-        <Button id="tourAdminUserLocate"><Icon ref="HELP" /> Locate</Button>
+        <Button id="tourAdminUserLocate" icon="HELP">Locate</Button>
       </Pane>
       <Pane pageTitle="Installing Plug-ins">
         <ul>
@@ -132,7 +132,7 @@
           <li>It is also possible to unload plug-ins to disable them without
               removing them completely.</li>
         </ul>
-        <Button id="tourAdminPluginLocate"><Icon ref="HELP" /> Locate</Button>
+        <Button id="tourAdminPluginLocate" icon="HELP">Locate</Button>
       </Pane>
     </Wizard>
   </Dialog>
