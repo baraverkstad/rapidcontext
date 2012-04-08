@@ -60,7 +60,7 @@
         copyright &#169; The Dojo Foundation (Table widget textures).</p>
       </div>
       <div style="position: absolute; bottom: 15px; right: 15px;">
-        <Button id="aboutClose" style="margin-left: 6px;"><Icon ref="YES" /> Close</Button>
+        <Button id="aboutClose" icon="OK">Close</Button>
       </div>
     </div>
   </Dialog>
