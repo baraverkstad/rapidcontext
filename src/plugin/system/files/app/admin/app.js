@@ -72,7 +72,7 @@ AdminApp.prototype.start = function () {
     this.ui.pluginTable.getChildNodes()[0].setAttrs({ renderer: func });
 
     // Procedure view
-    MochiKit.Signal.connectOnce(this.ui.procTab, "onenter", this.proc.procList, "call");
+    MochiKit.Signal.connectOnce(this.ui.procTab, "onenter", this, "loadProcedures");
     RapidContext.UI.connectProc(this.proc.procList, this.ui.procTreeLoading, this.ui.procTreeReload);
     MochiKit.Signal.connect(this.proc.procList, "onsuccess", this, "_callbackProcedures");
     RapidContext.UI.connectProc(this.proc.procDelete);
@@ -352,6 +352,13 @@ AdminApp.prototype.resetServer = function (e) {
         d.addErrback(RapidContext.UI.showError);
     }
     return d;
+}
+
+/**
+ * Loads the procedures for the procedure tree.
+ */
+AdminApp.prototype.loadProcedures = function () {
+    this.proc.procList();
 }
 
 /**

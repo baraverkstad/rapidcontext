@@ -353,7 +353,7 @@ StartApp.prototype.tourLocateAdmin = function () {
  * Locates the admin procedures.
  */
 StartApp.prototype.tourLocateAdminProcs = function () {
-    var res = this.tourGetAdminTab(2);
+    var res = this.tourGetAdminTab(3);
     res.container.selectChild(res.tab);
     var tree = res.tab.firstChild.lastChild;
     var node = tree.findByPath("System.Session.Current".split("."));
@@ -368,7 +368,7 @@ StartApp.prototype.tourLocateAdminProcs = function () {
  * Locates the admin logs.
  */
 StartApp.prototype.tourLocateAdminLogs = function () {
-    var res = this.tourGetAdminTab(5);
+    var res = this.tourGetAdminTab(6);
     res.container.selectChild(res.tab);
     var box = this.getBoundingBox(res.tab.firstChild.nextSibling);
     var diag = this.getBoundingBox(this.ui.tourDialog);
@@ -380,7 +380,7 @@ StartApp.prototype.tourLocateAdminLogs = function () {
  * Locates the admin users.
  */
 StartApp.prototype.tourLocateAdminUsers = function () {
-    var res = this.tourGetAdminTab(4);
+    var res = this.tourGetAdminTab(5);
     res.container.selectChild(res.tab);
     var box = this.getBoundingBox(res.tab);
     var diag = this.getBoundingBox(this.ui.tourDialog);
@@ -392,7 +392,7 @@ StartApp.prototype.tourLocateAdminUsers = function () {
  * Locates the admin plug-ins.
  */
 StartApp.prototype.tourLocateAdminPlugins = function () {
-    var res = this.tourGetAdminTab(1);
+    var res = this.tourGetAdminTab(2);
     res.container.selectChild(res.tab);
     var box = this.getBoundingBox(res.tab.firstChild);
     var diag = this.getBoundingBox(this.ui.tourDialog);
