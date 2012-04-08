@@ -230,6 +230,7 @@ public class MemoryStorage extends Storage {
             modified = idx.addObject(path.name());
         }
         if (modified) {
+            idx.updateLastModified(null);
             if (!meta.containsKey(parent)) {
                 meta.put(parent, idx);
                 if (!parent.isRoot()) {
@@ -260,6 +261,7 @@ public class MemoryStorage extends Storage {
                 modified = idx.removeObject(path.name());
             }
             if (modified) {
+                idx.updateLastModified(null);
                 if (idx.indices().size() <= 0 && idx.objects().size() <= 0) {
                     meta.remove(parent);
                     if (!parent.isRoot()) {
