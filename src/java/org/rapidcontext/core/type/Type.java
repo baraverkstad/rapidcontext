@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -15,6 +15,7 @@
 package org.rapidcontext.core.type;
 
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -77,9 +78,26 @@ public class Type extends StorableObject {
      *         null if not found
      */
     public static Type find(Storage storage, String id) {
-        Object  obj = storage.load(PATH.descendant(new Path(id)));
-
+        Object obj = storage.load(PATH.descendant(new Path(id)));
         return (obj instanceof Type) ? (Type) obj : null;
+    }
+
+    /**
+     * Searches for all types in the storage.
+     *
+     * @param storage        the storage to search in
+     *
+     * @return an array of all types found
+     */
+    public static Type[] findAll(Storage storage) {
+        Object[] objs = storage.loadAll(PATH);
+        ArrayList list = new ArrayList(objs.length);
+        for (int i = 0; i < objs.length; i++) {
+            if (objs[i] instanceof Type) {
+                list.add(objs[i]);
+            }
+        }
+        return (Type[]) list.toArray(new Type[list.size()]);
     }
 
     /**

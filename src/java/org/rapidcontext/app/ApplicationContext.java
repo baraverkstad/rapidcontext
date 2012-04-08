@@ -45,6 +45,7 @@ import org.rapidcontext.app.proc.ThreadContextProcedure;
 import org.rapidcontext.app.proc.ThreadCreateProcedure;
 import org.rapidcontext.app.proc.ThreadInterruptProcedure;
 import org.rapidcontext.app.proc.ThreadListProcedure;
+import org.rapidcontext.app.proc.TypeListProcedure;
 import org.rapidcontext.app.proc.UserChangeProcedure;
 import org.rapidcontext.app.proc.UserCheckAccessProcedure;
 import org.rapidcontext.app.proc.UserListProcedure;
@@ -269,6 +270,7 @@ public class ApplicationContext {
             library.addBuiltIn(new ThreadCreateProcedure());
             library.addBuiltIn(new ThreadInterruptProcedure());
             library.addBuiltIn(new ThreadListProcedure());
+            library.addBuiltIn(new TypeListProcedure());
             library.addBuiltIn(new UserChangeProcedure());
             library.addBuiltIn(new UserCheckAccessProcedure());
             library.addBuiltIn(new UserListProcedure());
