@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2011 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
@@ -61,6 +62,12 @@ public class ZipFileStorage extends Storage {
     protected ZipFile zip;
 
     /**
+     * The ZIP entries and index map. Indexed by the storage path and
+     * linked to either the Index or the ZipEntry objects.
+     */
+    protected HashMap entries = new HashMap();
+
+    /**
      * Creates a new read-only ZIP file storage.
      *
      * @param zipFile        the ZIP file to use
@@ -71,6 +78,40 @@ public class ZipFileStorage extends Storage {
         super("zipFile", false);
         this.file = zipFile;
         this.zip = new ZipFile(zipFile);
+        init();
+    }
+
+    /**
+     * Initializes this object. This method locates all the ZIP file
+     * entries and creates all the indexes.
+     */
+    public void init() {
+        Index idx = new Index(Path.ROOT);
+        idx.addObject(PATH_STORAGEINFO.name());
+        idx.updateLastModified(new Date(file.lastModified()));
+        entries.put(Path.ROOT, idx);
+        Enumeration e = zip.entries();
+        while (e.hasMoreElements()) {
+            ZipEntry entry = (ZipEntry) e.nextElement();
+            String name = entry.getName();
+            if (entry.isDirectory() && !name.endsWith("/")) {
+                name += "/";
+            } else {
+                name = StringUtils.removeEnd(name, FileStorage.SUFFIX_PROPS);
+            }
+            Path path = new Path(name);
+            Path parent = path.parent();
+            idx = (Index) entries.get(parent);
+            if (path.isIndex()) {
+                idx.addIndex(path.name());
+                idx = new Index(path);
+                idx.updateLastModified(new Date(entry.getTime()));
+                entries.put(path, idx);
+            } else {
+                idx.addObject(path.name());
+                entries.put(path, entry);
+            }
+        }
     }
 
     /**
@@ -81,6 +122,7 @@ public class ZipFileStorage extends Storage {
      */
     public void destroy() throws StorageException {
         try {
+            entries.clear();
             zip.close();
         } catch (Exception e) {
             LOG.log(Level.WARNING, "failed to closed zip file: " + file, e);
@@ -98,22 +140,22 @@ public class ZipFileStorage extends Storage {
      *         null if not found
      */
     public Metadata lookup(Path path) {
-        ZipEntry  entry;
-
         if (PATH_STORAGEINFO.equals(path)) {
             return new Metadata(Dict.class, path, path(), mountTime());
         }
-        entry = locateEntry(path);
-        if (path.isRoot()) {
-            return new Metadata(Index.class, path, path(), file.lastModified());
-        } else if (entry == null) {
-            return null;
-        } else if (entry.isDirectory()) {
-            return new Metadata(Index.class, path, path(), entry.getTime());
-        } else if (entry.getName().endsWith(FileStorage.SUFFIX_PROPS)) {
-            return new Metadata(Dict.class, path, path(), entry.getTime());
+        Object obj = entries.get(path);
+        if (obj instanceof Index) {
+            Index idx = (Index) obj;
+            return new Metadata(Index.class, path, path(), idx.lastModified());
+        } else if (obj instanceof ZipEntry) {
+            ZipEntry entry = (ZipEntry) obj;
+            if (entry.getName().endsWith(FileStorage.SUFFIX_PROPS)) {
+                return new Metadata(Dict.class, path, path(), entry.getTime());
+            } else {
+                return new Metadata(Binary.class, path, path(), entry.getTime());
+            }
         } else {
-            return new Metadata(Binary.class, path, path(), entry.getTime());
+            return null;
         }
     }
 
@@ -129,36 +171,27 @@ public class ZipFileStorage extends Storage {
      *         null if not found
      */
     public Object load(Path path) {
-        ZipEntry  entry;
-        String    msg;
-
         if (PATH_STORAGEINFO.equals(path)) {
             return dict;
         }
-        entry = locateEntry(path);
-        if (path.isRoot()) {
-            Index idx = new Index(path);
-            idx.addObject(PATH_STORAGEINFO.name());
-            locateEntries(null, idx);
-            idx.updateLastModified(new Date(file.lastModified()));
-            return idx;
-        } else if (entry == null) {
-            return null;
-        } else if (path.isIndex()) {
-            Index idx = new Index(path);
-            locateEntries(entry, idx);
-            idx.updateLastModified(new Date(entry.getTime()));
-            return idx;
-        } else if (entry.getName().endsWith(FileStorage.SUFFIX_PROPS)) {
-            try {
-                return PropertiesSerializer.read(zip, entry);
-            } catch (IOException e) {
-                msg = "failed to read ZIP file " + zip + ":" + entry;
-                LOG.log(Level.SEVERE, msg, e);
-                return null;
+        Object obj = entries.get(path);
+        if (obj instanceof Index) {
+            return obj;
+        } else if (obj instanceof ZipEntry) {
+            ZipEntry entry = (ZipEntry) obj;
+            if (entry.getName().endsWith(FileStorage.SUFFIX_PROPS)) {
+                try {
+                    return PropertiesSerializer.read(zip, entry);
+                } catch (IOException e) {
+                    String msg = "failed to read ZIP file " + zip + ":" + entry;
+                    LOG.log(Level.SEVERE, msg, e);
+                    return null;
+                }
+            } else {
+                return new ZipBinary(entry);
             }
         } else {
-            return new ZipBinary(entry);
+            return null;
         }
     }
 
@@ -193,57 +226,6 @@ public class ZipFileStorage extends Storage {
         String msg = "cannot remove from read-only storage at " + path();
         LOG.warning(msg);
         throw new StorageException(msg);
-    }
-
-    /**
-     * Locates the ZIP file entry by the specified path. If no entry
-     * is named exactly as the path, the properties file extension is
-     * appended to the name.
-     *
-     * @param path           the storage location
-     *
-     * @return the file referenced by the path, or
-     *         null if no existing file was found
-     */
-    private ZipEntry locateEntry(Path path) {
-        String    name = StringUtils.removeStart(path.toString(), "/");
-        ZipEntry  entry = zip.getEntry(name);
-
-        if (!path.isIndex() && entry == null) {
-            entry = zip.getEntry(name + FileStorage.SUFFIX_PROPS);
-        }
-        if (entry == null || entry.isDirectory() != path.isIndex()) {
-            return null;
-        } else {
-            return entry;
-        }
-    }
-
-    /**
-     * Locates the immediate child ZIP entries and adds them to the
-     * specified index.
-     *
-     * @param parent         the parent ZIP entry
-     * @param idx            the index to add entries to
-     */
-    private void locateEntries(ZipEntry parent, Index idx) {
-        Enumeration  e = zip.entries();
-        String       dirName = (parent == null) ? "" : parent.getName();
-
-        while (e.hasMoreElements()) {
-            ZipEntry entry = (ZipEntry) e.nextElement();
-            String name = entry.getName();
-            if (name.startsWith(dirName) && name.length() > dirName.length()) {
-                name = name.substring(dirName.length());
-                int seps = StringUtils.countMatches(name, "/");
-                if (seps == 0) {
-                    name = StringUtils.removeEnd(name, FileStorage.SUFFIX_PROPS);
-                    idx.addObject(name);
-                } else if (seps == 1 && name.endsWith("/")) {
-                    idx.addIndex(StringUtils.removeEnd(name, "/"));
-                }
-            }
-        }
     }
 
     /**
