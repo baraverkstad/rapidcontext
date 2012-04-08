@@ -27,6 +27,9 @@
 .widgetButtonHighlight {
     font-weight: bold;
 }
+.widgetButton .widgetIcon {
+    margin-right: 6px;
+}
 
 
 /**
