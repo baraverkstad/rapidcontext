@@ -23,6 +23,7 @@ import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.Restricted;
+import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.Storage;
@@ -128,11 +129,15 @@ public class AppListProcedure implements Procedure, Restricted {
         list = storage.lookupAll(PATH_APP);
         res = new Array(list.length);
         for (int i = 0; i < list.length; i++) {
-            if (Dict.class.isAssignableFrom(list[i].classInstance())) {
+            String id = list[i].path().toIdent(PATH_APP);
+            // TODO: Replace this temporary access check with generic method
+            if (SecurityContext.hasAccess("app", id) &&
+                Dict.class.isAssignableFrom(list[i].classInstance())) {
+
                 path = (Path) list[i].storagePaths().get(0);
                 plugin = ctx.pluginConfig(path.name());
                 dict = new Dict();
-                dict.set("id", list[i].path().name());
+                dict.set("id", id);
                 if (plugin != null) {
                     dict.set("plugin", plugin.get(Plugin.KEY_ID));
                     dict.set("version", plugin.get("version"));
