@@ -15,6 +15,8 @@ function AdminApp() {
 AdminApp.prototype.start = function () {
     // Create procedure callers
     this.proc = RapidContext.Procedure.mapAll({
+        typeList: "System.Type.List",
+        cxnList: "System.Connection.List",
         appList: "System.App.List",
         plugInList: "System.PlugIn.List",
         procList: "System.Procedure.List",
@@ -26,7 +28,12 @@ AdminApp.prototype.start = function () {
     // Tab switcher
     MochiKit.Signal.connect(this.ui.root, "onenter", MochiKit.Base.bind("selectChild", this.ui.tabContainer, null));
 
+    // Connection view
+    RapidContext.UI.connectProc(this.proc.cxnList, this.ui.cxnLoading, this.ui.cxnReload);
+    MochiKit.Signal.connect(this.proc.cxnList, "onsuccess", this.ui.cxnTable, "setData");
+
     // App view
+    MochiKit.Signal.connectOnce(this.ui.appTab, "onenter", this, "loadApps");
     RapidContext.UI.connectProc(this.proc.appList, this.ui.appLoading, this.ui.appReload);
     MochiKit.Signal.connect(this.proc.appList, "onsuccess", this.ui.appTable, "setData");
     MochiKit.Signal.connect(this.ui.appTable, "onselect", this, "_showApp");
@@ -44,8 +51,8 @@ AdminApp.prototype.start = function () {
     this.ui.appResourceTable.getChildNodes()[1].setAttrs({ renderer: func });
 
     // Plug-in view
-    MochiKit.Signal.connect(this.ui.pluginTab, "onenter", this, "_pluginUploadInit");
     MochiKit.Signal.connectOnce(this.ui.pluginTab, "onenter", this, "loadPlugins");
+    MochiKit.Signal.connect(this.ui.pluginTab, "onenter", this, "_pluginUploadInit");
     MochiKit.Signal.connect(this.ui.pluginFile, "onselect", this, "_pluginUploadStart");
     MochiKit.Signal.connect(this.ui.pluginInstall, "onclick", this, "_pluginInstall");
     MochiKit.Signal.connect(this.ui.pluginReset, "onclick", this, "resetServer");
@@ -122,6 +129,7 @@ AdminApp.prototype.start = function () {
     var user = RapidContext.App.user();
     if (!user || !user.role || MochiKit.Base.findValue(user.role, "admin") < 0) {
         this.ui.procAdd.hide();
+        this.ui.procRemove.addClass("hidden");
         this.ui.tabContainer.removeChildNode(this.ui.pluginTab);
         this.ui.tabContainer.removeChildNode(this.ui.userTab);
         RapidContext.Widget.destroyWidget(this.ui.pluginTab);
@@ -131,7 +139,7 @@ AdminApp.prototype.start = function () {
     }
 
     // Initialize data
-    this.proc.appList();
+    this.proc.cxnList();
     this._showProcedure();
     this._stopBatch();
 }
@@ -143,6 +151,13 @@ AdminApp.prototype.stop = function () {
     for (var name in this.proc) {
         MochiKit.Signal.disconnectAll(this.proc[name]);
     }
+}
+
+/**
+ * Loads the app list.
+ */
+AdminApp.prototype.loadApps = function () {
+    this.proc.appList();
 }
 
 /**

@@ -2,9 +2,22 @@
 
 <ui>
   <TabContainer id="tabContainer" w="100%" h="100%">
-    <Pane pageTitle="Apps">
+    <Pane pageTitle="Connections">
+      <div w="55%" h="100%" style="float: left; padding-right: 20px;">
+        <h3>Configured Connections: <Icon id="cxnReload" ref="RELOAD" /><Icon id="cxnLoading" ref="LOADING" /></h3>
+        <Table id="cxnTable" w="100%" h="100%-22">
+          <TableColumn title="Id" field="id" sort="asc" key="true" />
+          <TableColumn title="Type" field="type" />
+          <TableColumn title="In Use" field="_usedChannels" type="number" />
+          <TableColumn title="Open" field="_openChannels" type="number" />
+          <TableColumn title="Limit" field="_maxOpen" type="number" />
+          <TableColumn title="Last Accessed" field="_lastUsedTime" type="datetime" />
+        </Table>
+      </div>
+    </Pane>
+    <Pane id="appTab" pageTitle="Apps">
       <div w="35%" h="100%" style="float: left; padding-right: 20px;">
-        <h3>App Names: <Icon id="appReload" ref="RELOAD" /><Icon id="appLoading" ref="LOADING" /></h3>
+        <h3>Installed Apps: <Icon id="appReload" ref="RELOAD" /><Icon id="appLoading" ref="LOADING" /></h3>
         <Table id="appTable" w="100%" h="100%-22">
           <TableColumn title="Id" field="id" sort="asc" key="true" />
           <TableColumn title="Name" field="name" />
