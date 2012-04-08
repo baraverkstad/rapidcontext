@@ -149,6 +149,9 @@ RapidContext.Widget.TableColumn.prototype._map = function (src, dst) {
             }
             break;
         case "date":
+            if (/^@\d+$/.test(value)) {
+                value = new Date(+value.substr(1));
+            }
             if (value instanceof Date) {
                 value = MochiKit.DateTime.toISODate(value);
             } else {
@@ -156,6 +159,9 @@ RapidContext.Widget.TableColumn.prototype._map = function (src, dst) {
             }
             break;
         case "datetime":
+            if (/^@\d+$/.test(value)) {
+                value = new Date(+value.substr(1));
+            }
             if (value instanceof Date) {
                 value = MochiKit.DateTime.toISOTimestamp(value);
             } else {
@@ -163,6 +169,9 @@ RapidContext.Widget.TableColumn.prototype._map = function (src, dst) {
             }
             break;
         case "time":
+            if (/^@\d+$/.test(value)) {
+                value = new Date(+value.substr(1));
+            }
             if (value instanceof Date) {
                 value = MochiKit.DateTime.toISOTime(value);
             } else {
