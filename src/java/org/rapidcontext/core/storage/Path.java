@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -103,16 +103,48 @@ public class Path {
      * @return a string representation of this object
      */
     public String toString() {
-        StringBuilder  buffer = new StringBuilder();
+        return "/" + toIdent(0);
+    }
 
-        for (int i = 0; i < parts.length; i++) {
-            buffer.append("/");
+    /**
+     * Returns an object identifier based on this path. The
+     * identifier will start at the specified position in this path.
+     *
+     * @param pos            the position, 0 <= pos < length()
+     *
+     * @return an object identifier for this path (without prefix)
+     *
+     * @see #subPath(int)
+     */
+    public String toIdent(int pos) {
+        StringBuilder buffer = new StringBuilder();
+        for (int i = pos; i < parts.length; i++) {
+            if (i > pos) {
+                buffer.append("/");
+            }
             buffer.append(parts[i]);
         }
         if (index) {
             buffer.append("/");
         }
         return buffer.toString();
+    }
+
+    /**
+     * Returns an object identifier based on this path. The
+     * identifier will start after the specified prefix. If the
+     * prefix does not match this path, it is ignored.
+     *
+     * @param prefix         the path prefix to remove
+     *
+     * @return an object identifier for this path (without prefix)
+     */
+    public String toIdent(Path prefix) {
+        if (prefix != null && prefix.length() < length() && startsWith(prefix)) {
+            return toIdent(prefix.length());
+        } else {
+            return toIdent(0);
+        }
     }
 
     /**

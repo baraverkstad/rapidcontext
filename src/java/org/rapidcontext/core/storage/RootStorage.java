@@ -20,7 +20,6 @@ import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.task.Scheduler;
@@ -422,7 +421,7 @@ public class RootStorage extends Storage {
         res = storage.load(path);
         LOG.fine("loaded " + path + " value: " + res);
         if (cache != null && res instanceof Dict) {
-            id = StringUtils.removeStart(path.subPath(1).toString(), "/");
+            id = path.toIdent(1);
             res = initObject(id, (Dict) res);
             if (res instanceof StorableObject) {
                 try {
