@@ -209,7 +209,11 @@ RapidContext.Widget.TableColumn.prototype._render = function (obj) {
     var td = MochiKit.DOM.TD();
     var value = obj[this.field];
     if (typeof(this.renderer) === "function") {
-        this.renderer(td, value, obj.$data);
+        try {
+            this.renderer(td, value, obj.$data);
+        } catch (e) {
+            td.appendChild(RapidContext.Util.createTextNode(e));
+        }
     } else if (typeof(value) == "boolean") {
         td.appendChild(RapidContext.Widget.Icon({ ref: value ? "YES" : "NO" }));
     } else {
