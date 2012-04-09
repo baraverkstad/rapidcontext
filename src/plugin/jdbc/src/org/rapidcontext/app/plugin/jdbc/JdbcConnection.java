@@ -164,7 +164,7 @@ public class JdbcConnection extends Connection {
             return (Driver) loader.loadClass(driverClass).newInstance();
         } catch (ClassNotFoundException e) {
             msg = "couldn't find or load JDBC driver class " + driverClass +
-                  ": " + e.getMessage();
+                  ": class not found";
             throw new ConnectionException(msg);
         } catch (ClassCastException e) {
             msg = "couldn't load JDBC driver, must be an instance of " +
