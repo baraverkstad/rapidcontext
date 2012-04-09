@@ -468,6 +468,8 @@ public class RootStorage extends Storage {
                 msg = "failed to create instance of " + constr.getClass().getName() +
                       " for object " + id + " of type " + typeId;
                 LOG.log(Level.WARNING, msg, e);
+                dict.add("_error", msg);
+                return dict;
             }
         }
         return dict;
