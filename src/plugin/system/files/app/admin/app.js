@@ -31,6 +31,7 @@ AdminApp.prototype.start = function () {
     // Connection view
     RapidContext.UI.connectProc(this.proc.cxnList, this.ui.cxnLoading, this.ui.cxnReload);
     MochiKit.Signal.connect(this.proc.cxnList, "onsuccess", this.ui.cxnTable, "setData");
+    MochiKit.Signal.connect(this.proc.cxnList, "onsuccess", this, "_showConnection");
     MochiKit.Signal.connect(this.ui.cxnTable, "onselect", this, "_showConnection");
     var func = function (td, data) {
         if (/^connection\//.test(data)) {
@@ -43,6 +44,7 @@ AdminApp.prototype.start = function () {
     MochiKit.Signal.connectOnce(this.ui.appTab, "onenter", this, "loadApps");
     RapidContext.UI.connectProc(this.proc.appList, this.ui.appLoading, this.ui.appReload);
     MochiKit.Signal.connect(this.proc.appList, "onsuccess", this.ui.appTable, "setData");
+    MochiKit.Signal.connect(this.proc.appList, "onsuccess", this, "_showApp");
     MochiKit.Signal.connect(this.ui.appTable, "onselect", this, "_showApp");
     MochiKit.Signal.connect(this.ui.appLaunch, "onclick", this, "_launchApp");
     MochiKit.Signal.connect(this.ui.appLaunchWindow, "onclick", this, "_launchAppWindow");
@@ -66,6 +68,7 @@ AdminApp.prototype.start = function () {
     MochiKit.Signal.connect(this.ui.pluginFileDelete, "onclick", this, "_pluginUploadInit");
     RapidContext.UI.connectProc(this.proc.plugInList, this.ui.pluginLoading, this.ui.pluginReload);
     MochiKit.Signal.connect(this.proc.plugInList, "onsuccess", this.ui.pluginTable, "setData");
+    MochiKit.Signal.connect(this.proc.plugInList, "onsuccess", this, "_showPlugin");
     MochiKit.Signal.connect(this.ui.pluginTable, "onselect", this, "_showPlugin");
     MochiKit.Signal.connect(this.ui.pluginLoad, "onclick", this, "_togglePlugin");
     MochiKit.Signal.connect(this.ui.pluginUnload, "onclick", this, "_togglePlugin");
@@ -208,24 +211,30 @@ AdminApp.prototype.loadApps = function () {
 AdminApp.prototype._showApp = function () {
     var data = this.ui.appTable.getSelectedData();
     this.ui.appForm.reset();
-    this.ui.appForm.update(data);
-    var img = null;
-    for (var i = 0; i < data.resources.length; i++) {
-        var res = data.resources[i];
-        if (res.type == "icon") {
-            img = MochiKit.DOM.IMG({ src: res.url });
+    if (data) {
+        this.ui.appForm.update(data);
+        var img = null;
+        for (var i = 0; i < data.resources.length; i++) {
+            var res = data.resources[i];
+            if (res.type == "icon") {
+                img = MochiKit.DOM.IMG({ src: res.url });
+            }
         }
+        MochiKit.DOM.replaceChildNodes(this.ui.appIcon, img);
+        MochiKit.DOM.removeElementClass(this.ui.appLink, "hidden");
+        var path = "/storage/plugin/" + data.plugin + "/app/" + data.id;
+        var url = "/rapidcontext/storage" + path;
+        MochiKit.DOM.setNodeAttribute(this.ui.appLink, "href", url);
+        this.ui.appLink.href = "/rapidcontext/storage" + path;
+        this.ui.appResourceTable.show();
+        this.ui.appResourceTable.setData(data.resources);
+    } else {
+        MochiKit.DOM.replaceChildNodes(this.ui.appIcon);
+        MochiKit.DOM.addElementClass(this.ui.appLink, "hidden");
+        this.ui.appResourceTable.hide();
     }
-    MochiKit.DOM.replaceChildNodes(this.ui.appIcon, img);
-    MochiKit.DOM.removeElementClass(this.ui.appLink, "hidden");
-    var path = "/storage/plugin/" + data.plugin + "/app/" + data.id;
-    var url = "/rapidcontext/storage" + path;
-    MochiKit.DOM.setNodeAttribute(this.ui.appLink, "href", url);
-    this.ui.appLink.href = "/rapidcontext/storage" + path;
-    this.ui.appResourceTable.show();
-    this.ui.appResourceTable.setData(data.resources);
-    this.ui.appLaunch.show();
-    this.ui.appLaunchWindow.show();
+    this.ui.appLaunch.setAttrs({ disabled: !data });
+    this.ui.appLaunchWindow.setAttrs({ disabled: !data });
 }
 
 /**
@@ -257,19 +266,25 @@ AdminApp.prototype.loadPlugins = function () {
 AdminApp.prototype._showPlugin = function () {
     var data = this.ui.pluginTable.getSelectedData();
     this.ui.pluginForm.reset();
-    this.ui.pluginForm.update(data);
-    MochiKit.DOM.removeElementClass(this.ui.pluginLink, "hidden");
-    var path = "/storage/plugin/" + data.id + "/";
-    var url = "/rapidcontext/storage" + path;
-    MochiKit.DOM.setNodeAttribute(this.ui.pluginLink, "href", url);
-    if (data.loaded) {
-        this.ui.pluginLoad.hide();
-        this.ui.pluginUnload.show();
+    if (data) {
+        this.ui.pluginForm.update(data);
+        MochiKit.DOM.removeElementClass(this.ui.pluginLink, "hidden");
+        var path = "/storage/plugin/" + data.id + "/";
+        var url = "/rapidcontext/storage" + path;
+        MochiKit.DOM.setNodeAttribute(this.ui.pluginLink, "href", url);
+        if (data.loaded) {
+            this.ui.pluginLoad.hide();
+            this.ui.pluginUnload.show();
+        } else {
+            this.ui.pluginLoad.show();
+            this.ui.pluginUnload.hide();
+        }
+        if (data.id === "system" || data.id === "local") {
+            this.ui.pluginUnload.hide();
+        }
     } else {
-        this.ui.pluginLoad.show();
-        this.ui.pluginUnload.hide();
-    }
-    if (data.id === "system" || data.id === "local") {
+        MochiKit.DOM.addElementClass(this.ui.pluginLink, "hidden");
+        this.ui.pluginLoad.hide();
         this.ui.pluginUnload.hide();
     }
 }
@@ -292,7 +307,6 @@ AdminApp.prototype._togglePlugin = function () {
     // TODO: This should be handled internally on the server...
     d.addBoth(MochiKit.Base.bind("resetServer", this));
     d.addBoth(MochiKit.Base.bind("loadPlugins", this))
-    d.addBoth(MochiKit.Base.bind("_showPlugin", this))
 }
 
 /**

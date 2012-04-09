@@ -134,10 +134,10 @@
             </tr>
             <tr>
               <td colspan="2" style="padding-top: 10px;">
-                <Button id="appLaunch" icon="OK" class="widgetHidden" style="margin-right: 10px">
+                <Button id="appLaunch" icon="OK" disabled="true" style="margin-right: 10px">
                   Launch
                 </Button>
-                <Button id="appLaunchWindow" icon="EXPAND" class="widgetHidden">
+                <Button id="appLaunchWindow" icon="EXPAND" disabled="true">
                   Launch in new window
                 </Button>
               </td>
