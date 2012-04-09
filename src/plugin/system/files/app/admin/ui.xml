@@ -3,9 +3,9 @@
 <ui>
   <TabContainer id="tabContainer" w="100%" h="100%">
     <Pane pageTitle="Connections">
-      <div w="55%" h="100%" style="float: left; padding-right: 20px;">
+      <div w="45%" h="100%" style="float: left; padding-right: 20px;">
         <h3>
-          Configured Connections:
+          Connection List:
           <Icon id="cxnReload" ref="RELOAD" style="margin-left: 3px;" />
           <Icon id="cxnLoading" ref="LOADING" style="margin-left: 3px;" />
         </h3>
@@ -14,15 +14,65 @@
           <TableColumn title="Type" field="type" />
           <TableColumn title="In Use" field="_usedChannels" type="number" />
           <TableColumn title="Open" field="_openChannels" type="number" />
-          <TableColumn title="Limit" field="_maxOpen" type="number" />
-          <TableColumn title="Last Accessed" field="_lastUsedTime" type="datetime" />
+          <TableColumn title="Last Access" field="_lastUsedTime" type="datetime" />
         </Table>
       </div>
+      <Form id="cxnForm" w="55%-30" h="100%" style="float: left; overflow-y: auto;">
+        <h3>
+          Connection Details:
+<!--
+          <Icon ref="ADD" style="margin-left: 3px;" />
+          <Icon ref="REMOVE" style="margin-left: 3px;" />
+          <Icon ref="EDIT" style="margin-left: 3px;" />
+          <Icon ref="AUTOMATIC" style="margin-left: 3px;" />
+-->
+        </h3>
+        <table>
+          <tbody>
+            <tr>
+              <th class="label" style="padding-right: 4px; width: 90px;">Identifier:</th>
+              <td>
+                <Field name="id" />
+              </td>
+            </tr>
+            <tr>
+              <th class="label" style="padding-right: 4px;">Type:</th>
+              <td>
+                <Field name="type" />
+              </td>
+            </tr>
+            <tr>
+              <th class="label" style="padding-right: 4px;">Description:</th>
+              <td>
+                <Field name="description" />
+              </td>
+            </tr>
+            <tr id="cxnTemplate" class="hidden">
+              <th class="label" style="padding-right: 4px;"></th>
+              <td style="white-space: pre-wrap;"></td>
+            </tr>
+            <tr>
+              <th class="label" style="padding-right: 4px;">Last Access:</th>
+              <td>
+                <Field name="lastAccess" />
+              </td>
+            </tr>
+            <tr>
+              <th class="label" style="padding-right: 4px;">Channels:</th>
+              <td>
+                <Field name="_usedChannels" format="{} in use" /><br/>
+                <Field name="_openChannels" format="{} open" /><br/>
+                <Field name="_maxOpen" format="{} maximum open" />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </Form>
     </Pane>
     <Pane id="appTab" pageTitle="Apps">
       <div w="35%" h="100%" style="float: left; padding-right: 20px;">
         <h3>
-          Installed Apps:
+          App List:
           <Icon id="appReload" ref="RELOAD" style="margin-left: 3px;" />
           <Icon id="appLoading" ref="LOADING" style="margin-left: 3px;" />
         </h3>
@@ -125,7 +175,7 @@
       </Form>
       <div w="45%" h="100%-100" style="float: left; padding-right: 20px;">
         <h3>
-          Installed Plug-Ins:
+          Plug-In List:
           <Icon id="pluginReload" ref="RELOAD" style="margin-left: 3px;" />
           <Icon id="pluginLoading" ref="LOADING" style="margin-left: 3px;" />
         </h3>

@@ -31,6 +31,13 @@ AdminApp.prototype.start = function () {
     // Connection view
     RapidContext.UI.connectProc(this.proc.cxnList, this.ui.cxnLoading, this.ui.cxnReload);
     MochiKit.Signal.connect(this.proc.cxnList, "onsuccess", this.ui.cxnTable, "setData");
+    MochiKit.Signal.connect(this.ui.cxnTable, "onselect", this, "_showConnection");
+    var func = function (td, data) {
+        if (/^connection\//.test(data)) {
+            td.appendChild(RapidContext.Util.createTextNode(data.substr(11)));
+        }
+    };
+    this.ui.cxnTable.getChildNodes()[1].setAttrs({ renderer: func });
 
     // App view
     MochiKit.Signal.connectOnce(this.ui.appTab, "onenter", this, "loadApps");
@@ -150,6 +157,41 @@ AdminApp.prototype.start = function () {
 AdminApp.prototype.stop = function () {
     for (var name in this.proc) {
         MochiKit.Signal.disconnectAll(this.proc[name]);
+    }
+}
+
+/**
+ * Shows detailed connection information.
+ */
+AdminApp.prototype._showConnection = function () {
+    var data = this.ui.cxnTable.getSelectedData();
+    data = MochiKit.Base.update({}, data);
+    if (/^@\d+$/.test(data._lastUsedTime)) {
+        var dttm = new Date(+data._lastUsedTime.substr(1));
+        data.lastAccess = MochiKit.DateTime.toISOTimestamp(dttm);
+    }
+    this.ui.cxnForm.reset();
+    this.ui.cxnForm.update(data);
+    while (this.ui.cxnTemplate.previousSibling.className == "template") {
+        RapidContext.Widget.destroyWidget(this.ui.cxnTemplate.previousSibling);
+    }
+    var hidden = ["id", "type", "maxOpen", "_maxOpen", "_usedChannels",
+                  "_openChannels", "_lastUsedTime", "lastAccess"];
+    RapidContext.Util.mask(data, hidden);
+    for (var k in data) {
+        var title = RapidContext.Util.toTitleCase(k);
+        var value = data[k];
+        if (value == null) {
+            value = "";
+        }
+        if (k == "password") {
+            value = "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022";
+        }
+        var tr = this.ui.cxnTemplate.cloneNode(true);
+        tr.className = "template";
+        MochiKit.DOM.appendChildNodes(tr.firstChild, title + ":");
+        MochiKit.DOM.appendChildNodes(tr.lastChild, value);
+        MochiKit.DOM.insertSiblingNodesBefore(this.ui.cxnTemplate, tr);
     }
 }
 
