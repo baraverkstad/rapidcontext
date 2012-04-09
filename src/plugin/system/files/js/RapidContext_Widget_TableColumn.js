@@ -39,7 +39,8 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *            column header
  * @param {Function} [attrs.renderer] the function that renders the
  *            converted data value into a table cell, called with the
- *            TD DOM node and data value as arguments (in that order)
+ *            TD DOM node, field value and data object as arguments
+ *            (in that order)
  *
  * @return {Widget} the widget DOM node
  *
@@ -85,7 +86,8 @@ RapidContext.Widget.Classes.TableColumn = RapidContext.Widget.TableColumn;
  *            column header
  * @param {Function} [attrs.renderer] the function that renders the
  *            converted data value into a table cell, called with the
- *            TD DOM node and data value as arguments (in that order)
+ *            TD DOM node, field value and data object as arguments
+ *            (in that order)
  */
 RapidContext.Widget.TableColumn.prototype.setAttrs = function (attrs) {
     attrs = MochiKit.Base.update({}, attrs);
