@@ -88,9 +88,18 @@ public abstract class Connection extends StorableObject {
     private GenericObjectPool channelPool = null;
 
     /**
-     * The timestamp (in milliseconds) of the last usage time.
+     * The timestamp (in milliseconds) of the last usage time. This
+     * will be updated on each connection reservation or release. It
+     * is used in the default mechanism for determining if the
+     * connection is active.
      */
     protected long lastUsedTime = System.currentTimeMillis();
+
+    /**
+     * The error message for the last error. This will set or cleared
+     * on each connection reservation.
+     */
+    protected String lastError = null;
 
     /**
      * Searches for a specific connection in the storage.
@@ -166,7 +175,6 @@ public abstract class Connection extends StorableObject {
 
         dict.setInt("_" + KEY_MAX_OPEN, open);
         dict.setInt("_" + KEY_MAX_IDLE_SECS, idle);
-        dict.set("_lastUsedTime", new Date(lastUsedTime));
         channelPool = new GenericObjectPool(new ChannelFactory());
         channelPool.setMaxActive(open);
         channelPool.setMaxIdle(open);
@@ -221,6 +229,12 @@ public abstract class Connection extends StorableObject {
     public Dict serialize() {
         dict.setInt("_openChannels", openChannels());
         dict.setInt("_usedChannels", usedChannels());
+        dict.set("_lastUsedTime", lastUsed());
+        if (lastError == null) {
+            dict.remove("_lastError");
+        } else {
+            dict.set("_lastError", lastError);
+        }
         return dict;
     }
 
@@ -283,6 +297,28 @@ public abstract class Connection extends StorableObject {
     }
 
     /**
+     * Returns the timestamp of the last connection usage. This will
+     * be updated on each connection reservation or release. It is
+     * used in the default mechanism for determining if the
+     * connection is active.
+     *
+     * @return the timestamp of the last connection usage
+     */
+    public Date lastUsed() {
+        return new Date(lastUsedTime);
+    }
+
+    /**
+     * Returns the error message for the last error. This will set or
+     * cleared on each connection reservation.
+     *
+     * @return the error message for the last error
+     */
+    public String lastError() {
+        return lastError;
+    }
+
+    /**
      * Reserves a communication channel for this connection. If the
      * channels supports being pooled, a previously created channel
      * may be returned from this method.
@@ -297,6 +333,7 @@ public abstract class Connection extends StorableObject {
         String   msg = null;
 
         lastUsedTime = System.currentTimeMillis();
+        lastError = null;
         try {
             // TODO: handle shared channels
             msg = "reserving connection channel in " + this;
@@ -304,10 +341,12 @@ public abstract class Connection extends StorableObject {
             channel = (Channel) channelPool.borrowObject();
             LOG.fine("done " + msg);
         } catch (ConnectionException e) {
+            lastError = e.getMessage();
             LOG.log(Level.WARNING, "failed " + msg, e);
             cleanupChannel(channel);
             throw e;
         } catch (Exception e) {
+            lastError = e.getMessage();
             LOG.log(Level.WARNING, "failed " + msg, e);
             cleanupChannel(channel);
             throw new ConnectionException(e.getMessage());
