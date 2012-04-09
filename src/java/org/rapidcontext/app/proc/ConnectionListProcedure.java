@@ -15,6 +15,7 @@
 package org.rapidcontext.app.proc;
 
 import org.rapidcontext.core.data.Array;
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
@@ -107,10 +108,21 @@ public class ConnectionListProcedure implements Procedure, Restricted {
      */
     public Object call(CallContext cx, Bindings bindings)
     throws ProcedureException {
-        Connection[] connections = Connection.findAll(cx.getStorage());
-        Array res = new Array(connections.length);
-        for (int i = 0; i < connections.length; i++) {
-            res.add(connections[i].serialize().copy());
+        Object[] objs = cx.getStorage().loadAll(Connection.PATH);
+        Array res = new Array(objs.length);
+        for (int i = 0; i < objs.length; i++) {
+            if (objs[i] instanceof Connection) {
+                Connection con = (Connection) objs[i];
+                res.add(con.serialize().copy());
+            } else if (objs[i] instanceof Dict) {
+                Dict dict = (Dict) objs[i];
+                if (!dict.containsKey("_error")) {
+                    String msg = "failed to initialize: plug-in for " +
+                                 "connnection type probably not loaded";
+                    dict.add("_error", msg);
+                }
+                res.add(dict);
+            }
         }
         return res;
     }
