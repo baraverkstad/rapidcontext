@@ -33,12 +33,20 @@ AdminApp.prototype.start = function () {
     MochiKit.Signal.connect(this.proc.cxnList, "onsuccess", this.ui.cxnTable, "setData");
     MochiKit.Signal.connect(this.proc.cxnList, "onsuccess", this, "_showConnection");
     MochiKit.Signal.connect(this.ui.cxnTable, "onselect", this, "_showConnection");
-    var func = function (td, data) {
-        if (/^connection\//.test(data)) {
-            td.appendChild(RapidContext.Util.createTextNode(data.substr(11)));
+    var statusRenderer = function (td, value, data) {
+        if (data._error || data._lastError) {
+            td.appendChild(RapidContext.Widget.Icon({ ref: "ERROR" }));
+        } else {
+            td.appendChild(RapidContext.Widget.Icon({ ref: "OK" }));
         }
     };
-    this.ui.cxnTable.getChildNodes()[1].setAttrs({ renderer: func });
+    var typeRenderer = function (td, value, data) {
+        if (/^connection\//.test(value)) {
+            td.appendChild(RapidContext.Util.createTextNode(value.substr(11)));
+        }
+    };
+    this.ui.cxnTable.getChildNodes()[1].setAttrs({ renderer: statusRenderer });
+    this.ui.cxnTable.getChildNodes()[2].setAttrs({ renderer: typeRenderer });
 
     // App view
     MochiKit.Signal.connectOnce(this.ui.appTab, "onenter", this, "loadApps");
@@ -48,16 +56,16 @@ AdminApp.prototype.start = function () {
     MochiKit.Signal.connect(this.ui.appTable, "onselect", this, "_showApp");
     MochiKit.Signal.connect(this.ui.appLaunch, "onclick", this, "_launchApp");
     MochiKit.Signal.connect(this.ui.appLaunchWindow, "onclick", this, "_launchAppWindow");
-    var func = function (td, data) {
+    var urlRenderer = function (td, value, data) {
         if (data) {
             var styles = { marginLeft: "3px" };
             var attrs = { ref: "EXPAND", tooltip: "Open in new window", style: styles };
             var img = RapidContext.Widget.Icon(attrs);
-            var link = MochiKit.DOM.A({ href: data, target: "_blank" }, data, img);
+            var link = MochiKit.DOM.A({ href: value, target: "_blank" }, value, img);
             td.appendChild(link);
         }
     };
-    this.ui.appResourceTable.getChildNodes()[1].setAttrs({ renderer: func });
+    this.ui.appResourceTable.getChildNodes()[1].setAttrs({ renderer: urlRenderer });
 
     // Plug-in view
     MochiKit.Signal.connectOnce(this.ui.pluginTab, "onenter", this, "loadPlugins");
@@ -72,14 +80,14 @@ AdminApp.prototype.start = function () {
     MochiKit.Signal.connect(this.ui.pluginTable, "onselect", this, "_showPlugin");
     MochiKit.Signal.connect(this.ui.pluginLoad, "onclick", this, "_togglePlugin");
     MochiKit.Signal.connect(this.ui.pluginUnload, "onclick", this, "_togglePlugin");
-    var func = function (td, data) {
-        if (data) {
+    var statusRenderer = function (td, value, data) {
+        if (value) {
             td.appendChild(RapidContext.Widget.Icon({ ref: "OK", tooltip: "Loaded" }));
         } else {
             td.appendChild(RapidContext.Widget.Icon({ ref: "ERROR", tooltip: "Not loaded" }));
         }
     };
-    this.ui.pluginTable.getChildNodes()[0].setAttrs({ renderer: func });
+    this.ui.pluginTable.getChildNodes()[0].setAttrs({ renderer: statusRenderer });
 
     // Procedure view
     MochiKit.Signal.connectOnce(this.ui.procTab, "onenter", this, "loadProcedures");

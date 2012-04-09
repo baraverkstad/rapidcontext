@@ -11,6 +11,7 @@
         </h3>
         <Table id="cxnTable" w="100%" h="100%-22">
           <TableColumn title="Id" field="id" sort="asc" key="true" />
+          <TableColumn title="Status" field="status" />
           <TableColumn title="Type" field="type" />
           <TableColumn title="In Use" field="_usedChannels" type="number" />
           <TableColumn title="Open" field="_openChannels" type="number" />
