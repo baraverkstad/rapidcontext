@@ -41,6 +41,8 @@ AdminApp.prototype.start = function () {
     var statusRenderer = function (td, value, data) {
         if (data._error || data._lastError) {
             td.appendChild(RapidContext.Widget.Icon({ ref: "ERROR" }));
+        } else if (!data._openChannels) {
+            td.appendChild(RapidContext.Widget.Icon({ ref: "HELP" }));
         } else {
             td.appendChild(RapidContext.Widget.Icon({ ref: "OK" }));
         }
