@@ -28,6 +28,7 @@ import org.rapidcontext.app.plugin.PluginException;
 import org.rapidcontext.app.plugin.PluginManager;
 import org.rapidcontext.app.proc.AppListProcedure;
 import org.rapidcontext.app.proc.ConnectionListProcedure;
+import org.rapidcontext.app.proc.ConnectionValidateProcedure;
 import org.rapidcontext.app.proc.PluginInstallProcedure;
 import org.rapidcontext.app.proc.PluginListProcedure;
 import org.rapidcontext.app.proc.PluginLoadProcedure;
@@ -253,6 +254,7 @@ public class ApplicationContext {
         try {
             library.addBuiltIn(new AppListProcedure());
             library.addBuiltIn(new ConnectionListProcedure());
+            library.addBuiltIn(new ConnectionValidateProcedure());
             library.addBuiltIn(new PluginInstallProcedure());
             library.addBuiltIn(new PluginListProcedure());
             library.addBuiltIn(new PluginLoadProcedure());
