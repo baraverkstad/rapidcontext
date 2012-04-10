@@ -43,7 +43,7 @@ public class ConnectionListProcedure implements Procedure, Restricted {
     private Bindings defaults = new Bindings();
 
     /**
-     * Creates a new JDBC connection list procedure.
+     * Creates a new connection list procedure.
      */
     public ConnectionListProcedure() {
         this.defaults.seal();
