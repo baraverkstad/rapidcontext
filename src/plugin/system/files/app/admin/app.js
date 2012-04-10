@@ -235,7 +235,9 @@ AdminApp.prototype._showConnection = function () {
         if (value == null) {
             value = "";
         }
-        if (k == "password") {
+        if (/error$/i.test(k)) {
+            value = MochiKit.DOM.SPAN({ "class": "important" }, value);
+        } else if (k == "password") {
             value = "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022";
         }
         var tr = this.ui.cxnTemplate.cloneNode(true);
