@@ -127,6 +127,7 @@ public class ProcedureReadProcedure implements Procedure, Restricted {
     /**
      * Converts a procedure object into a data object.
      *
+     * @param library        the library to use for plug-in info
      * @param proc           the procedure
      *
      * @return the data object created
