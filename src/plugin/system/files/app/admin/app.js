@@ -42,7 +42,7 @@ AdminApp.prototype.start = function () {
         if (data._error || data._lastError) {
             td.appendChild(RapidContext.Widget.Icon({ ref: "ERROR" }));
         } else if (!data._openChannels) {
-            td.appendChild(RapidContext.Widget.Icon({ ref: "HELP" }));
+            td.appendChild(RapidContext.Widget.Icon({ ref: "WARNING", tooltip: "Unknown" }));
         } else {
             td.appendChild(RapidContext.Widget.Icon({ ref: "OK" }));
         }
