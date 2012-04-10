@@ -22,6 +22,8 @@ import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.Restricted;
 import org.rapidcontext.core.security.SecurityContext;
+import org.rapidcontext.core.storage.Metadata;
+import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.type.Connection;
 
 /**
@@ -108,19 +110,24 @@ public class ConnectionListProcedure implements Procedure, Restricted {
      */
     public Object call(CallContext cx, Bindings bindings)
     throws ProcedureException {
-        Object[] objs = cx.getStorage().loadAll(Connection.PATH);
-        Array res = new Array(objs.length);
-        for (int i = 0; i < objs.length; i++) {
-            if (objs[i] instanceof Connection) {
-                Connection con = (Connection) objs[i];
-                res.add(con.serialize().copy());
-            } else if (objs[i] instanceof Dict) {
-                Dict dict = (Dict) objs[i];
+        Metadata[] meta = cx.getStorage().lookupAll(Connection.PATH);
+        Array res = new Array(meta.length);
+        for (int i = 0; i < meta.length; i++) {
+            Object obj = cx.getStorage().load(meta[i].path());
+            Dict dict = null;
+            if (obj instanceof Connection) {
+                dict = ((Connection) obj).serialize().copy();
+            } else if (obj instanceof Dict) {
+                dict = (Dict) obj;
                 if (!dict.containsKey("_error")) {
                     String msg = "failed to initialize: plug-in for " +
                                  "connnection type probably not loaded";
                     dict.add("_error", msg);
                 }
+            }
+            if (dict != null) {
+                Path path = (Path) meta[i].storagePaths().get(0);
+                dict.add("plugin", path.name());
                 res.add(dict);
             }
         }
