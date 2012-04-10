@@ -6,6 +6,7 @@
       <div w="45%" h="100%" style="float: left; padding-right: 20px;">
         <h3>
           Connection List:
+          <Icon id="cxnValidate" ref="AUTOMATIC" tooltip="Check all connections" style="margin-left: 3px;" />
           <Icon id="cxnReload" ref="RELOAD" style="margin-left: 3px;" />
           <Icon id="cxnLoading" ref="LOADING" style="margin-left: 3px;" />
         </h3>
@@ -25,7 +26,6 @@
           <Icon ref="ADD" style="margin-left: 3px;" />
           <Icon ref="REMOVE" style="margin-left: 3px;" />
           <Icon ref="EDIT" style="margin-left: 3px;" />
-          <Icon ref="AUTOMATIC" style="margin-left: 3px;" />
 -->
         </h3>
         <table>

@@ -3,6 +3,8 @@
  */
 function AdminApp() {
     this._defaults = { operatorId: RapidContext.App.user().id };
+    this._cxnIds = null;
+    this._cxnCount = 0;
     this._currentProc = null;
     this._batch = { running: false, delay: 5, queue: [],
                     stat: { success: 0, failed: 0 },
@@ -17,6 +19,7 @@ AdminApp.prototype.start = function () {
     this.proc = RapidContext.Procedure.mapAll({
         typeList: "System.Type.List",
         cxnList: "System.Connection.List",
+        cxnValidate: "System.Connection.Validate",
         appList: "System.App.List",
         plugInList: "System.PlugIn.List",
         procList: "System.Procedure.List",
@@ -33,6 +36,8 @@ AdminApp.prototype.start = function () {
     MochiKit.Signal.connect(this.proc.cxnList, "onsuccess", this.ui.cxnTable, "setData");
     MochiKit.Signal.connect(this.proc.cxnList, "onsuccess", this, "_showConnection");
     MochiKit.Signal.connect(this.ui.cxnTable, "onselect", this, "_showConnection");
+    MochiKit.Signal.connect(this.proc.cxnValidate, "onresponse", this, "_validateCallback");
+    MochiKit.Signal.connect(this.ui.cxnValidate, "onclick", this, "_validateConnections");
     var statusRenderer = function (td, value, data) {
         if (data._error || data._lastError) {
             td.appendChild(RapidContext.Widget.Icon({ ref: "ERROR" }));
@@ -168,6 +173,41 @@ AdminApp.prototype.start = function () {
 AdminApp.prototype.stop = function () {
     for (var name in this.proc) {
         MochiKit.Signal.disconnectAll(this.proc[name]);
+    }
+}
+
+/**
+ * Validates all connections. The connection list is updated before
+ * the validation starts.
+ */
+AdminApp.prototype._validateConnections = function () {
+    this.ui.overlay.setAttrs({ message: "Validating..." });
+    this.ui.overlay.show();
+    var d = this.proc.cxnList();
+    d.addBoth(MochiKit.Base.bind("_validateCallback", this));
+}
+
+/**
+ * Connection validation callback handler. This method will iterate
+ * over all the connections in the connection table one by one. This
+ * callback method will be called between each validation.
+ */
+AdminApp.prototype._validateCallback = function () {
+    if (this._cxnIds == null) {
+        var data = this.ui.cxnTable.getData();
+        this._cxnIds = MochiKit.Base.map(MochiKit.Base.itemgetter("id"), data);
+        this._cxnCount = this._cxnIds.length;
+    }
+    if (this._cxnIds.length == 0) {
+        this._cxnIds = null;
+        this.ui.overlay.hide();
+        this.proc.cxnList();
+    } else {
+        var id = this._cxnIds.shift();
+        var pos = this._cxnCount - this._cxnIds.length;
+        var msg = "Validating " + pos + " of " + this._cxnCount + "...";
+        this.ui.overlay.setAttrs({ message: msg });
+        this.proc.cxnValidate(id);
     }
 }
 
