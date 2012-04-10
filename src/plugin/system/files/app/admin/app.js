@@ -225,11 +225,18 @@ AdminApp.prototype._showConnection = function () {
     }
     this.ui.cxnForm.reset();
     this.ui.cxnForm.update(data);
+    if (data.plugin && data.id) {
+        var url = "/rapidcontext/storage/connection/" + data.id;
+        MochiKit.DOM.setNodeAttribute(this.ui.cxnLink, "href", url);
+        MochiKit.DOM.removeElementClass(this.ui.cxnLink, "hidden");
+    } else {
+        MochiKit.DOM.addElementClass(this.ui.cxnLink, "hidden");
+    }
     while (this.ui.cxnTemplate.previousSibling.className == "template") {
         RapidContext.Widget.destroyWidget(this.ui.cxnTemplate.previousSibling);
     }
-    var hidden = ["id", "type", "maxOpen", "_maxOpen", "_usedChannels",
-                  "_openChannels", "_lastUsedTime", "lastAccess"];
+    var hidden = ["lastAccess", "id", "type", "plugin", "maxOpen", "_maxOpen",
+                  "_usedChannels", "_openChannels", "_lastUsedTime"];
     RapidContext.Util.mask(data, hidden);
     for (var k in data) {
         var title = RapidContext.Util.toTitleCase(k);
@@ -273,11 +280,9 @@ AdminApp.prototype._showApp = function () {
             }
         }
         MochiKit.DOM.replaceChildNodes(this.ui.appIcon, img);
-        MochiKit.DOM.removeElementClass(this.ui.appLink, "hidden");
-        var path = "/storage/plugin/" + data.plugin + "/app/" + data.id;
-        var url = "/rapidcontext/storage" + path;
+        var url = "/rapidcontext/storage/app/" + data.id;
         MochiKit.DOM.setNodeAttribute(this.ui.appLink, "href", url);
-        this.ui.appLink.href = "/rapidcontext/storage" + path;
+        MochiKit.DOM.removeElementClass(this.ui.appLink, "hidden");
         this.ui.appResourceTable.show();
         this.ui.appResourceTable.setData(data.resources);
     } else {

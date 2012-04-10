@@ -11,7 +11,7 @@
           <Icon id="cxnLoading" ref="LOADING" style="margin-left: 3px;" />
         </h3>
         <Table id="cxnTable" w="100%" h="100%-22">
-          <TableColumn title="Id" field="id" sort="asc" key="true" />
+          <TableColumn title="Identifier" field="id" sort="asc" key="true" />
           <TableColumn title="Status" field="status" />
           <TableColumn title="Type" field="type" />
           <TableColumn title="In Use" field="_usedChannels" type="number" />
@@ -31,15 +31,25 @@
         <table>
           <tbody>
             <tr>
-              <th class="label" style="padding-right: 4px; width: 90px;">Identifier:</th>
+              <th class="label" style="padding: 3px 4px 0 1px; width: 90px;">Identifier:</th>
               <td>
-                <Field name="id" />
+                <Field name="id" format="connection/" class="unimportant" />
+                <a id="cxnLink" href="#" target="_blank" class="hidden" title="View in storage browser">
+                  <Field name="id" />
+                  <Icon ref="EXPAND" style="margin-left: 3px;" />
+                </a>
               </td>
             </tr>
             <tr>
               <th class="label" style="padding-right: 4px;">Type:</th>
               <td>
                 <Field name="type" />
+              </td>
+            </tr>
+            <tr>
+              <th class="label" style="padding-right: 4px;">Plug-In:</th>
+              <td>
+                <Field name="plugin" />
               </td>
             </tr>
             <tr>
@@ -78,7 +88,7 @@
           <Icon id="appLoading" ref="LOADING" style="margin-left: 3px;" />
         </h3>
         <Table id="appTable" w="100%" h="100%-22">
-          <TableColumn title="Id" field="id" sort="asc" key="true" />
+          <TableColumn title="Identifier" field="id" sort="asc" key="true" />
           <TableColumn title="Name" field="name" />
           <TableColumn title="Version" field="version" />
         </Table>
@@ -97,18 +107,25 @@
               </td>
             </tr>
             <tr>
+              <th class="label" style="padding: 3px 4px 0 1px;">Identifier:</th>
+              <td>
+                <Field name="id" format="app/" class="unimportant" />
+                <a id="appLink" href="#" target="_blank" class="hidden" title="View in storage browser">
+                  <Field name="id" />
+                  <Icon ref="EXPAND" style="margin-left: 3px;" />
+                </a>
+              </td>
+            </tr>
+            <tr>
               <th class="label" style="padding-right: 4px;">Version:</th>
               <td>
                 <Field name="version" />
               </td>
             </tr>
             <tr>
-              <th class="label" style="padding-right: 4px;">Storage:</th>
+              <th class="label" style="padding-right: 4px;">Plug-In:</th>
               <td>
-                <a id="appLink" href="#" target="_blank" class="hidden">
-                  <Field name="*" format="/storage/plugin/{plugin}/app/{id}" />
-                  <Icon ref="EXPAND" tooltip="Open storage view" style="margin-left: 3px;" />
-                </a>
+                <Field name="plugin" />
               </td>
             </tr>
             <tr>
@@ -194,7 +211,8 @@
             <tr>
               <th class="label" style="padding-right: 4px;">Identifier:</th>
               <td>
-                <Field name="id" />
+                <Field name="id" format="plugin/" class="unimportant" />
+                <Field name="id" style="font-weight: bold; color: #444;" />
               </td>
             </tr>
             <tr>
@@ -212,9 +230,9 @@
             <tr>
               <th class="label" style="padding-right: 4px;">Storage:</th>
               <td>
-                <a id="pluginLink" href="#" target="_blank" class="hidden">
+                <a id="pluginLink" href="#" target="_blank" class="hidden" title="View in storage browser">
                   <Field name="*" format="/storage/plugin/{id}/" />
-                  <Icon ref="EXPAND" tooltip="Open storage view" style="margin-left: 3px;" />
+                  <Icon ref="EXPAND" style="margin-left: 3px;" />
                 </a>
               </td>
             </tr>
@@ -459,7 +477,7 @@
           <Icon id="userLoading" ref="LOADING" style="margin-left: 3px;" />
         </h3>
         <Table id="userTable" w="100%" h="100%-22">
-          <TableColumn title="Id" field="id" sort="asc" key="true" />
+          <TableColumn title="Identifier" field="id" sort="asc" key="true" />
           <TableColumn title="Name" field="name" />
           <TableColumn title="Enabled" field="enabled" type="boolean" />
           <TableColumn title="Description" field="description" maxLength="40" />
