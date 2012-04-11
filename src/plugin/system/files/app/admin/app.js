@@ -246,8 +246,8 @@ AdminApp.prototype._showConnection = function () {
         }
         if (/error$/i.test(k)) {
             value = MochiKit.DOM.SPAN({ "class": "important" }, value);
-        } else if (k == "password") {
-            value = "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022";
+        } else if (/password$/i.test(k)) {
+            value = RapidContext.Widget.Field({ name: k, value: value, mask: true });
         }
         var tr = this.ui.cxnTemplate.cloneNode(true);
         tr.className = "template";
