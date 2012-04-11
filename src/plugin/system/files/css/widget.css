@@ -42,6 +42,8 @@
     border-bottom: 1px solid threedshadow;
     border-left: 1px solid threedhighlight;
     border-right: 1px solid threedshadow;
+    border-radius: 5px 5px 0 5px;
+    box-shadow: 0px 0px 4px #AAAAAA;
     z-index: 100;
     overflow: visible;
 }
@@ -66,10 +68,8 @@
 }
 .widgetDialogTitle {
     margin: 2px;
-    padding-top: 3px;
-    padding-bottom: 3px;
-    padding-left: 3px;
-    padding-right: 3px;
+    border-radius: 3px 3px 0 0;
+    padding: 3px 6px;
     overflow: hidden;
     color: white;
     background-color: #446688;
@@ -84,8 +84,12 @@
     border-bottom: 1px solid threedhighlight;
     border-left: 1px solid threedshadow;
     border-right: 1px solid threedhighlight;
+    border-bottom-left-radius: 3px;
     padding: 8px;
-    background: #f8f8f8;
+    background: #F8F8F8;
+    background-image: -moz-linear-gradient(top, #FFFFFF, #EEEEEE);
+    background-image: -webkit-linear-gradient(top, #FFFFFF, #EEEEEE);
+    background-image: linear-gradient(top, #FFFFFF, #EEEEEE);
     overflow: auto;
 }
 
@@ -254,7 +258,7 @@
     background-image: -moz-linear-gradient(top, #FFFFFF, #EEF8FF);
     background-image: -webkit-linear-gradient(top, #FFFFFF, #EEF8FF);
     background-image: linear-gradient(top, #FFFFFF, #EEF8FF);
-    box-shadow: 2px 2px 2px #DDE2EE;
+    box-shadow: 0px 0px 4px #DDE2EE;
     color: #335577;
     font-size: 20px;
     font-weight: bold;
