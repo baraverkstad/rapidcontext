@@ -459,6 +459,12 @@ pre.code .comment {
     color: #888;
 }
 
+/* Help text style*/
+.helptext {
+    padding: 3px 0;
+    color: #668888;
+}
+
 /* Important style */
 .important {
     font-weight: bold;
