@@ -98,8 +98,6 @@ MochiKit.Base.update(RapidContext.Widget.Icon, {
     BLANK: { position: "0px 0px", style: { cursor: "default" } },
     /** The loading icon definition. */
     LOADING: { url: "images/icons/loading.gif", tooltip: "Loading..." },
-    /** The large loading icon definition. */
-    LOADING_LARGE: { url: "images/icons/loading-large.gif", tooltip: "Loading...", width: 32, height: 32 },
     /** The close icon definition. */
     CLOSE: { position: "0px -16px", tooltip: "Close" },
     /** The close (inverse video) icon definition. */
