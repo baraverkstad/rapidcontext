@@ -27,7 +27,6 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *            defaults to true
  * @param {String} [attrs.message] the overlay message text, defaults
  *            to "Working..."
- * @param {Widget} [...] the child widgets or DOM nodes
  *
  * @return {Widget} the widget DOM node
  *
@@ -37,14 +36,14 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *     operation.
  * @extends RapidContext.Widget
  */
-RapidContext.Widget.Overlay = function (attrs/*, ...*/) {
+RapidContext.Widget.Overlay = function (attrs) {
+    var cover = MochiKit.DOM.DIV({ "class": "widgetOverlayCover" });
     var msg = MochiKit.DOM.DIV({ "class": "widgetOverlayMessage" });
-    var o = MochiKit.DOM.DIV({}, msg);
+    var o = MochiKit.DOM.DIV({}, cover, msg);
     RapidContext.Widget._widgetMixin(o, arguments.callee);
     o.addClass("widgetOverlay");
     attrs = MochiKit.Base.update({ loading: true, message: "Working..." }, attrs);
     o.setAttrs(attrs);
-    o.addAll(MochiKit.Base.extend(null, arguments, 1));
     return o;
 };
 
@@ -68,9 +67,9 @@ RapidContext.Widget.Overlay.prototype.setAttrs = function (attrs) {
         this.message = locals.message;
     }
     if (this.showLoading) {
-        var icon = RapidContext.Widget.Icon({ ref: "LOADING_LARGE" });
+        var icon = RapidContext.Widget.Icon({ url: "images/icons/loading-overlay.gif", width: 32, height: 32 });
         icon.setStyle({ "margin-right": "20px" });
     }
-    MochiKit.DOM.replaceChildNodes(this.firstChild, icon, this.message);
+    MochiKit.DOM.replaceChildNodes(this.lastChild, icon, this.message);
     MochiKit.DOM.updateNodeAttributes(this, attrs);
 };
