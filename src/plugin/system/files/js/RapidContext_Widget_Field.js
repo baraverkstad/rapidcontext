@@ -32,6 +32,9 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  * @param {Number} [attrs.maxLength] the maximum data length,
  *            overflow will be displayed as a tooltip, defaults to
  *            -1 (unlimited)
+ * @param {Boolean} [attrs.mask] the masked display flag, when set
+ *            the field value is only displayed after the user has
+ *            clicked the field, defaults to false
  *
  * @return {Widget} the widget DOM node
  *
@@ -49,8 +52,10 @@ RapidContext.Widget.Field = function (attrs) {
     var o = MochiKit.DOM.SPAN();
     RapidContext.Widget._widgetMixin(o, arguments.callee);
     o.addClass("widgetField");
-    o.setAttrs(MochiKit.Base.update({ name: "", value: "", maxLength: -1 }, attrs));
+    o.setAttrs(MochiKit.Base.update({ name: "", value: "", maxLength: -1, mask: false }, attrs));
     o.defaultValue = o.value;
+    o.defaultMask = o.mask;
+    o.onclick = RapidContext.Widget._eventHandler(null, "_handleClick");
     return o;
 };
 
@@ -67,13 +72,16 @@ RapidContext.Widget.Classes.Field = RapidContext.Widget.Field;
  * @param {Function} [attrs.formatter] the value formatter function
  * @param {Number} [attrs.maxLength] the maximum data length,
  *            overflow will be displayed as a tooltip
+ * @param {Boolean} [attrs.mask] the masked display flag, when set
+ *            the field value is only displayed after the user has
+ *            clicked the field
  *
  * @example
  * field.setAttrs({ value: 0.23 });
  */
 RapidContext.Widget.Field.prototype.setAttrs = function (attrs) {
     attrs = MochiKit.Base.update({}, attrs);
-    var locals = RapidContext.Util.mask(attrs, ["name", "value", "format", "formatter", "maxLength"]);
+    var locals = RapidContext.Util.mask(attrs, ["name", "value", "format", "formatter", "maxLength", "mask"]);
     if (typeof(locals.name) != "undefined") {
         this.name = locals.name;
     }
@@ -86,34 +94,67 @@ RapidContext.Widget.Field.prototype.setAttrs = function (attrs) {
     if (typeof(locals.maxLength) != "undefined") {
         this.maxLength = parseInt(locals.maxLength);
     }
+    if (typeof(locals.mask) != "undefined") {
+        this.mask = locals.mask;
+    }
     if (typeof(locals.value) != "undefined") {
-        var str = this.value = locals.value;
-        if (this.formatter) {
-            try {
-                str = this.formatter(str);
-            } catch (e) {
-                str = e.message;
-            }
-        } else if (str == null || str === "") {
-            str = "";
-        } else if (this.format) {
-            str = MochiKit.Text.format(this.format, str);
-        } else if (typeof(str) != "string") {
-            str = str.toString();
-        }
-        var longStr = str;
-        if (this.maxLength > 0) {
-            str = MochiKit.Text.truncate(str, this.maxLength, "...");
-        }
-        MochiKit.DOM.replaceChildNodes(this, str);
-        this.title = (str == longStr) ? null : longStr;
+        this.value = locals.value;
     }
     MochiKit.DOM.updateNodeAttributes(this, attrs);
+    this.redraw();
+}
+
+/**
+ * Redraws the field from updated values or status. Note that this
+ * method is called automatically whenever the setAttrs() method is
+ * called.
+ */
+RapidContext.Widget.Field.prototype.redraw = function () {
+    var str = this.value;
+    if (this.formatter) {
+        try {
+            str = this.formatter(str);
+        } catch (e) {
+            str = e.message;
+        }
+    } else if (str == null || str === "") {
+        str = "";
+    } else if (this.format) {
+        str = MochiKit.Text.format(this.format, str);
+    } else if (typeof(str) != "string") {
+        str = str.toString();
+    }
+    var longStr = str;
+    if (this.maxLength > 0) {
+        str = MochiKit.Text.truncate(str, this.maxLength, "...");
+    }
+    if (this.mask) {
+        var tooltip = "Click to Show Value";
+        var mask = "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022";
+        var icon = RapidContext.Widget.Icon({ ref: "LOCK", tooltip: tooltip });
+        this.addClass("widgetFieldMask");
+        this.title = tooltip;
+        MochiKit.DOM.replaceChildNodes(this, mask, icon);
+    } else {
+        this.title = (str == longStr) ? null : longStr;
+        MochiKit.DOM.replaceChildNodes(this, str);
+    }
 };
 
 /**
  * Resets the field value to the initial value.
  */
 RapidContext.Widget.Field.prototype.reset = function () {
-    this.setAttrs({ value: this.defaultValue });
+    this.setAttrs({ value: this.defaultValue, mask: this.defaultMask });
+};
+
+/**
+ * Handles click events on the field (if masked).
+ */
+RapidContext.Widget.Field.prototype._handleClick = function () {
+    if (this.mask) {
+        this.mask = false;
+        this.removeClass("widgetFieldMask");
+        this.redraw();
+    }
 };

@@ -95,6 +95,12 @@
  */
 .widgetField {
 }
+.widgetFieldMask {
+    cursor: pointer;
+}
+.widgetField .widgetIcon {
+    margin-left: 3px;
+}
 
 
 /**
