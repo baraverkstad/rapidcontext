@@ -174,14 +174,18 @@ MochiKit.Base.update(RapidContext.Widget.Icon, {
     FLAG_RED: { position: "-64px -48px", tooltip: "Flag" },
     /** The blue flag icon definition. */
     FLAG_BLUE: { position: "-64px -64px", tooltip: "Flag" },
+    /** The green flag icon definition. */
+    FLAG_GREEN: { position: "-64px -80px", tooltip: "Flag" },
+    /** The yellow flag icon definition. */
+    FLAG_YELLOW: { position: "-64px -96px", tooltip: "Flag" },
     /** The red tag icon definition. */
-    TAG_RED: { position: "-64px -80px", tooltip: "Tag" },
+    TAG_RED: { position: "-64px -112px", tooltip: "Tag" },
     /** The blue tag icon definition. */
-    TAG_BLUE: { position: "-64px -96px", tooltip: "Tag" },
+    TAG_BLUE: { position: "-64px -128px", tooltip: "Tag" },
     /** The green tag icon definition. */
-    TAG_GREEN: { position: "-64px -112px", tooltip: "Tag" },
+    TAG_GREEN: { position: "-64px -144px", tooltip: "Tag" },
     /** The yellow tag icon definition. */
-    TAG_YELLOW: { position: "-64px -128px", tooltip: "Tag" },
+    TAG_YELLOW: { position: "-64px -160px", tooltip: "Tag" },
     /** The options icon definition. */
     OPTIONS: { position: "-80px 0px", tooltip: "Options" },
     /** The configure icon definition. */
@@ -270,12 +274,16 @@ MochiKit.Base.update(RapidContext.Widget.Icon, {
     DOCUMENT_WORD: { position: "-192px -16px", tooltip: "Word Document" },
     /** The Excel document icon definition. */
     DOCUMENT_EXCEL: { position: "-192px -32px", tooltip: "Excel Document" },
+    /** The Office document icon definition. */
+    DOCUMENT_OFFICE: { position: "-192px -48px", tooltip: "Office Document" },
     /** The PDF document icon definition. */
-    DOCUMENT_PDF: { position: "-192px -48px", tooltip: "PDF Document" },
+    DOCUMENT_PDF: { position: "-192px -64px", tooltip: "PDF Document" },
     /** The document search icon definition. */
-    DOCUMENT_SEARCH: { position: "-192px -64px", tooltip: "Search Document" },
+    DOCUMENT_SEARCH: { position: "-192px -80px", tooltip: "Search Document" },
     /** The code document icon definition. */
-    DOCUMENT_CODE: { position: "-192px -80px", tooltip: "Code Document" },
+    DOCUMENT_CODE: { position: "-192px -96px", tooltip: "Code Document" },
+    /** The text document icon definition. */
+    DOCUMENT_TEXT: { position: "-192px -112px", tooltip: "Text Document" },
     /** The contact icon definition. */
     CONTACT: { position: "-208px 0px", tooltip: "Contact" },
     /** The phone icon definition. */
@@ -330,6 +338,8 @@ MochiKit.Base.update(RapidContext.Widget.Icon, {
     BOOK: { position: "-256px -48px", tooltip: "Book" },
     /** The open book icon definition. */
     BOOK_OPEN: { position: "-256px -64px", tooltip: "Book" },
+    /** The clock icon definition. */
+    CLOCK: { position: "-256px -80px", tooltip: "Clock" },
     /** The delay icon definition. */
-    DELAY: { position: "-256px -80px", tooltip: "Delay" }
+    DELAY: { position: "-256px -96px", tooltip: "Delay" }
 });
