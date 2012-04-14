@@ -64,12 +64,17 @@ RapidContext.Widget.Overlay.prototype.setAttrs = function (attrs) {
         this.showLoading = MochiKit.Base.bool(locals.loading);
     }
     if (typeof(locals.message) != "undefined") {
-        this.message = locals.message;
+        this.message = locals.message || "";
     }
     if (this.showLoading) {
         var icon = RapidContext.Widget.Icon({ url: "images/icons/loading-overlay.gif", width: 32, height: 32 });
         icon.setStyle({ "margin-right": "20px" });
     }
     MochiKit.DOM.replaceChildNodes(this.lastChild, icon, this.message);
+    if (!this.showLoading && !this.message) {
+        MochiKit.DOM.addElementClass(this.lastChild, "widgetHidden");
+    } else {
+        MochiKit.DOM.removeElementClass(this.lastChild, "widgetHidden");
+    }
     MochiKit.DOM.updateNodeAttributes(this, attrs);
 };
