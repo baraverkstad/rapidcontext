@@ -59,9 +59,10 @@ RapidContext.Widget.Table = function (attrs/*, ...*/) {
     o._data = null;
     o._keyField = null;
     o._selected = [];
+    o._selectMode = "one";
     o._mouseX = 0;
     o._mouseY = 0;
-    o.setAttrs(MochiKit.Base.update({ select: "one" }, attrs));
+    o.setAttrs(attrs);
     o.addAll(MochiKit.Base.extend(null, arguments, 1));
     tbody.onmousedown = RapidContext.Widget._eventHandler("Table", "_handleMouseDown");
     tbody.onmouseup = RapidContext.Widget._eventHandler("Table", "_handleMouseUp");
@@ -83,7 +84,7 @@ RapidContext.Widget.Table.prototype.setAttrs = function (attrs) {
     attrs = MochiKit.Base.update({}, attrs);
     var locals = RapidContext.Util.mask(attrs, ["select", "key"]);
     if (typeof(locals.select) != "undefined") {
-        this.select = locals.select;
+        this._selectMode = locals.select;
     }
     if (typeof(locals.key) != "undefined") {
         this.setIdKey(locals.key);
@@ -418,7 +419,7 @@ RapidContext.Widget.Table.prototype.getSelectedIds = function () {
  *         an array of selected data rows if multiple selection is enabled
  */
 RapidContext.Widget.Table.prototype.getSelectedData = function () {
-    if (this.select === "multiple") {
+    if (this._selectMode === "multiple") {
         var res = [];
         for (var i = 0; i < this._selected.length; i++) {
             res.push(this._rows[this._selected[i]].$data);
@@ -564,7 +565,7 @@ RapidContext.Widget.Table.prototype._handleMouseUp = function (evt) {
         return true;
     }
     var row = tr.rowNo;
-    if (this.select === "multiple") {
+    if (this._selectMode === "multiple") {
         if (evt.modifier().ctrl || evt.modifier().meta) {
             var pos = MochiKit.Base.findIdentical(this._selected, row);
             if (pos >= 0) {
@@ -596,7 +597,7 @@ RapidContext.Widget.Table.prototype._handleMouseUp = function (evt) {
             this._selected = [row];
             this._markSelection(row);
         }
-    } else if (this.select !== "none") {
+    } else if (this._selectMode !== "none") {
         this._unmarkSelection();
         this._selected = [row];
         this._markSelection(row);
