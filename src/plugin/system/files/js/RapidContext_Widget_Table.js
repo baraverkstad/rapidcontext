@@ -249,7 +249,8 @@ RapidContext.Widget.Table.prototype.getData = function () {
  * having properties corresponding to the table column fields. Any
  * object property not mapped to a table column will be ignored (i.e.
  * a hidden column). See the TableColumn class for data mapping
- * details.
+ * details. Note that automatically generated row ids will be reset
+ * by this method and any selection on such tables is lost.
  *
  * @param {Array} data an array with data objects
  *
@@ -363,6 +364,36 @@ RapidContext.Widget.Table.prototype._renderRows = function () {
         tbody.appendChild(MochiKit.DOM.TR());
     }
 };
+
+/**
+ * Returns the number of rows in the table. This is a convenience
+ * method for "getData().length" and always returns the same row
+ * count.
+ *
+ * @return {Number} the number of table rows
+ */
+RapidContext.Widget.Table.prototype.getRowCount = function () {
+    return this._rows.length;
+}
+
+/**
+ * Returns the row id for the specified row index. If the row index
+ * is out of bounds, null will be returned. The row ids are the data
+ * values from the key column, or automatically generated internal
+ * values if no key column is set. Note that the row index uses the
+ * current table sort order.
+ *
+ * @param {Number} index the row index, 0 <= index < row count
+ *
+ * @return {String} the unique row id, or null if not found
+ */
+RapidContext.Widget.Table.prototype.getRowId = function (index) {
+    if (index >= 0 && index < this._rows.length) {
+        return this._rows[index].$id;
+    } else {
+        return null;
+    }
+}
 
 /**
  * Returns the currently selected row ids. If no rows are selected,
