@@ -251,17 +251,20 @@
     display: inline-block;
     position: relative;
     margin-top: 25%;
-    border: 1px solid #AAC2DD;
+    border: 1px solid #CCDDEE;
     border-radius: 10px 10px;
     padding: 30px 60px;
-    background-color: #EEF8FF;
-    background-image: -moz-linear-gradient(top, #FFFFFF, #EEF8FF);
-    background-image: -webkit-linear-gradient(top, #FFFFFF, #EEF8FF);
-    background-image: linear-gradient(top, #FFFFFF, #EEF8FF);
-    box-shadow: 0px 0px 4px #DDE2EE;
-    color: #335577;
+    background-color: #F8FBFF;
+    background-image: -moz-linear-gradient(top, #FFFFFF, #F8FBFF);
+    background-image: -webkit-linear-gradient(top, #FFFFFF, #F8FBFF);
+    background-image: linear-gradient(top, #FFFFFF, #F8FBFF);
+    box-shadow: 0px 0px 4px #DDDDDD;
+    color: #446688;
     font-size: 20px;
     font-weight: bold;
+}
+.widgetOverlayMessage.widgetHidden {
+    display: none;
 }
 
 
