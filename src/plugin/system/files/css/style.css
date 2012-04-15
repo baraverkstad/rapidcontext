@@ -461,8 +461,8 @@ pre.code .comment {
 
 /* Help text style*/
 .helptext {
-    padding: 4px 0;
-    color: #887766;
+    padding: 4px 0 10px 0;
+    color: #888888;
 }
 
 /* Important style */
