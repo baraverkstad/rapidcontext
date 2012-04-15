@@ -494,6 +494,14 @@ pre.code .comment {
     background: #EEF8FF;
 }
 
+/* Unselectable elements (text selection disabled) */
+.unselectable {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
 /* Disabled element (text box) */
 .disabled {
     background: #eee;

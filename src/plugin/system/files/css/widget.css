@@ -386,6 +386,10 @@
     white-space: nowrap;
     font-size: 13px;
     color: #444444;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 .widgetTabContainerLabel:hover,
 .widgetTabContainerLabel.selected {
@@ -479,6 +483,10 @@ th.widgetTableColumn {
     background-repeat: no-repeat;
     background-position: top right;
     text-align: left;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 th.widgetTableColumn.sortAsc {
     background-image: url(../images/backgrounds/tablecolumn-up.gif);
@@ -530,6 +538,10 @@ th.widgetTableColumn.sortDesc {
 .widgetTreeNode {
     margin: 0px;
     cursor: pointer;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 .widgetTreeNode .selected {
     background: #ffffaa;
