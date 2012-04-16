@@ -71,7 +71,7 @@
            debug="on"
            deprecation="on">
       <!-- TODO: Remove this hack once Java behaves properly -->
-      <compilerarg value="-Xbootclasspath/p:${basedir}/lib/js.jar" />
+      <compilerarg value="-Xbootclasspath/p:${basedir}/lib/js-1.7R3.jar" />
     </javac>
     <copy file="build.properties" todir="classes/org/rapidcontext/app/"/>
     <propertyfile file="classes/org/rapidcontext/app/build.properties">

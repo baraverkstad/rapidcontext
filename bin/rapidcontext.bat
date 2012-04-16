@@ -2,7 +2,7 @@
 
 ::Setup default values
 set _JAVA=java.exe
-set _JAVA_OPTS=-Xbootclasspath/p:lib/js.jar %JAVA_OPTS%
+set _JAVA_OPTS=-Xbootclasspath/p:lib/js-1.7R3.jar %JAVA_OPTS%
 
 ::Change to application directory & locate JAR file
 for %%x in (%0) do pushd %%~dpsx

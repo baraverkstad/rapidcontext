@@ -55,7 +55,7 @@ else
 fi
 
 # Setup JAVA_OPTS variable
-JAVA_OPTS="-Xbootclasspath/p:lib/js.jar $JAVA_OPTS"
+JAVA_OPTS="-Xbootclasspath/p:lib/js-1.7R3.jar $JAVA_OPTS"
 case "$JAVA_OPTS" in
 (*-DDEBUG*)
     JAVA_OPTS="$JAVA_OPTS -Djava.util.logging.config.file=lib/debug.properties"
