@@ -324,6 +324,17 @@ public class Request implements HttpUtil {
     }
 
     /**
+     * Returns the request content type value. This is normally set
+     * to "application/x-www-form-urlencoded" for POST data, but
+     * other MIME types may occasionally be used.
+     *
+     * @return the HTTP content type header value
+     */
+    public String getContentType() {
+        return request.getContentType();
+    }
+
+    /**
      * Returns the IP address of the request sender.
      *
      * @return the IP address of the request sender
