@@ -34,6 +34,7 @@ import org.rapidcontext.core.storage.FileStorage;
 import org.rapidcontext.core.storage.Index;
 import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
+import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.web.Mime;
 import org.rapidcontext.core.web.Request;
 import org.rapidcontext.core.web.RequestHandler;
@@ -60,8 +61,7 @@ public class StorageRequestHandler extends RequestHandler {
      */
     protected static final String[] METHODS = {
         METHOD.OPTIONS, METHOD.HEAD, METHOD.GET,
-        // METHOD.POST,
-        METHOD.PUT, METHOD.DELETE,
+        METHOD.POST, METHOD.PUT, METHOD.DELETE,
         METHOD.PROPFIND, METHOD.MKCOL, // METHOD.PROPPATCH,
         // METHOD.COPY,
         METHOD.MOVE, METHOD.LOCK, METHOD.UNLOCK
@@ -355,39 +355,70 @@ public class StorageRequestHandler extends RequestHandler {
     }
 
     /**
+     * Processes an HTTP POST request.
+     *
+     * @param request        the request to process
+     */
+    protected void doPost(Request request) {
+        if (!Mime.isInputMatch(request, Mime.JSON)) {
+            String msg = "application/json content type required";
+            request.sendError(STATUS.UNSUPPORTED_MEDIA_TYPE, null, msg);
+            return;
+        }
+        try {
+            Storage storage = ApplicationContext.getInstance().getStorage();
+            Path path = new Path(request.getPath());
+            Metadata prev = storage.lookup(path);
+            // TODO: JsSerializer.unserialize reorders properties...
+            Object data = JsSerializer.unserialize(request.getInputString());
+            storage.store(path, data);
+            if (prev == null) {
+                request.sendText(STATUS.CREATED, null, null);
+            } else {
+                request.sendText(STATUS.OK, null, null);
+            }
+        } catch (Exception e) {
+            LOG.log(Level.WARNING, "failed to write " + request.getPath(), e);
+            errorInternal(request, e.getMessage());
+        }
+    }
+
+    /**
      * Processes an HTTP PUT request.
      *
      * @param request        the request to process
      */
     protected void doPut(Request request) {
-        ApplicationContext  ctx = ApplicationContext.getInstance();
-        String              fileName;
-        File                file;
-        Path                path;
-        Dict                dict;
-
         if (request.getHeader(HEADER.CONTENT_RANGE) != null) {
             request.sendError(STATUS.NOT_IMPLEMENTED);
             return;
         }
+        if (request.getPath().endsWith("/")) {
+            errorBadRequest(request, "cannot write data to folder");
+            return;
+        }
         try {
-            // TODO: check for existing parent path
-            // TODO: check that request path is for object
-            fileName = StringUtils.substringAfterLast(request.getPath(), "/");
-            file = FileUtil.tempFile(fileName);
+            Storage storage = ApplicationContext.getInstance().getStorage();
+            Path path = new Path(StringUtils.removeEnd(request.getPath(), FileStorage.SUFFIX_PROPS));
+            Metadata prev = storage.lookup(path);
+            String fileName = StringUtils.substringAfterLast(request.getPath(), "/");
+            File file = FileUtil.tempFile(fileName);
             FileUtil.copy(request.getInputStream(), file);
-            path = new Path(StringUtils.removeEnd(request.getPath(), FileStorage.SUFFIX_PROPS));
             if (request.getPath().endsWith(FileStorage.SUFFIX_PROPS)) {
-                dict = PropertiesSerializer.read(file);
+                Dict dict = PropertiesSerializer.read(file);
                 file.delete();
-                ctx.getStorage().store(path, dict);
+                storage.store(path, dict);
             } else {
-                ctx.getStorage().store(path, file);
+                storage.store(path, file);
             }
-            // TODO: overwriting existing data should give 200
-            request.sendText(STATUS.CREATED, null, null);
+            if (prev == null) {
+                request.sendText(STATUS.CREATED, null, null);
+            } else {
+                request.sendText(STATUS.OK, null, null);
+            }
         } catch (Exception e) {
             LOG.log(Level.WARNING, "failed to write " + request.getPath(), e);
+            errorInternal(request, e.getMessage());
         }
     }
 
@@ -397,28 +428,22 @@ public class StorageRequestHandler extends RequestHandler {
      * @param request        the request to process
      */
     protected void doDelete(Request request) {
-        ApplicationContext  ctx = ApplicationContext.getInstance();
-        Path                path = new Path(request.getPath());
-        Metadata            meta = null;
-
         try {
-            path = normalizePath(path);
-            if (path != null) {
-                meta = ctx.getStorage().lookup(path);
-            }
-            if (meta == null) {
+            Storage storage = ApplicationContext.getInstance().getStorage();
+            Path path = normalizePath(new Path(request.getPath()));
+            if (path == null) {
                 errorNotFound(request);
                 return;
             }
-            ctx.getStorage().remove(path);
-            meta = ctx.getStorage().lookup(path);
-            if (meta == null) {
+            storage.remove(path);
+            if (storage.lookup(path) == null) {
                 request.sendText(STATUS.NO_CONTENT, null, null);
             } else {
                 request.sendError(STATUS.FORBIDDEN);
             }
         } catch (Exception e) {
             LOG.log(Level.WARNING, "failed to delete " + request.getPath(), e);
+            request.sendError(STATUS.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -674,22 +699,19 @@ public class StorageRequestHandler extends RequestHandler {
      * @return the normalized path
      */
     private Path normalizePath(Path path) {
-        ApplicationContext  ctx = ApplicationContext.getInstance();
-        Path                testPath = path;
-        Metadata            meta;
-        String              str;
-
-        meta = ctx.getStorage().lookup(testPath);
+        Storage storage = ApplicationContext.getInstance().getStorage();
+        Path lookupPath = path;
+        Metadata meta = storage.lookup(lookupPath);
         if (meta == null && path.name().endsWith(FileStorage.SUFFIX_PROPS)) {
-            str = StringUtils.removeEnd(path.name(), FileStorage.SUFFIX_PROPS);
-            testPath = path.parent().child(str, false);
-            meta = ctx.getStorage().lookup(testPath);
+            String str = StringUtils.removeEnd(path.name(), FileStorage.SUFFIX_PROPS);
+            lookupPath = path.parent().child(str, false);
+            meta = storage.lookup(lookupPath);
         }
         if (meta == null && !path.isIndex()) {
             // Windows WebDAV fix
-            testPath = path.parent().child(path.name(), true);
-            meta = ctx.getStorage().lookup(testPath);
+            lookupPath = path.parent().child(path.name(), true);
+            meta = storage.lookup(lookupPath);
         }
-        return (meta == null) ? null : testPath;
+        return (meta == null) ? null : lookupPath;
     }
 }
