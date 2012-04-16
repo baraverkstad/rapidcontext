@@ -20,11 +20,11 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import org.mozilla.javascript.edu.emory.mathcs.backport.java.util.Arrays;
 import org.rapidcontext.core.js.JsSerializer;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.SecurityContext;
