@@ -59,7 +59,9 @@ public class StorageRequestHandler extends RequestHandler {
      * The supported HTTP methods.
      */
     protected static final String[] METHODS = {
-        METHOD.OPTIONS, METHOD.HEAD, METHOD.GET, METHOD.PUT, METHOD.DELETE,
+        METHOD.OPTIONS, METHOD.HEAD, METHOD.GET,
+        // METHOD.POST,
+        METHOD.PUT, METHOD.DELETE,
         METHOD.PROPFIND, METHOD.MKCOL, // METHOD.PROPPATCH,
         // METHOD.COPY,
         METHOD.MOVE, METHOD.LOCK, METHOD.UNLOCK
@@ -112,9 +114,9 @@ public class StorageRequestHandler extends RequestHandler {
     protected void doGet(Request request) {
         ApplicationContext  ctx = ApplicationContext.getInstance();
         String              mimeType = request.getParameter("mimeType");
-        boolean             isHtml = isMimeMatch(request, Mime.HTML);
-        boolean             isJson = isMimeMatch(request, Mime.JSON);
-        boolean             isXml = isMimeMatch(request, Mime.XML);
+        boolean             isHtml = isOutputMimeMatch(request, Mime.HTML);
+        boolean             isJson = isOutputMimeMatch(request, Mime.JSON);
+        boolean             isXml = isOutputMimeMatch(request, Mime.XML);
         boolean             isDefault = (!isJson && !isXml && !isHtml);
         Path                path = new Path(request.getPath());
         Object              meta = null;
@@ -327,13 +329,13 @@ public class StorageRequestHandler extends RequestHandler {
      *
      * @return true if one of the MIME types is accepted, or false otherwise
      */
-    private boolean isMimeMatch(Request request, String[] mimes) {
+    private boolean isOutputMimeMatch(Request request, String[] mimes) {
         String param = request.getParameter("mimeType");
 
         if (param != null) {
             return ArrayUtils.contains(mimes, param);
         } else {
-            return Mime.isMatch(request, mimes);
+            return Mime.isOutputMatch(request, mimes);
         }
     }
 

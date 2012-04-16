@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -180,9 +180,41 @@ public class Mime {
     }
 
     /**
-     * Checks if a request contains an 'Accept' header with one of
-     * the specified MIME types. Note that this method checks for any
-     * match, without regard for any quality value in the header.
+     * Checks if a specified content type matches one of the specified
+     * MIME types. Note that this method checks for any match, without
+     * regard for any embedded quality or encoding value.
+     *
+     * @param contentType    the content type to analyze
+     * @param mimes          the MIME types to check for
+     *
+     * @return true if one of the MIME types is accepted, or
+     *         false otherwise
+     */
+    public static boolean isMatch(String contentType, String[] mimes) {
+        String mime = contentType.split(";")[0];
+        return ArrayUtils.contains(mimes, mime);
+    }
+
+    /**
+     * Checks if the request input matches one of the specified MIME
+     * types. The input MIME type is read from the 'Content-Type'
+     * HTTP header, not from the data stream itself.
+     *
+     * @param request        the request to analyze
+     * @param mimes          the MIME types to check for
+     *
+     * @return true if one of the MIME types match, or
+     *         false otherwise
+     */
+    public static boolean isInputMatch(Request request, String[] mimes) {
+        return isMatch(request.getContentType(), mimes);
+    }
+
+    /**
+     * Checks if the accepted request output matches one of the
+     * specified MIME types. The accepted output MIME type is read
+     * from the 'Accept' HTTP header. Note that this method accept
+     * matches without regard for quality values in the header.
      *
      * @param request        the request to analyze
      * @param mimes          the MIME types to check for
@@ -190,16 +222,12 @@ public class Mime {
      * @return true if one of the MIME types is accepted, or
      *         false otherwise
      */
-    public static boolean isMatch(Request request, String[] mimes) {
-        String    header = request.getHeader("Accept");
-        String[]  accept;
-        String    mime;
-
+    public static boolean isOutputMatch(Request request, String[] mimes) {
+        String header = request.getHeader("Accept");
         if (header != null) {
-            accept = header.split(",");
+            String[] accept = header.split(",");
             for (int i = 0; i < accept.length; i++) {
-                mime = accept[i].split(";")[0];
-                if (ArrayUtils.contains(mimes, mime)) {
+                if (isMatch(accept[i], mimes)) {
                     return true;
                 }
             }
