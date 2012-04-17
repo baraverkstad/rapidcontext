@@ -3,6 +3,7 @@
  */
 function AdminApp() {
     this._defaults = { operatorId: RapidContext.App.user().id };
+    this._types = {};
     this._cxnIds = null;
     this._cxnCount = 0;
     this._currentProc = null;
@@ -24,20 +25,27 @@ AdminApp.prototype.start = function () {
         plugInList: "System.PlugIn.List",
         procList: "System.Procedure.List",
         procDelete: "System.Procedure.Delete",
+        procTypes: "System.Procedure.Types",
         userList: "System.User.List",
         userChange: "System.User.Change"
     });
 
-    // Tab switcher
+    // All views
     MochiKit.Signal.connect(this.ui.root, "onenter", MochiKit.Base.bind("selectChild", this.ui.tabContainer, null));
+    MochiKit.Signal.connect(this.proc.typeList, "onsuccess", this, "_updateTypeCache");
 
     // Connection view
     RapidContext.UI.connectProc(this.proc.cxnList, this.ui.cxnLoading, this.ui.cxnReload);
     MochiKit.Signal.connect(this.proc.cxnList, "onsuccess", this.ui.cxnTable, "setData");
     MochiKit.Signal.connect(this.proc.cxnList, "onsuccess", this, "_showConnection");
     MochiKit.Signal.connect(this.ui.cxnTable, "onselect", this, "_showConnection");
-    MochiKit.Signal.connect(this.proc.cxnValidate, "onresponse", this, "_validateCallback");
     MochiKit.Signal.connect(this.ui.cxnValidate, "onclick", this, "_validateConnections");
+    MochiKit.Signal.connect(this.ui.cxnAdd, "onclick", this, "_addConnection");
+    // TODO: MochiKit.Signal.connect(this.ui.cxnRemove, "onclick", this, "_removeConnection");
+    MochiKit.Signal.connect(this.ui.cxnEdit, "onclick", this, "_editConnection");
+    MochiKit.Signal.connect(this.ui.cxnEditType, "onchange", this, "_updateConnectionEdit");
+    MochiKit.Signal.connect(this.ui.cxnEditCancel, "onclick", this.ui.cxnEditDialog, "hide");
+    MochiKit.Signal.connect(this.ui.cxnEditSave, "onclick", this, "_storeConnection");
     var statusRenderer = function (td, value, data) {
         if (data._error || data._lastError) {
             td.appendChild(RapidContext.Widget.Icon({ ref: "ERROR" }));
@@ -64,7 +72,7 @@ AdminApp.prototype.start = function () {
     MochiKit.Signal.connect(this.ui.appLaunch, "onclick", this, "_launchApp");
     MochiKit.Signal.connect(this.ui.appLaunchWindow, "onclick", this, "_launchAppWindow");
     var urlRenderer = function (td, value, data) {
-        if (data) {
+        if (value) {
             var styles = { marginLeft: "3px" };
             var attrs = { ref: "EXPAND", tooltip: "Open in new window", style: styles };
             var img = RapidContext.Widget.Icon(attrs);
@@ -155,16 +163,23 @@ AdminApp.prototype.start = function () {
     if (!user || !user.role || MochiKit.Base.findValue(user.role, "admin") < 0) {
         this.ui.procAdd.hide();
         this.ui.procRemove.addClass("hidden");
+        this.ui.tabContainer.removeChildNode(this.ui.cxnTab);
         this.ui.tabContainer.removeChildNode(this.ui.pluginTab);
         this.ui.tabContainer.removeChildNode(this.ui.userTab);
+        RapidContext.Widget.destroyWidget(this.ui.cxnTab);
         RapidContext.Widget.destroyWidget(this.ui.pluginTab);
         RapidContext.Widget.destroyWidget(this.ui.userTab);
+        this.ui.cxnTab = null;
         this.ui.pluginTab = null;
         this.ui.userTab = null;
     }
 
     // Initialize data
-    this.proc.cxnList();
+    if (this.ui.cxnTab) {
+        this.proc.cxnList();
+    } else {
+        this.loadApps();
+    }
     this._showProcedure();
     this._stopBatch();
 }
@@ -175,6 +190,35 @@ AdminApp.prototype.start = function () {
 AdminApp.prototype.stop = function () {
     for (var name in this.proc) {
         MochiKit.Signal.disconnectAll(this.proc[name]);
+    }
+}
+
+/**
+ * Updates the type cache.
+ */
+AdminApp.prototype._updateTypeCache = function (res) {
+    this._types = {};
+    for (var i = 0; i < res.length; i++) {
+        var type = res[i];
+        this._types[type.id] = type;
+        type.properties = {};
+        for (var j = 0; j < type.property.length; j++) {
+            var prop = type.property[j];
+            type.properties[prop.name] = prop;
+        }
+        delete type.property;
+    }
+    for (var id in this._types) {
+        var type = this._types[id];
+        var parts = id.split("/");
+        while (parts.length > 1) {
+            parts.pop();
+            var baseId = parts.join("/");
+            var baseType = this._types[baseId];
+            if (baseType && baseType.properties) {
+                MochiKit.Base.setdefault(type.properties, baseType.properties);
+            }
+        }
     }
 }
 
@@ -193,6 +237,9 @@ AdminApp.prototype._validateConnections = function () {
  * Connection validation callback handler. This method will iterate
  * over all the connections in the connection table one by one. This
  * callback method will be called between each validation.
+ *
+ * @return {Deferred} a MochiKit.Async.Deferred that will callback
+ *         when the validation is complete
  */
 AdminApp.prototype._validateCallback = function () {
     if (this._cxnIds == null) {
@@ -203,14 +250,33 @@ AdminApp.prototype._validateCallback = function () {
     if (this._cxnIds.length == 0) {
         this._cxnIds = null;
         this.ui.overlay.hide();
-        this.proc.cxnList();
+        return this.proc.cxnList();
     } else {
         var id = this._cxnIds.shift();
         var pos = this._cxnCount - this._cxnIds.length;
         var msg = "Validating " + pos + " of " + this._cxnCount + "...";
         this.ui.overlay.setAttrs({ message: msg });
-        this.proc.cxnValidate(id);
+        var d = this.proc.cxnValidate(id);
+        d.addBoth(MochiKit.Base.method(this, "_validateCallback"));
+        return d;
     }
+}
+
+/**
+ * Shows the specified connection in the Admin UI. This method will
+ * show the connection pane (if not already displaying), validate
+ * the connection specified, update the connection list and finally
+ * display the connection details.
+ *
+ * @param {String} id the connection identifier
+ */
+AdminApp.prototype.showConnection = function (id) {
+    this.ui.tabContainer.selectChild(this.ui.cxnTab);
+    var cxnList = this.proc.cxnList;
+    var cxnTable = this.ui.cxnTable;
+    var d = this.proc.cxnValidate(id);
+    d.addBoth(function () { return cxnList(); });
+    d.addCallback(function () { cxnTable.setSelectedIds(id); });
 }
 
 /**
@@ -226,10 +292,14 @@ AdminApp.prototype._showConnection = function () {
     this.ui.cxnForm.reset();
     this.ui.cxnForm.update(data);
     if (data.plugin && data.id) {
+        this.ui.cxnRemove.hide();
+        this.ui.cxnEdit.show();
         var url = "/rapidcontext/storage/connection/" + data.id;
         MochiKit.DOM.setNodeAttribute(this.ui.cxnLink, "href", url);
         MochiKit.DOM.removeElementClass(this.ui.cxnLink, "hidden");
     } else {
+        this.ui.cxnRemove.hide();
+        this.ui.cxnEdit.hide();
         MochiKit.DOM.addElementClass(this.ui.cxnLink, "hidden");
     }
     while (this.ui.cxnTemplate.previousSibling.className == "template") {
@@ -254,6 +324,148 @@ AdminApp.prototype._showConnection = function () {
         MochiKit.DOM.appendChildNodes(tr.firstChild, title + ":");
         MochiKit.DOM.appendChildNodes(tr.lastChild, value);
         MochiKit.DOM.insertSiblingNodesBefore(this.ui.cxnTemplate, tr);
+    }
+}
+
+/**
+ * Opens the connection editing dialog for a new connection.
+ */
+AdminApp.prototype._addConnection = function () {
+    this._initConnectionEdit({});
+}
+
+/**
+ * Opens the connection editing dialog for an existing connection.
+ */
+AdminApp.prototype._editConnection = function () {
+    var data = this.ui.cxnTable.getSelectedData();
+    this._initConnectionEdit(data);
+}
+
+/**
+ * Initializes the connection editing dialog.
+ */
+AdminApp.prototype._initConnectionEdit = function (data) {
+    this.ui.cxnEditDialog.data = data;
+    this.ui.cxnEditForm.reset();
+    this.ui.cxnEditForm.update(data);
+    var self = this;
+    var d = this.proc.typeList();
+    d.addCallback(function () {
+        var select = self.ui.cxnEditType;
+        while (select.firstChild.nextSibling) {
+            RapidContext.Widget.destroyWidget(select.firstChild.nextSibling);
+        }
+        for (var k in self._types) {
+            if (/connection\//.test(k)) {
+                var attrs = { value: k };
+                if (data.type === k) {
+                    attrs.selected = true;
+                }
+                select.appendChild(MochiKit.DOM.OPTION(attrs, k));
+            }
+        }
+    });
+    d.addCallback(MochiKit.Base.bind("_updateConnectionEdit", this));
+    d.addCallback(MochiKit.Base.bind("show", this.ui.cxnEditDialog));
+    d.addErrback(RapidContext.UI.showError);
+    return d;
+}
+
+/**
+ * Updates the connection editing dialog.
+ */
+AdminApp.prototype._updateConnectionEdit = function () {
+    var data = this.ui.cxnEditForm.valueMap();
+    this.ui.cxnEditForm.reset();
+    MochiKit.Base.setdefault(data, this.ui.cxnEditDialog.data);
+    while (this.ui.cxnEditTemplate.previousSibling.className == "template") {
+        RapidContext.Widget.destroyWidget(this.ui.cxnEditTemplate.previousSibling);
+    }
+    var hiddenProps = { id: true, type: true, plugin: true };
+    var props = {};
+    if (this._types[data.type]) {
+        var type = this._types[data.type];
+        MochiKit.Base.update(props, type.properties);
+        MochiKit.DOM.replaceChildNodes(this.ui.cxnEditTypeDescr, type.description);
+    } else {
+        MochiKit.DOM.replaceChildNodes(this.ui.cxnEditTypeDescr);
+    }
+    for (var name in this.ui.cxnEditDialog.data || {}) {
+        if (!/^_/.test(name) && !(name in props) && !(name in hiddenProps)) {
+            props[name] = { name: name, title: name, custom: true };
+            if (/password$/i.test(name)) {
+                props[name].format = "password";
+            }
+        }
+    }
+    for (var name in props) {
+        var p = props[name];
+        var title = p.title || RapidContext.Util.toTitleCase(name);
+        var value = (data[name] != null) ? "" + data[name] : "";
+        var defaultValue = (data["_" + name] != null) ? "" + data["_" + name] : "";
+        var valueLines = AdminApp.splitLines(value, 58);
+        var tr = this.ui.cxnEditTemplate.cloneNode(true);
+        tr.className = "template";
+        MochiKit.DOM.appendChildNodes(tr.firstChild, title + ":");
+        var attrs = { name: name, cols: 58, size: 60 };
+        if (defaultValue) {
+            attrs.placeholder = defaultValue;
+        }
+        var input = null;
+        if (p.format == "text" || valueLines.length > 1) {
+            attrs.rows = Math.min(Math.max(2, valueLines.length), 20);
+            input = RapidContext.Widget.TextArea(attrs);
+        } else if (p.format == "password") {
+            attrs.type = "password";
+            input = MochiKit.DOM.INPUT(attrs);
+        } else {
+            input = MochiKit.DOM.INPUT(attrs);
+        }
+        MochiKit.DOM.appendChildNodes(tr.lastChild, input);
+//        if (p.custom) {
+//            var style = { "margin-left": "3px" };
+//            var icon = RapidContext.Widget.Icon({ ref: "REMOVE", style: style });
+//            MochiKit.DOM.appendChildNodes(tr.lastChild, icon);
+//        }
+        if (p.required) {
+            var attrs = { name: name, display: "icon" };
+            var validator = RapidContext.Widget.FormValidator(attrs);
+            MochiKit.DOM.appendChildNodes(tr.lastChild, validator);
+        }
+        if (p.description) {
+            var help = MochiKit.DOM.DIV({ "class": "helptext preformatted" }, p.description);
+            MochiKit.DOM.appendChildNodes(tr.lastChild, help);
+        }
+        MochiKit.DOM.insertSiblingNodesBefore(this.ui.cxnEditTemplate, tr);
+    }
+    // TODO: allow add/remove of custom fields
+    this.ui.cxnEditForm.update(data);
+}
+
+/**
+ * Stores the edited or new connection to the RapidContext storage.
+ */
+AdminApp.prototype._storeConnection = function () {
+    this.ui.cxnEditForm.validateReset();
+    if (this.ui.cxnEditForm.validate()) {
+        var data = this.ui.cxnEditForm.valueMap();
+        var prevData = this.ui.cxnEditDialog.data;
+        var path = "connection/" + data.id;
+        for (var name in data) {
+            var value = MochiKit.Format.strip(data[name]);
+            if (value == "") {
+                delete data[name];
+            }
+        }
+        var d = AdminApp.storageWrite(path, data);
+        if (prevData.id && prevData.id != data.id) {
+            var oldPath = "connection/" + prevData.id;
+            d.addCallback(MochiKit.Base.partial(AdminApp.storageDelete, oldPath));
+        }
+        d.addErrback(RapidContext.UI.showError);
+        d.addCallback(MochiKit.Base.method(this.ui.cxnEditDialog, "hide"));
+        d.addCallback(MochiKit.Base.method(this, "showConnection", data.id));
     }
 }
 
@@ -691,7 +903,7 @@ AdminApp.prototype._editProcedure = function () {
 AdminApp.prototype._initProcEdit = function (data) {
     this.ui.procEditDialog.data = data;
     var select = this.ui.procEditType;
-    var d = RapidContext.App.callProc("System.Procedure.Types");
+    var d = this.proc.procTypes();
     d.addCallback(function (res) {
         MochiKit.DOM.replaceChildNodes(select);
         var types = MochiKit.Base.keys(res).sort();
@@ -1276,4 +1488,131 @@ AdminApp.prototype._showLogDetails = function () {
         text = MochiKit.Base.serializeJSON(data.data);
     }
     MochiKit.DOM.replaceChildNodes(this.ui.logData, text);
+}
+
+/**
+ * Stores an object to the RapidContext storage. Note that only
+ * read-write storages can be used for storage (typically the local
+ * plug-in). If the storage path does not point to a single mounted
+ * storage, the first writable overlay storage will be used (always
+ * the local plug-in).
+ *
+ * @param {String} path the storage path
+ * @param {Object} data the data object to store (JSON data)
+ *
+ * @return {Deferred} a MochiKit.Async.Deferred object that will
+ *         callback when the data has been stored
+ */
+AdminApp.storageWrite = function (path, data) {
+    if (MochiKit.Text.startsWith("/", path)) {
+        path = path.substring(1);
+    }
+    var options = { method: "POST", timeout: 60, headers: {} };
+    options.headers["Content-Type"] = "application/json";
+    options.sendContent = MochiKit.Base.serializeJSON(data);
+    var d = RapidContext.App.loadXHR("rapidcontext/storage/" + path, null, options);
+    d.addCallback(function (xhr) {
+        if (xhr.status == 200 || xhr.status == 201) {
+            return path;
+        } else {
+            throw new MochiKit.Async.XMLHttpRequestError(xhr, "unrecognized response code");
+        }
+    });
+    d.addErrback(function (err) {
+        if (err instanceof MochiKit.Async.XMLHttpRequestError) {
+            var xhr = err.req;
+            var msg = xhr.responseText || xhr.statusText || err.message;
+            msg = msg.replace(/^HTTP \d+\s/i, "");
+            msg = msg.replace(/^.*:\s*([\s\S]+)/, "$1");
+            err.message = msg;
+            return err;
+        } else {
+            return err;
+        }
+    });
+    return d;
+}
+
+/**
+ * Removes an object from the RapidContext storage. Note that only
+ * objects in read-write storages can be removed (typically the local
+ * plug-in).
+ *
+ * @param {String} path the storage path
+ *
+ * @return {Deferred} a MochiKit.Async.Deferred object that will
+ *         callback when the data has been removed
+ */
+AdminApp.storageDelete = function (path) {
+    if (MochiKit.Text.startsWith("/", path)) {
+        path = path.substring(1);
+    }
+    var options = { method: "DELETE", timeout: 60 };
+    var d = RapidContext.App.loadXHR("rapidcontext/storage/" + path, null, options);
+    d.addCallback(function (res) {
+        if (res.status == 204) {
+            return null;
+        } else {
+            throw new Error(res.statusText.substr(4));
+        }
+    });
+    return d;
+}
+
+/**
+ * Splits a text string into multiple lines. Existing line breaks
+ * will be preserved (recognizing "\n", "\r" or "\r\n"), but
+ * additional line breaks may be added by specifying a maximum line
+ * length. If the keepspace flag is set, the newlines and space
+ * characters at the end of each line will be preserved.
+ *
+ * @param {String} str the string to split
+ * @param {Number} [maxlen] the maximum line length, or zero for
+ *            unlimited (defaults to 0)
+ * @param {Boolean} [keepspace] the boolean flag to keep
+ *            trailing whitespace (defaults to false)
+ *
+ * @return {Array} an array of string for each line
+ *
+ * @example
+ *
+ */
+AdminApp.splitLines = function (str, maxlen, keepspace) {
+    var lines = [];
+    str = str || "";
+    maxlen = maxlen || 0;
+    function splitPush(str) {
+        if (!keepspace) {
+            str = str.replace(/\s+$/, "");
+        }
+        while (maxlen > 0 && str.length > maxlen) {
+            var line = str.substring(0, maxlen);
+            var m = /^\s+/.exec(str.substring(maxlen));
+            if (!keepspace && m) {
+                line += m[0];
+            } else {
+                m = /[^\s\).:,;=-]*$/.exec(line);
+                if (m && m.index > 0) {
+                    line = line.substring(0, m.index);
+                }
+            }
+            str = str.substring(line.length);
+            if (!keepspace) {
+                line = line.replace(/\s+$/, "");
+            }
+            lines.push(line);
+        }
+        if (str.length > 0 || line == null) {
+            lines.push(str);
+        }
+    }
+    var re = /\n|\r\n|\r/g;
+    var m;
+    var pos = 0;
+    while ((m = re.exec(str)) != null) {
+        splitPush(str.substring(pos, re.lastIndex));
+        pos = re.lastIndex;
+    }
+    splitPush(str.substring(pos));
+    return lines;
 }

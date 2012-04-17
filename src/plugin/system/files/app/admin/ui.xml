@@ -2,7 +2,7 @@
 
 <ui>
   <TabContainer id="tabContainer" w="100%" h="100%">
-    <Pane pageTitle="Connections">
+    <Pane id="cxnTab" pageTitle="Connections">
       <div w="45%" h="100%" style="float: left; padding-right: 20px;">
         <h3>
           Connection List:
@@ -22,16 +22,14 @@
       <Form id="cxnForm" w="55%-30" h="100%" style="float: left; overflow-y: auto;">
         <h3>
           Connection Details:
-<!--
-          <Icon ref="ADD" style="margin-left: 3px;" />
-          <Icon ref="REMOVE" style="margin-left: 3px;" />
-          <Icon ref="EDIT" style="margin-left: 3px;" />
--->
+          <Icon id="cxnAdd" ref="ADD" style="margin-left: 3px;" />
+          <Icon id="cxnRemove" ref="REMOVE" style="margin-left: 3px;" class="widgetHidden" />
+          <Icon id="cxnEdit" ref="EDIT" style="margin-left: 3px;" class="widgetHidden" />
         </h3>
         <table>
           <tbody>
             <tr>
-              <th class="label" style="padding: 3px 4px 0 1px; width: 90px;">Identifier:</th>
+              <th class="label" style="padding: 3px 4px 0 1px; width: 100px;">Identifier:</th>
               <td>
                 <Field name="id" format="connection/" class="unimportant" />
                 <a id="cxnLink" href="#" target="_blank" class="hidden" title="View in storage browser">
@@ -79,6 +77,45 @@
           </tbody>
         </table>
       </Form>
+      <Dialog id="cxnEditDialog" title="Edit Connection" modal="true" w="580" h="80%">
+        <h3>Edit Connection:</h3>
+        <Form id="cxnEditForm" w="100%" h="100%-60" style="overflow-y: auto;">
+          <table w="100%-20" style="border-collapse: collapse;">
+            <tbody>
+              <tr>
+                <th class="label" style="width: 100px; padding-top: 4px; padding-right: 4px;">Identifier:</th>
+                <td>
+                  <span class="unimportant" style="padding-right: 3px;">/connection/</span>
+                  <TextField name="id" size="50" />
+                  <FormValidator name="id" regex="[a-zA-Z0-9._-]+(/[a-zA-Z0-9._-]+)*" display="icon" message="Only alphanumeric characters allowed in identifier." />
+                  <div class="helptext">
+                    The unique connection identifier. Optionally prefixed with
+                    an environment path.
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <th class="label" style="padding-top: 4px; padding-right: 2px;">Type:</th>
+                <td style="padding-top: 2px;">
+                  <select id="cxnEditType" name="type">
+                    <option value="">&lt; Select Type &gt;</option>
+                  </select>
+                  <FormValidator name="type" display="icon" message="A valid connection type must be selected." />
+                  <div id="cxnEditTypeDescr" class="helptext"></div>
+                </td>
+              </tr>
+              <tr id="cxnEditTemplate" class="hidden">
+                <th class="label" style="padding-top: 4px; padding-right: 4px;"></th>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+          <div style="position: absolute; bottom: 10px; right: 12px;">
+            <Button id="cxnEditCancel" icon="CANCEL" style="margin-left: 10px;">Cancel</Button>
+            <Button id="cxnEditSave" icon="OK" highlight="true" style="margin-left: 10px;">Save</Button>
+          </div>
+        </Form>
+      </Dialog>
     </Pane>
     <Pane id="appTab" pageTitle="Apps">
       <div w="35%" h="100%" style="float: left; padding-right: 20px;">
@@ -356,7 +393,7 @@
             </label>
           </div>
           <TextArea name="value" w="100%-5" h="100%-65" />
-          <div style="position: absolute; bottom: 10px; right: 10px;">
+          <div style="position: absolute; bottom: 10px; right: 12px;">
             <Button id="procArgCancel" icon="CANCEL" style="margin-left: 10px;">
               Cancel
             </Button>
@@ -422,7 +459,7 @@
             </tbody>
           </table>
         </Form>
-        <div style="position: absolute; bottom: 10px; right: 10px;">
+        <div style="position: absolute; bottom: 10px; right: 12px;">
           <Button id="procEditCancel" icon="CANCEL" style="margin-left: 10px;">
             Cancel
           </Button>
