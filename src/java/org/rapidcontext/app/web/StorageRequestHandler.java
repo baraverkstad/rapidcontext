@@ -360,6 +360,10 @@ public class StorageRequestHandler extends RequestHandler {
      * @param request        the request to process
      */
     protected void doPost(Request request) {
+        if (request.getPath().endsWith("/")) {
+            errorBadRequest(request, "cannot write data to folder");
+            return;
+        }
         if (!Mime.isInputMatch(request, Mime.JSON)) {
             String msg = "application/json content type required";
             request.sendError(STATUS.UNSUPPORTED_MEDIA_TYPE, null, msg);
@@ -393,7 +397,7 @@ public class StorageRequestHandler extends RequestHandler {
             return;
         }
         if (request.getPath().endsWith("/")) {
-            errorBadRequest(request, "cannot write data to folder");
+            errorBadRequest(request, "cannot store data in a directory");
             return;
         }
         try {
@@ -434,12 +438,9 @@ public class StorageRequestHandler extends RequestHandler {
                 errorNotFound(request);
                 return;
             }
+            // TODO: check for read-write status?
             storage.remove(path);
-            if (storage.lookup(path) == null) {
-                request.sendText(STATUS.NO_CONTENT, null, null);
-            } else {
-                request.sendError(STATUS.FORBIDDEN);
-            }
+            request.sendText(STATUS.NO_CONTENT, null, null);
         } catch (Exception e) {
             LOG.log(Level.WARNING, "failed to delete " + request.getPath(), e);
             request.sendError(STATUS.INTERNAL_SERVER_ERROR);
