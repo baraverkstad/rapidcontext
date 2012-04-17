@@ -14,6 +14,8 @@
 
 package org.rapidcontext.util;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * A set of utility methods for handling strings and characters.
  *
@@ -131,28 +133,62 @@ public class StringUtil {
     }
 
     /**
-     * Creates a Unicode escape sequence for a character.
+     * Returns a 4 digit hexadecimal representation of a character.
      *
-     * @param c              the character to convert
+     * @param chr            the character to convert
      *
-     * @return the Unicode escape sequence
+     * @return the hexadecimal character code
      */
-    public static String escapeUnicode(char c) {
-        StringBuffer  res = new StringBuffer();
-        String        str;
+    public static String toHex(char chr) {
+        int high = (chr & 0xFF00) >>> 16;
+        int low = chr & 0xFF;
+        return StringUtils.leftPad(Integer.toHexString(high), 2, '0') +
+               StringUtils.leftPad(Integer.toHexString(low), 2, '0');
+    }
 
-        res.append("\\u");
-        str = Integer.toHexString((c & 0xFF00) >>> 16);
-        if (str.length() < 2) {
-            res.append("0");
+    /**
+     * Returns an escaped property file value for the specified input
+     * character. This method will return character escapes for
+     * backslash, tab and newline. It will also return a Unicode
+     * escape for any non-ASCII character.
+     *
+     * @param chr            the character to convert
+     *
+     * @return the valid property text string
+     */
+    public static String escapeProperty(char chr) {
+        switch (chr) {
+        case '\\':
+            return "\\\\";
+        case '\t':
+            return "\\t";
+        case '\n':
+            return "\\n";
+        default:
+            if (isAscii(chr)) {
+                return "" + chr;
+            } else {
+                return "\\u" + toHex(chr);
+            }
         }
-        res.append(str);
-        str = Integer.toHexString(c & 0xFF);
-        if (str.length() < 2) {
-            res.append("0");
+    }
+
+    /**
+     * Returns an escaped property file value for the specified input
+     * string. This method will return character escapes for
+     * backslash, tab and newline. It will also return a Unicode
+     * escape for any non-ASCII character.
+     *
+     * @param str            the string to convert
+     *
+     * @return the valid property text string
+     */
+    public static String escapeProperty(String str) {
+        StringBuilder buffer = new StringBuilder();
+        for (int i = 0; str != null && i < str.length(); i ++) {
+            buffer.append(escapeProperty(str.charAt(i)));
         }
-        res.append(str);
-        return res.toString();
+        return buffer.toString();
     }
 
     /**
@@ -175,7 +211,7 @@ public class StringUtil {
         case '"':
             return "&quot;";
         default:
-            if (32 <= chr && chr < 127) {
+            if (isAscii(chr)) {
                 return "" + chr;
             } else {
                 return "&#" + ((int) chr) + ";";

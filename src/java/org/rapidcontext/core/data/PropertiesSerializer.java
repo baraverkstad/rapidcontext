@@ -1,7 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2011 Per Cederberg & Dynabyte AB.
- * All rights reserved.
+ * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -534,26 +533,14 @@ public class PropertiesSerializer {
                 os.print(" ");
                 newline = false;
                 break;
-            case '\\':
-                os.print("\\\\");
-                newline = false;
-                break;
             case '\n':
                 os.println("\\n\\");
                 newline = true;
                 break;
             case '\r':
                 break;
-            case '\t':
-                os.print("\\t");
-                newline = false;
-                break;
             default:
-                if (StringUtil.isIsoLatin1(c)) {
-                    os.print(c);
-                } else {
-                    os.print(StringUtil.escapeUnicode(c));
-                }
+                os.print(StringUtil.escapeProperty(c));
                 newline = false;
             }
         }
