@@ -1,7 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
- * All rights reserved.
+ * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -18,7 +17,7 @@ package org.rapidcontext.util;
 /**
  * A set of utility methods for handling strings and characters.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class StringUtil {
@@ -157,30 +156,46 @@ public class StringUtil {
     }
 
     /**
-     * Creates an XML-encoded string.
+     * Returns properly escaped XML for the specified input character.
+     * This method will return an XML character entities for all
+     * non-ASCII characters as well as the reserved XML characters.
      *
-     * @param str            the string to encode
+     * @param chr            the character to convert
      *
-     * @return the XML encoded string
+     * @return the valid XML string
+     */
+    public static String escapeXml(char chr) {
+        switch (chr) {
+        case '<':
+            return "&lt;";
+        case '>':
+            return "&gt;";
+        case '&':
+            return "&amp;";
+        case '"':
+            return "&quot;";
+        default:
+            if (32 <= chr && chr < 127) {
+                return "" + chr;
+            } else {
+                return "&#" + ((int) chr) + ";";
+            }
+        }
+    }
+
+    /**
+     * Returns properly escaped XML for the specified input string.
+     * This method will add XML character entities for all non-ASCII
+     * characters as well as the reserved XML characters.
+     *
+     * @param str            the string to convert
+     *
+     * @return the valid XML string
      */
     public static String escapeXml(String str) {
-        StringBuffer  buffer = new StringBuffer();
-
+        StringBuilder buffer = new StringBuilder();
         for (int i = 0; str != null && i < str.length(); i ++) {
-            switch (str.charAt(i)) {
-            case '<':
-                buffer.append("&lt;");
-                break;
-            case '>':
-                buffer.append("&gt;");
-                break;
-            case '&':
-                buffer.append("&amp;");
-                break;
-            default:
-                buffer.append(str.charAt(i));
-                break;
-            }
+            buffer.append(escapeXml(str.charAt(i)));
         }
         return buffer.toString();
     }

@@ -1,7 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2011 Per Cederberg.
- * All rights reserved.
+ * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -18,6 +17,7 @@ package org.rapidcontext.core.data;
 import java.util.Date;
 
 import org.rapidcontext.core.storage.StorableObject;
+import org.rapidcontext.util.StringUtil;
 
 /**
  * A data serializer for XML. This class currently only attempts to
@@ -67,11 +67,11 @@ public class XmlSerializer {
         } else if (obj instanceof Date) {
             buffer.append("@" + ((Date) obj).getTime());
         } else if (obj instanceof Class) {
-            serialize(((Class) obj).getName(), buffer);
+            buffer.append(StringUtil.escapeXml(((Class) obj).getName()));
         } else if (obj instanceof StorableObject) {
             serialize(((StorableObject) obj).serialize(), buffer);
         } else {
-            serialize(obj.toString(), buffer);
+            buffer.append(StringUtil.escapeXml(obj.toString()));
         }
     }
 
@@ -111,47 +111,5 @@ public class XmlSerializer {
             buffer.append("</item>");
         }
         buffer.append("</array>");
-    }
-
-    /**
-     * Serializes a text string into an HTML representation. If the
-     * string contains a newline character, it will be wrapped in a
-     * pre-tag. Otherwise it will only be properly HTML escaped. This
-     * method also makes some rudimentary efforts to detect HTTP
-     * links.
-     *
-     * @param str            the text string to convert
-     * @param buffer         the string buffer to append into
-     */
-    private static void serialize(String str, StringBuilder buffer) {
-        if (str == null) {
-            buffer.append("<null/>");
-        } else {
-            for (int i = 0; i < str.length(); i++) {
-                char chr = str.charAt(i);
-                switch (chr) {
-                case '<':
-                    buffer.append("&lt;");
-                    break;
-                case '>':
-                    buffer.append("&gt;");
-                    break;
-                case '&':
-                    buffer.append("&amp;");
-                    break;
-                case '"':
-                    buffer.append("&quot;");
-                    break;
-                default:
-                    if (32 <= chr && chr < 127) {
-                        buffer.append(chr);
-                    } else {
-                        buffer.append("&#");
-                        buffer.append((int) chr);
-                        buffer.append(";");
-                    }
-                }
-            }
-        }
     }
 }
