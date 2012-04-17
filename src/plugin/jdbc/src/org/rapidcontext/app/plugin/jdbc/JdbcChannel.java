@@ -398,10 +398,14 @@ public class JdbcChannel extends Channel {
             throw new ConnectionException("failed to execute query: " +
                                           e.getMessage());
         } finally {
-            try {
-                if (set != null) {
+            if (set != null) {
+                try {
                     set.close();
+                } catch (SQLException ignore) {
+                    // Do nothing
                 }
+            }
+            try {
                 stmt.close();
             } catch (SQLException ignore) {
                 // Do nothing
@@ -430,7 +434,7 @@ public class JdbcChannel extends Channel {
             stmt = con.prepareStatement(sql,
                                         ResultSet.TYPE_FORWARD_ONLY,
                                         ResultSet.CONCUR_READ_ONLY,
-                                        ResultSet.CLOSE_CURSORS_AT_COMMIT);
+                                        ResultSet.HOLD_CURSORS_OVER_COMMIT);
             for (int i = 0; params != null && i < params.size(); i++) {
                 obj = params.get(i);
                 if (obj instanceof String && ((String) obj).length() > 255) {
