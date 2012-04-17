@@ -452,6 +452,11 @@ pre.code .comment {
     color: rgb(120,0,90);
 }
 
+/* Preformatted with line-breaks */
+.preformatted {
+    white-space: pre-wrap;
+}
+
 /* Abbreviation */
 .abbreviation {
     font-weight: bold;
