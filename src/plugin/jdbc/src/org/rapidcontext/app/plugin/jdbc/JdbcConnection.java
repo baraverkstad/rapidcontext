@@ -106,6 +106,8 @@ public class JdbcConnection extends Connection {
         if (driver.length() == 0) {
             if (url.startsWith("jdbc:odbc")) {
                 dict.set("_" + JDBC_DRIVER, "sun.jdbc.odbc.JdbcOdbcDriver");
+            } else if (url.startsWith("jdbc:drizzle:") || url.startsWith("jdbc:mysql:thin:")) {
+                dict.set("_" + JDBC_DRIVER, "org.drizzle.jdbc.DrizzleDriver");
             } else if (url.startsWith("jdbc:mysql:")) {
                 dict.set("_" + JDBC_DRIVER, "com.mysql.jdbc.Driver");
             } else if (url.startsWith("jdbc:postgresql:")) {
@@ -113,7 +115,7 @@ public class JdbcConnection extends Connection {
             } else if (url.startsWith("jdbc:oracle:")) {
                 dict.set("_" + JDBC_DRIVER, "oracle.jdbc.driver.OracleDriver");
             } else if (url.startsWith("jdbc:db2:")) {
-                dict.set("_" + JDBC_DRIVER, "COM.ibm.db2.jdbc.app.DB2Driver");
+                dict.set("_" + JDBC_DRIVER, "com.ibm.db2.jcc.DB2Driver");
             } else if (url.startsWith("jdbc:microsoft:")) {
                 dict.set("_" + JDBC_DRIVER, "com.microsoft.sqlserver.jdbc.SQLServerDriver");
             }
