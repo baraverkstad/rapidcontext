@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2011 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -15,6 +15,7 @@
 package org.rapidcontext.app.web;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.data.Dict;
@@ -32,6 +33,12 @@ import org.rapidcontext.core.web.RequestHandler;
  * @version  1.0
  */
 public class ProcedureRequestHandler extends RequestHandler {
+
+    /**
+     * The class logger.
+     */
+    private static final Logger LOG =
+        Logger.getLogger(ProcedureRequestHandler.class.getName());
 
     /**
      * Returns the HTTP methods supported for the specified request
@@ -56,6 +63,7 @@ public class ProcedureRequestHandler extends RequestHandler {
         Dict                res = new Dict();
         ArrayList           argList = new ArrayList();
         Object[]            args;
+        String              source = "web [" + request.getRemoteAddr() + "]";
         StringBuffer        trace = null;
         String              str = "";
         Object              obj;
@@ -63,10 +71,12 @@ public class ProcedureRequestHandler extends RequestHandler {
         res.set("data", null);
         res.set("trace", null);
         res.set("error", null);
+        LOG.fine(source + ": init procedure call " + request.getPath());
         try {
             for (int i = 0; str != null; i++) {
                 str = request.getParameter("arg" + i, null);
                 if (str != null) {
+                    LOG.fine(source + ": procedure arg " + (i + 1) + ":" + str);
                     argList.add(JsSerializer.unserialize(str));
                 }
             }
@@ -74,11 +84,12 @@ public class ProcedureRequestHandler extends RequestHandler {
             if (request.getParameter("trace", null) != null) {
                 trace = new StringBuffer();
             }
-            str = "web [" + request.getRemoteAddr() + "]";
-            obj = ctx.execute(request.getPath(), args, str, trace);
+            obj = ctx.execute(request.getPath(), args, source, trace);
             res.set("data", obj);
+            LOG.fine(source + ": done procedure call " + request.getPath());
         } catch (Exception e) {
             res.set("error", e.getMessage());
+            LOG.fine(source + ": error in procedure call: " + e.getMessage());
         }
         if (trace != null) {
             res.set("trace", trace.toString());
