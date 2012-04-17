@@ -369,7 +369,6 @@ public class StorageRequestHandler extends RequestHandler {
             Storage storage = ApplicationContext.getInstance().getStorage();
             Path path = new Path(request.getPath());
             Metadata prev = storage.lookup(path);
-            // TODO: JsSerializer.unserialize reorders properties...
             Object data = JsSerializer.unserialize(request.getInputString());
             storage.store(path, data);
             if (prev == null) {
