@@ -70,7 +70,7 @@
     cursor: nw-resize;
 }
 .widgetDialogTitle {
-    margin: 2px;
+    margin: 2px 2px 0 2px;
     border-radius: 3px 3px 0 0;
     padding: 3px 6px;
     overflow: hidden;
@@ -82,7 +82,7 @@
     -moz-user-select: none;
 }
 .widgetDialogContent {
-    margin: 2px;
+    margin: 0 2px 2px 2px;
     border-top: 1px solid #E0E0E0;
     border-bottom: 1px solid #FFFFFF;
     border-left: 1px solid #E0E0E0;

@@ -47,7 +47,7 @@ RapidContext.Widget.Dialog = function (attrs/*, ... */) {
     var close = RapidContext.Widget.Icon({ ref: "DEFAULT", tooltip: "Close", "class": "widgetDialogClose" });
     var resize = RapidContext.Widget.Icon({ ref: "RESIZE", "class": "widgetDialogResize" });
     var content = MochiKit.DOM.DIV({ "class": "widgetDialogContent" });
-    RapidContext.Util.registerSizeConstraints(content, "100% - 22", "100% - 44");
+    RapidContext.Util.registerSizeConstraints(content, "100% - 22", "100% - 42");
     var o = MochiKit.DOM.DIV({}, title, close, resize, content);
     RapidContext.Widget._widgetMixin(o, arguments.callee);
     o.addClass("widgetDialog", "widgetHidden");
