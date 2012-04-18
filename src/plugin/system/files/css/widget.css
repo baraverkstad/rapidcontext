@@ -14,8 +14,11 @@
     display: none;
 }
 .widgetInvalid {
-    border: 1px solid #cc7777;
-    background: #fff0f0;
+    border: 1px solid #EECCCC;
+    background-color: #FFFAFA;
+    background-image: -moz-linear-gradient(top , #FFFDFD, #FFFAFA);
+    background-image: -webkit-linear-gradient(top, #FFFDFD, #FFFAFA);
+    background-image: linear-gradient(top, #FFFDFD, #FFFAFA);
 }
 
 
@@ -501,9 +504,28 @@ th.widgetTableColumn.sortDesc {
  * Text Area Style
  */
 .widgetTextArea {
+    outline: 0;
+    border: 1px solid #CCCCCC;
+    border-radius: 3px 3px;
+    padding: 3px 5px;
+    box-shadow: 0 0 2px #EEEEEE;
     font-family: "Courier New", Courier, monospace;
     font-size: 11px;
     resize: none;
+}
+.widgetTextArea.widgetInvalid {
+    border: 1px solid #EECCCC;
+    box-shadow: 0 0 3px rgba(255,180,180,0.7);
+}
+.widgetTextArea:focus {
+    outline: 0;
+    border-color: #AADDFF;
+    box-shadow: 0 0 4px rgba(50,180,255,0.7);
+}
+.widgetTextArea.widgetInvalid:focus {
+    border-color: #AADDFF;
+    box-shadow: 0 0 4px rgba(50,180,255,0.7);
+    background: white;
 }
 .widgetTextAreaHelp {
     color: #888;
@@ -514,8 +536,27 @@ th.widgetTableColumn.sortDesc {
  * Text Field Style
  */
 .widgetTextField {
+    outline: 0;
+    border: 1px solid #CCCCCC;
+    border-radius: 3px 3px;
+    padding: 3px 5px;
+    box-shadow: 0 0 2px #EEEEEE;
     font-family: "Courier New", Courier, monospace;
     font-size: 11px;
+}
+.widgetTextField.widgetInvalid {
+    border: 1px solid #EECCCC;
+    box-shadow: 0 0 3px rgba(255,180,180,0.7);
+}
+.widgetTextField:focus {
+    outline: 0;
+    border-color: #AADDFF;
+    box-shadow: 0 0 4px rgba(50,180,255,0.7);
+}
+.widgetTextField.widgetInvalid:focus {
+    border-color: #AADDFF;
+    box-shadow: 0 0 4px rgba(50,180,255,0.7);
+    background: white;
 }
 .widgetTextFieldHelp {
     color: #888;
