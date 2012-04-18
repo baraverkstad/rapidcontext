@@ -41,7 +41,7 @@ AdminApp.prototype.start = function () {
     MochiKit.Signal.connect(this.ui.cxnTable, "onselect", this, "_showConnection");
     MochiKit.Signal.connect(this.ui.cxnValidate, "onclick", this, "_validateConnections");
     MochiKit.Signal.connect(this.ui.cxnAdd, "onclick", this, "_addConnection");
-    // TODO: MochiKit.Signal.connect(this.ui.cxnRemove, "onclick", this, "_removeConnection");
+    MochiKit.Signal.connect(this.ui.cxnRemove, "onclick", this, "_removeConnection");
     MochiKit.Signal.connect(this.ui.cxnEdit, "onclick", this, "_editConnection");
     MochiKit.Signal.connect(this.ui.cxnEditType, "onchange", this, "_updateConnectionEdit");
     MochiKit.Signal.connect(this.ui.cxnEditCancel, "onclick", this.ui.cxnEditDialog, "hide");
@@ -291,14 +291,17 @@ AdminApp.prototype._showConnection = function () {
     }
     this.ui.cxnForm.reset();
     this.ui.cxnForm.update(data);
-    if (data.plugin && data.id) {
+    if (data.plugin == "local") {
+        this.ui.cxnRemove.show();
+    } else {
         this.ui.cxnRemove.hide();
+    }
+    if (data.plugin && data.id) {
         this.ui.cxnEdit.show();
         var url = "/rapidcontext/storage/connection/" + data.id;
         MochiKit.DOM.setNodeAttribute(this.ui.cxnLink, "href", url);
         MochiKit.DOM.removeElementClass(this.ui.cxnLink, "hidden");
     } else {
-        this.ui.cxnRemove.hide();
         this.ui.cxnEdit.hide();
         MochiKit.DOM.addElementClass(this.ui.cxnLink, "hidden");
     }
@@ -332,6 +335,20 @@ AdminApp.prototype._showConnection = function () {
  */
 AdminApp.prototype._addConnection = function () {
     this._initConnectionEdit({});
+}
+
+/**
+ * Removes a connection (after user confirmation).
+ */
+AdminApp.prototype._removeConnection = function () {
+    var data = this.ui.cxnTable.getSelectedData();
+    var msg = "Delete the connection '" + data.id + "'?";
+    if (confirm(msg)) {
+        var path = "connection/" + data.id;
+        var d = AdminApp.storageDelete(path);
+        d.addErrback(RapidContext.UI.showError);
+        d.addCallback(MochiKit.Base.method(this.proc.cxnList, "recall"));
+    }
 }
 
 /**
