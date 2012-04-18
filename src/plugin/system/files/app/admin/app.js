@@ -435,9 +435,9 @@ AdminApp.prototype._updateConnectionEdit = function () {
             input = RapidContext.Widget.TextArea(attrs);
         } else if (p.format == "password") {
             attrs.type = "password";
-            input = MochiKit.DOM.INPUT(attrs);
+            input = RapidContext.Widget.TextField(attrs);
         } else {
-            input = MochiKit.DOM.INPUT(attrs);
+            input = RapidContext.Widget.TextField(attrs);
         }
         MochiKit.DOM.appendChildNodes(tr.lastChild, input);
 //        if (p.custom) {
@@ -787,7 +787,7 @@ AdminApp.prototype._callbackShowProcedure = function (res) {
                 var text = RapidContext.Util.toTitleCase(b.name).replace(" ", "\u00A0") + ":";
                 var col1 = MochiKit.DOM.TD(attrs, text);
                 var value = this._defaults[b.name] || "";
-                var attrs = { name: "arg" + count, value: value, style: "margin-right: 3px;" };
+                var attrs = { name: "arg" + count, value: value, style: "margin-right: 6px;" };
                 var field = RapidContext.Widget.TextField(attrs);
                 var icon = RapidContext.Widget.Icon({ ref: "EDIT", style: { "verticalAlign": "middle" } });
                 icon.onclick = MochiKit.Base.bind("_editProcArg", this, count);

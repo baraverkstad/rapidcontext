@@ -77,14 +77,14 @@
           </tbody>
         </table>
       </Form>
-      <Dialog id="cxnEditDialog" title="Edit Connection" modal="true" w="580" h="80%">
+      <Dialog id="cxnEditDialog" title="Edit Connection" modal="true" w="590" h="80%">
         <h3>Edit Connection:</h3>
         <Form id="cxnEditForm" w="100%" h="100%-60" style="overflow-y: auto;">
           <table w="100%-20" style="border-collapse: collapse;">
             <tbody>
               <tr>
-                <th class="label" style="width: 100px; padding-top: 4px; padding-right: 4px;">Identifier:</th>
-                <td>
+                <th class="label" style="width: 100px; padding-top: 6px; padding-right: 4px;">Identifier:</th>
+                <td style="padding-top: 2px;">
                   <span class="unimportant" style="padding-right: 3px;">/connection/</span>
                   <TextField name="id" size="50" />
                   <FormValidator name="id" regex="[a-zA-Z0-9._-]+(/[a-zA-Z0-9._-]+)*" display="icon" message="Only alphanumeric characters allowed in identifier." />
@@ -101,6 +101,10 @@
                     <option value="">&lt; Select Type &gt;</option>
                   </select>
                   <FormValidator name="type" display="icon" message="A valid connection type must be selected." />
+                  <label class="unselectable" style="margin-left: 10px;">
+                    <input type="checkbox" id="cxnEditShowAll" />
+                    Show optional parameters
+                  </label>
                   <div id="cxnEditTypeDescr" class="helptext"></div>
                 </td>
               </tr>
@@ -381,7 +385,7 @@
       </div>
       <Dialog id="procArgDialog" title="Edit Argument" modal="true" w="50%" h="75%">
         <Form id="procArgForm" style="width: 100%; height: 100%;">
-          <div style="padding-bottom: 4px;">
+          <div class="unselectable" style="padding-bottom: 6px;">
             <span class="label" style="padding-right: 4px;">Data Type:</span>
             <label style="margin-right: 4px; font-weight: bold;">
               <input type="radio" name="type" value="string" checked="checked" style="vertical-align: -20%;" />
@@ -392,7 +396,7 @@
               JSON
             </label>
           </div>
-          <TextArea name="value" w="100%-5" h="100%-65" />
+          <TextArea name="value" w="100%-13" h="100%-65" />
           <div style="position: absolute; bottom: 10px; right: 12px;">
             <Button id="procArgCancel" icon="CANCEL" style="margin-left: 10px;">
               Cancel
@@ -555,7 +559,7 @@
             <tr>
               <th class="label" style="padding-top: 4px; padding-right: 4px;">Password:</th>
               <td>
-                <input type="password" name="password" size="30" />
+                <TextField type="password" name="password" size="30" />
                 <Field name="passwordHint" style="padding-left: 10px;" />
               </td>
             </tr>
