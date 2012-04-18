@@ -44,6 +44,8 @@ AdminApp.prototype.start = function () {
     MochiKit.Signal.connect(this.ui.cxnRemove, "onclick", this, "_removeConnection");
     MochiKit.Signal.connect(this.ui.cxnEdit, "onclick", this, "_editConnection");
     MochiKit.Signal.connect(this.ui.cxnEditType, "onchange", this, "_updateConnectionEdit");
+    MochiKit.Signal.connect(this.ui.cxnEditShowAll, "onchange", this, "_updateConnectionEdit");
+    MochiKit.Signal.connect(this.ui.cxnEditForm, "onclick", this, "_addRemoveConnectionProps")
     MochiKit.Signal.connect(this.ui.cxnEditCancel, "onclick", this.ui.cxnEditDialog, "hide");
     MochiKit.Signal.connect(this.ui.cxnEditSave, "onclick", this, "_storeConnection");
     var statusRenderer = function (td, value, data) {
@@ -394,6 +396,7 @@ AdminApp.prototype._initConnectionEdit = function (data) {
  */
 AdminApp.prototype._updateConnectionEdit = function () {
     var data = this.ui.cxnEditForm.valueMap();
+    var showAll = (data._showAll == "yes");
     this.ui.cxnEditForm.reset();
     MochiKit.Base.setdefault(data, this.ui.cxnEditDialog.data);
     while (this.ui.cxnEditTemplate.previousSibling.className == "template") {
@@ -408,9 +411,11 @@ AdminApp.prototype._updateConnectionEdit = function () {
     } else {
         MochiKit.DOM.replaceChildNodes(this.ui.cxnEditTypeDescr);
     }
-    for (var name in this.ui.cxnEditDialog.data || {}) {
-        if (!/^_/.test(name) && !(name in props) && !(name in hiddenProps)) {
-            props[name] = { name: name, title: name, custom: true };
+    for (var name in data) {
+        var value = MochiKit.Format.strip(data[name]);
+        if (!/^_/.test(name) && !(name in props) && !(name in hiddenProps) && value) {
+            props[name] = { name: name, title: name, custom: true,
+                            description: "User-specified parameter." };
             if (/password$/i.test(name)) {
                 props[name].format = "password";
             }
@@ -440,12 +445,13 @@ AdminApp.prototype._updateConnectionEdit = function () {
             input = RapidContext.Widget.TextField(attrs);
         }
         MochiKit.DOM.appendChildNodes(tr.lastChild, input);
-//        if (p.custom) {
-//            var style = { "margin-left": "3px" };
-//            var icon = RapidContext.Widget.Icon({ ref: "REMOVE", style: style });
-//            MochiKit.DOM.appendChildNodes(tr.lastChild, icon);
-//        }
-        if (p.required) {
+        if (p.custom) {
+            var style = { "margin-left": "3px" };
+            var icon = RapidContext.Widget.Icon({ ref: "REMOVE", style: style });
+            icon["data-remove"] = true;
+            MochiKit.DOM.appendChildNodes(tr.lastChild, icon);
+        }
+        if (p.required && p.format != "password") {
             var attrs = { name: name, display: "icon" };
             var validator = RapidContext.Widget.FormValidator(attrs);
             MochiKit.DOM.appendChildNodes(tr.lastChild, validator);
@@ -454,10 +460,32 @@ AdminApp.prototype._updateConnectionEdit = function () {
             var help = MochiKit.DOM.DIV({ "class": "helptext preformatted" }, p.description);
             MochiKit.DOM.appendChildNodes(tr.lastChild, help);
         }
+        if (!showAll && !p.required && !p.custom && !value) {
+            tr.style.display = "none";
+        }
         MochiKit.DOM.insertSiblingNodesBefore(this.ui.cxnEditTemplate, tr);
     }
-    // TODO: allow add/remove of custom fields
     this.ui.cxnEditForm.update(data);
+}
+
+/**
+ * Handles addition and removal of custom connection parameters.
+ */
+AdminApp.prototype._addRemoveConnectionProps = function (evt) {
+    var elem = evt.target();
+    if (elem === this.ui.cxnEditAdd) {
+        var name = MochiKit.Format.strip(this.ui.cxnEditAddParam.value);
+        if (/[a-z0-9_-]+/i.test(name)) {
+            this.ui.cxnEditAddParam.setAttrs({ name: name, value: "value" });
+            this._updateConnectionEdit();
+            this.ui.cxnEditAddParam.setAttrs({ name: "_add", value: "" });
+        } else {
+            alert("Invalid parameter name.");
+        }
+    } else if (elem["data-remove"] === true) {
+        var tr = MochiKit.DOM.getFirstParentByTagAndClassName(elem, "TR");
+        RapidContext.Widget.destroyWidget(tr);
+    }
 }
 
 /**
@@ -471,7 +499,7 @@ AdminApp.prototype._storeConnection = function () {
         var path = "connection/" + data.id;
         for (var name in data) {
             var value = MochiKit.Format.strip(data[name]);
-            if (value == "") {
+            if (/^_/.test(name) || value == "") {
                 delete data[name];
             }
         }

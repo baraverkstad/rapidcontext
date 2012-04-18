@@ -77,10 +77,10 @@
           </tbody>
         </table>
       </Form>
-      <Dialog id="cxnEditDialog" title="Edit Connection" modal="true" w="590" h="80%">
+      <Dialog id="cxnEditDialog" title="Edit Connection" modal="true" w="600" h="80%">
         <h3>Edit Connection:</h3>
         <Form id="cxnEditForm" w="100%" h="100%-60" style="overflow-y: auto;">
-          <table w="100%-20" style="border-collapse: collapse;">
+          <table w="100%" style="border-collapse: collapse;">
             <tbody>
               <tr>
                 <th class="label" style="width: 100px; padding-top: 6px; padding-right: 4px;">Identifier:</th>
@@ -101,9 +101,9 @@
                     <option value="">&lt; Select Type &gt;</option>
                   </select>
                   <FormValidator name="type" display="icon" message="A valid connection type must be selected." />
-                  <label class="unselectable" style="margin-left: 10px;">
-                    <input type="checkbox" id="cxnEditShowAll" />
-                    Show optional parameters
+                  <label class="unselectable" style="margin-left: 20px;">
+                    <input type="checkbox" id="cxnEditShowAll" name="_showAll" value="yes" />
+                    Show all parameters
                   </label>
                   <div id="cxnEditTypeDescr" class="helptext"></div>
                 </td>
@@ -111,6 +111,13 @@
               <tr id="cxnEditTemplate" class="hidden">
                 <th class="label" style="padding-top: 4px; padding-right: 4px;"></th>
                 <td></td>
+              </tr>
+              <tr>
+                <th class="label" style="padding-top: 4px; padding-right: 2px;">Add Parameter:</th>
+                <td style="padding-top: 2px;">
+                  <TextField id="cxnEditAddParam" name="_add" size="25" />
+                  <Icon id="cxnEditAdd" ref="ADD" style="margin-left: 6px;" />
+                </td>
               </tr>
             </tbody>
           </table>
