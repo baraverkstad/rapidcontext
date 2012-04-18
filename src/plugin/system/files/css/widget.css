@@ -40,11 +40,11 @@
  */
 .widgetDialog {
     position: absolute;
-    background-color: threedface;
-    border-top: 1px solid threedhighlight;
-    border-bottom: 1px solid threedshadow;
-    border-left: 1px solid threedhighlight;
-    border-right: 1px solid threedshadow;
+    background-color: #F0F0F0;
+    border-top: 1px solid #FFFFFF;
+    border-bottom: 1px solid #E0E0E0;
+    border-left: 1px solid #FFFFFF;
+    border-right: 1px solid #E0E0E0;
     border-radius: 5px 5px 0 5px;
     box-shadow: 0px 0px 4px #AAAAAA;
     z-index: 100;
@@ -83,10 +83,10 @@
 }
 .widgetDialogContent {
     margin: 2px;
-    border-top: 1px solid threedshadow;
-    border-bottom: 1px solid threedhighlight;
-    border-left: 1px solid threedshadow;
-    border-right: 1px solid threedhighlight;
+    border-top: 1px solid #E0E0E0;
+    border-bottom: 1px solid #FFFFFF;
+    border-left: 1px solid #E0E0E0;
+    border-right: 1px solid #FFFFFF;
     border-bottom-left-radius: 3px;
     padding: 8px;
     background: #F8F8F8;
