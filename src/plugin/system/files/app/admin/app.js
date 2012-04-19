@@ -314,21 +314,23 @@ AdminApp.prototype._showConnection = function () {
                   "_usedChannels", "_openChannels", "_lastUsedTime"];
     RapidContext.Util.mask(data, hidden);
     for (var k in data) {
-        var title = RapidContext.Util.toTitleCase(k);
-        var value = data[k];
-        if (value == null) {
-            value = "";
+        if (!/^_/.test(k) || !(k.substr(1) in data)) {
+            var title = RapidContext.Util.toTitleCase(k);
+            var value = data[k];
+            if (value == null) {
+                value = "";
+            }
+            if (/error$/i.test(k)) {
+                value = MochiKit.DOM.SPAN({ "class": "important" }, value);
+            } else if (/password$/i.test(k)) {
+                value = RapidContext.Widget.Field({ name: k, value: value, mask: true });
+            }
+            var tr = this.ui.cxnTemplate.cloneNode(true);
+            tr.className = "template";
+            MochiKit.DOM.appendChildNodes(tr.firstChild, title + ":");
+            MochiKit.DOM.appendChildNodes(tr.lastChild, value);
+            MochiKit.DOM.insertSiblingNodesBefore(this.ui.cxnTemplate, tr);
         }
-        if (/error$/i.test(k)) {
-            value = MochiKit.DOM.SPAN({ "class": "important" }, value);
-        } else if (/password$/i.test(k)) {
-            value = RapidContext.Widget.Field({ name: k, value: value, mask: true });
-        }
-        var tr = this.ui.cxnTemplate.cloneNode(true);
-        tr.className = "template";
-        MochiKit.DOM.appendChildNodes(tr.firstChild, title + ":");
-        MochiKit.DOM.appendChildNodes(tr.lastChild, value);
-        MochiKit.DOM.insertSiblingNodesBefore(this.ui.cxnTemplate, tr);
     }
 }
 
