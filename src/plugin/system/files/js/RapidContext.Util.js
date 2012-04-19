@@ -408,12 +408,14 @@ RapidContext.Util.injectStackTrace = function (stackTrace, func) {
  * absolute.
  *
  * @param {String} uri the relative URI to resolve
- * @param {String} base the absolute base URI
+ * @param {String} [base] the absolute base URI, defaults to the
+ *            the current document base URI
  *
  * @return {String} the resolved absolute URI
  */
 RapidContext.Util.resolveURI = function (uri, base) {
-    if (uri.indexOf("://") > 0) {
+    base = base || document.baseURI || document.getElementsByTagName("base")[0].href;
+    if (uri.indexOf(":") > 0) {
         return uri;
     } else if (uri.indexOf("#") == 0) {
         var pos = base.lastIndexOf("#");
