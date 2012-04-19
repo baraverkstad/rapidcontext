@@ -110,8 +110,12 @@ StartApp.prototype.initApps = function () {
         expIcon.hide();
         var style = { margin: "0", lineHeight: "18px", color: "#1E466E" };
         var title = MochiKit.DOM.H3({ style: style }, app.name, expIcon);
-        var style = { whiteSpace: "pre-line" };
-        var desc = MochiKit.DOM.SPAN({ style: style }, app.description);
+        var desc = MochiKit.DOM.SPAN(null, app.description);
+        try {
+            desc.style.whiteSpace = "pre-line";
+        } catch (ignore) {
+            // May throw error in MSIE 7 since the style is unrecognized
+        }
         var tdName = MochiKit.DOM.TD(attrs, title, desc);
         var attrs = { "class": "clickable", "data-appid": app.id };
         rows.push(MochiKit.DOM.TR(attrs, tdIcon, tdName));
