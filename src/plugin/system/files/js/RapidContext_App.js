@@ -210,9 +210,8 @@ RapidContext.App.startApp = function (app, container) {
     }
     // TODO: Better detection of Window objects...
     if (container && typeof(container.location) == "object") {
-        var base = document.baseURI || document.location.href;
         var url = "rapidcontext/app/" + launcher.id;
-        container.location.href = RapidContext.Util.resolveURI(url, base);
+        container.location.href = RapidContext.Util.resolveURI(url);
         return d;
     }
     var stack = RapidContext.Util.stackTrace();
@@ -609,7 +608,7 @@ RapidContext.App.loadXHR = function (url, params, options) {
  *         callback when the script has been loaded
  */
 RapidContext.App.loadScript = function (url) {
-    var absoluteUrl = RapidContext.Util.resolveURI(url, window.location.href);
+    var absoluteUrl = RapidContext.Util.resolveURI(url);
     var selector1 = 'script[src^="' + url + '"]';
     var selector2 = 'script[src^="' + absoluteUrl + '"]';
     var elems = MochiKit.Selector.findDocElements(selector1, selector2);
@@ -655,7 +654,7 @@ RapidContext.App.loadStyles = function (url) {
         return null;
     }
     var d = new MochiKit.Async.Deferred();
-    var absoluteUrl = RapidContext.Util.resolveURI(url, window.location.href);
+    var absoluteUrl = RapidContext.Util.resolveURI(url);
     if (findStylesheet(url) || findStylesheet(absoluteUrl)) {
         LOG.trace("Stylesheet already loaded, skipping", url);
         return MochiKit.Async.wait(0);

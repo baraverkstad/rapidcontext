@@ -82,7 +82,7 @@ RapidContext.Widget.FileStreamer.prototype.setAttrs = function (attrs) {
     attrs = MochiKit.Base.update({}, attrs);
     var locals = RapidContext.Util.mask(attrs, ["url", "name", "size"]);
     if (typeof(locals.url) != "undefined") {
-        this.formUrl = RapidContext.Util.resolveURI(locals.url, window.location.href);
+        this.formUrl = RapidContext.Util.resolveURI(locals.url);
     }
     if (typeof(locals.name) != "undefined") {
         this.inputName = locals.param;
