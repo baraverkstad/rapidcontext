@@ -307,6 +307,9 @@
     color: #446688;
     font-size: 20px;
     font-weight: bold;
+    /* MSIE 7: fix for "display: inline-block" (actually uses inline display instead) */
+    zoom: 1;
+    *display: inline;
 }
 .widgetOverlayMessage.widgetHidden {
     display: none;
