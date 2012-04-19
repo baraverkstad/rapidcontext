@@ -82,7 +82,7 @@ RapidContext.UI.buildUI = function (node, ids) {
         try {
             return RapidContext.UI._buildUIElem(node, ids);
         } catch (e) {
-            LOG.error("Failed to build UI element", e.message);
+            LOG.error("Failed to build UI element <" + node.nodeName + ">", e.message);
         }
     } else if (node.nodeType === 3) { // Node.TEXT_NODE
         var str = node.nodeValue;
@@ -151,10 +151,14 @@ RapidContext.UI._buildUIElem = function (node, ids) {
                 styles[k] = MochiKit.Format.strip(a[1]);
             }
         }
-        if (typeof(widget.setAttrs) == "function") {
-            widget.setAttrs({ style: styles });
-        } else {
-            MochiKit.Style.setStyle(widget, styles);
+        try {
+            if (typeof(widget.setAttrs) == "function") {
+                widget.setAttrs({ style: styles });
+            } else {
+                MochiKit.Style.setStyle(widget, styles);
+            }
+        } catch (e) {
+            LOG.error("Failed to style UI element <" + name + ">", e.message);
         }
     }
     return widget;
