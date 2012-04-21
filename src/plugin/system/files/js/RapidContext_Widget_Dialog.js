@@ -47,7 +47,7 @@ RapidContext.Widget.Dialog = function (attrs/*, ... */) {
     var close = RapidContext.Widget.Icon({ ref: "DEFAULT", tooltip: "Close", "class": "widgetDialogClose" });
     var resize = RapidContext.Widget.Icon({ ref: "RESIZE", "class": "widgetDialogResize" });
     var content = MochiKit.DOM.DIV({ "class": "widgetDialogContent" });
-    RapidContext.Util.registerSizeConstraints(content, "100% - 22", "100% - 42");
+    RapidContext.Util.registerSizeConstraints(content, "100% - 22", "100% - 43");
     var o = MochiKit.DOM.DIV({}, title, close, resize, content);
     RapidContext.Widget._widgetMixin(o, arguments.callee);
     o.addClass("widgetDialog", "widgetHidden");
@@ -225,6 +225,9 @@ RapidContext.Widget.Dialog.prototype.moveToCenter = function () {
  *
  * @param {Number} width the width (in pixels)
  * @param {Number} height the height (in pixels)
+ *
+ * @return {Dimensions} an object with "w" and "h" properties for the
+ *         actual size used
  */
 RapidContext.Widget.Dialog.prototype.resizeTo = function (width, height) {
     var parentDim = MochiKit.Style.getElementDimensions(this.parentNode);
@@ -236,7 +239,26 @@ RapidContext.Widget.Dialog.prototype.resizeTo = function (width, height) {
     MochiKit.Base.update(this, dim);
     RapidContext.Util.resizeElements(this.lastChild);
     RapidContext.Widget.emitSignal(this, "onresize", dim);
+    return dim;
 };
+
+/**
+ * Resizes the dialog to the optimal size for the current content.
+ * Note that the size reported by the content may vary depending on
+ * if it has already been displayed, is absolutely positioned, etc.
+ * The size will be restrained by the parent DOM node size.
+ *
+ * @return {Dimensions} an object with "w" and "h" properties for the
+ *         actual size used
+ */
+RapidContext.Widget.Dialog.prototype.resizeToContent = function (mode) {
+    var content = this.lastChild;
+    MochiKit.Style.setStyle(content, { width: "auto", height: "auto", overflow: "hidden" });
+    var x = Math.round(Math.max(content.scrollWidth, content.offsetWidth) + 4);
+    var y = Math.round(Math.max(content.scrollHeight, content.offsetHeight) + 25);
+    MochiKit.Style.setStyle(content, { overflow: "auto" });
+    return this.resizeTo(x, y);
+}
 
 /**
  * Initiates a dialog move drag operation. This will install a mouse
