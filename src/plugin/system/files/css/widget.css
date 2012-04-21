@@ -116,6 +116,9 @@
     font-weight: bold;
     cursor: default;
     -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 .widgetDialogContent {
     margin: 0 2px 2px 2px;
@@ -632,10 +635,6 @@ th.widgetTableColumn.sortDesc {
 .widgetTreeNode {
     margin: 0px;
     cursor: pointer;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
 }
 .widgetTreeNode .selected {
     background: #ffffaa;
