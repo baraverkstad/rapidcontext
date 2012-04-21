@@ -20,7 +20,6 @@ import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.Restricted;
 import org.rapidcontext.core.security.SecurityContext;
-import org.rapidcontext.core.storage.StorageException;
 import org.rapidcontext.core.type.User;
 
 /**
@@ -47,8 +46,14 @@ public class UserPasswordChangeProcedure implements Procedure, Restricted {
      * @throws ProcedureException if the initialization failed
      */
     public UserPasswordChangeProcedure() throws ProcedureException {
-        defaults.set("password", Bindings.ARGUMENT, "",
-                     "The new password (minimum 6 characters)");
+        defaults.set("oldHash", Bindings.ARGUMENT, "",
+                     "The hexadecimal MD5 hash of the current password. The " +
+                     "MD5 hash is calculated from a string on the form " +
+                     "'<user>:<realm>:<password>'.");
+        defaults.set("newHash", Bindings.ARGUMENT, "",
+                     "The hexadecimal MD5 hash of the new password. The MD5 " +
+                     "hash is calculated from a string on the form " +
+                     "'<user>:<realm>:<password>'.");
         defaults.seal();
     }
 
@@ -116,15 +121,18 @@ public class UserPasswordChangeProcedure implements Procedure, Restricted {
         if (user == null) {
             throw new ProcedureException("user must be logged in");
         }
-        String pwd = bindings.getValue("password").toString();
-        if (pwd.length() < 5) {
-            throw new ProcedureException("password must be at least 5 characters");
+        String oldHash = bindings.getValue("oldHash").toString();
+        if (!user.verifyPasswordHash(oldHash)) {
+            throw new ProcedureException("invalid current password");
+        }
+        String newHash = bindings.getValue("newHash").toString();
+        if (newHash.length() != 32) {
+            throw new ProcedureException("new password hash is malformed");
         }
         try {
-            SecurityContext.updatePassword(pwd);
-        } catch (StorageException e) {
-            throw new ProcedureException(e.getMessage());
-        } catch (SecurityException e) {
+            user.setPasswordHash(newHash);
+            User.store(cx.getStorage(), user);
+        } catch (Exception e) {
             throw new ProcedureException(e.getMessage());
         }
         return user.id() + " password changed";

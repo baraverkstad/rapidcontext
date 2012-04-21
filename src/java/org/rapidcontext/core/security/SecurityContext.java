@@ -310,25 +310,4 @@ public class SecurityContext {
         }
         User.store(dataStorage, user);
     }
-
-    /**
-     * Updates the current user password in the application data store.
-     *
-     * @param password       the new user password
-     *
-     * @throws StorageException if the data couldn't be written
-     * @throws SecurityException if the current user isn't logged in
-     */
-    public static void updatePassword(String password)
-        throws StorageException, SecurityException {
-
-        User  user = SecurityContext.currentUser();
-
-        if (user == null) {
-            LOG.info("failed to modify user password: user not logged in");
-            throw new SecurityException("Permission denied");
-        }
-        user.setPassword(password);
-        User.store(dataStorage, user);
-    }
 }

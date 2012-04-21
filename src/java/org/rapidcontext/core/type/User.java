@@ -214,14 +214,30 @@ public class User extends StorableObject {
 
     /**
      * Returns the user password MD5 hash, encoded as a hexadecimal
-     * string.
+     * string. Avoid using this method to verify the current user
+     * password, since it may be blank (any password) or the user
+     * might be disabled. Use verifyPasswordHash() instead.
      *
      * @return the user password hash
      *
-     * @see #setPassword(String)
+     * @see #verifyPasswordHash(String)
      */
     public String getPasswordHash() {
         return dict.getString(KEY_PASSWORD, "");
+    }
+
+    /**
+     * Sets the user password MD5 hash. The password hash should be
+     * created from the string "id:realm:password" and converted to a
+     * lower-case hexadecimal string before being sent to this
+     * method.
+     *
+     * @param passwordHash   the new user password MD5 hash
+     *
+     * @see #setPassword(String)
+     */
+    public void setPasswordHash(String passwordHash) {
+        dict.set(KEY_PASSWORD, passwordHash.toLowerCase());
     }
 
     /**
@@ -231,14 +247,33 @@ public class User extends StorableObject {
      * so the original password cannot be retrieved from the object.
      *
      * @param password       the new user password (in clear text)
+     *
+     * @see #setPasswordHash(String)
      */
     public void setPassword(String password) {
-        String str = id() + ":" + realm() + ":" + password;
         try {
-            dict.set(KEY_PASSWORD, BinaryUtil.hashMD5(str));
+            String str = id() + ":" + realm() + ":" + password;
+            setPasswordHash(BinaryUtil.hashMD5(str));
         } catch (Exception e) {
             LOG.severe("failed to create MD5 password hash: " + e.getMessage());
         }
+    }
+
+    /**
+     * Verifies that the specified password MD5 hash is a match. This
+     * method checks that the user is enabled and that the current
+     * user password hash is identical to the specified one. If the
+     * current password hash is blank, this method will also return
+     * true.
+     *
+     * @param passwordHash   the password hash to check
+     *
+     * @return true if the password hashes are identical, or
+     *         false otherwise
+     */
+    public boolean verifyPasswordHash(String passwordHash) {
+        String hash = getPasswordHash();
+        return isEnabled() && (hash.length() == 0 || hash.equals(passwordHash));
     }
 
     /**
