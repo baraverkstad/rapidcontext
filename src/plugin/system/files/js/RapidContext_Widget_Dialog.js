@@ -206,13 +206,15 @@ RapidContext.Widget.Dialog.prototype.moveTo = function (x, y) {
 };
 
 /**
- * Moves the dialog to the center (relative to the parent DOM node).
+ * Moves the dialog to the apparent center (relative to the parent DOM
+ * node). The vertical position actually uses the golden ratio instead
+ * of the geometric center for improved visual alignment.
  */
 RapidContext.Widget.Dialog.prototype.moveToCenter = function () {
     var parentDim = MochiKit.Style.getElementDimensions(this.parentNode);
     var dim = MochiKit.Style.getElementDimensions(this);
     var pos = { x: Math.round(Math.max(0, (parentDim.w - dim.w) / 2)),
-                y: Math.round(Math.max(0, (parentDim.h - dim.h) / 2)) };
+                y: Math.round(Math.max(0, (parentDim.h - dim.h) / 2.618)) };
     MochiKit.Style.setElementPosition(this, pos);
     RapidContext.Widget.emitSignal(this, "onmove", pos);
 };
