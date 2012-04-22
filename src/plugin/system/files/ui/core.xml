@@ -18,10 +18,10 @@
     <h3 id="menuTitle">Anonymous User</h3>
     <div id="menuAbout" class="widgetPopupItem">&#187; About RapidContext</div>
     <div id="menuHelp" class="widgetPopupItem">&#187; Help &amp; Documentation</div>
-    <div id="menuAdmin" class="widgetPopupItem disabled">&#187; Administration</div>
+    <div id="menuAdmin" class="widgetPopupItem widgetPopupDisabled">&#187; Administration</div>
     <hr/>
-    <div id="menuPassword" class="widgetPopupItem">&#187; Change Password</div>
-    <div id="menuLogInOut" class="widgetPopupItem widgetPopupDisabled">&#187; Login</div>
+    <div id="menuPassword" class="widgetPopupItem widgetPopupDisabled">&#187; Change Password</div>
+    <div id="menuLogInOut" class="widgetPopupItem">&#187; Login</div>
   </Popup>
   <Dialog id="passwordDialog" title="Change Password" modal="true" resizeable="false" style="width: 400px; height: 160px;">
     <Form id="passwordForm">
@@ -56,7 +56,13 @@
       <Button id="passwordSave" icon="OK" highlight="true" style="margin-left: 10px;">Change Password</Button>
     </div>
   </Dialog>
-  <Dialog id="about" title="About RapidContext" modal="false" resizeable="false">
+  <Dialog id="logoutDialog" title="Logout Completed" modal="true" closeable="false" resizeable="false" style="width: 350px;">
+    <div style="margin: 0 10px 5px 10px;">
+      <h1 style="margin-top: 5px; font-size: 18px;">You've been logged out.</h1>
+      <p style="font-size: 15px;">Please close your web browser in order to complete the logout process.</p>
+    </div>
+  </Dialog>
+  <Dialog id="about" title="About RapidContext" modal="true" resizeable="false">
     <div class="about" style="width: 500px; height: 420px;">
       <div style="position: absolute; top: 35px; left: 185px; font-family: Trebuchet MS;">
         <a href="http://www.rapidcontext.com/" target="_blank">

@@ -893,6 +893,7 @@ RapidContext.App._UI = {
         var func = MochiKit.Base.partial(RapidContext.App.startApp, "AdminApp", null);
         MochiKit.Signal.connect(this.menuAdmin, "onclick", func);
         MochiKit.Signal.connect(this.menuPassword, "onclick", this, "showPasswordDialog");
+        MochiKit.Signal.connect(this.menuLogInOut, "onclick", this, "loginOut");
     },
     // Initializes the about and password dialogs
     initDialogs: function () {
@@ -912,12 +913,14 @@ RapidContext.App._UI = {
             MochiKit.DOM.replaceChildNodes(this.infoUser, user.name || user.id);
             MochiKit.DOM.replaceChildNodes(this.menuTitle, user.longName);
             MochiKit.DOM.replaceChildNodes(this.menuLogInOut, "\u00bb Logout");
-            MochiKit.DOM.removeElementClass(this.menuAdmin, "disabled");
+            MochiKit.DOM.removeElementClass(this.menuAdmin, "widgetPopupDisabled");
+            MochiKit.DOM.removeElementClass(this.menuPassword, "widgetPopupDisabled");
         } else {
             MochiKit.DOM.replaceChildNodes(this.infoUser, "anonymous");
             MochiKit.DOM.replaceChildNodes(this.menuTitle, "Anonymous User");
             MochiKit.DOM.replaceChildNodes(this.menuLogInOut, "\u00bb Login");
-            MochiKit.DOM.addElementClass(this.menuAdmin, "disabled");
+            MochiKit.DOM.addElementClass(this.menuAdmin, "widgetPopupDisabled");
+            MochiKit.DOM.addElementClass(this.menuPassword, "widgetPopupDisabled");
         }
         var status = RapidContext.App.status();
         var env = status.environment;
@@ -956,6 +959,14 @@ RapidContext.App._UI = {
             this.passwordSave.setAttrs({ disabled: true, icon: "LOADING" });
         }
         this.passwordDialog.resizeToContent();
+    },
+    // Shows the login or logout dialogs
+    loginOut: function () {
+        RapidContext.App.callProc("System.Session.Terminate", [null]);
+        this.logoutDialog.show();
+        this.logoutDialog.resizeToContent();
+        // TODO: Replace this hack that creates a back overlay background
+        this.logoutDialog._modalNode.firstChild.style.backgroundColor = "#000000";
     },
     // Callback for the password change dialog
     callbackChangePassword: function (res) {
