@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <ui>
-  <Pane id="paneContainer" w="100%-20" h="100%-20" class="widgetHidden" style="padding: 10px;">
+  <Pane id="paneContainer" w="100%-20" h="100%-20" hidden="true" style="padding: 10px;">
   </Pane>
   <!-- MSIE 7: Extra <div> element to fix padding bug in CSS box model -->
   <div w="100%-20" h="100%-20" style="padding: 10px;">
-    <TabContainer id="tabContainer" w="100%" h="100%" class="widgetHidden">
+    <TabContainer id="tabContainer" w="100%" h="100%" hidden="true">
     </TabContainer>
   </div>
-  <Pane id="infoBar" class="widgetHidden" style="position: absolute; top: 10px; right: 12px;">
+  <Pane id="infoBar" hidden="true" style="position: absolute; top: 10px; right: 12px;">
     <strong>User: </strong>
     <span id="infoUser" />
     <strong style="padding-left: 10px;">Environment: </strong>

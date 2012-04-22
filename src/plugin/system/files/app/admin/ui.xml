@@ -23,8 +23,8 @@
         <h3>
           Connection Details:
           <Icon id="cxnAdd" ref="ADD" style="margin-left: 3px;" />
-          <Icon id="cxnRemove" ref="REMOVE" style="margin-left: 3px;" class="widgetHidden" />
-          <Icon id="cxnEdit" ref="EDIT" style="margin-left: 3px;" class="widgetHidden" />
+          <Icon id="cxnRemove" ref="REMOVE" hidden="true" style="margin-left: 3px;" />
+          <Icon id="cxnEdit" ref="EDIT" hidden="true" style="margin-left: 3px;" />
         </h3>
         <table>
           <tbody>
@@ -191,7 +191,7 @@
             <tr>
               <th class="label" style="padding-right: 4px;">Resources:</th>
               <td>
-                <Table id="appResourceTable" class="widgetHidden">
+                <Table id="appResourceTable" hidden="true">
                   <TableColumn title="Type" field="type" />
                   <TableColumn title="URL" field="url" />
                   <TableColumn title="Id" field="id" />
