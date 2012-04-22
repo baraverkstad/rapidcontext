@@ -265,21 +265,27 @@ RapidContext.Widget.prototype.destroy = function () {
 /**
  * Updates the widget or HTML DOM node attributes. This method is
  * sometimes overridden by individual widgets to allow modification
- * of widget attributes also available in the constructor.
+ * of additional widget attributes.
  *
  * @param {Object} attrs the widget and node attributes to set
  * @param {Boolean} [attrs.disabled] the disabled widget flag
+ * @param {Boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.prototype.setAttrs = function (attrs) {
-    if (typeof(attrs.disabled) != "undefined") {
-        attrs.disabled = MochiKit.Base.bool(attrs.disabled);
-        if (attrs.disabled) {
-            this.addClass("widgetDisabled")
+    var attrsDOM = null;
+    for (var name in attrs) {
+        if (name == "disabled") {
+            this._setDisabled(attrs.disabled);
+        } else if (name == "hidden") {
+            this._setHidden(attrs.hidden);
         } else {
-            this.removeClass("widgetDisabled")
+            attrsDOM = attrsDOM || {};
+            attrsDOM[name] = attrs[name];
         }
     }
-    MochiKit.DOM.updateNodeAttributes(this, attrs);
+    if (attrsDOM) {
+        MochiKit.DOM.updateNodeAttributes(this, attrsDOM);
+    }
 };
 
 /**
@@ -367,7 +373,24 @@ RapidContext.Widget.prototype.toggleClass = function (/* ... */) {
  *         false otherwise
  */
 RapidContext.Widget.prototype.isDisabled = function () {
-    return this.hasClass("widgetDisabled") && this.disabled === true;
+    return this.disabled === true &&
+           MochiKit.DOM.hasElementClass(this, "widgetDisabled");
+};
+
+/**
+ * Performs the changes corresponding to setting the "disabled"
+ * widget attribute.
+ *
+ * @param {Boolean} value the new attribute value
+ */
+RapidContext.Widget.prototype._setDisabled = function (value) {
+    value = MochiKit.Base.bool(value);
+    if (value) {
+        MochiKit.DOM.addElementClass(this, "widgetDisabled");
+    } else {
+        MochiKit.DOM.removeElementClass(this, "widgetDisabled");
+    }
+    MochiKit.DOM.setNodeAttribute(this, "disabled", value);
 };
 
 /**
@@ -376,47 +399,63 @@ RapidContext.Widget.prototype.isDisabled = function () {
  */
 RapidContext.Widget.prototype.enable = function () {
     this.setAttrs({ disabled: false });
-}
+};
 
 /**
- * Disables this widget if it was previously enabled. This is
+ * Disables this widget if it was previously enabled. This method is
  * equivalent to calling "setAttrs({ disabled: true })".
  */
 RapidContext.Widget.prototype.disable = function () {
     this.setAttrs({ disabled: true });
-}
+};
 
 /**
- * Checks if this HTML DOM node is hidden (with the hide() method).
- * This method does NOT check the actual widget visibility (which
- * will be affected by animations for example), but only checks for
- * the "widgetHidden" CSS class.
+ * Checks if this widget node is hidden. This method checks for the
+ * existence of the "widgetHidden" CSS class. It does NOT check the
+ * actual widget visibility (the "display" style property set by
+ * animations for example).
  *
  * @return {Boolean} true if the widget is hidden, or
  *         false otherwise
  */
 RapidContext.Widget.prototype.isHidden = function () {
-    return this.hasClass("widgetHidden");
+    return MochiKit.DOM.hasElementClass(this, "widgetHidden");
 };
 
 /**
- * Shows this HTML DOM node if it was previously hidden with the
- * hide() method. This mechanism is safe for all types of HTML
- * elements, since it uses a "widgetHidden" CSS class to hide nodes
- * instead of explicitly setting the CSS display property.
+ * Performs the changes corresponding to setting the "hidden"
+ * widget attribute.
+ *
+ * @param {Boolean} value the new attribute value
+ */
+RapidContext.Widget.prototype._setHidden = function (value) {
+    value = MochiKit.Base.bool(value);
+    if (value) {
+        MochiKit.DOM.addElementClass(this, "widgetHidden");
+    } else {
+        MochiKit.DOM.removeElementClass(this, "widgetHidden");
+    }
+    MochiKit.DOM.setNodeAttribute(this, "hidden", value);
+};
+
+/**
+ * Shows this widget node if it was previously hidden. This method is
+ * equivalent to calling "setAttrs({ hidden: false })". It is safe
+ * for all types of widgets, since it only removes the "widgetHidden"
+ * CSS class instead of setting the "display" style property.
  */
 RapidContext.Widget.prototype.show = function () {
-    this.removeClass("widgetHidden");
+    this.setAttrs({ hidden: false });
 };
 
 /**
- * Hides this HTML DOM node if it doesn't have an explicit "display"
- * CSS value. This mechanism is safe for all types of HTML elements,
- * since it uses a "widgetHidden" CSS class to hide nodes instead of
- * explicitly setting the CSS display property.
+ * Hides this widget node if it was previously visible. This method
+ * is equivalent to calling "setAttrs({ hidden: true })". It is safe
+ * for all types of widgets, since it only adds the "widgetHidden"
+ * CSS class instead of setting the "display" style property.
  */
 RapidContext.Widget.prototype.hide = function () {
-    this.addClass("widgetHidden");
+    this.setAttrs({ hidden: true });
 };
 
 /**

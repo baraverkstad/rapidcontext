@@ -45,7 +45,8 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
 RapidContext.Widget.Popup = function (attrs/*, ...*/) {
     var o = MochiKit.DOM.DIV();
     RapidContext.Widget._widgetMixin(o, arguments.callee);
-    o.addClass("widgetPopup", "widgetHidden");
+    o.addClass("widgetPopup");
+    o._setHidden(true);
     o.selectedIndex = -1;
     o._delayTimer = null;
     o.setAttrs(MochiKit.Base.update({ delay: 5000 }, attrs));
@@ -71,7 +72,7 @@ RapidContext.Widget.Classes.Popup = RapidContext.Widget.Popup;
  */
 RapidContext.Widget.Popup.prototype.setAttrs = function (attrs) {
     attrs = MochiKit.Base.update({}, attrs);
-    var locals = RapidContext.Util.mask(attrs, ["delay", "showAnim", "hideAnim"]);
+    var locals = RapidContext.Util.mask(attrs, ["delay", "showAnim", "hideAnim", "hidden"]);
     if (typeof(locals.delay) != "undefined") {
         this.delay = parseInt(locals.delay);
         this.resetDelay();
@@ -82,41 +83,35 @@ RapidContext.Widget.Popup.prototype.setAttrs = function (attrs) {
     if (typeof(locals.hideAnim) != "undefined") {
         this.hideAnim = locals.hideAnim;
     }
+    if (typeof(locals.hidden) != "undefined") {
+        this._setHiddenPopup(locals.hidden);
+    }
     this.__setAttrs(attrs);
 };
 
 /**
- * Shows the popup.
+ * Performs the changes corresponding to setting the "hidden"
+ * widget attribute for the Popup widget.
+ *
+ * @param {Boolean} value the new attribute value
  */
-RapidContext.Widget.Popup.prototype.show = function () {
-    if (this.isHidden()) {
+RapidContext.Widget.Popup.prototype._setHiddenPopup = function (value) {
+    if (value && !this.isHidden()) {
+        this._setHidden(true);
+        if (this.hideAnim) {
+            this.animate(this.hideAnim);
+        }
+        RapidContext.Widget.emitSignal(this, "onhide");
+    } else if (!value && this.isHidden()) {
         this.selectChild(-1);
-        this.removeClass("widgetHidden");
-        this.resetDelay();
+        this._setHidden(false);
         if (this.showAnim) {
             this.animate(this.showAnim);
         }
         RapidContext.Util.resetScrollOffset(this, true);
         RapidContext.Widget.emitSignal(this, "onshow");
-    } else {
-        this.resetDelay();
     }
-};
-
-/**
- * Hides the popup.
- */
-RapidContext.Widget.Popup.prototype.hide = function () {
-    if (this.isHidden()) {
-        this.resetDelay();
-    } else {
-        this.addClass("widgetHidden");
-        this.resetDelay();
-        if (this.hideAnim) {
-            this.animate(this.hideAnim);
-        }
-        RapidContext.Widget.emitSignal(this, "onhide");
-    }
+    this.resetDelay();
 };
 
 /**

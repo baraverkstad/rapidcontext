@@ -50,7 +50,8 @@ RapidContext.Widget.Dialog = function (attrs/*, ... */) {
     RapidContext.Util.registerSizeConstraints(content, "100% - 22", "100% - 43");
     var o = MochiKit.DOM.DIV({}, title, close, resize, content);
     RapidContext.Widget._widgetMixin(o, arguments.callee);
-    o.addClass("widgetDialog", "widgetHidden");
+    o.addClass("widgetDialog");
+    o._setHidden(true);
     o.setAttrs(MochiKit.Base.update({ modal: false, center: true }, attrs));
     o.addAll(MochiKit.Base.extend(null, arguments, 1));
     title.onmousedown = RapidContext.Widget._eventHandler("Dialog", "_handleMoveStart");
@@ -103,7 +104,7 @@ RapidContext.Widget.Classes.Dialog = RapidContext.Widget.Dialog;
  */
 RapidContext.Widget.Dialog.prototype.setAttrs = function (attrs) {
     attrs = MochiKit.Base.update({}, attrs);
-    var locals = RapidContext.Util.mask(attrs, ["title", "modal", "center", "resizeable"]);
+    var locals = RapidContext.Util.mask(attrs, ["title", "modal", "center", "resizeable", "hidden"]);
     if (typeof(locals.title) != "undefined") {
         MochiKit.DOM.replaceChildNodes(this.firstChild, locals.title);
     }
@@ -121,43 +122,46 @@ RapidContext.Widget.Dialog.prototype.setAttrs = function (attrs) {
             resize.hide();
         }
     }
+    if (typeof(locals.hidden) != "undefined") {
+        this._setHiddenDialog(locals.hidden);
+    }
     this.__setAttrs(attrs);
 };
 
 /**
- * Shows the dialog.
+ * Performs the changes corresponding to setting the "hidden"
+ * widget attribute for the Dialog widget.
+ *
+ * @param {Boolean} value the new attribute value
  */
-RapidContext.Widget.Dialog.prototype.show = function () {
-    if (this.parentNode == null) {
-        throw new Error("Cannot show Dialog widget without setting a parent DOM node");
+RapidContext.Widget.Dialog.prototype._setHiddenDialog = function (value) {
+    if (value) {
+        if (this._modalNode != null) {
+            RapidContext.Widget.destroyWidget(this._modalNode);
+            this._modalNode = null;
+        }
+        this.blurAll();
+        this._setHidden(true);
+        RapidContext.Widget.emitSignal(this, "onhide");
+    } else {
+        if (this.parentNode == null) {
+            throw new Error("Cannot show Dialog widget without setting a parent DOM node");
+        }
+        if (this.modal) {
+            var attrs = { loading: false, message: "", style: { "z-index": "99" } };
+            this._modalNode = RapidContext.Widget.Overlay(attrs);
+            this.parentNode.appendChild(this._modalNode);
+        }
+        this._setHidden(false);
+        this.moveTo(0, 0);
+        var dim = MochiKit.Style.getElementDimensions(this);
+        this.resizeTo(dim.w, dim.h);
+        if (this.center) {
+            this.moveToCenter();
+        }
+        RapidContext.Util.resetScrollOffset(this, true);
+        RapidContext.Widget.emitSignal(this, "onshow");
     }
-    if (this.modal) {
-        var attrs = { loading: false, message: "", style: { "z-index": "99" } };
-        this._modalNode = RapidContext.Widget.Overlay(attrs);
-        this.parentNode.appendChild(this._modalNode);
-    }
-    this.removeClass("widgetHidden");
-    this.moveTo(0, 0);
-    var dim = MochiKit.Style.getElementDimensions(this);
-    this.resizeTo(dim.w, dim.h);
-    if (this.center) {
-        this.moveToCenter();
-    }
-    RapidContext.Util.resetScrollOffset(this, true);
-    RapidContext.Widget.emitSignal(this, "onshow");
-};
-
-/**
- * Hides the dialog.
- */
-RapidContext.Widget.Dialog.prototype.hide = function () {
-    if (this._modalNode != null) {
-        RapidContext.Widget.destroyWidget(this._modalNode);
-        this._modalNode = null;
-    }
-    this.blurAll();
-    this.addClass("widgetHidden");
-    RapidContext.Widget.emitSignal(this, "onhide");
 };
 
 /**
