@@ -868,7 +868,7 @@ RapidContext.App._UI = {
             this.infoBar.show();
         }
         this.initMenu();
-        this.initAbout();
+        this.initDialogs();
         this.initSessionInfo();
         var func = MochiKit.Base.partial(RapidContext.Util.resizeElements, document.body);
         MochiKit.Signal.connect(window, "onresize", func);
@@ -886,23 +886,24 @@ RapidContext.App._UI = {
         MochiKit.Signal.connect(this.infoBar, "onmousemove", this.menu, "show");
         MochiKit.Signal.connect(this.infoBar, "onmouseleave", this.menu, "hide");
         MochiKit.Signal.connect(this.menu, "onmouseleave", this.menu, "hide");
+        MochiKit.Signal.connect(this.menu, "onclick", this, "hideMenu");
         MochiKit.Signal.connect(this.menuAbout, "onclick", this.about, "show");
-        MochiKit.Signal.connect(this.menuAbout, "onclick", this, "hideMenu");
         var func = MochiKit.Base.partial(RapidContext.App.startApp, "HelpApp", null);
         MochiKit.Signal.connect(this.menuHelp, "onclick", func);
-        MochiKit.Signal.connect(this.menuHelp, "onclick", this, "hideMenu");
         var func = MochiKit.Base.partial(RapidContext.App.startApp, "AdminApp", null);
         MochiKit.Signal.connect(this.menuAdmin, "onclick", func);
-        MochiKit.Signal.connect(this.menuAdmin, "onclick", this, "hideMenu");
+        MochiKit.Signal.connect(this.menuPassword, "onclick", this, "showPasswordDialog");
     },
-    // Initializes the about dialog
-    initAbout: function () {
+    // Initializes the about and password dialogs
+    initDialogs: function () {
         // TODO: review the following hacks on the about dialog...
         MochiKit.Style.setElementPosition(this.about, { x: 0, y: 0});
         var div = this.about.lastChild;
-        MochiKit.Style.setStyle(div, { width: "auto", height: "auto", padding: "0px" });
+        MochiKit.Style.setStyle(div, { width: "auto", height: "auto", padding: "0" });
         RapidContext.Util.registerSizeConstraints(div, null, null, null);
         MochiKit.Signal.connect(this.aboutClose, "onclick", this.about, "hide");
+        MochiKit.Signal.connect(this.passwordCancel, "onclick", this.passwordDialog, "hide");
+        MochiKit.Signal.connect(this.passwordSave, "onclick", this, "changePassword");
     },
     // Initializes information labels
     initSessionInfo: function () {
@@ -930,6 +931,42 @@ RapidContext.App._UI = {
         this.menu.setAttrs({ hideAnim: { effect: "fade", duration: 0 } });
         this.menu.hide();
         this.menu.setAttrs({ hideAnim: { effect: "fade", duration: 0.2, delay: 0.2 } });
+    },
+    // Shows the password change dialog
+    showPasswordDialog: function () {
+        this.passwordForm.reset();
+        this.passwordDialog.show();
+        this.passwordDialog.resizeToContent();
+    },
+    // Changes the user password (from the dialog)
+    changePassword: function () {
+        var data = this.passwordForm.valueMap();
+        if (data.password != data.passwordcheck) {
+            data.passwordcheck = "";
+        }
+        this.passwordForm.update(data);
+        if (this.passwordForm.validate()) {
+            var user = RapidContext.App.user();
+            var prefix = user.id + ":" + user.realm + ":";
+            var oldHash = Crypto.MD5(prefix + data.current).toString();
+            var newHash = Crypto.MD5(prefix + data.password).toString();
+            var args = [oldHash, newHash];
+            var d = RapidContext.App.callProc("System.User.ChangePassword", args);
+            d.addBoth(MochiKit.Base.method(this, "callbackChangePassword"));
+            this.passwordSave.setAttrs({ disabled: true, icon: "LOADING" });
+        }
+        this.passwordDialog.resizeToContent();
+    },
+    // Callback for the password change dialog
+    callbackChangePassword: function (res) {
+        this.passwordSave.setAttrs({ disabled: false, icon: "OK" });
+        if (res instanceof Error) {
+            var field = this.passwordForm.fieldMap();
+            this.passwordError.addError(field.current, res.message);
+            this.passwordDialog.resizeToContent();
+        } else {
+            this.passwordDialog.hide();
+        }
     },
     // Initializes (and optionally creates) a new app pane
     createAppPane: function (title, pane, closeable) {
