@@ -268,8 +268,17 @@ RapidContext.Widget.prototype.destroy = function () {
  * of widget attributes also available in the constructor.
  *
  * @param {Object} attrs the widget and node attributes to set
+ * @param {Boolean} [attrs.disabled] the disabled widget flag
  */
 RapidContext.Widget.prototype.setAttrs = function (attrs) {
+    if (typeof(attrs.disabled) != "undefined") {
+        attrs.disabled = MochiKit.Base.bool(attrs.disabled);
+        if (attrs.disabled) {
+            this.addClass("widgetDisabled")
+        } else {
+            this.removeClass("widgetDisabled")
+        }
+    }
     MochiKit.DOM.updateNodeAttributes(this, attrs);
 };
 
@@ -347,6 +356,35 @@ RapidContext.Widget.prototype.toggleClass = function (/* ... */) {
         return true;
     }
 };
+
+/**
+ * Checks if this widget is disabled. This method checks both the
+ * "widgetDisabled" CSS class and the "disabled" attribute. Changes
+ * to the disabled status can be made with enable(), disable() or
+ * setAttrs().
+ *
+ * @return {Boolean} true if the widget is disabled, or
+ *         false otherwise
+ */
+RapidContext.Widget.prototype.isDisabled = function () {
+    return this.hasClass("widgetDisabled") && this.disabled === true;
+};
+
+/**
+ * Enables this widget if it was previously disabled. This is
+ * equivalent to calling "setAttrs({ disabled: false })".
+ */
+RapidContext.Widget.prototype.enable = function () {
+    this.setAttrs({ disabled: false });
+}
+
+/**
+ * Disables this widget if it was previously enabled. This is
+ * equivalent to calling "setAttrs({ disabled: true })".
+ */
+RapidContext.Widget.prototype.disable = function () {
+    this.setAttrs({ disabled: true });
+}
 
 /**
  * Checks if this HTML DOM node is hidden (with the hide() method).

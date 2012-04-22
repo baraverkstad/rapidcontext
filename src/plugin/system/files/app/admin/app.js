@@ -632,7 +632,7 @@ AdminApp.prototype._pluginUploadInit = function () {
     this.ui.pluginFile.show();
     this.ui.pluginProgress.hide();
     this.ui.pluginFileInfo.hide();
-    this.ui.pluginInstall.disabled = true;
+    this.ui.pluginInstall.disable();
 }
 
 /**
@@ -685,7 +685,7 @@ AdminApp.prototype._pluginUploadInfo = function (file) {
         file.approxSize = file.size + " bytes";
     }
     this.ui.pluginUploadForm.update(file);
-    this.ui.pluginInstall.disabled = false;
+    this.ui.pluginInstall.enable();
 }
 
 /**
@@ -777,8 +777,8 @@ AdminApp.prototype._showProcedure = function () {
     this.ui.procReload.hide();
     this.ui.procLoading.hide();
     MochiKit.DOM.replaceChildNodes(this.ui.procArgTable);
-    this.ui.procExec.disabled = true;
-    this.ui.procBatch.disabled = true;
+    this.ui.procExec.disable();
+    this.ui.procBatch.disable();
     this.ui.procExecResult.removeAll();
     RapidContext.Util.resizeElements(this.ui.procExecResult);
     if (node != null && node.data != null) {
@@ -828,8 +828,8 @@ AdminApp.prototype._callbackShowProcedure = function (res) {
                 count++;
             }
         }
-        this.ui.procExec.disabled = false;
-        this.ui.procBatch.disabled = false;
+        this.ui.procExec.enable();
+        this.ui.procBatch.enable();
         this.ui.procExecResult.removeAll();
         RapidContext.Util.resizeElements(this.ui.procExecResult);
     }
@@ -1138,8 +1138,8 @@ AdminApp.prototype._executeProcedure = function () {
         }
     }
     this.ui.procExecLoading.show();
-    this.ui.procExec.disabled = true;
-    this.ui.procBatch.disabled = true;
+    this.ui.procExec.disable();
+    this.ui.procBatch.disable();
     this.ui.procExecResult.removeAll();
     var d = RapidContext.App.callProc(proc.name, args);
     d.addBoth(MochiKit.Base.bind("_callbackExecute", this));
@@ -1152,8 +1152,8 @@ AdminApp.prototype._executeProcedure = function () {
  */
 AdminApp.prototype._callbackExecute = function (res) {
     this.ui.procExecLoading.hide();
-    this.ui.procExec.disabled = false;
-    this.ui.procBatch.disabled = false;
+    this.ui.procExec.enable();
+    this.ui.procBatch.enable();
     if (res instanceof Error) {
         RapidContext.UI.showError(res);
     } else {
@@ -1428,7 +1428,7 @@ AdminApp.prototype._addUser = function () {
     this.ui.userForm.reset();
     this.ui.userForm.update({ enabled: true,
                               passwordHint: "Minimum 5 characters" });
-    this.ui.userId.disabled = false;
+    this.ui.userId.enable();
 }
 
 /**
@@ -1440,7 +1440,7 @@ AdminApp.prototype._editUser = function () {
     var extra = { roles: (data.role) ? data.role.join(" ") : "",
                   passwordHint: "Leave blank for unmodified" };
     this.ui.userForm.update(MochiKit.Base.update(extra, data));
-    this.ui.userId.disabled = true;
+    this.ui.userId.disable();
 }
 
 /**

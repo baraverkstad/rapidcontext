@@ -507,13 +507,10 @@ pre.code .comment {
     user-select: none;
 }
 
-/* Disabled element (text box) */
+/* Disabled element */
 .disabled {
     background: #eee;
     color: #444;
-    border: 1px dashed #aaa;
-    padding-left: 1px;
-    padding-right: 1px;
 }
 
 /* Hidden element */

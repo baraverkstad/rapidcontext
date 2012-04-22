@@ -23,6 +23,8 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *
  * @constructor
  * @param {Object} attrs the widget and node attributes
+ * @param {Boolean} [attrs.disabled] the disabled button flag,
+ *            defaults to false
  * @param {Boolean} [attrs.highlight] the highlight option flag,
  *            defaults to false
  * @param {String} [attrs.icon] the icon reference to use, defaults
@@ -34,7 +36,6 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  * @class The button widget class. Used to provide a simple push
  *     button, using the &lt;button&gt; HTML element. In particular,
  *     the "onclick" event is usually of interest.
- * @property {Boolean} disabled The button disabled flag.
  * @extends RapidContext.Widget
  *
  * @example
@@ -56,6 +57,7 @@ RapidContext.Widget.Classes.Button = RapidContext.Widget.Button;
  * Updates the widget or HTML DOM node attributes.
  *
  * @param {Object} attrs the widget and node attributes to set
+ * @param {Boolean} [attrs.disabled] the disabled button flag
  * @param {Boolean} [attrs.highlight] the highlight option flag
  * @param {Icon/Object/String} [attrs.icon] the icon reference to use
  */

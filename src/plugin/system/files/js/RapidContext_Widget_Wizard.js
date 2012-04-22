@@ -155,9 +155,9 @@ RapidContext.Widget.Wizard.prototype._updateStatus = function () {
         bNext.show();
         bDone.hide();
     }
-    bPrev.disabled = (this._selectedIndex <= 0) || !status.previous;
-    bNext.disabled = !status.next;
-    bDone.disabled = !status.next;
+    bPrev.setAttrs({ disabled: (this._selectedIndex <= 0) || !status.previous });
+    bNext.setAttrs({ disabled: !status.next });
+    bDone.setAttrs({ disabled: !status.next });
     info = MochiKit.DOM.SPAN({ "class": "widgetWizardInfo" }, info);
     MochiKit.DOM.replaceChildNodes(h3, icon, title, info);
 };

@@ -13,6 +13,10 @@
 .widgetHidden {
     display: none;
 }
+.widgetDisabled {
+    background-color: #EEEEEE;
+    color: #888888;
+}
 .widgetInvalid {
     border: 1px solid #EECCCC;
     background-color: #FFFAFA;
@@ -33,13 +37,28 @@
     border-radius: 4px;
     padding: 2px 5px;
     color: #333333;
-    background-color: #EEEEEE;
-    background-image: -moz-linear-gradient(top, #FFFFFF, #EEEEEE);
-    background-image: -ms-linear-gradient(top, #FFFFFF, #EEEEEE);
-    background-image: -o-linear-gradient(top, #FFFFFF, #EEEEEE);
-    background-image: -webkit-linear-gradient(top, #FFFFFF, #EEEEEE);
-    background-image: linear-gradient(top, #FFFFFF, #EEEEEE);
-    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#EEEEEE')";
+    background-color: #E0E0E0;
+    background-image: -moz-linear-gradient(top, #F8F8F8, #E0E0E0);
+    background-image: -ms-linear-gradient(top, #F8F8F8, #E0E0E0);
+    background-image: -o-linear-gradient(top, #F8F8F8, #E0E0E0);
+    background-image: -webkit-linear-gradient(top, #F8F8F8, #E0E0E0);
+    background-image: linear-gradient(top, #F8F8F8, #E0E0E0);
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#F8F8F8', endColorstr='#E0E0E0')";
+    box-shadow: 0 1px 2px rgba(180, 180, 180, 0.5);
+    text-shadow: 0 1px #FFFFFF;
+}
+.widgetButton.widgetDisabled,
+.widgetButton.widgetDisabled:hover,
+.widgetButton.widgetDisabled:active {
+    top: 0;
+    color: #888888;
+    background-color: #F8F8F8;
+    background-image: -moz-linear-gradient(top, #FFFFFF, #F8F8F8);
+    background-image: -ms-linear-gradient(top, #FFFFFF, #F8F8F8);
+    background-image: -o-linear-gradient(top, #FFFFFF, #F8F8F8);
+    background-image: -webkit-linear-gradient(top, #FFFFFF, #F8F8F8);
+    background-image: linear-gradient(top, #FFFFFF, #F8F8F8);
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#F8F8F8')";
     box-shadow: 0 1px 2px rgba(180, 180, 180, 0.5);
     text-shadow: 0 1px #FFFFFF;
 }
@@ -49,13 +68,13 @@
     box-shadow: 0 0 4px rgba(50, 180, 255, 0.7);
 }
 .widgetButton:hover {
-    background-color: #FAFAFA;
-    background-image: -moz-linear-gradient(top, #FFFFFF, #F8F8F8);
-    background-image: -ms-linear-gradient(top, #FFFFFF, #F8F8F8);
-    background-image: -o-linear-gradient(top, #FFFFFF, #F8F8F8);
-    background-image: -webkit-linear-gradient(top, #FFFFFF, #F8F8F8);
-    background-image: linear-gradient(top, #FFFFFF, #F8F8F8);
-    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#F8F8F8')";
+    background-color: #E8E8E8;
+    background-image: -moz-linear-gradient(top, #FFFFFF, #E8E8E8);
+    background-image: -ms-linear-gradient(top, #FFFFFF, #E8E8E8);
+    background-image: -o-linear-gradient(top, #FFFFFF, #E8E8E8);
+    background-image: -webkit-linear-gradient(top, #FFFFFF, #E8E8E8);
+    background-image: linear-gradient(top, #FFFFFF, #E8E8E8);
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#E8E8E8')";
 }
 .widgetButton:active {
     position: relative;
