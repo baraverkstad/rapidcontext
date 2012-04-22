@@ -121,7 +121,7 @@ RapidContext.Widget.Dialog.prototype.setAttrs = function (attrs) {
             resize.hide();
         }
     }
-    MochiKit.DOM.updateNodeAttributes(this, attrs);
+    this.__setAttrs(attrs);
 };
 
 /**

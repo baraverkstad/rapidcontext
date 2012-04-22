@@ -91,7 +91,7 @@ RapidContext.Widget.TextArea.prototype.setAttrs = function (attrs) {
     if (typeof(locals.value) != "undefined") {
         this.value = this.storedValue = locals.value;
     }
-    MochiKit.DOM.updateNodeAttributes(this, attrs);
+    this.__setAttrs(attrs);
     this._render();
 };
 

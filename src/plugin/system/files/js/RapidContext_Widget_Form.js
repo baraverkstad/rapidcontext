@@ -39,8 +39,9 @@ RapidContext.Widget.Form = function (attrs/*, ...*/) {
     //       been renamed or similar...
     o.reset = RapidContext.Widget.Form.prototype.reset;
     o.addClass("widgetForm");
-    o.onsubmit = RapidContext.Widget._eventHandler(null, "_handleSubmit");
+    o.setAttrs(attrs);
     o.addAll(MochiKit.Base.extend(null, arguments, 1));
+    o.onsubmit = RapidContext.Widget._eventHandler(null, "_handleSubmit");
     return o;
 };
 

@@ -138,7 +138,7 @@ RapidContext.Widget.Pane.prototype.setAttrs = function (attrs) {
         typeof(this.parentNode._updateStatus) == "function") {
         this.parentNode._updateStatus();
     }
-    MochiKit.DOM.updateNodeAttributes(this, attrs);
+    this.__setAttrs(attrs);
 };
 
 /**

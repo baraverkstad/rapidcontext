@@ -40,7 +40,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  * var nav = RapidContext.Widget.NavigationBar();
  * nav.moveTo(0, ["Step 1", "Step 2", "Step 3"]);
  */
-RapidContext.Widget.NavigationBar = function (attrs/*, ...*/) {
+RapidContext.Widget.NavigationBar = function (attrs) {
     var tr = MochiKit.DOM.TR();
     var tbody = MochiKit.DOM.TBODY({}, tr);
     var o = MochiKit.DOM.TABLE({}, tbody);
@@ -62,15 +62,6 @@ RapidContext.Widget.Classes.NavigationBar = RapidContext.Widget.NavigationBar;
  * @name RapidContext.Widget.NavigationBar#onchange
  * @event
  */
-
-/**
- * Updates the widget or HTML DOM node attributes.
- *
- * @param {Object} attrs the widget and node attributes to set
- */
-RapidContext.Widget.NavigationBar.prototype.setAttrs = function (attrs) {
-    MochiKit.DOM.updateNodeAttributes(this, attrs);
-};
 
 /**
  * Resets the position and maximum position counters and moves to

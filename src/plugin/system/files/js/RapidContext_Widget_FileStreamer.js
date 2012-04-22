@@ -91,7 +91,7 @@ RapidContext.Widget.FileStreamer.prototype.setAttrs = function (attrs) {
         this.inputSize = locals.size;
     }
     // TODO: update form if already created, or recreate?
-    MochiKit.DOM.updateNodeAttributes(this, attrs);
+    this.__setAttrs(attrs);
 };
 
 /**

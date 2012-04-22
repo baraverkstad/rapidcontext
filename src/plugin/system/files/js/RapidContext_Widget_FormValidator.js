@@ -103,7 +103,7 @@ RapidContext.Widget.FormValidator.prototype.setAttrs = function (attrs) {
     if (typeof(locals.validator) != "undefined") {
         this.validator = locals.validator;
     }
-    MochiKit.DOM.updateNodeAttributes(this, attrs);
+    this.__setAttrs(attrs);
 };
 
 /**

@@ -74,6 +74,7 @@ RapidContext.Widget.Wizard = function (attrs/*, ... */) {
     MochiKit.Signal.connect(bNext, "onclick", o, "next");
     MochiKit.Signal.connect(bDone, "onclick", o, "done");
     o._updateStatus();
+    o.setAttrs(attrs);
     o.addAll(MochiKit.Base.extend(null, arguments, 1));
     return o;
 };

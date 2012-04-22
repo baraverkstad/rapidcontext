@@ -93,5 +93,5 @@ RapidContext.Widget.Button.prototype.setAttrs = function (attrs) {
             RapidContext.Widget.destroyWidget(iconNode);
         }
     }
-    MochiKit.DOM.updateNodeAttributes(this, attrs);
+    this.__setAttrs(attrs);
 };

@@ -126,7 +126,7 @@ RapidContext.Widget.TableColumn.prototype.setAttrs = function (attrs) {
     if (typeof(locals.renderer) === "function") {
         this.renderer = locals.renderer;
     }
-    MochiKit.DOM.updateNodeAttributes(this, attrs);
+    this.__setAttrs(attrs);
 };
 
 /**

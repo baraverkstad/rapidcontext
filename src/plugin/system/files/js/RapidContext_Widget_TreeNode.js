@@ -137,7 +137,7 @@ RapidContext.Widget.TreeNode.prototype.setAttrs = function (attrs) {
     if (typeof(locals.tooltip) != "undefined") {
         this.firstChild.title = locals.tooltip;
     }
-    MochiKit.DOM.updateNodeAttributes(this, attrs);
+    this.__setAttrs(attrs);
 };
 
 /**

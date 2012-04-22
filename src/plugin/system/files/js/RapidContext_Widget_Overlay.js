@@ -42,8 +42,7 @@ RapidContext.Widget.Overlay = function (attrs) {
     var o = MochiKit.DOM.DIV({}, cover, msg);
     RapidContext.Widget._widgetMixin(o, arguments.callee);
     o.addClass("widgetOverlay");
-    attrs = MochiKit.Base.update({ loading: true, message: "Working..." }, attrs);
-    o.setAttrs(attrs);
+    o.setAttrs(MochiKit.Base.update({ loading: true, message: "Working..." }, attrs));
     return o;
 };
 
@@ -76,5 +75,5 @@ RapidContext.Widget.Overlay.prototype.setAttrs = function (attrs) {
     } else {
         MochiKit.DOM.removeElementClass(this.lastChild, "widgetHidden");
     }
-    MochiKit.DOM.updateNodeAttributes(this, attrs);
+    this.__setAttrs(attrs);
 };

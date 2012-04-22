@@ -82,7 +82,7 @@ RapidContext.Widget.Popup.prototype.setAttrs = function (attrs) {
     if (typeof(locals.hideAnim) != "undefined") {
         this.hideAnim = locals.hideAnim;
     }
-    MochiKit.DOM.updateNodeAttributes(this, attrs);
+    this.__setAttrs(attrs);
 };
 
 /**

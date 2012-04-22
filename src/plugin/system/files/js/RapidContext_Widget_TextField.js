@@ -92,8 +92,8 @@ RapidContext.Widget.TextField.prototype.setAttrs = function (attrs) {
     if (typeof(locals.value) != "undefined") {
         this.value = this.storedValue = locals.value;
     }
+    this.__setAttrs(attrs);
     this._render();
-    MochiKit.DOM.updateNodeAttributes(this, attrs);
 };
 
 /**

@@ -39,6 +39,7 @@ RapidContext.Widget.Tree = function (attrs/*, ...*/) {
     o.addClass("widgetTree");
     o.resizeContent = MochiKit.Base.noop;
     o.selectedPath = null;
+    o.setAttrs(attrs);
     o.addAll(MochiKit.Base.extend(null, arguments, 1));
     return o;
 };

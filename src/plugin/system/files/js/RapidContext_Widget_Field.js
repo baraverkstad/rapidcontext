@@ -100,7 +100,7 @@ RapidContext.Widget.Field.prototype.setAttrs = function (attrs) {
     if (typeof(locals.value) != "undefined") {
         this.value = locals.value;
     }
-    MochiKit.DOM.updateNodeAttributes(this, attrs);
+    this.__setAttrs(attrs);
     this.redraw();
 }
 

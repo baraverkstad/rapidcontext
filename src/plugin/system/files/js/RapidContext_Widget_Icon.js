@@ -85,7 +85,7 @@ RapidContext.Widget.Icon.prototype.setAttrs = function (attrs) {
     if (typeof(locals.tooltip) != "undefined") {
         attrs.title = locals.tooltip;
     }
-    MochiKit.DOM.updateNodeAttributes(this, attrs);
+    this.__setAttrs(attrs);
 };
 
 /**

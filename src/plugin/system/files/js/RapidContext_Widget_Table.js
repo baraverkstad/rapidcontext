@@ -89,7 +89,7 @@ RapidContext.Widget.Table.prototype.setAttrs = function (attrs) {
     if (typeof(locals.key) != "undefined") {
         this.setIdKey(locals.key);
     }
-    MochiKit.DOM.updateNodeAttributes(this, attrs);
+    this.__setAttrs(attrs);
 };
 
 /**

@@ -66,7 +66,7 @@ RapidContext.Widget.ProgressBar.prototype.setAttrs = function (attrs) {
         this.lastTime = this.startTime;
         this.timeLeft = null;
     }
-    MochiKit.DOM.updateNodeAttributes(this, attrs);
+    this.__setAttrs(attrs);
 };
 
 /**
