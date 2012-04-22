@@ -98,8 +98,11 @@ RapidContext.Widget.isFormField = function (obj) {
  * Adds all functions from a widget class to a DOM node. This will
  * also convert the DOM node into a widget by adding the "widget"
  * CSS class and add all the default widget functions from the
- * standard Widget prototype. Functions are added with setdefault,
- * ensuring that existing functions will not be overwritten.
+ * standard Widget prototype. Functions are added non-destructively,
+ * using the prefix "__" on the function name if is was already
+ * defined. This means that existing functions will not be
+ * overwritten and parent object functions will be available under a
+ * different name.
  *
  * @param {Node} node the DOM node to modify
  * @param {Object/Function} [...] the widget class or constructor
@@ -108,14 +111,22 @@ RapidContext.Widget.isFormField = function (obj) {
  */
 RapidContext.Widget._widgetMixin = function (node/*, objOrClass, ...*/) {
     MochiKit.DOM.addElementClass(node, "widget");
-    for (var i = 1; i < arguments.length; i++) {
-        var obj = arguments[i];
+    var protos = MochiKit.Base.extend([], arguments, 1);
+    protos.push(RapidContext.Widget);
+    while (protos.length > 0) {
+        var obj = protos.shift();
         if (typeof(obj) === "function") {
             obj = obj.prototype;
         }
-        MochiKit.Base.setdefault(node, obj);
+        for (var key in obj) {
+            var parentKey = "__" + key;
+            if (!(key in node)) {
+                node[key] = obj[key];
+            } else if (!(parentKey in node)) {
+                node[parentKey] = obj[key];
+            }
+        }
     }
-    MochiKit.Base.setdefault(node, RapidContext.Widget.prototype);
     return node;
 };
 
