@@ -26,6 +26,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  * @param {String} [attrs.title] the dialog title, defaults to "Dialog"
  * @param {Boolean} [attrs.modal] the modal dialog flag, defaults to false
  * @param {Boolean} [attrs.center] the center dialog flag, defaults to true
+ * @param {Boolean} [attrs.closeable] the closeable dialog flag, defaults to true
  * @param {Boolean} [attrs.resizeable] the resize dialog flag, defaults to true
  * @param {Object} [...] the child widgets or DOM nodes
  *
@@ -100,11 +101,12 @@ RapidContext.Widget.Classes.Dialog = RapidContext.Widget.Dialog;
  * @param {String} [attrs.title] the dialog title
  * @param {Boolean} [attrs.modal] the modal dialog flag
  * @param {Boolean} [attrs.center] the center dialog flag
+ * @param {Boolean} [attrs.closeable] the closeable dialog flag
  * @param {Boolean} [attrs.resizeable] the resize dialog flag
  */
 RapidContext.Widget.Dialog.prototype.setAttrs = function (attrs) {
     attrs = MochiKit.Base.update({}, attrs);
-    var locals = RapidContext.Util.mask(attrs, ["title", "modal", "center", "resizeable", "hidden"]);
+    var locals = RapidContext.Util.mask(attrs, ["title", "modal", "center", "resizeable", "closeable", "hidden"]);
     if (typeof(locals.title) != "undefined") {
         MochiKit.DOM.replaceChildNodes(this.firstChild, locals.title);
     }
@@ -116,11 +118,11 @@ RapidContext.Widget.Dialog.prototype.setAttrs = function (attrs) {
     }
     if (typeof(locals.resizeable) != "undefined") {
         var resize = this.childNodes[2];
-        if (MochiKit.Base.bool(locals.resizeable)) {
-            resize.show();
-        } else {
-            resize.hide();
-        }
+        resize.setAttrs({ hidden: !MochiKit.Base.bool(locals.resizeable) });
+    }
+    if (typeof(locals.closeable) != "undefined") {
+        var close = this.childNodes[1];
+        close.setAttrs({ hidden: !MochiKit.Base.bool(locals.closeable) });
     }
     if (typeof(locals.hidden) != "undefined") {
         this._setHiddenDialog(locals.hidden);
