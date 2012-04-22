@@ -258,7 +258,7 @@ RapidContext.App.startApp = function (app, container) {
                   "&platform=" + status.version +
                   "&server=" + status.guid +
                   "&user=" + user.id +
-                  "&cb=" + cbDefer.func.NAME;
+                  "&cb=" + cbDefer.func.displayName;
         d.addCallback(function () {
             ui.overlay.setAttrs({ message: "Verifying License..." });
             var ld = MochiKit.Async.loadScript(url);
@@ -763,7 +763,7 @@ RapidContext.App._Callback = {
         var id = "cb" + this.nextId();
         var d = new MochiKit.Async.Deferred();
         var func = MochiKit.Base.bind("handle", this, id, d);
-        func.NAME = "RapidContext.App._Callback." + id;
+        func.displayName = "RapidContext.App._Callback." + id;
         this[id] = d.func = func;
         return d;
     },

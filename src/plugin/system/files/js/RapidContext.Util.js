@@ -292,7 +292,7 @@ RapidContext.Util.functionName = function (func) {
     } else if (func.name != null && func.name != "") {
         return func.name;
     } else {
-        return func.NAME;
+        return func.displayName;
     }
 };
 
@@ -300,7 +300,7 @@ RapidContext.Util.functionName = function (func) {
  * Registers function names for debugging or logging. This is useful
  * when using anonymous functions or inside JavaScript environments
  * that do not provide function <code>name</code> properties. This
- * function will add the specified name as a new <code>NAME</code>
+ * function will add the specified name as a <code>displayName</code>
  * property to any function that doesn't already have a name. This
  * function will also process any properties or prototype properties
  * recursively adding names like <code>name.[property name]</code>.
@@ -314,8 +314,8 @@ RapidContext.Util.functionName = function (func) {
 RapidContext.Util.registerFunctionNames = function (obj, name, stack) {
    if (typeof(obj) === "function" &&
        (obj.name == null || obj.name == "") &&
-       typeof(obj.NAME) === "undefined") {
-       obj.NAME = name;
+       typeof(obj.displayName) === "undefined") {
+       obj.displayName = name;
    }
    stack = stack || [];
    if (obj != null && name != null &&
