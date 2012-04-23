@@ -136,5 +136,5 @@
       </Pane>
     </Wizard>
   </Dialog>
-  <Pane id="tourLocator" style="position: absolute; z-index: 10000; border: 3px solid #70263e; background: #ffddee; display: none;"></Pane>
+  <Pane id="tourLocator" style="position: absolute; z-index: 10000; border: 3px solid #88AACC; background: #DDEEFF; display: none;"></Pane>
 </ui>

@@ -227,10 +227,6 @@ StartApp.prototype.startApp = function (app, container) {
 StartApp.prototype.tourStart = function () {
     if (this.ui.tourDialog.isHidden()) {
         document.body.appendChild(this.ui.tourDialog);
-        var title = this.ui.tourDialog.firstChild;
-        MochiKit.Style.setStyle(title, { background: "#70263e" });
-        var div = this.ui.tourDialog.lastChild;
-        MochiKit.Style.setStyle(div, { background: "#ffddee" });
         var dim = MochiKit.Style.getViewportDimensions();
         var opts = { effect: "Move", mode: "absolute", duration: 1.5, transition: "spring",
                      x: Math.floor(dim.w * 0.1), y: Math.floor(dim.h - 400) };
