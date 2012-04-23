@@ -655,7 +655,7 @@ public class PluginManager {
          * Creates a new empty class loader.
          */
         public PluginClassLoader() {
-            super(new URL[0]);
+            super(new URL[0], PluginClassLoader.class.getClassLoader());
         }
 
         /**
