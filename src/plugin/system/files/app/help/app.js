@@ -178,10 +178,10 @@ HelpApp.prototype._callbackContent = function(data) {
  * @param {String} html the HTML data to display
  */
 HelpApp.prototype._showContentHtml = function(html) {
-    var m = html.match(/<body[^>]*>([\s\S]*)<\/body>/im);
-    if (m != null) {
-        html = m[1];
-    }
+    html = html.replace(/^[\s\S]*<body[^>]*>/i, "");
+    html = html.replace(/<\/body>[\s\S]*$/i, "");
+    html = html.replace(/^[\s\S]*<!--START-->/, "");
+    html = html.replace(/<!--END-->[\s\S]*$/, "");
     this.ui.contentText.innerHTML = html;
     var baseUrl = window.location.href;
     var nodes = this.ui.contentText.getElementsByTagName("a");
