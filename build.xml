@@ -122,7 +122,7 @@
 
 <!-- DOCUMENTATION TARGETS -->
   <target name="doc"
-          depends="doc-clean,doc-license,doc-java,doc-js"
+          depends="doc-clean,doc-copy,doc-java,doc-js"
           description="Generates the application documentation">
     <zip destfile="doc.zip" basedir="doc" level="9">
     </zip>
@@ -136,13 +136,15 @@
     <mkdir dir="doc/js" />
   </target>
 
-  <target name="doc-license">
+  <target name="doc-copy">
     <copy todir="doc">
       <fileset dir="${basedir}">
         <include name="README.txt" />
         <include name="LICENSE.txt" />
       </fileset>
     </copy>
+    <copy todir="doc/images" file="src/plugin/system/files/images/favicon.png" />
+    <copy todir="doc/css" file="src/plugin/system/files/css/style.css" />
   </target>
 
   <target name="doc-java">
