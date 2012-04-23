@@ -6,11 +6,11 @@ RapidContext LICENSE
   RapidContext source code is licensed under a modified version of the
   original BSD license (see section 2 below).
 
-  Usage of the RapidContext name and logotype restricted. Please acquire a
-  written permission before using them in print or online material.
+  Usage of the RapidContext name and logotype is restricted. A written
+  permission is required prior to using them in print or online material.
 
-  Specific conditions apply for third party libraries and graphical material
-  distributed with RapidContext (see section 3 below).
+  Specific conditions apply for other third party libraries and graphical
+  materials distributed with RapidContext (see section 3 below).
 
 
 2. BSD License
@@ -34,8 +34,8 @@ RapidContext LICENSE
          its contributors. Please visit http://www.rapidcontext.com/ for
          more information.
 
-    4. No names of persons or organizations contributing to this software may
-       be used to endorse or promote products derived from this software
+    4. Names of persons or organizations contributing to this software may
+       NOT be used to endorse or promote products derived from this software
        without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
