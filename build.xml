@@ -162,11 +162,11 @@
 
   <target name="doc-js">
     <property name="jsdoc.dir" value="${basedir}/tools/jsdoc-toolkit" />
-    <fileset id="js.files"
-             dir="${basedir}/src/plugin/system/files/js"
-             includes="RapidContext*.js" />
-    <pathconvert property="jsdoc.files" pathsep=" " refid="js.files" />
-    <java jar="${jsdoc.dir}/jsrun.jar" fork="true">
+    <pathconvert property="jsdoc.files" pathsep=" ">
+      <fileset dir="src/plugin/system/files/js" includes="RapidContext*.js" />
+      <flattenmapper/>
+    </pathconvert>
+    <java jar="${jsdoc.dir}/jsrun.jar" fork="true" dir="src/plugin/system/files/js">
       <sysproperty key="jsdoc.dir" value="${jsdoc.dir}" />
       <arg value="${jsdoc.dir}/app/run.js" />
       <arg value="-t=${jsdoc.dir}/templates/jsdoc" />
