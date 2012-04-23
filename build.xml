@@ -142,9 +142,13 @@
         <include name="README.txt" />
         <include name="LICENSE.txt" />
       </fileset>
+      <fileset dir="src/plugin/system/files">
+        <include name="images/favicon.png" />
+        <include name="images/logotype.png" />
+        <include name="images/backgrounds/navigation-*" />
+        <include name="css/**" />
+      </fileset>
     </copy>
-    <copy todir="doc/images" file="src/plugin/system/files/images/favicon.png" />
-    <copy todir="doc/css" file="src/plugin/system/files/css/style.css" />
   </target>
 
   <target name="doc-java">
