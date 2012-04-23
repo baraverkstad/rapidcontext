@@ -353,7 +353,7 @@ public class Main {
         return file != null &&
                isDir(file, true) &&
                isDir(new File(file, "plugin"), true) &&
-               isDir(new File(file, "doc"), false);
+               (new File(file, "doc.zip")).canRead();
     }
 
     /**
