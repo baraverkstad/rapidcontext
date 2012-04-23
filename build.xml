@@ -33,7 +33,7 @@
     <pathconvert property="manifest.classpath" pathsep=" " refid="build.classpath">
       <mapper type="flatten"/>
     </pathconvert>
-    <jar jarfile="lib/${build.name}-${build.version}.jar">
+    <jar jarfile="lib/${build.name}-${build.version}.jar" level="9">
       <manifest>
         <attribute name="Package-Title" value="${build.name}"/>
         <attribute name="Package-Version" value="${build.version}"/>
@@ -102,6 +102,7 @@
       <copy tofile="plugin/@{id}.zip">
         <fileset dir="src/plugin/@{id}" includes="@{id}*.plugin" />
       </copy>
+      <ant dir="src/plugin/@{id}" antfile="../plugin-build.xml" target="clean" />
     </sequential>
   </macrodef>
 
@@ -123,7 +124,7 @@
   <target name="doc"
           depends="doc-clean,doc-license,doc-java,doc-js"
           description="Generates the application documentation">
-    <zip destfile="doc.zip" basedir="doc">
+    <zip destfile="doc.zip" basedir="doc" level="9">
     </zip>
   </target>
 
@@ -193,19 +194,20 @@
 
   <target name="package-war">
     <war destfile="${build.name}.war"
-         webxml="src/web/WEB-INF/web.xml">
+         webxml="src/web/WEB-INF/web.xml"
+         level="9">
       <lib dir="lib">
         <exclude name="servlet-api.jar" />
         <exclude name="jetty-*.jar" />
         <exclude name="slf4j-*.jar" />
       </lib>
-      <zipfileset dir="doc" prefix="doc" />
+      <zipfileset dir="." includes="doc.zip" />
       <zipfileset dir="plugin" prefix="plugin" />
     </war>
   </target>
 
   <target name="package-zip">
-    <zip destfile="${build.name}-${build.version}.zip">
+    <zip destfile="${build.name}-${build.version}.zip" level="9">
       <zipfileset dir="${basedir}"
                   prefix="${build.name}-${build.version}"
                   filemode="755">
@@ -220,10 +222,9 @@
         <include name="*.war" />
         <include name="lib/**" />
         <include name="plugin/**" />
-        <include name="doc/**" />
+        <include name="doc.zip" />
         <include name="src/**" />
         <exclude name="src/plugin/**/build.number" />
-        <exclude name="src/plugin/**/classes/**" />
       </zipfileset>
     </zip>
   </target>
@@ -251,7 +252,7 @@
     </copy>
     <chmod file="${build.title}.app/Contents/MacOS/start" perm="ugo+x" />
     <chmod file="${build.title}.app/Contents/Resources/bin/rapidcontext" perm="ugo+x" />
-    <zip destfile="${build.name}-${build.version}-mac.zip">
+    <zip destfile="${build.name}-${build.version}-mac.zip" level="9">
       <zipfileset dir="${basedir}" filemode="755">
         <include name="${build.title}.app/**/MacOS/*" />
         <include name="${build.title}.app/**/bin/*" />
