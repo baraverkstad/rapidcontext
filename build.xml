@@ -214,8 +214,7 @@
         <include name="bin/*" />
         <exclude name="bin/*.bat" />
       </zipfileset>
-      <zipfileset dir="${basedir}"
-                  prefix="${build.name}-${build.version}">
+      <zipfileset dir="${basedir}" prefix="${build.name}-${build.version}">
         <include name="README.txt" />
         <include name="LICENSE.txt" />
         <include name="bin/*.bat" />
@@ -223,8 +222,10 @@
         <include name="lib/**" />
         <include name="plugin/**" />
         <include name="doc.zip" />
-        <include name="src/**" />
-        <exclude name="src/plugin/**/build.number" />
+      </zipfileset>
+      <zipfileset dir="src/plugin" prefix="${build.name}-${build.version}">
+        <include name="plugin-build.xml" />
+        <include name="plugin.properties.template" />
       </zipfileset>
     </zip>
   </target>
