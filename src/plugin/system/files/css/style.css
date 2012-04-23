@@ -75,13 +75,10 @@ code, pre, input, textarea {
     font-weight: bold;
 }
 
-pre {
-    margin-top: 0px;
-}
-
+pre,
 code {
-    color: rgb(212,94,138);
-    font-weight: bold;
+    margin-top: 0px;
+    color: #3399BB;
 }
 
 a {
@@ -228,120 +225,87 @@ body.doc {
 }
 .doc table {
     font-size: 12px;
+    border-collapse: collapse;
 }
 .doc code,
-.doc pre,
-.doc input,
-.doc textarea {
-    font-size: 13px;
+.doc pre {
+    font-size: 12px;
+}
+.doc .fineprint {
+    font-size: 10px;
+    color: #888888;
 }
 
 
 /**
- * Documentation style for JSDoc
+ * Documentation style for Javadoc
  */
-.doc .TableHeadingColor {
-    background: #ffeeee;
+
+.doc .NavBarCell1,
+.doc .NavBarCell1Rev {
+    border: none;
+    padding: 2px;
 }
-.doc .TableSubHeadingColor {
-    background: #ffeeee;
+.doc .TableHeadingColor,
+.doc .TableSubHeadingColor,
+.doc .NavBarCell1 {
+    border: none;
+    background: #CCEEFF;
+    color: #1E466E;
 }
-.doc .TableRowColor {
-}
-.doc .NavBar {
-    font-family: Arial, Helvetica, sans-serif;
-}
-.doc .jsdoc_ctime {
-    text-align: right;
-}
-.doc .optional {
-    color: black;
-    font-size: 80%;
-    font-weight: bold;
-    vertical-align: super;
-}
-.doc a:link,
-.doc a:active,
-.doc a:visited {
-    color: rgb(110, 30, 70);
-}
-.doc .KEYW {
-    color: #933;
-}
-.doc .COMM {
-    color: #bbb;
-    font-style: italic;
-}
-.doc .NUMB {
-    color: #393;
-}
-.doc .STRN {
-    color: #393;
-}
-.doc .REGX {
-    color: #339;
-}
-.doc .linenumber {
-    border-right: 1px dotted #666;
-    color: #666;
-    font-style: normal;
+.doc .TableHeadingColor th,
+.doc .TableHeadingColor td,
+.doc .TableSubHeadingColor th,
+.doc .TableSubHeadingColor td,
+.doc .TableRowColor th,
+.doc .TableRowColor td {
+    border: 1px solid #AACCEE;
+    padding: 3px 6px;
 }
 
 
 /**
  * Documentation style for JSDoc 2.x
  */
-.doc #index {
-    display: none;
-}
-.doc .classList {
-    list-style-type: none;
-    padding: 0;
-    margin: 0 0 0 8px;
-    font-family: arial, sans-serif;
-    overflow: auto;
-}
-.doc .classList li {
-    padding: 0;
-    margin: 0 0 8px 0;
-}
-.doc .summaryTable {
-    width: 100%;
-}
-.doc h1.classTitle {
-    font-size: 170%;
-    line-height: 130%;
-}
-.doc caption,
-.doc div.sectionTitle {
-    background-color: #7F8FB1;
-    color: #fff;
-    font-size: 130%;
-    text-align: left;
-    padding: 2px 6px 2px 6px;
-    border: 1px #7F8FB1 solid;
-}
-.doc div.sectionTitle {
-    margin-bottom: 8px;
-}
+.doc #index,
 .doc .summaryTable thead {
     display: none;
 }
-.doc .summaryTable td {
+.doc h1.classTitle {
+    font-size: 30px;
+}
+.doc .summaryTable,
+.doc div.sectionTitle {
+    width: 100%;
+    margin-bottom: 8px;
+}
+.doc .summaryTable caption,
+.doc div.sectionTitle {
+    background: #CCEEFF;
+    color: #1E466E;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: left;
+}
+.doc .summaryTable caption,
+.doc .summaryTable th,
+.doc .summaryTable td,
+.doc div.sectionTitle {
+    border: 1px solid #AACCEE;
+    padding: 3px 6px;
     vertical-align: top;
-    padding: 4px;
-    border-bottom: 1px #7F8FB1 solid;
-    border-right: 1px #7F8FB1 solid;
+}
+.doc .summaryTable caption {
+    border-bottom-width: 0;
 }
 .doc .summaryTable td.attributes {
-    border-left: 1px #7F8FB1 solid;
     width: 140px;
     text-align: right;
 }
 .doc td.attributes,
 .doc .fixedFont {
     line-height: 15px;
-    color: #002EBE;
+    color: #1E466E;
     font-family: "Courier New", Courier, monospace;
     font-size: 13px;
 }
@@ -351,14 +315,15 @@ body.doc {
     line-height: 15px;
 }
 .doc .summaryTable td.nameDescription,
-.doc .description {
+.doc .summaryTable .description {
+    margin: 3px 0;
     font: 13px Palatino,Garamond,serif;
     line-height: 15px;
-    padding: 4px;
-    padding-left: 4px;
 }
-.doc .summaryTable {
-    margin-bottom: 8px;
+.doc .description {
+    margin: 10px 0;
+    font: 13px Palatino,Garamond,serif;
+    line-height: 15px;
 }
 .doc ul.inheritsList {
     list-style: square;
@@ -367,6 +332,7 @@ body.doc {
 }
 .doc .detailList {
     margin-left: 20px;
+    padding: 0;
     line-height: 15px;
 }
 .doc .detailList dt {
@@ -381,21 +347,9 @@ body.doc {
 .doc td.attributes,
 .doc .light a:link,
 .doc .light a:visited {
-    color: #777;
+    color: #777777;
     font-style: italic;
-}
-.doc .fineprint {
-    text-align: right;
-    font-size: 10px;
-}
-.doc pre.code {
-    margin-top: 10px;
-    margin-bottom: 0px;
-    border-left: 3px solid #ffaacc;
-    padding: 6px 0px 6px 20px;
-    background: #ffeeee;
-    font-weight: bold;
-    font-size: 12px;
+    font-weight: normal;
 }
 
 
@@ -405,19 +359,11 @@ body.doc {
 
 /* Box style */
 .box {
-    margin-top: 15px;
-    margin-bottom: 15px;
-    margin-left: 40px;
-    margin-right: 40px;
-    border: 1px solid rgb(212,94,138);
-    border-radius: 12px 12px;
-    -moz-border-radius: 12px;
-    -webkit-border-radius: 12px;
-    padding-top: 6px;
-    padding-bottom: 6px;
-    padding-left: 10px;
-    padding-right: 10px;
-    background: #ffeeee;
+    margin: 15px 40px 15px 40px;
+    border: 1px solid #88AACC;
+    border-radius: 12px;
+    padding: 6px 10px 6px 10px;
+    background: #F8FBFF;
     page-break-inside: avoid;
 }
 ol.box, ul.box {
@@ -445,11 +391,19 @@ ul.compact {
 
 /* Code style */
 pre.code {
-    color: rgb(212,94,138);
-    font-weight: bold;
+    margin-top: 10px;
+    border-left: 3px solid #88AACC;
+    padding: 6px 6px 6px 20px;
+    background: #F8FBFF;
+    color: #006699;
 }
 pre.code .comment {
-    color: rgb(120,0,90);
+    color: #66AACC;
+}
+pre.code.box {
+    margin-top: 15px;
+    border-left: 1px solid #88AACC;
+    padding: 6px 6px 6px 20px;
 }
 
 /* Preformatted with line-breaks */
