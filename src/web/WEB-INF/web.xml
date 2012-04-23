@@ -5,6 +5,7 @@
     'http://java.sun.com/j2ee/dtds/web-app_2_2.dtd'>
 
 <web-app>
+
   <display-name>RapidContext</display-name>
   <description>
     The RapidContext server-side application.
@@ -26,7 +27,4 @@
     <url-pattern>/*</url-pattern>
   </servlet-mapping>
 
-  <session-config>
-    <session-timeout>240</session-timeout>
-  </session-config>
 </web-app>
