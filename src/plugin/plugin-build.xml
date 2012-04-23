@@ -35,13 +35,14 @@
   </patternset>
 
 
+<!-- CLEANING TARGETS -->
+  <target name="clean" depends="compile-clean,package-clean"
+          description="Removes intermediary files created during build." />
+
+
 <!-- COMPILATION TARGETS -->
-  <target name="compile" depends="compile-clean,compile-java" if="build.java"
-          description="Compiles the Java source code for the plugin">
-    <mkdir dir="lib" />
-    <jar jarfile="lib/${plugin.id}-${build.version}.jar">
-      <fileset dir="classes" />
-    </jar>
+  <target name="compile" depends="compile-clean,compile-text,compile-java"
+          description="Compiles and prepares the plug-in source code.">
   </target>
 
   <target name="compile-clean" if="build.java">
@@ -49,7 +50,9 @@
       <fileset dir="classes" />
       <fileset dir="lib" includes="${plugin.id}-*.jar" />
     </delete>
-    <mkdir dir="classes" />
+  </target>
+
+  <target name="compile-text">
     <fixcrlf srcdir="." eol="unix" eof="remove" tab="remove">
       <patternset refid="pattern.srcfiles" />
     </fixcrlf>
@@ -61,6 +64,7 @@
   </target>
 
   <target name="compile-java" if="build.java">
+    <mkdir dir="classes" />
     <javac srcdir="src"
            destdir="classes"
            classpathref="build.classpath"
@@ -68,19 +72,16 @@
            source="1.5"
            debug="on"
            deprecation="on" />
+    <mkdir dir="lib" />
+    <jar jarfile="lib/${plugin.id}-${build.version}.jar" level="9">
+      <fileset dir="classes" />
+    </jar>
   </target>
 
 
 <!-- PACKAGING TARGETS -->
-  <target name="package" depends="compile"
-          description="Packages the plugin files into proper format">
-    <delete quiet="true">
-      <fileset dir=".">
-        <include name="${plugin.id}-*.zip" />
-        <include name="${plugin.id}-*.plugin" />
-      </fileset>
-    </delete>
-    <delete dir="tmp" quiet="true" />
+  <target name="package" depends="compile,package-clean"
+          description="Packages the plugin files into proper format.">
     <mkdir dir="tmp" />
     <copy todir="tmp">
       <fileset dir=".">
@@ -105,7 +106,7 @@
         <patternset refid="replace.files" />
       </fileset>
     </replaceregexp>
-    <zip destfile="${plugin.id}-${build.version}.plugin">
+    <zip destfile="${plugin.id}-${build.version}.plugin" level="9">
       <fileset dir="tmp" />
       <fileset dir=".">
         <exclude name=".*" />
@@ -120,6 +121,16 @@
         <exclude name="tmp/**" />
       </fileset>
     </zip>
+    <delete dir="tmp" quiet="true" />
+  </target>
+
+  <target name="package-clean">
+    <delete quiet="true">
+      <fileset dir=".">
+        <include name="${plugin.id}-*.zip" />
+        <include name="${plugin.id}-*.plugin" />
+      </fileset>
+    </delete>
     <delete dir="tmp" quiet="true" />
   </target>
 
