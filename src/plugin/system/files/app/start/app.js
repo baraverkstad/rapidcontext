@@ -35,17 +35,6 @@ StartApp.prototype.start = function () {
     MochiKit.Signal.connect(this.ui.tourUserLocate, "onclick", this, "tourLocateUser");
     MochiKit.Signal.connect(this.ui.tourHelpLocate, "onclick", this, "tourLocateHelp");
     MochiKit.Signal.connect(this.ui.tourTabsLocate, "onclick", this, "tourLocateTabs");
-    MochiKit.Signal.connect(this.ui.tourAdminLocate, "onclick", this, "tourLocateAdmin");
-    MochiKit.Signal.connect(this.ui.tourAdminProcLocate, "onclick", this, "tourLocateAdminProcs");
-    MochiKit.Signal.connect(this.ui.tourAdminLogLocate, "onclick", this, "tourLocateAdminLogs");
-    MochiKit.Signal.connect(this.ui.tourAdminUserLocate, "onclick", this, "tourLocateAdminUsers");
-    MochiKit.Signal.connect(this.ui.tourAdminPluginLocate, "onclick", this, "tourLocateAdminPlugins");
-    // TODO: Security test should be made on access, not role name
-    var user = RapidContext.App.user();
-    if (!user || !user.role || MochiKit.Base.findValue(user.role, "admin") < 0) {
-        this.ui.tourWizard.removeChildNode(this.ui.tourWizard.lastChild);
-        this.ui.tourWizard.removeChildNode(this.ui.tourWizard.lastChild);
-    }
 
     // Init app list
     this.proc.appList();
@@ -224,6 +213,9 @@ StartApp.prototype.startApp = function (app, container) {
     }
 }
 
+/**
+ * Starts the guided tour.
+ */
 StartApp.prototype.tourStart = function () {
     if (this.ui.tourDialog.isHidden()) {
         document.body.appendChild(this.ui.tourDialog);
@@ -238,14 +230,14 @@ StartApp.prototype.tourStart = function () {
 }
 
 /**
- * Starts the guided tour.
+ * Stops the guided tour.
  */
 StartApp.prototype.tourStop = function () {
     this.ui.tourDialog.hide();
 }
 
 /**
- * Stops the guided tour.
+ * Changes the active page in the guided tour.
  */
 StartApp.prototype.tourChange = function () {
     var d = MochiKit.Async.wait(1);
@@ -256,9 +248,6 @@ StartApp.prototype.tourChange = function () {
         });
         break;
     case 2:
-        d.addBoth(MochiKit.Base.bind("tourLocateUser", this));
-        break;
-    case 3:
         d.addBoth(function() {
             return RapidContext.App.callApp("HelpApp", "loadTopics");
         });
@@ -267,29 +256,11 @@ StartApp.prototype.tourChange = function () {
         });
         d.addBoth(MochiKit.Base.bind("tourLocateHelp", this));
         break;
-    case 4:
+    case 3:
         d.addBoth(MochiKit.Base.bind("tourLocateTabs", this));
         break;
-    case 5:
-        d.addBoth(function() {
-            return RapidContext.App.callApp("AdminApp", "loadProcedures");
-        });
-        d.addBoth(function() {
-            return MochiKit.Async.wait(1);
-        });
-        d.addBoth(MochiKit.Base.bind("tourLocateAdmin", this));
-        break;
-    case 6:
-        d.addBoth(MochiKit.Base.bind("tourLocateAdminProcs", this));
-        break;
-    case 7:
-        d.addBoth(MochiKit.Base.bind("tourLocateAdminLogs", this));
-        break;
-    case 8:
-        d.addBoth(MochiKit.Base.bind("tourLocateAdminUsers", this));
-        break;
-    case 9:
-        d.addBoth(MochiKit.Base.bind("tourLocateAdminPlugins", this));
+    case 4:
+        d.addBoth(MochiKit.Base.bind("tourLocateUser", this));
         break;
     }
     d.addErrback(RapidContext.UI.showError);
@@ -300,6 +271,27 @@ StartApp.prototype.tourChange = function () {
  */
 StartApp.prototype.tourLocateStart = function () {
     this.tourLocate(this.ui.appTable);
+}
+
+/**
+ * Locates the help app.
+ */
+StartApp.prototype.tourLocateHelp = function () {
+    var tab = RapidContext.App._UI.container.selectedChild();
+    var box = this.getBoundingBox(tab.firstChild.nextSibling);
+    var diag = this.getBoundingBox(this.ui.tourDialog);
+    box.h = 200;
+    this.tourLocate(box);
+}
+
+/**
+ * Locates the app tabs.
+ */
+StartApp.prototype.tourLocateTabs = function () {
+    var tabs = RapidContext.App._UI.container.firstChild;
+    var box = this.getBoundingBox(tabs.firstChild, tabs.lastChild);
+    box.h += 30;
+    this.tourLocate(box);
 }
 
 /**
@@ -315,89 +307,6 @@ StartApp.prototype.tourLocateUser = function () {
         RapidContext.App._UI.menu.show();
         this.tourLocate(menu);
     }
-}
-
-/**
- * Locates the help app.
- */
-StartApp.prototype.tourLocateHelp = function () {
-    var tab = RapidContext.App._UI.container.selectedChild();
-    var box = this.getBoundingBox(tab.firstChild.nextSibling);
-    var diag = this.getBoundingBox(this.ui.tourDialog);
-    box.h = diag.y - box.y - 100;
-    this.tourLocate(box);
-}
-
-/**
- * Locates the app tabs.
- */
-StartApp.prototype.tourLocateTabs = function () {
-    var tabs = RapidContext.App._UI.container.firstChild;
-    var box = this.getBoundingBox(tabs.firstChild, tabs.lastChild);
-    box.h += 30;
-    this.tourLocate(box);
-}
-
-/**
- * Locates the admin app.
- */
-StartApp.prototype.tourLocateAdmin = function () {
-    var tab = RapidContext.App._UI.container.selectedChild();
-    var box = this.getBoundingBox(tab);
-    var diag = this.getBoundingBox(this.ui.tourDialog);
-    box.h = diag.y - box.y - 100;
-    this.tourLocate(box);
-}
-
-/**
- * Locates the admin procedures.
- */
-StartApp.prototype.tourLocateAdminProcs = function () {
-    var res = this.tourGetAdminTab(3);
-    res.container.selectChild(res.tab);
-    var tree = res.tab.firstChild.lastChild;
-    var node = tree.findByPath("System.Session.Current".split("."));
-    node.select();
-    var box = this.getBoundingBox(res.tab.firstChild.nextSibling);
-    var diag = this.getBoundingBox(this.ui.tourDialog);
-    box.h = diag.y - box.y - 100;
-    this.tourLocate(box);
-}
-
-/**
- * Locates the admin logs.
- */
-StartApp.prototype.tourLocateAdminLogs = function () {
-    var res = this.tourGetAdminTab(6);
-    res.container.selectChild(res.tab);
-    var box = this.getBoundingBox(res.tab.firstChild.nextSibling);
-    var diag = this.getBoundingBox(this.ui.tourDialog);
-    box.h = diag.y - box.y - 100;
-    this.tourLocate(box);
-}
-
-/**
- * Locates the admin users.
- */
-StartApp.prototype.tourLocateAdminUsers = function () {
-    var res = this.tourGetAdminTab(5);
-    res.container.selectChild(res.tab);
-    var box = this.getBoundingBox(res.tab);
-    var diag = this.getBoundingBox(this.ui.tourDialog);
-    box.h = diag.y - box.y - 100;
-    this.tourLocate(box);
-}
-
-/**
- * Locates the admin plug-ins.
- */
-StartApp.prototype.tourLocateAdminPlugins = function () {
-    var res = this.tourGetAdminTab(2);
-    res.container.selectChild(res.tab);
-    var box = this.getBoundingBox(res.tab.firstChild);
-    var diag = this.getBoundingBox(this.ui.tourDialog);
-    box.h = diag.y - box.y - 100;
-    this.tourLocate(box);
 }
 
 /**
@@ -419,29 +328,6 @@ StartApp.prototype.tourLocate = function () {
     this.ui.tourLocator.animate({ effect: "Morph", duration: 3.0,
                                   transition: "spring", style: style });
     this.ui.tourLocator.animate({ effect: "fade", delay: 2.4, queue: "parallel" });
-}
-
-/**
- * Returns a UI tab from the admin app.
- *
- * @param {Number} idx the tab index
- *
- * @return {Object} a result object with 'tab' and 'container'
- *             properties
- */
-StartApp.prototype.tourGetAdminTab = function (idx) {
-    // TODO: this accesses internal UI from the app...
-    var tab = RapidContext.App._UI.container.selectedChild();
-    var container = tab.lastChild;
-    var children = container.getChildNodes();
-    if (children.length < 6 && idx > 4) {
-        idx--;
-    }
-    if (children.length < 6 && idx > 1) {
-        idx--;
-    }
-    tab = children[idx];
-    return { container: container, tab: tab };
 }
 
 /**
