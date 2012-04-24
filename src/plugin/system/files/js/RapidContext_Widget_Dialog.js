@@ -106,7 +106,7 @@ RapidContext.Widget.Classes.Dialog = RapidContext.Widget.Dialog;
  */
 RapidContext.Widget.Dialog.prototype.setAttrs = function (attrs) {
     attrs = MochiKit.Base.update({}, attrs);
-    var locals = RapidContext.Util.mask(attrs, ["title", "modal", "center", "resizeable", "closeable", "hidden"]);
+    var locals = RapidContext.Util.mask(attrs, ["title", "modal", "center", "resizeable", "closeable", "hidden", "class", "style"]);
     if (typeof(locals.title) != "undefined") {
         MochiKit.DOM.replaceChildNodes(this.firstChild, locals.title);
     }
@@ -126,6 +126,12 @@ RapidContext.Widget.Dialog.prototype.setAttrs = function (attrs) {
     }
     if (typeof(locals.hidden) != "undefined") {
         this._setHiddenDialog(locals.hidden);
+    }
+    if (typeof(locals["class"]) != "undefined") {
+        this.lastChild.className = "widgetDialogContent " + locals["class"];
+    }
+    if (typeof(locals.style) != "undefined") {
+        MochiKit.Style.setStyle(this.lastChild, locals.style);
     }
     this.__setAttrs(attrs);
 };
