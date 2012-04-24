@@ -268,8 +268,8 @@ public class RootStorage extends Storage {
         }
         updateStorageCache(path, false);
         mountedStorages.remove(mountedStorages.indexOf(storage));
-        // Removal of storage from metadata also cause its destruction
         setMountedStorage(path, null);
+        storage.destroy();
     }
 
     /**
