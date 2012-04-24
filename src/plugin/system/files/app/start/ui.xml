@@ -31,11 +31,14 @@
   <Pane id="inlinePane" w="70%-14" h="100%" style="float: left; padding-left: 6px;">
     <Pane w="50%-25" class="startApp yellow" style="float: left; clear: left;">
       <div style="padding: 0 10px; font-size: 13px;">
-        <img src="images/logotype-circle.png" style="float: right; width: 100px; height: 100px;" />
+        <img src="images/logotype-circle.png" style="float: right; width: 128px; height: 128px;" />
         <h1 style="font-family: Trebuchet MS; margin: 6px 0;">Welcome to RapidContext!</h1>
         <p style="margin-top: 6px;">RapidContext is a platform for dynamic web applications and tools.</p>
         <p>If you haven't used it before, you can take the quick tour and
         learn the basics in an easy, interactive fashion.</p>
+        <div style="float: right; margin: 12px 0;">
+          <a href="doc/changes.html" target="_blank">&#x25B6; Version History</a>
+        </div>
         <Button id="tourButton" icon="NEXT" style="margin: 10px 0 10px 0;">Start Quick Tour</Button>
       </div>
     </Pane>
