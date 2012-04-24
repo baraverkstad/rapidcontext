@@ -118,6 +118,10 @@ RapidContext.UI._buildUIElem = function (node, ids) {
             delete attrs.multiple;
         }
         var widget = RapidContext.Widget.createWidget(name, attrs, children);
+    } else if (name == "style") {
+        RapidContext.UI._buildUIStylesheet(MochiKit.DOM.scrapeText(node));
+        node.parentNode.removeChild(node);
+        return null;
     } else {
         var widget = MochiKit.DOM.createDOM(name, attrs, children);
     }
@@ -163,6 +167,25 @@ RapidContext.UI._buildUIElem = function (node, ids) {
     }
     return widget;
 };
+
+/**
+ * Creates and injects a stylesheet element from a set of CSS rules.
+ *
+ * @param {String} css the CSS rules to inject
+ */
+RapidContext.UI._buildUIStylesheet = function (css) {
+    var style = document.createElement('style');
+    style.setAttribute('type', 'text/css');
+    document.getElementsByTagName('head')[0].appendChild(style);
+    try {
+        style.innerHTML = css;
+    } catch (e) {
+        var parts = css.split(/\s*[{}]\s*/);
+        for (var i = 0; i < parts.length; i += 2) {
+            style.styleSheet.addRule(parts[i], parts[i+1]);
+        }
+    }
+}
 
 /**
  * Connects the default UI signals for a procedure. This includes a default
