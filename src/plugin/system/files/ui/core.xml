@@ -28,22 +28,22 @@
       <table w="100%" style="border-collapse: collapse; font-size: 11px;">
         <tbody w="100%">
           <tr>
-            <th class="label" style="width: 130px; padding-top: 6px; padding-right: 10px; text-align: right;">Current Password:</th>
-            <td style="padding-top: 2px;" w="100%-130">
+            <th class="label" style="width: 140px; padding-top: 6px; padding-right: 10px; text-align: right;">Current Password:</th>
+            <td style="padding-top: 2px;" w="100%-140">
               <TextField name="current" type="password" w="100%-10" />
               <FormValidator id="passwordError" name="current" mandatory="false" style="padding: 3px 0 6px 0;" />
             </td>
           </tr>
           <tr>
             <th class="label" style="padding-top: 4px; padding-right: 10px; text-align: right;">New Password:</th>
-            <td w="100%-130">
+            <td w="100%-140">
               <TextField name="password" type="password" w="100%-10" />
               <FormValidator name="password" regex=".{5,}" message="Minimum length is 5 characters." style="padding: 3px 0 6px 0;" />
             </td>
           </tr>
           <tr>
             <th class="label" style="padding-top: 4px; padding-right: 10px; text-align: right;">Confirm Password:</th>
-            <td w="100%-130">
+            <td w="100%-140">
               <TextField name="passwordcheck" type="password" w="100%-10" />
               <FormValidator name="passwordcheck" message="Not identical to password above." style="padding: 3px 0 6px 0;" />
             </td>
