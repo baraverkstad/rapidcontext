@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <ui>
+  <style>
+div.about {
+    position: relative;
+    padding: 20px;
+    background: url(images/backgrounds/about.png);
+    color: #EEEEEE;
+}
+div.about a:link,
+div.about a:active,
+div.about a:visited {
+    color: #88AACC;
+}
+  </style>
   <Pane id="paneContainer" w="100%-20" h="100%-20" hidden="true" style="padding: 10px;">
   </Pane>
   <!-- MSIE 7: Extra <div> element to fix padding bug in CSS box model -->

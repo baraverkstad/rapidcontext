@@ -114,22 +114,6 @@ dd {
 
 
 /**
- * About dialog styles
- */
-div.about {
-    position: relative;
-    padding: 20px;
-    background: url(../images/backgrounds/about.png);
-    color: #EEEEEE;
-}
-div.about a:link,
-div.about a:active,
-div.about a:visited {
-    color: #88AACC;
-}
-
-
-/**
  * Storage API styles
  */
 div.query {
