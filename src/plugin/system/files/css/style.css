@@ -423,6 +423,12 @@ pre.code.box {
     padding: 6px 6px 6px 20px;
 }
 
+/* Short horizontal line */
+hr.short {
+    width: 50%;
+    margin: 12px 25%;
+}
+
 /* Preformatted with line-breaks */
 .preformatted {
     white-space: pre-wrap;
