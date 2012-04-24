@@ -338,6 +338,56 @@ body.doc {
 
 
 /**
+ * Gradient styles
+ */
+.grey {
+    background-color: #EEEEEE;
+    background-image: -moz-linear-gradient(top, #FDFDFD, #EEEEEE);
+    background-image: -ms-linear-gradient(top, #FDFDFD, #EEEEEE);
+    background-image: -o-linear-gradient(top, #FDFDFD, #EEEEEE);
+    background-image: -webkit-linear-gradient(top, #FDFDFD, #EEEEEE);
+    background-image: linear-gradient(top, #FDFDFD, #EEEEEE);
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FDFDFD', endColorstr='#EEEEEE')";
+}
+.yellow {
+    background-color: #FFFFEE;
+    background-image: -moz-linear-gradient(top, #FFFFFD, #FFFFEE);
+    background-image: -ms-linear-gradient(top, #FFFFFD, #FFFFEE);
+    background-image: -o-linear-gradient(top, #FFFFFD, #FFFFEE);
+    background-image: -webkit-linear-gradient(top, #FFFFFD, #FFFFEE);
+    background-image: linear-gradient(top, #FFFFFD, #FFFFEE);
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFD', endColorstr='#FFFFEE')";
+}
+.red {
+    background-color: #FFEEEE;
+    background-image: -moz-linear-gradient(top, #FFFDFD, #FFEEEE);
+    background-image: -ms-linear-gradient(top, #FFFDFD, #FFEEEE);
+    background-image: -o-linear-gradient(top, #FFFDFD, #FFEEEE);
+    background-image: -webkit-linear-gradient(top, #FFFDFD, #FFEEEE);
+    background-image: linear-gradient(top, #FFFDFD, #FFEEEE);
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFDFD', endColorstr='#FFEEEE')";
+}
+.green {
+    background-color: #EEFFEE;
+    background-image: -moz-linear-gradient(top, #FDFFFD, #EEFFEE);
+    background-image: -ms-linear-gradient(top, #FDFFFD, #EEFFEE);
+    background-image: -o-linear-gradient(top, #FDFFFD, #EEFFEE);
+    background-image: -webkit-linear-gradient(top, #FDFFFD, #EEFFEE);
+    background-image: linear-gradient(top, #FDFFFD, #EEFFEE);
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FDFFFD', endColorstr='#EEFFEE')";
+}
+.blue {
+    background-color: #EEF8FF;
+    background-image: -moz-linear-gradient(top, #FDFDFF, #EEF8FF);
+    background-image: -ms-linear-gradient(top, #FDFDFF, #EEF8FF);
+    background-image: -o-linear-gradient(top, #FDFDFF, #EEF8FF);
+    background-image: -webkit-linear-gradient(top, #FDFDFF, #EEF8FF);
+    background-image: linear-gradient(top, #FDFDFF, #EEF8FF);
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FDFDFF', endColorstr='#EEF8FF')";
+}
+
+
+/**
  * Markup display styles
  */
 
