@@ -3,9 +3,9 @@
  */
 function StartApp() {
     this.appStatus = {};
+    this.gradients = ["red", "green", "blue"];
     this.focused = true;
     this.showingModifiers = false;
-    this.inlinePanes = false;
 }
 
 /**
@@ -116,18 +116,23 @@ StartApp.prototype.initApps = function () {
  * Initializes an inline pane auto-start app.
  */
 StartApp.prototype.initStartupApp = function (app) {
-    if (!this.inlinePanes) {
-        this.inlinePanes = true;
-        this.ui.inlinePane.removeAll();
-    }
     // TODO: use proper widget and container instead
-    var style = { "position": "relative", "float": app.startPage,
-                  "min-height": "200px", "border": "1px solid #BBBBBB",
-                  "padding": "5px" };
-    var attrs = { pageTitle: app.name, pageCloseable: true, style: style };
+    var style = {};
+    if (app.startPage == "left" || app.startPage == "right") {
+        style = { float: app.startPage, clear: app.startPage };
+    } else {
+        style = { clear: "both" };
+    }
+    var color = this.gradients.shift() || "grey";
+    var attrs = { pageTitle: app.name, pageCloseable: true,
+                  "class": "startApp " + color, style: style };
     var pane = new RapidContext.Widget.Pane(attrs);
-    this.ui.inlinePane.addAll(pane);
-    RapidContext.Util.registerSizeConstraints(pane, "50%-15");
+    this.ui.inlinePane.insertBefore(pane, this.ui.inlinePane.firstChild);
+    if (app.startPage == "left" || app.startPage == "right") {
+        RapidContext.Util.registerSizeConstraints(pane, "50%-25");
+    } else {
+        RapidContext.Util.registerSizeConstraints(pane, "100%");
+    }
     RapidContext.Util.resizeElements(pane);
     this.startApp(app.className, pane);
 }
