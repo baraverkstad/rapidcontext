@@ -182,7 +182,12 @@ RapidContext.UI._buildUIStylesheet = function (css) {
     } catch (e) {
         var parts = css.split(/\s*[{}]\s*/);
         for (var i = 0; i < parts.length; i += 2) {
-            style.styleSheet.addRule(parts[i], parts[i+1]);
+            var rules = parts[i].split(/\s*,\s*/);
+            var styles = parts[i+1];
+            for (var j = 0; j < rules.length; j++) {
+                var rule = MochiKit.Format.strip(rules[j].replace(/\s+/, " "));
+                style.styleSheet.addRule(rule, styles);
+            }
         }
     }
 }
