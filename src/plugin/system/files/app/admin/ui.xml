@@ -390,7 +390,7 @@
           </Tree>
         </Form>
       </div>
-      <Dialog id="procArgDialog" title="Edit Argument" modal="true" w="50%" h="75%">
+      <Dialog id="procArgDialog" title="Edit Argument" modal="true" w="50%" h="75%" style="overflow: hidden;">
         <Form id="procArgForm" style="width: 100%; height: 100%;">
           <div class="unselectable" style="padding-bottom: 6px;">
             <span class="label" style="padding-right: 4px;">Data Type:</span>
