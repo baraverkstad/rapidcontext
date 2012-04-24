@@ -32,11 +32,11 @@
     <Pane w="50%-25" class="startApp yellow" style="float: left; clear: left;">
       <div style="padding: 0 10px; font-size: 13px;">
         <img src="images/logotype-circle.png" style="float: right; width: 100px; height: 100px;" />
-        <h1 style="font-family: Trebuchet MS; margin: 6px 0;">Welcome to RapidContext</h1>
-        <p>RapidContext is a platform for creating dynamic web applications and tools.</p>
-        <p>If you are new to RapidContext, please take the quick tour to learn
-        the basics in an easy, interactive fashion.</p>
-        <Button id="tourButton" icon="NEXT" style="margin: 10px 0 0 0;">Start Quick Tour</Button>
+        <h1 style="font-family: Trebuchet MS; margin: 6px 0;">Welcome to RapidContext!</h1>
+        <p style="margin-top: 6px;">RapidContext is a platform for dynamic web applications and tools.</p>
+        <p>If you haven't used it before, you can take the quick tour and
+        learn the basics in an easy, interactive fashion.</p>
+        <Button id="tourButton" icon="NEXT" style="margin: 10px 0 10px 0;">Start Quick Tour</Button>
       </div>
     </Pane>
   </Pane>
@@ -68,8 +68,8 @@
       <Pane pageTitle="App Switching &amp; Tabs">
         <ul>
           <li>Many apps can run at the same time, each in a separate tab.</li>
-          <li>Switching and closing apps is easy by clicking the tabs or the <Icon ref="CLOSE_ACTIVE" /> buttons.</li>
-          <li>Most apps also support running several copies, which is sometimes useful.</li>
+          <li>Switching between apps is easy by clicking the tabs. The <Icon ref="CLOSE_ACTIVE" /> button closes the app.</li>
+          <li>You can also run several copies of a single app, e.g. to compare results or data.</li>
         </ul>
         <Button id="tourTabsLocate" icon="HELP">Locate</Button>
       </Pane>
