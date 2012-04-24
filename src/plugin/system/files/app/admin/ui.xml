@@ -58,7 +58,7 @@
             </tr>
             <tr id="cxnTemplate" class="hidden">
               <th class="label" style="padding-right: 4px;"></th>
-              <td style="white-space: pre-wrap;"></td>
+              <td class="preformatted"></td>
             </tr>
             <tr>
               <th class="label" style="padding-right: 4px;">Last Access:</th>
@@ -293,13 +293,13 @@
             <tr>
               <th class="label" style="padding-right: 4px;">Description:</th>
               <td>
-                <Field name="description" style="white-space: pre-wrap;" />
+                <Field name="description" class="preformatted" />
               </td>
             </tr>
             <tr>
               <th class="label" style="padding-right: 4px;">Copyright:</th>
               <td>
-                <Field name="copyright" style="white-space: pre-wrap;" />
+                <Field name="copyright" class="preformatted" />
               </td>
             </tr>
             <tr>
