@@ -11,28 +11,23 @@ html, body {
     font-family : Lucida Grande, Verdana, sans-serif;
     font-size: 10px;
 }
-
 h1, h2, h3 {
     font-family : Lucida Grande, Verdana, sans-serif;
     font-weight: bold;
     margin-bottom: 6px;
 }
-
 h1 {
     margin-top: 20px;
     font-size: 20px;
 }
-
 h2 {
     margin-top: 15px;
     font-size: 15px;
 }
-
 h3 {
     margin-top: 0px;
     font-size: 12px;
 }
-
 hr {
     margin: 12px 0;
     border: none;
@@ -40,76 +35,64 @@ hr {
     width: 100%;
     clear: both;
 }
-
 p {
     page-break-inside: avoid;
 }
-
 table {
     font-family: Lucida Grande, Verdana, sans-serif;
     font-size: 10px;
 }
-
 td,
 th {
     text-align: left;
     vertical-align: top;
 }
-
+a {
+    font-weight: bold;
+    text-decoration: none;
+}
 a:link,
 a:active,
 a:visited {
     color: rgb(30, 70, 110);
 }
-
 img {
     vertical-align: text-bottom;
 }
 a img {
     border: none;
 }
-
 code, pre, input, textarea {
     font-size: 11px;
     font-family: "Courier New", monospace;
     font-weight: bold;
 }
-
 pre,
 code {
     margin-top: 0px;
     color: #3399BB;
 }
-
-a {
-    font-weight: bold;
-    text-decoration: none;
-}
-
 ol, ul {
-    margin: 0px;
-    padding: 10px 40px 10px 40px;
+    margin: 10px 0;
+    padding: 0 40px;
     page-break-inside: avoid;
 }
-
 li {
     margin-bottom: 3px;
 }
-
 dl {
-    margin: 0px;
-    padding: 10px 20px 10px 20px;
+    margin: 10px 0;
+    padding: 0 20px;
     page-break-inside: avoid;
 }
-
 dt {
+    margin: 0;
+    padding: 0;
     font-weight: bold;
 }
-
 dd {
-    margin: 0px;
-    padding-bottom: 6px;
-    padding-left: 16px;
+    margin: 3px 0 16px 0;
+    padding: 0 0 0 16px;
 }
 
 
