@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+
+<html lang="en" xml:lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/xhtml; charset=UTF-8">
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <meta http-equiv="Content-Language" content="en" />
+    <link rel="icon" type="image/gif" href="images/favicon.png" />
+    <link rel="stylesheet" href="css/style.css" type="text/css" />
+    <link rel="stylesheet" href="css/widget.css" type="text/css" />
+    <title>RapidContext :: Change History</title>
+  </head>
+  <body class="doc">
+
+<div style="position: relative;">
+  <img src="images/logotype.png" alt="RapidContext Logotype" style="width: 128px; height: 128px;" />
+  <div style="position: absolute; top: 6px; left: 170px; font-family: Trebuchet MS;">
+    <a href="http://www.rapidcontext.com/" target="_blank">
+      <span style="font-size: 50px; color: #345;">RapidContext</span><br/>
+      <span style="font-size: 24px; color: #88AACC;">Access &gt; Discovery &gt; Insight</span><br/>
+      <span style="font-size: 18px; color: #666; letter-spacing: 6px; line-height: 24px;">www.rapidcontext.com</span><br/>
+    </a>
+  </div>
+</div>
+
+<table class="widgetNavigationBar" style="margin: 20px 0;">
+  <tr>
+    <td class="prev"><a href="index.html">Documentation</a></td>
+    <td class='prev-active'>&nbsp;</td>
+    <td class='active'>Change History</td>
+    <td class='active-end'>&nbsp;</td>
+  </tr>
+</table>
+
+<h1>Change History</h1>
+
+<!--START-->
+
+<h2>Version 0.15 (2012-04-24)</h2>
+
+<div style="float: right; margin: 0 0 10px 10px;">
+  <img src="images/screenshot-password.png" />
+</div>
+
+<dl>
+  <dt>Persistent Sessions</dt>
+  <dd>
+    User sessions are now stored to files on the server. These are kept
+    for up to 30 days, meaning that users do not have to login as
+    frequently as before (provided that their web browser cookies are
+    intact).
+  </dd>
+
+  <dt>Password Changes &amp; Logouts</dt>
+  <dd>
+    A new password change dialog has been added to the
+    <strong>User Menu</strong> at the top right corner. From there, it is
+    easy to either change the password or logout.
+  </dd>
+
+  <hr style="clear: both;" />
+
+  <div style="float: left; margin: 0 10px 10px 0;">
+    <img src="images/screenshot-start-window.png" />
+  </div>
+
+  <dt style="padding-top: 10px;">Launching Apps in Separate Windows</dt>
+  <dd>
+    Apps can now be launched in separate windows (or tabs) with their
+    own URL. This means that apps can also be bookmarked.<br/><br/>
+    This proves to be very convenient for immediate access to popular apps.
+    Just press <strong>Ctrl</strong> or <strong>Alt</strong> when clicking
+    the app launcher in the <strong>Start</strong> app.
+  </dd>
+
+  <hr style="clear: both;" />
+
+  <div style="float: right; margin: 20px 0 10px 10px;">
+    <img src="images/screenshot-cxn-details.png" />
+  </div>
+
+  <dt>Editing Connection Settings</dt>
+  <dd>
+    Connections can now be created, edited and removed directly from the
+    <strong>Admin</strong> app (in the new "Connections" tab).<br/><br/>
+    The connection details view also provides information about current
+    usage, pool size, timeout values, connection errors, JDBC driver
+    and more.
+  </dd>
+
+  <dt>Storage &amp; Plug-In Information</dt>
+  <dd>
+    The <strong>Admin</strong> app has been improved to include direct
+    links to the storage API for apps, connections and plug-ins. A new
+    field also displays the source plug-in for apps, connections and
+    procedures.
+  </dd>
+
+  <hr style="clear: both;" />
+
+  <div style="float: right; margin: 0 0 10px 10px;">
+      <img src="images/screenshot-widget.png" />
+  </div>
+
+  <dt>Updated Graphical Style</dt>
+  <dd>
+    The graphical style for many of the platform UI components (widgets)
+    has been updated. This can be seen on dialogs, tabs, buttons, text
+    input fields and more. The default icon set has also been extended
+    with many new icons to use in apps.
+  </dd>
+
+  <dt>Plug-ins Stored in ZIP files</dt>
+  <dd>
+    Plug-ins are now stored unpacked on the server, i.e. the plug-in ZIP
+    files are used directly. Any contained JAR file is moved to a temporary
+    location when the plug-in is loaded and removed when it is unloaded.
+  </dd>
+
+  <dt>JDBC: Built-in Drivers for Drizzle, MySQL &amp; PostgreSQL</dt>
+  <dd>
+    JDBC drivers for Drizzle, MySQL &amp; PostgreSQL are now bundled and
+    provided with the JDBC plug-in. Due to license restrictions, drivers
+    for other popular databases cannot at this time be included with the
+    default distribution.
+  </dd>
+
+  <dt>And Much More...</dt>
+  <dd>
+    This release also contains several changes programmer-visible
+    changes. These include new API functions, bundled jQuery and
+    Underscore libraries, changes to the object storage model, etc.
+    See the API documentation for further details.
+  </dd>
+
+</dl>
+
+<!--END-->
+
+<div class="fineprint">
+  <hr>
+  Copyright &copy; 2007-2012 Per Cederberg. All rights reserved.
+</div>
+
+  </body>
+
+</html>
