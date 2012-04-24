@@ -844,10 +844,9 @@ RapidContext.App._Cache = {
                     if (pos < 0) {
                         launcher.instances = [];
                         this.apps.push(launcher);
-                   } else {
-                        launcher.instances = this.apps[pos].instances;
-                        this.apps[pos] = launcher;
-                   }
+                    } else {
+                        MochiKit.Base.update(this.apps[pos], launcher);
+                    }
                 }
             }
             LOG.info("Updated cached apps", this.apps);
