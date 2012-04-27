@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+
+<html lang="en" xml:lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/xhtml; charset={+IO.encoding+}">
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <meta http-equiv="Content-Language" content="en" />
+    <meta name="generator" content="JsDoc Toolkit" />
+    <link rel="icon" type="image/gif" href="../images/favicon.png" />
+    <link rel="stylesheet" href="../css/style.css" type="text/css" />
+    <link rel="stylesheet" href="../css/widget.css" type="text/css" />
+    <title>RapidContext :: JavaScript API</title>
+  </head>
+  <body class="doc">
+    {+include("static/header.html")+}
+
+<table class="widgetNavigationBar" style="margin: 20px 0;">
+  <tr>
+    <td class="prev"><a href="../index.html">Documentation</a></td>
+    <td class='prev-active'>&nbsp;</td>
+    <td class='active'>JavaScript API</td>
+    <td class='active-end'>&nbsp;</td>
+  </tr>
+</table>
+
+<!--START-->
+
+    <h1 class="classTitle">JavaScript API Index</h1>
+
+    <table class="summaryTable" cellspacing="0">
+      <caption>Namespace Summary</caption>
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      <for each="thisClass" in="data">
+        <tr>
+          <td class="nameDescription">
+            {+(new Link().toSymbol(thisClass.alias))+}
+          </td>
+          <td class="description">
+            {+resolveLinks(summarize(thisClass.classDesc))+}
+          </td>
+        </tr>
+      </for>
+      </tbody>
+    </table>
+
+    <hr />
+    {+include("static/footer.html")+}
+  </body>
+</html>

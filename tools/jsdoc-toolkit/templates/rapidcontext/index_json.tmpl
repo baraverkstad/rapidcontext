@@ -1,0 +1,31 @@
+{
+<for each="symbol" in="data">
+    "{+symbol.alias+}": {
+        "url": "{+symbol.alias+".html"+}",
+        "alias": "{+symbol.alias+}",
+        "name": "{+symbol.name+}",
+        "memberOf": "{+symbol.memberOf+}",
+        "isStatic": {+symbol.isStatic+},
+        "isa": {+symbol.isa+},
+        "desc": "{+symbol.desc+}",
+        "classDesc": "{+symbol.classDesc+}",
+        "methods": [<for each="method" in="symbol.methods">
+            {
+                "name": "{+method.name+}",
+                "memberOf": "{+method.memberOf+}",
+                "isStatic": {+method.isStatic+},
+                "desc": "{+method.desc+}"
+             }{+($method_last) ? "" : ","+}
+         </for>],
+         "properties": [<for each="property" in="symbol.properties">
+             {
+                 "name": "{+property.name+}",
+                 "memberOf": "{+property.memberOf+}",
+                 "isStatic": {+property.isStatic+},
+                 "desc": "{+property.desc+}",
+                 "type": "{+property.type+}"
+             }{+($property_last) ? "" : ","+}
+         </for>]
+    }{+($symbol_last) ? "" : ","+}
+</for>
+}

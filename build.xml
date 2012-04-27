@@ -175,7 +175,7 @@
     <java jar="${jsdoc.dir}/jsrun.jar" fork="true" dir="src/plugin/system/files/js">
       <sysproperty key="jsdoc.dir" value="${jsdoc.dir}" />
       <arg value="${jsdoc.dir}/app/run.js" />
-      <arg value="-t=${jsdoc.dir}/templates/jsdoc" />
+      <arg value="-t=${jsdoc.dir}/templates/rapidcontext" />
       <arg value="-d=${basedir}/doc/js" />
       <arg line="${jsdoc.files}" />
     </java>
