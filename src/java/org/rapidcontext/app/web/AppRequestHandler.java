@@ -24,7 +24,6 @@ import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Binary;
-import org.rapidcontext.core.js.JsSerializer;
 import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.StorageException;
@@ -114,7 +113,11 @@ public class AppRequestHandler extends RequestHandler {
         reader = new BufferedReader(is);
         while ((line = reader.readLine()) != null) {
             if (line.contains("%APP_ID%")) {
-                res.append(line.replace("%APP_ID%", JsSerializer.serialize(appId)));
+                if (appId == null) {
+                    res.append(line.replace("%APP_ID%", "null"));
+                } else {
+                    res.append(line.replace("%APP_ID%", "'" + appId + "'"));
+                }
                 res.append("\n");
             } else if (line.contains("%BASE_URL%")) {
                 res.append(line.replace("%BASE_URL%", request.getRootUrl()));
