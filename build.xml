@@ -155,6 +155,7 @@
     <javadoc destdir="doc/java"
              sourcepath="src/java"
              classpathref="build.classpath"
+             stylesheetfile="tools/javadoc/stylesheet.css"
              version="true"
              use="true"
              author="true"

@@ -1,0 +1,120 @@
+/**
+ * JavaDoc Styles
+ */
+html, body {
+    border: 0px;
+    padding: 0px;
+    font-family : Lucida Grande, Verdana, sans-serif;
+    font-size: 12px;
+}
+html {
+    margin: 0px;
+}
+body {
+    width: 800px;
+    height: auto;
+    margin: 0 auto;
+}
+h1, h2, h3 {
+    font-family: Trebuchet MS, Verdana, sans-serif;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+h1 {
+    margin-top: 20px;
+    font-size: 20px;
+}
+h2 {
+    margin-top: 15px;
+    font-size: 16px;
+}
+h3 {
+    margin-top: 0px;
+    font-size: 12px;
+}
+hr {
+    margin: 12px 0;
+    border: none;
+    border-bottom: 1px solid #cccccc;
+    width: 100%;
+    clear: both;
+}
+p {
+    margin: 10px 0;
+    page-break-inside: avoid;
+}
+table {
+    font-family: Lucida Grande, Verdana, sans-serif;
+    font-size: 12px;
+    border-collapse: collapse;
+}
+td,
+th {
+    text-align: left;
+    vertical-align: top;
+}
+a {
+    font-weight: bold;
+    text-decoration: none;
+}
+a:link,
+a:active,
+a:visited {
+    color: rgb(30, 70, 110);
+}
+img {
+    vertical-align: text-bottom;
+}
+a img {
+    border: none;
+}
+code,
+pre {
+    margin-top: 0px;
+    color: #005577;
+    font-size: 13px;
+    font-family: "Courier New", monospace;
+}
+ol, ul {
+    margin: 10px 0;
+    padding: 0 40px;
+    page-break-inside: avoid;
+}
+li {
+    margin-bottom: 3px;
+}
+dl {
+    margin: 10px 0;
+    padding: 0 20px;
+    page-break-inside: avoid;
+}
+dt {
+    margin: 0;
+    padding: 0;
+    font-weight: bold;
+}
+dd {
+    margin: 3px 0 16px 0;
+    padding: 0 0 0 20px;
+}
+.NavBarCell1,
+.NavBarCell1Rev {
+    border: none;
+    padding: 2px;
+}
+.TableHeadingColor,
+.TableSubHeadingColor,
+.NavBarCell1 {
+    border: none;
+    background: #CCEEFF;
+    color: #1E466E;
+}
+.TableHeadingColor th,
+.TableHeadingColor td,
+.TableSubHeadingColor th,
+.TableSubHeadingColor td,
+.TableRowColor th,
+.TableRowColor td {
+    border: 1px solid #AACCEE;
+    padding: 3px 6px;
+}
