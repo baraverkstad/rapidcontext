@@ -76,7 +76,6 @@ RapidContext.Widget.TreeNode.prototype._container = function (create) {
         this.appendChild(container);
         var imgNode = this.firstChild.firstChild;
         imgNode.setAttrs({ ref: "PLUS" });
-        this.setAttrs({ icon: "FOLDER" });
         return container;
     } else {
         return null;

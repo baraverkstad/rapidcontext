@@ -221,14 +221,15 @@ RapidContext.Widget.Tree.prototype.addPath = function (path) {
     }
     var node = this.findRoot(path[0]);
     if (node == null) {
-        node = RapidContext.Widget.TreeNode({ name: path[0] });
+        node = RapidContext.Widget.TreeNode({ name: path[0], folder: (path.length > 1) });
         this.addChildNode(node);
     }
     node.marked = false;
     for (var i = 1; i < path.length; i++) {
         var child = node.findChild(path[i]);
         if (child == null) {
-            child = RapidContext.Widget.TreeNode({ name: path[i] });
+            var attrs = { name: path[i], folder: (path.length > i + 1) };
+            child = RapidContext.Widget.TreeNode(attrs);
             node.addChildNode(child);
         }
         child.marked = false;
