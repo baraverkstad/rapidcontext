@@ -162,7 +162,7 @@ public class JsSerializer {
         if (str == null) {
             buffer.append("null");
         } else {
-            buffer.append("'");
+            buffer.append('"');
             for (int i = 0; i < str.length(); i++) {
                 char chr = str.charAt(i);
                 switch (chr) {
@@ -200,7 +200,7 @@ public class JsSerializer {
                     }
                 }
             }
-            buffer.append("'");
+            buffer.append('"');
         }
     }
 
