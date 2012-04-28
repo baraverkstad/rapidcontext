@@ -433,16 +433,15 @@ RapidContext.App.callProc = function (name, args) {
         if (args[i] == null) {
             params["arg" + i] = "null";
         } else {
-            params["arg" + i] = MochiKit.Base.serializeJSON(args[i]);
+            params["arg" + i] = JSON.stringify(args[i]);
         }
     }
     if (LOG.enabled[LOG.TRACE]) {
         params.trace = "true";
     }
-    var d = RapidContext.App.loadText("rapidcontext/procedure/" + name, params, options);
+    var d = RapidContext.App.loadJSON("rapidcontext/procedure/" + name, params, options);
     d.addCallback(function (res) {
         RapidContext.Util.injectStackTrace(stack);
-        res = MochiKit.Base.evalJSON(res);
         if (res.trace != null) {
             LOG.trace("Server trace " + name, res.trace);
         }
@@ -463,6 +462,41 @@ RapidContext.App.callProc = function (name, args) {
             return res;
         });
     }
+    return d;
+};
+
+/**
+ * Performs an asynchronous HTTP request for a JSON data document and
+ * returns a deferred response. If no request method has been
+ * specified, the POST or GET methods are chosen depending on
+ * whether or not the params argument is null. The request
+ * parameters are specified as an object that will be encoded by the
+ * MochiKit.Base.queryString function. In addition to the default
+ * options in MochiKit.Async.doXHR, this function also accepts a
+ * timeout option for automatic request cancellation.<p>
+ *
+ * Note that this function is unsuitable for loading JavaScript
+ * source code, since using eval() will confuse some browser error
+ * messages and debuggers regarding the actual source location.
+ *
+ * @param {String} url the URL to request
+ * @param {Object} [params] the request parameters, or null
+ * @param {Object} [options] the request options, or null
+ * @config {String} [method] the HTTP method, "GET" or "POST"
+ * @config {Number} [timeout] the timeout in seconds, default is
+ *             no timeout
+ * @config {Object} [headers] the specific HTTP headers to use
+ * @config {String} [mimeType] the override MIME type, default is
+ *             none
+ *
+ * @return {Deferred} a MochiKit.Async.Deferred object that will
+ *         callback with the response text on success
+ */
+RapidContext.App.loadJSON = function (url, params, options) {
+    var d = RapidContext.App.loadXHR(url, params, options);
+    d.addCallback(function (res) {
+        return JSON.parse(res.responseText);
+    });
     return d;
 };
 
