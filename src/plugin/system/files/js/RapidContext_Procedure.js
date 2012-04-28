@@ -19,19 +19,24 @@ if (typeof(RapidContext) == "undefined") {
 }
 
 /**
- * Creates a new procedure caller function. The returned function provides a
- * simplified way of calling a procedure and connecting with UI elements
- * through signals. The actual call is performed with the arguments supplied,
- * just as a normal function. But the call is asynchronous, so only a deferred
- * object will be returned and results are best collected through the
- * "onsuccess" signal. Differing from normal functions, the returned function
- * will ensure that only a single call is in progress at any time,
- * automatically cancelling any previous call if needed.
+ * Creates a new procedure caller function. This function can be called either
+ * as a constructor or as a plain function. In both cases it returns a new
+ * JavaScript function with additional methods.
  *
  * @constructor
  * @param {String} procedure the procedure name
  * @property {String} procedure The procedure name.
  * @property {Array} args The arguments used in the last call.
+ *
+ * @class The procedure wrapper function. Used to provide a simplified way of
+ *   calling a procedure and connecting results through signals (instead of
+ *   using deferred callbacks). The actual call is performed with a normal
+ *   function call, but the results are asynchronous. When called, the
+ *   procedure function returns a deferred object (as the normal API call),
+ *   but the results will also be signalled through the "onsuccess" signal.
+ *   Differing from normal functions, a procedure function will also ensure
+ *   that only a single call is in progress at any time, automatically
+ *   cancelling any previous call if needed.
  */
 RapidContext.Procedure = function (procedure) {
     var proc = function () {
