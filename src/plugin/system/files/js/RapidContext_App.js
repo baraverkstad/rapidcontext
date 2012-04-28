@@ -13,6 +13,17 @@
  * See the RapidContext LICENSE.txt file for more details.
  */
 
+// Temporary code for JSON compat
+if (typeof(JSON) == "undefined") {
+    var JSON = {};
+}
+if (!JSON.parse) {
+    JSON.parse = MochiKit.Base.evalJSON;
+}
+if (!JSON.stringify) {
+    JSON.stringify = MochiKit.Base.serializeJSON;
+}
+
 /**
  * @name RapidContext
  * @namespace The base RapidContext namespace.
@@ -177,6 +188,13 @@ RapidContext.App._startAuto = function (startup) {
     return d;
 };
 
+RapidContext.App._cbAssign = function (obj, key) {
+    return function (data) {
+        obj[key] = data;
+        return data;
+    }
+}
+
 /**
  * Creates and starts an app instance. Normally apps are started in
  * the default app tab container or in a provided widget DOM node. By
@@ -223,17 +241,17 @@ RapidContext.App.startApp = function (app, container) {
         launcher.resource = {};
         for (var i = 0; i < launcher.resources.length; i++) {
             var res = launcher.resources[i];
-            if (res.type == "code") {
+            if (res.type == "code" || res.type == "js" || res.type == "javascript") {
                 d.addCallback(MochiKit.Base.partial(RapidContext.App.loadScript, res.url));
-            } else if (res.type == "style") {
+            } else if (res.type == "style" || res.type == "css") {
                 d.addCallback(MochiKit.Base.partial(RapidContext.App.loadStyles, res.url));
             } else if (res.type == "ui") {
                 d.addCallback(MochiKit.Base.partial(RapidContext.App.loadXML, res.url));
-                d.addCallback(function (xmlDoc) {
-                    launcher.ui = xmlDoc;
-                });
-            }
-            if (res.id != null) {
+                d.addCallback(RapidContext.App._cbAssign(launcher, "ui"));
+            } else if (res.type == "json" && res.id != null) {
+                d.addCallback(MochiKit.Base.partial(RapidContext.App.loadJSON, res.url, null, null));
+                d.addCallback(RapidContext.App._cbAssign(launcher.resource, res.id));
+            } else if (res.id != null) {
                 launcher.resource[res.id] = res.url;
             }
         }
