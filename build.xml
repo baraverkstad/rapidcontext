@@ -42,7 +42,7 @@
         <attribute name="Main-Class" value="${build.mainclass}"/>
       </manifest>
       <fileset dir="classes" />
-      <fileset dir="src/java" />
+      <fileset dir="src/java" excludes="**/package.html" />
     </jar>
   </target>
 
