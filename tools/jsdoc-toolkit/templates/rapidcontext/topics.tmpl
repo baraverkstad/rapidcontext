@@ -3,17 +3,17 @@
         "topic": "RapidContext/JavaScript API/{+symbol.alias+}",
         "url": "doc/js/{+symbol.alias+".html"+}"
     },
-<for each="method" in="symbol.methods">    {
+<for each="method" in="symbol.methods"><if test="method.memberOf == symbol.alias">    {
         "topic": "RapidContext/JavaScript API/{+symbol.alias+}/{+method.name+}",
         "url": "doc/js/{+method.memberOf+".html"+}#{+method.name+}"
     },
-</for><for each="property" in="symbol.properties">    {
+</if></for><for each="property" in="symbol.properties"><if test="property.memberOf == symbol.alias">    {
         "topic": "RapidContext/JavaScript API/{+symbol.alias+}/{+property.name+}",
         "url": "doc/js/{+property.memberOf+".html"+}#{+property.name+}"
     },
-</for><for each="event" in="symbol.events">    {
+</if></for><for each="event" in="symbol.events"><if test="event.memberOf == symbol.alias">    {
         "topic": "RapidContext/JavaScript API/{+symbol.alias+}/{+event.name+}",
         "url": "doc/js/{+event.memberOf+".html"+}#event:{+event.name+}"
     },
-</for></for>    null
+</if></for></for>    null
 ]
