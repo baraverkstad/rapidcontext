@@ -51,10 +51,8 @@
 
 <!-- ============================== class summary ========================== -->			
 			<p class="description">
-				<if test="data.version"><br />Version
-					{+ data.version +}.<br />
-				</if>
-				<if test="data.augments.length"><br />Extends
+				<if test="data.augments.length">
+				    <i>Extends:</i>
 					{+
 						data.augments
 						.sort()
@@ -62,26 +60,26 @@
 							function($) { return new Link().toSymbol($); }
 						)
 						.join(", ")
-					+}.<br />
+					+}<br /><br />
 				</if>
-			
+
 				{+resolveLinks(data.classDesc)+}
-				
-				<if test="!data.isBuiltin()">{# isn't defined in any file #}
-					<br /><i>Defined in: </i> {+new Link().toSrc(data.srcFile)+}.
-				</if>
-			</p>
+
+                <br/><br/>
+                <if test="data.version">
+                    <i>Version:</i>
+                    {+ data.version +}<br />
+                </if>
+                <if test="!data.isBuiltin()">{# isn't defined in any file #}
+                    <i>Source code:</i>
+                    {+new Link().toSrc(data.srcFile)+}
+                </if>
+            </p>
 
 <!-- ============================== constructor summary ==================== -->			
 			<if test="!data.isBuiltin() && (data.isNamespace || data.is('CONSTRUCTOR'))">
 			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class {+data.alias+}.">
 				<caption>{+classType+}Summary</caption>
-				<thead>
-					<tr>
-						<th scope="col">Constructor Attributes</th>
-						<th scope="col">Constructor Name and Description</th>
-					</tr>
-				</thead>
 				<tbody>
 					<tr>
 						<td class="attributes">{!
@@ -105,12 +103,6 @@
 				<if test="ownProperties.length">
 				<table class="summaryTable" cellspacing="0" summary="A summary of the fields documented in the class {+data.alias+}.">
 					<caption>Field Summary</caption>
-					<thead>
-						<tr>
-							<th scope="col">Field Attributes</th>
-							<th scope="col">Field Name and Description</th>
-						</tr>
-					</thead>
 					<tbody>
 					<for each="member" in="ownProperties">
 						<tr>
@@ -167,12 +159,6 @@
 				<if test="ownMethods.length">
 				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class {+data.alias+}.">
 					<caption>Method Summary</caption>
-					<thead>
-						<tr>
-							<th scope="col">Method Attributes</th>
-							<th scope="col">Method Name and Description</th>
-						</tr>
-					</thead>
 					<tbody>
 					<for each="member" in="ownMethods">
 						<tr>
@@ -226,12 +212,6 @@
 				<if test="ownEvents.length">
 				<table class="summaryTable" cellspacing="0" summary="A summary of the events documented in the class {+data.alias+}.">
 					<caption>Event Summary</caption>
-					<thead>
-						<tr>
-							<th scope="col">Event Attributes</th>
-							<th scope="col">Event Name and Description</th>
-						</tr>
-					</thead>
 					<tbody>
 					<for each="member" in="ownEvents">
 						<tr>
@@ -637,8 +617,6 @@
 				</for>
 			</if>
 			
-			<hr />
-
     {+include("static/footer.html")+}
   </body>
 </html>

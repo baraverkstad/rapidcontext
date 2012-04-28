@@ -36,6 +36,7 @@ hr {
     clear: both;
 }
 p {
+    margin: 10px 0;
     page-break-inside: avoid;
 }
 table {
@@ -92,7 +93,7 @@ dt {
 }
 dd {
     margin: 3px 0 16px 0;
-    padding: 0 0 0 16px;
+    padding: 0 0 0 20px;
 }
 
 
@@ -234,17 +235,13 @@ body.doc {
 /**
  * Documentation style for JSDoc 2.x
  */
-.doc #index,
-.doc .summaryTable thead {
-    display: none;
-}
 .doc h1.classTitle {
     font-size: 30px;
 }
 .doc .summaryTable,
 .doc div.sectionTitle {
     width: 100%;
-    margin-bottom: 8px;
+    margin: 16px 0 8px;
 }
 .doc .summaryTable caption,
 .doc div.sectionTitle {
@@ -269,7 +266,7 @@ body.doc {
     width: 140px;
     text-align: right;
 }
-.doc td.attributes,
+.doc .summaryTable td.attributes,
 .doc .fixedFont {
     line-height: 15px;
     color: #1E466E;
@@ -279,28 +276,13 @@ body.doc {
 .doc .summaryTable td.nameDescription {
     text-align: left;
     font-size: 13px;
-    line-height: 15px;
 }
 .doc .summaryTable td.nameDescription,
 .doc .summaryTable .description {
     margin: 3px 0;
-    font: 13px Palatino,Garamond,serif;
-    line-height: 15px;
 }
-.doc .description {
-    margin: 10px 0;
-    font: 13px Palatino,Garamond,serif;
-    line-height: 15px;
-}
-.doc ul.inheritsList {
-    list-style: square;
-    margin-left: 20px;
-    padding-left: 0;
-}
-.doc .detailList {
-    margin-left: 20px;
-    padding: 0;
-    line-height: 15px;
+div.description {
+    margin: 10px 20px;
 }
 .doc .detailList dt {
     margin-left: 20px;
