@@ -82,10 +82,10 @@ function publish(symbolSet) {
 	// create the class index page and symbol index file
 	try {
 		var classIndexTemplate = new JSDOC.JsPlate(publish.conf.templatesDir+"index.tmpl");
-        var jsonIndexTemplate = new JSDOC.JsPlate(publish.conf.templatesDir+"index_json.tmpl");
+        var topicsTemplate = new JSDOC.JsPlate(publish.conf.templatesDir+"topics.tmpl");
 	} catch(e) { print(e.message); quit(); }
 	IO.saveFile(publish.conf.outDir, "index"+publish.conf.ext, classIndexTemplate.process(classes));
-    IO.saveFile(publish.conf.outDir, "index.json", jsonIndexTemplate.process(classes));
+    IO.saveFile(publish.conf.outDir, "topics.json", topicsTemplate.process(classes));
 }
 
 
