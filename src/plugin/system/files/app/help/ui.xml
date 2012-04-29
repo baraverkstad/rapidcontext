@@ -12,7 +12,6 @@
   <div w="70%-30" h="100%" style="float: left;">
     <h3>
       Content:
-      <Icon id="contentReload" ref="RELOAD" style="margin-left: 3px;" />
       <Icon id="contentLoading" ref="LOADING" style="margin-left: 3px;" />
       <a id="contentExpand" href="#" target="_blank" style="margin-left: 3px;"><Icon ref="EXPAND" /></a>
     </h3>

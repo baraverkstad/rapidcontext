@@ -14,7 +14,6 @@ HelpApp.prototype.start = function() {
     MochiKit.Signal.connect(this.ui.topicReload, "onclick", this, "loadTopics");
     MochiKit.Signal.connect(this.ui.topicTree, "onexpand", this, "_expandTopic");
     MochiKit.Signal.connect(this.ui.topicTree, "onselect", this, "loadContent");
-    MochiKit.Signal.connect(this.ui.contentReload, "onclick", this, "loadContent");
     this.loadTopics();
 }
 
@@ -48,13 +47,12 @@ HelpApp.prototype.loadTopics = function() {
     var topics = [];
     MochiKit.Base.extend(topics, this.resource.topicsBase);
     MochiKit.Base.extend(topics, this.resource.topicsJsApi);
+    MochiKit.Base.extend(topics, this.resource.topicsMochiKit);
     MochiKit.Base.extend(topics, this.resource.topicsExtra);
     for (var i = 0; i < topics.length; i++) {
         var topic = topics[i];
-        if (topic) {
-            topic.source = "RapidContext Platform Documentation";
-            this._addTopic(topic);
-        }
+        topic.source = "RapidContext Platform Documentation";
+        this._addTopic(topic);
     }
     this._insertTopic(this.ui.topicTree, this._topics);
     this.ui.topicTree.expandAll(1);
@@ -157,7 +155,6 @@ HelpApp.prototype.findTopicByUrl = function(nodes, url) {
  */
 HelpApp.prototype.clearContent = function() {
     this._current = null;
-    this.ui.contentReload.hide();
     this.ui.contentLoading.hide();
     this.ui.contentExpand.className = "hidden";
     MochiKit.DOM.replaceChildNodes(this.ui.contentTitle);
@@ -205,7 +202,6 @@ HelpApp.prototype.loadContent = function (url) {
  * Callback function for content HTML document retrieval.
  */
 HelpApp.prototype._callbackContent = function(data) {
-    this.ui.contentReload.show();
     this.ui.contentLoading.hide();
     if (data instanceof Error) {
         RapidContext.UI.showError(data);
