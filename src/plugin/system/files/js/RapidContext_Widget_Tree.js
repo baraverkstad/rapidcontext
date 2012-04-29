@@ -48,6 +48,20 @@ RapidContext.Widget.Tree = function (attrs/*, ...*/) {
 RapidContext.Widget.Classes.Tree = RapidContext.Widget.Tree;
 
 /**
+ * Emitted when a tree node is expanded or collapsed.
+ *
+ * @name RapidContext.Widget.Tree#onexpand
+ * @event
+ */
+
+/**
+ * Emitted when a tree node is selected.
+ *
+ * @name RapidContext.Widget.Tree#onselect
+ * @event
+ */
+
+/**
  * Adds a single child tree node widget to this widget.
  *
  * @param {Widget} child the tree node widget to add
