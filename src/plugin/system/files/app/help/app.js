@@ -2,6 +2,7 @@
  * Creates a new app instance.
  */
 function HelpApp() {
+    this._topics = { child: {}, children: [] };
     this._current = null;
     this._scrollName = null;
 }
@@ -12,6 +13,7 @@ function HelpApp() {
 HelpApp.prototype.start = function() {
     this.clearContent();
     MochiKit.Signal.connect(this.ui.topicReload, "onclick", this, "loadTopics");
+    MochiKit.Signal.connect(this.ui.topicTree, "onexpand", this, "_expandTopic");
     MochiKit.Signal.connect(this.ui.topicTree, "onselect", this, "loadContent");
     MochiKit.Signal.connect(this.ui.contentReload, "onclick", this, "loadContent");
     MochiKit.Signal.connect(this.ui.contentExpand, "onclick", this, "_openWindow");
@@ -27,11 +29,12 @@ HelpApp.prototype.stop = function() {
 
 /**
  * Loads all available topics and displays them in the topic tree
- * view. Currently this method does not fetch any topic list from
+ * view. Currently this method does not fetch new topic data from
  * the server, but only unifies the topic data from apps and the
- * constant platform docs.
+ * previously loaded platform topics.
  */
 HelpApp.prototype.loadTopics = function() {
+    this._topics = { child: {}, children: [] };
     this.ui.topicTree.removeAll();
     var apps = RapidContext.App.apps();
     for (var i = 0; i < apps.length; i++) {
@@ -44,9 +47,18 @@ HelpApp.prototype.loadTopics = function() {
             }
         }
     }
-    for (var i = 0; i < HelpApp.TOPICS.length; i++) {
-        this._addTopic(HelpApp.TOPICS[i]);
+    var topics = [];
+    MochiKit.Base.extend(topics, this.resource.topicsBase);
+    MochiKit.Base.extend(topics, this.resource.topicsJsApi);
+    MochiKit.Base.extend(topics, this.resource.topicsExtra);
+    for (var i = 0; i < topics.length; i++) {
+        var topic = topics[i];
+        if (topic) {
+            topic.source = "RapidContext Platform Documentation";
+            this._addTopic(topic);
+        }
     }
+    this._insertTopic(this.ui.topicTree, this._topics);
     this.ui.topicTree.expandAll(1);
     if (this._current != null) {
         var path = this._current.topic.split("/");
@@ -59,14 +71,65 @@ HelpApp.prototype.loadTopics = function() {
 }
 
 /**
- * Adds a topic data object to the topic tree.
+ * Adds a topic data object to the internal topic tree structure.
  *
- * @param {Object} data the topic data object
+ * @param {Object} topic the topic data object
  */
-HelpApp.prototype._addTopic = function(data) {
-    var path = data.topic.split("/");
-    var node = this.ui.topicTree.addPath(path);
-    node.data = data;
+HelpApp.prototype._addTopic = function (topic) {
+    var path = topic.topic.split("/");
+    var parent = this._topics;
+    while (path.length > 1) {
+        var name = path.shift();
+        var temp = parent.child[name];
+        if (!temp) {
+            temp = { name: name, child: {}, children: [] };
+            parent.child[name] = temp;
+            parent.children.push(temp);
+        }
+        parent = temp;
+    }
+    var name = path.shift();
+    if (parent.child[name]) {
+        LOG.warning("Duplicated Help topic", topic.topic);
+        MochiKit.Base.update(parent.child[name], topic);
+    } else {
+        MochiKit.Base.update(topic, { name: name, child: {}, children: [] });
+        parent.child[name] = topic;
+        parent.children.push(topic);
+    }
+}
+
+/**
+ * Adds the child topics to a node if it is expanded and the nodes
+ * have not already been added.
+ *
+ * @param {TreeNode} node the tree node to add to
+ */
+HelpApp.prototype._expandTopic = function (node) {
+    var topic = node.data;
+    if (node.isExpanded && topic.children.length != node.getChildNodes().length) {
+        this._insertTopic(node, topic);
+    }
+}
+
+/**
+ * Adds the child topics to a node.
+ *
+ * @param {Tree/TreeNode} parentNode the parent tree or tree node
+ * @param {Object} topic the parent topic
+ */
+HelpApp.prototype._insertTopic = function (parentNode, topic) {
+    for (var i = 0; i < topic.children.length; i++) {
+        var child = topic.children[i];
+        var attrs = {
+            name: child.name,
+            folder: (child.children.length > 0),
+            icon: (!child.url ? "FOLDER" : /#/.test(child.url) ? "TAG_BLUE" : "BOOK_OPEN")
+        };
+        var node = RapidContext.Widget.TreeNode(attrs);
+        node.data = child;
+        parentNode.addAll(node);
+    }
 }
 
 /**
