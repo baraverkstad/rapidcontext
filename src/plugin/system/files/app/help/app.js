@@ -4,7 +4,6 @@
 function HelpApp() {
     this._topics = { child: {}, children: [] };
     this._current = null;
-    this._scrollName = null;
 }
 
 /**
@@ -16,7 +15,6 @@ HelpApp.prototype.start = function() {
     MochiKit.Signal.connect(this.ui.topicTree, "onexpand", this, "_expandTopic");
     MochiKit.Signal.connect(this.ui.topicTree, "onselect", this, "loadContent");
     MochiKit.Signal.connect(this.ui.contentReload, "onclick", this, "loadContent");
-    MochiKit.Signal.connect(this.ui.contentExpand, "onclick", this, "_openWindow");
     this.loadTopics();
 }
 
@@ -140,6 +138,7 @@ HelpApp.prototype._insertTopic = function (parentNode, topic) {
  * @param {String} url the URL to search for
  */
 HelpApp.prototype.findTopicByUrl = function(nodes, url) {
+    // TODO: use topic tree structure instead...
     for (var i = 0; nodes != null && i < nodes.length; i++) {
         var node = nodes[i];
         if (node.data != null && url.indexOf(node.data.url) == 0) {
@@ -160,7 +159,7 @@ HelpApp.prototype.clearContent = function() {
     this._current = null;
     this.ui.contentReload.hide();
     this.ui.contentLoading.hide();
-    this.ui.contentExpand.hide();
+    this.ui.contentExpand.className = "hidden";
     MochiKit.DOM.replaceChildNodes(this.ui.contentTitle);
     MochiKit.DOM.replaceChildNodes(this.ui.contentInfo);
     MochiKit.DOM.replaceChildNodes(this.ui.contentText);
@@ -173,7 +172,7 @@ HelpApp.prototype.clearContent = function() {
  *
  * @param {String} [url] the optional content data URL
  */
-HelpApp.prototype.loadContent = function(url) {
+HelpApp.prototype.loadContent = function (url) {
     this.clearContent();
     if (typeof(url) != "string") {
         url = null;
@@ -182,10 +181,6 @@ HelpApp.prototype.loadContent = function(url) {
         if (node != null) {
             node.expand();
             node.select();
-            var pos = url.indexOf("#");
-            if (pos > 0) {
-                this._scrollName = url.substring(pos + 1);
-            }
             return false;
         }
     }
@@ -194,7 +189,7 @@ HelpApp.prototype.loadContent = function(url) {
         var str = (node.isFolder()) ? "folderIcon" : "topicIcon";
         this.ui.contentIcon.src = this.resource[str];
         MochiKit.DOM.replaceChildNodes(this.ui.contentTitle, node.name);
-        if (node.data != null) {
+        if (node.data && node.data.url) {
             this.ui.contentLoading.show();
             MochiKit.DOM.replaceChildNodes(this.ui.contentInfo, node.data.source);
             url = url || node.data.url;
@@ -216,11 +211,11 @@ HelpApp.prototype._callbackContent = function(data) {
         RapidContext.UI.showError(data);
     } else if (typeof(data) == "string") {
         this._current.text = data;
-        this.ui.contentExpand.show();
+        MochiKit.DOM.setNodeAttribute(this.ui.contentExpand, "href", this._current.url);
+        this.ui.contentExpand.className = "";
         this._showContentHtml(data);
-        if (this._scrollName != null) {
-            this._scrollLink(this._scrollName);
-            this._scrollName = null;
+        if (/#.+/.test(this._current.url)) {
+            this._scrollLink(this._current.url.replace(/.*#/, ""));
         }
     } else {
         MochiKit.DOM.replaceChildNodes(this.ui.contentInfo, "Not Found");
@@ -302,30 +297,4 @@ HelpApp.prototype._scrollLink = function(name) {
         }
     }
     return false;
-}
-
-/**
- * Opens a new window with the contents of the content pane. This is
- * primarily useful for printing documents.
- */
-HelpApp.prototype._openWindow = function() {
-    var node = this.ui.topicTree.selectedChild();
-    var win = window.open("", "_blank");
-    var doc = win.document;
-    // TODO: clean up this HTML generation...
-    doc.open();
-    doc.write("<?xml version='1.0' encoding='UTF-8'?>\n");
-    doc.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" " +
-              "\"DTD/xhtml1-strict.dtd\">\n");
-    doc.write("<html xmlns='http://www.w3.org/1999/xhtml'>\n");
-    doc.write("<head>\n");
-    doc.write("<link rel='icon' type='image/gif' href='images/favicon.gif' />\n");
-    doc.write("<link rel='stylesheet' href='css/style.css' type='text/css' />\n");
-    doc.write("<title>Help &amp; Docs :: " + node.name + "</title>\n");
-    doc.write("</head>\n");
-    doc.write("<body class='doc' style='width: auto; height: auto; padding-top: 15px; padding-bottom: 15px; " +
-              "padding-left: 30px; padding-right: 30px;'>\n");
-    doc.write(this.ui.contentScroll.innerHTML);
-    doc.write("</body>\n</html>\n");
-    doc.close();
 }

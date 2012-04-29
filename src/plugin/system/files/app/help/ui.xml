@@ -14,7 +14,7 @@
       Content:
       <Icon id="contentReload" ref="RELOAD" style="margin-left: 3px;" />
       <Icon id="contentLoading" ref="LOADING" style="margin-left: 3px;" />
-      <Icon id="contentExpand" ref="EXPAND" style="margin-left: 3px;" />
+      <a id="contentExpand" href="#" target="_blank" style="margin-left: 3px;"><Icon ref="EXPAND" /></a>
     </h3>
     <div id="contentScroll" w="100%" h="100% - 22" class="doc" style="overflow: auto;">
       <img id="contentIcon" src="images/icons/blank.gif" width="48" height="48" style="float: left; padding-top: 10px; padding-right: 10px; "/>
