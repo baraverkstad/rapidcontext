@@ -6,19 +6,17 @@
       Topics:
       <Icon id="topicReload" ref="RELOAD" style="margin-left: 3px;" />
     </h3>
-    <Tree id="topicTree" w="100%-2" h="100% - 24">
+    <Tree id="topicTree" w="100%-2" h="100%-24">
     </Tree>
   </div>
-  <div w="70%-30" h="100%" style="float: left;">
+  <div w="70%-30" h="100%" style="float: left; position: relative;">
     <h3>
       Content:
       <Icon id="contentLoading" ref="LOADING" style="margin-left: 3px;" />
       <a id="contentExpand" href="#" target="_blank" style="margin-left: 3px;"><Icon ref="EXPAND" /></a>
     </h3>
-    <div id="contentScroll" w="100%" h="100% - 22" class="doc" style="overflow: auto;">
-      <img id="contentIcon" src="images/icons/blank.gif" width="48" height="48" style="float: left; padding-top: 10px; padding-right: 10px; "/>
-      <h1 id="contentTitle" style="margin-top: 10px; margin-bottom: 6px;"></h1>
-      <p id="contentInfo" style="margin-top: 6px; margin-bottom: 20px; color: #666;"></p>
+    <div id="contentInfo" class="unimportant" style="position: absolute; top: 2px; right: 20px;"></div>
+    <div id="contentScroll" w="100%" h="100%-22" class="doc" style="overflow: auto;">
       <div id="contentText" style="margin-right: 20px;"></div>
     </div>
   </div>

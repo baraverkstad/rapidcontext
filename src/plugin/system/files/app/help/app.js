@@ -157,7 +157,6 @@ HelpApp.prototype.clearContent = function() {
     this._current = null;
     this.ui.contentLoading.hide();
     this.ui.contentExpand.className = "hidden";
-    MochiKit.DOM.replaceChildNodes(this.ui.contentTitle);
     MochiKit.DOM.replaceChildNodes(this.ui.contentInfo);
     MochiKit.DOM.replaceChildNodes(this.ui.contentText);
 }
@@ -183,9 +182,6 @@ HelpApp.prototype.loadContent = function (url) {
     }
     var node = this.ui.topicTree.selectedChild();
     if (node != null) {
-        var str = (node.isFolder()) ? "folderIcon" : "topicIcon";
-        this.ui.contentIcon.src = this.resource[str];
-        MochiKit.DOM.replaceChildNodes(this.ui.contentTitle, node.name);
         if (node.data && node.data.url) {
             this.ui.contentLoading.show();
             MochiKit.DOM.replaceChildNodes(this.ui.contentInfo, node.data.source);
