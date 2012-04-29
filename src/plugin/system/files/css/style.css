@@ -209,6 +209,11 @@ body.doc {
     font-size: 10px;
     color: #888888;
 }
+@media print {
+    .widgetNavigationBar {
+        display: none;
+    }
+}
 
 
 /**
