@@ -236,6 +236,7 @@ HelpApp.prototype._showContentHtml = function(html) {
     html = html.replace(/<\/body>[\s\S]*$/i, "");
     html = html.replace(/^[\s\S]*<!--START-->/, "");
     html = html.replace(/<!--END-->[\s\S]*$/, "");
+    html = html.replace(/^[\s\S]*(<div class="document">)/i, "$1");
     this.ui.contentText.innerHTML = html;
     var baseUrl = window.location.href;
     var nodes = this.ui.contentText.getElementsByTagName("a");
