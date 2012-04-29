@@ -1,19 +1,10 @@
-[
-<for each="symbol" in="data">    {
+[<for each="symbol" in="data"><if test="$symbol_i > 0">,</if>
+    {
         "topic": "RapidContext/JavaScript API/{+symbol.alias+}",
         "url": "doc/js/{+symbol.alias+".html"+}"
-    },
-<for each="method" in="symbol.methods"><if test="method.memberOf == symbol.alias">    {
-        "topic": "RapidContext/JavaScript API/{+symbol.alias+}/{+method.name+}",
-        "url": "doc/js/{+method.memberOf+".html"+}#{+Link.symbolNameToLinkName(method)+}"
-    },
-</if></for><for each="property" in="symbol.properties"><if test="property.memberOf == symbol.alias">    {
-        "topic": "RapidContext/JavaScript API/{+symbol.alias+}/{+property.name+}",
-        "url": "doc/js/{+property.memberOf+".html"+}#{+Link.symbolNameToLinkName(property)+}"
-    },
-</if></for><for each="event" in="symbol.events"><if test="event.memberOf == symbol.alias">    {
-        "topic": "RapidContext/JavaScript API/{+symbol.alias+}/{+event.name+}",
-        "url": "doc/js/{+event.memberOf+".html"+}#{+Link.symbolNameToLinkName(event)+}"
-    },
-</if></for></for>    null
+    }<for each="prop" in="allOwnProperties(symbol)">,
+    {
+        "topic": "RapidContext/JavaScript API/{+symbol.alias+}/{+prop.name+}",
+        "url": "doc/js/{+prop.memberOf+".html"+}#{+Link.symbolNameToLinkName(prop)+}"
+    }</for></for>
 ]

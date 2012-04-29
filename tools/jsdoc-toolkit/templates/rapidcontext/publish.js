@@ -95,17 +95,35 @@ function summarize(desc) {
 		return desc.match(/([\w\W]+?\.)[^a-z0-9_$]/i)? RegExp.$1 : desc;
 }
 
+function isOwnProperty(parent) {
+    return function ($) {
+        return $.memberOf == parent.alias && !$.isNamespace;
+    }
+}
+
 /** Make a symbol sorter by some attribute. */
 function makeSortby(attribute) {
 	return function(a, b) {
 		if (a[attribute] != undefined && b[attribute] != undefined) {
-			a = a[attribute].toLowerCase();
-			b = b[attribute].toLowerCase();
+			a = a[attribute];
+			b = b[attribute];
 			if (a < b) return -1;
 			if (a > b) return 1;
 			return 0;
 		}
 	}
+}
+
+function ownProperties(list, parent) {
+    return list.filter(isOwnProperty(parent)).sort(makeSortby("name"));
+}
+
+function allOwnProperties(parent) {
+    var list = [];
+    list.push.apply(list, parent.methods);
+    list.push.apply(list, parent.properties);
+    list.push.apply(list, parent.events);
+    return ownProperties(list, parent);
 }
 
 /** Pull in the contents of an external file at the given path. */
