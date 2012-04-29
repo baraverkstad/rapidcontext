@@ -5,15 +5,15 @@
     },
 <for each="method" in="symbol.methods"><if test="method.memberOf == symbol.alias">    {
         "topic": "RapidContext/JavaScript API/{+symbol.alias+}/{+method.name+}",
-        "url": "doc/js/{+method.memberOf+".html"+}#{+method.name+}"
+        "url": "doc/js/{+method.memberOf+".html"+}#{+Link.symbolNameToLinkName(method)+}"
     },
 </if></for><for each="property" in="symbol.properties"><if test="property.memberOf == symbol.alias">    {
         "topic": "RapidContext/JavaScript API/{+symbol.alias+}/{+property.name+}",
-        "url": "doc/js/{+property.memberOf+".html"+}#{+property.name+}"
+        "url": "doc/js/{+property.memberOf+".html"+}#{+Link.symbolNameToLinkName(property)+}"
     },
 </if></for><for each="event" in="symbol.events"><if test="event.memberOf == symbol.alias">    {
         "topic": "RapidContext/JavaScript API/{+symbol.alias+}/{+event.name+}",
-        "url": "doc/js/{+event.memberOf+".html"+}#event:{+event.name+}"
+        "url": "doc/js/{+event.memberOf+".html"+}#{+Link.symbolNameToLinkName(event)+}"
     },
 </if></for></for>    null
 ]
