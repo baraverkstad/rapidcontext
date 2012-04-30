@@ -13,11 +13,12 @@
     <h3>
       Content:
       <Icon id="contentLoading" ref="LOADING" style="margin-left: 3px;" />
-      <a id="contentExpand" href="#" target="_blank" style="margin-left: 3px;"><Icon ref="EXPAND" /></a>
+      <a id="contentLink" href="#" target="doc" class="hidden" style="margin-left: 3px;"><Icon ref="EXPAND" /></a>
     </h3>
     <div id="contentInfo" class="unimportant" style="position: absolute; top: 2px; right: 20px;"></div>
-    <div id="contentScroll" w="100%" h="100%-22" class="doc" style="overflow: auto;">
+    <div id="contentScroll" w="100%" h="100%-22" class="doc" style="overflow: auto; position: relative;">
       <div id="contentText" style="margin-right: 20px;"></div>
+      <Pane id="contentLocator" style="position: absolute; left: 0px; top: 0px; width: 8px; height: 150px; z-index: 10; background: #AAAAAA; border-radius: 3px; display: none;"></Pane>
     </div>
   </div>
 </ui>

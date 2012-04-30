@@ -2,8 +2,8 @@
  * Creates a new app instance.
  */
 function HelpApp() {
-    this._topics = { child: {}, children: [] };
-    this._current = null;
+    this._topics = null;
+    this._currentUrl = "";
 }
 
 /**
@@ -12,17 +12,18 @@ function HelpApp() {
 HelpApp.prototype.start = function() {
     this.clearContent();
     MochiKit.Signal.connect(this.ui.topicReload, "onclick", this, "loadTopics");
-    MochiKit.Signal.connect(this.ui.topicTree, "onexpand", this, "_expandTopic");
+    MochiKit.Signal.connect(this.ui.topicTree, "onexpand", this, "_treeOnExpand");
     MochiKit.Signal.connect(this.ui.topicTree, "onselect", this, "loadContent");
+    MochiKit.Signal.connect(this.ui.contentText, "onclick", this, "_handleClick");
     this.loadTopics();
-}
+};
 
 /**
  * Stops the app.
  */
 HelpApp.prototype.stop = function() {
     // Nothing to do here
-}
+};
 
 /**
  * Loads all available topics and displays them in the topic tree
@@ -31,47 +32,39 @@ HelpApp.prototype.stop = function() {
  * previously loaded platform topics.
  */
 HelpApp.prototype.loadTopics = function() {
-    this._topics = { child: {}, children: [] };
+    this._topics = { child: {}, children: [], url: {} };
     this.ui.topicTree.removeAll();
     var apps = RapidContext.App.apps();
     for (var i = 0; i < apps.length; i++) {
-        for (var j = 0; j < apps[i].resources.length; j++) {
-            var res = apps[i].resources[j];
+        var app = apps[i];
+        for (var j = 0; j < app.resources.length; j++) {
+            var res = app.resources[j];
             if (res.topic != null) {
-                var data = MochiKit.Base.clone(res);
-                data.source = apps[i].name + " (App)";
-                this._addTopic(data);
+                this._addTopic(app.name + " (App)", MochiKit.Base.clone(res));
             }
         }
     }
-    var topics = [];
-    MochiKit.Base.extend(topics, this.resource.topicsBase);
-    MochiKit.Base.extend(topics, this.resource.topicsJsApi);
-    MochiKit.Base.extend(topics, this.resource.topicsMochiKit);
-    MochiKit.Base.extend(topics, this.resource.topicsExtra);
-    for (var i = 0; i < topics.length; i++) {
-        var topic = topics[i];
-        topic.source = "RapidContext Platform Documentation";
-        this._addTopic(topic);
-    }
-    this._insertTopic(this.ui.topicTree, this._topics);
+    var source = "RapidContext Platform Documentation";
+    var func = MochiKit.Base.method(this, "_addTopic", source);
+    MochiKit.Base.map(func, this.resource.topicsBase);
+    MochiKit.Base.map(func, this.resource.topicsJsApi);
+    MochiKit.Base.map(func, this.resource.topicsMochiKit);
+    MochiKit.Base.map(func, this.resource.topicsExtra);
+    this._treeInsertChildren(this.ui.topicTree, this._topics);
     this.ui.topicTree.expandAll(1);
-    if (this._current != null) {
-        var path = this._current.topic.split("/");
-        var node = this.ui.topicTree.findByPath(path);
-        if (node != null) {
-            node.expand();
-            node.select();
-        }
+    if (this._currentUrl) {
+        this.loadContent(this._currentUrl);
     }
-}
+};
 
 /**
  * Adds a topic data object to the internal topic tree structure.
  *
+ * @param {String} source the topic source
  * @param {Object} topic the topic data object
  */
-HelpApp.prototype._addTopic = function (topic) {
+HelpApp.prototype._addTopic = function (source, topic) {
+    topic.source = topic.source || source;
     var path = topic.topic.split("/");
     var parent = this._topics;
     while (path.length > 1) {
@@ -87,13 +80,16 @@ HelpApp.prototype._addTopic = function (topic) {
     var name = path.shift();
     if (parent.child[name]) {
         LOG.warning("Duplicated Help topic", topic.topic);
-        MochiKit.Base.update(parent.child[name], topic);
+        topic = MochiKit.Base.update(parent.child[name], topic);
     } else {
         MochiKit.Base.update(topic, { name: name, child: {}, children: [] });
         parent.child[name] = topic;
         parent.children.push(topic);
     }
-}
+    if (topic.url) {
+        this._topics.url[topic.url] = topic;
+    }
+};
 
 /**
  * Adds the child topics to a node if it is expanded and the nodes
@@ -101,12 +97,12 @@ HelpApp.prototype._addTopic = function (topic) {
  *
  * @param {TreeNode} node the tree node to add to
  */
-HelpApp.prototype._expandTopic = function (node) {
+HelpApp.prototype._treeOnExpand = function (node) {
     var topic = node.data;
     if (node.isExpanded && topic.children.length != node.getChildNodes().length) {
-        this._insertTopic(node, topic);
+        this._treeInsertChildren(node, topic);
     }
-}
+};
 
 /**
  * Adds the child topics to a node.
@@ -114,7 +110,7 @@ HelpApp.prototype._expandTopic = function (node) {
  * @param {Tree/TreeNode} parentNode the parent tree or tree node
  * @param {Object} topic the parent topic
  */
-HelpApp.prototype._insertTopic = function (parentNode, topic) {
+HelpApp.prototype._treeInsertChildren = function (parentNode, topic) {
     for (var i = 0; i < topic.children.length; i++) {
         var child = topic.children[i];
         var attrs = {
@@ -126,40 +122,40 @@ HelpApp.prototype._insertTopic = function (parentNode, topic) {
         node.data = child;
         parentNode.addAll(node);
     }
-}
+};
 
 /**
- * Finds a topic based on a specified URL. The search will be
- * performed in depth-first order through the tree.
+ * Expands the tree topic corresponding to a specified URL. The URL
+ * must exactly match a topic URL, or no match will be found.
  *
- * @param {Array} nodes the tree nodes to search
  * @param {String} url the URL to search for
+ *
+ * @return {TreeNode} the TreeNode widget for the matching topic
  */
-HelpApp.prototype.findTopicByUrl = function(nodes, url) {
-    // TODO: use topic tree structure instead...
-    for (var i = 0; nodes != null && i < nodes.length; i++) {
-        var node = nodes[i];
-        if (node.data != null && url.indexOf(node.data.url) == 0) {
-            return node;
+HelpApp.prototype._treeExpandUrl = function (url) {
+    var topic = this._topics.url[url] || this._topics.url[url.replace(/#.*/, "")];
+    if (topic) {
+        var path = topic.topic.split("/");
+        for (var i = 0; i < path.length; i++) {
+            this.ui.topicTree.findByPath(path.slice(0, i + 1)).expand();
         }
-        node = this.findTopicByUrl(node.getChildNodes(), url);
-        if (node != null) {
-            return node;
-        }
+        var node = this.ui.topicTree.findByPath(path);
+        node.select();
+        return node;
     }
     return null;
-}
+};
 
 /**
  * Clears the content view from any loaded topic data.
  */
 HelpApp.prototype.clearContent = function() {
-    this._current = null;
+    this._currentUrl = "";
     this.ui.contentLoading.hide();
-    this.ui.contentExpand.className = "hidden";
+    this.ui.contentLink.className = "hidden";
     MochiKit.DOM.replaceChildNodes(this.ui.contentInfo);
     MochiKit.DOM.replaceChildNodes(this.ui.contentText);
-}
+};
 
 /**
  * Loads new content into the content view. The content is either
@@ -169,30 +165,29 @@ HelpApp.prototype.clearContent = function() {
  * @param {String} [url] the optional content data URL
  */
 HelpApp.prototype.loadContent = function (url) {
-    this.clearContent();
     if (typeof(url) != "string") {
         url = null;
-    } else {
-        var node = this.findTopicByUrl(this.ui.topicTree.getChildNodes(), url);
-        if (node != null) {
-            node.expand();
-            node.select();
-            return false;
-        }
+    } else if (this._treeExpandUrl(url)) {
+        // Content loading is triggered by node selection in method above
+        return;
     }
     var node = this.ui.topicTree.selectedChild();
-    if (node != null) {
-        if (node.data && node.data.url) {
+    if (node && node.data && node.data.url) {
+        url = url || node.data.url;
+        var docUrl = url.replace(/#.*/, "");
+        if (/#/.test(url) && this._currentUrl.indexOf(docUrl) == 0) {
+            this._currentUrl = url;
+            this._scrollLink(url.replace(/.*#/, ""));
+        } else {
+            this.clearContent();
+            this._currentUrl = url;
             this.ui.contentLoading.show();
             MochiKit.DOM.replaceChildNodes(this.ui.contentInfo, node.data.source);
-            url = url || node.data.url;
-            this._current = { topic: node.data.topic, text: null, url: url };
-            var d = RapidContext.App.loadText(url, null, { timeout: 60 });
-            d.addBoth(MochiKit.Base.bind("_callbackContent", this));
+            var d = RapidContext.App.loadText(docUrl, null, { timeout: 60 });
+            d.addBoth(MochiKit.Base.method(this, "_callbackContent"));
         }
     }
-    return false;
-}
+};
 
 /**
  * Callback function for content HTML document retrieval.
@@ -202,23 +197,18 @@ HelpApp.prototype._callbackContent = function(data) {
     if (data instanceof Error) {
         RapidContext.UI.showError(data);
     } else if (typeof(data) == "string") {
-        this._current.text = data;
-        MochiKit.DOM.setNodeAttribute(this.ui.contentExpand, "href", this._current.url);
-        this.ui.contentExpand.className = "";
+        MochiKit.DOM.setNodeAttribute(this.ui.contentLink, "href", this._currentUrl);
+        this.ui.contentLink.className = "";
         this._showContentHtml(data);
-        if (/#.+/.test(this._current.url)) {
-            this._scrollLink(this._current.url.replace(/.*#/, ""));
+        if (/#.+/.test(this._currentUrl)) {
+            this._scrollLink(this._currentUrl.replace(/.*#/, ""));
+        } else {
+            RapidContext.Util.setScrollOffset(this.ui.contentScroll, 0);
         }
     } else {
         MochiKit.DOM.replaceChildNodes(this.ui.contentInfo, "Not Found");
     }
-/* TODO: re-enable display when readable from data store
-        this._ui.info.setText("Revision " + data.revisions +
-                              ", Last modified " + data.modified_dttm +
-                              " by " + data.modified_oprid);
-        this._showContentHtml(data.text);
-*/
-}
+};
 
 /**
  * Displays content HTML data. This method replaces all links in the
@@ -234,60 +224,84 @@ HelpApp.prototype._showContentHtml = function(html) {
     html = html.replace(/<!--END-->[\s\S]*$/, "");
     html = html.replace(/^[\s\S]*(<div class="document">)/i, "$1");
     this.ui.contentText.innerHTML = html;
-    var baseUrl = window.location.href;
+    var baseUrl = RapidContext.Util.resolveURI("");
     var nodes = this.ui.contentText.getElementsByTagName("a");
-    nodes = MochiKit.Base.extend([], nodes);
     for (var i = 0; i < nodes.length; i++) {
         var href = nodes[i].getAttribute("href");
-        if (href != null && href.indexOf(baseUrl) == 0) {
-            // Patch for IE, since it returns absolute href values...
-            href = href.substring(baseUrl.length);
-        }
-        if (href == null || href == "") {
-            // Ignore missing or blank links
-        } else if (href.indexOf("#") == 0) {
-            href = href.substring(1);
-            nodes[i].href = this._current.url + "#" + href;
-            nodes[i].onclick = MochiKit.Base.bind("_scrollLink", this, href);
-        } else if (href.indexOf("://") > 0) {
-            nodes[i].target = "_blank";
-        } else {
-            href = RapidContext.Util.resolveURI(href, this._current.url);
-            nodes[i].href = href;
-            nodes[i].onclick = MochiKit.Base.bind("loadContent", this, href);
+        if (href && href != "") {
+            href = RapidContext.Util.resolveURI(href, this._currentUrl);
+            if (href.indexOf(baseUrl) == 0) {
+                href = href.substring(baseUrl.length);
+            }
+            if (nodes[i].hasAttribute("target")) {
+                nodes[i].setAttribute("target", "doc");
+            }
+            if (href.indexOf("://") > 0) {
+                nodes[i].setAttribute("target", "doc");
+            } else {
+                nodes[i].setAttribute("href", href);
+            }
         }
     }
     var nodes = this.ui.contentText.getElementsByTagName("img");
-    nodes = MochiKit.Base.extend([], nodes);
     for (var i = 0; i < nodes.length; i++) {
         var href = nodes[i].getAttribute("src");
-        if (href != null && href.indexOf(baseUrl) == 0) {
-            // Patch for IE, since it returns absolute href values...
-            href = href.substring(baseUrl.length);
-        }
-        if (href == null || href == "" || href.indexOf("://") > 0) {
-            // Ignore missing, blank or absolute URL:s
-        } else {
-            nodes[i].src = RapidContext.Util.resolveURI(href, this._current.url);
+        if (href && href != "") {
+            href = RapidContext.Util.resolveURI(href, this._currentUrl);
+            if (href.indexOf(baseUrl) == 0) {
+                href = href.substring(baseUrl.length);
+            }
+            if (href.indexOf("://") < 0) {
+                nodes[i].setAttribute("src", href);
+            }
         }
     }
-}
+};
+
+/**
+ * Handles click events in the content text.
+ */
+HelpApp.prototype._handleClick = function (evt) {
+    var elem = evt.target();
+    if (elem.tagName != "A") {
+        elem = MochiKit.DOM.getFirstParentByTagAndClassName(elem, "A");
+    }
+    if (elem && elem.hasAttribute("href") && !elem.hasAttribute("target")) {
+        evt.stop();
+        var href = elem.getAttribute("href");
+        var baseUrl = RapidContext.Util.resolveURI("");
+        if (href.indexOf(baseUrl) == 0) {
+            href = href.substring(baseUrl.length);
+        }
+        this.loadContent(href);
+    }
+};
 
 /**
  * Scrolls the content pane to make the specified link name visible.
  *
  * @param {String} name the link name attribute
  */
-HelpApp.prototype._scrollLink = function(name) {
-    var nodes = this.ui.contentText.getElementsByTagName("a");
-    for (var i = 0; i < nodes.length; i++) {
-        if (nodes[i].name == name) {
-            var parentNode = this.ui.contentScroll;
-            var parentPos = MochiKit.Style.getElementPosition(parentNode);
-            var pos = MochiKit.Style.getElementPosition(nodes[i], parentPos);
-            RapidContext.Util.setScrollOffset(parentNode, pos);
-            break;
+HelpApp.prototype._scrollLink = function (name) {
+    var selector = "a[name='" + name + "'], *[id='" + name + "']";
+    var ctx = $(this.ui.contentText).find(selector);
+    if (ctx.length) {
+        var elem = ctx[0];
+        this.ui.contentScroll.scrollTop = elem.offsetTop;
+        this.ui.contentLocator.animate({ effect: "cancel" });
+        MochiKit.Style.setElementPosition(this.ui.contentLocator, { y: elem.offsetTop });
+        MochiKit.Style.setOpacity(this.ui.contentLocator, 0);
+        MochiKit.Style.showElement(this.ui.contentLocator);
+        var opts = {
+            effect: "Opacity",
+            transition: function (pos) {
+                var t = MochiKit.Visual.Transitions;
+                return t.sinoidal(t.pulse(pos, 2));
+            },
+            afterFinish: function (effect) {
+                MochiKit.Style.setOpacity(effect.element, 0);
+            }
         }
+        this.ui.contentLocator.animate(opts);
     }
-    return false;
-}
+};
