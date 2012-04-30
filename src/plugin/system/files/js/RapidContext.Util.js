@@ -424,8 +424,8 @@ RapidContext.Util.resolveURI = function (uri, base) {
         }
         return base + uri;
     } else if (uri.indexOf("/") == 0) {
-        var pos = base.indexOf("://");
-        base = base.substring(0, pos + 2);
+        var pos = base.indexOf("/", base.indexOf("://") + 3);
+        base = base.substring(0, pos);
         return base + uri;
     } else if (uri.indexOf("../") == 0) {
         var pos = base.lastIndexOf("/");
