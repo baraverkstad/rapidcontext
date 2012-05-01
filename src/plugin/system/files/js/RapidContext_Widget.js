@@ -391,6 +391,7 @@ RapidContext.Widget.prototype._setDisabled = function (value) {
         MochiKit.DOM.removeElementClass(this, "widgetDisabled");
     }
     MochiKit.DOM.setNodeAttribute(this, "disabled", value);
+    this.disabled = value;
 };
 
 /**
@@ -436,6 +437,7 @@ RapidContext.Widget.prototype._setHidden = function (value) {
         MochiKit.DOM.removeElementClass(this, "widgetHidden");
     }
     MochiKit.DOM.setNodeAttribute(this, "hidden", value);
+    this.hidden = value;
 };
 
 /**
