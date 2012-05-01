@@ -121,21 +121,21 @@ MochiKit.Base.update(RapidContext.Widget.Icon, {
     /** The cancel icon definition. */
     CANCEL: { position: "-16px -64px", tooltip: "Cancel" },
     /** The up icon definition. */
-    UP: { position: "-32px -0px", tooltip: "Move Up" },
+    UP: { position: "-32px -0px", tooltip: "Move up" },
     /** The down icon definition. */
-    DOWN: { position: "-32px -16px", tooltip: "Move Down" },
+    DOWN: { position: "-32px -16px", tooltip: "Move down" },
     /** The left icon definition. */
-    LEFT: { position: "-32px -32px", tooltip: "Move Left" },
+    LEFT: { position: "-32px -32px", tooltip: "Move left" },
     /** The right icon definition. */
-    RIGHT: { position: "-32px -48px", tooltip: "Move Right" },
+    RIGHT: { position: "-32px -48px", tooltip: "Move right" },
     /** The first icon definition. */
-    FIRST: { position: "-32px -64px", tooltip: "Move First" },
+    FIRST: { position: "-32px -64px", tooltip: "First" },
     /** The last icon definition. */
-    LAST: { position: "-32px -80px", tooltip: "Move Last" },
+    LAST: { position: "-32px -80px", tooltip: "Last" },
     /** The previous icon definition. */
-    PREVIOUS: { position: "-32px -96px", tooltip: "Move Previous" },
+    PREVIOUS: { position: "-32px -96px", tooltip: "Previous" },
     /** The next icon definition. */
-    NEXT: { position: "-32px -112px", tooltip: "Move Next" },
+    NEXT: { position: "-32px -112px", tooltip: "Next" },
     /** The plus icon definition. */
     PLUS: { position: "-32px -128px", tooltip: "Show" },
     /** The minus icon definition. */
@@ -161,7 +161,7 @@ MochiKit.Base.update(RapidContext.Widget.Icon, {
     /** The search icon definition. */
     SEARCH: { position: "-48px -144px", tooltip: "Search" },
     /** The expand icon definition. */
-    EXPAND: { position: "-48px -160px", tooltip: "Open in New Window" },
+    EXPAND: { position: "-48px -160px", tooltip: "Open in new window" },
     /** The asterisk icon definition. */
     ASTERISK: { position: "-64px 0px", tooltip: "Mark" },
     /** The select icon definition. */
@@ -189,9 +189,9 @@ MochiKit.Base.update(RapidContext.Widget.Icon, {
     /** The configure icon definition. */
     CONFIG: { position: "-80px -16px", tooltip: "Configure" },
     /** The attach file icon definition. */
-    ATTACH: { position: "-80px -32px", tooltip: "Attach File" },
+    ATTACH: { position: "-80px -32px", tooltip: "Attach file" },
     /** The automatic icon definition. */
-    AUTOMATIC: { position: "-80px -48px", tooltip: "Automatic Actions" },
+    AUTOMATIC: { position: "-80px -48px", tooltip: "Automatic actions" },
     /** The export icon definition. */
     EXPORT: { position: "-80px -64px", tooltip: "Export" },
     /** The information icon definition. */
@@ -203,19 +203,19 @@ MochiKit.Base.update(RapidContext.Widget.Icon, {
     /** The error icon definition. */
     ERROR: { position: "-96px -48px", tooltip: "Error" },
     /** The bar chart icon definition. */
-    BARCHART: { position: "-112px 0px", tooltip: "Bar Chart" },
+    BARCHART: { position: "-112px 0px", tooltip: "Bar chart" },
     /** The line chart icon definition. */
-    LINECHART: { position: "-112px -16px", tooltip: "Line Chart" },
+    LINECHART: { position: "-112px -16px", tooltip: "Line chart" },
     /** The curve chart icon definition. */
-    CURVECHART: { position: "-112px -32px", tooltip: "Curve Chart" },
+    CURVECHART: { position: "-112px -32px", tooltip: "Curve chart" },
     /** The pie chart icon definition. */
-    PIECHART: { position: "-112px -48px", tooltip: "Pie Chart" },
+    PIECHART: { position: "-112px -48px", tooltip: "Pie chart" },
     /** The organization chart icon definition. */
-    ORGCHART: { position: "-112px -64px", tooltip: "Organization Chart" },
+    ORGCHART: { position: "-112px -64px", tooltip: "Organization chart" },
     /** The web feed icon definition. */
-    FEED: { position: "-128px 0px", tooltip: "RSS/Atom Feed" },
+    FEED: { position: "-128px 0px", tooltip: "RSS/Atom feed" },
     /** The RSS icon definition. */
-    RSS: { position: "-128px -16px", tooltip: "RSS Feed" },
+    RSS: { position: "-128px -16px", tooltip: "RSS feed" },
     /** The CSS icon definition. */
     CSS: { position: "-128px -32px", tooltip: "CSS" },
     /** The HTML icon definition. */
@@ -227,7 +227,7 @@ MochiKit.Base.update(RapidContext.Widget.Icon, {
     /** The style icon definition. */
     STYLE: { position: "-144px -16px", tooltip: "Style" },
     /** The text format icon definition. */
-    TEXT_FORMAT: { position: "-144px -32px", tooltip: "Text Format" },
+    TEXT_FORMAT: { position: "-144px -32px", tooltip: "Text format" },
     /** The calendar icon definition. */
     CALENDAR: { position: "-144px -48px", tooltip: "Calendar" },
     /** The date icon definition. */
@@ -243,17 +243,17 @@ MochiKit.Base.update(RapidContext.Widget.Icon, {
     /** The color icon definition. */
     COLOR: { position: "-144px -144px", tooltip: "Color" },
     /** The HTML source icon definition. */
-    HTML_SOURCE: { position: "-144px -160px", tooltip: "HTML Source" },
+    HTML_SOURCE: { position: "-144px -160px", tooltip: "HTML source" },
     /** The plug-in icon definition. */
     PLUGIN: { position: "-160px 0px", tooltip: "Plug-in" },
     /** The add plug-in icon definition. */
-    PLUGIN_ADD: { position: "-160px -16px", tooltip: "Add Plug-in" },
+    PLUGIN_ADD: { position: "-160px -16px", tooltip: "Add plug-in" },
     /** The remove plug-in icon definition. */
-    PLUGIN_REMOVE: { position: "-160px -32px", tooltip: "Remove Plug-in" },
+    PLUGIN_REMOVE: { position: "-160px -32px", tooltip: "Remove plug-in" },
     /** The inactive plug-in icon definition. */
-    PLUGIN_INACTIVE: { position: "-160px -48px", tooltip: "Inactive Plug-in" },
+    PLUGIN_INACTIVE: { position: "-160px -48px", tooltip: "Inactive plug-in" },
     /** The plug-in error icon definition. */
-    PLUGIN_ERROR: { position: "-160px -64px", tooltip: "Plug-in Error" },
+    PLUGIN_ERROR: { position: "-160px -64px", tooltip: "Plug-in error" },
     /** The user icon definition. */
     USER: { position: "-160px -80px", tooltip: "User" },
     /** The group icon definition. */
@@ -261,7 +261,7 @@ MochiKit.Base.update(RapidContext.Widget.Icon, {
     /** The folder icon definition. */
     FOLDER: { position: "-176px 0px", tooltip: "Folder" },
     /** The add folder icon definition. */
-    FOLDER_ADD: { position: "-176px -16px", tooltip: "Add Folder" },
+    FOLDER_ADD: { position: "-176px -16px", tooltip: "Add folder" },
     /** The lock icon definition. */
     LOCK: { position: "-176px -32px", tooltip: "Lock" },
     /** The key icon definition. */
@@ -269,25 +269,25 @@ MochiKit.Base.update(RapidContext.Widget.Icon, {
     /** The document icon definition. */
     DOCUMENT: { position: "-192px 0px", tooltip: "Document" },
     /** The Word document icon definition. */
-    DOCUMENT_WORD: { position: "-192px -16px", tooltip: "Word Document" },
+    DOCUMENT_WORD: { position: "-192px -16px", tooltip: "Word document" },
     /** The Excel document icon definition. */
-    DOCUMENT_EXCEL: { position: "-192px -32px", tooltip: "Excel Document" },
+    DOCUMENT_EXCEL: { position: "-192px -32px", tooltip: "Excel document" },
     /** The Office document icon definition. */
-    DOCUMENT_OFFICE: { position: "-192px -48px", tooltip: "Office Document" },
+    DOCUMENT_OFFICE: { position: "-192px -48px", tooltip: "Office document" },
     /** The PDF document icon definition. */
-    DOCUMENT_PDF: { position: "-192px -64px", tooltip: "PDF Document" },
+    DOCUMENT_PDF: { position: "-192px -64px", tooltip: "PDF document" },
     /** The document search icon definition. */
-    DOCUMENT_SEARCH: { position: "-192px -80px", tooltip: "Search Document" },
+    DOCUMENT_SEARCH: { position: "-192px -80px", tooltip: "Search document" },
     /** The code document icon definition. */
-    DOCUMENT_CODE: { position: "-192px -96px", tooltip: "Code Document" },
+    DOCUMENT_CODE: { position: "-192px -96px", tooltip: "Code document" },
     /** The text document icon definition. */
-    DOCUMENT_TEXT: { position: "-192px -112px", tooltip: "Text Document" },
+    DOCUMENT_TEXT: { position: "-192px -112px", tooltip: "Text document" },
     /** The contact icon definition. */
     CONTACT: { position: "-208px 0px", tooltip: "Contact" },
     /** The phone icon definition. */
-    PHONE: { position: "-208px -16px", tooltip: "Phone Number" },
+    PHONE: { position: "-208px -16px", tooltip: "Phone number" },
     /** The mobile phone icon definition. */
-    PHONE_MOBILE: { position: "-208px -32px", tooltip: "Mobile Phone Number" },
+    PHONE_MOBILE: { position: "-208px -32px", tooltip: "Mobile phone number" },
     /** The comment icon definition. */
     COMMENT: { position: "-208px -48px", tooltip: "Comment" },
     /** The comments icon definition. */
@@ -309,9 +309,9 @@ MochiKit.Base.update(RapidContext.Widget.Icon, {
     /** The package icon definition. */
     PACKAGE: { position: "-224px -96px", tooltip: "Package" },
     /** The textfield icon definition. */
-    TEXTFIELD: { position: "-224px -112px", tooltip: "Text Field" },
+    TEXTFIELD: { position: "-224px -112px", tooltip: "Text field" },
     /** The network drive icon definition. */
-    DRIVE_NETWORK: { position: "-240px 0px", tooltip: "Network Drive" },
+    DRIVE_NETWORK: { position: "-240px 0px", tooltip: "Network drive" },
     /** The monitor icon definition. */
     MONITOR: { position: "-240px -16px", tooltip: "Monitor" },
     /** The keyboard icon definition. */
