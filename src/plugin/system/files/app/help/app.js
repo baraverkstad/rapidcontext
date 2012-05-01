@@ -4,16 +4,19 @@
 function HelpApp() {
     this._topics = null;
     this._currentUrl = "";
+    this._historyHead = [];
+    this._historyTail = [];
 }
 
 /**
  * Starts the app and initializes the UI.
  */
 HelpApp.prototype.start = function() {
-    this.clearContent();
     MochiKit.Signal.connect(this.ui.topicReload, "onclick", this, "loadTopics");
     MochiKit.Signal.connect(this.ui.topicTree, "onexpand", this, "_treeOnExpand");
     MochiKit.Signal.connect(this.ui.topicTree, "onselect", this, "loadContent");
+    MochiKit.Signal.connect(this.ui.contentPrev, "onclick", this, "_historyBack");
+    MochiKit.Signal.connect(this.ui.contentNext, "onclick", this, "_historyForward");
     MochiKit.Signal.connect(this.ui.contentText, "onclick", this, "_handleClick");
     this.loadTopics();
 };
@@ -152,10 +155,49 @@ HelpApp.prototype._treeExpandUrl = function (url) {
 HelpApp.prototype.clearContent = function() {
     this._currentUrl = "";
     this.ui.contentLoading.hide();
+    this.ui.contentPrev.setAttrs({ disabled: (this._historyTail.length <= 0) });
+    this.ui.contentNext.setAttrs({ disabled: (this._historyHead.length <= 0) });
     this.ui.contentLink.className = "hidden";
     MochiKit.DOM.replaceChildNodes(this.ui.contentInfo);
     MochiKit.DOM.replaceChildNodes(this.ui.contentText);
 };
+
+/**
+ * Moves one step back in history (if possible).
+ */
+HelpApp.prototype._historyBack = function () {
+    if (!this.ui.contentPrev.isDisabled()) {
+        this._historyBlockUpdates = true;
+        this._historyHead.push(this._currentUrl);
+        this.loadContent(this._historyTail.pop());
+        this._historyBlockUpdates = false;
+    }
+}
+
+/**
+ * Moves one step forward in history (if possible).
+ */
+HelpApp.prototype._historyForward = function () {
+    if (!this.ui.contentNext.isDisabled()) {
+        this._historyBlockUpdates = true;
+        this._historyTail.push(this._currentUrl);
+        this.loadContent(this._historyHead.pop());
+        this._historyBlockUpdates = false;
+    }
+}
+
+/**
+ * Saves the current URL to the history. Also clears the forward
+ * history if not already empty.
+ */
+HelpApp.prototype._historySave = function (url) {
+    if (!this._historyBlockUpdates) {
+        this._historyHead = [];
+        if (this._currentUrl) {
+            this._historyTail.push(this._currentUrl);
+        }
+    }
+}
 
 /**
  * Loads new content into the content view. The content is either
@@ -179,6 +221,7 @@ HelpApp.prototype.loadContent = function (url) {
             this._currentUrl = url;
             this._scrollLink(url.replace(/.*#/, ""));
         } else {
+            this._historySave();
             this.clearContent();
             this._currentUrl = url;
             this.ui.contentLoading.show();
