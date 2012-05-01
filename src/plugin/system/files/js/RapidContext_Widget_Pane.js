@@ -40,10 +40,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *     paged containers, such as a TabContainer, a Wizard and
  *     similar. A pane only uses a &lt;div&gt; HTML element, and
  *     supports being hidden and shown according to any page
- *     transitions required by a parent container. In addition to
- *     standard HTML events, the "onenter" and "onexit" events are
- *     triggered whenever the pane is used in a parent container
- *     page transition.
+ *     transitions required by a parent container.
  * @property {String} pageTitle [read-only] The current page title.
  * @property {Object} pageStatus [read-only] The current page status.
  * @property {Boolean} pageCloseable [read-only] The current page
@@ -61,6 +58,30 @@ RapidContext.Widget.Pane = function (attrs/*, ... */) {
 
 // Register widget class
 RapidContext.Widget.Classes.Pane = RapidContext.Widget.Pane;
+
+/**
+ * Emitted when the pane is shown for viewing in a container widget.
+ * This event signal carries no event information.
+ *
+ * @name RapidContext.Widget.Pane#onenter
+ * @event
+ */
+
+/**
+ * Emitted when the pane is hidden from view in a container widget.
+ * This event signal carries no event information.
+ *
+ * @name RapidContext.Widget.Pane#onexit
+ * @event
+ */
+
+/**
+ * Emitted when the pane is closed (removed) in a TabContainer. This
+ * event signal carries no event information.
+ *
+ * @name RapidContext.Widget.Pane#onclose
+ * @event
+ */
 
 /**
  * The default page status. Allows page transitions both to the

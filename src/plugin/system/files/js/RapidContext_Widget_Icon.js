@@ -33,9 +33,9 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  * @return {Widget} the widget DOM node
  *
  * @class The icon widget class. Used to provide a small clickable
- *     image, using the &lt;span&gt; HTML element. In particular,
- *     the "onclick" event is usually of interest. Predefined icon
- *     images (using a large image sprite) are available.
+ *     image, using the &lt;span&gt; HTML element. A number of
+ *     predefined icon images suitable for different actions are
+ *     available (using a single icon sprite image).
  * @extends RapidContext.Widget
  */
 RapidContext.Widget.Icon = function (attrs) {
@@ -48,6 +48,14 @@ RapidContext.Widget.Icon = function (attrs) {
 
 // Register widget class
 RapidContext.Widget.Classes.Icon = RapidContext.Widget.Icon;
+
+/**
+ * Emitted when the icon has been clicked. This is a standard DOM
+ * event.
+ *
+ * @name RapidContext.Widget.Icon#onclick
+ * @event
+ */
 
 /**
  * Updates the icon or HTML DOM node attributes.

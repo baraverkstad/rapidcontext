@@ -33,8 +33,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  * @class The text field widget class. Used to provide a text input
  *     field for a single line, using the &lt;input&gt; HTML element.
  *     The text field may also be connected to a popup (for auto-
- *     suggest or similar) and in that case the "onpopupselect" event
- *     will be triggered when an element is selected from the popup.
+ *     suggest or similar).
  * @property {Boolean} disabled The widget disabled flag.
  * @property {Boolean} focused The read-only widget focused flag.
  * @property {String} defaultValue The value to use on form reset.
@@ -70,6 +69,14 @@ RapidContext.Widget.TextField = function (attrs/*, ...*/) {
 
 // Register widget class
 RapidContext.Widget.Classes.TextField = RapidContext.Widget.TextField;
+
+/**
+ * Emitted when an item has been selected in the connected popup.
+ * This event signal carries no event information.
+ *
+ * @name RapidContext.Widget.TextField#onpopupselect
+ * @event
+ */
 
 /**
  * Updates the widget or HTML DOM node attributes.

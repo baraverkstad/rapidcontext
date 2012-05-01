@@ -37,9 +37,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *     information area, using a &lt;div&gt; HTML element. The Popup
  *     widget will automatically disappear after a configurable
  *     amount of time, unless the user performs keyboard or mouse
- *     actions related to the popup. In addition to standard HTML
- *     events, the "onshow" and "onhide" events are triggered when
- *     the menu has been shown or hidden.
+ *     actions related to the popup.
  * @extends RapidContext.Widget
  */
 RapidContext.Widget.Popup = function (attrs/*, ...*/) {
@@ -58,6 +56,22 @@ RapidContext.Widget.Popup = function (attrs/*, ...*/) {
 
 //Register widget class
 RapidContext.Widget.Classes.Popup = RapidContext.Widget.Popup;
+
+/**
+ * Emitted when the popup is shown. This event signal carries no
+ * event information.
+ *
+ * @name RapidContext.Widget.Popup#onshow
+ * @event
+ */
+
+/**
+ * Emitted when the popup is hidden. This event signal carries no
+ * event information.
+ *
+ * @name RapidContext.Widget.Popup#onhide
+ * @event
+ */
 
 /**
  * Updates the widget or HTML DOM node attributes.

@@ -56,8 +56,10 @@ RapidContext.Widget.NavigationBar = function (attrs) {
 RapidContext.Widget.Classes.NavigationBar = RapidContext.Widget.NavigationBar;
 
 /**
- * Emitted when the position is changed, either by moving either
- * forward or backward.
+ * Emitted when the navigation position changes. This is triggered
+ * either by the user moving forward or backward, or by a call to the
+ * moveTo() method. This event signal carries a reference to the
+ * widget itself.
  *
  * @name RapidContext.Widget.NavigationBar#onchange
  * @event

@@ -35,9 +35,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *     scrolling data table, using an outer &lt;div&gt; HTML
  *     element around a &lt;table&gt;. The Table widget can only
  *     have TableColumn child nodes, each providing a visible data
- *     column in the table. In addition to standard HTML events, the
- *     "onclear" and "onselect" events are triggered when data is
- *     cleared or selected in the table.
+ *     column in the table.
  * @extends RapidContext.Widget
  *
  * @example
@@ -71,6 +69,22 @@ RapidContext.Widget.Table = function (attrs/*, ...*/) {
 
 // Register widget class
 RapidContext.Widget.Classes.Table = RapidContext.Widget.Table;
+
+/**
+ * Emitted when the table data is cleared. This event signal carries
+ * no event information.
+ *
+ * @name RapidContext.Widget.Table#onclear
+ * @event
+ */
+
+/**
+ * Emitted when the table selection changes. This event signal
+ * carries no event information.
+ *
+ * @name RapidContext.Widget.Table#onselect
+ * @event
+ */
 
 /**
  * Updates the widget or HTML DOM node attributes.

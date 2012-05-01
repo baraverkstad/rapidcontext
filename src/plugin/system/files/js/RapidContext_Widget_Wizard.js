@@ -32,11 +32,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *     pages, where the user can step forward and backward with
  *     buttons. Internally it uses a &lt;div&gt; HTML element
  *     containing Pane widgets that are hidden and shown according
- *     to the page transitions. In addition to standard HTML events,
- *     the "onchange" event is triggered on page transitions, the
- *     "oncancel" event is triggered if a user cancels an operation,
- *     and the "onclose" event is triggered when the wizard
- *     completes.
+ *     to the page transitions.
  * @extends RapidContext.Widget
  *
  * @example
@@ -81,6 +77,30 @@ RapidContext.Widget.Wizard = function (attrs/*, ... */) {
 
 // Register widget class
 RapidContext.Widget.Classes.Wizard = RapidContext.Widget.Wizard;
+
+/**
+ * Emitted when a page transition is performed. This event
+ * signal contains the page index and widget as payload.
+ *
+ * @name RapidContext.Widget.Wizard#onchange
+ * @event
+ */
+
+/**
+ * Emitted when the user selects to cancel the page flow. This event
+ * signal carries no event information.
+ *
+ * @name RapidContext.Widget.Wizard#oncancel
+ * @event
+ */
+
+/**
+ * Emitted when the user has completed the page flow. This event
+ * signal carries no event information.
+ *
+ * @name RapidContext.Widget.Wizard#onclose
+ * @event
+ */
 
 /**
  * Returns an array with all child pane widgets. Note that the array

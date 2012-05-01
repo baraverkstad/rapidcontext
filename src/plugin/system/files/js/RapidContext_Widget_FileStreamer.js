@@ -38,13 +38,11 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *     the web page to remain active also during the potentially long
  *     delays caused by sending large amounts of data. The widget
  *     creates its own IFRAME HTML element inside which the actual
- *     FORM and INPUT elements are created automatically. In addition
- *     to standard HTML events, the "onselect" and "onupload" events
- *     are also triggered.
+ *     FORM and INPUT elements are created automatically.
  * @extends RapidContext.Widget
  *
  * @example
- * var file = RapidContext.Widget.FileStreamer({ url: "rapidcontext/upload/myid" });
+ * var file = RapidContext.Widget.FileStreamer({ url: "rapidcontext/upload/my_id" });
  * form.addAll(file);
  * MochiKit.Signal.connect(file, "onselect", function () {
  *     file.hide();
@@ -69,6 +67,23 @@ RapidContext.Widget.FileStreamer = function (attrs) {
 
 // Register widget class
 RapidContext.Widget.Classes.FileStreamer = RapidContext.Widget.FileStreamer;
+
+/**
+ * Emitted when the file upload begins. This event is triggered by
+ * the user selecting a file to upload, which automatically starts
+ * the upload. This event signal carries no event information.
+ *
+ * @name RapidContext.Widget.FileStreamer#onselect
+ * @event
+ */
+
+/**
+ * Emitted when the file upload has completed. This event signal
+ * carries no event information.
+ *
+ * @name RapidContext.Widget.FileStreamer#onupload
+ * @event
+ */
 
 /**
  * Updates the widget or HTML DOM node attributes.

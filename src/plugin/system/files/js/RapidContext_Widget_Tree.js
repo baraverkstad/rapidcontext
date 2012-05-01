@@ -29,8 +29,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *
  * @class The tree widget class. Used to provide a dynamic tree with
  *     expandable tree nodes, using a number of &lt;div&gt; HTML
- *     elements. The the "onexpand" and "onselect" event are emitted
- *     whenever a node is expanded, collapsed or selected.
+ *     elements.
  * @extends RapidContext.Widget
  */
 RapidContext.Widget.Tree = function (attrs/*, ...*/) {
@@ -48,14 +47,17 @@ RapidContext.Widget.Tree = function (attrs/*, ...*/) {
 RapidContext.Widget.Classes.Tree = RapidContext.Widget.Tree;
 
 /**
- * Emitted when a tree node is expanded or collapsed.
+ * Emitted when a tree node is expanded or collapsed. This event
+ * signal contains the tree node as payload.
  *
  * @name RapidContext.Widget.Tree#onexpand
  * @event
  */
 
 /**
- * Emitted when a tree node is selected.
+ * Emitted when the tree node selection changes. Note that it fires
+ * both for unselect and select (normally both in sequence). This
+ * event signal contains the currently selected tree node as payload.
  *
  * @name RapidContext.Widget.Tree#onselect
  * @event

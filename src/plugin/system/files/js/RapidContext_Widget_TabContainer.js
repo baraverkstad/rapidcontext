@@ -33,9 +33,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *     Internally it uses a &lt;div&gt; HTML element containing Pane
  *     widgets that are hidden and shown according to the page
  *     transitions. If a child Pane widget is "pageCloseable", a
- *     close button will be available on the tab label and an
- *     "onclose" signal will be emitted for that node when removed
- *     from the container.
+ *     close button will be available on the tab label.
  * @extends RapidContext.Widget
  */
 RapidContext.Widget.TabContainer = function (attrs/*, ... */) {

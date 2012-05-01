@@ -34,8 +34,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  * @return {Widget} the widget DOM node
  *
  * @class The button widget class. Used to provide a simple push
- *     button, using the &lt;button&gt; HTML element. In particular,
- *     the "onclick" event is usually of interest.
+ *     button, using the &lt;button&gt; HTML element.
  * @extends RapidContext.Widget
  *
  * @example
@@ -52,6 +51,14 @@ RapidContext.Widget.Button = function (attrs/*, ...*/) {
 
 // Register widget class
 RapidContext.Widget.Classes.Button = RapidContext.Widget.Button;
+
+/**
+ * Emitted when the button has been clicked. This is a standard DOM
+ * event.
+ *
+ * @name RapidContext.Widget.Button#onclick
+ * @event
+ */
 
 /**
  * Updates the widget or HTML DOM node attributes.

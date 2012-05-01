@@ -65,14 +65,16 @@ RapidContext.Widget.Dialog = function (attrs/*, ... */) {
 RapidContext.Widget.Classes.Dialog = RapidContext.Widget.Dialog;
 
 /**
- * Emitted when the dialog is shown.
+ * Emitted when the dialog is shown. This event signal carries no
+ * event information.
  *
  * @name RapidContext.Widget.Dialog#onshow
  * @event
  */
 
 /**
- * Emitted when the dialog is hidden.
+ * Emitted when the dialog is hidden. This event signal carries no
+ * event information.
  *
  * @name RapidContext.Widget.Dialog#onhide
  * @event
@@ -80,7 +82,8 @@ RapidContext.Widget.Classes.Dialog = RapidContext.Widget.Dialog;
 
 /**
  * Emitted when the dialog is moved. The event will be sent
- * repeatedly when moving with a mouse drag operation.
+ * repeatedly when moving with a mouse drag operation. This event
+ * signal contains the new element position as payload.
  *
  * @name RapidContext.Widget.Dialog#onmove
  * @event
@@ -88,7 +91,8 @@ RapidContext.Widget.Classes.Dialog = RapidContext.Widget.Dialog;
 
 /**
  * Emitted when the dialog is resized. The event will be sent
- * repeatedly when resizing with a mouse drag operation.
+ * repeatedly when resizing with a mouse drag operation. This event
+ * signal contains the new element dimensions as payload.
  *
  * @name RapidContext.Widget.Dialog#onresize
  * @event
