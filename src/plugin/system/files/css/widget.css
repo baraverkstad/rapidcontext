@@ -230,6 +230,12 @@
 .widgetIcon.widgetHidden {
     display: none;
 }
+.widgetIcon.widgetDisabled {
+    background-color: transparent;
+    opacity: 0.25;
+    filter: alpha(opacity=25);
+    cursor: default;
+}
 
 /**
  * NavigationBar Style
