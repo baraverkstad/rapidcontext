@@ -45,12 +45,28 @@ if (!JSON.stringify) {
 // General utility functions
 
 /**
- * Returns the first function argument that is not undefined.
+ * Returns the first argument that is not undefined.
  *
  * @param {Object} [...] the values to check
  *
  * @return {Object} the first non-undefined argument, or
  *         undefined if all arguments were undefined
+ *
+ * @example
+ * RapidContext.Util.defaultValue(undefined, window.noSuchProp, 1)
+ *     --> 1
+ *
+ * @example
+ * RapidContext.Util.defaultValue(0, 1)
+ *     --> 0
+ *
+ * @example
+ * RapidContext.Util.defaultValue(null, 1)
+ *     --> null
+ *
+ * @example
+ * RapidContext.Util.defaultValue()
+ *     --> undefined
  */
 RapidContext.Util.defaultValue = function (/* ... */) {
     for (var i = 0; i < arguments.length; i++) {
@@ -58,29 +74,36 @@ RapidContext.Util.defaultValue = function (/* ... */) {
             return arguments[i];
         }
     }
-    return undefined;
+    return arguments[0];
 };
 
 /**
- * Creates a dictionary object from a list of keys and values. It
- * can be used either as a reverse of items(), or as a reverse of
- * keys() and values(). That is, either the function take a single
- * list where each element contains both key and value, or it takes
- * two separate lists, one with keys and the other with values. If
- * a key is specified twice, only the last value will be used.
+ * Creates a dictionary object from a list of keys and values.
+ * Optionally a list of key-value pairs can be provided instead. As
+ * a third option, a single (non-array) value can be assigned to all
+ * the keys.<p>
  *
- * @param {Array} itemsOrKeys the list of items or keys
- * @param {Array} [values] the optional list of values
+ * If a key is specified twice, only the last value will be used.
+ * Note that this function is the reverse of MochiKit.Base.items(),
+ * MochiKit.Base.keys() and MochiKit.Base.values().
  *
- * @return {Object} a dictionary object with all the keys set to the
- *         corresponding value
+ * @param {Array} keysOrItems the list of keys or items
+ * @param {Array} [values] the list of values (optional if key-value
+ *            pairs are specified in first argument)
+ *
+ * @return {Object} an object with properties for each key-value pair
  *
  * @example
- * RapidContext.Util.dict(['a','b'], [1, 2]);
+ * RapidContext.Util.dict(['a','b'], [1, 2])
  *     --> { a: 1, b: 2 }
  *
- * RapidContext.Util.dict([['a', 1], ['b', 2]]);
+ * @example
+ * RapidContext.Util.dict([['a', 1], ['b', 2]])
  *     --> { a: 1, b: 2 }
+ *
+ * @example
+ * RapidContext.Util.dict(['a','b'], true)
+ *     --> { a: true, b: true }
  */
 RapidContext.Util.dict = function (itemsOrKeys, values) {
     var o = {};
@@ -124,7 +147,8 @@ RapidContext.Util.dict = function (itemsOrKeys, values) {
  * RapidContext.Util.select({ a: 1, b: 2 }, ['a', 'c']);
  *     --> { a: 1 }
  *
- * RapidContext.Util.select({ a: 1, b: 2 }, { a: null, c: null });
+ * @example
+ * RapidContext.Util.select({ a: 1, b: 2 }, { a: true, c: true });
  *     --> { a: 1 }
  */
 RapidContext.Util.select = function (src, keys) {
@@ -160,6 +184,7 @@ RapidContext.Util.select = function (src, keys) {
  * RapidContext.Util.mask(o, ['a', 'c']);
  *     --> { a: 1 } and also sets o == { b: 2 }
  *
+ * @example
  * var o = { a: 1, b: 2 };
  * RapidContext.Util.mask(o, { a: null, c: null });
  *     --> { a: 1 } and also sets o == { b: 2 }
@@ -180,57 +205,44 @@ RapidContext.Util.mask = function (src, keys) {
 };
 
 /**
- * Converts a string to a title-cased string, i.e. all words are
- * separated with a single space and each word starts with a
- * capitilized letter. The string will be stripped of any
- * underscore or hyphen character (replaced by spaces) and trimmed
- * down to only use spaces to separate words.
+ * Converts a string to a title-cased string. All word boundaries
+ * are replaced with a single space and the subsequent character is
+ * capitalized.<p>
+ *
+ * All underscore ("_"), hyphen ("-") and lower-upper character
+ * pairs are recognized as word boundaries. Note that this function
+ * does not change the capitalization of other characters in the
+ * string.
  *
  * @param {String} str the string to convert
  *
  * @return {String} the converted string
+ *
+ * @example
+ * RapidContext.Util.toTitleCase("a short heading")
+ *     --> "A Short Heading"
+ *
+ * @example
+ * RapidContext.Util.toTitleCase("camelCase")
+ *     --> "Camel Case"
+ *
+ * @example
+ * RapidContext.Util.toTitleCase("bounding-box")
+ *     --> "Bounding Box"
+ *
+ * @example
+ * RapidContext.Util.toTitleCase("UPPER_CASE_VALUE")
+ *     --> "UPPER CASE VALUE"
  */
 RapidContext.Util.toTitleCase = function (str) {
     str = MochiKit.Format.strip(str.replace(/[_-]+/g, " "));
     str = str.replace(/[a-z][A-Z]/g, function (match) {
         return match.charAt(0) + " " + match.charAt(1);
     });
-    str = str.replace(/ [a-z]/g, function (match) {
+    str = str.replace(/(^|\s)[a-z]/g, function (match) {
         return match.toUpperCase();
     });
-    if (str.length > 0) {
-        str = str.charAt(0).toUpperCase() + str.substring(1);
-    }
     return str;
-};
-
-/**
- * Finds the index of an object in a list having a specific property
- * value. The value will be compared using MochiKit.Base.compare.
- *
- * @param {Array} lst the Array-like object to search
- * @param {String} key the property key name
- * @param {Object} value the property value to search for
- * @param {Number} [start] the search start index, defaults to 0
- * @param {Number} [end] the search end index, defaults to lst.length
- *
- * @return {Number} the array index found, or
- *         -1 if not found
- */
-RapidContext.Util.findProperty = function (lst, key, value, start, end) {
-    if (typeof(end) == "undefined" || end === null) {
-        end = (lst == null) ? 0 : lst.length;
-    }
-    if (typeof(start) == "undefined" || start === null) {
-        start = 0;
-    }
-    var cmp = MochiKit.Base.compare;
-    for (var i = start; lst != null && i < end; i++) {
-        if (lst[i] != null && cmp(lst[i][key], value) === 0) {
-            return i;
-        }
-    }
-    return -1;
 };
 
 /**

@@ -50,22 +50,32 @@ RapidContext.Util.isFalse = function (value) {
 };
 
 /**
- * Checks if the specified value corresponds to false. This function
- * will equate false, undefined, null, 0, "", [], "false" and "null"
- * with a boolean false value.
+ * Finds the index of an object in a list having a specific property
+ * value. The value will be compared using MochiKit.Base.compare.
  *
- * @param {Object} value the value to check
+ * @param {Array} lst the Array-like object to search
+ * @param {String} key the property key name
+ * @param {Object} value the property value to search for
+ * @param {Number} [start] the search start index, defaults to 0
+ * @param {Number} [end] the search end index, defaults to lst.length
  *
- * @return {Boolean} true if the value corresponds to false, or
- *         false otherwise
- *
- * @deprecated Use MochiKit.Base.bool instead.
+ * @return {Number} the array index found, or
+ *         -1 if not found
  */
-RapidContext.Util.isFalse = function (value) {
-    var msg = "RapidContext.Util.isFalse is deprecated. Use " +
-              "MochiKit.Base.bool instead.";
-    RapidContext.Util._logOnce('DEBUG', msg);
-    return !MochiKit.Base.bool(value);
+RapidContext.Util.findProperty = function (lst, key, value, start, end) {
+    if (typeof(end) == "undefined" || end === null) {
+        end = (lst == null) ? 0 : lst.length;
+    }
+    if (typeof(start) == "undefined" || start === null) {
+        start = 0;
+    }
+    var cmp = MochiKit.Base.compare;
+    for (var i = start; lst != null && i < end; i++) {
+        if (lst[i] != null && cmp(lst[i][key], value) === 0) {
+            return i;
+        }
+    }
+    return -1;
 };
 
 /**
