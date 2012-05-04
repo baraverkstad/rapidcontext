@@ -246,15 +246,19 @@ RapidContext.Util.toTitleCase = function (str) {
 };
 
 /**
- * Returns the name of a function. This is often useful for debugging
- * or logging purposes. If the function is anonymous or the
- * JavaScript environment doesn't provide function <code>name</code>
- * properties, any registered function name or undefined will be
- * returned.
+ * Returns the name of a function. If the function is anonymous (i.e.
+ * the <code>name</code> property is undefined or blank), the value
+ * of the <code>displayName</code> property is returned instead.
  *
- * @param {Function} func the function to name
+ * @param {Function} func the function to check
  *
  * @return {String} the function name, or undefined if not available
+ *
+ * @example
+ * var o = { test: function () {} };
+ * RapidContext.Util.registerFunctionNames(o, "o");
+ * RapidContext.Util.functionName(o.test)
+ *     --> "o.test"
  *
  * @see RapidContext.Util.registerFunctionNames
  */
@@ -269,42 +273,49 @@ RapidContext.Util.functionName = function (func) {
 };
 
 /**
- * Registers function names for debugging or logging. This is useful
- * when using anonymous functions or inside JavaScript environments
- * that do not provide function <code>name</code> properties. This
- * function will add the specified name as a <code>displayName</code>
- * property to any function that doesn't already have a name. This
- * function will also process any properties or prototype properties
- * recursively adding names like <code>name.[property name]</code>.
+ * Registers function names for anonymous functions. This is useful
+ * when debugging code in Firebug or similar tools, as readable stack
+ * traces can be provided.<p>
  *
- * @param {Object} obj the function or object to register
- * @param {String} name the function or object (class) name
- * @param {Array} [stack] the object stack to avoid circular recursion
+ * This function will add a <code>displayName</code> property to all
+ * functions without a <code>name</code> property. Object properties
+ * and prototype properties are processed recursively, adding to the
+ * supplied base name (e.g. <code>[name].[property name]</code>).
+ *
+ * @param {Object} obj the function or object to process
+ * @param {String} [name] the function or object (class) name
+ *
+ * @example
+ * var o = { name: "MyObject", test: function () {} };
+ * RapidContext.Util.registerFunctionNames(o);
+ * o.test.displayName
+ *     --> "MyObject.test"
  *
  * @see RapidContext.Util.functionName
  */
-RapidContext.Util.registerFunctionNames = function (obj, name, stack) {
-   if (typeof(obj) === "function" &&
-       (obj.name == null || obj.name == "") &&
-       typeof(obj.displayName) === "undefined") {
-       obj.displayName = name;
-   }
-   stack = stack || [];
-   if (obj != null && name != null &&
-       (typeof(obj) === "object" || typeof(obj) === "function") &&
-       obj !== Object.prototype && obj !== Function.prototype &&
-       typeof(obj.nodeType) !== "number" &&
-       MochiKit.Base.findIdentical(stack, obj) < 0) {
-
-       stack.push(obj);
-       for (var prop in obj) {
-           var str = name + "." + prop;
-           RapidContext.Util.registerFunctionNames(obj[prop], str, stack);
-       }
-       var str = name + ".prototype";
-       RapidContext.Util.registerFunctionNames(obj.prototype, str, stack);
-       stack.pop();
-   }
+RapidContext.Util.registerFunctionNames = function (obj, name) {
+    function worker(o, name, stack) {
+        var isObj = (o != null && typeof(o) === "object");
+        var isFunc = (typeof(o) === "function");
+        var isAnon = isFunc && (o.name == null || o.name == "");
+        var isProto = (o === Object.prototype || o === Function.prototype);
+        var isNode = isObj && (typeof(o.nodeType) === "number");
+        var isVisited = (MochiKit.Base.findIdentical(stack, o) >= 0);
+        if (isFunc && isAnon && !o.hasOwnProperty("displayName")) {
+            o.displayName = name;
+        }
+        if ((isObj || isFunc) && !isProto && !isNode && !isVisited) {
+            stack.push(o);
+            for (var prop in o) {
+                if (o.hasOwnProperty(prop)) {
+                    worker(o[prop], name + "." + prop, stack);
+                }
+            }
+            worker(o.prototype, name + ".prototype", stack);
+            stack.pop();
+        }
+    }
+    worker(obj, name || obj.name || obj.displayName || obj.NAME || "", []);
 };
 
 /**
