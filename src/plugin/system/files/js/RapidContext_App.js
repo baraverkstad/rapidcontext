@@ -1,7 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
- * All rights reserved.
+ * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -12,17 +11,6 @@
  *
  * See the RapidContext LICENSE.txt file for more details.
  */
-
-// Temporary code for JSON compat
-if (typeof(JSON) == "undefined") {
-    var JSON = {};
-}
-if (!JSON.parse) {
-    JSON.parse = MochiKit.Base.evalJSON;
-}
-if (!JSON.stringify) {
-    JSON.stringify = MochiKit.Base.serializeJSON;
-}
 
 /**
  * @name RapidContext

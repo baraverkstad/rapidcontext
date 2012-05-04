@@ -1,7 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
- * All rights reserved.
+ * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -30,37 +29,20 @@ if (typeof(RapidContext.Util) == "undefined") {
 }
 
 
+// JSON object for browsers missing it
+
+if (typeof(JSON) == "undefined") {
+    var JSON = {};
+}
+if (!JSON.parse) {
+    JSON.parse = MochiKit.Base.evalJSON;
+}
+if (!JSON.stringify) {
+    JSON.stringify = MochiKit.Base.serializeJSON;
+}
+
+
 // General utility functions
-
-RapidContext.Util._logOnce = function(level, message) {
-    var func = arguments.callee.caller;
-    if (func.loggedMsg == null) {
-        func.loggedMsg = {};
-    }
-    if (func.loggedMsg[message] !== true) {
-        func.loggedMsg[message] = true
-        MochiKit.Logging.logger.baseLog(level, message);
-    }
-};
-
-/**
- * Checks if the specified value corresponds to false. This function
- * will equate false, undefined, null, 0, "", [], "false" and "null"
- * with a boolean false value.
- *
- * @param {Object} value the value to check
- *
- * @return {Boolean} true if the value corresponds to false, or
- *         false otherwise
- *
- * @deprecated Use MochiKit.Base.bool instead.
- */
-RapidContext.Util.isFalse = function (value) {
-    var msg = "RapidContext.Util.isFalse is deprecated. Use " +
-              "MochiKit.Base.bool instead.";
-    RapidContext.Util._logOnce('DEBUG', msg);
-    return !MochiKit.Base.bool(value);
-};
 
 /**
  * Returns the first function argument that is not undefined.
@@ -195,28 +177,6 @@ RapidContext.Util.mask = function (src, keys) {
         }
     }
     return res;
-};
-
-/**
- * Returns a truncated copy of a string or an array. If the string
- * or array is shorter than the specified maximum length, the object
- * will be returned unmodified. If an optional tail string or array
- * is specified, additional elements will be removed from the object
- * to append it to the end.
- *
- * @param {String/Array} obj the string or array to truncate
- * @param {Number} maxLength the maximum length
- * @param {String/Array} tail the optional tail to use on truncation
- *
- * @return {String/Array} the truncated string or array
- *
- * @deprecated Use MochiKit.Text.truncate instead.
- */
-RapidContext.Util.truncate = function (obj, maxLength, tail) {
-    var msg = "RapidContext.Util.truncate is deprecated. Use " +
-              "MochiKit.Text.truncate instead.";
-    RapidContext.Util._logOnce('DEBUG', msg);
-    return MochiKit.Text.truncate(obj, maxLength, tail);
 };
 
 /**
@@ -439,18 +399,6 @@ RapidContext.Util.resolveURI = function (uri, base) {
     }
 };
 
-/**
- * Formats a number using two digits, i.e. pads with a leading zero
- * character if the number is only one digit.
- *
- * @param {Number} value the number to format
- *
- * @return {String} the formatted number string
- *
- * @function
- */
-RapidContext.Util.twoDigitNumber = MochiKit.Format.numberFormatter("00");
-
 
 // DateTime utility functions
 
@@ -506,11 +454,11 @@ RapidContext.Util.toApproxPeriod = function (millis) {
     if (p.days >= 10) {
         return p.days + " days";
     } else if (p.days >= 1) {
-        return p.days + " days " + RapidContext.Util.twoDigitNumber(p.hours) + " hours";
+        return p.days + " days " + p.hours + " hours";
     } else if (p.hours >= 1) {
-        return p.hours + ":" + RapidContext.Util.twoDigitNumber(p.minutes) + " hours";
+        return p.hours + ":" + MochiKit.Text.padLeft("" + p.minutes, 2, "0") + " hours";
     } else if (p.minutes >= 1) {
-        return p.minutes + ":" + RapidContext.Util.twoDigitNumber(p.seconds) + " minutes";
+        return p.minutes + ":" + MochiKit.Text.padLeft("" + p.seconds, 2, "0") + " minutes";
     } else if (p.seconds >= 1) {
         return p.seconds + " seconds";
     } else {
