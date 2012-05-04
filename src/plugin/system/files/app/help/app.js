@@ -14,7 +14,7 @@ function HelpApp() {
 HelpApp.prototype.start = function() {
     MochiKit.Signal.connect(this.ui.topicReload, "onclick", this, "loadTopics");
     MochiKit.Signal.connect(this.ui.topicTree, "onexpand", this, "_treeOnExpand");
-    MochiKit.Signal.connect(this.ui.topicTree, "onselect", this, "loadContent");
+    MochiKit.Signal.connect(this.ui.topicTree, "onselect", this, "_treeOnSelect");
     MochiKit.Signal.connect(this.ui.contentPrev, "onclick", this, "_historyBack");
     MochiKit.Signal.connect(this.ui.contentNext, "onclick", this, "_historyForward");
     MochiKit.Signal.connect(this.ui.contentText, "onclick", this, "_handleClick");
@@ -53,6 +53,7 @@ HelpApp.prototype.loadTopics = function() {
     MochiKit.Base.map(func, this.resource.topicsJsApi);
     MochiKit.Base.map(func, this.resource.topicsMochiKit);
     MochiKit.Base.map(func, this.resource.topicsJava);
+    MochiKit.Base.map(func, this.resource.topicsExternal);
     this._treeInsertChildren(this.ui.topicTree, this._topics);
     this.ui.topicTree.expandAll(1);
     if (this._currentUrl) {
@@ -95,19 +96,6 @@ HelpApp.prototype._addTopic = function (source, topic) {
 };
 
 /**
- * Adds the child topics to a node if it is expanded and the nodes
- * have not already been added.
- *
- * @param {TreeNode} node the tree node to add to
- */
-HelpApp.prototype._treeOnExpand = function (node) {
-    var topic = node.data;
-    if (node.isExpanded && topic.children.length != node.getChildNodes().length) {
-        this._treeInsertChildren(node, topic);
-    }
-};
-
-/**
  * Adds the child topics to a node.
  *
  * @param {Tree/TreeNode} parentNode the parent tree or tree node
@@ -116,10 +104,18 @@ HelpApp.prototype._treeOnExpand = function (node) {
 HelpApp.prototype._treeInsertChildren = function (parentNode, topic) {
     for (var i = 0; i < topic.children.length; i++) {
         var child = topic.children[i];
+        var icon = { ref: "BOOK_OPEN", tooltip: "Documentation Topic" };
+        if (!child.url) {
+            icon = "FOLDER";
+        } else if (/https?:/.test(child.url)) {
+            icon = { ref: "BOOK", tooltip: "External Documentation" };
+        } else if (/#/.test(child.url)) {
+            icon = { ref: "TAG_BLUE", tooltip: "Bookmark" };
+        }
         var attrs = {
             name: child.name,
             folder: (child.children.length > 0),
-            icon: (!child.url ? "FOLDER" : /#/.test(child.url) ? "TAG_BLUE" : "BOOK_OPEN")
+            icon: icon
         };
         var node = RapidContext.Widget.TreeNode(attrs);
         node.data = child;
@@ -136,17 +132,86 @@ HelpApp.prototype._treeInsertChildren = function (parentNode, topic) {
  * @return {TreeNode} the TreeNode widget for the matching topic
  */
 HelpApp.prototype._treeExpandUrl = function (url) {
-    var topic = this._topics.url[url] || this._topics.url[url.replace(/#.*/, "")];
-    if (topic) {
-        var path = topic.topic.split("/");
-        for (var i = 0; i < path.length; i++) {
-            this.ui.topicTree.findByPath(path.slice(0, i + 1)).expand();
+    if (this._treeBlockEvents) {
+        return this.ui.topicTree.selectedChild();
+    } else {
+        var topic = this._topics.url[url] || this._topics.url[url.replace(/#.*/, "")];
+        if (topic) {
+            var path = topic.topic.split("/");
+            for (var i = 0; i < path.length; i++) {
+                this.ui.topicTree.findByPath(path.slice(0, i + 1)).expand();
+            }
+            var node = this.ui.topicTree.findByPath(path);
+            this._treeBlockEvents = true;
+            node.select();
+            this._treeBlockEvents = false;
+            return node;
         }
-        var node = this.ui.topicTree.findByPath(path);
-        node.select();
-        return node;
     }
     return null;
+};
+
+/**
+ * Handles the tree expand and collapse events.
+ *
+ * @param {TreeNode} node the tree node expanded or collapsed
+ */
+HelpApp.prototype._treeOnExpand = function (node) {
+    var topic = node.data;
+    if (node.isExpanded && topic.children.length != node.getChildNodes().length) {
+        this._treeInsertChildren(node, topic);
+    }
+};
+
+/**
+ * Handles the tree select events.
+ */
+HelpApp.prototype._treeOnSelect = function () {
+    if (!this._treeBlockEvents) {
+        var node = this.ui.topicTree.selectedChild();
+        if (node && node.data && node.data.url) {
+            this._treeBlockEvents = true;
+            this.loadContent(node.data.url);
+            this._treeBlockEvents = false;
+        }
+    }
+};
+
+/**
+ * Moves one step back in history (if possible).
+ */
+HelpApp.prototype._historyBack = function () {
+    if (!this.ui.contentPrev.isDisabled()) {
+        this._historyBlockUpdates = true;
+        this._historyHead.push(this._currentUrl);
+        this.loadContent(this._historyTail.pop());
+        this._historyBlockUpdates = false;
+    }
+};
+
+/**
+ * Moves one step forward in history (if possible).
+ */
+HelpApp.prototype._historyForward = function () {
+    if (!this.ui.contentNext.isDisabled()) {
+        this._historyBlockUpdates = true;
+        this._historyTail.push(this._currentUrl);
+        this.loadContent(this._historyHead.pop());
+        this._historyBlockUpdates = false;
+    }
+};
+
+/**
+ * Saves the current URL to the history. Also clears the forward
+ * history if not already empty.
+ */
+HelpApp.prototype._historySave = function (url) {
+    if (!this._historyBlockUpdates) {
+        this._historyHead = [];
+        if (this._currentUrl) {
+            this._historyTail.push(this._currentUrl);
+        }
+    }
 };
 
 /**
@@ -163,72 +228,30 @@ HelpApp.prototype.clearContent = function() {
 };
 
 /**
- * Moves one step back in history (if possible).
- */
-HelpApp.prototype._historyBack = function () {
-    if (!this.ui.contentPrev.isDisabled()) {
-        this._historyBlockUpdates = true;
-        this._historyHead.push(this._currentUrl);
-        this.loadContent(this._historyTail.pop());
-        this._historyBlockUpdates = false;
-    }
-}
-
-/**
- * Moves one step forward in history (if possible).
- */
-HelpApp.prototype._historyForward = function () {
-    if (!this.ui.contentNext.isDisabled()) {
-        this._historyBlockUpdates = true;
-        this._historyTail.push(this._currentUrl);
-        this.loadContent(this._historyHead.pop());
-        this._historyBlockUpdates = false;
-    }
-}
-
-/**
- * Saves the current URL to the history. Also clears the forward
- * history if not already empty.
- */
-HelpApp.prototype._historySave = function (url) {
-    if (!this._historyBlockUpdates) {
-        this._historyHead = [];
-        if (this._currentUrl) {
-            this._historyTail.push(this._currentUrl);
-        }
-    }
-}
-
-/**
- * Loads new content into the content view. The content is either
- * loaded from a specified URL or from the currently selected topic
- * tree node.
+ * Loads a new HTML document into the content view. The document is
+ * loaded from a specified URL and the tree is updated to select the
+ * topic matching the URL (if any). Note that for external URL:s, a
+ * separate window (tab) is opened instead.
  *
- * @param {String} [url] the optional content data URL
+ * @param {String} url the content URL (HTML document)
  */
 HelpApp.prototype.loadContent = function (url) {
-    if (typeof(url) != "string") {
-        url = null;
-    } else if (this._treeExpandUrl(url)) {
-        // Content loading is triggered by node selection in method above
-        return;
-    }
-    var node = this.ui.topicTree.selectedChild();
-    if (node && node.data && node.data.url) {
-        url = url || node.data.url;
-        var docUrl = url.replace(/#.*/, "");
-        if (/#/.test(url) && this._currentUrl.indexOf(docUrl) == 0) {
-            this._currentUrl = url;
-            this._scrollLink(url.replace(/.*#/, ""));
-        } else {
-            this._historySave();
-            this.clearContent();
-            this._currentUrl = url;
-            this.ui.contentLoading.show();
-            MochiKit.DOM.replaceChildNodes(this.ui.contentInfo, node.data.source);
-            var d = RapidContext.App.loadText(docUrl, null, { timeout: 60 });
-            d.addBoth(MochiKit.Base.method(this, "_callbackContent"));
-        }
+    var node = this._treeExpandUrl(url);
+    var fileUrl = url.replace(/#.*/, "");
+    if (/https?:/.test(url)) {
+        window.open(url);
+    } else if (/#.+/.test(url) && this._currentUrl.indexOf(fileUrl) == 0) {
+        this._currentUrl = url;
+        this._scrollLink(url.replace(/.*#/, ""));
+    } else {
+        this._historySave();
+        this.clearContent();
+        this._currentUrl = url;
+        this.ui.contentLoading.show();
+        var source = (node && node.data) ? node.data.source || "" : "";
+        MochiKit.DOM.replaceChildNodes(this.ui.contentInfo, source);
+        var d = RapidContext.App.loadText(fileUrl, null, { timeout: 60 });
+        d.addBoth(MochiKit.Base.method(this, "_callbackContent"));
     }
 };
 
