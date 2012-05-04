@@ -402,41 +402,25 @@ RapidContext.Util.resolveURI = function (uri, base) {
 
 // DateTime utility functions
 
-RapidContext.Util.MILLIS_PER_SECOND = 1000;
-RapidContext.Util.MILLIS_PER_MINUTE = 60 * 1000;
-RapidContext.Util.MILLIS_PER_HOUR = 60 * 60 * 1000;
-RapidContext.Util.MILLIS_PER_DAY = 24 * 60 * 60 * 1000;
-RapidContext.Util.MILLIS_PER_WEEK = 7 * 24 * 60 * 60 * 1000;
+RapidContext.Util._MILLIS_PER_SECOND = 1000;
+RapidContext.Util._MILLIS_PER_MINUTE = 60 * 1000;
+RapidContext.Util._MILLIS_PER_HOUR = 60 * 60 * 1000;
+RapidContext.Util._MILLIS_PER_DAY = 24 * 60 * 60 * 1000;
+RapidContext.Util._MILLIS_PER_WEEK = 7 * 24 * 60 * 60 * 1000;
 
 /**
  * Creates a new time period object from a number of milliseconds.
  *
- * @constructor
  * @param {Number} millis the number of milliseconds in the period
  *
- * @return {Object} new time period object
- *
- * @class The time period class. Used to encapsulate a structured
- *     time period, split up into its variuos components. For time
- *     period calculations, the total millisecond value is normally
- *     a better choice (to avoid overflow and underflow issues).
- * @property {Number} days The number of days in the period. This is
- *     an integer value from 0 and up.
- * @property {Number} hours The number of hours in the period. This
- *     is an integer value between 0 and 23.
- * @property {Number} minutes The number of minutes in the period.
- *     This is an integer value between 0 and 59.
- * @property {Number} seconds The number of seconds in the period.
- *     This is an integer value between 0 and 59.
- * @property {Number} millis The number of remaining milliseconds in
- *     the period. This is an integer value between 0 and 999.
+ * @return {Object} new time duration object
  */
-RapidContext.Util.TimePeriod = function (millis) {
+RapidContext.Util._toDuration = function (millis) {
     return {
-        days: Math.floor(millis / RapidContext.Util.MILLIS_PER_DAY),
-        hours: Math.floor(millis / RapidContext.Util.MILLIS_PER_HOUR) % 24,
-        minutes: Math.floor(millis / RapidContext.Util.MILLIS_PER_MINUTE) % 60,
-        seconds: Math.floor(millis / RapidContext.Util.MILLIS_PER_SECOND) % 60,
+        days: Math.floor(millis / RapidContext.Util._MILLIS_PER_DAY),
+        hours: Math.floor(millis / RapidContext.Util._MILLIS_PER_HOUR) % 24,
+        minutes: Math.floor(millis / RapidContext.Util._MILLIS_PER_MINUTE) % 60,
+        seconds: Math.floor(millis / RapidContext.Util._MILLIS_PER_SECOND) % 60,
         millis: millis % 1000
     };
 };
@@ -449,8 +433,7 @@ RapidContext.Util.TimePeriod = function (millis) {
  * @return {String} the string representation of the period
  */
 RapidContext.Util.toApproxPeriod = function (millis) {
-    var p = RapidContext.Util.TimePeriod(millis);
-
+    var p = RapidContext.Util._toDuration(millis);
     if (p.days >= 10) {
         return p.days + " days";
     } else if (p.days >= 1) {
@@ -667,34 +650,6 @@ RapidContext.Util.createDOMFuncExt = function (ns, tag, args, attrs/*, ...*/) {
 };
 
 /**
- * Returns the scroll offset for an HTML DOM node.
- *
- * @param {Object} node the HTML DOM node
- *
- * @return {Object} a MochiKit.Style.Coordinates object with "x" and
- *         "y" properties containing the element scroll offset
- */
-RapidContext.Util.getScrollOffset = function (node) {
-    node = MochiKit.DOM.getElement(node);
-    var x = node.scrollLeft || 0;
-    var y = node.scrollTop || 0;
-    return new MochiKit.Style.Coordinates(x, y);
-};
-
-/**
- * Sets the scroll offset for an HTML DOM node.
- *
- * @param {Object} node the HTML DOM node
- * @param {Object} offset the MochiKit.Style.Coordinates containing
- *            the new scroll offset "x" and "y" values
- */
-RapidContext.Util.setScrollOffset = function (node, offset) {
-    node = MochiKit.DOM.getElement(node);
-    node.scrollLeft = offset.x;
-    node.scrollTop = offset.y;
-};
-
-/**
  * Resets the scroll offsets to zero for for an HTML DOM node.
  * Optionally all child node offsets can also be reset.
  *
@@ -750,81 +705,6 @@ RapidContext.Util.adjustScrollOffset = function (node, box) {
 };
 
 /**
- * Returns the margin sizes for an HTML DOM node. The margin sizes
- * for all four sides will be returned.
- *
- * @param {Object} node the HTML DOM node
- *
- * @return {Object} an object with "t", "b", "l" and "r" properties,
- *         each containing either an integer value or null
- */
-RapidContext.Util.getMarginBox = function (node) {
-    var getStyle = MochiKit.Style.getStyle;
-    var px = RapidContext.Util.toPixels;
-    return { t: px(getStyle(node, "margin-top")),
-             b: px(getStyle(node, "margin-bottom")),
-             l: px(getStyle(node, "margin-left")),
-             r: px(getStyle(node, "margin-right")) };
-};
-
-/**
- * Returns the border widths for an HTML DOM node. The widths for
- * all four sides will be returned.
- *
- * @param {Object} node the HTML DOM node
- *
- * @return {Object} an object with "t", "b", "l" and "r" properties,
- *         each containing either an integer value or null
- */
-RapidContext.Util.getBorderBox = function (node) {
-    var getStyle = MochiKit.Style.getStyle;
-    var px = RapidContext.Util.toPixels;
-    return { t: px(getStyle(node, "border-width-top")),
-             b: px(getStyle(node, "border-width-bottom")),
-             l: px(getStyle(node, "border-width-left")),
-             r: px(getStyle(node, "border-width-right")) };
-};
-
-/**
- * Returns the padding sizes for an HTML DOM node. The sizes for all
- * four sides will be returned.
- *
- * @param {Object} node the HTML DOM node
- *
- * @return {Object} an object with "t", "b", "l" and "r" properties,
- *         each containing either an integer value or null
- */
-RapidContext.Util.getPaddingBox = function (node) {
-    var getStyle = MochiKit.Style.getStyle;
-    var px = RapidContext.Util.toPixels;
-    return { t: px(getStyle(node, "padding-top")),
-             b: px(getStyle(node, "padding-bottom")),
-             l: px(getStyle(node, "padding-left")),
-             r: px(getStyle(node, "padding-right")) };
-};
-
-/**
- * Converts a style pixel value to the corresponding integer. If the
- * string ends with "px", those characters will be silently removed.
- *
- * @param {String} value the style string value to convert
- *
- * @return {Number} the numeric value, or
- *         null if the conversion failed
- */
-RapidContext.Util.toPixels = function (value) {
-    if (value != null) {
-        try {
-            value = MochiKit.Format.rstrip(value, "px");
-            value = Math.round(parseFloat(value));
-        } catch (ignore) {
-            value = null;
-        }
-    }
-    return (value == null || isNaN(value)) ? null : value;
-};
-
-/**
  * Blurs (unfocuses) a specified DOM node and all relevant child
  * nodes. This function will recursively blur all A, BUTTON, INPUT,
  * TEXTAREA and SELECT child nodes found.
@@ -832,15 +712,12 @@ RapidContext.Util.toPixels = function (value) {
  * @param {Object} node the HTML DOM node
  */
 RapidContext.Util.blurAll = function (node) {
-    if (arguments.length <= 1) {
-        RapidContext.Util.blurAll(node, "A", "BUTTON", "INPUT", "TEXTAREA", "SELECT");
-    } else {
-        node.blur();
-        for (var i = 1; i < arguments.length; i++) {
-            var nodes = node.getElementsByTagName(arguments[i]);
-            for (var j = 0; j < nodes.length; j++) {
-                nodes[j].blur();
-            }
+    node.blur();
+    var tags = ["A", "BUTTON", "INPUT", "TEXTAREA", "SELECT"];
+    for (var i = 0; i < tags.length; i++) {
+        var nodes = node.getElementsByTagName(tags[i]);
+        for (var j = 0; j < nodes.length; j++) {
+            nodes[j].blur();
         }
     }
 };
