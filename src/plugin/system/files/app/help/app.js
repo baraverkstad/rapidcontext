@@ -269,7 +269,7 @@ HelpApp.prototype._callbackContent = function(data) {
         if (/#.+/.test(this._currentUrl)) {
             this._scrollLink(this._currentUrl.replace(/.*#/, ""));
         } else {
-            RapidContext.Util.setScrollOffset(this.ui.contentScroll, 0);
+            this.ui.contentScroll.scrollTop = 0;
         }
     } else {
         MochiKit.DOM.replaceChildNodes(this.ui.contentInfo, "Not Found");
