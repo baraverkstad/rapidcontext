@@ -1,34 +1,10 @@
 [
-    {
-        "topic": "RapidContext/1. Introduction",
-        "url": "doc/platform.html"
-    },
-    {
-        "topic": "RapidContext/2. Client Programming",
-        "url": "doc/client.html"
-    },
-    {
-        "topic": "RapidContext/3. Server Programming",
-        "url": "doc/server.html"
-    },
-    {
-        "topic": "RapidContext/4. Users & Security",
-        "url": "doc/security.html"
-    },
-    {
-        "topic": "RapidContext/5. Command-line Plug-In",
-        "url": "doc/plugin-cmdline.html"
-    },
-    {
-        "topic": "RapidContext/6. HTTP Plug-In",
-        "url": "doc/plugin-http.html"
-    },
-    {
-        "topic": "RapidContext/7. JDBC Plug-In",
-        "url": "doc/plugin-jdbc.html"
-    },
-    {
-        "topic": "RapidContext/8. Change History",
-        "url": "doc/changes.html"
-    }
+    { "topic": "RapidContext/1. Introduction", "url": "doc/platform.html" },
+    { "topic": "RapidContext/2. Client Programming", "url": "doc/client.html" },
+    { "topic": "RapidContext/3. Server Programming", "url": "doc/server.html" },
+    { "topic": "RapidContext/4. Users & Security", "url": "doc/security.html" },
+    { "topic": "RapidContext/5. Command-line Plug-In", "url": "doc/plugin-cmdline.html" },
+    { "topic": "RapidContext/6. HTTP Plug-In", "url": "doc/plugin-http.html" },
+    { "topic": "RapidContext/7. JDBC Plug-In", "url": "doc/plugin-jdbc.html" },
+    { "topic": "RapidContext/8. Change History", "url": "doc/changes.html" }
 ]
