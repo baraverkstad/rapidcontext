@@ -846,28 +846,37 @@ RapidContext.Util.blurAll = function (node) {
 };
 
 /**
- * Registers algebraic constraints for an element width, height and
- * aspect ratio. The constraints may either be fixed numeric values,
- * functions or string formulas. The string formulas will be
- * converted to JavaScript functions, replacing any "%" character
- * with the parent reference value (i.e. the parent element width,
- * height or aspect ratio). It is also possible to directly reference
- * the parent values with the "w" and "h" variables. Any functions
- * specified must take both the parent element width and height as
- * arguments (possibly ignoring one or the other) and return a
- * number. Any value returned when evaluating the functions or
- * formulas will be bounded to the parent element size.
+ * Registers algebraic constraints for the element width, height
+ * and/or aspect ratio. The constraints may either be fixed numeric
+ * values, functions or algebraic formulas (in a string).<p>
+ *
+ * The formulas will be converted to JavaScript functions, replacing
+ * any "%" character with a reference to the corresponding parent
+ * dimension value (i.e. the parent element width, height or aspect
+ * ratio). It is also possible to directly reference the parent
+ * values as "w" or "h".<p>
+ *
+ * Constraint functions must take two arguments (parent width and
+ * height) and return a number. The returned number is set as the new
+ * element width or height (in pixels). Any returned value will also
+ * be bounded by the parent element size to avoid calculation errors.
  *
  * @param {Object} node the HTML DOM node
  * @param {Number/Function/String} [width] the width constraint
  * @param {Number/Function/String} [height] the height constraint
  * @param {Number/Function/String} [aspect] the aspect ratio constraint
  *
+ * @see RapidContext.Util.resizeElements
+ *
  * @example
- * // To set width to 50% - 20 px & height to 100%
- * registerSizeConstraints(node, "50% - 20", "100%");
- * // To set a square aspect ratio
- * registerSizeConstraints(node, null, null, 1.0);
+ * RapidContext.Util.registerSizeConstraints(node, "50%-20", "100%");
+ *     // Sets width to 50%-20 px and height to 100% of parent dimension
+ *
+ * RapidContext.Util.registerSizeConstraints(otherNode, null, null, 1.0);
+ *     // Ensures a square aspect ratio
+ *
+ * RapidContext.Util.resizeElements(node, otherNode);
+ *     // Evaluates the size constraints for both nodes
  */
 RapidContext.Util.registerSizeConstraints = function (node, width, height, aspect) {
     node = MochiKit.DOM.getElement(node);
@@ -899,15 +908,24 @@ RapidContext.Util.registerSizeConstraints = function (node, width, height, aspec
 };
 
 /**
- * Resizes a list of DOM nodes using their parent element sizes and
- * any registered size constraints. The resize operation is recursive
- * and will also be applied to all child nodes. If an element lacks a
- * size constraint for either width or height, that size aspect will
- * not be modified.
+ * Resizes one or more DOM nodes using their registered size
+ * constraints and their parent element sizes. The resize operation
+ * will only modify those elements that have constraints, but will
+ * perform a depth-first recursion over all element child nodes as
+ * well.<p>
+ *
+ * Partial constraints are accepted, in which case only the width
+ * or the height is modified. Aspect ratio constraints are applied
+ * after the width and height constraints. The result will always
+ * be bounded by the parent element width or height.
  *
  * @param {Object} [...] the HTML DOM nodes to resize
  *
- * @see registerSizeConstraints
+ * @see RapidContext.Util.registerSizeConstraints
+ *
+ * @example
+ * RapidContext.Util.resizeElements(node);
+ *     // Evaluates the size constraints for a node and all child nodes
  */
 RapidContext.Util.resizeElements = function (/* ... */) {
     var args = MochiKit.Base.flattenArray(arguments);
@@ -953,9 +971,10 @@ RapidContext.Util.resizeElements = function (/* ... */) {
  */
 RapidContext.Util._evalConstraints = function (sc, ref) {
     var log = MochiKit.Logging.logError;
+    var w, h, a;
     if (typeof(sc.w) == "function") {
         try {
-            var w = Math.max(0, Math.min(ref.w, sc.w(ref.w, ref.h)));
+            w = Math.max(0, Math.min(ref.w, sc.w(ref.w, ref.h)));
         } catch (e) {
             log("Error evaluating width size constraint; " +
                 "w: " + ref.w + ", h: " + ref.h, e);
@@ -963,7 +982,7 @@ RapidContext.Util._evalConstraints = function (sc, ref) {
     }
     if (typeof(sc.h) == "function") {
         try {
-            var h = Math.max(0, Math.min(ref.h, sc.h(ref.w, ref.h)));
+            h = Math.max(0, Math.min(ref.h, sc.h(ref.w, ref.h)));
         } catch (e) {
             log("Error evaluating height size constraint; " +
                 "w: " + ref.w + ", h: " + ref.h, e);
@@ -971,7 +990,7 @@ RapidContext.Util._evalConstraints = function (sc, ref) {
     }
     if (typeof(sc.a) == "function") {
         try {
-            var a = sc.a(ref.w, ref.h);
+            a = sc.a(ref.w, ref.h);
             w = w || ref.w;
             h = h || ref.h;
             if (h * a > ref.w) {
