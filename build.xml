@@ -130,9 +130,10 @@
 
   <target name="doc-clean">
     <delete file="doc.zip" quiet="true" />
-    <delete dir="doc/java" quiet="true" includeemptydirs="true" />
+    <delete quiet="true" includeemptydirs="true">
+      <fileset dir="doc/java" includes="**/*" excludes="topics.json" />
+    </delete>
     <delete dir="doc/js" quiet="true" includeemptydirs="true" />
-    <mkdir dir="doc/java" />
     <mkdir dir="doc/js" />
   </target>
 

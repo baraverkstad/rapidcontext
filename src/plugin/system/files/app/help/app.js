@@ -52,7 +52,7 @@ HelpApp.prototype.loadTopics = function() {
     MochiKit.Base.map(func, this.resource.topicsBase);
     MochiKit.Base.map(func, this.resource.topicsJsApi);
     MochiKit.Base.map(func, this.resource.topicsMochiKit);
-    MochiKit.Base.map(func, this.resource.topicsExtra);
+    MochiKit.Base.map(func, this.resource.topicsJava);
     this._treeInsertChildren(this.ui.topicTree, this._topics);
     this.ui.topicTree.expandAll(1);
     if (this._currentUrl) {
