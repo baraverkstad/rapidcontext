@@ -360,9 +360,14 @@ HelpApp.prototype._scrollLink = function (name) {
         MochiKit.Style.showElement(this.ui.contentLocator);
         var opts = {
             effect: "Opacity",
+            duration: 0.8,
             transition: function (pos) {
-                var t = MochiKit.Visual.Transitions;
-                return t.sinoidal(t.pulse(pos, 2));
+                if (pos < 0.2) {
+                    pos = pos / 0.2;
+                } else {
+                    pos = 1 - (pos - 0.2) / 0.8;
+                }
+                return MochiKit.Visual.Transitions.sinoidal(pos);
             },
             afterFinish: function (effect) {
                 MochiKit.Style.setOpacity(effect.element, 0);
