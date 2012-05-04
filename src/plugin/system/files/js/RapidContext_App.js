@@ -834,6 +834,7 @@ RapidContext.App._Cache = {
             return this._cmpId(a, b);
         }
     },
+    // Object comparator for 'id' property
     _cmpId: MochiKit.Base.keyComparator("id"),
     // Updates the cache data with the results from a procedure.
     update: function (proc, data) {
@@ -880,7 +881,7 @@ RapidContext.App._Cache = {
                     launcher.instances = [];
                     this.apps.push(launcher);
                 } else {
-                    var pos = RapidContext.Util.findProperty(this.apps, "className", launcher.className);
+                    var pos = _.pluck(this.apps, "className").indexOf(launcher.className);
                     if (pos < 0) {
                         launcher.instances = [];
                         this.apps.push(launcher);
