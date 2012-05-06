@@ -171,7 +171,7 @@ RapidContext.Widget.Dialog.prototype._setHiddenDialog = function (value) {
         if (this.center) {
             this.moveToCenter();
         }
-        RapidContext.Util.resetScrollOffset(this, true);
+        this.resetScroll();
         RapidContext.Widget.emitSignal(this, "onshow");
     }
 };
@@ -274,6 +274,20 @@ RapidContext.Widget.Dialog.prototype.resizeToContent = function (mode) {
     var y = Math.round(Math.max(content.scrollHeight, content.offsetHeight) + 25);
     MochiKit.Style.setStyle(content, { overflow: "auto" });
     return this.resizeTo(x, y);
+}
+
+/**
+ * Resets the scroll offsets for all child elements in the dialog.
+ */
+RapidContext.Widget.Dialog.prototype.resetScroll = function () {
+    function visitor(node) {
+        if (node.nodeType == 1) {
+            node.scrollTop = 0;
+            node.scrollLeft = 0;
+            return node.childNodes;
+        }
+    }
+    MochiKit.Base.nodeWalk(this, visitor);
 }
 
 /**

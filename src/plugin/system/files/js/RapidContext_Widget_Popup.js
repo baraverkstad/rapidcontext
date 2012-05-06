@@ -122,7 +122,7 @@ RapidContext.Widget.Popup.prototype._setHiddenPopup = function (value) {
         if (this.showAnim) {
             this.animate(this.showAnim);
         }
-        RapidContext.Util.resetScrollOffset(this, true);
+        this.scrollTop = 0;
         RapidContext.Widget.emitSignal(this, "onshow");
     }
     this.resetDelay();
@@ -176,8 +176,14 @@ RapidContext.Widget.Popup.prototype.selectChild = function (indexOrNode) {
     if (index >= 0 && node != null) {
         this.selectedIndex = index;
         MochiKit.DOM.addElementClass(node, "widgetPopupSelected");
-        var box = { y: node.offsetTop, h: node.offsetHeight + 5 };
-        RapidContext.Util.adjustScrollOffset(this, box);
+        var top = node.offsetTop;
+        var bottom = top + node.offsetHeight + 5;
+        if (this.scrollTop + this.clientHeight < bottom) {
+            this.scrollTop = bottom - this.clientHeight;
+        }
+        if (this.scrollTop > top) {
+            this.scrollTop = top;
+        }
     } else {
         this.selectedIndex = -1;
     }
