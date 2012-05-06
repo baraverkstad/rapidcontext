@@ -87,7 +87,7 @@ RapidContext.Util.defaultValue = function (/* ... */) {
  * Note that this function is the reverse of MochiKit.Base.items(),
  * MochiKit.Base.keys() and MochiKit.Base.values().
  *
- * @param {Array} keysOrItems the list of keys or items
+ * @param {Array} itemsOrKeys the list of keys or items
  * @param {Array} [values] the list of values (optional if key-value
  *            pairs are specified in first argument)
  *
@@ -126,43 +126,6 @@ RapidContext.Util.dict = function (itemsOrKeys, values) {
         }
     }
     return o;
-};
-
-/**
- * Creates a new object by copying keys and values from another
- * object. A list of key names (or an object whose property names
- * will be used as keys) must be specified as an argument. The
- * returned object will only contain properties that were defined in
- * the source object, keeping the source object values. The source
- * object will be left unmodified.
- *
- * @param {Object} src the source object to select values from
- * @param {Array/Object} keys the list of keys to select, or an
- *            object with the keys to select
- *
- * @return {Object} a new object containing the matching keys and
- *             values found in the source object
- *
- * @example
- * RapidContext.Util.select({ a: 1, b: 2 }, ['a', 'c']);
- *     --> { a: 1 }
- *
- * @example
- * RapidContext.Util.select({ a: 1, b: 2 }, { a: true, c: true });
- *     --> { a: 1 }
- */
-RapidContext.Util.select = function (src, keys) {
-    var res = {};
-    if (!MochiKit.Base.isArrayLike(keys)) {
-        keys = MochiKit.Base.keys(keys);
-    }
-    for (var i = 0; i < keys.length; i++) {
-        var k = keys[i];
-        if (k in src) {
-            res[k] = src[k];
-        }
-    }
-    return res;
 };
 
 /**
@@ -669,61 +632,6 @@ RapidContext.Util.createDOMFuncExt = function (ns, tag, args, attrs/*, ...*/) {
         var myChildren = MochiKit.Base.extend([], children);
         MochiKit.Base.extend(myChildren, arguments, args.length + 1);
         return RapidContext.Util.createDOMExt(ns, tag, myAttrs, myChildren);
-    }
-};
-
-/**
- * Resets the scroll offsets to zero for for an HTML DOM node.
- * Optionally all child node offsets can also be reset.
- *
- * @param {Object} node the HTML DOM node
- * @param {Boolean} [recursive] the recursive flag, defaults to
- *            false
- */
-RapidContext.Util.resetScrollOffset = function (node, recursive) {
-    node = MochiKit.DOM.getElement(node);
-    node.scrollLeft = 0;
-    node.scrollTop = 0;
-    if (recursive) {
-        node = node.firstChild;
-        while (node != null) {
-            if (node.nodeType === 1) { // Node.ELEMENT_NODE
-                RapidContext.Util.resetScrollOffset(node, true);
-            }
-            node = node.nextSibling;
-        }
-    }
-};
-
-/**
- * Adjusts the scroll offsets for an HTML DOM node to ensure optimal
- * visibility for the specified coordinates box. This function will
- * scroll the node both vertially and horizontally to ensure that
- * the top left corner of the box is always visible and that as much
- * of the box extent as possible is visible.
- *
- * @param {Object} node the HTML DOM node
- * @param {Object} box the coordinates box with optional properties
- *            {l, t, r, b} or {x, y, w, h}
- */
-RapidContext.Util.adjustScrollOffset = function (node, box) {
-    node = MochiKit.DOM.getElement(node);
-    var dim = MochiKit.Style.getElementDimensions(node);
-    var xMin = RapidContext.Util.defaultValue(box.l, box.x, NaN);
-    var xMax = RapidContext.Util.defaultValue(box.r, xMin + box.w, NaN);
-    var yMin = RapidContext.Util.defaultValue(box.t, box.y, NaN);
-    var yMax = RapidContext.Util.defaultValue(box.b, yMin + box.h, NaN);
-    if (!isNaN(xMax) && node.scrollLeft + dim.w < xMax) {
-        node.scrollLeft = xMax - dim.h;
-    }
-    if (!isNaN(xMin) && node.scrollLeft > xMin) {
-        node.scrollLeft = xMin;
-    }
-    if (!isNaN(yMax) && node.scrollTop + dim.h < yMax) {
-        node.scrollTop = yMax - dim.h;
-    }
-    if (!isNaN(yMin) && node.scrollTop > yMin) {
-        node.scrollTop = yMin;
     }
 };
 
