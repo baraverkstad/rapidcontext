@@ -2,13 +2,20 @@
 <!-- User Interface XML File -->
 
 <ui>
-  <h3>
-    Example Procedure List:
-    <Icon id="reload" ref="RELOAD" />
-    <Icon id="loading" ref="LOADING" />
-  </h3>
-  <Table id="table" style="width: 400px;">
-    <TableColumn title="Name" field="name" sort="asc" />
-  </Table>
+  <TabContainer w="100%" h="100%">
+    <Pane pageTitle="Table" pageCloseable="false">
+      <h3>
+        Example App List:
+        <Icon id="appReload" ref="RELOAD" />
+        <Icon id="appLoading" ref="LOADING" />
+      </h3>
+      <Table id="appTable" style="width: 400px;">
+        <TableColumn title="Id" field="id" sort="asc" />
+        <TableColumn title="Name" field="name" />
+        <TableColumn title="Plugin" field="plugin" />
+        <TableColumn title="Version" field="version" />
+      </Table>
+    </Pane>
+  </TabContainer>
   <!-- Add more widgets here... -->
 </ui>
