@@ -45,39 +45,6 @@ if (!JSON.stringify) {
 // General utility functions
 
 /**
- * Returns the first argument that is not undefined.
- *
- * @param {Object} [...] the values to check
- *
- * @return {Object} the first non-undefined argument, or
- *         undefined if all arguments were undefined
- *
- * @example
- * RapidContext.Util.defaultValue(undefined, window.noSuchProp, 1)
- *     --> 1
- *
- * @example
- * RapidContext.Util.defaultValue(0, 1)
- *     --> 0
- *
- * @example
- * RapidContext.Util.defaultValue(null, 1)
- *     --> null
- *
- * @example
- * RapidContext.Util.defaultValue()
- *     --> undefined
- */
-RapidContext.Util.defaultValue = function (/* ... */) {
-    for (var i = 0; i < arguments.length; i++) {
-        if (typeof(arguments[i]) != "undefined") {
-            return arguments[i];
-        }
-    }
-    return arguments[0];
-};
-
-/**
  * Creates a dictionary object from a list of keys and values.
  * Optionally a list of key-value pairs can be provided instead. As
  * a third option, a single (non-array) value can be assigned to all
