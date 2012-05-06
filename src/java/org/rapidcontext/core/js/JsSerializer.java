@@ -169,9 +169,6 @@ public class JsSerializer {
                 case '\\':
                     buffer.append("\\\\");
                     break;
-                case '\'':
-                    buffer.append("\\'");
-                    break;
                 case '\"':
                     buffer.append("\\\"");
                     break;
@@ -185,7 +182,7 @@ public class JsSerializer {
                     buffer.append("\\t");
                     break;
                 default:
-                    if (chr != '<' && 32 <= chr && chr < 127) {
+                    if (chr != '\'' && chr != '<' && 32 <= chr && chr < 127) {
                         buffer.append(chr);
                     } else {
                         buffer.append("\\u");
