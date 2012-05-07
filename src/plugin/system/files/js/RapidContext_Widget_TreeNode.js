@@ -45,12 +45,14 @@ RapidContext.Widget.TreeNode = function (attrs/*, ...*/) {
     var o = MochiKit.DOM.DIV({}, div);
     RapidContext.Widget._widgetMixin(o, arguments.callee);
     o.addClass("widgetTreeNode");
-    attrs = MochiKit.Base.update({ name: "Tree Node", folder: false }, attrs);
+    var args = MochiKit.Base.flattenArguments(arguments);
+    var folder = (args.length > 1);
+    attrs = MochiKit.Base.update({ name: "Tree Node", folder: folder }, attrs);
     if (typeof(attrs.icon) == "undefined") {
         attrs.icon = attrs.folder ? "FOLDER" : "DOCUMENT";
     }
     o.setAttrs(attrs);
-    o.addAll(MochiKit.Base.extend(null, arguments, 1));
+    o.addAll(args.slice(1));
     icon.onclick = RapidContext.Widget._eventHandler("TreeNode", "toggle");
     div.onclick = RapidContext.Widget._eventHandler("TreeNode", "select");
     return o;
