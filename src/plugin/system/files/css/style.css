@@ -51,6 +51,16 @@ th {
     text-align: left;
     vertical-align: top;
 }
+fieldset {
+    border: 1px solid #CCCCCC;
+    border-radius: 4px;
+    vertical-align: top;
+}
+fieldset legend {
+    padding: 0 3px;
+    font-size: 12px;
+    color: #666666;
+}
 a {
     font-weight: bold;
     text-decoration: none;
