@@ -3,7 +3,8 @@
  */
 function ExampleApp() {
     // Set instance variables here:
-    // this.abc = 123;
+    this.interval = null;
+    this.progress = 0;
 }
 
 /**
@@ -17,23 +18,70 @@ ExampleApp.prototype.start = function() {
     });
 
     // Attach signal handlers
-    MochiKit.Signal.connect(this.ui.iconShowAll, "onchange", this, "toggleIcons");
     RapidContext.UI.connectProc(this.proc.appList, this.ui.appLoading, this.ui.appReload);
     MochiKit.Signal.connect(this.proc.appList, "oncall", this.ui.appTable, "clear");
     MochiKit.Signal.connect(this.proc.appList, "onsuccess", this.ui.appTable, "setData");
+    MochiKit.Signal.connect(this.ui.popupTrigger, "onmouseover", this.ui.popupMenu, "show");
+    MochiKit.Signal.connect(this.ui.popupField, "onfocus", this, "autocomplete");
+    MochiKit.Signal.connect(this.ui.popupField, "onchange", this, "autocomplete");
+    MochiKit.Signal.connect(this.ui.popupField, "onpopupselect", this, "autoselect");
+    MochiKit.Signal.connect(this.ui.dialogButton, "onclick", this.ui.dialog, "show");
+    MochiKit.Signal.connect(this.ui.dialogClose, "onclick", this.ui.dialog, "hide");
+    MochiKit.Signal.connect(this.ui.iconShowAll, "onchange", this, "toggleIcons");
 
     // Initialize data
-    this.initIcons();
     this.proc.appList();
-}
+    this.initIcons();
+    this.interval = setInterval(MochiKit.Base.method(this, "updateProgress"), 500);
+};
 
 /**
  * Stops the app.
  */
 ExampleApp.prototype.stop = function() {
     // Usually not much to do here
+    clearInterval(this.interval);
+};
+
+/**
+ * Handle autocomplete events.
+ */
+ExampleApp.prototype.autocomplete = function () {
+    var items = ["Apple", "Banana", "Blueberry", "Mango", "Kiwi", "Orange", "Strawberry"];
+    var value = this.ui.popupField.getValue().toLowerCase();
+    for (var i = 0; i < items.length; i++) {
+        if (items[i].toLowerCase().indexOf(value) < 0) {
+            items.splice(i--, 1);
+        }
+    }
+    this.ui.popupField.showPopup({}, items);
+};
+
+/**
+ * Handle autocomplete selections.
+ */
+ExampleApp.prototype.autoselect = function () {
+    var popup = this.ui.popupField.popup();
+    var value = popup.selectedChild().value;
+    popup.hide();
+    this.ui.popupField.setAttrs({ value: value });
 }
 
+/**
+ * Animate the progress bar.
+ */
+ExampleApp.prototype.updateProgress = function () {
+    this.progress += 0.5
+    if (this.progress >= 110) {
+        this.progress = 0;
+        this.ui.progressBar.setAttrs({ min: 0, max: 100 });
+    }
+    this.ui.progressBar.setValue(Math.floor(this.progress));
+}
+
+/**
+ * Creates the icon table content dynamically.
+ */
 ExampleApp.prototype.initIcons = function () {
     var TD = MochiKit.DOM.TD;
     var TR = MochiKit.DOM.TR;
@@ -69,8 +117,11 @@ ExampleApp.prototype.initIcons = function () {
         this.ui.iconTable.appendChild(tr);
     }
     this.ui.iconTable.resizeContent = MochiKit.Base.noop;
-}
+};
 
+/**
+ * Handles show all icon backgrounds checkbox.
+ */
 ExampleApp.prototype.toggleIcons = function () {
     $(this.ui.iconTable).find(".extra").toggleClass("hidden");
-}
+};
