@@ -2,7 +2,59 @@
 <!-- User Interface XML File -->
 
 <ui>
+  <style>
+table.data {
+    border-collapse: collapse;
+}
+table.data td {
+    padding: 6px 10px;
+    border: 1px solid #CCC;
+    vertical-align: middle;
+}
+table.data td.label {
+    padding-right: 20px;
+}
+table.data td.white,
+table.data td.grey,
+table.data td.black {
+    text-align: center;
+    border-left: none;
+    border-right: none;
+}
+table.data td.grey {
+    background: #888888;
+    border-top: 1px solid #666;
+    border-bottom: 1px solid #666;
+}
+table.data td.black {
+    background: #000000;
+    border-top: 1px solid #444;
+    border-bottom: 1px solid #444;
+}
+table.data td.space {
+    border-top: none;
+    border-bottom: none;
+    width: 50px;
+}
+table.data td.end {
+    border-top: none;
+    border-bottom: none;
+    border-right: none;
+    width: 5px;
+}
+  </style>
   <TabContainer w="100%" h="100%">
+    <Pane pageTitle="Icons" pageCloseable="false">
+      <div style="height: 25px;">
+        <label class="label"><input id="iconShowAll" type="checkbox" /> Show alternate backgrounds</label>
+      </div>
+      <div w="100%" h="100%-25" style="overflow: auto;">
+        <table class="data">
+          <tbody id="iconTable">
+          </tbody>
+        </table>
+      </div>
+    </Pane>
     <Pane pageTitle="Table" pageCloseable="false">
       <h3>
         Example App List:
