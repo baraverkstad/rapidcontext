@@ -311,7 +311,7 @@
     left: 0px;
     width: 100%;
     height: 100%;
-    z-index: 1000;
+    z-index: 100;
     overflow: hidden;
     text-align: center;
 }
@@ -420,7 +420,10 @@
     height: 14px;
     width: 100%;
     background: url(../images/backgrounds/progress-incomplete.gif) repeat-x;
-    border: 1px solid #cccccc;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #BBBBBB #888888 #888888 #BBBBBB;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.5);
 }
 .widgetProgressBarMeter {
     height: 14px;
