@@ -327,7 +327,7 @@
 .widgetOverlayMessage {
     display: inline-block;
     position: relative;
-    margin-top: 25%;
+    top: 25%;
     border: 1px solid #CCDDEE;
     border-radius: 10px 10px;
     padding: 30px 60px;
