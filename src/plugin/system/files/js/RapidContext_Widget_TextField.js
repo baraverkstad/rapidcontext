@@ -175,6 +175,7 @@ RapidContext.Widget.TextField.prototype.showPopup = function (attrs, items) {
             if (typeof(items[i]) == "string") {
                 var node = MochiKit.DOM.DIV({ "class": "widgetPopupItem" },
                                             "\u00BB " + items[i]);
+                node.value = items[i];
                 popup.appendChild(node);
             } else {
                 MochiKit.DOM.appendChildNodes(popup, items[i]);
@@ -200,7 +201,7 @@ RapidContext.Widget.TextField.prototype._handleFocus = function (evt) {
         this.focused = false;
         this.storedValue = this.value;
         var popup = this.popup();
-        if (popup != null && !popup.isHidden()) {
+        if (popup && !popup.isHidden()) {
             popup.setAttrs({ delay: 250 });
         }
     }
