@@ -260,7 +260,7 @@
 
 <!-- ============================== constructor details ==================== -->		
 			<if test="!data.isBuiltin() && (data.isNamespace || data.is('CONSTRUCTOR'))">
-			<div class="details"><a name="constructor"> </a>
+			<div id="constructor" class="details">
 				<div class="sectionTitle">
 					{+classType+}Detail
 				</div>
@@ -355,8 +355,7 @@
 					Field Detail
 				</div>
 				<for each="member" in="ownProperties">
-					<a name="{+Link.symbolNameToLinkName(member)+}"> </a>
-					<div class="fixedFont">{!
+					<div id="{+Link.symbolNameToLinkName(member)+}" class="fixedFont">{!
 						if (member.isPrivate) output += "&lt;private&gt; ";
 						if (member.isInner) output += "&lt;inner&gt; ";
 						if (member.isStatic) output += "&lt;static&gt; ";
@@ -423,8 +422,7 @@
 					Method Detail
 				</div>
 				<for each="member" in="ownMethods">
-					<a name="{+Link.symbolNameToLinkName(member)+}"> </a>
-					<div class="fixedFont">{!
+					<div id="{+Link.symbolNameToLinkName(member)+}" class="fixedFont">{!
 						if (member.isPrivate) output += "&lt;private&gt; ";
 						if (member.isInner) output += "&lt;inner&gt; ";
 						if (member.isStatic) output += "&lt;static&gt; ";
@@ -522,8 +520,7 @@
 					Event Detail
 				</div>
 				<for each="member" in="ownEvents">
-					<a name="{+Link.symbolNameToLinkName(member)+}"> </a>
-					<div class="fixedFont">{!
+					<div id="{+Link.symbolNameToLinkName(member)+}" class="fixedFont">{!
 						if (member.isPrivate) output += "&lt;private&gt; ";
 						if (member.isInner) output += "&lt;inner&gt; ";
 						if (member.isStatic) output += "&lt;static&gt; ";
