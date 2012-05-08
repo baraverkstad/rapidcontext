@@ -85,20 +85,20 @@
         <h3 style="padding-top: 15px; border-top: 1px solid #ACF;">Progress Widgets:</h3>
         <fieldset w="100%-20">
           <legend>Progress Bar</legend>
-          <div>
+          <Form id="progressForm">
             <label class="label" style="margin-right: 10px;">
-              <input type="checkbox" checked="checked"/> Ratio (Percent)
+              <input type="checkbox" name="ratio" checked="checked"/> Ratio (Percent)
             </label>
             <label class="label" style="margin-right: 10px;">
-              <input type="checkbox" checked="checked"/> Position
+              <input type="checkbox" name="value" checked="checked"/> Value (Step)
             </label>
             <label class="label" style="margin-right: 10px;">
-              <input type="checkbox" /> Information Text
+              <input type="checkbox" name="text" /> Information Text
             </label>
             <label class="label">
-              <input type="checkbox" checked="checked"/> Time Remaining
+              <input type="checkbox" name="time" checked="checked"/> Time Remaining
             </label>
-          </div>
+          </Form>
           <ProgressBar id="progressBar" style="margin: 10px 0;" />
         </fieldset>
         <fieldset w="100%-20" h="200">

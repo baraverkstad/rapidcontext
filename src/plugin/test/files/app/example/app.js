@@ -18,6 +18,7 @@ ExampleApp.prototype.start = function() {
     });
 
     // Attach signal handlers
+    MochiKit.Signal.connect(this.ui.progressForm, "onclick", this, "progressConfig");
     RapidContext.UI.connectProc(this.proc.appList, this.ui.appLoading, this.ui.appReload);
     MochiKit.Signal.connect(this.proc.appList, "oncall", this.ui.appTable, "clear");
     MochiKit.Signal.connect(this.proc.appList, "onsuccess", this.ui.appTable, "setData");
@@ -32,7 +33,7 @@ ExampleApp.prototype.start = function() {
     // Initialize data
     this.proc.appList();
     this.initIcons();
-    this.interval = setInterval(MochiKit.Base.method(this, "updateProgress"), 500);
+    this.interval = setInterval(MochiKit.Base.method(this, "progressUpdate"), 500);
 };
 
 /**
@@ -42,6 +43,31 @@ ExampleApp.prototype.stop = function() {
     // Usually not much to do here
     clearInterval(this.interval);
 };
+
+/**
+ * Modify the progress bar style.
+ */
+ExampleApp.prototype.progressConfig = function () {
+    var cfg = this.ui.progressForm.valueMap();
+    var attrs = {};
+    attrs.text = cfg.text ? "Doing Random Stuff" : null;
+    attrs.noratio = !cfg.ratio;
+    attrs.novalue = !cfg.value;
+    attrs.notime = !cfg.time;
+    this.ui.progressBar.setAttrs(attrs);
+}
+
+/**
+ * Updates the progress bar value.
+ */
+ExampleApp.prototype.progressUpdate = function () {
+    this.progress += 0.5
+    if (this.progress >= 110) {
+        this.progress = 0;
+        this.ui.progressBar.setAttrs({ min: 0, max: 100 });
+    }
+    this.ui.progressBar.setAttrs({ value: Math.floor(this.progress) });
+}
 
 /**
  * Handle autocomplete events.
@@ -65,18 +91,6 @@ ExampleApp.prototype.autoselect = function () {
     var value = popup.selectedChild().value;
     popup.hide();
     this.ui.popupField.setAttrs({ value: value });
-}
-
-/**
- * Animate the progress bar.
- */
-ExampleApp.prototype.updateProgress = function () {
-    this.progress += 0.5
-    if (this.progress >= 110) {
-        this.progress = 0;
-        this.ui.progressBar.setAttrs({ min: 0, max: 100 });
-    }
-    this.ui.progressBar.setValue(Math.floor(this.progress));
 }
 
 /**
