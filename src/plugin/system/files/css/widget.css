@@ -533,6 +533,7 @@
  * Table Style
  */
 div.widgetTable {
+    position: relative;
     overflow-x: hidden;
     overflow-y: auto;
 }
@@ -659,6 +660,7 @@ th.widgetTableColumn.sortDesc {
  * Tree Style
  */
 .widgetTree {
+    position: relative;
     overflow: auto;
     border: 1px solid #ccc;
     background: white;

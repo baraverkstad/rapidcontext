@@ -35,7 +35,7 @@ RapidContext.Widget.Tree = function (attrs/*, ...*/) {
     var o = MochiKit.DOM.DIV(attrs);
     RapidContext.Widget._widgetMixin(o, arguments.callee);
     o.addClass("widgetTree");
-    o.resizeContent = MochiKit.Base.noop;
+    o.resizeContent = o._resizeContent;
     o.selectedPath = null;
     o.setAttrs(attrs);
     o.addAll(MochiKit.Base.extend(null, arguments, 1));
@@ -251,4 +251,18 @@ RapidContext.Widget.Tree.prototype.addPath = function (path) {
         node = child;
     }
     return node;
+};
+
+/**
+ * Called when tree content should be resized. This method is also called when
+ * the widget is made visible in a container after being hidden.
+ */
+RapidContext.Widget.Tree.prototype._resizeContent = function () {
+    // Work-around to restore scrollTop for WebKit browsers
+    if (this.scrollTop == 0 && this.selectedPath) {
+        var node = this.selectedChild();
+        var h = this.clientHeight;
+        var y = node.offsetTop + node.offsetHeight;
+        this.scrollTop = Math.round(y - h / 2);
+    }
 };

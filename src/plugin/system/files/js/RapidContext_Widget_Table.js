@@ -47,11 +47,11 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
 RapidContext.Widget.Table = function (attrs/*, ...*/) {
     var thead = MochiKit.DOM.THEAD({}, MochiKit.DOM.TR());
     var tbody = MochiKit.DOM.TBODY();
-    tbody.resizeContent = MochiKit.Base.noop;
     var table = MochiKit.DOM.TABLE({ "class": "widgetTable" }, thead, tbody);
     var o = MochiKit.DOM.DIV({}, table);
     RapidContext.Widget._widgetMixin(o, arguments.callee);
     o.addClass("widgetTable");
+    o.resizeContent = o._resizeContent;
     o._rows = [];
     o._data = null;
     o._keyField = null;
@@ -655,4 +655,22 @@ RapidContext.Widget.Table.prototype._unmarkSelection = function (indexOrNull) {
         var tr = tbody.childNodes[indexOrNull];
         MochiKit.DOM.removeElementClass(tr, "selected");
     }
+};
+
+/**
+ * Called when table content should be resized. This method is also called when
+ * the widget is made visible in a container after being hidden.
+ */
+RapidContext.Widget.Table.prototype._resizeContent = function () {
+    // Work-around to restore scrollTop for WebKit browsers
+    if (this.scrollTop == 0 && this._selected.length > 0) {
+        var index = this._selected[0];
+        var tbody = this.firstChild.lastChild;
+        var tr = tbody.childNodes[index];
+        var h = this.clientHeight;
+        var y = tr.offsetTop + tr.offsetHeight;
+        this.scrollTop = Math.round(y - h / 2);
+    }
+    var thead = this.firstChild.firstChild;
+    RapidContext.Util.resizeElements(thead);
 };
