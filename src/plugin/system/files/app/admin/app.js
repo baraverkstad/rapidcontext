@@ -300,7 +300,7 @@ AdminApp.prototype._showConnection = function () {
     }
     if (data.plugin && data.id) {
         this.ui.cxnEdit.show();
-        var url = "/rapidcontext/storage/connection/" + data.id;
+        var url = "rapidcontext/storage/connection/" + data.id;
         MochiKit.DOM.setNodeAttribute(this.ui.cxnLink, "href", url);
         MochiKit.DOM.removeElementClass(this.ui.cxnLink, "hidden");
     } else {
@@ -539,7 +539,7 @@ AdminApp.prototype._showApp = function () {
             }
         }
         MochiKit.DOM.replaceChildNodes(this.ui.appIcon, img);
-        var url = "/rapidcontext/storage/app/" + data.id;
+        var url = "rapidcontext/storage/app/" + data.id;
         MochiKit.DOM.setNodeAttribute(this.ui.appLink, "href", url);
         MochiKit.DOM.removeElementClass(this.ui.appLink, "hidden");
         this.ui.appResourceTable.show();
@@ -586,7 +586,7 @@ AdminApp.prototype._showPlugin = function () {
         this.ui.pluginForm.update(data);
         MochiKit.DOM.removeElementClass(this.ui.pluginLink, "hidden");
         var path = "/storage/plugin/" + data.id + "/";
-        var url = "/rapidcontext/storage" + path;
+        var url = "rapidcontext/storage" + path;
         MochiKit.DOM.setNodeAttribute(this.ui.pluginLink, "href", url);
         if (data.loaded) {
             this.ui.pluginLoad.hide();
