@@ -92,8 +92,6 @@ function html(str) {
     if (str == null) return "";
     str = str.toString();
     str = str.replace(/&/g, "&amp;");
-    str = str.replace(/\"/g, "&quot;");
-    str = str.replace(/\'/g, "&apos;");
     str = str.replace(/</g, "&lt;");
     str = str.replace(/>/g, "&gt;");
     return str;
@@ -184,6 +182,10 @@ function makeSignature(params) {
 /** Find symbol {@link ...} strings in text and turn into html links */
 function resolveLinks(str, from) {
     str = html(str);
+    str = str.replace(/(\n|\r\n|\r){2,}/g, "<br/><br/>");
+    str = str.replace(/`([^`\n]+)`/g, "<var>$1</var>");
+    str = str.replace(/"([^"\n]+)"/g, "<q>$1</q>");
+    str = str.replace(/'([^'\n]+)'/g, "<q>$1</q>");
     str = str.replace(/\{@link ([^} ]+) ?\}/gi,
         function(match, symbolName) {
             return new Link().toSymbol(symbolName);
