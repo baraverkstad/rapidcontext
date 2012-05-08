@@ -623,6 +623,15 @@ th.widgetTableColumn.sortDesc {
 .widgetTextAreaHelp {
     color: #888;
 }
+.widgetTextArea:-moz-placeholder {
+    color: #888;
+}
+.widgetTextArea:-ms-input-placeholder {
+    color: #888;
+}
+.widgetTextArea::-webkit-input-placeholder {
+    color: #888;
+}
 
 
 /**
@@ -652,6 +661,15 @@ th.widgetTableColumn.sortDesc {
     background: white;
 }
 .widgetTextFieldHelp {
+    color: #888;
+}
+.widgetTextField:-moz-placeholder {
+    color: #888;
+}
+.widgetTextField:-ms-input-placeholder {
+    color: #888;
+}
+.widgetTextField::-webkit-input-placeholder {
     color: #888;
 }
 

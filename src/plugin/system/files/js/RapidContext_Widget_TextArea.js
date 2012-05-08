@@ -85,7 +85,12 @@ RapidContext.Widget.TextArea.prototype.setAttrs = function (attrs) {
     attrs = MochiKit.Base.update({}, attrs);
     var locals = RapidContext.Util.mask(attrs, ["helpText", "value"]);
     if (typeof(locals.helpText) != "undefined") {
-        this.helpText = MochiKit.Format.strip(locals.helpText);
+        var str = MochiKit.Format.strip(locals.helpText);
+        if ("placeholder" in this) {
+            attrs.placeholder = str;
+        } else {
+            this.helpText = str;
+        }
     }
     if (typeof(locals.value) != "undefined") {
         this.value = this.storedValue = locals.value;
@@ -157,7 +162,7 @@ RapidContext.Widget.TextArea.prototype._handleFocus = function (evt) {
 RapidContext.Widget.TextArea.prototype._render = function () {
     var value = this.getValue();
     var str = MochiKit.Format.strip(value);
-    if (!this.focused && str == "" && this.helpText != "") {
+    if (!this.focused && str == "" && this.helpText) {
         this.value = this.helpText;
         this.addClass("widgetTextAreaHelp");
     } else {

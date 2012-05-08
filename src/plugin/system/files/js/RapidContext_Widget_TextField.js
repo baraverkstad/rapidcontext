@@ -93,7 +93,12 @@ RapidContext.Widget.TextField.prototype.setAttrs = function (attrs) {
     attrs = MochiKit.Base.update({}, attrs);
     var locals = RapidContext.Util.mask(attrs, ["helpText", "value"]);
     if (typeof(locals.helpText) != "undefined") {
-        this.helpText = locals.helpText;
+        var str = MochiKit.Format.strip(locals.helpText);
+        if ("placeholder" in this) {
+            attrs.placeholder = str;
+        } else {
+            this.helpText = str;
+        }
     }
     if (typeof(locals.value) != "undefined") {
         this.value = this.storedValue = locals.value;
@@ -193,12 +198,15 @@ RapidContext.Widget.TextField.prototype.showPopup = function (attrs, items) {
  * @param evt the `MochiKit.Signal.Event` object
  */
 RapidContext.Widget.TextField.prototype._handleFocus = function (evt) {
+    var value = this.getValue();
     if (evt.type() == "focus") {
         this.focused = true;
-        this.value = this.storedValue;
+        if (this.value != value) {
+            this.value = value
+        }
     } else if (evt.type() == "blur") {
         this.focused = false;
-        this.storedValue = this.value;
+        this.storedValue = value;
         var popup = this.popup();
         if (popup && !popup.isHidden()) {
             popup.setAttrs({ delay: 250 });
@@ -267,13 +275,15 @@ RapidContext.Widget.TextField.prototype._handleClick = function (evt) {
  * Updates the display of the widget content.
  */
 RapidContext.Widget.TextField.prototype._render = function () {
-    var strip = MochiKit.Format.strip;
-    var str = this.getValue();
-    if (!this.focused && strip(str) == "" && strip(this.helpText) != "") {
+    var value = this.getValue();
+    var str = MochiKit.Format.strip(value);
+    if (!this.focused && str == "" && this.helpText) {
         this.value = this.helpText;
         this.addClass("widgetTextFieldHelp");
     } else {
-        this.value = str;
+        if (this.value != value) {
+            this.value = value;
+        }
         this.removeClass("widgetTextFieldHelp");
     }
 };
