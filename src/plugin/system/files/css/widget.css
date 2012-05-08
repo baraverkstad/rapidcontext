@@ -224,7 +224,7 @@
     background-repeat: no-repeat;
     background-position: 0px 0px;
     cursor: pointer;
-    vertical-align: -20%;
+    vertical-align: -25%;
     /* MSIE 7: Fix for CSS vertical-align not working correctly. */
     *vertical-align: 0;
 }
