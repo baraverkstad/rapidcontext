@@ -85,7 +85,7 @@ RapidContext.Widget.TextArea.prototype.setAttrs = function (attrs) {
     attrs = MochiKit.Base.update({}, attrs);
     var locals = RapidContext.Util.mask(attrs, ["helpText", "value"]);
     if (typeof(locals.helpText) != "undefined") {
-        this.helpText = locals.helpText;
+        this.helpText = MochiKit.Format.strip(locals.helpText);
     }
     if (typeof(locals.value) != "undefined") {
         this.value = this.storedValue = locals.value;
@@ -138,13 +138,15 @@ RapidContext.Widget.TextArea.prototype.getValue = function () {
  * @param evt the MochiKit.Signal.Event object
  */
 RapidContext.Widget.TextArea.prototype._handleFocus = function (evt) {
-    var str = this.getValue();
+    var value = this.getValue();
     if (evt.type() == "focus") {
         this.focused = true;
-        this.value = str
+        if (this.value != value) {
+            this.value = value
+        }
     } else if (evt.type() == "blur") {
         this.focused = false;
-        this.storedValue = str;
+        this.storedValue = value;
     }
     this._render();
 };
@@ -153,13 +155,15 @@ RapidContext.Widget.TextArea.prototype._handleFocus = function (evt) {
  * Updates the display of the widget content.
  */
 RapidContext.Widget.TextArea.prototype._render = function () {
-    var strip = MochiKit.Format.strip;
-    var str = this.getValue();
-    if (!this.focused && strip(str) == "" && strip(this.helpText) != "") {
+    var value = this.getValue();
+    var str = MochiKit.Format.strip(value);
+    if (!this.focused && str == "" && this.helpText != "") {
         this.value = this.helpText;
         this.addClass("widgetTextAreaHelp");
     } else {
-        this.value = str;
+        if (this.value != value) {
+            this.value = value;
+        }
         this.removeClass("widgetTextAreaHelp");
     }
 };
