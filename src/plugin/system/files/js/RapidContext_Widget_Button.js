@@ -34,7 +34,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  * @return {Widget} the widget DOM node
  *
  * @class The button widget class. Used to provide a simple push
- *     button, using the &lt;button&gt; HTML element.
+ *     button, using the `<button>` HTML element.
  * @extends RapidContext.Widget
  *
  * @example

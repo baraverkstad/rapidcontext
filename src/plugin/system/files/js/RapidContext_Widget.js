@@ -70,11 +70,10 @@ RapidContext.Widget.isWidget = function (obj, className) {
 };
 
 /**
- * Checks if the specified object is a form field. Any non-null
- * object that looks like a DOM node and is either an standard HTML
- * form field (&lt;input&gt;, &lt;textarea&gt; or &lt;select&gt;) or
- * one with a "value" property will cause this function to return
- * true. Otherwise, false will be returned.
+ * Checks if the specified object is a form field. Any non-null object that
+ * looks like a DOM node and is either an standard HTML form field (`<input>`,
+ * `<textarea>` or `<select>`) or one with a "value" property will cause this
+ * function to return true. Otherwise, false will be returned.
  *
  * @param {Object} obj the object to check
  *
@@ -95,13 +94,13 @@ RapidContext.Widget.isFormField = function (obj) {
 };
 
 /**
- * Adds all functions from a widget class to a DOM node. This will
- * also convert the DOM node into a widget by adding the "widget"
- * CSS class and add all the default widget functions from the
- * standard Widget prototype. Functions are added non-destructively,
- * using the prefix "__" on the function name if is was already
- * defined. This means that existing functions will not be
- * overwritten and parent object functions will be available under a
+ * Adds all functions from a widget class to a DOM node. This will also convert
+ * the DOM node into a widget by adding the "widget" CSS class and add all the
+ * default widget functions from `Widget.prototype`.
+ *
+ * Functions are added non-destructively, using the prefix "__" on the function
+ * name if is was already defined. This means that existing functions will not
+ * be overwritten and parent object functions will be available under a
  * different name.
  *
  * @param {Node} node the DOM node to modify
@@ -133,7 +132,7 @@ RapidContext.Widget._widgetMixin = function (node/*, objOrClass, ...*/) {
 /**
  * Creates a new widget with the specified name, attributes and
  * child widgets or DOM nodes. The widget class name must have been
- * registered in the RapidContext.Widget.Classes lookup table, or an
+ * registered in the `RapidContext.Widget.Classes` lookup table, or an
  * exception will be thrown. This function is identical to calling
  * the constructor function directly.
  *
@@ -216,7 +215,7 @@ RapidContext.Widget._eventHandler = function (className, methodName/*, ...*/) {
 /**
  * Emits a signal to any listeners connected with MochiKit.Signal.
  * This function handles errors by logging them to the default error
- * log in MochiKit.Logging.<p>
+ * log in `MochiKit.Logging`.
  *
  * Note that this function is an internal helper function for the
  * widgets and shouldn't be called by external code.
@@ -255,7 +254,7 @@ RapidContext.Widget.prototype.uid = function () {
 
 /**
  * The internal widget destructor function. This method should only
- * be called by destroyWidget() and may be overridden by subclasses.
+ * be called by `destroyWidget()` and may be overridden by subclasses.
  * By default this method does nothing.
  */
 RapidContext.Widget.prototype.destroy = function () {
@@ -288,7 +287,7 @@ RapidContext.Widget.prototype.setAttrs = function (attrs) {
 
 /**
  * Updates the CSS styles of this HTML DOM node. This method is
- * identical to MochiKit.Style.setStyle, but uses "this" as the
+ * identical to `MochiKit.Style.setStyle`, but uses "this" as the
  * first argument.
  *
  * @param {Object} styles an object with the styles to set
@@ -363,9 +362,9 @@ RapidContext.Widget.prototype.toggleClass = function (/* ... */) {
 
 /**
  * Checks if this widget is disabled. This method checks both the
- * "widgetDisabled" CSS class and the "disabled" attribute. Changes
- * to the disabled status can be made with enable(), disable() or
- * setAttrs().
+ * "widgetDisabled" CSS class and the `disabled` property. Changes
+ * to the disabled status can be made with `enable()`, `disable()` or
+ * `setAttrs()`.
  *
  * @return {Boolean} true if the widget is disabled, or
  *         false otherwise
@@ -376,7 +375,7 @@ RapidContext.Widget.prototype.isDisabled = function () {
 };
 
 /**
- * Performs the changes corresponding to setting the "disabled"
+ * Performs the changes corresponding to setting the `disabled`
  * widget attribute.
  *
  * @param {Boolean} value the new attribute value
@@ -394,7 +393,7 @@ RapidContext.Widget.prototype._setDisabled = function (value) {
 
 /**
  * Enables this widget if it was previously disabled. This is
- * equivalent to calling "setAttrs({ disabled: false })".
+ * equivalent to calling `setAttrs({ disabled: false })`.
  */
 RapidContext.Widget.prototype.enable = function () {
     this.setAttrs({ disabled: false });
@@ -402,7 +401,7 @@ RapidContext.Widget.prototype.enable = function () {
 
 /**
  * Disables this widget if it was previously enabled. This method is
- * equivalent to calling "setAttrs({ disabled: true })".
+ * equivalent to calling `setAttrs({ disabled: true })`.
  */
 RapidContext.Widget.prototype.disable = function () {
     this.setAttrs({ disabled: true });
@@ -410,8 +409,8 @@ RapidContext.Widget.prototype.disable = function () {
 
 /**
  * Checks if this widget node is hidden. This method checks for the
- * existence of the "widgetHidden" CSS class. It does NOT check the
- * actual widget visibility (the "display" style property set by
+ * existence of the `widgetHidden` CSS class. It does NOT check the
+ * actual widget visibility (the `display` style property set by
  * animations for example).
  *
  * @return {Boolean} true if the widget is hidden, or
@@ -422,7 +421,7 @@ RapidContext.Widget.prototype.isHidden = function () {
 };
 
 /**
- * Performs the changes corresponding to setting the "hidden"
+ * Performs the changes corresponding to setting the `hidden`
  * widget attribute.
  *
  * @param {Boolean} value the new attribute value
@@ -440,9 +439,9 @@ RapidContext.Widget.prototype._setHidden = function (value) {
 
 /**
  * Shows this widget node if it was previously hidden. This method is
- * equivalent to calling "setAttrs({ hidden: false })". It is safe
- * for all types of widgets, since it only removes the "widgetHidden"
- * CSS class instead of setting the "display" style property.
+ * equivalent to calling `setAttrs({ hidden: false })`. It is safe
+ * for all types of widgets, since it only removes the `widgetHidden`
+ * CSS class instead of setting the `display` style property.
  */
 RapidContext.Widget.prototype.show = function () {
     this.setAttrs({ hidden: false });
@@ -450,9 +449,9 @@ RapidContext.Widget.prototype.show = function () {
 
 /**
  * Hides this widget node if it was previously visible. This method
- * is equivalent to calling "setAttrs({ hidden: true })". It is safe
- * for all types of widgets, since it only adds the "widgetHidden"
- * CSS class instead of setting the "display" style property.
+ * is equivalent to calling `setAttrs({ hidden: true })`. It is safe
+ * for all types of widgets, since it only adds the `widgetHidden`
+ * CSS class instead of setting the `display` style property.
  */
 RapidContext.Widget.prototype.hide = function () {
     this.setAttrs({ hidden: true });
@@ -488,9 +487,9 @@ RapidContext.Widget.prototype.animate = function (opts) {
 };
 
 /**
- * Blurs (unfocuses) this DOM node and all relevant child nodes.
- * This function will recursively blur all A, BUTTON, INPUT,
- * TEXTAREA and SELECT child nodes found.
+ * Blurs (unfocuses) this DOM node and all relevant child nodes. This function
+ * will recursively blur all `<a>`, `<button>`, `<input>`, `<textarea>` and
+ * `<select>` child nodes found.
  */
 RapidContext.Widget.prototype.blurAll = function () {
     RapidContext.Util.blurAll(this);
@@ -498,7 +497,7 @@ RapidContext.Widget.prototype.blurAll = function () {
 
 /**
  * Returns an array with all child DOM nodes. Note that the array is
- * a real JavaScript array, not a dynamic NodeList. This method is
+ * a real JavaScript array, not a dynamic `NodeList`. This method is
  * sometimes overridden by child widgets in order to hide
  * intermediate DOM nodes required by the widget.
  *
@@ -522,7 +521,7 @@ RapidContext.Widget.prototype.addChildNode = function (child) {
 /**
  * Removes a single child DOM node from this widget. This method is
  * sometimes overridden by child widgets in order to hide or control
- * intermediate DOM nodes required by the widget.<p>
+ * intermediate DOM nodes required by the widget.
  *
  * Note that this method will NOT destroy the removed child widget,
  * so care must be taken to ensure proper child widget destruction.
@@ -534,12 +533,12 @@ RapidContext.Widget.prototype.removeChildNode = function (child) {
 };
 
 /**
- * Adds one or more children to this widget. This method will
- * flatten any arrays among the arguments and ignores any null or
- * undefined argument. Any DOM nodes or widgets will be added to the
- * end, and other objects will be converted to a text node first.
- * Subclasses should normally override the addChildNode() method instead
- * of this one, since that is the basis for DOM node insertion.
+ * Adds one or more children to this widget. This method will flatten any
+ * arrays among the arguments and ignores any `null` or `undefined` arguments.
+ * Any DOM nodes or widgets will be added to the end, and other objects will be
+ * converted to a text node first. Subclasses should normally override the
+ * `addChildNode()` method instead of this one, since that is the basis for
+ * DOM node insertion.
  *
  * @param {Object} [...] the children to add
  */
@@ -559,10 +558,10 @@ RapidContext.Widget.prototype.addAll = function (/* ... */) {
 };
 
 /**
- * Removes all children to this widget. This method will also destroy
- * and child widgets and disconnect all signal listeners. This method
- * uses the getChildNodes() and removeChildNode() methods to find and
- * remove the individual child nodes.
+ * Removes all children to this widget. This method will also destroy and child
+ * widgets and disconnect all signal listeners. This method uses the
+ * `getChildNodes()` and `removeChildNode()` methods to find and remove the
+ * individual child nodes.
  */
 RapidContext.Widget.prototype.removeAll = function () {
     var children = this.getChildNodes();

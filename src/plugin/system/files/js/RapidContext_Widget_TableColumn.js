@@ -37,16 +37,16 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *            set for a single column per table
  * @param {String} [attrs.tooltip] the tooltip text to display on the
  *            column header
- * @param {Function} [attrs.renderer] the function that renders the
- *            converted data value into a table cell, called with the
- *            TD DOM node, field value and data object as arguments
- *            (in that order)
+ * @param {Function} [attrs.renderer] the function that renders the converted
+ *            data value into a table cell, called as
+ *            `renderer(<td>, value, data)` with the DOM node, field value and
+ *            data object as arguments
  *
  * @return {Widget} the widget DOM node
  *
- * @class The table column widget class. Used to provide a sortable
- *     data table column, using a &lt;th&gt; HTML element for the
- *     header (and rendering data to &lt;td&gt; HTML elements).
+ * @class The table column widget class. Used to provide a sortable data table
+ *     column, using a `<th>` HTML element for the header (and rendering data
+ *     to `<td>` HTML elements).
  * @extends RapidContext.Widget
  */
 RapidContext.Widget.TableColumn = function (attrs) {
@@ -84,10 +84,10 @@ RapidContext.Widget.Classes.TableColumn = RapidContext.Widget.TableColumn;
  *            set for a single column per table
  * @param {String} [attrs.tooltip] the tooltip text to display on the
  *            column header
- * @param {Function} [attrs.renderer] the function that renders the
- *            converted data value into a table cell, called with the
- *            TD DOM node, field value and data object as arguments
- *            (in that order)
+ * @param {Function} [attrs.renderer] the function that renders the converted
+ *            data value into a table cell, called as
+ *            `renderer(<td>, value, data)` with the DOM node, field value and
+ *            data object as arguments
  */
 RapidContext.Widget.TableColumn.prototype.setAttrs = function (attrs) {
     attrs = MochiKit.Base.update({}, attrs);

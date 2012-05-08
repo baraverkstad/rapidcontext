@@ -26,10 +26,9 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *
  * @return {Widget} the widget DOM node
  *
- * @class The navigation bar widget class. Used to show step-based
- *     progress or location in a tree structure. In both cases, it
- *     allows the user to go back to a previous step. The widget
- *     uses a &lt;table&gt; HTML element.
+ * @class The navigation bar widget class. Used to show step-based progress or
+ *     location in a tree structure. In both cases, it allows the user to go
+ *     back to a previous step. The widget uses a `<table>` HTML element.
  * @extends RapidContext.Widget
  * @property {Number} position The current position in the path (from 0)
  * @property {Number} maxPosition The maximum position reached when
@@ -58,7 +57,7 @@ RapidContext.Widget.Classes.NavigationBar = RapidContext.Widget.NavigationBar;
 /**
  * Emitted when the navigation position changes. This is triggered
  * either by the user moving forward or backward, or by a call to the
- * moveTo() method. This event signal carries a reference to the
+ * `moveTo()` method. This event signal carries a reference to the
  * widget itself.
  *
  * @name RapidContext.Widget.NavigationBar#onchange

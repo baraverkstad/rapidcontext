@@ -32,10 +32,10 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *
  * @return {Widget} the widget DOM node
  *
- * @class The tree node widget class. Used to provide a tree node in
- *     a tree, using a number of &lt;div&gt; HTML elements. Note that
- *     events should normally not be listened for on individual tree
- *     nodes, but rather on the tree as a whole.
+ * @class The tree node widget class. Used to provide a tree node in a tree,
+ *     using a number of `<div>` HTML elements. Note that events should
+ *     normally not be listened for on individual tree nodes, but rather on
+ *     the tree as a whole.
  * @extends RapidContext.Widget
  */
 RapidContext.Widget.TreeNode = function (attrs/*, ...*/) {
@@ -143,7 +143,7 @@ RapidContext.Widget.TreeNode.prototype.setAttrs = function (attrs) {
 
 /**
  * Returns an array with all child tree node widgets. Note that the
- * array is a real JavaScript array, not a dynamic NodeList.
+ * array is a real JavaScript array, not a dynamic `NodeList`.
  *
  * @return {Array} the array of child tree node widgets
  */
@@ -205,7 +205,7 @@ RapidContext.Widget.TreeNode.prototype.removeAllMarked = function () {
  * modified. This function makes tree pruning possible, by initially
  * marking all tree nodes (clearing any previous modified flag),
  * touching all nodes to be kept, and finally calling the
- * removeAllMarked() method to remove the remaining nodes.
+ * `removeAllMarked()` method to remove the remaining nodes.
  */
 RapidContext.Widget.TreeNode.prototype.markAll = function () {
     this.marked = true;

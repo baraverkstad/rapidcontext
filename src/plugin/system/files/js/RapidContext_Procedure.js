@@ -33,7 +33,7 @@ if (typeof(RapidContext) == "undefined") {
  *   using deferred callbacks). The actual call is performed with a normal
  *   function call, but the results are asynchronous. When called, the
  *   procedure function returns a deferred object (as the normal API call),
- *   but the results will also be signalled through the "onsuccess" signal.
+ *   but the results will also be signalled through the `onsuccess` signal.
  *   Differing from normal functions, a procedure function will also ensure
  *   that only a single call is in progress at any time, automatically
  *   cancelling any previous call if needed.
@@ -69,7 +69,7 @@ RapidContext.Procedure.mapAll = function (obj) {
 
 /**
  * Emitted when the procedure is called. Each call corresponds to exactly one
- * "oncall" and one "onresponse" event (even if the call was cancelled). No
+ * `oncall` and one `onresponse` event (even if the call was cancelled). No
  * event data will be sent.
  *
  * @name RapidContext.Procedure#oncall
@@ -78,8 +78,8 @@ RapidContext.Procedure.mapAll = function (obj) {
 
 /**
  * Emitted if a partial procedure result is available. This event will only be
- * emitted when performing a multi-call, along with the  "oncall" and
- * "onresponse" events (for each call). The partial procedure result will be
+ * emitted when performing a multi-call, along with the `oncall` and
+ * `onresponse` events (for each call). The partial procedure result will be
  * sent as the event data.
  *
  * @name RapidContext.Procedure#onupdate
@@ -88,7 +88,7 @@ RapidContext.Procedure.mapAll = function (obj) {
 
 /**
  * Emitted when the procedure response has been received. Each call corresponds
- * to exactly one "oncall" and one "onresponse" event (even if the call was
+ * to exactly one `oncall` and one `onresponse` event (even if the call was
  * cancelled). The call response or error object will be sent as the event
  * data.
  *
@@ -98,8 +98,8 @@ RapidContext.Procedure.mapAll = function (obj) {
 
 /**
  * Emitted when a procedure call returned a result. This event is emitted after
- * the "onresponse" event, but only if the procedure call actually succeeded.
- * Use the "onerror" or "oncancel" signals for other result statuses. The call
+ * the `onresponse` event, but only if the procedure call actually succeeded.
+ * Use the `onerror` or `oncancel` signals for other result statuses. The call
  * response object will be sent as the event data.
  *
  * @name RapidContext.Procedure#onsuccess
@@ -108,8 +108,8 @@ RapidContext.Procedure.mapAll = function (obj) {
 
 /**
  * Emitted when a procedure call failed. This event is emitted after the
- * "onresponse" event, but only if the procedure call returned an error. Use
- * the "onsuccess" or "oncancel" for other result statuses. The call error
+ * `onresponse` event, but only if the procedure call returned an error. Use
+ * the `onsuccess` or `oncancel` for other result statuses. The call error
  * object will be sent as the event data.
  *
  * @name RapidContext.Procedure#onerror
@@ -118,8 +118,8 @@ RapidContext.Procedure.mapAll = function (obj) {
 
 /**
  * Emitted when a procedure call was cancelled. This event is emitted after the
- * "onresponse" event, but only if the procedure call was cancelled. Use the
- * "onsuccess" or "onerror" for other result statuses. No event data will be
+ * `onresponse` event, but only if the procedure call was cancelled. Use the
+ * `onsuccess` or `onerror` for other result statuses. No event data will be
  * sent.
  *
  * @name RapidContext.Procedure#oncancel
@@ -129,7 +129,7 @@ RapidContext.Procedure.mapAll = function (obj) {
 /**
  * Calls the procedure with the same arguments as used in the last call. The
  * call is asynchronous, so results will not be returned by this method.
- * Instead the results will be available through the "onsuccess" signal, for
+ * Instead the results will be available through the `onsuccess` signal, for
  * example. Note that any previously running call will automatically be
  * cancelled, since only a single call can be processed at any time.
  *
@@ -170,7 +170,7 @@ RapidContext.Procedure.prototype._callback = function (res) {
  * Calls the procedure multiple times with different arguments (supplied as
  * an array of argument arrays). The calls are asynchronous, so results will
  * not be returned by this method. Instead an array with the results will be
- * available through the "onupdate" and "onsuccess" signals, for example. Note
+ * available through the `onupdate` and `onsuccess` signals, for example. Note
  * that any previously running call will automatically be cancelled, since
  * only a single call can be processed at any time. A result transform
  * function can be supplied to transform each individual result or throwing an

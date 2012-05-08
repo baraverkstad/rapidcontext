@@ -39,8 +39,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  * @return {Widget} the widget DOM node
  *
  * @class The field widget class. This widget is useful for providing
- *     visible display of form data, using a &lt;span&gt; HTML
- *     element.
+ *     visible display of form data, using a `<span>` HTML element.
  * @extends RapidContext.Widget
  *
  * @example
@@ -106,7 +105,7 @@ RapidContext.Widget.Field.prototype.setAttrs = function (attrs) {
 
 /**
  * Redraws the field from updated values or status. Note that this
- * method is called automatically whenever the setAttrs() method is
+ * method is called automatically whenever the `setAttrs()` method is
  * called.
  */
 RapidContext.Widget.Field.prototype.redraw = function () {

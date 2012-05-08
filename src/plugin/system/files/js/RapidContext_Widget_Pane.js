@@ -27,20 +27,19 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *            a page container, defaults to "Page"
  * @param {String/Object} [attrs.pageStatus] the page status used
  *            when inside a page container, use one of the predefined
- *            status constants in this class, defaults to "ANY"
+ *            status constants in this class, defaults to `ANY`
  * @param {Boolean} [attrs.pageCloseable] the page closeable flag
  *            used when inside some page containers, defaults to
- *            false
+ *            `false`
  * @param {Object} [...] the child widgets or DOM nodes
  *
  * @return {Widget} the widget DOM node
  *
- * @class The pane widget class. Used to create the simplest form of
- *     element container. It is also used inside various types of
- *     paged containers, such as a TabContainer, a Wizard and
- *     similar. A pane only uses a &lt;div&gt; HTML element, and
- *     supports being hidden and shown according to any page
- *     transitions required by a parent container.
+ * @class The pane widget class. Used to create the simplest form of element
+ *     container. It is also used inside various types of paged containers,
+ *     such as a `TabContainer`, a `Wizard` and similar. A pane only uses a
+ *     `<div>` HTML element, and supports being hidden and shown according to
+ *     any page transitions required by a parent container.
  * @property {String} pageTitle [read-only] The current page title.
  * @property {Object} pageStatus [read-only] The current page status.
  * @property {Boolean} pageCloseable [read-only] The current page
@@ -76,7 +75,7 @@ RapidContext.Widget.Classes.Pane = RapidContext.Widget.Pane;
  */
 
 /**
- * Emitted when the pane is closed (removed) in a TabContainer. This
+ * Emitted when the pane is closed (removed) in a `TabContainer`. This
  * event signal carries no event information.
  *
  * @name RapidContext.Widget.Pane#onclose
@@ -164,7 +163,7 @@ RapidContext.Widget.Pane.prototype.setAttrs = function (attrs) {
 
 /**
  * Handles the page enter event. This method is called by a parent
- * page container widget, such as a TabContainer or a Wizard. It will
+ * page container widget, such as a `TabContainer` or a `Wizard`. It will
  * reset the form validations (optional), show the pane (optional),
  * and finally trigger the "onenter" event.
  *
@@ -192,7 +191,7 @@ RapidContext.Widget.Pane.prototype._handleEnter = function (opts) {
 
 /**
  * Handles the page exit event. This method is called by a parent
- * page container widget, such as a TabContainer or a Wizard. It will
+ * page container widget, such as a `TabContainer` or a `Wizard`. It will
  * validate the form (optional), unfocus all form fields, hide the
  * pane (optional), and finally trigger the "onexit" event.
  *

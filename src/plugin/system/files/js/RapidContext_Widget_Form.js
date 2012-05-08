@@ -27,9 +27,9 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *
  * @return {Widget} the widget DOM node
  *
- * @class The form widget class. Provides a grouping for form fields,
- *     using the &lt;form&gt; HTML element. The form widget supports
- *     form reset, validation and data retrieval.
+ * @class The form widget class. Provides a grouping for form fields, using the
+ *     `<form>` HTML element. The form widget supports form reset, validation
+ *     and data retrieval.
  * @extends RapidContext.Widget
  */
 RapidContext.Widget.Form = function (attrs/*, ...*/) {
@@ -51,7 +51,7 @@ RapidContext.Widget.Classes.Form = RapidContext.Widget.Form;
 /**
  * Returns an array with all child DOM nodes containing form fields.
  * The child nodes will be returned based on the results of the
- * RapidContext.Widget.isFormField() function.
+ * `RapidContext.Widget.isFormField()` function.
  *
  * @return {Array} the array of form field elements
  */

@@ -48,11 +48,11 @@ if (!JSON.stringify) {
  * Creates a dictionary object from a list of keys and values.
  * Optionally a list of key-value pairs can be provided instead. As
  * a third option, a single (non-array) value can be assigned to all
- * the keys.<p>
+ * the keys.
  *
  * If a key is specified twice, only the last value will be used.
- * Note that this function is the reverse of MochiKit.Base.items(),
- * MochiKit.Base.keys() and MochiKit.Base.values().
+ * Note that this function is the reverse of `MochiKit.Base.items()`,
+ * `MochiKit.Base.keys()` and `MochiKit.Base.values()`.
  *
  * @param {Array} itemsOrKeys the list of keys or items
  * @param {Array} [values] the list of values (optional if key-value
@@ -137,7 +137,7 @@ RapidContext.Util.mask = function (src, keys) {
 /**
  * Converts a string to a title-cased string. All word boundaries
  * are replaced with a single space and the subsequent character is
- * capitalized.<p>
+ * capitalized.
  *
  * All underscore ("_"), hyphen ("-") and lower-upper character
  * pairs are recognized as word boundaries. Note that this function
@@ -176,9 +176,9 @@ RapidContext.Util.toTitleCase = function (str) {
 };
 
 /**
- * Returns the name of a function. If the function is anonymous (i.e.
- * the <code>name</code> property is undefined or blank), the value
- * of the <code>displayName</code> property is returned instead.
+ * Returns the name of a function. If the function is anonymous (i.e. the
+ * `name` property is undefined or blank), the value of the `displayName`
+ * property is returned instead.
  *
  * @param {Function} func the function to check
  *
@@ -203,14 +203,13 @@ RapidContext.Util.functionName = function (func) {
 };
 
 /**
- * Registers function names for anonymous functions. This is useful
- * when debugging code in Firebug or similar tools, as readable stack
- * traces can be provided.<p>
+ * Registers function names for anonymous functions. This is useful when
+ * debugging code in Firebug or similar tools, as readable stack traces can be
+ * provided.
  *
- * This function will add a <code>displayName</code> property to all
- * functions without a <code>name</code> property. Object properties
- * and prototype properties are processed recursively, adding to the
- * supplied base name (e.g. <code>[name].[property name]</code>).
+ * This function will add a `displayName` property to all functions without a
+ * `name` property. Object properties and prototype properties are processed
+ * recursively, adding to the supplied base name (e.g. `[name].[property name]`).
  *
  * @param {Object} obj the function or object to process
  * @param {String} [name] the function or object (class) name
@@ -416,7 +415,7 @@ RapidContext.Util.NS.HTML = [undefined, null, '', RapidContext.Util.NS.XHTML];
 /**
  * Returns true if the specified object looks like a DOM node.
  * Otherwise, false will be returned. Any non-null object with a
- * nodeType > 0 will be considered a DOM node by this function.
+ * `nodeType` > 0 will be considered a DOM node by this function.
  *
  * @param {Object} obj the object to check
  *
@@ -432,7 +431,7 @@ RapidContext.Util.isDOM = function (obj) {
 /**
  * Returns true if the specified object looks like an HTML or XHTML
  * DOM node. Otherwise, false will be returned. Any non-null object
- * with a nodeType > 0 will be considered a DOM node, but only those
+ * with a `nodeType` > 0 will be considered a DOM node, but only those
  * with a matching namespaceURI will be considered HTML DOM nodes.
  *
  * @param {Object} obj the object to check
@@ -448,7 +447,7 @@ RapidContext.Util.isHTML = function (obj) {
 
 /**
  * Creates a programmers debug representation of a DOM node. This
- * method is similar to MochiKit.DOM.emitHtml, except for that it
+ * method is similar to `MochiKit.DOM.emitHtml`, except for that it
  * does not recurse into child nodes.
  *
  * @param {Object} node the HTML DOM node
@@ -555,8 +554,8 @@ RapidContext.Util.createDOMExt = function (ns, tag, attrs/*, ...*/) {
 
 /**
  * Creates a DOM text node from the specified text. This is a
- * convenience function for currentDocument().createTextNode, in
- * order to be compatible with the withDocument() function.
+ * convenience function for `currentDocument().createTextNode`, in
+ * order to be compatible with the `withDocument()` function.
  *
  * @param {String} text the text content
  *
@@ -571,7 +570,7 @@ RapidContext.Util.createTextNode = function (text) {
  * returned function will optionally require a sequence of non-null
  * arguments that will be added as attributes to the node creation.
  * The returned function will otherwise work similar to the
- * createDOMExt() function, taking attributes and child nodes.
+ * `createDOMExt()` function, taking attributes and child nodes.
  *
  * @param {String} ns the DOM namespace, or null for HTML
  * @param {String} tag the DOM tag name
@@ -603,9 +602,9 @@ RapidContext.Util.createDOMFuncExt = function (ns, tag, args, attrs/*, ...*/) {
 };
 
 /**
- * Blurs (unfocuses) a specified DOM node and all relevant child
- * nodes. This function will recursively blur all A, BUTTON, INPUT,
- * TEXTAREA and SELECT child nodes found.
+ * Blurs (unfocuses) a specified DOM node and all relevant child nodes. This
+ * function will recursively blur all `<a>`, `<button>`, `<input>`,
+ * `<textarea>` and `<select>` child nodes found.
  *
  * @param {Object} node the HTML DOM node
  */
@@ -623,13 +622,13 @@ RapidContext.Util.blurAll = function (node) {
 /**
  * Registers algebraic constraints for the element width, height
  * and/or aspect ratio. The constraints may either be fixed numeric
- * values, functions or algebraic formulas (in a string).<p>
+ * values, functions or algebraic formulas (in a string).
  *
  * The formulas will be converted to JavaScript functions, replacing
  * any "%" character with a reference to the corresponding parent
  * dimension value (i.e. the parent element width, height or aspect
  * ratio). It is also possible to directly reference the parent
- * values as "w" or "h".<p>
+ * values as "w" or "h".
  *
  * Constraint functions must take two arguments (parent width and
  * height) and return a number. The returned number is set as the new
@@ -683,16 +682,20 @@ RapidContext.Util.registerSizeConstraints = function (node, width, height, aspec
 };
 
 /**
- * Resizes one or more DOM nodes using their registered size
- * constraints and their parent element sizes. The resize operation
- * will only modify those elements that have constraints, but will
- * perform a depth-first recursion over all element child nodes as
- * well.<p>
+ * Resizes one or more DOM nodes using their registered size constraints and
+ * their parent element sizes. The resize operation will only modify those
+ * elements that have constraints, but will perform a depth-first recursion
+ * over all element child nodes as well.
  *
- * Partial constraints are accepted, in which case only the width
- * or the height is modified. Aspect ratio constraints are applied
- * after the width and height constraints. The result will always
- * be bounded by the parent element width or height.
+ * Partial constraints are accepted, in which case only the width or the height
+ * is modified. Aspect ratio constraints are applied after the width and height
+ * constraints. The result will always be bounded by the parent element width
+ * or height.
+ *
+ * The recursive descent of this function can be limited by adding a
+ * `resizeContent` function to a DOM node. Such a function will be called to
+ * handle all subnode resizing, making it possible to limit or omitting the
+ * DOM tree traversal.
  *
  * @param {Object} [...] the HTML DOM nodes to resize
  *
@@ -701,6 +704,9 @@ RapidContext.Util.registerSizeConstraints = function (node, width, height, aspec
  * @example
  * RapidContext.Util.resizeElements(node);
  *     // Evaluates the size constraints for a node and all child nodes
+ *
+ * elem.resizeContent = MochiKit.Base.noop;
+ *     // Assigns a no-op resize handler to an element
  */
 RapidContext.Util.resizeElements = function (/* ... */) {
     var args = MochiKit.Base.flattenArray(arguments);

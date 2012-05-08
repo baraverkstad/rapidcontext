@@ -58,7 +58,7 @@ RapidContext.UI.showError = function () {
 
 /**
  * Creates a tree of widgets from a parsed XML document. This
- * function will call createWidget() for any XML element node found,
+ * function will call `createWidget()` for any XML element node found,
  * performing some basic adjustments on the element attributes
  * before sending them as attributes to the widget constructor. Text
  * nodes with non-whitespace content will be mapped to HTML DOM text
@@ -96,7 +96,7 @@ RapidContext.UI.buildUI = function (node, ids) {
 
 /**
  * Creates a widget from a parsed XML element. This function will
- * call createWidget(), performing some basic adjustments on the
+ * call `createWidget()`, performing some basic adjustments on the
  * element attributes before sending them as attributes to the widget
  * constructor.
  *

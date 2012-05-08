@@ -30,10 +30,9 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *
  * @return {Widget} the widget DOM node
  *
- * @class The overlay widget class. Used to provide a layer on top
- *     of the parent node, using a &lt;div&gt; HTML element. This
- *     widget is useful for disabling the user interface during an
- *     operation.
+ * @class The overlay widget class. Used to provide a layer on top of the
+ *     parent node, using a `<div>` HTML element. This widget is useful for
+ *     disabling the user interface during an operation.
  * @extends RapidContext.Widget
  */
 RapidContext.Widget.Overlay = function (attrs) {

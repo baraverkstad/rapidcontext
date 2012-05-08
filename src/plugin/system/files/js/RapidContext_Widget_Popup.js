@@ -33,11 +33,10 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *
  * @return {Widget} the widget DOM node
  *
- * @class The popup widget class. Used to provide a popup menu or
- *     information area, using a &lt;div&gt; HTML element. The Popup
- *     widget will automatically disappear after a configurable
- *     amount of time, unless the user performs keyboard or mouse
- *     actions related to the popup.
+ * @class The popup widget class. Used to provide a popup menu or information
+ *     area, using a `<div>` HTML element. The `Popup` widget will automatically
+ *     disappear after a configurable amount of time, unless the user performs
+ *     keyboard or mouse actions related to the popup.
  * @extends RapidContext.Widget
  */
 RapidContext.Widget.Popup = function (attrs/*, ...*/) {
@@ -104,8 +103,8 @@ RapidContext.Widget.Popup.prototype.setAttrs = function (attrs) {
 };
 
 /**
- * Performs the changes corresponding to setting the "hidden"
- * widget attribute for the Popup widget.
+ * Performs the changes corresponding to setting the `hidden`
+ * widget attribute for the `Popup` widget.
  *
  * @param {Boolean} value the new attribute value
  */
@@ -228,7 +227,7 @@ RapidContext.Widget.Popup.prototype._handleMouseMove = function (evt) {
 /**
  * Handles mouse click events on the popup.
  *
- * @param {Event} evt the MochiKit.Signal.Event object
+ * @param {Event} evt the `MochiKit.Signal.Event` object
  */
 RapidContext.Widget.Popup.prototype._handleMouseClick = function (evt) {
     var node = RapidContext.Util.childNode(this, evt.target());

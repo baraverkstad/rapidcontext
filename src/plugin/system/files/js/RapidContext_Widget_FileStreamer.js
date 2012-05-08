@@ -37,8 +37,8 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *     asynchronously (i.e. in the background) to allow the rest of
  *     the web page to remain active also during the potentially long
  *     delays caused by sending large amounts of data. The widget
- *     creates its own IFRAME HTML element inside which the actual
- *     FORM and INPUT elements are created automatically.
+ *     creates its own `<iframe>` HTML element inside which the actual
+ *     `<form>` and `<input>` elements are created automatically.
  * @extends RapidContext.Widget
  *
  * @example
@@ -154,7 +154,7 @@ RapidContext.Widget.FileStreamer.prototype._initDocument = function () {
 };
 
 /**
- * Handles widget resize calls, so that the iframe can be adjusted
+ * Handles widget resize calls, so that the `<iframe>` can be adjusted
  * to the file input field.
  *
  * @private

@@ -37,10 +37,10 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *
  * @return {Widget} the widget DOM node
  *
- * @class The form validator widget class. Provides visual feedback
- *     on form validation failures, using a &lt;span&gt; HTML
- *     element. It is normally hidden by default and may be
- *     configured to only modify its related form field.
+ * @class The form validator widget class. Provides visual feedback on form
+ *     validation failures, using a `<span>` HTML element. It is normally
+ *     hidden by default and may be configured to only modify its related form
+ *     field.
  * @property {String} name The form field name to validate.
  * @property {String} message The default validation message.
  * @property {Function} validator The validator function in use.

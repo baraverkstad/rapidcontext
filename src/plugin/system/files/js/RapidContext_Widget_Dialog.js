@@ -34,7 +34,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *
  * @class The dialog widget class. Used to provide a resizeable and
  *     moveable window within the current page. Internally it uses a
- *     number of &lt;div&gt; HTML elements.
+ *     number of `<div>` HTML elements.
  * @extends RapidContext.Widget
  *
  * @example
@@ -141,7 +141,7 @@ RapidContext.Widget.Dialog.prototype.setAttrs = function (attrs) {
 };
 
 /**
- * Performs the changes corresponding to setting the "hidden"
+ * Performs the changes corresponding to setting the `hidden`
  * widget attribute for the Dialog widget.
  *
  * @param {Boolean} value the new attribute value
@@ -178,7 +178,7 @@ RapidContext.Widget.Dialog.prototype._setHiddenDialog = function (value) {
 
 /**
  * Returns an array with all child DOM nodes. Note that the array is
- * a real JavaScript array, not a dynamic NodeList.
+ * a real JavaScript array, not a dynamic `NodeList`.
  *
  * @return {Array} the array of child DOM nodes
  */

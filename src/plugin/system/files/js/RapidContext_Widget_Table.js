@@ -31,19 +31,18 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *
  * @return {Widget} the widget DOM node
  *
- * @class The table widget class. Used to provide a sortable and
- *     scrolling data table, using an outer &lt;div&gt; HTML
- *     element around a &lt;table&gt;. The Table widget can only
- *     have TableColumn child nodes, each providing a visible data
- *     column in the table.
+ * @class The table widget class. Used to provide a sortable and scrolling
+ *     data table, using an outer `<div>` HTML element around a `<table>`. The
+ *     `Table` widget can only have `TableColumn` child nodes, each providing a
+ *     visible data column in the table.
  * @extends RapidContext.Widget
  *
- * @example
- * &lt;Table id="exTable" w="50%" h="100%"&gt;
- *   &lt;TableColumn title="Id" field="id" key="true" type="number" /&gt;
- *   &lt;TableColumn title="Name" field="name" sort="asc" /&gt;
- *   &lt;TableColumn title="Creation Date" field="created" type="date" /&gt;
- * &lt;/Table&gt;
+ * @example {User Interface XML}
+ * <Table id="exTable" w="50%" h="100%">
+ *   <TableColumn title="Id" field="id" key="true" type="number" />
+ *   <TableColumn title="Name" field="name" sort="asc" />
+ *   <TableColumn title="Creation Date" field="created" type="date" />
+ * </Table>
  */
 RapidContext.Widget.Table = function (attrs/*, ...*/) {
     var thead = MochiKit.DOM.THEAD({}, MochiKit.DOM.TR());
@@ -241,7 +240,7 @@ RapidContext.Widget.Table.prototype.getCellElem = function (row, col) {
 
 /**
  * Clears all the data in the table. The column headers will not be
- * affected by this method. Use removeAll() or removeChildNode() to
+ * affected by this method. Use `removeAll()` or `removeChildNode()` to
  * also remove columns.
  */
 RapidContext.Widget.Table.prototype.clear = function () {
@@ -263,7 +262,7 @@ RapidContext.Widget.Table.prototype.getData = function () {
  * Sets the table data. The table data is an array of objects, each
  * having properties corresponding to the table column fields. Any
  * object property not mapped to a table column will be ignored (i.e.
- * a hidden column). See the TableColumn class for data mapping
+ * a hidden column). See the `TableColumn` class for data mapping
  * details. Note that automatically generated row ids will be reset
  * by this method and any selection on such tables is lost.
  *
@@ -340,7 +339,7 @@ RapidContext.Widget.Table.prototype.sortData = function (field, direction) {
 /**
  * Redraws the table from updated source data. Note that this method
  * will not add or remove rows and keeps the current row order
- * intact. For a more complete redraw of the table, use setData().
+ * intact. For a more complete redraw of the table, use `setData()`.
  */
 RapidContext.Widget.Table.prototype.redraw = function () {
     var cols = this.getChildNodes();
@@ -382,8 +381,7 @@ RapidContext.Widget.Table.prototype._renderRows = function () {
 
 /**
  * Returns the number of rows in the table. This is a convenience
- * method for "getData().length" and always returns the same row
- * count.
+ * method for `getData().length`.
  *
  * @return {Number} the number of table rows
  */

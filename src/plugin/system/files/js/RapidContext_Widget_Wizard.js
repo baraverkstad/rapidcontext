@@ -28,24 +28,23 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *
  * @return {Widget} the widget DOM node
  *
- * @class The wizard widget class. Used to provide a sequence of
- *     pages, where the user can step forward and backward with
- *     buttons. Internally it uses a &lt;div&gt; HTML element
- *     containing Pane widgets that are hidden and shown according
- *     to the page transitions.
+ * @class The wizard widget class. Used to provide a sequence of pages, where
+ *     the user can step forward and backward with buttons. Internally it uses
+ *     a `<div>` HTML element containing Pane widgets that are hidden and shown
+ *     according to the page transitions.
  * @extends RapidContext.Widget
  *
- * @example
- * &lt;Dialog id="exDialog" title="Example Dialog" w="80%" h="50%"&gt;
- *   &lt;Wizard id="exWizard" style="width: 100%; height: 100%;"&gt;
- *     &lt;Pane pageTitle="The first step"&gt;
+ * @example {User Interface XML}
+ * <Dialog id="exDialog" title="Example Dialog" w="80%" h="50%">
+ *   <Wizard id="exWizard" style="width: 100%; height: 100%;">
+ *     <Pane pageTitle="The first step">
  *       ...
- *     &lt;/Pane&gt;
- *     &lt;Pane pageTitle="The second step"&gt;
+ *     </Pane>
+ *     <Pane pageTitle="The second step">
  *       ...
- *     &lt;/Pane&gt;
- *   &lt;/Wizard&gt;
- * &lt;/Dialog&gt;
+ *     </Pane>
+ *   </Wizard>
+ * </Dialog>
  */
 RapidContext.Widget.Wizard = function (attrs/*, ... */) {
     var o = MochiKit.DOM.DIV(attrs);
@@ -113,9 +112,8 @@ RapidContext.Widget.Wizard.prototype.getChildNodes = function () {
 };
 
 /**
- * Adds a single child page widget to this widget. The child widget
- * should be a RapidContext.Widget.Pane widget, or it will be added to a
- * new one.
+ * Adds a single child page widget to this widget. The child widget should be a
+ * `RapidContext.Widget.Pane` widget, or it will be added to a new one.
  *
  * @param {Widget} child the page widget to add
  */
@@ -252,7 +250,7 @@ RapidContext.Widget.Wizard.prototype.activatePage = function (indexOrPage) {
 
 /**
  * Cancels the active page operation. This method will also reset
- * the page status of the currently active page to "ANY".
+ * the page status of the currently active page to `ANY`.
  */
 RapidContext.Widget.Wizard.prototype.cancel = function () {
     var page = this.activePage();
@@ -280,7 +278,7 @@ RapidContext.Widget.Wizard.prototype.next = function () {
 };
 
 /**
- * Sends the wizard onclose signal when the user presses the finish
+ * Sends the wizard `onclose` signal when the user presses the finish
  * button.
  */
 RapidContext.Widget.Wizard.prototype.done = function () {

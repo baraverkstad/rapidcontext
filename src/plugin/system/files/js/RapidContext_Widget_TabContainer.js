@@ -28,12 +28,11 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *
  * @return {Widget} the widget DOM node
  *
- * @class The tab container widget class. Used to provide a set of
- *     tabbed pages, where the user can switch page freely.
- *     Internally it uses a &lt;div&gt; HTML element containing Pane
- *     widgets that are hidden and shown according to the page
- *     transitions. If a child Pane widget is "pageCloseable", a
- *     close button will be available on the tab label.
+ * @class The tab container widget class. Used to provide a set of tabbed
+ *     pages, where the user can switch page freely. Internally it uses a
+ *     `<div>` HTML element containing `Pane` widgets that are hidden and shown
+ *     according to the page transitions. If a child `Pane` widget is
+ *     `pageCloseable`, a close button will be available on the tab label.
  * @extends RapidContext.Widget
  */
 RapidContext.Widget.TabContainer = function (attrs/*, ... */) {
@@ -56,7 +55,7 @@ RapidContext.Widget.Classes.TabContainer = RapidContext.Widget.TabContainer;
 
 /**
  * Returns an array with all child pane widgets. Note that the array
- * is a real JavaScript array, not a dynamic NodeList.
+ * is a real JavaScript array, not a dynamic `NodeList`.
  *
  * @return {Array} the array of child DOM nodes
  */
@@ -66,7 +65,7 @@ RapidContext.Widget.TabContainer.prototype.getChildNodes = function () {
 
 /**
  * Adds a single child page widget to this widget. The child widget
- * should be a RapidContext.Widget.Pane widget, or it will be added to a
+ * should be a `RapidContext.Widget.Pane` widget, or it will be added to a
  * new one.
  *
  * @param {Widget} child the page widget to add
@@ -97,7 +96,7 @@ RapidContext.Widget.TabContainer.prototype.addChildNode = function (child) {
 /**
  * Removes a single child DOM node from this widget. This method is
  * sometimes overridden by child widgets in order to hide or control
- * intermediate DOM nodes required by the widget.<p>
+ * intermediate DOM nodes required by the widget.
  *
  * Note that this method will NOT destroy the removed child widget,
  * so care must be taken to ensure proper child widget destruction.

@@ -25,26 +25,25 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  * @param {Object} attrs the widget and node attributes
  * @param {Number} [attrs.min] the minimum range value, defaults to 0
  * @param {Number} [attrs.max] the maximum range value, defaults to 100
- * @param {Number} [attrs.value] the progress value, a number between min
- *            and max, defaults to 0
+ * @param {Number} [attrs.value] the progress value, a number between `min`
+ *            and `max`, defaults to 0
  * @param {Number} [attrs.ratio] the progress ratio, a floating-point number
  *            between 0.0 and 1.0, defaults to 0.0
  * @param {Number} [attrs.text] the additional information text, defaults to
  *            blank
  * @param {Boolean} [attrs.noratio] the hide ratio (in percent) display flag,
- *            defaults to false
+ *            defaults to `false`
  * @param {Boolean} [attrs.novalue] the hide value display flag, defaults to
- *            false
+ *            `false`
  * @param {Boolean} [attrs.notime] the hide remaining time display flag,
- *            defaults to false
+ *            defaults to `false`
  *
  * @return {Widget} the widget DOM node
  *
- * @class The progress bar widget class. Used to provide a dynamic
- *     progress meter, using a &lt;div&gt; HTML elements. The
- *     progress bar also provides a completion time estimation that
- *     is displayed in the bar. Whenever the range is modified, the
- *     time estimation is reset.
+ * @class The progress bar widget class. Used to provide a dynamic progress
+ *     meter, using a `<div>` HTML elements. The progress bar also provides a
+ *     completion time estimation that is displayed in the bar. Whenever the
+ *     range is modified, the time estimation is reset.
  * @extends RapidContext.Widget
  *
  * @example {JavaScript}
@@ -77,15 +76,15 @@ RapidContext.Widget.Classes.ProgressBar = RapidContext.Widget.ProgressBar;
  *            value and ratio are reset
  * @param {Number} [attrs.max] the maximum range value, if modified the current
  *            value and ratio are reset
- * @param {Number} [attrs.value] the progress value, a number between min
- *            and max
+ * @param {Number} [attrs.value] the progress value, a number between `min`
+ *            and `max`
  * @param {Number} [attrs.ratio] the progress ratio, a floating-point number
  *            between 0.0 and 1.0
  * @param {Number} [attrs.text] the additional information text
  * @param {Boolean} [attrs.noratio] the hide ratio (in percent) display flag
  * @param {Boolean} [attrs.novalue] the hide value display flag
  * @param {Boolean} [attrs.notime] the hide remaining time display flag
- * */
+ */
 RapidContext.Widget.ProgressBar.prototype.setAttrs = function (attrs) {
     attrs = MochiKit.Base.update({}, attrs);
     var nowTime = new Date().getTime();

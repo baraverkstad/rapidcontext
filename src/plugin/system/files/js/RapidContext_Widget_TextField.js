@@ -30,10 +30,9 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *
  * @return {Widget} the widget DOM node
  *
- * @class The text field widget class. Used to provide a text input
- *     field for a single line, using the &lt;input&gt; HTML element.
- *     The text field may also be connected to a popup (for auto-
- *     suggest or similar).
+ * @class The text field widget class. Used to provide a text input field for a
+ *     single line, using the `<input>` HTML element. The text field may also
+ *     be connected to a popup (for auto-complete or similar).
  * @property {Boolean} disabled The widget disabled flag.
  * @property {Boolean} focused The read-only widget focused flag.
  * @property {String} defaultValue The value to use on form reset.
@@ -112,7 +111,7 @@ RapidContext.Widget.TextField.prototype.reset = function () {
 
 /**
  * Returns the text field value. This function is slightly different
- * from using the "value" property directly, since it will always
+ * from using the `value` property directly, since it will always
  * return the actual value string instead of the temporary help text
  * displayed when the text field is empty and unfocused.
  *
@@ -131,7 +130,7 @@ RapidContext.Widget.TextField.prototype.getValue = function () {
  * Returns (or creates) a popup for this text field. The popup will
  * not be shown by this method, only returned as-is. If the create
  * flag is specified, a new popup will be created if none has been
- * created previuosly.
+ * created previously.
  *
  * @param {Boolean} create the create popup flag
  *
@@ -191,7 +190,7 @@ RapidContext.Widget.TextField.prototype.showPopup = function (attrs, items) {
 /**
  * Handles focus and blur events for this widget.
  *
- * @param evt the MochiKit.Signal.Event object
+ * @param evt the `MochiKit.Signal.Event` object
  */
 RapidContext.Widget.TextField.prototype._handleFocus = function (evt) {
     if (evt.type() == "focus") {
@@ -211,7 +210,7 @@ RapidContext.Widget.TextField.prototype._handleFocus = function (evt) {
 /**
  * Handles the key down event for the text field.
  *
- * @param {Event} evt the MochiKit.Signal.Event object
+ * @param {Event} evt the `MochiKit.Signal.Event` object
  */
 RapidContext.Widget.TextField.prototype._handleKeyDown = function (evt) {
     var popup = this.popup(false);
@@ -256,7 +255,7 @@ RapidContext.Widget.TextField.prototype._handleKeyDown = function (evt) {
 /**
  * Handles the mouse click event on the popup.
  *
- * @param evt the MochiKit.Signal.Event object
+ * @param evt the `MochiKit.Signal.Event` object
  */
 RapidContext.Widget.TextField.prototype._handleClick = function (evt) {
     this.blur();

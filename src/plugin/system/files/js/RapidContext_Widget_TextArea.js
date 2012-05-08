@@ -30,9 +30,8 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *
  * @return {Widget} the widget DOM node
  *
- * @class The text area widget class. Used to provide a text input
- *     field spanning multiple rows, using the &lt;textarea&gt; HTML
- *     element.
+ * @class The text area widget class. Used to provide a text input field
+ *     spanning multiple rows, using the `<textarea>` HTML element.
  * @property {Boolean} disabled The widget disabled flag.
  * @property {Boolean} focused The read-only widget focused flag.
  * @property {String} defaultValue The value to use on form reset.
