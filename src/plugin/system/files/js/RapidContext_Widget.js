@@ -272,19 +272,17 @@ RapidContext.Widget.prototype.destroy = function () {
  * @param {Boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.prototype.setAttrs = function (attrs) {
-    var attrsDOM = null;
     for (var name in attrs) {
+        var value = attrs[name];
         if (name == "disabled") {
-            this._setDisabled(attrs.disabled);
+            this._setDisabled(value);
         } else if (name == "hidden") {
-            this._setHidden(attrs.hidden);
+            this._setHidden(value);
+        } else if (value != null) {
+            MochiKit.DOM.setNodeAttribute(this, name, value);
         } else {
-            attrsDOM = attrsDOM || {};
-            attrsDOM[name] = attrs[name];
+            this.removeAttribute(name);
         }
-    }
-    if (attrsDOM) {
-        MochiKit.DOM.updateNodeAttributes(this, attrsDOM);
     }
 };
 
