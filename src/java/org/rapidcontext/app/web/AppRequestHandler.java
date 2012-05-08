@@ -22,8 +22,10 @@ import java.util.logging.Logger;
 
 import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.app.ApplicationContext;
+import org.rapidcontext.app.plugin.PluginManager;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Binary;
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.StorageException;
@@ -158,15 +160,17 @@ public class AppRequestHandler extends RequestHandler {
         ApplicationContext  ctx = ApplicationContext.getInstance();
         String              root = FileRequestHandler.PATH_FILES.toString();
         Path                path = FileRequestHandler.PATH_FILES.child(type, true);
+        Dict                dict;
         Metadata[]          meta;
         String              file;
         Array               res = new Array();
 
+        dict = (Dict) ctx.getStorage().load(PluginManager.PATH_INFO);
         meta = ctx.getStorage().lookupAll(path);
         for (int i = 0; i < meta.length; i++) {
             file = StringUtils.removeStart(meta[i].path().toString(), root);
             if (meta[i].isBinary() && file.endsWith("." + type)) {
-                res.add(file);
+                res.add(file + "?" + dict.getString("version", "1"));
             }
         }
         res.sort();
