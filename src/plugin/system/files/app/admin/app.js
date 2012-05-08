@@ -1331,8 +1331,7 @@ AdminApp.prototype._startBatch = function () {
         this._batch.running = true;
         this._batch.stat.success = 0;
         this._batch.stat.failed = 0;
-        this.ui.batchProgress.setAttrs({ min: 0, max: this._batch.queue.length });
-        this.ui.batchProgress.setValue(0);
+        this.ui.batchProgress.setAttrs({ min: 0, max: this._batch.queue.length, text: null });
         MochiKit.DOM.replaceChildNodes(this.ui.batchResume, "Pause");
         this.ui.batchLoading.show();
         this._processBatch();
@@ -1368,7 +1367,7 @@ AdminApp.prototype._clearBatch = function () {
     this._batch.stat.success = 0;
     this._batch.stat.failed = 0;
     this.ui.batchForm.reset();
-    this.ui.batchProgress.setText("Stopped");
+    this.ui.batchProgress.setAttrs({ min: 0, max: 0, text: "Stopped" });
 }
 
 /**
@@ -1403,10 +1402,10 @@ AdminApp.prototype._callbackBatch = function (res) {
     this.ui.batchForm.update(this._batch.stat);
     var done = this._batch.stat.success + this._batch.stat.failed;
     var total = this._batch.queue.length + done;
-    if (this.ui.batchProgress.maxValue != total) {
+    if (this.ui.batchProgress.max != total) {
         this.ui.batchProgress.setAttrs({ min: 0, max: total });
     }
-    this.ui.batchProgress.setValue(done);
+    this.ui.batchProgress.setAttrs({ value: done });
     if (this._batch.queue.length > 0) {
         setTimeout(this._batch.func, this._batch.delay * 1000);
     } else {

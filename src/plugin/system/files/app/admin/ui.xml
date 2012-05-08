@@ -493,7 +493,7 @@
             <tr>
               <th class="label" style="padding-right: 4px;">Progress:</th>
               <td style="width: 500px;">
-                <ProgressBar id="batchProgress" />
+                <ProgressBar id="batchProgress" noratio="true" />
               </td>
             </tr>
             <tr>
