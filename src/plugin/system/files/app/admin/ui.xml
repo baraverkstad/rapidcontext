@@ -29,7 +29,7 @@
         <table>
           <tbody>
             <tr>
-              <th class="label" style="padding: 3px 4px 0 1px; width: 100px;">Identifier:</th>
+              <th class="label" style="padding: 4px 4px 1px 1px; width: 100px;">Identifier:</th>
               <td>
                 <Field name="id" format="connection/" class="unimportant" />
                 <a id="cxnLink" href="#" target="_blank" class="hidden" title="View in storage browser">
@@ -155,7 +155,7 @@
               </td>
             </tr>
             <tr>
-              <th class="label" style="padding: 3px 4px 0 1px;">Identifier:</th>
+              <th class="label" style="padding: 4px 4px 1px 1px;">Identifier:</th>
               <td>
                 <Field name="id" format="app/" class="unimportant" />
                 <a id="appLink" href="#" target="_blank" class="hidden" title="View in storage browser">
@@ -276,10 +276,11 @@
               </td>
             </tr>
             <tr>
-              <th class="label" style="padding-right: 4px;">Storage:</th>
-              <td>
+              <th class="label" style="padding: 3px 4px 2px 1px;">Storage:</th>
+              <td style="padding: 0 1px;">
+                <Field name="id" format="storage/" class="unimportant" />
                 <a id="pluginLink" href="#" target="_blank" class="hidden" title="View in storage browser">
-                  <Field name="*" format="/storage/plugin/{id}/" />
+                  <Field name="id" format="plugin/{}/" />
                   <Icon ref="EXPAND" style="margin-left: 3px;" />
                 </a>
               </td>
@@ -619,7 +620,7 @@
       </div>
       <div w="75%-25" h="40%-20" style="float: left; padding-top: 6px; border-top: solid 1px #6290d2;">
         <h3>Log Data:</h3>
-        <p id="logData" w="100%" h="100%-25" style="overflow: auto;"></p>
+        <p id="logData" w="100%" h="100%-25" style="overflow: auto; color: #666666;"></p>
       </div>
     </Pane>
   </TabContainer>
