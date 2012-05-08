@@ -41,8 +41,8 @@ RapidContext.Widget.TabContainer = function (attrs/*, ... */) {
     var o = MochiKit.DOM.DIV(attrs, labels, container);
     RapidContext.Widget._widgetMixin(o, arguments.callee);
     o.addClass("widgetTabContainer");
-    // TODO: possibly add MSIE size fix?
     RapidContext.Util.registerSizeConstraints(container, "100% - 22", "100% - 47");
+    o.resizeContent = o._resizeContent;
     container.resizeContent = MochiKit.Base.noop;
     o._selectedIndex = -1;
     o.setAttrs(attrs);
@@ -184,7 +184,7 @@ RapidContext.Widget.TabContainer.prototype.selectChild = function (indexOrChild)
  * child nodes that are visible, i.e. the currently selected tab
  * container child.
  */
-RapidContext.Widget.TabContainer.prototype.resizeContent = function () {
+RapidContext.Widget.TabContainer.prototype._resizeContent = function () {
     RapidContext.Util.resizeElements(this.lastChild);
     var child = this.selectedChild();
     if (child != null) {

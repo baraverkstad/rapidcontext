@@ -50,6 +50,7 @@ RapidContext.Widget.Wizard = function (attrs/*, ... */) {
     var o = MochiKit.DOM.DIV(attrs);
     RapidContext.Widget._widgetMixin(o, arguments.callee);
     o.addClass("widgetWizard");
+    o.resizeContent = o._resizeContent;
     o._selectedIndex = -1;
     o.appendChild(MochiKit.DOM.H3({ "class": "widgetWizardTitle" }));
     var bCancel = RapidContext.Widget.Button({ icon:"CANCEL", style: { "margin-right": "10px" }},
@@ -298,7 +299,7 @@ RapidContext.Widget.Wizard.prototype.done = function () {
  * resized. It optimizes the resize chain by only resizing those DOM
  * child nodes that are visible.
  */
-RapidContext.Widget.Wizard.prototype.resizeContent = function () {
+RapidContext.Widget.Wizard.prototype._resizeContent = function () {
     var page = this.activePage();
     if (page != null) {
         RapidContext.Util.resizeElements(page);
