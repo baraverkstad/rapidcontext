@@ -216,6 +216,16 @@ body.doc {
 .doc pre {
     font-size: 12px;
 }
+.doc var {
+    font-family: "Courier New", monospace;
+    font-style: normal;
+    font-size: 13px;
+    color: #006633;
+}
+.doc q {
+    font-style: normal;
+    color: #006633;
+}
 .doc .fineprint {
     font-size: 10px;
     color: #888888;
@@ -417,6 +427,7 @@ pre.code {
     padding: 6px 6px 6px 20px;
     background: #F8FBFF;
     color: #006699;
+    font-weight: normal;
 }
 pre.code .label {
     position: relative;
@@ -424,10 +435,11 @@ pre.code .label {
     left: -20px;
     display: inline-block;
     width: 100%;
-    padding: 2px 6px 1px 20px;
+    padding: 2px 16px 1px 10px;
     background: #88AACC;
     color: #FFFFFF;
     text-shadow: 0 1px 2px #006699;
+    font-weight: bold;
 }
 pre.code .comment {
     color: #66AACC;
