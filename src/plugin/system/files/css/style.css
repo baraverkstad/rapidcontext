@@ -194,7 +194,8 @@ div.query {
 body.doc {
     width: 800px;
     height: auto;
-    margin: 5% auto;
+    margin: 0 auto;
+    padding: 60px 0;
 }
 .doc {
     font-size: 12px;
