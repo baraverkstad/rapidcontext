@@ -30,7 +30,7 @@ function publish(symbolSet) {
 		quit();
 	}
 	
-	// some ustility filters
+	// some utility filters
 	function hasNoParent($) {return ($.memberOf == "")}
 	function isaFile($) {return ($.is("FILE"))}
 	function isaClass($) {return ($.is("CONSTRUCTOR") || $.isNamespace) && /^RapidContext\./.test($.alias);}
@@ -88,17 +88,21 @@ function publish(symbolSet) {
     IO.saveFile(publish.conf.outDir, "topics.json", topicsTemplate.process(classes));
 }
 
+function html(str) {
+    if (str == null) return "";
+    str = str.toString();
+    str = str.replace(/&/g, "&amp;");
+    str = str.replace(/\"/g, "&quot;");
+    str = str.replace(/\'/g, "&apos;");
+    str = str.replace(/</g, "&lt;");
+    str = str.replace(/>/g, "&gt;");
+    return str;
+}
 
 /** Just the first sentence (up to a full stop). Should not break on dotted variable names. */
 function summarize(desc) {
 	if (typeof desc != "undefined")
 		return desc.match(/([\w\W]+?\.)[^a-z0-9_$]/i)? RegExp.$1 : desc;
-}
-
-function isOwnProperty(parent) {
-    return function ($) {
-        return $.memberOf == parent.alias && !$.isNamespace;
-    }
 }
 
 /** Make a symbol sorter by some attribute. */
@@ -112,6 +116,12 @@ function makeSortby(attribute) {
 			return 0;
 		}
 	}
+}
+
+function isOwnProperty(parent) {
+    return function ($) {
+        return $.memberOf == parent.alias && !$.isNamespace;
+    }
 }
 
 function ownProperties(list, parent) {
@@ -173,11 +183,11 @@ function makeSignature(params) {
 
 /** Find symbol {@link ...} strings in text and turn into html links */
 function resolveLinks(str, from) {
-	str = str.replace(/\{@link ([^} ]+) ?\}/gi,
-		function(match, symbolName) {
-			return new Link().toSymbol(symbolName);
-		}
-	);
-	
-	return str;
+    str = html(str);
+    str = str.replace(/\{@link ([^} ]+) ?\}/gi,
+        function(match, symbolName) {
+            return new Link().toSymbol(symbolName);
+        }
+    );
+    return str;
 }

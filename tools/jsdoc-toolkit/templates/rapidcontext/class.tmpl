@@ -2,9 +2,7 @@
 
 <html lang="en" xml:lang="en">
   <head>
-    <meta http-equiv="Content-Type" content="text/xhtml; charset={+IO.encoding+}">
-    <meta http-equiv="Content-Style-Type" content="text/css" />
-    <meta http-equiv="Content-Language" content="en" />
+    <meta http-equiv="Content-Type" content="text/html; charset={+IO.encoding+}" />
     <meta name="generator" content="JsDoc Toolkit" />
     <link rel="icon" type="image/gif" href="../images/favicon.png" />
     <link rel="stylesheet" href="../css/style.css" type="text/css" />
@@ -78,7 +76,7 @@
 
 <!-- ============================== constructor summary ==================== -->			
 			<if test="!data.isBuiltin() && (data.isNamespace || data.is('CONSTRUCTOR'))">
-			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class {+data.alias+}.">
+			<table class="summaryTable">
 				<caption>{+classType+}Summary</caption>
 				<tbody>
 					<tr>
@@ -101,7 +99,7 @@
 			<if test="data.properties.length">
 				{! var ownProperties = data.properties.filter(function($){return $.memberOf == data.alias && !$.isNamespace}).sort(makeSortby("name")); !}
 				<if test="ownProperties.length">
-				<table class="summaryTable" cellspacing="0" summary="A summary of the fields documented in the class {+data.alias+}.">
+				<table class="summaryTable">
 					<caption>Field Summary</caption>
 					<tbody>
 					<for each="member" in="ownProperties">
@@ -157,7 +155,7 @@
 			<if test="data.methods.length">
 				{! var ownMethods = data.methods.filter(function($){return $.memberOf == data.alias  && !$.isNamespace}).sort(makeSortby("name")); !}
 				<if test="ownMethods.length">
-				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class {+data.alias+}.">
+				<table class="summaryTable">
 					<caption>Method Summary</caption>
 					<tbody>
 					<for each="member" in="ownMethods">
@@ -210,7 +208,7 @@
 			<if test="data.events.length">
 				{! var ownEvents = data.events.filter(function($){return $.memberOf == data.alias  && !$.isNamespace}).sort(makeSortby("name")); !}
 				<if test="ownEvents.length">
-				<table class="summaryTable" cellspacing="0" summary="A summary of the events documented in the class {+data.alias+}.">
+				<table class="summaryTable">
 					<caption>Event Summary</caption>
 					<tbody>
 					<for each="member" in="ownEvents">
@@ -281,7 +279,7 @@
 				
 				<if test="data.example.length">
 				<for each="example" in="data.example">
-				<pre class="code">{+example+}</pre>
+                <pre class="code"><if test="example.type"><span class="label">{+example.type+}:</span></if>{+html(example)+}</pre>
 				</for>
 				</if>
 				
@@ -380,7 +378,7 @@
 					
 					<if test="member.example.length">
 					<for each="example" in="member.example">
-					<pre class="code">{+example+}</pre>
+                    <pre class="code"><if test="example.type"><span class="label">{+example.type+}:</span></if>{+html(example)+}</pre>
 					</for>
 					</if>
 
@@ -447,7 +445,7 @@
 					
 					<if test="member.example.length">
 					<for each="example" in="member.example">
-					<pre class="code">{+example+}</pre>
+                    <pre class="code"><if test="example.type"><span class="label">{+example.type+}:</span></if>{+html(example)+}</pre>
 					</for>
 					</if>
 					
@@ -546,7 +544,7 @@
 					
 					<if test="member.example.length">
 					<for each="example" in="member.example">
-					<pre class="code">{+example+}</pre>
+                    <pre class="code"><if test="example.type"><span class="label">{+example.type+}:</span></if>{+html(example)+}</pre>
 					</for>
 					</if>
 					

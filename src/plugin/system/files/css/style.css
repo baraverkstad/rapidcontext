@@ -417,6 +417,17 @@ pre.code {
     background: #F8FBFF;
     color: #006699;
 }
+pre.code .label {
+    position: relative;
+    top: -6px;
+    left: -20px;
+    display: inline-block;
+    width: 100%;
+    padding: 2px 6px 1px 20px;
+    background: #88AACC;
+    color: #FFFFFF;
+    text-shadow: 0 1px 2px #006699;
+}
 pre.code .comment {
     color: #66AACC;
 }
