@@ -182,6 +182,53 @@ RapidContext.Util.truncate = function (obj, maxLength, tail) {
  */
 RapidContext.Util.twoDigitNumber = MochiKit.Format.numberFormatter("00");
 
+RapidContext.Util._MILLIS_PER_SECOND = 1000;
+RapidContext.Util._MILLIS_PER_MINUTE = 60 * 1000;
+RapidContext.Util._MILLIS_PER_HOUR = 60 * 60 * 1000;
+RapidContext.Util._MILLIS_PER_DAY = 24 * 60 * 60 * 1000;
+RapidContext.Util._MILLIS_PER_WEEK = 7 * 24 * 60 * 60 * 1000;
+
+/**
+ * Creates a new time period object from a number of milliseconds.
+ *
+ * @param {Number} millis the number of milliseconds in the period
+ *
+ * @return {Object} new time duration object
+ */
+RapidContext.Util._toDuration = function (millis) {
+    return {
+        days: Math.floor(millis / RapidContext.Util._MILLIS_PER_DAY),
+        hours: Math.floor(millis / RapidContext.Util._MILLIS_PER_HOUR) % 24,
+        minutes: Math.floor(millis / RapidContext.Util._MILLIS_PER_MINUTE) % 60,
+        seconds: Math.floor(millis / RapidContext.Util._MILLIS_PER_SECOND) % 60,
+        millis: millis % 1000
+    };
+};
+
+/**
+ * Converts a number of milliseconds to an approximate time period.
+ *
+ * @param {Number} millis the number of milliseconds
+ *
+ * @return {String} the string representation of the period
+ */
+RapidContext.Util.toApproxPeriod = function (millis) {
+    var p = RapidContext.Util._toDuration(millis);
+    if (p.days >= 10) {
+        return p.days + " days";
+    } else if (p.days >= 1) {
+        return p.days + " days " + p.hours + " hours";
+    } else if (p.hours >= 1) {
+        return p.hours + ":" + MochiKit.Text.padLeft("" + p.minutes, 2, "0") + " hours";
+    } else if (p.minutes >= 1) {
+        return p.minutes + ":" + MochiKit.Text.padLeft("" + p.seconds, 2, "0") + " minutes";
+    } else if (p.seconds >= 1) {
+        return p.seconds + " seconds";
+    } else {
+        return p.millis + " milliseconds";
+    }
+};
+
 /**
  * Returns the margin sizes for an HTML DOM node. The margin sizes
  * for all four sides will be returned.
