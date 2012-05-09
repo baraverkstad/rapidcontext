@@ -92,6 +92,7 @@ function html(str) {
     if (str == null) return "";
     str = str.toString();
     str = str.replace(/&/g, "&amp;");
+    str = str.replace(/==>/g, "&rArr;");
     str = str.replace(/</g, "&lt;");
     str = str.replace(/>/g, "&gt;");
     return str;
