@@ -130,16 +130,48 @@ RapidContext.Widget.ProgressBar.prototype.setAttrs = function (attrs) {
     this.__setAttrs(attrs);
     if (!this.notime && nowTime - this.updateTime > 1000) {
         this.updateTime = nowTime;
-        var duration = nowTime - this.startTime;
-        duration = Math.max(Math.round(duration / this.ratio - duration), 0);
-        if (isFinite(duration) && !isNaN(duration)) {
-            this.timeRemaining = RapidContext.Util.toApproxPeriod(duration);
-        } else {
-            this.timeRemaining = null;
-        }
+        var time = this._remainingTime();
+        this.timeRemaining = (time && time.text) ? time.text : null;
     }
     this._render();
 };
+
+/**
+ * Returns the remaining time.
+ *
+ * @return {Object} the remaining time object, or
+ *         `null` if not possible to estimate
+ */
+RapidContext.Widget.ProgressBar.prototype._remainingTime = function () {
+    var duration = new Date().getTime() - this.startTime;
+    duration = Math.max(Math.round(duration / this.ratio - duration), 0);
+    if (isFinite(duration) && !isNaN(duration)) {
+        var res = {
+            total: duration,
+            days: Math.floor(duration / 86400000),
+            hours: Math.floor(duration / 3600000) % 24,
+            minutes: Math.floor(duration / 60000) % 60,
+            seconds: Math.floor(duration / 1000) % 60,
+            millis: duration % 1000
+        };
+        var pad = MochiKit.Text.padLeft;
+        if (res.days >= 10) {
+            res.text = res.days + " days";
+        } else if (res.days >= 1) {
+            res.text = res.days + " days " + res.hours + " hours";
+        } else if (res.hours >= 1) {
+            res.text = res.hours + ":" + pad("" + res.minutes, 2, "0") + " hours";
+        } else if (res.minutes >= 1) {
+            res.text = res.minutes + ":" + pad("" + res.seconds, 2, "0") + " minutes";
+        } else if (res.seconds >= 1) {
+            res.text = res.seconds + " seconds";
+        } else {
+            res.text = res.millis + " milliseconds";
+        }
+        return res;
+    }
+    return null;
+}
 
 /**
  * Redraws the progress bar meter and text.
