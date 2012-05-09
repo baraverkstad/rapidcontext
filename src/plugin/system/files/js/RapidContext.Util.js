@@ -19,10 +19,10 @@ if (typeof(RapidContext) == "undefined") {
 
 /**
  * @name RapidContext.Util
- * @namespace Provides utility functions for basic objects, arrays,
- *     DOM nodes and CSS. Mostly these functions extend or improve
- *     upon what is already available in MochiKit (with the goal of
- *     being included there where reasonable).
+ * @namespace
+ * Provides utility functions for basic objects, arrays, DOM nodes and CSS.
+ * These functions are complementary to what is available in MochiKit, jQuery
+ * and/or Underscore.
  */
 if (typeof(RapidContext.Util) == "undefined") {
     RapidContext.Util = {};
@@ -45,13 +45,12 @@ if (!JSON.stringify) {
 // General utility functions
 
 /**
- * Creates a dictionary object from a list of keys and values.
- * Optionally a list of key-value pairs can be provided instead. As
- * a third option, a single (non-array) value can be assigned to all
- * the keys.
+ * Creates a dictionary object from a list of keys and values. Optionally a
+ * list of key-value pairs can be provided instead. As a third option, a single
+ * (non-array) value can be assigned to all the keys.
  *
- * If a key is specified twice, only the last value will be used.
- * Note that this function is the reverse of `MochiKit.Base.items()`,
+ * If a key is specified twice, only the last value will be used. Note that
+ * this function is the reverse of `MochiKit.Base.items()`,
  * `MochiKit.Base.keys()` and `MochiKit.Base.values()`.
  *
  * @param {Array} itemsOrKeys the list of keys or items
@@ -62,15 +61,15 @@ if (!JSON.stringify) {
  *
  * @example
  * RapidContext.Util.dict(['a','b'], [1, 2])
- *     --> { a: 1, b: 2 }
+ * ==> { a: 1, b: 2 }
  *
  * @example
  * RapidContext.Util.dict([['a', 1], ['b', 2]])
- *     --> { a: 1, b: 2 }
+ * ==> { a: 1, b: 2 }
  *
  * @example
  * RapidContext.Util.dict(['a','b'], true)
- *     --> { a: true, b: true }
+ * ==> { a: true, b: true }
  */
 RapidContext.Util.dict = function (itemsOrKeys, values) {
     var o = {};
@@ -96,11 +95,11 @@ RapidContext.Util.dict = function (itemsOrKeys, values) {
 };
 
 /**
- * Filters an object by removing a list of keys. A list of key names
- * (or an object whose property names will be used as keys) must be
- * specified as an argument. A new object containing the source
- * object values for the specified keys will be returned. The source
- * object will be modified by removing all the specified keys.
+ * Filters an object by removing a list of keys. A list of key names (or an
+ * object whose property names will be used as keys) must be specified as an
+ * argument. A new object containing the source object values for the specified
+ * keys will be returned. The source object will be modified by removing all
+ * the specified keys.
  *
  * @param {Object} src the source object to select and modify
  * @param {Array/Object} keys the list of keys to remove, or an
@@ -109,15 +108,18 @@ RapidContext.Util.dict = function (itemsOrKeys, values) {
  * @return {Object} a new object containing the matching keys and
  *             values found in the source object
  *
+ * @deprecated This function will be removed in the future. Use Underscore
+ *     `pick` and/or custom code instead.
+ *
  * @example
  * var o = { a: 1, b: 2 };
  * RapidContext.Util.mask(o, ['a', 'c']);
- *     --> { a: 1 } and also sets o == { b: 2 }
+ * ==> { a: 1 } and modifies o to { b: 2 }
  *
  * @example
  * var o = { a: 1, b: 2 };
  * RapidContext.Util.mask(o, { a: null, c: null });
- *     --> { a: 1 } and also sets o == { b: 2 }
+ * ==> { a: 1 } and modifies o to { b: 2 }
  */
 RapidContext.Util.mask = function (src, keys) {
     var res = {};
@@ -135,14 +137,12 @@ RapidContext.Util.mask = function (src, keys) {
 };
 
 /**
- * Converts a string to a title-cased string. All word boundaries
- * are replaced with a single space and the subsequent character is
- * capitalized.
+ * Converts a string to a title-cased string. All word boundaries are replaced
+ * with a single space and the subsequent character is capitalized.
  *
- * All underscore ("_"), hyphen ("-") and lower-upper character
- * pairs are recognized as word boundaries. Note that this function
- * does not change the capitalization of other characters in the
- * string.
+ * All underscore ("_"), hyphen ("-") and lower-upper character pairs are
+ * recognized as word boundaries. Note that this function does not change the
+ * capitalization of other characters in the string.
  *
  * @param {String} str the string to convert
  *
@@ -150,19 +150,19 @@ RapidContext.Util.mask = function (src, keys) {
  *
  * @example
  * RapidContext.Util.toTitleCase("a short heading")
- *     --> "A Short Heading"
+ * ==> "A Short Heading"
  *
  * @example
  * RapidContext.Util.toTitleCase("camelCase")
- *     --> "Camel Case"
+ * ==> "Camel Case"
  *
  * @example
  * RapidContext.Util.toTitleCase("bounding-box")
- *     --> "Bounding Box"
+ * ==> "Bounding Box"
  *
  * @example
  * RapidContext.Util.toTitleCase("UPPER_CASE_VALUE")
- *     --> "UPPER CASE VALUE"
+ * ==> "UPPER CASE VALUE"
  */
 RapidContext.Util.toTitleCase = function (str) {
     str = MochiKit.Format.strip(str.replace(/[_-]+/g, " "));
@@ -177,18 +177,18 @@ RapidContext.Util.toTitleCase = function (str) {
 
 /**
  * Returns the name of a function. If the function is anonymous (i.e. the
- * `name` property is undefined or blank), the value of the `displayName`
- * property is returned instead.
+ * `name` property is `undefined` or an empty string), the value of the
+ * `displayName` property is returned instead.
  *
  * @param {Function} func the function to check
  *
- * @return {String} the function name, or undefined if not available
+ * @return {String} the function name, or `undefined` if not available
  *
  * @example
  * var o = { test: function () {} };
  * RapidContext.Util.registerFunctionNames(o, "o");
  * RapidContext.Util.functionName(o.test)
- *     --> "o.test"
+ * ==> "o.test"
  *
  * @see RapidContext.Util.registerFunctionNames
  */
@@ -208,8 +208,9 @@ RapidContext.Util.functionName = function (func) {
  * provided.
  *
  * This function will add a `displayName` property to all functions without a
- * `name` property. Object properties and prototype properties are processed
- * recursively, adding to the supplied base name (e.g. `[name].[property name]`).
+ * `name` property. Both the `obj` properties and `obj.prototype` properties
+ * are processed recursively, using the base name as a namespace (i.e.
+ * `[name].[property]` or `[name].prototype.[property]`).
  *
  * @param {Object} obj the function or object to process
  * @param {String} [name] the function or object (class) name
@@ -218,7 +219,7 @@ RapidContext.Util.functionName = function (func) {
  * var o = { name: "MyObject", test: function () {} };
  * RapidContext.Util.registerFunctionNames(o);
  * o.test.displayName
- *     --> "MyObject.test"
+ * ==> "MyObject.test"
  *
  * @see RapidContext.Util.functionName
  */
@@ -248,16 +249,20 @@ RapidContext.Util.registerFunctionNames = function (obj, name) {
 };
 
 /**
- * Returns the current execution stack trace. The stack trace is an
- * array of function names with the innermost function at the lowest
- * index (0). Due to limitations in the JavaScript API:s, the stack
- * trace will be cut if recursion is detected. The stack trace will
- * also be cut if the call depth exceeds the maximum depth or if any
- * function in the chain has an injected stack trace.
+ * Returns the current execution stack trace. The stack trace is an array of
+ * function names with the innermost function at the lowest index (0). Due to
+ * limitations in the JavaScript API:s, the stack trace will be cut if
+ * recursion is detected. The stack trace will also be cut if the call depth
+ * exceeds the maximum depth or if any function in the chain has an injected
+ * stack trace.
  *
  * @param {Number} [maxDepth] the maximum call depth, defaults to 20
  *
  * @return {Array} the stack trace array of function names
+ *
+ * @deprecated This function will be removed in the future. Custom code for
+ *     logging and determining stack traces is obsolete, since `console.log`
+ *     now provides a better solution. 
  *
  * @see RapidContext.Util.functionName
  * @see RapidContext.Util.injectStackTrace
@@ -293,14 +298,17 @@ RapidContext.Util.stackTrace = function (maxDepth) {
 };
 
 /**
- * Injects a stack trace for a function. This method is useful for
- * creating a fake stack trace in anonymous or callback functions. A
- * null value can be used to clear any previously injected stack
- * trace for the calling function.
+ * Injects a stack trace for a function. This method is useful for creating a
+ * fake stack trace in anonymous or callback functions. A `null` value can be
+ * used to clear any previously injected stack trace for the calling function.
  *
- * @param {Array} stackTrace the stack trace, or null to clear
- * @param {Function} [func] the function to modify, or null for the
+ * @param {Array} stackTrace the stack trace, or `null` to clear
+ * @param {Function} [func] the function to modify, or `null` for the
  *            currently executing function (i.e. the caller)
+ *
+ * @deprecated This function will be removed in the future. Custom code for
+ *     logging and determining stack traces is obsolete, since `console.log`
+ *     now provides a better solution. 
  */
 RapidContext.Util.injectStackTrace = function (stackTrace, func) {
     func = func || arguments.callee.caller;
@@ -314,16 +322,19 @@ RapidContext.Util.injectStackTrace = function (stackTrace, func) {
 };
 
 /**
- * Resolves a relative URI to an absolute URI. This function will
- * return absolute URI:s directly and traverse any "../" directory
- * paths in the specified URI. The base URI provided must be
- * absolute.
+ * Resolves a relative URI to an absolute URI. This function will return
+ * absolute URI:s directly and traverse any "../" directory paths in the
+ * specified URI. The base URI provided must be absolute.
  *
  * @param {String} uri the relative URI to resolve
  * @param {String} [base] the absolute base URI, defaults to the
  *            the current document base URI
  *
  * @return {String} the resolved absolute URI
+ *
+ * @deprecated This function will be removed and/or renamed in the future.
+ *     Better solutions for handling URL:s is to use a URL-parsing library such
+ *     as URL.js.
  */
 RapidContext.Util.resolveURI = function (uri, base) {
     base = base || document.baseURI || document.getElementsByTagName("base")[0].href;
@@ -413,14 +424,14 @@ RapidContext.Util.NS = {
 RapidContext.Util.NS.HTML = [undefined, null, '', RapidContext.Util.NS.XHTML];
 
 /**
- * Returns true if the specified object looks like a DOM node.
- * Otherwise, false will be returned. Any non-null object with a
- * `nodeType` > 0 will be considered a DOM node by this function.
+ * Returns `true` if the specified object looks like a DOM node. Otherwise,
+ * `false` will be returned. Any non-null object with a `nodeType` > 0 will be
+ * considered a DOM node by this function.
  *
  * @param {Object} obj the object to check
  *
- * @return {Boolean} true if the object looks like a DOM node, or
- *         false otherwise
+ * @return {Boolean} `true` if the object looks like a DOM node, or
+ *         `false` otherwise
  */
 RapidContext.Util.isDOM = function (obj) {
     return obj != null &&
@@ -429,15 +440,15 @@ RapidContext.Util.isDOM = function (obj) {
 };
 
 /**
- * Returns true if the specified object looks like an HTML or XHTML
- * DOM node. Otherwise, false will be returned. Any non-null object
- * with a `nodeType` > 0 will be considered a DOM node, but only those
- * with a matching namespaceURI will be considered HTML DOM nodes.
+ * Returns `true` if the specified object looks like an HTML or XHTML DOM node.
+ * Otherwise, `false` will be returned. Any non-null object with a
+ * `nodeType` > 0 will be considered a DOM node, but only those with a matching
+ * `namespaceURI` will be considered HTML DOM nodes.
  *
  * @param {Object} obj the object to check
  *
- * @return {Boolean} true if the object looks like an HTML DOM node,
- *         or false otherwise
+ * @return {Boolean} `true` if the object looks like an HTML DOM node,
+ *         or `false` otherwise
  */
 RapidContext.Util.isHTML = function (obj) {
     var ns = RapidContext.Util.NS.HTML;
@@ -446,9 +457,9 @@ RapidContext.Util.isHTML = function (obj) {
 };
 
 /**
- * Creates a programmers debug representation of a DOM node. This
- * method is similar to `MochiKit.DOM.emitHtml`, except for that it
- * does not recurse into child nodes.
+ * Creates a programmers debug representation of a DOM node. This method is
+ * similar to `MochiKit.DOM.emitHtml`, except for that it does not recurse into
+ * child nodes.
  *
  * @param {Object} node the HTML DOM node
  *
@@ -483,9 +494,8 @@ RapidContext.Util.reprDOM = function (node) {
 };
 
 /**
- * Returns an array with DOM node attribute name and value pairs.
- * The name and value pairs are also stored in arrays with two
- * elements.
+ * Returns an array with DOM node attribute name and value pairs. The name and
+ * value pairs are also stored in arrays with two elements.
  *
  * @param {Object} node the HTML DOM node
  *
@@ -505,16 +515,24 @@ RapidContext.Util.attributeArray = function (node) {
 };
 
 /**
- * Returns an immediate child node from a parent DOM node. This
- * function handles the index range checks and finds the immediate
- * child node if a descendant node is specified.
+ * Returns an immediate child node from a parent DOM node. If a numeric index
+ * is provided, the index will be range checked and any matching child DOM
+ * node will be returned. Otherwise, the DOM tree is traversed to find the
+ * immediate child that corresponds to the specified node.
  *
  * @param {Node} parent the parent HTML DOM node
- * @param {Number/Node} indexOrNode the child index or a descendant
- *            node
+ * @param {Number/Node} indexOrNode the child index or a descendant node
  *
  * @return {Node} the child HTML DOM node, or
- *         null if no matching node was found
+ *         `null` if no matching node was found
+ *
+ * @example
+ * var child = RapidContext.Util.childNode(parent, 2);
+ * ==> parent.childNodes[2] or null
+ *
+ * @example
+ * var child = RapidContext.Util.childNode(node, evt.target());
+ * ==> child DOM node if descendant or null otherwise
  */
 RapidContext.Util.childNode = function (parent, indexOrNode) {
     parent = MochiKit.DOM.getElement(parent);
@@ -542,6 +560,10 @@ RapidContext.Util.childNode = function (parent, indexOrNode) {
  * @param {Object} [...] the nodes or text to add as children
  *
  * @return {Object} the DOM node created
+ *
+ * @example
+ * RapidContext.Util.createDOMExt("http://www.w3.org/2000/svg", "g");
+ * ==> an SVG <g> element
  */
 RapidContext.Util.createDOMExt = function (ns, tag, attrs/*, ...*/) {
     var doc = MochiKit.DOM.currentDocument();
@@ -553,9 +575,9 @@ RapidContext.Util.createDOMExt = function (ns, tag, attrs/*, ...*/) {
 };
 
 /**
- * Creates a DOM text node from the specified text. This is a
- * convenience function for `currentDocument().createTextNode`, in
- * order to be compatible with the `withDocument()` function.
+ * Creates a DOM text node from the specified text. This is a convenience
+ * function for `currentDocument().createTextNode`, in order to be compatible
+ * with the `withDocument()` function.
  *
  * @param {String} text the text content
  *
@@ -566,18 +588,17 @@ RapidContext.Util.createTextNode = function (text) {
 };
 
 /**
- * Returns a function for creating a specific kind of DOM nodes. The
- * returned function will optionally require a sequence of non-null
- * arguments that will be added as attributes to the node creation.
- * The returned function will otherwise work similar to the
- * `createDOMExt()` function, taking attributes and child nodes.
+ * Returns a function for creating a specific kind of DOM nodes. The returned
+ * function will optionally require a sequence of non-null arguments that will
+ * be added as attributes to the node creation. The returned function will
+ * otherwise work similar to the `createDOMExt()` function, taking attributes
+ * and child nodes.
  *
- * @param {String} ns the DOM namespace, or null for HTML
+ * @param {String} ns the DOM namespace, or `null` for HTML
  * @param {String} tag the DOM tag name
- * @param {Array} [args] the array with required arguments, or null
- *            for no required arguments
- * @param {Object} [attrs] the default node attributes, or null for
- *            none
+ * @param {Array} [args] the array with required arguments, or `null` for no
+ *            required arguments
+ * @param {Object} [attrs] the default node attributes, or `null` for none
  * @param {Object} [...] the default nodes or text to add as children
  *
  * @return {Function} the function that creates the DOM nodes
@@ -620,20 +641,19 @@ RapidContext.Util.blurAll = function (node) {
 };
 
 /**
- * Registers algebraic constraints for the element width, height
- * and/or aspect ratio. The constraints may either be fixed numeric
- * values, functions or algebraic formulas (in a string).
+ * Registers algebraic constraints for the element width, height and/or aspect
+ * ratio. The constraints may either be fixed numeric values, functions or
+ * algebraic formulas (in a string).
  *
- * The formulas will be converted to JavaScript functions, replacing
- * any "%" character with a reference to the corresponding parent
- * dimension value (i.e. the parent element width, height or aspect
- * ratio). It is also possible to directly reference the parent
- * values as "w" or "h".
+ * The formulas will be converted to JavaScript functions, replacing any "%"
+ * character with a reference to the corresponding parent dimension value (i.e.
+ * the parent element width, height or aspect ratio as a percentage). It is
+ * also possible to directly reference the parent values as `w` or `h`.
  *
- * Constraint functions must take two arguments (parent width and
- * height) and return a number. The returned number is set as the new
- * element width or height (in pixels). Any returned value will also
- * be bounded by the parent element size to avoid calculation errors.
+ * Constraint functions must take two arguments (parent width and height) and
+ * return a number. The returned number is set as the new element width or
+ * height (in pixels). Any returned value will also be bounded by the parent
+ * element size to avoid calculation errors.
  *
  * @param {Object} node the HTML DOM node
  * @param {Number/Function/String} [width] the width constraint
@@ -644,13 +664,15 @@ RapidContext.Util.blurAll = function (node) {
  *
  * @example
  * RapidContext.Util.registerSizeConstraints(node, "50%-20", "100%");
- *     // Sets width to 50%-20 px and height to 100% of parent dimension
+ * ==> Sets width to 50%-20 px and height to 100% of parent dimension
  *
+ * @example
  * RapidContext.Util.registerSizeConstraints(otherNode, null, null, 1.0);
- *     // Ensures a square aspect ratio
+ * ==> Ensures a square aspect ratio
  *
+ * @example
  * RapidContext.Util.resizeElements(node, otherNode);
- *     // Evaluates the size constraints for both nodes
+ * ==> Evaluates the size constraints for both nodes
  */
 RapidContext.Util.registerSizeConstraints = function (node, width, height, aspect) {
     node = MochiKit.DOM.getElement(node);
@@ -703,10 +725,11 @@ RapidContext.Util.registerSizeConstraints = function (node, width, height, aspec
  *
  * @example
  * RapidContext.Util.resizeElements(node);
- *     // Evaluates the size constraints for a node and all child nodes
+ * ==> Evaluates the size constraints for a node and all child nodes
  *
+ * @example
  * elem.resizeContent = MochiKit.Base.noop;
- *     // Assigns a no-op resize handler to an element
+ * ==> Assigns a no-op child resize handler to elem
  */
 RapidContext.Util.resizeElements = function (/* ... */) {
     var args = MochiKit.Base.flattenArray(arguments);
