@@ -24,7 +24,8 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  * @constructor
  * @param {Object} attrs the widget and node attributes
  * @param {String} attrs.name the tree node name
- * @param {Boolean} [attrs.folder] the folder flag, defaults to false
+ * @param {Boolean} [attrs.folder] the folder flag, defaults to false if no
+ *            child nodes are provided in constructor call
  * @param {String} [attrs.icon] the icon reference to use, defaults
  *            to "FOLDER" for folders and "DOCUMENT" otherwise
  * @param {String} [attrs.tooltip] the tooltip text when hovering
@@ -37,6 +38,16 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *     normally not be listened for on individual tree nodes, but rather on
  *     the tree as a whole.
  * @extends RapidContext.Widget
+ *
+ * @example {JavaScript}
+ * var parent = RapidContext.Widget.TreeNode({ folder: true, name: "Parent" });
+ * var child = RapidContext.Widget.TreeNode({ name: "Child" });
+ * parent.addAll(child);
+ *
+ * @example {User Interface XML}
+ * <TreeNode name="Parent">
+ *   <TreeNode name="Child" />
+ * </TreeNode>
  */
 RapidContext.Widget.TreeNode = function (attrs/*, ...*/) {
     var icon = RapidContext.Widget.Icon({ ref: "BLANK" });
@@ -181,12 +192,18 @@ RapidContext.Widget.TreeNode.prototype.removeChildNode = function (child) {
 };
 
 /**
- * Removes all tree nodes that are marked as unmodified. When adding
- * or updating nodes, they (and their parent nodes) are automatically
- * marked as modified. This function makes tree pruning possible, by
- * initially marking all tree nodes as unmodified (clearing any
- * previous modified flag), touching all nodes to be kept, and
+ * Removes all marked tree nodes. When adding or updating tree nodes, any
+ * node modified is automatically unmarked (e.g. by calling `setAttrs`). This
+ * makes it easy to prune a tree after an update, by initially marking all
+ * tree nodes with `markAll()`, inserting or touching all nodes to keep, and
  * finally calling this method to remove the remaining nodes.
+ *
+ * @example
+ * parent.markAll();
+ * parent.setAttrs();
+ * child.setAttrs();
+ * ...
+ * parent.removeAllMarked();
  */
 RapidContext.Widget.TreeNode.prototype.removeAllMarked = function () {
     var children = this.getChildNodes();
@@ -200,12 +217,18 @@ RapidContext.Widget.TreeNode.prototype.removeAllMarked = function () {
 };
 
 /**
- * Marks all tree nodes as unmodified. When adding or updating nodes,
- * they (and their parent nodes) are automatically marked as
- * modified. This function makes tree pruning possible, by initially
- * marking all tree nodes (clearing any previous modified flag),
- * touching all nodes to be kept, and finally calling the
- * `removeAllMarked()` method to remove the remaining nodes.
+ * Marks this tree node and all child nodes recursively. When adding or
+ * updating tree nodes, any node modified is automatically unmarked (e.g. by
+ * calling `setAttrs`). This makes it easy to prune a tree after an update, by
+ * initially marking all tree nodes, inserting or touching all nodes to keep,
+ * and finally calling `removeAllMarked()` to remove the remaining nodes.
+ *
+ * @example
+ * parent.markAll();
+ * parent.setAttrs();
+ * child.setAttrs();
+ * ...
+ * parent.removeAllMarked();
  */
 RapidContext.Widget.TreeNode.prototype.markAll = function () {
     this.marked = true;

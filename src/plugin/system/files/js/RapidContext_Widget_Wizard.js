@@ -35,8 +35,8 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  * @extends RapidContext.Widget
  *
  * @example {User Interface XML}
- * <Dialog id="exDialog" title="Example Dialog" w="80%" h="50%">
- *   <Wizard id="exWizard" style="width: 100%; height: 100%;">
+ * <Dialog id="exampleDialog" title="Example Dialog" w="80%" h="50%">
+ *   <Wizard id="exampleWizard" style="width: 100%; height: 100%;">
  *     <Pane pageTitle="The first step">
  *       ...
  *     </Pane>
@@ -114,7 +114,8 @@ RapidContext.Widget.Wizard.prototype.getChildNodes = function () {
 
 /**
  * Adds a single child page widget to this widget. The child widget should be a
- * `RapidContext.Widget.Pane` widget, or it will be added to a new one.
+ * `RapidContext.Widget.Pane` widget, or a new one will be created where it
+ * will be added.
  *
  * @param {Widget} child the page widget to add
  */
@@ -206,9 +207,14 @@ RapidContext.Widget.Wizard.prototype.activePageIndex = function () {
 };
 
 /**
- * Activates a new page.
+ * Activates a new page and sends the `onchange` signal. If the page is moved
+ * forward, the old page must pass a form validation check, or nothing will
+ * happen.
  *
  * @param {Number/Widget} indexOrPage the page index or page DOM node
+ *
+ * @see #next
+ * @see #previous
  */
 RapidContext.Widget.Wizard.prototype.activatePage = function (indexOrPage) {
     if (typeof(indexOrPage) == "number") {
@@ -250,8 +256,11 @@ RapidContext.Widget.Wizard.prototype.activatePage = function (indexOrPage) {
 };
 
 /**
- * Cancels the active page operation. This method will also reset
- * the page status of the currently active page to `ANY`.
+ * Cancels the active page operation. This method will also reset the page
+ * status of the currently active page to `ANY`. This method is triggered when
+ * the user presses the "Cancel" button.
+ *
+ * @see RapidContext.Widget.Pane.ANY
  */
 RapidContext.Widget.Wizard.prototype.cancel = function () {
     var page = this.activePage();
@@ -260,7 +269,9 @@ RapidContext.Widget.Wizard.prototype.cancel = function () {
 };
 
 /**
- * Moves the wizard backward to the previous page.
+ * Moves the wizard backward to the previous page and sends the `onchange`
+ * signal. This method is triggered when the user presses the "Previous"
+ * button.
  */
 RapidContext.Widget.Wizard.prototype.previous = function () {
     if (this._selectedIndex > 0) {
@@ -269,8 +280,9 @@ RapidContext.Widget.Wizard.prototype.previous = function () {
 };
 
 /**
- * Moves the wizard forward to the next page. The page will not be
- * changed if the active page fails a validation check.
+ * Moves the wizard forward to the next page and sends the `onchange` signal.
+ * The page will not be changed if the active page fails a validation check.
+ * This method is triggered when the user presses the "Next" button.
  */
 RapidContext.Widget.Wizard.prototype.next = function () {
     if (this._selectedIndex < this.getChildNodes().length - 1) {
@@ -279,8 +291,8 @@ RapidContext.Widget.Wizard.prototype.next = function () {
 };
 
 /**
- * Sends the wizard `onclose` signal when the user presses the finish
- * button.
+ * Sends the wizard `onclose` signal. This method is triggered when the user
+ * presses the "Finish" button.
  */
 RapidContext.Widget.Wizard.prototype.done = function () {
     var page = this.activePage();
