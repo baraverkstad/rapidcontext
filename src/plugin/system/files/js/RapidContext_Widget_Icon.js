@@ -68,13 +68,12 @@ RapidContext.Widget.Classes.Icon = RapidContext.Widget.Icon;
  * @param {String} [attrs.tooltip] the icon tooltip text
  */
 RapidContext.Widget.Icon.prototype.setAttrs = function (attrs) {
-    attrs = MochiKit.Base.update({}, attrs);
-    if (attrs.ref || attrs.url) {
-        MochiKit.Base.setdefault(attrs,
-                                 RapidContext.Widget.Icon[attrs.ref] || {},
-                                 RapidContext.Widget.Icon.DEFAULT);
+    var locals = MochiKit.Base.update({}, attrs);
+    if (attrs.ref) {
+        var ref = RapidContext.Widget.Icon[attrs.ref] || {};
+        var def = RapidContext.Widget.Icon.DEFAULT;
+        MochiKit.Base.setdefault(locals, ref, def);
     }
-    var locals = RapidContext.Util.mask(attrs, ["ref", "url", "position", "width", "height", "tooltip"]);
     var styles = {};
     if (locals.url) {
         styles.backgroundImage = 'url("' + locals.url + '")';
@@ -85,11 +84,11 @@ RapidContext.Widget.Icon.prototype.setAttrs = function (attrs) {
     if (locals.width) {
         styles.width = locals.width + "px";
     }
-    if (locals.height != null) {
+    if (locals.height) {
         styles.height = locals.height + "px";
     }
     this.setStyle(styles);
-    if (typeof(locals.tooltip) != "undefined") {
+    if (locals.tooltip && !attrs.title) {
         attrs.title = locals.tooltip;
     }
     this.__setAttrs(attrs);
