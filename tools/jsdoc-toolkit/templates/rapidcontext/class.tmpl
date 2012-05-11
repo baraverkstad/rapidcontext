@@ -97,12 +97,13 @@
 
 <!-- ============================== properties summary ===================== -->
             <if test="data.properties.length">
-                {! var ownProperties = data.properties.filter(function($){return $.memberOf == data.alias && !$.isNamespace}).sort(makeSortby("name")); !}
-                <if test="ownProperties.length">
+                {! var ownProperties = data.properties.filter(function($){return $.memberOf == data.alias && !$.isNamespace}); !}
+                {! var ownSortedProperties = ownProperties.slice().sort(makeSortby("name")); !}
+                <if test="ownSortedProperties.length">
                 <table class="summaryTable">
                     <caption>Field Summary</caption>
                     <tbody>
-                    <for each="member" in="ownProperties">
+                    <for each="member" in="ownSortedProperties">
                         <tr>
                             <td class="attributes">{!
                                 if (member.isPrivate) output += "&lt;private&gt; ";
@@ -153,12 +154,13 @@
 
 <!-- ============================== methods summary ======================== -->
             <if test="data.methods.length">
-                {! var ownMethods = data.methods.filter(function($){return $.memberOf == data.alias  && !$.isNamespace}).sort(makeSortby("name")); !}
-                <if test="ownMethods.length">
+                {! var ownMethods = data.methods.filter(function($){return $.memberOf == data.alias  && !$.isNamespace}); !}
+                {! var ownSortedMethods = ownMethods.slice().sort(makeSortby("name")); !}
+                <if test="ownSortedMethods.length">
                 <table class="summaryTable">
                     <caption>Method Summary</caption>
                     <tbody>
-                    <for each="member" in="ownMethods">
+                    <for each="member" in="ownSortedMethods">
                         <tr>
                             <td class="attributes">{!
                                 if (member.isPrivate) output += "&lt;private&gt; ";
@@ -206,12 +208,13 @@
             </if>
 <!-- ============================== events summary ======================== -->
             <if test="data.events.length">
-                {! var ownEvents = data.events.filter(function($){return $.memberOf == data.alias  && !$.isNamespace}).sort(makeSortby("name")); !}
-                <if test="ownEvents.length">
+                {! var ownEvents = data.events.filter(function($){return $.memberOf == data.alias  && !$.isNamespace}); !}
+                {! var ownSortedEvents = ownEvents.slice().sort(makeSortby("name")); !}
+                <if test="ownSortedEvents.length">
                 <table class="summaryTable">
                     <caption>Event Summary</caption>
                     <tbody>
-                    <for each="member" in="ownEvents">
+                    <for each="member" in="ownSortedEvents">
                         <tr>
                             <td class="attributes">{!
                                 if (member.isPrivate) output += "&lt;private&gt; ";
