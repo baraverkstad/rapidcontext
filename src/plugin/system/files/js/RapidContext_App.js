@@ -119,7 +119,7 @@ RapidContext.App.apps = function () {
  *        launcher
  *
  * @return {Object} the read-only app launcher, or
- *         null if not found
+ *         `null` if not found
  */
 RapidContext.App.findApp = function (app) {
     if (app == null) {
@@ -138,8 +138,7 @@ RapidContext.App.findApp = function (app) {
 };
 
 /**
- * Creates and starts apps on startup or when no other apps are
- * active.
+ * Creates and starts apps on startup or when no other apps are active.
  *
  * @param {Boolean} startup the initial startup flag
  *
@@ -184,13 +183,14 @@ RapidContext.App._cbAssign = function (obj, key) {
 }
 
 /**
- * Creates and starts an app instance. Normally apps are started in
- * the default app tab container or in a provided widget DOM node. By
- * specifying a newly created window object as the parent container,
- * apps can also be launched into separate windows. Note that when a
- * new window is used, the returned deferred will callback
- * immediately with a null app instance (normal app communication is
- * not possible cross-window).
+ * Creates and starts an app instance. Normally apps are started in the default
+ * app tab container or in a provided widget DOM node. By specifying a newly
+ * created window object as the parent container, apps can also be launched
+ * into separate windows.
+ *
+ * Note that when a new window is used, the returned deferred will callback
+ * immediately with a `null` app instance (normal app communication is not
+ * possible cross-window).
  *
  * @param {String/Object} app the app id, class name or launcher
  * @param {Widget/Window} [container] the app container widget or
@@ -198,7 +198,7 @@ RapidContext.App._cbAssign = function (obj, key) {
  *            container
  *
  * @return {Deferred} a `MochiKit.Async.Deferred` object that will
- *         callback with the app instance (or null if not available)
+ *         callback with the app instance (or `null` if not available)
  *
  * @example
  * // Starts the help app in a new tab
@@ -322,11 +322,10 @@ RapidContext.App.startApp = function (app, container) {
 };
 
 /**
- * Stops an app instance. If only the class name or launcher is
- * specified, the most recently created instance will be stopped.
+ * Stops an app instance. If only the class name or launcher is specified, the
+ * most recently created instance will be stopped.
  *
- * @param {String/Object} app the app id, instance, class name or
- *        launcher
+ * @param {String/Object} app the app id, instance, class name or launcher
  *
  * @return {Deferred} a `MochiKit.Async.Deferred` object that will
  *         callback when the app has been stopped
@@ -359,14 +358,12 @@ RapidContext.App.stopApp = function (app) {
 };
 
 /**
- * Performs an asynchronous call to a method in an app. If only
- * the class name or launcher is specified, the most recently
- * created instance will be used. If no instance is running, one
- * will be started. Also, before calling the app method, the
- * app UI will be focused.
+ * Performs an asynchronous call to a method in an app. If only the class name
+ * or launcher is specified, the most recently created instance will be used.
+ * If no instance is running, one will be started. Also, before calling the app
+ * method, the app UI will be focused.
  *
- * @param {String/Object} app the app id, instance, class name or
- *        launcher
+ * @param {String/Object} app the app id, instance, class name or launcher
  * @param {String} method the app method name
  * @param {Mixed} [args] additional parameters sent to method
  *
@@ -415,12 +412,12 @@ RapidContext.App.callApp = function (app, method) {
 };
 
 /**
- * Performs an asynchronous procedure call. This function returns a
- * deferred object that will produce either a `callback` or an `errback`
- * depending on the server response.
+ * Performs an asynchronous procedure call. This function returns a deferred
+ * object that will produce either a `callback` or an `errback` depending on
+ * the server response.
  *
  * @param {String} name the procedure name
- * @param {Array} [args] the array of arguments, or null
+ * @param {Array} [args] the array of arguments, or `null`
  *
  * @return {Deferred} a `MochiKit.Async.Deferred` object that will
  *         callback with the response data on success
@@ -472,25 +469,23 @@ RapidContext.App.callProc = function (name, args) {
 };
 
 /**
- * Performs an asynchronous HTTP request for a JSON data document and
- * returns a deferred response. If no request method has been
- * specified, the POST or GET methods are chosen depending on
- * whether or not the params argument is null. The request
- * parameters are specified as an object that will be encoded by the
- * `MochiKit.Base.queryString` function. In addition to the default
- * options in `MochiKit.Async.doXHR`, this function also accepts a
+ * Performs an asynchronous HTTP request for a JSON data document and returns a
+ * deferred response. If no request method has been specified, the `POST` or
+ * `GET` methods are chosen depending on whether or not the params argument is
+ * `null`. The request parameters are specified as an object that will be
+ * encoded by the `MochiKit.Base.queryString` function. In addition to the
+ * default options in `MochiKit.Async.doXHR`, this function also accepts a
  * timeout option for automatic request cancellation.
  *
- * Note that this function is unsuitable for loading JavaScript
- * source code, since using `eval()` will confuse some browser error
- * messages and debuggers regarding the actual source location.
+ * Note that this function is unsuitable for loading JavaScript source code,
+ * since using `eval()` will confuse some browser error messages and debuggers
+ * regarding the actual source location.
  *
  * @param {String} url the URL to request
- * @param {Object} [params] the request parameters, or null
- * @param {Object} [options] the request options, or null
+ * @param {Object} [params] the request parameters, or `null`
+ * @param {Object} [options] the request options, or `null`
  * @config {String} [method] the HTTP method, "GET" or "POST"
- * @config {Number} [timeout] the timeout in seconds, default is
- *             no timeout
+ * @config {Number} [timeout] the timeout in seconds, default is no timeout
  * @config {Object} [headers] the specific HTTP headers to use
  * @config {String} [mimeType] the override MIME type, default is
  *             none
@@ -507,26 +502,23 @@ RapidContext.App.loadJSON = function (url, params, options) {
 };
 
 /**
- * Performs an asynchronous HTTP request for a text document and
- * returns a deferred response. If no request method has been
- * specified, the POST or GET methods are chosen depending on
- * whether or not the params argument is null. The request
- * parameters are specified as an object that will be encoded by the
- * `MochiKit.Base.queryString` function. In addition to the default
- * options in `MochiKit.Async.doXHR`, this function also accepts a
+ * Performs an asynchronous HTTP request for a text document and returns a
+ * deferred response. If no request method has been specified, the `POST` or
+ * `GET` methods are chosen depending on whether or not the params argument is
+ * `null`. The request parameters are specified as an object that will be
+ * encoded by the `MochiKit.Base.queryString` function. In addition to the
+ * default options in `MochiKit.Async.doXHR`, this function also accepts a
  * timeout option for automatic request cancellation.
  *
- * Note that this function is unsuitable for loading JavaScript
- * source code (but not JSON data), since using `eval()` will confuse
- * some browser error messages and debuggers regarding the actual
- * source location.
+ * Note that this function is unsuitable for loading JavaScript source code,
+ * since using `eval()` will confuse some browser error messages and debuggers
+ * regarding the actual source location.
  *
  * @param {String} url the URL to request
- * @param {Object} [params] the request parameters, or null
- * @param {Object} [options] the request options, or null
+ * @param {Object} [params] the request parameters, or `null`
+ * @param {Object} [options] the request options, or `null`
  * @config {String} [method] the HTTP method, "GET" or "POST"
- * @config {Number} [timeout] the timeout in seconds, default is
- *             no timeout
+ * @config {Number} [timeout] the timeout in seconds, default is no timeout
  * @config {Object} [headers] the specific HTTP headers to use
  * @config {String} [mimeType] the override MIME type, default is
  *             none
@@ -541,21 +533,19 @@ RapidContext.App.loadText = function (url, params, options) {
 };
 
 /**
- * Performs an asynchronous HTTP request for an XML document and
- * returns a deferred response. If no request method has been
- * specified, the POST or GET methods are chosen depending on
- * whether or not the params argument is null. The request
- * parameters are specified as an object that will be encoded by the
- * `MochiKit.Base.queryString` function. In addition to the default
- * options in `MochiKit.Async.doXHR`, this function also accepts a
+ * Performs an asynchronous HTTP request for an XML document and returns a
+ * deferred response. If no request method has been specified, the `POST` or
+ * `GET` methods are chosen depending on whether or not the params argument is
+ * `null`. The request parameters are specified as an object that will be
+ * encoded by the `MochiKit.Base.queryString` function. In addition to the
+ * default options in `MochiKit.Async.doXHR`, this function also accepts a
  * timeout option for automatic request cancellation.
  *
  * @param {String} url the URL to request
- * @param {Object} [params] the request parameters, or null
- * @param {Object} [options] the request options, or null
+ * @param {Object} [params] the request parameters, or `null`
+ * @param {Object} [options] the request options, or `null`
  * @config {String} [method] the HTTP method, "GET" or "POST"
- * @config {Number} [timeout] the timeout in seconds, default is
- *             no timeout
+ * @config {Number} [timeout] the timeout in seconds, default is no timeout
  * @config {Object} [headers] the specific HTTP headers to use
  * @config {String} [mimeType] the override MIME type, default is
  *             none
@@ -570,26 +560,23 @@ RapidContext.App.loadXML = function (url, params, options) {
 };
 
 /**
- * Performs an asynchronous HTTP request and returns a deferred
- * response. If no request method has been specified, the POST or
- * GET methods are chosen depending on whether or not the params
- * argument is null. The request parameters are specified as an
- * object that will be encoded by the `MochiKit.Base.queryString`
- * function. In addition to the default options in
- * `MochiKit.Async.doXHR`, this function also accepts a timeout
- * option for automatic request cancellation.
+ * Performs an asynchronous HTTP request and returns a deferred response. If no
+ * request method has been specified, the `POST` or `GET` methods are chosen
+ * depending on whether or not the `params` argument is `null`. The request
+ * parameters are specified as an object that will be encoded by the
+ * `MochiKit.Base.queryString` function. In addition to the default options in
+ * `MochiKit.Async.doXHR`, this function also accepts a timeout option for
+ * automatic request cancellation.
  *
- * Note that this function is unsuitable for loading JavaScript
- * source code (but not JSON data), since using `eval()` will confuse
- * some browser error messages and debuggers regarding the actual
- * source location.
+ * Note that this function is unsuitable for loading JavaScript source code,
+ * since using `eval()` will confuse some browser error messages and debuggers
+ * regarding the actual source location.
  *
  * @param {String} url the URL to request
- * @param {Object} [params] the request parameters, or null
- * @param {Object} [options] the request options, or null
+ * @param {Object} [params] the request parameters, or `null`
+ * @param {Object} [options] the request options, or `null`
  * @config {String} [method] the HTTP method, "GET" or "POST"
- * @config {Number} [timeout] the timeout in seconds, default is
- *             no timeout
+ * @config {Number} [timeout] the timeout in seconds, default is no timeout
  * @config {Object} [headers] the specific HTTP headers to use
  * @config {String} [mimeType] the override MIME type, default is
  *             none
@@ -627,20 +614,18 @@ RapidContext.App.loadXHR = function (url, params, options) {
 };
 
 /**
- * Loads a JavaScript to the the current page asynchronously and
- * returns a deferred response. This function is only suitable for
- * loading JavaScript source code, and not JSON data, since it loads
- * the script by inserting a `<script>` tag in the document `<head>` tag.
- * All function definitions and values must therefore be stored to
- * global variables by the script to be accessible after loading.
- * The deferred callback function will therefore not provide any
- * data even on successful callback.
+ * Loads a JavaScript to the the current page asynchronously and returns a
+ * deferred response. This function is only suitable for loading JavaScript
+ * source code, and not JSON data, since it loads the script by inserting a
+ * `<script>` tag in the document `<head>` tag. All function definitions and
+ * values must therefore be stored to global variables by the script to be
+ * accessible after loading. The deferred callback function will therefore not
+ * provide any data even on successful callback.
  *
- * This method of script loading has the advantage that JavaScript
- * debuggers (such as Firebug) will be able to handle the code
- * properly (error messages, breakpoints, etc). If the script fails
- * to load due to errors however, the returned deferred object may
- * fail to `errback` in some cases.
+ * This method of script loading has the advantage that JavaScript debuggers
+ * (such as Firebug) will be able to handle the code properly (error messages,
+ * breakpoints, etc). If the script fails to load due to errors however, the
+ * returned deferred object may fail to `errback` in some cases.
  *
  * @param {String} url the URL to the script
  *
@@ -673,10 +658,10 @@ RapidContext.App.loadScript = function (url) {
 };
 
 /**
- * Loads a CSS stylesheet to the the current page asynchronously and
- * returns a deferred response. The stylesheet is loaded by inserting
- * a LINK tag in the document head tag, which means that the deferred
- * callback function will not be provided with any data.
+ * Loads a CSS stylesheet to the the current page asynchronously and returns a
+ * deferred response. The stylesheet is loaded by inserting a `<link>` tag in
+ * the document head tag, which means that the deferred callback function will
+ * not be provided with any data.
  *
  * @param {String} url the URL to the stylesheet
  *

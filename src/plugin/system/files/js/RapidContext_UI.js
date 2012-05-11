@@ -197,9 +197,11 @@ RapidContext.UI._buildUIStylesheet = function (css) {
  * error handler, a loading icon with cancellation handler and a reload icon
  * with the appropriate click handler.
  *
- * @param {Procedure} proc the RapidContext.Procedure instance
- * @param {Icon} [loadingIcon] the loading icon, or null
- * @param {Icon} [reloadIcon] the reload icon, or null
+ * @param {Procedure} proc the `RapidContext.Procedure` instance
+ * @param {Icon} [loadingIcon] the loading icon, or `null`
+ * @param {Icon} [reloadIcon] the reload icon, or `null`
+ *
+ * @see RapidContext.Procedure
  */
 RapidContext.UI.connectProc = function (proc, loadingIcon, reloadIcon) {
     // TODO: error signal not automatically cleaned up on stop()...

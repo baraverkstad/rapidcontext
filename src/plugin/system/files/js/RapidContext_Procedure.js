@@ -30,10 +30,13 @@ if (typeof(RapidContext) == "undefined") {
  *
  * @class The procedure wrapper function. Used to provide a simplified way of
  *   calling a procedure and connecting results through signals (instead of
- *   using deferred callbacks). The actual call is performed with a normal
- *   function call, but the results are asynchronous. When called, the
- *   procedure function returns a deferred object (as the normal API call),
- *   but the results will also be signalled through the `onsuccess` signal.
+ *   using deferred callbacks).
+ *
+ *   The actual calls are performed with normal function calls, but the results
+ *   are asynchronous. When called, the procedure function returns a
+ *   `MochiKit.Async.Deferred` object (as the normal API call), but the results
+ *   will also be signalled through the `onsuccess` signal.
+ *
  *   Differing from normal functions, a procedure function will also ensure
  *   that only a single call is in progress at any time, automatically
  *   cancelling any previous call if needed.
@@ -130,10 +133,12 @@ RapidContext.Procedure.mapAll = function (obj) {
  * Calls the procedure with the same arguments as used in the last call. The
  * call is asynchronous, so results will not be returned by this method.
  * Instead the results will be available through the `onsuccess` signal, for
- * example. Note that any previously running call will automatically be
- * cancelled, since only a single call can be processed at any time.
+ * example.
  *
- * @return {Deferred} a MochiKit.Async.Deferred object that will
+ * Note that any previously running call will automatically be cancelled, since
+ * only a single call can be processed at any time.
+ *
+ * @return {Deferred} a `MochiKit.Async.Deferred` object that will
  *         callback with the response data or error
  */
 RapidContext.Procedure.prototype.recall = function () {
@@ -167,19 +172,21 @@ RapidContext.Procedure.prototype._callback = function (res) {
 };
 
 /**
- * Calls the procedure multiple times with different arguments (supplied as
- * an array of argument arrays). The calls are asynchronous, so results will
- * not be returned by this method. Instead an array with the results will be
- * available through the `onupdate` and `onsuccess` signals, for example. Note
- * that any previously running call will automatically be cancelled, since
- * only a single call can be processed at any time. A result transform
- * function can be supplied to transform each individual result or throwing an
- * exception to omit a particular result.
+ * Calls the procedure multiple times (in sequence) with different arguments
+ * (supplied as an array of argument arrays). The calls are asynchronous, so
+ * results will not be returned by this method. Instead an array with the
+ * results will be available through the `onupdate` and `onsuccess` signals,
+ * for example.
+ *
+ * Note that any previously running call will automatically be cancelled, since
+ * only a single call can be processed at any time. A result `transform`
+ * function can be supplied to transform each individual result. If the
+ * `transform` function throws an error, that result will be omitted.
  *
  * @param {Array} args the array of argument arrays
  * @param {Function} [transform] the optional result transform function
  *
- * @return {Deferred} a MochiKit.Async.Deferred object that will
+ * @return {Deferred} a `MochiKit.Async.Deferred` object that will
  *         callback with the response data or error
  */
 RapidContext.Procedure.prototype.multicall = function (args, transform) {
