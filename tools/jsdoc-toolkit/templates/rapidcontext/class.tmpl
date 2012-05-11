@@ -338,7 +338,7 @@
                         </dl>
                     </if>
                     <if test="data.see.length">
-                        <dl class="detailList">
+                        <dl class="detailList linkList">
                         <dt class="heading">See:</dt>
                         <for each="item" in="data.see">
                             <dd>{+ new Link().toSymbol(item) +}</dd>
@@ -396,7 +396,7 @@
                             </dl>
                         </if>
                         <if test="member.see.length">
-                            <dl class="detailList">
+                            <dl class="detailList linkList">
                             <dt class="heading">See:</dt>
                             <for each="item" in="member.see">
                             <dd>{+ new Link().toSymbol(item) +}</dd>
@@ -502,7 +502,7 @@
                             </dl>
                         </if>
                         <if test="member.see.length">
-                            <dl class="detailList">
+                            <dl class="detailList linkList">
                             <dt class="heading">See:</dt>
                             <for each="item" in="member.see">
                                 <dd>{+ new Link().toSymbol(item) +}</dd>
@@ -600,7 +600,7 @@
                             </dl>
                         </if>
                         <if test="member.see.length">
-                            <dl class="detailList">
+                            <dl class="detailList linkList">
                             <dt class="heading">See:</dt>
                             <for each="item" in="member.see">
                                 <dd>{+ new Link().toSymbol(item) +}</dd>

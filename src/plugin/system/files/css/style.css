@@ -325,6 +325,11 @@ div.description {
     padding-bottom: 6px;
     margin-left: 0;
 }
+.doc .linkList dd {
+    display: list-item;
+    margin: 0;
+    list-style: circle inside;
+}
 .doc .light,
 .doc td.attributes,
 .doc .light a:link,
