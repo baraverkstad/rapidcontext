@@ -24,10 +24,13 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  * @constructor
  * @param {Object} attrs the widget and node attributes
  * @param {String} [attrs.title] the dialog title, defaults to "Dialog"
- * @param {Boolean} [attrs.modal] the modal dialog flag, defaults to false
- * @param {Boolean} [attrs.center] the center dialog flag, defaults to true
- * @param {Boolean} [attrs.closeable] the closeable dialog flag, defaults to true
- * @param {Boolean} [attrs.resizeable] the resize dialog flag, defaults to true
+ * @param {Boolean} [attrs.modal] the modal dialog flag, defaults to `false`
+ * @param {Boolean} [attrs.center] the center dialog flag, defaults to `true`
+ * @param {Boolean} [attrs.closeable] the closeable dialog flag, defaults to
+ *            `true`
+ * @param {Boolean} [attrs.resizeable] the resize dialog flag, defaults to
+ *            `true`
+ * @param {Boolean} [attrs.hidden] the hidden widget flag, defaults to `true`
  * @param {Object} [...] the child widgets or DOM nodes
  *
  * @return {Widget} the widget DOM node
@@ -37,11 +40,16 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *     number of `<div>` HTML elements.
  * @extends RapidContext.Widget
  *
- * @example
- * var dialog = RapidContext.Widget.Dialog({ title: "My Dialog", modal: true },
- *                                         "...dialog content widgets here...");
- * parent.addAll(dialog);
- * dialog.show();
+ * @example {JavaScript}
+ * var h1 = MochiKit.DOM.H1({}, "Hello, world!");
+ * var attrs = { title: "Hello", modal: true };
+ * var helloDialog = RapidContext.Widget.Dialog(attrs, h1);
+ * RapidContext.Util.registerSizeConstraints(helloDialog, "200", "75");
+ *
+ * @example {User Interface XML}
+ * <Dialog id="helloDialog" title="Hello" modal="true" w="200" h="75">
+ *   <h1>Hello, world!</h1>
+ * </Dialog>
  */
 RapidContext.Widget.Dialog = function (attrs/*, ... */) {
     var title = MochiKit.DOM.DIV({ "class": "widgetDialogTitle" }, "Dialog");
@@ -107,6 +115,7 @@ RapidContext.Widget.Classes.Dialog = RapidContext.Widget.Dialog;
  * @param {Boolean} [attrs.center] the center dialog flag
  * @param {Boolean} [attrs.closeable] the closeable dialog flag
  * @param {Boolean} [attrs.resizeable] the resize dialog flag
+ * @param {Boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.Dialog.prototype.setAttrs = function (attrs) {
     attrs = MochiKit.Base.update({}, attrs);

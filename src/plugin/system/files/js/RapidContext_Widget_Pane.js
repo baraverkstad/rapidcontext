@@ -31,13 +31,14 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  * @param {Boolean} [attrs.pageCloseable] the page closeable flag
  *            used when inside some page containers, defaults to
  *            `false`
+ * @param {Boolean} [attrs.hidden] the hidden widget flag, defaults to false
  * @param {Object} [...] the child widgets or DOM nodes
  *
  * @return {Widget} the widget DOM node
  *
  * @class The pane widget class. Used to create the simplest form of element
  *     container. It is also used inside various types of paged containers,
- *     such as a `TabContainer`, a `Wizard` and similar. A pane only uses a
+ *     such as a `TabContainer`, a `Wizard` or similar. A pane only uses a
  *     `<div>` HTML element, and supports being hidden and shown according to
  *     any page transitions required by a parent container.
  * @property {String} pageTitle [read-only] The current page title.
@@ -45,6 +46,15 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  * @property {Boolean} pageCloseable [read-only] The current page
  *               closeable flag value.
  * @extends RapidContext.Widget
+ *
+ * @example {JavaScript}
+ * var h1 = MochiKit.DOM.H1({}, "Hello, world!");
+ * var helloPane = RapidContext.Widget.Pane({}, h1);
+ *
+ * @example {User Interface XML}
+ * <Pane id="helloPane">
+ *   <h1>Hello, world!</h1>
+ * </Pane>
  */
 RapidContext.Widget.Pane = function (attrs/*, ... */) {
     var o = MochiKit.DOM.DIV();
@@ -134,6 +144,7 @@ RapidContext.Widget.Pane.WORKING = { previous: false, next: false };
  *            status constants in this class
  * @param {Boolean} [attrs.pageCloseable] the page closeable flag
  *            used when inside some page containers
+ * @param {Boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.Pane.prototype.setAttrs = function (attrs) {
     attrs = MochiKit.Base.update({}, attrs);
@@ -168,7 +179,7 @@ RapidContext.Widget.Pane.prototype.setAttrs = function (attrs) {
  * and finally trigger the "onenter" event.
  *
  * @param {Object} opts the page transition options
- * @param {Boolean} [opts.show] the show pane flag, defaults to true
+ * @param {Boolean} [opts.show] the show pane flag, defaults to `true`
  * @param {Boolean} [opts.validateReset] the form validation reset
  *            flag, used to clear all form validations in the pane
  */
@@ -196,13 +207,13 @@ RapidContext.Widget.Pane.prototype._handleEnter = function (opts) {
  * pane (optional), and finally trigger the "onexit" event.
  *
  * @param {Object} opts the page transition options
- * @param {Boolean} [opts.hide] the hide pane flag, defaults to true
+ * @param {Boolean} [opts.hide] the hide pane flag, defaults to `true`
  * @param {Boolean} [opts.validate] the form validation flag, used to
  *            check all forms in the page for valid entries before
- *            proceeding, defaults to false
+ *            proceeding, defaults to `false`
  *
- * @return {Boolean} true if the page exit event completed, or
- *         false if it was cancelled (due to validation errors)
+ * @return {Boolean} `true` if the page exit event completed, or
+ *         `false` if it was cancelled (due to validation errors)
  */
 RapidContext.Widget.Pane.prototype._handleExit = function (opts) {
     opts = MochiKit.Base.update({ hide: true, validate: false }, opts);

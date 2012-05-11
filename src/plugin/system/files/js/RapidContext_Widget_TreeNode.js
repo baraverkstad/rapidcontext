@@ -24,11 +24,12 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  * @constructor
  * @param {Object} attrs the widget and node attributes
  * @param {String} attrs.name the tree node name
- * @param {Boolean} [attrs.folder] the folder flag, defaults to false if no
+ * @param {Boolean} [attrs.folder] the folder flag, defaults to `false` if no
  *            child nodes are provided in constructor call
  * @param {String} [attrs.icon] the icon reference to use, defaults
  *            to "FOLDER" for folders and "DOCUMENT" otherwise
  * @param {String} [attrs.tooltip] the tooltip text when hovering
+ * @param {Boolean} [attrs.hidden] the hidden widget flag, defaults to `false`
  * @param {Widget} [...] the child tree node widgets
  *
  * @return {Widget} the widget DOM node
@@ -76,7 +77,7 @@ RapidContext.Widget.Classes.TreeNode = RapidContext.Widget.TreeNode;
  * Returns and/or creates the child container DOM node. If a child
  * container is created, it will be hidden by default.
  *
- * @param {Boolean} create the optional create flag, defaults to false
+ * @param {Boolean} create the optional create flag, defaults to `false`
  *
  * @return {Node} the child container DOM node found or created
  */
@@ -105,10 +106,11 @@ RapidContext.Widget.TreeNode.prototype._container = function (create) {
  * @param {Object} attrs the widget and node attributes to set
  * @param {String} [attrs.name] the tree node name
  * @param {Boolean} [attrs.folder] the folder flag, cannot be
- *            reverted to false once set (implicitly or explicitly)
+ *            reverted to `false` once set (implicitly or explicitly)
  * @param {Icon/Object/String} [attrs.icon] icon the icon to set, or
  *            null to remove
  * @param {String} [attrs.tooltip] the tooltip text when hovering
+ * @param {Boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.TreeNode.prototype.setAttrs = function (attrs) {
     attrs = MochiKit.Base.update({}, attrs);
@@ -245,8 +247,8 @@ RapidContext.Widget.TreeNode.prototype.markAll = function () {
 /**
  * Checks if this node is a folder.
  *
- * @return {Boolean} true if this node is a folder, or
- *         false otherwise
+ * @return {Boolean} `true` if this node is a folder, or
+ *         `false` otherwise
  */
 RapidContext.Widget.TreeNode.prototype.isFolder = function () {
     return this._container() != null;
@@ -255,8 +257,8 @@ RapidContext.Widget.TreeNode.prototype.isFolder = function () {
 /**
  * Checks if this folder node is expanded.
  *
- * @return {Boolean} true if this node is expanded, or
- *         false otherwise
+ * @return {Boolean} `true` if this node is expanded, or
+ *         `false` otherwise
  */
 RapidContext.Widget.TreeNode.prototype.isExpanded = function () {
     var container = this._container();
@@ -267,8 +269,8 @@ RapidContext.Widget.TreeNode.prototype.isExpanded = function () {
 /**
  * Checks if this node is selected.
  *
- * @return {Boolean} true if the node is selected, or
- *         false otherwise
+ * @return {Boolean} `true` if the node is selected, or
+ *         `false` otherwise
  */
 RapidContext.Widget.TreeNode.prototype.isSelected = function () {
     return MochiKit.DOM.hasElementClass(this.firstChild, "selected");

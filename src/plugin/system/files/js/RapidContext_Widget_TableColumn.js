@@ -27,7 +27,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  * @param {String} attrs.field the data property name
  * @param {String} [attrs.type] the data property type, one of
  *            "string", "number", "date", "time", "datetime",
- *            "boolean" or "object"
+ *            "boolean" or "object" (defaults to "string")
  * @param {String} [attrs.sort] the sort direction, one of "asc",
  *            "desc", "none" (disabled) or null (unsorted)
  * @param {Number} [attrs.maxLength] the maximum data length,
@@ -48,6 +48,23 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *     column, using a `<th>` HTML element for the header (and rendering data
  *     to `<td>` HTML elements).
  * @extends RapidContext.Widget
+ *
+ * @example {JavaScript}
+ * var attrs1 = { field: "id", title: "Identifier", key: true, type: "number" };
+ * var attrs2 = { field: "name", title: "Name", maxLength: 50, sort: "asc" };
+ * var attrs3 = { field: "modified", title: "Last Modified", type: "datetime" };
+ * var col1 = RapidContext.Widget.TableColumn(attrs1);
+ * var col2 = RapidContext.Widget.TableColumn(attrs2);
+ * var col3 = RapidContext.Widget.TableColumn(attrs3);
+ * var exampleTable = RapidContext.Widget.Table({}, col1, col2, col3);
+ * RapidContext.Util.registerSizeConstraints(exampleTable, "50%", "100%");
+ *
+ * @example {User Interface XML}
+ * <Table id="exampleTable" w="50%" h="100%">
+ *   <TableColumn field="id" title="Identifier" key="true" type="number" />
+ *   <TableColumn field="name" title="Name" maxLength="50" sort="asc" />
+ *   <TableColumn field="modified" title="Last Modified" type="datetime" />
+ * </Table>
  */
 RapidContext.Widget.TableColumn = function (attrs) {
     if (attrs.field == null) {

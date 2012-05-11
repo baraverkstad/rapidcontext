@@ -23,6 +23,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *
  * @constructor
  * @param {Object} attrs the widget and node attributes
+ * @param {Boolean} [attrs.hidden] the hidden widget flag, defaults to false
  * @param {Widget} [...] the child widgets or DOM nodes (should be
  *            Pane widgets)
  *
@@ -33,6 +34,16 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *     a `<div>` HTML element containing Pane widgets that are hidden and shown
  *     according to the page transitions.
  * @extends RapidContext.Widget
+ *
+ * @example {JavaScript}
+ * var page1 = RapidContext.Widget.Pane({ pageTitle: "The first step" });
+ * ...
+ * var page2 = RapidContext.Widget.Pane({ pageTitle: "The second step" });
+ * ...
+ * var attrs = { style: { width: "100%", height: "100%" } };
+ * var exampleWizard = RapidContext.Widget.Wizard(attrs, page1, page2);
+ * var exampleDialog = RapidContext.Widget.Dialog({ title: "Example Dialog" }, exampleWizard);
+ * RapidContext.Util.registerSizeConstraints(exampleDialog, "80%", "50%");
  *
  * @example {User Interface XML}
  * <Dialog id="exampleDialog" title="Example Dialog" w="80%" h="50%">

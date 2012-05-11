@@ -44,7 +44,7 @@ RapidContext.Widget._nextId = MochiKit.Base.counter();
 /**
  * Checks if the specified object is a widget. Any non-null object
  * that looks like a DOM node and has the element class "widget"
- * will cause this function to return true. Otherwise, false will
+ * will cause this function to return `true`. Otherwise, `false` will
  * be returned. As an option, this function can also check if the
  * widget has a certain class by checking for an additional CSS
  * class "widget<className>" (which is a standard followed by all
@@ -53,8 +53,8 @@ RapidContext.Widget._nextId = MochiKit.Base.counter();
  * @param {Object} obj the object to check
  * @param {String} [className] the optional widget class name
  *
- * @return {Boolean} true if the object looks like a widget, or
- *         false otherwise
+ * @return {Boolean} `true` if the object looks like a widget, or
+ *         `false` otherwise
  *
  * @static
  */
@@ -73,12 +73,12 @@ RapidContext.Widget.isWidget = function (obj, className) {
  * Checks if the specified object is a form field. Any non-null object that
  * looks like a DOM node and is either an standard HTML form field (`<input>`,
  * `<textarea>` or `<select>`) or one with a "value" property will cause this
- * function to return true. Otherwise, false will be returned.
+ * function to return `true`. Otherwise, `false` will be returned.
  *
  * @param {Object} obj the object to check
  *
- * @return {Boolean} true if the object looks like a form field, or
- *         false otherwise
+ * @return {Boolean} `true` if the object looks like a form field, or
+ *         `false` otherwise
  *
  * @static
  */
@@ -143,7 +143,7 @@ RapidContext.Widget._widgetMixin = function (node/*, objOrClass, ...*/) {
  * @return {Widget} the widget DOM node
  *
  * @throws {ReferenceError} if the widget class name couldn't be
- *             found in RapidContext.Widget.Classes
+ *             found in `RapidContext.Widget.Classes`
  *
  * @static
  */
@@ -224,8 +224,8 @@ RapidContext.Widget._eventHandler = function (className, methodName/*, ...*/) {
  * @param {String} sig the signal name ("onclick" or similar)
  * @param {Object} [...] the optional signal arguments
  *
- * @return {Boolean} true if the signal was processed correctly, or
- *         false if an exception was thrown
+ * @return {Boolean} `true` if the signal was processed correctly, or
+ *         `false` if an exception was thrown
  */
 RapidContext.Widget.emitSignal = function (node, sig/*, ...*/) {
     try {
@@ -310,8 +310,8 @@ RapidContext.Widget.prototype.setStyle = function (styles) {
  *
  * @param {String} [...] the CSS class names to check
  *
- * @return {Boolean} true if all CSS classes were present, or
- *         false otherwise
+ * @return {Boolean} `true` if all CSS classes were present, or
+ *         `false` otherwise
  */
 RapidContext.Widget.prototype.hasClass = function (/* ... */) {
     for (var i = 0; i < arguments.length; i++) {
@@ -351,8 +351,8 @@ RapidContext.Widget.prototype.removeClass = function (/* ... */) {
  *
  * @param {String} [...] the CSS class names to remove
  *
- * @return {Boolean} true if the CSS classes were added, or
- *         false otherwise
+ * @return {Boolean} `true` if the CSS classes were added, or
+ *         `false` otherwise
  */
 RapidContext.Widget.prototype.toggleClass = function (/* ... */) {
     if (this.hasClass.apply(this, arguments)) {
@@ -370,8 +370,8 @@ RapidContext.Widget.prototype.toggleClass = function (/* ... */) {
  * to the disabled status can be made with `enable()`, `disable()` or
  * `setAttrs()`.
  *
- * @return {Boolean} true if the widget is disabled, or
- *         false otherwise
+ * @return {Boolean} `true` if the widget is disabled, or
+ *         `false` otherwise
  */
 RapidContext.Widget.prototype.isDisabled = function () {
     return this.disabled === true &&
@@ -417,8 +417,8 @@ RapidContext.Widget.prototype.disable = function () {
  * actual widget visibility (the `display` style property set by
  * animations for example).
  *
- * @return {Boolean} true if the widget is hidden, or
- *         false otherwise
+ * @return {Boolean} `true` if the widget is hidden, or
+ *         `false` otherwise
  */
 RapidContext.Widget.prototype.isHidden = function () {
     return MochiKit.DOM.hasElementClass(this, "widgetHidden");
@@ -463,15 +463,15 @@ RapidContext.Widget.prototype.hide = function () {
 
 /**
  * Performs a visual effect animation on this widget. This is
- * implemented using the MochiKit.Visual effect package. All options
+ * implemented using the `MochiKit.Visual` effect package. All options
  * sent to this function will be passed on to the appropriate
- * MochiKit.Visual function.
+ * `MochiKit.Visual` function.
  *
  * @param {Object} opts the visual effect options
  * @param {String} opts.effect the MochiKit.Visual effect name
  * @param {String} opts.queue the MochiKit.Visual queue handling,
  *            defaults to "replace" and a unique scope for each widget
- *            (see MochiKit.Visual for full options)
+ *            (see `MochiKit.Visual` for full options)
  *
  * @example
  * widget.animate({ effect: "fade", duration: 0.5 });

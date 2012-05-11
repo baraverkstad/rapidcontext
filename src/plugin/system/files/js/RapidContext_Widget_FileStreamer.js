@@ -28,6 +28,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  * @param {String} [attrs.name] the file input field name,
  *            defaults to 'file'
  * @param {String} [attrs.size] the file input size, defaults to '30'
+ * @param {Boolean} [attrs.hidden] the hidden widget flag, defaults to false
  *
  * @return {Widget} the widget DOM node
  *
@@ -41,7 +42,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *     `<form>` and `<input>` elements are created automatically.
  * @extends RapidContext.Widget
  *
- * @example
+ * @example {JavaScript}
  * var file = RapidContext.Widget.FileStreamer({ url: "rapidcontext/upload/my_id" });
  * form.addAll(file);
  * MochiKit.Signal.connect(file, "onselect", function () {
@@ -92,6 +93,7 @@ RapidContext.Widget.Classes.FileStreamer = RapidContext.Widget.FileStreamer;
  * @param {String} [attrs.url] the URL to post the data to
  * @param {String} [attrs.name] the file input field name
  * @param {String} [attrs.size] the file input size
+ * @param {Boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.FileStreamer.prototype.setAttrs = function (attrs) {
     attrs = MochiKit.Base.update({}, attrs);

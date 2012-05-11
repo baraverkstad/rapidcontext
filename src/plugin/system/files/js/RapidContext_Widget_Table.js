@@ -27,6 +27,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *            'multiple'), defaults to 'one'
  * @param {String} [attrs.key] the unique key identifier column field,
  *            defaults to null
+ * @param {Boolean} [attrs.hidden] the hidden widget flag, defaults to false
  * @param {Widget} [...] the child table columns
  *
  * @return {Widget} the widget DOM node
@@ -37,11 +38,21 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *     visible data column in the table.
  * @extends RapidContext.Widget
  *
+ * @example {JavaScript}
+ * var attrs1 = { field: "id", title: "Identifier", key: true, type: "number" };
+ * var attrs2 = { field: "name", title: "Name", maxLength: 50, sort: "asc" };
+ * var attrs3 = { field: "modified", title: "Last Modified", type: "datetime" };
+ * var col1 = RapidContext.Widget.TableColumn(attrs1);
+ * var col2 = RapidContext.Widget.TableColumn(attrs2);
+ * var col3 = RapidContext.Widget.TableColumn(attrs3);
+ * var exampleTable = RapidContext.Widget.Table({}, col1, col2, col3);
+ * RapidContext.Util.registerSizeConstraints(exampleTable, "50%", "100%");
+ *
  * @example {User Interface XML}
- * <Table id="exTable" w="50%" h="100%">
- *   <TableColumn title="Id" field="id" key="true" type="number" />
- *   <TableColumn title="Name" field="name" sort="asc" />
- *   <TableColumn title="Creation Date" field="created" type="date" />
+ * <Table id="exampleTable" w="50%" h="100%">
+ *   <TableColumn field="id" title="Identifier" key="true" type="number" />
+ *   <TableColumn field="name" title="Name" maxLength="50" sort="asc" />
+ *   <TableColumn field="modified" title="Last Modified" type="datetime" />
  * </Table>
  */
 RapidContext.Widget.Table = function (attrs/*, ...*/) {
@@ -92,6 +103,7 @@ RapidContext.Widget.Classes.Table = RapidContext.Widget.Table;
  * @param {String} [attrs.select] the row selection mode ('none', 'one' or
  *            'multiple')
  * @param {String} [attrs.key] the unique key identifier column field
+ * @param {Boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.Table.prototype.setAttrs = function (attrs) {
     attrs = MochiKit.Base.update({}, attrs);
@@ -270,9 +282,9 @@ RapidContext.Widget.Table.prototype.getData = function () {
  *
  * @example
  * var data = [
- *     { id: 1, name: "John Doe", created: "2007-12-31" },
- *     { id: 2, name: "First Last", created: "2008-03-01" },
- *     { id: 3, name: "Another Name", created: "2009-01-12" }
+ *     { id: 1, name: "John Doe", modified: "@1300000000000" },
+ *     { id: 2, name: "First Last", modified: new Date() },
+ *     { id: 3, name: "Another Name", modified: "2004-11-30 13:33:20" }
  * ];
  * table.setData(data);
  */

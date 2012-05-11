@@ -23,22 +23,29 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *
  * @constructor
  * @param {Object} attrs the widget and node attributes
- * @param {String} [attrs.helpText] the help text shown on empty
- *            input, defaults to ""
+ * @param {String} [attrs.name] the form field name
  * @param {String} [attrs.value] the field value, defaults to ""
+ * @param {String} [attrs.helpText] the help text shown on empty input,
+ *            defaults to ""
+ * @param {Boolean} [attrs.disabled] the disabled widget flag, defaults to
+ *            false
+ * @param {Boolean} [attrs.hidden] the hidden widget flag, defaults to false
  * @param {Object} [...] the initial text content
  *
  * @return {Widget} the widget DOM node
  *
  * @class The text area widget class. Used to provide a text input field
  *     spanning multiple rows, using the `<textarea>` HTML element.
- * @property {Boolean} disabled The widget disabled flag.
+ * @property {Boolean} disabled The read-only widget disabled flag.
  * @property {Boolean} focused The read-only widget focused flag.
  * @property {String} defaultValue The value to use on form reset.
  * @extends RapidContext.Widget
  *
- * @example
- * var field = RapidContext.Widget.TextArea({ helpText: "< Enter Data >" });
+ * @example {JavaScript}
+ * var field = RapidContext.Widget.TextArea({ name="description", helpText: "Description Text" });
+ *
+ * @example {User Interface XML}
+ * <TextArea name="description" helpText="Description Text" />
  */
 RapidContext.Widget.TextArea = function (attrs/*, ...*/) {
     var text = "";
@@ -71,15 +78,11 @@ RapidContext.Widget.Classes.TextArea = RapidContext.Widget.TextArea;
  * Updates the widget or HTML DOM node attributes.
  *
  * @param {Object} attrs the widget and node attributes to set
- * @param {String} [attrs.helpText] the help text shown on empty input
+ * @param {String} [attrs.name] the form field name
  * @param {String} [attrs.value] the field value
- *
- * @example
- * var value = field.getValue();
- * var lines = value.split("\n");
- * lines = MochiKit.Base.map(MochiKit.Format.strip, lines);
- * value = lines.join("\n");
- * field.setAttrs({ "value": value });
+ * @param {String} [attrs.helpText] the help text shown on empty input
+ * @param {Boolean} [attrs.disabled] the disabled widget flag
+ * @param {Boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.TextArea.prototype.setAttrs = function (attrs) {
     attrs = MochiKit.Base.update({}, attrs);
@@ -107,10 +110,10 @@ RapidContext.Widget.TextArea.prototype.reset = function () {
 };
 
 /**
- * Returns the text area value. This function is slightly different
- * from using the "value" property directly, since it will always
- * return the actual value string instead of the temporary help text
- * displayed when the text area is empty and unfocused.
+ * Returns the text area value. This function is slightly different from using
+ * the `value` property directly, since it will always return the actual value
+ * instead of the temporary help text displayed when the text area is empty and
+ * unfocused.
  *
  * @return {String} the field value
  *

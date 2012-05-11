@@ -25,15 +25,16 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  * @param {Object} attrs the widget and node attributes
  * @param {String} attrs.name the form field name to validate
  * @param {Boolean} [attrs.mandatory] the mandatory field flag,
- *            defaults to true
+ *            defaults to `true`
  * @param {String/RegExp} [attrs.regex] the regular expression to
- *            match the field value against, defaults to null
+ *            match the field value against, defaults to `null`
  * @param {String} [attrs.display] the validator display setting
  *            (either "none", "icon", "text" or "both"), defaults
  *            to "both"
  * @param {String} [attrs.message] the message to display, defaults
  *            to the validator function error message
  * @param {Function} [attrs.validator] the validator function
+ * @param {Boolean} [attrs.hidden] the hidden widget flag, defaults to `false`
  *
  * @return {Widget} the widget DOM node
  *
@@ -45,6 +46,18 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  * @property {String} message The default validation message.
  * @property {Function} validator The validator function in use.
  * @extends RapidContext.Widget
+ *
+ * @example {JavaScript}
+ * var field = RapidContext.Widget.TextField({ name: "name", helpText: "Your Name Here" });
+ * var attrs = { name: "name", message: "Please enter your name to proceed." };
+ * var valid = RapidContext.Widget.FormValidator(attrs);
+ * var exampleForm = RapidContext.Widget.Form({}, field, valid);
+ *
+ * @example {User Interface XML}
+ * <Form id="exampleForm">
+ *   <TextField name="name" helpText="Your Name Here" />
+ *   <FormValidator name="name" message="Please enter your name to proceed." />
+ * </Form>
  */
 RapidContext.Widget.FormValidator = function (attrs) {
     var o = MochiKit.DOM.SPAN();
@@ -71,6 +84,7 @@ RapidContext.Widget.Classes.FormValidator = RapidContext.Widget.FormValidator;
  *            (either "none", "icon", "text" or "both")
  * @param {String} [attrs.message] the message to display
  * @param {Function} [attrs.validator] the validator function
+ * @param {Boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.FormValidator.prototype.setAttrs = function (attrs) {
     attrs = MochiKit.Base.update({}, attrs);
@@ -107,8 +121,13 @@ RapidContext.Widget.FormValidator.prototype.setAttrs = function (attrs) {
 };
 
 /**
- * Resets this form validator. This will hide any error messages and
- * mark all invalidated fields as valid.
+ * Resets this form validator. This will hide any error messages and mark all
+ * invalidated fields as valid.
+ *
+ * Note that this method is normally not called directly, instead the
+ * validation is reset by the `RapidContext.Widget.Form` widget.
+ *
+ * @see RapidContext.Widget.Form#validateReset
  */
 RapidContext.Widget.FormValidator.prototype.reset = function () {
     for (var i = 0; i < this.fields.length; i++) {
@@ -120,16 +139,20 @@ RapidContext.Widget.FormValidator.prototype.reset = function () {
 };
 
 /**
- * Verifies a form field with this validator. If the form field
- * value doesn't match this validator, the field will be invalidated
- * until this validator is reset.
+ * Verifies a form field with this validator. If the form field value doesn't
+ * match this validator, the field will be invalidated until this validator is
+ * reset.
+ *
+ * Note that this method is normally not called directly, instead the
+ * validation is performed by the `RapidContext.Widget.Form` widget.
  *
  * @param {Widget/Node} field the form field DOM node
  *
- * @return {Boolean/MochiKit.Async.Deferred} true if the form
- *         validated successfully, false if the validation failed,
- *         or a MochiKit.Async.Deferred instance if the validation
- *         was deferred
+ * @return {Boolean/MochiKit.Async.Deferred} `true` if the form validated
+ *         successfully, `false` if the validation failed, or a
+ *         `MochiKit.Async.Deferred` instance if the validation was deferred
+ *
+ * @see RapidContext.Widget.Form#validate
  */
 RapidContext.Widget.FormValidator.prototype.verify = function (field) {
     if (!field.disabled) {
@@ -173,11 +196,16 @@ RapidContext.Widget.FormValidator.prototype.verify = function (field) {
 };
 
 /**
- * Adds a validation error message for the specified field. If the
- * field is already invalid, this method will not do anything.
+ * Adds a validation error message for the specified field. If the field is
+ * already invalid, this method will not do anything.
+ *
+ * Note that this method is normally not called directly, instead the
+ * validation is performed by the `RapidContext.Widget.Form` widget.
  *
  * @param {Widget/Node} field the field DOM node
  * @param {String} message the validation error message
+ *
+ * @see RapidContext.Widget.Form#validate
  */
 RapidContext.Widget.FormValidator.prototype.addError = function (field, message) {
     if (!MochiKit.DOM.hasElementClass(field, "widgetInvalid")) {

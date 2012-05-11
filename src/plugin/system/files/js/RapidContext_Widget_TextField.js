@@ -23,9 +23,13 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *
  * @constructor
  * @param {Object} attrs the widget and node attributes
- * @param {String} [attrs.helpText] the help text shown on empty
- *            input, defaults to ""
+ * @param {String} [attrs.name] the form field name
  * @param {String} [attrs.value] the field value, defaults to ""
+ * @param {String} [attrs.helpText] the help text shown on empty input,
+ *            defaults to ""
+ * @param {Boolean} [attrs.disabled] the disabled widget flag, defaults to
+ *            false
+ * @param {Boolean} [attrs.hidden] the hidden widget flag, defaults to false
  * @param {Object} [...] the initial text content
  *
  * @return {Widget} the widget DOM node
@@ -33,13 +37,16 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  * @class The text field widget class. Used to provide a text input field for a
  *     single line, using the `<input>` HTML element. The text field may also
  *     be connected to a popup (for auto-complete or similar).
- * @property {Boolean} disabled The widget disabled flag.
+ * @property {Boolean} disabled The read-only widget disabled flag.
  * @property {Boolean} focused The read-only widget focused flag.
  * @property {String} defaultValue The value to use on form reset.
  * @extends RapidContext.Widget
  *
- * @example
- * var field = RapidContext.Widget.TextField({ helpText: "< Enter Data >" });
+ * @example {JavaScript}
+ * var field = RapidContext.Widget.TextField({ name: "name", helpText: "Your Name Here" });
+ *
+ * @example {User Interface XML}
+ * <TextField name="name" helpText="Your Name Here" />
  */
 RapidContext.Widget.TextField = function (attrs/*, ...*/) {
     var text = "";
@@ -81,13 +88,11 @@ RapidContext.Widget.Classes.TextField = RapidContext.Widget.TextField;
  * Updates the widget or HTML DOM node attributes.
  *
  * @param {Object} attrs the widget and node attributes to set
- * @param {String} [attrs.helpText] the help text shown on empty input
+ * @param {String} [attrs.name] the form field name
  * @param {String} [attrs.value] the field value
- *
- * @example
- * var value = field.getValue();
- * value = MochiKit.Format.strip(value);
- * field.setAttrs({ "value": value });
+ * @param {String} [attrs.helpText] the help text shown on empty input
+ * @param {Boolean} [attrs.disabled] the disabled widget flag
+ * @param {Boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.TextField.prototype.setAttrs = function (attrs) {
     attrs = MochiKit.Base.update({}, attrs);
@@ -168,7 +173,11 @@ RapidContext.Widget.TextField.prototype.popup = function (create) {
  * @param {Number} [attrs.delay] the popup auto-hide delay, defaults
  *            to 30 seconds
  * @param {Array} [items] the items to show, or null to keep the
- *            previuos popup content
+ *            previous popup content
+ *
+ * @example
+ * var items = ["Cat", "Dog", "Elephant", "Zebra"];
+ * field.showPopup({}, items);
  */
 RapidContext.Widget.TextField.prototype.showPopup = function (attrs, items) {
     var popup = this.popup(true);

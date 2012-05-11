@@ -23,8 +23,9 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *
  * @constructor
  * @param {Object} attrs the widget and node attributes
- * @param {Boolean} [attrs.disabled] the disabled button flag,
- *            defaults to false
+ * @param {Boolean} [attrs.disabled] the disabled widget flag, defaults to
+ *            false
+ * @param {Boolean} [attrs.hidden] the hidden widget flag, defaults to false
  * @param {Boolean} [attrs.highlight] the highlight option flag,
  *            defaults to false
  * @param {String} [attrs.icon] the icon reference to use, defaults
@@ -37,8 +38,11 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *     button, using the `<button>` HTML element.
  * @extends RapidContext.Widget
  *
- * @example
- * var closeBtn = RapidContext.Widget.Button({ icon: "OK" }, "Close");
+ * @example {JavaScript}
+ * var closeBtn = RapidContext.Widget.Button({ icon: "OK", highlight: true }, "Close");
+ *
+ * @example {User Interface XML}
+ * <Button id="closeBtn" icon="OK" highlight="true">Close</Button>
  */
 RapidContext.Widget.Button = function (attrs/*, ...*/) {
     var o = MochiKit.DOM.BUTTON();
@@ -64,7 +68,8 @@ RapidContext.Widget.Classes.Button = RapidContext.Widget.Button;
  * Updates the widget or HTML DOM node attributes.
  *
  * @param {Object} attrs the widget and node attributes to set
- * @param {Boolean} [attrs.disabled] the disabled button flag
+ * @param {Boolean} [attrs.disabled] the disabled widget flag
+ * @param {Boolean} [attrs.hidden] the hidden widget flag
  * @param {Boolean} [attrs.highlight] the highlight option flag
  * @param {Icon/Object/String} [attrs.icon] the icon reference to use
  */

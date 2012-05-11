@@ -24,11 +24,12 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  * @constructor
  * @param {Object} attrs the widget and node attributes
  * @param {Number} [attrs.delay] the widget auto-hide delay in
- *            milliseconds, defaults to 5000
+ *            milliseconds, defaults to `5000`
  * @param {Object} [attrs.showAnim] the optional animation options
               when showing the popup, defaults to none
  * @param {Object} [attrs.hideAnim] the optional animation options
  *            when hiding the popup, defaults to none
+ * @param {Boolean} [attrs.hidden] the hidden widget flag, defaults to `true`
  * @param {Widget} [...] the child widgets or DOM nodes
  *
  * @return {Widget} the widget DOM node
@@ -38,6 +39,24 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *     disappear after a configurable amount of time, unless the user performs
  *     keyboard or mouse actions related to the popup.
  * @extends RapidContext.Widget
+ *
+ * @example {JavaScript}
+ * var attrs1 = { value: 1, "class": "widgetPopupItem" };
+ * var attrs2 = { value: 2, "class": "widgetPopupItem" };
+ * var attrs3 = { value: 3, "class": "widgetPopupItem widgetPopupDisabled" };
+ * var item1 = MochiKit.DOM.DIV(attrs1, "\u00BB First Item");
+ * var item2 = MochiKit.DOM.DIV(attrs2, "\u00BB Second Item");
+ * var item3 = MochiKit.DOM.DIV(attrs3, "\u00BB Third Item");
+ * var hr = MochiKit.DOM.HR();
+ * var examplePopup = RapidContext.Widget.Popup({}, item1, item2, hr, item3);
+ *
+ * @example {User Interface XML}
+ * <Popup id="examplePopup">
+ *   <div value="1" class="widgetPopupItem">&#187; First Item</div>
+ *   <div value="2" class="widgetPopupItem">&#187; Second Item</div>
+ *   <hr />
+ *   <div value="3" class="widgetPopupItem widgetPopupDisabled">&#187; Third Item</div>
+ * </Popup>
  */
 RapidContext.Widget.Popup = function (attrs/*, ...*/) {
     var o = MochiKit.DOM.DIV();
@@ -82,6 +101,7 @@ RapidContext.Widget.Classes.Popup = RapidContext.Widget.Popup;
               when showing the popup, defaults to none
  * @param {Object} [attrs.hideAnim] the optional animation options
  *            when hiding the popup, defaults to none
+ * @param {Boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.Popup.prototype.setAttrs = function (attrs) {
     attrs = MochiKit.Base.update({}, attrs);

@@ -37,6 +37,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *            `false`
  * @param {Boolean} [attrs.notime] the hide remaining time display flag,
  *            defaults to `false`
+ * @param {Boolean} [attrs.hidden] the hidden widget flag, defaults to false
  *
  * @return {Widget} the widget DOM node
  *
@@ -51,7 +52,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  * var w = RapidContext.Widget.ProgressBar(attrs);
  *
  * @example {User Interface XML}
- * <ProgressBar text="Working" noratio="1" notime="1" />
+ * <ProgressBar text="Working" noratio="true" notime="true" />
  */
 RapidContext.Widget.ProgressBar = function (attrs) {
     var meter = MochiKit.DOM.DIV({ "class": "widgetProgressBarMeter" });
@@ -84,6 +85,7 @@ RapidContext.Widget.Classes.ProgressBar = RapidContext.Widget.ProgressBar;
  * @param {Boolean} [attrs.noratio] the hide ratio (in percent) display flag
  * @param {Boolean} [attrs.novalue] the hide value display flag
  * @param {Boolean} [attrs.notime] the hide remaining time display flag
+ * @param {Boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.ProgressBar.prototype.setAttrs = function (attrs) {
     attrs = MochiKit.Base.update({}, attrs);

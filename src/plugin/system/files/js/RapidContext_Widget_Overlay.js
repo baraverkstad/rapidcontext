@@ -23,10 +23,11 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *
  * @constructor
  * @param {Object} attrs the widget and node attributes
- * @param {Boolean} [attrs.loading] the display loading icon flag,
- *            defaults to true
- * @param {String} [attrs.message] the overlay message text, defaults
- *            to "Working..."
+ * @param {Boolean} [attrs.loading] the display loading icon flag, defaults to
+ *            `true`
+ * @param {String} [attrs.message] the overlay message text, defaults to
+ *            "Working..."
+ * @param {Boolean} [attrs.hidden] the hidden widget flag, defaults to `true`
  *
  * @return {Widget} the widget DOM node
  *
@@ -34,6 +35,12 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *     parent node, using a `<div>` HTML element. This widget is useful for
  *     disabling the user interface during an operation.
  * @extends RapidContext.Widget
+ *
+ * @example {JavaScript}
+ * var workOverlay = RapidContext.WidgetOverlay({ message: "Doing Stuff..." });
+ *
+ * @example {User Interface XML}
+ * <Overlay id="workOverlay" message="Doing Stuff..." />
  */
 RapidContext.Widget.Overlay = function (attrs) {
     var cover = MochiKit.DOM.DIV({ "class": "widgetOverlayCover" });
@@ -54,6 +61,7 @@ RapidContext.Widget.Classes.Overlay = RapidContext.Widget.Overlay;
  * @param {Object} attrs the widget and node attributes to set
  * @param {Boolean} [attrs.loading] the display loading icon flag
  * @param {String} [attrs.message] the overlay message text
+ * @param {Boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.Overlay.prototype.setAttrs = function (attrs) {
     attrs = MochiKit.Base.update({}, attrs);

@@ -23,6 +23,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *
  * @constructor
  * @param {Object} attrs the widget and node attributes
+ * @param {Boolean} [attrs.hidden] the hidden widget flag, defaults to false
  *
  * @return {Widget} the widget DOM node
  *
@@ -35,9 +36,13 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *     navigating.
  * @property {Array} path The path being navigated.
  *
- * @example
- * var nav = RapidContext.Widget.NavigationBar();
- * nav.moveTo(0, ["Step 1", "Step 2", "Step 3"]);
+ * @example {JavaScript}
+ * var navBar = RapidContext.NavigationBar();
+ * navBar.moveTo(0, ["Step 1", "Step 2", "Step 3"]);
+ *
+ * @example {User Interface XML}
+ * <NavigationBar id="navBar" />
+ * <!-- No support for menu items in XML yet -->
  */
 RapidContext.Widget.NavigationBar = function (attrs) {
     var tr = MochiKit.DOM.TR();

@@ -23,6 +23,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *
  * @constructor
  * @param {Object} attrs the widget and node attributes
+ * @param {Boolean} [attrs.hidden] the hidden widget flag, defaults to false
  * @param {Object} [...] the child widgets or DOM nodes
  *
  * @return {Widget} the widget DOM node
@@ -31,6 +32,18 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *     `<form>` HTML element. The form widget supports form reset, validation
  *     and data retrieval.
  * @extends RapidContext.Widget
+ *
+ * @example {JavaScript}
+ * var field = RapidContext.Widget.TextField({ name: "name", helpText: "Your Name Here" });
+ * var attrs = { name: "name", message: "Please enter your name to proceed." };
+ * var valid = RapidContext.Widget.FormValidator(attrs);
+ * var exampleForm = RapidContext.Widget.Form({}, field, valid);
+ *
+ * @example {User Interface XML}
+ * <Form id="exampleForm">
+ *   <TextField name="name" helpText="Your Name Here" />
+ *   <FormValidator name="name" message="Please enter your name to proceed." />
+ * </Form>
  */
 RapidContext.Widget.Form = function (attrs/*, ...*/) {
     var o = MochiKit.DOM.FORM(attrs);
@@ -206,8 +219,7 @@ RapidContext.Widget.Form.prototype.update = function (values) {
 };
 
 /**
- * Returns an array with all child DOM nodes containing form
- * validator widgets.
+ * Returns an array with all child DOM nodes containing form validator widgets.
  *
  * @return {Array} the array of form validator widgets
  */
@@ -225,9 +237,9 @@ RapidContext.Widget.Form.prototype.validators = function () {
 /**
  * Validates this form using the form validators found.
  *
- * @return {Boolean/MochiKit.Async.Deferred} true if the form
- *         validated successfully, false if the validation failed,
- *         or a MochiKit.Async.Deferred instance if the validation
+ * @return {Boolean/MochiKit.Async.Deferred} `true` if the form
+ *         validated successfully, `false` if the validation failed,
+ *         or a `MochiKit.Async.Deferred` instance if the validation
  *         was deferred
  */
 RapidContext.Widget.Form.prototype.validate = function () {
@@ -260,7 +272,10 @@ RapidContext.Widget.Form.prototype.validate = function () {
 };
 
 /**
- * Resets all form validators.
+ * Resets all form validators. This metod is automatically called upon form
+ * reset.
+ *
+ * @see #reset
  */
 RapidContext.Widget.Form.prototype.validateReset = function () {
     var validators = this.validators();

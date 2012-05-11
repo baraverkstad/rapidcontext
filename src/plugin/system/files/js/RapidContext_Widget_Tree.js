@@ -23,6 +23,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *
  * @constructor
  * @param {Object} attrs the widget and node attributes
+ * @param {Boolean} [attrs.hidden] the hidden widget flag, defaults to false
  * @param {Widget} [...] the child tree node widgets
  *
  * @return {Widget} the widget DOM node

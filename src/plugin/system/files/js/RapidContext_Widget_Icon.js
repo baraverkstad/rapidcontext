@@ -29,6 +29,9 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  * @param {Number} [attrs.width] the icon image width (in pixels)
  * @param {Number} [attrs.height] the icon image height (in pixels)
  * @param {String} [attrs.tooltip] the icon tooltip text
+ * @param {Boolean} [attrs.disabled] the disabled widget flag, defaults to
+ *            false
+ * @param {Boolean} [attrs.hidden] the hidden widget flag, defaults to false
  *
  * @return {Widget} the widget DOM node
  *
@@ -36,6 +39,19 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *     the `<span>` HTML element. A number of predefined icon images suitable
  *     for different actions are available (using a single icon sprite image).
  * @extends RapidContext.Widget
+ *
+ * @example {JavaScript}
+ * var style = { "margin-left": "3px" };
+ * var dataReload = RapidContext.Widget.Icon({ ref: "RELOAD", style: style });
+ * var dataLoading = RapidContext.Widget.Icon({ ref: "LOADING", hidden: true, style: style });
+ * var h3 = MochiKit.DOM.H3({}, "Data List:", dataReload, dataLoading);
+ *
+ * @example {User Interface XML}
+ * <h3>
+ *   Data List:
+ *   <Icon id="dataReload" ref="RELOAD" style="margin-left: 3px;" />
+ *   <Icon id="dataLoading" ref="LOADING" hidden="true" style="margin-left: 3px;" />
+ * </h3>
  */
 RapidContext.Widget.Icon = function (attrs) {
     var o = MochiKit.DOM.SPAN();
@@ -66,6 +82,8 @@ RapidContext.Widget.Classes.Icon = RapidContext.Widget.Icon;
  * @param {Number} [attrs.width] the icon image width (in pixels)
  * @param {Number} [attrs.height] the icon image height (in pixels)
  * @param {String} [attrs.tooltip] the icon tooltip text
+ * @param {Boolean} [attrs.disabled] the disabled widget flag
+ * @param {Boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.Icon.prototype.setAttrs = function (attrs) {
     var locals = MochiKit.Base.update({}, attrs);

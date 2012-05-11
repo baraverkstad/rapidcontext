@@ -23,6 +23,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *
  * @constructor
  * @param {Object} attrs the widget and node attributes
+ * @param {Boolean} [attrs.hidden] the hidden widget flag, defaults to false
  * @param {Widget} [...] the child widgets or DOM nodes (should be
  *            Pane widgets)
  *
@@ -34,6 +35,24 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *     according to the page transitions. If a child `Pane` widget is
  *     `pageCloseable`, a close button will be available on the tab label.
  * @extends RapidContext.Widget
+ *
+ * @example {JavaScript}
+ * var page1 = RapidContext.Widget.Pane({ pageTitle: "One" });
+ * ...
+ * var page2 = RapidContext.Widget.Pane({ pageTitle: "Two", pageCloseable: true });
+ * ...
+ * var attrs = { style: { width: "100%", height: "100%" } };
+ * var tabs = RapidContext.Widget.TabContainer(attrs, page1, page2);
+ *
+ * @example {User Interface XML}
+ * <TabContainer style="width: 100%; height: 100%;">
+ *   <Pane pageTitle="One">
+ *     ...
+ *   </Pane>
+ *   <Pane pageTitle="Two" pageCloseable="true">
+ *     ...
+ *   </Pane>
+ * <TabContainer>
  */
 RapidContext.Widget.TabContainer = function (attrs/*, ... */) {
     var labels = MochiKit.DOM.DIV({ "class": "widgetTabContainerLabels" });
@@ -69,6 +88,8 @@ RapidContext.Widget.TabContainer.prototype.getChildNodes = function () {
  * new one.
  *
  * @param {Widget} child the page widget to add
+ *
+ * @see RapidContext.Widget.Pane
  */
 RapidContext.Widget.TabContainer.prototype.addChildNode = function (child) {
     if (!RapidContext.Widget.isWidget(child, "Pane")) {
