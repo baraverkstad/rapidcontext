@@ -279,8 +279,12 @@ RapidContext.Widget.prototype.setAttrs = function (attrs) {
             this._setHidden(value);
         } else if (value != null) {
             MochiKit.DOM.setNodeAttribute(this, name, value);
+            if (typeof(value) != "object") {
+                this[name] = value;
+            }
         } else {
             this.removeAttribute(name);
+            delete this[name];
         }
     }
 };
