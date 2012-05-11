@@ -89,6 +89,10 @@ RapidContext.Widget.TreeNode.prototype._container = function (create) {
         this.appendChild(container);
         var imgNode = this.firstChild.firstChild;
         imgNode.setAttrs({ ref: "PLUS" });
+        var iconNode = imgNode.nextSibling;
+        if (!RapidContext.Widget.isWidget(iconNode, "Icon") && iconNode.ref == "DOCUMENT") {
+            iconNode.setAttrs({ ref: "FOLDER" });
+        }
         return container;
     } else {
         return null;
