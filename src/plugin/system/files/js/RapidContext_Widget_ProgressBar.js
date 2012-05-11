@@ -91,8 +91,8 @@ RapidContext.Widget.ProgressBar.prototype.setAttrs = function (attrs) {
     if (typeof(attrs.min) != "undefined" || typeof(attrs.max) != "undefined") {
         this.min = attrs.min = Math.max(parseInt(attrs.min) || this.min || 0, 0);
         this.max = attrs.max = Math.max(parseInt(attrs.max) || this.max || 100, this.min);
-        this.value = null;
-        this.ratio = 0.0;
+        attrs.value = attrs.value || null;
+        attrs.ratio = attrs.ratio || 0.0;
         this.startTime = nowTime;
         this.updateTime = nowTime;
         this.timeRemaining = null;
@@ -100,8 +100,9 @@ RapidContext.Widget.ProgressBar.prototype.setAttrs = function (attrs) {
     if (typeof(attrs.value) != "undefined") {
         var value = Math.min(Math.max(parseFloat(attrs.value), this.min), this.max);
         if (!isNaN(value)) {
-            this.value = attrs.value = value;
-            this.ratio = (this.value - this.min) / (this.max - this.min);
+            attrs.value = value;
+            var ratio = (value - this.min) / (this.max - this.min);
+            attrs.ratio = attrs.ratio || ratio;
         } else {
             delete attrs.value;
         }
@@ -109,22 +110,19 @@ RapidContext.Widget.ProgressBar.prototype.setAttrs = function (attrs) {
     if (typeof(attrs.ratio) != "undefined") {
         var ratio = Math.min(Math.max(parseFloat(attrs.ratio), 0.0), 1.0);
         if (!isNaN(ratio)) {
-            this.ratio = attrs.ratio = ratio;
+            attrs.ratio = ratio;
         } else {
             delete attrs.ratio;
         }
     }
-    if (typeof(attrs.text) != "undefined") {
-        this.text = attrs.text;
-    }
     if (typeof(attrs.noratio) != "undefined") {
-        this.noratio = MochiKit.Base.bool(attrs.noratio);
+        attrs.noratio = MochiKit.Base.bool(attrs.noratio) || null;
     }
     if (typeof(attrs.novalue) != "undefined") {
-        this.novalue = MochiKit.Base.bool(attrs.novalue);
+        attrs.novalue = MochiKit.Base.bool(attrs.novalue) || null;
     }
     if (typeof(attrs.notime) != "undefined") {
-        this.notime = MochiKit.Base.bool(attrs.notime);
+        attrs.notime = MochiKit.Base.bool(attrs.notime) || null;
         this.timeRemaining = null;
     }
     this.__setAttrs(attrs);
