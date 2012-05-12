@@ -3,6 +3,7 @@
  */
 function HelpApp() {
     this._topics = null;
+    this._topicUrls = null;
     this._currentUrl = "";
     this._historyHead = [];
     this._historyTail = [];
@@ -35,7 +36,8 @@ HelpApp.prototype.stop = function() {
  * previously loaded platform topics.
  */
 HelpApp.prototype.loadTopics = function() {
-    var root = this._topics = { child: {}, children: [], url: {} };
+    var root = this._topics = { path: [], child: {}, children: [] };
+    var topicUrls = this._topicUrls = {};
 
     // Add a topic path to a parent (and its children)
     function addPath(parent, path) {
@@ -44,6 +46,8 @@ HelpApp.prototype.loadTopics = function() {
             var child = parent.child[name];
             if (!child) {
                 child = { name: name, child: {}, children: [] };
+                child.path = parent.path.slice();
+                child.path.push(name);
                 parent.child[name] = child;
                 parent.children.push(child);
             }
@@ -61,7 +65,7 @@ HelpApp.prototype.loadTopics = function() {
         topic.source = obj.source || source;
         if (obj.url) {
             topic.url = obj.url;
-            root.url[obj.url] = topic;
+            topicUrls[obj.url] = topic;
         }
         addAll(topic, topic.source, obj.children);
     }
@@ -139,9 +143,9 @@ HelpApp.prototype._treeExpandUrl = function (url) {
     if (this._treeBlockEvents) {
         return this.ui.topicTree.selectedChild();
     } else {
-        var topic = this._topics.url[url] || this._topics.url[url.replace(/#.*/, "")];
+        var topic = this._topicUrls[url] || this._topicUrls[url.replace(/#.*/, "")];
         if (topic) {
-            var path = topic.topic.split("/");
+            var path = topic.path;
             for (var i = 0; i < path.length; i++) {
                 this.ui.topicTree.findByPath(path.slice(0, i + 1)).expand();
             }
