@@ -35,63 +35,68 @@ HelpApp.prototype.stop = function() {
  * previously loaded platform topics.
  */
 HelpApp.prototype.loadTopics = function() {
-    this._topics = { child: {}, children: [], url: {} };
-    this.ui.topicTree.removeAll();
-    var apps = RapidContext.App.apps();
-    for (var i = 0; i < apps.length; i++) {
-        var app = apps[i];
-        for (var j = 0; j < app.resources.length; j++) {
-            var res = app.resources[j];
-            if (res.topic != null) {
-                this._addTopic(app.name + " (App)", MochiKit.Base.clone(res));
+    var root = this._topics = { child: {}, children: [], url: {} };
+
+    // Add a topic path to a parent (and its children)
+    function addPath(parent, path) {
+        while (path.length > 0) {
+            var name = path.shift();
+            var child = parent.child[name];
+            if (!child) {
+                child = { name: name, child: {}, children: [] };
+                parent.child[name] = child;
+                parent.children.push(child);
             }
+            parent = child;
+        }
+        return parent;
+    }
+
+    // Add a single help topic (and children if any)
+    function add(parent, source, obj) {
+        var topic = addPath(parent, obj.topic.split("/"));
+        if (topic.source) {
+            LOG.warning("Duplicated Help topic, possibly overwritten", obj.topic);
+        }
+        topic.source = obj.source || source;
+        if (obj.url) {
+            topic.url = obj.url;
+            root.url[obj.url] = topic;
+        }
+        addAll(topic, topic.source, obj.children);
+    }
+
+    // Add a list of help topics
+    function addAll(parent, source, obj) {
+        if (MochiKit.Base.isArrayLike(obj)) {
+            for (var i = 0; i < obj.length; i++) {
+                addAll(parent, source, obj[i]);
+            }
+        } else if (obj && typeof(obj.topic) == "string") {
+            add(parent, source, obj);
         }
     }
+
+    // Add app topics
+    var apps = RapidContext.App.apps();
+    for (var i = 0; i < apps.length; i++) {
+        addAll(root, apps[i].name + " (App)", apps[i].resources);
+    }
+
+    // Add platform topics
     var source = "RapidContext Platform Documentation";
-    var func = MochiKit.Base.method(this, "_addTopic", source);
-    MochiKit.Base.map(func, this.resource.topicsBase);
-    MochiKit.Base.map(func, this.resource.topicsJsApi);
-    MochiKit.Base.map(func, this.resource.topicsMochiKit);
-    MochiKit.Base.map(func, this.resource.topicsJava);
-    MochiKit.Base.map(func, this.resource.topicsExternal);
-    this._treeInsertChildren(this.ui.topicTree, this._topics);
+    addAll(root, source, this.resource.topicsBase);
+    addAll(root, source, this.resource.topicsJsApi);
+    addAll(root, source, this.resource.topicsMochiKit);
+    addAll(root, source, this.resource.topicsJava);
+    addAll(root, source, this.resource.topicsExternal);
+
+    // Update topics tree
+    this.ui.topicTree.removeAll();
+    this._treeInsertChildren(this.ui.topicTree, root);
     this.ui.topicTree.expandAll(1);
     if (this._currentUrl) {
         this.loadContent(this._currentUrl);
-    }
-};
-
-/**
- * Adds a topic data object to the internal topic tree structure.
- *
- * @param {String} source the topic source
- * @param {Object} topic the topic data object
- */
-HelpApp.prototype._addTopic = function (source, topic) {
-    topic.source = topic.source || source;
-    var path = topic.topic.split("/");
-    var parent = this._topics;
-    while (path.length > 1) {
-        var name = path.shift();
-        var temp = parent.child[name];
-        if (!temp) {
-            temp = { name: name, child: {}, children: [] };
-            parent.child[name] = temp;
-            parent.children.push(temp);
-        }
-        parent = temp;
-    }
-    var name = path.shift();
-    if (parent.child[name]) {
-        LOG.warning("Duplicated Help topic", topic.topic);
-        topic = MochiKit.Base.update(parent.child[name], topic);
-    } else {
-        MochiKit.Base.update(topic, { name: name, child: {}, children: [] });
-        parent.child[name] = topic;
-        parent.children.push(topic);
-    }
-    if (topic.url) {
-        this._topics.url[topic.url] = topic;
     }
 };
 
