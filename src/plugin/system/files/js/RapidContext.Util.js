@@ -21,8 +21,8 @@ if (typeof(RapidContext) == "undefined") {
  * @name RapidContext.Util
  * @namespace
  * Provides utility functions for basic objects, arrays, DOM nodes and CSS.
- * These functions are complementary to what is available in MochiKit, jQuery
- * and/or Underscore.
+ * These functions are complementary to what is available in MochiKit and/or
+ * jQuery.
  */
 if (typeof(RapidContext.Util) == "undefined") {
     RapidContext.Util = {};
@@ -108,8 +108,7 @@ RapidContext.Util.dict = function (itemsOrKeys, values) {
  * @return {Object} a new object containing the matching keys and
  *             values found in the source object
  *
- * @deprecated This function will be removed in the future. Use Underscore
- *     `pick` and/or custom code instead.
+ * @deprecated This function will be removed in the future.
  *
  * @example
  * var o = { a: 1, b: 2 };

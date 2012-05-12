@@ -2,6 +2,5 @@
     { "topic": "RapidContext/JavaScript Libraries/Augment.js (0.4.2)", "url": "http://augmentjs.com/" },
     { "topic": "RapidContext/JavaScript Libraries/Crypto-JS MD5 (2.5.3)", "url": "http://code.google.com/p/crypto-js/#MD5" },
     { "topic": "RapidContext/JavaScript Libraries/jQuery (1.7.2)", "url": "http://api.jquery.com/" },
-    { "topic": "RapidContext/JavaScript Libraries/PlotKit (0.9)", "url": "http://bits.liquidx.net/projects/plotkit-svn/doc/PlotKit.html" },
-    { "topic": "RapidContext/JavaScript Libraries/Underscore (1.3.3)", "url": "http://documentcloud.github.com/underscore/" }
+    { "topic": "RapidContext/JavaScript Libraries/PlotKit (0.9)", "url": "http://bits.liquidx.net/projects/plotkit-svn/doc/PlotKit.html" }
 ]
