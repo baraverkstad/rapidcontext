@@ -1,16 +1,16 @@
-[
-    { "topic": "RapidContext/Java API/org.rapidcontext.app", "url": "doc/java/org/rapidcontext/app/package-summary.html" },
-    { "topic": "RapidContext/Java API/org.rapidcontext.app.plugin", "url": "doc/java/org/rapidcontext/app/plugin/package-summary.html" },
-    { "topic": "RapidContext/Java API/org.rapidcontext.app.proc", "url": "doc/java/org/rapidcontext/app/proc/package-summary.html" },
-    { "topic": "RapidContext/Java API/org.rapidcontext.app.ui", "url": "doc/java/org/rapidcontext/app/ui/package-summary.html" },
-    { "topic": "RapidContext/Java API/org.rapidcontext.app.web", "url": "doc/java/org/rapidcontext/app/web/package-summary.html" },
-    { "topic": "RapidContext/Java API/org.rapidcontext.core.data", "url": "doc/java/org/rapidcontext/core/data/package-summary.html" },
-    { "topic": "RapidContext/Java API/org.rapidcontext.core.js", "url": "doc/java/org/rapidcontext/core/js/package-summary.html" },
-    { "topic": "RapidContext/Java API/org.rapidcontext.core.proc", "url": "doc/java/org/rapidcontext/core/proc/package-summary.html" },
-    { "topic": "RapidContext/Java API/org.rapidcontext.core.security", "url": "doc/java/org/rapidcontext/core/security/package-summary.html" },
-    { "topic": "RapidContext/Java API/org.rapidcontext.core.storage", "url": "doc/java/org/rapidcontext/core/storage/package-summary.html" },
-    { "topic": "RapidContext/Java API/org.rapidcontext.core.task", "url": "doc/java/org/rapidcontext/core/task/package-summary.html" },
-    { "topic": "RapidContext/Java API/org.rapidcontext.core.type", "url": "doc/java/org/rapidcontext/core/type/package-summary.html" },
-    { "topic": "RapidContext/Java API/org.rapidcontext.core.web", "url": "doc/java/org/rapidcontext/core/web/package-summary.html" },
-    { "topic": "RapidContext/Java API/org.rapidcontext.util", "url": "doc/java/org/rapidcontext/util/package-summary.html" }
-]
+{ "topic": "RapidContext/Java API", "children": [
+    { "topic": "org.rapidcontext.app", "url": "doc/java/org/rapidcontext/app/package-summary.html" },
+    { "topic": "org.rapidcontext.app.plugin", "url": "doc/java/org/rapidcontext/app/plugin/package-summary.html" },
+    { "topic": "org.rapidcontext.app.proc", "url": "doc/java/org/rapidcontext/app/proc/package-summary.html" },
+    { "topic": "org.rapidcontext.app.ui", "url": "doc/java/org/rapidcontext/app/ui/package-summary.html" },
+    { "topic": "org.rapidcontext.app.web", "url": "doc/java/org/rapidcontext/app/web/package-summary.html" },
+    { "topic": "org.rapidcontext.core.data", "url": "doc/java/org/rapidcontext/core/data/package-summary.html" },
+    { "topic": "org.rapidcontext.core.js", "url": "doc/java/org/rapidcontext/core/js/package-summary.html" },
+    { "topic": "org.rapidcontext.core.proc", "url": "doc/java/org/rapidcontext/core/proc/package-summary.html" },
+    { "topic": "org.rapidcontext.core.security", "url": "doc/java/org/rapidcontext/core/security/package-summary.html" },
+    { "topic": "org.rapidcontext.core.storage", "url": "doc/java/org/rapidcontext/core/storage/package-summary.html" },
+    { "topic": "org.rapidcontext.core.task", "url": "doc/java/org/rapidcontext/core/task/package-summary.html" },
+    { "topic": "org.rapidcontext.core.type", "url": "doc/java/org/rapidcontext/core/type/package-summary.html" },
+    { "topic": "org.rapidcontext.core.web", "url": "doc/java/org/rapidcontext/core/web/package-summary.html" },
+    { "topic": "org.rapidcontext.util", "url": "doc/java/org/rapidcontext/util/package-summary.html" }
+] }
