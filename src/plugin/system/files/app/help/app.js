@@ -87,9 +87,8 @@ HelpApp.prototype.loadTopics = function() {
     var source = "RapidContext Platform Documentation";
     addAll(root, source, this.resource.topicsBase);
     addAll(root, source, this.resource.topicsJsApi);
-    addAll(root, source, this.resource.topicsMochiKit);
+    addAll(root, source, this.resource.topicsJsEnv);
     addAll(root, source, this.resource.topicsJava);
-    addAll(root, source, this.resource.topicsExternal);
 
     // Update topics tree
     this.ui.topicTree.removeAll();
