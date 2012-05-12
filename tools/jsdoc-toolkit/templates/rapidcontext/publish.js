@@ -85,7 +85,7 @@ function publish(symbolSet) {
         var topicsTemplate = new JSDOC.JsPlate(publish.conf.templatesDir+"topics.tmpl");
     } catch(e) { print(e.message); quit(); }
     IO.saveFile(publish.conf.outDir, "index"+publish.conf.ext, classIndexTemplate.process(classes));
-    IO.saveFile(publish.conf.outDir, "topics.json", topicsTemplate.process(classes));
+    IO.saveFile(publish.conf.outDir, "topics.json", topicsTemplate.process(classes, true));
 }
 
 function html(str) {
