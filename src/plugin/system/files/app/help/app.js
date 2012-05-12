@@ -220,6 +220,8 @@ HelpApp.prototype._historySave = function (url) {
             this._historyTail.push(this._currentUrl);
         }
     }
+    this.ui.contentPrev.setAttrs({ disabled: (this._historyTail.length <= 0) });
+    this.ui.contentNext.setAttrs({ disabled: (this._historyHead.length <= 0) });
 };
 
 /**
@@ -228,8 +230,6 @@ HelpApp.prototype._historySave = function (url) {
 HelpApp.prototype.clearContent = function() {
     this._currentUrl = "";
     this.ui.contentLoading.hide();
-    this.ui.contentPrev.setAttrs({ disabled: (this._historyTail.length <= 0) });
-    this.ui.contentNext.setAttrs({ disabled: (this._historyHead.length <= 0) });
     this.ui.contentLink.className = "hidden";
     MochiKit.DOM.replaceChildNodes(this.ui.contentInfo);
     MochiKit.DOM.replaceChildNodes(this.ui.contentText);
@@ -249,6 +249,7 @@ HelpApp.prototype.loadContent = function (url) {
     if (/https?:/.test(url)) {
         window.open(url);
     } else if (/#.+/.test(url) && this._currentUrl.indexOf(fileUrl) == 0) {
+        this._historySave();
         this._currentUrl = url;
         this._scrollLink(url.replace(/.*#/, ""));
     } else {
