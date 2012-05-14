@@ -208,6 +208,9 @@ body.doc {
     font-size: 16px;
     font-family: Trebuchet MS, Verdana, sans-serif;
 }
+.doc h2 .unimportant {
+    font-size: 14px;
+}
 .doc table {
     font-size: 12px;
     border-collapse: collapse;
