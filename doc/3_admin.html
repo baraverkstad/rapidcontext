@@ -6,7 +6,7 @@
     <link rel="icon" type="image/gif" href="images/favicon.png" />
     <link rel="stylesheet" href="css/style.css" type="text/css" />
     <link rel="stylesheet" href="css/widget.css" type="text/css" />
-    <title>RapidContext :: Users &amp; Security</title>
+    <title>RapidContext :: Administration &amp; Security</title>
   </head>
   <body class="doc">
 
@@ -25,14 +25,14 @@
   <tr>
     <td class="prev"><a href="index.html">Documentation</a></td>
     <td class='prev-active'>&nbsp;</td>
-    <td class='active'>Users &amp; Security</td>
+    <td class='active'>Administration &amp; Security</td>
     <td class='active-end'>&nbsp;</td>
   </tr>
 </table>
 
 <!--START-->
 
-<h1>Users &amp; Security</h1>
+<h1>3. Administration &amp; Security</h1>
 
 <div style="position: relative; margin: 10px 40px; border: 1px solid #DD6; border-radius: 6px; padding: 6px 20px; background: #FFFFAA;">
   <img src="images/warning.png">
@@ -50,7 +50,7 @@ administrative privileges for any operation that modifies the configuration
 or accesses sensitive information.</p>
 
 
-<h2>1. Default Users &amp; Roles</h2>
+<h2 id="default_users">3.1. Default Users &amp; Roles</h2>
 
 <p>The default installation of RapidContext contain the following users
 and roles:</p>
@@ -65,7 +65,7 @@ and roles:</p>
 </ul>
 
 
-<h2>2. User Authentication</h2>
+<h2 id="user_authentication">3.2. User Authentication</h2>
 
 <p>In the standard configuration, user authentication is supported by the
 following protocols:</p>
@@ -87,7 +87,7 @@ forcefully terminated with the <code>System.Session.Terminate</code>
 procedure.</p>
 
 
-<h2>3. Managing Users</h2>
+<h2 id="managing_users">3.3. Managing Users</h2>
 
 <p>Users are managed with the <strong>Admin</strong> app, in the
 <strong>Users</strong> tab. Below is a screenshot showing the editing
@@ -117,7 +117,7 @@ facts should be noted regarding the storage of user data:</p>
 </ul>
 
 
-<h2>4. Roles &amp; Access Control</h2>
+<h2 id="roles_access_control">3.4. Roles &amp; Access Control</h2>
 
 <p>User roles are by default only possible to create or modify by accessing
 the corresponding data files in the <code>plugin/&lt;plugin id&gt;/role</code>
@@ -175,7 +175,7 @@ procedures and the <code>caller</code> access list property to protect the
 direct access to resources.</p>
 
 
-<h2>5. Security Checklist</h2>
+<h2 id="security_checklist">3.5. Security Checklist</h2>
 
 <p>Before installing a RapidContext server in a publically acessible location,
 please check the following:</p>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+
+<html lang="en" xml:lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="icon" type="image/gif" href="images/favicon.png" />
+    <link rel="stylesheet" href="css/style.css" type="text/css" />
+    <link rel="stylesheet" href="css/widget.css" type="text/css" />
+    <title>RapidContext :: Installing &amp; Connecting</title>
+  </head>
+  <body class="doc">
+
+<div style="position: relative;">
+  <img src="images/logotype.png" alt="RapidContext Logotype" style="width: 128px; height: 128px;" />
+  <div style="position: absolute; top: 6px; left: 170px; font-family: Trebuchet MS;">
+    <a href="http://www.rapidcontext.com/" target="_blank">
+      <span style="font-size: 50px; color: #345;">RapidContext</span><br/>
+      <span style="font-size: 24px; color: #88AACC;">Access &gt; Discovery &gt; Insight</span><br/>
+      <span style="font-size: 18px; color: #666; letter-spacing: 6px; line-height: 24px;">www.rapidcontext.com</span><br/>
+    </a>
+  </div>
+</div>
+
+<table class="widgetNavigationBar" style="margin: 20px 0;">
+  <tr>
+    <td class="prev"><a href="index.html">Documentation</a></td>
+    <td class='prev-active'>&nbsp;</td>
+    <td class='active'>Installing &amp; Connecting</td>
+    <td class='active-end'>&nbsp;</td>
+  </tr>
+</table>
+
+<!--START-->
+
+<h1>2. Installing &amp; Connecting</h1>
+
+<div style="position: relative; margin: 10px 40px; border: 1px solid #DD6; border-radius: 6px; padding: 6px 20px; background: #FFFFAA;">
+  <img src="images/warning.png">
+  <div style="position: absolute; left: 80px; top: 0px;">
+    <h2 style="margin: 10px 0 0 0;">Information Not Updated</h2>
+    The information in this document has not been updated to the latest
+    version of RapidContext.
+  </div>
+</div>
+
+<p>RapidContext server programming is based on Java, JavaScript and the specific
+languages used for communication with external systems (such as SQL). Server
+functionality is added by <em>plug-ins</em>, a ZIP file containing Java
+libraries, procedures, apps, configuration or file data. The API:s exposed
+by the server to the client is file retrieval (HTTP GET), file upload (HTTP
+POST to a specific URL) and a set of callable <em>procedures</em>.</p>
+
+
+<h2>2.1. Plug-in Installation &amp; Restarts</h2>
+
+<p>Plug-ins are installed or updated by using the built-in Admin app.
+The steps below explains how to install or update a plug-in:</p>
+
+<ol class="box">
+  <li>Choose the "Plug-Ins" tab in the Admin app</li>
+  <li>Locate the "Software Install &amp; Update" pane at the top (see
+      screenshot)</li>
+  <p style="text-align: center;">
+    <img src="images/screenshot-plugin-upload.png" />
+  </p>
+  <li>Click the "Browse..." button and choose the plug-in ZIP file</li>
+  <li>Wait for the upload progress bar to complete</li>
+  <li>Click the "Install / Update Plug-In" button</li>
+  <li>The plug-in has been installed (but client and/or server restarts
+      might be necessary)</li>
+</ol>
+
+<p>Plug-ins can also easily be loaded and unloaded through the built-in
+Admin app. Once unloaded, the plug-in directory under
+<code>plugin</code> can be removed to completely uninstall it. In certain
+circumstances, the web browser and/or the server must also be restarted
+for the plug-in loading or unloading to have effect:</p>
+
+<ul class="box">
+  <li><strong>Client Restarts:</strong> Once a new plug-in has been
+      installed, it is normally possible to use any apps in it
+      immediately. The list of displayed apps on the start page is not
+      automatically updated, however. So sometimes a restart of the web
+      browser (using Ctrl-R for a forced page reload) might be necessary.</li>
+  <li><strong>Server Restarts:</strong> The server is automatically
+      re-initiated once a plug-in has been installed, loaded or unloaded.
+      This is however not always sufficient when the plug-in contains Java
+      libraries that conflicts with ones previously loaded in the Java
+      Virtual Machine. This happens, for example, when updating a plug-in
+      containing a modified JAR file, in which case the server must be
+      restarted manually.</li>
+</ul>
+
+
+<!--END-->
+
+<div class="fineprint">
+  <hr>
+  Copyright &copy; 2007-2012 Per Cederberg. All rights reserved.
+</div>
+
+  </body>
+
+</html>

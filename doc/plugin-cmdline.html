@@ -40,7 +40,7 @@ executables or system utilities supporting a non-interactive or scriptable
 execution.</p>
 
 
-<h2>1. Built-in Procedure &amp; Procedure Type</h2>
+<h2 id="builtins">1. Built-in Procedure &amp; Procedure Type</h2>
 
 <p>The command-line plug-in provides two ways to execute programs on the
 server:</p>
@@ -57,7 +57,7 @@ server:</p>
 </ul>
 
 
-<h2>2. Return Values</h2>
+<h2 id="returns">2. Return Values</h2>
 
 <p>Using the <code>PlugIn.CmdLine.Exec</code> procedure, the command-line
 execution can easily be tested. Below follows some simple command examples
@@ -87,7 +87,7 @@ properties:</p>
 </ul>
 
 
-<h2>3. Input &amp; Output Streams</h2>
+<h2 id="io_streams">3. Input &amp; Output Streams</h2>
 
 <p>When executing command-line programs, the RapidContext server captures the
 standard input and output streams (file descriptors 0, 1 &amp; 2) in the
@@ -120,7 +120,7 @@ lines matching the progress information format below will be used:</p>
 ...</span></pre>
 
 
-<h2>4. Execution Environment</h2>
+<h2 id="exec_env">4. Execution Environment</h2>
 
 <p>The execution environment for each command can be controlled by the
 following two parameters:</p>
@@ -148,7 +148,7 @@ shell binary and specifying the command with a parameter (see the last example
 above).</p>
 
 
-<h2>5. Parameter Substitution</h2>
+<h2 id="param_subst">5. Parameter Substitution</h2>
 
 <p>Command-line arguments and environment values may contain procedure
 call arguments (for <code>cmdline.exec</code> procedures). These are

@@ -33,43 +33,119 @@
 <h1>Platform Documentation</h1>
 
 <ul>
-  <li><a href="platform.html">1. Introduction</a></li>
-  <li><a href="client.html">2. Client Programming</a></li>
-  <li><a href="server.html">3. Server Programming</a></li>
-  <li><a href="security.html">4. Users &amp; Security</a></li>
-  <li><a href="changes.html">5. Change History</a></li>
+  <li>
+    <h2>1. Introduction</h2>
+    <ul>
+      <li><a href="1_introduction.html">1.1. Features</a></li>
+      <li><a href="1_introduction.html#technologies">1.2. Technologies</a></li>
+      <li><a href="1_introduction.html#deployment">1.3. Deployment</a></li>
+      <li><a href="1_introduction.html#concepts">1.4. Concepts &amp; Terminology</a></li>
+    </ul>
+  </li>
+  <li>
+    <h2>2. Installing &amp; Connecting</h2>
+    <ul>
+      <li><a href="2_install.html">2.1. Plug-in Installation &amp; Restarts</a></li>
+    </ul>
+  </li>
+  <li>
+    <h2>3. Administration &amp; Security</h2>
+    <ul>
+      <li><a href="3_admin.html">3.1. Default Users &amp; Roles</a></li>
+      <li><a href="3_admin.html#user_authentication">3.2. User Authentication</a></li>
+      <li><a href="3_admin.html#managing_users">3.3. Managing Users</a></li>
+      <li><a href="3_admin.html#roles_access_control">3.4. Roles &amp; Access Control</a></li>
+      <li><a href="3_admin.html#security_checklist">3.5. Security Checklist</a></li>
+    </ul>
+  </li>
+  <li>
+    <h2>4. App Development</h2>
+    <ul>
+      <li><a href="4_app_dev.html">4.1. Technology Reference</a></li>
+      <li><a href="4_app_dev.html#app_decl">4.2. App Declaration</a></li>
+      <li><a href="4_app_dev.html#app_impl">4.3. App Implementation</a></li>
+      <li><a href="4_app_dev.html#ui_xml">4.4. User Interface XML</a></li>
+      <li><a href="4_app_dev.html#ui_style">4.5. User Interface Style</a></li>
+    </ul>
+  </li>
+  <li>
+    <h2>5. Plug-In Development &amp; Distribution</h2>
+    <ul>
+      <li><a href="5_plugin_dev.html">5.1. Plug-in Structure</a></li>
+      <li><a href="5_plugin_dev.html#plugin_dev">5.2. Plug-in Development</a></li>
+      <li><a href="5_plugin_dev.html#procedures">5.3. Procedures</a></li>
+      <li><a href="5_plugin_dev.html#environment">5.4. Environment</a></li>
+    </ul>
+  </li>
+  <li>
+    <h2>6. Change History</h2>
+    <ul>
+      <li><a href="6_changes.html">Version 0.15 (2012-04-24)</a></li>
+    </ul>
+  </li>
 </ul>
 
 <h1>Plug-In Documentation</h1>
 
 <ul>
-  <li><a href="plugin-cmdline.html">Command-line Plug-In</a> &mdash;
-      Local command execution on server</li>
-  <li><a href="plugin-http.html">HTTP Plug-In</a> &mdash;
-      Web &amp; WebService Connectivity via HTTP</li>
-  <li><a href="plugin-jdbc.html">JDBC Plug-In</a> &mdash;
-      Database Connectivity via JDBC drivers</li>
+  <li>
+    <h2>Command-line Plug-In <span class="unimportant">&mdash; Local command execution on server</span></h2>
+    <ul>
+      <li><a href="plugin-cmdline.html">1. Built-in Procedure &amp; Procedure Type</a></li>
+      <li><a href="plugin-cmdline.html#returns">2. Return Values</a></li>
+      <li><a href="plugin-cmdline.html#io_streams">3. Input &amp; Output Streams</a></li>
+      <li><a href="plugin-cmdline.html#exec_env">4. Execution Environment</a></li>
+      <li><a href="plugin-cmdline.html#param_subst">5. Parameter Substitution</a></li>
+    </ul>
+  </li>
+  <li>
+    <h2>HTTP Plug-In <span class="unimportant">&mdash; Web &amp; WebService Connectivity via HTTP</span></h2>
+    <ul>
+      <li><a href="plugin-http.html">1. Built-in Procedure &amp; Procedure Type</a></li>
+      <li><a href="plugin-http.html#params">2. Parameter Substitution</a></li>
+    </ul>
+  </li>
+  <li>
+    <h2>JDBC Plug-In <span class="unimportant">&mdash; Database Connectivity via JDBC drivers</span></h2>
+    <ul>
+      <li><a href="plugin-jdbc.html">1. Basic Configuration</a></li>
+      <li><a href="plugin-jdbc.html#builtins">2. Built-in Procedures &amp; Procedure Types</a></li>
+      <li><a href="plugin-jdbc.html#query_results">3. Query Result Mappings</a></li>
+      <li><a href="plugin-jdbc.html#statement_results">4. Statement Results</a></li>
+      <li><a href="plugin-jdbc.html#param_subst">5. Parameter Substitution</a></li>
+      <li><a href="plugin-jdbc.html#transactions">6. Transactions &amp; Connection Pooling</a></li>
+    </ul>
+  </li>
 </ul>
 
 
 <h1>API Documentation</h1>
 
 <ul>
-  <li><a href="java/overview-summary.html">Java API (Plug-In API)</a> &mdash;
-      Server-Side Java API for building connectivity plug-ins</li>
-  <li><a href="js/index.html">JavaScript API (App API)</a> &mdash;
-      Client-Side JavaScript API for building apps</li>
-  <li><a href="external/mochikit/index.html">MochiKit</a>
-      &mdash; Client-Side JavaScript library</li>
-  <li><a href="http://media.liquidx.net/js/plotkit-doc/PlotKit.html">PlotKit</a>
-      &mdash; Client-Side JavaScript library</li>
-  <li><a href="http://api.jquery.com/">jQuery</a> &mdash;
-      Client-Side JavaScript library</li>
-  <li><a href="http://augmentjs.com/">Augment.js</a> &mdash;
-      Client-Side JavaScript library</li>
-  <li><a href="http://code.google.com/p/crypto-js/#MD5">Crypto-JS (MD5)</a> &mdash;
-      Client-Side JavaScript library</li>
-
+  <li>
+    <h2>App &amp; Web Browser API:</h2>
+    <ul>
+      <li><a href="js/index.html">JavaScript API (App API)</a> &mdash;
+          Client-Side JavaScript API for building apps</li>
+      <li><a href="external/mochikit/index.html">MochiKit</a>
+          &mdash; Client-Side JavaScript library</li>
+      <li><a href="http://media.liquidx.net/js/plotkit-doc/PlotKit.html">PlotKit</a>
+          &mdash; Client-Side JavaScript library</li>
+      <li><a href="http://api.jquery.com/">jQuery</a> &mdash;
+          Client-Side JavaScript library</li>
+      <li><a href="http://augmentjs.com/">Augment.js</a> &mdash;
+          Client-Side JavaScript library</li>
+      <li><a href="http://code.google.com/p/crypto-js/#MD5">Crypto-JS (MD5)</a> &mdash;
+          Client-Side JavaScript library</li>
+    </ul>
+  </li>
+  <li>
+    <h2>Plug-In &amp; Server-side API:</h2>
+    <ul>
+      <li><a href="java/overview-summary.html">Java API (Plug-In API)</a> &mdash;
+          Server-Side Java API for building connectivity plug-ins</li>
+    </ul>
+  </li>
 </ul>
 
 

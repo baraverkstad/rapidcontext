@@ -49,7 +49,7 @@ are automatically pooled and reused to improve resource efficiency and
 access speed for each database used.</p>
 
 
-<h2>1. Basic Configuration</h2>
+<h2 id="basics">1. Basic Configuration</h2>
 
 <p>In order for the JDBC plug-in to access a database, the corresponding
 JDBC driver JAR file must be installed. This is accomplished by copying
@@ -93,7 +93,7 @@ restarted. Also, any client web browser should be reloaded (e.g. with
 <code>Ctrl-R</code>) in order to detect the updated environment settings.</p>
 
 
-<h2>2. Built-in Procedure &amp; Procedure Type</h2>
+<h2 id="builtins">2. Built-in Procedures &amp; Procedure Types</h2>
 
 <p>The JDBC plug-in provides a number of built-in procedures and predefined
 procedure types:</p>
@@ -118,7 +118,7 @@ procedure types:</p>
 </ul>
 
 
-<h2>3. Query Result Mappings</h2>
+<h2 id="query_results">3. Query Result Mappings</h2>
 
 <p>Any procedures executed as SQL queries always return the full dataset
 returned by the database. By default, the query also returns meta-data
@@ -168,7 +168,7 @@ datetime strings (e.g. "2009-01-31 23:59:59").</p>
 are always returned as strings.</p>
 
 
-<h2>4. Statement Results</h2>
+<h2 id="statement_results">4. Statement Results</h2>
 
 <p>In contrast to SQL queries, the SQL statements (e.g. <code>INSERT</code>,
 <code>UPDATE</code> or <code>DELETE</code>) normally have no results. When
@@ -182,7 +182,7 @@ PlugIn.Jdbc.Statement('jdbc.example','insert into test values (1,2,3)')
 </pre>
 
 
-<h2>5. Parameter Substitution</h2>
+<h2 id="param_subst">5. Parameter Substitution</h2>
 
 <p>The SQL text may contain procedure call arguments (for
 <code>jdbc.query</code> and <code>jdbc.statement</code> procedures). These are
@@ -221,7 +221,7 @@ recognized and processed in this way:</p>
 </ul>
 
 
-<h2>6. Transactions &amp; Connection Pooling</h2>
+<h2 id="transactions">6. Transactions &amp; Connection Pooling</h2>
 
 <p>All database connections created with the JDBC plug-in are automatically
 pooled in the server. The connection pools are used to speed up database

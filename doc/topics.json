@@ -1,10 +1,11 @@
 { "topic": "RapidContext", "children": [
-    { "topic": "1. Introduction", "url": "doc/platform.html" },
-    { "topic": "2. Client Programming", "url": "doc/client.html" },
-    { "topic": "3. Server Programming", "url": "doc/server.html" },
-    { "topic": "4. Users & Security", "url": "doc/security.html" },
-    { "topic": "5. Command-line Plug-In", "url": "doc/plugin-cmdline.html" },
-    { "topic": "6. HTTP Plug-In", "url": "doc/plugin-http.html" },
-    { "topic": "7. JDBC Plug-In", "url": "doc/plugin-jdbc.html" },
-    { "topic": "8. Change History", "url": "doc/changes.html" }
+    { "topic": "1. Introduction", "url": "doc/1_introduction.html" },
+    { "topic": "2. Installing & Connecting", "url": "doc/2_install.html" },
+    { "topic": "3. Administration & Security", "url": "doc/3_admin.html" },
+    { "topic": "4. App Development", "url": "doc/4_app_dev.html" },
+    { "topic": "5. Plug-In Development & Distribution", "url": "doc/5_plugin_dev.html" },
+    { "topic": "6. Change History", "url": "doc/6_changes.html" },
+    { "topic": "Plug-In: Command-line", "url": "doc/plugin-cmdline.html" },
+    { "topic": "Plug-In: HTTP", "url": "doc/plugin-http.html" },
+    { "topic": "Plug-In: JDBC", "url": "doc/plugin-jdbc.html" }
 ] }
