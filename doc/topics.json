@@ -1,5 +1,10 @@
 { "topic": "RapidContext", "children": [
-    { "topic": "1. Introduction", "url": "doc/1_introduction.html" },
+    { "topic": "1. Introduction", "url": "doc/1_introduction.html", "children": [
+        { "topic": "1.1. Overview", "url": "doc/1_introduction.html#overview" },
+        { "topic": "1.2. Standard Setup", "url": "doc/1_introduction.html#setup" },
+        { "topic": "1.3. Features", "url": "doc/1_introduction.html#features" },
+        { "topic": "1.4. Concepts & Terminology", "url": "doc/1_introduction.html#concepts" }
+    ] },
     { "topic": "2. Installing & Connecting", "url": "doc/2_install.html" },
     { "topic": "3. Administration & Security", "url": "doc/3_admin.html" },
     { "topic": "4. App Development", "url": "doc/4_app_dev.html" },

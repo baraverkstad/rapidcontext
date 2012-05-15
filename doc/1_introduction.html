@@ -21,7 +21,7 @@
   </div>
 </div>
 
-<table class="widgetNavigationBar" style="margin: 20px 0;">
+<table class="navigation widgetNavigationBar" style="margin: 20px 0;">
   <tr>
     <td class="prev"><a href="index.html">Documentation</a></td>
     <td class='prev-active'>&nbsp;</td>
@@ -34,110 +34,159 @@
 
 <h1>1. Introduction</h1>
 
-<p>RapidContext is a platform for creating rich dynamic web applications. The
-platform consists of both a client and a server part, providing a simple,
-safe and stable way to build applications that can connect to a wide range
-of back-end services.</p>
+<h2 id="overview">1.1. Overview</h2>
 
+<p>RapidContext is a platform for building and hosting web applications. It
+is ideal for creating and distributing web-based tools on an intranet and
+provides a number of important advantages:</p>
 
-<h2 id="features">1.1. Features</h2>
-
-<p>The RapidContext platform provides a number of features that are important
-when developing applications for the web:</p>
-
-<ul class="box">
-  <li><strong>Simple Connectivity</strong> &mdash; Standard plug-ins
-      for accessing JDBC, HTTP, messaging buses and more is available.
-      Transactions and connection pooling is built-in from the start
-      and will be used whenever supported.</li>
-  <li><strong>Flexible Scripting</strong> &mdash; JavaScript is
-      supported both on the client and the server side, providing
-      advanced, standardized and flexible programming to implement
-      business logic and other non-trivial data flows.</li>
-  <li><strong>Extensible Architecture</strong> &mdash; The RapidContext
-      platform is built around a plug-in architecture, making it
-      possible to create new services and applications when the default
-      ones are not sufficient.</li>
-  <li><strong>Robust Security</strong> &mdash; User authentication,
-      authorization and auditing mechanisms are available to guarantee
-      the integrity of applications and data.</li>
-  <li><strong>Efficient Development</strong> &mdash; The platform
-      provides both structure and tools to simplify development,
-      testing and deployment of web applications.</li>
+<ul class="box yellow">
+  <li><strong>Simple Connectivity</strong> &mdash; Data access via
+      <abbr title="Java Database Connectivity (for database access)">JDBC</abbr>,
+      web services, messaging buses and more is built-in or readily available.
+      This makes it easy to integrate with and connect to existing data sources
+      and external systems.</li>
+  <li><strong>Data Discovery</strong> &mdash; Using built-in components and
+      tools, it is easy to create apps for exploring data across multiple
+      systems. With an additional bit of knowledge of business rules and data
+      models, unique tools for side-by-side comparisons, data analysis or
+      drill-down search are quickly created.</li>
+  <li><strong>Plug-In Architecture</strong> &mdash; The RapidContext platform
+      is built on a plug-in architecture, allowing new connectors, services and
+      applications to be deployed at run-time. And third party plug-ins can be
+      downloaded and installed as well.</li>
+  <li><strong>Administrative Tools</strong> &mdash; An easy-to-use web app
+      for managing users, connections and all other aspects of the system comes
+      built-in with RapidContext. This makes it simple to manage and maintain
+      multiple installations and/or complex configurations needed to fully
+      serve corporate environments.</li>
 </ul>
 
 
-<h2 id="technologies">1.2. Technologies</h2>
+<h2 id="setup">1.2. Standard Setup</h2>
 
-<p>The client-side technologies used in RapidContext are JavaScript, HTML,
-CSS and DOM (i.e. AJAX without XML) based on the
-<a href="http://www.mochikit.com/">MochiKit</a> JavaScript library.
-All data transfers between the client and the server are encoded in the
-<a href="http://www.json.org/"><abbr title="JavaScript Object Notation">JSON</abbr></a>
-data format as it is compact, efficient and well-suited to a
-JavaScript environment. The RapidContext web applications normally run
-without any page reloads.</p>
+<p>RapidContext provides a web application environment with both client (web
+browser) and server components. The client and server parts are integrated,
+providing easy-to-use solutions for all the common issues that arise in a web
+environment (authentication, permissions, etc).</p>
 
-<p>On the server-side, the RapidContext server is implemented as a Java
-Servlet (J2EE). Several Java technologies are included via libraries
-and plug-ins, such as Mozilla Rhino (JavaScript), JDBC and more.</p>
+<p>The web browser runs the web applications and manages the user interface.
+In the standard setup, multiple applications are running on a single web page.
+Data is fetched asynchronously in the background without blocking the user
+from other parallel tasks.</p>
 
-
-<h2 id="deployment">1.3. Deployment</h2>
-
-<p>RapidContext is normally deployed either as a stand-alone server or
-inside a Java Servlet container, such as Jetty or Tomcat. The client
-and server parts can be used without each other, although no special
-provisions have been made to facilitate such a setup.</p>
+<p>The RapidContext server handles user authentication, sessions, permissions,
+data connectivity, transactions, etc. The server runs the actual database
+queries or remote sessions, while posting results back to the web applications
+in a convenient <abbr title="JavaScript Object Notation">JSON</abbr> data
+format.</p>
 
 <p style="margin: 10px; text-align: center;">
-  <img src="images/deployment.png" />
+  <img src="images/figure-communication.jpg" alt="Figure of standard setup." />
 </p>
+
+
+<h2 id="features">1.3. Features</h2>
+
+<p>Using RapidContext for building web tools, connecting to databases or
+managing servers has a number of advantages compared to other toolkits or
+direct access via
+<abbr title="Standard Query Language (for database queries)">SQL</abbr>,
+<abbr title="Secure Shell (for terminal access)">SSH</abbr> or similar.</p>
+
+<ol class="box yellow">
+  <li><strong>Knowledge Sharing</strong> &mdash; All SQL queries and system
+      commands used are stored on the RapidContext server for reuse and easy
+      inspection. This improves knowledge sharing and information transfer
+      between co-workers. It also helps with eliminating mistakes and data
+      issues, since changes propagate immediately to all users.</li>
+  <li><strong>Resource Footprint</strong> &mdash; Transactions and connection
+      pooling is built-in and used whenever supported by the data source. This
+      means that many users can efficiently share a small number of external
+      connections.</li>
+  <li><strong>Robust Security</strong> &mdash; User authentication,
+      authorization and auditing mechanisms are available to guarantee
+      the integrity of applications and data. Since users share connections,
+      the direct access and number of accounts on external systems can also be
+      reduced.</li>
+  <li><strong>Flexible Scripting</strong> &mdash; JavaScript is supported both
+      on the client and the server side, providing a powerful programming
+      environment for business logic, data transformations, validations or any
+      kind of data handling.</li>
+  <li><strong>Efficient Workflows</strong> &mdash; A well-designed browsing
+      user interface is at least an order of magnitude faster to work with than
+      switching between multiple SQL and shell windows. Since computations are
+      mostly performed in the client browsers, a single server can handle many
+      users without </li>
+</ol>
 
 
 <h2 id="concepts">1.4. Concepts &amp; Terminology</h2>
 
-<div style="position: relative; margin: 10px 40px; border: 1px solid #DD6; border-radius: 6px; padding: 6px 20px; background: #FFFFAA;">
-  <img src="images/warning.png">
-  <div style="position: absolute; left: 80px; top: 0px;">
-    <h2 style="margin: 10px 0 0 0;">Information Not Updated</h2>
-    The information in this section has not been updated to the latest
-    version of RapidContext.
-  </div>
-</div>
+<p>A number of terms are used repeatedly in the RapidContext documentation and
+elsewhere. Their definitions are as follows:</p>
 
-<p>A number of terms are used repeatedly in the RapidContext platform and
-documentation. Their definitions are as follows:</p>
-
-<ul class="box">
-  <li><strong>Adapter</strong> &mdash; A connection communication handler
-      written in Java. The adapter controls all the communication over a
-      connection and defines which operations are available. Default
-      adapters for JDBC, HTTP and command-line program execution are
-      available, and other adapters can be loaded as plug-ins.</li>
-  <li><strong>App</strong> &mdash; A client-side application that
-      runs in the web browser, normally as a "tab" in the default user
-      interface. Apps are installed on the server, but executes solely
-      on the client. Multiple apps can be executing at the same time,
-      allowing the user to switch beween different tasks and transferring
-      data between the apps.</li>
+<ul class="box yellow">
+  <li><strong>App</strong> &mdash; A client-side application that runs in the
+      web browser, normally as a &ldquo;tab&rdquo; in the standard user
+      interface. Apps are installed on the server, but execute solely on the
+      client. Multiple apps can be executing at the same time, allowing the
+      user to switch between different tasks and transferring data between the
+      apps.</li>
   <li><strong>Connection</strong> &mdash; A named link to a database or
-      another system. Each connection is managed by an adapter on the server.
-      The connection names and configuration parameters are defined in the
-      environment.</li>
-  <li><strong>Environment</strong> &mdash; A set of named connections on
-      the server. The environment stores the connection creation parameters
-      for the adapter and a pool of already established connnections. The
-      pool is continually monitored for stale connections and expands as
-      necessary.</li>
+      another system. Each connection is managed on the server, normally by
+      a handler for that specific connection type. Most connections are kept
+      in a pool of established connnections where they are continually
+      monitored and eventually replaced.</li>
+  <li><strong>Environment</strong> &mdash; A group of connections sharing the
+      same identifier prefix. Using different environments, it is possible to
+      switch between servers easily. The environment name is also given
+      prominent display in the standard user interface.</li>
+  <li><strong>Identifier</strong> &mdash; A unique identity for an object
+      in the RapidContext storage. The identifier should consist only of ASCII
+      alphanumeric characters, preferably in lower-case. Hierarchical
+      identifiers (containing <q>/</q> characters) are also possible, as for
+      example <q><var>connection/jdbc</var></q> for the JDBC connection
+      type.</li>
   <li><strong>Plug-in</strong> &mdash; A ZIP file containing Java libraries,
-      procedures, apps, configuration or file data. A plug-in is the
-      standard way of installing additional applications or functionality
-      in a RapidContext server.</li>
+      procedures, apps, configuration or file data. A plug-in is the standard
+      distribution mechanism for all kinds of add-on functionality in
+      RapidContext.</li>
   <li><strong>Procedure</strong> &mdash; A server-side operation that can
       be invoked from the client. The operation may take arguments, modify
-      data and/or return a value depending on implementation. New procedures
-      can easily be created in the Admin app.</li>
+      data and/or return a value depending on implementation. A typical
+      procedure could for example consist of a parameterized SQL query.</li>
+  <li><strong>Role</strong> &mdash; A set of permissions (or limits) for
+      resource usage and access. Each user is assigned one or more roles,
+      providing the user with the sum of the role permissions. The default
+      built-in role <q><var>admin</var></q> provides full access to everything,
+      and should be used with care.</li>
+  <li><strong>Session</strong> &mdash; A active user connection to the
+      RapidContext server. The session is initiated upon successful login, and
+      remains active for up to 30 days (by default). Sessions are locked to the
+      browser IP address and user agent string and identifier by the HTTP
+      cookie <q><var>sessionid</var></q>. A user may have multiple sessions
+      open in different web browsers.</li>
+  <li><strong>Storage</strong> &mdash; A server-side location service for
+      RapidContext objects. The storage is organized in a tree-like structure,
+      similar to a normal file system. It handles both persistent and temporary
+      in-memory objects, allowing the latter to &ldquo;shadow&rdquo; the
+      former in the storage tree. All active plug-ins are mounted to the
+      storage and overlaid on the root storage tree, providing a single
+      coherent view of data from all plug-ins.</li>
+  <li><strong>Storage Path</strong> &mdash; An object location in the
+      RapidContext storage. The storage path is formed from the object type
+      and identifier as <var>[type]/[identifier]</var>. Note that only the
+      base type is used, e.g. <q><var>connection</var></q> instead of
+      <q><var>connection/jdbc</var></q>.</li>
+  <li><strong>Type</strong> &mdash; A server-side descriptor and optionally
+      an associated Java handler for a piece of data in the RapidContext
+      storage. The type contains meta-data and descriptions for all recognized
+      properties of the type, similar to a Java class or an XML schema.</li>
+  <li><strong>User</strong> &mdash; A login identity, usually assigned to a
+      physical person. Each user has an identifier, a name, a description and
+      a password. The user can also have one or many roles, which in turn
+      control the access permissions for the user.</li>
 </ul>
 
 
