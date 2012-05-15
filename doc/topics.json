@@ -5,7 +5,14 @@
         { "topic": "1.3. Features", "url": "doc/1_introduction.html#features" },
         { "topic": "1.4. Concepts & Terminology", "url": "doc/1_introduction.html#concepts" }
     ] },
-    { "topic": "2. Installing & Connecting", "url": "doc/2_install.html" },
+    { "topic": "2. Installing & Connecting", "url": "doc/2_install.html", "children": [
+        { "topic": "2.1. System Requirements", "url": "doc/2_install.html#requirements" },
+        { "topic": "2.2. Server Installation", "url": "doc/2_install.html#installation" },
+        { "topic": "2.3. Plug-in Installation", "url": "doc/2_install.html#plugin_install" },
+        { "topic": "2.4. Plug-in Activation & Deactivation", "url": "doc/2_install.html#plugin_loading" },
+        { "topic": "2.5. Plug-in Removal", "url": "doc/2_install.html#plugin_removal" },
+        { "topic": "2.6. Adding Connections", "url": "doc/2_install.html#connection_add" }
+    ] },
     { "topic": "3. Administration & Security", "url": "doc/3_admin.html" },
     { "topic": "4. App Development", "url": "doc/4_app_dev.html" },
     { "topic": "5. Plug-In Development & Distribution", "url": "doc/5_plugin_dev.html" },
