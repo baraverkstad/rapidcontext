@@ -357,18 +357,18 @@ div.description {
  */
 .box {
     margin: 20px 40px;
-    border: 1px solid #CCEEFF;
+    border: 1px solid #CCCCCC;
     border-radius: 6px;
     padding: 10px 20px;
     overflow: hidden; /* Fix for float elements overflowing box */
     page-break-inside: avoid;
-    background-color: #E8F8FF;
-    background-image: -moz-linear-gradient(top, #FDFDFF, #E8F8FF);
-    background-image: -ms-linear-gradient(top, #FDFDFF, #E8F8FF);
-    background-image: -o-linear-gradient(top, #FDFDFF, #E8F8FF);
-    background-image: -webkit-linear-gradient(top, #FDFDFF, #E8F8FF);
-    background-image: linear-gradient(top, #FDFDFF, #E8F8FF);
-    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FDFDFF', endColorstr='#E8F8FF')";
+    background-color: #EEEEEE;
+    background-image: -moz-linear-gradient(top, #FDFDFD, #EEEEEE);
+    background-image: -ms-linear-gradient(top, #FDFDFD, #EEEEEE);
+    background-image: -o-linear-gradient(top, #FDFDFD, #EEEEEE);
+    background-image: -webkit-linear-gradient(top, #FDFDFD, #EEEEEE);
+    background-image: linear-gradient(top, #FDFDFD, #EEEEEE);
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FDFDFD', endColorstr='#EEEEEE')";
     box-shadow: 0 1px 3px #CCCCCC;
 }
 ol.box, ul.box {
