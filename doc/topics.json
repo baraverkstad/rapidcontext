@@ -13,7 +13,14 @@
         { "topic": "2.5. Plug-in Removal", "url": "doc/2_install.html#plugin_removal" },
         { "topic": "2.6. Adding Connections", "url": "doc/2_install.html#connection_add" }
     ] },
-    { "topic": "3. Administration & Security", "url": "doc/3_admin.html" },
+    { "topic": "3. Administration & Security", "url": "doc/3_admin.html", "children": [
+        { "topic": "3.1. Storage & Local Changes", "url": "doc/3_admin.html#storage" },
+        { "topic": "3.2. Default Users & Roles", "url": "doc/3_admin.html#default_users" },
+        { "topic": "3.3. User Authentication", "url": "doc/3_admin.html#user_authentication" },
+        { "topic": "3.4. Managing Users", "url": "doc/3_admin.html#managing_users" },
+        { "topic": "3.5. Roles & Access Control", "url": "doc/3_admin.html#roles_access_control" },
+        { "topic": "3.6. Security Checklist", "url": "doc/3_admin.html#security_checklist" }
+    ] },
     { "topic": "4. App Development", "url": "doc/4_app_dev.html" },
     { "topic": "5. Plug-In Development & Distribution", "url": "doc/5_plugin_dev.html" },
     { "topic": "6. Change History", "url": "doc/6_changes.html" },

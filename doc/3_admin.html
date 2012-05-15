@@ -34,95 +34,151 @@
 
 <h1>3. Administration &amp; Security</h1>
 
-<div class="box red">
-  <img src="images/stop.png" class="left" alt="Warning" />
-  <h2 style="margin: 0;">Information Not Updated</h2>
-  This section has not been updated to the latest version of RapidContext.
+<h2 id="storage">3.1. Storage &amp; Local Changes</h2>
+
+<p>The RapidContext storage is located in the <var>plugin</var> subdirectory
+on the server. There all installed plug-ins are saved as packed ZIP files
+along with the special <var>local</var> directory.</p>
+
+<p>The <var>local</var> directory contains the special <var>local</var> plug-in
+that stores any local additions or modifications. These local changes always
+have priority over other plug-ins. The figure below illustrates the server
+storage file structure:</p>
+
+<ul class="box yellow">
+  <li>
+    <var>plugin/</var>
+    <ul>
+      <li><var>cmdline.zip</var> &mdash; The command-line plug-in</li>
+      <li><var>http.zip</var> &mdash; The HTTP plug-in</li>
+      <li><var>jdbc.zip</var> &mdash; The JDBC plug-in</li>
+      <li>
+        <var>local/</var> &mdash; A plug-in with local modifications and additions
+        <ul>
+          <li><var>connection/</var> &mdash; Connections added or modified</li>
+          <li><var>lib/</var> &mdash; JAR files added (JDBC drivers)</li>
+          <li><var>role/</var> &mdash; Roles added or modified</li>
+          <li><var>session/</var> &mdash; Currently active sessions</li>
+          <li><var>user/</var> &mdash; Users added or modified</li>
+        </ul>
+      </li>
+      <li><var>system.zip</var> &mdash; The system or core platform plug-in</li>
+    </ul>
+  </li>
+</ul>
+
+
+<h2 id="default_users">3.2. Default Users &amp; Roles</h2>
+
+<p>The default installation of RapidContext contain the following users and
+roles:</p>
+
+<ul class="box yellow">
+  <li><strong><var>admin</var> (user)</strong> &mdash; Created if no other
+      users are detected on server startup. The password is initially set to
+      accept any value (an empty string). The user is also assigned the
+      <var>admin</var> role. It is good practice to either disable this user
+      or assign it a proper password.</li>
+  <li><strong><var>admin</var> (role)</strong> &mdash; A built-in role that
+      provides full system access, everywhere. This role is required in order
+      to modify procedures, manage plug-ins, and all similar administrative
+      operations. This role <strong>shouldn't be modified or removed</strong>
+      from the system. Instead, it should be assigned to users with care.</li>
+</ul>
+
+
+<h2 id="user_authentication">3.3. User Authentication</h2>
+
+<p>RapidContext require all users to authenticate with user name and password.
+The following protocols for user authentication are built-in and supported
+by default:</p>
+
+<ul class="box yellow">
+  <li><strong>HTTP Digest Auth</strong> &mdash; Uses a browser built-in login
+      dialog for user authentication. This method uses a challenge-response
+      protocol that avoids sending the password over
+      the wire. Even so, it is recommended to only use this authentication
+      method over secure channels (intranet, VPN tunnel or HTTPS).</li>
+</ul>
+
+<p>After a successful authentication, a new session is initiated for the user.
+The <var>sessionid</var> HTTP cookie is sent to the web browser and no further
+authentication is required until the cookie expires or is invalidated. This
+avoids repeated authentication requests.</p>
+
+<div class="box green" style="margin-top: 0;">
+  <img src="images/info.png" class="left" alt="Information" />
+  <div style="margin-left: 68px;">
+    <h2 style="margin: 0;">Notice</h2>
+    <p>A user session can be invalidated in one of the following ways:</p>
+    <ul>
+      <li><strong>Session Expiry</strong> &mdash; Both the <var>sessionid</var>
+          cookie and the session itself is set to expire after 30 days.</li>
+      <li><strong>Logout</strong> &mdash; Users can logout from the user menu
+          (top right in the standard user interface).</li>
+      <li><strong>Forced Termination</strong> &mdash; The built-in procedure
+          <var>System.Session.Terminate</var> allows the early termination of
+          any user session.</li>
+      <li><strong>IP or Browser Mismatch</strong> &mdash; A session is bound
+          to the original browser user agent string and IP address in order to
+          avoid session hijacking. Whenever a mismatch occurs, the session is
+          terminated.</li>
+    </ul>
+  </div>
 </div>
 
-<p>RapidContext requires all users to authenticate with username and password.
-The user information is available for logging and is also used to check all
-procedure calls before execution. By default the platform requires
-administrative privileges for any operation that modifies the configuration
-or accesses sensitive information.</p>
+
+<h2 id="managing_users">3.4. Managing Users</h2>
+
+<p>Users are managed with the built-in <strong>Admin</strong> app. Follow
+the steps below in order to edit or create a user:</p>
+
+<ol class="box yellow">
+  <li>Launch or go to the <strong>Admin</strong> app</li>
+  <li>Choose the <q>Users</q> tab</li>
+  <li>Select the appropriate user <strong>OR</strong> press the <q>+</q>
+      icon</li>
+  <li>Edit the user form (see screenshot for <var>admin</var> user)
+      <p class="figure">
+        <img src="images/screenshot-user-edit.png" />
+      </p></li>
+  <li>Press <q>Save</q> to store the changes</li>
+</ol>
+
+<div class="box green" style="margin-top: 0;">
+  <img src="images/info.png" class="left" alt="Information" />
+  <div style="margin-left: 68px;">
+    <h2 style="margin: 0;">Notice</h2>
+    <p>A few facts regarding user data storage:</p>
+    <ul>
+      <li><strong>Passwords</strong> &mdash; Passwords are stored with a
+          one-way MD5 hash (with salt). This makes them virtually impossible to
+          retrieve without resorting to brute force and guesses. An
+          administrator can of course reset user passwords as needed.</li>
+      <li><strong>User Removal</strong> &ndash; Users can be removed by
+          deleting the corresponding file from storage, but this is
+          <strong>strongly discouraged</strong>. Use the
+          <q>Enabled</q> checkbox in the dialog above instead.</li>
+    </ul>
+  </div>
+</div>
 
 
-<h2 id="default_users">3.1. Default Users &amp; Roles</h2>
+<h2 id="roles_access_control">3.5. Roles &amp; Access Control</h2>
 
-<p>The default installation of RapidContext contain the following users
-and roles:</p>
+<p>Access permissions are assigned to users from the <strong>roles</strong>
+assigned. All platform operations for managing plug-ins or editing procedures
+require the <var>admin</var> role, but access to other procedures is possible
+to attain also from other roles.</p>
 
-<ul class="box blue">
-  <li><strong><code>admin</code> (user)</strong> &ndash; Created if no other users are
-      detected on server startup. The password is initially set to accept
-      any value (blank string) and has the <code>Admin</code> role.</li>
-  <li><strong><code>Admin</code> (role)</strong> &ndash; A built-in role that provides
-      full system access. This role is required in order to modify procedures,
-      install plug-ins, and similar adminirative operations.</li>
-</ul>
-
-
-<h2 id="user_authentication">3.2. User Authentication</h2>
-
-<p>In the standard configuration, user authentication is supported by the
-following protocols:</p>
-
-<ul class="box blue">
-  <li><strong>HTTP Basic Auth</strong> &ndash; Uses browser built-in login
-      dialog for user authentication. Note that the user name and password
-      will be sent unencrypted over the wire, so the communication channel
-      must be secure (intranet, VPN tunnel or HTTPS is recommended).</li>
-</ul>
-
-<p>After successful authentication, the user credentials are stored in the
-HTTP session. This avoids repeated authentication requests and makes other
-authentication methods feasible (provided by plug-ins).</p>
-
-<p class="box blue"><strong>Note:</strong> By default the HTTP sessions are
-configured to expire after 4 hours of inactivity. The sessions may also be
-forcefully terminated with the <code>System.Session.Terminate</code>
-procedure.</p>
-
-
-<h2 id="managing_users">3.3. Managing Users</h2>
-
-<p>Users are managed with the <strong>Admin</strong> app, in the
-<strong>Users</strong> tab. Below is a screenshot showing the editing
-of the default <code>admin</code> user:</p>
-
-<p style="text-align: center;">
-  <img src="images/screenshot-user-edit.png" />
-</p>
-
-<p>New and modified user are automatically stored in the <code>local</code>
-plug-in, under the <code>plugin/local/user</code> directory. A few important
-facts should be noted regarding the storage of user data:</p>
-
-<ul class="box blue">
-  <li><strong>Passwords</strong> &ndash; Passwords are stored with a one-way
-      SHA-256 hash (with salting). This makes it virtually impossible to
-      retrieve passwords other than by guessing. An administrator can of
-      course reset user passwords if needed.</li>
-  <li><strong>User Removal</strong> &ndash; Users can be removed by deleting
-      the corresponding file in the plug-in <code>user</code> directory.
-      This is discouraged since it makes unintentional reuse of user names
-      possible. Use the <strong>enabled</strong> flag instead.</li>
-  <li><strong>Default Reset</strong> &ndash; By removing or renaming all
-      plug-in <code>user</code> directories and restarting the server, the
-      default <code>admin</code> user is recreated. This is useful to
-      reset a server.</li>
-</ul>
-
-
-<h2 id="roles_access_control">3.4. Roles &amp; Access Control</h2>
-
-<p>User roles are by default only possible to create or modify by accessing
-the corresponding data files in the <code>plugin/&lt;plugin id&gt;/role</code>
-directory. The files are named <code>&lt;name&gt;.properties</code>. See below
-for a simple example role file.</p>
+<p>Roles are currently created and modified directly on the server file system,
+in the <var>plugin/local/role</var> directory. The role files should be named
+<var>[identifier].properties</var>. See below for an example role file.</p>
 
 <pre class="box blue code">
 <span class="comment"># General properties</span>
+id = demo
+type = role
 name = Demo
 description = Provides access to all read-only procedures (if properly named).
 
@@ -131,67 +187,75 @@ access.0.type = procedure
 access.0.regexp = .*\\.Find[^.]*
 </pre>
 
-<p>All procedure calls are authorized (permission checked) based on the roles
-that a user has. The <code>Admin</code> role automatically provides access to
-all procedures, but other roles use the configured <code>access</code> array
-in the role data file.</p>
+<p>The configuration for the <var>access</var> array requires some further
+elaboration:</p>
 
-<ul class="box blue">
-  <li><code>access.#.type</code> &ndash; The object type to match. Only the
-      <code>procedure</code> type is currently recognized and used in default
-      access controls. Use a prefix <code>&lt;plugin id&gt;:</code> for custom
-      permission types used in generic access controls.</li>
-  <li><code>access.#.name</code> &ndash; The exact object name to match, e.g.
-      the procedure name. Either this property or the <code>regexp</code>
-      property must be specified. Use the <code>name</code> property when a
+<ul class="box yellow">
+  <li><var>access.#.type</var> &mdash; The object type to match. Only the
+      <q><var>procedure</var></q> and <q><var>app</var></q> types are currently
+      used by the default access controls. Use the format
+      <var>[plug-in identifier]:[type]</var> for custom permission types and
+      generic access controls.</li>
+  <li><var>access.#.name</var> &mdash; The exact object identifier to match,
+      i.e. the procedure name. Either this property or the <var>regexp</var>
+      property must be specified. Use the <var>name</var> property when a
       single unique object is to be identified.</li>
-  <li><code>access.#.regexp</code> &ndash; The regular expression object name
-      to match. Either this property or the <code>name</code> property must be
-      specified. Note that the "." character has special meaning when using
-      regular expressions, so it must be escaped with a single "\"
-      character.</li>
-  <li><code>access.#.caller</code> &ndash; The regular expression caller name
+  <li><var>access.#.regexp</var> &mdash; The regular expression to match the
+      object identifier. Either this property or the <var>name</var> property
+      must be specified. Note that the <q>.</q> character has special meaning
+      in regular expressions, so it must be escaped as <q>\\.</q> to be used
+      literally.</li>
+  <li><var>access.#.caller</var> &mdash; The regular expression caller name
       to match. If this property is specified, the procedure will only be
       accessible when executed by the matched caller procedure. This is useful
       for limiting access to generic helper procedures.</li>
-  <li><code>access.#.allow</code> &ndash; The access permission value, defaults
-      to <code>true</code>. The permission access list is processed in order,
+  <li><var>access.#.allow</var> &mdash; The access permission value, defaults
+      to <var>true</var>. The permission access list is processed in order,
       so once an object matches an access list entry, the value of the
-      <code>allow</code> property will be returned as the permission check
+      <var>allow</var> property will be returned as the permission check
       result.</li>
 </ul>
 
-<p>Since only procedures are permission checked by default, other object
-accesses must be programmatically checked (from JavaScript procedures) by
-using the <code>System.User.CheckAccess</code> procedure.</p>
+<div class="box green" style="margin-top: 0;">
+  <img src="images/info.png" class="left" alt="Information" />
+  <div style="margin-left: 68px;">
+    <h2 style="margin: 0;">Notice</h2>
+    <p>A few important notes on access control:</p>
+    <ul>
+      <li><strong>Admin</strong> &mdash; It is currently not possible to manage
+          roles from the <strong>Admin</strong> app. This will change in a
+          future release possibly along with much of the current access control
+          model.</li>
+      <li><strong>Generic Access Controls</strong> &mdash; Since only apps and
+          procedures are checked by default, other objects must be checked
+          programmatically (from JavaScript procedures) by using the
+          <var>System.User.CheckAccess</var> procedure.</li>
+    </ul>
+  </div>
+</div>
 
-<p class="box blue"><strong>Note:</strong> When using programmatic access checks,
-care must be taken to ensure that no procedures are exposed that allow direct
-access to the protected data or operation. Make sure to use wrapper JavaScript
-procedures and the <code>caller</code> access list property to protect the
-direct access to resources.</p>
 
-
-<h2 id="security_checklist">3.5. Security Checklist</h2>
+<h2 id="security_checklist">3.6. Security Checklist</h2>
 
 <p>Before installing a RapidContext server in a publically acessible location,
 please check the following:</p>
 
-<ul class="box blue">
+<ul class="box yellow">
   <li><strong>Disable Default User</strong> &ndash; Make sure that the
-      <strong>admin</strong> user is either removed, disabled or provided with
-      a strong password.</li>
-  <li><strong>Check User Passwords</strong> &ndash; All users should have
-      strong passwords to avoid brute-force attacks with password guessing.</li>
-  <li><strong>Encrypt Connection</strong> &ndash; Communication over the
-      internet must be encrypted, since passwords and data can otherwise be
-      eavesdropped. Either use an HTTPS proxy, an HTTPS servlet container or
-      a VPN tunnel.</li>
-  <li><strong>Check Access Controls</strong> &ndash; The access controls for
-      each role must be checked to verify that no private resources are
-      available to unprivileged users.</li>
+      <var>admin</var> user is either disabled or provided with a strong
+      password.</li>
+  <li><strong>User Passwords</strong> &ndash; Users should be encouraged to use
+      strong passwords to avoid risks with brute-force attacks or password
+      guessing.</li>
+  <li><strong>Encrypt Connections</strong> &ndash; Communication over the
+      Internet should be encrypted, since information can otherwise be
+      eavesdropped. Use an HTTPS proxy, an HTTPS servlet container or a VPN
+      tunnel.</li>
+  <li><strong>Verify Access Controls</strong> &ndash; Test the access controls
+      for each role with a test user assigned to only that role. Check that no
+      privileged resources are available to unprivileged roles.</li>
   <li><strong>Limit Admin Access</strong> &ndash; The number of users with
-      the <code>Admin</code> role should be limited, to avoid potential abuse
+      the <var>admin</var> role should be limited, to avoid potential abuse
       of the system.</li>
 </ul>
 
