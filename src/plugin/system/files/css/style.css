@@ -198,7 +198,7 @@ body.doc {
     padding: 60px 0;
 }
 .doc {
-    font-size: 12px;
+    font-size: 14px;
 }
 .doc h1 {
     font-size: 20px;
@@ -212,32 +212,46 @@ body.doc {
     font-size: 14px;
 }
 .doc table {
-    font-size: 12px;
+    font-size: 14px;
     border-collapse: collapse;
 }
 .doc code,
 .doc pre {
-    font-size: 13px;
+    font-size: 14px;
     color: #006699;
 }
 .doc var {
     font-family: "Courier New", monospace;
     font-style: normal;
-    font-size: 13px;
+    font-size: 14px;
     color: #006633;
+}
+.doc abbr {
+    border-bottom: 1px dotted #006633;
+    color: #006633;
+}
+.doc .box abbr {
+    border-bottom: 1px dotted #006699;
+    color: #006699;
 }
 .doc q {
     font-style: normal;
     color: #006633;
 }
+.doc .navigation {
+    font-size: 13px;
+}
+.doc .navigation td {
+    padding-top: 4px;
+}
+@media print {
+    .navigation {
+        display: none;
+    }
+}
 .doc .fineprint {
     font-size: 10px;
     color: #888888;
-}
-@media print {
-    .widgetNavigationBar {
-        display: none;
-    }
 }
 
 
@@ -304,14 +318,13 @@ body.doc {
 }
 .doc .summaryTable td.attributes,
 .doc .fixedFont {
-    line-height: 15px;
     color: #1E466E;
     font-family: "Courier New", Courier, monospace;
-    font-size: 13px;
+    font-size: 15px;
+    line-height: 17px;
 }
 .doc .summaryTable td.nameDescription {
     text-align: left;
-    font-size: 13px;
 }
 .doc .summaryTable td.nameDescription,
 .doc .summaryTable .description {
@@ -399,10 +412,10 @@ div.description {
 
 /* Box style */
 .box {
-    margin: 15px 40px 15px 40px;
+    margin: 20px 40px;
     border: 1px solid #88AACC;
     border-radius: 12px;
-    padding: 6px 10px 6px 10px;
+    padding: 6px 10px;
     background: #F8FBFF;
     page-break-inside: avoid;
 }
@@ -411,6 +424,9 @@ ol.box, ul.box {
     padding-bottom: 10px;
     padding-left: 35px;
     padding-right: 35px;
+}
+.box li + li {
+    margin-top: 12px;
 }
 
 /* Compact list style */
@@ -468,13 +484,6 @@ hr.short {
 /* Preformatted with line-breaks */
 .preformatted {
     white-space: pre-wrap;
-}
-
-/* Abbreviation */
-.abbreviation {
-    font-weight: bold;
-    font-size: 90%;
-    color: #888;
 }
 
 /* Help text style*/

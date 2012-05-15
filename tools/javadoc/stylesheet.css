@@ -5,7 +5,7 @@ html, body {
     border: 0px;
     padding: 0px;
     font-family : Lucida Grande, Verdana, sans-serif;
-    font-size: 12px;
+    font-size: 14px;
 }
 html {
     margin: 0px;
@@ -29,7 +29,7 @@ h2 {
 }
 h3 {
     margin-top: 0px;
-    font-size: 12px;
+    font-size: 14px;
 }
 hr {
     margin: 12px 0;
@@ -44,7 +44,7 @@ p {
 }
 table {
     font-family: Lucida Grande, Verdana, sans-serif;
-    font-size: 12px;
+    font-size: 14px;
     border-collapse: collapse;
 }
 td,
@@ -71,7 +71,7 @@ code,
 pre {
     margin-top: 0px;
     color: #005577;
-    font-size: 13px;
+    font-size: 14px;
     font-family: "Courier New", monospace;
 }
 ol, ul {
