@@ -44,7 +44,8 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  * @extends RapidContext.Widget
  *
  * @example {JavaScript}
- * var field = RapidContext.Widget.Field({ name: "ratio", value: 0.23, format: "Ratio: {:%}" });
+ * var attrs = { name: "ratio", value: 0.23, format: "Ratio: {:%}" };
+ * var field = RapidContext.Widget.Field(attrs);
  *
  * @example {User Interface XML}
  * <Field name="ratio" value="0.23" format="Ratio: {:%}" />

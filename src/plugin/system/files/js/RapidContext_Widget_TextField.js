@@ -43,7 +43,8 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  * @extends RapidContext.Widget
  *
  * @example {JavaScript}
- * var field = RapidContext.Widget.TextField({ name: "name", helpText: "Your Name Here" });
+ * var attrs = { name: "name", helpText: "Your Name Here" };
+ * var field = RapidContext.Widget.TextField(attrs);
  *
  * @example {User Interface XML}
  * <TextField name="name" helpText="Your Name Here" />

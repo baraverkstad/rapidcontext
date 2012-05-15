@@ -42,7 +42,8 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  * @extends RapidContext.Widget
  *
  * @example {JavaScript}
- * var field = RapidContext.Widget.TextArea({ name="description", helpText: "Description Text" });
+ * var attrs = { name="description", helpText: "Description Text" };
+ * var field = RapidContext.Widget.TextArea(attrs);
  *
  * @example {User Interface XML}
  * <TextArea name="description" helpText="Description Text" />
