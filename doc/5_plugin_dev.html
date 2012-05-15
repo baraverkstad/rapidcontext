@@ -34,13 +34,10 @@
 
 <h1>Server &amp; Plug-In Development</h1>
 
-<div style="position: relative; margin: 10px 40px; border: 1px solid #DD6; border-radius: 6px; padding: 6px 20px; background: #FFFFAA;">
-  <img src="images/warning.png">
-  <div style="position: absolute; left: 80px; top: 0px;">
-    <h2 style="margin: 10px 0 0 0;">Information Not Updated</h2>
-    The information in this document has not been updated to the latest
-    version of RapidContext.
-  </div>
+<div class="box yellow">
+  <img src="images/warning.png" class="left" alt="Warning" />
+  <h2 style="margin: 0;">Information Not Updated</h2>
+  This section has not been updated to the latest version of RapidContext.
 </div>
 
 <p>RapidContext server programming is based on Java, JavaScript and the specific
@@ -58,7 +55,7 @@ directory. Each plug-in is stored in its own subdirectory based on the
 unique plug-in identifier. A few plug-in identifiers are reserved with a
 special meaning:</p>
 
-<ul class="box">
+<ul class="box blue">
   <li><code>system</code> &mdash; A plug-in that provides all the platform
       built-in functionality. In essence, a platform update consists of
       replacing this plug-in with a new version. This plug-in is always
@@ -77,7 +74,7 @@ into the corresponding <code>plugin/&lt;plug-in id&gt;</code> directory.
 The plug-in directories and their corresponding ZIP files are all structured
 in the same way. The list below explains the standard files and directories:</p>
 
-<pre class="box code">
+<pre class="box blue code">
 plugin.properties <span class="comment">-- The plug-in manifest file (see below)</span>
 files/            <span class="comment">-- Contains all files mapped to URL:s</span>
 lib/              <span class="comment">-- Contains Java JAR libraries to load</span>
@@ -100,7 +97,7 @@ running in the web browser.</p>
 It is the only mandatory content of a plug-in and consists of the following
 fields:</p>
 
-<ul class="box">
+<ul class="box blue">
   <li><code>id</code> &mdash; The unique plug-in identifier. May only contain
       ASCII alphanumeric characters without spaces or separators.</li>
   <li><code>name</code> &mdash; The plug-in name as presented to the users.</li>
@@ -116,7 +113,7 @@ fields:</p>
 <p>The plug-in manifest is the first file to write when developing a plug-in.
 An example <code>plugin.properties</code> file is illustrated below:</p>
 
-<pre class="box code">
+<pre class="box blue code">
 <span class="comment"># General properties</span>
 id = example
 name = Example Plug-in
@@ -145,7 +142,7 @@ types are actually needed. So most procedures are instead created by
 configuring one of the standard procedure types available. The standard
 procedure types are listed below:</p>
 
-<ul class="box">
+<ul class="box blue">
   <li><code>built-in</code> &mdash; The built-in procedure type, used for
       non-configurable procedures implemented directly in Java code. This
       procedure type is normally only used for platform operations.</li>
@@ -181,7 +178,7 @@ parameters, it is possible to create advanced procedures easily without
 writing any Java code at all. Each procedure configuration parameter has
 a specific type, as listed below:</p>
 
-<ol class="box">
+<ol class="box blue">
   <li><strong>Constant Data</strong> &mdash; The value is a data string that
       may or may not span multiple lines.</li>
   <li><strong>Procedure Reference</strong> &mdash; The value contains a
@@ -220,7 +217,7 @@ user interface for editing or creating environment files, so they must
 be manually created as <code>environment/&lt;name&gt;.properties</code> in
 one of the plug-ins. See below for a simple example environment file.</p>
 
-<pre class="box code">
+<pre class="box blue code">
 <span class="comment"># Environment information</span>
 name = EXAMPLE
 description = The example environment
@@ -253,7 +250,7 @@ any actual operations are made. All connections reserved also participate in
 the same transaction (if supported) and will be committed or rolled back
 in sequence.</p>
 
-<p class="box"><strong>Note:</strong> A RapidContext server may only have a
+<p class="box blue"><strong>Note:</strong> A RapidContext server may only have a
 single environment loaded. This environment (and all its connections) is
 shared between all apps, procedures and users on the server. If several
 environment are required, separate RapidContext server instances must be

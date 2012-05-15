@@ -34,13 +34,10 @@
 
 <h1>3. Administration &amp; Security</h1>
 
-<div style="position: relative; margin: 10px 40px; border: 1px solid #DD6; border-radius: 6px; padding: 6px 20px; background: #FFFFAA;">
-  <img src="images/warning.png">
-  <div style="position: absolute; left: 80px; top: 0px;">
-    <h2 style="margin: 10px 0 0 0;">Information Not Updated</h2>
-    The information in this document has not been updated to the latest
-    version of RapidContext.
-  </div>
+<div class="box yellow">
+  <img src="images/warning.png" class="left" alt="Warning" />
+  <h2 style="margin: 0;">Information Not Updated</h2>
+  This section has not been updated to the latest version of RapidContext.
 </div>
 
 <p>RapidContext requires all users to authenticate with username and password.
@@ -55,7 +52,7 @@ or accesses sensitive information.</p>
 <p>The default installation of RapidContext contain the following users
 and roles:</p>
 
-<ul class="box">
+<ul class="box blue">
   <li><strong><code>admin</code> (user)</strong> &ndash; Created if no other users are
       detected on server startup. The password is initially set to accept
       any value (blank string) and has the <code>Admin</code> role.</li>
@@ -70,7 +67,7 @@ and roles:</p>
 <p>In the standard configuration, user authentication is supported by the
 following protocols:</p>
 
-<ul class="box">
+<ul class="box blue">
   <li><strong>HTTP Basic Auth</strong> &ndash; Uses browser built-in login
       dialog for user authentication. Note that the user name and password
       will be sent unencrypted over the wire, so the communication channel
@@ -81,7 +78,7 @@ following protocols:</p>
 HTTP session. This avoids repeated authentication requests and makes other
 authentication methods feasible (provided by plug-ins).</p>
 
-<p class="box"><strong>Note:</strong> By default the HTTP sessions are
+<p class="box blue"><strong>Note:</strong> By default the HTTP sessions are
 configured to expire after 4 hours of inactivity. The sessions may also be
 forcefully terminated with the <code>System.Session.Terminate</code>
 procedure.</p>
@@ -101,7 +98,7 @@ of the default <code>admin</code> user:</p>
 plug-in, under the <code>plugin/local/user</code> directory. A few important
 facts should be noted regarding the storage of user data:</p>
 
-<ul class="box">
+<ul class="box blue">
   <li><strong>Passwords</strong> &ndash; Passwords are stored with a one-way
       SHA-256 hash (with salting). This makes it virtually impossible to
       retrieve passwords other than by guessing. An administrator can of
@@ -124,7 +121,7 @@ the corresponding data files in the <code>plugin/&lt;plugin id&gt;/role</code>
 directory. The files are named <code>&lt;name&gt;.properties</code>. See below
 for a simple example role file.</p>
 
-<pre class="box code">
+<pre class="box blue code">
 <span class="comment"># General properties</span>
 name = Demo
 description = Provides access to all read-only procedures (if properly named).
@@ -139,7 +136,7 @@ that a user has. The <code>Admin</code> role automatically provides access to
 all procedures, but other roles use the configured <code>access</code> array
 in the role data file.</p>
 
-<ul class="box">
+<ul class="box blue">
   <li><code>access.#.type</code> &ndash; The object type to match. Only the
       <code>procedure</code> type is currently recognized and used in default
       access controls. Use a prefix <code>&lt;plugin id&gt;:</code> for custom
@@ -168,7 +165,7 @@ in the role data file.</p>
 accesses must be programmatically checked (from JavaScript procedures) by
 using the <code>System.User.CheckAccess</code> procedure.</p>
 
-<p class="box"><strong>Note:</strong> When using programmatic access checks,
+<p class="box blue"><strong>Note:</strong> When using programmatic access checks,
 care must be taken to ensure that no procedures are exposed that allow direct
 access to the protected data or operation. Make sure to use wrapper JavaScript
 procedures and the <code>caller</code> access list property to protect the
@@ -180,7 +177,7 @@ direct access to resources.</p>
 <p>Before installing a RapidContext server in a publically acessible location,
 please check the following:</p>
 
-<ul class="box">
+<ul class="box blue">
   <li><strong>Disable Default User</strong> &ndash; Make sure that the
       <strong>admin</strong> user is either removed, disabled or provided with
       a strong password.</li>

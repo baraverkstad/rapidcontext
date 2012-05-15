@@ -34,6 +34,12 @@
 
 <h1>4. App Development</h1>
 
+<div class="box yellow">
+  <img src="images/warning.png" class="left" alt="Warning" />
+  <h2 style="margin: 0;">Information Not Updated</h2>
+  This section has not been updated to the latest version of RapidContext.
+</div>
+
 <p>RapidContext client programming is based on JavaScript, HTML, CSS and
 DOM (i.e. AJAX without XML). Client applications are called an "app" and
 executes in the web browser. Care must therefore be taken to follow
@@ -47,7 +53,7 @@ targeted browsers.</p>
 libraries, besides the RapidContext API:s themselves. Please refer to the
 references below for more information:</p>
 
-<ul class="box">
+<ul class="box blue">
   <li><a href="http://www.w3.org/TR/html401/">HTML 4.01</a> &mdash; User
       interface presentation layer. Normally used dynamically through the
       HTML DOM by both <code>MochiKit.DOM</code> and
@@ -87,7 +93,7 @@ part. In the file, generic configuration parameters are specified along with
 a list of URL resources required to load the app. Below follows a simple
 example:</p>
 
-<pre class="box code">
+<pre class="box blue code">
 <span class="comment"># General properties</span>
 name = Example App
 description = A small example app.
@@ -108,7 +114,7 @@ is first launched and is thereafter reused without reloading on subsequent
 launches. The available configuration parameters and their meaning is as
 follows:</p>
 
-<ul class="box">
+<ul class="box blue">
   <li><code>name</code> &mdash; The app name as presented to the user.
       This name is shown in various places in the default user interface.</li>
   <li><code>description</code> &mdash; The optional app description that
@@ -189,7 +195,7 @@ must also contain two methods &mdash; <code>start()</code> and
 <code>stop()</code> &mdash; that handles the app lifecycle. Below is an
 example JavaScript file that implements a minimal example app:</p>
 
-<pre class="box code">
+<pre class="box blue code">
 <span class="comment">/**
  * Creates a new ExampleApp instance. This function is called once all
  * app JavaScript resources have been loaded. It is called as a
@@ -228,7 +234,7 @@ app loading, instance creation and calling the <code>start()</code> method
 once the user interface has been created. A number of instance variables will
 also be provided to all app instances:</p>
 
-<ul class="box">
+<ul class="box blue">
   <li><code>this.className</code> &mdash; The app class name value.</li>
   <li><code>this.ui</code> &mdash; Contains an <code>Object</code> with
       properties for any user interface widget with an <code>id</code>
@@ -263,7 +269,7 @@ app JavaScript source code and other resources. To trigger the automatic
 loading and creation of the user interface from this file, it must be
 specified as an app resource as follows:</p>
 
-<pre class="box code">
+<pre class="box blue code">
 ...
 resources.2.url = example/ui.xml
 resources.2.type = ui
@@ -274,7 +280,7 @@ serialization of user interface widgets defined in the
 <code>RapidContext.Widget</code> namespace. The actual XML is processed by
 the <code>RapidContext.UI.buildUI</code> function. Here is a simple example:</p>
 
-<pre class="box code">
+<pre class="box blue code">
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
 
 &lt;ui&gt;
@@ -286,7 +292,7 @@ the <code>RapidContext.UI.buildUI</code> function. Here is a simple example:</p>
 <code>&lt;ui&gt;</code>. Inside this tag, all well-formed XML tags will be
 interpreted as follows:</p>
 
-<ul class="box">
+<ul class="box blue">
   <li><strong>Tag Names</strong> &mdash; The XML tag names will be looked up
       in the <code>RapidContext.Widget.CLASSES</code> map, using the exact
       case-sensitive tag name. If found, the corresponding constructor function
@@ -332,7 +338,7 @@ circumstances should the default CSS files be overwritten or modified, since
 such changes won't be preserved in platform updates. Below follows a list
 of the possibilities for user interface styling:</p>
 
-<ol class="box">
+<ol class="box blue">
   <li><strong>Element <code>style</code> Attribute</strong> &mdash; The
       easiest way to modify the style of a widget or an HTML DOM node is by
       setting the <code>style</code> attribute. This can be done either in

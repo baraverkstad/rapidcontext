@@ -45,7 +45,7 @@ way.</p>
 <p>The HTTP plug-in provides two ways to perform an HTTP request from the
 RapidContext server:</p>
 
-<ul class="box">
+<ul class="box blue">
   <li><strong>The <code>PlugIn.Http.Post</code> procedure</strong> &ndash;
       A built-in procedure for performing an HTTP POST operation. Only
       accessible to users in the <code>Admin</code> group. This procedure
@@ -60,7 +60,7 @@ RapidContext server:</p>
 string. If the HTTP response code wasn't <code>200</code>, an error
 exception will be thrown by the procedures instead.</p>
 
-<p class="box"><strong>Note:</strong> The HTTP plug-in does currently not
+<p class="box blue"><strong>Note:</strong> The HTTP plug-in does currently not
 provide access to the HTTP response headers. Neither does it support other
 operations than <code>POST</code>.</p>
 
@@ -72,7 +72,7 @@ operations than <code>POST</code>.</p>
 argument values at call time. Each procedure argument name must be prefixed
 with a <code>:</code> character in order to be replaced:</p>
 
-<pre class="box code">
+<pre class="box blue code">
 <span class="comment"># Substituting a 'name' procedure argument</span>
 USERNAME=:name</pre>
 

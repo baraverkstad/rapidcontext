@@ -45,7 +45,7 @@ execution.</p>
 <p>The command-line plug-in provides two ways to execute programs on the
 server:</p>
 
-<ul class="box">
+<ul class="box blue">
   <li><strong>The <code>PlugIn.CmdLine.Exec</code> procedure</strong> &ndash;
       A built-in procedure for running any program. Only accessible to users
       in the <code>Admin</code> group. This procedure should normally only be
@@ -63,7 +63,7 @@ server:</p>
 execution can easily be tested. Below follows some simple command examples
 (using a Unix or Cygwin environment):</p>
 
-<pre class="box code">PlugIn.CmdLine.Exec('dir', '', '')
+<pre class="box blue code">PlugIn.CmdLine.Exec('dir', '', '')
   <span class="comment">--> { exitValue: 0, output: 'cmdline http jdbc ...' }</span>
 
 PlugIn.CmdLine.Exec('test 0 -eq 1', '', '')
@@ -75,7 +75,7 @@ PlugIn.CmdLine.Exec('bash -c set', '', '')
 <p>The result of a program execution is always an object with the following
 properties:</p>
 
-<ul class="box">
+<ul class="box blue">
   <li><code>exitValue</code> &ndash; The return status code from the
       operating system process. Normally 0 (zero) if the execution succeeded
       and non-zero otherwise. See the documentation for each command for more
@@ -93,7 +93,7 @@ properties:</p>
 standard input and output streams (file descriptors 0, 1 &amp; 2) in the
 following way:</p>
 
-<ul class="box">
+<ul class="box blue">
   <li><code>stdin</code> &ndash; Always an empty input
       stream, returning <code>EOF</code> on the first byte read.</li>
   <li><code>stdout</code> &ndash; All output is captured and returned in the
@@ -113,7 +113,7 @@ as a progress bar or similar.</p>
 starting with a <code>#</code> character will be analyzed, but only the
 lines matching the progress information format below will be used:</p>
 
-<pre class="box code"><span class="comment">...
+<pre class="box blue code"><span class="comment">...
 # progress: 34.9%
 # progress: 35.0%
 # progress: 35.3%
@@ -125,7 +125,7 @@ lines matching the progress information format below will be used:</p>
 <p>The execution environment for each command can be controlled by the
 following two parameters:</p>
 
-<ul class="box">
+<ul class="box blue">
   <li><strong>Directory</strong> &ndash; The working directory for the program.
       If not specified or left blank, the <code>plugin</code> directory will
       be used.</li>
@@ -141,7 +141,7 @@ the <code>PATH</code> variable as it was set when the RapidContext server was
 started. An absolute path to the executable program can naturally also be
 specified at the beginning of the command-line.</p>
 
-<p class="box"><strong>Note:</strong> Some commands like <code>cd</code> &amp;
+<p class="box blue"><strong>Note:</strong> Some commands like <code>cd</code> &amp;
 <code>set</code> are not binary executables on most systems, but instead
 available as shell built-ins. These commands are available by executing the
 shell binary and specifying the command with a parameter (see the last example
@@ -156,7 +156,7 @@ substituted with the procedure argument values at call time. Each procedure
 argument name must be prefixed with a <code>:</code> character in the
 command-line or environment string in order to be replaced:</p>
 
-<pre class="box code">
+<pre class="box blue code">
 <span class="comment"># Substituting a 'dirName' procedure argument</span>
 echo :dirName</pre>
 
