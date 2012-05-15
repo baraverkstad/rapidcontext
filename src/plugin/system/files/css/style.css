@@ -94,6 +94,10 @@ ol, ul {
     padding: 0 40px;
     page-break-inside: avoid;
 }
+li ol,
+li ul {
+    margin-top: 3px;
+}
 li {
     margin-bottom: 3px;
 }
@@ -208,6 +212,12 @@ body.doc {
     font-size: 16px;
     font-family: Trebuchet MS, Verdana, sans-serif;
 }
+.doc h2[id] {
+    margin-top: 40px;
+}
+.doc h1 + h2[id] {
+    margin-top: 10px;
+}
 .doc h2 .unimportant {
     font-size: 14px;
 }
@@ -244,6 +254,10 @@ body.doc {
     .navigation {
         display: none;
     }
+}
+.doc .figure {
+    margin: 10px;
+    text-align: center;
 }
 .doc .fineprint {
     font-size: 10px;
@@ -376,6 +390,10 @@ ol.box, ul.box {
 }
 .box li + li {
     margin-top: 12px;
+}
+.box li ol li,
+.box li ul li {
+    margin-top: 3px;
 }
 pre.code.box {
     margin: 20px 40px;
