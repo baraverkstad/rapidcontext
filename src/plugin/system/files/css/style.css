@@ -205,11 +205,11 @@ body.doc {
     font-size: 14px;
 }
 .doc h1 {
-    font-size: 20px;
+    font-size: 24px;
     font-family: Trebuchet MS, Verdana, sans-serif;
 }
 .doc h2 {
-    font-size: 16px;
+    font-size: 18px;
     font-family: Trebuchet MS, Verdana, sans-serif;
 }
 .doc h2[id] {
@@ -224,6 +224,13 @@ body.doc {
 .doc table {
     font-size: 14px;
     border-collapse: collapse;
+}
+.doc p {
+    margin: 20px 0;
+}
+.doc h1 + p,
+.doc h2 + p {
+    margin-top: 6px;
 }
 .doc code,
 .doc pre {
