@@ -21,7 +21,13 @@
         { "topic": "3.5. Roles & Access Control", "url": "doc/3_admin.html#roles_access_control" },
         { "topic": "3.6. Security Checklist", "url": "doc/3_admin.html#security_checklist" }
     ] },
-    { "topic": "4. App Development", "url": "doc/4_app_dev.html" },
+    { "topic": "4. App Development", "url": "doc/4_app_dev.html", "children": [
+        { "topic": "4.1. Technology Reference", "url": "doc/4_app_dev.html#tech_ref" },
+        { "topic": "4.2. App Configuration", "url": "doc/4_app_dev.html#app_config" },
+        { "topic": "4.3. App Implementation", "url": "doc/4_app_dev.html#app_impl" },
+        { "topic": "4.4. User Interface XML", "url": "doc/4_app_dev.html#ui_xml" },
+        { "topic": "4.5. User Interface Style", "url": "doc/4_app_dev.html#ui_style" }
+    ] },
     { "topic": "5. Plug-In Development & Distribution", "url": "doc/5_plugin_dev.html" },
     { "topic": "6. Change History", "url": "doc/6_changes.html" },
     { "topic": "Plug-In: Command-line", "url": "doc/plugin-cmdline.html" },
