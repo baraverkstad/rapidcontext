@@ -45,12 +45,12 @@ execution.</p>
 <p>The command-line plug-in provides two ways to execute programs on the
 server:</p>
 
-<ul class="box blue">
-  <li><strong>The <code>PlugIn.CmdLine.Exec</code> procedure</strong> &ndash;
+<ul class="box yellow">
+  <li><strong>The <var>PlugIn.CmdLine.Exec</var> procedure</strong> &ndash;
       A built-in procedure for running any program. Only accessible to users
-      in the <code>Admin</code> group. This procedure should normally only be
+      with the <var>admin</var> role. This procedure should normally only be
       used for testing and development.</li>
-  <li><strong>Procedures of the <code>cmdline.exec</code> type</strong> &ndash;
+  <li><strong>Procedures of the <var>cmdline.exec</var> type</strong> &ndash;
       Supports inserting procedure arguments into the command-line or into
       the environment. Useful to enable limited command-line access for normal
       users and for storing pre-configured commands.</li>
@@ -59,7 +59,7 @@ server:</p>
 
 <h2 id="returns">2. Return Values</h2>
 
-<p>Using the <code>PlugIn.CmdLine.Exec</code> procedure, the command-line
+<p>Using the <var>PlugIn.CmdLine.Exec</var> procedure, the command-line
 execution can easily be tested. Below follows some simple command examples
 (using a Unix or Cygwin environment):</p>
 
@@ -75,12 +75,12 @@ PlugIn.CmdLine.Exec('bash -c set', '', '')
 <p>The result of a program execution is always an object with the following
 properties:</p>
 
-<ul class="box blue">
-  <li><code>exitValue</code> &ndash; The return status code from the
-      operating system process. Normally 0 (zero) if the execution succeeded
-      and non-zero otherwise. See the documentation for each command for more
+<ul class="box yellow">
+  <li><var>exitValue</var> &ndash; The return status code from the operating
+      system process. Normally 0 (zero) if the execution succeeded and non-zero
+      otherwise. See the documentation for each command for more
       information.</li>
-  <li><code>output</code> &ndash; The output text from the program. In the
+  <li><var>output</var> &ndash; The output text from the program. In the
       examples above this has been simplified, but the actual strings are not
       truncated and may contain newline characters (and other control
       characters).</li>
@@ -93,24 +93,24 @@ properties:</p>
 standard input and output streams (file descriptors 0, 1 &amp; 2) in the
 following way:</p>
 
-<ul class="box blue">
-  <li><code>stdin</code> &ndash; Always an empty input
-      stream, returning <code>EOF</code> on the first byte read.</li>
-  <li><code>stdout</code> &ndash; All output is captured and returned in the
-      <code>output</code> string as part of the result.</li>
-  <li><code>stderr</code> &ndash; All output is captured and sent to the
+<ul class="box yellow">
+  <li><var>stdin</var> &ndash; Always an empty input stream, returning
+      <var>EOF</var> on the first byte read.</li>
+  <li><var>stdout</var> &ndash; All output is captured and returned in the
+      <var>output</var> string as part of the result.</li>
+  <li><var>stderr</var> &ndash; All output is captured and sent to the
       thread context log.</li>
 </ul>
 
-<p>Using the <code>stderr</code> stream, the program may also communicate
+<p>Using the <var>stderr</var> stream, the program may also communicate
 progress information back to the server thread context. If the command is
-executed in a background thread, this information can also be retrieved using
-a built-in procedure like <code>System.Thread.Context</code> and displayed
-as a progress bar or similar.</p>
+executed in a background thread, this information can be retrieved using
+<var>System.Thread.Context</var> and displayed in a progress bar or
+similar.</p>
 
 <p>Each progress update must be on its own line and should be flushed to the
-<code>stderr</code> stream immediately (normally automatic). Each line
-starting with a <code>#</code> character will be analyzed, but only the
+<var>stderr</var> stream immediately (normally automatic). Each line
+starting with a <q><var>#</var></q> character will be analyzed, but only the
 lines matching the progress information format below will be used:</p>
 
 <pre class="box blue code"><span class="comment">...
@@ -125,36 +125,41 @@ lines matching the progress information format below will be used:</p>
 <p>The execution environment for each command can be controlled by the
 following two parameters:</p>
 
-<ul class="box blue">
+<ul class="box yellow">
   <li><strong>Directory</strong> &ndash; The working directory for the program.
-      If not specified or left blank, the <code>plugin</code> directory will
+      If not specified or left blank, the <var>plugin</var> directory will
       be used.</li>
-  <li><strong>Environment</strong> &ndash; The list of environment variables
-      to set, specified in a <code>"NAME1=VALUE1;NAME2=VALUE2;..."</code> format
-      each entry separated by a <code>;</code> character. If not specified or
-      left blank, all the RapidContext environment variables will be passed on
-      unmodified.</li>
+  <li><strong>Environment</strong> &ndash; The list of environment variables to
+      set, specified in a <q><var>NAME1=VALUE1;NAME2=VALUE2;...</var></q>
+      format, each entry separated by a <q><var>;</var></q> character. If not
+      specified or left blank, all the RapidContext environment variables will
+      be passed on unmodified.</li>
 </ul>
 
 <p>The executable lookup is performed by the underlying operating system using
-the <code>PATH</code> variable as it was set when the RapidContext server was
+the <var>PATH</var> variable as it was set when the RapidContext server was
 started. An absolute path to the executable program can naturally also be
 specified at the beginning of the command-line.</p>
 
-<p class="box blue"><strong>Note:</strong> Some commands like <code>cd</code> &amp;
-<code>set</code> are not binary executables on most systems, but instead
-available as shell built-ins. These commands are available by executing the
-shell binary and specifying the command with a parameter (see the last example
-above).</p>
+<div class="box green" style="margin-top: 0;">
+  <img src="images/info.png" class="left" alt="Information" />
+  <div style="margin-left: 68px;">
+    <h2 style="margin: 0;">Notice</h2>
+    <p>Some commands like <var>cd</var> &amp; <var>set</var> are not binary
+    executables on most systems, but instead available as shell built-ins.
+    These commands are available by executing the shell binary and specifying
+    the command with a parameter (see the example above).</p>
+  </div>
+</div>
 
 
 <h2 id="param_subst">5. Parameter Substitution</h2>
 
-<p>Command-line arguments and environment values may contain procedure
-call arguments (for <code>cmdline.exec</code> procedures). These are
-substituted with the procedure argument values at call time. Each procedure
-argument name must be prefixed with a <code>:</code> character in the
-command-line or environment string in order to be replaced:</p>
+<p>Command-line arguments and environment values may contain procedure call
+arguments (for <var>cmdline.exec</var> procedures). These are substituted with
+the procedure argument values at call time. Each procedure argument name must
+be prefixed with a <q><var>:</var></q> character in the command-line or
+environment string in order to be replaced:</p>
 
 <pre class="box blue code">
 <span class="comment"># Substituting a 'dirName' procedure argument</span>
