@@ -230,8 +230,8 @@ steps:</p>
 
 <div class="box red">
   <img src="images/stop.png" class="left" alt="Warning" />
-  <h2 style="margin: 0;">Chapter In Progress</h2>
-  This chapter is not yet complete. Any information below is temporary.
+  <h2 style="margin: 0;">Section In Progress</h2>
+  This section is not yet complete. Any information below is temporary.
 </div>
 
      <p class="figure">
@@ -242,6 +242,50 @@ steps:</p>
      <p class="figure">
       <img src="images/screenshot-cxn-edit.png" alt="Screenshot" />
      </p>
+
+<h2 id="environment">2.7. Environments</h2>
+
+<div class="box red">
+  <img src="images/stop.png" class="left" alt="Warning" />
+  <h2 style="margin: 0;">Section In Progress</h2>
+  This section is not yet complete. Any information below is temporary.
+</div>
+
+<p>There is currently no
+user interface for editing or creating environment files, so they must
+be manually created as <var>environment/[identifier].properties</var> in
+one of the plug-ins. See below for a simple example environment file.</p>
+
+<pre class="box blue code">
+<span class="comment"># General properties</span>
+id = EXAMPLE
+type = environment
+description = The example environment
+connections = EXAMPLE/
+</pre>
+
+<!--
+<p>The environment also keeps a pool of established connections. The
+connection pools are used to minimize the overhead of creating and closing
+connections, as well as providing a mechanism to limit the resource usage
+in the server. Connections are created or reserved automatically before
+processing user requests. This enables detection of resource shortages before
+any actual operations are made. All connections reserved also participate in
+the same transaction (if supported) and will be committed or rolled back
+in sequence.</p>
+-->
+
+<div class="box green" style="margin-top: 0;">
+  <img src="images/info.png" class="left" alt="Information" />
+  <div style="margin-left: 68px;">
+    <h2 style="margin: 0;">Notice</h2>
+    <p>A RapidContext server may currently only have a single environment
+    loaded (although multiple connections are supported). This environment is
+    used for all users, apps and procedures on the server. If several
+    environments are in use, separate RapidContext server instances should
+    currently be installed.</p>
+  </div>
+</div>
 
 
 <!--END-->
