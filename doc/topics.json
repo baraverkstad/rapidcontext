@@ -10,8 +10,7 @@
         { "topic": "2.2. Server Installation", "url": "doc/2_install.html#installation" },
         { "topic": "2.3. Plug-in Installation", "url": "doc/2_install.html#plugin_install" },
         { "topic": "2.4. Plug-in Activation & Deactivation", "url": "doc/2_install.html#plugin_loading" },
-        { "topic": "2.5. Plug-in Removal", "url": "doc/2_install.html#plugin_removal" },
-        { "topic": "2.6. Adding Connections", "url": "doc/2_install.html#connection_add" }
+        { "topic": "2.5. Plug-in Removal", "url": "doc/2_install.html#plugin_removal" }
     ] },
     { "topic": "3. Administration & Security", "url": "doc/3_admin.html", "children": [
         { "topic": "3.1. Storage & Local Changes", "url": "doc/3_admin.html#storage" },
@@ -28,7 +27,12 @@
         { "topic": "4.4. User Interface XML", "url": "doc/4_app_dev.html#ui_xml" },
         { "topic": "4.5. User Interface Style", "url": "doc/4_app_dev.html#ui_style" }
     ] },
-    { "topic": "5. Plug-In Development & Distribution", "url": "doc/5_plugin_dev.html" },
+    { "topic": "5. Plug-In Development & Distribution", "url": "doc/5_plugin_dev.html", "children": [
+        { "topic": "5.1. Plug-in Structure", "url": "doc/5_plugin_dev.html#plugin_struct" },
+        { "topic": "5.2. Plug-in Configuration", "url": "doc/5_plugin_dev.html#plugin_config" },
+        { "topic": "5.3. Procedures & Procedure Types", "url": "doc/5_plugin_dev.html#procedures" },
+        { "topic": "5.4. Procedure Editing", "url": "doc/5_plugin_dev.html#procedure_editing" }
+    ] },
     { "topic": "6. Change History", "url": "doc/6_changes.html" },
     { "topic": "Plug-In: Command-line", "url": "doc/plugin-cmdline.html", "children": [
         { "topic": "1. Built-in Procedure & Procedure Type", "url": "doc/plugin-cmdline.html#builtins" },

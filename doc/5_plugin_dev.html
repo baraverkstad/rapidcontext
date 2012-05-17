@@ -32,153 +32,193 @@
 
 <!--START-->
 
-<h1>Server &amp; Plug-In Development</h1>
-
-<div class="box red">
-  <img src="images/stop.png" class="left" alt="Warning" />
-  <h2 style="margin: 0;">Information Not Updated</h2>
-  This section has not been updated to the latest version of RapidContext.
-</div>
-
-<p>RapidContext server programming is based on Java, JavaScript and the specific
-languages used for communication with external systems (such as SQL). Server
-functionality is added by <em>plug-ins</em>, a ZIP file containing Java
-libraries, procedures, apps, configuration or file data. The API:s exposed
-by the server to the client is file retrieval (HTTP GET), file upload (HTTP
-POST to a specific URL) and a set of callable <em>procedures</em>.</p>
-
+<h1>5. Server &amp; Plug-In Development</h1>
 
 <h2 id="plugin_struct">5.1. Plug-in Structure</h2>
 
-<p>All installed plug-ins are stored unpacked in the <code>plugin</code>
-directory. Each plug-in is stored in its own subdirectory based on the
-unique plug-in identifier. A few plug-in identifiers are reserved with a
-special meaning:</p>
+<p>All RapidContext server functionality is provided by plug-ins. The plug-ins
+are distributed as ZIP files named
+<var>[plugin identifier]-[version].plugin</var>, and can contain Java
+libraries, procedures, apps, connections, roles or any other object from the
+RapidContext storage.  A few plug-ins are reserved with a special meaning:</p>
 
-<ul class="box blue">
-  <li><code>system</code> &mdash; A plug-in that provides all the platform
+<ul class="box yellow">
+  <li><var>system</var> &mdash; A plug-in that provides all the platform
       built-in functionality. In essence, a platform update consists of
       replacing this plug-in with a new version. This plug-in is always
-      searched last, meaning that any file in it may be fully replaced by
-      an equally named file in another plug-in.</li>
-  <li><code>local</code> &mdash; A plug-in the provides all the local
-      modifications to the default platform settings. In particular this
-      plug-in usually stores the <code>config.properties</code> file that
-      lists which plug-ins should be loaded on startup. This plug-in is
-      always searched first, meaning that any file in it will always
-      override an equally named file in another plug-in.</li>
+      searched last, meaning that any file in it may be shadowed by a file
+      with the same name from another plug-in.</li>
+  <li><var>local</var> &mdash; A plug-in that provides all local modifications
+      and additions to RapidContext storage. In particular this plug-in usually
+      stores the <var>config.properties</var> file that lists which plug-ins
+      to load on startup. This plug-in is always searched first, meaning that
+      any file in it will always shadow a file with the same name in another
+      plug-in.</li>
 </ul>
 
-<p>When installing a plug-in, the contents of the ZIP file is just unpacked
-into the corresponding <code>plugin/&lt;plug-in id&gt;</code> directory.
-The plug-in directories and their corresponding ZIP files are all structured
-in the same way. The list below explains the standard files and directories:</p>
+<p>All installed plug-ins are stored in the <var>plugin</var> directory on the
+RapidContext server. Most plug-in are stored in their original ZIP files, which
+can contain an internal directory structure like this:</p>
 
-<pre class="box blue code">
-plugin.properties <span class="comment">-- The plug-in manifest file (see below)</span>
-files/            <span class="comment">-- Contains all files mapped to URL:s</span>
-lib/              <span class="comment">-- Contains Java JAR libraries to load</span>
-app/              <span class="comment">-- Contains app configuration files</span>
-procedure/        <span class="comment">-- Contains procedure configuration files</span>
-environment/      <span class="comment">-- Contains environment configuration file(s)</span>
-role/             <span class="comment">-- Contains role configuration files</span>
-user/             <span class="comment">-- Contains user configuration files</span>
-</pre>
+<ul class="box yellow">
+  <table style="width: 100%;">
+    <tr>
+      <td><var>app/</var></td>
+      <td>App configuration files</td>
+    </tr>
+    <tr>
+      <td><var>connection/</var></td>
+      <td>Connection configuration files</td>
+    </tr>
+    <tr>
+      <td><var>environment/</var></td>
+      <td>Environment configuration files</td>
+    </tr>
+    <tr>
+      <td><var>files/</var></td>
+      <td>Contains files to serve via HTTP (maps directly to URL:s)</td>
+    </tr>
+    <tr>
+      <td><var>lib/</var></td>
+      <td>Java JAR libraries to load (server-side)</td>
+    </tr>
+    <tr>
+      <td><var>procedure/</var></td>
+      <td>Procedure configuration files</td>
+    </tr>
+    <tr>
+      <td><var>role/</var></td>
+      <td>Role configuration files</td>
+    </tr>
+    <tr>
+      <td><var>user/</var></td>
+      <td>User configuration files</td>
+    </tr>
+    <tr>
+      <td><var>plugin.properties</var></td>
+      <td>The plug-in configuration file (mandatory, see below)</td>
+    </tr>
+  </table>
+</ul>
 
-<p>The <code>files</code> sub-directory is special in that it automatically
-maps the files inside onto URL:s. This is the standard way to provide
-JavaScript source files, images and other resources needed by the apps
-running in the web browser.</p>
+<p>The directories are names according to the type of objects contained. The
+exceptions being <var>files</var> and <var>lib</var> that are handled in a
+special way. The <var>files</var> contains all the JavaScript code and images
+to make available to web browsers.</p>
 
 
-<h2 id="plugin_dev">5.2. Plug-in Development</h2>
+<h2 id="plugin_config">5.2. Plug-in Configuration</h2>
 
-<p>Each plug-in must contain a <code>plugin.properties</code> manifest file.
+<p>Each plug-in must contain a <var>plugin.properties</var> configuration file.
 It is the only mandatory content of a plug-in and consists of the following
 fields:</p>
 
-<ul class="box blue">
-  <li><code>id</code> &mdash; The unique plug-in identifier. May only contain
+<ul class="box yellow">
+  <li><var>id</var> &mdash; The unique plug-in identifier. May only contain
       ASCII alphanumeric characters without spaces or separators.</li>
-  <li><code>name</code> &mdash; The plug-in name as presented to the users.</li>
-  <li><code>version</code> &mdash; The plug-in version number.</li>
-  <li><code>description</code> &mdash; The optional description text that
-      explains what functionality in provided by the plug-in.</li>
-  <li><code>className</code> &mdash; The optional fully qualified name of
-      a Java class that is loaded to initialize the plug-in. The class must
-      subclass <code>org.rapidcontext.app.plugin.Plugin</code> and handled the
-      lifecycle of the plug-in.</li>
+  <li><var>name</var> &mdash; The plug-in name as presented to the users.</li>
+  <li><var>version</var> &mdash; The plug-in version number. This number is
+      automatically modified if the Ant script in <var>plugin-build.xml</var>
+      is used for packaging the plug-in.</li>
+  <li><var>date</var> &mdash; The plug-in build date. This number is
+      automatically set if the Ant script in <var>plugin-build.xml</var> is
+      used for packaging the plug-in.</li>
+  <li><var>description</var> &mdash; The optional description text that
+      explains the functionality in provided by the plug-in.</li>
+  <li><var>copyright</var> &mdash; The optional copyright statement text.</li>
+  <li><var>className</var> &mdash; The optional fully qualified name of
+      a Java class that handles the plug-in life-cycle. The class must be a
+      subclass of <var>org.rapidcontext.app.plugin.Plugin</var>.</li>
 </ul>
 
-<p>The plug-in manifest is the first file to write when developing a plug-in.
-An example <code>plugin.properties</code> file is illustrated below:</p>
+<p>The plug-in configuration is the first file to write when developing a
+plug-in. An example <var>plugin.properties</var> file is shown below:</p>
 
 <pre class="box blue code">
 <span class="comment"># General properties</span>
 id = example
 name = Example Plug-in
 version = 1.0
+date =
 description = Provides tests and examples for the platform.
 className = org.rapidcontext.app.plugin.example.ExamplePlugin
 </pre>
 
-<p>Once the <code>plugin.properties</code> file has been created, the template
-<code>src/plugin/build.xml</code> file can be copied into the root of the
-plug-in development folder. With this Ant build file, it is easy to package
-the plug-in ZIP file for installation.</p>
+<p>Once the <var>plugin.properties</var> file has been created, the Ant script
+in <var>plugin-build.xml</var> can be used for packaging the plug-in.</p>
 
 
-<h2 id="procedures">5.3. Procedures</h2>
+<h2 id="procedures">5.3. Procedures &amp; Procedure Types</h2>
 
-<p>Most common server-side operations can be achieved by creating one or
-more <em>procedures</em>. A procedure is a server-side operation that can be
-invoked from the client or from other procedures. The operation may take
-arguments, modify data and/or return a value depending on implementation.</p>
+<p>Server-side operations can be added by creating <strong>procedures</strong>.
+Procedures can be invoked from the client or from other procedures and may take
+arguments, modify data and/or return values.</p>
 
-<p>Each procedure has a specific procedure type. The procedure type
-defines which server-side Java code is used to execute the procedure. Since
-most server-side operations are so similar, only a few different procedure
-types are actually needed. So most procedures are instead created by
-configuring one of the standard procedure types available. The standard
-procedure types are listed below:</p>
+<p>Each procedure has a specific type (or kind). The procedure type defines
+which Java code is used to execute the procedure, similar to a templating
+engine. Since most server-side operations very similar, only a few different
+procedure types are needed. The standard procedure types are listed below, but
+more can be added by installing additional plug-ins.</p>
 
-<ul class="box blue">
-  <li><code>built-in</code> &mdash; The built-in procedure type, used for
-      non-configurable procedures implemented directly in Java code. This
-      procedure type is normally only used for platform operations.</li>
-  <li><code>cmdline.exec</code> &mdash; The command-line execution procedure
+<ul class="box yellow">
+  <li><var>built-in</var> &mdash; The built-in procedure type, used for one-off
+      procedures implemented directly in Java code. This type is normally only
+      used for platform operations.</li>
+  <li><var>cmdline.exec</var> &mdash; The command-line execution procedure
       type, used for running shell commands on the server. Procedure arguments
-      may be inserted as arguments on the command-line.</li>
-  <li><code>http.post</code> &mdash; The HTTP POST request procedure type,
-      used for sending dynamic data to a receiving URL. Procedure arguments
-      may be inserted into the request headers and/or data.</li>
-  <li><code>javascript</code> &mdash; The JavaScript procedure type, used
-      for fully dynamic control of the execution. Procedure arguments may
-      be provided as global variables for the JavaScript code upon
-      execution.</li>
-  <li><code>jdbc.query</code> &mdash; The JDBC SQL query procedure type,
-      used for SQL SELECT queries returning results. Procedure arguments
-      may be inserted as literals into the SQL text.</li>
-  <li><code>jdbc.statement</code> &mdash; The JDBC SQL statement procedure
-      type, used for SQL INSERT, UPDATE and DELETE statements (and others).
-      Procedure arguments may be inserted as literals into the SQL text.</li>
+      can used as arguments on the command-line.</li>
+  <li><var>http.post</var> &mdash; The HTTP POST request procedure type, used
+      for sending data to a receiving URL. Procedure arguments can be inserted
+      into either the request headers and/or data payload.</li>
+  <li><var>javascript</var> &mdash; The JavaScript procedure type, used for
+      building a procedure in JavaScript (usually to provide business logic and
+      smarts to more basic procedures). Procedure arguments are available as
+      global variables during execution.</li>
+  <li><var>jdbc.query</var> &mdash; The JDBC query procedure type, used for
+      SQL SELECT queries returning results. Procedure arguments may be inserted
+      as literals into the SQL text.</li>
+  <li><var>jdbc.statement</var> &mdash; The JDBC statement procedure type, used
+      for SQL INSERT, UPDATE and DELETE statements (among others). Procedure
+      arguments may be inserted as literals into the SQL text.</li>
 </ul>
 
-<p>By installing additional plug-ins, more procedure types can become
-available. It is possible to edit or create new procedures of any registered
-procedure type in the Admin app. Below is a screenshot showing the location
-of the add and edit procedure buttons:</p>
+
+<h2 id="procedure_editing">5.4. Procedure Editing</h2>
+
+<p>Using the <strong>Admin</strong> app, it is easy to create or edit
+procedures of any type (except <var>built-in</var>). The screenshot below
+shows the location of the <q>+</q> icon for adding a new procedure. Just next
+to it is the edit icon.</p>
 
 <p style="text-align: center;">
   <img src="images/screenshot-procedure-buttons.png" />
 </p>
+
+<p>After clicking the add or edit icon, the following dialog is shown:</p>
+
+<p style="text-align: center;">
+  <img src="images/screenshot-procedure-edit.png" />
+</p>
+
+<p>Procedures created or edited are stored to the <var>procedure/</var>
+directory inside the <var>local</var> plug-in. The files there can be copied to
+the corresponding plug-in development development for packaging.</p>
+
+
+<h2 id="procedures">5.6. Procedure Authoring</h2>
+
+<div class="box red">
+  <img src="images/stop.png" class="left" alt="Warning" />
+  <h2 style="margin: 0;">Section In Progress</h2>
+  This section is not yet complete. Any information below is temporary.
+</div>
 
 <p>By storing SQL queries, JavaScript code or similar as configuration
 parameters, it is possible to create advanced procedures easily without
 writing any Java code at all. Each procedure configuration parameter has
 a specific type, as listed below:</p>
 
-<ol class="box blue">
+<ol class="box yellow">
   <li><strong>Constant Data</strong> &mdash; The value is a data string that
       may or may not span multiple lines.</li>
   <li><strong>Procedure Reference</strong> &mdash; The value contains a
@@ -193,68 +233,6 @@ a specific type, as listed below:</p>
       procedure is executing, the identifier will be replaced by the value
       provided by the procedure caller.</li>
 </ol>
-
-<p>Editing the procedure and the procedure configuration parameters is
-easy in the Admin app, as shown in the screenshot below:</p>
-
-<p style="text-align: center;">
-  <img src="images/screenshot-procedure-edit.png" />
-</p>
-
-<p>Once created or modified, the procedures edited in the Admin app are
-stored in the <code>local</code> plug-in, in the <code>procedures</code>
-directory. From that location the files may be copied into the corresponding
-plug-in development folder for procedures.</p>
-
-
-<h2 id="environment">5.4. Environment</h2>
-
-<p>The environment contains a list of named connections. Each connection
-name is associated with a set of parameters for creating new connnections.
-The creation parameters depend what each adapter requires and may contain
-IP addresses, user names, passwords and similar. There is currently no
-user interface for editing or creating environment files, so they must
-be manually created as <code>environment/&lt;name&gt;.properties</code> in
-one of the plug-ins. See below for a simple example environment file.</p>
-
-<pre class="box blue code">
-<span class="comment"># Environment information</span>
-name = EXAMPLE
-description = The example environment
-
-<span class="comment"># Pool 0 configuration</span>
-pool.0.name = jdbc.example
-pool.0.adapter = jdbc
-pool.0.param.maxConnections = 10
-pool.0.param.maxIdleSecs = 600
-pool.0.param.driver = com.mysql.jdbc.Driver
-pool.0.param.url = jdbc:mysql://localhost:3306/example_database
-pool.0.param.user = example
-pool.0.param.password = password
-pool.0.param.sqlping = SHOW DATABASES
-pool.0.param.timeout = 45
-
-<span class="comment"># Pool 1 configuration</span>
-pool.1.name = http.ncbi.entrez
-pool.1.adapter = http
-pool.1.param.maxConnections = 0
-pool.1.param.url = http://eutils.ncbi.nlm.nih.gov/entrez/
-</pre>
-
-<p>The environment also keeps a pool of established connections. The
-connection pools are used to minimize the overhead of creating and closing
-connections, as well as providing a mechanism to limit the resource usage
-in the server. Connections are created or reserved automatically before
-processing user requests. This enables detection of resource shortages before
-any actual operations are made. All connections reserved also participate in
-the same transaction (if supported) and will be committed or rolled back
-in sequence.</p>
-
-<p class="box blue"><strong>Note:</strong> A RapidContext server may only have a
-single environment loaded. This environment (and all its connections) is
-shared between all apps, procedures and users on the server. If several
-environment are required, separate RapidContext server instances must be
-used.</p>
 
 
 <!--END-->
