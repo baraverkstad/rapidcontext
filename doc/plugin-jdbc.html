@@ -34,12 +34,6 @@
 
 <h1>JDBC Plug-In</h1>
 
-<div class="box red">
-  <img src="images/stop.png" class="left" alt="Warning" />
-  <h2 style="margin: 0;">Information Not Updated</h2>
-  This section has not been updated to the latest version of RapidContext.
-</div>
-
 <p>The JDBC (Java Database Connectivity) plug-in provides the ability to
 access databases and execute SQL queries and statements. Database connections
 are automatically pooled and reused to improve resource efficiency and
@@ -48,46 +42,41 @@ access speed for each database used.</p>
 
 <h2 id="basics">1. Basic Configuration</h2>
 
-<p>In order for the JDBC plug-in to access a database, the corresponding
-JDBC driver JAR file must be installed. This is accomplished by copying
-the corresponding file from the vendor directory or package into the
-<code>lib</code> directory in the <code>local</code> plug-in:</p>
+<p>In order for the JDBC plug-in to access a database, the corresponding JDBC
+driver (JAR file) must be installed on the RapidContext server. The plug-in
+comes bundled with drivers for <strong>Drizzle</strong>, <strong>MySQL</strong>
+and <strong>PostgreSQL</strong>, but other database vendors impose
+restrictions on driver distribution. Follow the following steps to install a
+custom JDBC driver:</p>
 
-<pre class="box blue code">
-<span class="comment">-- Example for the MySQL database</span>
-plugin/
- +- local/
-     +- lib/ <span class="comment">-- create directory if it doesn't exist</span>
-         +- mysql-connector-java-3.1.10-bin.jar
-</pre>
+<ol class="box yellow">
+  <li>Transfer the JDBC driver (JAR file) to the RapidContext server</li>
+  <li>Go to the <var>plugin/local/</var> directory in RapidContext</li>
+  <li>Create a <var>lib/</var> subdirectory (if one didn't already exist)</li>
+  <li>Copy the JDBC driver to the new directory</li>
+  <li>Use the <q>Restart</q> button in the <q>Plug-in</q> tab in the
+      <strong>Admin</strong> app</li>
+</ol>
 
-<p>The next step is to create or update the environment to provide all the
-required database connection parameters. The example below shows how the
-configuration parameters could look for a simple <code>example</code> database
-using the MySQL JDBC driver. Please consult your database vendor documentation
-for information about the correct connection driver class name and URL:s.</p>
+<p>The next step is to create one or more connections using JDBC. The
+screenshot below shows how to create a simple <var>test</var> connection to a
+local MySQL database. Please consult your database vendor documentation for
+information about the correct connection URL (and possibly class name).</p>
 
-<pre class="box blue code">
-<span class="comment"># Environment information</span>
-name = EXAMPLE
-description = The example environment
+<p class="figure">
+  <img src="images/screenshot-cxn-edit.png" alt="Screenshot" />
+</p>
 
-<span class="comment"># Pool 0 configuration</span>
-pool.0.name = jdbc.example
-pool.0.adapter = jdbc
-pool.0.param.maxConnections = 10
-pool.0.param.maxIdleSecs = 600
-pool.0.param.driver = com.mysql.jdbc.Driver
-pool.0.param.url = jdbc:mysql://localhost:3306/example
-pool.0.param.user = user
-pool.0.param.password = password
-pool.0.param.sqlping = SHOW DATABASES
-pool.0.param.timeout = 45
-</pre>
-
-<p>Once the basic configuration is in place, the RapidContext server should be
-restarted. Also, any client web browser should be reloaded (e.g. with
-<code>Ctrl-R</code>) in order to detect the updated environment settings.</p>
+<div class="box green" style="margin-top: 0;">
+  <img src="images/info.png" class="left" alt="Information" />
+  <div style="margin-left: 68px;">
+    <h2 style="margin: 0;">Notice</h2>
+    <p>Only the drivers URL formats listed in the connection help are
+    recognized by the JDBC plug-in. Press the <q>Show all parameters</q>
+    checkbox to be able to set the custom JDBC driver Java class needed for
+    other data sources.</p>
+  </div>
+</div>
 
 
 <h2 id="builtins">2. Built-in Procedures &amp; Procedure Types</h2>
@@ -95,86 +84,98 @@ restarted. Also, any client web browser should be reloaded (e.g. with
 <p>The JDBC plug-in provides a number of built-in procedures and predefined
 procedure types:</p>
 
-<ul class="box blue">
-  <li><strong>The <code>PlugIn.Jdbc.Query</code> procedure</strong> &ndash;
-      A built-in procedure for executing an SQL query (e.g.
-      <code>SELECT</code>). Only accessible to users in the <code>Admin</code>
-      group. This procedure should normally only be used for testing and
-      development.</li>
-  <li><strong>The <code>PlugIn.Jdbc.Statement</code> procedure</strong> &ndash;
-      A built-in procedure for executing an SQL statement (e.g.
-      <code>INSERT</code>, <code>UPDATE</code> or <code>DELETE</code>). Only
-      accessible to users in the <code>Admin</code> group. This procedure
-      should normally only be used for testing and development.</li>
-  <li><strong>Procedures of the <code>jdbc.query</code> type</strong> &ndash;
-      Supports inserting procedure arguments into the SQL text. Useful to
-      store predefined and parameterized SQL queries.</li>
-  <li><strong>Procedures of the <code>jdbc.statement</code> type</strong>
-      &ndash; Supports inserting procedure arguments into the SQL text.
-      Useful to store predefined and parameterized SQL statements.</li>
+<ul class="box yellow">
+  <li><strong>The <var>jdbc.query</var> procedure type</strong> &mdash;
+      Used for creating procedures that execute an SQL query, i.e.
+      <q><var>SELECT</var></q>. Supports inserting procedure arguments into the
+      SQL text.</li>
+  <li><strong>The <var>jdbc.statement</var> procedure type</strong> &mdash;
+      Used for creating procedures that execute an SQL statement, i.e.
+      <q><var>INSERT</var></q>, <q><var>UPDATE</var></q> or
+      <q><var>DELETE</var></q> (among others). Supports inserting procedure
+      arguments into the SQL text.</li>
+  <li><strong>The <var>PlugIn.Jdbc.Query</var> procedure</strong> &mdash;
+      A built-in procedure for executing an SQL query, i.e.
+      <q><var>SELECT</var></q>. Only accessible to users with the
+      <var>admin</var> role. This procedure should normally only be used for
+      testing and development.</li>
+  <li><strong>The <var>PlugIn.Jdbc.Statement</var> procedure</strong> &mdash;
+      A built-in procedure for executing an SQL statement, i.e.
+      <q><var>INSERT</var></q>, <q><var>UPDATE</var></q> or
+      <q><var>DELETE</var></q> (among others). Only accessible to users with
+      the <var>admin</var> role. This procedure should normally only be used
+      for testing and development.</li>
 </ul>
 
 
 <h2 id="query_results">3. Query Result Mappings</h2>
 
-<p>Any procedures executed as SQL queries always return the full dataset
-returned by the database. By default, the query also returns meta-data
-about the columns in the dataset and each row in the results is mapped
-to a data object where the columns provide the property names:</p>
+<p>JDBC query procedures can map the database result set to a JSON data
+structure in various ways. By default, all rows are returned in an array and
+each row is mapped to an object with properties corresponding to the column
+names:</p>
 
 <pre class="box blue code">
-PlugIn.Jdbc.Query('jdbc.example','show databases')
-  <span class="comment">--> { columns: [ { name: 'database', ... } ],
-        rows: [ { database: 'example' },
-                { database: 'information_schema' },
-                { database: 'mysql' } ] }</span>
+PlugIn.Jdbc.Query('test','SELECT * FROM fruits')
+<span class="comment">  --> [{'id': 1, 'value': 'apple'},
+       {'id': 2, 'value': 'banana'},
+       {'id': 3, 'value': 'clementine'}]</span>
 </pre>
 
-<p>This default mapping can be modified when creating new procedures using
-the <code>jdbc.query</code> procedure type. This is accomplished by setting
-one of the available flags:</p>
+<p>This default mapping can be modified using the <q><var>flags</var></q>
+parameter when editing or creating a procedure. The available flags are as
+follows:</p>
 
-<ul class="box blue">
-  <li><code>no-metadata</code> &ndash; Omits the <code>columns</code>
-      meta-data information and the outer wrapping object altogether.
-      Instead only an array matching the previous <code>rows</code>
-      property is returned.</li>
-  <li><code>no-mapping</code> &ndash; Omits the column to property
-      mapping for rows and instead returns each row as an array of
-      values. Note that the row arrays will be ordered according to
-      the column order in the SQL query (or database), which is
-      impractical but makes the returned dataset use less memory.</li>
+<ul class="box yellow">
+  <li><var>binary-data</var> &mdash; Returns any binary value (e.g.
+      <q><var>BINARY</var></q>, <q><var>BLOB</var></q>,
+      <q><var>VARBINARY</var></q> or <q><var>LONG</var></q> columns) as a byte
+      array instead of a string. This is sometimes necessary for processing
+      data without encoding issues.<br/><br/>
+      <strong>Note:</strong> JSON does not support binary data, so the result
+      cannot be transferred from the server if this flag is set. It can only be
+      processed by another procedure on the same server.</li>
+  <li><var>metadata</var> &mdash; Adds a wrapper object with <var>columns</var>
+      and <var>rows</var> properties to the result. The <var>columns</var>
+      array contains  meta-data information about the result structure, whereas
+      <var>rows</var> contain the result rows.</li>
+  <li><var>no-column-names</var> &mdash; Omits the mapping of column names to
+      properties in the result row objects. Instead each row will be returned
+      as an array of values (in column order). This is impractical, but more
+      space efficient for large results (lowering transfer time and bandwidth
+      usage).</li>
+  <li><var>no-native-types</var> &mdash; Omits the mapping of values to numbers
+      or booleans, using strings for all values. This is sometimes necessary
+      when the database number type isn't compatible with JavaScript.</li>
+  <li><var>single-row</var> &mdash; Returns only the first row of the result or
+      <var>null</var> if no row was matched. This omits the array wrapper
+      around the result, making usage simpler. If multiple rows is encountered,
+      an error will be thrown (instead of silently ignoring it).</li>
 </ul>
 
-<p>Using both the above flags, the result from the previous SQL query
-would instead be mapped to the following result object:</p>
-
-<pre class="box blue code">
-Procedure with SQL "show databases" and flags "no-metadata no-mapping"
-  <span class="comment">--> [ ['example'],
-        ['information_schema'],
-        ['mysql'] ]</span>
-</pre>
-
-<p>Regardless of which result structure mapping that is used, the database
-result set values are always converted into strings. Special handling is
-used for date and timestamp values, which are always converted into ISO
-datetime strings (e.g. "2009-01-31 23:59:59").</p>
-
-<p class="box blue"><strong>Note:</strong> The actual values in the result
-are always returned as strings.</p>
+<div class="box green" style="margin-top: 0;">
+  <img src="images/info.png" class="left" alt="Information" />
+  <div style="margin-left: 68px;">
+    <h2 style="margin: 0;">Notice</h2>
+    <p>Date and timestamp values are currently always converted into ISO
+    datetime strings without timezone (e.g. <q>2009-01-31 23:59:59</q>). This
+    mapping will likely to change in future versions, so use string conversion
+    in the SQL query if a specific date and time format is desired.</p>
+  </div>
+</div>
 
 
 <h2 id="statement_results">4. Statement Results</h2>
 
-<p>In contrast to SQL queries, the SQL statements (e.g. <code>INSERT</code>,
-<code>UPDATE</code> or <code>DELETE</code>) normally have no results. When
-inserting new table rows however, sometimes unique keys are automatically
-generated by the database engine. If that happens, the first generated key
-will be returned as the procedure result.</p>
+<p>In contrast to SQL queries, the SQL statements (i.e.
+<q><var>INSERT</var></q>, <q><var>UPDATE</var></q> or <q><var>DELETE</var></q>)
+normally have no results. When inserting new table rows however, sometimes
+unique keys are automatically generated by the database engine. If that
+happens, the first generated key will be returned as the procedure result
+(depends on JDBC driver).</p>
 
 <pre class="box blue code">
-PlugIn.Jdbc.Statement('jdbc.example','insert into test values (1,2,3)')
+PlugIn.Jdbc.Statement('jdbc.example','INSERT INTO test VALUES (1,2,3)')
   <span class="comment">--> '4711'</span>
 </pre>
 
@@ -182,9 +183,9 @@ PlugIn.Jdbc.Statement('jdbc.example','insert into test values (1,2,3)')
 <h2 id="param_subst">5. Parameter Substitution</h2>
 
 <p>The SQL text may contain procedure call arguments (for
-<code>jdbc.query</code> and <code>jdbc.statement</code> procedures). These are
+<var>jdbc.query</var> and <var>jdbc.statement</var> procedures). These are
 substituted with the procedure argument values at call time. Each procedure
-argument name must be prefixed with a <code>:</code> character in the
+argument name must be prefixed with a <q><var>:</var></q> character in the
 SQL text in order to be replaced:</p>
 
 <pre class="box blue code">
@@ -195,60 +196,67 @@ WHERE name = :name</pre>
 
 <p>The procedure argument value will always be properly escaped and quoted
 (for string values) for insertion into the SQL text. When using parameter
-substitution inside a <code>WHERE</code> block, the comparison operator
+substitution inside a <q><var>WHERE</var></q> block, the comparison operator
 <em>preceeding</em> the replacement value will also be analysed and possibly
-replaced for increased flexibility. See the list below for the SQL operator
+replaced for increased flexibility. See the list below for the SQL operators
 recognized and processed in this way:</p>
 
-<ul class="box blue">
-  <li><code>=</code> &ndash; If the value is null or an empty array, replaced
-      by <code>IS NULL</code>. If the value is an array, replaced by a
-      corresponding <code>IN (...)</code> construct.</li>
-  <li><code>!=</code> &ndash; If the value is null or an empty array, replaced
-      by <code>IS NOT NULL</code>. If the value is an array, replaced by a
-      corresponding <code>NOT IN (...)</code> construct.</li>
-  <li><code>?=</code> &ndash; If the value is null or an empty array, the
-      test is omitted altogether (using a dummy <code>1 = 1</code> test).
-      Otherwise similar to the processing for the <code>=</code>
+<ul class="box yellow">
+  <li><var>=</var> &mdash; If the value is <var>null</var> or an empty array,
+      the operator is replaced by <q><var>IS NULL</var></q>. If the value is an
+      array, it is replaced by the corresponding <q><var>IN (...)</var></q>
+      construct.</li>
+  <li><var>!=</var> &mdash; If the value is <var>null</var> or an empty array,
+      the operator is replaced by <q><var>IS NOT NULL</var></q>. If the value
+      is an array, it is replaced by the corresponding
+      <q><var>NOT IN (...)</var></q> construct.</li>
+  <li><var>?=</var> &mdash; If the value is <var>null</var> or an empty array,
+      the condition is omitted (replaced by a <q><var>1=1</var></q> test).
+      Otherwise similar to the processing for the <q><var>=</var></q>
       operator.</li>
-  <li><code>?!=</code> &ndash; If the value is null or an empty array, the
-      test is omitted altogether (using a dummy <code>1 = 1</code> test).
-      Otherwise similar to the processing for the <code>!=</code>
+  <li><var>?!=</var> &mdash; If the value is <var>null</var> or an empty array,
+      the condition is omitted (replaced by a <code>1=1</code> test).
+      Otherwise similar to the processing for the <q><var>!=</var></q>
       operator.</li>
 </ul>
 
 
 <h2 id="transactions">6. Transactions &amp; Connection Pooling</h2>
 
-<p>All database connections created with the JDBC plug-in are automatically
-pooled in the server. The connection pools are used to speed up database
-access times, since the costly connection creation, handshake and destruction
-operations are used very infrequently. Also, the resource usage on the
-database server is limited since a maximum number of connections is easily
-configured. The number of connections in the pool and the maximum idle
-timeout is specified with the <code>maxConnections</code> and
-<code>maxIdleSecs</code> parameters in the environment configuration:</p>
+<p>Connections created with the JDBC plug-in are normally pooled in the server.
+This means that connections are not closed immediately, but kept alive for a
+period of time in order to be reused. This greatly speeds up access times to
+most data sources, since connection creation, handshake and destruction can be
+relatively costly. This behavior can be fine-tuned as follows:</p>
 
-<pre class="box blue code">
-pool.0.param.maxConnections = 10
-pool.0.param.maxIdleSecs = 600
-</pre>
+<ol class="box yellow">
+  <li>Launch or go to the <strong>Admin</strong> app</li>
+  <li>Choose the <q>Connections</q> tab</li>
+  <li>Select the connection to edit and press the edit icon</li>
+  <li>In the connection edit dialog, press the <q>Show all parameters</q>
+      checkbox</li>
+  <li>Edit the <q>Max Open</q> value to modify the size of the connection
+      pool (defaults to 4 connections)</li>
+  <li>Edit the <q>Max Idle Secs</q> value to modify the time-to-live for a
+      connection (defaults to 10 minutes)</li>
+</ol>
 
-<p>Transactions are also automatically handled by RapidContext when the
-underlying JDBC driver and database supports it. A new transaction is
-always created when an initial procedure call is made, reserving all the
-connections needed. The same JDBC connections are then used throughout
-the processing of the call (and any subprocedure calls) with a final
-transaction commit when successfully returning the results. If one of
-the procedures involved threw an exception, all of the connections used
-in the procedure call will be rolled back and no results stored.</p>
+<p>Transactions are automatically used by RapidContext when the underlying JDBC
+driver and database support them. The process works as follows:</p>
 
-<p class="box blue"><strong>Note:</strong> Transaction support is fully
-automatic and crosses database and system boundaries. It will only be
-used by JDBC drivers and databases supporting it, however. Forced
-commits or rollbacks are also possible through direct JavaScript access
-to the <code>commit()</code> and <code>rollback()</code> methods in the
-JDBC connection object.</p>
+<ol class="box yellow">
+  <li>A web browser (client) initiates a procedure call</li>
+  <li>All connections needed by the procedure (and any sub-procedures) are
+      reserved</li>
+  <li>A new transaction is initiated for each connection supporting it</li>
+  <li>The procedure (and any sub-procedures) are executed</li>
+  <li>If an error is thrown to the client, all transactions are rolled back</li>
+  <li>Otherwise, all transactions are committed</li>
+</ol>
+
+<p>Transaction commits or rollbacks can also be forced from JavaScript
+procedures, by calling the <var>commit()</var> or <var>rollback()</var> methods
+directly on the JDBC connection object.</p>
 
 
 <!--END-->

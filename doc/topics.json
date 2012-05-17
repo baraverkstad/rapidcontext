@@ -45,5 +45,12 @@
         { "topic": "1. Built-in Procedure & Procedure Type", "url": "doc/plugin-http.html#builtins" },
         { "topic": "2. Parameter Substitution", "url": "doc/plugin-http.html#params" }
     ] },
-    { "topic": "Plug-In: JDBC", "url": "doc/plugin-jdbc.html" }
+    { "topic": "Plug-In: JDBC", "url": "doc/plugin-jdbc.html", "children": [
+        { "topic": "1. Basic Configuration", "url": "doc/plugin-jdbc.html#basics" },
+        { "topic": "2. Built-in Procedures & Procedure Types", "url": "doc/plugin-jdbc.html#builtins" },
+        { "topic": "3. Query Result Mappings", "url": "doc/plugin-jdbc.html#query_results" },
+        { "topic": "4. Statement Results", "url": "doc/plugin-jdbc.html#statement_results" },
+        { "topic": "5. Parameter Substitution", "url": "doc/plugin-jdbc.html#param_subst" },
+        { "topic": "6. Transactions & Connection Pooling", "url": "doc/plugin-jdbc.html#transactions" }
+    ] }
 ] }
