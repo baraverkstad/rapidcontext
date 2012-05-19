@@ -33,7 +33,16 @@
         { "topic": "5.3. Procedures & Procedure Types", "url": "doc/5_plugin_dev.html#procedures" },
         { "topic": "5.4. Procedure Editing", "url": "doc/5_plugin_dev.html#procedure_editing" }
     ] },
-    { "topic": "6. Change History", "url": "doc/6_changes.html" },
+    { "topic": "6. Development Guidelines", "url": "doc/6_guidelines.html", "children": [
+        { "topic": "6.1. Design Principle Usage", "url": "doc/6_guidelines.html#usage" },
+        { "topic": "6.2. Less is More", "url": "doc/6_guidelines.html#less_is_more" },
+        { "topic": "6.3. Declarative over Imperative", "url": "doc/6_guidelines.html#declarative" },
+        { "topic": "6.4. Simplicity over Documentation", "url": "doc/6_guidelines.html#simplicity" },
+        { "topic": "6.5. Defaults over Configuration", "url": "doc/6_guidelines.html#defaults" },
+        { "topic": "6.6. Implementation over Specification", "url": "doc/6_guidelines.html#implementation" },
+        { "topic": "6.7. Dynamic over Strict Types", "url": "doc/6_guidelines.html#dynamic_types" }
+    ] },
+    { "topic": "7. Change History", "url": "doc/7_changes.html" },
     { "topic": "Plug-In: Command-line", "url": "doc/plugin-cmdline.html", "children": [
         { "topic": "1. Built-in Procedure & Procedure Type", "url": "doc/plugin-cmdline.html#builtins" },
         { "topic": "2. Return Values", "url": "doc/plugin-cmdline.html#returns" },

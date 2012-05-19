@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+
+<html lang="en" xml:lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="icon" type="image/gif" href="images/favicon.png" />
+    <link rel="stylesheet" href="css/style.css" type="text/css" />
+    <link rel="stylesheet" href="css/widget.css" type="text/css" />
+    <title>RapidContext :: Change History</title>
+  </head>
+  <body class="doc">
+
+<div style="position: relative;">
+  <img src="images/logotype.png" alt="RapidContext Logotype" style="width: 128px; height: 128px;" />
+  <div style="position: absolute; top: 6px; left: 170px; font-family: Trebuchet MS;">
+    <a href="http://www.rapidcontext.com/" target="_blank">
+      <span style="font-size: 50px; color: #345;">RapidContext</span><br/>
+      <span style="font-size: 24px; color: #88AACC;">Access &gt; Discovery &gt; Insight</span><br/>
+      <span style="font-size: 18px; color: #666; letter-spacing: 6px; line-height: 24px;">www.rapidcontext.com</span><br/>
+    </a>
+  </div>
+</div>
+
+<table class="navigation widgetNavigationBar" style="margin: 20px 0;">
+  <tr>
+    <td class="prev"><a href="index.html">Documentation</a></td>
+    <td class='prev-active'>&nbsp;</td>
+    <td class='active'>Development Guidelines</td>
+    <td class='active-end'>&nbsp;</td>
+  </tr>
+</table>
+
+<!--START-->
+
+<h1>6. Development Guidelines</h1>
+
+<h2 id="usage">6.1. Design Principle Usage</h2>
+
+<p>This chapter lists of some of the key principles guiding the design of
+RapidContext. Or the philosophy behind RapidContext if you will. It is an
+attempt to explain the trade-offs, omissions and choices made for the
+platform.</p>
+
+<div class="box yellow">
+  <table style="width: 100%;">
+    <tr>
+      <th style="width: 48%;">Pattern</th>
+      <th></th>
+      <th style="width: 48%;">Anti-Pattern</th>
+    </tr>
+    <tr>
+      <td>
+        Read this document as the RapidContext declaration of <q>good
+        taste</q>, whatever that means. And consider the <q>pattern</q>
+        examples as templates.
+      </td>
+      <td></td>
+      <td>
+        Do not read this as a set of absolute principles that can never be
+        broken. The <q>anti-pattern</q> examples show that they already have
+        been.
+      </td>
+    </tr>
+  </table>
+</div>
+
+
+<h2 id="less_is_more">6.2. Less is More</h2>
+
+<p>The less code that is written, the less code needs to be maintained,
+corrected and refactored. By omitting difficult, poorly designed or rarely used
+features, time and focus can be shifted to more pressing needs.</p>
+
+<p>Also, by not including poorly designed API:s in the product, it is possible
+to revisit the omitted feature at a later date. Hopefully with a better
+understanding, more realistic use cases and/or a better design proposal.</p>
+
+<p>This principle is sometimes referred to as
+<a href="http://en.wikipedia.org/wiki/Worse_is_better">worse is better</a>.</p>
+
+<div class="box yellow">
+  <table style="width: 100%;">
+    <tr>
+      <th style="width: 48%;">Pattern</th>
+      <th></th>
+      <th style="width: 48%;">Anti-Pattern</th>
+    </tr>
+    <tr>
+      <td>
+        The built-in transaction support is limited to the most commonly used
+        scenario. Code and work-arounds are required for other behaviors.
+      </td>
+      <td></td>
+      <td>
+        Built-in support for SVG, PlotKit diagrams, procedure call interceptors
+        and more...
+      </td>
+    </tr>
+  </table>
+</div>
+
+
+<h2 id="declarative">6.3. Declarative over Imperative</h2>
+
+<p>Using a declarative language over an imperative one has a number of
+advantages:</p>
+
+<ol>
+  <li>The source code becomes less verbose and easier to read</li>
+  <li>The data might be reused for other purposes</li>
+  <li>The data might become readable by non-developers</li>
+</ol>
+
+<p>These advantages are especially valid for configuration parameters, data
+transformations or similar.</p>
+
+<div class="box yellow">
+  <table style="width: 100%;">
+    <tr>
+      <th style="width: 48%;">Pattern</th>
+      <th></th>
+      <th style="width: 48%;">Anti-Pattern</th>
+    </tr>
+    <tr>
+      <td>
+        The user interface XML (<var>ui.xml</var>) format is less verbose and
+        easier to read than JavaScript code (imperative) for the same thing.
+      </td>
+      <td></td>
+      <td>
+        Custom widgets are still not possible to create using XML, but require
+        everything to be done in JavaScript code.
+      </td>
+    </tr>
+  </table>
+</div>
+
+
+<h2 id="simplicity">6.4. Simplicity over Documentation</h2>
+
+<p>An application that is simple or easy to use doesn't require much (if any)
+documentation. Using tooltips or small in-app help texts in the user interface,
+reduces the need for user guide or screenshot sequences.</p>
+
+<p>Note that simplification of the user interface is not identical to reducing
+the number of feature or making development easier. On the contrary, simplicity
+often require much hard work with auto-detection, generalization and various
+smart tricks in the interface. Generally, only the <strong>illusion of
+simplicity</strong> that is desired.</p>
+
+<div class="box yellow">
+  <table style="width: 100%;">
+    <tr>
+      <th style="width: 48%;">Pattern</th>
+      <th></th>
+      <th style="width: 48%;">Anti-Pattern</th>
+    </tr>
+    <tr>
+      <td>
+        The automatic detection of <var>java</var> location and available port
+        number when launching the RapidContext server.
+      </td>
+      <td></td>
+      <td>
+        Creating new apps and plug-ins still can't be done without access to
+        the manual or by copying from other apps or plug-ins.
+      </td>
+    </tr>
+  </table>
+</div>
+
+
+<h2 id="defaults">6.5. Defaults over Configuration</h2>
+
+<p>Sensible default values should be used instead of forcing users to configure
+the application. When in doubt, use defaults suitable for the majority or for
+the least technically inclined.</p>
+
+<p>This principle is also applicable when designing API:s, where common use
+cases should be made as simple as possible. This is sometimes referred to as
+<strong>optimizing for the common case</strong>.</p>
+
+<div class="box yellow">
+  <table style="width: 100%;">
+    <tr>
+      <th style="width: 48%;">Pattern</th>
+      <th></th>
+      <th style="width: 48%;">Anti-Pattern</th>
+    </tr>
+    <tr>
+      <td>
+        The default <var>admin</var> user is created with a blank password when
+        no other users are configured.
+      </td>
+      <td></td>
+      <td>
+        The app and plug-in configurations are mostly identical and should be
+        possible to omit, using heuristics to set the defaults.
+      </td>
+    </tr>
+  </table>
+</div>
+
+
+<h2 id="implementation">6.6. Implementation over Specification</h2>
+
+<p>Most concepts and features are better understood after creating a working
+implementation with real-world data, rather than by writing a specification.
+<strong>Working code is preferred over ideas</strong>.</p>
+
+<p>This shouldn't be confused with the good practice of providing example data
+and interactions (use cases) before starting the implementation.</p>
+
+<div class="box yellow">
+  <table style="width: 100%;">
+    <tr>
+      <th style="width: 48%;">Pattern</th>
+      <th></th>
+      <th style="width: 48%;">Anti-Pattern</th>
+    </tr>
+    <tr>
+      <td>
+        Implement new ideas or behaviors as plug-ins. If they prove useful, the
+        core extensions may be suitable for inclusion in the platform.
+      </td>
+      <td></td>
+      <td class="unimportant">
+        No current example found
+      </td>
+    </tr>
+  </table>
+</div>
+
+
+<h2 id="dynamic_types">6.7. Dynamic over Strict Types</h2>
+
+<p>This issue has been debated at length elsewhere. Suffice to say here that
+dynamic types is a core feature in JavaScript (and many other
+productivity-improving languages), so it makes sense to try to take this into
+account when building Java code for RapidContext.</p>
+
+<div class="box yellow">
+  <table style="width: 100%;">
+    <tr>
+      <th style="width: 48%;">Pattern</th>
+      <th></th>
+      <th style="width: 48%;">Anti-Pattern</th>
+    </tr>
+    <tr>
+      <td>
+        The generic <var>Dict</var> and <var>Array</var> classes add some
+        generic duck-typing to Java. And also simplify serializing to JSON,
+        HTML or <var>.properties</var> files.
+      </td>
+      <td></td>
+      <td>
+        The Java implementation of built-in procedures or procedure types still
+        require a number of specific interfaces and classes that are rather
+        strict.
+      </td>
+    </tr>
+  </table>
+</div>
+
+
+<!--END-->
+
+<div class="fineprint">
+  <hr>
+  Copyright &copy; 2007-2012 Per Cederberg. All rights reserved.
+</div>
+
+  </body>
+
+</html>
