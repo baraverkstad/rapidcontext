@@ -157,8 +157,8 @@ arguments, modify data and/or return values.</p>
 <p>Each procedure has a specific type (or kind). The procedure type defines
 which Java code is used to execute the procedure, similar to a templating
 engine. Since most server-side operations very similar, only a few different
-procedure types are needed. The standard procedure types are listed below, but
-more can be added by installing additional plug-ins.</p>
+procedure types are needed. The built-in and standard plug-in procedure types
+are listed below, but more can be added by installing additional plug-ins.</p>
 
 <ul class="box yellow">
   <li><var>built-in</var> &mdash; The built-in procedure type, used for one-off
@@ -200,39 +200,103 @@ to it is the edit icon.</p>
   <img src="images/screenshot-procedure-edit.png" />
 </p>
 
+<p>Each procedure can have a number of custom configuration properties that
+control their execution. A property has one of four types, each with different
+semantics and expected values:</p>
+
+<ol class="box yellow">
+  <li><strong>Argument</strong> &mdash; The value should contain the procedure
+      argument description (as later shown in the <strong>Admin</strong> app).
+      Note that both the number and order of arguments are important. During
+      procedure execution, the property identifier is bound to the value
+      provided in the call.</li>
+  <li><strong>Connection</strong> &mdash; The value should contain a connection
+      identifier (connection reference). The connection will be reserved before
+      calling the procedure. For JavaScript procedures, the connection object
+      allows direct calls to methods such as <var>commit()</var> or
+      similar.</li>
+  <li><strong>Data</strong> &mdash; The value is a data string constant that
+      may or may not span multiple lines. Mostly useful for JavaScript
+      procedures.</li>
+  <li><strong>Procedure</strong> &mdash; The value contains a procedure
+      identifier (procedure reference). Only used for JavaScript procedures,
+      where it enables calling other procedures as functions.</li>
+</ol>
+
 <p>Procedures created or edited are stored to the <var>procedure/</var>
 directory inside the <var>local</var> plug-in. The files there can be copied to
 the corresponding plug-in development development for packaging.</p>
 
 
-<h2 id="procedures">5.6. Procedure Authoring</h2>
+<h2 id="javascript">5.5. JavaScript Procedures</h2>
 
-<div class="box red">
-  <img src="images/stop.png" class="left" alt="Warning" />
-  <h2 style="margin: 0;">Section In Progress</h2>
-  This section is not yet complete. Any information below is temporary.
-</div>
+<p>The <var>javascript</var> procedure type allows creating generic server-side
+logic with minimum effort. The procedure consists of JavaScript code, which is
+compiled upon the first call. Additional procedure properties are exposed as
+variables in the global scope and can be accessed or called directly.</p>
 
-<p>By storing SQL queries, JavaScript code or similar as configuration
-parameters, it is possible to create advanced procedures easily without
-writing any Java code at all. Each procedure configuration parameter has
-a specific type, as listed below:</p>
+<p>The JavaScript environment provided is compatible with EcmaScript 5.1 and
+allows the creation of helper functions and comments to keep the code readable.
+See the example below for a JavaScript procedure that calls another procedure
+and filters its result:</p>
+
+<pre class="box blue code">
+<span class="comment">// Helper: Check if server thread has context</span>
+function hasContext(thread) {
+    return thread.context != null;
+}
+
+<span class="comment">// Helper: Extract procedure name from server thread context</span>
+function getProcName(thread) {
+    return thread.context.procedure;
+}
+
+<span class="comment">// Using property bound to 'System.Thread.List' procedure</span>
+var threads = listThreads();
+
+<span class="comment">// Filter threads and extract procedure names,</span>
+return threads.filter(hasContext).map(getProcName);
+</pre>
+
+<p>Using JavaScript procedures is a powerful tool for post-processing data in
+various ways. And it is often easier and more efficient to put this
+functionality into a procedure than to perform it in the web browser.
+Especially when the data set is large or when many separate queries are
+required. Here are a number of recommended uses for JavaScript procedures:</p>
 
 <ol class="box yellow">
-  <li><strong>Constant Data</strong> &mdash; The value is a data string that
-      may or may not span multiple lines.</li>
-  <li><strong>Procedure Reference</strong> &mdash; The value contains a
-      procedure name. The procedure can be called by using the identifier
-      as a function (JavaScript only).</li>
-  <li><strong>Connection Reference</strong> &mdash; The value contains a
-      connection name. The connection will be reserved before calling the
-      procedure and the identifier allows calling any connection methods
-      directly from JavaScript.</li>
-  <li><strong>Procedure Argument</strong> &mdash; The value is the
-      description of a procedure argument, as shown to the user. When the
-      procedure is executing, the identifier will be replaced by the value
-      provided by the procedure caller.</li>
+  <li><strong>Data Filtering</strong> &mdash; Perform additional checks to
+      remove items from a list is easy with the JavaScript <var>filter()</var>
+      method. Some checks are also much easier to express in JavaScript than in
+      SQL or similar.</li>
+  <li><strong>Data Merging</strong> &mdash; Merging data from multiple queries
+      and/or data sources is straight-forward in JavaScript. The easiest way is
+      of course to just return a new object with all results as properties.</li>
+  <li><strong>Data Transformation</strong> &mdash; Transforming data from a
+      list to a lookup table is just a matter of writing a <var>for</var> or a
+      <var>while</var> loop. But the possibilties are really endless here.</li>
+  <li><strong>Higher-Order Searches</strong> &mdash; Using a bit of JavaScript,
+      it is possible to build higher-order searches that use the results from
+      one query as input to the next one. Since a JavaScript procedure can
+      use many other procedures, results can be tailored in any way.</li>
+  <li><strong>Statistics</strong> &mdash; If the data source itself cannot
+      perform adequate statistical functions, the next best option is to use a
+      procedure. The transfer of large quantities of data is costly, so
+      processing closer to the data source is faster.</li>
 </ol>
+
+<p>A few additional tips to consider when developing JavaScript procedures:</p>
+
+<ul class="box yellow">
+  <li><strong>Debugging</strong> &mdash; When creating or modifying JavaScript
+      procedures, it is often very helpful to switch on trace logging. See the
+      <q>Logging</q> tab in the <strong>Admin</strong> app for controlling
+      this.</li>
+  <li><strong>Connection Reservation</strong> &mdash;  All connections required
+      by a procedure and <em>all its referenced sub-procedures</em> are
+      reserved before the execution starts. This guarantees that all resources
+      are available, but might be wasteful in some circumstances.</li>
+</ul>
 
 
 <!--END-->

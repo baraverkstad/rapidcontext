@@ -31,7 +31,8 @@
         { "topic": "5.1. Plug-in Structure", "url": "doc/5_plugin_dev.html#plugin_struct" },
         { "topic": "5.2. Plug-in Configuration", "url": "doc/5_plugin_dev.html#plugin_config" },
         { "topic": "5.3. Procedures & Procedure Types", "url": "doc/5_plugin_dev.html#procedures" },
-        { "topic": "5.4. Procedure Editing", "url": "doc/5_plugin_dev.html#procedure_editing" }
+        { "topic": "5.4. Procedure Editing", "url": "doc/5_plugin_dev.html#procedure_editing" },
+        { "topic": "5.5. JavaScript Procedures", "url": "doc/5_plugin_dev.html#javascript" }
     ] },
     { "topic": "6. Development Guidelines", "url": "doc/6_guidelines.html", "children": [
         { "topic": "6.1. Design Principle Usage", "url": "doc/6_guidelines.html#usage" },
