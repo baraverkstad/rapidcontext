@@ -150,7 +150,7 @@ it shows a simple server controlpanel as below:</p>
 <h2 id="plugin_install">2.3. Plug-in Installation</h2>
 
 <p>Plug-ins are installed or updated by using the built-in
-<strong>Admin</strong> app. The steps below explains how to install or update
+<strong>Admin</strong> app. The steps below explain how to install or update
 a plug-in:</p>
 
 <ol class="box yellow">
@@ -192,15 +192,15 @@ a plug-in:</p>
 <h2 id="plugin_loading">2.4. Plug-in Activation &amp; Deactivation</h2>
 
 <p>Plug-ins can both be loaded and unloaded in the built-in
-<strong>Admin</strong> app. The steps below explains how to do it.</p>
+<strong>Admin</strong> app. The steps below explain how to do it.</p>
 
 <ol class="box yellow">
   <li>Launch or go to the <strong>Admin</strong> app</li>
   <li>Choose the <q>Plug-Ins</q> tab</li>
   <li>Locate the <q>Plug-In List</q> pane (see screenshot)
-     <p class="figure">
-      <img src="images/screenshot-plugin-list.png" alt="Screenshot" />
-     </p>
+      <p class="figure">
+        <img src="images/screenshot-plugin-list.png" alt="Screenshot" />
+      </p>
   </li>
   <li>Select the plug-in to activate or deactivate</li>
   <li>Press the corresponding <q>Load</q> or <q>Unload</q> button</li>
@@ -226,35 +226,73 @@ steps:</p>
 </ol>
 
 
-<h2 id="connection_add">2.6. Adding Connections</h2>
+<h2 id="connections">2.6. Connections</h2>
 
-<div class="box red">
-  <img src="images/stop.png" class="left" alt="Warning" />
-  <h2 style="margin: 0;">Section In Progress</h2>
-  This section is not yet complete. Any information below is temporary.
-</div>
+<p>Connections to external systems can be created and modified in the built-in
+<strong>Admin</strong> app. The steps below explain how to do it:</p>
 
-     <p class="figure">
-      <img src="images/screenshot-cxn-list.png" alt="Screenshot" />
-     </p>
+<ol class="box yellow">
+  <li>Launch or go to the <strong>Admin</strong> app</li>
+  <li>Choose the <q>Connections</q> tab</li>
+  <li>Select the connection to modify (if appropriate, see screenshot)
+      <p class="figure">
+        <img src="images/screenshot-cxn-list.png" alt="Screenshot" />
+      </p>
+  </li>
+  <li>Press the edit <strong>OR</strong> the "+" icon in the <q>Connection
+      Details</q> view (to the right)
+  <li>The connection editing dialog is shown (see screenshot)
+      <p class="figure">
+        <img src="images/screenshot-cxn-edit.png" alt="Screenshot" />
+      </p>
+  </li>
+  <li>Select the appropriate type and edit the details</li>
+  <li>Press <q>Save</q> to save and validate the connection</li>
+</ol>
+
+<p>The connection will automatically be validated (tested) when modified or
+created in the <strong>Admin</strong> app. Any previously open communication
+channels will be closed and a single new one will be established. The results
+are visible in the <q>Connection Details</q> view.</p>
+
+<p>A number of things should be noted regarding connections and connection
+editing:</p>
+
+<ul class="box yellow">
+  <li><strong>Advanced Settings</strong> &mdash; The advanced settings for a
+      connection becomes visible when checking the <q>Show all parameters</q>
+      checkbox in the edit dialog.</li>
+  <li><strong>Connection Channels</strong> &mdash; Each connection may open one
+      or more connection channels (i.e. a TCP or UDP connection) to the
+      external service. The number of currently open and used channels is shown
+      in the <q>Connection List</q> view.</li>
+  <li><strong>Connection Pooling</strong> &mdash; Connection channels are often
+      not closed immediately after use, but instead pooled for reuse (depending
+      on connection type). This improves performance and reduces resource
+      usage. The size of the pool can be controlled with the <q>Max Open</q>
+      and <q>Max Idle Secs</q> parameters.</li>
+  <li><strong>Connection Types</strong> &mdash; Connections may behave somewhat
+      differently depending on the connection type. Read the separate
+      documentation for the relevant plug-in for more information.</li>
+  <li><strong>Transactions</strong> &mdash; Some connection types support
+      transactions, in which case each call to the server will be encapsulated
+      in a new transaction. The same transaction may several connections.</li>
+</ul>
 
 
-     <p class="figure">
-      <img src="images/screenshot-cxn-edit.png" alt="Screenshot" />
-     </p>
+<h2 id="environments">2.7. Environments</h2>
 
-<h2 id="environment">2.7. Environments</h2>
+<p>An environment is used to signal the RapidContext server location to the
+user. The environment name is displayed at the top right corner of the standard
+user interface, along with the user name. Environments are primarily useful
+when several RapidContext servers are in use.</p>
 
-<div class="box red">
-  <img src="images/stop.png" class="left" alt="Warning" />
-  <h2 style="margin: 0;">Section In Progress</h2>
-  This section is not yet complete. Any information below is temporary.
-</div>
-
-<p>There is currently no
-user interface for editing or creating environment files, so they must
-be manually created as <var>environment/[identifier].properties</var> in
-one of the plug-ins. See below for a simple example environment file.</p>
+<p>There is currently no user interface for editing or creating environments,
+so they must be manually added to the <var>plugin/local/environment/</var>
+directory (or the <var>environment/</var> directory in your plug-in). The file
+name should follow normal storage rules, i.e.
+<var>[identifier].properties</var>. See below for an example environment
+file.</p>
 
 <pre class="box blue code">
 <span class="comment"># General properties</span>
@@ -264,16 +302,13 @@ description = The example environment
 connections = EXAMPLE/
 </pre>
 
-<!--
-<p>The environment also keeps a pool of established connections. The
-connection pools are used to minimize the overhead of creating and closing
-connections, as well as providing a mechanism to limit the resource usage
-in the server. Connections are created or reserved automatically before
-processing user requests. This enables detection of resource shortages before
-any actual operations are made. All connections reserved also participate in
-the same transaction (if supported) and will be committed or rolled back
-in sequence.</p>
--->
+<p>The <var>connections</var> property is used as a prefix when locating
+connections. I.e. all connection identifiers in the environment should be named
+<var>[prefix]/[identifier]</var>, but only the <var>identifier</var> part
+should be specified on usage (in procedures and similar).</p>
+
+<p>This will make it possible to add support for multiple environments with
+similar connections in a future version.</p>
 
 <div class="box green" style="margin-top: 0;">
   <img src="images/info.png" class="left" alt="Information" />
@@ -282,8 +317,8 @@ in sequence.</p>
     <p>A RapidContext server may currently only have a single environment
     loaded (although multiple connections are supported). This environment is
     used for all users, apps and procedures on the server. If several
-    environments are in use, separate RapidContext server instances should
-    currently be installed.</p>
+    environments are required, separate RapidContext server instances should
+    be installed.</p>
   </div>
 </div>
 
