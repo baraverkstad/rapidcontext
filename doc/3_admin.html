@@ -70,7 +70,7 @@ storage file structure:</p>
 
 <h2 id="default_users">3.2. Default Users &amp; Roles</h2>
 
-<p>The default installation of RapidContext contain the following users and
+<p>The default installation of RapidContext contains the following users and
 roles:</p>
 
 <ul class="box yellow">
@@ -82,7 +82,7 @@ roles:</p>
   <li><strong><var>admin</var> (role)</strong> &mdash; A built-in role that
       provides full system access, everywhere. This role is required in order
       to modify procedures, manage plug-ins, and all similar administrative
-      operations. This role <strong>shouldn't be modified or removed</strong>
+      operations. This role <strong>should not be modified or removed</strong>
       from the system. Instead, it should be assigned to users with care.</li>
 </ul>
 
@@ -119,10 +119,10 @@ avoids repeated authentication requests.</p>
       <li><strong>Forced Termination</strong> &mdash; The built-in procedure
           <var>System.Session.Terminate</var> allows the early termination of
           any user session.</li>
-      <li><strong>IP or Browser Mismatch</strong> &mdash; A session is bound
-          to the original browser user agent string and IP address in order to
-          avoid session hijacking. Whenever a mismatch occurs, the session is
-          terminated.</li>
+      <li><strong>IP or Browser Mismatch</strong> &mdash; A session is locked
+          to the specific user agent string and IP address it was created with.
+          This is a security feature to avoid session hijacking. Whenever a
+          mismatch occurs, the session is terminated.</li>
     </ul>
   </div>
 </div>
@@ -166,10 +166,10 @@ the steps below in order to edit or create a user:</p>
 
 <h2 id="roles_access_control">3.5. Roles &amp; Access Control</h2>
 
-<p>Access permissions are assigned to users from the <strong>roles</strong>
-assigned. All platform operations for managing plug-ins or editing procedures
-require the <var>admin</var> role, but access to other procedures is possible
-to attain also from other roles.</p>
+<p>Access permissions are assigned to users from the roles assigned. A number
+of built-in platform operations and procedures require the <var>admin</var>
+role, but access to normal procedures and apps can be granted from other
+roles.</p>
 
 <p>Roles are currently created and modified directly on the server file system,
 in the <var>plugin/local/role</var> directory. The role files should be named
@@ -224,8 +224,8 @@ elaboration:</p>
     <ul>
       <li><strong>Admin</strong> &mdash; It is currently not possible to manage
           roles from the <strong>Admin</strong> app. This will change in a
-          future release possibly along with much of the current access control
-          model.</li>
+          future release, possibly along with much of the current access
+          control model.</li>
       <li><strong>Generic Access Controls</strong> &mdash; Since only apps and
           procedures are checked by default, other objects must be checked
           programmatically (from JavaScript procedures) by using the
@@ -237,7 +237,7 @@ elaboration:</p>
 
 <h2 id="security_checklist">3.6. Security Checklist</h2>
 
-<p>Before installing a RapidContext server in a publically acessible location,
+<p>Before installing a RapidContext server in a publically accessible location,
 please check the following:</p>
 
 <ul class="box yellow">
@@ -252,7 +252,7 @@ please check the following:</p>
       eavesdropped. Use an HTTPS proxy, an HTTPS servlet container or a VPN
       tunnel.</li>
   <li><strong>Verify Access Controls</strong> &ndash; Test the access controls
-      for each role with a test user assigned to only that role. Check that no
+      for each role with a test user assigned to that role only. Check that no
       privileged resources are available to unprivileged roles.</li>
   <li><strong>Limit Admin Access</strong> &ndash; The number of users with
       the <var>admin</var> role should be limited, to avoid potential abuse
