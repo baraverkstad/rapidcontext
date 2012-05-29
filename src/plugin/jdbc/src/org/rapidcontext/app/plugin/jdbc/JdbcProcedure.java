@@ -223,12 +223,12 @@ public abstract class JdbcProcedure extends AddOnProcedure {
         public String fieldName;
 
         /**
-         * The optional SQL operator preceeding the field.
+         * The optional SQL operator preceding the field.
          */
         private String operator = null;
 
         /**
-         * The optional SQL column name preceeding the operator and
+         * The optional SQL column name preceding the operator and
          * field.
          */
         private String column = null;
