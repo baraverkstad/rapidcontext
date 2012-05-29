@@ -124,7 +124,7 @@ fields:</p>
       automatically set if the Ant script in <var>plugin-build.xml</var> is
       used for packaging the plug-in.</li>
   <li><var>description</var> &mdash; The optional description text that
-      explains the functionality in provided by the plug-in.</li>
+      explains the functionality provided by the plug-in.</li>
   <li><var>copyright</var> &mdash; The optional copyright statement text.</li>
   <li><var>className</var> &mdash; The optional fully qualified name of
       a Java class that handles the plug-in life-cycle. The class must be a
@@ -156,9 +156,10 @@ arguments, modify data and/or return values.</p>
 
 <p>Each procedure has a specific type (or kind). The procedure type defines
 which Java code is used to execute the procedure, similar to a templating
-engine. Since most server-side operations very similar, only a few different
-procedure types are needed. The built-in and standard plug-in procedure types
-are listed below, but more can be added by installing additional plug-ins.</p>
+engine. Since most server-side operations are very similar, only a few
+different procedure types are needed. The built-in and standard plug-in
+procedure types are listed below, but more can be added by installing
+additional plug-ins.</p>
 
 <ul class="box yellow">
   <li><var>built-in</var> &mdash; The built-in procedure type, used for one-off
@@ -225,7 +226,7 @@ semantics and expected values:</p>
 
 <p>Procedures created or edited are stored to the <var>procedure/</var>
 directory inside the <var>local</var> plug-in. The files there can be copied to
-the corresponding plug-in development development for packaging.</p>
+the corresponding plug-in development directory for packaging.</p>
 
 
 <h2 id="javascript">5.5. JavaScript Procedures</h2>
@@ -258,9 +259,9 @@ var threads = listThreads();
 return threads.filter(hasContext).map(getProcName);
 </pre>
 
-<p>Using JavaScript procedures is a powerful tool for post-processing data in
-various ways. And it is often easier and more efficient to put this
-functionality into a procedure than to perform it in the web browser.
+<p>JavaScript procedures is a powerful tool for post-processing data in various
+situations. It is also often easier and more efficient to put this type of
+functionality into a procedure, than to perform it in the web browser.
 Especially when the data set is large or when many separate queries are
 required. Here are a number of recommended uses for JavaScript procedures:</p>
 
@@ -272,9 +273,10 @@ required. Here are a number of recommended uses for JavaScript procedures:</p>
   <li><strong>Data Merging</strong> &mdash; Merging data from multiple queries
       and/or data sources is straight-forward in JavaScript. The easiest way is
       of course to just return a new object with all results as properties.</li>
-  <li><strong>Data Transformation</strong> &mdash; Transforming data from a
-      list to a lookup table is just a matter of writing a <var>for</var> or a
-      <var>while</var> loop. But the possibilties are really endless here.</li>
+  <li><strong>Data Transformation</strong> &mdash; Transforming data from one
+      format to another is often easy with a bit of JavaScript. Using a simple
+      <var>for</var> or <var>while</var> loop, any data list can easily be
+      transformed into a lookup table for example.</li>
   <li><strong>Higher-Order Searches</strong> &mdash; Using a bit of JavaScript,
       it is possible to build higher-order searches that use the results from
       one query as input to the next one. Since a JavaScript procedure can

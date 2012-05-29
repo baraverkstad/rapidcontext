@@ -45,9 +45,9 @@ access speed for each database used.</p>
 <p>In order for the JDBC plug-in to access a database, the corresponding JDBC
 driver (JAR file) must be installed on the RapidContext server. The plug-in
 comes bundled with drivers for <strong>Drizzle</strong>, <strong>MySQL</strong>
-and <strong>PostgreSQL</strong>, but other database vendors impose
-restrictions on driver distribution. Follow the following steps to install a
-custom JDBC driver:</p>
+and <strong>PostgreSQL</strong>. Other database vendors impose restrictions on
+driver distribution, so the JDBC driver must be installed locally. Follow the
+following steps to install a custom JDBC driver:</p>
 
 <ol class="box yellow">
   <li>Transfer the JDBC driver (JAR file) to the RapidContext server</li>
@@ -149,8 +149,9 @@ follows:</p>
       when the database number type isn't compatible with JavaScript.</li>
   <li><var>single-row</var> &mdash; Returns only the first row of the result or
       <var>null</var> if no row was matched. This omits the array wrapper
-      around the result, making usage simpler. If multiple rows is encountered,
-      an error will be thrown (instead of silently ignoring it).</li>
+      around the result, making usage simpler. If multiple rows are
+      encountered, an error will be thrown (instead of silently ignoring
+      it).</li>
 </ul>
 
 <div class="box green" style="margin-top: 0;">
@@ -159,8 +160,8 @@ follows:</p>
     <h2 style="margin: 0;">Notice</h2>
     <p>Date and timestamp values are currently always converted into ISO
     datetime strings without timezone (e.g. <q>2009-01-31 23:59:59</q>). This
-    mapping will likely to change in future versions, so use string conversion
-    in the SQL query if a specific date and time format is desired.</p>
+    mapping will likely change in future versions, so use string conversion in
+    the SQL query if a specific date and time format is desired.</p>
   </div>
 </div>
 
@@ -197,7 +198,7 @@ WHERE name = :name</pre>
 <p>The procedure argument value will always be properly escaped and quoted
 (for string values) for insertion into the SQL text. When using parameter
 substitution inside a <q><var>WHERE</var></q> block, the comparison operator
-<em>preceeding</em> the replacement value will also be analysed and possibly
+<em>preceding</em> the replacement value will also be analysed and possibly
 replaced for increased flexibility. See the list below for the SQL operators
 recognized and processed in this way:</p>
 

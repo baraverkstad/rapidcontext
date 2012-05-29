@@ -114,11 +114,11 @@ resources.2.type = icon
 </pre>
 
 <p>In the example above, the three files <var>app.js</var>, <var>ui.xml</var>
-and <var>icon.png</var> referenced and must be available in the file area
-(more on that later). Any app resource of type <q><var>code</var></q>
-is dynamically loaded as a JavaScript file on the first app launch. Subsequent
-launches will reuse the previously loaded file, so <var>Ctrl-R</var> must be
-used to force an app reload.
+and <var>icon.png</var> are referenced and must be located at the specified
+URL. Any app resource of type <q><var>code</var></q> is dynamically loaded as a
+JavaScript file on the first app launch. Subsequent launches will reuse the
+previously loaded file, so <var>Ctrl-R</var> must be used to force an app
+reload.</p>
 
 <p>The available app configuration parameters are as follows:</p>
 
@@ -133,7 +133,7 @@ used to force an app reload.
       at the same time (in the web page). The source code for the class should
       be placed in one of the <var>code</var> resources listed.</li>
   <li>
-    <var>launch</var> &mdash; The optional app launch setting. Can have
+    <var>launch</var> &mdash; The optional app launch setting. This may have
     one of the following values:
     <ul>
       <li><var>manual</var> (default) &mdash; The app is manually started
@@ -156,8 +156,8 @@ used to force an app reload.
       visible from the server (or the <var>files/</var> directory in your
       plug-in).</li>
   <li>
-    <var>resources.#.type</var> &mdash; The resource type. Can be any
-    text string, but the following values have a defined meaning:
+    <var>resources.#.type</var> &mdash; The resource type. This may have one
+    of the following values:
     <ul>
       <li><var>code</var> &mdash; A JavaScript source code file that will be
           loaded before app launch.</li>
@@ -315,7 +315,7 @@ interpreted as follows:</p>
       in the <var>RapidContext.Widget.CLASSES</var> map, using the exact
       case-sensitive tag name. If found, the corresponding widget constructor
       function is used to create the HTML DOM node. Otherwise the tag name is
-      sent to <var>MochiKit.DOM.createDOM()</var>  to create the corresponding
+      sent to <var>MochiKit.DOM.createDOM()</var> to create the corresponding
       HTML DOM node.</li>
   <li><strong>The <q><var>id</var></q> Attribute</strong> &mdash; The
       <q><var>id</var></q> attribute is used to map the DOM node to the app
@@ -327,8 +327,8 @@ interpreted as follows:</p>
       identifiers.</li>
   <li><strong>The <q><var>class</var></q> Attribute</strong> &mdash; The
       <q><var>class</var></q> attribute is set on the HTML DOM node created
-      (similar to in HTML files). Note that widgets have additional CSS
-      classes, potentially causing conflicts with specific style settings (see
+      (similar to HTML). Note that widgets have additional CSS classes,
+      potentially causing conflicts with specific style settings (see
       below).</li>
   <li><strong>The <q><var>w</var></q>, <q><var>h</var></q> &amp;
       <q><var>a</var></q> Attributes</strong>&mdash; The attributes
