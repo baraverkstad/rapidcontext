@@ -253,25 +253,31 @@ public class StorageRequestHandler extends RequestHandler {
         Array  arr;
 
         dict.set("type", "index");
-        arr = idx.indices();
-        arr = arr.copy();
+        arr = idx.indices().copy();
         if (linkify) {
             arr.sort();
         }
         for (int i = 0; i < arr.size(); i++) {
-            if (linkify) {
-                arr.set(i, "http:" + arr.getString(i, null) + "/");
+            String name = arr.getString(i, null);
+            if (name.startsWith(".")) {
+                arr.remove(i--);
+            } else if (linkify) {
+                arr.set(i, "http:" + name + "/");
             } else {
-                arr.set(i, arr.getString(i, null) + "/");
+                arr.set(i, name + "/");
             }
         }
         dict.set("directories", arr);
-        arr = idx.objects();
+        arr = idx.objects().copy();
         if (linkify) {
-            arr = arr.copy();
             arr.sort();
-            for (int i = 0; i < arr.size(); i++) {
-                arr.set(i, "http:" + arr.getString(i, null));
+        }
+        for (int i = 0; i < arr.size(); i++) {
+            String name = arr.getString(i, null);
+            if (name.startsWith(".")) {
+                arr.remove(i--);
+            } else if (linkify) {
+                arr.set(i, "http:" + name);
             }
         }
         dict.set("objects", arr);
