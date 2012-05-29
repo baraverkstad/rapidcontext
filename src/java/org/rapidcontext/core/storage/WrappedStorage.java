@@ -14,6 +14,8 @@
 
 package org.rapidcontext.core.storage;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * A storage wrapper class. This class allows any storage object to
  * be wrapped and modified or monitored. It is useful when
@@ -39,7 +41,8 @@ public class WrappedStorage extends Storage {
      * @param wrapped        the encapsulated storage
      */
     public WrappedStorage(String storageType, Storage wrapped) {
-        super(storageType, wrapped.isReadWrite());
+        super(storageType + StringUtils.removeStart(wrapped.type(), "storage"),
+              wrapped.isReadWrite());
         this.wrapped = wrapped;
     }
 

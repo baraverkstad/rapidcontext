@@ -30,11 +30,6 @@ import org.rapidcontext.core.data.Array;
 public abstract class Storage extends StorableObject implements Comparable {
 
     /**
-     * The dictionary key for the storage type.
-     */
-    public static final String KEY_STORAGE_TYPE = "storageType";
-
-    /**
      * The dictionary key for the read-write flag.
      */
     public static final String KEY_READWRITE = "readWrite";
@@ -93,9 +88,8 @@ public abstract class Storage extends StorableObject implements Comparable {
      * @param readWrite      the read write flag
      */
     protected Storage(String storageType, boolean readWrite) {
-        super(null, "storage");
+        super(null, "storage/" + storageType);
         dict.remove(KEY_ID);
-        dict.set(KEY_STORAGE_TYPE, storageType);
         dict.setBoolean(KEY_READWRITE, readWrite);
         dict.set(KEY_MOUNT_PATH, Path.ROOT);
         dict.set(KEY_MOUNT_TIME, new Date());
@@ -124,15 +118,6 @@ public abstract class Storage extends StorableObject implements Comparable {
         } else {
             return (this == other) ? 0 : -1;
         }
-    }
-
-    /**
-     * Returns the storage type name.
-     *
-     * @return the storage type name
-     */
-    public String storageType() {
-        return dict.getString(KEY_STORAGE_TYPE, null);
     }
 
     /**
