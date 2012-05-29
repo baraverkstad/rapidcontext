@@ -36,14 +36,11 @@
 
 <h2 id="storage">3.1. Storage &amp; Local Changes</h2>
 
-<p>The RapidContext storage is located in the <var>plugin</var> subdirectory
-on the server. There all installed plug-ins are saved as packed ZIP files
-along with the special <var>local</var> directory.</p>
-
-<p>The <var>local</var> directory contains the special <var>local</var> plug-in
-that stores any local additions or modifications. These local changes always
-have priority over other plug-ins. The figure below illustrates the server
-storage file structure:</p>
+<p>The RapidContext storage is located in the <var>plugin/</var> directory on
+the server. All installed plug-ins are kept as packed ZIP files in this
+directory, along with the special <var>plugin/local/</var> subdirectory
+containing the <var>local</var> plug-in. The figure below illustrates the
+server storage file structure:</p>
 
 <ul class="box yellow">
   <li>
@@ -66,6 +63,10 @@ storage file structure:</p>
     </ul>
   </li>
 </ul>
+
+<p>The <var>local</var> plug-in stores all local additions and modifications.
+Objects located there will always &ldquo;shadow&rdquo; or override objects with
+the same storage path in other plug-ins.</p>
 
 
 <h2 id="default_users">3.2. Default Users &amp; Roles</h2>

@@ -168,18 +168,18 @@ elsewhere. Their definitions are as follows:</p>
       browser IP address and user agent string and identifier by the HTTP
       cookie <q><var>sessionid</var></q>. A user may have multiple sessions
       open in different web browsers.</li>
-  <li><strong>Storage</strong> &mdash; A server-side location service for
-      RapidContext objects. The storage is organized in a tree-like structure,
-      similar to a normal file system. It handles both persistent and temporary
-      in-memory objects, allowing the latter to &ldquo;shadow&rdquo; the
-      former in the storage tree. All active plug-ins are mounted to the
+  <li><strong>Storage</strong> &mdash; A server-side virtual file system for
+      storing data and objects. The storage handles both persistent (file) and
+      temporary (in-memory) objects, allowing some objects to
+      &ldquo;shadow&rdquo; others. All active plug-ins are mounted to the
       storage and overlaid on the root storage tree, providing a single
-      coherent view of data from all plug-ins.</li>
+      unified storage view for all objects.</li>
   <li><strong>Storage Path</strong> &mdash; An object location in the
       RapidContext storage. The storage path is formed from the object type
-      and identifier as <var>[type]/[identifier]</var>. Note that only the
-      base type is used, e.g. <q><var>connection</var></q> instead of
-      <q><var>connection/jdbc</var></q>.</li>
+      and identifier as <var>[type]/[identifier]</var>. Only the base type is
+      used when searching for objects in the storage, i.e.
+      <q><var>connection/</var></q> instead of
+      <q><var>connection/jdbc/</var></q>.</li>
   <li><strong>Type</strong> &mdash; A server-side descriptor and optionally
       an associated Java handler for a piece of data in the RapidContext
       storage. The type contains meta-data and descriptions for all recognized
