@@ -43,7 +43,8 @@
         { "topic": "6.4. Simplicity over Documentation", "url": "doc/6_guidelines.html#simplicity" },
         { "topic": "6.5. Defaults over Configuration", "url": "doc/6_guidelines.html#defaults" },
         { "topic": "6.6. Implementation over Specification", "url": "doc/6_guidelines.html#implementation" },
-        { "topic": "6.7. Dynamic over Strict Types", "url": "doc/6_guidelines.html#dynamic_types" }
+        { "topic": "6.7. Dynamic over Strict Types", "url": "doc/6_guidelines.html#dynamic_types" },
+        { "topic": "6.8. Exploratory over Automated Testing", "url": "doc/6_guidelines.html#testing" }
     ] },
     { "topic": "7. Change History", "url": "doc/7_changes.html" },
     { "topic": "Plug-In: Command-line", "url": "doc/plugin-cmdline.html", "children": [

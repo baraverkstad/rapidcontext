@@ -50,8 +50,8 @@ choices made for the platform.</p>
     <tr>
       <td>
         Read this document as the RapidContext declaration of <q>good
-        taste</q>, whatever that means. And consider the <q>pattern</q>
-        examples as templates.
+        taste</q>, whatever that means. Consider the <q>pattern</q> examples as
+        templates.
       </td>
       <td></td>
       <td>
@@ -256,6 +256,35 @@ account when building Java code for RapidContext.</p>
         The Java implementation of built-in procedures or procedure types still
         require a number of specific interfaces and classes that are rather
         strict.
+      </td>
+    </tr>
+  </table>
+</div>
+
+
+<h2 id="testing">6.8. Exploratory over Automated Testing</h2>
+
+<p>Automated testing is unsuitable for discovering usability or deployment
+issues, due to its controlled and automated environment. Also, the time
+required for writing scripted tests is often better spent performing ad hoc
+testing of apps and procedures. This is especially true for the type of
+fast-moving software that RapidContext encourages.</p>
+
+<div class="box yellow">
+  <table style="width: 100%;">
+    <tr>
+      <th style="width: 48%;">Pattern</th>
+      <th></th>
+      <th style="width: 48%;">Anti-Pattern</th>
+    </tr>
+    <tr>
+      <td>
+        The <strong>Admin</strong> app makes ad-hoc testing (calls) of
+        procedures easy and straight-forward.
+      </td>
+      <td></td>
+      <td class="unimportant">
+        No current example found
       </td>
     </tr>
   </table>
