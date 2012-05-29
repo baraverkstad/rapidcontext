@@ -130,6 +130,7 @@ div.query {
     color: #666666;
 }
 .query ol {
+    margin: 0;
     padding: 0 20px;
 }
 .query table {
