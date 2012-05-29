@@ -30,7 +30,7 @@ import org.rapidcontext.core.data.PropertiesSerializer;
 import org.rapidcontext.core.data.XmlSerializer;
 import org.rapidcontext.core.js.JsSerializer;
 import org.rapidcontext.core.security.SecurityContext;
-import org.rapidcontext.core.storage.FileStorage;
+import org.rapidcontext.core.storage.DirStorage;
 import org.rapidcontext.core.storage.Index;
 import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
@@ -146,7 +146,7 @@ public class StorageRequestHandler extends RequestHandler {
                 errorNotFound(request);
             } else if (isDefault && res instanceof Binary) {
                 request.sendBinary((Binary) res, true);
-            } else if (isDefault && request.getPath().endsWith(FileStorage.SUFFIX_PROPS)) {
+            } else if (isDefault && request.getPath().endsWith(DirStorage.SUFFIX_PROPS)) {
                 str = StringUtils.substringAfterLast(request.getPath(), "/");
                 mimeType = StringUtils.defaultIfEmpty(mimeType, Mime.type(str));
                 request.sendText(mimeType, PropertiesSerializer.serialize(res));
@@ -408,12 +408,12 @@ public class StorageRequestHandler extends RequestHandler {
         }
         try {
             Storage storage = ApplicationContext.getInstance().getStorage();
-            Path path = new Path(StringUtils.removeEnd(request.getPath(), FileStorage.SUFFIX_PROPS));
+            Path path = new Path(StringUtils.removeEnd(request.getPath(), DirStorage.SUFFIX_PROPS));
             Metadata prev = storage.lookup(path);
             String fileName = StringUtils.substringAfterLast(request.getPath(), "/");
             File file = FileUtil.tempFile(fileName);
             FileUtil.copy(request.getInputStream(), file);
-            if (request.getPath().endsWith(FileStorage.SUFFIX_PROPS)) {
+            if (request.getPath().endsWith(DirStorage.SUFFIX_PROPS)) {
                 Dict dict = PropertiesSerializer.read(file);
                 file.delete();
                 storage.store(path, dict);
@@ -502,7 +502,7 @@ public class StorageRequestHandler extends RequestHandler {
                         if (path.isIndex()) {
                             str += "/";
                         } else if (meta.isObject()) {
-                            str += FileStorage.SUFFIX_PROPS;
+                            str += DirStorage.SUFFIX_PROPS;
                         }
                         addResource(davRequest, str, meta, data);
                     }
@@ -708,8 +708,8 @@ public class StorageRequestHandler extends RequestHandler {
         Storage storage = ApplicationContext.getInstance().getStorage();
         Path lookupPath = path;
         Metadata meta = storage.lookup(lookupPath);
-        if (meta == null && path.name().endsWith(FileStorage.SUFFIX_PROPS)) {
-            String str = StringUtils.removeEnd(path.name(), FileStorage.SUFFIX_PROPS);
+        if (meta == null && path.name().endsWith(DirStorage.SUFFIX_PROPS)) {
+            String str = StringUtils.removeEnd(path.name(), DirStorage.SUFFIX_PROPS);
             lookupPath = path.parent().child(str, false);
             meta = storage.lookup(lookupPath);
         }

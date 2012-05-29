@@ -38,18 +38,18 @@ import org.rapidcontext.core.web.Mime;
  * converted to dictionary object on retrieval.<p>
  *
  * Note: This storage is read-only. Unpack the ZIP file and use a
- * FileStorage for read-write access.
+ * DirStorage for read-write access.
  *
  * @author   Per Cederberg
  * @version  1.0
  */
-public class ZipFileStorage extends Storage {
+public class ZipStorage extends Storage {
 
     /**
      * The class logger.
      */
     private static final Logger LOG =
-        Logger.getLogger(ZipFileStorage.class.getName());
+        Logger.getLogger(ZipStorage.class.getName());
 
     /**
      * The ZIP file being read.
@@ -74,8 +74,8 @@ public class ZipFileStorage extends Storage {
      *
      * @throws IOException if the ZIP couldn't be opened properly
      */
-    public ZipFileStorage(File zipFile) throws IOException {
-        super("zipFile", false);
+    public ZipStorage(File zipFile) throws IOException {
+        super("zip", false);
         this.file = zipFile;
         this.zip = new ZipFile(zipFile);
         init();
@@ -97,7 +97,7 @@ public class ZipFileStorage extends Storage {
             if (entry.isDirectory() && !name.endsWith("/")) {
                 name += "/";
             } else {
-                name = StringUtils.removeEnd(name, FileStorage.SUFFIX_PROPS);
+                name = StringUtils.removeEnd(name, DirStorage.SUFFIX_PROPS);
             }
             Path path = new Path(name);
             Path parent = path.parent();
@@ -149,7 +149,7 @@ public class ZipFileStorage extends Storage {
             return new Metadata(Index.class, path, path(), idx.lastModified());
         } else if (obj instanceof ZipEntry) {
             ZipEntry entry = (ZipEntry) obj;
-            if (entry.getName().endsWith(FileStorage.SUFFIX_PROPS)) {
+            if (entry.getName().endsWith(DirStorage.SUFFIX_PROPS)) {
                 return new Metadata(Dict.class, path, path(), entry.getTime());
             } else {
                 return new Metadata(Binary.class, path, path(), entry.getTime());
@@ -179,7 +179,7 @@ public class ZipFileStorage extends Storage {
             return obj;
         } else if (obj instanceof ZipEntry) {
             ZipEntry entry = (ZipEntry) obj;
-            if (entry.getName().endsWith(FileStorage.SUFFIX_PROPS)) {
+            if (entry.getName().endsWith(DirStorage.SUFFIX_PROPS)) {
                 try {
                     return PropertiesSerializer.read(zip, entry);
                 } catch (IOException e) {

@@ -29,22 +29,22 @@ import org.rapidcontext.core.data.PropertiesSerializer;
 import org.rapidcontext.util.FileUtil;
 
 /**
- * A persistent data storage and retrieval handler based on the file
- * system. This class will read and write both Java property files
- * and binary files depending on the object type provided. The
- * property files are used for all dictionary data storage and
- * retrieval.
+ * A persistent data storage and retrieval handler based on a file
+ * system directory. This class will read and write both Java
+ * property files and binary files depending on the object type
+ * provided. The property files are used for all dictionary data
+ * storage and retrieval.
  *
  * @author   Per Cederberg
  * @version  1.0
  */
-public class FileStorage extends Storage {
+public class DirStorage extends Storage {
 
     /**
      * The class logger.
      */
     private static final Logger LOG =
-        Logger.getLogger(FileStorage.class.getName());
+        Logger.getLogger(DirStorage.class.getName());
 
     /**
      * The file suffix used for properties files. These files are
@@ -58,13 +58,13 @@ public class FileStorage extends Storage {
     private File baseDir;
 
     /**
-     * Creates a new file storage.
+     * Creates a new directory storage.
      *
      * @param dir            the base data directory to use
      * @param readWrite      the read write flag
      */
-    public FileStorage(File dir, boolean readWrite) {
-        super("file", readWrite);
+    public DirStorage(File dir, boolean readWrite) {
+        super("dir", readWrite);
         this.baseDir = dir;
     }
 

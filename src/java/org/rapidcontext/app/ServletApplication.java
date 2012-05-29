@@ -38,7 +38,7 @@ import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.RootStorage;
 import org.rapidcontext.core.storage.Storage;
-import org.rapidcontext.core.storage.ZipFileStorage;
+import org.rapidcontext.core.storage.ZipStorage;
 import org.rapidcontext.core.type.Session;
 import org.rapidcontext.core.type.User;
 import org.rapidcontext.core.web.Mime;
@@ -104,7 +104,7 @@ public class ServletApplication extends HttpServlet {
         // TODO: move the doc directory into the system plug-in storage
         try {
             File docZip = new File(baseDir, "doc.zip");
-            ZipFileStorage docStore = new ZipFileStorage(docZip);
+            ZipStorage docStore = new ZipStorage(docZip);
             RootStorage root = (RootStorage) ctx.getStorage();
             Path storagePath = Storage.PATH_STORAGE.child("doc", true);
             Path overlayPath = FileRequestHandler.PATH_FILES.child("doc", true);

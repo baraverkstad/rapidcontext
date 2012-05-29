@@ -28,14 +28,14 @@ import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Library;
-import org.rapidcontext.core.storage.FileStorage;
+import org.rapidcontext.core.storage.DirStorage;
 import org.rapidcontext.core.storage.MemoryStorage;
 import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.storage.StorageException;
 import org.rapidcontext.core.storage.RootStorage;
-import org.rapidcontext.core.storage.ZipFileStorage;
+import org.rapidcontext.core.storage.ZipStorage;
 import org.rapidcontext.core.type.Type;
 import org.rapidcontext.util.FileUtil;
 
@@ -341,9 +341,9 @@ public class PluginManager {
         }
         try {
             if (file.isDirectory()) {
-                ps = new FileStorage(file, false);
+                ps = new DirStorage(file, false);
             } else {
-                ps = new ZipFileStorage(file);
+                ps = new ZipStorage(file);
             }
             if (isLegacyPlugin(pluginId, ps)) {
                 ps = new PluginUpgradeStorage(ps);
@@ -389,15 +389,15 @@ public class PluginManager {
      *             correctly
      */
     public String install(File file) throws PluginException {
-        ZipFileStorage  ps = null;
-        Dict            dict;
-        String          pluginId;
-        File            dst;
-        String          msg;
+        ZipStorage  storage = null;
+        Dict        dict;
+        String      pluginId;
+        File        dst;
+        String      msg;
 
         try {
-            ps = new ZipFileStorage(file);
-            dict = (Dict) ps.load(new Path("/plugin"));
+            storage = new ZipStorage(file);
+            dict = (Dict) storage.load(new Path("/plugin"));
             if (dict == null) {
                 throw new PluginException("missing plugin.properties");
             }
@@ -424,9 +424,9 @@ public class PluginManager {
             LOG.log(Level.WARNING, msg, e);
             throw new PluginException(msg + ": " + e.getMessage());
         } finally {
-            if (ps != null) {
+            if (storage != null) {
                 try {
-                    ps.destroy();
+                    storage.destroy();
                 } catch (Exception ignore) {
                     // Do nothing
                 }
