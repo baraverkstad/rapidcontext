@@ -103,7 +103,7 @@ public class Path {
      * @return a string representation of this object
      */
     public String toString() {
-        return "/" + toIdent(0);
+        return (parts.length == 0) ? "/" : "/" + toIdent(0);
     }
 
     /**
@@ -342,6 +342,9 @@ public class Path {
      *         a root path if the position was out of range
      */
     public Path subPath(int pos) {
+        if (pos <= 0) {
+            return this;
+        }
         int len = Math.max(Math.min(parts.length - pos, parts.length), 0);
         String[] newParts = new String[len];
         for (int i = 0; i < len; i++) {
