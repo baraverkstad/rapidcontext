@@ -32,9 +32,9 @@
 
 <!--START-->
 
-<h1>5. Server &amp; Plug-In Development</h1>
+<h1>4. Server-side &amp; Plug-In Development</h1>
 
-<h2 id="plugin_struct">5.1. Plug-in Structure</h2>
+<h2 id="plugin_struct">4.1. Plug-in Structure</h2>
 
 <p>All RapidContext server functionality is provided by plug-ins. The plug-ins
 are distributed as ZIP files named
@@ -107,7 +107,7 @@ special way. The <var>files</var> contains all the JavaScript code and images
 to make available to web browsers.</p>
 
 
-<h2 id="plugin_config">5.2. Plug-in Configuration</h2>
+<h2 id="plugin_config">4.2. Plug-in Configuration</h2>
 
 <p>Each plug-in must contain a <var>plugin.properties</var> configuration file.
 It is the only mandatory content of a plug-in and consists of the following
@@ -148,7 +148,7 @@ className = org.rapidcontext.app.plugin.example.ExamplePlugin
 in <var>plugin-build.xml</var> can be used for packaging the plug-in.</p>
 
 
-<h2 id="procedures">5.3. Procedures &amp; Procedure Types</h2>
+<h2 id="procedures">4.3. Procedures &amp; Procedure Types</h2>
 
 <p>Server-side operations can be added by creating <strong>procedures</strong>.
 Procedures can be invoked from the client or from other procedures and may take
@@ -184,7 +184,7 @@ additional plug-ins.</p>
 </ul>
 
 
-<h2 id="procedure_editing">5.4. Procedure Editing</h2>
+<h2 id="procedure_editing">4.4. Procedure Editing</h2>
 
 <p>Using the <strong>Admin</strong> app, it is easy to create or edit
 procedures of any type (except <var>built-in</var>). The screenshot below
@@ -229,7 +229,7 @@ directory inside the <var>local</var> plug-in. The files there can be copied to
 the corresponding plug-in development directory for packaging.</p>
 
 
-<h2 id="javascript">5.5. JavaScript Procedures</h2>
+<h2 id="javascript">4.5. JavaScript Procedures</h2>
 
 <p>The <var>javascript</var> procedure type allows creating generic server-side
 logic with minimum effort. The procedure consists of JavaScript code, which is

@@ -22,19 +22,19 @@
         { "topic": "3.5. Roles & Access Control", "url": "doc/3_admin.html#roles_access_control" },
         { "topic": "3.6. Security Checklist", "url": "doc/3_admin.html#security_checklist" }
     ] },
-    { "topic": "4. App Development", "url": "doc/4_app_dev.html", "children": [
-        { "topic": "4.1. Technology Reference", "url": "doc/4_app_dev.html#tech_ref" },
-        { "topic": "4.2. App Configuration", "url": "doc/4_app_dev.html#app_config" },
-        { "topic": "4.3. App Implementation", "url": "doc/4_app_dev.html#app_impl" },
-        { "topic": "4.4. User Interface XML", "url": "doc/4_app_dev.html#ui_xml" },
-        { "topic": "4.5. User Interface Style", "url": "doc/4_app_dev.html#ui_style" }
+    { "topic": "4. Server-side & Plug-In Development", "url": "doc/4_plugin_dev.html", "children": [
+        { "topic": "4.1. Plug-in Structure", "url": "doc/4_plugin_dev.html#plugin_struct" },
+        { "topic": "4.2. Plug-in Configuration", "url": "doc/4_plugin_dev.html#plugin_config" },
+        { "topic": "4.3. Procedures & Procedure Types", "url": "doc/4_plugin_dev.html#procedures" },
+        { "topic": "4.4. Procedure Editing", "url": "doc/4_plugin_dev.html#procedure_editing" },
+        { "topic": "4.5. JavaScript Procedures", "url": "doc/4_plugin_dev.html#javascript" }
     ] },
-    { "topic": "5. Plug-In Development & Distribution", "url": "doc/5_plugin_dev.html", "children": [
-        { "topic": "5.1. Plug-in Structure", "url": "doc/5_plugin_dev.html#plugin_struct" },
-        { "topic": "5.2. Plug-in Configuration", "url": "doc/5_plugin_dev.html#plugin_config" },
-        { "topic": "5.3. Procedures & Procedure Types", "url": "doc/5_plugin_dev.html#procedures" },
-        { "topic": "5.4. Procedure Editing", "url": "doc/5_plugin_dev.html#procedure_editing" },
-        { "topic": "5.5. JavaScript Procedures", "url": "doc/5_plugin_dev.html#javascript" }
+    { "topic": "5. App Development", "url": "doc/5_app_dev.html", "children": [
+        { "topic": "5.1. Technology Reference", "url": "doc/5_app_dev.html#tech_ref" },
+        { "topic": "5.2. App Configuration", "url": "doc/5_app_dev.html#app_config" },
+        { "topic": "5.3. App Implementation", "url": "doc/5_app_dev.html#app_impl" },
+        { "topic": "5.4. User Interface XML", "url": "doc/5_app_dev.html#ui_xml" },
+        { "topic": "5.5. User Interface Style", "url": "doc/5_app_dev.html#ui_style" }
     ] },
     { "topic": "6. Development Guidelines", "url": "doc/6_guidelines.html", "children": [
         { "topic": "6.1. Design Principle Usage", "url": "doc/6_guidelines.html#usage" },
