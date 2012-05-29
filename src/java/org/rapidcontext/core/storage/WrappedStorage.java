@@ -62,12 +62,12 @@ public class WrappedStorage extends Storage {
      *
      * @param path           the mount path (or storage root path)
      * @param readWrite      the storage read-write flag
-     * @param overlay        the mount overlay flag
+     * @param overlay        the mount overlay path
      * @param prio           the mount overlay priority
      */
     public void setMountInfo(Path path,
                              boolean readWrite,
-                             boolean overlay,
+                             Path overlay,
                              int prio) {
 
         wrapped.setMountInfo(path, readWrite, overlay, prio);

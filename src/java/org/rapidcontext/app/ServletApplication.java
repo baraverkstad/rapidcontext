@@ -37,6 +37,7 @@ import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.RootStorage;
+import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.storage.ZipFileStorage;
 import org.rapidcontext.core.type.Session;
 import org.rapidcontext.core.type.User;
@@ -105,8 +106,9 @@ public class ServletApplication extends HttpServlet {
             File docZip = new File(baseDir, "doc.zip");
             ZipFileStorage docStore = new ZipFileStorage(docZip);
             RootStorage root = (RootStorage) ctx.getStorage();
-            Path docPath = FileRequestHandler.PATH_FILES.child("doc", true);
-            root.mount(docStore, docPath, false, false, 0);
+            Path storagePath = Storage.PATH_STORAGE.child("doc", true);
+            Path overlayPath = FileRequestHandler.PATH_FILES.child("doc", true);
+            root.mount(docStore, storagePath, false, overlayPath, 0);
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "failed to mount doc storage", e);
         }

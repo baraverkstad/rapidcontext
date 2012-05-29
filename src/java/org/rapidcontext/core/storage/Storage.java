@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -52,12 +52,12 @@ public abstract class Storage extends StorableObject implements Comparable {
     public static final String KEY_MOUNT_TIME = "mountTime";
 
     /**
-     * The dictionary key for the mount overlay flag. The value
-     * stored is a boolean indicating if the storage has been mounted
-     * as a global overlay or not. If the storage has not been
+     * The dictionary key for the mount overlay path. The value
+     * stored is a path object indicating if the storage is also
+     * mounted as a global overlay. If the storage has not been
      * mounted at all, this key is not set.
      */
-    public static final String KEY_MOUNT_OVERLAY = "mountOverlay";
+    public static final String KEY_MOUNT_OVERLAY_PATH = "mountOverlayPath";
 
     /**
      * The dictionary key for the mount overlay priority. The value
@@ -66,6 +66,11 @@ public abstract class Storage extends StorableObject implements Comparable {
      * storage has not been mounted at all, this key is not set.
      */
     public static final String KEY_MOUNT_OVERLAY_PRIO = "mountOverlayPrio";
+
+    /**
+     * The base storage path for mounting a storage to the root.
+     */
+    public static final Path PATH_STORAGE = new Path("/storage/");
 
     /**
      * The storage information path. Each storage implementation
@@ -176,15 +181,16 @@ public abstract class Storage extends StorableObject implements Comparable {
     }
 
     /**
-     * Returns the mount overlay flag. This flag is set if the
-     * storage has been mounted as a global overlay. If the storage
-     * has not been mounted at all, false will be returned.
+     * Returns the mount overlay path. This value is set if the
+     * storage has been mounted as a global overlay (to the path
+     * returned). If the storage has not been mounted at all, null
+     * will be returned.
      *
-     * @return true if the storage is mounted as a global overlay, or
-     *         false otherwise
+     * @return the storage mount overlay path, or
+     *         null if no mount overlay is used
      */
-    public boolean mountOverlay() {
-        return dict.getBoolean(KEY_MOUNT_OVERLAY, false);
+    public Path mountOverlayPath() {
+        return (Path) dict.get(KEY_MOUNT_OVERLAY_PATH);
     }
 
     /**
@@ -204,20 +210,20 @@ public abstract class Storage extends StorableObject implements Comparable {
      *
      * @param path           the mount path (or storage root path)
      * @param readWrite      the storage read-write flag
-     * @param overlay        the mount overlay flag
+     * @param overlay        the mount overlay path
      * @param prio           the mount overlay priority
      */
     public void setMountInfo(Path path,
                              boolean readWrite,
-                             boolean overlay,
+                             Path overlay,
                              int prio) {
 
         lastMountTime = Math.max(System.currentTimeMillis(), lastMountTime + 1);
         dict.set(KEY_MOUNT_PATH, path == null ? Path.ROOT : path);
         dict.set(KEY_MOUNT_TIME, new Date(lastMountTime));
         dict.setBoolean(KEY_READWRITE, readWrite);
-        dict.setBoolean(KEY_MOUNT_OVERLAY, overlay);
-        dict.setInt(KEY_MOUNT_OVERLAY_PRIO, overlay ? prio : -1);
+        dict.set(KEY_MOUNT_OVERLAY_PATH, overlay);
+        dict.setInt(KEY_MOUNT_OVERLAY_PRIO, (overlay != null) ? prio : -1);
     }
 
     /**

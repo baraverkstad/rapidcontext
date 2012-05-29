@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.task.Scheduler;
@@ -138,21 +139,32 @@ public class RootStorage extends Storage {
     }
 
     /**
-     * Sets or removes a storage at a specific storage location.
+     * Creates or removes the storage metadata. The metadata needs to
+     * be updated with the mount points and mount overlay points in
+     * order to create all the intermediate indices.
      *
-     * @param path           the storage mount path
-     * @param storage        the storage to add, or null to remove
+     * @param storage        the storage to update for
+     * @param update         the boolean update or remove flag
      *
      * @throws StorageException if the data couldn't be written
      */
-    private void setMountedStorage(Path path, Storage storage)
+    private void updateStorageMetadata(Storage storage, boolean update)
     throws StorageException {
 
-        path = path.child("storage", false);
-        if (storage == null) {
-            metadata.remove(path);
-        } else {
+        Path path = storage.path().child("storage", false);
+        if (update) {
             metadata.store(path, storage);
+        } else {
+            metadata.remove(path);
+        }
+        Path overlay = storage.mountOverlayPath();
+        if (overlay != null) {
+            overlay = overlay.child(".", false);
+            if (update) {
+                metadata.store(overlay, ObjectUtils.NULL);
+            } else {
+                metadata.remove(overlay);
+            }
         }
     }
 
@@ -161,16 +173,16 @@ public class RootStorage extends Storage {
      * path.
      *
      * @param path           the storage mount path
-     * @param exist          the create or remove flag
+     * @param overlay        the root overlay path
      */
-    private void updateStorageCache(Path path, boolean exist) {
+    private void updateStorageCache(Path path, Path overlay) {
         MemoryStorage  cache;
 
-        if (exist && !cacheStorages.containsKey(path)) {
+        if (overlay != null && !cacheStorages.containsKey(path)) {
             cache = new MemoryStorage(true);
-            cache.setMountInfo(path, true, true, 1);
+            cache.setMountInfo(path, true, overlay, 1);
             cacheStorages.put(path, cache);
-        } else if (!exist && cacheStorages.containsKey(path)) {
+        } else if (overlay == null && cacheStorages.containsKey(path)) {
             cache = (MemoryStorage) cacheStorages.get(path);
             cacheRemove(cache, Path.ROOT, false, true);
             cache.destroy();
@@ -189,7 +201,7 @@ public class RootStorage extends Storage {
      * @param storage        the storage to mount
      * @param path           the mount path
      * @param readWrite      the read write flag
-     * @param overlay        the root overlay flag
+     * @param overlay        the root overlay path
      * @param prio           the root overlay search priority (higher numbers
      *                       are searched before lower numbers)
      *
@@ -198,7 +210,7 @@ public class RootStorage extends Storage {
     public void mount(Storage storage,
                       Path path,
                       boolean readWrite,
-                      boolean overlay,
+                      Path overlay,
                       int prio)
     throws StorageException {
 
@@ -214,7 +226,7 @@ public class RootStorage extends Storage {
             throw new StorageException(msg);
         }
         storage.setMountInfo(path, readWrite, overlay, prio);
-        setMountedStorage(path, storage);
+        updateStorageMetadata(storage, true);
         mountedStorages.add(storage);
         mountedStorages.sort();
         updateStorageCache(path, overlay);
@@ -226,24 +238,24 @@ public class RootStorage extends Storage {
      *
      * @param path           the mount path
      * @param readWrite      the read write flag
-     * @param overlay        the root overlay flag
+     * @param overlay        the root overlay path
      * @param prio           the root overlay search priority (higher numbers
      *                       are searched before lower numbers)
      *
      * @throws StorageException if the storage couldn't be remounted
      */
-    public void remount(Path path, boolean readWrite, boolean overlay, int prio)
+    public void remount(Path path, boolean readWrite, Path overlay, int prio)
     throws StorageException {
 
-        Storage  storage = getMountedStorage(path, true);
-        String   msg;
-
+        Storage storage = getMountedStorage(path, true);
         if (storage == null) {
-            msg = "no mounted storage found matching path: " + path;
+            String msg = "no mounted storage found matching path: " + path;
             LOG.warning(msg);
             throw new StorageException(msg);
         }
+        updateStorageMetadata(storage, false);
         storage.setMountInfo(storage.path(), readWrite, overlay, prio);
+        updateStorageMetadata(storage, true);
         mountedStorages.sort();
         updateStorageCache(path, overlay);
     }
@@ -266,9 +278,9 @@ public class RootStorage extends Storage {
             LOG.warning(msg);
             throw new StorageException(msg);
         }
-        updateStorageCache(path, false);
+        updateStorageCache(path, null);
         mountedStorages.remove(mountedStorages.indexOf(storage));
-        setMountedStorage(path, null);
+        updateStorageMetadata(storage, false);
         storage.destroy();
     }
 
@@ -311,8 +323,10 @@ public class RootStorage extends Storage {
             meta = metadata.lookup(path);
             for (int i = 0; i < mountedStorages.size(); i++) {
                 storage = (Storage) mountedStorages.get(i);
-                if (storage.mountOverlay()) {
-                    meta = Metadata.merge(meta, lookupObject(storage, path));
+                Path overlay = storage.mountOverlayPath();
+                if (overlay != null && path.startsWith(overlay)) {
+                    Path subpath = path.subPath(overlay.depth());
+                    meta = Metadata.merge(meta, lookupObject(storage, subpath));
                 }
             }
             return meta;
@@ -372,13 +386,15 @@ public class RootStorage extends Storage {
             res = metadata.load(path);
             if (res instanceof Index) {
                 idx = (Index) res;
-            } else if (res != null) {
+            } else if (res != null && res != ObjectUtils.NULL) {
                 return res;
             }
             for (int i = 0; i < mountedStorages.size(); i++) {
                 storage = (Storage) mountedStorages.get(i);
-                if (storage.mountOverlay()) {
-                    res = loadObject(storage, path);
+                Path overlay = storage.mountOverlayPath();
+                if (overlay != null && path.startsWith(overlay)) {
+                    Path subpath = path.subPath(overlay.depth());
+                    res = loadObject(storage, subpath);
                     if (res instanceof Index) {
                         idx = Index.merge(idx, (Index) res);
                     } else if (res != null) {
@@ -521,10 +537,13 @@ public class RootStorage extends Storage {
             }
             for (int i = 0; i < mountedStorages.size(); i++) {
                 storage = (Storage) mountedStorages.get(i);
-                if (storage.isReadWrite() && storage.mountOverlay()) {
-                    storage.store(path, data);
+                Path overlay = storage.mountOverlayPath();
+                boolean isMatch = (overlay != null) && path.startsWith(overlay);
+                if (storage.isReadWrite() && isMatch) {
+                    Path subpath = path.subPath(overlay.depth());
+                    storage.store(subpath, data);
                     if (caching) {
-                        cacheAdd(storage.path(), path, data);
+                        cacheAdd(storage.path(), subpath, data);
                     }
                     return;
                 }
@@ -572,8 +591,11 @@ public class RootStorage extends Storage {
             }
             for (int i = 0; i < mountedStorages.size(); i++) {
                 storage = (Storage) mountedStorages.get(i);
-                if (storage.isReadWrite() && storage.mountOverlay()) {
-                    storage.remove(path);
+                Path overlay = storage.mountOverlayPath();
+                boolean isMatch = (overlay != null) && path.startsWith(overlay);
+                if (storage.isReadWrite() && isMatch) {
+                    Path subpath = path.subPath(overlay.depth());
+                    storage.remove(subpath);
                 }
             }
         }

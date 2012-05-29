@@ -57,12 +57,14 @@ public class PluginManager {
     /**
      * The storage path to the in-memory storage.
      */
-    public static final Path PATH_STORAGE_MEMORY = new Path("/storage/memory/");
+    public static final Path PATH_STORAGE_MEMORY =
+        Storage.PATH_STORAGE.child("memory", true);
 
     /**
      * The storage path to the mounted plug-in file storages.
      */
-    public static final Path PATH_STORAGE_PLUGIN = new Path("/storage/plugin/");
+    public static final Path PATH_STORAGE_PLUGIN =
+        Storage.PATH_STORAGE.child("plugin", true);
 
     /**
      * The storage path to the loaded plug-in objects.
@@ -170,7 +172,7 @@ public class PluginManager {
         this.storage = storage;
         try {
             MemoryStorage memory = new MemoryStorage(true);
-            storage.mount(memory, PATH_STORAGE_MEMORY, true, true, 50);
+            storage.mount(memory, PATH_STORAGE_MEMORY, true, Path.ROOT, 50);
         } catch (StorageException e) {
             LOG.log(Level.SEVERE, "failed to create memory storage", e);
         }
@@ -346,7 +348,7 @@ public class PluginManager {
             if (isLegacyPlugin(pluginId, ps)) {
                 ps = new PluginUpgradeStorage(ps);
             }
-            storage.mount(ps, storagePath(pluginId), false, false, 0);
+            storage.mount(ps, storagePath(pluginId), false, null, 0);
         } catch (Exception e) {
             msg = "failed to create " + pluginId + " plug-in storage";
             LOG.log(Level.SEVERE, msg, e);
@@ -534,7 +536,7 @@ public class PluginManager {
         String   msg;
 
         try {
-            storage.remount(storagePath(pluginId), readWrite, true, prio);
+            storage.remount(storagePath(pluginId), readWrite, Path.ROOT, prio);
         } catch (StorageException e) {
             msg = "failed to overlay " + pluginId + " plug-in storage";
             LOG.log(Level.SEVERE, msg, e);
@@ -565,7 +567,7 @@ public class PluginManager {
             LOG.log(Level.SEVERE, msg, e);
         }
         try {
-            storage.remount(storagePath(pluginId), false, false, 0);
+            storage.remount(storagePath(pluginId), false, null, 0);
         } catch (StorageException e) {
             msg = "plugin " + pluginId + " storage remount failed";
             LOG.log(Level.WARNING, msg, e);
