@@ -431,6 +431,7 @@ public class RootStorage extends Storage {
      */
     private Object loadObject(Storage storage, Path path) {
         MemoryStorage  cache;
+        Index          idx = null;
         Object         res = null;
         String         id;
         String         msg;
@@ -439,7 +440,9 @@ public class RootStorage extends Storage {
         cache = (MemoryStorage) cacheStorages.get(storage.path());
         if (cache != null) {
             res = cache.load(path);
-            if (res instanceof StorableObject && !(res instanceof Index)) {
+            if (res instanceof Index) {
+                idx = (Index) res;
+            } else if (res instanceof StorableObject) {
                 LOG.fine("loaded " + path + " value from cache: " + res);
                 ((StorableObject) res).activate();
                 return res;
@@ -461,7 +464,11 @@ public class RootStorage extends Storage {
                 }
             }
         }
-        return res;
+        if (idx != null && (res == null || res instanceof Index)) {
+            return Index.merge(idx, (Index) res);
+        } else {
+            return res;
+        }
     }
 
     /**
