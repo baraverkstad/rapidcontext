@@ -30,7 +30,6 @@ import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Library;
 import org.rapidcontext.core.storage.DirStorage;
-import org.rapidcontext.core.storage.MemoryStorage;
 import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.Storage;
@@ -54,12 +53,6 @@ public class PluginManager {
      */
     private static final Logger LOG =
         Logger.getLogger(PluginManager.class.getName());
-
-    /**
-     * The storage path to the in-memory storage.
-     */
-    public static final Path PATH_STORAGE_MEMORY =
-        Storage.PATH_STORAGE.child("memory", true);
 
     /**
      * The storage path to the mounted plug-in file storages.
@@ -156,8 +149,9 @@ public class PluginManager {
      * @return the plug-in instance path
      */
     public static Path pluginPath(String pluginId) {
-        Path rootRelative = PATH_PLUGIN.child(pluginId, false);
-        return PATH_STORAGE_MEMORY.descendant(rootRelative);
+        Path storagePath = storagePath(pluginId).subPath(1);
+        Path cachePath = Storage.PATH_STORAGE_CACHE.descendant(storagePath);
+        return cachePath.descendant(PATH_PLUGIN.child(pluginId, false));
     }
 
     /**
@@ -192,12 +186,6 @@ public class PluginManager {
         this.builtinDir = builtinDir;
         this.pluginDir = pluginDir;
         this.storage = storage;
-        try {
-            MemoryStorage memory = new MemoryStorage(true, true);
-            storage.mount(memory, PATH_STORAGE_MEMORY, true, Path.ROOT, 50);
-        } catch (StorageException e) {
-            LOG.log(Level.SEVERE, "failed to create memory storage", e);
-        }
         try {
             createStorage(SYSTEM_PLUGIN);
             loadOverlay(SYSTEM_PLUGIN);
