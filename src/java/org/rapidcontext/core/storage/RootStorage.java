@@ -114,7 +114,8 @@ public class RootStorage extends Storage {
      * Returns the storage at a specific storage location. If the
      * exact match flag is set, the path must exactly match the mount
      * point of a storage. If exact matching is not required, the
-     * parent storage for the path will be returned.
+     * parent storage for the path will be returned. This method will
+     * also search for matching cache storages.
      *
      * @param path           the storage location
      * @param exact          the exact match flag
@@ -130,6 +131,13 @@ public class RootStorage extends Storage {
         } else {
             for (int i = 0; i < mountedStorages.size(); i++) {
                 Storage storage = (Storage) mountedStorages.get(i);
+                if (path.startsWith(storage.path())) {
+                    return storage;
+                }
+            }
+            Iterator iter = cacheStorages.values().iterator();
+            while (iter.hasNext()) {
+                Storage storage = (Storage) iter.next();
                 if (path.startsWith(storage.path())) {
                     return storage;
                 }
@@ -158,7 +166,7 @@ public class RootStorage extends Storage {
             metadata.remove(path);
         }
         Path overlay = storage.mountOverlayPath();
-        if (overlay != null) {
+        if (overlay != null && !overlay.isRoot()) {
             overlay = overlay.child(".", false);
             if (update) {
                 metadata.store(overlay, ObjectUtils.NULL);
@@ -174,19 +182,25 @@ public class RootStorage extends Storage {
      *
      * @param path           the storage mount path
      * @param overlay        the root overlay path
+     *
+     * @throws StorageException if the cache couldn't be created or
+     *             removed
      */
-    private void updateStorageCache(Path path, Path overlay) {
-        MemoryStorage  cache;
+    private void updateStorageCache(Path path, Path overlay)
+    throws StorageException {
 
-        if (overlay != null && !cacheStorages.containsKey(path)) {
+        Path cachePath = Storage.PATH_STORAGE_CACHE.descendant(path.subPath(1));
+        MemoryStorage cache = (MemoryStorage) cacheStorages.get(path);
+        if (overlay != null && cache == null) {
             cache = new MemoryStorage(true, true);
-            cache.setMountInfo(path, true, overlay, 1);
+            cache.setMountInfo(cachePath, true, overlay, 0);
+            updateStorageMetadata(cache, true);
             cacheStorages.put(path, cache);
-        } else if (overlay == null && cacheStorages.containsKey(path)) {
-            cache = (MemoryStorage) cacheStorages.get(path);
+        } else if (overlay == null && cache != null) {
+            updateStorageMetadata(cache, false);
+            cacheStorages.remove(path);
             cacheRemove(cache, Path.ROOT, false, true);
             cache.destroy();
-            cacheStorages.remove(path);
         }
     }
 
@@ -351,11 +365,8 @@ public class RootStorage extends Storage {
         cache = (MemoryStorage) cacheStorages.get(storage.path());
         if (cache != null) {
             meta = cache.lookup(path);
-            if (meta != null && meta.isObject()) {
-                return meta;
-            }
         }
-        return storage.lookup(path);
+        return Metadata.merge(meta, storage.lookup(path));
     }
 
     /**

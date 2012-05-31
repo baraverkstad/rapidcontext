@@ -69,6 +69,12 @@ public abstract class Storage extends StorableObject implements Comparable {
     public static final Path PATH_STORAGE = new Path("/storage/");
 
     /**
+     * The base storage path for the storage caches.
+     */
+    public static final Path PATH_STORAGE_CACHE =
+        PATH_STORAGE.child("cache", true);
+
+    /**
      * The storage information path. Each storage implementation
      * should provide introspection abilities by returning it's
      * own dictionary when queried for this path.
