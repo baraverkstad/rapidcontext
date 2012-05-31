@@ -123,6 +123,9 @@ public class MemoryStorage extends Storage {
      *         null if not found
      */
     public Metadata lookup(Path path) {
+        if (storageInfo && PATH_STORAGEINFO.equals(path)) {
+            return new Metadata(Dict.class, path, path(), mountTime());
+        }
         Object obj = meta.get(path);
         if (obj instanceof Index) {
             Index idx = (Index) obj;
