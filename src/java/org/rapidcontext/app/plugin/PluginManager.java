@@ -25,6 +25,7 @@ import java.util.logging.Logger;
 
 import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.StringUtils;
+import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Library;
@@ -157,6 +158,27 @@ public class PluginManager {
     public static Path pluginPath(String pluginId) {
         Path rootRelative = PATH_PLUGIN.child(pluginId, false);
         return PATH_STORAGE_MEMORY.descendant(rootRelative);
+    }
+
+    /**
+     * Returns the plug-in identifier for a storage object. The
+     * object storage paths will be used to return the first matching
+     * plug-in.
+     *
+     * @param meta           the metadata object
+     *
+     * @return the plug-in identifier, or
+     *         null if not found
+     */
+    public static String pluginId(Metadata meta) {
+        Array paths = meta.storagePaths();
+        for (int i = 0; i < paths.size(); i++) {
+            Path path = (Path) paths.get(i);
+            if (path.startsWith(PATH_STORAGE_PLUGIN)) {
+                return path.name();
+            }
+        }
+        return null;
     }
 
     /**

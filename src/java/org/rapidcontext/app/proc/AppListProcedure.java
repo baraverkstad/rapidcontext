@@ -16,6 +16,7 @@ package org.rapidcontext.app.proc;
 
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.app.plugin.Plugin;
+import org.rapidcontext.app.plugin.PluginManager;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
@@ -118,29 +119,25 @@ public class AppListProcedure implements Procedure, Restricted {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        ApplicationContext  ctx = ApplicationContext.getInstance();
-        Storage             storage = cx.getStorage();
-        Dict                plugin;
-        Metadata[]          list;
-        Dict                dict;
-        Path                path;
-        Array               res;
-
-        list = storage.lookupAll(PATH_APP);
-        res = new Array(list.length);
+        ApplicationContext ctx = ApplicationContext.getInstance();
+        Storage storage = cx.getStorage();
+        Metadata[] list = storage.lookupAll(PATH_APP);
+        Array res = new Array(list.length);
         for (int i = 0; i < list.length; i++) {
             String id = list[i].path().toIdent(PATH_APP);
             // TODO: Replace this temporary access check with generic method
             if (SecurityContext.hasAccess("app", id) &&
                 Dict.class.isAssignableFrom(list[i].classInstance())) {
 
-                path = (Path) list[i].storagePaths().get(0);
-                plugin = ctx.pluginConfig(path.name());
-                dict = new Dict();
+                Dict dict = new Dict();
                 dict.set("id", id);
-                if (plugin != null) {
-                    dict.set("plugin", plugin.get(Plugin.KEY_ID));
-                    dict.set("version", plugin.get("version"));
+                String pluginId = PluginManager.pluginId(list[i]);
+                if (pluginId != null) {
+                    Dict plugin = ctx.pluginConfig(pluginId);
+                    if (plugin != null) {
+                        dict.set("plugin", plugin.get(Plugin.KEY_ID));
+                        dict.set("version", plugin.get("version"));
+                    }
                 }
                 dict.addAll((Dict) storage.load(list[i].path()));
                 res.add(dict);

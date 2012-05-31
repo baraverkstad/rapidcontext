@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.logging.Logger;
 
+import org.rapidcontext.app.plugin.PluginManager;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
@@ -251,7 +252,7 @@ public class Library {
         if (builtInPlugins.containsKey(name)) {
             return (String) builtInPlugins.get(name);
         } else if (meta != null) {
-            return ((Path) meta.storagePaths().get(0)).name();
+            return PluginManager.pluginId(meta);
         }
         return null;
     }

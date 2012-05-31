@@ -14,6 +14,7 @@
 
 package org.rapidcontext.app.proc;
 
+import org.rapidcontext.app.plugin.PluginManager;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
@@ -23,7 +24,6 @@ import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.Restricted;
 import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Metadata;
-import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.type.Connection;
 
 /**
@@ -126,8 +126,7 @@ public class ConnectionListProcedure implements Procedure, Restricted {
                 }
             }
             if (dict != null) {
-                Path path = (Path) meta[i].storagePaths().get(0);
-                dict.add("plugin", path.name());
+                dict.add("plugin", PluginManager.pluginId(meta[i]));
                 res.add(dict);
             }
         }
