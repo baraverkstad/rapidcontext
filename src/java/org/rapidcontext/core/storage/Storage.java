@@ -36,7 +36,8 @@ public abstract class Storage extends StorableObject implements Comparable {
 
     /**
      * The dictionary key for the mount path. The value stored is a
-     * path object, using the root path by default.
+     * path object. If the storage is not mounted, this key is not
+     * set or has a null value.
      */
     public static final String KEY_MOUNT_PATH = "mountPath";
 
@@ -91,8 +92,6 @@ public abstract class Storage extends StorableObject implements Comparable {
         super(null, "storage/" + storageType);
         dict.remove(KEY_ID);
         dict.setBoolean(KEY_READWRITE, readWrite);
-        dict.set(KEY_MOUNT_PATH, Path.ROOT);
-        dict.set(KEY_MOUNT_TIME, new Date());
     }
 
     /**
@@ -123,10 +122,12 @@ public abstract class Storage extends StorableObject implements Comparable {
     /**
      * Returns the storage mount path.
      *
-     * @return the storage mount path
+     * @return the storage mount path, or
+     *         the root path if the storage isn't mounted
      */
     public Path path() {
-        return (Path) dict.get(KEY_MOUNT_PATH);
+        Path path = (Path) dict.get(KEY_MOUNT_PATH);
+        return (path == null) ? Path.ROOT : path;
     }
 
     /**
@@ -157,12 +158,14 @@ public abstract class Storage extends StorableObject implements Comparable {
     }
 
     /**
-     * Returns the storage mount or creation time.
+     * Returns the storage mount time.
      *
-     * @return the storage mount or creation time
+     * @return the storage mount time, or
+     *         the current system time if not mounted
      */
     public Date mountTime() {
-        return (Date) dict.get(KEY_MOUNT_TIME);
+        Date date = (Date) dict.get(KEY_MOUNT_TIME);
+        return (date == null) ? new Date() : date;
     }
 
     /**
@@ -204,7 +207,7 @@ public abstract class Storage extends StorableObject implements Comparable {
                              int prio) {
 
         lastMountTime = Math.max(System.currentTimeMillis(), lastMountTime + 1);
-        dict.set(KEY_MOUNT_PATH, path == null ? Path.ROOT : path);
+        dict.set(KEY_MOUNT_PATH, path);
         dict.set(KEY_MOUNT_TIME, new Date(lastMountTime));
         dict.setBoolean(KEY_READWRITE, readWrite);
         dict.set(KEY_MOUNT_OVERLAY_PATH, overlay);
