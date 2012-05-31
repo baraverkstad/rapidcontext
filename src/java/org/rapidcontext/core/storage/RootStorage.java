@@ -72,7 +72,7 @@ public class RootStorage extends Storage {
      * their corresponding mount path (appended to form an object
      * path instead of an index path).
      */
-    private MemoryStorage metadata = new MemoryStorage(true);
+    private MemoryStorage metadata = new MemoryStorage(true, false);
 
     /**
      * The sorted array of mounted storages. This array is sorted
@@ -179,7 +179,7 @@ public class RootStorage extends Storage {
         MemoryStorage  cache;
 
         if (overlay != null && !cacheStorages.containsKey(path)) {
-            cache = new MemoryStorage(true);
+            cache = new MemoryStorage(true, true);
             cache.setMountInfo(path, true, overlay, 1);
             cacheStorages.put(path, cache);
         } else if (overlay == null && cacheStorages.containsKey(path)) {

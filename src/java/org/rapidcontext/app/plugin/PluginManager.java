@@ -171,7 +171,7 @@ public class PluginManager {
         this.pluginDir = pluginDir;
         this.storage = storage;
         try {
-            MemoryStorage memory = new MemoryStorage(true);
+            MemoryStorage memory = new MemoryStorage(true, true);
             storage.mount(memory, PATH_STORAGE_MEMORY, true, Path.ROOT, 50);
         } catch (StorageException e) {
             LOG.log(Level.SEVERE, "failed to create memory storage", e);

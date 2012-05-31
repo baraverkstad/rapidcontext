@@ -18,6 +18,7 @@ import java.util.LinkedHashMap;
 import java.util.logging.Logger;
 
 import org.rapidcontext.core.data.Array;
+import org.rapidcontext.core.data.Dict;
 
 /**
  * A persistent data storage and retrieval handler based on an
@@ -53,12 +54,20 @@ public class MemoryStorage extends Storage {
     private LinkedHashMap meta = new LinkedHashMap();
 
     /**
+     * The show storage info flag. When set to true, the
+     * "/storageinfo" path will be enabled for this storage.
+     */
+    private boolean storageInfo;
+
+    /**
      * Creates a new memory storage.
      *
      * @param readWrite      the read write flag
+     * @param storageInfo    the show storage info flag
      */
-    public MemoryStorage(boolean readWrite) {
+    public MemoryStorage(boolean readWrite, boolean storageInfo) {
         super("memory", readWrite);
+        this.storageInfo = storageInfo;
     }
 
     /**
@@ -70,6 +79,18 @@ public class MemoryStorage extends Storage {
         meta.clear();
         objects = null;
         meta = null;
+    }
+
+    /**
+     * Returns a serialized representation of this object. Used when
+     * accessing the object from outside pure Java.
+     *
+     * @return the serialized representation of this object
+     */
+    public Dict serialize() {
+        dict.setInt("_objectCount", objects.size());
+        dict.setInt("_metadataCount", meta.size());
+        return dict;
     }
 
     /**
@@ -94,6 +115,9 @@ public class MemoryStorage extends Storage {
      *         null if not found
      */
     public Metadata lookup(Path path) {
+        if (storageInfo && PATH_STORAGEINFO.equals(path)) {
+            return new Metadata(Dict.class, path, path(), mountTime());
+        }
         Object obj = meta.get(path);
         if (obj instanceof Index) {
             Index idx = (Index) obj;
@@ -115,6 +139,9 @@ public class MemoryStorage extends Storage {
      *         null if not found
      */
     public Object load(Path path) {
+        if (storageInfo && PATH_STORAGEINFO.equals(path)) {
+            return serialize();
+        }
         if (path.isIndex()) {
             Object obj = meta.get(path);
             return (obj instanceof Index) ? obj : null;
