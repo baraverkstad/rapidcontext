@@ -224,6 +224,19 @@ public class Metadata extends StorableObject {
     }
 
     /**
+     * Checks if the object category is an object of the specified
+     * class (or a subclass).
+     *
+     * @param clazz          the object class
+     *
+     * @return true if the object category is a matching object, or
+     *         false otherwise
+     */
+    public boolean isObject(Class clazz) {
+        return isObject() && clazz.isAssignableFrom(classInstance());
+    }
+
+    /**
      * Checks if the object category is binary.
      *
      * @return true if the object category is binary, or
