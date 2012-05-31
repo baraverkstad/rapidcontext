@@ -47,15 +47,16 @@ public class DirStorage extends Storage {
         Logger.getLogger(DirStorage.class.getName());
 
     /**
+     * The dictionary key for the base directory. The value stored is
+     * a file object.
+     */
+    public static final String KEY_DIR = "dir";
+
+    /**
      * The file suffix used for properties files. These files are
      * used for serializing dictionary objects to files.
      */
     public static final String SUFFIX_PROPS = ".properties";
-
-    /**
-     * The base directory for storing data files.
-     */
-    private File baseDir;
 
     /**
      * Creates a new directory storage.
@@ -65,7 +66,16 @@ public class DirStorage extends Storage {
      */
     public DirStorage(File dir, boolean readWrite) {
         super("dir", readWrite);
-        this.baseDir = dir;
+        dict.set(KEY_DIR, dir);
+    }
+
+    /**
+     * Returns the base directory for the storage data files.
+     *
+     * @return the base directory for data files
+     */
+    public File dir() {
+        return (File) dict.get(KEY_DIR);
     }
 
     /**
@@ -240,7 +250,7 @@ public class DirStorage extends Storage {
                     FileUtil.deleteFiles(file);
                 } else {
                     FileUtil.delete(file);
-                    FileUtil.deleteEmptyDirs(baseDir);
+                    FileUtil.deleteEmptyDirs(dir());
                 }
             } catch (IOException e) {
                 msg = "failed to remove " + file + ": " + e.getMessage();
@@ -261,12 +271,11 @@ public class DirStorage extends Storage {
      * @return the last directory referenced by the path
      */
     private File locateDir(Path path) {
-        File dir = baseDir;
-
+        File subDir = dir();
         for (int i = 0; i < path.depth(); i++) {
-            dir = new File(dir, path.name(i));
+            subDir = new File(subDir, path.name(i));
         }
-        return dir;
+        return subDir;
     }
 
     /**
