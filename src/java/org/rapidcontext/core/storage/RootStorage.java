@@ -234,6 +234,10 @@ public class RootStorage extends Storage {
             msg = "cannot mount storage to a non-index path: " + path;
             LOG.warning(msg);
             throw new StorageException(msg);
+        } else if (!path.startsWith(PATH_STORAGE)) {
+            msg = "cannot mount storage to a non-storage path: " + path;
+            LOG.warning(msg);
+            throw new StorageException(msg);
         } else if (metadata.lookup(path) != null) {
             msg = "storage mount path conflicts with another mount: " + path;
             LOG.warning(msg);
