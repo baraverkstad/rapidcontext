@@ -15,6 +15,7 @@
 package org.rapidcontext.core.storage;
 
 import java.util.LinkedHashMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.rapidcontext.core.data.Array;
@@ -68,6 +69,13 @@ public class MemoryStorage extends Storage {
     public MemoryStorage(boolean readWrite, boolean storageInfo) {
         super("memory", readWrite);
         this.storageInfo = storageInfo;
+        if (storageInfo) {
+            try {
+                store(PATH_STORAGEINFO, dict);
+            } catch (StorageException e) {
+                LOG.log(Level.WARNING, "internal error in memory storage", e);
+            }
+        }
     }
 
     /**
@@ -115,9 +123,6 @@ public class MemoryStorage extends Storage {
      *         null if not found
      */
     public Metadata lookup(Path path) {
-        if (storageInfo && PATH_STORAGEINFO.equals(path)) {
-            return new Metadata(Dict.class, path, path(), mountTime());
-        }
         Object obj = meta.get(path);
         if (obj instanceof Index) {
             Index idx = (Index) obj;
@@ -200,7 +205,9 @@ public class MemoryStorage extends Storage {
             LOG.warning(msg);
             throw new StorageException(msg);
         }
-        remove(path, true);
+        if (!storageInfo || !PATH_STORAGEINFO.equals(path)) {
+            remove(path, true);
+        }
     }
 
     /**
