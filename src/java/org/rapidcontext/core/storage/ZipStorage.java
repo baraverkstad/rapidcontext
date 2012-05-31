@@ -52,9 +52,10 @@ public class ZipStorage extends Storage {
         Logger.getLogger(ZipStorage.class.getName());
 
     /**
-     * The ZIP file being read.
+     * The dictionary key for the ZIP file location. The value stored
+     * is a file object.
      */
-    protected File file;
+    public static final String KEY_FILE = "file";
 
     /**
      * The ZIP file used for locating resources.
@@ -76,7 +77,7 @@ public class ZipStorage extends Storage {
      */
     public ZipStorage(File zipFile) throws IOException {
         super("zip", false);
-        this.file = zipFile;
+        dict.set(KEY_FILE, zipFile);
         this.zip = new ZipFile(zipFile);
         init();
     }
@@ -88,7 +89,7 @@ public class ZipStorage extends Storage {
     public void init() {
         Index idx = new Index(Path.ROOT);
         idx.addObject(PATH_STORAGEINFO.name());
-        idx.updateLastModified(new Date(file.lastModified()));
+        idx.updateLastModified(new Date(file().lastModified()));
         entries.put(Path.ROOT, idx);
         Enumeration e = zip.entries();
         while (e.hasMoreElements()) {
@@ -125,8 +126,17 @@ public class ZipStorage extends Storage {
             entries.clear();
             zip.close();
         } catch (Exception e) {
-            LOG.log(Level.WARNING, "failed to closed zip file: " + file, e);
+            LOG.log(Level.WARNING, "failed to close zip file: " + file(), e);
         }
+    }
+
+    /**
+     * Returns the ZIP file being read by this storage.
+     *
+     * @return the ZIP file being read
+     */
+    public File file() {
+        return (File) dict.get(KEY_FILE);
     }
 
     /**
