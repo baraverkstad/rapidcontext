@@ -20,6 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.net.util.SubnetUtils;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
@@ -271,6 +272,21 @@ public class Session extends StorableObject {
     }
 
     /**
+     * Checks if an IP address is valid for this session. All IP
+     * addresses sharing the same initial 20 bits are considered
+     * valid.
+     *
+     * @param ip             the IP address to check
+     *
+     * @return true if the IP address is valid, or
+     *         false otherwise
+     */
+    public boolean isValidIp(String ip) {
+        return ip().equals(ip) ||
+               new SubnetUtils(ip() + "/20").getInfo().isInRange(ip);
+    }
+
+    /**
      * Returns the session user identifier.
      *
      * @return the session user identifier.
@@ -413,7 +429,7 @@ public class Session extends StorableObject {
         if (!isValid()) {
             throw new SecurityException("Session has expired");
         }
-        if (!ip().equals(ip)) {
+        if (!isValidIp(ip)) {
             msg = "Attempt to re-bind HTTP session from IP '" + ip() +
                   "' to '" + ip + "', invalidating session";
             invalidate();
