@@ -486,25 +486,19 @@ public class RootStorage extends Storage {
      *         the input dictionary if no type matched
      */
     private Object initObject(String id, Dict dict) {
-        String          typeId = dict.getString(KEY_TYPE, null);
-        Constructor     constr = null;
-        Object[]        args;
-        StorableObject  obj;
-        String          msg;
-
-        if (typeId != null) {
-            constr = Type.constructor(this, dict);
-        }
+        Constructor constr = Type.constructor(this, dict);
         if (constr != null) {
-            args = new Object[] { id, typeId, dict };
+            String typeId = dict.getString(KEY_TYPE, null);
+            Object[] args = new Object[] { id, typeId, dict };
             try {
-                obj = (StorableObject) constr.newInstance(args);
+                StorableObject obj = (StorableObject) constr.newInstance(args);
                 obj.init();
                 obj.activate();
                 return obj;
             } catch (Exception e) {
-                msg = "failed to create instance of " + constr.getClass().getName() +
-                      " for object " + id + " of type " + typeId;
+                String msg = "failed to create instance of " +
+                    constr.getClass().getName() + " for object " + id +
+                    " of type " + typeId;
                 LOG.log(Level.WARNING, msg, e);
                 dict.add("_error", msg);
                 return dict;

@@ -118,6 +118,7 @@ public class Type extends StorableObject {
         Class           cls = null;
         String          msg;
 
+        // TODO: Add support for the 'className' property
         if (typeId == null) {
             return null;
         } else if (typeId.equals("type")) {
