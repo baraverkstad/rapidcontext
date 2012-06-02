@@ -6,7 +6,7 @@
     <link rel="icon" type="image/gif" href="images/favicon.png" />
     <link rel="stylesheet" href="css/style.css" type="text/css" />
     <link rel="stylesheet" href="css/widget.css" type="text/css" />
-    <title>RapidContext :: Administration &amp; Security</title>
+    <title>RapidContext :: Users &amp; Security</title>
   </head>
   <body class="doc">
 
@@ -25,51 +25,16 @@
   <tr>
     <td class="prev"><a href="index.html">Documentation</a></td>
     <td class='prev-active'>&nbsp;</td>
-    <td class='active'>Administration &amp; Security</td>
+    <td class='active'>Users &amp; Security</td>
     <td class='active-end'>&nbsp;</td>
   </tr>
 </table>
 
 <!--START-->
 
-<h1>3. Administration &amp; Security</h1>
+<h1>4. Users &amp; Security</h1>
 
-<h2 id="storage">3.1. Storage &amp; Local Changes</h2>
-
-<p>The RapidContext storage is located in the <var>plugin/</var> directory on
-the server. All installed plug-ins are kept as packed ZIP files in this
-directory, along with the special <var>plugin/local/</var> subdirectory
-containing the <var>local</var> plug-in. The figure below illustrates the
-server storage file structure:</p>
-
-<ul class="box yellow">
-  <li>
-    <var>plugin/</var>
-    <ul>
-      <li><var>cmdline.zip</var> &mdash; The command-line plug-in</li>
-      <li><var>http.zip</var> &mdash; The HTTP plug-in</li>
-      <li><var>jdbc.zip</var> &mdash; The JDBC plug-in</li>
-      <li>
-        <var>local/</var> &mdash; A plug-in with local modifications and additions
-        <ul>
-          <li><var>connection/</var> &mdash; Connections added or modified</li>
-          <li><var>lib/</var> &mdash; JAR files added (JDBC drivers)</li>
-          <li><var>role/</var> &mdash; Roles added or modified</li>
-          <li><var>session/</var> &mdash; Currently active sessions</li>
-          <li><var>user/</var> &mdash; Users added or modified</li>
-        </ul>
-      </li>
-      <li><var>system.zip</var> &mdash; The system or core platform plug-in</li>
-    </ul>
-  </li>
-</ul>
-
-<p>The <var>local</var> plug-in stores all local additions and modifications.
-Objects located there will always &ldquo;shadow&rdquo; or override objects with
-the same storage path in other plug-ins.</p>
-
-
-<h2 id="default_users">3.2. Default Users &amp; Roles</h2>
+<h2 id="default_users">4.1. Default Users &amp; Roles</h2>
 
 <p>The default installation of RapidContext contains the following users and
 roles:</p>
@@ -88,7 +53,7 @@ roles:</p>
 </ul>
 
 
-<h2 id="user_authentication">3.3. User Authentication</h2>
+<h2 id="user_authentication">4.2. User Authentication</h2>
 
 <p>RapidContext require all users to authenticate with user name and password.
 The following protocols for user authentication are built-in and supported
@@ -129,7 +94,7 @@ avoids repeated authentication requests.</p>
 </div>
 
 
-<h2 id="managing_users">3.4. Managing Users</h2>
+<h2 id="managing_users">4.3. Managing Users</h2>
 
 <p>Users are managed with the built-in <strong>Admin</strong> app. Follow
 the steps below in order to edit or create a user:</p>
@@ -165,7 +130,7 @@ the steps below in order to edit or create a user:</p>
 </div>
 
 
-<h2 id="roles_access_control">3.5. Roles &amp; Access Control</h2>
+<h2 id="roles_access_control">4.4. Roles &amp; Access Control</h2>
 
 <p>Access permissions are assigned to users from the roles assigned. A number
 of built-in platform operations and procedures require the <var>admin</var>
@@ -236,7 +201,7 @@ elaboration:</p>
 </div>
 
 
-<h2 id="security_checklist">3.6. Security Checklist</h2>
+<h2 id="security_checklist">4.5. Security Checklist</h2>
 
 <p>Before installing a RapidContext server in a publically accessible location,
 please check the following:</p>
