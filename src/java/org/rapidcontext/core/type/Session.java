@@ -15,12 +15,13 @@
 package org.rapidcontext.core.type;
 
 import java.io.File;
+import java.net.InetAddress;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang.time.DateUtils;
-import org.apache.commons.net.util.SubnetUtils;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
@@ -272,9 +273,11 @@ public class Session extends StorableObject {
     }
 
     /**
-     * Checks if an IP address is valid for this session. All IP
-     * addresses sharing the same initial 20 bits are considered
-     * valid.
+     * Checks if an IP address is valid for this session. If the IP address is
+     * identical to the session IP address, this method returns true. Otherwise
+     * it will attempt to compare the two addresses. For IPv4, the first 20
+     * bits are compared (assuming DHCP may be in use). For IPv6, the last 64
+     * bits are compared (the device interface bits).
      *
      * @param ip             the IP address to check
      *
@@ -282,8 +285,35 @@ public class Session extends StorableObject {
      *         false otherwise
      */
     public boolean isValidIp(String ip) {
-        return ip().equals(ip) ||
-               new SubnetUtils(ip() + "/20").getInfo().isInRange(ip);
+        if (ip().equals(ip)) {
+            return true;
+        }
+        try {
+            byte[] ipAddr = InetAddress.getByName(ip).getAddress();
+            byte[] origAddr = InetAddress.getByName(ip()).getAddress();
+            if (ipAddr.length == 4 && origAddr.length == 4) {
+                // IPv4: compare first 20 bits of address (assume DHCP usage)
+                LOG.fine("comparing IPv4 addresses: " + ip + " with " + ip());
+                ipAddr[2] &= 0xF0;
+                ipAddr[3] = 0;
+                origAddr[2] &= 0xF0;
+                origAddr[3] = 0;
+                return Arrays.equals(origAddr, ipAddr);
+            } else if (ipAddr.length == 16 && origAddr.length == 16) {
+                // IPv6: clear network bits & compare interface address
+                LOG.fine("comparing IPv6 addresses: " + ip + " with " + ip());
+                ipAddr[0] = ipAddr[1] = ipAddr[2] = ipAddr[3] = 0;
+                ipAddr[4] = ipAddr[5] = ipAddr[6] = ipAddr[7] = 0;
+                origAddr[0] = origAddr[1] = origAddr[2] = origAddr[3] = 0;
+                origAddr[4] = origAddr[5] = origAddr[6] = origAddr[7] = 0;
+                return Arrays.equals(origAddr, ipAddr);
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            LOG.log(Level.INFO, "failed to parse IP addresses: " + ip, e);
+            return false;
+        }
     }
 
     /**
@@ -332,7 +362,8 @@ public class Session extends StorableObject {
     }
 
     /**
-     * Returns the session source IP address.
+     * Returns the session source IP address. May be in either IPv4 or IPv6
+     * format.
      *
      * @return the session source IP address.
      */
