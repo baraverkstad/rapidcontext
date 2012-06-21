@@ -32,6 +32,7 @@ import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.util.FileUtil;
@@ -783,7 +784,7 @@ public class Request implements HttpUtil {
             commitBinary();
             break;
         case REDIRECT_RESPONSE:
-            commitDynamicHeaders();
+            commitHeaders(false, 0);
             response.sendRedirect((String) responseData);
             logResponse();
             break;
@@ -802,32 +803,32 @@ public class Request implements HttpUtil {
     }
 
     /**
-     * Sets the dynamic HTTP response headers. The current system time
-     * will be used as the last modification time.
-     */
-    private void commitDynamicHeaders() {
-        response.setHeader(HEADER.CACHE_CONTROL, "no-cache");
-        response.setHeader(HEADER.EXPIRES, "-1");
-        response.setDateHeader(HEADER.LAST_MODIFIED, System.currentTimeMillis());
-    }
-
-    /**
-     * Sets the static HTTP response headers. The specified system
-     * time will be used as the last modification time.
+     * Sets the HTTP cache, expires and last modified headers. If the
+     * last modified time is zero (0) or negative, the current system
+     * time will be used instead.
      *
+     * @param cache          the cache permission flag
      * @param lastModified   the last modification time, or
      *                       zero (0) for the current system time
      */
-    private void commitStaticHeaders(long lastModified) {
+    private void commitHeaders(boolean cache, long lastModified) {
         if (!response.containsHeader(HEADER.CACHE_CONTROL)) {
-            response.setHeader(HEADER.CACHE_CONTROL, "public");
+            String cacheControl = cache ? "public" : "no-cache";
+            response.setHeader(HEADER.CACHE_CONTROL, cacheControl);
         }
-        if (lastModified > 0) {
-            response.setDateHeader(HEADER.LAST_MODIFIED, lastModified);
-        } else {
-            response.setDateHeader(HEADER.LAST_MODIFIED,
-                                   System.currentTimeMillis());
+        if (!response.containsHeader(HEADER.EXPIRES)) {
+            if (cache) {
+                long nextHour = System.currentTimeMillis() +
+                                DateUtils.MILLIS_PER_HOUR;
+                response.setDateHeader(HEADER.EXPIRES, nextHour);
+            } else {
+                response.setHeader(HEADER.EXPIRES, "-1");
+            }
         }
+        if (lastModified <= 0) {
+            lastModified = System.currentTimeMillis();
+        }
+        response.setDateHeader(HEADER.LAST_MODIFIED, lastModified);
     }
 
     /**
@@ -839,7 +840,7 @@ public class Request implements HttpUtil {
      */
     private void commitText() throws IOException {
         response.setStatus(responseCode);
-        commitDynamicHeaders();
+        commitHeaders(false, 0);
         response.setContentType(responseMimeType);
         if (responseData == null) {
             response.setContentLength(0);
@@ -872,7 +873,7 @@ public class Request implements HttpUtil {
             return;
         }
         response.setStatus(responseCode);
-        commitStaticHeaders(data.lastModified());
+        commitHeaders(true, data.lastModified());
         response.setContentType(data.mimeType());
         if (data.size() >= 0) {
             response.setContentLength((int) data.size());
