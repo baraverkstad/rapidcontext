@@ -197,10 +197,25 @@ div.query {
  * Documentation styles
  */
 body.doc {
-    width: 800px;
-    height: auto;
+    background-color: #999999;
+    background-image: -moz-linear-gradient(left, #666666, #AAAAAA 20%, #AAAAAA 80%, #666666);
+    background-image: -ms-linear-gradient(left, #666666, #AAAAAA 20%, #AAAAAA 80%, #666666);
+    background-image: -o-linear-gradient(left, #666666, #AAAAAA 20%, #AAAAAA 80%, #666666);
+    background-image: -webkit-linear-gradient(left, #666666, #AAAAAA 20%, #AAAAAA 80%, #666666);
+    background-image: linear-gradient(left, #666666, #AAAAAA 20%, #AAAAAA 80%, #666666);
+    /* IE center page hack */
+    text-align: center;
+}
+body.doc .center {
+    width: 960px;
+    min-height: 100%;
     margin: 0 auto;
-    padding: 60px 0;
+    background: url("../images/backgrounds/linen.png");
+    box-shadow: 0 0 10px black;
+    /* IE height hack, ignored by others */
+    *height: 100%;
+    /* IE center page hack */
+    text-align: left;
 }
 .doc {
     font-size: 14px;
@@ -251,6 +266,56 @@ body.doc {
 .doc q {
     font-style: normal;
     color: #006633;
+}
+.doc .header {
+    position: relative;
+    padding: 20px 0;
+    font-family: 'Trebuchet MS';
+}
+.doc .header a:link,
+.doc .header a:visited,
+.doc .header a:active,
+.doc .header a:hover {
+    color: white;
+    text-decoration: none;
+}
+.doc .header .logotype {
+    position: relative;
+    left: 20px;
+}
+.doc .header .text {
+    position: absolute;
+    top: 23px;
+    left: 180px;
+    text-shadow: 2px 2px 2px #222222, 0 0 10px #BBBBBB;
+}
+.doc .header .menu {
+    position: absolute;
+    top: 0px;
+    right: 2px;
+    padding: 3px 10px;
+    border-radius: 2px 2px;
+    box-shadow: 2px 2px 5px black, 2px 2px 40px #888888;
+    background: black;
+    color: white;
+}
+.doc .content {
+    position: relative;
+    left: -10px;
+    width: 880px;
+    min-height: 750px;
+    margin: 10px 0 20px;
+    padding: 30px 50px 70px 50px;
+    border-radius: 3px 3px;
+    box-shadow: 2px 2px 5px black, 2px 2px 40px #AAAAAA;
+    background: white;
+    /* IE height hack, ignored by others */
+    *height: 750px;
+}
+.doc .footer {
+    position: absolute;
+    bottom: 20px;
+    width: 880px;
 }
 .doc .navigation {
     font-size: 13px;

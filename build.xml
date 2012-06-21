@@ -144,9 +144,8 @@
         <include name="LICENSE.txt" />
       </fileset>
       <fileset dir="src/plugin/system/files">
-        <include name="images/favicon.png" />
-        <include name="images/logotype.png" />
-        <include name="images/backgrounds/navigation-*" />
+        <include name="images/*.png" />
+        <include name="images/backgrounds/*" />
         <include name="css/**" />
       </fileset>
     </copy>
