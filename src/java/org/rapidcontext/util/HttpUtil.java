@@ -113,7 +113,7 @@ public interface HttpUtil {
 
         // 3xx Redirection
 
-        /** <tt>300 Mutliple Choices</tt> (HTTP/1.1 - RFC 2616) */
+        /** <tt>300 Multiple Choices</tt> (HTTP/1.1 - RFC 2616) */
         public static final int MULTIPLE_CHOICES = 300;
         /** <tt>301 Moved Permanently</tt> (HTTP/1.0 - RFC 1945) */
         public static final int MOVED_PERMANENTLY = 301;
