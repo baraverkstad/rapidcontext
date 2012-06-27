@@ -25,7 +25,6 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.StringTokenizer;
 
 import org.rapidcontext.core.proc.AddOnProcedure;
 import org.rapidcontext.core.proc.Bindings;
@@ -162,13 +161,11 @@ public class HttpPostProcedure extends AddOnProcedure {
      * @param data           the unparsed header string
      */
     private static void parseHeaders(LinkedHashMap map, String data) {
-        StringTokenizer  st1;
-        StringTokenizer  st2;
-
-        st1 = new StringTokenizer(data, "\n\r");
-        while (st1.hasMoreTokens()) {
-            st2 = new StringTokenizer(st1.nextToken(), " :");
-            map.put(st2.nextToken().trim(), st2.nextToken().trim());
+        for (String line : data.split("[\\n\\r]+")) {
+            String[] parts = line.split("\\s*:\\s*", 2);
+            if (parts.length == 2) {
+                map.put(parts[0].trim(), parts[1].trim());
+            }
         }
     }
 
