@@ -1,7 +1,6 @@
 /**
  * RapidContext HTTP plug-in <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
- * All rights reserved.
+ * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the BSD license.
@@ -14,6 +13,9 @@
  */
 
 package org.rapidcontext.app.plugin.http;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.app.plugin.Plugin;
@@ -30,6 +32,12 @@ import org.rapidcontext.core.storage.StorageException;
  * @version  1.0
  */
 public class HttpPlugin extends Plugin {
+
+    /**
+     * The class logger.
+     */
+    private static final Logger LOG =
+        Logger.getLogger(HttpPlugin.class.getName());
 
     /**
      * Creates a new plug-in instance with the specified plug-in
@@ -51,6 +59,12 @@ public class HttpPlugin extends Plugin {
     public void init() throws StorageException {
         Library  lib = ApplicationContext.getInstance().getLibrary();
 
+        try {
+            System.setProperty("http.keepAlive", "false");
+        } catch (Throwable t) {
+            String msg = this + ": failed to set http.keepAlive to false";
+            LOG.log(Level.WARNING, msg, t);
+        }
         try {
             Library.registerType("http.post", HttpPostProcedure.class);
             lib.addBuiltIn(new HttpPostBuiltInProcedure());
