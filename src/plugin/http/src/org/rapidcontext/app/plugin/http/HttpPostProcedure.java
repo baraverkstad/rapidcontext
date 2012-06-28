@@ -35,7 +35,7 @@ import org.rapidcontext.core.proc.ProcedureException;
  * An HTTP POST procedure. This procedure provides simplified access
  * to HTTP data sending and retrieval.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class HttpPostProcedure extends AddOnProcedure {

@@ -1,7 +1,6 @@
 /**
  * RapidContext HTTP plug-in <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
- * All rights reserved.
+ * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the BSD license.
@@ -29,7 +28,7 @@ import org.rapidcontext.core.security.SecurityContext;
  * more specified add-on procedure with the "http.post" type to
  * allow other users access to this functionality.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class HttpPostBuiltInProcedure implements Procedure, Restricted {
