@@ -641,8 +641,7 @@ AdminApp.prototype._pluginUploadInit = function () {
 AdminApp.prototype._pluginUploadStart = function () {
     this.ui.pluginFile.hide();
     this.ui.pluginProgress.show();
-    this.ui.pluginProgress.setAttrs({ min: 0, max: 100 });
-    this.ui.pluginProgress.setRatio(0);
+    this.ui.pluginProgress.setAttrs({ min: 0, max: 100, ratio: 0 });
     this._pluginUploadProgress();
 }
 
@@ -657,11 +656,11 @@ AdminApp.prototype._pluginUploadProgress = function (res) {
         var d = RapidContext.App.callProc("System.Session.Current");
         d.addBoth(selfCallback);
     }
-    if (res == null) {
+    if (!res || !res.files || res.files.progress) {
         MochiKit.Async.callLater(1, pluginLoadStatus);
-    } else if (res.files.progress) {
-        this.ui.pluginProgress.setRatio(res.files.progress);
-        MochiKit.Async.callLater(1, pluginLoadStatus);
+        if (res.files.progress) {
+            this.ui.pluginProgress.setAttrs({ ratio: res.files.progress });
+        }
     } else {
         this._pluginUploadInfo(res.files.plugin);
     }
