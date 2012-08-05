@@ -169,11 +169,7 @@ public class Path {
      * @return a hash code for this object
      */
     public int hashCode() {
-        int result = 1;
-        for (int i = 0; i < parts.length; i++) {
-            result = 31 * result + parts[i].hashCode();
-        }
-        return result;
+        return Arrays.hashCode(parts);
     }
 
     /**
