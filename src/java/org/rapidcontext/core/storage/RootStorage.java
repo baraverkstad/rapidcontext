@@ -519,7 +519,16 @@ public class RootStorage extends Storage {
      * @throws StorageException if the data couldn't be written
      */
     public void store(Path path, Object data) throws StorageException {
-        store(getMountedStorage(path, false), path, data, true);
+        Storage storage = getMountedStorage(path, false);
+        if (storage != null && path.startsWith(PATH_STORAGE_CACHE)) {
+            Path storageId = storage.path().subPath(PATH_STORAGE_CACHE.depth());
+            Path storagePath = PATH_STORAGE.descendant(storageId);
+            cacheRemove(storagePath, storage.localPath(path));
+            cacheAdd(storagePath, storage.localPath(path), data);
+        } else {
+            store(storage, path, data, true);
+        }
+        LOG.fine("stored " + path);
     }
 
     /**
@@ -578,7 +587,15 @@ public class RootStorage extends Storage {
      * @throws StorageException if the data couldn't be removed
      */
     public void remove(Path path) throws StorageException {
-        remove(getMountedStorage(path, false), path, true);
+        Storage storage = getMountedStorage(path, false);
+        if (storage != null && path.startsWith(PATH_STORAGE_CACHE)) {
+            Path storageId = storage.path().subPath(PATH_STORAGE_CACHE.depth());
+            Path storagePath = PATH_STORAGE.descendant(storageId);
+            cacheRemove(storagePath, storage.localPath(path));
+        } else {
+            remove(storage, path, true);
+        }
+        LOG.fine("removed " + path);
     }
 
     /**
