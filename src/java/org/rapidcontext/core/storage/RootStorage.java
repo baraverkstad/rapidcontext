@@ -83,7 +83,9 @@ public class RootStorage extends Storage {
     /**
      * The map of cache memory storages. For each mounted and
      * overlaid storage, a corresponding cache storage is created to
-     * contain any StorableObject instances.
+     * contain any StorableObject instances. The cache storages are
+     * indexed by their parent storage path (not their own actual
+     * storage paths).
      */
     private HashMap cacheStorages = new HashMap();
 
@@ -434,39 +436,25 @@ public class RootStorage extends Storage {
      *         null if not found
      */
     private Object loadObject(Storage storage, Path path) {
-        MemoryStorage  cache;
-        Index          idx = null;
-        Object         res = null;
-        String         id;
-        String         msg;
+        boolean  isCached = cacheStorages.containsKey(storage.path());
+        Index    idx = null;
+        Object   res = null;
+        String   id;
 
         LOG.fine("loading " + path + " from " + storage.path());
-        cache = (MemoryStorage) cacheStorages.get(storage.path());
-        if (cache != null) {
-            res = cache.load(path);
-            if (res instanceof Index) {
-                idx = (Index) res;
-            } else if (res instanceof StorableObject) {
-                LOG.fine("loaded " + path + " value from cache: " + res);
-                ((StorableObject) res).activate();
-                return res;
-            }
+        res = cacheGet(storage.path(), path);
+        if (res instanceof Index) {
+            idx = (Index) res;
+        } else if (res instanceof StorableObject) {
+            LOG.fine("loaded object " + path + " from cache");
+            return res;
         }
         res = storage.load(path);
         LOG.fine("loaded " + path + " value: " + res);
-        if (cache != null && res instanceof Dict) {
+        if (isCached && res instanceof Dict) {
             id = path.toIdent(1);
             res = initObject(id, (Dict) res);
-            if (res instanceof StorableObject) {
-                try {
-                    cache.store(path, res);
-                    LOG.fine("initialized object for " + path + ": " + res);
-                } catch (StorageException e) {
-                    msg = "failed to store object in storage cache " +
-                          cache.path();
-                    LOG.log(Level.WARNING, msg, e);
-                }
-            }
+            cacheAdd(storage.path(), path, res);
         }
         if (idx != null && (res == null || res instanceof Index)) {
             return Index.merge(idx, (Index) res);
@@ -635,6 +623,29 @@ public class RootStorage extends Storage {
     }
 
     /**
+     * Retrieves an object from the cache. If the object is a storable
+     * object, it will also be activated.
+     *
+     * @param storagePath    the storage path being cached
+     * @param path           the object location
+     *
+     * @return the object loaded from the cache, or
+     *         null if not found
+     */
+    private Object cacheGet(Path storagePath, Path path) {
+        MemoryStorage cache = (MemoryStorage) cacheStorages.get(storagePath);
+        Object res = cache.load(path);
+        if (res != null) {
+            LOG.fine("cache " + cache.path() + ": loaded " + path);
+        }
+        if (res instanceof StorableObject) {
+            LOG.fine("cache " + cache.path() + ": activating object " + path);
+            ((StorableObject) res).activate();
+        }
+        return res;
+    }
+
+    /**
      * Adds an object to a storage cache (if possible). The object
      * will only be added if it is an instance of  StorableObject and
      * a memory cache exists for the specified storage path.
@@ -647,6 +658,7 @@ public class RootStorage extends Storage {
         MemoryStorage cache = (MemoryStorage) cacheStorages.get(storagePath);
         if (cache != null && data instanceof StorableObject) {
             try {
+                LOG.fine("adding " + path + " to cache " + cache.path());
                 cache.store(path, data);
             } catch (StorageException e) {
                 LOG.log(Level.WARNING, "failed to cache object", e);
@@ -664,6 +676,7 @@ public class RootStorage extends Storage {
      */
     private void cacheRemove(Path storagePath, Path path) {
         if (storagePath == null) {
+            LOG.fine("removing " + path + " from all caches");
             Iterator iter = cacheStorages.keySet().iterator();
             while (iter.hasNext()) {
                 cacheRemove((Path) iter.next(), path);
@@ -671,6 +684,7 @@ public class RootStorage extends Storage {
         } else {
             MemoryStorage cache = (MemoryStorage) cacheStorages.get(storagePath);
             if (cache != null) {
+                LOG.fine("removing " + path + " from cache " + cache.path());
                 cacheRemove(cache, path, false, true);
             }
         }
@@ -691,6 +705,7 @@ public class RootStorage extends Storage {
                              boolean store,
                              boolean force) {
 
+        String debugPrefix = "cache " + cache.path() + ": ";
         Metadata[] metas = cache.lookupAll(basePath);
         for (int i = 0; i < metas.length; i++) {
             Path path = metas[i].path();
@@ -699,30 +714,32 @@ public class RootStorage extends Storage {
                 StorableObject storable = (StorableObject) obj;
                 if (store && storable.isModified()) {
                     try {
+                        LOG.fine(debugPrefix + "persisting object " + path);
                         store(null, path, storable, false);
-                        LOG.fine("persisted cached object: " + path);
                     } catch (StorageException e) {
                         LOG.log(Level.WARNING, "failed to persist cached object", e);
                     }
                 }
+                LOG.fine(debugPrefix + "passivating object " + path);
                 storable.passivate();
                 if (force || !storable.isActive()) {
                     try {
+                        LOG.fine(debugPrefix + "destroying object " + path);
                         storable.destroy();
                     } catch (StorageException e) {
                         LOG.log(Level.WARNING, "failed to destroy cached object", e);
                     }
                     try {
+                        LOG.fine(debugPrefix + "removing object " + path);
                         cache.remove(path);
-                        LOG.fine("removed cached object: " + path);
                     } catch (StorageException e) {
                         LOG.log(Level.WARNING, "failed to remove cached object", e);
                     }
                 }
             } else {
                 try {
+                    LOG.fine(debugPrefix + "removing data " + path);
                     cache.remove(path);
-                    LOG.fine("removed cached data: " + path);
                 } catch (StorageException e) {
                     LOG.log(Level.WARNING, "failed to remove cached data", e);
                 }
