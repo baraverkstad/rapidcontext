@@ -32,7 +32,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.lang.SystemUtils;
 import org.rapidcontext.app.ui.ControlPanel;
-import org.rapidcontext.util.ClassLoaderUtil;
+import org.rapidcontext.util.ClasspathUtil;
 import org.rapidcontext.util.FileUtil;
 
 /**
@@ -306,7 +306,7 @@ public class Main {
     private static File locateAppDir() {
         File[] dirs = { new File("."),
                         SystemUtils.getUserDir(),
-                        ClassLoaderUtil.getLocation(ServerApplication.class) };
+                        ClasspathUtil.locateFile(ServerApplication.class) };
 
         for (int i = 0; i < dirs.length; i++) {
             File file = dirs[i];
