@@ -165,7 +165,7 @@
       <group title="Core Library Layer" packages="${build.package}.core:${build.package}.core.*" />
       <group title="Utilities Layer" packages="${build.package}.util:${build.package}.util.*" />
     </javadoc>
-    <replaceregexp match="//class-use" replace="/class-use" flags="g">
+    <replaceregexp match="//class-use" replace="/class-use/" flags="g">
       <fileset dir="doc/java">
         <include name="**/*.html" />
       </fileset>
