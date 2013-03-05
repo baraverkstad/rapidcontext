@@ -37,7 +37,7 @@
         <p>If you haven't used it before, you can take the quick tour and
         learn the basics in an easy, interactive fashion.</p>
         <div style="float: right; margin: 12px 0;">
-          <a href="doc/changes.html" target="_blank">&#x25B6; Version History</a>
+          <a href="doc/8_changes.html" target="_blank">&#x25B6; Version History</a>
         </div>
         <Button id="tourButton" icon="NEXT" style="margin: 10px 0 10px 0;">Start Quick Tour</Button>
       </div>
