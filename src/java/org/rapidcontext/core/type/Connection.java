@@ -149,15 +149,15 @@ public abstract class Connection extends StorableObject {
     }
 
     /**
-     * Checks if this object is in active use. This method will
-     * return true if the object haven't been used for 60 seconds and
-     * no channels remain open.
+     * Checks if this object is in active use. This method will only
+     * return false if the object haven't been used for 60 seconds
+     * and no channels remain open.
      *
      * @return true if the object is considered active, or
      *         false otherwise
      */
     protected boolean isActive() {
-        return System.currentTimeMillis() - lastUsedTime <= 60000L &&
+        return System.currentTimeMillis() - lastUsedTime <= 60000L ||
                openChannels() > 0;
     }
 
