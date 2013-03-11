@@ -59,7 +59,7 @@ RapidContext LICENSE
     o PlotKit (http://www.liquidx.net/plotkit/),
       copyright (c) Alastair Tse
     o jQuery (http://jquery.com/),
-      copyright (c) John Resig
+      copyright (c) jQuery Foundation, Inc.
     o Augment.js (http://augmentjs.com/),
       copyright (c) Oliver Nightingale
     o Crypto-JS (http://code.google.com/p/crypto-js)
