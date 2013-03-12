@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -35,49 +35,36 @@ import org.rapidcontext.core.storage.Index;
 import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.Storage;
+import org.rapidcontext.core.type.WebService;
 import org.rapidcontext.core.web.Mime;
 import org.rapidcontext.core.web.Request;
-import org.rapidcontext.core.web.RequestHandler;
 import org.rapidcontext.util.FileUtil;
 
 /**
- * A storage API request handler. This request handler supports both
- * WebDAV and normal browser requests and provides a file-system-like
- * view of the storage hierarchy.
+ * A storage API web service. This service supports both WebDAV and
+ * normal browser requests and provides a file-system-like view of
+ * the storage hierarchy.
  *
  * @author   Per Cederberg
  * @version  1.0
  */
-public class StorageRequestHandler extends RequestHandler {
+public class StorageWebService extends WebService {
 
     /**
      * The class logger.
      */
     private static final Logger LOG =
-        Logger.getLogger(StorageRequestHandler.class.getName());
+        Logger.getLogger(StorageWebService.class.getName());
 
     /**
-     * The supported HTTP methods.
-     */
-    protected static final String[] METHODS = {
-        METHOD.OPTIONS, METHOD.HEAD, METHOD.GET,
-        METHOD.POST, METHOD.PUT, METHOD.DELETE,
-        METHOD.PROPFIND, METHOD.MKCOL, // METHOD.PROPPATCH,
-        // METHOD.COPY,
-        METHOD.MOVE, METHOD.LOCK, METHOD.UNLOCK
-    };
-
-    /**
-     * Returns the HTTP methods supported for the specified request
-     * (path). This method assumes local request paths (removal of
-     * the mapped URL base).
+     * Creates a new storage web service from a serialized representation.
      *
-     * @param request        the request to check
-     *
-     * @return the array of HTTP method names supported
+     * @param id             the object identifier
+     * @param type           the object type name
+     * @param dict           the serialized representation
      */
-    public String[] methods(Request request) {
-        return METHODS;
+    public StorageWebService(String id, String type, Dict dict) {
+        super(id, type, dict);
     }
 
     /**

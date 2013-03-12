@@ -231,17 +231,6 @@ public class Request implements HttpUtil {
     }
 
     /**
-     * Returns the base URL of the server, complete with protocol,
-     * hostname and path.
-     *
-     * @return the base URL of the server
-     */
-    public String getRootUrl() {
-        String path = StringUtils.removeStart(request.getPathInfo(), "/");
-        return StringUtils.removeEnd(getUrl(), path);
-    }
-
-    /**
      * Returns the protocol name in the request, i.e. "http" or
      * "https".
      *
@@ -343,7 +332,7 @@ public class Request implements HttpUtil {
                 setPath(path.substring(prefix.length()));
             }
             return true;
-        } else if (requestPath.startsWith(StringUtils.removeEnd(prefix, "/"))) {
+        } else if (path.startsWith(StringUtils.removeEnd(prefix, "/"))) {
             sendRedirect(getUrl() + "/");
         }
         return false;

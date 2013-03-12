@@ -16,8 +16,6 @@ package org.rapidcontext.app;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,13 +24,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
-import org.rapidcontext.app.web.AppRequestHandler;
-import org.rapidcontext.app.web.DownloadRequestHandler;
-import org.rapidcontext.app.web.FileRequestHandler;
-import org.rapidcontext.app.web.ProcedureRequestHandler;
-import org.rapidcontext.app.web.StorageRequestHandler;
-import org.rapidcontext.app.web.UploadRequestHandler;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Path;
@@ -41,9 +32,9 @@ import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.storage.ZipStorage;
 import org.rapidcontext.core.type.Session;
 import org.rapidcontext.core.type.User;
+import org.rapidcontext.core.type.WebMatcher;
 import org.rapidcontext.core.web.Mime;
 import org.rapidcontext.core.web.Request;
-import org.rapidcontext.core.web.RequestHandler;
 import org.rapidcontext.util.BinaryUtil;
 import org.rapidcontext.util.FileUtil;
 
@@ -73,12 +64,6 @@ public class ServletApplication extends HttpServlet {
     private ApplicationContext ctx = null;
 
     /**
-     * The map of request handlers. Each handler is added with its
-     * mapped directory or file path as key.
-     */
-    private LinkedHashMap handlers = new LinkedHashMap();
-
-    /**
      * Initializes this servlet.
      *
      * @throws ServletException if the initialization failed
@@ -99,12 +84,6 @@ public class ServletApplication extends HttpServlet {
         LOG.log(Level.FINE, "using temporary directory: " + tmpDir);
         FileUtil.setTempDir(tmpDir);
         Mime.context = getServletContext();
-        handlers.put("/rapidcontext/app/", new AppRequestHandler());
-        handlers.put("/rapidcontext/download", new DownloadRequestHandler());
-        handlers.put("/rapidcontext/upload", new UploadRequestHandler());
-        handlers.put("/rapidcontext/procedure/", new ProcedureRequestHandler());
-        handlers.put("/rapidcontext/storage/", new StorageRequestHandler());
-        handlers.put("/", new FileRequestHandler());
         ctx = ApplicationContext.init(baseDir, baseDir, true);
         // TODO: move the doc directory into the system plug-in storage
         try {
@@ -123,7 +102,6 @@ public class ServletApplication extends HttpServlet {
      */
     public void destroy() {
         ApplicationContext.destroy();
-        handlers.clear();
         super.destroy();
     }
 
@@ -140,24 +118,25 @@ public class ServletApplication extends HttpServlet {
     protected void service(HttpServletRequest req, HttpServletResponse resp)
     throws ServletException, IOException {
 
-        Request         request = new Request(req, resp);
-        Iterator        iter = handlers.keySet().iterator();
-        String          path = request.getPath();
-        String          handlerPath;
-        String          incompletePath;
-        RequestHandler  handler;
+        Request       request = new Request(req, resp);
+        WebMatcher[]  matchers = ctx.getWebMatchers();
+        WebMatcher    bestMatcher = null;
+        int           bestScore = 0;
 
         try {
-            processAuth(request);
-            while (!request.hasResponse() && iter.hasNext()) {
-                handlerPath = (String) iter.next();
-                incompletePath = StringUtils.removeEnd(handlerPath, "/");
-                handler = (RequestHandler) handlers.get(handlerPath);
-                if (path.startsWith(handlerPath)) {
-                    request.setPath(path.substring(handlerPath.length()));
-                    handler.process(request);
-                } else if (path.equals(incompletePath)) {
-                    request.sendRedirect(request.getUrl() + "/");
+            for (int i = 0; i < matchers.length; i++) {
+                int score = matchers[i].match(request);
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestMatcher = matchers[i];
+                }
+            }
+            if (bestMatcher != null) {
+                if (bestMatcher.auth()) {
+                    processAuth(request);
+                }
+                if (!request.hasResponse()) {
+                    bestMatcher.process(request);
                 }
             }
             if (!request.hasResponse()) {

@@ -386,12 +386,86 @@ styles are not sufficient, a number of options are available:</p>
       future versions.</li>
 </ol>
 
+<!--
+<h2 id="web_listener">6.6. Web Services</h2>
+
+
+<pre class="box blue code">
+<span class="comment"># General properties</span>
+id = www.test.com
+type = webservice/file
+description = A simple static web site service.
+path = files/www.test.com/
+
+<span class="comment"># Match array</span>
+match.1.host = www.test.com
+match.2.host = www.test.net
+match.3.host = www.test.org
+</pre>
+
+<pre class="box blue code">
+<span class="comment"># General properties</span>
+id = www.simpleapp.com
+type = webservice/app
+description = A simple app service.
+app = simpleapp
+
+<span class="comment"># Match array</span>
+match.1.host = www.simpleapp.com
+match.1.auth = true
+</pre>
+
+
+
+<p>The available web listener configuration parameters are as follows:</p>
+
+<ul class="box yellow">
+  <li><var>id</var> &mdash; The unique listener identifier. May only contain
+      ASCII alphanumeric characters without spaces or separators.</li>
+  <li><var>description</var> &mdash; The optional description text that
+      explains the purpose of this listener.</li>
+  <li><var>targetFiles</var> &mdash;
+  <li><var>targetApp</var> &mdash;
+  <li><var>className</var> &mdash; The optional fully qualified name of a Java
+      class that handles all requests. The class must be a subclass of
+      <var>org.rapidcontext.core.type.WebListener</var>.</li>
+
+
+
+  <li><var>method</var> &mdash; The optional...</li>
+  <li><var>host</var> &mdash; The optional...</li>
+  <li><var>port</var> &mdash; The optional...</li>
+  <li><var>path</var> &mdash; The optional...</li>
+  <li><var>ssl</var> &mdash; The optional...</li>
+  <li><var>auth</var> &mdash; The optional...</li>
+  <li><var>prio</var> &mdash; The optional...</li>
+
+  <li>
+    <var>launch</var> &mdash; The optional app launch setting. This may have
+    one of the following values:
+    <ul>
+      <li><var>manual</var> (default) &mdash; The app is manually started
+          and stopped by the user (when clicking on icons or similar).</li>
+      <li><var>auto</var> &mdash; The app is started automatically when
+          a new user session starts, but can also be started and stopped
+          manually by the user.</li>
+      <li><var>once</var> &mdash; The app is started automatically when
+          a new user session starts and can thereafter neither be started nor
+          stopped by the user.</li>
+      <li><var>limited</var> &mdash; The app is hidden from the user to
+          avoid manual starting and stopping in the default user interface.
+          The app can still be started programmatically by other apps
+          through the RapidContext client API:s.</li>
+    </ul>
+  </li>
+</ul>
+-->
 
 <!--END-->
 
         <div class="footer fineprint">
           <hr>
-          Copyright &copy; 2007-2012 Per Cederberg. All rights reserved.
+          Copyright &copy; 2007-2013 Per Cederberg. All rights reserved.
         </div>
       </div>
       &nbsp;

@@ -69,6 +69,8 @@ import org.rapidcontext.core.task.Scheduler;
 import org.rapidcontext.core.task.Task;
 import org.rapidcontext.core.type.Environment;
 import org.rapidcontext.core.type.Session;
+import org.rapidcontext.core.type.WebMatcher;
+import org.rapidcontext.core.type.WebService;
 
 /**
  * The application context. This is a singleton object that contains
@@ -122,6 +124,11 @@ public class ApplicationContext {
      * The active environment.
      */
     private Environment env = null;
+
+    /**
+     * The cached list of web matchers (from the web services).
+     */
+    private WebMatcher[] matchers = null;
 
     /**
      * The procedure library.
@@ -312,6 +319,7 @@ public class ApplicationContext {
         pluginManager.unloadAll();
         Library.unregisterType("javascript");
         library = new Library(this.storage);
+        matchers = null;
     }
 
     /**
@@ -349,6 +357,21 @@ public class ApplicationContext {
      */
     public Environment getEnvironment() {
         return this.env;
+    }
+
+    /**
+     * Returns the array of cached web matchers (from the web services).
+     * This list is only re-read when the context is reset.
+     *
+     * @return the array of cached web matchers
+     *
+     * @see #reset()
+     */
+    public WebMatcher[] getWebMatchers() {
+        if (matchers == null) {
+            matchers = WebService.findAllMatchers(storage);
+        }
+        return matchers;
     }
 
     /**

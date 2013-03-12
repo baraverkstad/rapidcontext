@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -12,60 +12,137 @@
  * See the RapidContext LICENSE.txt file for more details.
  */
 
-package org.rapidcontext.core.web;
+package org.rapidcontext.core.type;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang.StringUtils;
+import org.rapidcontext.core.data.Array;
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.security.SecurityContext;
-import org.rapidcontext.core.type.User;
+import org.rapidcontext.core.storage.Path;
+import org.rapidcontext.core.storage.StorableObject;
+import org.rapidcontext.core.storage.Storage;
+import org.rapidcontext.core.web.Mime;
+import org.rapidcontext.core.web.Request;
 import org.rapidcontext.util.HttpUtil;
 
 /**
- * The base request handler class. A request handler is mapped to a
- * set of URL:s, normally based on host and path prefix.
+ * An HTTP web service (request handler). This is a generic type, providing
+ * basic support for matching HTTP requests to the actual handlers (file
+ * handler, app handler, WebDAV, etc). A custom web service usually subclasses
+ * this class directly.
  *
  * @author   Per Cederberg
  * @version  1.0
  */
-public abstract class RequestHandler implements HttpUtil {
+public abstract class WebService extends StorableObject implements HttpUtil {
 
     /**
      * The class logger.
      */
     private static final Logger LOG =
-        Logger.getLogger(RequestHandler.class.getName());
+        Logger.getLogger(WebService.class.getName());
 
     /**
-     * The array of HTTP methods for a GET-only handler. This array
-     * contains the OPTIONS, HEAD and GET methods.
+     * The dictionary key for the description text.
      */
-    protected static final String[] GET_METHODS_ONLY =
-        new String[] { METHOD.OPTIONS, METHOD.HEAD, METHOD.GET };
+    public static final String KEY_DESCRIPTION = "description";
 
     /**
-     * The array of HTTP methods for a POST-only handler. This array
-     * contains the OPTIONS, POST methods.
+     * The dictionary key for the request match array.
      */
-    protected static final String[] POST_METHODS_ONLY =
-        new String[] { METHOD.OPTIONS, METHOD.POST };
+    public static final String KEY_MATCH = "match";
 
     /**
-     * Returns the HTTP methods supported for the specified request
-     * (path). This method assumes local request paths (removal of
-     * the mapped URL base).
+     * The web service object storage path.
+     */
+    public static final Path PATH = new Path("/webservice/");
+
+    /**
+     * The array of matcher objects.
+     */
+    protected ArrayList matchers;
+
+    /**
+     * Searches for all matchers in all web services in the storage.
+     *
+     * @param storage        the storage to search in
+     *
+     * @return an array of all matchers found
+     */
+    public static WebMatcher[] findAllMatchers(Storage storage) {
+        Object[]   objs = storage.loadAll(PATH);
+        ArrayList  list = new ArrayList();
+
+        for (int i = 0; i < objs.length; i++) {
+            if (objs[i] instanceof WebService) {
+                list.addAll(((WebService) objs[i]).matchers);
+            }
+        }
+        return (WebMatcher[]) list.toArray(new WebMatcher[list.size()]);
+    }
+
+    /**
+     * Creates a new web service from a serialized representation.
+     *
+     * @param id             the object identifier
+     * @param type           the object type name
+     * @param dict           the serialized representation
+     */
+    public WebService(String id, String type, Dict dict) {
+        super(id, type, dict);
+        dict.set(KEY_DESCRIPTION, description());
+        Array arr = dict.getArray(KEY_MATCH);
+        matchers = new ArrayList(arr.size());
+        for (int i = 0; i < arr.size(); i++) {
+            matchers.add(new WebMatcher(this, arr.getDict(i)));
+        }
+    }
+
+    /**
+     * Returns the description text.
+     *
+     * @return the description text.
+     */
+    public String description() {
+        return dict.getString(KEY_DESCRIPTION, "");
+    }
+
+    /**
+     * Returns the HTTP methods supported for the specified request.
+     * The OPTIONS method is always supported and the HEAD method is
+     * automatically added if GET is supported.
      *
      * @param request        the request to check
      *
      * @return the array of HTTP method names supported
      */
-    public abstract String[] methods(Request request);
+    public String[] methods(Request request) {
+        LinkedHashSet set = new LinkedHashSet();
+        set.add(METHOD.OPTIONS);
+        for (int i = 0; i < matchers.size(); i++) {
+            WebMatcher m = (WebMatcher) matchers.get(i);
+            if (m.match(request) > 0) {
+                String method = m.method();
+                if (METHOD.GET.equals(method)) {
+                    set.add(METHOD.HEAD);
+                }
+                set.add(method);
+            }
+        }
+        return (String[]) set.toArray(new String[set.size()]);
+    }
 
     /**
      * Processes a request for this handler. This method assumes
      * local request paths (removal of the mapped URL base).
      *
-     * @param request the request to process
+     * @param request        the request to process
+     *
+     * @see WebMatcher#process(Request)
      */
     public void process(Request request) {
         if (request.hasMethod(METHOD.GET)) {
@@ -84,6 +161,31 @@ public abstract class RequestHandler implements HttpUtil {
             doTrace(request);
         } else {
             errorMethodNotAllowed(request);
+        }
+    }
+
+    /**
+     * Processes an HTTP OPTIONS request.
+     *
+     * @param request
+     */
+    protected void doOptions(Request request) {
+        headerAllow(request);
+        request.sendText(null, null);
+    }
+
+    /**
+     * Processes an HTTP HEAD request. By default this method will
+     * call doGet() and set the response headers only flag if a
+     * result was generated. There is normally no need to subclass
+     * this method.
+     *
+     * @param request        the request to process
+     */
+    protected void doHead(Request request) {
+        doGet(request);
+        if (request.hasResponse()) {
+            request.setResponseHeadersOnly(true);
         }
     }
 
@@ -125,31 +227,6 @@ public abstract class RequestHandler implements HttpUtil {
      */
     protected void doDelete(Request request) {
         errorMethodNotAllowed(request);
-    }
-
-    /**
-     * Processes an HTTP OPTIONS request.
-     *
-     * @param request
-     */
-    protected void doOptions(Request request) {
-        headerAllow(request);
-        request.sendText(null, null);
-    }
-
-    /**
-     * Processes an HTTP HEAD request. By default this method will
-     * call doGet() and set the response headers only flag if a
-     * result was generated. There is normally no need to subclass
-     * this method.
-     *
-     * @param request        the request to process
-     */
-    protected void doHead(Request request) {
-        doGet(request);
-        if (request.hasResponse()) {
-            request.setResponseHeadersOnly(true);
-        }
     }
 
     /**
