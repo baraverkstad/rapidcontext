@@ -61,6 +61,15 @@ public class StorableObject {
     public static final String KEY_TYPE = "type";
 
     /**
+     * The dictionary key for the Java class name. The value stored
+     * is a string with the fully qualified Java class name for
+     * initializing the object from storage. The class is used
+     * instead of the default type initializer, but the type id must
+     * still be specified.
+     */
+    public static final String KEY_CLASSNAME = "className";
+
+    /**
      * The dictionary containing the serializable data for this
      * object.
      */

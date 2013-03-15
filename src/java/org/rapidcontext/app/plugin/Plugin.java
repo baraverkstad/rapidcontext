@@ -36,11 +36,6 @@ public class Plugin extends StorableObject {
     public static final String KEY_PLATFORM = "platform";
 
     /**
-     * The dictionary key for the optional plug-in class name.
-     */
-    public static final String KEY_CLASSNAME = "className";
-
-    /**
      * Creates a new plug-in instance with the specified plug-in
      * configuration data. All subclasses must provide a constructor
      * matching this signature.

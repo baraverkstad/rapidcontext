@@ -113,14 +113,16 @@ public class Type extends StorableObject {
      *         null if not found
      */
     public static Constructor constructor(Storage storage, Dict dict) {
-        String          typeId = dict.getString(KEY_TYPE, null);
-        Type            type;
-        Class           cls = null;
-        String          msg;
+        String  typeId = dict.getString(KEY_TYPE, null);
+        String  className = dict.getString(KEY_CLASSNAME, null);
+        Type    type;
+        Class   cls = null;
+        String  msg;
 
-        // TODO: Add support for the 'className' property
         if (typeId == null) {
             return null;
+        } else if (className != null) {
+            cls = loadClass(className, typeId + " " + dict.get(KEY_ID));
         } else if (typeId.equals("type")) {
             cls = Type.class;
         } else {
@@ -140,6 +142,29 @@ public class Type extends StorableObject {
             }
         }
         return null;
+    }
+
+    /**
+     * Loads and returns a specified class.
+     *
+     * @param className      the fully qualified class name to load
+     * @param objId          the object identifier for logging
+     *
+     * @return the class found in the class loader, or
+     *         null if not found
+     */
+    protected static Class loadClass(String className, String objId) {
+        ClassLoader  loader = ApplicationContext.getInstance().getClassLoader();
+        String       msg;
+
+        try {
+            return (className == null) ? null : loader.loadClass(className);
+        } catch (Exception e) {
+            msg = "couldn't find or load " + objId + " initializer class " +
+                  className;
+            LOG.warning(msg);
+            return null;
+        }
     }
 
     /**
@@ -197,18 +222,7 @@ public class Type extends StorableObject {
      * @return the type initializer class
      */
     public Class initializer() {
-        ClassLoader  loader = ApplicationContext.getInstance().getClassLoader();
-        String       className = dict.getString(KEY_INITIALIZER, null);
-        String       msg;
-
-        try {
-            return (className == null) ? null : loader.loadClass(className);
-        } catch (Exception e) {
-            msg = "couldn't find or load " + this + " initializer class " +
-                  className;
-            LOG.warning(msg);
-            return null;
-        }
+        return loadClass(dict.getString(KEY_INITIALIZER, null), toString());
     }
 
     /**
