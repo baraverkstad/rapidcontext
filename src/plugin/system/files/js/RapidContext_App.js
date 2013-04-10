@@ -62,6 +62,10 @@ RapidContext.App.init = function (app) {
         RapidContext.Util.injectStackTrace(stack);
         var widgets = RapidContext.UI.buildUI(ui, RapidContext.App._UI);
         MochiKit.DOM.appendChildNodes(document.body, widgets);
+        RapidContext.Util.registerSizeConstraints(document.body, "100%-20", "100%-20");
+        var resizer = MochiKit.Base.partial(RapidContext.Util.resizeElements, document.body);
+        MochiKit.Signal.connect(window, "onresize", resizer);
+        RapidContext.Util.resizeElements(document.body);
         if (app) {
             RapidContext.App._UI.init(false);
             return RapidContext.App.startApp(app);
@@ -898,9 +902,6 @@ RapidContext.App._UI = {
         this.initMenu();
         this.initDialogs();
         this.initSessionInfo();
-        var func = MochiKit.Base.partial(RapidContext.Util.resizeElements, document.body);
-        MochiKit.Signal.connect(window, "onresize", func);
-        RapidContext.Util.resizeElements(document.body);
     },
     // Initializes the popup menu
     initMenu: function () {
