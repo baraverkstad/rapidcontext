@@ -1017,21 +1017,21 @@ RapidContext.App._UI = {
             RapidContext.Util.registerSizeConstraints(pane, "100%", "100%");
             if (!this.container) {
                 pane.setAttrs({ pageCloseable: false });
-                this.paneContainer.show();
-                this.container = this.paneContainer;
-            } else if (!RapidContext.Widget.isWidget(this.container, "TabContainer")) {
-                this.paneContainer.hide();
-                this.tabContainer.addAll(this.paneContainer.getChildNodes());
-                this.tabContainer.show();
-                this.infoBar.show();
-                this.container = this.tabContainer;
-            }
-            this.container.addAll(pane);
-            if (this.container.selectChild) {
-                this.container.selectChild(pane);
+                document.body.appendChild(pane);
+                RapidContext.Util.resizeElements(pane);
+                this.container = pane;
+            } else {
+                if (this.container !== this.tabContainer) {
+                    this.tabContainer.addAll(this.container);
+                    this.tabContainer.show();
+                    this.infoBar.show();
+                    this.container = this.tabContainer;
+                }
+                this.tabContainer.addAll(pane);
+                this.tabContainer.selectChild(pane);
             }
         }
-        var msg = "Loading " + title + "...";
+        var msg = "Loading " + title + " app...";
         var overlay = new RapidContext.Widget.Overlay({ message: msg });
         MochiKit.DOM.replaceChildNodes(pane, overlay);
         return { root: pane, overlay: overlay };

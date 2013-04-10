@@ -14,8 +14,6 @@ div.about a:visited {
     color: #88AACC;
 }
   </style>
-  <Pane id="paneContainer" hidden="true" style="width: 100%; height: 100%;">
-  </Pane>
   <TabContainer id="tabContainer" hidden="true" w="100%" h="100%">
   </TabContainer>
   <Pane id="infoBar" hidden="true" style="position: absolute; top: 10px; right: 12px;">
