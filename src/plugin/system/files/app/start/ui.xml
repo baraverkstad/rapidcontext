@@ -2,7 +2,18 @@
 
 <ui>
   <style>
-.startApp {
+.startApp-about {
+    position: relative;
+    padding: 20px;
+    background: url(images/backgrounds/about.png);
+    color: #EEEEEE;
+}
+.startApp-about a:link,
+.startApp-about a:active,
+.startApp-about a:visited {
+    color: #88AACC;
+}
+.startApp-inline {
     position: relative;
     min-height: 200px;
     margin: 0 0 10px 0;
@@ -11,39 +22,147 @@
     padding: 6px 10px;
 }
   </style>
-  <p style="position: absolute; left: 0px; bottom: 0px; margin: 0px;">
-    <span class="label">App icons by: </span>
-    <a href="http://fasticon.com/" target="_blank">FastIcon.com</a>
-  </p>
-  <div style="float: left; width: 30%; height: 100%; border-right: solid 1px #6290d2; padding-right: 6px;">
-    <h3>
-      Apps:
-      <Icon id="appReload" ref="RELOAD" style="margin-left: 3px;" />
-      <Icon id="appLoading" ref="LOADING" style="margin-left: 3px;" />
-    </h3>
-    <div w="100%" h="100%-50" style="overflow-y: auto;">
-      <table style="border-collapse: collapse;">
-        <tbody id="appTable">
+  <TabContainer id="tabContainer" w="100%" h="100%">
+    <Pane pageTitle="Start" style="position: relative;">
+      <p style="position: absolute; left: 0px; bottom: 0px; margin: 0px;">
+        <span class="label">App icons by: </span>
+        <a href="http://fasticon.com/" target="_blank">FastIcon.com</a>
+      </p>
+      <div style="float: left; width: 30%; height: 100%; border-right: solid 1px #6290d2; padding-right: 6px;">
+        <h3>
+          Apps:
+          <Icon id="appReload" ref="RELOAD" style="margin-left: 3px;" />
+          <Icon id="appLoading" ref="LOADING" style="margin-left: 3px;" />
+        </h3>
+        <div w="100%" h="100%-50" style="overflow-y: auto;">
+          <table style="border-collapse: collapse;">
+            <tbody id="appTable">
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <Pane id="inlinePane" w="70%-14" h="100%" style="float: left; padding-left: 6px;">
+        <Pane w="50%-25" class="startApp-inline yellow" style="float: left; clear: left;">
+          <div style="padding: 0 10px; font-size: 13px;">
+            <img src="images/logotype-circle.png" style="float: right; width: 128px; height: 128px;" />
+            <h1 style="font-family: Trebuchet MS; margin: 6px 0;">Welcome to RapidContext!</h1>
+            <p style="margin-top: 6px;">RapidContext is a platform for dynamic web applications and tools.</p>
+            <p>If you haven't used it before, you can take the quick tour and
+            learn the basics in an easy, interactive fashion.</p>
+            <div style="float: right; margin: 12px 0;">
+              <a href="doc/8_changes.html" target="_blank">&#x25B6; Version History</a>
+            </div>
+            <Button id="tourButton" icon="NEXT" style="margin: 10px 0 10px 0;">Start Quick Tour</Button>
+          </div>
+        </Pane>
+      </Pane>
+    </Pane>
+  </TabContainer>
+  <Pane id="infoBar" style="position: absolute; top: 10px; right: 12px;">
+    <strong>User: </strong>
+    <span id="infoUser" />
+    <strong style="padding-left: 10px;">Environment: </strong>
+    <span id="infoEnv" />
+  </Pane>
+  <Popup id="menu" style="top: 26px; right: 10px; display: none; z-index: 10000; overflow: hidden;">
+    <h3 id="menuTitle">Anonymous User</h3>
+    <div id="menuAbout" class="widgetPopupItem">&#187; About RapidContext</div>
+    <div id="menuHelp" class="widgetPopupItem">&#187; Help &amp; Documentation</div>
+    <div id="menuAdmin" class="widgetPopupItem widgetPopupDisabled">&#187; Administration</div>
+    <hr/>
+    <div id="menuPassword" class="widgetPopupItem widgetPopupDisabled">&#187; Change Password</div>
+    <div id="menuLogInOut" class="widgetPopupItem">&#187; Login</div>
+  </Popup>
+  <Dialog id="passwordDialog" title="Change Password" modal="true" resizeable="false" style="width: 400px; height: 160px;">
+    <Form id="passwordForm">
+      <table w="100%" style="border-collapse: collapse; font-size: 11px;">
+        <tbody w="100%">
+          <tr>
+            <th class="label" style="width: 140px; padding-top: 6px; padding-right: 10px; text-align: right;">Current Password:</th>
+            <td style="padding-top: 2px;" w="100%-140">
+              <TextField name="current" type="password" w="100%-10" />
+              <FormValidator id="passwordError" name="current" mandatory="false" style="padding: 3px 0 6px 0;" />
+            </td>
+          </tr>
+          <tr>
+            <th class="label" style="padding-top: 4px; padding-right: 10px; text-align: right;">New Password:</th>
+            <td w="100%-140">
+              <TextField name="password" type="password" w="100%-10" />
+              <FormValidator name="password" regex=".{5,}" message="Minimum length is 5 characters." style="padding: 3px 0 6px 0;" />
+            </td>
+          </tr>
+          <tr>
+            <th class="label" style="padding-top: 4px; padding-right: 10px; text-align: right;">Confirm Password:</th>
+            <td w="100%-140">
+              <TextField name="passwordcheck" type="password" w="100%-10" />
+              <FormValidator name="passwordcheck" message="Not identical to password above." style="padding: 3px 0 6px 0;" />
+            </td>
+          </tr>
         </tbody>
       </table>
+    </Form>
+    <div style="margin: 15px 5px 5px 5px; text-align: right;">
+      <Button id="passwordCancel" icon="CANCEL">Cancel</Button>
+      <Button id="passwordSave" icon="OK" highlight="true" style="margin-left: 10px;">Change Password</Button>
     </div>
-  </div>
-  <Pane id="inlinePane" w="70%-14" h="100%" style="float: left; padding-left: 6px;">
-    <Pane w="50%-25" class="startApp yellow" style="float: left; clear: left;">
-      <div style="padding: 0 10px; font-size: 13px;">
-        <img src="images/logotype-circle.png" style="float: right; width: 128px; height: 128px;" />
-        <h1 style="font-family: Trebuchet MS; margin: 6px 0;">Welcome to RapidContext!</h1>
-        <p style="margin-top: 6px;">RapidContext is a platform for dynamic web applications and tools.</p>
-        <p>If you haven't used it before, you can take the quick tour and
-        learn the basics in an easy, interactive fashion.</p>
-        <div style="float: right; margin: 12px 0;">
-          <a href="doc/8_changes.html" target="_blank">&#x25B6; Version History</a>
-        </div>
-        <Button id="tourButton" icon="NEXT" style="margin: 10px 0 10px 0;">Start Quick Tour</Button>
+  </Dialog>
+  <Dialog id="logoutDialog" title="Logout Completed" modal="true" closeable="false" resizeable="false" style="width: 350px;">
+    <div style="margin: 0 10px 5px 10px;">
+      <h1 style="margin-top: 5px; font-size: 18px;">You've been logged out.</h1>
+      <p style="font-size: 15px;">Please close your web browser in order to complete the logout process.</p>
+    </div>
+  </Dialog>
+  <Dialog id="about" title="About RapidContext" modal="true" resizeable="false">
+    <div class="startApp-about" style="width: 500px;">
+      <div style="position: absolute; top: 35px; left: 185px; font-family: Trebuchet MS;">
+        <a href="http://www.rapidcontext.com/" target="_blank">
+          <span style="font-size: 40px; color: white;">RapidContext</span><br/>
+          <span style="font-size: 19px; color: #88AACC;">Access &gt; Discovery &gt; Insight</span><br/>
+          <span style="font-size: 12px; color: #EEEEEE; letter-spacing: 6px; line-height: 24px;">www.rapidcontext.com</span><br/>
+        </a>
       </div>
-    </Pane>
-  </Pane>
-  <Dialog id="tourDialog" title="RapidContext Quick Tour" center="false" resizeable="false" w="80%" h="190" style="z-index: 1000;">
+      <div style="padding: 140px 0 25px 0;">
+        <p><strong>Version: </strong><span id="aboutVersion">1.0.0</span><br/>
+        <strong>License: </strong><a href="doc/LICENSE.txt" target="_blank">BSD License</a> (source code)</p>
+
+        <p>Copyright &#169; 2007-2013 by Per Cederberg. All rights reserved.<br/>
+        Usage of the RapidContext name and logotype is restricted.<br/>
+        Please visit the
+        <a href="http://www.rapidcontext.com/" target="_blank">RapidContext project web site</a>
+        for more information.</p>
+
+        <p>This software would not be possible without the following software libraries;<br/>
+        &#187; <a href="http://www.mochikit.com/" target="_blank">MochiKit</a>,
+        copyright &#169; Bob Ippolito,<br/>
+        &#187; <a href="http://www.liquidx.net/plotkit/" target="_blank">PlotKit</a>,
+        copyright &#169; Alastair Tse,<br/>
+        &#187; <a href="http://jquery.com/" target="_blank">jQuery</a>,
+        copyright &#169; jQuery Foundation, Inc,<br/>
+        &#187; <a href="http://augmentjs.com/" target="_blank">Augment.js</a>,
+        copyright &#169; Oliver Nightingale,<br/>
+        &#187; <a href="http://code.google.com/p/crypto-js" target="_blank">Crypto-JS</a>,
+        copyright &#169; Jeff Mott,<br/>
+        &#187; <a href="http://www.mozilla.org/rhino/" target="_blank">Mozilla Rhino</a>,
+        copyright &#169; The Mozilla Foundation,<br/>
+        &#187; <a href="http://commons.apache.org/" target="_blank">Apache Commons</a>,
+        copyright &#169; The Apache Software Foundation, and<br/>
+        &#187; <a href="http://www.mortbay.org/jetty/" target="_blank">Jetty WebServer</a>,
+        copyright &#169; Mort Bay Consulting.</p>
+
+        <p>Images have kindly been provided and adapted from the following sources;<br/>
+        &#187; <a href="http://www.famfamfam.com/lab/icons/silk/" target="_blank">Silk
+        Icons by FamFamFam</a>, copyright &#169; Mark James (small widget icons),<br/>
+        &#187; <a href="http://fasticon.com/" target="_blank">FastIcon.com</a>,
+        copyright &#169; Dirceu Veiga (icons for built-in apps), and<br/>
+        &#187; <a href="http://dojotoolkit.org/" target="_blank">The Dojo Toolkit</a>,
+        copyright &#169; The Dojo Foundation (Table widget textures).</p>
+      </div>
+      <div style="position: absolute; bottom: 15px; right: 15px;">
+        <Button id="aboutClose" icon="OK" highlight="true" style="box-shadow: none;">Close</Button>
+      </div>
+    </div>
+  </Dialog>
+  <Dialog id="tourDialog" title="RapidContext Quick Tour" center="false" resizeable="false" w="80%" h="190">
     <Wizard id="tourWizard" style="width: 100%; height: 100%; font-size: larger;">
       <Pane pageTitle="Welcome to the Quick Tour of RapidContext!">
         <ul>

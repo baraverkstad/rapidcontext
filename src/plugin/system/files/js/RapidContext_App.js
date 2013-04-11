@@ -41,6 +41,7 @@ if (typeof(RapidContext.App) == "undefined") {
  *         callback when the initialization has completed
  */
 RapidContext.App.init = function (app) {
+    // Setup logging
     var stack = ["RapidContext.App.init"];
     RapidContext.Util.injectStackTrace(stack);
     RapidContext.Util.registerFunctionNames(RapidContext, "RapidContext");
@@ -51,27 +52,28 @@ RapidContext.App.init = function (app) {
                                RapidContext.Util.isDOM,
                                RapidContext.Util.reprDOM);
     LOG.info("Initializing RapidContext");
+
+    // Setup UI
+    RapidContext.Util.registerSizeConstraints(document.body, "100%-20", "100%-20");
+    var resizer = MochiKit.Base.partial(RapidContext.Util.resizeElements, document.body);
+    MochiKit.Signal.connect(window, "onresize", resizer);
+    RapidContext.Util.resizeElements(document.body);
+    var overlay = new RapidContext.Widget.Overlay({ message: "Loading..." });
+    MochiKit.DOM.replaceChildNodes(document.body, overlay);
+
+    // Load platform data
     var list = [ RapidContext.App.callProc("System.Status"),
                  RapidContext.App.callProc("System.Session.Current"),
                  RapidContext.App.callProc("System.App.List") ];
     var d = MochiKit.Async.gatherResults(list);
+
+    // Launch app
     d.addCallback(function () {
-        return RapidContext.App.loadXML("ui/core.xml");
-    });
-    d.addCallback(function (ui) {
         RapidContext.Util.injectStackTrace(stack);
-        var widgets = RapidContext.UI.buildUI(ui, RapidContext.App._UI);
-        MochiKit.DOM.appendChildNodes(document.body, widgets);
-        RapidContext.Util.registerSizeConstraints(document.body, "100%-20", "100%-20");
-        var resizer = MochiKit.Base.partial(RapidContext.Util.resizeElements, document.body);
-        MochiKit.Signal.connect(window, "onresize", resizer);
-        RapidContext.Util.resizeElements(document.body);
-        if (app) {
-            RapidContext.App._UI.init(false);
-            return RapidContext.App.startApp(app);
-        } else {
-            RapidContext.App._UI.init(true);
-            return RapidContext.App._startAuto(true);
+        try {
+            return RapidContext.App.startApp(app || "start");
+        } catch (e) {
+            return RapidContext.App.startApp("admin");
         }
     });
     d.addErrback(RapidContext.UI.showError);
@@ -115,6 +117,20 @@ RapidContext.App.apps = function () {
 };
 
 /**
+ * Returns an array with running app instances.
+ *
+ * @return {Array} the array of app instances
+ */
+RapidContext.App._instances = function () {
+    var res = [];
+    var apps = RapidContext.App.apps();
+    for (var i = 0; i < apps.length; i++) {
+        res = res.concat(apps[i].instances || []);
+    }
+    return res;
+};
+
+/**
  * Finds the app launcher from an app instance, class name or
  * launcher. In the last case, the matching cached launcher will be
  * returned.
@@ -134,49 +150,11 @@ RapidContext.App.findApp = function (app) {
         var l = apps[i];
         if (l.className == null) {
             LOG.error("Launcher does not have 'className' property", l);
-        } else if (l.id == app || l.className == app || l.className == app.className) {
+        } else if (l.id == app || l.className == app || l.id == app.id) {
             return l;
         }
     }
     return null;
-};
-
-/**
- * Creates and starts apps on startup or when no other apps are active.
- *
- * @param {Boolean} startup the initial startup flag
- *
- * @return {Deferred} a `MochiKit.Async.Deferred` object that will
- *         callback when the apps have been started
- */
-RapidContext.App._startAuto = function (startup) {
-    var stack = RapidContext.Util.stackTrace();
-    var d = MochiKit.Async.wait(0);
-    var apps = RapidContext.App.apps();
-    var autoLaunch = { auto: true, once: true };
-    var instances = 0;
-    for (var i = 0; i < apps.length; i++) {
-        instances += apps[i].instances.length;
-        if (startup && apps[i].launch in autoLaunch) {
-            var fun = MochiKit.Base.partial(RapidContext.App.startApp, apps[i]);
-            RapidContext.Util.injectStackTrace(stack, fun);
-            d.addBoth(fun);
-            d.addErrback(RapidContext.UI.showError);
-            instances++;
-        }
-    }
-    if (instances == 0) {
-        var fun = MochiKit.Base.partial(RapidContext.App.startApp, "AdminApp");
-        RapidContext.Util.injectStackTrace(stack, fun);
-        d.addCallback(fun);
-        d.addErrback(RapidContext.UI.showError);
-    } else if (startup) {
-        var fun = MochiKit.Base.partial(RapidContext.App._startAuto, false);
-        RapidContext.Util.injectStackTrace(stack, fun);
-        d.addErrback(fun);
-    }
-    RapidContext.App._addErrbackLogger(d);
-    return d;
 };
 
 RapidContext.App._cbAssign = function (obj, key) {
@@ -212,22 +190,41 @@ RapidContext.App._cbAssign = function (obj, key) {
  * RapidContext.App.startApp('help', window.open());
  */
 RapidContext.App.startApp = function (app, container) {
-    var d = MochiKit.Async.wait(0.1);
+
+    // Setup variables and find app launcher
     var launcher = RapidContext.App.findApp(app);
     if (launcher == null) {
         LOG.error("No matching app launcher found", app);
         throw new Error("No matching app launcher found");
     }
-    // TODO: Better detection of Window objects...
-    if (container && typeof(container.location) == "object") {
+    var instance = null;
+    var instances = RapidContext.App._instances();
+    var startApp = RapidContext.App.findApp("start");
+    var d = MochiKit.Async.wait(0.1);
+    var ui = null;
+
+    // Initialize app UI container
+    launcher.instances = launcher.instances || [];
+    if ($.isWindow(container)) {
         var url = "rapidcontext/app/" + launcher.id;
         container.location.href = RapidContext.Util.resolveURI(url);
         return d;
+    } else if (startApp && startApp.instances && startApp.instances.length) {
+        var opts = { title: launcher.name, closeable: (launcher.launch != "once") };
+        ui = startApp.instances[0].initAppPane(container, opts);
+    } else if (instances.length == 1 && launcher.id != "start") {
+        // Switch from single-app to multi-app mode
+        d = RapidContext.App.startApp("start");
+        d.addCallback(function (instance) {
+            return RapidContext.App.startApp(app, container);
+        });
+        return d;
+    } else {
+        var ui = { root: document.body, overlay: document.body.childNodes[0] };
     }
-    var stack = RapidContext.Util.stackTrace();
-    var instance = null;
-    var ui = RapidContext.App._UI.createAppPane(launcher.name, container, launcher.launch != "once");
     MochiKit.Signal.connect(ui.root, "onclose", d, "cancel");
+
+    // Load app resources
     if (launcher.creator == null) {
         LOG.info("Loading app " + launcher.name, launcher);
         launcher.resource = {};
@@ -247,6 +244,7 @@ RapidContext.App.startApp = function (app, container) {
                 launcher.resource[res.id] = res.url;
             }
         }
+        var stack = RapidContext.Util.stackTrace();
         d.addCallback(function () {
             RapidContext.Util.injectStackTrace(stack);
             launcher.creator = this[launcher.className] || window[launcher.className];
@@ -257,6 +255,8 @@ RapidContext.App.startApp = function (app, container) {
             RapidContext.Util.registerFunctionNames(launcher.creator, launcher.className);
         });
     }
+
+    // Retrieve license data (if requested)
     if (typeof(launcher.license) == "string") {
         var status = RapidContext.App.status();
         var user = RapidContext.App.user();
@@ -285,6 +285,8 @@ RapidContext.App.startApp = function (app, container) {
             return null;
         });
     }
+
+    // Create app instance, build UI and start app
     d.addCallback(function () {
         RapidContext.Util.injectStackTrace(stack);
         LOG.info("Starting app " + launcher.name, launcher);
@@ -307,6 +309,22 @@ RapidContext.App.startApp = function (app, container) {
         ui.overlay.setAttrs({ message: "Working..." });
         return RapidContext.App.callApp(instance, "start");
     });
+
+    // Convert to start app UI (if previously in single-app mode)
+    if (launcher.id == "start" && instances.length == 1) {
+        var elems = [].slice.call(document.body.childNodes);
+        var opts = { title: instances[0].name, closeable: false, background: true };
+        d.addCallback(function () {
+            return RapidContext.App.callApp(instance, "initAppPane", null, opts);
+        });
+        d.addCallback(function (ui) {
+            ui.root.removeAll();
+            ui.root.addAll(elems);
+            RapidContext.Util.resizeElements(ui.root);
+        });
+    }
+
+    // Report errors and return app instance
     d.addErrback(function (err) {
         if (err instanceof MochiKit.Async.CancelledError) {
             // Ignore cancellation errors
@@ -321,6 +339,7 @@ RapidContext.App.startApp = function (app, container) {
     d.addCallback(function () {
         return instance;
     });
+
     RapidContext.App._addErrbackLogger(d);
     return d;
 };
@@ -336,7 +355,7 @@ RapidContext.App.startApp = function (app, container) {
  */
 RapidContext.App.stopApp = function (app) {
     var launcher = RapidContext.App.findApp(app);
-    if (launcher == null || launcher.instances.length <= 0) {
+    if (!(launcher && launcher.instances && launcher.instances.length)) {
         LOG.error("No running app instance found", app);
         throw new Error("No running app instance found");
     }
@@ -383,7 +402,7 @@ RapidContext.App.callApp = function (app, method) {
         LOG.error("No matching app launcher found", app);
         throw new Error("No matching app launcher found");
     }
-    if (launcher.instances.length <= 0) {
+    if (!(launcher.instances && launcher.instances.length)) {
         d = RapidContext.App.startApp(app);
     } else {
         var pos = MochiKit.Base.findIdentical(launcher.instances, app);
@@ -814,7 +833,7 @@ RapidContext.App._Cache = {
     status: null,
     user: null,
     apps: [],
-    // Compares two object on the 'name' property
+    // Compares two object on the 'id' property
     compareId: function (a, b) {
         // TODO: replace with MochiKit.Base.keyComparator once #331 is fixed
         if (a == null || b == null) {
@@ -825,8 +844,6 @@ RapidContext.App._Cache = {
     },
     // Object comparator for 'id' property
     _cmpId: MochiKit.Base.keyComparator("id"),
-    // Class name getter
-    _getClassName: MochiKit.Base.itemgetter("className"),
     // Updates the cache data with the results from a procedure.
     update: function (proc, data) {
         switch (proc) {
@@ -850,10 +867,9 @@ RapidContext.App._Cache = {
             }
             break;
         case "System.App.List":
+            var idxs = {};
             for (var i = 0; i < this.apps.length; i++) {
-                if (this.apps[i].instances.length <= 0) {
-                    this.apps.splice(i--, 1);
-                }
+                idxs[this.apps[i].id] = i;
             }
             for (var i = 0; i < data.length; i++) {
                 // TODO: use deep clone
@@ -868,172 +884,26 @@ RapidContext.App._Cache = {
                     }
                 }
                 if (launcher.className == null) {
-                    LOG.error("Launcher does not have 'className' property", launcher);
-                    launcher.instances = [];
-                    this.apps.push(launcher);
+                    LOG.error("App missing 'className' property", launcher);
+                }
+                var pos = idxs[launcher.id];
+                if (pos >= 0) {
+                    delete idxs[launcher.id];
+                    MochiKit.Base.update(this.apps[pos], launcher);
                 } else {
-                    var names = this.apps.map(this._getClassName);
-                    var pos = names.indexOf(launcher.className);
-                    if (pos < 0) {
-                        launcher.instances = [];
-                        this.apps.push(launcher);
-                    } else {
-                        MochiKit.Base.update(this.apps[pos], launcher);
-                    }
+                    this.apps.push(launcher);
+                }
+            }
+            // TODO: use separate list of app instances...
+            var arr = MochiKit.Base.values(idxs).reverse();
+            for (var i = 0; i < arr.length; i++) {
+                var pos = arr[i];
+                if (this.apps[pos].instances == null) {
+                    this.apps.splice(pos, 1);
                 }
             }
             LOG.info("Updated cached apps", this.apps);
             break;
         }
-    }
-};
-
-/**
- * Provides default application user interface handling.
- */
-RapidContext.App._UI = {
-    // Initializes the core user interface
-    init: function (initAppSwitcher) {
-        if (initAppSwitcher) {
-            this.container = this.tabContainer;
-            this.container.show();
-            this.infoBar.show();
-        }
-        this.initMenu();
-        this.initDialogs();
-        this.initSessionInfo();
-    },
-    // Initializes the popup menu
-    initMenu: function () {
-        var show = { effect: "appear", duration: 0.2 };
-        var hide = { effect: "fade", duration: 0.2, delay: 0.2 };
-        this.menu.setAttrs({ showAnim: show, hideAnim: hide });
-        if (/MSIE/.test(navigator.userAgent)) {
-            // TODO: MSIE 6.0 sets div width to 100%, so we hack the width
-            this.menu.style.width = "250px";
-        }
-        MochiKit.Signal.connect(this.infoBar, "onmousemove", this.menu, "show");
-        MochiKit.Signal.connect(this.infoBar, "onmouseleave", this.menu, "hide");
-        MochiKit.Signal.connect(this.menu, "onmouseleave", this.menu, "hide");
-        MochiKit.Signal.connect(this.menu, "onclick", this, "hideMenu");
-        MochiKit.Signal.connect(this.menuAbout, "onclick", this.about, "show");
-        var func = MochiKit.Base.partial(RapidContext.App.startApp, "HelpApp", null);
-        MochiKit.Signal.connect(this.menuHelp, "onclick", func);
-        var func = MochiKit.Base.partial(RapidContext.App.startApp, "AdminApp", null);
-        MochiKit.Signal.connect(this.menuAdmin, "onclick", func);
-        MochiKit.Signal.connect(this.menuPassword, "onclick", this, "showPasswordDialog");
-        MochiKit.Signal.connect(this.menuLogInOut, "onclick", this, "loginOut");
-    },
-    // Initializes the about and password dialogs
-    initDialogs: function () {
-        // TODO: review the following hacks on the about dialog...
-        MochiKit.Style.setElementPosition(this.about, { x: 0, y: 0});
-        var div = this.about.lastChild;
-        MochiKit.Style.setStyle(div, { width: "auto", height: "auto", padding: "0" });
-        RapidContext.Util.registerSizeConstraints(div, null, null, null);
-        MochiKit.Signal.connect(this.aboutClose, "onclick", this.about, "hide");
-        MochiKit.Signal.connect(this.passwordCancel, "onclick", this.passwordDialog, "hide");
-        MochiKit.Signal.connect(this.passwordSave, "onclick", this, "changePassword");
-    },
-    // Initializes information labels
-    initSessionInfo: function () {
-        var user = RapidContext.App.user();
-        if (user && user.id) {
-            MochiKit.DOM.replaceChildNodes(this.infoUser, user.name || user.id);
-            MochiKit.DOM.replaceChildNodes(this.menuTitle, user.longName);
-            MochiKit.DOM.replaceChildNodes(this.menuLogInOut, "\u00bb Logout");
-            MochiKit.DOM.removeElementClass(this.menuAdmin, "widgetPopupDisabled");
-            MochiKit.DOM.removeElementClass(this.menuPassword, "widgetPopupDisabled");
-        } else {
-            MochiKit.DOM.replaceChildNodes(this.infoUser, "anonymous");
-            MochiKit.DOM.replaceChildNodes(this.menuTitle, "Anonymous User");
-            MochiKit.DOM.replaceChildNodes(this.menuLogInOut, "\u00bb Login");
-            MochiKit.DOM.addElementClass(this.menuAdmin, "widgetPopupDisabled");
-            MochiKit.DOM.addElementClass(this.menuPassword, "widgetPopupDisabled");
-        }
-        var status = RapidContext.App.status();
-        var env = status.environment;
-        env = (env && env.name) ? env.name : "<none>";
-        MochiKit.DOM.replaceChildNodes(this.infoEnv, env);
-        var version = MochiKit.Text.format("{version} ({date})", status);
-        MochiKit.DOM.replaceChildNodes(this.aboutVersion, version);
-    },
-    // Hides the popup menu instantly
-    hideMenu: function() {
-        this.menu.setAttrs({ hideAnim: { effect: "fade", duration: 0 } });
-        this.menu.hide();
-        this.menu.setAttrs({ hideAnim: { effect: "fade", duration: 0.2, delay: 0.2 } });
-    },
-    // Shows the password change dialog
-    showPasswordDialog: function () {
-        this.passwordForm.reset();
-        this.passwordDialog.show();
-        this.passwordDialog.resizeToContent();
-    },
-    // Changes the user password (from the dialog)
-    changePassword: function () {
-        var data = this.passwordForm.valueMap();
-        if (data.password != data.passwordcheck) {
-            data.passwordcheck = "";
-        }
-        this.passwordForm.update(data);
-        if (this.passwordForm.validate()) {
-            var user = RapidContext.App.user();
-            var prefix = user.id + ":" + user.realm + ":";
-            var oldHash = Crypto.MD5(prefix + data.current).toString();
-            var newHash = Crypto.MD5(prefix + data.password).toString();
-            var args = [oldHash, newHash];
-            var d = RapidContext.App.callProc("System.User.ChangePassword", args);
-            d.addBoth(MochiKit.Base.method(this, "callbackChangePassword"));
-            this.passwordSave.setAttrs({ disabled: true, icon: "LOADING" });
-        }
-        this.passwordDialog.resizeToContent();
-    },
-    // Shows the login or logout dialogs
-    loginOut: function () {
-        RapidContext.App.callProc("System.Session.Terminate", [null]);
-        this.logoutDialog.show();
-        this.logoutDialog.resizeToContent();
-        // TODO: Replace this hack that creates a back overlay background
-        this.logoutDialog._modalNode.firstChild.style.backgroundColor = "#000000";
-    },
-    // Callback for the password change dialog
-    callbackChangePassword: function (res) {
-        this.passwordSave.setAttrs({ disabled: false, icon: "OK" });
-        if (res instanceof Error) {
-            var field = this.passwordForm.fieldMap();
-            this.passwordError.addError(field.current, res.message);
-            this.passwordDialog.resizeToContent();
-        } else {
-            this.passwordDialog.hide();
-        }
-    },
-    // Initializes (and optionally creates) a new app pane
-    createAppPane: function (title, pane, closeable) {
-        if (pane == null) {
-            var style = { position: "relative" };
-            var attrs = { pageTitle: title, pageCloseable: closeable, style: style };
-            pane = new RapidContext.Widget.Pane(attrs);
-            RapidContext.Util.registerSizeConstraints(pane, "100%", "100%");
-            if (!this.container) {
-                pane.setAttrs({ pageCloseable: false });
-                document.body.appendChild(pane);
-                RapidContext.Util.resizeElements(pane);
-                this.container = pane;
-            } else {
-                if (this.container !== this.tabContainer) {
-                    this.tabContainer.addAll(this.container);
-                    this.tabContainer.show();
-                    this.infoBar.show();
-                    this.container = this.tabContainer;
-                }
-                this.tabContainer.addAll(pane);
-                this.tabContainer.selectChild(pane);
-            }
-        }
-        var msg = "Loading " + title + " app...";
-        var overlay = new RapidContext.Widget.Overlay({ message: msg });
-        MochiKit.DOM.replaceChildNodes(pane, overlay);
-        return { root: pane, overlay: overlay };
     }
 };
