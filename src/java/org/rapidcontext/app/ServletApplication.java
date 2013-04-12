@@ -63,6 +63,11 @@ public class ServletApplication extends HttpServlet {
         Logger.getLogger(ServletApplication.class.getName());
 
     /**
+     * The documentation storage path.
+     */
+    public static final Path DOC_PATH = new Path("/files/doc/");
+
+    /**
      * The context to use for process execution.
      */
     private ApplicationContext ctx = null;
@@ -107,8 +112,7 @@ public class ServletApplication extends HttpServlet {
             ZipStorage docStore = new ZipStorage(docZip);
             RootStorage root = (RootStorage) ctx.getStorage();
             Path storagePath = Storage.PATH_STORAGE.child("doc", true);
-            Path overlayPath = FileRequestHandler.PATH_FILES.child("doc", true);
-            root.mount(docStore, storagePath, false, overlayPath, 0);
+            root.mount(docStore, storagePath, false, DOC_PATH, 0);
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "failed to mount doc storage", e);
         }
