@@ -325,6 +325,31 @@ public class Request implements HttpUtil {
     }
 
     /**
+     * Matches and modifies the request path with the specified path
+     * prefix. If a match is found, the prefix is removed from the
+     * request path and true is returned. If the prefix ends with a /
+     * and the path would match the shorter prefix, a redirect is
+     * sent and false is returned.
+     *
+     * @param prefix         the path prefix to check
+     *
+     * @return true if the request path matched the prefix, or
+     *         false otherwise
+     */
+    public boolean matchPath(String prefix) {
+        String path = getPath();
+        if (path.startsWith(prefix)) {
+            if (prefix.length() > 0) {
+                setPath(path.substring(prefix.length()));
+            }
+            return true;
+        } else if (requestPath.startsWith(StringUtils.removeEnd(prefix, "/"))) {
+            sendRedirect(getUrl() + "/");
+        }
+        return false;
+    }
+
+    /**
      * Returns the request content type value. This is normally set
      * to "application/x-www-form-urlencoded" for POST data, but
      * other MIME types may occasionally be used.
@@ -354,18 +379,15 @@ public class Request implements HttpUtil {
      *         null if not present
      */
     public Dict getAuthentication() {
-        String    auth = request.getHeader("Authorization");
-        String[]  pairs;
-        String[]  pair;
-        Dict      dict = new Dict();
-
+        String auth = request.getHeader("Authorization");
         if (auth == null || !auth.contains(" ")) {
             return null;
         } else {
-            pairs = auth.split("[ \t\n\r,]");
+            Dict dict = new Dict();
+            String[] pairs = auth.split("[ \t\n\r,]");
             dict.set("type", pairs[0]);
             for (int i = 1; i < pairs.length; i++) {
-                pair = pairs[i].split("=");
+                String[] pair = pairs[i].split("=");
                 if (pair.length == 2) {
                     dict.set(pair[0], StringUtils.strip(pair[1], "\""));
                 } else {
