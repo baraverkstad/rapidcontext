@@ -16,6 +16,7 @@ package org.rapidcontext.core.type;
 
 import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.core.data.Dict;
+import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.web.Request;
 
 /**
@@ -201,12 +202,15 @@ public class WebMatcher {
     }
 
     /**
-     * Processes a matching request.
+     * Processes a matching request. If authentication is required, an
+     * authentication request will be sent if a user isn't available.
      *
      * @param request        the request to process
      */
     public void process(Request request) {
-        if (request.matchPath(path())) {
+        if (auth() && SecurityContext.currentUser() == null) {
+            service.errorUnauthorized(request);
+        } else if (request.matchPath(path())) {
             service.process(request);
         }
     }

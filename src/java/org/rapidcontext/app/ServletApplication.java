@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Path;
@@ -124,6 +125,7 @@ public class ServletApplication extends HttpServlet {
         int           bestScore = 0;
 
         try {
+            processAuthCheck(request);
             for (int i = 0; i < matchers.length; i++) {
                 int score = matchers[i].match(request);
                 if (score > bestScore) {
@@ -132,9 +134,6 @@ public class ServletApplication extends HttpServlet {
                 }
             }
             if (bestMatcher != null) {
-                if (bestMatcher.auth()) {
-                    processAuth(request);
-                }
                 if (!request.hasResponse()) {
                     bestMatcher.process(request);
                 }
@@ -149,43 +148,58 @@ public class ServletApplication extends HttpServlet {
         LOG.fine(ip(request) + "Request to " + request.getPath() +
                  " processed in " + request.getProcessTime() +
                  " millisecs");
+        processAuthReset();
         request.dispose();
-        Session.activeSession.set(null);
     }
 
     /**
-     * Processes authentication for a servlet request. Note that a
-     * request response may be set if the request has been handled,
-     * for instance by returning an HTTP authentication request.
-     * On successful authentication, the current user will be set
-     * but the request will not contain a response.
+     * Clears any previous user authentication. This will remove the
+     * security context and session info from this thread. It may
+     * also delete the session if it has been invalidated.
+     */
+    private void processAuthReset() {
+        Session session = (Session) Session.activeSession.get();
+        Session.activeSession.set(null);
+        if (session != null && !session.isValid()) {
+            Session.remove(ctx.getStorage(), session.id());
+        }
+        SecurityContext.authClear();
+    }
+
+    /**
+     * Re-establishes user authentication for a servlet request. This
+     * will clear any previous user authentication and check for
+     * a valid session or authentication response. No request
+     * response will be generated from this method.
      *
      * @param request        the request to process
      */
-    private void processAuth(Request request) {
-        String   sessionId = request.getSessionId();
-        Session  session = null;
-        String   userId = null;
-        User     user = null;
-        Dict     authData;
+    private void processAuthCheck(Request request) {
 
-        // Authenticate user if session or digest provided
-        SecurityContext.authClear();
+        // Clear previous authentication
+        processAuthReset();
+
+        // Check for valid session
         try {
-            if (sessionId != null) {
-                session = Session.find(ctx.getStorage(), sessionId);
-            }
+            String id = StringUtils.defaultString(request.getSessionId());
+            Session session = Session.find(ctx.getStorage(), id);
             if (session != null) {
                 Session.activeSession.set(session);
                 session.updateAccessTime();
                 session.validate(request.getRemoteAddr(),
                                  request.getHeader("User-Agent"));
-                userId = session.userId();
+                if (!StringUtils.isEmpty(session.userId())) {
+                    SecurityContext.auth(session.userId());
+                }
             }
-            if (userId != null) {
-                SecurityContext.auth(userId);
-            } else if (isAuthRequired(request)) {
-                authData = request.getAuthentication();
+        } catch (Exception e) {
+            LOG.info(ip(request) + e.getMessage());
+        }
+
+        // Check for authentication response
+        try {
+            if (SecurityContext.currentUser() == null) {
+                Dict authData = request.getAuthentication();
                 if (authData != null) {
                     processAuthResponse(request, authData);
                 }
@@ -194,39 +208,10 @@ public class ServletApplication extends HttpServlet {
             LOG.info(ip(request) + e.getMessage());
         }
 
-        // Update session and request authentication (if needed)
-        user = SecurityContext.currentUser();
-        if (user == null) {
+        // TODO: remove stale session cookies intelligently!
+        if (SecurityContext.currentUser() == null) {
             request.setSessionId(null, 0);
         }
-        if (session != null && !session.isValid()) {
-            Session.remove(ctx.getStorage(), session.id());
-        }
-        if (user == null && isAuthRequired(request)) {
-            request.sendAuthenticationRequest(User.DEFAULT_REALM,
-                                              SecurityContext.nonce());
-        }
-    }
-
-    /**
-     * Checks if authentication is required for a specific resource.
-     *
-     * @param request        the request to check
-     *
-     * @return true if the request requires authentication, or
-     *         false otherwise
-     */
-    private boolean isAuthRequired(Request request) {
-        String   path = request.getPath().toLowerCase();
-        boolean  isRoot = path.equals("") || path.equals("/");
-
-        // TODO: make this control configurable in some way, probably
-        //       by checking which resources are available for
-        //       anonymous users
-        return (isRoot && request.getUrl().endsWith("/")) ||
-               path.equals("index.html") ||
-               path.startsWith("/rapidcontext/") ||
-               !request.hasMethod("GET");
     }
 
     /**
