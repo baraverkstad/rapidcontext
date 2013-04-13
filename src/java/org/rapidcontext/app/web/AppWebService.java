@@ -59,6 +59,12 @@ public class AppWebService extends FileWebService {
     public static final String KEY_APP = "app";
 
     /**
+     * The storage web service used for the to "rapidcontext/storage"
+     * URLs.
+     */
+    protected StorageWebService storage;
+
+    /**
      * Returns the platform version number.
      *
      * @return the platform version number
@@ -109,6 +115,7 @@ public class AppWebService extends FileWebService {
     public AppWebService(String id, String type, Dict dict) {
         super(id, type, dict);
         dict.set(KEY_APP, appId());
+        storage = new StorageWebService("id", "type", new Dict());
     }
 
     /**
@@ -121,7 +128,19 @@ public class AppWebService extends FileWebService {
         return dict.getString(KEY_APP, "start");
     }
 
-    // TODO: if (str.startsWith("rapidcontext/storage")) {
+    /**
+     * Processes a request for this handler. This method assumes
+     * local request paths (removal of the mapped URL base).
+     *
+     * @param request the request to process
+     */
+    public void process(Request request) {
+        if (request.matchPath("rapidcontext/storage/")) {
+            storage.process(request);
+        } else if (!request.hasResponse()) {
+            super.process(request);
+        }
+    }
 
     /**
      * Processes an HTTP GET request.

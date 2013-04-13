@@ -41,9 +41,10 @@ import org.rapidcontext.core.web.Request;
 import org.rapidcontext.util.FileUtil;
 
 /**
- * A storage API web service. This service supports both WebDAV and
- * normal browser requests and provides a file-system-like view of
- * the storage hierarchy.
+ * A storage API web service. This service is used for accessing the
+ * raw data storage through HTTP or WebDAV and provides a view of the
+ * storage hierarchy similar to a file system. Note that WebDAV makes
+ * use of extended HTTP methods.
  *
  * @author   Per Cederberg
  * @version  1.0
@@ -111,6 +112,8 @@ public class StorageWebService extends WebService {
         Dict                dict;
         String              str;
 
+        // TODO: Make the storage service self-reliant (serving the CSS file it needs)
+        // TODO: Change URLs to serve binary files by default (as FileWebService)
         request.setPath(null);
         try {
             // TODO: Extend data lookup via standardized query language
