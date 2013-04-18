@@ -138,6 +138,33 @@ public abstract class WebService extends StorableObject implements HttpUtil {
     }
 
     /**
+     * Returns the current session for the request. Or creates a new
+     * one if none existed.
+     *
+     * @param request        the request to check
+     * @param create         the session create flag
+     *
+     * @return the user session found or created, or
+     *         null if not available
+     */
+    public Session session(Request request, boolean create) {
+        Session session = (Session) Session.activeSession.get();
+        if (create && session == null) {
+            String ip = request.getRemoteAddr();
+            String client = request.getHeader("User-Agent");
+            User user = SecurityContext.currentUser();
+            String userId = (user == null) ? null : user.id();
+            session = new Session(userId, ip, client);
+            Session.activeSession.set(session);
+            long destroy = session.destroyTime().getTime();
+            long now = System.currentTimeMillis();
+            int expiry = (int) ((destroy - now) / 1000);
+            request.setSessionId(session.id(), expiry);
+        }
+        return session;
+    }
+
+    /**
      * Processes a request for this handler. This method assumes
      * local request paths (removal of the mapped URL base).
      *

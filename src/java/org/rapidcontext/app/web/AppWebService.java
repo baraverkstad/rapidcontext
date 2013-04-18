@@ -30,6 +30,7 @@ import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.js.JsSerializer;
+import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.type.Session;
@@ -148,14 +149,16 @@ public class AppWebService extends FileWebService {
      * @param request        the request to process
      */
     protected void doGet(Request request) {
-        String path = request.getPath();
-        String baseUrl = StringUtils.removeEnd(request.getUrl(), path);
-        if (request.matchPath("rapidcontext/app/")) {
-            processApp(request, request.getPath(), baseUrl);
-        } else if (!request.hasResponse()) {
+        super.doGet(request);
+        if (!request.hasResponse()) {
+            String path = request.getPath();
+            String baseUrl = StringUtils.removeEnd(request.getUrl(), path);
             boolean isRoot = path.equals("") || path.startsWith("index.htm");
-            super.doGet(request);
-            if (!request.hasResponse() && isRoot) {
+            if (SecurityContext.currentUser() == null) {
+                errorUnauthorized(request);
+            } else if (request.matchPath("rapidcontext/app/")) {
+                processApp(request, request.getPath(), baseUrl);
+            } else if (isRoot) {
                 processApp(request, appId(), baseUrl);
             }
         }
@@ -167,7 +170,9 @@ public class AppWebService extends FileWebService {
      * @param request        the request to process
      */
     protected void doPost(Request request) {
-        if (request.matchPath("rapidcontext/download")) {
+        if (SecurityContext.currentUser() == null) {
+            errorUnauthorized(request);
+        } else if (request.matchPath("rapidcontext/download")) {
             processDownload(request);
         } else if (request.matchPath("rapidcontext/upload")) {
             processUpload(request);
@@ -194,6 +199,7 @@ public class AppWebService extends FileWebService {
         Object              obj;
         String              str;
 
+        session(request, true);
         path = PATH_FILES.child("index.tmpl", false);
         obj = ctx.getStorage().load(path);
         if (obj instanceof Binary) {

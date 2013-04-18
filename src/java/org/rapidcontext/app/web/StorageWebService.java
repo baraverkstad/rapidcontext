@@ -96,6 +96,7 @@ public class StorageWebService extends WebService {
     public void process(Request request) {
         request.setResponseHeader(HEADER.DAV, "2");
         request.setResponseHeader("MS-Author-Via", "DAV");
+        // TODO: Change to generic security model
         if (!SecurityContext.hasAdmin()) {
             errorUnauthorized(request);
         } else if (request.hasMethod(METHOD.PROPFIND)) {

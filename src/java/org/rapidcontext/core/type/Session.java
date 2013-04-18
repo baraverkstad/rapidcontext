@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -110,6 +110,11 @@ public class Session extends StorableObject {
     public static ThreadLocal activeSession = new ThreadLocal();
 
     /**
+     * The initial creation flag.
+     */
+    private boolean created = false;
+
+    /**
      * The modified data flag.
      */
     private boolean modified = false;
@@ -207,6 +212,8 @@ public class Session extends StorableObject {
         dict.set(KEY_IP, ip);
         dict.set(KEY_CLIENT, client);
         dict.set(KEY_FILES, new Dict());
+        created = true;
+        modified = true;
     }
 
     /**
@@ -248,6 +255,7 @@ public class Session extends StorableObject {
      * Discards the modified flag for this object.
      */
     protected void passivate() {
+        created = false;
         modified = false;
     }
 
@@ -260,6 +268,16 @@ public class Session extends StorableObject {
     public Dict serialize() {
         dict.setBoolean("_valid", isValid());
         return dict;
+    }
+
+    /**
+     * Checks if this session is new (hasn't been stored).
+     *
+     * @return true if the session is new, or
+     *         false otherwise
+     */
+    public boolean isNew() {
+        return created;
     }
 
     /**

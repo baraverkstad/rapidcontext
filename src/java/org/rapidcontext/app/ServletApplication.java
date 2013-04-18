@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -30,6 +30,7 @@ import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.RootStorage;
 import org.rapidcontext.core.storage.Storage;
+import org.rapidcontext.core.storage.StorageException;
 import org.rapidcontext.core.storage.ZipStorage;
 import org.rapidcontext.core.type.Session;
 import org.rapidcontext.core.type.User;
@@ -138,6 +139,9 @@ public class ServletApplication extends HttpServlet {
                     bestMatcher.process(request);
                 }
             }
+            if (Session.activeSession.get() == null && request.getSessionId() != null) {
+                request.setSessionId(null, 0);
+            }
             if (!request.hasResponse()) {
                 request.sendError(HttpServletResponse.SC_NOT_FOUND);
             }
@@ -155,13 +159,20 @@ public class ServletApplication extends HttpServlet {
     /**
      * Clears any previous user authentication. This will remove the
      * security context and session info from this thread. It may
-     * also delete the session if it has been invalidated.
+     * also delete the session if it has been invalidated, or store
+     * it if newly created.
      */
     private void processAuthReset() {
         Session session = (Session) Session.activeSession.get();
         Session.activeSession.set(null);
         if (session != null && !session.isValid()) {
             Session.remove(ctx.getStorage(), session.id());
+        } else if (session != null && session.isNew()) {
+            try {
+                Session.store(ctx.getStorage(), session);
+            } catch (StorageException e) {
+                LOG.log(Level.WARNING, "failed to store session " + session.id(), e);
+            }
         }
         SecurityContext.authClear();
     }
@@ -207,11 +218,6 @@ public class ServletApplication extends HttpServlet {
         } catch (Exception e) {
             LOG.info(ip(request) + e.getMessage());
         }
-
-        // TODO: remove stale session cookies intelligently!
-        if (SecurityContext.currentUser() == null) {
-            request.setSessionId(null, 0);
-        }
     }
 
     /**
@@ -243,24 +249,6 @@ public class ServletApplication extends HttpServlet {
                  BinaryUtil.hashMD5(request.getMethod() + ":" + uri);
         SecurityContext.authHash(user, suffix, response);
         LOG.fine(ip(request) + "Valid authentication for " + user);
-
-        // Create new session (if applicable)
-        String client = request.getHeader("User-Agent");
-        // TODO: Improve logic for when to use sessions
-        if (client.contains("Mozilla") || client.contains("MSIE")) {
-            String ip = request.getRemoteAddr();
-            Session session = new Session(user, ip, client);
-            Session.activeSession.set(session);
-            try {
-                Session.store(ctx.getStorage(), session);
-                long destroy = session.destroyTime().getTime();
-                long now = System.currentTimeMillis();
-                int expiry = (int) ((destroy - now) / 1000);
-                request.setSessionId(session.id(), expiry);
-            } catch (Exception e) {
-                LOG.log(Level.WARNING, ip(request) + "Failed to store session", e);
-            }
-        }
     }
 
     /**
