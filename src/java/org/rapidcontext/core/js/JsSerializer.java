@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang.StringUtils;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContextFactory;
 import org.mozilla.javascript.NativeArray;
@@ -66,7 +67,7 @@ public class JsSerializer {
     public static String serialize(Object obj) {
         StringBuffer  buffer = new StringBuffer();
 
-        serialize(unwrap(obj), buffer);
+        serialize(unwrap(obj), 0, buffer);
         return buffer.toString();
     }
 
@@ -79,13 +80,13 @@ public class JsSerializer {
      * @param obj            the object to convert, or null
      * @param buffer         the string buffer to append into
      */
-    private static void serialize(Object obj, StringBuffer buffer) {
+    private static void serialize(Object obj, int indent, StringBuffer buffer) {
         if (obj == null) {
             buffer.append("null");
         } else if (obj instanceof Dict) {
-            serialize((Dict) obj, buffer);
+            serialize((Dict) obj, indent, buffer);
         } else if (obj instanceof Array) {
-            serialize((Array) obj, buffer);
+            serialize((Array) obj, indent, buffer);
         } else if (obj instanceof Boolean) {
             buffer.append(obj.toString());
         } else if (obj instanceof Number) {
@@ -95,7 +96,7 @@ public class JsSerializer {
         } else if (obj instanceof Class) {
             serialize(((Class) obj).getName(), buffer);
         } else if (obj instanceof StorableObject) {
-            serialize(((StorableObject) obj).serialize(), buffer);
+            serialize(((StorableObject) obj).serialize(), indent, buffer);
         } else {
             serialize(obj.toString(), buffer);
         }
@@ -110,7 +111,7 @@ public class JsSerializer {
      * @param dict           the dictionary to convert
      * @param buffer         the string buffer to append into
      */
-    private static void serialize(Dict dict, StringBuffer buffer) {
+    private static void serialize(Dict dict, int indent, StringBuffer buffer) {
         String[]  keys = dict.keys();
 
         buffer.append("{");
@@ -118,13 +119,15 @@ public class JsSerializer {
             if (i > 0) {
                 buffer.append(",");
             }
-            buffer.append(" ");
+            buffer.append("\n");
+            buffer.append(StringUtils.repeat("  ", indent + 1));
             serialize(keys[i], buffer);
             buffer.append(": ");
-            serialize(dict.get(keys[i]), buffer);
+            serialize(dict.get(keys[i]), indent + 1, buffer);
         }
         if (keys.length > 0) {
-            buffer.append(" ");
+            buffer.append("\n");
+            buffer.append(StringUtils.repeat("  ", indent));
         }
         buffer.append("}");
     }
@@ -138,13 +141,13 @@ public class JsSerializer {
      * @param arr            the array to convert
      * @param buffer         the string buffer to append into
      */
-    private static void serialize(Array arr, StringBuffer buffer) {
+    private static void serialize(Array arr, int indent, StringBuffer buffer) {
         buffer.append("[");
         for (int i = 0; i < arr.size(); i++) {
             if (i > 0) {
                 buffer.append(", ");
             }
-            serialize(arr.get(i), buffer);
+            serialize(arr.get(i), indent, buffer);
         }
         buffer.append("]");
     }
