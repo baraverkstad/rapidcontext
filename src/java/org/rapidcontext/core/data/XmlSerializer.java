@@ -47,69 +47,102 @@ public class XmlSerializer {
     public static String serialize(Object obj) {
         StringBuilder  buffer = new StringBuilder();
 
-        serialize(obj, buffer);
+        serialize("object", obj, buffer);
         return buffer.toString();
     }
 
     /**
      * Serializes an object into an XML representation.
      *
+     * @param id             the data identifier
      * @param obj            the object to convert
      * @param buffer         the string buffer to append into
      */
-    private static void serialize(Object obj, StringBuilder buffer) {
+    private static void serialize(String id, Object obj, StringBuilder buffer) {
         if (obj == null) {
-            buffer.append("<null/>");
+            buffer.append("<");
+            buffer.append(id);
+            buffer.append(" type=\"null\"/>");
         } else if (obj instanceof Dict) {
-            serialize((Dict) obj, buffer);
+            serialize(id, (Dict) obj, buffer);
         } else if (obj instanceof Array) {
-            serialize((Array) obj, buffer);
+            serialize(id, (Array) obj, buffer);
         } else if (obj instanceof Date) {
+            tagStart(id, "date", buffer);
             buffer.append("@" + ((Date) obj).getTime());
+            tagEnd(id, buffer);
         } else if (obj instanceof Class) {
+            tagStart(id, "class", buffer);
             buffer.append(StringUtil.escapeXml(((Class) obj).getName()));
+            tagEnd(id, buffer);
         } else if (obj instanceof StorableObject) {
-            serialize(((StorableObject) obj).serialize(), buffer);
+            serialize(id, ((StorableObject) obj).serialize(), buffer);
         } else {
+            tagStart(id, null, buffer);
             buffer.append(StringUtil.escapeXml(obj.toString()));
+            tagEnd(id, buffer);
         }
     }
 
     /**
      * Serializes a dictionary into an XML representation.
      *
+     * @param id             the data identifier
      * @param dict           the dictionary to convert
      * @param buffer         the string buffer to append into
      */
-    private static void serialize(Dict dict, StringBuilder buffer) {
+    private static void serialize(String id, Dict dict, StringBuilder buffer) {
         String[]  keys = dict.keys();
 
-        buffer.append("<object>");
+        tagStart(id, "object", buffer);
         for (int i = 0; i < keys.length; i++) {
-            buffer.append("<");
-            buffer.append(keys[i]);
-            buffer.append(">");
-            serialize(dict.get(keys[i]), buffer);
-            buffer.append("</");
-            buffer.append(keys[i]);
-            buffer.append(">");
+            serialize(keys[i], dict.get(keys[i]), buffer);
         }
-        buffer.append("</object>");
+        tagEnd(id, buffer);
     }
 
     /**
      * Serializes an array into an XML representation.
      *
+     * @param id             the data identifier
      * @param arr            the array to convert
      * @param buffer         the string buffer to append into
      */
-    private static void serialize(Array arr, StringBuilder buffer) {
-        buffer.append("<array>");
+    private static void serialize(String id, Array arr, StringBuilder buffer) {
+        tagStart(id, "array", buffer);
         for (int i = 0; i < arr.size(); i++) {
-            buffer.append("<item>");
-            serialize(arr.get(i), buffer);
-            buffer.append("</item>");
+            serialize("item", arr.get(i), buffer);
         }
-        buffer.append("</array>");
+        tagEnd(id, buffer);
+    }
+
+    /**
+     * Writes an XML start tag.
+     *
+     * @param id             the tag name (identifier)
+     * @param type           the data type, or null for none
+     * @param buffer         the string buffer to append into
+     */
+    private static void tagStart(String id, String type, StringBuilder buffer) {
+        buffer.append("<");
+        buffer.append(id);
+        if (type != null) {
+            buffer.append(" type=\"");
+            buffer.append(type);
+            buffer.append("\"");
+        }
+        buffer.append(">");
+    }
+
+    /**
+     * Writes an XML end tag.
+     *
+     * @param id             the tag name (identifier)
+     * @param buffer         the string buffer to append into
+     */
+    private static void tagEnd(String id, StringBuilder buffer) {
+        buffer.append("</");
+        buffer.append(id);
+        buffer.append(">");
     }
 }
