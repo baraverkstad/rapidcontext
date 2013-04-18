@@ -202,9 +202,9 @@ public class StorageWebService extends WebService {
         html.append("<html>\n<head>\n<link rel='stylesheet' href='");
         html.append(relativeBackPath(request.getPath()));
         html.append("files/css/style.css' type='text/css' />\n");
-        html.append("<title>RapidContext Query Response</title>\n");
+        html.append("<title>RapidContext Storage API</title>\n");
         html.append("</head>\n<body>\n<div class='query'>\n");
-        html.append("<h1>RapidContext Query API</h1>\n");
+        html.append("<h1>RapidContext Storage API</h1>\n");
         html.append("<table class='navigation'>\n<tr>\n");
         if (path.isRoot()) {
             html.append("<td class='active'>Start</td>\n");
