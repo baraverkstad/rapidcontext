@@ -19,7 +19,6 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.data.Array;
@@ -56,6 +55,26 @@ public class StorageWebService extends WebService {
      */
     private static final Logger LOG =
         Logger.getLogger(StorageWebService.class.getName());
+
+    /**
+     * The HTML file extension.
+     */
+    public static final String EXT_HTML = ".html";
+
+    /**
+     * The JSON file extension.
+     */
+    public static final String EXT_JSON = ".json";
+
+    /**
+     * The properties file extension.
+     */
+    public static final String EXT_PROPERTIES = ".properties";
+
+    /**
+     * The XML file extension.
+     */
+    public static final String EXT_XML = ".xml";
 
     /**
      * Creates a new storage web service from a serialized representation.
@@ -101,34 +120,34 @@ public class StorageWebService extends WebService {
      */
     protected void doGet(Request request) {
         ApplicationContext  ctx = ApplicationContext.getInstance();
-        String              mimeType = request.getParameter("mimeType");
-        boolean             isHtml = isOutputMimeMatch(request, Mime.HTML);
-        boolean             isJson = isOutputMimeMatch(request, Mime.JSON);
-        boolean             isXml = isOutputMimeMatch(request, Mime.XML);
-        boolean             isDefault = (!isJson && !isXml && !isHtml);
-        Path                path = new Path(request.getPath());
-        Object              meta = null;
+        Path                orig = new Path(request.getPath());
+        Metadata            meta = null;
         Object              res = null;
+        boolean             isHtml = false;
+        boolean             isJson = false;
+        boolean             isProps = false;
+        boolean             isXml = false;
+        boolean             isDefault = true;
         Dict                dict;
-        String              str;
 
-        // TODO: Make the storage service self-reliant (serving the CSS file it needs)
-        // TODO: Change URLs to serve binary files by default (as FileWebService)
-        request.setPath(null);
         try {
-            // TODO: Extend data lookup via standardized query language
-            path = normalizePath(path);
+            // TODO: Extend data lookup via query language
+            Path path = normalizePath(orig);
+            if (path != null && !path.equals(orig)) {
+                isHtml = StringUtils.endsWith(orig.name(), EXT_HTML);
+                isJson = StringUtils.endsWith(orig.name(), EXT_JSON);
+                isXml = StringUtils.endsWith(orig.name(), EXT_XML);
+            }
+            isProps = StringUtils.endsWith(orig.name(), EXT_PROPERTIES);
+            isDefault = (!isHtml && !isJson && !isProps && !isXml);
             if (path != null) {
                 res = ctx.getStorage().load(path);
                 meta = ctx.getStorage().lookup(path);
             }
             if (res instanceof Index) {
-                res = serializeIndex((Index) res, isHtml || isDefault);
+                res = serializeIndex((Index) res, isDefault || isHtml);
             } else if (res instanceof Binary && !isDefault) {
                 res = serializeBinary((Binary) res, request, path);
-            }
-            if (meta instanceof Metadata) {
-                meta = serializeMetadata((Metadata) meta, request);
             }
 
             // Render result as raw data, Properties, HTML, JSON or XML
@@ -136,24 +155,20 @@ public class StorageWebService extends WebService {
                 errorNotFound(request);
             } else if (isDefault && res instanceof Binary) {
                 request.sendBinary((Binary) res, true);
-            } else if (isDefault && request.getPath().endsWith(DirStorage.SUFFIX_PROPS)) {
-                str = StringUtils.substringAfterLast(request.getPath(), "/");
-                mimeType = StringUtils.defaultIfEmpty(mimeType, Mime.type(str));
-                request.sendText(mimeType, PropertiesSerializer.serialize(res));
             } else if (isDefault || isHtml) {
                 sendHtml(request, path, meta, res);
             } else if (isJson) {
                 dict = new Dict();
-                dict.set("metadata", meta);
+                dict.set("metadata", serializeMetadata(meta, request));
                 dict.set("data", res);
-                mimeType = StringUtils.defaultIfEmpty(mimeType, Mime.JSON[0]);
-                request.sendText(mimeType, JsSerializer.serialize(dict));
-            } else if (isXml && !isHtml) {
+                request.sendText(Mime.JSON[0], JsSerializer.serialize(dict));
+            } else if (isProps) {
+                request.sendText(Mime.TEXT[0], PropertiesSerializer.serialize(res));
+            } else if (isXml) {
                 dict = new Dict();
-                dict.set("metadata", meta);
+                dict.set("metadata", serializeMetadata(meta, request));
                 dict.set("data", res);
-                mimeType = StringUtils.defaultIfEmpty(mimeType, Mime.XML[0]);
-                request.sendText(mimeType, XmlSerializer.serialize(dict));
+                request.sendText(Mime.XML[0], XmlSerializer.serialize("results", dict));
             } else {
                 request.sendError(STATUS.NOT_ACCEPTABLE);
             }
@@ -166,7 +181,7 @@ public class StorageWebService extends WebService {
             if (isJson) {
                 request.sendText(Mime.JSON[0], JsSerializer.serialize(res));
             } else if (isXml) {
-                request.sendText(Mime.XML[0], XmlSerializer.serialize(res));
+                request.sendText(Mime.XML[0], XmlSerializer.serialize("error", res));
             } else {
                 errorInternal(request, e.getMessage());
             }
@@ -181,12 +196,12 @@ public class StorageWebService extends WebService {
      * @param meta           the meta-data to render
      * @param res            the actual data to render
      */
-    private void sendHtml(Request request, Path path, Object meta, Object res) {
+    private void sendHtml(Request request, Path path, Metadata meta, Object res) {
         StringBuffer html = new StringBuffer();
 
         html.append("<html>\n<head>\n<link rel='stylesheet' href='");
         html.append(relativeBackPath(request.getPath()));
-        html.append("css/style.css' type='text/css' />\n");
+        html.append("files/css/style.css' type='text/css' />\n");
         html.append("<title>RapidContext Query Response</title>\n");
         html.append("</head>\n<body>\n<div class='query'>\n");
         html.append("<h1>RapidContext Query API</h1>\n");
@@ -217,24 +232,34 @@ public class StorageWebService extends WebService {
         html.append("</tr>\n</table>\n<hr/>\n");
         html.append("<div class='metadata'>\n");
         html.append("<h2>Query Metadata</h2>\n");
-        html.append(HtmlSerializer.serialize(meta));
+        html.append(HtmlSerializer.serialize(serializeMetadata(meta, request)));
         html.append("</div>\n");
         html.append("<h2>Query Results</h2>");
         html.append(HtmlSerializer.serialize(res));
         html.append("<hr/><p><strong>Data Formats:</strong>");
-        html.append(" &nbsp;<a href='?mimeType=text/javascript'>JSON</a>");
-        html.append(" &nbsp;<a href='?mimeType=text/xml'>XML</a></p>");
-        html.append("</div>\n</body>\n</html>\n");
+        if (meta.isIndex()) {
+            html.append(" &nbsp;<a href='index.json'>JSON</a>");
+            html.append(" &nbsp;<a href='index.xml'>XML</a>");
+        } else {
+            html.append(" &nbsp;<a href='" + path.name() + ".json'>JSON</a>");
+            html.append(" &nbsp;<a href='" + path.name() + ".xml'>XML</a>");
+            if (meta.isBinary()) {
+                html.append(" &nbsp;<a href='" + path.name() + "'>RAW</a>");
+            } else {
+                html.append(" &nbsp;<a href='" + path.name() + ".properties'>PROPERTIES</a>");
+            }
+        }
+        html.append("</p></div>\n</body>\n</html>\n");
         request.sendText(Mime.HTML[0], html.toString());
     }
 
     /**
      * Serializes an index to a suitable external representation. If
-     * the HTTP link flag is set, all the references in the index
-     * will be prefixed by "http:" (being serialized into HTML links).
+     * the HTML link flag is set, all the references in the index
+     * will be prefixed by "$href$" (being serialized into HTML links).
      *
      * @param idx            the index to serialize
-     * @param linkify        the HTTP link flag
+     * @param linkify        the HTML link flag
      *
      * @return the serialized representation of the index
      */
@@ -244,30 +269,26 @@ public class StorageWebService extends WebService {
 
         dict.set("type", "index");
         arr = idx.indices().copy();
-        if (linkify) {
-            arr.sort();
-        }
+        arr.sort();
         for (int i = 0; i < arr.size(); i++) {
             String name = arr.getString(i, null);
             if (name.startsWith(".")) {
                 arr.remove(i--);
             } else if (linkify) {
-                arr.set(i, "http:" + name + "/");
+                arr.set(i, "$href$" + name + "/");
             } else {
                 arr.set(i, name + "/");
             }
         }
         dict.set("directories", arr);
         arr = idx.objects().copy();
-        if (linkify) {
-            arr.sort();
-        }
+        arr.sort();
         for (int i = 0; i < arr.size(); i++) {
             String name = arr.getString(i, null);
             if (name.startsWith(".")) {
                 arr.remove(i--);
             } else if (linkify) {
-                arr.set(i, "http:" + name);
+                arr.set(i, "$href$" + name + ".html$" + name);
             }
         }
         dict.set("objects", arr);
@@ -290,11 +311,6 @@ public class StorageWebService extends WebService {
         dict.set("name", path.name());
         dict.set("mimeType", data.mimeType());
         dict.set("size", new Long(data.size()));
-        String url = StringUtils.removeEnd(request.getUrl(), request.getPath()) +
-                     StringUtils.removeStart(path.toString(), "/files");
-        if (path.name(0).equals("files")) {
-            dict.set("url", url);
-        }
         return dict;
     }
 
@@ -316,26 +332,6 @@ public class StorageWebService extends WebService {
     }
 
     /**
-     * Checks if the request accepts one of the listed MIME types as response.
-     *
-     * @param request
-     *            the request to analyze
-     * @param mimes
-     *            the MIME types to check for
-     *
-     * @return true if one of the MIME types is accepted, or false otherwise
-     */
-    private boolean isOutputMimeMatch(Request request, String[] mimes) {
-        String param = request.getParameter("mimeType");
-
-        if (param != null) {
-            return ArrayUtils.contains(mimes, param);
-        } else {
-            return Mime.isOutputMatch(request, mimes);
-        }
-    }
-
-    /**
      * Returns the relative path to reverse the specified path. This
      * method will add an "../" part for each directory in the
      * current path so that site-relative links can be created
@@ -347,7 +343,7 @@ public class StorageWebService extends WebService {
      */
     private String relativeBackPath(String path) {
         int count = StringUtils.countMatches(path, "/");
-        return StringUtils.repeat("../", count - 1);
+        return StringUtils.repeat("../", count);
     }
 
     /**
@@ -696,16 +692,32 @@ public class StorageWebService extends WebService {
      */
     private Path normalizePath(Path path) {
         Storage storage = ApplicationContext.getInstance().getStorage();
+        String pathName = path.name();
         Path lookupPath = path;
         Metadata meta = storage.lookup(lookupPath);
-        if (meta == null && path.name().endsWith(DirStorage.SUFFIX_PROPS)) {
-            String str = StringUtils.removeEnd(path.name(), DirStorage.SUFFIX_PROPS);
-            lookupPath = path.parent().child(str, false);
-            meta = storage.lookup(lookupPath);
+        if (meta == null) {
+            String str = pathName;
+            if (StringUtils.endsWith(str, EXT_HTML)) {
+                str = StringUtils.removeEnd(str, EXT_HTML);
+            } else if (StringUtils.endsWith(str, EXT_JSON)) {
+                str = StringUtils.removeEnd(str, EXT_JSON);
+            } else if (StringUtils.endsWith(str, EXT_PROPERTIES)) {
+                str = StringUtils.removeEnd(str, EXT_PROPERTIES);
+            } else if (StringUtils.endsWith(str, EXT_XML)) {
+                str = StringUtils.removeEnd(str, EXT_XML);
+            }
+            if (!StringUtils.equals(pathName, str)) {
+                lookupPath = path.parent().child(str, false);
+                meta = storage.lookup(lookupPath);
+                if (meta == null && "index".equals(str)) {
+                    lookupPath = path.parent();
+                    meta = storage.lookup(lookupPath);
+                }
+            }
         }
+        // Fix for Windows WebDAV (omitting trailing /)
         if (meta == null && !path.isIndex()) {
-            // Windows WebDAV fix
-            lookupPath = path.parent().child(path.name(), true);
+            lookupPath = path.parent().child(pathName, true);
             meta = storage.lookup(lookupPath);
         }
         return (meta == null) ? null : lookupPath;

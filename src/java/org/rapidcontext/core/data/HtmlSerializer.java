@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg.
+ * Copyright (c) 2007-2013 Per Cederberg.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -18,6 +18,7 @@ package org.rapidcontext.core.data;
 import java.util.Date;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.util.DateUtil;
 
@@ -126,22 +127,22 @@ public class HtmlSerializer {
     private static void serialize(String str, StringBuilder buffer) {
         if (str == null) {
             buffer.append("<code>N/A</code>");
+        } else if (str.startsWith("$href$")) {
+            str = StringUtils.substringAfter(str, "$href$");
+            String url = StringUtils.substringBefore(str, "$");
+            String text = StringUtils.substringAfter(str, "$");
+            text = StringUtils.defaultIfEmpty(text, url);
+            buffer.append("<a href='");
+            buffer.append(StringEscapeUtils.escapeHtml(url));
+            buffer.append("'>");
+            buffer.append(StringEscapeUtils.escapeHtml(text));
+            buffer.append("</a>");
+        } else if (str.indexOf("\n") >= 0) {
+            buffer.append("<pre>");
+            buffer.append(StringEscapeUtils.escapeHtml(str));
+            buffer.append("</pre>");
         } else {
-            String html = StringEscapeUtils.escapeHtml(str);
-            if (str.startsWith("http:")) {
-                int pos = str.startsWith("http://") ? 0 : 5;
-                buffer.append("<a href='");
-                buffer.append(html.substring(pos));
-                buffer.append("'>");
-                buffer.append(html.substring(pos));
-                buffer.append("</a>");
-            } else if (str.indexOf("\n") >= 0) {
-                buffer.append("<pre>");
-                buffer.append(html.toString());
-                buffer.append("</pre>");
-            } else {
-                buffer.append(html.toString());
-            }
+            buffer.append(StringEscapeUtils.escapeHtml(str));
         }
     }
 }

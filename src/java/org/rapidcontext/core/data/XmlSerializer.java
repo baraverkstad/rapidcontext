@@ -16,6 +16,7 @@ package org.rapidcontext.core.data;
 
 import java.util.Date;
 
+import org.apache.commons.lang.CharUtils;
 import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.util.StringUtil;
 
@@ -40,14 +41,15 @@ public class XmlSerializer {
      * Serializes an object into an XML representation. The string
      * returned can be used (without escaping) inside an XML document.
      *
+     * @param id             the data identifier
      * @param obj            the object to convert, or null
      *
      * @return an XML representation
      */
-    public static String serialize(Object obj) {
+    public static String serialize(String id, Object obj) {
         StringBuilder  buffer = new StringBuilder();
 
-        serialize("object", obj, buffer);
+        serialize(id, obj, buffer);
         return buffer.toString();
     }
 
@@ -61,7 +63,7 @@ public class XmlSerializer {
     private static void serialize(String id, Object obj, StringBuilder buffer) {
         if (obj == null) {
             buffer.append("<");
-            buffer.append(id);
+            tagName(id, buffer);
             buffer.append(" type=\"null\"/>");
         } else if (obj instanceof Dict) {
             serialize(id, (Dict) obj, buffer);
@@ -125,7 +127,7 @@ public class XmlSerializer {
      */
     private static void tagStart(String id, String type, StringBuilder buffer) {
         buffer.append("<");
-        buffer.append(id);
+        tagName(id, buffer);
         if (type != null) {
             buffer.append(" type=\"");
             buffer.append(type);
@@ -142,7 +144,25 @@ public class XmlSerializer {
      */
     private static void tagEnd(String id, StringBuilder buffer) {
         buffer.append("</");
-        buffer.append(id);
+        tagName(id, buffer);
         buffer.append(">");
+    }
+
+    /**
+     * Writes an XML tag name.
+     *
+     * @param id             the tag name (identifier)
+     * @param buffer         the string buffer to append into
+     */
+    private static void tagName(String id, StringBuilder buffer) {
+        for (int i = 0; i < id.length(); i++) {
+            char c = id.charAt(i);
+            if (i == 0 && !CharUtils.isAsciiAlpha(c)) {
+                c = '_';
+            } else if (!CharUtils.isAsciiAlphanumeric(c)) {
+                c = '_';
+            }
+            buffer.append(c);
+        }
     }
 }
