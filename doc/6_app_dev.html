@@ -386,9 +386,30 @@ styles are not sufficient, a number of options are available:</p>
       future versions.</li>
 </ol>
 
-<!--
-<h2 id="web_listener">6.6. Web Services</h2>
 
+<h2 id="web_service">6.6. Web Listeners &amp; Services</h2>
+
+<p>RapidContext provides a default web listener for HTTP requests. This is the
+web listener that launches the <var>start</var> app and handles the platform
+web requests. It is configured in the <var>webservice/root.properties</var>
+file:</p>
+
+<pre class="box blue code">
+<span class="comment"># General properties</span>
+id = root
+type = webservice/app
+description = The root (default) web service. This launches the start app \
+    and provides access to the storage files.
+path = /files/
+app = start
+
+<span class="comment"># Match array</span>
+match.1.path = /
+</pre>
+
+<p>Although the default web listener responds to all requests, it is easy to
+add a custom listener to handle requests for a specific host, path, etc. The
+example below shows a simple file web server:</p>
 
 <pre class="box blue code">
 <span class="comment"># General properties</span>
@@ -403,63 +424,69 @@ match.2.host = www.test.net
 match.3.host = www.test.org
 </pre>
 
-<pre class="box blue code">
-<span class="comment"># General properties</span>
-id = www.simpleapp.com
-type = webservice/app
-description = A simple app service.
-app = simpleapp
+<p>Web listeners configurations are placed in the
+<var>plugin/local/webservice/</var> directory (or the <var>webservice/</var>
+directory in your plug-in). The file name should follow normal storage rules,
+i.e. <var>[identifier].properties</var>. A number of web service types are
+available and custom ones can also be implemented in Java.</p>
 
-<span class="comment"># Match array</span>
-match.1.host = www.simpleapp.com
-match.1.auth = true
-</pre>
-
-
-
-<p>The available web listener configuration parameters are as follows:</p>
+<p>The available web service configuration parameters are as follows:</p>
 
 <ul class="box yellow">
-  <li><var>id</var> &mdash; The unique listener identifier. May only contain
+  <li><var>id</var> &mdash; The unique web service identifier. May only contain
       ASCII alphanumeric characters without spaces or separators.</li>
-  <li><var>description</var> &mdash; The optional description text that
-      explains the purpose of this listener.</li>
-  <li><var>targetFiles</var> &mdash;
-  <li><var>targetApp</var> &mdash;
-  <li><var>className</var> &mdash; The optional fully qualified name of a Java
-      class that handles all requests. The class must be a subclass of
-      <var>org.rapidcontext.core.type.WebListener</var>.</li>
-
-
-
-  <li><var>method</var> &mdash; The optional...</li>
-  <li><var>host</var> &mdash; The optional...</li>
-  <li><var>port</var> &mdash; The optional...</li>
-  <li><var>path</var> &mdash; The optional...</li>
-  <li><var>ssl</var> &mdash; The optional...</li>
-  <li><var>auth</var> &mdash; The optional...</li>
-  <li><var>prio</var> &mdash; The optional...</li>
-
   <li>
-    <var>launch</var> &mdash; The optional app launch setting. This may have
-    one of the following values:
+    <var>type</var> &mdash; The web service type. This may have one of the
+    following values:
     <ul>
-      <li><var>manual</var> (default) &mdash; The app is manually started
-          and stopped by the user (when clicking on icons or similar).</li>
-      <li><var>auto</var> &mdash; The app is started automatically when
-          a new user session starts, but can also be started and stopped
-          manually by the user.</li>
-      <li><var>once</var> &mdash; The app is started automatically when
-          a new user session starts and can thereafter neither be started nor
-          stopped by the user.</li>
-      <li><var>limited</var> &mdash; The app is hidden from the user to
-          avoid manual starting and stopping in the default user interface.
-          The app can still be started programmatically by other apps
-          through the RapidContext client API:s.</li>
+      <li><var>webservice/file</var> &mdash; Provides access to binary files
+          from the storage hierarchy. Indexes are automatially mapped to
+          <q><var>index.html</var></q> files (if such files exist).</li>
+      <li><var>webservice/app</var> &mdash; Extends the
+          <var>webservice/file</var> service by also responding to requests for
+          the <var>/rapidcontext/*</var> API. Also provides a default app
+          launcher if no <q><var>index.html</var></q> file was found in
+          storage.</li>
+      <li><var>webservice/storage</var> &mdash; Provides HTTP and WebDAV
+          access to the storage hierarchy.</li>
+      <li><var>webservice</var> &mdash; Only used when implementing a web
+          service in Java.</li>
     </ul>
   </li>
+  <li><var>description</var> &mdash; The optional description text for this
+      resource.</li>
+  <li><var>path</var> &mdash; The base storage path for file lookups (only
+      for <var>webservice/file</var> and <var>webservice/app</var> types).
+      Defaults to <q><var>/files/</var></q>.</li>
+  <li><var>app</var> &mdash; The app identifier for the default launcher
+      (only for <var>webservice/app</var> type). Defaults to
+      <q><var>start</var></q>.</li>
+  <li><var>className</var> &mdash; The optional fully qualified name of a Java
+      class that handles all requests (only for base <var>webservice</var>
+      type). The class must be a subclass of
+      <var>org.rapidcontext.core.type.WebListener</var>.</li>
+  <li><var>match.#.method</var> &mdash; The optional HTTP request method to
+      match. Defaults to blank, meaning that any request method will match.
+      A non-blank value contributes 400 points to the reqest match score.</li>
+  <li><var>match.#.protocol</var> &mdash; The optional request protocol to
+      match (i.e. <q><var>http</var></q> or <q><var>https</var></q>). Defaults
+      to blank, meaning that any protocol will match. A non-blank value
+      contributes 300 points to the request match score.</li>
+  <li><var>match.#.host</var> &mdash; The optional web server host name to
+      match. Defaults to null, meaning that any host name will match. A
+      non-blank value contributes 200 points to the request match score.</li>
+  <li><var>match.#.port</var> &mdash; The optional web server port number to
+      match. Defaults to zero (0), meaning that any port number will match.
+      A non-blank value contributes 100 points to the request match score.</li>
+  <li><var>match.#.path</var> &mdash; The optional base request path to match.
+      Defaults to an empty string, meaning that any path will match. A non-blank
+      value contributes its length to the request match score.</li>
+  <li><var>match.#.auth</var> &mdash; The optional user authentication required
+      flag. Defaults to false, meaning that anonymous access is allowed.</li>
+  <li><var>match.#.prio</var> &mdash; The optional the matcher priority.
+      Defaults to zero (0). Contributes its own value to the request match
+      score.</li>
 </ul>
--->
 
 <!--END-->
 

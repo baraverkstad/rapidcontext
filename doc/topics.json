@@ -39,7 +39,8 @@
         { "topic": "6.2. App Configuration", "url": "doc/6_app_dev.html#app_config" },
         { "topic": "6.3. App Implementation", "url": "doc/6_app_dev.html#app_impl" },
         { "topic": "6.4. User Interface XML", "url": "doc/6_app_dev.html#ui_xml" },
-        { "topic": "6.5. User Interface Style", "url": "doc/6_app_dev.html#ui_style" }
+        { "topic": "6.5. User Interface Style", "url": "doc/6_app_dev.html#ui_style" },
+        { "topic": "6.6. Web Listeners & Services", "url": "doc/6_app_dev.html#web_service" }
     ] },
     { "topic": "7. Development Guidelines", "url": "doc/7_guidelines.html", "children": [
         { "topic": "7.1. Design Principle Usage", "url": "doc/7_guidelines.html#usage" },
