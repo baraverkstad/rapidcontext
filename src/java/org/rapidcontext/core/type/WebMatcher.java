@@ -62,7 +62,7 @@ public class WebMatcher {
 
     /**
      * The request protocol to match (i.e. "http" or "https").
-     * Defaults to null, meaning that any host name will match.
+     * Defaults to null, meaning that any protocol will match.
      *
      * @return the request protocol to match, or
      *         null to match any protocol
@@ -94,7 +94,8 @@ public class WebMatcher {
     }
 
     /**
-     * The base request path to match. Defaults to an empty string
+     * The base request path to match. Defaults to an empty string,
+     * meaning that any path will match.
      *
      * @return the base request path to match, or
      *         an empty string to match any request
@@ -104,7 +105,7 @@ public class WebMatcher {
     }
 
     /**
-     * The user authentication required flag.
+     * The user authentication required flag. Defaults to false.
      *
      * @return true if user authentication is required, or
      *         false if it is optional
@@ -132,18 +133,18 @@ public class WebMatcher {
         int score = dict.getInt("_score", 0);
         if (score == 0) {
             if (method() != null) {
-                score += 4000;
+                score += 400;
             }
             if (protocol() != null) {
-                score += 3000;
+                score += 300;
             }
             if (host() != null) {
-                score += 2000;
+                score += 200;
             }
             if (port() > 0) {
-                score += 1000;
+                score += 100;
             }
-            score += path().length() + 1;
+            score += 1 + path().length() + prio();
             dict.setInt("_score", score);
         }
         return score;
