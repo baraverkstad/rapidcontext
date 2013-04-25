@@ -154,7 +154,10 @@ public class AppWebService extends FileWebService {
             String path = request.getPath();
             String baseUrl = StringUtils.removeEnd(request.getUrl(), path);
             boolean isRoot = path.equals("") || path.startsWith("index.htm");
-            if (SecurityContext.currentUser() == null) {
+            if (request.matchPath("rapidcontext/files/")) {
+                processFile(request, new Path(PATH_FILES, request.getPath()));
+            } else if (SecurityContext.currentUser() == null) {
+                // TODO: Handle use authorization properly...
                 errorUnauthorized(request);
             } else if (request.matchPath("rapidcontext/app/")) {
                 processApp(request, request.getPath(), baseUrl);

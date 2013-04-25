@@ -77,11 +77,23 @@ public class FileWebService extends WebService {
      * @param request        the request to process
      */
     protected void doGet(Request request) {
+        processFile(request, new Path(path(), request.getPath()));
+    }
+
+    /**
+     * Processes a storage file retrieval request (if possible).
+     *
+     * @param request        the request to process
+     * @param path           the storage path to the binary file
+     */
+    protected void processFile(Request request, Path path) {
         ApplicationContext  ctx = ApplicationContext.getInstance();
-        Path                path = toStoragePath(request);
         Object              obj = null;
         boolean             cache;
 
+        if (path.isIndex()) {
+            path = path.child("index.html", false);
+        }
         obj = ctx.getStorage().load(path);
         if (obj instanceof Binary) {
             if (request.getParameter("download") != null) {
@@ -95,22 +107,5 @@ public class FileWebService extends WebService {
         } else if (obj != null) {
             errorForbidden(request);
         }
-    }
-
-    /**
-     * Maps a request path to a corresponding storage path. If a
-     * directory is requested, "index.html" will automatically be
-     * appended to the path.
-     *
-     * @param request        the request to map
-     *
-     * @return the storage path for the request
-     */
-    protected Path toStoragePath(Request request) {
-        String str = request.getPath();
-        if ("".equals(str) || str.endsWith("/")) {
-            str += "index.html";
-        }
-        return new Path(path(), str);
     }
 }
