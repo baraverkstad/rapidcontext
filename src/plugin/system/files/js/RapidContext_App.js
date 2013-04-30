@@ -73,7 +73,8 @@ RapidContext.App.init = function (app) {
         try {
             return RapidContext.App.startApp(app || "start");
         } catch (e) {
-            return RapidContext.App.startApp("admin");
+            RapidContext.UI.showError(e);
+            return RapidContext.App.startApp("start");
         }
     });
     d.addErrback(RapidContext.UI.showError);
@@ -377,7 +378,7 @@ RapidContext.App.stopApp = function (app) {
         delete app[n];
     }
     MochiKit.Signal.disconnectAllTo(app);
-    return RapidContext.App._startAuto(false);
+    return MochiKit.Async.wait(0);
 };
 
 /**
