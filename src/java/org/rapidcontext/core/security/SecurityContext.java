@@ -290,24 +290,4 @@ public class SecurityContext {
     public static void authClear() {
         authUser.set(null);
     }
-
-    /**
-     * Saves a user to the application data store.
-     *
-     * @param user           the user to save
-     *
-     * @throws StorageException if the data couldn't be written
-     * @throws SecurityException if the current user doesn't have
-     *             admin access
-     */
-    public static void saveUser(User user)
-        throws StorageException, SecurityException {
-
-        if (!hasAdmin()) {
-            LOG.info("failed to modify user " + user.id() + ": user " +
-                     SecurityContext.currentUser() + " lacks admin privileges");
-            throw new SecurityException("Permission denied");
-        }
-        User.store(dataStorage, user);
-    }
 }

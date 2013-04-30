@@ -176,10 +176,8 @@ public class UserChangeProcedure implements Procedure, Restricted {
         }
         user.setRoles(roles);
         try {
-            SecurityContext.saveUser(user);
+            User.store(cx.getStorage(), user);
         } catch (StorageException e) {
-            throw new ProcedureException(e.getMessage());
-        } catch (SecurityException e) {
             throw new ProcedureException(e.getMessage());
         }
         return str;
