@@ -196,7 +196,7 @@ RapidContext.App.startApp = function (app, container) {
     var launcher = RapidContext.App.findApp(app);
     if (launcher == null) {
         LOG.error("No matching app launcher found", app);
-        throw new Error("No matching app launcher found");
+        throw new Error("No matching app launcher found: " + app);
     }
     var instance = null;
     var instances = RapidContext.App._instances();
