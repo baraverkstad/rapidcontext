@@ -58,7 +58,7 @@ public class StatusProcedure implements Procedure, Restricted {
      *         false otherwise
      */
     public boolean hasAccess() {
-        return SecurityContext.currentUser() != null;
+        return true;
     }
 
     /**
@@ -118,7 +118,9 @@ public class StatusProcedure implements Procedure, Restricted {
             return null;
         }
         res.set("guid", ctx.getConfig().get("guid"));
-        res.set("environment", getEnvironmentData(cx.getEnvironment()));
+        if (SecurityContext.currentUser() != null) {
+            res.set("environment", getEnvironmentData(cx.getEnvironment()));
+        }
         return res;
     }
 
