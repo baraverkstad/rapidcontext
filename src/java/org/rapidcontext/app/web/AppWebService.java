@@ -30,7 +30,6 @@ import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.js.JsSerializer;
-import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.type.Session;
@@ -156,9 +155,6 @@ public class AppWebService extends FileWebService {
             boolean isRoot = path.equals("") || path.startsWith("index.htm");
             if (request.matchPath("rapidcontext/files/")) {
                 processFile(request, new Path(PATH_FILES, request.getPath()));
-            } else if (SecurityContext.currentUser() == null) {
-                // TODO: Handle use authorization properly...
-                errorUnauthorized(request);
             } else if (request.matchPath("rapidcontext/app/")) {
                 processApp(request, request.getPath(), baseUrl);
             } else if (isRoot) {
@@ -173,9 +169,7 @@ public class AppWebService extends FileWebService {
      * @param request        the request to process
      */
     protected void doPost(Request request) {
-        if (SecurityContext.currentUser() == null) {
-            errorUnauthorized(request);
-        } else if (request.matchPath("rapidcontext/download")) {
+        if (request.matchPath("rapidcontext/download")) {
             processDownload(request);
         } else if (request.matchPath("rapidcontext/upload")) {
             processUpload(request);
@@ -325,7 +319,10 @@ public class AppWebService extends FileWebService {
         String           fileName;
         File             file;
 
-        // TODO: ensure that we have a valid session...
+        if (session == null) {
+            errorUnauthorized(request);
+            return;
+        }
         try {
             stream = request.getNextFile();
             if (stream == null) {

@@ -58,6 +58,14 @@ public class SecurityContext {
     private static ThreadLocal authUser = new ThreadLocal();
 
     /**
+     * The cache of all user roles available. This array will be reset
+     * on each call to init(), i.e. only when the system is reset.
+     *
+     * @see #init(Storage)
+     */
+    private static Role[] roleCache = null;
+
+    /**
      * Initializes the security context. It can be called multiple
      * times in order to re-read the configuration data from the
      * data storage. The data store specified will be used for
@@ -81,7 +89,7 @@ public class SecurityContext {
             user.setRoles(new String[] { "admin" });
             User.store(dataStorage, user);
         }
-        // TODO: create default system user?
+        roleCache = Role.findAll(dataStorage);
     }
 
     /**
@@ -155,24 +163,17 @@ public class SecurityContext {
      *         false otherwise
      */
     public static boolean hasAccess(String type, String name, String caller) {
-        String[]  list;
-        Role      role;
-
+        User user = currentUser();
         if (hasAdmin()) {
             return true;
-        } else if (currentUser() != null) {
-            list = currentUser().roles();
-            for (int i = 0; i < list.length; i++) {
-                role = Role.find(dataStorage, list[i], true);
-                if (role != null && role.hasAccess(type, name, caller)) {
-                    return true;
-                }
-            }
-            return false;
-        } else {
-            // TODO: support anonymous access
-            return false;
         }
+        for (int i = 0; i < roleCache.length; i++) {
+            Role role = roleCache[i];
+            if (role.hasUser(user) && role.hasAccess(type, name, caller)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

@@ -42,6 +42,11 @@ public class Role extends StorableObject {
     public static final String KEY_DESCRIPTION = "description";
 
     /**
+     * The dictionary key for automatic user match.
+     */
+    public static final String KEY_AUTO = "auto";
+
+    /**
      * The dictionary key for the role access array. The value stored
      * is an array of access rules.
      */
@@ -51,26 +56,6 @@ public class Role extends StorableObject {
      * The role object storage path.
      */
     public static final Path PATH = new Path("/role/");
-
-    /**
-     * Searches for a specific role in the storage. If the
-     * case-insensitive search flag is set, a fallback search for the
-     * lower-case name will be performed.
-     *
-     * @param storage        the storage to search in
-     * @param id             the role identifier
-     * @param search         the search case-insensitive flag
-     *
-     * @return the role found, or
-     *         null if not found
-     */
-    public static Role find(Storage storage, String id, boolean search) {
-        Object obj = storage.load(PATH.descendant(new Path(id)));
-        if (obj == null && search && !id.equals(id.toLowerCase())) {
-            obj = storage.load(PATH.descendant(new Path(id.toLowerCase())));
-        }
-        return (obj instanceof Role) ? (Role) obj : null;
-    }
 
     /**
      * Searches for all roles in the storage.
@@ -122,6 +107,28 @@ public class Role extends StorableObject {
         return dict.getString(KEY_DESCRIPTION, "");
     }
 
+    public String auto() {
+        return dict.getString(KEY_AUTO, "none");
+    }
+
+    /**
+     * Checks if the specified user has this role. The user may be
+     * null, in which case only automatic roles for "all" will be
+     * considered a match.
+     *
+     * @param user           the user to check, or null
+     *
+     * @return true if the user has this role, or
+     *         false otherwise
+     */
+    public boolean hasUser(User user) {
+        if (user == null) {
+            return auto().equalsIgnoreCase("all");
+        } else  {
+            return auto().equalsIgnoreCase("auth") || user.hasRole(id());
+        }
+    }
+
     /**
      * Checks if the role has access to an object. The access list is
      * processed from top to bottom to find a matching entry. Once
@@ -138,7 +145,7 @@ public class Role extends StorableObject {
      *         false otherwise
      */
     public boolean hasAccess(String type, String name, String caller) {
-        Array  list = dict.getArray("access");
+        Array  list = dict.getArray(KEY_ACCESS);
         Dict   match;
 
         if (list == null) {
