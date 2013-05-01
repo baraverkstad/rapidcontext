@@ -166,7 +166,7 @@ RapidContext.Widget.FormValidator.prototype.verify = function (field) {
         var stripped = MochiKit.Format.strip(value);
         if (MochiKit.Format.strip(value) == "") {
             if (this.mandatory) {
-                var msg = "This field is mandatory and cannot be left blank";
+                var msg = "This field is required";
                 this.addError(field, msg);
                 return false;
             }
