@@ -49,11 +49,11 @@ public class UserPasswordChangeProcedure implements Procedure, Restricted {
         defaults.set("oldHash", Bindings.ARGUMENT, "",
                      "The hexadecimal MD5 hash of the current password. The " +
                      "MD5 hash is calculated from a string on the form " +
-                     "'<user>:<realm>:<password>'.");
+                     "'<userId>:<realm>:<password>'.");
         defaults.set("newHash", Bindings.ARGUMENT, "",
                      "The hexadecimal MD5 hash of the new password. The MD5 " +
                      "hash is calculated from a string on the form " +
-                     "'<user>:<realm>:<password>'.");
+                     "'<userId>:<realm>:<password>'.");
         defaults.seal();
     }
 
