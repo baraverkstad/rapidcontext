@@ -39,6 +39,7 @@ import org.rapidcontext.app.proc.ProcedureReadProcedure;
 import org.rapidcontext.app.proc.ProcedureTypesProcedure;
 import org.rapidcontext.app.proc.ProcedureWriteProcedure;
 import org.rapidcontext.app.proc.ResetProcedure;
+import org.rapidcontext.app.proc.SessionAuthenticateProcedure;
 import org.rapidcontext.app.proc.SessionCurrentProcedure;
 import org.rapidcontext.app.proc.SessionTerminateProcedure;
 import org.rapidcontext.app.proc.StatusProcedure;
@@ -272,6 +273,7 @@ public class ApplicationContext {
             library.addBuiltIn(new ProcedureWriteProcedure());
             library.addBuiltIn(new ProcedureDeleteProcedure());
             library.addBuiltIn(new ResetProcedure());
+            library.addBuiltIn(new SessionAuthenticateProcedure());
             library.addBuiltIn(new SessionCurrentProcedure());
             library.addBuiltIn(new SessionTerminateProcedure());
             library.addBuiltIn(new StatusProcedure());

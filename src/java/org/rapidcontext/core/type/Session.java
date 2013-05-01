@@ -344,6 +344,31 @@ public class Session extends StorableObject {
     }
 
     /**
+     * Sets the session user identifier if it was previously blank.
+     * Once a session has been bound to a user, it cannot be bound to
+     * another user (or reset to a blank user).
+     *
+     * @param userId         the new session user identifier
+     *
+     * @throws SecurityException if the session couldn't be bound to
+     *     the specified user identifier
+     */
+    public void setUserId(String userId) {
+        if (userId == null || userId.trim().length() <= 0) {
+            String msg = "Attempt to re-bind HTTP session to blank user id";
+            throw new SecurityException(msg);
+        }
+        userId = userId.trim();
+        if (this.userId().length() > 0 && !this.userId().equals(userId)) {
+            String msg = "Attempt to re-bind HTTP session from user '" +
+                         this.userId() + "' to '" + userId + "'";
+            throw new SecurityException(msg);
+        }
+        dict.set(KEY_USER, userId);
+        modified = true;
+    }
+
+    /**
      * Returns the session creation date & time.
      *
      * @return the session creation date & time.
@@ -375,8 +400,8 @@ public class Session extends StorableObject {
      * system time.
      */
     public void updateAccessTime() {
-        modified = true;
         dict.set(KEY_ACCESS_TIME, new Date());
+        modified = true;
     }
 
     /**
