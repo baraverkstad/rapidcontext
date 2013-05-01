@@ -139,7 +139,8 @@ public class ServletApplication extends HttpServlet {
                     bestMatcher.process(request);
                 }
             }
-            if (Session.activeSession.get() == null && request.getSessionId() != null) {
+            Session s = (Session) Session.activeSession.get();
+            if ((s == null || !s.isValid()) && request.getSessionId() != null) {
                 request.setSessionId(null, 0);
             }
             if (!request.hasResponse()) {
