@@ -13,9 +13,12 @@ function StartApp() {
  */
 StartApp.prototype.start = function () {
     this.proc = RapidContext.Procedure.mapAll({
-        appList: "System.App.List"
+        appList: "System.App.List",
+        changePassword: "System.User.ChangePassword",
+        sessionInfo: "System.Session.Current",
+        sessionLogin: "System.Session.Authenticate",
+        sessionLogout: "System.Session.Terminate"
     });
-    var user = RapidContext.App.user();
     var status = RapidContext.App.status();
 
     // General events
@@ -24,25 +27,11 @@ StartApp.prototype.start = function () {
     MochiKit.Signal.connect(this.ui.root, "onenter", this, "_focusGained");
     MochiKit.Signal.connect(this.ui.root, "onexit", this, "_focusLost");
 
-    // Info bar
-    if (user && user.id) {
-        MochiKit.DOM.replaceChildNodes(this.ui.infoUser, user.name || user.id);
-        MochiKit.DOM.replaceChildNodes(this.ui.menuTitle, user.longName);
-        MochiKit.DOM.replaceChildNodes(this.ui.menuLogInOut, "\u00bb Logout");
-        MochiKit.DOM.removeElementClass(this.ui.menuAdmin, "widgetPopupDisabled");
-        MochiKit.DOM.removeElementClass(this.ui.menuPassword, "widgetPopupDisabled");
-    } else {
-        MochiKit.DOM.replaceChildNodes(this.ui.infoUser, "anonymous");
-        MochiKit.DOM.replaceChildNodes(this.ui.menuTitle, "Anonymous User");
-        MochiKit.DOM.replaceChildNodes(this.ui.menuLogInOut, "\u00bb Login");
-        MochiKit.DOM.addElementClass(this.ui.menuAdmin, "widgetPopupDisabled");
-        MochiKit.DOM.addElementClass(this.ui.menuPassword, "widgetPopupDisabled");
-    }
+    // Info bar & popup menu
+    this._initInfoMenu();
     var env = status.environment;
     env = (env && env.name) ? env.name : "<none>";
     MochiKit.DOM.replaceChildNodes(this.ui.infoEnv, env);
-
-    // Info popup menu
     var show = { effect: "appear", duration: 0.2 };
     var hide = { effect: "fade", duration: 0.2, delay: 0.2 };
     this.ui.menu.setAttrs({ showAnim: show, hideAnim: hide });
@@ -50,16 +39,14 @@ StartApp.prototype.start = function () {
         // TODO: MSIE 6.0 sets div width to 100%, so we hack the width
         this.ui.menu.style.width = "250px";
     }
+    MochiKit.Signal.connect(this.proc.sessionInfo, "onsuccess", this, "_initInfoMenu");
     MochiKit.Signal.connect(this.ui.infoBar, "onmousemove", this.ui.menu, "show");
     MochiKit.Signal.connect(this.ui.infoBar, "onmouseleave", this.ui.menu, "hide");
     MochiKit.Signal.connect(this.ui.menu, "onmouseleave", this.ui.menu, "hide");
     MochiKit.Signal.connect(this.ui.menu, "onclick", this, "_hideInfoPopup");
     MochiKit.Signal.connect(this.ui.menuAbout, "onclick", this.ui.about, "show");
-    var func = MochiKit.Base.partial(RapidContext.App.startApp, "HelpApp", null);
+    var func = MochiKit.Base.partial(RapidContext.App.startApp, "help", null);
     MochiKit.Signal.connect(this.ui.menuHelp, "onclick", func);
-    var func = MochiKit.Base.partial(RapidContext.App.startApp, "AdminApp", null);
-    MochiKit.Signal.connect(this.ui.menuAdmin, "onclick", func);
-    MochiKit.Signal.connect(this.ui.menuPassword, "onclick", this, "_showPasswordDialog");
     MochiKit.Signal.connect(this.ui.menuLogInOut, "onclick", this, "_loginOut");
 
     // App pane
@@ -80,6 +67,13 @@ StartApp.prototype.start = function () {
     // Password dialog
     MochiKit.Signal.connect(this.ui.passwordCancel, "onclick", this.ui.passwordDialog, "hide");
     MochiKit.Signal.connect(this.ui.passwordSave, "onclick", this, "_changePassword");
+    MochiKit.Signal.connect(this.proc.changePassword, "onresponse", this, "_changePasswordCallback");
+
+    // Login dialog
+    MochiKit.Signal.connect(this.proc.sessionInfo, "onsuccess", this, "_loginUpdateNonce");
+    MochiKit.Signal.connect(this.ui.loginCancel, "onclick", this.ui.loginDialog, "hide");
+    MochiKit.Signal.connect(this.ui.loginAuth, "onclick", this, "_loginAuth");
+    MochiKit.Signal.connect(this.proc.sessionLogin, "onresponse", this, "_loginAuthCallback");
 
     // Tour wizard
     MochiKit.Signal.connect(this.ui.tourButton, "onclick", this, "_tourStart");
@@ -100,6 +94,31 @@ StartApp.prototype.start = function () {
 StartApp.prototype.stop = function () {
     for (var name in this.proc) {
         MochiKit.Signal.disconnectAll(this.proc[name]);
+    }
+};
+
+/**
+ * Initializes the info bar and popup menu.
+ */
+StartApp.prototype._initInfoMenu = function () {
+    var user = RapidContext.App.user();
+    MochiKit.Signal.disconnect(this.ui.menuAdmin, "onclick");
+    MochiKit.Signal.disconnect(this.ui.menuPassword, "onclick");
+    if (user && user.id) {
+        MochiKit.DOM.replaceChildNodes(this.ui.infoUser, user.name || user.id);
+        MochiKit.DOM.replaceChildNodes(this.ui.menuTitle, user.longName);
+        MochiKit.DOM.replaceChildNodes(this.ui.menuLogInOut, "\u00bb Logout");
+        MochiKit.DOM.removeElementClass(this.ui.menuAdmin, "widgetPopupDisabled");
+        MochiKit.DOM.removeElementClass(this.ui.menuPassword, "widgetPopupDisabled");
+        var func = MochiKit.Base.partial(RapidContext.App.startApp, "admin", null);
+        MochiKit.Signal.connect(this.ui.menuAdmin, "onclick", func);
+        MochiKit.Signal.connect(this.ui.menuPassword, "onclick", this, "_showPasswordDialog");
+    } else {
+        MochiKit.DOM.replaceChildNodes(this.ui.infoUser, "anonymous");
+        MochiKit.DOM.replaceChildNodes(this.ui.menuTitle, "Anonymous User");
+        MochiKit.DOM.replaceChildNodes(this.ui.menuLogInOut, "\u00bb Login");
+        MochiKit.DOM.addElementClass(this.ui.menuAdmin, "widgetPopupDisabled");
+        MochiKit.DOM.addElementClass(this.ui.menuPassword, "widgetPopupDisabled");
     }
 };
 
@@ -331,6 +350,9 @@ StartApp.prototype._showPasswordDialog = function () {
     this.ui.passwordForm.reset();
     this.ui.passwordDialog.show();
     this.ui.passwordDialog.resizeToContent();
+    this.ui.passwordCurrent.focus();
+    // TODO: Replace this hack that creates a black overlay background
+    this.ui.passwordDialog._modalNode.firstChild.style.backgroundColor = "#000000";
 };
 
 /**
@@ -347,9 +369,7 @@ StartApp.prototype._changePassword = function () {
         var prefix = user.id + ":" + user.realm + ":";
         var oldHash = Crypto.MD5(prefix + data.current).toString();
         var newHash = Crypto.MD5(prefix + data.password).toString();
-        var args = [oldHash, newHash];
-        var d = RapidContext.App.callProc("System.User.ChangePassword", args);
-        d.addBoth(MochiKit.Base.method(this, "_callbackChangePassword"));
+        this.proc.changePassword(oldHash, newHash);
         this.ui.passwordSave.setAttrs({ disabled: true, icon: "LOADING" });
     }
     this.ui.passwordDialog.resizeToContent();
@@ -358,26 +378,76 @@ StartApp.prototype._changePassword = function () {
 /**
  * Callback for the password change dialog.
  */
-StartApp.prototype._callbackChangePassword = function (res) {
+StartApp.prototype._changePasswordCallback = function (res) {
     this.ui.passwordSave.setAttrs({ disabled: false, icon: "OK" });
     if (res instanceof Error) {
-        var field = this.ui.passwordForm.fieldMap();
-        this.ui.passwordError.addError(field.current, res.message);
+        this.ui.passwordError.addError(this.ui.passwordCurrent, res.message);
         this.ui.passwordDialog.resizeToContent();
     } else {
         this.ui.passwordDialog.hide();
+        this.ui.passwordForm.reset();
     }
 };
 
 /**
- * Terminates the session and shows the logout message.
+ * Shows either the login or the logout dialog. In the latter case, the
+ * session is also terminated.
  */
 StartApp.prototype._loginOut = function () {
-    RapidContext.App.callProc("System.Session.Terminate", [null]);
-    this.ui.logoutDialog.show();
-    this.ui.logoutDialog.resizeToContent();
-    // TODO: Replace this hack that creates a black overlay background
-    this.ui.logoutDialog._modalNode.firstChild.style.backgroundColor = "#000000";
+    var user = RapidContext.App.user();
+    if (user && user.id) {
+        this.proc.sessionLogout(null);
+        this.ui.logoutDialog.show();
+        this.ui.logoutDialog.resizeToContent();
+        // TODO: Replace this hack that creates a black overlay background
+        this.ui.logoutDialog._modalNode.firstChild.style.backgroundColor = "#000000";
+    } else {
+        this.ui.loginForm.reset();
+        this.ui.loginDialog.show();
+        this.ui.loginDialog.resizeToContent();
+        this.ui.loginUser.focus();
+        // TODO: Replace this hack that creates a black overlay background
+        this.ui.loginDialog._modalNode.firstChild.style.backgroundColor = "#000000";
+        this.proc.sessionInfo();
+    }
+};
+
+/**
+ * Update the login nonce values from the session.
+ */
+StartApp.prototype._loginUpdateNonce = function (data) {
+    this.ui.loginForm.update({ nonce: data.nonce });
+};
+
+/**
+ * Shows the login authentication dialog.
+ */
+StartApp.prototype._loginAuth = function () {
+    if (this.ui.loginForm.validate()) {
+        var data = this.ui.loginForm.valueMap();
+        var realm = RapidContext.App.status().realm;
+        var hash = Crypto.MD5(data.user + ":" + realm + ":" + data.password);
+        hash = Crypto.MD5(hash.toString() + ":" + data.nonce).toString();
+        this.proc.sessionLogin(data.user, data.nonce, hash);
+        this.ui.loginAuth.setAttrs({ disabled: true, icon: "LOADING" });
+    }
+    this.ui.loginDialog.resizeToContent();
+};
+
+/**
+ * Callback for the login authentication dialog.
+ */
+StartApp.prototype._loginAuthCallback = function (res) {
+    this.ui.loginAuth.setAttrs({ disabled: false, icon: "OK" });
+    if (res instanceof Error) {
+        this.ui.loginPasswordError.addError(this.ui.loginPassword, res.message);
+        this.ui.loginDialog.resizeToContent();
+    } else {
+        this.ui.loginDialog.hide();
+        this.ui.loginForm.reset();
+        this.proc.appList();
+        this.proc.sessionInfo();
+    }
 };
 
 /**
@@ -416,7 +486,7 @@ StartApp.prototype._tourChange = function () {
         break;
     case 2:
         d.addBoth(function() {
-            return RapidContext.App.callApp("HelpApp", "loadTopics");
+            return RapidContext.App.callApp("help", "loadTopics");
         });
         d.addBoth(function() {
             return MochiKit.Async.wait(1);

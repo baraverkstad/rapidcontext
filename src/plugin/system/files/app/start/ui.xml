@@ -80,7 +80,7 @@
           <tr>
             <th class="label" style="width: 140px; padding-top: 6px; padding-right: 10px; text-align: right;">Current Password:</th>
             <td style="padding-top: 2px;" w="100%-140">
-              <TextField name="current" type="password" w="100%-10" />
+              <TextField id="passwordCurrent" name="current" type="password" w="100%-10" />
               <FormValidator id="passwordError" name="current" mandatory="false" style="padding: 3px 0 6px 0;" />
             </td>
           </tr>
@@ -100,11 +100,38 @@
           </tr>
         </tbody>
       </table>
+      <div style="margin: 15px 5px 5px 5px; text-align: right;">
+        <Button id="passwordCancel" type="button" icon="CANCEL">Cancel</Button>
+        <Button id="passwordSave" type="submit" icon="OK" highlight="true" style="margin-left: 10px;">Change Password</Button>
+      </div>
     </Form>
-    <div style="margin: 15px 5px 5px 5px; text-align: right;">
-      <Button id="passwordCancel" icon="CANCEL">Cancel</Button>
-      <Button id="passwordSave" icon="OK" highlight="true" style="margin-left: 10px;">Change Password</Button>
-    </div>
+  </Dialog>
+  <Dialog id="loginDialog" title="Login" modal="true" resizeable="false" style="width: 300px; height: 100px;">
+    <Form id="loginForm">
+      <input id="loginNonce" type="hidden" name="nonce" value="0" />
+      <table w="100%" style="border-collapse: collapse; font-size: 11px;">
+        <tbody w="100%">
+          <tr>
+            <th class="label" style="width: 70px; padding-top: 6px; padding-right: 10px; text-align: right;">User Name:</th>
+            <td style="padding-top: 2px;" w="100%-80">
+              <TextField id="loginUser" name="user" w="100%-10" />
+              <FormValidator name="user" mandatory="true" message="A user name is required" style="padding: 3px 0 6px 0;" />
+            </td>
+          </tr>
+          <tr>
+            <th class="label" style="width: 70px; padding-top: 6px; padding-right: 10px; text-align: right;">Password:</th>
+            <td style="padding-top: 2px;" w="100%-80">
+              <TextField id="loginPassword" name="password" type="password" w="100%-10" />
+              <FormValidator id="loginPasswordError" name="password" mandatory="false" style="padding: 3px 0 6px 0;" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="margin: 15px 5px 5px 5px; text-align: right;">
+        <Button id="loginCancel" type="button" icon="CANCEL">Cancel</Button>
+        <Button id="loginAuth" type="submit" icon="OK" highlight="true" style="margin-left: 10px;">Login</Button>
+      </div>
+    </Form>
   </Dialog>
   <Dialog id="logoutDialog" title="Logout Completed" modal="true" closeable="false" resizeable="false" style="width: 350px;">
     <div style="margin: 0 10px 5px 10px;">
