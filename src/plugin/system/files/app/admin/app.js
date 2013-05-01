@@ -203,6 +203,7 @@ AdminApp.prototype._updateTypeCache = function (res) {
     for (var i = 0; i < res.length; i++) {
         var type = res[i];
         this._types[type.id] = type;
+        type.property = type.property || [];
         type.properties = {};
         for (var j = 0; j < type.property.length; j++) {
             var prop = type.property[j];

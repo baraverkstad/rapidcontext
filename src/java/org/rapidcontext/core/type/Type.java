@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -55,6 +55,11 @@ public class Type extends StorableObject {
      * The dictionary key for the initializer class name.
      */
     public static final String KEY_INITIALIZER = "initializer";
+
+    /**
+     * The dictionary key for the property array.
+     */
+    public static final String KEY_PROPERTY = "property";
 
     /**
      * The connection object storage path.
@@ -176,6 +181,7 @@ public class Type extends StorableObject {
      */
     public Type(String id, String type, Dict dict) {
         super(id, type, dict);
+        this.dict.set(KEY_PROPERTY, properties());
     }
 
     /**
@@ -239,7 +245,7 @@ public class Type extends StorableObject {
         String  msg;
 
         try {
-            arr = dict.getArray("property");
+            arr = dict.getArray(KEY_PROPERTY);
         } catch (ClassCastException e) {
             msg = this + " contains 'property' attribute that isn't a proper array";
             LOG.warning(msg);
