@@ -22,8 +22,8 @@ import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.Restricted;
-import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.type.Environment;
+import org.rapidcontext.core.type.User;
 
 /**
  * The built-in status information procedure.
@@ -118,9 +118,9 @@ public class StatusProcedure implements Procedure, Restricted {
             return null;
         }
         res.set("guid", ctx.getConfig().get("guid"));
-        if (SecurityContext.currentUser() != null) {
-            res.set("environment", getEnvironmentData(cx.getEnvironment()));
-        }
+        res.set("environment", getEnvironmentData(cx.getEnvironment()));
+        // TODO: Allow multiple security realms (depending on web site)
+        res.set("realm", User.DEFAULT_REALM);
         return res;
     }
 
