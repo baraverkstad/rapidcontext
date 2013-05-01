@@ -368,6 +368,7 @@ public class AppWebService extends FileWebService {
         String              str = "";
         Object              obj;
 
+        session(request, true);
         res.set("data", null);
         res.set("trace", null);
         res.set("error", null);
