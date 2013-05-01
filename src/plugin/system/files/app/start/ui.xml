@@ -226,7 +226,7 @@
         <ul>
           <li>At the top right corner of the screen is the user and environment information.</li>
           <li>When passing the mouse pointer over it, the <strong>User Menu</strong> is shown.</li>
-          <li>This menu provides logout and password change functions.</li>
+          <li>This menu provides login, logout and password change functions.</li>
         </ul>
         <Button id="tourUserLocate" icon="HELP">Locate</Button>
       </Pane>
