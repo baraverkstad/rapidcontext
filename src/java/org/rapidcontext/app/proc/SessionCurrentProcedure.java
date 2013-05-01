@@ -127,23 +127,19 @@ public class SessionCurrentProcedure implements Procedure, Restricted {
      * @return the serialized session dictionary
      */
     public static Dict serialize(Storage storage, Session session) {
-        Dict      res = session.serialize().copy();
-        Dict      dict;
-        String    userId;
-        String[]  ids;
-
+        Dict res = session.serialize().copy();
         res.set("creationDate", DateUtil.formatIsoDateTime(session.createTime()));
         res.set("lastAccessDate", DateUtil.formatIsoDateTime(session.accessTime()));
-        res.set("user", null);
-        userId = session.userId();
-        if (userId != null) {
-            User user = User.find(storage, userId);
-            if (user != null) {
-                res.set("user", UserListProcedure.serialize(user));
-            }
+        String userId = session.userId();
+        User user = (userId == null) ? null : User.find(storage, userId);
+        if (user == null) {
+            res.set("user", null);
+            res.set("nonce", "" + session.accessTime().getTime());
+        } else {
+            res.set("user", UserListProcedure.serialize(user));
         }
-        dict = new Dict();
-        ids = session.files().keys();
+        Dict dict = new Dict();
+        String[] ids = session.files().keys();
         for (int i = 0; i < ids.length; i++) {
             dict.set(ids[i], serialize(session.file(ids[i])));
         }

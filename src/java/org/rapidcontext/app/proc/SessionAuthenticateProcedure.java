@@ -122,6 +122,7 @@ public class SessionAuthenticateProcedure implements Procedure, Restricted {
         String nonce = bindings.getValue("nonce").toString();
         String hash = bindings.getValue("hash").toString();
         try {
+            SecurityContext.verifyNonce(nonce);
             SecurityContext.authHash(userId, ":" + nonce, hash);
             session.setUserId(userId);
             return userId + " logged in";
