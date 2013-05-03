@@ -442,11 +442,13 @@ StartApp.prototype._loginAuthCallback = function (res) {
     if (res instanceof Error) {
         this.ui.loginPasswordError.addError(this.ui.loginPassword, res.message);
         this.ui.loginDialog.resizeToContent();
+        return false;
     } else {
         this.ui.loginDialog.hide();
         this.ui.loginForm.reset();
         this.proc.appList();
         this.proc.sessionInfo();
+        return true;
     }
 };
 
