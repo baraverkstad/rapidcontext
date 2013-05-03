@@ -40,7 +40,7 @@ COMMAND="$1"
 #
 cd `dirname $PROGRAM`/..
 BASEDIR=`pwd -P`
-FILEATTR=(`ls -l plugin/system/plugin.properties`)
+FILEATTR=(`ls -l plugin/system.zip`)
 USER=${FILEATTR[2]}
 GROUP=${FILEATTR[3]}
 VARDIR=$BASEDIR/var
@@ -75,10 +75,10 @@ start() {
     else
         mkdir -p $VARDIR
         touch $PIDFILE
-        # rotate log file
+        # TODO: rotate log file
         touch $LOGFILE
         chown -R $USER:$GROUP $VARDIR
-        su - $USER -c "$BASEDIR/bin/rapidcontext --server" >$LOGFILE 2>&1 &
+        su - $USER -c "PIDFILE=$PIDFILE LOGFILE=$LOGFILE $BASEDIR/bin/rapidcontext --server" &
         sleep 3
         if is_running; then
             echo "OK"

@@ -234,13 +234,15 @@
       <zipfileset dir="${basedir}"
                   prefix="${build.name}-${build.version}"
                   filemode="755">
-        <include name="bin/*" />
+        <include name="bin/init" />
         <exclude name="bin/*.bat" />
+        <exclude name="bin/*.conf" />
       </zipfileset>
       <zipfileset dir="${basedir}" prefix="${build.name}-${build.version}">
         <include name="README.txt" />
         <include name="LICENSE.txt" />
         <include name="bin/*.bat" />
+        <include name="bin/*.conf" />
         <include name="lib/**" />
         <include name="plugin/system*.zip" />
         <include name="plugin/cmdline*.zip" />
