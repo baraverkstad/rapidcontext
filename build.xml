@@ -213,9 +213,20 @@
         <exclude name="jetty-*.jar" />
         <exclude name="slf4j-*.jar" />
       </lib>
-      <zipfileset dir="." includes="doc.zip" />
-      <zipfileset dir="plugin" prefix="plugin" />
+      <zipfileset dir="${basedir}">
+        <include name="plugin/system*.zip" />
+        <include name="plugin/cmdline*.zip" />
+        <include name="plugin/http*.zip" />
+        <include name="plugin/jdbc*.zip" />
+        <include name="plugin/legacy*.zip" />
+        <include name="plugin/test*.zip" />
+        <include name="plugin/local/**" />
+        <include name="doc.zip" />
+      </zipfileset>
     </war>
+    <zip destfile="${build.name}-${build.version}-war.zip" level="0">
+      <zipfileset dir="${basedir}" includes="*.war" />
+    </zip>
   </target>
 
   <target name="package-zip">
@@ -230,9 +241,14 @@
         <include name="README.txt" />
         <include name="LICENSE.txt" />
         <include name="bin/*.bat" />
-        <include name="*.war" />
         <include name="lib/**" />
-        <include name="plugin/**" />
+        <include name="plugin/system*.zip" />
+        <include name="plugin/cmdline*.zip" />
+        <include name="plugin/http*.zip" />
+        <include name="plugin/jdbc*.zip" />
+        <include name="plugin/legacy*.zip" />
+        <include name="plugin/test*.zip" />
+        <include name="plugin/local/**" />
         <include name="doc.zip" />
       </zipfileset>
       <zipfileset dir="src/plugin" prefix="${build.name}-${build.version}">
@@ -258,9 +274,15 @@
     <copy todir="${build.title}.app/Contents/Resources">
       <fileset dir="${basedir}">
         <include name="bin/rapidcontext" />
-        <include name="doc.zip" />
         <include name="lib/**" />
-        <include name="plugin/**" />
+        <include name="plugin/system*.zip" />
+        <include name="plugin/cmdline*.zip" />
+        <include name="plugin/http*.zip" />
+        <include name="plugin/jdbc*.zip" />
+        <include name="plugin/legacy*.zip" />
+        <include name="plugin/test*.zip" />
+        <include name="plugin/local/**" />
+        <include name="doc.zip" />
       </fileset>
     </copy>
     <chmod file="${build.title}.app/Contents/MacOS/start" perm="ugo+x" />
