@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -511,7 +511,6 @@ public class RootStorage extends Storage {
         if (storage != null && path.startsWith(PATH_STORAGE_CACHE)) {
             Path storageId = storage.path().subPath(PATH_STORAGE_CACHE.depth());
             Path storagePath = PATH_STORAGE.descendant(storageId);
-            cacheRemove(storagePath, storage.localPath(path));
             cacheAdd(storagePath, storage.localPath(path), data);
         } else {
             store(storage, path, data, true);
@@ -538,30 +537,31 @@ public class RootStorage extends Storage {
 
         if (storage != null) {
             if (caching) {
-                cacheRemove(storage.path(), storage.localPath(path));
-            }
-            storage.store(storage.localPath(path), data);
-            if (caching) {
                 cacheAdd(storage.path(), storage.localPath(path), data);
             }
+            storage.store(storage.localPath(path), data);
         } else {
-            if (caching) {
-                cacheRemove(null, path);
-            }
+            boolean stored = false;
             for (int i = 0; i < mountedStorages.size(); i++) {
                 storage = (Storage) mountedStorages.get(i);
                 Path overlay = storage.mountOverlayPath();
-                boolean isMatch = (overlay != null) && path.startsWith(overlay);
-                if (storage.isReadWrite() && isMatch) {
+                if (overlay != null && path.startsWith(overlay)) {
                     Path subpath = path.subPath(overlay.depth());
-                    storage.store(subpath, data);
-                    if (caching) {
-                        cacheAdd(storage.path(), subpath, data);
+                    if (!stored && storage.isReadWrite()) {
+                        if (caching) {
+                            cacheAdd(storage.path(), subpath, data);
+                        }
+                        storage.store(subpath, data);
+                        stored = true;
+                    } else if (caching) {
+                        cacheRemove(storage.path(), subpath);
                     }
-                    return;
                 }
             }
-            throw new StorageException("no writable storage found for " + path);
+            if (!stored) {
+                throw new StorageException("no writable storage found for " +
+                                           path);
+            }
         }
     }
 
@@ -648,7 +648,8 @@ public class RootStorage extends Storage {
     /**
      * Adds an object to a storage cache (if possible). The object
      * will only be added if it is an instance of  StorableObject and
-     * a memory cache exists for the specified storage path.
+     * a memory cache exists for the specified storage path. Any old
+     * object will be removed and destroyed.
      *
      * @param storagePath    the storage path to cache for
      * @param path           the object location
@@ -656,13 +657,8 @@ public class RootStorage extends Storage {
      */
     private void cacheAdd(Path storagePath, Path path, Object data) {
         MemoryStorage cache = (MemoryStorage) cacheStorages.get(storagePath);
-        if (cache != null && data instanceof StorableObject) {
-            try {
-                LOG.fine("adding " + path + " to cache " + cache.path());
-                cache.store(path, data);
-            } catch (StorageException e) {
-                LOG.log(Level.WARNING, "failed to cache object", e);
-            }
+        if (cache != null) {
+            cacheReplace(cache, path, data, cache.load(path));
         }
     }
 
@@ -708,41 +704,74 @@ public class RootStorage extends Storage {
         String debugPrefix = "cache " + cache.path() + ": ";
         Metadata[] metas = cache.lookupAll(basePath);
         for (int i = 0; i < metas.length; i++) {
+            boolean keepObject = false;
             Path path = metas[i].path();
             Object obj = cache.load(path);
             if (obj instanceof StorableObject) {
                 StorableObject storable = (StorableObject) obj;
                 if (store && storable.isModified()) {
                     try {
-                        LOG.fine(debugPrefix + "persisting object " + path);
+                        LOG.fine(debugPrefix + "persisting modified object " + path);
                         store(null, path, storable, false);
                     } catch (StorageException e) {
                         LOG.log(Level.WARNING, "failed to persist cached object", e);
                     }
                 }
-                LOG.fine(debugPrefix + "passivating object " + path);
-                storable.passivate();
-                if (force || !storable.isActive()) {
-                    try {
-                        LOG.fine(debugPrefix + "destroying object " + path);
-                        storable.destroy();
-                    } catch (StorageException e) {
-                        LOG.log(Level.WARNING, "failed to destroy cached object", e);
-                    }
-                    try {
-                        LOG.fine(debugPrefix + "removing object " + path);
-                        cache.remove(path);
-                    } catch (StorageException e) {
-                        LOG.log(Level.WARNING, "failed to remove cached object", e);
-                    }
-                }
+                keepObject = !force && storable.isActive();
+            }
+            if (keepObject) {
+                cacheReplace(cache, path, obj, obj);
             } else {
+                cacheReplace(cache, path, null, obj);
+            }
+        }
+    }
+
+    /**
+     * Replaces a single object in a storage cache. This operation is
+     * atomic, meaning that old object are destroyed only after the
+     * new object has been inserted into the cache.
+     *
+     * @param cache          the storage cache to modify
+     * @param path           the object path to write
+     * @param newData        the new data to insert, or null for none
+     * @param oldData        the old data to remove, or null for none
+     */
+    private void cacheReplace(MemoryStorage cache,
+                              Path path,
+                              Object newData,
+                              Object oldData) {
+
+        String debugPrefix = "cache " + cache.path() + ": ";
+        if (newData instanceof StorableObject) {
+            StorableObject storable = (StorableObject) newData;
+            LOG.fine(debugPrefix + "passivating object " + path);
+            storable.passivate();
+            if (newData != oldData) {
                 try {
-                    LOG.fine(debugPrefix + "removing data " + path);
-                    cache.remove(path);
+                    LOG.fine(debugPrefix + "adding object " + path);
+                    cache.store(path, newData);
                 } catch (StorageException e) {
-                    LOG.log(Level.WARNING, "failed to remove cached data", e);
+                    LOG.log(Level.WARNING, "failed to cache object", e);
                 }
+            }
+        } else if (oldData != null) {
+            try {
+                LOG.fine(debugPrefix + "removing object " + path);
+                cache.remove(path);
+            } catch (StorageException e) {
+                LOG.log(Level.WARNING, "failed to remove cached data", e);
+            }
+        }
+        if (oldData != newData && oldData instanceof StorableObject) {
+            StorableObject storable = (StorableObject) oldData;
+            LOG.fine(debugPrefix + "passivating removed object " + path);
+            storable.passivate();
+            try {
+                LOG.fine(debugPrefix + "destroying removed object " + path);
+                storable.destroy();
+            } catch (StorageException e) {
+                LOG.log(Level.WARNING, "failed to destroy object", e);
             }
         }
     }
