@@ -150,7 +150,7 @@ public class ServletApplication extends HttpServlet {
         } catch (IOException e) {
             LOG.info("IO error when processing request: " + request);
         }
-        LOG.fine(ip(request) + "Request to " + request.getPath() +
+        LOG.fine(ip(request) + "Request to " + request.getUrl() +
                  " processed in " + request.getProcessTime() +
                  " millisecs");
         processAuthReset();
@@ -167,6 +167,8 @@ public class ServletApplication extends HttpServlet {
         Session session = (Session) Session.activeSession.get();
         Session.activeSession.set(null);
         if (session != null && !session.isValid()) {
+            LOG.fine("session " + session.id() + " invalided (expired on " +
+                     session.destroyTime() + "), removing from storage");
             Session.remove(ctx.getStorage(), session.id());
         } else if (session != null && session.isNew()) {
             try {
