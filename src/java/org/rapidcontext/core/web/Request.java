@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -21,6 +21,7 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -37,6 +38,7 @@ import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.util.FileUtil;
 import org.rapidcontext.util.HttpUtil;
+import org.rapidcontext.util.StringUtil;
 
 /**
  * A request wrapper class. This class encapsulates the HTTP servlet
@@ -100,6 +102,11 @@ public class Request implements HttpUtil {
     private static final int ERROR_RESPONSE = 5;
 
     /**
+     * The regular expression for extracting header values.
+     */
+    private static final Pattern RE_HEADER_VALUE = Pattern.compile("[^,\'\"\\s]+");
+
+    /**
      * The system time when creating this request.
      */
     private long requestTime = System.currentTimeMillis();
@@ -120,6 +127,31 @@ public class Request implements HttpUtil {
      * The servlet response.
      */
     private HttpServletResponse response = null;
+
+    /**
+     * The cached request URL.
+     */
+    private String requestUrl = null;
+
+    /**
+     * The cached request protocol scheme.
+     */
+    private String requestProtocol = null;
+
+    /**
+     * The cached request host name.
+     */
+    private String requestHost = null;
+
+    /**
+     * The cached request port number.
+     */
+    private int requestPort = 0;
+
+    /**
+     * The cached request IP address.
+     */
+    private String requestIp = null;
 
     /**
      * The response type. This flag is set to true if the response
@@ -221,13 +253,32 @@ public class Request implements HttpUtil {
     }
 
     /**
-     * Returns the full request URL with protocol, hostname and path.
-     * No query parameters will be included in the URL, however.
+     * Returns the full request URL with protocol, hostname, port and
+     * path. No query parameters will be included in the URL, however.
      *
      * @return the full request URL
      */
     public String getUrl() {
-        return Helper.decodeUrl(request.getRequestURL().toString());
+        if (requestUrl == null) {
+            StringBuilder buffer = new StringBuilder();
+            String scheme = getProtocol();
+            String host = getHost();
+            int port = getPort();
+            buffer.append(scheme);
+            buffer.append("://");
+            if (scheme.equals("http") && port == 80) {
+                buffer.append(host);
+            } else if (scheme.equals("https") && port == 443) {
+                buffer.append(host);
+            } else {
+                buffer.append(host);
+                buffer.append(":");
+                buffer.append(port);
+            }
+            buffer.append(getAbsolutePath());
+            requestUrl = buffer.toString();
+        }
+        return requestUrl;
     }
 
     /**
@@ -237,7 +288,15 @@ public class Request implements HttpUtil {
      * @return the protocol name
      */
     public String getProtocol() {
-        return request.getScheme();
+        if (requestProtocol == null) {
+            String str1 = request.getHeader("X-Forwarded-Scheme");
+            String str2 = request.getHeader("X-Forwarded-Proto");
+            String str3 = request.getScheme();
+            str1 = StringUtil.match(str1, RE_HEADER_VALUE);
+            str2 = StringUtil.match(str2, RE_HEADER_VALUE);
+            requestProtocol = StringUtil.first(str1, str2, str3);
+        }
+        return requestProtocol;
     }
 
     /**
@@ -246,7 +305,16 @@ public class Request implements HttpUtil {
      * @return the host name
      */
     public String getHost() {
-        return request.getServerName();
+        if (requestHost == null) {
+            String str1 = request.getHeader("X-Forwarded-Server");
+            String str2 = request.getHeader("X-Forwarded-Host");
+            String str3 = request.getServerName();
+            str1 = StringUtil.match(str1, RE_HEADER_VALUE);
+            str2 = StringUtil.match(str2, RE_HEADER_VALUE);
+            str2 = StringUtils.substringBefore(str2, ":");
+            requestHost = StringUtil.first(str1, str2, str3);
+        }
+        return requestHost;
     }
 
     /**
@@ -255,7 +323,22 @@ public class Request implements HttpUtil {
      * @return the port number
      */
     public int getPort() {
-        return request.getServerPort();
+        if (requestPort <= 0) {
+            String str1 = request.getHeader("X-Forwarded-Port");
+            String str2 = request.getHeader("X-Forwarded-Host");
+            str1 = StringUtil.match(str1, RE_HEADER_VALUE);
+            str2 = StringUtil.match(str2, RE_HEADER_VALUE);
+            if (str1 != null) {
+                requestPort = Integer.parseInt(str1);
+            } else if (str2 != null) {
+                str2 = StringUtils.substringAfter(str2, ":");
+                str2 = StringUtils.defaultIfEmpty(str2, "80");
+                requestPort = Integer.parseInt(str2);
+            } else {
+                requestPort = request.getServerPort();
+            }
+        }
+        return requestPort;
     }
 
     /**
@@ -355,7 +438,15 @@ public class Request implements HttpUtil {
      * @return the IP address of the request sender
      */
     public String getRemoteAddr() {
-        return request.getRemoteAddr();
+        if (requestIp == null) {
+            String str1 = request.getHeader("X-Forwarded-For");
+            String str2 = request.getHeader("X-Real-IP");
+            String str3 = request.getRemoteAddr();
+            str1 = StringUtil.match(str1, RE_HEADER_VALUE);
+            str2 = StringUtil.match(str2, RE_HEADER_VALUE);
+            requestIp = (str1 != null) ? str1 : (str2 != null) ? str2 : str3;
+        }
+        return requestIp;
     }
 
     /**
