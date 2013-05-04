@@ -14,6 +14,9 @@
 
 package org.rapidcontext.util;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -234,5 +237,42 @@ public class StringUtil {
             buffer.append(escapeXml(str.charAt(i)));
         }
         return buffer.toString();
+    }
+
+    /**
+     * Returns the first non-empty value of the argument strings.
+     *
+     * @param str1           the first string to check
+     * @param str2           the second string to check
+     * @param str3           the third string to check
+     *
+     * @return the first non-empty value of the argument strings, or
+     *         the last string value
+     */
+    public static String first(String str1, String str2, String str3) {
+        if (str1 != null && str1.trim().length() > 0) {
+            return str1;
+        } else if (str2 != null && str2.trim().length() > 0) {
+            return str2;
+        } else {
+            return str3;
+        }
+    }
+
+    /**
+     * Returns the first match of a regular expression from a string.
+     *
+     * @param str           the string to match
+     * @param re            the compiled regular expression
+     *
+     * @return the matched substring, or
+     *         null if no match was found
+     */
+    public static String match(String str, Pattern re) {
+        if (str == null) {
+            return null;
+        }
+        Matcher m = re.matcher(str);
+        return (m != null && m.find()) ? m.group() : null;
     }
 }
