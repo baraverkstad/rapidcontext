@@ -117,11 +117,11 @@ RapidContext.Widget.Icon.prototype.setAttrs = function (attrs) {
  */
 MochiKit.Base.update(RapidContext.Widget.Icon, {
     /** The default icon definition, inherited by all others. */
-    DEFAULT: { url: "images/icons/icons_16x16.png", width: 16, height: 16 },
+    DEFAULT: { url: "rapidcontext/files/images/icons/icons_16x16.png", width: 16, height: 16 },
     /** The blank icon definition. */
     BLANK: { position: "0px 0px", style: { cursor: "default" } },
     /** The loading icon definition. */
-    LOADING: { url: "images/icons/loading.gif", position: "0px 0px", tooltip: "Loading..." },
+    LOADING: { url: "rapidcontext/files/images/icons/loading.gif", position: "0px 0px", tooltip: "Loading..." },
     /** The close icon definition. */
     CLOSE: { position: "0px -16px", tooltip: "Close" },
     /** The close (inverse video) icon definition. */

@@ -73,7 +73,7 @@ RapidContext.Widget.Overlay.prototype.setAttrs = function (attrs) {
         this.message = locals.message || "";
     }
     if (this.showLoading) {
-        var icon = RapidContext.Widget.Icon({ url: "images/icons/loading-overlay.gif", width: 32, height: 32 });
+        var icon = RapidContext.Widget.Icon({ url: "rapidcontext/files/images/icons/loading-overlay.gif", width: 32, height: 32 });
         icon.setStyle({ "margin-right": "20px" });
     }
     MochiKit.DOM.replaceChildNodes(this.lastChild, icon, this.message);

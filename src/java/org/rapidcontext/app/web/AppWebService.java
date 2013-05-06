@@ -78,13 +78,13 @@ public class AppWebService extends FileWebService {
     /**
      * Finds binary files of a specified type from the storage. The
      * type must be used both as a named subdirectory (i.e. "css")
-     * and as file name suffix (i.e. "*.css") in order to match.
+     * and as file name suffix (i.e. "*.css") in order to match. The
+     * returned files will be prefixed with "rapidcontext/files/".
      *
      * @param base           the base storage path (e.g. "/files/")
      * @param type           the file type to find
      *
-     * @return a sorted list of all matching files (relative paths)
-     *     found in storage
+     * @return a sorted list of all matching files found in storage
      */
     protected static Array resources(Path base, String type) {
         ApplicationContext  ctx = ApplicationContext.getInstance();
@@ -98,7 +98,7 @@ public class AppWebService extends FileWebService {
         for (int i = 0; i < meta.length; i++) {
             file = StringUtils.removeStart(meta[i].path().toString(), root);
             if (meta[i].isBinary() && file.endsWith("." + type)) {
-                res.add(file);
+                res.add("rapidcontext/files/" + file);
             }
         }
         res.sort();
@@ -251,7 +251,6 @@ public class AppWebService extends FileWebService {
                 res.append(line.replace("%BASE_URL%", baseUrl));
                 res.append("\n");
             } else if (line.contains("%JS_FILES%")) {
-                // TODO: return URL:s starting with /rapidcontext/files/...
                 files = resources(PATH_FILES, "js");
                 for (int i = 0; i < files.size(); i++) {
                     str = files.getString(i, "") + "?" + ver;
@@ -259,7 +258,6 @@ public class AppWebService extends FileWebService {
                     res.append("\n");
                 }
             } else if (line.contains("%CSS_FILES%")) {
-                // TODO: return URL:s starting with /rapidcontext/files/...
                 files = resources(PATH_FILES, "css");
                 for (int i = 0; i < files.size(); i++) {
                     str = files.getString(i, "") + "?" + ver;
