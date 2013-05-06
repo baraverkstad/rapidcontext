@@ -377,12 +377,12 @@ public class Request implements HttpUtil {
      * @return the local request path
      */
     public String getPath() {
-        if (requestPath != null) {
-            return requestPath;
-        } else {
+        if (requestPath == null) {
             String path = request.getPathInfo();
-            return (path == null) ? "" : path;
+            path = StringUtils.removeStart(path, "/");
+            requestPath = (path == null) ? "" : path;
         }
+        return requestPath;
     }
 
     /**
