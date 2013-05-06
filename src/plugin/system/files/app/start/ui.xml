@@ -73,7 +73,7 @@
     <div id="menuPassword" class="widgetPopupItem widgetPopupDisabled">&#187; Change Password</div>
     <div id="menuLogInOut" class="widgetPopupItem">&#187; Login</div>
   </Popup>
-  <Dialog id="passwordDialog" title="Change Password" modal="true" resizeable="false" style="width: 400px; height: 160px;">
+  <Dialog id="passwordDialog" title="Change Password" system="true" resizeable="false" style="width: 400px; height: 160px;">
     <Form id="passwordForm">
       <table w="100%" style="border-collapse: collapse; font-size: 11px;">
         <tbody w="100%">
@@ -106,7 +106,7 @@
       </div>
     </Form>
   </Dialog>
-  <Dialog id="loginDialog" title="Login" modal="true" resizeable="false" style="width: 300px; height: 100px;">
+  <Dialog id="loginDialog" title="Login" system="true" resizeable="false" style="width: 300px; height: 100px;">
     <Form id="loginForm">
       <input id="loginNonce" type="hidden" name="nonce" value="0" />
       <table w="100%" style="border-collapse: collapse; font-size: 11px;">
@@ -133,7 +133,7 @@
       </div>
     </Form>
   </Dialog>
-  <Dialog id="logoutDialog" title="Logout Completed" modal="true" closeable="false" resizeable="false" style="width: 350px;">
+  <Dialog id="logoutDialog" title="Logout Completed" system="true" closeable="false" resizeable="false" style="width: 350px;">
     <div style="margin: 0 10px 5px 10px;">
       <h1 style="margin-top: 5px; font-size: 18px;">You've been logged out.</h1>
       <p style="font-size: 15px;">Please close your web browser in order to complete the logout process.</p>

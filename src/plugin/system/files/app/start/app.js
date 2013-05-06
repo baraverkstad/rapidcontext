@@ -351,8 +351,6 @@ StartApp.prototype._showPasswordDialog = function () {
     this.ui.passwordDialog.show();
     this.ui.passwordDialog.resizeToContent();
     this.ui.passwordCurrent.focus();
-    // TODO: Replace this hack that creates a black overlay background
-    this.ui.passwordDialog._modalNode.firstChild.style.backgroundColor = "#000000";
 };
 
 /**
@@ -399,15 +397,11 @@ StartApp.prototype._loginOut = function () {
         this.proc.sessionLogout(null);
         this.ui.logoutDialog.show();
         this.ui.logoutDialog.resizeToContent();
-        // TODO: Replace this hack that creates a black overlay background
-        this.ui.logoutDialog._modalNode.firstChild.style.backgroundColor = "#000000";
     } else {
         this.ui.loginForm.reset();
         this.ui.loginDialog.show();
         this.ui.loginDialog.resizeToContent();
         this.ui.loginUser.focus();
-        // TODO: Replace this hack that creates a black overlay background
-        this.ui.loginDialog._modalNode.firstChild.style.backgroundColor = "#000000";
         this.proc.sessionInfo();
     }
 };
