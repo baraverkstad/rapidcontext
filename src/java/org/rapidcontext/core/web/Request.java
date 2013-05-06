@@ -410,6 +410,7 @@ public class Request implements HttpUtil {
      */
     public boolean matchPath(String prefix) {
         String path = getPath();
+        prefix = StringUtils.removeStart(prefix, "/");
         if (path.startsWith(prefix)) {
             if (prefix.length() > 0) {
                 setPath(path.substring(prefix.length()));
