@@ -27,6 +27,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  *            `true`
  * @param {String} [attrs.message] the overlay message text, defaults to
  *            "Working..."
+ * @param {Boolean} [attrs.dark] the dark overlay flag, defaults to `false`
  * @param {Boolean} [attrs.hidden] the hidden widget flag, defaults to `true`
  *
  * @return {Widget} the widget DOM node
@@ -65,12 +66,19 @@ RapidContext.Widget.Classes.Overlay = RapidContext.Widget.Overlay;
  */
 RapidContext.Widget.Overlay.prototype.setAttrs = function (attrs) {
     attrs = MochiKit.Base.update({}, attrs);
-    var locals = RapidContext.Util.mask(attrs, ["loading", "message"]);
+    var locals = RapidContext.Util.mask(attrs, ["loading", "message", "dark"]);
     if (typeof(locals.loading) != "undefined") {
         this.showLoading = MochiKit.Base.bool(locals.loading);
     }
     if (typeof(locals.message) != "undefined") {
         this.message = locals.message || "";
+    }
+    if (typeof(locals.dark) != "undefined") {
+        if (locals.dark) {
+            this.addClass("widgetOverlayDark");
+        } else {
+            this.removeClass("widgetOverlayDark");
+        }
     }
     if (this.showLoading) {
         var icon = RapidContext.Widget.Icon({ url: "rapidcontext/files/images/icons/loading-overlay.gif", width: 32, height: 32 });

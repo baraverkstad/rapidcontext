@@ -325,6 +325,9 @@
     opacity: 0.75;
     filter: alpha(opacity=75);
 }
+.widgetOverlayDark .widgetOverlayCover {
+    background-color: black;
+}
 .widgetOverlayMessage {
     display: inline-block;
     position: relative;
