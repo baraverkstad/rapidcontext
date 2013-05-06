@@ -235,8 +235,7 @@
                   prefix="${build.name}-${build.version}"
                   filemode="755">
         <include name="bin/init" />
-        <exclude name="bin/*.bat" />
-        <exclude name="bin/*.conf" />
+        <include name="bin/rapidcontext" />
       </zipfileset>
       <zipfileset dir="${basedir}" prefix="${build.name}-${build.version}">
         <include name="README.txt" />
