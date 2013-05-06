@@ -59,7 +59,7 @@ if [ "$PIDFILE" != "" ] ; then
     echo $$ > $PIDFILE
 fi
 if [ "$LOGFILE" != "" ] ; then
-    exec >$LOGFILE 2>&1
+    exec >>$LOGFILE 2>&1
 fi
 
 # Setup JAVA_OPTS variable
