@@ -429,12 +429,8 @@ RapidContext.Util.reprDOM = function (node) {
         res += "/>";
         return res;
     } else if (node.nodeType === 2) { // Node.ATTRIBUTE_NODE
-        if (node.specified) {
-            return " " + node.name + '="' +
-                   MochiKit.DOM.escapeHTML(node.value) + '"';
-        } else {
-            return "";
-        }
+        return " " + node.name + '="' +
+               MochiKit.DOM.escapeHTML(node.value) + '"';
     } else if (node.nodeType === 3) { // Node.TEXT_NODE
         return MochiKit.DOM.escapeHTML(node.nodeValue);
     } else {
@@ -456,9 +452,7 @@ RapidContext.Util.attributeArray = function (node) {
     node = MochiKit.DOM.getElement(node);
     for (var i = 0; node != null && i < node.attributes.length; i++) {
         var a = node.attributes[i];
-        if (a.specified) {
-            res.push([a.name, a.value]);
-        }
+        res.push([a.name, a.value]);
     }
     return res;
 };
