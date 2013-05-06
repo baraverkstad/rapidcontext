@@ -213,9 +213,9 @@ RapidContext.Widget._eventHandler = function (className, methodName/*, ...*/) {
 };
 
 /**
- * Emits a signal to any listeners connected with MochiKit.Signal.
- * This function handles errors by logging them to the default error
- * log in `MochiKit.Logging`.
+ * Emits an asynchronous signal to any listeners connected with
+ * MochiKit.Signal. This function will log any errors to the default
+ * error log in `MochiKit.Logging`.
  *
  * Note that this function is an internal helper function for the
  * widgets and shouldn't be called by external code.
@@ -223,19 +223,18 @@ RapidContext.Widget._eventHandler = function (className, methodName/*, ...*/) {
  * @param {Widget} node the widget DOM node
  * @param {String} sig the signal name ("onclick" or similar)
  * @param {Object} [...] the optional signal arguments
- *
- * @return {Boolean} `true` if the signal was processed correctly, or
- *         `false` if an exception was thrown
  */
 RapidContext.Widget.emitSignal = function (node, sig/*, ...*/) {
-    try {
-        MochiKit.Signal.signal.apply(MochiKit.Signal, arguments);
-        return true;
-    } catch (e) {
-        var msg = "Exception in signal '" + sig + "' handler";
-        MochiKit.Logging.logError(msg, e);
-        return false;
+    var args = $.makeArray(arguments);
+    function later() {
+        try {
+            MochiKit.Signal.signal.apply(MochiKit.Signal, args);
+        } catch (e) {
+            var msg = "Exception in signal '" + sig + "' handler";
+            MochiKit.Logging.logError(msg, e);
+        }
     }
+    setTimeout(later, 0);
 };
 
 /**

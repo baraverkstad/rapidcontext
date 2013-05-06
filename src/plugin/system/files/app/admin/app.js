@@ -657,13 +657,13 @@ AdminApp.prototype._pluginUploadProgress = function (res) {
         var d = RapidContext.App.callProc("System.Session.Current");
         d.addBoth(selfCallback);
     }
-    if (!res || !res.files || res.files.progress) {
+    if (res && res.files && res.files.plugin) {
+        this._pluginUploadInfo(res.files.plugin);
+    } else {
         MochiKit.Async.callLater(1, pluginLoadStatus);
-        if (res.files.progress) {
+        if (res && res.files && res.files.progress) {
             this.ui.pluginProgress.setAttrs({ ratio: res.files.progress });
         }
-    } else {
-        this._pluginUploadInfo(res.files.plugin);
     }
 }
 
