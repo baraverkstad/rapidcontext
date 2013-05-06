@@ -369,46 +369,47 @@
     position: absolute;
     overflow: auto;
     z-index: 20;
-    border: 1px solid #6290D2;
-    padding: 2px;
-    background: #e3edfa;
+    border: 1px solid #CCEEFF;
+    border-radius: 4px;
+    padding: 4px;
+    background-color: #E8F8FF;
+    background-image: -moz-linear-gradient(top, #FDFDFF, #E8F8FF);
+    background-image: -ms-linear-gradient(top, #FDFDFF, #E8F8FF);
+    background-image: -o-linear-gradient(top, #FDFDFF, #E8F8FF);
+    background-image: -webkit-linear-gradient(top, #FDFDFF, #E8F8FF);
+    background-image: linear-gradient(top, #FDFDFF, #E8F8FF);
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FDFDFF', endColorstr='#E8F8FF')";
     color: rgb(30, 70, 110);
     cursor: default;
+    font-size: 1.2em;
 }
 .widgetPopup h3 {
-    border-bottom: 2px solid #B1CDF1;
-    margin-top: 2px;
-    margin-bottom: 2px;
-    margin-left: 4px;
-    margin-right: 4px;
+    border-bottom: 2px solid #CCE8FF;
+    margin: 2px 4px;
+    font-size: 1.2em;
 }
 .widgetPopup hr {
-    margin-top: 2px;
-    margin-bottom: 2px;
-    margin-left: 4px;
-    margin-right: 4px;
+    margin: 2px 4px;
     border-top: 0px;
-    border-bottom: 2px solid #B1CDF1;
+    border-bottom: 2px solid #CCE8FF;
     border-left: 0px;
     border-right: 0px;
 }
 .widgetPopupItem {
-    border: 1px solid #e3edfa;
-    padding-top: 1px;
-    padding-bottom: 1px;
-    padding-left: 3px;
-    padding-right: 3px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    padding: 1px 6px 2px 6px;
     font-weight: bold;
     cursor: pointer;
 }
 .widgetPopupItem.widgetPopupSelected {
+    border-color: #CCEEFF;
     background: white;
-    border: 1px solid #B1CDF1;
 }
 .widgetPopupDisabled,
 .widgetPopupDisabled.widgetPopupItem.widgetPopupSelected {
-    border: 1px solid #e3edfa;
-    background: #e3edfa;
+    border-color: transparent;
+    background: transparent;
     color: #7BABDB;
     cursor: default;
 }
