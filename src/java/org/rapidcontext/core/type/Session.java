@@ -163,18 +163,19 @@ public class Session extends StorableObject {
 
     /**
      * Removes all expired sessions from the provided storage. This
-     * method will load and examine all sessions that have not been
-     * modified in a few days.
+     * method will load and examine sessions that have not been
+     * modified in 30 minutes.
      *
      * @param storage        the storage to use
      */
     public static void removeExpired(Storage storage) {
         long        now = System.currentTimeMillis();
-        Date        oldDate = new Date(now - 5L * DateUtils.MILLIS_PER_DAY);
+        Date        active = new Date(now - 30L * DateUtils.MILLIS_PER_MINUTE);
         Metadata[]  meta = storage.lookupAll(PATH);
 
+        // TODO: session expiry must be handled with iterator
         for (int i = 0; i < meta.length; i++) {
-            if (meta[i].lastModified().before(oldDate)) {
+            if (meta[i].lastModified().before(active)) {
                 Session session = find(storage, meta[i].id());
                 if (!session.isValid()) {
                     remove(storage, session.id());
@@ -287,7 +288,10 @@ public class Session extends StorableObject {
      *         false otherwise
      */
     public boolean isValid() {
-        return destroyTime().after(new Date());
+        long now = System.currentTimeMillis();
+        long active = 30L * DateUtils.MILLIS_PER_MINUTE;
+        return now < destroyTime().getTime() &&
+               (userId().length() > 0 || now < accessTime().getTime() + active);
     }
 
     /**

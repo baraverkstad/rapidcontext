@@ -99,7 +99,7 @@ public class ApplicationContext {
      * The number of milliseconds between each run of the expired
      * session cleaner job.
      */
-    private static final long CLEANER_INTERVAL_MILLIS = DateUtils.MILLIS_PER_DAY;
+    private static final long EXPIRED_INTERVAL_MILLIS = DateUtils.MILLIS_PER_HOUR;
 
     /**
      * The singleton application context instance.
@@ -167,7 +167,7 @@ public class ApplicationContext {
                     Session.removeExpired(getInstance().getStorage());
                 }
             };
-            long delay = CLEANER_INTERVAL_MILLIS;
+            long delay = EXPIRED_INTERVAL_MILLIS;
             Scheduler.schedule(sessionCleaner, delay, delay);
         }
         return instance;
