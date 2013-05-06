@@ -107,6 +107,12 @@ public class Role extends StorableObject {
         return dict.getString(KEY_DESCRIPTION, "");
     }
 
+    /**
+     * Returns the automatic role attachment type. The values "all"
+     * and "auth" are the only ones with defined meaning.
+     *
+     * @return the automatic role attachment type
+     */
     public String auto() {
         return dict.getString(KEY_AUTO, "none");
     }
@@ -122,10 +128,12 @@ public class Role extends StorableObject {
      *         false otherwise
      */
     public boolean hasUser(User user) {
+        boolean matchAll = auto().equalsIgnoreCase("all");
+        boolean matchAuth = auto().equalsIgnoreCase("auth");
         if (user == null) {
-            return auto().equalsIgnoreCase("all");
+            return matchAll;
         } else  {
-            return auto().equalsIgnoreCase("auth") || user.hasRole(id());
+            return matchAll || matchAuth || user.hasRole(id());
         }
     }
 
