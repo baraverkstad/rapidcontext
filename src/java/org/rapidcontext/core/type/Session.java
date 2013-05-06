@@ -177,7 +177,7 @@ public class Session extends StorableObject {
         for (int i = 0; i < meta.length; i++) {
             if (meta[i].lastModified().before(active)) {
                 Session session = find(storage, meta[i].id());
-                if (!session.isValid()) {
+                if (session != null && !session.isValid()) {
                     remove(storage, session.id());
                 }
             }
