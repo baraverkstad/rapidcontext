@@ -25,6 +25,8 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  * @param {Object} attrs the widget and node attributes
  * @param {String} [attrs.title] the dialog title, defaults to "Dialog"
  * @param {Boolean} [attrs.modal] the modal dialog flag, defaults to `false`
+ * @param {Boolean} [attrs.system] the system dialog flag, implies modal,
+ *            defaults to `false`
  * @param {Boolean} [attrs.center] the center dialog flag, defaults to `true`
  * @param {Boolean} [attrs.closeable] the closeable dialog flag, defaults to
  *            `true`
@@ -61,7 +63,7 @@ RapidContext.Widget.Dialog = function (attrs/*, ... */) {
     RapidContext.Widget._widgetMixin(o, arguments.callee);
     o.addClass("widgetDialog");
     o._setHidden(true);
-    o.setAttrs(MochiKit.Base.update({ modal: false, center: true }, attrs));
+    o.setAttrs(MochiKit.Base.update({ modal: false, system: false, center: true }, attrs));
     o.addAll(MochiKit.Base.extend(null, arguments, 1));
     title.onmousedown = RapidContext.Widget._eventHandler("Dialog", "_handleMoveStart");
     close.onclick = RapidContext.Widget._eventHandler("Dialog", "hide");
@@ -112,6 +114,7 @@ RapidContext.Widget.Classes.Dialog = RapidContext.Widget.Dialog;
  * @param {Object} attrs the widget and node attributes to set
  * @param {String} [attrs.title] the dialog title
  * @param {Boolean} [attrs.modal] the modal dialog flag
+ * @param {Boolean} [attrs.system] the system dialog flag, implies modal
  * @param {Boolean} [attrs.center] the center dialog flag
  * @param {Boolean} [attrs.closeable] the closeable dialog flag
  * @param {Boolean} [attrs.resizeable] the resize dialog flag
@@ -119,12 +122,15 @@ RapidContext.Widget.Classes.Dialog = RapidContext.Widget.Dialog;
  */
 RapidContext.Widget.Dialog.prototype.setAttrs = function (attrs) {
     attrs = MochiKit.Base.update({}, attrs);
-    var locals = RapidContext.Util.mask(attrs, ["title", "modal", "center", "resizeable", "closeable", "hidden", "class", "style"]);
+    var locals = RapidContext.Util.mask(attrs, ["title", "modal", "system", "center", "resizeable", "closeable", "hidden", "class", "style"]);
     if (typeof(locals.title) != "undefined") {
         MochiKit.DOM.replaceChildNodes(this.firstChild, locals.title);
     }
     if (typeof(locals.modal) != "undefined") {
         this.modal = MochiKit.Base.bool(locals.modal);
+    }
+    if (typeof(locals.system) != "undefined") {
+        this.system = MochiKit.Base.bool(locals.system);
     }
     if (typeof(locals.center) != "undefined") {
         this.center = MochiKit.Base.bool(locals.center);
@@ -168,8 +174,11 @@ RapidContext.Widget.Dialog.prototype._setHiddenDialog = function (value) {
         if (this.parentNode == null) {
             throw new Error("Cannot show Dialog widget without setting a parent DOM node");
         }
-        if (this.modal) {
+        if (this.modal || this.system) {
             var attrs = { loading: false, message: "", style: { "z-index": "99" } };
+            if (this.system) {
+                attrs.dark = true;
+            }
             this._modalNode = RapidContext.Widget.Overlay(attrs);
             this.parentNode.appendChild(this._modalNode);
         }
