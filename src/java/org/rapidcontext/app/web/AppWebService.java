@@ -59,6 +59,21 @@ public class AppWebService extends FileWebService {
     public static final String KEY_APP = "app";
 
     /**
+     * The dictionary key for the page title.
+     */
+    public static final String KEY_TITLE = "title";
+
+    /**
+     * The dictionary key for the page icon (favicon).
+     */
+    public static final String KEY_FAVICON = "favicon";
+
+    /**
+     * The dictionary key for the page language meta-data.
+     */
+    public static final String KEY_LANG = "lang";
+
+    /**
      * The storage web service used for the to "rapidcontext/storage"
      * URLs.
      */
@@ -115,6 +130,9 @@ public class AppWebService extends FileWebService {
     public AppWebService(String id, String type, Dict dict) {
         super(id, type, dict);
         dict.set(KEY_APP, appId());
+        dict.set(KEY_TITLE, title());
+        dict.set(KEY_FAVICON, favicon());
+        dict.set(KEY_LANG, lang());
         storage = new StorageWebService("id", "type", new Dict());
     }
 
@@ -126,6 +144,36 @@ public class AppWebService extends FileWebService {
      */
     public String appId() {
         return dict.getString(KEY_APP, "start");
+    }
+
+    /**
+     * Returns the title for the HTML web page.
+     *
+     * @return the configured page title, or
+     *         "RapidContext" if not defined
+     */
+    public String title() {
+        return dict.getString(KEY_TITLE, "RapidContext");
+    }
+
+    /**
+     * Returns the icon (favicon) for the HTML web page.
+     *
+     * @return the web page favicon URL, or
+     *         the default RapidContext favicon if not defined
+     */
+    public String favicon() {
+        return dict.getString(KEY_FAVICON, "rapidcontext/files/images/favicon.png");
+    }
+
+    /**
+     * Returns the page language ISO code.
+     *
+     * @return the page language ISO code, or
+     *         "en" if not defined
+     */
+    public String lang() {
+        return dict.getString(KEY_LANG, "en");
     }
 
     /**
@@ -240,17 +288,30 @@ public class AppWebService extends FileWebService {
         is = new InputStreamReader(template.openStream(), "UTF-8");
         reader = new BufferedReader(is);
         while ((line = reader.readLine()) != null) {
+            // Simple text replacement
             if (line.contains("%APP_ID%")) {
                 if (appId == null || appId.equals("")) {
-                    res.append(line.replace("%APP_ID%", "null"));
+                    line = line.replace("%APP_ID%", "null");
                 } else {
-                    res.append(line.replace("%APP_ID%", "'" + appId + "'"));
+                    line = line.replace("%APP_ID%", "'" + appId + "'");
                 }
-                res.append("\n");
-            } else if (line.contains("%BASE_URL%")) {
-                res.append(line.replace("%BASE_URL%", baseUrl));
-                res.append("\n");
-            } else if (line.contains("%JS_FILES%")) {
+            }
+            if (line.contains("%TITLE%")) {
+                line = line.replace("%TITLE%", title());
+            }
+            if (line.contains("%FAVICON%")) {
+                str = favicon();
+                line = line.replace("%FAVICON%", str);
+                line = line.replace("%FAVICON.MIME%", Mime.type(str));
+            }
+            if (line.contains("%LANG%")) {
+                line = line.replace("%LANG%", lang());
+            }
+            if (line.contains("%BASE_URL%")) {
+                line = line.replace("%BASE_URL%", baseUrl);
+            }
+            // Complex text replacement & printout
+            if (line.contains("%JS_FILES%")) {
                 files = resources(PATH_FILES, "js");
                 for (int i = 0; i < files.size(); i++) {
                     str = files.getString(i, "") + "?" + ver;

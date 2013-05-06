@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 
-<html lang="en" xml:lang="en">
+<html lang="%LANG%">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <base href="%BASE_URL%">
-    <link rel="icon" type="image/png" href="images/favicon.png">
-    <link rel="stylesheet" href="%CSS_FILES%" type="text/css">
+    <link rel="icon" type="%FAVICON.MIME%" href="%FAVICON%">
+    <link rel="stylesheet" type="text/css" href="%CSS_FILES%">
     <script type="text/javascript">
       MochiKit = {__export__: false};
     </script>
     <script type="text/javascript" src="%JS_FILES%"></script>
-    <title>RapidContext</title>
+    <title>%TITLE%</title>
   </head>
 
   <body style="overflow: hidden; padding: 10px;" onload="RapidContext.App.init(%APP_ID%)">

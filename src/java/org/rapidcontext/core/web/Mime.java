@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -110,6 +110,14 @@ public class Mime {
     };
 
     /**
+     * The MIME types commonly used for ICO images.
+     */
+    public static final String[] ICO = {
+        "image/x-icon",
+        "image/vnd.microsoft.icon"
+    };
+
+    /**
      * The MIME types commonly used for binary files and data.
      */
     public static final String[] BIN = {
@@ -174,6 +182,8 @@ public class Mime {
             return PNG[0];
         } else if (fileName.endsWith(".svg")) {
             return SVG[0];
+        } else if (fileName.endsWith(".ico")) {
+            return ICO[0];
         } else {
             return BIN[0];
         }
