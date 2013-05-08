@@ -132,8 +132,6 @@ RapidContext.Widget.TextArea.prototype.getValue = function () {
     // within the HTML textarea control.
     if (/\r\n\n/.test(str)) {
         str = str.replace(/\r\n\n/g, "\n");
-    } else if (/\n\n/.test(str) && !/.\n./.test(str)) {
-        str = str.replace(/\n\n/g, "\n");
     }
     if (this.focused && this.value != str) {
         this.value = str;
