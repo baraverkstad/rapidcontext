@@ -68,6 +68,10 @@ RapidContext.Widget.TextField = function (attrs/*, ...*/) {
     o.focused = false;
     o._popupCreated = false;
     o.setAttrs(MochiKit.Base.update({ helpText: "", value: text }, attrs));
+    var changeHandler = RapidContext.Widget._eventHandler(null, "_handleChange");
+    o.onkeyup = changeHandler;
+    o.oncut = changeHandler;
+    o.onpaste = changeHandler;
     var focusHandler = RapidContext.Widget._eventHandler(null, "_handleFocus");
     o.onfocus = focusHandler;
     o.onblur = focusHandler;
@@ -76,6 +80,15 @@ RapidContext.Widget.TextField = function (attrs/*, ...*/) {
 
 // Register widget class
 RapidContext.Widget.Classes.TextField = RapidContext.Widget.TextField;
+
+/**
+ * Emitted when the text is modified. This event is triggered by both
+ * keypress and paste events if the text content is modified. The DOM
+ * standard onchange event may also be trigged (on blur).
+ *
+ * @name RapidContext.Widget.TextField#onchange
+ * @event
+ */
 
 /**
  * Emitted when an item has been selected in the connected popup.
@@ -107,7 +120,8 @@ RapidContext.Widget.TextField.prototype.setAttrs = function (attrs) {
         }
     }
     if (typeof(locals.value) != "undefined") {
-        this.value = this.storedValue = locals.value;
+        this.value = locals.value;
+        this._handleChange();
     }
     this.__setAttrs(attrs);
     this._render();
@@ -201,6 +215,21 @@ RapidContext.Widget.TextField.prototype.showPopup = function (attrs, items) {
         popup.show();
     }
 };
+
+/**
+ * Handles keypress and paste events for this this widget.
+ *
+ * @param evt the MochiKit.Signal.Event object
+ */
+RapidContext.Widget.TextField.prototype._handleChange = function (evt) {
+    if (evt) {
+        var self = this;
+        setTimeout(MochiKit.Base.bind("_handleChange", this));
+    } else if (this.storedValue != this.value) {
+        this.storedValue = this.value;
+        RapidContext.Widget.emitSignal(this, "onchange", this.value);
+    }
+}
 
 /**
  * Handles focus and blur events for this widget.

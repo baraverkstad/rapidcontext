@@ -66,6 +66,10 @@ RapidContext.Widget.TextArea = function (attrs/*, ...*/) {
     o.addClass("widgetTextArea");
     o.focused = false;
     o.setAttrs(MochiKit.Base.update({ helpText: "", value: text }, attrs));
+    var changeHandler = RapidContext.Widget._eventHandler(null, "_handleChange");
+    o.onkeyup = changeHandler;
+    o.oncut = changeHandler;
+    o.onpaste = changeHandler;
     var focusHandler = RapidContext.Widget._eventHandler(null, "_handleFocus");
     o.onfocus = focusHandler;
     o.onblur = focusHandler;
@@ -74,6 +78,15 @@ RapidContext.Widget.TextArea = function (attrs/*, ...*/) {
 
 // Register widget class
 RapidContext.Widget.Classes.TextArea = RapidContext.Widget.TextArea;
+
+/**
+ * Emitted when the text is modified. This event is triggered by both
+ * keypress and paste events if the text content is modified. The DOM
+ * standard onchange event may also be trigged (on blur).
+ *
+ * @name RapidContext.Widget.TextArea#onchange
+ * @event
+ */
 
 /**
  * Updates the widget or HTML DOM node attributes.
@@ -97,7 +110,8 @@ RapidContext.Widget.TextArea.prototype.setAttrs = function (attrs) {
         }
     }
     if (typeof(locals.value) != "undefined") {
-        this.value = this.storedValue = locals.value;
+        this.value = locals.value;
+        this._handleChange();
     }
     this.__setAttrs(attrs);
     this._render();
@@ -138,6 +152,20 @@ RapidContext.Widget.TextArea.prototype.getValue = function () {
     }
     return str;
 };
+
+/**
+ * Handles keypress and paste events for this this widget.
+ *
+ * @param evt the MochiKit.Signal.Event object
+ */
+RapidContext.Widget.TextArea.prototype._handleChange = function (evt) {
+    if (evt) {
+        setTimeout(MochiKit.Base.bind("_handleChange", this));
+    } else if (this.storedValue != this.value) {
+        this.storedValue = this.value;
+        RapidContext.Widget.emitSignal(this, "onchange", this.value);
+    }
+}
 
 /**
  * Handles focus and blur events for this widget.
