@@ -252,15 +252,21 @@ public class Main {
             if (!app.localDir.exists()) {
                 app.localDir.mkdirs();
             }
-            if (!isDir(app.localDir, true)) {
-                exit(null, "Cannot write to local directory: " + app.localDir);
-            }
-            app.localDir = app.localDir.getAbsoluteFile();
-            try {
-                setupLocalAppDir(app.appDir, app.localDir);
-            } catch (IOException e) {
-                exit(null, "Failed to setup local directory: " + e.getMessage());
-            }
+        }
+        File pluginDir = new File(app.localDir, "plugin");
+        if (!pluginDir.exists()) {
+            pluginDir.mkdirs();
+        }
+        if (!isDir(app.localDir, true)) {
+            exit(null, "Cannot write to directory: " + app.localDir);
+        } else if (!isDir(pluginDir, true)) {
+            exit(null, "Cannot write to plug-in directory: " + pluginDir);
+        }
+        app.localDir = app.localDir.getAbsoluteFile();
+        try {
+            setupLocalAppDir(app.appDir, app.localDir);
+        } catch (IOException e) {
+            exit(null, "Failed to setup local directory: " + e.getMessage());
         }
         return app;
     }
@@ -349,8 +355,8 @@ public class Main {
      */
     private static boolean isAppDir(File file) {
         return file != null &&
-               isDir(file, true) &&
-               isDir(new File(file, "plugin"), true) &&
+               isDir(file, false) &&
+               isDir(new File(file, "plugin"), false) &&
                (new File(file, "doc.zip")).canRead();
     }
 

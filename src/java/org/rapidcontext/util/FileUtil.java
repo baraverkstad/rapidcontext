@@ -39,8 +39,8 @@ public abstract class FileUtil {
     /**
      * Copies a file or a directory. Directories are copied
      * recursively and file modification dates are kept. If the
-     * read-only or executable bits are set on the source file,
-     * those bits will also be set on the destination file.
+     * executable bit is set on the source file, that bit will also
+     * be set on the destination file.
      *
      * @param src            the source file or directory
      * @param dst            the destination file or directory
@@ -58,7 +58,6 @@ public abstract class FileUtil {
             copy(new FileInputStream(src), dst);
             dst.setExecutable(src.canExecute());
         }
-        dst.setWritable(src.canWrite());
         dst.setLastModified(src.lastModified());
     }
 
