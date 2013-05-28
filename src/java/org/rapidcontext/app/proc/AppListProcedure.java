@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -124,13 +124,12 @@ public class AppListProcedure implements Procedure, Restricted {
         Metadata[] list = storage.lookupAll(PATH_APP);
         Array res = new Array(list.length);
         for (int i = 0; i < list.length; i++) {
-            String id = list[i].path().toIdent(PATH_APP);
-            // TODO: Replace this temporary access check with generic method
-            if (SecurityContext.hasAccess("app", id) &&
+            Path path = list[i].path();
+            if (SecurityContext.hasReadAccess(path.toString()) &&
                 Dict.class.isAssignableFrom(list[i].classInstance())) {
 
                 Dict dict = new Dict();
-                dict.set("id", id);
+                dict.set("id", path.toIdent(PATH_APP));
                 String pluginId = PluginManager.pluginId(list[i]);
                 if (pluginId != null) {
                     Dict plugin = ctx.pluginConfig(pluginId);

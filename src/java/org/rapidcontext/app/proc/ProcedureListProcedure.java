@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2007-2013 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -116,12 +116,12 @@ public class ProcedureListProcedure implements Procedure, Restricted {
         names = library.getProcedureNames();
         list = new Array(names.length);
         for (int i = 0; i < names.length; i++) {
-            // TODO: This security check should be built-into SecurityContext
+            // TODO: The built-in procedure access should be similar to others
             if (library.hasBuiltIn(names[i])) {
                 if (SecurityContext.hasAccess(library.getProcedure(names[i]))) {
                     list.add(names[i]);
                 }
-            } else if (SecurityContext.hasAccess("procedure", names[i], "")) {
+            } else if (SecurityContext.hasReadAccess("procedure/" + names[i])) {
                 list.add(names[i]);
             }
         }

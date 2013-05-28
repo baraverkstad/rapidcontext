@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
+ * Copyright (c) 2007-2013 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -29,6 +29,7 @@ import org.rapidcontext.core.security.SecurityContext;
  * @version  1.0
  */
 public class UserCheckAccessProcedure implements Procedure, Restricted {
+    // TODO: Replace this procedure with something more generic
 
     /**
      * The procedure name constant.
@@ -118,6 +119,6 @@ public class UserCheckAccessProcedure implements Procedure, Restricted {
 
         type = bindings.getValue("type").toString();
         name = bindings.getValue("name").toString();
-        return Boolean.valueOf(SecurityContext.hasAccess(type, name));
+        return Boolean.valueOf(SecurityContext.hasReadAccess(type + "/" + name));
     }
 }

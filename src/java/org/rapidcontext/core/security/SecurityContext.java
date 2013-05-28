@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -16,6 +16,7 @@ package org.rapidcontext.core.security;
 
 import java.util.logging.Logger;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.storage.Storage;
@@ -110,6 +111,9 @@ public class SecurityContext {
      *
      * @return true if the current user has access, or
      *         false otherwise
+     *
+     * @deprecated Perform normal internal/read/write access check
+     *     instead, using hasAccess(String,String)
      */
     public static boolean hasAccess(Object obj) {
         return hasAccess(obj, null);
@@ -124,52 +128,56 @@ public class SecurityContext {
      *
      * @return true if the current user has access, or
      *         false otherwise
+     *
+     * @deprecated Perform normal internal/read/write access check
+     *     instead, using hasAccess(String,String)
      */
     public static boolean hasAccess(Object obj, String caller) {
         if (obj instanceof Restricted) {
             return ((Restricted) obj).hasAccess();
         } else if (obj instanceof Procedure) {
-            return hasAccess("procedure",
-                             ((Procedure) obj).getName(),
-                             caller);
+            String path = "procedure/" + ((Procedure) obj).getName();
+            if (caller == null || caller.length() == 0) {
+                return hasAccess(path, Role.PERM_READ);
+            } else {
+                return hasAccess(path, Role.PERM_INTERNAL);
+            }
         } else {
-            return true;
+            return false;
         }
     }
 
     /**
-     * Checks if the currently authenticated user has access to an
-     * object.
+     * Checks if the currently authenticated user has read access to
+     * a storage path.
      *
-     * @param type           the object type
-     * @param name           the object name
+     * @param path           the object storage path
      *
      * @return true if the current user has access, or
      *         false otherwise
      */
-    public static boolean hasAccess(String type, String name) {
-        return hasAccess(type, name, null);
+    public static boolean hasReadAccess(String path) {
+        return hasAccess(path, Role.PERM_READ);
     }
 
     /**
-     * Checks if the currently authenticated user has access to an
-     * object.
+     * Checks if the currently authenticated user has has access
+     * permission for a storage path.
      *
-     * @param type           the object type
-     * @param name           the object name
-     * @param caller         the caller procedure, or null for none
+     * @param path           the object storage path
+     * @param permission     the requested permission
      *
      * @return true if the current user has access, or
      *         false otherwise
+     *
+     * @see Role#hasAccess(String, String)
      */
-    public static boolean hasAccess(String type, String name, String caller) {
+    public static boolean hasAccess(String path, String permission) {
         User user = currentUser();
-        if (hasAdmin()) {
-            return true;
-        }
+        path = StringUtils.removeStart(path, "/");
         for (int i = 0; i < roleCache.length; i++) {
             Role role = roleCache[i];
-            if (role.hasUser(user) && role.hasAccess(type, name, caller)) {
+            if (role.hasUser(user) && role.hasAccess(path, permission)) {
                 return true;
             }
         }
@@ -181,6 +189,9 @@ public class SecurityContext {
      *
      * @return true if the current user has admin access, or
      *         false otherwise
+     *
+     * @deprecated Perform normal internal/read/write access check
+     *     instead, using hasAccess(String,String)
      */
     public static boolean hasAdmin() {
         User user = currentUser();

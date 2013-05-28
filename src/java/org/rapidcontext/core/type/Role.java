@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -15,7 +15,11 @@
 package org.rapidcontext.core.type;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.storage.Path;
@@ -30,6 +34,11 @@ import org.rapidcontext.core.storage.Storage;
  * @version  1.0
  */
 public class Role extends StorableObject {
+
+    /**
+     * The class logger.
+     */
+    private static final Logger LOG = Logger.getLogger(Role.class.getName());
 
     /**
      * The dictionary key for the role name.
@@ -51,6 +60,58 @@ public class Role extends StorableObject {
      * is an array of access rules.
      */
     public static final String KEY_ACCESS = "access";
+
+    /**
+     * The dictionary key for the path in the access dictionary. The
+     * value stored is an absolute path to an object, with optional
+     * glob characters ('*', '**' or '?').
+     */
+    public static final String ACCESS_PATH = "path";
+
+    /**
+     * The dictionary key for the regex path in the access
+     * dictionary. The value stored is a regular expression matching
+     * an absolute path to an object (without leading '/' chars).
+     */
+    public static final String ACCESS_REGEX = "regex";
+
+    /**
+     * The dictionary key for the permission list in the access
+     * dictionary. The value stored is a string with permissions
+     * separated by comma (',').
+     *
+     * @see #PERM_NONE
+     * @see #PERM_INTERNAL
+     * @see #PERM_READ
+     * @see #PERM_WRITE
+     * @see #PERM_ALL
+     */
+    public static final String ACCESS_PERMISSION = "permission";
+
+    /**
+     * The permission key for no access.
+     */
+    public static final String PERM_NONE = "none";
+
+    /**
+     * The permission key for internal access.
+     */
+    public static final String PERM_INTERNAL = "internal";
+
+    /**
+     * The permission key for read access.
+     */
+    public static final String PERM_READ = "read";
+
+    /**
+     * The permission key for write access.
+     */
+    public static final String PERM_WRITE = "write";
+
+    /**
+     * The permission key for full access.
+     */
+    public static final String PERM_ALL = "all";
 
     /**
      * The role object storage path.
@@ -138,32 +199,33 @@ public class Role extends StorableObject {
     }
 
     /**
-     * Checks if the role has access to an object. The access list is
-     * processed from top to bottom to find a matching entry. Once
-     * found, the value of the "allow" boolean property will be
-     * returned (defaults to true). The object matching is based on
-     * "type", "name" (or "regexp") and optionally a "caller" (i.e. a
-     * calling procedure).
+     * Checks if the role has access permission for a storage path.
+     * The access list is processed from top to bottom to find a
+     * matching path entry. If a matching path with the PERM_NONE
+     * permission is encountered, false will be returned. Otherwise
+     * true will be returned only if the permission matches the
+     * requested one.
      *
-     * @param type           the object type
-     * @param name           the object name
-     * @param caller         the caller procedure, or null for none
+     * @param path           the object storage path
+     * @param permission     the requested permission
      *
-     * @return true if the user has access, or
+     * @return true if the role provides access, or
      *         false otherwise
      */
-    public boolean hasAccess(String type, String name, String caller) {
-        Array  list = dict.getArray(KEY_ACCESS);
-        Dict   match;
-
-        if (list == null) {
-            // TODO: return true if this is the admin role
-            return false;
-        }
-        for (int i = 0; i < list.size(); i++) {
-            match = list.getDict(i);
-            if (matches(match, type, name, caller)) {
-                return match.getBoolean("allow", true);
+    public boolean hasAccess(String path, String permission) {
+        Array arr = dict.getArray(KEY_ACCESS);
+        for (int i = 0; arr != null && i < arr.size(); i++) {
+            Dict dict = arr.getDict(i);
+            if (matchPath(dict, path)) {
+                String perms = dict.getString(ACCESS_PERMISSION, "").trim();
+                // BUG: string matching is not reliable for custom permissions!
+                if (perms.contains(permission)) {
+                    return true;
+                } else if (PERM_NONE.equalsIgnoreCase(perms)) {
+                    return false;
+                } else if (PERM_ALL.equalsIgnoreCase(perms)) {
+                    return true;
+                }
             }
         }
         return false;
@@ -172,32 +234,45 @@ public class Role extends StorableObject {
     /**
      * Checks if the access data matches the specified values.
      *
-     * @param m              the access data
-     * @param type           the object type
-     * @param name           the object name
-     * @param caller         the caller procedure, or null for none
+     * @param dict           the access data
+     * @param path           the object storage path
      *
-     * @return true if the data matches, or
+     * @return true if the access path matches, or
      *         false otherwise
      */
-    private boolean matches(Dict m, String type, String name, String caller) {
-        String  str;
-
-        if (!m.getString("type", "").equals(type)) {
-            return false;
+    private boolean matchPath(Dict dict, String path) {
+        String glob = dict.getString(ACCESS_PATH, null);
+        String regex = dict.getString(ACCESS_REGEX, null);
+        Pattern m = (Pattern) dict.get("_" + ACCESS_REGEX);
+        if (m == null && glob != null) {
+            glob = glob.replace(".", "\\.").replace("\\", "\\\\");
+            glob = glob.replace("+", "\\+").replace("|", "\\|");
+            glob = glob.replace("^", "\\^").replace("$", "\\$");
+            glob = glob.replace("(", "\\(").replace(")", "\\)");
+            glob = glob.replace("[", "\\[").replace("]", "\\]");
+            glob = glob.replace("{", "\\{").replace("}", "\\}");
+            glob = glob.replace("**", ".+");
+            glob = glob.replace("*", "[^/]+");
+            glob = glob.replace("?", ".");
+            try {
+                m = Pattern.compile("^" + glob + "$");
+            } catch (Exception e) {
+                LOG.log(Level.WARNING, "invalid pattern in role " + id(), e);
+                m = Pattern.compile("^invalid-glob-pattern$");
+            }
+            dict.set("_" + ACCESS_REGEX, m);
+        } else if (m == null && regex != null) {
+            regex = StringUtils.removeStart(regex, "^");
+            regex = StringUtils.removeStart(regex, "/");
+            regex = StringUtils.removeEnd(regex, "$");
+            try {
+                m = Pattern.compile("^" + regex + "$");
+            } catch (Exception e) {
+                LOG.log(Level.WARNING, "invalid pattern in role " + id(), e);
+                m = Pattern.compile("^invalid-regex-pattern$");
+            }
+            dict.set("_" + ACCESS_REGEX, m);
         }
-        str = m.getString("regexp", null);
-        if (str != null && !name.matches("^" + str + "$")) {
-            return false;
-        }
-        str = m.getString("name", null);
-        if (str != null && !str.equals(name)) {
-            return false;
-        }
-        str = m.getString("caller", null);
-        if (str != null && (caller == null || !caller.matches("^" + str + "$"))) {
-            return false;
-        }
-        return true;
+        return m.matcher(path).matches();
     }
 }
