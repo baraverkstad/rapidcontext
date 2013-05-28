@@ -243,6 +243,9 @@ public class Role extends StorableObject {
                         } else if (list[j].equalsIgnoreCase(PERM_READ)) {
                             map.put(PERM_INTERNAL, Boolean.TRUE);
                             map.put(PERM_READ, Boolean.TRUE);
+                        } else if (list[j].length() <= 0) {
+                            map.put(PERM_INTERNAL, Boolean.TRUE);
+                            map.put(PERM_READ, Boolean.TRUE);
                         } else {
                             map.put(list[j].toLowerCase(), Boolean.TRUE);
                         }
