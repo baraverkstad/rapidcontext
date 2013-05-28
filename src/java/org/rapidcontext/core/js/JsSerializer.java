@@ -28,7 +28,6 @@ import org.mozilla.javascript.WrappedException;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.storage.StorableObject;
-import org.rapidcontext.core.type.Channel;
 
 /**
  * An object serializer and unserializer for the JavaScript object
@@ -296,8 +295,6 @@ public class JsSerializer {
     public static Object wrap(Object obj, Scriptable scope) {
         if (obj instanceof Dict || obj instanceof Array) {
             return new DataWrapper(obj, scope);
-        } else if (obj instanceof Channel) {
-            return new ConnectionWrapper((Channel) obj, scope);
         } else {
             return obj;
         }
@@ -322,8 +319,6 @@ public class JsSerializer {
     public static Object unwrap(Object obj) {
         if (obj instanceof DataWrapper) {
             return ((DataWrapper) obj).getData();
-        } else if (obj instanceof ConnectionWrapper) {
-            return ((ConnectionWrapper) obj).getConnection();
         } else if (obj instanceof NativeArray) {
             NativeArray nativeArr = (NativeArray) obj;
             int length = (int) nativeArr.getLength();

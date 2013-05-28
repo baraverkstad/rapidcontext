@@ -29,6 +29,7 @@ import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
+import org.rapidcontext.core.type.Channel;
 
 /**
  * A JavaScript procedure. This procedure will execute generic
@@ -122,7 +123,7 @@ public class JsProcedure extends AddOnProcedure {
                     value = new ProcedureWrapper(cx, (Procedure) value, scope);
                     ScriptableObject.putProperty(scope, names[i], value);
                 } else if (type == Bindings.CONNECTION) {
-                    value = JsSerializer.wrap(value, scope);
+                    value = new ConnectionWrapper(cx, (Channel) value, scope);
                     ScriptableObject.putProperty(scope, names[i], value);
                 } else if (type == Bindings.ARGUMENT) {
                     value = JsSerializer.wrap(value, scope);
@@ -130,7 +131,6 @@ public class JsProcedure extends AddOnProcedure {
                 }
             }
             value = script.exec(scriptContext, scope);
-            // TODO: Use better heuristics to determine result unwrapping?
             boolean unwrapResult = (cx.getCallStack().height() <= 1);
             return unwrapResult ? JsSerializer.unwrap(value) : value;
         } catch (Exception e) {

@@ -23,6 +23,7 @@ import org.mozilla.javascript.EvaluatorException;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
+import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.type.Channel;
 
 /**
@@ -33,6 +34,11 @@ import org.rapidcontext.core.type.Channel;
  * @version  1.0
  */
 public class ConnectionWrapper implements Scriptable {
+
+    /**
+     * The procedure call context in use.
+     */
+    CallContext cx = null;
 
     /**
      * The encapsulated connection channel.
@@ -52,10 +58,12 @@ public class ConnectionWrapper implements Scriptable {
     /**
      * Creates a new JavaScript connection wrapper.
      *
+     * @param cx             the procedure call context
      * @param channel        the connection channel
      * @param parentScope    the object parent scope
      */
-    public ConnectionWrapper(Channel channel, Scriptable parentScope) {
+    public ConnectionWrapper(CallContext cx, Channel channel, Scriptable parentScope) {
+        this.cx = cx;
         this.channel = channel;
         this.prototype = ScriptableObject.getObjectPrototype(parentScope);
         this.parentScope = parentScope;
@@ -468,19 +476,19 @@ public class ConnectionWrapper implements Scriptable {
         /**
          * Calls this function.
          *
-         * @param cx             the current script context
+         * @param ctx            the current script context
          * @param scope          the scope to execute the function in
          * @param thisObj        the script <code>this</code> object
          * @param args           the array of arguments
          *
          * @return the result of the function call
          */
-        public Object call(Context cx,
+        public Object call(Context ctx,
                            Scriptable scope,
                            Scriptable thisObj,
                            Object[] args) {
 
-            Object    target = parent.getConnection();
+            Channel   target = parent.getConnection();
             Method[]  methods = target.getClass().getMethods();
             Object    res;
             String    msg;
@@ -490,10 +498,16 @@ public class ConnectionWrapper implements Scriptable {
             }
             for (int i = 0; i < methods.length; i++) {
                 if (isMatching(methods[i], args)) {
+                    // TODO: call context stack should be pushed & popped
+                    String signature = target.getConnection().path() + "#" +
+                                       this.methodName;
+                    cx.logCall(signature, args);
                     try {
                         methods[i].setAccessible(true);
                         res = methods[i].invoke(target, args);
+                        cx.logResponse(res);
                     } catch (Exception e) {
+                        cx.logError(e);
                         msg = "call to " + this.methodName + " failed: " +
                               e.getClass().getName() + ": " + e.getMessage();
                         throw new EvaluatorException(msg);

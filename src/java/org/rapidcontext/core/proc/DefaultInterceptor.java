@@ -14,7 +14,7 @@
 
 package org.rapidcontext.core.proc;
 
-import org.rapidcontext.core.js.JsSerializer;
+import java.util.ArrayList;
 
 /**
  * The default procedure call interceptor. This interceptor provides
@@ -126,41 +126,20 @@ public class DefaultInterceptor extends Interceptor {
     private Object traceCall(CallContext cx, Procedure proc, Bindings bindings)
         throws ProcedureException {
 
-        int           indent = 2 * cx.getCallStack().height() - 2;
-        StringBuffer  buffer = new StringBuffer();
-        String[]      names = bindings.getNames();
-        boolean       first = true;
-        Object        obj;
-        String        str;
-
         try {
-            buffer.append(proc.getName());
-            buffer.append("(");
+            String[] names = bindings.getNames();
+            ArrayList args = new ArrayList(names.length);
             for (int i = 0; i < names.length; i++) {
                 if (bindings.getType(names[i]) == Bindings.ARGUMENT) {
-                    if (!first) {
-                        buffer.append(", ");
-                    }
-                    obj = bindings.getValue(names[i], null);
-                    str = JsSerializer.serialize(obj, false);
-                    if (str.length() > 1000) {
-                        str = str.substring(0, 1000) + "...";
-                    }
-                    buffer.append(str);
-                    first = false;
+                    args.add(bindings.getValue(names[i], null));
                 }
             }
-            buffer.append(")");
-            cx.log(indent, buffer.toString());
-            obj = proc.call(cx, bindings);
-            str = JsSerializer.serialize(obj, true);
-            if (str.length() > 1000) {
-                str = str.substring(0, 1000) + "...";
-            }
-            cx.log(indent, "---> " + str);
+            cx.logCall(proc.getName(), args.toArray());
+            Object obj = proc.call(cx, bindings);
+            cx.logResponse(obj);
             return obj;
         } catch (ProcedureException e) {
-            cx.log(indent, "---> ERROR: " + e.getMessage());
+            cx.logError(e);
             throw e;
         }
     }

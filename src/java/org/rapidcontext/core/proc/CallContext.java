@@ -20,6 +20,8 @@ import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang.StringUtils;
+import org.rapidcontext.core.js.JsSerializer;
 import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.type.Channel;
@@ -535,7 +537,7 @@ public class CallContext {
         if (id != null && !connections.containsKey(id)) {
             checkInternalAccess("connection/" + id);
             if (isTracing()) {
-                log("Reserving connection channel on '" + id + "'");
+                logInternal(0, "... Reserving connection channel on '" + id + "'");
             }
             Connection con = null;
             if (env == null) {
@@ -601,12 +603,74 @@ public class CallContext {
     }
 
     /**
-     * Logs the specified message to the call log.
+     * Logs the specified message to the log if tracing is enabled.
      *
      * @param message        the message text
      */
     public void log(String message) {
-        log(0, message);
+        if (isTracing()) {
+            int indent = 2 * getCallStack().height() - 2;
+            logInternal(indent, "... " + logIndent(4, message));
+        }
+    }
+
+    /**
+     * Logs the specified call to the log if tracing is enabled.
+     *
+     * @param name           the procedure or object method
+     * @param args           the arguments, or null for none
+     */
+    public void logCall(String name, Object[] args) {
+        if (isTracing()) {
+            StringBuilder buffer = new StringBuilder();
+            buffer.append(name);
+            if (args != null) {
+                buffer.append("(");
+                for (int i = 0; i < args.length; i++) {
+                    if (i > 0) {
+                        buffer.append(", ");
+                    }
+                    String str = JsSerializer.serialize(args[i], false);
+                    if (str.length() > 250) {
+                        str = str.substring(0, 250) + "...";
+                    }
+                    buffer.append(str);
+                }
+                buffer.append(")");
+            }
+            int indent = 2 * getCallStack().height() - 2;
+            logInternal(indent, logIndent(4, "--> " + buffer.toString()));
+        }
+    }
+
+    /**
+     * Logs the specified call response to the log if tracing is
+     * enabled.
+     *
+     * @param obj            the call response
+     */
+    public void logResponse(Object obj) {
+        if (isTracing()) {
+            String str = JsSerializer.serialize(obj, true);
+            if (str.length() > 1000) {
+                str = str.substring(0, 1000) + "...";
+            }
+            int indent = 2 * getCallStack().height() - 2;
+            logInternal(indent, logIndent(4, "<-- " + str));
+        }
+    }
+
+    /**
+     * Logs the specified call error to the log if tracing is
+     * enabled.
+     *
+     * @param e              the exception to log
+     */
+    public void logError(Exception e) {
+        if (isTracing()) {
+            int indent = 2 * getCallStack().height() - 2;
+            logInternal(indent, logIndent(4, "<-- ERROR: " + e.getMessage()));
+        }
     }
 
     /**
@@ -615,7 +679,7 @@ public class CallContext {
      * @param indent         the indentation level
      * @param message        the message text
      */
-    public void log(int indent, String message) {
+    private void logInternal(int indent, String message) {
         StringBuffer buffer = (StringBuffer) attributes.get(ATTRIBUTE_LOG_BUFFER);
         if (buffer == null) {
             buffer = new StringBuffer();
@@ -623,21 +687,43 @@ public class CallContext {
         }
         String prefix = DateUtil.formatIsoTime(new Date()) + ": ";
         buffer.append(prefix);
-        String[] lines = message.split("\n");
-        for (int i = 0; i < lines.length; i++) {
-            for (int j = 0; j < indent; j++) {
-                buffer.append(" ");
-            }
-            if (lines[i].trim().length() > 0) {
-                buffer.append(lines[i]);
-            }
-            buffer.append("\n");
-            if (i == 0) {
-                indent += prefix.length();
-            }
-        }
+        buffer.append(StringUtils.repeat(" ", indent));
+        buffer.append(logIndent(prefix.length() + indent, message));
+        buffer.append("\n");
         if (buffer.length() > MAX_LOG_LENGTH) {
             buffer.delete(0, buffer.length() - MAX_LOG_LENGTH);
+        }
+    }
+
+    /**
+     * Indents all lines after the first one in a text string.
+     *
+     * @param indent         the indentation depth (chars)
+     * @param text           the text to indent
+     *
+     * @return the indented text
+     */
+    private String logIndent(int indent, String text) {
+        if (indent <= 0 || text.indexOf('\n') < 0) {
+            return text;
+        } else {
+            StringBuilder buffer = new StringBuilder();
+            String indentStr = StringUtils.repeat(" ", indent);
+            String[] lines = text.split("\n");
+            for (int i = 0; i < lines.length; i++) {
+                if (lines[i].trim().length() <= 0) {
+                    if (i > 0) {
+                        buffer.append("\n");
+                    }
+                } else {
+                    if (i > 0) {
+                        buffer.append("\n");
+                        buffer.append(indentStr);
+                    }
+                    buffer.append(lines[i]);
+                }
+            }
+            return buffer.toString();
         }
     }
 }
