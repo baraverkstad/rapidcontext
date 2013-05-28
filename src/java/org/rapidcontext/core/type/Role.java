@@ -245,14 +245,15 @@ public class Role extends StorableObject {
         String regex = dict.getString(ACCESS_REGEX, null);
         Pattern m = (Pattern) dict.get("_" + ACCESS_REGEX);
         if (m == null && glob != null) {
-            glob = glob.replace(".", "\\.").replace("\\", "\\\\");
+            glob = glob.replace("\\", "\\\\").replace(".", "\\.");
             glob = glob.replace("+", "\\+").replace("|", "\\|");
             glob = glob.replace("^", "\\^").replace("$", "\\$");
             glob = glob.replace("(", "\\(").replace(")", "\\)");
             glob = glob.replace("[", "\\[").replace("]", "\\]");
             glob = glob.replace("{", "\\{").replace("}", "\\}");
             glob = glob.replace("**", ".+");
-            glob = glob.replace("*", "[^/]+");
+            glob = glob.replace("*", "[^/]*");
+            glob = glob.replace(".+", ".*");
             glob = glob.replace("?", ".");
             try {
                 m = Pattern.compile("^" + glob + "$");
