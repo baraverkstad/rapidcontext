@@ -1,7 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
- * All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -24,7 +23,7 @@ import org.rapidcontext.core.js.JsSerializer;
  * calls will be delegated to the actual procedure implementation,
  * and resource reservation will be delegated to the call context.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class DefaultInterceptor extends Interceptor {

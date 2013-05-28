@@ -26,6 +26,7 @@ import org.rapidcontext.core.type.Channel;
 import org.rapidcontext.core.type.Connection;
 import org.rapidcontext.core.type.ConnectionException;
 import org.rapidcontext.core.type.Environment;
+import org.rapidcontext.core.type.User;
 import org.rapidcontext.util.DateUtil;
 
 /**
@@ -264,6 +265,24 @@ public class CallContext {
     }
 
     /**
+     * Checks if the currently authenticated user has internal access
+     * to a storage path.
+     *
+     * @param path           the object storage path
+     *
+     * @throws ProcedureException if the current user didn't have
+     *             internal access
+     */
+    public static void checkInternalAccess(String path) throws ProcedureException {
+        if (!SecurityContext.hasInternalAccess(path)) {
+            User user = SecurityContext.currentUser();
+            String userInfo = (user == null) ? "anonymous user" : user.toString();
+            LOG.info("internal permission denied for " + path + ", " + userInfo);
+            throw new ProcedureException("permission denied");
+        }
+    }
+
+    /**
      * Checks if the currently authenticated user has read access to
      * a storage path.
      *
@@ -274,6 +293,9 @@ public class CallContext {
      */
     public static void checkReadAccess(String path) throws ProcedureException {
         if (!SecurityContext.hasReadAccess(path)) {
+            User user = SecurityContext.currentUser();
+            String userInfo = (user == null) ? "anonymous user" : user.toString();
+            LOG.info("read permission denied for " + path + ", " + userInfo);
             throw new ProcedureException("permission denied");
         }
     }
@@ -289,6 +311,9 @@ public class CallContext {
      */
     public static void checkWriteAccess(String path) throws ProcedureException {
         if (!SecurityContext.hasWriteAccess(path)) {
+            User user = SecurityContext.currentUser();
+            String userInfo = (user == null) ? "anonymous user" : user.toString();
+            LOG.info("write permission denied for " + path + ", " + userInfo);
             throw new ProcedureException("permission denied");
         }
     }
@@ -342,25 +367,23 @@ public class CallContext {
     public Object execute(String name, Object[] args)
         throws ProcedureException {
 
-        Procedure  proc = library.getProcedure(name);
-        boolean    commit = false;
-        Object     res;
-        String     msg;
-
+        Procedure proc = library.getProcedure(name);
+        boolean commit = false;
         setAttribute(ATTRIBUTE_PROCEDURE, proc);
         setAttribute(ATTRIBUTE_START_TIME, new Date());
         try {
             reserve(proc);
-            res = call(proc, args);
+            Object res = call(proc, args);
             commit = true;
             return res;
         } catch (Exception e) {
             if (e instanceof ProcedureException) {
-                msg = "Execution error in procedure '" + name + "'";
+                String msg = "Execution error in procedure '" + name + "'";
                 LOG.log(Level.FINE, msg, e);
                 throw (ProcedureException) e;
             } else {
-                msg = "Caught unhandled exception in procedure '" + name + "'";
+                String msg = "Caught unhandled exception in procedure '" +
+                             name + "'";
                 LOG.log(Level.WARNING, msg, e);
                 throw new ProcedureException(msg, e);
             }
@@ -383,6 +406,11 @@ public class CallContext {
      *             reserved
      */
     public void reserve(Procedure proc) throws ProcedureException {
+        if (getCallStack().height() <= 0) {
+            checkReadAccess("procedure/" + proc.getName());
+        } else {
+            checkInternalAccess("procedure/" + proc.getName());
+        }
         getInterceptor().reserve(this, proc);
     }
 
@@ -417,35 +445,31 @@ public class CallContext {
     public Object call(Procedure proc, Object[] args)
         throws ProcedureException {
 
-        Bindings  bindings = proc.getBindings();
-        Bindings  callBindings;
-        String[]  names;
-        int       pos = 0;
-        Object    value;
-        String    msg;
-
-        callBindings = new Bindings(bindings);
-        names = bindings.getNames();
+        Bindings bindings = proc.getBindings();
+        Bindings callBindings = new Bindings(bindings);
+        String[] names = bindings.getNames();
+        int pos = 0;
         for (int i = 0; i < names.length; i++) {
             if (bindings.getType(names[i]) == Bindings.PROCEDURE) {
-                value = bindings.getValue(names[i]);
+                Object value = bindings.getValue(names[i]);
                 value = library.getProcedure((String) value);
                 callBindings.set(names[i], Bindings.PROCEDURE, value, null);
             } else if (bindings.getType(names[i]) == Bindings.CONNECTION) {
-                value = bindings.getValue(names[i], null);
+                Object value = bindings.getValue(names[i], null);
                 if (value != null) {
                     value = connections.get(value);
                     if (value == null) {
-                        msg = "no connection defined for '" + names[i] + "'";
+                        String msg = "no connection defined for '" + names[i] +
+                                     "'";
                         throw new ProcedureException(msg);
                     }
                 }
                 callBindings.set(names[i], Bindings.CONNECTION, value, null);
             } else if (bindings.getType(names[i]) == Bindings.ARGUMENT) {
                 if (pos >= args.length) {
-                    msg = "missing argument " + (pos + 1) + " '" +
-                          names[i] + "' in call to '" +
-                          proc.getName() + "'";
+                    String msg = "missing argument " + (pos + 1) + " '" +
+                                 names[i] + "' in call to '" + proc.getName() +
+                                 "'";
                     throw new ProcedureException(msg);
                 }
                 callBindings.set(names[i], Bindings.ARGUMENT, args[pos], null);
@@ -453,8 +477,8 @@ public class CallContext {
             }
         }
         if (pos != args.length) {
-            msg = "too many arguments in call to '" + proc.getName() +
-                  "'; expected " + pos + ", found " + args.length;
+            String msg = "too many arguments in call to '" + proc.getName() +
+                         "'; expected " + pos + ", found " + args.length;
             throw new ProcedureException(msg);
         }
         return call(proc, callBindings);
@@ -508,21 +532,20 @@ public class CallContext {
     public Channel connectionReserve(String id)
         throws ProcedureException {
 
-        Connection  con;
-        String      msg;
-
         if (id != null && !connections.containsKey(id)) {
+            checkInternalAccess("connection/" + id);
             if (isTracing()) {
                 log("Reserving connection channel on '" + id + "'");
             }
+            Connection con = null;
             if (env == null) {
                 con = Connection.find(storage, id);
             } else {
                 con = env.findConnection(storage, id);
             }
             if (con == null) {
-                msg = "failed to reserve connection channel: " +
-                      "no connection '" + id + "' found";
+                String msg = "failed to reserve connection channel: " +
+                             "no connection '" + id + "' found";
                 if (isTracing()) {
                     log("ERROR: " + msg);
                 }
@@ -532,8 +555,8 @@ public class CallContext {
             try {
                 connections.put(id, con.reserve());
             } catch (ConnectionException e) {
-                msg = "failed to reserve connection channel on '" + id +
-                      "': " + e.getMessage();
+                String msg = "failed to reserve connection channel on '" + id +
+                             "': " + e.getMessage();
                 if (isTracing()) {
                     log("ERROR: " + msg);
                 }
@@ -554,11 +577,9 @@ public class CallContext {
      * @see #connectionReserve(String)
      */
     public void connectionReleaseAll(boolean commit) {
-        Iterator  iter = connections.values().iterator();
-        Channel   channel;
-
+        Iterator iter = connections.values().iterator();
         while (iter.hasNext()) {
-            channel = (Channel) iter.next();
+            Channel channel = (Channel) iter.next();
             if (commit) {
                 channel.commit();
             } else {
@@ -595,18 +616,14 @@ public class CallContext {
      * @param message        the message text
      */
     public void log(int indent, String message) {
-        StringBuffer  buffer;
-        String        prefix;
-        String[]      lines;
-
-        buffer = (StringBuffer) attributes.get(ATTRIBUTE_LOG_BUFFER);
+        StringBuffer buffer = (StringBuffer) attributes.get(ATTRIBUTE_LOG_BUFFER);
         if (buffer == null) {
             buffer = new StringBuffer();
             attributes.put(ATTRIBUTE_LOG_BUFFER, buffer);
         }
-        prefix = DateUtil.formatIsoTime(new Date()) + ": ";
+        String prefix = DateUtil.formatIsoTime(new Date()) + ": ";
         buffer.append(prefix);
-        lines = message.split("\n");
+        String[] lines = message.split("\n");
         for (int i = 0; i < lines.length; i++) {
             for (int j = 0; j < indent; j++) {
                 buffer.append(" ");

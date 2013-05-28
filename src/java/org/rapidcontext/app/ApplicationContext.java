@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -61,7 +61,6 @@ import org.rapidcontext.core.proc.Interceptor;
 import org.rapidcontext.core.proc.Library;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.SecurityContext;
-import org.rapidcontext.core.security.SecurityInterceptor;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.storage.StorageException;
@@ -242,7 +241,6 @@ public class ApplicationContext {
      * Initializes the library in this context.
      */
     private void initLibrary() {
-        Interceptor  i;
 
         // Register default procedure types
         try {
@@ -253,10 +251,8 @@ public class ApplicationContext {
         }
 
         // Add default interceptors
-        i = library.getInterceptor();
-        i = new JsCompileInterceptor(i);
-        i = new SecurityInterceptor(i);
-        library.setInterceptor(i);
+        Interceptor i = library.getInterceptor();
+        library.setInterceptor(new JsCompileInterceptor(i));
 
         // Add default built-in procedures
         try {
