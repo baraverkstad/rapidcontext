@@ -148,7 +148,7 @@ public class ScriptApplication {
             name = (String) params.removeFirst();
             args = (String[]) params.toArray(new String[params.size()]);
             res = ctx.execute(name, args, source, traceBuffer);
-            System.out.println(JsSerializer.serialize(res));
+            System.out.println(JsSerializer.serialize(res, true));
         } catch (ProcedureException e) {
             System.err.println("ERROR: " + e.getMessage());
         }

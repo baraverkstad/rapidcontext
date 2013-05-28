@@ -162,7 +162,7 @@ public class StorageWebService extends WebService {
                 dict = new Dict();
                 dict.set("metadata", serializeMetadata(meta, request));
                 dict.set("data", res);
-                request.sendText(Mime.JSON[0], JsSerializer.serialize(dict));
+                request.sendText(Mime.JSON[0], JsSerializer.serialize(dict, true));
             } else if (isProps) {
                 request.sendText(Mime.TEXT[0], PropertiesSerializer.serialize(res));
             } else if (isXml) {
@@ -180,7 +180,7 @@ public class StorageWebService extends WebService {
             dict.set("error", e.getMessage());
             res = dict;
             if (isJson) {
-                request.sendText(Mime.JSON[0], JsSerializer.serialize(res));
+                request.sendText(Mime.JSON[0], JsSerializer.serialize(res, true));
             } else if (isXml) {
                 request.sendText(Mime.XML[0], XmlSerializer.serialize("error", res));
             } else {

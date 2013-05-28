@@ -1,7 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2011 Per Cederberg & Dynabyte AB.
- * All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -56,31 +55,36 @@ public class JsSerializer {
         Logger.getLogger(JsSerializer.class.getName());
 
     /**
-     * Serializes an object into a JavaScript literal. I.e. the
+     * Serializes an object into a JavaScript literal (JSON). The
      * string returned can be used as a constant inside JavaScript
-     * code.
+     * code or returned via a JSON API. If the indentation flag is
+     * set, the JSON data will be indented and formatted. Otherwise
+     * a minimal string will be returned.
      *
      * @param obj            the object to convert, or null
+     * @param indent         the indentation flag
      *
      * @return a JavaScript literal
      */
-    public static String serialize(Object obj) {
-        StringBuffer  buffer = new StringBuffer();
-
-        serialize(unwrap(obj), 0, buffer);
+    public static String serialize(Object obj, boolean indent) {
+        StringBuilder buffer = new StringBuilder();
+        serialize(unwrap(obj), indent ? 0 : -1, buffer);
         return buffer.toString();
     }
 
     /**
-     * Serializes an object into a JavaScript literal. I.e. the
-     * serialized result can be used as a constant inside JavaScript
-     * code. The serialized result will be written into the specified
-     * string buffer.
+     * Serializes an object into a JavaScript literal (JSON). The
+     * string returned can be used as a constant inside JavaScript
+     * code or returned via a JSON API. If the indentation flag is
+     * set, the JSON data will be indented and formatted. Otherwise
+     * a minimal string will be created. The serialized result will
+     * be written into the specified string buffer.
      *
      * @param obj            the object to convert, or null
+     * @param indent         the indentation level, or -1 for none
      * @param buffer         the string buffer to append into
      */
-    private static void serialize(Object obj, int indent, StringBuffer buffer) {
+    private static void serialize(Object obj, int indent, StringBuilder buffer) {
         if (obj == null) {
             buffer.append("null");
         } else if (obj instanceof Dict) {
@@ -103,29 +107,37 @@ public class JsSerializer {
     }
 
     /**
-     * Serializes a dictionary into a JavaScript literal. I.e. the
-     * serialized result can be used as a constant inside JavaScript
-     * code. The serialized result will be written into the specified
-     * string buffer.
+     * Serializes a dictionary into a JavaScript literal (JSON). The
+     * string returned can be used as a constant inside JavaScript
+     * code or returned via a JSON API. If the indentation flag is
+     * set, the JSON data will be indented and formatted. Otherwise
+     * a minimal string will be created. The serialized result will
+     * be written into the specified string buffer.
      *
      * @param dict           the dictionary to convert
+     * @param indent         the indentation level, or -1 for none
      * @param buffer         the string buffer to append into
      */
-    private static void serialize(Dict dict, int indent, StringBuffer buffer) {
-        String[]  keys = dict.keys();
-
+    private static void serialize(Dict dict, int indent, StringBuilder buffer) {
+        String prefix = "";
+        String infix = ":";
+        if (indent >= 0) {
+            prefix = "\n" + StringUtils.repeat("  ", indent + 1);
+            infix += " ";
+        }
+        String[] keys = dict.keys();
         buffer.append("{");
         for (int i = 0; i < keys.length; i++) {
             if (i > 0) {
                 buffer.append(",");
             }
-            buffer.append("\n");
-            buffer.append(StringUtils.repeat("  ", indent + 1));
+            buffer.append(prefix);
             serialize(keys[i], buffer);
-            buffer.append(": ");
-            serialize(dict.get(keys[i]), indent + 1, buffer);
+            buffer.append(infix);
+            int nextindent = (indent < 0) ? indent : indent + 1;
+            serialize(dict.get(keys[i]), nextindent, buffer);
         }
-        if (keys.length > 0) {
+        if (keys.length > 0 && indent >= 0) {
             buffer.append("\n");
             buffer.append(StringUtils.repeat("  ", indent));
         }
@@ -133,19 +145,25 @@ public class JsSerializer {
     }
 
     /**
-     * Serializes an array into a JavaScript literal. I.e. the
-     * serialized result can be used as a constant inside JavaScript
-     * code. The serialized result will be written into the specified
-     * string buffer.
+     * Serializes an array into a JavaScript literal (JSON). The
+     * string returned can be used as a constant inside JavaScript
+     * code or returned via a JSON API. If the indentation flag is
+     * set, the JSON data will be indented and formatted. Otherwise
+     * a minimal string will be created. The serialized result will
+     * be written into the specified string buffer.
      *
      * @param arr            the array to convert
+     * @param indent         the indentation level, or -1 for none
      * @param buffer         the string buffer to append into
      */
-    private static void serialize(Array arr, int indent, StringBuffer buffer) {
+    private static void serialize(Array arr, int indent, StringBuilder buffer) {
         buffer.append("[");
         for (int i = 0; i < arr.size(); i++) {
             if (i > 0) {
-                buffer.append(", ");
+                buffer.append(",");
+                if (indent >= 0) {
+                    buffer.append(" ");
+                }
             }
             serialize(arr.get(i), indent, buffer);
         }
@@ -153,15 +171,15 @@ public class JsSerializer {
     }
 
     /**
-     * Serializes a string into a JavaScript string literal. I.e.
-     * the serialized result can be used as a string constant inside
-     * JavaScript code. The serialized result will be written into
-     * the specified string buffer.
+     * Serializes a string into a JavaScript literal (JSON). The
+     * string returned can be used as a constant inside JavaScript
+     * code or returned via a JSON API. The serialized result will
+     * be written into the specified string buffer.
      *
      * @param str            the string to convert, or null
      * @param buffer         the string buffer to append into
      */
-    private static void serialize(String str, StringBuffer buffer) {
+    private static void serialize(String str, StringBuilder buffer) {
         if (str == null) {
             buffer.append("null");
         } else {
@@ -205,15 +223,15 @@ public class JsSerializer {
     }
 
     /**
-     * Serializes a number into a JavaScript number literal. I.e.
-     * the serialized result can be used as a number constant inside
-     * JavaScript code. The serialized result will be written into
-     * the specified string buffer.
+     * Serializes a number into a JavaScript literal (JSON). The
+     * string returned can be used as a constant inside JavaScript
+     * code or returned via a JSON API. The serialized result will
+     * be written into the specified string buffer.
      *
      * @param num            the number to convert, or null
      * @param buffer         the string buffer to append into
      */
-    private static void serialize(Number num, StringBuffer buffer) {
+    private static void serialize(Number num, StringBuilder buffer) {
         int     i = num.intValue();
         double  d = num.doubleValue();
 

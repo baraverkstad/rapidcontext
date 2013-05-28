@@ -455,6 +455,6 @@ public class AppWebService extends FileWebService {
         if (trace != null) {
             res.set("trace", trace.toString());
         }
-        request.sendText(Mime.JSON[0], JsSerializer.serialize(res));
+        request.sendText(Mime.JSON[0], JsSerializer.serialize(res, true));
     }
 }

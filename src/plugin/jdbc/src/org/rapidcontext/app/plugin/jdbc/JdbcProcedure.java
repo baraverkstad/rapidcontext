@@ -188,8 +188,8 @@ public abstract class JdbcProcedure extends AddOnProcedure {
         buffer.append(sql.substring(pos));
         try {
             if (cx.isTracing()) {
-                cx.log("JDBC call on " + con.getConnection().id());
-                cx.log("SQL: " + buffer.toString());
+                cx.log("JDBC " + con.getConnection() + " SQL:");
+                cx.log(buffer.toString());
             }
             return con.prepare(buffer.toString(), params);
         } catch (ConnectionException e) {

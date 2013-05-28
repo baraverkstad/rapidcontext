@@ -142,7 +142,7 @@ public class DefaultInterceptor extends Interceptor {
                         buffer.append(", ");
                     }
                     obj = bindings.getValue(names[i], null);
-                    str = JsSerializer.serialize(obj);
+                    str = JsSerializer.serialize(obj, false);
                     if (str.length() > 1000) {
                         str = str.substring(0, 1000) + "...";
                     }
@@ -153,7 +153,7 @@ public class DefaultInterceptor extends Interceptor {
             buffer.append(")");
             cx.log(indent, buffer.toString());
             obj = proc.call(cx, bindings);
-            str = JsSerializer.serialize(obj);
+            str = JsSerializer.serialize(obj, true);
             if (str.length() > 1000) {
                 str = str.substring(0, 1000) + "...";
             }
