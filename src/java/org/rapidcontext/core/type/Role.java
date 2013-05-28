@@ -15,6 +15,7 @@
 package org.rapidcontext.core.type;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -218,13 +219,39 @@ public class Role extends StorableObject {
             Dict dict = arr.getDict(i);
             if (matchPath(dict, path)) {
                 String perms = dict.getString(ACCESS_PERMISSION, "").trim();
-                // BUG: string matching is not reliable for custom permissions!
-                if (perms.contains(permission)) {
-                    return true;
-                } else if (PERM_NONE.equalsIgnoreCase(perms)) {
-                    return false;
-                } else if (PERM_ALL.equalsIgnoreCase(perms)) {
-                    return true;
+                HashMap map = (HashMap) dict.get("_" + ACCESS_PERMISSION);
+                if (map == null) {
+                    map = new HashMap();
+                    String[] list = perms.split("[,;\\s]+");
+                    for (int j = 0; j < list.length; j++) {
+                        if (list[j].equalsIgnoreCase(PERM_NONE)) {
+                            map.put(PERM_NONE, Boolean.TRUE);
+                            map.put(PERM_INTERNAL, Boolean.FALSE);
+                            map.put(PERM_READ, Boolean.FALSE);
+                            map.put(PERM_WRITE, Boolean.FALSE);
+                            map.put(PERM_ALL, Boolean.FALSE);
+                        } else if (list[j].equalsIgnoreCase(PERM_ALL)) {
+                            map.put(PERM_NONE, Boolean.FALSE);
+                            map.put(PERM_INTERNAL, Boolean.TRUE);
+                            map.put(PERM_READ, Boolean.TRUE);
+                            map.put(PERM_WRITE, Boolean.TRUE);
+                            map.put(PERM_ALL, Boolean.TRUE);
+                        } else if (list[j].equalsIgnoreCase(PERM_WRITE)) {
+                            map.put(PERM_INTERNAL, Boolean.TRUE);
+                            map.put(PERM_READ, Boolean.TRUE);
+                            map.put(PERM_WRITE, Boolean.TRUE);
+                        } else if (list[j].equalsIgnoreCase(PERM_READ)) {
+                            map.put(PERM_INTERNAL, Boolean.TRUE);
+                            map.put(PERM_READ, Boolean.TRUE);
+                        } else {
+                            map.put(list[j].toLowerCase(), Boolean.TRUE);
+                        }
+                    }
+                    dict.set("_" + ACCESS_PERMISSION, map);
+                }
+                Boolean bool = (Boolean) map.get(permission.toLowerCase());
+                if (bool != null) {
+                    return bool.booleanValue();
                 }
             }
         }
