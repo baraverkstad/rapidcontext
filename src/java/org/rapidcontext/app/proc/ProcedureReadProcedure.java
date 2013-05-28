@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -22,8 +22,6 @@ import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Library;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.security.Restricted;
-import org.rapidcontext.core.security.SecurityContext;
 
 /**
  * The built-in procedure read procedure.
@@ -31,7 +29,7 @@ import org.rapidcontext.core.security.SecurityContext;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class ProcedureReadProcedure implements Procedure, Restricted {
+public class ProcedureReadProcedure implements Procedure {
 
     /**
      * The procedure name constant.
@@ -51,17 +49,6 @@ public class ProcedureReadProcedure implements Procedure, Restricted {
     public ProcedureReadProcedure() throws ProcedureException {
         defaults.set("name", Bindings.ARGUMENT, "", "The procedure name");
         defaults.seal();
-    }
-
-    /**
-     * Checks if the currently authenticated user has access to this
-     * object.
-     *
-     * @return true if the current user has access, or
-     *         false otherwise
-     */
-    public boolean hasAccess() {
-        return SecurityContext.currentUser() != null;
     }
 
     /**
@@ -113,14 +100,9 @@ public class ProcedureReadProcedure implements Procedure, Restricted {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        String     name;
-        Procedure  proc;
-
-        name = (String) bindings.getValue("name");
-        proc = cx.getLibrary().getProcedure(name);
-        if (!SecurityContext.hasAccess(proc, "")) {
-            throw new ProcedureException("no procedure '" + name + "' found");
-        }
+        String name = (String) bindings.getValue("name");
+        CallContext.checkReadAccess("procedure/" + name);
+        Procedure proc = cx.getLibrary().getProcedure(name);
         return getProcedureData(cx.getLibrary(), proc);
     }
 
@@ -161,17 +143,15 @@ public class ProcedureReadProcedure implements Procedure, Restricted {
      *             failed
      */
     static Array getBindingsData(Bindings bindings) throws ProcedureException {
-        String[]  names = bindings.getNames();
-        Array     res = new Array(names.length);
-        Dict      obj;
-
+        String[] names = bindings.getNames();
+        Array res = new Array(names.length);
         for (int i = 0; i < names.length; i++) {
-            obj = new Dict();
-            obj.set("name", names[i]);
-            obj.set("type", bindings.getTypeName(names[i]));
-            obj.set("value", bindings.getValue(names[i], ""));
-            obj.set("description", bindings.getDescription(names[i]));
-            res.add(obj);
+            Dict dict = new Dict();
+            dict.set("name", names[i]);
+            dict.set("type", bindings.getTypeName(names[i]));
+            dict.set("value", bindings.getValue(names[i], ""));
+            dict.set("description", bindings.getDescription(names[i]));
+            res.add(dict);
         }
         return res;
     }

@@ -1,6 +1,6 @@
 /*
  * RapidContext JDBC plug-in <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -19,8 +19,6 @@ import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.security.Restricted;
-import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.type.ConnectionException;
 
 /**
@@ -31,7 +29,7 @@ import org.rapidcontext.core.type.ConnectionException;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class JdbcBuiltInConnectionInfoProcedure implements Procedure, Restricted {
+public class JdbcBuiltInConnectionInfoProcedure implements Procedure {
 
     /**
      * The procedure name constant.
@@ -52,17 +50,6 @@ public class JdbcBuiltInConnectionInfoProcedure implements Procedure, Restricted
         defaults.set(JdbcProcedure.BINDING_DB, Bindings.ARGUMENT, "",
                      "The JDBC connection identifier.");
         this.defaults.seal();
-    }
-
-    /**
-     * Checks if the currently authenticated user has access to this
-     * object.
-     *
-     * @return true if the current user has access, or
-     *         false otherwise
-     */
-    public boolean hasAccess() {
-        return SecurityContext.hasAdmin();
     }
 
     /**
@@ -111,9 +98,8 @@ public class JdbcBuiltInConnectionInfoProcedure implements Procedure, Restricted
     public Object call(CallContext cx, Bindings bindings)
     throws ProcedureException {
 
-        JdbcChannel  channel = JdbcProcedure.connectionReserve(cx, bindings);
-        Dict         res = channel.getConnection().serialize().copy();
-
+        JdbcChannel channel = JdbcProcedure.connectionReserve(cx, bindings);
+        Dict res = channel.getConnection().serialize().copy();
         try {
             res.set("_metadata", channel.metadata());
         } catch (ConnectionException e) {

@@ -1,7 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
- * All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -24,7 +23,6 @@ import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.security.Restricted;
 import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.Storage;
@@ -36,7 +34,7 @@ import org.rapidcontext.core.storage.Storage;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class PluginListProcedure implements Procedure, Restricted {
+public class PluginListProcedure implements Procedure {
 
     /**
      * The procedure name constant.
@@ -53,15 +51,6 @@ public class PluginListProcedure implements Procedure, Restricted {
      */
     public PluginListProcedure() {
         defaults.seal();
-    }
-
-    /**
-     * Checks if the currently authenticated user has access to this object.
-     *
-     * @return true if the current user has access, or false otherwise
-     */
-    public boolean hasAccess() {
-        return SecurityContext.hasAdmin();
     }
 
     /**
@@ -113,30 +102,25 @@ public class PluginListProcedure implements Procedure, Restricted {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        ApplicationContext  ctx = ApplicationContext.getInstance();
-        Storage             storage = ctx.getStorage();
-        Dict                dict;
-        Array               arr;
-        Path                path;
-        String              pluginId;
-        Array               res;
-
-        dict = (Dict) storage.load(Storage.PATH_STORAGEINFO);
-        arr = dict.getArray("storages");
-        res = new Array(arr.size());
+        ApplicationContext ctx = ApplicationContext.getInstance();
+        Dict dict = (Dict) ctx.getStorage().load(Storage.PATH_STORAGEINFO);
+        Array arr = dict.getArray("storages");
+        Array res = new Array(arr.size());
         for (int i = 0; i < arr.size(); i++) {
-            path = ((Storage) arr.get(i)).path();
-            if (path.startsWith(PluginManager.PATH_STORAGE_PLUGIN)) {
-                pluginId = path.name();
-                dict = ctx.pluginConfig(pluginId);
-                if (dict == null) {
-                    dict = new Dict();
-                    dict.set(Plugin.KEY_ID, pluginId);
-                } else {
-                    dict = dict.copy();
+            Path path = ((Storage) arr.get(i)).path();
+            if (SecurityContext.hasReadAccess(path.toString())) {
+                if (path.startsWith(PluginManager.PATH_STORAGE_PLUGIN)) {
+                    String pluginId = path.name();
+                    dict = ctx.pluginConfig(pluginId);
+                    if (dict == null) {
+                        dict = new Dict();
+                        dict.set(Plugin.KEY_ID, pluginId);
+                    } else {
+                        dict = dict.copy();
+                    }
+                    dict.setBoolean("loaded", ctx.isPluginLoaded(pluginId));
+                    res.add(dict);
                 }
-                dict.setBoolean("loaded", ctx.isPluginLoaded(pluginId));
-                res.add(dict);
             }
         }
         return res;

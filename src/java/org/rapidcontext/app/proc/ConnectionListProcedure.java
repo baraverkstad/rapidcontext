@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -21,9 +21,9 @@ import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.security.Restricted;
 import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Metadata;
+import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.type.Connection;
 
 /**
@@ -32,7 +32,7 @@ import org.rapidcontext.core.type.Connection;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class ConnectionListProcedure implements Procedure, Restricted {
+public class ConnectionListProcedure implements Procedure {
 
     /**
      * The procedure name constant.
@@ -49,17 +49,6 @@ public class ConnectionListProcedure implements Procedure, Restricted {
      */
     public ConnectionListProcedure() {
         this.defaults.seal();
-    }
-
-    /**
-     * Checks if the currently authenticated user has access to this
-     * object.
-     *
-     * @return true if the current user has access, or
-     *         false otherwise
-     */
-    public boolean hasAccess() {
-        return SecurityContext.hasAdmin();
     }
 
     /**
@@ -113,21 +102,24 @@ public class ConnectionListProcedure implements Procedure, Restricted {
         Metadata[] meta = cx.getStorage().lookupAll(Connection.PATH);
         Array res = new Array(meta.length);
         for (int i = 0; i < meta.length; i++) {
-            Object obj = cx.getStorage().load(meta[i].path());
-            Dict dict = null;
-            if (obj instanceof Connection) {
-                dict = ((Connection) obj).serialize().copy();
-            } else if (obj instanceof Dict) {
-                dict = (Dict) obj;
-                if (!dict.containsKey("_error")) {
-                    String msg = "failed to initialize: plug-in for " +
-                                 "connnection type probably not loaded";
-                    dict.add("_error", msg);
+            Path path = meta[i].path();
+            if (SecurityContext.hasReadAccess(path.toString())) {
+                Object obj = cx.getStorage().load(path);
+                Dict dict = null;
+                if (obj instanceof Connection) {
+                    dict = ((Connection) obj).serialize().copy();
+                } else if (obj instanceof Dict) {
+                    dict = (Dict) obj;
+                    if (!dict.containsKey("_error")) {
+                        String msg = "failed to initialize: plug-in for " +
+                                     "connnection type probably not loaded";
+                        dict.add("_error", msg);
+                    }
                 }
-            }
-            if (dict != null) {
-                dict.add("plugin", PluginManager.pluginId(meta[i]));
-                res.add(dict);
+                if (dict != null) {
+                    dict.add("plugin", PluginManager.pluginId(meta[i]));
+                    res.add(dict);
+                }
             }
         }
         return res;

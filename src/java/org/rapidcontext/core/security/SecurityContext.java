@@ -18,7 +18,6 @@ import java.util.logging.Logger;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
-import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.storage.StorageException;
 import org.rapidcontext.core.type.Role;
@@ -104,47 +103,16 @@ public class SecurityContext {
     }
 
     /**
-     * Checks if the currently authenticated user has access to an
-     * object.
+     * Checks if the currently authenticated user has internal access
+     * to a storage path.
      *
-     * @param obj            the object to check
+     * @param path           the object storage path
      *
-     * @return true if the current user has access, or
+     * @return true if the current user has internal access, or
      *         false otherwise
-     *
-     * @deprecated Perform normal internal/read/write access check
-     *     instead, using hasAccess(String,String)
      */
-    public static boolean hasAccess(Object obj) {
-        return hasAccess(obj, null);
-    }
-
-    /**
-     * Checks if the currently authenticated user has access to an
-     * object.
-     *
-     * @param obj            the object to check
-     * @param caller         the caller procedure, or null for none
-     *
-     * @return true if the current user has access, or
-     *         false otherwise
-     *
-     * @deprecated Perform normal internal/read/write access check
-     *     instead, using hasAccess(String,String)
-     */
-    public static boolean hasAccess(Object obj, String caller) {
-        if (obj instanceof Restricted) {
-            return ((Restricted) obj).hasAccess();
-        } else if (obj instanceof Procedure) {
-            String path = "procedure/" + ((Procedure) obj).getName();
-            if (caller == null || caller.length() == 0) {
-                return hasAccess(path, Role.PERM_READ);
-            } else {
-                return hasAccess(path, Role.PERM_INTERNAL);
-            }
-        } else {
-            return false;
-        }
+    public static boolean hasInternalAccess(String path) {
+        return hasAccess(path, Role.PERM_INTERNAL);
     }
 
     /**
@@ -153,11 +121,24 @@ public class SecurityContext {
      *
      * @param path           the object storage path
      *
-     * @return true if the current user has access, or
+     * @return true if the current user has read access, or
      *         false otherwise
      */
     public static boolean hasReadAccess(String path) {
         return hasAccess(path, Role.PERM_READ);
+    }
+
+    /**
+     * Checks if the currently authenticated user has write access to
+     * a storage path.
+     *
+     * @param path           the object storage path
+     *
+     * @return true if the current user has write access, or
+     *         false otherwise
+     */
+    public static boolean hasWriteAccess(String path) {
+        return hasAccess(path, Role.PERM_WRITE);
     }
 
     /**
@@ -182,20 +163,6 @@ public class SecurityContext {
             }
         }
         return false;
-    }
-
-    /**
-     * Checks if the currently authenticated user has admin access.
-     *
-     * @return true if the current user has admin access, or
-     *         false otherwise
-     *
-     * @deprecated Perform normal internal/read/write access check
-     *     instead, using hasAccess(String,String)
-     */
-    public static boolean hasAdmin() {
-        User user = currentUser();
-        return user != null && user.hasRole("admin");
     }
 
     /**

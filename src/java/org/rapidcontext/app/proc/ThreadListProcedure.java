@@ -1,7 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
- * All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -22,7 +21,6 @@ import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.security.Restricted;
 import org.rapidcontext.core.security.SecurityContext;
 
 /**
@@ -31,7 +29,7 @@ import org.rapidcontext.core.security.SecurityContext;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class ThreadListProcedure implements Procedure, Restricted {
+public class ThreadListProcedure implements Procedure {
 
     /**
      * The procedure name constant.
@@ -48,17 +46,6 @@ public class ThreadListProcedure implements Procedure, Restricted {
      */
     public ThreadListProcedure() {
         defaults.seal();
-    }
-
-    /**
-     * Checks if the currently authenticated user has access to this
-     * object.
-     *
-     * @return true if the current user has access, or
-     *         false otherwise
-     */
-    public boolean hasAccess() {
-        return SecurityContext.hasAdmin();
     }
 
     /**
@@ -110,10 +97,8 @@ public class ThreadListProcedure implements Procedure, Restricted {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        Array         res = new Array(100);
-        ThreadGroup  root;
-
-        root = Thread.currentThread().getThreadGroup().getParent();
+        Array res = new Array(100);
+        ThreadGroup root = Thread.currentThread().getThreadGroup().getParent();
         while (root.getParent() != null) {
             root = root.getParent();
         }
@@ -129,33 +114,31 @@ public class ThreadListProcedure implements Procedure, Restricted {
      * @param list           the data list
      */
     private void listThreads(ThreadGroup group, Array list) {
-        Thread[]       threads;
-        ThreadGroup[]  groups;
-        int            size;
-        Dict           data;
-        CallContext    cx;
-
-        size = group.activeCount();
-        threads = new Thread[size * 2];
+        ApplicationContext ctx = ApplicationContext.getInstance();
+        int size = group.activeCount();
+        Thread[] threads = new Thread[size * 2];
         size = group.enumerate(threads, false);
         for (int i = 0; i < size; i++) {
-            data = new Dict();
-            data.setInt("id", threads[i].hashCode());
-            data.set("name", threads[i].getName());
-            data.setInt("priority", threads[i].getPriority());
-            data.set("group", group.getName());
-            data.setBoolean("daemon", threads[i].isDaemon());
-            data.setBoolean("alive", threads[i].isAlive());
-            cx = ApplicationContext.getInstance().findContext(threads[i]);
-            if (cx == null) {
-                data.set("context", null);
-            } else {
-                data.set("context", ThreadContextProcedure.getContextData(cx));
+            int id = threads[i].hashCode();
+            if (SecurityContext.hasReadAccess("thread/" + id)) {
+                Dict dict = new Dict();
+                dict.setInt("id", threads[i].hashCode());
+                dict.set("name", threads[i].getName());
+                dict.setInt("priority", threads[i].getPriority());
+                dict.set("group", group.getName());
+                dict.setBoolean("daemon", threads[i].isDaemon());
+                dict.setBoolean("alive", threads[i].isAlive());
+                CallContext cx = ctx.findContext(threads[i]);
+                if (cx == null) {
+                    dict.set("context", null);
+                } else {
+                    dict.set("context", ThreadContextProcedure.getContextData(cx));
+                }
+                list.add(dict);
             }
-            list.add(data);
         }
         size = group.activeGroupCount();
-        groups = new ThreadGroup[size * 2];
+        ThreadGroup[] groups = new ThreadGroup[size * 2];
         size = group.enumerate(groups, false);
         for (int i = 0; i < size; i++) {
             listThreads(groups[i], list);

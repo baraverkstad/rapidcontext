@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -19,8 +19,6 @@ import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.security.Restricted;
-import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.StorageException;
 import org.rapidcontext.core.type.User;
 
@@ -30,7 +28,7 @@ import org.rapidcontext.core.type.User;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class UserChangeProcedure implements Procedure, Restricted {
+public class UserChangeProcedure implements Procedure {
 
     /**
      * The procedure name constant.
@@ -61,17 +59,6 @@ public class UserChangeProcedure implements Procedure, Restricted {
         defaults.set("roles", Bindings.ARGUMENT, "",
                      "The list of roles (separated by spaces)");
         defaults.seal();
-    }
-
-    /**
-     * Checks if the currently authenticated user has access to this
-     * object.
-     *
-     * @return true if the current user has access, or
-     *         false otherwise
-     */
-    public boolean hasAccess() {
-        return SecurityContext.hasAdmin();
     }
 
     /**
@@ -123,36 +110,27 @@ public class UserChangeProcedure implements Procedure, Restricted {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        User      user;
-        String    id;
-        String    name;
-        String    descr;
-        boolean   enabled;
-        String    pwd;
-        String[]  roles;
-        Array     list;
-        String    str;
-        Object    obj;
-
         // Validate arguments
-        id = bindings.getValue("id").toString();
+        String id = bindings.getValue("id").toString();
         if (id.equals("")) {
             throw new ProcedureException("user id cannot be blank");
         } else if (!id.matches("^[a-zA-Z][a-zA-Z0-9_]*$")) {
             throw new ProcedureException("user id contains invalid character");
         }
-        user = User.find(cx.getStorage(), id);
-        name = bindings.getValue("name").toString();
-        descr = bindings.getValue("description").toString();
-        str = bindings.getValue("enabled").toString();
-        enabled = (!str.equals("") && !str.equals("false") && !str.equals("0"));
-        pwd = bindings.getValue("password").toString();
+        CallContext.checkWriteAccess("user/" + id);
+        User user = User.find(cx.getStorage(), id);
+        String name = bindings.getValue("name").toString();
+        String descr = bindings.getValue("description").toString();
+        String str = bindings.getValue("enabled").toString();
+        boolean enabled = (!str.equals("") && !str.equals("false") && !str.equals("0"));
+        String pwd = bindings.getValue("password").toString();
         if ((user == null || pwd.length() > 0) && pwd.length() < 5) {
             throw new ProcedureException("password must be at least 5 characters");
         }
-        obj = bindings.getValue("roles");
+        String[] roles = null;
+        Object obj = bindings.getValue("roles");
         if (obj instanceof Array) {
-            list = (Array) obj;
+            Array list = (Array) obj;
             roles = new String[list.size()];
             for (int i = 0; i < list.size(); i++) {
                 roles[i] = list.get(i).toString();
@@ -162,11 +140,12 @@ public class UserChangeProcedure implements Procedure, Restricted {
         }
 
         // Create or modify user
+        String res = null;
         if (user == null) {
             user = new User(id);
-            str = user.id() + " created";
+            res = user.id() + " created";
         } else {
-            str = user.id() + " modified";
+            res = user.id() + " modified";
         }
         user.setName(name);
         user.setDescription(descr);
@@ -180,6 +159,6 @@ public class UserChangeProcedure implements Procedure, Restricted {
         } catch (StorageException e) {
             throw new ProcedureException(e.getMessage());
         }
-        return str;
+        return res;
     }
 }

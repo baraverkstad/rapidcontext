@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -20,9 +20,9 @@ import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.security.Restricted;
 import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Metadata;
+import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.type.User;
 
@@ -32,7 +32,7 @@ import org.rapidcontext.core.type.User;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class UserListProcedure implements Procedure, Restricted {
+public class UserListProcedure implements Procedure {
 
     // TODO: Replace this procedure with Query API?
 
@@ -51,17 +51,6 @@ public class UserListProcedure implements Procedure, Restricted {
      */
     public UserListProcedure() {
         defaults.seal();
-    }
-
-    /**
-     * Checks if the currently authenticated user has access to this
-     * object.
-     *
-     * @return true if the current user has access, or
-     *         false otherwise
-     */
-    public boolean hasAccess() {
-        return SecurityContext.hasAdmin();
     }
 
     /**
@@ -113,17 +102,16 @@ public class UserListProcedure implements Procedure, Restricted {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        Storage     storage = cx.getStorage();
-        Metadata[]  meta;
-        Array       res;
-        Object      obj;
-
-        meta = storage.lookupAll(User.PATH);
-        res = new Array(meta.length);
+        Storage storage = cx.getStorage();
+        Metadata[] meta = storage.lookupAll(User.PATH);
+        Array res = new Array(meta.length);
         for (int i = 0; i < meta.length; i++) {
-            obj = storage.load(meta[i].path());
-            if (obj instanceof User) {
-                res.add(serialize((User) obj));
+            Path path = meta[i].path();
+            if (SecurityContext.hasReadAccess(path.toString())) {
+                Object obj = storage.load(path);
+                if (obj instanceof User) {
+                    res.add(serialize((User) obj));
+                }
             }
         }
         res.sort("id");

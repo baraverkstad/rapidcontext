@@ -1,6 +1,6 @@
 /**
  * RapidContext HTTP plug-in <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the BSD license.
@@ -18,8 +18,6 @@ import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.security.Restricted;
-import org.rapidcontext.core.security.SecurityContext;
 
 /**
  * The built-in HTTP POST procedure. This procedure provides
@@ -31,7 +29,7 @@ import org.rapidcontext.core.security.SecurityContext;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class HttpPostBuiltInProcedure implements Procedure, Restricted {
+public class HttpPostBuiltInProcedure implements Procedure {
 
     /**
      * The procedure name constant.
@@ -56,17 +54,6 @@ public class HttpPostBuiltInProcedure implements Procedure, Restricted {
         defaults.set(HttpPostProcedure.BINDING_DATA, Bindings.ARGUMENT, "",
                      "The HTTP POST data to send or blank for none.");
         this.defaults.seal();
-    }
-
-    /**
-     * Checks if the currently authenticated user has access to this
-     * object.
-     *
-     * @return true if the current user has access, or
-     *         false otherwise
-     */
-    public boolean hasAccess() {
-        return SecurityContext.hasAdmin();
     }
 
     /**

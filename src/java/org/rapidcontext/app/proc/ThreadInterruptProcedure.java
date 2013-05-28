@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -19,7 +19,6 @@ import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.security.Restricted;
 import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.type.User;
 
@@ -29,7 +28,7 @@ import org.rapidcontext.core.type.User;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class ThreadInterruptProcedure implements Procedure, Restricted {
+public class ThreadInterruptProcedure implements Procedure {
 
     /**
      * The procedure name constant.
@@ -49,17 +48,6 @@ public class ThreadInterruptProcedure implements Procedure, Restricted {
     public ThreadInterruptProcedure() throws ProcedureException {
         defaults.set("threadId", Bindings.ARGUMENT, "", "The thread id");
         defaults.seal();
-    }
-
-    /**
-     * Checks if the currently authenticated user has access to this
-     * object.
-     *
-     * @return true if the current user has access, or
-     *         false otherwise
-     */
-    public boolean hasAccess() {
-        return SecurityContext.currentUser() != null;
     }
 
     /**
@@ -111,11 +99,8 @@ public class ThreadInterruptProcedure implements Procedure, Restricted {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        int     threadId;
-        User    user;
-        String  str;
-
-        str = bindings.getValue("threadId").toString();
+        String str = bindings.getValue("threadId").toString();
+        int threadId = 0;
         try {
             threadId = Integer.parseInt(str);
         } catch (NumberFormatException e) {
@@ -125,9 +110,10 @@ public class ThreadInterruptProcedure implements Procedure, Restricted {
         if (cx == null) {
             throw new ProcedureException("cannot interrupt thread without context");
         }
-        user = (User) cx.getAttribute(CallContext.ATTRIBUTE_USER);
-        if (!SecurityContext.hasAdmin() && user != SecurityContext.currentUser()) {
-            throw new ProcedureException("permission denied");
+        User user = (User) cx.getAttribute(CallContext.ATTRIBUTE_USER);
+        boolean isOwner = user != null && user == SecurityContext.currentUser();
+        if (!isOwner) {
+            CallContext.checkWriteAccess("thread/" + threadId);
         }
         cx.interrupt();
         return null;

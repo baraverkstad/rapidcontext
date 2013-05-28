@@ -1,7 +1,6 @@
 /**
  * RapidContext command-line plug-in <http://www.rapidcontext.com/>
- * Copyright (c) 2008-2009 Per Cederberg & Dynabyte AB.
- * All rights reserved.
+ * Copyright (c) 2008-2009 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the BSD license.
@@ -19,8 +18,6 @@ import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.security.Restricted;
-import org.rapidcontext.core.security.SecurityContext;
 
 /**
  * The built-in command-line execution procedure. This procedure
@@ -30,10 +27,10 @@ import org.rapidcontext.core.security.SecurityContext;
  * add-on procedure of the "cmdline.exec" type to allow other users
  * access to this functionality.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
-public class CmdLineExecBuiltInProcedure implements Procedure, Restricted {
+public class CmdLineExecBuiltInProcedure implements Procedure {
 
     /**
      * The procedure name constant.
@@ -58,17 +55,6 @@ public class CmdLineExecBuiltInProcedure implements Procedure, Restricted {
         defaults.set(CmdLineExecProcedure.BINDING_ENVIRONMENT, Bindings.ARGUMENT, "",
                      "The environment variable bindings or blank for current.");
         this.defaults.seal();
-    }
-
-    /**
-     * Checks if the currently authenticated user has access to this
-     * object.
-     *
-     * @return true if the current user has access, or
-     *         false otherwise
-     */
-    public boolean hasAccess() {
-        return SecurityContext.hasAdmin();
     }
 
     /**

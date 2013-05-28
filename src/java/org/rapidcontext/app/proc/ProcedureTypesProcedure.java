@@ -1,7 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
- * All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -21,8 +20,6 @@ import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Library;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.security.Restricted;
-import org.rapidcontext.core.security.SecurityContext;
 
 /**
  * The built-in procedure type list procedure.
@@ -30,7 +27,8 @@ import org.rapidcontext.core.security.SecurityContext;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class ProcedureTypesProcedure implements Procedure, Restricted {
+public class ProcedureTypesProcedure implements Procedure {
+    // TODO: Remove this procedure when procedures are proper types
 
     /**
      * The procedure name constant.
@@ -47,17 +45,6 @@ public class ProcedureTypesProcedure implements Procedure, Restricted {
      */
     public ProcedureTypesProcedure() {
         defaults.seal();
-    }
-
-    /**
-     * Checks if the currently authenticated user has access to this
-     * object.
-     *
-     * @return true if the current user has access, or
-     *         false otherwise
-     */
-    public boolean hasAccess() {
-        return SecurityContext.currentUser() != null;
     }
 
     /**
@@ -109,19 +96,15 @@ public class ProcedureTypesProcedure implements Procedure, Restricted {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        Dict      res = new Dict();
-        String[]  names;
-        Bindings  defs;
-        Dict      obj;
-
-        names = Library.getTypes();
+        Dict res = new Dict();
+        String[] names = Library.getTypes();
         for (int i = 0; i < names.length; i++) {
-            defs = Library.getDefaultBindings(names[i]);
+            Bindings defs = Library.getDefaultBindings(names[i]);
             if (defs != null) {
-                obj = new Dict();
-                obj.set("type", names[i]);
-                obj.set("bindings", ProcedureReadProcedure.getBindingsData(defs));
-                res.set(names[i], obj);
+                Dict dict = new Dict();
+                dict.set("type", names[i]);
+                dict.set("bindings", ProcedureReadProcedure.getBindingsData(defs));
+                res.set(names[i], dict);
             }
         }
         return res;

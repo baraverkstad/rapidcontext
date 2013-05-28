@@ -18,11 +18,16 @@ import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.security.Restricted;
 import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.type.Session;
 
-public class SessionAuthenticateProcedure implements Procedure, Restricted {
+/**
+ * The built-in session authentication procedure.
+ *
+ * @author   Per Cederberg
+ * @version  1.0
+ */
+public class SessionAuthenticateProcedure implements Procedure {
 
     /**
      * The procedure name constant.
@@ -50,17 +55,6 @@ public class SessionAuthenticateProcedure implements Procedure, Restricted {
                      "'<userId>:<realm>:<password>'. The final hash is then " +
                      "calculated as an MD5 hash of '<first hash>:nonce'.");
         defaults.seal();
-    }
-
-    /**
-     * Checks if the currently authenticated user has access to this
-     * object.
-     *
-     * @return true if the current user has access, or
-     *         false otherwise
-     */
-    public boolean hasAccess() {
-        return true;
     }
 
     /**

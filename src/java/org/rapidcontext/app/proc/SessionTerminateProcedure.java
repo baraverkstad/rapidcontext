@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -18,8 +18,6 @@ import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.security.Restricted;
-import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.type.Session;
 
 /**
@@ -30,7 +28,7 @@ import org.rapidcontext.core.type.Session;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class SessionTerminateProcedure implements Procedure, Restricted {
+public class SessionTerminateProcedure implements Procedure {
 
     /**
      * The procedure name constant.
@@ -51,17 +49,6 @@ public class SessionTerminateProcedure implements Procedure, Restricted {
         defaults.set("sessionId", Bindings.ARGUMENT, "",
                      "The unique session id, use null or blank for current session");
         defaults.seal();
-    }
-
-    /**
-     * Checks if the currently authenticated user has access to this
-     * object.
-     *
-     * @return true if the current user has access, or
-     *         false otherwise
-     */
-    public boolean hasAccess() {
-        return true;
     }
 
     /**
@@ -113,21 +100,16 @@ public class SessionTerminateProcedure implements Procedure, Restricted {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        Session  session;
-        String   id;
-        String   msg;
-
-        id = (String) bindings.getValue("sessionId", "");
+        Session session = null;
+        String id = (String) bindings.getValue("sessionId", "");
         if (id == null || id.trim().equals("")) {
             session = (Session) Session.activeSession.get();
-        } else if (SecurityContext.hasAdmin()){
-            session = Session.find(cx.getStorage(), id);
         } else {
-            msg = "only admin users can terminate other sessions";
-            throw new ProcedureException(msg);
+            CallContext.checkWriteAccess("session/" + id);
+            session = Session.find(cx.getStorage(), id);
         }
         if (session == null) {
-            msg = "cannot find session with id " + id;
+            String msg = "cannot find session with id " + id;
             throw new ProcedureException(msg);
         }
         session.invalidate();

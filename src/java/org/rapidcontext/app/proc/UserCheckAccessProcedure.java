@@ -1,7 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2013 Per Cederberg & Dynabyte AB.
- * All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -19,16 +18,15 @@ import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.security.Restricted;
 import org.rapidcontext.core.security.SecurityContext;
 
 /**
  * The built-in user access control procedure.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
-public class UserCheckAccessProcedure implements Procedure, Restricted {
+public class UserCheckAccessProcedure implements Procedure {
     // TODO: Replace this procedure with something more generic
 
     /**
@@ -52,17 +50,6 @@ public class UserCheckAccessProcedure implements Procedure, Restricted {
         defaults.set("name", Bindings.ARGUMENT, "",
                      "The name of the object to check");
         defaults.seal();
-    }
-
-    /**
-     * Checks if the currently authenticated user has access to this
-     * object.
-     *
-     * @return true if the current user has access, or
-     *         false otherwise
-     */
-    public boolean hasAccess() {
-        return true;
     }
 
     /**
@@ -114,11 +101,8 @@ public class UserCheckAccessProcedure implements Procedure, Restricted {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        String  type;
-        String  name;
-
-        type = bindings.getValue("type").toString();
-        name = bindings.getValue("name").toString();
+        String type = bindings.getValue("type").toString();
+        String name = bindings.getValue("name").toString();
         return Boolean.valueOf(SecurityContext.hasReadAccess(type + "/" + name));
     }
 }

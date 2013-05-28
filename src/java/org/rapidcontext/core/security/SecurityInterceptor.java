@@ -1,7 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
- * All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -21,6 +20,7 @@ import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Interceptor;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
+import org.rapidcontext.core.type.Role;
 
 /**
  * A security procedure call interceptor. This interceptor checks
@@ -28,7 +28,7 @@ import org.rapidcontext.core.proc.ProcedureException;
  * resource to be reserved. It also filters the results from
  * procedures returning data known to be sensitive.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class SecurityInterceptor extends Interceptor {
@@ -62,14 +62,10 @@ public class SecurityInterceptor extends Interceptor {
     public void reserve(CallContext cx, Procedure proc)
         throws ProcedureException {
 
-        Procedure  caller;
-        String     callerName;
-
-        caller = cx.getCallStack().top();
-        callerName = (caller == null) ? null : caller.getName();
-        if (!SecurityContext.hasAccess(proc, callerName)) {
-            LOG.info("permission denied to procedure " +
-                     proc.getName() + " from " + callerName +
+        boolean internal = cx.getCallStack().height() > 0;
+        String perm = internal ? Role.PERM_INTERNAL : Role.PERM_READ;
+        if (!SecurityContext.hasAccess("procedure/" + proc.getName(), perm)) {
+            LOG.info("permission denied for procedure/" + proc.getName() +
                      " for user " + SecurityContext.currentUser());
             throw new ProcedureException("Permission denied");
         }

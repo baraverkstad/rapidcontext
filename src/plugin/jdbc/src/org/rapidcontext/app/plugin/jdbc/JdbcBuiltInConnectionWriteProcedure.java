@@ -1,6 +1,6 @@
 /*
  * RapidContext JDBC plug-in <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -20,8 +20,6 @@ import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.security.Restricted;
-import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.storage.StorageException;
@@ -36,7 +34,7 @@ import org.rapidcontext.core.type.Type;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class JdbcBuiltInConnectionWriteProcedure implements Procedure, Restricted {
+public class JdbcBuiltInConnectionWriteProcedure implements Procedure {
 
     /**
      * The procedure name constant.
@@ -59,17 +57,6 @@ public class JdbcBuiltInConnectionWriteProcedure implements Procedure, Restricte
                      "An object with at least the required keys from the " +
                      "connection/jdbc type set.");
         defaults.seal();
-    }
-
-    /**
-     * Checks if the currently authenticated user has access to this
-     * object.
-     *
-     * @return true if the current user has access, or
-     *         false otherwise
-     */
-    public boolean hasAccess() {
-        return SecurityContext.hasAdmin();
     }
 
     /**
@@ -124,18 +111,11 @@ public class JdbcBuiltInConnectionWriteProcedure implements Procedure, Restricte
     public Object call(CallContext cx, Bindings bindings)
     throws ProcedureException {
 
-        Storage  storage = cx.getStorage();
-        String   id;
-        Dict     data;
-        Path     path;
-        Type     type;
-        Array    props;
-        String   name;
-        Dict     res = null;
-
-        id = (String) bindings.getValue("id");
-        data = (Dict) bindings.getValue("data", null);
-        path = JdbcConnection.PATH.descendant(new Path(id));
+        Storage storage = cx.getStorage();
+        Dict res = null;
+        String id = (String) bindings.getValue("id");
+        Dict data = (Dict) bindings.getValue("data", null);
+        Path path = JdbcConnection.PATH.descendant(new Path(id));
         if (data == null) {
             try {
                 storage.remove(path);
@@ -143,15 +123,15 @@ public class JdbcBuiltInConnectionWriteProcedure implements Procedure, Restricte
                 throw new ProcedureException(e.getMessage());
             }
         } else {
-            type = Type.find(storage, "connection/jdbc");
+            Type type = Type.find(storage, "connection/jdbc");
             res = new Dict();
             res.set(JdbcConnection.KEY_ID, id);
             data.remove(JdbcConnection.KEY_ID);
             res.set(JdbcConnection.KEY_TYPE, type.id());
             data.remove(JdbcConnection.KEY_TYPE);
-            props = type.properties();
+            Array props = type.properties();
             for (int i = 0; i < props.size(); i++) {
-                name = props.getDict(i).getString("name", null);
+                String name = props.getDict(i).getString("name", null);
                 if (data.containsKey(name)) {
                     res.set(name, data.get(name));
                 } else if (props.getDict(i).getBoolean("required", false)) {
@@ -185,13 +165,10 @@ public class JdbcBuiltInConnectionWriteProcedure implements Procedure, Restricte
     private JdbcConnection createConnection(String id, String type, Dict dict)
     throws StorageException {
 
-        JdbcConnection  con;
-        JdbcChannel     channel;
-
-        con = new JdbcConnection(id, type, dict);
+        JdbcConnection con = new JdbcConnection(id, type, dict);
         con.init();
         try {
-            channel = (JdbcChannel) con.reserve();
+            JdbcChannel channel = (JdbcChannel) con.reserve();
             con.release(channel);
         } catch (ConnectionException e) {
             con.destroy();

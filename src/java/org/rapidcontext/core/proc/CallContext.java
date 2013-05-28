@@ -1,7 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
- * All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -21,6 +20,7 @@ import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.type.Channel;
 import org.rapidcontext.core.type.Connection;
@@ -261,6 +261,36 @@ public class CallContext {
      */
     public CallStack getCallStack() {
         return stack;
+    }
+
+    /**
+     * Checks if the currently authenticated user has read access to
+     * a storage path.
+     *
+     * @param path           the object storage path
+     *
+     * @throws ProcedureException if the current user didn't have
+     *             read access
+     */
+    public static void checkReadAccess(String path) throws ProcedureException {
+        if (!SecurityContext.hasReadAccess(path)) {
+            throw new ProcedureException("permission denied");
+        }
+    }
+
+    /**
+     * Checks if the currently authenticated user has write access to
+     * a storage path.
+     *
+     * @param path           the object storage path
+     *
+     * @throws ProcedureException if the current user didn't have
+     *             write access
+     */
+    public static void checkWriteAccess(String path) throws ProcedureException {
+        if (!SecurityContext.hasWriteAccess(path)) {
+            throw new ProcedureException("permission denied");
+        }
     }
 
     /**

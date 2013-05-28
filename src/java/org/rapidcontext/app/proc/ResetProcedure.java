@@ -1,7 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
- * All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -20,16 +19,14 @@ import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.security.Restricted;
-import org.rapidcontext.core.security.SecurityContext;
 
 /**
  * The built-in reset procedure.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
-public class ResetProcedure implements Procedure, Restricted {
+public class ResetProcedure implements Procedure {
 
     /**
      * The procedure name constant.
@@ -46,17 +43,6 @@ public class ResetProcedure implements Procedure, Restricted {
      */
     public ResetProcedure() {
         this.defaults.seal();
-    }
-
-    /**
-     * Checks if the currently authenticated user has access to this
-     * object.
-     *
-     * @return true if the current user has access, or
-     *         false otherwise
-     */
-    public boolean hasAccess() {
-        return SecurityContext.hasAdmin();
     }
 
     /**
@@ -108,9 +94,8 @@ public class ResetProcedure implements Procedure, Restricted {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        ApplicationContext  ctx = ApplicationContext.getInstance();
-
-        ctx.reset();
+        CallContext.checkWriteAccess("plugin/system");
+        ApplicationContext.getInstance().reset();
         return "OK";
     }
 }

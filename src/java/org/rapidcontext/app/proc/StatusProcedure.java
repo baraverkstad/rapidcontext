@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -21,7 +21,6 @@ import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.security.Restricted;
 import org.rapidcontext.core.type.Environment;
 import org.rapidcontext.core.type.User;
 
@@ -31,7 +30,7 @@ import org.rapidcontext.core.type.User;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class StatusProcedure implements Procedure, Restricted {
+public class StatusProcedure implements Procedure {
 
     /**
      * The procedure name constant.
@@ -48,17 +47,6 @@ public class StatusProcedure implements Procedure, Restricted {
      */
     public StatusProcedure() {
         this.defaults.seal();
-    }
-
-    /**
-     * Checks if the currently authenticated user has access to this
-     * object.
-     *
-     * @return true if the current user has access, or
-     *         false otherwise
-     */
-    public boolean hasAccess() {
-        return true;
     }
 
     /**
@@ -110,10 +98,8 @@ public class StatusProcedure implements Procedure, Restricted {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        ApplicationContext  ctx = ApplicationContext.getInstance();
-        Dict                res;
-
-        res = (Dict) cx.getStorage().load(PluginManager.PATH_INFO);
+        ApplicationContext ctx = ApplicationContext.getInstance();
+        Dict res = (Dict) cx.getStorage().load(PluginManager.PATH_INFO);
         if (res == null) {
             return null;
         }
@@ -132,10 +118,8 @@ public class StatusProcedure implements Procedure, Restricted {
      * @return the corresponding data object
      */
     private Dict getEnvironmentData(Environment env) {
-        Dict  res;
-
         if (env != null) {
-            res = new Dict();
+            Dict res = new Dict();
             res.set("name", env.id());
             res.set("description", env.description());
             return res;

@@ -1,7 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2013 Per Cederberg & Dynabyte AB.
- * All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -18,10 +17,8 @@ package org.rapidcontext.app.proc;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
-import org.rapidcontext.core.proc.Library;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.security.Restricted;
 import org.rapidcontext.core.security.SecurityContext;
 
 /**
@@ -30,7 +27,7 @@ import org.rapidcontext.core.security.SecurityContext;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class ProcedureListProcedure implements Procedure, Restricted {
+public class ProcedureListProcedure implements Procedure {
 
     /**
      * The procedure name constant.
@@ -47,17 +44,6 @@ public class ProcedureListProcedure implements Procedure, Restricted {
      */
     public ProcedureListProcedure() {
         defaults.seal();
-    }
-
-    /**
-     * Checks if the currently authenticated user has access to this
-     * object.
-     *
-     * @return true if the current user has access, or
-     *         false otherwise
-     */
-    public boolean hasAccess() {
-        return SecurityContext.currentUser() != null;
     }
 
     /**
@@ -109,19 +95,10 @@ public class ProcedureListProcedure implements Procedure, Restricted {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        Library   library = cx.getLibrary();
-        String[]  names;
-        Array     list;
-
-        names = library.getProcedureNames();
-        list = new Array(names.length);
+        String[] names = cx.getLibrary().getProcedureNames();
+        Array list = new Array(names.length);
         for (int i = 0; i < names.length; i++) {
-            // TODO: The built-in procedure access should be similar to others
-            if (library.hasBuiltIn(names[i])) {
-                if (SecurityContext.hasAccess(library.getProcedure(names[i]))) {
-                    list.add(names[i]);
-                }
-            } else if (SecurityContext.hasReadAccess("procedure/" + names[i])) {
+            if (SecurityContext.hasReadAccess("procedure/" + names[i])) {
                 list.add(names[i]);
             }
         }

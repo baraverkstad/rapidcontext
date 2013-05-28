@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -21,10 +21,8 @@ import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
-import org.rapidcontext.core.proc.CallStack;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.security.Restricted;
 import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.type.User;
 import org.rapidcontext.util.DateUtil;
@@ -35,7 +33,7 @@ import org.rapidcontext.util.DateUtil;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class ThreadContextProcedure implements Procedure, Restricted {
+public class ThreadContextProcedure implements Procedure {
 
     /**
      * The procedure name constant.
@@ -55,17 +53,6 @@ public class ThreadContextProcedure implements Procedure, Restricted {
     public ThreadContextProcedure() throws ProcedureException {
         defaults.set("threadId", Bindings.ARGUMENT, "", "The thread id");
         defaults.seal();
-    }
-
-    /**
-     * Checks if the currently authenticated user has access to this
-     * object.
-     *
-     * @return true if the current user has access, or
-     *         false otherwise
-     */
-    public boolean hasAccess() {
-        return SecurityContext.currentUser() != null;
     }
 
     /**
@@ -117,11 +104,8 @@ public class ThreadContextProcedure implements Procedure, Restricted {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        int     threadId;
-        User    user;
-        String  str;
-
-        str = bindings.getValue("threadId").toString();
+        String str = bindings.getValue("threadId").toString();
+        int threadId = 0;
         try {
             threadId = Integer.parseInt(str);
         } catch (NumberFormatException e) {
@@ -131,13 +115,13 @@ public class ThreadContextProcedure implements Procedure, Restricted {
         if (cx == null) {
             return null;
         }
-        user = (User) cx.getAttribute(CallContext.ATTRIBUTE_USER);
-        if (SecurityContext.hasAdmin() ||
-            user != null && user == SecurityContext.currentUser()) {
-
+        User user = (User) cx.getAttribute(CallContext.ATTRIBUTE_USER);
+        boolean isOwner = user != null && user == SecurityContext.currentUser();
+        if (isOwner) {
             return getContextData(cx);
         } else {
-            return null;
+            CallContext.checkReadAccess("thread/" + threadId);
+            return getContextData(cx);
         }
     }
 
@@ -149,24 +133,14 @@ public class ThreadContextProcedure implements Procedure, Restricted {
      * @return the data object
      */
     static Dict getContextData(CallContext cx) {
-        Dict          res = new Dict();
-        Procedure     proc;
-        Date          startTime;
-        Date          endTime;
-        Number        progress;
-        User          user;
-        StringBuffer  log;
-        CallStack     stack = cx.getCallStack();
-        Procedure[]   procs;
-        Array         list;
-
-        proc = (Procedure) cx.getAttribute(CallContext.ATTRIBUTE_PROCEDURE);
+        Dict res = new Dict();
+        Procedure proc = (Procedure) cx.getAttribute(CallContext.ATTRIBUTE_PROCEDURE);
         if (proc == null) {
             res.set("procedure", null);
         } else {
             res.set("procedure", proc.getName());
         }
-        startTime = (Date) cx.getAttribute(CallContext.ATTRIBUTE_START_TIME);
+        Date startTime = (Date) cx.getAttribute(CallContext.ATTRIBUTE_START_TIME);
         if (startTime == null) {
             res.set("startMillis", null);
             res.set("startTime", null);
@@ -174,7 +148,7 @@ public class ThreadContextProcedure implements Procedure, Restricted {
             res.set("startMillis", String.valueOf(startTime.getTime()));
             res.set("startTime", DateUtil.formatIsoTime(startTime));
         }
-        endTime = (Date) cx.getAttribute(CallContext.ATTRIBUTE_END_TIME);
+        Date endTime = (Date) cx.getAttribute(CallContext.ATTRIBUTE_END_TIME);
         if (endTime == null) {
             res.set("endMillis", null);
             res.set("endTime", null);
@@ -182,7 +156,7 @@ public class ThreadContextProcedure implements Procedure, Restricted {
             res.set("endMillis", String.valueOf(endTime.getTime()));
             res.set("endTime", DateUtil.formatIsoTime(endTime));
         }
-        progress = (Number) cx.getAttribute(CallContext.ATTRIBUTE_PROGRESS);
+        Number progress = (Number) cx.getAttribute(CallContext.ATTRIBUTE_PROGRESS);
         if (endTime != null) {
             res.set("progress", "1.0");
         } else if (startTime == null || progress == null) {
@@ -194,7 +168,7 @@ public class ThreadContextProcedure implements Procedure, Restricted {
         } else {
             res.set("progress", String.valueOf(progress.doubleValue() / 100.0));
         }
-        user = (User) cx.getAttribute(CallContext.ATTRIBUTE_USER);
+        User user = (User) cx.getAttribute(CallContext.ATTRIBUTE_USER);
         if (user == null) {
             res.set("user", null);
         } else {
@@ -203,10 +177,10 @@ public class ThreadContextProcedure implements Procedure, Restricted {
         res.set("source", cx.getAttribute(CallContext.ATTRIBUTE_SOURCE));
         res.set("result", cx.getAttribute(CallContext.ATTRIBUTE_RESULT));
         res.set("error", cx.getAttribute(CallContext.ATTRIBUTE_ERROR));
-        log = (StringBuffer) cx.getAttribute(CallContext.ATTRIBUTE_LOG_BUFFER);
+        StringBuffer log = (StringBuffer) cx.getAttribute(CallContext.ATTRIBUTE_LOG_BUFFER);
         res.set("log", (log == null) ? "" : log.toString());
-        procs = stack.toArray();
-        list = new Array(procs.length);
+        Procedure[] procs = cx.getCallStack().toArray();
+        Array list = new Array(procs.length);
         for (int i = 0; i < procs.length; i++) {
             list.add(procs[i].getName());
         }

@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -22,7 +22,6 @@ import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.security.Restricted;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.type.Session;
 import org.rapidcontext.core.type.User;
@@ -35,7 +34,7 @@ import org.rapidcontext.util.DateUtil;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class SessionCurrentProcedure implements Procedure, Restricted {
+public class SessionCurrentProcedure implements Procedure {
 
     /**
      * The procedure name constant.
@@ -52,17 +51,6 @@ public class SessionCurrentProcedure implements Procedure, Restricted {
      */
     public SessionCurrentProcedure() {
         defaults.seal();
-    }
-
-    /**
-     * Checks if the currently authenticated user has access to this
-     * object.
-     *
-     * @return true if the current user has access, or
-     *         false otherwise
-     */
-    public boolean hasAccess() {
-        return true;
     }
 
     /**

@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -19,8 +19,6 @@ import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.security.Restricted;
-import org.rapidcontext.core.security.SecurityContext;
 
 /**
  * The built-in procedure write procedure.
@@ -28,7 +26,7 @@ import org.rapidcontext.core.security.SecurityContext;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class ProcedureWriteProcedure implements Procedure, Restricted {
+public class ProcedureWriteProcedure implements Procedure {
 
     /**
      * The procedure name constant.
@@ -51,17 +49,6 @@ public class ProcedureWriteProcedure implements Procedure, Restricted {
         defaults.set("description", Bindings.ARGUMENT, "", "The procedure description");
         defaults.set("bindings", Bindings.ARGUMENT, "", "The array of procedure bindings");
         defaults.seal();
-    }
-
-    /**
-     * Checks if the currently authenticated user has access to this
-     * object.
-     *
-     * @return true if the current user has access, or
-     *         false otherwise
-     */
-    public boolean hasAccess() {
-        return SecurityContext.hasAdmin();
     }
 
     /**
@@ -115,19 +102,17 @@ public class ProcedureWriteProcedure implements Procedure, Restricted {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        Dict       data = new Dict();
-        String     name;
-        Procedure  proc;
-
-        name = ((String) bindings.getValue("name")).trim();
+        String name = ((String) bindings.getValue("name")).trim();
         if (name.length() == 0) {
             throw new ProcedureException("invalid procedure name");
         }
-        data.set("name", name);
-        data.set("type", bindings.getValue("type"));
-        data.set("description", bindings.getValue("description", ""));
-        data.set("binding", bindings.getValue("bindings"));
-        proc = cx.getLibrary().storeProcedure(data);
+        CallContext.checkWriteAccess("procedure/" + name);
+        Dict dict = new Dict();
+        dict.set("name", name);
+        dict.set("type", bindings.getValue("type"));
+        dict.set("description", bindings.getValue("description", ""));
+        dict.set("binding", bindings.getValue("bindings"));
+        Procedure proc = cx.getLibrary().storeProcedure(dict);
         return ProcedureReadProcedure.getProcedureData(cx.getLibrary(), proc);
     }
 }

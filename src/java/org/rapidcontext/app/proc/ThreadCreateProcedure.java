@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -20,7 +20,6 @@ import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.security.Restricted;
 import org.rapidcontext.core.security.SecurityContext;
 
 /**
@@ -29,7 +28,7 @@ import org.rapidcontext.core.security.SecurityContext;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class ThreadCreateProcedure implements Procedure, Restricted {
+public class ThreadCreateProcedure implements Procedure {
 
     /**
      * The procedure name constant.
@@ -58,17 +57,6 @@ public class ThreadCreateProcedure implements Procedure, Restricted {
         defaults.set("arguments", Bindings.ARGUMENT, "",
                      "The array with procedure arguments.");
         defaults.seal();
-    }
-
-    /**
-     * Checks if the currently authenticated user has access to this
-     * object.
-     *
-     * @return true if the current user has access, or
-     *         false otherwise
-     */
-    public boolean hasAccess() {
-        return SecurityContext.currentUser() != null;
     }
 
     /**
@@ -120,18 +108,14 @@ public class ThreadCreateProcedure implements Procedure, Restricted {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        Thread    thread;
-        String    proc;
-        Object[]  args;
-        String    source;
-        String    name;
-        Array     data;
-        Object    obj;
-
-        proc = bindings.getValue("procedure").toString();
-        obj = bindings.getValue("arguments");
+        if (SecurityContext.currentUser() == null) {
+            throw new ProcedureException("permission denied");
+        }
+        String proc = bindings.getValue("procedure").toString();
+        Object[] args = null;
+        Object obj = bindings.getValue("arguments");
         if (obj instanceof Array) {
-            data = (Array) obj;
+            Array data = (Array) obj;
             args = new Object[data.size()];
             for (int i = 0; i < args.length; i++) {
                 args[i] = data.get(i);
@@ -140,9 +124,9 @@ public class ThreadCreateProcedure implements Procedure, Restricted {
             args = new Object[1];
             args[0] = obj;
         }
-        source = (String) cx.getAttribute(CallContext.ATTRIBUTE_SOURCE);
-        name = "Procedure Thread " + counter++;
-        thread = new Thread(new ProcedureExecutor(proc, args, source), name);
+        String source = (String) cx.getAttribute(CallContext.ATTRIBUTE_SOURCE);
+        String name = "Procedure Thread " + counter++;
+        Thread thread = new Thread(new ProcedureExecutor(proc, args, source), name);
         thread.start();
         return Integer.valueOf(thread.hashCode());
     }
@@ -150,7 +134,7 @@ public class ThreadCreateProcedure implements Procedure, Restricted {
     /**
      * An asynchronous procedure executor.
      *
-     * @author   Per Cederberg, Dynabyte AB
+     * @author   Per Cederberg
      * @version  1.0
      */
     private static class ProcedureExecutor implements Runnable {
@@ -193,10 +177,9 @@ public class ThreadCreateProcedure implements Procedure, Restricted {
          * Executes the procedure in the current application context.
          */
         public void run() {
-            ApplicationContext  ctx = ApplicationContext.getInstance();
-
             SecurityContext.auth(userName);
             try {
+                ApplicationContext ctx = ApplicationContext.getInstance();
                 ctx.executeAsync(proc, args, source);
             } finally {
                 SecurityContext.authClear();

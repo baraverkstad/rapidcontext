@@ -1,6 +1,6 @@
 /*
  * RapidContext JDBC plug-in <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -19,8 +19,6 @@ import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.security.Restricted;
-import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.type.Connection;
 
 /**
@@ -31,7 +29,7 @@ import org.rapidcontext.core.type.Connection;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class JdbcBuiltInConnectionListProcedure implements Procedure, Restricted {
+public class JdbcBuiltInConnectionListProcedure implements Procedure {
 
     /**
      * The procedure name constant.
@@ -48,17 +46,6 @@ public class JdbcBuiltInConnectionListProcedure implements Procedure, Restricted
      */
     public JdbcBuiltInConnectionListProcedure() {
         this.defaults.seal();
-    }
-
-    /**
-     * Checks if the currently authenticated user has access to this
-     * object.
-     *
-     * @return true if the current user has access, or
-     *         false otherwise
-     */
-    public boolean hasAccess() {
-        return SecurityContext.hasAdmin();
     }
 
     /**
@@ -110,10 +97,8 @@ public class JdbcBuiltInConnectionListProcedure implements Procedure, Restricted
     public Object call(CallContext cx, Bindings bindings)
     throws ProcedureException {
 
-        Connection[]  connections;
-        Array         res = new Array();
-
-        connections = Connection.findAll(cx.getStorage());
+        Connection[] connections = Connection.findAll(cx.getStorage());
+        Array res = new Array(connections.length);
         for (int i = 0; i < connections.length; i++) {
             if (connections[i] instanceof JdbcConnection) {
                 res.add(connections[i].serialize().copy());
