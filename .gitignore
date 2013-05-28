@@ -26,6 +26,3 @@
 /rapidcontext.war
 /RapidContext.app
 /rapidcontext-*.zip
-
-# Run-Time Files
-/var
