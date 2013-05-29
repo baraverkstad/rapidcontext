@@ -20,7 +20,6 @@ import java.util.logging.Logger;
 
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.data.Binary;
-import org.rapidcontext.core.data.BinaryString;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.PropertiesSerializer;
 import org.rapidcontext.core.data.XmlSerializer;
@@ -133,7 +132,7 @@ public class StorageWriteProcedure implements Procedure {
         boolean isBinary = data instanceof Binary ||
                            data instanceof File;
         if (isString) {
-            data = new BinaryString((String) data);
+            data = new Binary.BinaryString((String) data);
         } else if (!isString && !isDict && !isBinary) {
             throw new ProcedureException("input data type not supported");
         }
@@ -142,7 +141,7 @@ public class StorageWriteProcedure implements Procedure {
             if (isDict) {
                 try {
                     String str = PropertiesSerializer.serialize(data);
-                    data = new BinaryString(str);
+                    data = new Binary.BinaryString(str);
                 } catch (Exception e) {
                     String msg = "invalid data: " + e.getMessage();
                     LOG.log(Level.WARNING, msg, e);
@@ -154,12 +153,12 @@ public class StorageWriteProcedure implements Procedure {
         } else if (fmt.equalsIgnoreCase("json")) {
             if (isDict) {
                 String str = JsSerializer.serialize(data, true);
-                data = new BinaryString(str);
+                data = new Binary.BinaryString(str);
             }
         } else if (fmt.equalsIgnoreCase("xml")) {
             if (isDict) {
                 String str = XmlSerializer.serialize("data", data);
-                data = new BinaryString(str);
+                data = new Binary.BinaryString(str);
             }
         } else {
             throw new ProcedureException("invalid data format: " + fmt);

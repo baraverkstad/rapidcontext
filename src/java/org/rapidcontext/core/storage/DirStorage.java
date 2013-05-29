@@ -23,7 +23,6 @@ import java.util.logging.Logger;
 
 import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.core.data.Binary;
-import org.rapidcontext.core.data.BinaryFile;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.PropertiesSerializer;
 import org.rapidcontext.util.FileUtil;
@@ -156,7 +155,7 @@ public class DirStorage extends Storage {
                 return null;
             }
         } else {
-            return new BinaryFile(file);
+            return new Binary.BinaryFile(file);
         }
     }
 
