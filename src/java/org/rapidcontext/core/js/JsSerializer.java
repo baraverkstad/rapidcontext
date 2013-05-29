@@ -68,6 +68,7 @@ public class JsSerializer {
     public static String serialize(Object obj, boolean indent) {
         StringBuilder buffer = new StringBuilder();
         serialize(unwrap(obj), indent ? 0 : -1, buffer);
+        buffer.append("\n");
         return buffer.toString();
     }
 
