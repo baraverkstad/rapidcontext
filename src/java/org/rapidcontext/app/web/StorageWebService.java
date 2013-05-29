@@ -15,6 +15,7 @@
 package org.rapidcontext.app.web;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,6 +24,7 @@ import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.app.proc.StorageCopyProcedure;
 import org.rapidcontext.app.proc.StorageDeleteProcedure;
+import org.rapidcontext.app.proc.StorageWriteProcedure;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
@@ -39,7 +41,6 @@ import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.type.WebService;
 import org.rapidcontext.core.web.Mime;
 import org.rapidcontext.core.web.Request;
-import org.rapidcontext.util.FileUtil;
 
 /**
  * A storage API web service. This service is used for accessing the
@@ -396,27 +397,25 @@ public class StorageWebService extends WebService {
             return;
         }
         try {
-            Storage storage = ApplicationContext.getInstance().getStorage();
-            Path path = new Path(StringUtils.removeEnd(request.getPath(), DirStorage.SUFFIX_PROPS));
-            Metadata prev = storage.lookup(path);
-            String fileName = StringUtils.substringAfterLast(request.getPath(), "/");
-            File file = FileUtil.tempFile(fileName);
-            FileUtil.copy(request.getInputStream(), file);
-            if (request.getPath().endsWith(DirStorage.SUFFIX_PROPS)) {
-                Dict dict = PropertiesSerializer.read(file);
-                file.delete();
-                storage.store(path, dict);
+            Path path = new Path(request.getPath());
+            Path normalizedPath = normalizePath(path);
+            Binary data = new Binary.BinaryStream(request.getInputStream(), -1);
+            if (StorageWriteProcedure.store(path, data)) {
+                if (normalizedPath == null) {
+                    request.sendText(STATUS.CREATED, null, null);
+                } else {
+                    request.sendText(STATUS.OK, null, null);
+                }
             } else {
-                storage.store(path, file);
+                String msg = "failed to write " + request.getPath();
+                LOG.log(Level.WARNING, msg);
+                errorInternal(request, msg);
             }
-            if (prev == null) {
-                request.sendText(STATUS.CREATED, null, null);
-            } else {
-                request.sendText(STATUS.OK, null, null);
-            }
-        } catch (Exception e) {
-            LOG.log(Level.WARNING, "failed to write " + request.getPath(), e);
-            errorInternal(request, e.getMessage());
+        } catch (IOException e) {
+            String msg = "failed to write " + request.getPath() + ": " +
+                         e.getMessage();
+            LOG.log(Level.WARNING, msg, e);
+            errorInternal(request, msg);
         }
     }
 
