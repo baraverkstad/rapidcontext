@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -18,6 +18,7 @@ import java.util.LinkedHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 
@@ -76,6 +77,20 @@ public class MemoryStorage extends Storage {
                 LOG.log(Level.WARNING, "internal error in memory storage", e);
             }
         }
+    }
+
+    /**
+     * Checks if the specified object is supported in this storage.
+     *
+     * @param obj            the object instance to check
+     *
+     * @return true if the object is supported, or
+     *         false otherwise
+     */
+    public boolean isStorable(Object obj) {
+        return obj instanceof Dict ||
+               obj instanceof StorableObject ||
+               obj == ObjectUtils.NULL;
     }
 
     /**
@@ -182,6 +197,11 @@ public class MemoryStorage extends Storage {
             throw new StorageException(msg);
         } else if (!isReadWrite()) {
             msg = "cannot store to read-only storage at " + path();
+            LOG.warning(msg);
+            throw new StorageException(msg);
+        } else if (!isStorable(data)) {
+            msg = "cannot store unsupported data type at " + path() + ": " +
+                  data.getClass().getName();
             LOG.warning(msg);
             throw new StorageException(msg);
         }
