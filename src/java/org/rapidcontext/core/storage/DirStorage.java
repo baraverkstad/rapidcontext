@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -173,51 +173,62 @@ public class DirStorage extends Storage {
      * @throws StorageException if the data couldn't be written
      */
     public void store(Path path, Object data) throws StorageException {
-        String  msg;
-        File    file;
-
         if (path.isIndex()) {
-            msg = "cannot write to index " + path;
+            String msg = "cannot write to index " + path;
             LOG.warning(msg);
             throw new StorageException(msg);
         } else if (data == null) {
-            msg = "cannot store null data, use remove() instead: " + path;
+            String msg = "cannot store null data, use remove(): " + path;
             LOG.warning(msg);
             throw new StorageException(msg);
         } else if (!isReadWrite()) {
-            msg = "cannot store to read-only storage at " + path();
+            String msg = "cannot store to read-only storage at " + path();
             LOG.warning(msg);
             throw new StorageException(msg);
         } else if (PATH_STORAGEINFO.equals(path)) {
-            msg = "storage info is read-only: " + path;
+            String msg = "storage info is read-only: " + path;
             LOG.warning(msg);
             throw new StorageException(msg);
         }
         if (data instanceof StorableObject) {
             data = ((StorableObject) data).serialize();
         }
+        File dir = locateDir(path);
+        File file = new File(dir, path.name());
+        File tmp = null;
         if (data instanceof Dict) {
-            file = locateDir(path);
-            file.mkdirs();
-            file = new File(file, path.name() + SUFFIX_PROPS);
             try {
-                PropertiesSerializer.write(file, (Dict) data);
-            } catch (IOException e) {
-                msg = "failed to write file " + file + ": " + e.getMessage();
+                file = new File(dir, path.name() + SUFFIX_PROPS);
+                tmp = FileUtil.tempFile(file.getName());
+                PropertiesSerializer.write(tmp, (Dict) data);
+            } catch (Exception e) {
+                String msg = "failed to write temporary file " + tmp + ": " +
+                             e.getMessage();
+                LOG.warning(msg);
+                throw new StorageException(msg);
+            }
+        } else if (data instanceof Binary) {
+            try {
+                tmp = FileUtil.tempFile(file.getName());
+                FileUtil.copy(((Binary) data).openStream(), tmp);
+            } catch (Exception e) {
+                String msg = "failed to write temporary file " + tmp + ": " +
+                             e.getMessage();
                 LOG.warning(msg);
                 throw new StorageException(msg);
             }
         } else if (data instanceof File) {
-            file = locateDir(path);
-            file.mkdirs();
-            file = new File(file, path.name());
-            if (!((File) data).renameTo(file)) {
-                msg = "failed to move " + data + " to file " + file;
-                LOG.warning(msg);
-                throw new StorageException(msg);
-            }
+            tmp = (File) data;
         } else {
-            throw new StorageException("cannot store unsupported data type");
+            String msg = "cannot store unsupported data type at " + path();
+            LOG.warning(msg);
+            throw new StorageException(msg);
+        }
+        dir.mkdirs();
+        if (!tmp.renameTo(file)) {
+            String msg = "failed to move " + tmp + " to file " + file;
+            LOG.warning(msg);
+            throw new StorageException(msg);
         }
     }
 
