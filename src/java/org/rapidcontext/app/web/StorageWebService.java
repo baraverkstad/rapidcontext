@@ -21,6 +21,8 @@ import java.util.logging.Logger;
 
 import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.app.ApplicationContext;
+import org.rapidcontext.app.proc.StorageCopyProcedure;
+import org.rapidcontext.app.proc.StorageDeleteProcedure;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
@@ -424,19 +426,16 @@ public class StorageWebService extends WebService {
      * @param request        the request to process
      */
     protected void doDelete(Request request) {
-        try {
-            Storage storage = ApplicationContext.getInstance().getStorage();
-            Path path = normalizePath(new Path(request.getPath()));
-            if (path == null) {
-                errorNotFound(request);
-                return;
-            }
-            // TODO: check for read-write status?
-            storage.remove(path);
+        Path path = normalizePath(new Path(request.getPath()));
+        if (path == null) {
+            errorNotFound(request);
+            return;
+        }
+        if (StorageDeleteProcedure.delete(path)) {
             request.sendText(STATUS.NO_CONTENT, null, null);
-        } catch (Exception e) {
-            LOG.log(Level.WARNING, "failed to delete " + request.getPath(), e);
-            request.sendError(STATUS.INTERNAL_SERVER_ERROR);
+        } else {
+            String msg = "failed to delete " + request.getPath();
+            errorInternal(request, msg);
         }
     }
 
@@ -567,59 +566,37 @@ public class StorageWebService extends WebService {
      * @param request        the request to process
      */
     protected void doMove(Request request) {
-        ApplicationContext  ctx = ApplicationContext.getInstance();
-        Path                src;
-        Path                dst;
-        Object              data = null;
-        String              href;
-        String              prefix;
-        String              fileName;
-        File                file;
-
-        try {
-            prefix = StringUtils.substringBeforeLast(request.getUrl(), request.getPath());
-            if (prefix.endsWith("/")) {
-                prefix = StringUtils.substringBeforeLast(prefix, "/");
-            }
-            href = request.getHeader(HEADER.DESTINATION);
-            if (href == null) {
-                errorBadRequest(request, "missing Destination header");
-                return;
-            }
-            href = Helper.decodeUrl(href);
-            if (!href.startsWith(prefix)) {
-                request.sendError(STATUS.BAD_GATEWAY);
-                return;
-            }
-            dst = new Path(href.substring(prefix.length()));
-            src = new Path(request.getPath());
-            src = normalizePath(src);
-            // TODO: verify destination path
-            if (src != null) {
-                data = ctx.getStorage().load(src);
-            }
-            if (data == null) {
-                errorNotFound(request);
-            } else if (data instanceof Index) {
-                // TODO: add support for collection moves
-                request.sendError(STATUS.FORBIDDEN);
-            } else if (data instanceof File) {
-                // TODO: storage file
-                fileName = StringUtils.substringAfterLast(request.getPath(), "/");
-                file = FileUtil.tempFile(fileName);
-                FileUtil.copy((File) data, file);
-                ctx.getStorage().store(dst, file);
-                ctx.getStorage().remove(src);
+        String path = request.getPath();
+        String prefix = StringUtils.substringBeforeLast(request.getUrl(), path);
+        prefix = StringUtils.removeEnd(prefix, "/");
+        String href = request.getHeader(HEADER.DESTINATION);
+        if (href == null) {
+            errorBadRequest(request, "missing Destination header");
+            return;
+        }
+        href = Helper.decodeUrl(href);
+        if (!href.startsWith(prefix)) {
+            request.sendError(STATUS.BAD_GATEWAY);
+            return;
+        }
+        Path dst = new Path(href.substring(prefix.length()));
+        Path src = normalizePath(new Path(path));
+        if (src == null) {
+            errorNotFound(request);
+        } else if (src.isIndex()) {
+            // TODO: add support for collection moves
+            errorForbidden(request);
+        } else {
+            boolean success = StorageCopyProcedure.copy(src, dst, false) &&
+                              StorageDeleteProcedure.delete(src);
+            if (success) {
                 href = Helper.encodeUrl(prefix + dst.toString());
                 request.setResponseHeader(HEADER.LOCATION, href);
                 request.sendText(STATUS.CREATED, null, null);
             } else {
-                // TODO: add support for object moves
-                request.sendError(STATUS.FORBIDDEN);
+                String msg = "failed to move " + request.getPath();
+                errorInternal(request, msg);
             }
-        } catch (Exception e) {
-            LOG.log(Level.WARNING, "failed to move " + request.getPath(), e);
-            errorInternal(request, e.getMessage());
         }
     }
 
