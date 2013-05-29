@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -17,6 +17,7 @@ package org.rapidcontext.core.data;
 import java.util.Date;
 
 import org.apache.commons.lang.CharUtils;
+import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.util.StringUtil;
 
@@ -39,7 +40,8 @@ public class XmlSerializer {
 
     /**
      * Serializes an object into an XML representation. The string
-     * returned can be used (without escaping) inside an XML document.
+     * returned is a stand-alone XML document marked as being in the
+     * UTF-8 charset.
      *
      * @param id             the data identifier
      * @param obj            the object to convert, or null
@@ -47,9 +49,10 @@ public class XmlSerializer {
      * @return an XML representation
      */
     public static String serialize(String id, Object obj) {
-        StringBuilder  buffer = new StringBuilder();
-
-        serialize(id, obj, buffer);
+        StringBuilder buffer = new StringBuilder();
+        buffer.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+        serialize(id, obj, 0, buffer);
+        buffer.append("\n");
         return buffer.toString();
     }
 
@@ -60,15 +63,15 @@ public class XmlSerializer {
      * @param obj            the object to convert
      * @param buffer         the string buffer to append into
      */
-    private static void serialize(String id, Object obj, StringBuilder buffer) {
+    private static void serialize(String id, Object obj, int indent, StringBuilder buffer) {
         if (obj == null) {
             buffer.append("<");
             tagName(id, buffer);
             buffer.append(" type=\"null\"/>");
         } else if (obj instanceof Dict) {
-            serialize(id, (Dict) obj, buffer);
+            serialize(id, (Dict) obj, indent, buffer);
         } else if (obj instanceof Array) {
-            serialize(id, (Array) obj, buffer);
+            serialize(id, (Array) obj, indent, buffer);
         } else if (obj instanceof Date) {
             tagStart(id, "date", buffer);
             buffer.append("@" + ((Date) obj).getTime());
@@ -78,7 +81,7 @@ public class XmlSerializer {
             buffer.append(StringUtil.escapeXml(((Class) obj).getName()));
             tagEnd(id, buffer);
         } else if (obj instanceof StorableObject) {
-            serialize(id, ((StorableObject) obj).serialize(), buffer);
+            serialize(id, ((StorableObject) obj).serialize(), indent, buffer);
         } else {
             tagStart(id, null, buffer);
             buffer.append(StringUtil.escapeXml(obj.toString()));
@@ -93,13 +96,16 @@ public class XmlSerializer {
      * @param dict           the dictionary to convert
      * @param buffer         the string buffer to append into
      */
-    private static void serialize(String id, Dict dict, StringBuilder buffer) {
-        String[]  keys = dict.keys();
-
+    private static void serialize(String id, Dict dict, int indent, StringBuilder buffer) {
+        String[] keys = dict.keys();
         tagStart(id, "object", buffer);
         for (int i = 0; i < keys.length; i++) {
-            serialize(keys[i], dict.get(keys[i]), buffer);
+            buffer.append("\n");
+            buffer.append(StringUtils.repeat("  ", indent + 1));
+            serialize(keys[i], dict.get(keys[i]), indent + 1, buffer);
         }
+        buffer.append("\n");
+        buffer.append(StringUtils.repeat("  ", indent));
         tagEnd(id, buffer);
     }
 
@@ -110,11 +116,15 @@ public class XmlSerializer {
      * @param arr            the array to convert
      * @param buffer         the string buffer to append into
      */
-    private static void serialize(String id, Array arr, StringBuilder buffer) {
+    private static void serialize(String id, Array arr, int indent, StringBuilder buffer) {
         tagStart(id, "array", buffer);
         for (int i = 0; i < arr.size(); i++) {
-            serialize("item", arr.get(i), buffer);
+            buffer.append("\n");
+            buffer.append(StringUtils.repeat("  ", indent + 1));
+            serialize("item", arr.get(i), indent + 1, buffer);
         }
+        buffer.append("\n");
+        buffer.append(StringUtils.repeat("  ", indent));
         tagEnd(id, buffer);
     }
 
