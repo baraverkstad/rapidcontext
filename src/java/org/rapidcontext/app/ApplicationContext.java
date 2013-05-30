@@ -45,6 +45,7 @@ import org.rapidcontext.app.proc.SessionTerminateProcedure;
 import org.rapidcontext.app.proc.StatusProcedure;
 import org.rapidcontext.app.proc.StorageCopyProcedure;
 import org.rapidcontext.app.proc.StorageDeleteProcedure;
+import org.rapidcontext.app.proc.StorageReadProcedure;
 import org.rapidcontext.app.proc.StorageWriteProcedure;
 import org.rapidcontext.app.proc.ThreadContextProcedure;
 import org.rapidcontext.app.proc.ThreadCreateProcedure;
@@ -278,6 +279,7 @@ public class ApplicationContext {
             library.addBuiltIn(new StatusProcedure());
             library.addBuiltIn(new StorageCopyProcedure());
             library.addBuiltIn(new StorageDeleteProcedure());
+            library.addBuiltIn(new StorageReadProcedure());
             library.addBuiltIn(new StorageWriteProcedure());
             library.addBuiltIn(new ThreadContextProcedure());
             library.addBuiltIn(new ThreadCreateProcedure());
