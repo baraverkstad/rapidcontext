@@ -1,7 +1,6 @@
 /**
  * RapidContext command-line plug-in <http://www.rapidcontext.com/>
- * Copyright (c) 2008-2010 Per Cederberg & Dynabyte AB.
- * All rights reserved.
+ * Copyright (c) 2008-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the BSD license.
@@ -125,30 +124,31 @@ public class CmdLineExecProcedure extends AddOnProcedure {
      */
     static Object execCall(CallContext cx, Bindings bindings)
         throws ProcedureException {
-        Runtime   runtime;
-        Process   process;
-        String    cmd;
-        File      dir;
-        String[]  env = null;
-        String    str;
-        Dict      res;
 
-        dir = ApplicationContext.getInstance().getBaseDir();
-        str = bindings.getValue(BINDING_COMMAND).toString();
-        cmd = replaceArguments(str, bindings);
-        str = (String) bindings.getValue(BINDING_DIRECTORY, "");
+        File dir = ApplicationContext.getInstance().getBaseDir();
+        String str = bindings.getValue(BINDING_COMMAND).toString();
+        // TODO: parse command-line properly, avoid StringTokenizer
+        String cmd = replaceArguments(str, bindings).trim();
+        str = ((String) bindings.getValue(BINDING_DIRECTORY, "")).trim();
         if (str.length() > 0) {
-            dir = new File(dir, str);
+            str = replaceArguments(str, bindings);
+            if (str.startsWith("/")) {
+                dir = new File(str);
+            } else {
+                dir = new File(dir, str);
+            }
         }
-        str = (String) bindings.getValue(BINDING_ENVIRONMENT, "");
+        String[] env = null;
+        str = ((String) bindings.getValue(BINDING_ENVIRONMENT, "")).trim();
         if (str.length() > 0) {
             env = replaceArguments(str, bindings).split(";");
         }
-        runtime = Runtime.getRuntime();
+        Runtime runtime = Runtime.getRuntime();
         LOG.fine("init exec: " + cmd);
         try {
-            process = runtime.exec(cmd, env, dir);
-            res = waitFor(process, cx);
+            // TODO: investigate using ProcessBuilder instead
+            Process process = runtime.exec(cmd, env, dir);
+            return waitFor(process, cx);
         } catch (IOException e) {
             str = "error executing '" + cmd + "': " + e.getMessage();
             LOG.log(Level.WARNING, str, e);
@@ -156,7 +156,6 @@ public class CmdLineExecProcedure extends AddOnProcedure {
         } finally {
             LOG.fine("done exec: " + cmd);
         }
-        return res;
     }
 
     /**
@@ -173,12 +172,10 @@ public class CmdLineExecProcedure extends AddOnProcedure {
     private static String replaceArguments(String data, Bindings bindings)
         throws ProcedureException {
 
-        String[]  names = bindings.getNames();
-        Object    value;
-
+        String[] names = bindings.getNames();
         for (int i = 0; i < names.length; i++) {
             if (bindings.getType(names[i]) == Bindings.ARGUMENT) {
-                value = bindings.getValue(names[i], null);
+                Object value = bindings.getValue(names[i], null);
                 if (value == null) {
                     value = "";
                 }
@@ -202,18 +199,17 @@ public class CmdLineExecProcedure extends AddOnProcedure {
     private static Dict waitFor(Process process, CallContext cx)
         throws IOException {
 
-        Dict          res = new Dict();
-        boolean       running = true;
-        int           exitValue = 0;
-        StringBuffer  output = new StringBuffer();
-        StringBuffer  error = new StringBuffer();
-        InputStream   isOut = process.getInputStream();
-        InputStream   isErr = process.getErrorStream();
-        byte[]        buffer = new byte[4096];
-
+        StringBuffer output = new StringBuffer();
+        StringBuffer error = new StringBuffer();
+        InputStream isOut = process.getInputStream();
+        InputStream isErr = process.getErrorStream();
+        byte[] buffer = new byte[4096];
+        int exitValue = 0;
         process.getOutputStream().close();
-        do {
+        while (true) {
             if (cx.isInterrupted()) {
+                // TODO: isOut.close();
+                // TODO: isErr.close();
                 process.destroy();
                 throw new IOException("procedure call interrupted");
             }
@@ -222,7 +218,7 @@ public class CmdLineExecProcedure extends AddOnProcedure {
                 readStream(isErr, buffer, error);
                 log(cx, error);
                 exitValue = process.exitValue();
-                running = false;
+                break;
             } catch (IllegalThreadStateException e) {
                 try {
                     Thread.sleep(50);
@@ -230,7 +226,8 @@ public class CmdLineExecProcedure extends AddOnProcedure {
                     // Ignore this exception
                 }
             }
-        } while (running);
+        }
+        Dict res = new Dict();
         res.setInt("exitValue", exitValue);
         res.set("output", output);
         return res;
@@ -248,9 +245,7 @@ public class CmdLineExecProcedure extends AddOnProcedure {
     private static void readStream(InputStream is, byte[] buffer, StringBuffer result)
         throws IOException {
 
-        int  avail;
-
-        avail = is.available();
+        int avail = is.available();
         while (avail > 0) {
             if (avail > buffer.length) {
                 avail = buffer.length;
@@ -269,18 +264,14 @@ public class CmdLineExecProcedure extends AddOnProcedure {
      * @param buffer         the process error output buffer
      */
     private static void log(CallContext cx, StringBuffer buffer) {
-        int      pos;
-        String   text;
-        Matcher  m;
-        double   progress;
-
+        int pos;
         while ((pos = buffer.indexOf("\n")) >= 0) {
-            text = buffer.substring(0, pos).trim();
+            String text = buffer.substring(0, pos).trim();
             if (text.length() > 0 && text.charAt(0) == '#') {
                 if (cx.getCallStack().height() <= 1) {
-                    m = PROGRESS_PATTERN.matcher(text);
+                    Matcher m = PROGRESS_PATTERN.matcher(text);
                     if (m.find()) {
-                        progress = Double.parseDouble(m.group(1));
+                        double progress = Double.parseDouble(m.group(1));
                         cx.setAttribute(CallContext.ATTRIBUTE_PROGRESS,
                                         Double.valueOf(progress));
                     }
