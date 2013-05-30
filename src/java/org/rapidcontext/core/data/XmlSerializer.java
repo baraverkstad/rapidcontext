@@ -61,6 +61,7 @@ public class XmlSerializer {
      *
      * @param id             the data identifier
      * @param obj            the object to convert
+     * @param indent         the current indentation level
      * @param buffer         the string buffer to append into
      */
     private static void serialize(String id, Object obj, int indent, StringBuilder buffer) {
@@ -94,6 +95,7 @@ public class XmlSerializer {
      *
      * @param id             the data identifier
      * @param dict           the dictionary to convert
+     * @param indent         the current indentation level
      * @param buffer         the string buffer to append into
      */
     private static void serialize(String id, Dict dict, int indent, StringBuilder buffer) {
@@ -114,6 +116,7 @@ public class XmlSerializer {
      *
      * @param id             the data identifier
      * @param arr            the array to convert
+     * @param indent         the current indentation level
      * @param buffer         the string buffer to append into
      */
     private static void serialize(String id, Array arr, int indent, StringBuilder buffer) {

@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -114,6 +114,7 @@ public class PropertiesSerializer {
      * @throws IOException if an error occurred while reading the
      *             file
      */
+    @SuppressWarnings("resource")
     public static Dict read(File file)
     throws FileNotFoundException, IOException {
 

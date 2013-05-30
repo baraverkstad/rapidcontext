@@ -168,13 +168,12 @@ public class StorageWriteProcedure implements Procedure {
     }
 
     /**
-     * Copies a storage object to a new destination.
+     * Writes a data object to the storage.
      *
-     * @param src            the source object path
-     * @param dst            the destination object path
-     * @param updateOnly     the copy-only-on-newer flag
+     * @param path           the storage path
+     * @param data           the data object
      *
-     * @return true if the data was successfully copied, or
+     * @return true if the data was successfully written, or
      *         false otherwise
      */
     public static boolean store(Path path, Object data) {

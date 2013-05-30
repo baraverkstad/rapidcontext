@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -47,6 +47,7 @@ public abstract class FileUtil {
      *
      * @throws IOException if some file couldn't be copied
      */
+    @SuppressWarnings("resource")
     public static void copy(File src, File dst) throws IOException {
         if (src.isDirectory()) {
             dst.mkdirs();
@@ -73,6 +74,7 @@ public abstract class FileUtil {
      * @throws IOException if the input stream couldn't be read or if
      *             the destination file couldn't be written
      */
+    @SuppressWarnings("resource")
     public static void copy(InputStream is, File dst) throws IOException {
         copy(is, new FileOutputStream(dst));
     }

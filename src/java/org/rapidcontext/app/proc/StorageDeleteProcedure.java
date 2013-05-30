@@ -117,13 +117,11 @@ public class StorageDeleteProcedure implements Procedure {
     }
 
     /**
-     * Copies a storage object to a new destination.
+     * Deletes a storage object or path.
      *
-     * @param src            the source object path
-     * @param dst            the destination object path
-     * @param updateOnly     the copy-only-on-newer flag
+     * @param path           the storage path to remove
      *
-     * @return true if the data was successfully copied, or
+     * @return true if the data was successfully removed, or
      *         false otherwise
      */
     public static boolean delete(Path path) {

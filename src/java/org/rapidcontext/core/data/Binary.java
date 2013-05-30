@@ -150,7 +150,7 @@ public interface Binary {
         /**
          * Creates a new binary string wrapper.
          *
-         * @param file           the file to encapsulate
+         * @param data           the string to encapsulate
          */
         public BinaryString(String data) {
             this.data = data;
