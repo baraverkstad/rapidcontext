@@ -359,8 +359,7 @@ public class Request implements HttpUtil {
      * @return the full request path with file name
      */
     public String getAbsolutePath() {
-        String  path = request.getPathInfo();
-
+        String path = request.getPathInfo();
         if (path == null) {
             return request.getContextPath();
         } else {
@@ -541,8 +540,6 @@ public class Request implements HttpUtil {
      * @throws IOException if the file upload
      */
     public FileItemStream getNextFile() throws IOException {
-        FileItemStream  item;
-
         if (isFileUpload() && fileIter == null) {
             try {
                 fileIter = new ServletFileUpload().getItemIterator(request);
@@ -554,7 +551,7 @@ public class Request implements HttpUtil {
         if (fileIter != null) {
             try {
                 while (fileIter.hasNext()) {
-                    item = fileIter.next();
+                    FileItemStream item = fileIter.next();
                     if (!item.isFormField()) {
                         return item;
                     }
@@ -645,9 +642,8 @@ public class Request implements HttpUtil {
      * @return the request input stream data as a string
      */
     public String getInputString() {
-        ByteArrayOutputStream  os = new ByteArrayOutputStream();
-
         try {
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
             FileUtil.copy(request.getInputStream(), os);
             return os.toString("UTF-8");
         } catch (IOException e) {
@@ -965,11 +961,8 @@ public class Request implements HttpUtil {
      *             commit the response
      */
     private void commitBinary() throws IOException {
-        Binary       data = (Binary) responseData;
-        long         modified;
-        InputStream  is;
-
-        modified = request.getDateHeader(HEADER.IF_MODIFIED_SINCE);
+        Binary data = (Binary) responseData;
+        long modified = request.getDateHeader(HEADER.IF_MODIFIED_SINCE);
         if (modified != -1 && data.lastModified() < modified + 1000) {
             response.setStatus(STATUS.NOT_MODIFIED);
             logResponse();
@@ -984,12 +977,10 @@ public class Request implements HttpUtil {
         logResponse();
         if (!responseHeadersOnly) {
             try {
-                is = data.openStream();
+                FileUtil.copy(data.openStream(), response.getOutputStream());
             } catch (Exception e) {
                 response.sendError(STATUS.NOT_FOUND);
-                return;
             }
-            FileUtil.copy(is, response.getOutputStream());
         }
     }
 
@@ -997,10 +988,8 @@ public class Request implements HttpUtil {
      * Logs the request for debugging purposes.
      */
     private void logRequest() {
-        StringBuilder  buffer;
-
         if (LOG.isLoggable(Level.FINE)) {
-            buffer = new StringBuilder();
+            StringBuilder buffer = new StringBuilder();
             buffer.append("[");
             buffer.append(request.getRemoteAddr());
             buffer.append("] ");
@@ -1017,10 +1006,8 @@ public class Request implements HttpUtil {
      * Logs the response for debugging purposes.
      */
     private void logResponse() {
-        StringBuilder  buffer;
-
         if (LOG.isLoggable(Level.FINE)) {
-            buffer = new StringBuilder();
+            StringBuilder buffer = new StringBuilder();
             buffer.append("[");
             buffer.append(request.getRemoteAddr());
             buffer.append("] ");
