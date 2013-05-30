@@ -75,6 +75,7 @@ import org.rapidcontext.core.type.Environment;
 import org.rapidcontext.core.type.Session;
 import org.rapidcontext.core.type.WebMatcher;
 import org.rapidcontext.core.type.WebService;
+import org.rapidcontext.util.FileUtil;
 
 /**
  * The application context. This is a singleton object that contains
@@ -205,8 +206,8 @@ public class ApplicationContext {
      * @param localDir       the local add-on directory
      */
     private ApplicationContext(File baseDir, File localDir) {
-        File builtinDir = new File(baseDir, "plugin");
-        File pluginDir = new File(localDir, "plugin");
+        File builtinDir = FileUtil.canonical(new File(baseDir, "plugin"));
+        File pluginDir = FileUtil.canonical(new File(localDir, "plugin"));
         this.storage = new RootStorage(true);
         this.pluginManager = new PluginManager(builtinDir, pluginDir, storage);
         this.library = new Library(this.storage);

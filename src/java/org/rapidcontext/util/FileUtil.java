@@ -37,6 +37,22 @@ public abstract class FileUtil {
     private static File tempDir = null;
 
     /**
+     * Attempts to resolve a file to a canonical file.
+     *
+     * @param file           the file to resolve
+     *
+     * @return the canonical file, or
+     *         the original file if the resolution failed
+     */
+    public static File canonical(File file) {
+        try {
+            return file.getCanonicalFile();
+        } catch (IOException ignore) {
+            return file;
+        }
+    }
+
+    /**
      * Copies a file or a directory. Directories are copied
      * recursively and file modification dates are kept. If the
      * executable bit is set on the source file, that bit will also
