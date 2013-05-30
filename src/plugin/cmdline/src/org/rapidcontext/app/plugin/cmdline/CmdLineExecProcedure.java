@@ -17,6 +17,7 @@ package org.rapidcontext.app.plugin.cmdline;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -145,6 +146,11 @@ public class CmdLineExecProcedure extends AddOnProcedure {
         }
         Runtime runtime = Runtime.getRuntime();
         LOG.fine("init exec: " + cmd);
+        cx.log("Command: " + cmd);
+        cx.log("Directory: " + dir);
+        if (env != null) {
+            cx.log("Environment: " + Arrays.toString(env));
+        }
         try {
             // TODO: investigate using ProcessBuilder instead
             Process process = runtime.exec(cmd, env, dir);
