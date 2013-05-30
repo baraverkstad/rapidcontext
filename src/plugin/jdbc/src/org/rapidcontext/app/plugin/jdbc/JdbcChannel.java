@@ -1,6 +1,6 @@
 /*
  * RapidContext JDBC plug-in <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -128,16 +128,14 @@ public class JdbcChannel extends Channel {
      *             reserved (channel will be destroyed)
      */
     protected void reserve() throws ConnectionException {
-        String  msg;
-
         try {
             if (con.isClosed()) {
-                msg = "failed to reserve, connection channel already closed";
+                String msg = "failed to reserve, connection channel already closed";
                 LOG.fine(prefix + msg);
                 throw new ConnectionException(msg);
             }
         } catch (SQLException e) {
-            msg = "failed to reserve: " + e.getMessage();
+            String msg = "failed to reserve: " + e.getMessage();
             LOG.fine(prefix + msg);
             throw new ConnectionException(msg);
         }
@@ -223,12 +221,9 @@ public class JdbcChannel extends Channel {
      * @throws ConnectionException if the extraction failed
      */
     public Dict metadata() throws ConnectionException {
-        Dict   res = new Dict();
-        Array  schemas = new Array();
-        Array  tmp;
-
         try {
             DatabaseMetaData meta = con.getMetaData();
+            Dict res = new Dict();
             res.set("dbName", meta.getDatabaseProductName());
             res.set("dbVersion", meta.getDatabaseProductVersion());
             res.setInt("dbVersionMajor", meta.getDatabaseMajorVersion());
@@ -237,8 +232,8 @@ public class JdbcChannel extends Channel {
             res.set("driverVersion", meta.getDriverVersion());
             res.setInt("driverVersionMajor", meta.getDriverMajorVersion());
             res.setInt("driverVersionMinor", meta.getDriverMinorVersion());
-            res.set("schema", schemas);
-            tmp = (Array) createResults(meta.getCatalogs(), "no-column-names");
+            Array schemas = new Array();
+            Array tmp = (Array) createResults(meta.getCatalogs(), "no-column-names");
             for (int i = 0; i < tmp.size(); i++) {
                 schemas.add(tmp.getArray(i).get(0));
             }
@@ -247,6 +242,7 @@ public class JdbcChannel extends Channel {
                 Array row = tmp.getArray(i);
                 schemas.add(row.get(0) + "." + row.get(1));
             }
+            res.set("schema", schemas);
             return res;
         } catch (SQLException e) {
             LOG.log(Level.WARNING, prefix + "failed to extract meta-data", e);
@@ -286,13 +282,13 @@ public class JdbcChannel extends Channel {
      *
      * @throws ConnectionException if the execution failed
      */
+    @SuppressWarnings("resource")
     protected Array executeStatement(PreparedStatement stmt)
     throws ConnectionException {
 
-        Array      res = new Array(10);
-        ResultSet  set = null;
-
+        ResultSet set = null;
         try {
+            Array res = new Array(10);
             stmt.executeUpdate();
             try {
                 set = stmt.getGeneratedKeys();
@@ -386,11 +382,11 @@ public class JdbcChannel extends Channel {
      *
      * @throws ConnectionException if the execution failed
      */
+    @SuppressWarnings("resource")
     protected Object executeQuery(PreparedStatement stmt, String flags)
     throws ConnectionException {
 
-        ResultSet  set = null;
-
+        ResultSet set = null;
         try {
             set = stmt.executeQuery();
             return createResults(set, flags);
@@ -426,19 +422,16 @@ public class JdbcChannel extends Channel {
     protected PreparedStatement prepare(String sql, ArrayList params)
     throws ConnectionException {
 
-        PreparedStatement  stmt;
-        Object             obj;
-        String             str;
-
+        PreparedStatement stmt;
         try {
             stmt = con.prepareStatement(sql,
                                         ResultSet.TYPE_FORWARD_ONLY,
                                         ResultSet.CONCUR_READ_ONLY,
                                         ResultSet.HOLD_CURSORS_OVER_COMMIT);
             for (int i = 0; params != null && i < params.size(); i++) {
-                obj = params.get(i);
+                Object obj = params.get(i);
                 if (obj instanceof String && ((String) obj).length() > 255) {
-                    str = (String) params.get(i);
+                    String str = (String) params.get(i);
                     stmt.setCharacterStream(i + 1,
                                             new StringReader(str),
                                             str.length());
@@ -450,8 +443,8 @@ public class JdbcChannel extends Channel {
             //stmt.setFetchSize(Integer.MIN_VALUE);
             return stmt;
         } catch (SQLException e) {
-            str = "failed to prepare SQL: " + e.getMessage();
-            throw new ConnectionException(str);
+            String msg = "failed to prepare SQL: " + e.getMessage();
+            throw new ConnectionException(msg);
         }
     }
 
@@ -468,18 +461,15 @@ public class JdbcChannel extends Channel {
     protected Object createResults(ResultSet rs, String flags)
     throws ConnectionException {
 
-        boolean            flagMetadata = hasFlag(flags, "metadata", false);
-        ResultSetMetaData  meta;
-        Dict               dict;
-
+        ResultSetMetaData meta;
         try {
             meta = rs.getMetaData();
         } catch (SQLException e) {
             throw new ConnectionException("failed to retrieve query result meta-data: " +
                                           e.getMessage());
         }
-        if (flagMetadata) {
-            dict = new Dict();
+        if (hasFlag(flags, "metadata", false)) {
+            Dict dict = new Dict();
             dict.set("columns", createColumnData(meta, flags));
             dict.set("rows", createRowData(meta, rs, flags));
             return dict;
@@ -501,15 +491,12 @@ public class JdbcChannel extends Channel {
     protected Array createColumnData(ResultSetMetaData meta, String flags)
     throws ConnectionException {
 
-        Array  cols;
-        Dict   obj;
-        int    colCount;
-
+        Array cols;
         try {
-            colCount = meta.getColumnCount();
+            int colCount = meta.getColumnCount();
             cols = new Array(colCount);
             for (int i = 0; i < colCount; i++) {
-                obj = new Dict();
+                Dict obj = new Dict();
                 obj.set("name", meta.getColumnLabel(i + 1).toLowerCase());
                 obj.set("catalog", meta.getCatalogName(i + 1));
                 obj.set("type", meta.getColumnTypeName(i + 1));
@@ -541,30 +528,25 @@ public class JdbcChannel extends Channel {
     protected Object createRowData(ResultSetMetaData meta, ResultSet rs, String flags)
     throws ConnectionException {
 
-        boolean  flagColumnNames = hasFlag(flags, "column-names", true);
-        boolean  flagNativeTypes = hasFlag(flags, "native-types", true);
-        boolean  flagBinaryData = hasFlag(flags, "binary-data", false);
-        boolean  flagSingleRow = hasFlag(flags, "single-row", false);
-        int      colCount;
-        Array    rows = new Array(10);
-        Dict     rowDict;
-        Array    rowArr;
-        Object   value;
-
+        Array rows = new Array(10);
+        boolean flagColumnNames = hasFlag(flags, "column-names", true);
+        boolean flagNativeTypes = hasFlag(flags, "native-types", true);
+        boolean flagBinaryData = hasFlag(flags, "binary-data", false);
+        boolean flagSingleRow = hasFlag(flags, "single-row", false);
         try {
-            colCount = meta.getColumnCount();
+            int colCount = meta.getColumnCount();
             while (rs.next()) {
                 if (flagColumnNames) {
-                    rowDict = new Dict();
+                    Dict rowDict = new Dict();
                     for (int i = 0; i < colCount; i++) {
-                        value = createValue(meta, rs, i + 1, flagNativeTypes, flagBinaryData);
+                        Object value = createValue(meta, rs, i + 1, flagNativeTypes, flagBinaryData);
                         rowDict.add(meta.getColumnLabel(i + 1).toLowerCase(), value);
                     }
                     rows.add(rowDict);
                 } else {
-                    rowArr = new Array(colCount);
+                    Array rowArr = new Array(colCount);
                     for (int i = 0; i < colCount; i++) {
-                        value = createValue(meta, rs, i + 1, flagNativeTypes, flagBinaryData);
+                        Object value = createValue(meta, rs, i + 1, flagNativeTypes, flagBinaryData);
                         rowArr.add(value);
                     }
                     rows.add(rowArr);
@@ -636,6 +618,7 @@ public class JdbcChannel extends Channel {
                     while ((count = is.read(buffer)) > 0 && os.size() < 1000000) {
                         os.write(buffer, 0, count);
                     }
+                    is.close();
                     return os.toByteArray();
                 } else {
                     return rs.getString(column);
