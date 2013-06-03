@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
@@ -129,7 +130,7 @@ public class StorageCopyProcedure implements Procedure {
         if (dst.length() <= 0) {
             throw new ProcedureException("destination path cannot be empty");
         } else if (dst.endsWith("/")) {
-            throw new ProcedureException("destination path cannot be an index");
+            dst += StringUtils.substringAfterLast("/" + src, "/");
         }
         CallContext.checkWriteAccess(dst);
         String flags = ((String) bindings.getValue("flags", "")).toLowerCase();
