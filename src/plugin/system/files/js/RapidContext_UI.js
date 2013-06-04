@@ -1,7 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
- * All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -74,10 +73,15 @@ RapidContext.UI.buildUI = function (node, ids) {
     if (node.documentElement) {
         return RapidContext.UI.buildUI(node.documentElement.childNodes, ids);
     } else if (typeof(node.item) != "undefined" && typeof(node.length) == "number") {
-        var iter = MochiKit.Iter.repeat(ids, node.length);
-        iter = MochiKit.Iter.imap(RapidContext.UI.buildUI, node, iter);
-        iter = MochiKit.Iter.ifilterfalse(MochiKit.Base.isUndefinedOrNull, iter);
-        return MochiKit.Iter.list(iter);
+        var res = [];
+        var elems = Array.prototype.slice.apply(node);
+        for (var i = 0; i < elems.length; i++) {
+            var elem = RapidContext.UI.buildUI(elems[i], ids);
+            if (elem) {
+                res.push(elem);
+            }
+        }
+        return res;
     } else if (node.nodeType === 1) { // Node.ELEMENT_NODE
         try {
             return RapidContext.UI._buildUIElem(node, ids);
@@ -107,6 +111,11 @@ RapidContext.UI.buildUI = function (node, ids) {
  */
 RapidContext.UI._buildUIElem = function (node, ids) {
     var name = node.nodeName;
+    if (name == "style") {
+        RapidContext.UI._buildUIStylesheet(MochiKit.DOM.scrapeText(node));
+        node.parentNode.removeChild(node);
+        return null;
+    }
     var attrs = RapidContext.Util.dict(RapidContext.Util.attributeArray(node));
     var locals = RapidContext.Util.mask(attrs, ["id", "w", "h", "a", "class", "style"]);
     var children = RapidContext.UI.buildUI(node.childNodes, ids);
@@ -118,10 +127,6 @@ RapidContext.UI._buildUIElem = function (node, ids) {
             delete attrs.multiple;
         }
         var widget = RapidContext.Widget.createWidget(name, attrs, children);
-    } else if (name == "style") {
-        RapidContext.UI._buildUIStylesheet(MochiKit.DOM.scrapeText(node));
-        node.parentNode.removeChild(node);
-        return null;
     } else {
         var widget = MochiKit.DOM.createDOM(name, attrs, children);
     }
