@@ -86,7 +86,7 @@ RapidContext.UI.buildUI = function (node, ids) {
         try {
             return RapidContext.UI._buildUIElem(node, ids);
         } catch (e) {
-            LOG.error("Failed to build UI element <" + node.nodeName + ">", e.message);
+            LOG.error("Failed to build UI element " + MochiKit.Base.repr(node), e.message);
         }
     } else if (node.nodeType === 3) { // Node.TEXT_NODE
         var str = node.nodeValue;
@@ -167,7 +167,7 @@ RapidContext.UI._buildUIElem = function (node, ids) {
                 MochiKit.Style.setStyle(widget, styles);
             }
         } catch (e) {
-            LOG.error("Failed to style UI element <" + name + ">", e.message);
+            LOG.error("Failed to style UI element " + MochiKit.Base.repr(node), e.message);
         }
     }
     return widget;
