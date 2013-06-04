@@ -279,7 +279,11 @@ RapidContext.Widget.prototype.setAttrs = function (attrs) {
         } else if (value != null) {
             MochiKit.DOM.setNodeAttribute(this, name, value);
             if (typeof(value) != "object") {
-                this[name] = value;
+                try {
+                    this[name] = value;
+                } catch (ignore) {
+                    // IE8: breaks on setting button.type property
+                }
             }
         } else {
             this.removeAttribute(name);
