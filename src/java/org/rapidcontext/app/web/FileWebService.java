@@ -72,6 +72,21 @@ public class FileWebService extends WebService {
     }
 
     /**
+     * Returns the HTTP methods implemented for the specified
+     * request. The OPTIONS or HEAD methods doesn't have to be added
+     * to the result (added automatically later).
+     *
+     * @param request        the request to check
+     *
+     * @return the array of HTTP method names supported
+     *
+     * @see #methods(Request)
+     */
+    protected String[] methodsImpl(Request request) {
+        return METHODS_GET_ONLY;
+    }
+
+    /**
      * Processes an HTTP GET request.
      *
      * @param request        the request to process

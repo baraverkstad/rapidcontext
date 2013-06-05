@@ -60,6 +60,22 @@ public class StorageWebService extends WebService {
         Logger.getLogger(StorageWebService.class.getName());
 
     /**
+     * The HTTP methods supported by this web service.
+     */
+    public static final String[] METHODS = {
+        METHOD.GET,
+        METHOD.POST,
+        // METHOD.PATCH,
+        METHOD.PUT,
+        METHOD.DELETE,
+        METHOD.PROPFIND,
+        METHOD.MKCOL,
+        METHOD.MOVE,
+        METHOD.LOCK,
+        METHOD.UNLOCK
+    };
+
+    /**
      * The HTML file extension.
      */
     public static final String EXT_HTML = ".html";
@@ -88,6 +104,21 @@ public class StorageWebService extends WebService {
      */
     public StorageWebService(String id, String type, Dict dict) {
         super(id, type, dict);
+    }
+
+    /**
+     * Returns the HTTP methods implemented for the specified
+     * request. The OPTIONS or HEAD methods doesn't have to be added
+     * to the result (added automatically later).
+     *
+     * @param request        the request to check
+     *
+     * @return the array of HTTP method names supported
+     *
+     * @see #methods(Request)
+     */
+    protected String[] methodsImpl(Request request) {
+        return METHODS;
     }
 
     /**

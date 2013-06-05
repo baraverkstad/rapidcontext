@@ -177,6 +177,31 @@ public class AppWebService extends FileWebService {
     }
 
     /**
+     * Returns the HTTP methods implemented for the specified
+     * request. The OPTIONS or HEAD methods doesn't have to be added
+     * to the result (added automatically later).
+     *
+     * @param request        the request to check
+     *
+     * @return the array of HTTP method names supported
+     *
+     * @see #methods(Request)
+     */
+    protected String[] methodsImpl(Request request) {
+        if (request.matchPath("rapidcontext/storage/")) {
+            return storage.methodsImpl(request);
+        } else if (request.matchPath("rapidcontext/download")) {
+            return METHODS_POST_ONLY;
+        } else if (request.matchPath("rapidcontext/upload")) {
+            return METHODS_POST_ONLY;
+        } else if (request.matchPath("rapidcontext/procedure/")) {
+            return METHODS_POST_ONLY;
+        } else {
+            return METHODS_GET_ONLY;
+        }
+    }
+
+    /**
      * Processes a request for this handler. This method assumes
      * local request paths (removal of the mapped URL base).
      *

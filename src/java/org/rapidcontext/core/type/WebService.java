@@ -15,6 +15,7 @@
 package org.rapidcontext.core.type;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.logging.Logger;
 
@@ -45,6 +46,16 @@ public abstract class WebService extends StorableObject implements HttpUtil {
      */
     private static final Logger LOG =
         Logger.getLogger(WebService.class.getName());
+
+    /**
+     * An array with only the HTTP GET method.
+     */
+    public static final String[] METHODS_GET_ONLY = new String[] { METHOD.GET };
+
+    /**
+     * An array with only the HTTP POST method.
+     */
+    public static final String[] METHODS_POST_ONLY = new String[] { METHOD.POST };
 
     /**
      * The dictionary key for the description text.
@@ -124,18 +135,31 @@ public abstract class WebService extends StorableObject implements HttpUtil {
     public String[] methods(Request request) {
         LinkedHashSet set = new LinkedHashSet();
         set.add(METHOD.OPTIONS);
+        set.addAll(Arrays.asList(methodsImpl(request)));
         for (int i = 0; i < matchers.size(); i++) {
             WebMatcher m = (WebMatcher) matchers.get(i);
-            if (m.match(request) > 0) {
-                String method = m.method();
-                if (METHOD.GET.equals(method)) {
-                    set.add(METHOD.HEAD);
-                }
-                set.add(method);
+            if (m.method() != null && m.match(request) > 0) {
+                set.add(m.method());
             }
+        }
+        if (set.contains(METHOD.GET)) {
+            set.add(METHOD.HEAD);
         }
         return (String[]) set.toArray(new String[set.size()]);
     }
+
+    /**
+     * Returns the HTTP methods implemented for the specified
+     * request. The OPTIONS or HEAD methods doesn't have to be added
+     * to the result (added automatically later).
+     *
+     * @param request        the request to check
+     *
+     * @return the array of HTTP method names supported
+     *
+     * @see #methods(Request)
+     */
+    protected abstract String[] methodsImpl(Request request);
 
     /**
      * Returns the current session for the request. Or creates a new
