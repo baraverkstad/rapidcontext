@@ -241,22 +241,4 @@ public class StorableObject {
     public Dict serialize() {
         return dict;
     }
-
-    /**
-     * Updates this object from a serialized representation. The
-     * default implementation of this method always throws a storage
-     * exception, but subclasses using automatic object creation must
-     * implement it.<p>
-     *
-     * <strong>Note:</strong> It is important that both full and
-     * partial object representations are supported, since objects
-     * may also be modified through this method (via remote access).
-     * This method should properly handle any changes that require
-     * resource re-initialization or destruction.
-     *
-     * @param dict           the serialized representation
-     */
-    public void unserialize(Dict dict) throws StorageException {
-        throw new StorageException("operation not supported for " + path());
-    }
 }

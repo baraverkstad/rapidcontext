@@ -397,44 +397,6 @@ public class StorageWebService extends WebService {
     }
 
     /**
-     * Processes an HTTP POST request.
-     *
-     * @param request        the request to process
-     */
-    protected void doPost(Request request) {
-        if (!SecurityContext.hasWriteAccess(request.getPath())) {
-            errorUnauthorized(request);
-            return;
-        } else if (request.getPath().endsWith("/")) {
-            errorBadRequest(request, "cannot write data to folder");
-            return;
-        } else if (!Mime.isInputMatch(request, Mime.JSON)) {
-            String msg = "application/json content type required";
-            request.sendError(STATUS.UNSUPPORTED_MEDIA_TYPE, null, msg);
-            return;
-        }
-        try {
-            Storage storage = ApplicationContext.getInstance().getStorage();
-            Path path = new Path(request.getPath());
-            Metadata prev = storage.lookup(path);
-            Object data = JsSerializer.unserialize(request.getInputString());
-            storage.store(path, data);
-            if (prev == null) {
-                request.sendText(STATUS.CREATED, null, null);
-            } else {
-                request.sendText(STATUS.OK, null, null);
-            }
-        } catch (JsException e) {
-            String msg = "invalid input JSON: " + e.getMessage();
-            LOG.log(Level.WARNING, msg);
-            errorBadRequest(request, msg);
-        } catch (Exception e) {
-            LOG.log(Level.WARNING, "failed to write " + request.getPath(), e);
-            errorInternal(request, e.getMessage());
-        }
-    }
-
-    /**
      * Processes an HTTP PATCH request.
      *
      * @param request        the request to process
@@ -452,28 +414,26 @@ public class StorageWebService extends WebService {
             return;
         }
         try {
-            Storage storage = ApplicationContext.getInstance().getStorage();
-            Path path = new Path(request.getPath());
-            Object prev = storage.load(path);
             Object data = JsSerializer.unserialize(request.getInputString());
+            Path path = new Path(request.getPath());
+            Storage storage = ApplicationContext.getInstance().getStorage();
+            Object prev = storage.load(path);
+            Dict dict = (prev instanceof Dict) ? (Dict) prev : null;
+            if (prev instanceof StorableObject) {
+                dict = ((StorableObject) prev).serialize();
+            }
             if (prev == null) {
                 errorNotFound(request);
-            } else if (!(data instanceof Dict)) {
-                String msg = "data should be JSON object";
+            } else if (dict == null){
+                String msg = "resource is not object";
                 request.sendError(STATUS.UNPROCESSABLE_ENTITY, null, msg);
-            } else if (prev instanceof Dict) {
-                Dict dict = (Dict) prev;
+            } else if (!(data instanceof Dict)) {
+                String msg = "patch data should be JSON object";
+                request.sendError(STATUS.UNPROCESSABLE_ENTITY, null, msg);
+            } else {
                 dict.setAll((Dict) data);
                 storage.store(path, dict);
                 request.sendText(Mime.JSON[0], JsSerializer.serialize(dict, true));
-            } else if (prev instanceof StorableObject) {
-                StorableObject obj = (StorableObject) prev;
-                obj.unserialize((Dict) data);
-                storage.store(path, obj);
-                request.sendText(Mime.JSON[0], JsSerializer.serialize(obj, true));
-            } else {
-                String msg = "resource is not object";
-                request.sendError(STATUS.UNPROCESSABLE_ENTITY, null, msg);
             }
         } catch (JsException e) {
             String msg = "invalid input JSON: " + e.getMessage();
@@ -482,6 +442,45 @@ public class StorageWebService extends WebService {
         } catch (Exception e) {
             LOG.log(Level.WARNING, "failed to write " + request.getPath(), e);
             errorInternal(request, e.getMessage());
+        }
+    }
+
+    /**
+     * Processes an HTTP POST request.
+     *
+     * @param request        the request to process
+     */
+    protected void doPost(Request request) {
+        if (!SecurityContext.hasWriteAccess(request.getPath())) {
+            errorUnauthorized(request);
+            return;
+        } else if (request.getPath().endsWith("/")) {
+            errorBadRequest(request, "cannot write data to folder");
+            return;
+        } else if (!Mime.isInputMatch(request, Mime.JSON)) {
+            String msg = "application/json content type required";
+            request.sendError(STATUS.UNSUPPORTED_MEDIA_TYPE, null, msg);
+            return;
+        }
+        try {
+            Path path = new Path(request.getPath());
+            Path normalizedPath = normalizePath(path);
+            Object data = JsSerializer.unserialize(request.getInputString());
+            if (StorageWriteProcedure.store(path, data)) {
+                if (normalizedPath == null) {
+                    request.sendText(STATUS.CREATED, null, null);
+                } else {
+                    request.sendText(STATUS.OK, null, null);
+                }
+            } else {
+                String msg = "failed to write " + request.getPath();
+                LOG.log(Level.WARNING, msg);
+                errorInternal(request, msg);
+            }
+        } catch (JsException e) {
+            String msg = "invalid input JSON: " + e.getMessage();
+            LOG.log(Level.WARNING, msg);
+            errorBadRequest(request, msg);
         }
     }
 
