@@ -177,6 +177,8 @@ public abstract class WebService extends StorableObject implements HttpUtil {
             doGet(request);
         } else if (request.hasMethod(METHOD.POST)) {
             doPost(request);
+        } else if (request.hasMethod(METHOD.PATCH)) {
+            doPatch(request);
         } else if (request.hasMethod(METHOD.PUT)) {
             doPut(request);
         } else if (request.hasMethod(METHOD.DELETE)) {
@@ -234,6 +236,16 @@ public abstract class WebService extends StorableObject implements HttpUtil {
      * @param request        the request to process
      */
     protected void doPost(Request request) {
+        errorMethodNotAllowed(request);
+    }
+
+    /**
+     * Processes an HTTP PATCH request. By default this method will
+     * generate an HTTP 405 method not allowed error.
+     *
+     * @param request        the request to process
+     */
+    protected void doPatch(Request request) {
         errorMethodNotAllowed(request);
     }
 

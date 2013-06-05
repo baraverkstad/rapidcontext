@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -28,7 +28,7 @@ public interface HttpUtil {
 
     /**
      * The HTTP methods as defined in RFC1945 (HTTP/1.0), RFC2616
-     * (HTTP/1.1), and RFC4918 (WebDAV).
+     * (HTTP/1.1), RFC5789 (PATCH) and RFC4918 (WebDAV).
      */
     public static interface METHOD {
 
@@ -46,6 +46,9 @@ public interface HttpUtil {
 
         /** <tt>PUT</tt> (HTTP/1.1 - RFC 2616) */
         public static final String PUT = "PUT";
+
+        /** <tt>PATCH</tt> (HTTP PATCH - RFC 5789) */
+        public static final String PATCH = "PATCH";
 
         /** <tt>DELETE</tt> (HTTP/1.1 - RFC 2616) */
         public static final String DELETE = "DELETE";
@@ -314,6 +317,9 @@ public interface HttpUtil {
 
         /** RFC 2616 (HTTP/1.1) Section 14.4 */
         public static final String ACCEPT_LANGUAGE = "Accept-Language";
+
+        /** RFC 5789 (HTTP PATCH) Section 3.1 */
+        public static final String ACCEPT_PATCH = "Accept-Patch";
 
         /** RFC 2616 (HTTP/1.1) Section 14.5 */
         public static final String ACCEPT_RANGES = "Accept-Ranges";
