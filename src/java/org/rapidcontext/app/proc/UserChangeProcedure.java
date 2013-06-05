@@ -114,7 +114,7 @@ public class UserChangeProcedure implements Procedure {
         String id = bindings.getValue("id").toString();
         if (id.equals("")) {
             throw new ProcedureException("user id cannot be blank");
-        } else if (!id.matches("^[a-zA-Z][a-zA-Z0-9_]*$")) {
+        } else if (!id.matches("^[a-zA-Z0-9_/]*$")) {
             throw new ProcedureException("user id contains invalid character");
         }
         CallContext.checkWriteAccess("user/" + id);
