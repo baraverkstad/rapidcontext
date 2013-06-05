@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -88,7 +88,7 @@ public class User extends StorableObject {
      *         null if not found
      */
     public static User find(Storage storage, String id) {
-        Object obj = storage.load(PATH.descendant(new Path(id)));
+        Object obj = storage.load(new Path(PATH, id));
         return (obj instanceof User) ? (User) obj : null;
     }
 
@@ -103,7 +103,7 @@ public class User extends StorableObject {
     public static void store(Storage storage, User user)
         throws StorageException {
 
-        storage.store(PATH.child(user.id(), false), user);
+        storage.store(user.path(), user);
     }
 
     /**

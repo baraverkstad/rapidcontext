@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -58,8 +58,7 @@ public class Environment extends StorableObject {
      *         null if not found
      */
     public static Environment find(Storage storage, String id) {
-        Object  obj = storage.load(PATH.descendant(new Path(id)));
-
+        Object obj = storage.load(new Path(PATH, id));
         return (obj instanceof Environment) ? (Environment) obj : null;
     }
 

@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -111,8 +111,7 @@ public abstract class Connection extends StorableObject {
      *         null if not found
      */
     public static Connection find(Storage storage, String id) {
-        Object  obj = storage.load(PATH.descendant(new Path(id)));
-
+        Object obj = storage.load(new Path(PATH, id));
         return (obj instanceof Connection) ? (Connection) obj : null;
     }
 

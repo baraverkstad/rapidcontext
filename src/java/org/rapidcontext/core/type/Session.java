@@ -129,7 +129,7 @@ public class Session extends StorableObject {
      *         null if not found
      */
     public static Session find(Storage storage, String id) {
-        Object obj = storage.load(PATH.child(id, false));
+        Object obj = storage.load(new Path(PATH, id));
         return (obj instanceof Session) ? (Session) obj : null;
     }
 
@@ -144,7 +144,7 @@ public class Session extends StorableObject {
     public static void store(Storage storage, Session session)
         throws StorageException {
 
-        storage.store(PATH.child(session.id(), false), session);
+        storage.store(session.path(), session);
     }
 
     /**
@@ -155,7 +155,7 @@ public class Session extends StorableObject {
      */
     public static void remove(Storage storage, String id) {
         try {
-            storage.remove(PATH.child(id, false));
+            storage.remove(new Path(PATH, id));
         } catch (StorageException e) {
             LOG.log(Level.WARNING, "failed to delete session " + id, e);
         }
