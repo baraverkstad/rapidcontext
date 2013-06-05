@@ -130,10 +130,7 @@ public class StorageWebService extends WebService {
     public void process(Request request) {
         request.setResponseHeader(HEADER.DAV, "2");
         request.setResponseHeader("MS-Author-Via", "DAV");
-        // TODO: Use proper storage object access layer instead
-        if (!SecurityContext.hasWriteAccess(request.getPath())) {
-            errorUnauthorized(request);
-        } else if (request.hasMethod(METHOD.PROPFIND)) {
+        if (request.hasMethod(METHOD.PROPFIND)) {
             doPropFind(request);
         } else if (request.hasMethod(METHOD.MKCOL)) {
             doMkCol(request);
@@ -165,6 +162,12 @@ public class StorageWebService extends WebService {
         boolean             isDefault = true;
         Dict                dict;
 
+        // TODO: Change to read-access here once a solution has been devised
+        //       to disable search queries for certain paths and/or users.
+        if (!SecurityContext.hasWriteAccess(request.getPath())) {
+            errorUnauthorized(request);
+            return;
+        }
         try {
             // TODO: Extend data lookup via query language
             Path path = normalizePath(orig);
@@ -387,7 +390,10 @@ public class StorageWebService extends WebService {
      * @param request        the request to process
      */
     protected void doPost(Request request) {
-        if (request.getPath().endsWith("/")) {
+        if (!SecurityContext.hasWriteAccess(request.getPath())) {
+            errorUnauthorized(request);
+            return;
+        } else if (request.getPath().endsWith("/")) {
             errorBadRequest(request, "cannot write data to folder");
             return;
         }
@@ -419,7 +425,10 @@ public class StorageWebService extends WebService {
      * @param request        the request to process
      */
     protected void doPut(Request request) {
-        if (request.getHeader(HEADER.CONTENT_RANGE) != null) {
+        if (!SecurityContext.hasWriteAccess(request.getPath())) {
+            errorUnauthorized(request);
+            return;
+        } else if (request.getHeader(HEADER.CONTENT_RANGE) != null) {
             request.sendError(STATUS.NOT_IMPLEMENTED);
             return;
         }
@@ -456,6 +465,10 @@ public class StorageWebService extends WebService {
      * @param request        the request to process
      */
     protected void doDelete(Request request) {
+        if (!SecurityContext.hasWriteAccess(request.getPath())) {
+            errorUnauthorized(request);
+            return;
+        }
         Path path = normalizePath(new Path(request.getPath()));
         if (path == null) {
             errorNotFound(request);
@@ -485,6 +498,10 @@ public class StorageWebService extends WebService {
         Array               arr;
         String              str;
 
+        if (!SecurityContext.hasWriteAccess(request.getPath())) {
+            errorUnauthorized(request);
+            return;
+        }
         try {
             davRequest = new WebDavRequest(request);
             if (davRequest.depth() < 0 || davRequest.depth() > 1) {
@@ -571,6 +588,10 @@ public class StorageWebService extends WebService {
         Path                path;
         Metadata            meta;
 
+        if (!SecurityContext.hasWriteAccess(request.getPath())) {
+            errorUnauthorized(request);
+            return;
+        }
         try {
             path = new Path(request.getPath());
             if (!path.isIndex()) {
@@ -600,7 +621,10 @@ public class StorageWebService extends WebService {
         String prefix = StringUtils.substringBeforeLast(request.getUrl(), path);
         prefix = StringUtils.removeEnd(prefix, "/");
         String href = request.getHeader(HEADER.DESTINATION);
-        if (href == null) {
+        if (!SecurityContext.hasWriteAccess(path)) {
+            errorUnauthorized(request);
+            return;
+        } else if (href == null) {
             errorBadRequest(request, "missing Destination header");
             return;
         }
@@ -611,7 +635,10 @@ public class StorageWebService extends WebService {
         }
         Path dst = new Path(href.substring(prefix.length()));
         Path src = normalizePath(new Path(path));
-        if (src == null) {
+        if (!SecurityContext.hasWriteAccess(dst.toString())) {
+            errorUnauthorized(request);
+            return;
+        } else if (src == null) {
             errorNotFound(request);
         } else if (src.isIndex()) {
             // TODO: add support for collection moves
@@ -643,6 +670,10 @@ public class StorageWebService extends WebService {
         Dict                lockInfo;
         Metadata            meta = null;
 
+        if (!SecurityContext.hasWriteAccess(request.getPath())) {
+            errorUnauthorized(request);
+            return;
+        }
         try {
             davRequest = new WebDavRequest(request);
             if (davRequest.depth() > 0) {
@@ -684,6 +715,10 @@ public class StorageWebService extends WebService {
      * @param request        the request to process
      */
     protected void doUnlock(Request request) {
+        if (!SecurityContext.hasWriteAccess(request.getPath())) {
+            errorUnauthorized(request);
+            return;
+        }
         // TODO: remove lock
         request.sendText(STATUS.NO_CONTENT, null, null);
     }
