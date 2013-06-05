@@ -248,7 +248,7 @@ public class JsSerializer {
     /**
      * Unserializes a JavaScript literal into a Java object. I.e.
      * this method converts a JSON object into the corresponding
-     * String, Number, Boolean and/or Data objects.
+     * String, Number, Boolean, Dict and/or Array objects.
      *
      * @param str            the string to convert, or null
      *
