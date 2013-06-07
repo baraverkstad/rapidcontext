@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,7 +27,6 @@ import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.app.plugin.PluginManager;
-import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.js.JsSerializer;
@@ -92,27 +92,39 @@ public class AppWebService extends FileWebService {
 
     /**
      * Finds binary files of a specified type from the storage. The
-     * type must be used both as a named subdirectory (i.e. "css")
-     * and as file name suffix (i.e. "*.css") in order to match. The
-     * returned files will be prefixed with "rapidcontext/files/".
+     * file type is both used as a subdirectory (i.e. "files/css")
+     * and as a suffix (i.e. "*.css") when performing the search. The
+     * returned files will be prefixed with the proper path (e.g.
+     * "rapidcontext/files/") relative to the specified base path for
+     * the web service. The current platform version will be added as
+     * a parameter to the file URL:s.
      *
-     * @param base           the base storage path (e.g. "/files/")
      * @param type           the file type to find
+     * @param base           the web service root path
      *
      * @return a sorted list of all matching files found in storage
      */
-    protected static Array resources(Path base, String type) {
-        Array res = new Array();
+    protected static ArrayList resources(String type, Path base) {
+        ArrayList res = new ArrayList();
         ApplicationContext ctx = ApplicationContext.getInstance();
-        Metadata[] meta = ctx.getStorage().lookupAll(base.child(type, true));
-        String root = base.toString();
+        Path storagePath = new Path(PATH_FILES, type + "/");
+        Metadata[] meta = ctx.getStorage().lookupAll(storagePath);
+        String rootPath = PATH_FILES.toString();
+        String basePath = base.toString();
+        String ver = version();
         for (int i = 0; i < meta.length; i++) {
-            String file = StringUtils.removeStart(meta[i].path().toString(), root);
+            String file = meta[i].path().toString();
             if (meta[i].isBinary() && file.endsWith("." + type)) {
-                res.add("rapidcontext/files/" + file);
+                if (file.startsWith(basePath)) {
+                    file = StringUtils.removeStart(file, basePath);
+                } else {
+                    file = StringUtils.removeStart(file, rootPath);
+                    file = "rapidcontext/files/" + file;
+                }
+                res.add(file + "?" + ver);
             }
         }
-        res.sort();
+        Collections.sort(res);
         return res;
     }
 
@@ -321,18 +333,16 @@ public class AppWebService extends FileWebService {
             }
             // Complex text replacement & printout
             if (line.contains("%JS_FILES%")) {
-                String ver = version();
-                Array files = resources(PATH_FILES, "js");
+                ArrayList files = resources("js", path());
                 for (int i = 0; i < files.size(); i++) {
-                    String str = files.getString(i, "") + "?" + ver;
+                    String str = (String) files.get(i);
                     res.append(line.replace("%JS_FILES%", str));
                     res.append("\n");
                 }
             } else if (line.contains("%CSS_FILES%")) {
-                String ver = version();
-                Array files = resources(PATH_FILES, "css");
+                ArrayList files = resources("css", path());
                 for (int i = 0; i < files.size(); i++) {
-                    String str = files.getString(i, "") + "?" + ver;
+                    String str = (String) files.get(i);
                     res.append(line.replace("%CSS_FILES%", str));
                     res.append("\n");
                 }
