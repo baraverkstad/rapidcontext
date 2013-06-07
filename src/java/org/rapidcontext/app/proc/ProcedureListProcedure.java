@@ -95,6 +95,7 @@ public class ProcedureListProcedure implements Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
+        CallContext.checkSearchAccess("procedure/");
         String[] names = cx.getLibrary().getProcedureNames();
         Array list = new Array(names.length);
         for (int i = 0; i < names.length; i++) {

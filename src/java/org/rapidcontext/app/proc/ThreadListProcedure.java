@@ -97,6 +97,7 @@ public class ThreadListProcedure implements Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
+        CallContext.checkSearchAccess("thread/");
         Array res = new Array(100);
         ThreadGroup root = Thread.currentThread().getThreadGroup().getParent();
         while (root.getParent() != null) {

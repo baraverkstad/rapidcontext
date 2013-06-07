@@ -129,6 +129,19 @@ public class SecurityContext {
     }
 
     /**
+     * Checks if the currently authenticated user has search access to
+     * a storage path.
+     *
+     * @param path           the object storage path
+     *
+     * @return true if the current user has search access, or
+     *         false otherwise
+     */
+    public static boolean hasSearchAccess(String path) {
+        return hasAccess(path, Role.PERM_SEARCH);
+    }
+
+    /**
      * Checks if the currently authenticated user has write access to
      * a storage path.
      *

@@ -99,6 +99,8 @@ public class ConnectionListProcedure implements Procedure {
      */
     public Object call(CallContext cx, Bindings bindings)
     throws ProcedureException {
+
+        CallContext.checkSearchAccess(Connection.PATH.toString());
         Metadata[] meta = cx.getStorage().lookupAll(Connection.PATH);
         Array res = new Array(meta.length);
         for (int i = 0; i < meta.length; i++) {

@@ -102,6 +102,7 @@ public class PluginListProcedure implements Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
+        CallContext.checkSearchAccess("plugin/");
         ApplicationContext ctx = ApplicationContext.getInstance();
         Dict dict = (Dict) ctx.getStorage().load(Storage.PATH_STORAGEINFO);
         Array arr = dict.getArray("storages");

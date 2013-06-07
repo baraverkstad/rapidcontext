@@ -102,6 +102,7 @@ public class UserListProcedure implements Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
+        CallContext.checkSearchAccess(User.PATH.toString());
         Storage storage = cx.getStorage();
         Metadata[] meta = storage.lookupAll(User.PATH);
         Array res = new Array(meta.length);

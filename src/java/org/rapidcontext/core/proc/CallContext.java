@@ -303,6 +303,24 @@ public class CallContext {
     }
 
     /**
+     * Checks if the currently authenticated user has search access to
+     * a storage path.
+     *
+     * @param path           the object storage path
+     *
+     * @throws ProcedureException if the current user didn't have
+     *             search access
+     */
+    public static void checkSearchAccess(String path) throws ProcedureException {
+        if (!SecurityContext.hasSearchAccess(path)) {
+            User user = SecurityContext.currentUser();
+            String userInfo = (user == null) ? "anonymous user" : user.toString();
+            LOG.info("search permission denied for " + path + ", " + userInfo);
+            throw new ProcedureException("permission denied");
+        }
+    }
+
+    /**
      * Checks if the currently authenticated user has write access to
      * a storage path.
      *

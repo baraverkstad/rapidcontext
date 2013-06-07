@@ -107,6 +107,7 @@ public class AppListProcedure implements Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
+        CallContext.checkSearchAccess(PATH_APP.toString());
         ApplicationContext ctx = ApplicationContext.getInstance();
         Storage storage = cx.getStorage();
         Metadata[] list = storage.lookupAll(PATH_APP);

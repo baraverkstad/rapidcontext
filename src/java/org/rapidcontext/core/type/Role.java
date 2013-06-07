@@ -84,6 +84,7 @@ public class Role extends StorableObject {
      * @see #PERM_NONE
      * @see #PERM_INTERNAL
      * @see #PERM_READ
+     * @see #PERM_SEARCH
      * @see #PERM_WRITE
      * @see #PERM_ALL
      */
@@ -103,6 +104,11 @@ public class Role extends StorableObject {
      * The permission key for read access.
      */
     public static final String PERM_READ = "read";
+
+    /**
+     * The permission key for search access.
+     */
+    public static final String PERM_SEARCH = "search";
 
     /**
      * The permission key for write access.
@@ -228,18 +234,25 @@ public class Role extends StorableObject {
                             map.put(PERM_NONE, Boolean.TRUE);
                             map.put(PERM_INTERNAL, Boolean.FALSE);
                             map.put(PERM_READ, Boolean.FALSE);
+                            map.put(PERM_SEARCH, Boolean.FALSE);
                             map.put(PERM_WRITE, Boolean.FALSE);
                             map.put(PERM_ALL, Boolean.FALSE);
                         } else if (list[j].equalsIgnoreCase(PERM_ALL)) {
                             map.put(PERM_NONE, Boolean.FALSE);
                             map.put(PERM_INTERNAL, Boolean.TRUE);
                             map.put(PERM_READ, Boolean.TRUE);
+                            map.put(PERM_SEARCH, Boolean.TRUE);
                             map.put(PERM_WRITE, Boolean.TRUE);
                             map.put(PERM_ALL, Boolean.TRUE);
                         } else if (list[j].equalsIgnoreCase(PERM_WRITE)) {
                             map.put(PERM_INTERNAL, Boolean.TRUE);
                             map.put(PERM_READ, Boolean.TRUE);
+                            map.put(PERM_SEARCH, Boolean.TRUE);
                             map.put(PERM_WRITE, Boolean.TRUE);
+                        } else if (list[j].equalsIgnoreCase(PERM_SEARCH)) {
+                            map.put(PERM_INTERNAL, Boolean.TRUE);
+                            map.put(PERM_SEARCH, Boolean.TRUE);
+                            map.put(PERM_READ, Boolean.TRUE);
                         } else if (list[j].equalsIgnoreCase(PERM_READ)) {
                             map.put(PERM_INTERNAL, Boolean.TRUE);
                             map.put(PERM_READ, Boolean.TRUE);
@@ -282,8 +295,7 @@ public class Role extends StorableObject {
             glob = glob.replace("[", "\\[").replace("]", "\\]");
             glob = glob.replace("{", "\\{").replace("}", "\\}");
             glob = glob.replace("**", ".+");
-            glob = glob.replace("*", "[^/]*");
-            glob = glob.replace(".+", ".*");
+            glob = glob.replace("*", "[^/]+");
             glob = glob.replace("?", ".");
             try {
                 m = Pattern.compile("^" + glob + "$");
