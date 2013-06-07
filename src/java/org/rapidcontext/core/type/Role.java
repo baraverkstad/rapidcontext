@@ -295,7 +295,8 @@ public class Role extends StorableObject {
             glob = glob.replace("[", "\\[").replace("]", "\\]");
             glob = glob.replace("{", "\\{").replace("}", "\\}");
             glob = glob.replace("**", ".+");
-            glob = glob.replace("*", "[^/]+");
+            glob = glob.replace("*", "[^/]*");
+            glob = glob.replace(".+", ".*");
             glob = glob.replace("?", ".");
             try {
                 m = Pattern.compile("^" + glob + "$");
