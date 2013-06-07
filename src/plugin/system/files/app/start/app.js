@@ -144,7 +144,7 @@ StartApp.prototype._initApps = function () {
             help = app;
         } else if (app.id === "admin") {
             admin = app;
-        } else if (app.launch == "manual" || app.launch == "auto") {
+        } else if (app.launch == "auto" || app.launch == "manual" || app.launch == "window") {
             launchers.push(app);
         }
     }
@@ -170,7 +170,11 @@ StartApp.prototype._initApps = function () {
         var iconAttrs = { ref: "EXPAND", tooltip: "Open in new window",
                           style: style };
         var expIcon = RapidContext.Widget.Icon(iconAttrs);
-        expIcon.hide();
+        if (app.launch == "window") {
+            expIcon.addClass("launch-window");
+        } else {
+            expIcon.hide();
+        }
         var style = { margin: "0", lineHeight: "18px", color: "#1E466E" };
         var title = MochiKit.DOM.H3({ style: style }, app.name, expIcon);
         var desc = MochiKit.DOM.SPAN(null, app.description);
@@ -262,7 +266,7 @@ StartApp.prototype._handleKeyEvent = function (evt) {
  * @param {Boolean} visible the visible flag
  */
 StartApp.prototype._showAppModifiers = function (visible) {
-    var icons = MochiKit.DOM.getElementsByTagAndClassName(null, "widgetIcon", this.ui.appTable);
+    var icons = $(this.ui.appTable).find(".widgetIcon").not(".launch-window");
     for (var i = 0; i < icons.length; i++) {
         if (visible) {
             icons[i].show();
@@ -285,7 +289,9 @@ StartApp.prototype._handleAppLaunch = function (evt) {
     if (tr != null) {
         var appId = MochiKit.DOM.getNodeAttribute(tr, "data-appid");
         if (appId) {
-            this.startApp(appId, evt.modifier().any ? window.open() : null);
+            var app = RapidContext.App.findApp(appId);
+            var win = evt.modifier().any || (app && app.launch == "window");
+            this.startApp(appId, win ? window.open() : null);
             this._showAppModifiers(false);
         }
     }
