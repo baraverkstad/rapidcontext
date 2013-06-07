@@ -102,16 +102,12 @@ public class AppWebService extends FileWebService {
      * @return a sorted list of all matching files found in storage
      */
     protected static Array resources(Path base, String type) {
-        ApplicationContext  ctx = ApplicationContext.getInstance();
-        String              root = base.toString();
-        Path                path = base.child(type, true);
-        Metadata[]          meta;
-        String              file;
-        Array               res = new Array();
-
-        meta = ctx.getStorage().lookupAll(path);
+        Array res = new Array();
+        ApplicationContext ctx = ApplicationContext.getInstance();
+        Metadata[] meta = ctx.getStorage().lookupAll(base.child(type, true));
+        String root = base.toString();
         for (int i = 0; i < meta.length; i++) {
-            file = StringUtils.removeStart(meta[i].path().toString(), root);
+            String file = StringUtils.removeStart(meta[i].path().toString(), root);
             if (meta[i].isBinary() && file.endsWith("." + type)) {
                 res.add("rapidcontext/files/" + file);
             }
@@ -263,26 +259,20 @@ public class AppWebService extends FileWebService {
      * @param baseUrl        the base URL for requests
      */
     protected void processApp(Request request, String appId, String baseUrl) {
-        ApplicationContext  ctx = ApplicationContext.getInstance();
-        Path                path;
-        Binary              template;
-        Object              obj;
-        String              str;
-
         session(request, true);
-        path = PATH_FILES.child("index.tmpl", false);
-        obj = ctx.getStorage().load(path);
+        Path path = PATH_FILES.child("index.tmpl", false);
+        Object obj = ApplicationContext.getInstance().getStorage().load(path);
         if (obj instanceof Binary) {
-            template = (Binary) obj;
+            Binary template = (Binary) obj;
             try {
-                str = processAppTemplate(template, baseUrl, appId);
+                String str = processAppTemplate(template, baseUrl, appId);
                 request.sendText(Mime.HTML[0], str);
             } catch (IOException e) {
                 LOG.log(Level.WARNING, "failed to launch app: " + appId, e);
                 errorInternal(request, e.getMessage());
             }
         } else {
-            str = "app template 'index.tmpl' not found";
+            String str = "app template 'index.tmpl' not found";
             LOG.log(Level.WARNING, "app template 'index.tmpl' not found");
             errorInternal(request, str);
         }
@@ -302,16 +292,10 @@ public class AppWebService extends FileWebService {
     protected String processAppTemplate(Binary template, String baseUrl, String appId)
     throws IOException {
 
-        InputStreamReader  is;
-        BufferedReader     reader;
-        String             line;
-        Array              files;
-        String             ver = version();
-        StringBuilder      res = new StringBuilder();
-        String             str;
-
-        is = new InputStreamReader(template.openStream(), "UTF-8");
-        reader = new BufferedReader(is);
+        InputStreamReader is = new InputStreamReader(template.openStream(), "UTF-8");
+        BufferedReader reader = new BufferedReader(is);
+        StringBuilder res = new StringBuilder();
+        String line;
         while ((line = reader.readLine()) != null) {
             // Simple text replacement
             if (line.contains("%APP_ID%")) {
@@ -325,7 +309,7 @@ public class AppWebService extends FileWebService {
                 line = line.replace("%TITLE%", title());
             }
             if (line.contains("%FAVICON%")) {
-                str = favicon();
+                String str = favicon();
                 line = line.replace("%FAVICON%", str);
                 line = line.replace("%FAVICON.MIME%", Mime.type(str));
             }
@@ -337,16 +321,18 @@ public class AppWebService extends FileWebService {
             }
             // Complex text replacement & printout
             if (line.contains("%JS_FILES%")) {
-                files = resources(PATH_FILES, "js");
+                String ver = version();
+                Array files = resources(PATH_FILES, "js");
                 for (int i = 0; i < files.size(); i++) {
-                    str = files.getString(i, "") + "?" + ver;
+                    String str = files.getString(i, "") + "?" + ver;
                     res.append(line.replace("%JS_FILES%", str));
                     res.append("\n");
                 }
             } else if (line.contains("%CSS_FILES%")) {
-                files = resources(PATH_FILES, "css");
+                String ver = version();
+                Array files = resources(PATH_FILES, "css");
                 for (int i = 0; i < files.size(); i++) {
-                    str = files.getString(i, "") + "?" + ver;
+                    String str = files.getString(i, "") + "?" + ver;
                     res.append(line.replace("%CSS_FILES%", str));
                     res.append("\n");
                 }
@@ -369,11 +355,8 @@ public class AppWebService extends FileWebService {
      * @param request        the request to process
      */
     protected void processDownload(Request request) {
-        String  name = request.getParameter("fileName", request.getPath());
-        String  data = request.getParameter("fileData");
-        String  mimeType = request.getParameter("mimeType", Mime.type(name));
-        String  disp = "attachment";
-
+        String name = request.getParameter("fileName", request.getPath());
+        String data = request.getParameter("fileData");
         if (data == null) {
             errorBadRequest(request, "Missing 'fileData' parameter");
         } else {
@@ -381,11 +364,13 @@ public class AppWebService extends FileWebService {
                 if (name.indexOf("/") >= 0) {
                     name = StringUtils.substringAfterLast(name, "/");
                 }
+                String disp = "attachment";
                 if (name.length() > 0) {
                     disp += "; filename=" + name;
                 }
                 request.setResponseHeader("Content-Disposition", disp);
             }
+            String mimeType = request.getParameter("mimeType", Mime.type(name));
             request.sendText(mimeType, data);
         }
     }
@@ -397,29 +382,25 @@ public class AppWebService extends FileWebService {
      * @param request        the request to process
      */
     protected void processUpload(Request request) {
-        Session          session = (Session) Session.activeSession.get();
-        FileItemStream   stream;
-        String           fileId = request.getPath();
-        String           fileName;
-        File             file;
-
+        Session session = (Session) Session.activeSession.get();
         if (session == null) {
             errorUnauthorized(request);
             return;
         }
         try {
-            stream = request.getNextFile();
+            FileItemStream stream = request.getNextFile();
             if (stream == null) {
                 errorBadRequest(request, "Missing file data");
                 return;
             }
-            fileName = stream.getName();
+            String fileName = stream.getName();
             if (fileName.lastIndexOf("/") >= 0) {
                 fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
             }
             if (fileName.lastIndexOf("\\") >= 0) {
                 fileName = fileName.substring(fileName.lastIndexOf("\\") + 1);
             }
+            String fileId = request.getPath();
             while (fileId != null && fileId.startsWith("/")) {
                 fileId = fileId.substring(1);
             }
@@ -427,7 +408,7 @@ public class AppWebService extends FileWebService {
                 fileId = fileName;
             }
             session.removeFile(fileId);
-            file = FileUtil.tempFile(fileName);
+            File file = FileUtil.tempFile(fileName);
             FileUtil.copy(stream.openStream(), file);
             session.addFile(fileId, file);
             request.sendText(Mime.TEXT[0], "Session file " + fileId + " uploaded");
@@ -444,21 +425,17 @@ public class AppWebService extends FileWebService {
      * @param request        the request to process
      */
     protected void processProcedure(Request request) {
-        ApplicationContext  ctx = ApplicationContext.getInstance();
-        Dict                res = new Dict();
-        ArrayList           argList = new ArrayList();
-        Object[]            args;
-        String              source = "web [" + request.getRemoteAddr() + "]";
-        StringBuffer        trace = null;
-        String              str = "";
-        Object              obj;
-
         session(request, true);
+        Dict res = new Dict();
         res.set("data", null);
         res.set("trace", null);
         res.set("error", null);
+        String source = "web [" + request.getRemoteAddr() + "]";
         LOG.fine(source + ": init procedure call " + request.getPath());
+        StringBuffer trace = null;
         try {
+            ArrayList argList = new ArrayList();
+            String str = "";
             for (int i = 0; str != null; i++) {
                 str = request.getParameter("arg" + i, null);
                 if (str != null) {
@@ -466,11 +443,12 @@ public class AppWebService extends FileWebService {
                     argList.add(JsSerializer.unserialize(str));
                 }
             }
-            args = argList.toArray();
+            Object[] args = argList.toArray();
             if (request.getParameter("trace", null) != null) {
                 trace = new StringBuffer();
             }
-            obj = ctx.execute(request.getPath(), args, source, trace);
+            ApplicationContext ctx = ApplicationContext.getInstance();
+            Object obj = ctx.execute(request.getPath(), args, source, trace);
             res.set("data", obj);
             LOG.fine(source + ": done procedure call " + request.getPath());
         } catch (Exception e) {
