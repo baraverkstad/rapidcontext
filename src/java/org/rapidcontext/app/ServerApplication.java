@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -129,9 +129,8 @@ public class ServerApplication {
         }
         ApplicationContext.init(appDir, localDir, false);
         server = new Server(findAvailablePort(port));
-        Context root = new Context(server, "/", Context.SESSIONS);
+        Context root = new Context(server, "/", Context.NO_SESSIONS);
         root.setResourceBase(appDir.toString());
-        root.getSessionHandler().getSessionManager().setMaxInactiveInterval(240 * 60);
         root.addServlet(new ServletHolder(new ServletApplication()), "/*");
         server.setStopAtShutdown(true);
         port = server.getConnectors()[0].getPort();
