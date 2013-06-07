@@ -331,6 +331,15 @@ public class AppWebService extends FileWebService {
             if (line.contains("%BASE_URL%")) {
                 line = line.replace("%BASE_URL%", baseUrl);
             }
+            if (line.contains("%BASE_PATH%")) {
+                if (PATH_FILES.equals(path())) {
+                    // Skip this line, no config needed
+                    continue;
+                }
+                String str = StringUtils.removeStart(path().toString(),
+                                                     PATH_FILES.toString());
+                line = line.replace("%BASE_PATH%", str);
+            }
             // Complex text replacement & printout
             if (line.contains("%JS_FILES%")) {
                 ArrayList files = resources("js", path());

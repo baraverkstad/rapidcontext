@@ -231,18 +231,26 @@ RapidContext.App.startApp = function (app, container) {
         launcher.resource = {};
         for (var i = 0; i < launcher.resources.length; i++) {
             var res = launcher.resources[i];
+            var url = res.url || "";
+            if (RapidContext._basePath) {
+                if (url.indexOf(RapidContext._basePath) == 0) {
+                    url = url.substring(RapidContext._basePath.length);
+                } else if (url.indexOf(":") < 0) {
+                    url = "rapidcontext/files/" + url;
+                }
+            }
             if (res.type == "code" || res.type == "js" || res.type == "javascript") {
-                d.addCallback(MochiKit.Base.partial(RapidContext.App.loadScript, res.url));
+                d.addCallback(MochiKit.Base.partial(RapidContext.App.loadScript, url));
             } else if (res.type == "style" || res.type == "css") {
-                d.addCallback(MochiKit.Base.partial(RapidContext.App.loadStyles, res.url));
+                d.addCallback(MochiKit.Base.partial(RapidContext.App.loadStyles, url));
             } else if (res.type == "ui") {
-                d.addCallback(MochiKit.Base.partial(RapidContext.App.loadXML, res.url));
+                d.addCallback(MochiKit.Base.partial(RapidContext.App.loadXML, url));
                 d.addCallback(RapidContext.App._cbAssign(launcher, "ui"));
             } else if (res.type == "json" && res.id != null) {
-                d.addCallback(MochiKit.Base.partial(RapidContext.App.loadJSON, res.url, null, null));
+                d.addCallback(MochiKit.Base.partial(RapidContext.App.loadJSON, url, null, null));
                 d.addCallback(RapidContext.App._cbAssign(launcher.resource, res.id));
             } else if (res.id != null) {
-                launcher.resource[res.id] = res.url;
+                launcher.resource[res.id] = url;
             }
         }
         var stack = RapidContext.Util.stackTrace();
