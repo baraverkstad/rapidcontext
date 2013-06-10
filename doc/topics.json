@@ -14,18 +14,20 @@
         { "topic": "2.6. Connections", "url": "doc/2_install.html#connections" },
         { "topic": "2.7. Environments", "url": "doc/2_install.html#environments" }
     ] },
-    { "topic": "3. Plug-Ins & Storage", "url": "doc/3_storage.html", "children": [
-        { "topic": "3.1. Plug-Ins & Server Files", "url": "doc/3_storage.html#plugins" },
-        { "topic": "3.2. Storage Overview", "url": "doc/3_storage.html#storage" },
-        { "topic": "3.3. Storage Tree", "url": "doc/3_storage.html#storage_tree" },
-        { "topic": "3.4. Storage Data Types", "url": "doc/3_storage.html#storage_type" }
+    { "topic": "3. Users & Security", "url": "doc/3_security.html", "children": [
+        { "topic": "3.1. Default Users & Roles", "url": "doc/3_security.html#default_users" },
+        { "topic": "3.2. User Authentication", "url": "doc/3_security.html#user_authentication" },
+        { "topic": "3.3. Sessions & Persistent Cookie Authentication", "url": "doc/3_security.html#sessions" },
+        { "topic": "3.4. User Management & Storage", "url": "doc/3_security.html#user_management" },
+        { "topic": "3.5. Roles & Access Control", "url": "doc/3_security.html#roles_access_control" },
+        { "topic": "3.6. Role Management & Storage", "url": "doc/3_security.html#role_management" },
+        { "topic": "3.7. Security Checklist", "url": "doc/3_security.html#security_checklist" }
     ] },
-    { "topic": "4. Users & Security", "url": "doc/4_security.html", "children": [
-        { "topic": "4.1. Default Users & Roles", "url": "doc/4_security.html#default_users" },
-        { "topic": "4.2. User Authentication", "url": "doc/4_security.html#user_authentication" },
-        { "topic": "4.3. Managing Users", "url": "doc/4_security.html#managing_users" },
-        { "topic": "4.4. Roles & Access Control", "url": "doc/4_security.html#roles_access_control" },
-        { "topic": "4.5. Security Checklist", "url": "doc/4_security.html#security_checklist" }
+    { "topic": "4. Plug-Ins & Storage", "url": "doc/4_storage.html", "children": [
+        { "topic": "4.1. Plug-Ins & Server Files", "url": "doc/4_storage.html#plugins" },
+        { "topic": "4.2. Storage Overview", "url": "doc/4_storage.html#storage" },
+        { "topic": "4.3. Storage Tree", "url": "doc/4_storage.html#storage_tree" },
+        { "topic": "4.4. Storage Data Types", "url": "doc/4_storage.html#storage_type" }
     ] },
     { "topic": "5. Server-side & Plug-In Development", "url": "doc/5_plugin_dev.html", "children": [
         { "topic": "5.1. Plug-in Structure", "url": "doc/5_plugin_dev.html#plugin_struct" },
