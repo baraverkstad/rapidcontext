@@ -19,6 +19,7 @@ import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.SecurityContext;
+import org.rapidcontext.core.type.User;
 
 /**
  * The built-in user access control procedure.
@@ -26,13 +27,12 @@ import org.rapidcontext.core.security.SecurityContext;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class UserCheckAccessProcedure implements Procedure {
-    // TODO: Replace this procedure with something more generic
+public class UserAccessProcedure implements Procedure {
 
     /**
      * The procedure name constant.
      */
-    public static final String NAME = "System.User.CheckAccess";
+    public static final String NAME = "System.User.Access";
 
     /**
      * The default bindings.
@@ -44,11 +44,13 @@ public class UserCheckAccessProcedure implements Procedure {
      *
      * @throws ProcedureException if the initialization failed
      */
-    public UserCheckAccessProcedure() throws ProcedureException {
-        defaults.set("type", Bindings.ARGUMENT, "",
-                     "The type of the object to check");
-        defaults.set("name", Bindings.ARGUMENT, "",
-                     "The name of the object to check");
+    public UserAccessProcedure() throws ProcedureException {
+        defaults.set("path", Bindings.ARGUMENT, "",
+                     "The storage path to check");
+        defaults.set("permission", Bindings.ARGUMENT, "",
+                     "The permission type to check, or null for 'read'");
+        defaults.set("user", Bindings.ARGUMENT, "",
+                     "The user id to check, or null for current user");
         defaults.seal();
     }
 
@@ -67,7 +69,7 @@ public class UserCheckAccessProcedure implements Procedure {
      * @return the procedure description
      */
     public String getDescription() {
-        return "Checks access control for the current user on an object.";
+        return "Checks access to a storage object for a user.";
     }
 
     /**
@@ -101,8 +103,18 @@ public class UserCheckAccessProcedure implements Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        String type = bindings.getValue("type").toString();
-        String name = bindings.getValue("name").toString();
-        return Boolean.valueOf(SecurityContext.hasReadAccess(type + "/" + name));
+        String path = bindings.getValue("path").toString();
+        String perm = bindings.getValue("permission", "read").toString();
+        String userId = bindings.getValue("user", "").toString();
+        if (userId.trim().length() <= 0) {
+            return Boolean.valueOf(SecurityContext.hasAccess(path, perm));
+        } else {
+            CallContext.checkReadAccess("user/" + userId);
+            User user = null;
+            if (!userId.equalsIgnoreCase("anonymous")) {
+                user = User.find(cx.getStorage(), userId);
+            }
+            return Boolean.valueOf(SecurityContext.hasAccess(user, path, perm));
+        }
     }
 }

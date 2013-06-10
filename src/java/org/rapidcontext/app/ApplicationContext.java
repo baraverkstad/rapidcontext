@@ -53,7 +53,7 @@ import org.rapidcontext.app.proc.ThreadInterruptProcedure;
 import org.rapidcontext.app.proc.ThreadListProcedure;
 import org.rapidcontext.app.proc.TypeListProcedure;
 import org.rapidcontext.app.proc.UserChangeProcedure;
-import org.rapidcontext.app.proc.UserCheckAccessProcedure;
+import org.rapidcontext.app.proc.UserAccessProcedure;
 import org.rapidcontext.app.proc.UserListProcedure;
 import org.rapidcontext.app.proc.UserPasswordChangeProcedure;
 import org.rapidcontext.core.data.Array;
@@ -287,8 +287,8 @@ public class ApplicationContext {
             library.addBuiltIn(new ThreadInterruptProcedure());
             library.addBuiltIn(new ThreadListProcedure());
             library.addBuiltIn(new TypeListProcedure());
+            library.addBuiltIn(new UserAccessProcedure());
             library.addBuiltIn(new UserChangeProcedure());
-            library.addBuiltIn(new UserCheckAccessProcedure());
             library.addBuiltIn(new UserListProcedure());
             library.addBuiltIn(new UserPasswordChangeProcedure());
         } catch (ProcedureException e) {

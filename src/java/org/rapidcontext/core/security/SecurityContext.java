@@ -112,7 +112,7 @@ public class SecurityContext {
      *         false otherwise
      */
     public static boolean hasInternalAccess(String path) {
-        return hasAccess(path, Role.PERM_INTERNAL);
+        return hasAccess(currentUser(), path, Role.PERM_INTERNAL);
     }
 
     /**
@@ -125,7 +125,7 @@ public class SecurityContext {
      *         false otherwise
      */
     public static boolean hasReadAccess(String path) {
-        return hasAccess(path, Role.PERM_READ);
+        return hasAccess(currentUser(), path, Role.PERM_READ);
     }
 
     /**
@@ -138,7 +138,7 @@ public class SecurityContext {
      *         false otherwise
      */
     public static boolean hasSearchAccess(String path) {
-        return hasAccess(path, Role.PERM_SEARCH);
+        return hasAccess(currentUser(), path, Role.PERM_SEARCH);
     }
 
     /**
@@ -151,7 +151,7 @@ public class SecurityContext {
      *         false otherwise
      */
     public static boolean hasWriteAccess(String path) {
-        return hasAccess(path, Role.PERM_WRITE);
+        return hasAccess(currentUser(), path, Role.PERM_WRITE);
     }
 
     /**
@@ -167,7 +167,23 @@ public class SecurityContext {
      * @see Role#hasAccess(String, String)
      */
     public static boolean hasAccess(String path, String permission) {
-        User user = currentUser();
+        return hasAccess(currentUser(), path, permission);
+    }
+
+    /**
+     * Checks if the specified user has has access permission for a
+     * storage path.
+     *
+     * @param user           the user to check, or null or anonymous
+     * @param path           the object storage path
+     * @param permission     the requested permission
+     *
+     * @return true if the current user has access, or
+     *         false otherwise
+     *
+     * @see Role#hasAccess(String, String)
+     */
+    public static boolean hasAccess(User user, String path, String permission) {
         path = StringUtils.removeStart(path, "/");
         permission = permission.toLowerCase().trim();
         for (int i = 0; i < roleCache.length; i++) {
