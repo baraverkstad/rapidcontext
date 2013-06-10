@@ -15,7 +15,7 @@
 package org.rapidcontext.core.type;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -225,49 +225,37 @@ public class Role extends StorableObject {
             Dict dict = arr.getDict(i);
             if (matchPath(dict, path)) {
                 String perms = dict.getString(ACCESS_PERMISSION, "").trim();
-                HashMap map = (HashMap) dict.get("_" + ACCESS_PERMISSION);
-                if (map == null) {
-                    map = new HashMap();
+                HashSet set = (HashSet) dict.get("_" + ACCESS_PERMISSION);
+                if (set == null) {
                     String[] list = perms.split("[,;\\s]+");
+                    set = new HashSet(list.length + 1);
                     for (int j = 0; j < list.length; j++) {
                         if (list[j].equalsIgnoreCase(PERM_NONE)) {
-                            map.put(PERM_NONE, Boolean.TRUE);
-                            map.put(PERM_INTERNAL, Boolean.FALSE);
-                            map.put(PERM_READ, Boolean.FALSE);
-                            map.put(PERM_SEARCH, Boolean.FALSE);
-                            map.put(PERM_WRITE, Boolean.FALSE);
-                            map.put(PERM_ALL, Boolean.FALSE);
+                            set.add(PERM_NONE);
                         } else if (list[j].equalsIgnoreCase(PERM_ALL)) {
-                            map.put(PERM_NONE, Boolean.FALSE);
-                            map.put(PERM_INTERNAL, Boolean.TRUE);
-                            map.put(PERM_READ, Boolean.TRUE);
-                            map.put(PERM_SEARCH, Boolean.TRUE);
-                            map.put(PERM_WRITE, Boolean.TRUE);
-                            map.put(PERM_ALL, Boolean.TRUE);
+                            set.add(PERM_ALL);
                         } else if (list[j].equalsIgnoreCase(PERM_WRITE)) {
-                            map.put(PERM_INTERNAL, Boolean.TRUE);
-                            map.put(PERM_READ, Boolean.TRUE);
-                            map.put(PERM_SEARCH, Boolean.TRUE);
-                            map.put(PERM_WRITE, Boolean.TRUE);
+                            set.add(PERM_WRITE);
                         } else if (list[j].equalsIgnoreCase(PERM_SEARCH)) {
-                            map.put(PERM_INTERNAL, Boolean.TRUE);
-                            map.put(PERM_SEARCH, Boolean.TRUE);
-                            map.put(PERM_READ, Boolean.TRUE);
+                            set.add(PERM_SEARCH);
                         } else if (list[j].equalsIgnoreCase(PERM_READ)) {
-                            map.put(PERM_INTERNAL, Boolean.TRUE);
-                            map.put(PERM_READ, Boolean.TRUE);
+                            set.add(PERM_INTERNAL);
+                            set.add(PERM_READ);
                         } else if (list[j].length() <= 0) {
-                            map.put(PERM_INTERNAL, Boolean.TRUE);
-                            map.put(PERM_READ, Boolean.TRUE);
+                            set.add(PERM_INTERNAL);
+                            set.add(PERM_READ);
                         } else {
-                            map.put(list[j].toLowerCase(), Boolean.TRUE);
+                            set.add(list[j].toLowerCase());
                         }
                     }
-                    dict.set("_" + ACCESS_PERMISSION, map);
+                    dict.set("_" + ACCESS_PERMISSION, set);
                 }
-                Boolean bool = (Boolean) map.get(permission.toLowerCase());
-                if (bool != null) {
-                    return bool.booleanValue();
+                if (set.contains(PERM_NONE)) {
+                    return false;
+                } else if (set.contains(PERM_ALL)) {
+                    return true;
+                } else if (set.contains(permission)) {
+                    return true;
                 }
             }
         }
