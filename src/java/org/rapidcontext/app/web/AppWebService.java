@@ -74,6 +74,11 @@ public class AppWebService extends FileWebService {
     public static final String KEY_LANG = "lang";
 
     /**
+     * The dictionary key for the page viewport meta-data.
+     */
+    public static final String KEY_VIEWPORT = "viewport";
+
+    /**
      * The storage web service used for the to "rapidcontext/storage"
      * URLs.
      */
@@ -182,6 +187,16 @@ public class AppWebService extends FileWebService {
      */
     public String lang() {
         return dict.getString(KEY_LANG, "en");
+    }
+
+    /**
+     * Returns the page viewport meta data.
+     *
+     * @return the page viewport meta data, or
+     *         "width=700" if not defined
+     */
+    public String viewport() {
+        return dict.getString(KEY_VIEWPORT, "width=700");
     }
 
     /**
@@ -327,6 +342,9 @@ public class AppWebService extends FileWebService {
             }
             if (line.contains("%LANG%")) {
                 line = line.replace("%LANG%", lang());
+            }
+            if (line.contains("%VIEWPORT%")) {
+                line = line.replace("%VIEWPORT%", viewport());
             }
             if (line.contains("%BASE_URL%")) {
                 line = line.replace("%BASE_URL%", baseUrl);
