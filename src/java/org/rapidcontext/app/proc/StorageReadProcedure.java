@@ -22,6 +22,7 @@ import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.storage.Path;
+import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.core.storage.Storage;
 
 /**
@@ -119,6 +120,8 @@ public class StorageReadProcedure implements Procedure {
             dict.set("mimeType", data.mimeType());
             dict.set("size", new Long(data.size()));
             res = dict;
+        } else if (res instanceof StorableObject) {
+            res = ((StorableObject) res).serialize();
         }
         return res;
     }
