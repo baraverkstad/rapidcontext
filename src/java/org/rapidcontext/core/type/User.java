@@ -49,6 +49,11 @@ public class User extends StorableObject {
     public static final String KEY_NAME = "name";
 
     /**
+     * The dictionary key for the user email address.
+     */
+    public static final String KEY_EMAIL = "email";
+
+    /**
      * The dictionary key for the user description.
      */
     public static final String KEY_DESCRIPTION = "description";
@@ -116,6 +121,7 @@ public class User extends StorableObject {
     public User(String id, String type, Dict dict) {
         super(id, type, dict);
         dict.set(KEY_NAME, name());
+        dict.set(KEY_EMAIL, email());
         dict.set(KEY_DESCRIPTION, description());
         dict.setBoolean(KEY_ENABLED, isEnabled());
         dict.set(KEY_REALM, realm());
@@ -131,6 +137,7 @@ public class User extends StorableObject {
     public User(String id) {
         super(id, "user");
         dict.set(KEY_NAME, name());
+        dict.set(KEY_EMAIL, email());
         dict.set(KEY_DESCRIPTION, description());
         dict.setBoolean(KEY_ENABLED, isEnabled());
         dict.set(KEY_REALM, realm());
@@ -153,6 +160,24 @@ public class User extends StorableObject {
      */
     public void setName(String name) {
         dict.set(KEY_NAME, name);
+    }
+
+    /**
+     * Returns the user email address.
+     *
+     * @return the user email address.
+     */
+    public String email() {
+        return dict.getString(KEY_EMAIL, "");
+    }
+
+    /**
+     * Sets the user email address.
+     *
+     * @param email          the user email address
+     */
+    public void setEmail(String email) {
+        dict.set(KEY_EMAIL, email);
     }
 
     /**
