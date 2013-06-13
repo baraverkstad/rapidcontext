@@ -126,7 +126,9 @@ public class ServletApplication extends HttpServlet {
         int           bestScore = 0;
 
         try {
+            LOG.fine(ip(request) + "Processing authentication info");
             processAuthCheck(request);
+            LOG.fine(ip(request) + "Finding best matching web service");
             for (int i = 0; i < matchers.length; i++) {
                 int score = matchers[i].match(request);
                 if (score > bestScore) {
@@ -136,13 +138,17 @@ public class ServletApplication extends HttpServlet {
             }
             if (bestMatcher != null) {
                 if (!request.hasResponse()) {
+                    LOG.fine(ip(request) + "Processing with " + bestMatcher.parent());
                     bestMatcher.process(request);
+                } else {
+                    LOG.fine(ip(request) + "Processed during web service matching");
                 }
             }
             Session s = (Session) Session.activeSession.get();
             if ((s == null || !s.isValid()) && request.getSessionId() != null) {
                 request.setSessionId(null, 0);
             }
+            LOG.fine(ip(request) + "Sending response data");
             if (!request.hasResponse()) {
                 request.sendError(HttpServletResponse.SC_NOT_FOUND);
             }
@@ -196,7 +202,10 @@ public class ServletApplication extends HttpServlet {
         // Check for valid session
         try {
             String id = StringUtils.defaultString(request.getSessionId());
-            Session session = Session.find(ctx.getStorage(), id);
+            Session session = null;
+            if (id.length() > 0) {
+                session = Session.find(ctx.getStorage(), id);
+            }
             if (session != null) {
                 Session.activeSession.set(session);
                 session.updateAccessTime();
