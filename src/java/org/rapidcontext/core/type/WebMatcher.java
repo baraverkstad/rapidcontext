@@ -51,6 +51,15 @@ public class WebMatcher {
     }
 
     /**
+     * Returns the parent web service this matcher is connected to.
+     *
+     * @return the parent web service
+     */
+    public WebService parent() {
+        return this.service;
+    }
+
+    /**
      * The HTTP request method to match. Defaults to null, meaning
      * that any request method will match.
      *
@@ -101,7 +110,7 @@ public class WebMatcher {
      *         an empty string to match any request
      */
     public String path() {
-        return dict.getString("path", "");
+        return StringUtils.removeStart(dict.getString("path", ""), "/");
     }
 
     /**
