@@ -213,7 +213,7 @@
       </Form>
     </Pane>
     <Pane id="pluginTab" pageTitle="Plug-Ins">
-      <Form id="pluginUploadForm" w="100%" style="margin-bottom: 10px; border-bottom: solid 1px #6290d2; padding-bottom: 10px;">
+      <Form id="pluginUploadForm" w="100%" style="margin-bottom: 10px; border-bottom: solid 1px #DDDDDD; padding-bottom: 10px;">
         <h3>Software Install &amp; Update:</h3>
         <table>
           <tbody>
@@ -614,11 +614,11 @@
           <TableColumn title="Message" field="message" />
         </Table>
       </div>
-      <div w="25%" h="40%-20" style="float: left; padding-right: 20px; padding-top: 6px; border-top: solid 1px #6290d2;">
+      <div w="25%" h="40%-20" style="float: left; padding-right: 20px; padding-top: 6px; border-top: solid 1px #DDDDDD;">
         <h3>Stack Trace:</h3>
         <pre id="logStack" w="100%" h="100%-25" style="overflow: auto;"></pre>
       </div>
-      <div w="75%-25" h="40%-20" style="float: left; padding-top: 6px; border-top: solid 1px #6290d2;">
+      <div w="75%-25" h="40%-20" style="float: left; padding-top: 6px; border-top: solid 1px #DDDDDD;">
         <h3>Log Data:</h3>
         <p id="logData" w="100%" h="100%-25" style="overflow: auto; color: #666666;"></p>
       </div>

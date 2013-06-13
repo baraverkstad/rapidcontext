@@ -16,10 +16,10 @@
 .startApp-inline {
     position: relative;
     min-height: 200px;
-    margin: 0 0 10px 0;
-    border: 1px solid #CCCCCC;
+    margin: 0 5px 10px 5px;
     border-radius: 6px;
     padding: 6px 10px;
+    box-shadow: 0 1px 3px #CCCCCC;
 }
   </style>
   <TabContainer id="tabContainer" w="100%" h="100%">
@@ -28,7 +28,7 @@
         <span class="label">App icons by: </span>
         <a href="http://fasticon.com/" target="_blank">FastIcon.com</a>
       </p>
-      <div style="float: left; width: 30%; height: 100%; border-right: solid 1px #6290d2; padding-right: 6px;">
+      <div style="float: left; width: 30%; height: 100%; border-right: solid 1px #DDDDDD; padding-right: 6px;">
         <h3>
           Apps:
           <Icon id="appReload" ref="RELOAD" style="margin-left: 3px;" />

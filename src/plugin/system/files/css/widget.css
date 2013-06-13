@@ -333,7 +333,7 @@
     position: relative;
     top: 25%;
     border: 1px solid #CCDDEE;
-    border-radius: 10px 10px;
+    border-radius: 6px 6px;
     padding: 30px 60px;
     background-color: #F8FBFF;
     background-image: -moz-linear-gradient(top, #FFFFFF, #F8FBFF);
@@ -342,7 +342,7 @@
     background-image: -webkit-linear-gradient(top, #FFFFFF, #F8FBFF);
     background-image: linear-gradient(top, #FFFFFF, #F8FBFF);
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#F8FBFF')";
-    box-shadow: 0px 0px 4px #DDDDDD;
+    box-shadow: 0 1px 3px #CCCCCC;
     color: #446688;
     font-size: 20px;
     font-weight: bold;
@@ -467,9 +467,9 @@
     float: left;
     margin-right: 2px;
     padding-left: 9px;
-    border-top: 1px solid #999999;
-    border-left: 1px solid #999999;
-    border-right: 1px solid #999999;
+    border-top: 1px solid #BBBBBB;
+    border-left: 1px solid #BBBBBB;
+    border-right: 1px solid #BBBBBB;
     border-radius: 6px 6px 0 0;
     background: #EEEEEE;
     background-image: -moz-linear-gradient(top, #DDDDDD, #EEEEEE);
@@ -490,9 +490,9 @@
 }
 .widgetTabContainerLabel:hover,
 .widgetTabContainerLabel.selected {
-    border-top: 1px solid #6290D2;
-    border-left: 1px solid #6290D2;
-    border-right: 1px solid #6290D2;
+    border-top: 1px solid #DDDDDD;
+    border-left: 1px solid #DDDDDD;
+    border-right: 1px solid #DDDDDD;
     background: #FFFFFF;
     background-image: -moz-linear-gradient(top, #E0F0F8, #FFFFFF);
     background-image: -ms-linear-gradient(top, #E0F0F8, #FFFFFF);
@@ -503,10 +503,7 @@
     color: black;
 }
 .widgetTabContainerLabel div {
-    padding-top: 4px;
-    padding-bottom: 4px;
-    padding-left: 6px;
-    padding-right: 15px;
+    padding: 4px 15px 4px 6px;
 }
 .widgetTabContainerLabel.selected div {
     padding-bottom: 5px;
@@ -523,11 +520,8 @@
 .widgetTabContainerContent {
     position: relative;
     top: -1px;
-    border: 1px solid #6290D2;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    padding-left: 10px;
-    padding-right: 10px;
+    border: 1px solid #DDDDDD;
+    padding: 10px 10px 10px 10px;
     clear: both;
     overflow: hidden;
     /* z-index: -1;  Required for IE6, but breaks in IE7 */
@@ -547,7 +541,7 @@ div.widgetTable.compact {
 }
 table.widgetTable {
     width: 100%;
-    border: 1px solid #cccccc;
+    border: 1px solid #DDDDDD;
     border-collapse: collapse;
     cursor: default;
 }
@@ -685,7 +679,7 @@ th.widgetTableColumn.sortDesc {
 .widgetTree {
     position: relative;
     overflow: auto;
-    border: 1px solid #ccc;
+    border: 1px solid #DDDDDD;
     background: white;
 }
 
@@ -727,7 +721,7 @@ th.widgetTableColumn.sortDesc {
     overflow: hidden;
 }
 .widgetWizardTitle {
-    border-bottom: 1px solid #6290D2;
+    border-bottom: 1px solid #DDDDDD;
     padding-bottom: 3px;
 }
 .widgetWizardInfo {
