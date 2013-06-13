@@ -333,7 +333,7 @@
     position: relative;
     top: 25%;
     border: 1px solid #CCDDEE;
-    border-radius: 6px 6px;
+    border-radius: 10px 10px;
     padding: 30px 60px;
     background-color: #F8FBFF;
     background-image: -moz-linear-gradient(top, #FFFFFF, #F8FBFF);
