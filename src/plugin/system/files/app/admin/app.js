@@ -1450,6 +1450,7 @@ AdminApp.prototype._saveUser = function () {
     if (this.ui.userForm.validate()) {
         this.proc.userChange(data.id,
                              data.name,
+                             data.email,
                              data.description,
                              data.enabled ? "1" : "0",
                              data.password,

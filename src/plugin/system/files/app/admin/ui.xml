@@ -526,10 +526,10 @@
           <Icon id="userLoading" ref="LOADING" style="margin-left: 3px;" />
         </h3>
         <Table id="userTable" w="100%" h="100%-22">
-          <TableColumn title="Identifier" field="id" sort="asc" key="true" />
-          <TableColumn title="Name" field="name" />
+          <TableColumn title="Id" field="id" sort="asc" key="true" maxLength="20" />
           <TableColumn title="Enabled" field="enabled" type="boolean" />
-          <TableColumn title="Description" field="description" maxLength="40" />
+          <TableColumn title="Name" field="name" maxLength="40" />
+          <TableColumn title="E-mail" field="email" maxLength="40" />
         </Table>
       </div>
       <Form id="userForm" w="50%-30" h="100%" style="float: left;">
@@ -550,6 +550,13 @@
               <th class="label" style="padding-top: 4px; padding-right: 4px;">Name:</th>
               <td>
                 <TextField name="name" w="100%-20" />
+              </td>
+            </tr>
+            <tr>
+              <th class="label" style="padding-top: 4px; padding-right: 4px;">E-mail:</th>
+              <td>
+                <TextField name="email" w="100%-20" />
+                <FormValidator name="email" mandatory="false" regex=".+@.+\..+" message="Invalid e-mail address" />
               </td>
             </tr>
             <tr>

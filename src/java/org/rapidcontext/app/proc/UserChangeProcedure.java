@@ -50,6 +50,8 @@ public class UserChangeProcedure implements Procedure {
                      "The unique user id");
         defaults.set("name", Bindings.ARGUMENT, "",
                      "The user real name");
+        defaults.set("email", Bindings.ARGUMENT, "",
+                     "The user email address");
         defaults.set("description", Bindings.ARGUMENT, "",
                      "The user description");
         defaults.set("enabled", Bindings.ARGUMENT, "",
@@ -111,17 +113,18 @@ public class UserChangeProcedure implements Procedure {
         throws ProcedureException {
 
         // Validate arguments
-        String id = bindings.getValue("id").toString();
-        if (id.equals("")) {
+        String id = bindings.getValue("id", "").toString().trim();
+        if (id.length() <= 0) {
             throw new ProcedureException("user id cannot be blank");
         } else if (!id.matches("^[a-zA-Z0-9_/]*$")) {
             throw new ProcedureException("user id contains invalid character");
         }
         CallContext.checkWriteAccess("user/" + id);
         User user = User.find(cx.getStorage(), id);
-        String name = bindings.getValue("name").toString();
-        String descr = bindings.getValue("description").toString();
-        String str = bindings.getValue("enabled").toString();
+        String name = bindings.getValue("name", "").toString();
+        String email = bindings.getValue("email", "").toString();
+        String descr = bindings.getValue("description", "").toString();
+        String str = bindings.getValue("enabled", "").toString();
         boolean enabled = (!str.equals("") && !str.equals("false") && !str.equals("0"));
         String pwd = bindings.getValue("password").toString();
         if ((user == null || pwd.length() > 0) && pwd.length() < 5) {
@@ -148,6 +151,7 @@ public class UserChangeProcedure implements Procedure {
             res = user.id() + " modified";
         }
         user.setName(name);
+        user.setEmail(email);
         user.setDescription(descr);
         user.setEnabled(enabled);
         if (pwd.length() > 0) {
