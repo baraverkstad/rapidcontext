@@ -542,7 +542,7 @@
             <tr>
               <th class="label" style="padding-top: 4px; padding-right: 4px;" w="65">Id:</th>
               <td w="100%-70">
-                <TextField id="userId" name="id" size="30" />
+                <TextField id="userId" name="id" w="100%-20" />
                 <FormValidator name="id" message="User id cannot be empty" />
               </td>
             </tr>
