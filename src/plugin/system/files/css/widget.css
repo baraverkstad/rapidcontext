@@ -209,6 +209,9 @@
     font-weight: bold;
     color: #cc3333;
 }
+.widgetFormValidator.widgetHidden {
+    display: none;
+}
 .widgetFormValidator .widgetIcon {
     margin-right: 6px;
 }
