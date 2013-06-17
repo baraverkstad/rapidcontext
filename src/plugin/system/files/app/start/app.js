@@ -58,11 +58,6 @@ StartApp.prototype.start = function () {
     MochiKit.Signal.connect(this.ui.aboutClose, "onclick", this.ui.about, "hide");
     var version = MochiKit.Text.format("{version} ({date})", status);
     MochiKit.DOM.replaceChildNodes(this.ui.aboutVersion, version);
-    // TODO: review the following hacks on the about dialog...
-    MochiKit.Style.setElementPosition(this.ui.about, { x: 0, y: 0});
-    var div = this.ui.about.lastChild;
-    MochiKit.Style.setStyle(div, { width: "auto", height: "auto", padding: "0" });
-    RapidContext.Util.registerSizeConstraints(div, null, null, null);
 
     // Password dialog
     MochiKit.Signal.connect(this.ui.passwordCancel, "onclick", this.ui.passwordDialog, "hide");

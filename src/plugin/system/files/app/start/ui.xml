@@ -4,9 +4,9 @@
   <style>
 .startApp-about {
     position: relative;
-    padding: 20px;
     background: url(images/backgrounds/about.png);
     color: #EEEEEE;
+    box-shadow: 0 0 30px #000 inset;
 }
 .startApp-about a:link,
 .startApp-about a:active,
@@ -139,54 +139,52 @@
       <p style="font-size: 15px;">Please close your web browser in order to complete the logout process.</p>
     </div>
   </Dialog>
-  <Dialog id="about" title="About RapidContext" modal="true" resizeable="false">
-    <div class="startApp-about" style="width: 500px;">
-      <div style="position: absolute; top: 35px; left: 185px; font-family: Trebuchet MS;">
-        <a href="http://www.rapidcontext.com/" target="_blank">
-          <span style="font-size: 40px; color: white;">RapidContext</span><br/>
-          <span style="font-size: 19px; color: #88AACC;">Access &gt; Discovery &gt; Insight</span><br/>
-          <span style="font-size: 12px; color: #EEEEEE; letter-spacing: 6px; line-height: 24px;">www.rapidcontext.com</span><br/>
-        </a>
-      </div>
-      <div style="padding: 140px 0 25px 0;">
-        <p><strong>Version: </strong><span id="aboutVersion">1.0.0</span><br/>
-        <strong>License: </strong><a href="doc/LICENSE.txt" target="_blank">BSD License</a> (source code)</p>
+  <Dialog id="about" title="About RapidContext" w="544" h="515" modal="true" resizeable="false" class="startApp-about">
+    <div style="position: absolute; top: 35px; left: 185px; font-family: Trebuchet MS;">
+      <a href="http://www.rapidcontext.com/" target="_blank">
+        <span style="font-size: 40px; color: white;">RapidContext</span><br/>
+        <span style="font-size: 19px; color: #88AACC;">Access &gt; Discovery &gt; Insight</span><br/>
+        <span style="font-size: 12px; color: #EEEEEE; letter-spacing: 6px; line-height: 24px;">www.rapidcontext.com</span><br/>
+      </a>
+    </div>
+    <div style="padding: 150px 15px 25px 15px;">
+      <p><strong>Version: </strong><span id="aboutVersion">1.0.0</span><br/>
+      <strong>License: </strong><a href="doc/LICENSE.txt" target="_blank">BSD License</a> (source code only)</p>
 
-        <p>Copyright &#169; 2007-2013 by Per Cederberg. All rights reserved.<br/>
-        Usage of the RapidContext name and logotype is restricted.<br/>
-        Please visit the
-        <a href="http://www.rapidcontext.com/" target="_blank">RapidContext project web site</a>
-        for more information.</p>
+      <p>Copyright &#169; 2007-2013 by Per Cederberg. All rights reserved.<br/>
+      Usage of the RapidContext name and logotype is restricted.<br/>
+      Please visit the
+      <a href="http://www.rapidcontext.com/" target="_blank">RapidContext project web site</a>
+      for more information.</p>
 
-        <p>This software would not be possible without the following software libraries;<br/>
-        &#187; <a href="http://www.mochikit.com/" target="_blank">MochiKit</a>,
-        copyright &#169; Bob Ippolito,<br/>
-        &#187; <a href="http://www.liquidx.net/plotkit/" target="_blank">PlotKit</a>,
-        copyright &#169; Alastair Tse,<br/>
-        &#187; <a href="http://jquery.com/" target="_blank">jQuery</a>,
-        copyright &#169; jQuery Foundation, Inc,<br/>
-        &#187; <a href="http://augmentjs.com/" target="_blank">Augment.js</a>,
-        copyright &#169; Oliver Nightingale,<br/>
-        &#187; <a href="http://code.google.com/p/crypto-js" target="_blank">Crypto-JS</a>,
-        copyright &#169; Jeff Mott,<br/>
-        &#187; <a href="http://www.mozilla.org/rhino/" target="_blank">Mozilla Rhino</a>,
-        copyright &#169; The Mozilla Foundation,<br/>
-        &#187; <a href="http://commons.apache.org/" target="_blank">Apache Commons</a>,
-        copyright &#169; The Apache Software Foundation, and<br/>
-        &#187; <a href="http://www.mortbay.org/jetty/" target="_blank">Jetty WebServer</a>,
-        copyright &#169; Mort Bay Consulting.</p>
+      <p>This software would not be possible without the following software libraries;<br/>
+      &#187; <a href="http://www.mochikit.com/" target="_blank">MochiKit</a>,
+      copyright &#169; Bob Ippolito,<br/>
+      &#187; <a href="http://www.liquidx.net/plotkit/" target="_blank">PlotKit</a>,
+      copyright &#169; Alastair Tse,<br/>
+      &#187; <a href="http://jquery.com/" target="_blank">jQuery</a>,
+      copyright &#169; jQuery Foundation, Inc,<br/>
+      &#187; <a href="http://augmentjs.com/" target="_blank">Augment.js</a>,
+      copyright &#169; Oliver Nightingale,<br/>
+      &#187; <a href="http://code.google.com/p/crypto-js" target="_blank">Crypto-JS</a>,
+      copyright &#169; Jeff Mott,<br/>
+      &#187; <a href="http://www.mozilla.org/rhino/" target="_blank">Mozilla Rhino</a>,
+      copyright &#169; The Mozilla Foundation,<br/>
+      &#187; <a href="http://commons.apache.org/" target="_blank">Apache Commons</a>,
+      copyright &#169; The Apache Software Foundation, and<br/>
+      &#187; <a href="http://www.mortbay.org/jetty/" target="_blank">Jetty WebServer</a>,
+      copyright &#169; Mort Bay Consulting.</p>
 
-        <p>Images have kindly been provided and adapted from the following sources;<br/>
-        &#187; <a href="http://www.famfamfam.com/lab/icons/silk/" target="_blank">Silk
-        Icons by FamFamFam</a>, copyright &#169; Mark James (small widget icons),<br/>
-        &#187; <a href="http://fasticon.com/" target="_blank">FastIcon.com</a>,
-        copyright &#169; Dirceu Veiga (icons for built-in apps), and<br/>
-        &#187; <a href="http://dojotoolkit.org/" target="_blank">The Dojo Toolkit</a>,
-        copyright &#169; The Dojo Foundation (Table widget textures).</p>
-      </div>
-      <div style="position: absolute; bottom: 15px; right: 15px;">
-        <Button id="aboutClose" icon="OK" highlight="true" style="box-shadow: none;">Close</Button>
-      </div>
+      <p>Images have kindly been provided and/or adapted from the following sources;<br/>
+      &#187; <a href="http://www.famfamfam.com/lab/icons/silk/" target="_blank">Silk
+      Icons by FamFamFam</a>, copyright &#169; Mark James (small widget icons),<br/>
+      &#187; <a href="http://fasticon.com/" target="_blank">FastIcon.com</a>,
+      copyright &#169; Dirceu Veiga (icons for built-in apps), and<br/>
+      &#187; <a href="http://dojotoolkit.org/" target="_blank">The Dojo Toolkit</a>,
+      copyright &#169; The Dojo Foundation (Table widget textures).</p>
+    </div>
+    <div style="position: absolute; bottom: 15px; right: 15px;">
+      <Button id="aboutClose" icon="OK" highlight="true" style="box-shadow: none;">Close</Button>
     </div>
   </Dialog>
   <Dialog id="tourDialog" title="RapidContext Quick Tour" center="false" resizeable="false" w="80%" h="190">
