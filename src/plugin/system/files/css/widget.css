@@ -146,11 +146,7 @@
 }
 .widgetDialogContent {
     margin: 0 2px 2px 2px;
-    border-top: 1px solid #E0E0E0;
-    border-bottom: 1px solid #FFFFFF;
-    border-left: 1px solid #E0E0E0;
-    border-right: 1px solid #FFFFFF;
-    border-bottom-left-radius: 3px;
+    border-radius: 0 0 3px 3px;
     padding: 8px;
     background: #F8F8F8;
     background-image: -moz-linear-gradient(top, #FFFFFF, #EEEEEE);
