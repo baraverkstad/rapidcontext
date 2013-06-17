@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -49,7 +49,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
 RapidContext.Widget.Tree = function (attrs/*, ...*/) {
     var o = MochiKit.DOM.DIV(attrs);
     RapidContext.Widget._widgetMixin(o, arguments.callee);
-    o.addClass("widgetTree");
+    MochiKit.DOM.addElementClass(o, "widgetTree");
     o.resizeContent = o._resizeContent;
     o.selectedPath = null;
     o.setAttrs(attrs);

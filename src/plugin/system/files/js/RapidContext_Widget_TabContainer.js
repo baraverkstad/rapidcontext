@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -59,7 +59,7 @@ RapidContext.Widget.TabContainer = function (attrs/*, ... */) {
     var container = MochiKit.DOM.DIV({ "class": "widgetTabContainerContent" });
     var o = MochiKit.DOM.DIV(attrs, labels, container);
     RapidContext.Widget._widgetMixin(o, arguments.callee);
-    o.addClass("widgetTabContainer");
+    MochiKit.DOM.addElementClass(o, "widgetTabContainer");
     RapidContext.Util.registerSizeConstraints(container, "100% - 22", "100% - 47");
     o.resizeContent = o._resizeContent;
     container.resizeContent = MochiKit.Base.noop;

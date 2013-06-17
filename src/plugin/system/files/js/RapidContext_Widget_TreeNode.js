@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -56,7 +56,7 @@ RapidContext.Widget.TreeNode = function (attrs/*, ...*/) {
     var div = MochiKit.DOM.DIV({ "class": "widgetTreeNodeLabel" }, icon, label);
     var o = MochiKit.DOM.DIV({}, div);
     RapidContext.Widget._widgetMixin(o, arguments.callee);
-    o.addClass("widgetTreeNode");
+    MochiKit.DOM.addElementClass(o, "widgetTreeNode");
     var args = MochiKit.Base.flattenArguments(arguments);
     var folder = (args.length > 1);
     attrs = MochiKit.Base.update({ name: "Tree Node", folder: folder }, attrs);
@@ -74,14 +74,15 @@ RapidContext.Widget.TreeNode = function (attrs/*, ...*/) {
 RapidContext.Widget.Classes.TreeNode = RapidContext.Widget.TreeNode;
 
 /**
- * Returns and/or creates the child container DOM node. If a child
- * container is created, it will be hidden by default.
+ * Returns and optionally creates the widget container DOM node. If a
+ * child container is created, it will be hidden by default.
  *
- * @param {Boolean} create the optional create flag, defaults to `false`
+ * @param {Boolean} [create] the create flag, defaults to `false`
  *
- * @return {Node} the child container DOM node found or created
+ * @return {Node} the container DOM node, or
+ *         null if this widget has no container (yet)
  */
-RapidContext.Widget.TreeNode.prototype._container = function (create) {
+RapidContext.Widget.TreeNode.prototype._containerNode = function (create) {
     var container = this.lastChild;
     if (MochiKit.DOM.hasElementClass(container, "widgetTreeNodeContainer")) {
         return container;
@@ -125,7 +126,7 @@ RapidContext.Widget.TreeNode.prototype.setAttrs = function (attrs) {
         MochiKit.DOM.replaceChildNodes(node, locals.name);
     }
     if (MochiKit.Base.bool(locals.folder)) {
-        this._container(true);
+        this._containerNode(true);
     }
     if (typeof(locals.icon) != "undefined") {
         var imgNode = this.firstChild.firstChild;
@@ -159,21 +160,6 @@ RapidContext.Widget.TreeNode.prototype.setAttrs = function (attrs) {
 };
 
 /**
- * Returns an array with all child tree node widgets. Note that the
- * array is a real JavaScript array, not a dynamic `NodeList`.
- *
- * @return {Array} the array of child tree node widgets
- */
-RapidContext.Widget.TreeNode.prototype.getChildNodes = function () {
-    var container = this._container();
-    if (container == null) {
-        return [];
-    } else {
-        return MochiKit.Base.extend([], container.childNodes);
-    }
-};
-
-/**
  * Adds a single child tree node widget to this widget.
  *
  * @param {Widget} child the tree node widget to add
@@ -182,19 +168,7 @@ RapidContext.Widget.TreeNode.prototype.addChildNode = function (child) {
     if (!RapidContext.Widget.isWidget(child, "TreeNode")) {
         throw new Error("TreeNode widget can only have TreeNode children");
     }
-    this._container(true).appendChild(child);
-};
-
-/**
- * Removes a single child tree node widget from this widget.
- *
- * @param {Widget} child the tree node widget to remove
- */
-RapidContext.Widget.TreeNode.prototype.removeChildNode = function (child) {
-    var container = this._container();
-    if (container != null) {
-        container.removeChild(child);
-    }
+    this._containerNode(true).appendChild(child);
 };
 
 /**
@@ -251,7 +225,7 @@ RapidContext.Widget.TreeNode.prototype.markAll = function () {
  *         `false` otherwise
  */
 RapidContext.Widget.TreeNode.prototype.isFolder = function () {
-    return this._container() != null;
+    return this._containerNode() != null;
 };
 
 /**
@@ -261,7 +235,7 @@ RapidContext.Widget.TreeNode.prototype.isFolder = function () {
  *         `false` otherwise
  */
 RapidContext.Widget.TreeNode.prototype.isExpanded = function () {
-    var container = this._container();
+    var container = this._containerNode();
     return container != null &&
            !MochiKit.DOM.hasElementClass(container, "widgetHidden");
 };
@@ -394,7 +368,7 @@ RapidContext.Widget.TreeNode.prototype.expand = function () {
     if (parent != null && !parent.isExpanded()) {
         parent.expand();
     }
-    var container = this._container();
+    var container = this._containerNode();
     if (container != null && !this.isExpanded()) {
         var imgNode = this.firstChild.firstChild;
         imgNode.setAttrs({ ref: "MINUS" });
@@ -427,7 +401,7 @@ RapidContext.Widget.TreeNode.prototype.expandAll = function (depth) {
  * Collapses this node to hide any child nodes.
  */
 RapidContext.Widget.TreeNode.prototype.collapse = function () {
-    var container = this._container();
+    var container = this._containerNode();
     if (container != null && this.isExpanded()) {
         var imgNode = this.firstChild.firstChild;
         imgNode.setAttrs({ ref: "PLUS" });

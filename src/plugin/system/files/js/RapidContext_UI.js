@@ -117,7 +117,7 @@ RapidContext.UI._buildUIElem = function (node, ids) {
         return null;
     }
     var attrs = RapidContext.Util.dict(RapidContext.Util.attributeArray(node));
-    var locals = RapidContext.Util.mask(attrs, ["id", "w", "h", "a", "class", "style"]);
+    var locals = RapidContext.Util.mask(attrs, ["id", "w", "h", "a"]);
     var children = RapidContext.UI.buildUI(node.childNodes, ids);
     if (RapidContext.Widget.Classes[name]) {
         if (name == "Table" && attrs.multiple) {
@@ -139,36 +139,6 @@ RapidContext.UI._buildUIElem = function (node, ids) {
     }
     if (locals.w || locals.h || locals.a) {
         RapidContext.Util.registerSizeConstraints(widget, locals.w, locals.h, locals.a);
-    }
-    if (locals["class"]) {
-        var classes = MochiKit.Format.strip(locals["class"]).split(" ");
-        if (typeof(widget.addClass) == "function") {
-            widget.addClass.apply(widget, classes);
-        } else {
-            for (var i = 0; i < classes.length; i++) {
-                MochiKit.DOM.addElementClass(widget, classes[i]);
-            }
-        }
-    }
-    if (locals.style) {
-        var styles = {};
-        var parts = locals.style.split(";");
-        for (var i = 0; i < parts.length; i++) {
-            var a = parts[i].split(":");
-            var k = MochiKit.Format.strip(a[0]);
-            if (k != "" && a.length > 1) {
-                styles[k] = MochiKit.Format.strip(a[1]);
-            }
-        }
-        try {
-            if (typeof(widget.setAttrs) == "function") {
-                widget.setAttrs({ style: styles });
-            } else {
-                MochiKit.Style.setStyle(widget, styles);
-            }
-        } catch (e) {
-            LOG.error("Failed to style UI element " + MochiKit.Base.repr(node), e.message);
-        }
     }
     return widget;
 };

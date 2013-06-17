@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -261,6 +261,29 @@ RapidContext.Widget.prototype.destroy = function () {
 };
 
 /**
+ * Returns the widget container DOM node. By default this method
+ * returns the widget itself, but subclasses may override it to place
+ * child DOM nodes in a different container.
+ *
+ * @return {Node} the container DOM node, or
+ *         null if this widget has no container
+ */
+RapidContext.Widget.prototype._containerNode = function () {
+    return this;
+};
+
+/**
+ * Returns the widget style DOM node. By default this method returns
+ * the widget itself, but subclasses may override it to move widget
+ * styling (but not sizing or positioning) to a subnode.
+ *
+ * @return {Node} the style DOM node
+ */
+RapidContext.Widget.prototype._styleNode = function () {
+    return this;
+};
+
+/**
  * Updates the widget or HTML DOM node attributes. This method is
  * sometimes overridden by individual widgets to allow modification
  * of additional widget attributes.
@@ -276,6 +299,24 @@ RapidContext.Widget.prototype.setAttrs = function (attrs) {
             this._setDisabled(value);
         } else if (name == "hidden") {
             this._setHidden(value);
+        } else if (name == "class") {
+            var elem = this._styleNode();
+            this.removeClass.apply(this, elem.className.split(/\s+/));
+            this.addClass.apply(this, value.split(/\s+/));
+        } else if (name == "style") {
+            if (typeof(value) == "string") {
+                var styles = {};
+                var parts = value.split(";");
+                for (var i = 0; i < parts.length; i++) {
+                    var a = parts[i].split(":");
+                    var k = MochiKit.Format.strip(a[0]);
+                    if (k != "" && a.length > 1) {
+                        styles[k] = MochiKit.Format.strip(a[1]);
+                    }
+                }
+                value = styles;
+            }
+            this.setStyle(value);
         } else if (value != null) {
             MochiKit.DOM.setNodeAttribute(this, name, value);
             if (typeof(value) != "object") {
@@ -303,7 +344,12 @@ RapidContext.Widget.prototype.setAttrs = function (attrs) {
  * widget.setStyle({ "font-size": "bold", "color": "red" });
  */
 RapidContext.Widget.prototype.setStyle = function (styles) {
-    MochiKit.Style.setStyle(this, styles);
+    styles = MochiKit.Base.update({}, styles);
+    var posDimNames = ["width", "height", "zIndex", "z-index",
+                       "position", "top", "bottom", "left", "right"];
+    var posDimStyles = RapidContext.Util.mask(styles, posDimNames);
+    MochiKit.Style.setStyle(this, posDimStyles);
+    MochiKit.Style.setStyle(this._styleNode(), styles);
 };
 
 /**
@@ -317,8 +363,9 @@ RapidContext.Widget.prototype.setStyle = function (styles) {
  *         `false` otherwise
  */
 RapidContext.Widget.prototype.hasClass = function (/* ... */) {
+    var elem = this._styleNode();
     for (var i = 0; i < arguments.length; i++) {
-        if (!MochiKit.DOM.hasElementClass(this, arguments[i])) {
+        if (!MochiKit.DOM.hasElementClass(elem, arguments[i])) {
             return false;
         }
     }
@@ -331,19 +378,26 @@ RapidContext.Widget.prototype.hasClass = function (/* ... */) {
  * @param {String} [...] the CSS class names to add
  */
 RapidContext.Widget.prototype.addClass = function (/* ... */) {
+    var elem = this._styleNode();
     for (var i = 0; i < arguments.length; i++) {
-        MochiKit.DOM.addElementClass(this, arguments[i]);
+        MochiKit.DOM.addElementClass(elem, arguments[i]);
     }
 };
 
 /**
  * Removes the specified CSS class names from this HTML DOM node.
+ * Note that this method will not remove any class starting with
+ * "widget".
  *
  * @param {String} [...] the CSS class names to remove
  */
 RapidContext.Widget.prototype.removeClass = function (/* ... */) {
+    var elem = this._styleNode();
     for (var i = 0; i < arguments.length; i++) {
-        MochiKit.DOM.removeElementClass(this, arguments[i]);
+        var name = "" + arguments[i];
+        if (name.indexOf("widget") != 0) {
+            MochiKit.DOM.removeElementClass(elem, name);
+        }
     }
 };
 
@@ -511,7 +565,8 @@ RapidContext.Widget.prototype.blurAll = function () {
  * @return {Array} the array of child DOM nodes
  */
 RapidContext.Widget.prototype.getChildNodes = function () {
-    return MochiKit.Base.extend([], this.childNodes);
+    var elem = this._containerNode();
+    return elem ? MochiKit.Base.extend([], elem.childNodes) : [];
 };
 
 /**
@@ -522,7 +577,12 @@ RapidContext.Widget.prototype.getChildNodes = function () {
  * @param {Widget/Node} child the DOM node to add
  */
 RapidContext.Widget.prototype.addChildNode = function (child) {
-    this.appendChild(child);
+    var elem = this._containerNode();
+    if (elem) {
+        elem.appendChild(child);
+    } else {
+        throw new Error("cannot add child node, widget is not a container");
+    }
 };
 
 /**
@@ -536,7 +596,10 @@ RapidContext.Widget.prototype.addChildNode = function (child) {
  * @param {Widget/Node} child the DOM node to remove
  */
 RapidContext.Widget.prototype.removeChildNode = function (child) {
-    this.removeChild(child);
+    var elem = this._containerNode();
+    if (elem) {
+        elem.removeChild(child);
+    }
 };
 
 /**

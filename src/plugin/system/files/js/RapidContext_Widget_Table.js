@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -61,7 +61,7 @@ RapidContext.Widget.Table = function (attrs/*, ...*/) {
     var table = MochiKit.DOM.TABLE({ "class": "widgetTable" }, thead, tbody);
     var o = MochiKit.DOM.DIV({}, table);
     RapidContext.Widget._widgetMixin(o, arguments.callee);
-    o.addClass("widgetTable");
+    MochiKit.DOM.addElementClass(o, "widgetTable");
     o.resizeContent = o._resizeContent;
     o._rows = [];
     o._data = null;
@@ -97,6 +97,18 @@ RapidContext.Widget.Classes.Table = RapidContext.Widget.Table;
  */
 
 /**
+ * Returns the widget container DOM node.
+ *
+ * @return {Node} the container DOM node
+ */
+RapidContext.Widget.Table.prototype._containerNode = function () {
+    var table = this.firstChild;
+    var thead = table.firstChild;
+    var tr = thead.firstChild;
+    return tr;
+};
+
+/**
  * Updates the widget or HTML DOM node attributes.
  *
  * @param {Object} attrs the widget and node attributes to set
@@ -118,19 +130,6 @@ RapidContext.Widget.Table.prototype.setAttrs = function (attrs) {
 };
 
 /**
- * Returns an array with all child table column widgets. Note that
- * the array is a real JavaScript array, not a dynamic NodeList.
- *
- * @return {Array} the array of child table column widgets
- */
-RapidContext.Widget.Table.prototype.getChildNodes = function () {
-    var table = this.firstChild;
-    var thead = table.firstChild;
-    var tr = thead.firstChild;
-    return MochiKit.Base.extend([], tr.childNodes);
-};
-
-/**
  * Adds a single child table column widget to this widget.
  *
  * @param {Widget} child the table column widget to add
@@ -140,10 +139,7 @@ RapidContext.Widget.Table.prototype.addChildNode = function (child) {
         throw new Error("Table widget can only have TableColumn children");
     }
     this.clear();
-    var table = this.firstChild;
-    var thead = table.firstChild;
-    var tr = thead.firstChild;
-    tr.appendChild(child);
+    this._containerNode().appendChild(child);
 };
 
 /**
@@ -154,10 +150,7 @@ RapidContext.Widget.Table.prototype.addChildNode = function (child) {
  */
 RapidContext.Widget.Table.prototype.removeChildNode = function (child) {
     this.clear();
-    var table = this.firstChild;
-    var thead = table.firstChild;
-    var tr = thead.firstChild;
-    tr.removeChild(child);
+    this._containerNode().removeChild(child);
 };
 
 /**

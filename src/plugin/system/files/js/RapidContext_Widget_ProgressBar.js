@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -66,6 +66,15 @@ RapidContext.Widget.ProgressBar = function (attrs) {
 
 // Register widget class
 RapidContext.Widget.Classes.ProgressBar = RapidContext.Widget.ProgressBar;
+
+/**
+ * Returns the widget container DOM node.
+ *
+ * @return {Node} returns null, since child nodes are not supported
+ */
+RapidContext.Widget.ProgressBar.prototype._containerNode = function () {
+    return null;
+};
 
 /**
  * Updates the widget or HTML DOM node attributes. Note that updating the

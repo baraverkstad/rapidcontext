@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -63,6 +63,15 @@ RapidContext.Widget.Icon = function (attrs) {
 
 // Register widget class
 RapidContext.Widget.Classes.Icon = RapidContext.Widget.Icon;
+
+/**
+ * Returns the widget container DOM node.
+ *
+ * @return {Node} returns null, since child nodes are not supported
+ */
+RapidContext.Widget.Icon.prototype._containerNode = function () {
+    return null;
+};
 
 /**
  * Emitted when the icon has been clicked. This is a standard DOM

@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -61,7 +61,7 @@ RapidContext.Widget.Dialog = function (attrs/*, ... */) {
     RapidContext.Util.registerSizeConstraints(content, "100% - 20", "100% - 41");
     var o = MochiKit.DOM.DIV({}, title, close, resize, content);
     RapidContext.Widget._widgetMixin(o, arguments.callee);
-    o.addClass("widgetDialog");
+    MochiKit.DOM.addElementClass(o, "widgetDialog");
     o._setHidden(true);
     o.setAttrs(MochiKit.Base.update({ modal: false, system: false, center: true }, attrs));
     o.addAll(MochiKit.Base.extend(null, arguments, 1));
@@ -109,6 +109,24 @@ RapidContext.Widget.Classes.Dialog = RapidContext.Widget.Dialog;
  */
 
 /**
+ * Returns the widget container DOM node.
+ *
+ * @return {Node} the container DOM node
+ */
+RapidContext.Widget.Dialog.prototype._containerNode = function () {
+    return this.lastChild;
+};
+
+/**
+ * Returns the widget style DOM node.
+ *
+ * @return {Node} the style DOM node
+ */
+RapidContext.Widget.Dialog.prototype._styleNode = function () {
+    return this.lastChild;
+};
+
+/**
  * Updates the dialog or HTML DOM node attributes.
  *
  * @param {Object} attrs the widget and node attributes to set
@@ -122,7 +140,7 @@ RapidContext.Widget.Classes.Dialog = RapidContext.Widget.Dialog;
  */
 RapidContext.Widget.Dialog.prototype.setAttrs = function (attrs) {
     attrs = MochiKit.Base.update({}, attrs);
-    var locals = RapidContext.Util.mask(attrs, ["title", "modal", "system", "center", "resizeable", "closeable", "hidden", "class", "style"]);
+    var locals = RapidContext.Util.mask(attrs, ["title", "modal", "system", "center", "resizeable", "closeable", "hidden"]);
     if (typeof(locals.title) != "undefined") {
         MochiKit.DOM.replaceChildNodes(this.firstChild, locals.title);
     }
@@ -145,12 +163,6 @@ RapidContext.Widget.Dialog.prototype.setAttrs = function (attrs) {
     }
     if (typeof(locals.hidden) != "undefined") {
         this._setHiddenDialog(locals.hidden);
-    }
-    if (typeof(locals["class"]) != "undefined") {
-        this.lastChild.className = "widgetDialogContent " + locals["class"];
-    }
-    if (typeof(locals.style) != "undefined") {
-        MochiKit.Style.setStyle(this.lastChild, locals.style);
     }
     this.__setAttrs(attrs);
 };
@@ -192,34 +204,6 @@ RapidContext.Widget.Dialog.prototype._setHiddenDialog = function (value) {
         this.resetScroll();
         RapidContext.Widget.emitSignal(this, "onshow");
     }
-};
-
-/**
- * Returns an array with all child DOM nodes. Note that the array is
- * a real JavaScript array, not a dynamic `NodeList`.
- *
- * @return {Array} the array of child DOM nodes
- */
-RapidContext.Widget.Dialog.prototype.getChildNodes = function () {
-    return MochiKit.Base.extend([], this.lastChild.childNodes);
-};
-
-/**
- * Adds a single child DOM node to this widget.
- *
- * @param {Widget/Node} child the DOM node to add
- */
-RapidContext.Widget.Dialog.prototype.addChildNode = function (child) {
-    this.lastChild.appendChild(child);
-};
-
-/**
- * Removes a single child DOM node from this widget.
- *
- * @param {Widget/Node} child the DOM node to remove
- */
-RapidContext.Widget.Dialog.prototype.removeChildNode = function (child) {
-    this.lastChild.removeChild(child);
 };
 
 /**
