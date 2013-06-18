@@ -73,15 +73,6 @@ RapidContext.Widget.FormValidator = function (attrs) {
 RapidContext.Widget.Classes.FormValidator = RapidContext.Widget.FormValidator;
 
 /**
- * Returns the widget container DOM node.
- *
- * @return {Node} returns null, since child nodes are not supported
- */
-RapidContext.Widget.FormValidator.prototype._containerNode = function () {
-    return null;
-};
-
-/**
  * Updates the widget or HTML DOM node attributes.
  *
  * @param {Object} attrs the widget and node attributes to set
