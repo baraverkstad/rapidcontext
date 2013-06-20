@@ -14,13 +14,9 @@
 
 /**
  * @name RapidContext.Storage
- * @namespace Provides functions for accessing the server storage.
+ * @namespace Provides functions for accessing the server storage (BETA).
  */
 (function (window, undefined) {
-
-    // Create namespaces
-    var RapidContext = window.RapidContext || (window.RapidContext = {});
-    var Storage = RapidContext.Storage || (RapidContext.Storage = {});
 
     /**
      * Returns a storage URL for a resource. If the resource is an
@@ -124,6 +120,10 @@
         var opts = { method: "PATCH", sendContent: json, headers: headers };
         return RapidContext.App.loadJSON(storageUrl(pathOrObj), null, opts);
     }
+
+    // Create namespaces
+    var RapidContext = window.RapidContext || (window.RapidContext = {});
+    var Storage = RapidContext.Storage || (RapidContext.Storage = {});
 
     // Export symbols
     Storage.path = path;
