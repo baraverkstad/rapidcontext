@@ -366,8 +366,8 @@ StartApp.prototype._changePassword = function () {
     if (this.ui.passwordForm.validate()) {
         var user = RapidContext.App.user();
         var prefix = user.id + ":" + user.realm + ":";
-        var oldHash = Crypto.MD5(prefix + data.current).toString();
-        var newHash = Crypto.MD5(prefix + data.password).toString();
+        var oldHash = CryptoJS.MD5(prefix + data.current).toString();
+        var newHash = CryptoJS.MD5(prefix + data.password).toString();
         this.proc.changePassword(oldHash, newHash);
         this.ui.passwordSave.setAttrs({ disabled: true, icon: "LOADING" });
     }
@@ -421,8 +421,8 @@ StartApp.prototype._loginAuth = function () {
     if (this.ui.loginForm.validate()) {
         var data = this.ui.loginForm.valueMap();
         var realm = RapidContext.App.status().realm;
-        var hash = Crypto.MD5(data.user + ":" + realm + ":" + data.password);
-        hash = Crypto.MD5(hash.toString() + ":" + data.nonce).toString();
+        var hash = CryptoJS.MD5(data.user + ":" + realm + ":" + data.password);
+        hash = CryptoJS.MD5(hash.toString() + ":" + data.nonce).toString();
         this.proc.sessionLogin(data.user, data.nonce, hash);
         this.ui.loginAuth.setAttrs({ disabled: true, icon: "LOADING" });
     }
