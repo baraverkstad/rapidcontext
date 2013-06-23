@@ -596,17 +596,17 @@
       </Form>
     </Pane>
     <Pane id="logTab" pageTitle="Logging">
-      <div w="100" h="60%" style="float: left; padding-right: 20px; padding-bottom: 6px;">
+      <div w="100" h="100%" style="float: left; padding: 0 10px 0 0; border-right: 1px solid #DDDDDD;">
         <Form id="logForm">
           <h3>Log Level: <Icon ref="BLANK" /></h3>
-          <span id="logError" class="label"><input type="radio" name="level" value="Error" /> Error</span><br/>
-          <span id="logWarning" class="label"><input type="radio" name="level" value="Warning" /> Warning</span><br/>
-          <span id="logInfo" class="label"><input type="radio" name="level" value="Info" checked="true" /> Info</span><br/>
-          <span id="logTrace" class="label"><input type="radio" name="level" value="Trace" /> Trace</span>
+          <span id="logError" class="label"><input type="radio" name="level" value="error" /> Error</span><br/>
+          <span id="logWarning" class="label"><input type="radio" name="level" value="warn" /> Warning</span><br/>
+          <span id="logInfo" class="label"><input type="radio" name="level" value="info" checked="true" /> Info</span><br/>
+          <span id="logTrace" class="label"><input type="radio" name="level" value="log" /> Trace</span>
           <p style="padding-top: 20px;">Press refresh to update log entries table.</p>
         </Form>
       </div>
-      <div w="100%-120" h="60%" style="float: left; padding-bottom: 6px;">
+      <div w="100%-125" h="50%" style="float: left; margin-left: 10px; padding-bottom: 6px;">
         <h3>
           Log Entries:
           <Icon id="logClear" ref="DELETE" style="margin-left: 3px;" />
@@ -617,15 +617,10 @@
           <TableColumn title="Time" field="time" type="time" />
           <TableColumn title="Level" field="level" />
           <TableColumn title="Context" field="context" />
-          <TableColumn title="Function" field="caller" />
           <TableColumn title="Message" field="message" />
         </Table>
       </div>
-      <div w="25%" h="40%-20" style="float: left; padding-right: 20px; padding-top: 6px; border-top: solid 1px #DDDDDD;">
-        <h3>Stack Trace:</h3>
-        <pre id="logStack" w="100%" h="100%-25" style="overflow: auto;"></pre>
-      </div>
-      <div w="75%-25" h="40%-20" style="float: left; padding-top: 6px; border-top: solid 1px #DDDDDD;">
+      <div w="100%-125" h="50%-20" style="float: left; margin-left: 10px; padding-top: 6px; border-top: solid 1px #DDDDDD;">
         <h3>Log Data:</h3>
         <p id="logData" w="100%" h="100%-25" style="overflow: auto; color: #666666;"></p>
       </div>

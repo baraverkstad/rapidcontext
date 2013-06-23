@@ -60,7 +60,7 @@ HelpApp.prototype.loadTopics = function() {
     function add(parent, source, obj) {
         var topic = addPath(parent, obj.topic.split("/"));
         if (topic.source) {
-            LOG.warning("Duplicated Help topic, possibly overwritten", obj.topic);
+            console.warn("Duplicated Help topic, possibly overwritten", obj.topic);
         }
         topic.source = obj.source || source;
         if (obj.url) {

@@ -152,10 +152,10 @@ AdminApp.prototype.start = function () {
 
     // Log view
     MochiKit.Signal.connect(this.ui.logTab, "onenter", this, "_showLogs");
-    MochiKit.Signal.connect(this.ui.logError, "onclick", MochiKit.Base.bind("setLogLevel", this, LOG.ERROR));
-    MochiKit.Signal.connect(this.ui.logWarning, "onclick", MochiKit.Base.bind("setLogLevel", this, LOG.WARNING));
-    MochiKit.Signal.connect(this.ui.logInfo, "onclick", MochiKit.Base.bind("setLogLevel", this, LOG.INFO));
-    MochiKit.Signal.connect(this.ui.logTrace, "onclick", MochiKit.Base.bind("setLogLevel", this, LOG.TRACE));
+    MochiKit.Signal.connect(this.ui.logError, "onclick", MochiKit.Base.bind("setLogLevel", this, "error"));
+    MochiKit.Signal.connect(this.ui.logWarning, "onclick", MochiKit.Base.bind("setLogLevel", this, "warn"));
+    MochiKit.Signal.connect(this.ui.logInfo, "onclick", MochiKit.Base.bind("setLogLevel", this, "info"));
+    MochiKit.Signal.connect(this.ui.logTrace, "onclick", MochiKit.Base.bind("setLogLevel", this, "log"));
     MochiKit.Signal.connect(this.ui.logClear, "onclick", this, "_clearLogs");
     MochiKit.Signal.connect(this.ui.logReload, "onclick", this, "_showLogs");
     MochiKit.Signal.connect(this.ui.logTable, "onselect", this, "_showLogDetails");
@@ -1462,38 +1462,26 @@ AdminApp.prototype._saveUser = function () {
  * Sets a new log level.
  */
 AdminApp.prototype.setLogLevel = function (level) {
+    level = RapidContext.Log.level(level);
     this.ui.logForm.update({ level: level });
-    LOG.enabled[LOG.TRACE] = (level == LOG.TRACE);
-    LOG.enabled[LOG.INFO] = (level == LOG.TRACE || level == LOG.INFO);
-    LOG.enabled[LOG.WARNING] = (level != LOG.ERROR);
-    LOG.enabled[LOG.ERROR] = true;
-}
+};
 
 /**
  * Clears the log.
  */
 AdminApp.prototype._clearLogs = function () {
-    LOG.clear();
+    RapidContext.Log.clear();
     this.ui.logTable.setData([]);
-    MochiKit.DOM.replaceChildNodes(this.ui.logStack);
     MochiKit.DOM.replaceChildNodes(this.ui.logData);
-}
+};
 
 /**
  * Refreshes the log levels and table.
  */
 AdminApp.prototype._showLogs = function () {
-    if (LOG.enabled[LOG.TRACE]) {
-        this.ui.logForm.update({ level: LOG.TRACE });
-    } else if (LOG.enabled[LOG.INFO]) {
-        this.ui.logForm.update({ level: LOG.INFO });
-    } else if (LOG.enabled[LOG.WARNING]) {
-        this.ui.logForm.update({ level: LOG.WARNING });
-    } else {
-        this.ui.logForm.update({ level: LOG.ERROR });
-    }
-    this.ui.logTable.setData(LOG.entries.slice(0));
-}
+    this.ui.logForm.update({ level: RapidContext.Log.level() });
+    this.ui.logTable.setData(RapidContext.Log.history());
+};
 
 /**
  * Show log details for the selected log data.
@@ -1501,22 +1489,9 @@ AdminApp.prototype._showLogs = function () {
 AdminApp.prototype._showLogDetails = function () {
     var data = this.ui.logTable.getSelectedData();
     var text;
-    if (data == null || data.stackTrace == null) {
-        text = "<no stack trace>";
-    } else {
-        text = "";
-        for (var i = 0; i < data.stackTrace.length; i++) {
-            if (data.stackTrace[i] != null) {
-                text += data.stackTrace[i] + "\n";
-            } else {
-                text += "<anonymous>\n";
-            }
-        }
-    }
-    MochiKit.DOM.replaceChildNodes(this.ui.logStack, text);
     if (data == null || data.data == null) {
         text = "<no additional data>";
-    } else if (typeof data.data == "string" || data.data instanceof String) {
+    } else {
         // TODO: Replace this string splitting with something more dynamic
         var list = data.data.split("\n");
         for (var i = 0; i < list.length; i++) {
@@ -1531,11 +1506,9 @@ AdminApp.prototype._showLogDetails = function () {
             list[i] = res + str;
         }
         text = MochiKit.DOM.PRE(null, list.join("\n"));
-    } else {
-        text = MochiKit.Base.serializeJSON(data.data);
     }
     MochiKit.DOM.replaceChildNodes(this.ui.logData, text);
-}
+};
 
 /**
  * Stores an object to the RapidContext storage. Note that only

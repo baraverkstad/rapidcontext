@@ -41,9 +41,9 @@ if (typeof(RapidContext.App) == "undefined") {
  *         callback when the initialization has completed
  */
 RapidContext.App.init = function (app) {
-    // Setup logging
-    var stack = ["RapidContext.App.init"];
-    RapidContext.Util.injectStackTrace(stack);
+    // Setup libraries
+    RapidContext.Log.context("RapidContext.App.init()");
+    console.info("Initializing RapidContext");
     RapidContext.Util.registerFunctionNames(RapidContext, "RapidContext");
     MochiKit.Base.registerRepr("func",
                                MochiKit.Base.typeMatcher("function"),
@@ -51,7 +51,6 @@ RapidContext.App.init = function (app) {
     MochiKit.Base.registerRepr("dom",
                                RapidContext.Util.isDOM,
                                RapidContext.Util.reprDOM);
-    LOG.info("Initializing RapidContext");
 
     // Setup UI
     RapidContext.Util.registerSizeConstraints(document.body, "100%-20", "100%-20");
@@ -68,8 +67,10 @@ RapidContext.App.init = function (app) {
     var d = MochiKit.Async.gatherResults(list);
 
     // Launch app
+    d.addBoth(function () {
+        RapidContext.Log.context(null);
+    });
     d.addCallback(function () {
-        RapidContext.Util.injectStackTrace(stack);
         try {
             return RapidContext.App.startApp(app || "start");
         } catch (e) {
@@ -150,7 +151,7 @@ RapidContext.App.findApp = function (app) {
     for (var i = 0; i < apps.length; i++) {
         var l = apps[i];
         if (l.className == null) {
-            LOG.error("Launcher does not have 'className' property", l);
+            console.error("Launcher does not have 'className' property", l);
         } else if (l.id == app || l.className == app || l.id == app.id) {
             return l;
         }
@@ -195,7 +196,7 @@ RapidContext.App.startApp = function (app, container) {
     // Setup variables and find app launcher
     var launcher = RapidContext.App.findApp(app);
     if (launcher == null) {
-        LOG.error("No matching app launcher found", app);
+        console.error("No matching app launcher found", app);
         throw new Error("No matching app launcher found: " + app);
     }
     var instance = null;
@@ -226,8 +227,9 @@ RapidContext.App.startApp = function (app, container) {
     MochiKit.Signal.connect(ui.root, "onclose", d, "cancel");
 
     // Load app resources
+    RapidContext.Log.context("RapidContext.App.startApp(" + launcher.id + ")");
     if (launcher.creator == null) {
-        LOG.info("Loading app " + launcher.name, launcher);
+        console.info("Loading app " + launcher.name, launcher);
         launcher.resource = {};
         for (var i = 0; i < launcher.resources.length; i++) {
             var res = launcher.resources[i];
@@ -258,7 +260,7 @@ RapidContext.App.startApp = function (app, container) {
             RapidContext.Util.injectStackTrace(stack);
             launcher.creator = this[launcher.className] || window[launcher.className];
             if (launcher.creator == null) {
-                LOG.error("App constructor not defined", launcher);
+                console.error("App constructor not defined", launcher);
                 throw new Error("App constructor " + launcher.className + " not defined");
             }
             RapidContext.Util.registerFunctionNames(launcher.creator, launcher.className);
@@ -287,7 +289,7 @@ RapidContext.App.startApp = function (app, container) {
         cbDefer.addBoth(function (res) {
             if (res instanceof Error) {
                 RapidContext.Util.injectStackTrace(stack);
-                LOG.error("License retrieval failed", res);
+                console.error("License retrieval failed", res);
             } else {
                 launcher.license = res;
             }
@@ -298,7 +300,7 @@ RapidContext.App.startApp = function (app, container) {
     // Create app instance, build UI and start app
     d.addCallback(function () {
         RapidContext.Util.injectStackTrace(stack);
-        LOG.info("Starting app " + launcher.name, launcher);
+        console.info("Starting app " + launcher.name, launcher);
         var fun = launcher.creator;
         instance = new fun();
         launcher.instances.push(instance);
@@ -335,6 +337,7 @@ RapidContext.App.startApp = function (app, container) {
 
     // Report errors and return app instance
     d.addErrback(function (err) {
+        RapidContext.Log.context(null);
         if (err instanceof MochiKit.Async.CancelledError) {
             // Ignore cancellation errors
         } else {
@@ -346,6 +349,7 @@ RapidContext.App.startApp = function (app, container) {
         return err;
     });
     d.addCallback(function () {
+        RapidContext.Log.context(null);
         return instance;
     });
 
@@ -365,10 +369,10 @@ RapidContext.App.startApp = function (app, container) {
 RapidContext.App.stopApp = function (app) {
     var launcher = RapidContext.App.findApp(app);
     if (!(launcher && launcher.instances && launcher.instances.length)) {
-        LOG.error("No running app instance found", app);
+        console.error("No running app instance found", app);
         throw new Error("No running app instance found");
     }
-    LOG.info("Stopping app " + launcher.name);
+    console.info("Stopping app " + launcher.name);
     var pos = MochiKit.Base.findIdentical(launcher.instances, app);
     if (pos < 0) {
         app = launcher.instances.pop();
@@ -408,7 +412,7 @@ RapidContext.App.callApp = function (app, method) {
     var launcher = RapidContext.App.findApp(app);
     var d;
     if (launcher == null) {
-        LOG.error("No matching app launcher found", app);
+        console.error("No matching app launcher found", app);
         throw new Error("No matching app launcher found");
     }
     if (!(launcher.instances && launcher.instances.length)) {
@@ -427,16 +431,16 @@ RapidContext.App.callApp = function (app, method) {
             parent.selectChild(child);
         }
         var methodName = launcher.className + "." + method;
-        LOG.trace("Calling app method " + methodName, args);
+        console.log("Calling app method " + methodName, args);
         if (instance == null || instance[method] == null) {
-            LOG.error("No app method " + methodName + " found");
+            console.error("No app method " + methodName + " found");
             throw new Error("No app method " + methodName + " found");
         }
         RapidContext.Util.injectStackTrace([]);
         try {
             return instance[method].apply(instance, args);
         } catch (e) {
-            LOG.error("In call to " + methodName, e);
+            console.error("In call to " + methodName, e);
             throw new Error("In call to " + methodName + ": " + e.message);
         }
     });
@@ -463,7 +467,7 @@ RapidContext.App.callProc = function (name, args) {
     if (name.indexOf("RapidContext.") == 0) {
         name = "System" + name.substring(8);
     }
-    LOG.trace("Call request " + name, args);
+    console.log("Call request " + name, args);
     for (var i = 0; args != null && i < args.length; i++) {
         if (args[i] == null) {
             params["arg" + i] = "null";
@@ -471,20 +475,21 @@ RapidContext.App.callProc = function (name, args) {
             params["arg" + i] = JSON.stringify(args[i]);
         }
     }
-    if (LOG.enabled[LOG.TRACE]) {
+    var logLevel = RapidContext.Log.level();
+    if (logLevel == "log" || logLevel == "all") {
         params.trace = "true";
     }
     var d = RapidContext.App.loadJSON("rapidcontext/procedure/" + name, params, options);
     d.addCallback(function (res) {
         RapidContext.Util.injectStackTrace(stack);
         if (res.trace != null) {
-            LOG.trace("Server trace " + name, res.trace);
+            console.log("Server trace " + name, res.trace);
         }
         if (res.error != null) {
-            LOG.error("Call error " + name, res.error);
+            console.error("Call error " + name, res.error);
             throw new Error(res.error);
         } else {
-            LOG.trace("Call response " + name, res.data);
+            console.log("Call response " + name, res.data);
         }
         return res.data;
     });
@@ -670,19 +675,19 @@ RapidContext.App.loadScript = function (url) {
     var selector2 = 'script[src^="' + absoluteUrl + '"]';
     var elems = MochiKit.Selector.findDocElements(selector1, selector2);
     if (elems.length > 0) {
-        LOG.trace("Script already loaded, skipping", url);
+        console.log("Script already loaded, skipping", url);
         return MochiKit.Async.wait(0);
     }
-    LOG.trace("Starting script loading", url);
+    console.log("Starting script loading", url);
     var stack = RapidContext.Util.stackTrace();
     var d = MochiKit.Async.loadScript(RapidContext.App._nonCachedUrl(url));
     d.addCallback(function () {
         RapidContext.Util.injectStackTrace(stack);
-        LOG.trace("Completed loading script", url);
+        console.log("Completed loading script", url);
     });
     d.addErrback(function (e) {
         RapidContext.Util.injectStackTrace(stack);
-        LOG.warning("Failed loading script", url + ": " + e.message);
+        console.warning("Failed loading script", url + ": " + e.message);
         return e;
     });
     RapidContext.App._addErrbackLogger(d);
@@ -713,11 +718,11 @@ RapidContext.App.loadStyles = function (url) {
     var d = new MochiKit.Async.Deferred();
     var absoluteUrl = RapidContext.Util.resolveURI(url);
     if (findStylesheet(url) || findStylesheet(absoluteUrl)) {
-        LOG.trace("Stylesheet already loaded, skipping", url);
+        console.log("Stylesheet already loaded, skipping", url);
         return MochiKit.Async.wait(0);
     }
     var stack = RapidContext.Util.stackTrace();
-    LOG.trace("Starting stylesheet loading", url);
+    console.log("Starting stylesheet loading", url);
     var loadUrl = RapidContext.App._nonCachedUrl(url);
     var link = MochiKit.DOM.LINK({ rel: "stylesheet", type: "text/css", href: loadUrl });
     document.getElementsByTagName("head")[0].appendChild(link);
@@ -726,10 +731,10 @@ RapidContext.App.loadStyles = function (url) {
         RapidContext.Util.injectStackTrace(stack);
         var sheet = findStylesheet(url) || findStylesheet(absoluteUrl);
         if (sheet && sheet.cssRules && sheet.cssRules.length) {
-            LOG.trace("Completed loading stylesheet", url);
+            console.log("Completed loading stylesheet", url);
             d.callback();
         } else {
-            LOG.warning("Failed loading stylesheet", url);
+            console.warning("Failed loading stylesheet", url);
             msg = "Failed loading stylesheet " + url;
             d.errback(new URIError(msg, url));
         }
@@ -802,7 +807,7 @@ RapidContext.App._addErrbackLogger = function (d) {
         if (!d.chained) {
             RapidContext.Util.injectStackTrace(stack);
             // TODO: Handle MochiKit.Async.CancelledError here?
-            LOG.warning("Unhandled error in deferred", err);
+            console.warning("Unhandled error in deferred", err);
         }
         return err;
     };
@@ -860,7 +865,7 @@ RapidContext.App._Cache = {
             // TODO: use deep clone
             data = MochiKit.Base.update(null, data);
             this.status = data;
-            LOG.info("Updated cached status", this.status);
+            console.log("Updated cached status", this.status);
             break;
         case "System.Session.Current":
             if (this.compareId(this.user, data.user) != 0) {
@@ -872,7 +877,7 @@ RapidContext.App._Cache = {
                     data.longName = data.id;
                 }
                 this.user = data;
-                LOG.info("Updated cached user", this.user);
+                console.log("Updated cached user", this.user);
             }
             break;
         case "System.App.List":
@@ -893,7 +898,7 @@ RapidContext.App._Cache = {
                     }
                 }
                 if (launcher.className == null) {
-                    LOG.error("App missing 'className' property", launcher);
+                    console.error("App missing 'className' property", launcher);
                 }
                 var pos = idxs[launcher.id];
                 if (pos >= 0) {
@@ -911,7 +916,7 @@ RapidContext.App._Cache = {
                     this.apps.splice(pos, 1);
                 }
             }
-            LOG.info("Updated cached apps", this.apps);
+            console.log("Updated cached apps", this.apps);
             break;
         }
     }
