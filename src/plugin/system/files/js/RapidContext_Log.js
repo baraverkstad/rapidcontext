@@ -308,7 +308,7 @@
      * value, but may also be simplified for increased readability.
      *
      * @param {Object} o the value or object to convert
-     * @param {Number} [depth=0] the current object depth (max is 3)
+     * @param {Number} [depth=0] the current object depth (max is 4)
      *
      * @return {String} the string representation of the value
      *
@@ -317,8 +317,12 @@
     function stringify(o, depth) {
         depth = depth || 0;
         var type = typeof(o);
-        if (o == null || type == "boolean" || type == "number" || type == "string") {
+        if (o == null || type == "boolean" || type == "number") {
             return "" + o;
+        } else if (type == "string" && depth > 0) {
+            return '"' + o.replace(/"/g, '\\"').replace(/\n/g, "\\n") + '"';
+        } else if (type == "string") {
+            return o;
         } else if (type == "function") {
             var name = o.name || o.displayName || "";
             var signature = o.toString().replace(/\)[\s\S]*/, "") + ")";
@@ -328,18 +332,20 @@
                 signature = "function ()";
             }
             return signature + " {...}";
-        } else if (o.nodeType === 1) {
+        } else if (o.nodeType === 1 || o.nodeType === 9) {
+            o = o.documentElement || o.document || o;
+            var xml = o.outerHTML || o.outerXML || o.toString();
             if (o.childNodes && o.childNodes.length) {
-                return o.outerHTML.replace(/>[\s\S]*</, ">...<");
+                return xml.replace(/>[\s\S]*</, ">...<");
             } else {
-                return o.outerHTML.replace(/>[\s\S]*/, " />");
+                return xml.replace(/>[\s\S]*/, " />");
             }
-        } else if (depth > 2) {
+        } else if (depth > 3) {
             return "...";
         } else if (typeof(o.length) == "number") {
             var arr = [];
             for (var i = 0; i < o.length; i++) {
-                if (i > 10) {
+                if (i > 20) {
                     arr.push("...");
                     break;
                 }
@@ -357,7 +363,7 @@
                 if (arr.length > 0) {
                     arr.push(",");
                 }
-                if (arr.length > 49) {
+                if (arr.length > 99) {
                     arr.push(newline, "...");
                     break;
                 }
