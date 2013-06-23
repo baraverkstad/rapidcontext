@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <style type="text/css">
+table {
+    border-collapse: collapse;
+}
+th, td {
+    border: 1px solid #EEE;
+    padding: 2px 10px 2px 3px;
+    text-align: left;
+}
+    </style>
+    <script type="text/javascript" src="js/RapidContext_Log.js"></script>
+    <script type="text/javascript">
+// <!--
+function update() {
+    document.getElementById("level").innerHTML = RapidContext.Log.level();
+    document.getElementById("context").value = RapidContext.Log.context() || "";
+    var table = document.getElementById("history");
+    while (table.lastChild) {
+        table.removeChild(table.lastChild);
+    }
+    var hist = RapidContext.Log.history();
+    for (var i = 0; i < hist.length; i++) {
+        var e = hist[i];
+        var tr = document.createElement("TR");
+        var td1 = document.createElement("TD");
+        var td2 = document.createElement("TD");
+        var td3 = document.createElement("TD");
+        var td4 = document.createElement("TD");
+        var td5 = document.createElement("TD");
+        var td6 = document.createElement("TD");
+        td1.innerHTML = e.id || "";
+        td2.innerHTML = e.time.toTimeString().replace(/ .*/, "");
+        td3.innerHTML = e.level;
+        td4.innerHTML = e.context || "";
+        td5.innerHTML = e.message || "";
+        td6.innerHTML = (e.data || "").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        tr.appendChild(td1);
+        tr.appendChild(td2);
+        tr.appendChild(td3);
+        tr.appendChild(td4);
+        tr.appendChild(td5);
+        tr.appendChild(td6);
+        table.appendChild(tr);
+    }
+}
+// -->
+    </script>
+  </head>
+
+  <body style="padding: 10px;" onload="update(); console.log('body.onload', [1,2,3], null, document.body);" onclick="update();">
+
+    <p>
+      <button onclick="console.error('console.error', [1,2,3], null, document.body)">console.error</button>
+      <button onclick="RapidContext.Log.error('RapidContext.Log.error', [1,2,3], null, document.body)">RapidContext.Log.error</button>
+    </p>
+    <p>
+      <button onclick="console.warn('console.warn', [1,2,3], null, document.body)">console.warn</button>
+      <button onclick="RapidContext.Log.warn('RapidContext.Log.warn', [1,2,3], null, document.body)">RapidContext.Log.warn</button>
+    </p>
+    <p>
+      <button onclick="console.info('console.info', [1,2,3], null, document.body)">console.info</button>
+      <button onclick="RapidContext.Log.info('RapidContext.Log.info', [1,2,3], null, document.body)">RapidContext.Log.info</button>
+    </p>
+    <p>
+      <button onclick="console.log('console.log', [1,2,3], null, document.body)">console.log</button>
+      <button onclick="RapidContext.Log.log('RapidContext.Log.log', [1,2,3], null, document.body)">RapidContext.Log.log</button>
+    </p>
+    <p>
+      <button onclick="console.debug('console.debug', [1,2,3], null, document.body)">console.debug</button>
+      <button onclick="RapidContext.Log.debug('RapidContext.Log.debug', [1,2,3], null, document.body)">RapidContext.Log.debug</button>
+      <button onclick="RapidContext.Log.trace('RapidContext.Log.trace', [1,2,3], null, document.body)">RapidContext.Log.trace</button>
+    </p>
+
+    <hr>
+
+    <p>Log Level: <span id="level"></span></p>
+
+    <p>
+      <button onclick="RapidContext.Log.level('none');">level none</button>
+      <button onclick="RapidContext.Log.level('error');">level error</button>
+      <button onclick="RapidContext.Log.level('warn');">level warn</button>
+      <button onclick="RapidContext.Log.level('info');">level info</button>
+      <button onclick="RapidContext.Log.level('log');">level log</button>
+      <button onclick="RapidContext.Log.level('debug');">level debug</button>
+      <button onclick="RapidContext.Log.level('trace');">level trace</button>
+      <button onclick="RapidContext.Log.level('all');">level all</button>
+    </p>
+
+    <hr>
+
+    <form onsubmit="return false;">
+      Log Context:
+      <input id="context" placeholder="Context name here" />
+      <button type="button" onclick="RapidContext.Log.context(document.getElementById('context').value || null);">Change</button>
+    </form>
+
+    <hr>
+
+    <p>Log History: <button onclick="RapidContext.Log.clear();">clear</button></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>Time</th>
+          <th>Level</th>
+          <th>Context</th>
+          <th>Message</th>
+          <th>Data</th>
+        </tr>
+      </thead>
+      <tbody id="history">
+      </tbody>
+    </table>
+
+  </body>
+
+</html>
