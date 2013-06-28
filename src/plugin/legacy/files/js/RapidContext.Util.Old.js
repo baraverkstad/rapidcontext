@@ -31,6 +31,79 @@ RapidContext.Util._logOnce = function(level, message) {
 };
 
 /**
+ * Returns the current execution stack trace. The stack trace is an array of
+ * function names with the innermost function at the lowest index (0). Due to
+ * limitations in the JavaScript API:s, the stack trace will be cut if
+ * recursion is detected. The stack trace will also be cut if the call depth
+ * exceeds the maximum depth or if any function in the chain has an injected
+ * stack trace.
+ *
+ * @param {Number} [maxDepth] the maximum call depth, defaults to 20
+ *
+ * @return {Array} the stack trace array of function names
+ *
+ * @deprecated This function will be removed in the future. Custom code for
+ *     logging and determining stack traces is obsolete, since `console.log`
+ *     now provides a better solution.
+ *
+ * @see RapidContext.Util.functionName
+ * @see RapidContext.Util.injectStackTrace
+ */
+RapidContext.Util.stackTrace = function (maxDepth) {
+    var func = arguments.callee.caller;
+    var visited = [];
+    var res = [];
+    maxDepth = maxDepth || 20;
+    while (func != null) {
+        if (MochiKit.Base.findIdentical(visited, func) >= 0) {
+            res.push("...recursion...");
+            break;
+        }
+        if (func.$stackTrace != null) {
+            res = res.concat(func.$stackTrace);
+            break;
+        }
+        var name = RapidContext.Util.functionName(func);
+        if (name === null) {
+            // Skip stack trace when null (but not when undefined)
+        } else {
+            res.push(name || "<anonymous>");
+        }
+        visited.push(func);
+        if (visited.length >= maxDepth) {
+            res.push("...");
+            break;
+        }
+        func = func.caller;
+    }
+    return res;
+};
+
+/**
+ * Injects a stack trace for a function. This method is useful for creating a
+ * fake stack trace in anonymous or callback functions. A `null` value can be
+ * used to clear any previously injected stack trace for the calling function.
+ *
+ * @param {Array} stackTrace the stack trace, or `null` to clear
+ * @param {Function} [func] the function to modify, or `null` for the
+ *            currently executing function (i.e. the caller)
+ *
+ * @deprecated This function will be removed in the future. Custom code for
+ *     logging and determining stack traces is obsolete, since `console.log`
+ *     now provides a better solution.
+ */
+RapidContext.Util.injectStackTrace = function (stackTrace, func) {
+    func = func || arguments.callee.caller;
+    if (func != null) {
+        if (stackTrace) {
+            func.$stackTrace = stackTrace;
+        } else {
+            delete func.$stackTrace;
+        }
+    }
+};
+
+/**
  * Checks if the specified value corresponds to false. This function
  * will equate false, undefined, null, 0, "", [], "false" and "null"
  * with a boolean false value.
@@ -226,6 +299,39 @@ RapidContext.Util.toApproxPeriod = function (millis) {
         return p.seconds + " seconds";
     } else {
         return p.millis + " milliseconds";
+    }
+};
+
+/**
+ * Creates a programmers debug representation of a DOM node. This method is
+ * similar to `MochiKit.DOM.emitHtml`, except for that it does not recurse into
+ * child nodes.
+ *
+ * @param {Object} node the HTML DOM node
+ *
+ * @return {String} a debug representation of the DOM node
+ */
+RapidContext.Util.reprDOM = function (node) {
+    if (node == null) {
+        return "null";
+    } else if (typeof(node) === 'string') {
+        return node;
+    } else if (node.nodeType === 1) { // Node.ELEMENT_NODE
+        var res = "<" + node.tagName.toLowerCase();
+        var attrs = MochiKit.Base.map(RapidContext.Util.reprDOM, node.attributes);
+        res += attrs.join("");
+        if (node.hasChildNodes()) {
+            res += " ["  + node.childNodes.length + " child nodes]";
+        }
+        res += "/>";
+        return res;
+    } else if (node.nodeType === 2) { // Node.ATTRIBUTE_NODE
+        return " " + node.name + '="' +
+               MochiKit.DOM.escapeHTML(node.value) + '"';
+    } else if (node.nodeType === 3) { // Node.TEXT_NODE
+        return MochiKit.DOM.escapeHTML(node.nodeValue);
+    } else {
+        return node.toString();
     }
 };
 
