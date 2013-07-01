@@ -86,7 +86,7 @@ RapidContext.UI.buildUI = function (node, ids) {
         try {
             return RapidContext.UI._buildUIElem(node, ids);
         } catch (e) {
-            console.error("Failed to build UI element", node, e);
+            RapidContext.Log.error("Failed to build UI element", node, e);
         }
     } else if (node.nodeType === 3) { // Node.TEXT_NODE
         var str = node.nodeValue;
@@ -122,7 +122,7 @@ RapidContext.UI._buildUIElem = function (node, ids) {
     if (RapidContext.Widget.Classes[name]) {
         if (name == "Table" && attrs.multiple) {
             // TODO: remove deprecated code, eventually...
-            console.warning("Table 'multiple' attribute is deprecated, use 'select'", node);
+            RapidContext.Log.warning("Table 'multiple' attribute is deprecated, use 'select'", node);
             attrs.select = MochiKit.Base.bool(attrs.multiple) ? "multiple" : "one";
             delete attrs.multiple;
         }

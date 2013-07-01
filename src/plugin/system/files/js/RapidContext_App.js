@@ -43,7 +43,7 @@ if (typeof(RapidContext.App) == "undefined") {
 RapidContext.App.init = function (app) {
     // Setup libraries
     RapidContext.Log.context("RapidContext.App.init()");
-    console.info("Initializing RapidContext");
+    RapidContext.Log.info("Initializing RapidContext");
     RapidContext.Util.registerFunctionNames(RapidContext, "RapidContext");
 
     // Setup UI
@@ -145,7 +145,7 @@ RapidContext.App.findApp = function (app) {
     for (var i = 0; i < apps.length; i++) {
         var l = apps[i];
         if (l.className == null) {
-            console.error("Launcher does not have 'className' property", l);
+            RapidContext.Log.error("Launcher does not have 'className' property", l);
         } else if (l.id == app || l.className == app || l.id == app.id) {
             return l;
         }
@@ -190,7 +190,7 @@ RapidContext.App.startApp = function (app, container) {
     // Setup variables and find app launcher
     var launcher = RapidContext.App.findApp(app);
     if (launcher == null) {
-        console.error("No matching app launcher found", app);
+        RapidContext.Log.error("No matching app launcher found", app);
         throw new Error("No matching app launcher found: " + app);
     }
     var instance = null;
@@ -223,7 +223,7 @@ RapidContext.App.startApp = function (app, container) {
     // Load app resources
     RapidContext.Log.context("RapidContext.App.startApp(" + launcher.id + ")");
     if (launcher.creator == null) {
-        console.info("Loading app/" + launcher.id + " resources", launcher);
+        RapidContext.Log.info("Loading app/" + launcher.id + " resources", launcher);
         launcher.resource = {};
         for (var i = 0; i < launcher.resources.length; i++) {
             var res = launcher.resources[i];
@@ -252,7 +252,7 @@ RapidContext.App.startApp = function (app, container) {
         d.addCallback(function () {
             launcher.creator = this[launcher.className] || window[launcher.className];
             if (launcher.creator == null) {
-                console.error("app constructor " + launcher.className + " not defined", launcher);
+                RapidContext.Log.error("app constructor " + launcher.className + " not defined", launcher);
                 throw new Error("App constructor " + launcher.className + " not defined");
             }
             RapidContext.Util.registerFunctionNames(launcher.creator, launcher.className);
@@ -280,7 +280,7 @@ RapidContext.App.startApp = function (app, container) {
         });
         cbDefer.addBoth(function (res) {
             if (res instanceof Error) {
-                console.error("License retrieval failed", res);
+                RapidContext.Log.error("License retrieval failed", res);
             } else {
                 launcher.license = res;
             }
@@ -290,7 +290,7 @@ RapidContext.App.startApp = function (app, container) {
 
     // Create app instance, build UI and start app
     d.addCallback(function () {
-        console.info("Starting app/" + launcher.id, launcher);
+        RapidContext.Log.info("Starting app/" + launcher.id, launcher);
         var fun = launcher.creator;
         instance = new fun();
         launcher.instances.push(instance);
@@ -360,10 +360,10 @@ RapidContext.App.startApp = function (app, container) {
 RapidContext.App.stopApp = function (app) {
     var launcher = RapidContext.App.findApp(app);
     if (!(launcher && launcher.instances && launcher.instances.length)) {
-        console.error("No running app instance found", app);
+        RapidContext.Log.error("No running app instance found", app);
         throw new Error("No running app instance found");
     }
-    console.info("Stopping app " + launcher.name);
+    RapidContext.Log.info("Stopping app " + launcher.name);
     var pos = MochiKit.Base.findIdentical(launcher.instances, app);
     if (pos < 0) {
         app = launcher.instances.pop();
@@ -402,7 +402,7 @@ RapidContext.App.callApp = function (app, method) {
     var launcher = RapidContext.App.findApp(app);
     var d;
     if (launcher == null) {
-        console.error("No matching app launcher found", app);
+        RapidContext.Log.error("No matching app launcher found", app);
         throw new Error("No matching app launcher found");
     }
     if (!(launcher.instances && launcher.instances.length)) {
@@ -422,14 +422,14 @@ RapidContext.App.callApp = function (app, method) {
         }
         var methodName = launcher.className + "." + method;
         if (instance == null || instance[method] == null) {
-            console.error("No app method " + methodName + " found");
+            RapidContext.Log.error("No app method " + methodName + " found");
             throw new Error("No app method " + methodName + " found");
         }
-        console.log("Calling app method " + methodName, args);
+        RapidContext.Log.log("Calling app method " + methodName, args);
         try {
             return instance[method].apply(instance, args);
         } catch (e) {
-            console.error("In call to " + methodName, e);
+            RapidContext.Log.error("In call to " + methodName, e);
             throw new Error("In call to " + methodName + ": " + e.message);
         }
     });
@@ -459,7 +459,7 @@ RapidContext.App.callProc = function (name, args) {
     if (name.indexOf("RapidContext.") == 0) {
         name = "System" + name.substring(8);
     }
-    console.log("Call request " + name, args);
+    RapidContext.Log.log("Call request " + name, args);
     for (var i = 0; args != null && i < args.length; i++) {
         if (args[i] == null) {
             params["arg" + i] = "null";
@@ -474,13 +474,13 @@ RapidContext.App.callProc = function (name, args) {
     var d = RapidContext.App.loadJSON("rapidcontext/procedure/" + name, params, options);
     d.addCallback(function (res) {
         if (res.trace != null) {
-            console.log("Server trace " + name, res.trace);
+            RapidContext.Log.log("Server trace " + name, res.trace);
         }
         if (res.error != null) {
-            console.error("Call error " + name, res.error);
+            RapidContext.Log.error("Call error " + name, res.error);
             throw new Error(res.error);
         } else {
-            console.log("Call response " + name, res.data);
+            RapidContext.Log.log("Call response " + name, res.data);
         }
         return res.data;
     });
@@ -665,16 +665,16 @@ RapidContext.App.loadScript = function (url) {
     var selector2 = 'script[src^="' + absoluteUrl + '"]';
     var elems = MochiKit.Selector.findDocElements(selector1, selector2);
     if (elems.length > 0) {
-        console.log("Script already loaded, skipping", url);
+        RapidContext.Log.log("Script already loaded, skipping", url);
         return MochiKit.Async.wait(0);
     }
-    console.log("Starting script loading", url);
+    RapidContext.Log.log("Starting script loading", url);
     var d = MochiKit.Async.loadScript(RapidContext.App._nonCachedUrl(url));
     d.addCallback(function () {
-        console.log("Completed loading script", url);
+        RapidContext.Log.log("Completed loading script", url);
     });
     d.addErrback(function (e) {
-        console.warning("Failed loading script", url + ": " + e.message);
+        RapidContext.Log.warning("Failed loading script", url + ": " + e.message);
         return e;
     });
     RapidContext.App._addErrbackLogger(d);
@@ -705,10 +705,10 @@ RapidContext.App.loadStyles = function (url) {
     var d = new MochiKit.Async.Deferred();
     var absoluteUrl = RapidContext.Util.resolveURI(url);
     if (findStylesheet(url) || findStylesheet(absoluteUrl)) {
-        console.log("Stylesheet already loaded, skipping", url);
+        RapidContext.Log.log("Stylesheet already loaded, skipping", url);
         return MochiKit.Async.wait(0);
     }
-    console.log("Starting stylesheet loading", url);
+    RapidContext.Log.log("Starting stylesheet loading", url);
     var loadUrl = RapidContext.App._nonCachedUrl(url);
     var link = MochiKit.DOM.LINK({ rel: "stylesheet", type: "text/css", href: loadUrl });
     document.getElementsByTagName("head")[0].appendChild(link);
@@ -716,10 +716,10 @@ RapidContext.App.loadStyles = function (url) {
     img.onerror = function () {
         var sheet = findStylesheet(url) || findStylesheet(absoluteUrl);
         if (sheet && sheet.cssRules && sheet.cssRules.length) {
-            console.log("Completed loading stylesheet", url);
+            RapidContext.Log.log("Completed loading stylesheet", url);
             d.callback();
         } else {
-            console.warning("Failed loading stylesheet", url);
+            RapidContext.Log.warning("Failed loading stylesheet", url);
             msg = "Failed loading stylesheet " + url;
             d.errback(new URIError(msg, url));
         }
@@ -790,7 +790,7 @@ RapidContext.App._addErrbackLogger = function (d) {
     var logger = function (err) {
         if (!d.chained) {
             // TODO: Handle MochiKit.Async.CancelledError here?
-            console.warning("Unhandled error in deferred", err);
+            RapidContext.Log.warning("Unhandled error in deferred", err);
         }
         return err;
     };
@@ -848,7 +848,7 @@ RapidContext.App._Cache = {
             // TODO: use deep clone
             data = MochiKit.Base.update(null, data);
             this.status = data;
-            console.log("Updated cached status", this.status);
+            RapidContext.Log.log("Updated cached status", this.status);
             break;
         case "System.Session.Current":
             if (this.compareId(this.user, data.user) != 0) {
@@ -860,7 +860,7 @@ RapidContext.App._Cache = {
                     data.longName = data.id;
                 }
                 this.user = data;
-                console.log("Updated cached user", this.user);
+                RapidContext.Log.log("Updated cached user", this.user);
             }
             break;
         case "System.App.List":
@@ -881,7 +881,7 @@ RapidContext.App._Cache = {
                     }
                 }
                 if (launcher.className == null) {
-                    console.error("App missing 'className' property", launcher);
+                    RapidContext.Log.error("App missing 'className' property", launcher);
                 }
                 var pos = idxs[launcher.id];
                 if (pos >= 0) {
@@ -899,7 +899,7 @@ RapidContext.App._Cache = {
                     this.apps.splice(pos, 1);
                 }
             }
-            console.log("Updated cached apps", this.apps);
+            RapidContext.Log.log("Updated cached apps", this.apps);
             break;
         }
     }
