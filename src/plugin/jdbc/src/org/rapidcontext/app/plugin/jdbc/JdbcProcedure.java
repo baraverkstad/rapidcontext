@@ -18,6 +18,8 @@ import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.proc.AddOnProcedure;
@@ -208,6 +210,12 @@ public abstract class JdbcProcedure extends AddOnProcedure {
     private static class SqlField implements Comparable {
 
         /**
+         * A regular expression to find the SQL WHERE clause.
+         */
+        private static final Pattern RE_WHERE =
+            Pattern.compile("\\s(WHERE|JOIN)\\s", Pattern.CASE_INSENSITIVE);
+
+        /**
          * The start index of the field (in the SQL buffer).
          */
         public int startPos;
@@ -295,10 +303,14 @@ public abstract class JdbcProcedure extends AddOnProcedure {
          *         a negative number if not found
          */
         private int findOperator(String sql, int end) {
+            Matcher m = RE_WHERE.matcher(sql);
             String  opChars = "=!?";
             int     pos = end - 1;
             char    c;
 
+            if (!m.find() || m.end() > end) {
+                return -1;
+            }
             while (pos >= 0) {
                 c = sql.charAt(pos);
                 if (!Character.isWhitespace(c) && opChars.indexOf(c) < 0) {
