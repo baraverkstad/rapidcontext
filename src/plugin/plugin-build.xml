@@ -71,7 +71,8 @@
            target="1.5"
            source="1.5"
            debug="on"
-           deprecation="on" />
+           deprecation="on"
+           includeantruntime="off" />
     <mkdir dir="lib" />
     <jar jarfile="lib/${plugin.id}-${build.version}.jar" level="9">
       <fileset dir="classes" />
