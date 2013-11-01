@@ -93,8 +93,12 @@ RapidContext.UI.buildUI = function (node, ids) {
         if (str != null && MochiKit.Format.strip(str) != "") {
             return RapidContext.Util.createTextNode(str.replace(/\s+/g, " "));
         }
+    } else if (node.nodeType === 4) { // Node.CDATA_SECTION_NODE
+        var str = node.nodeValue;
+        if (str != null && str != "") {
+            return RapidContext.Util.createTextNode(str);
+        }
     }
-    // TODO: handling of CDATA nodes to escape text?
     return null;
 };
 
