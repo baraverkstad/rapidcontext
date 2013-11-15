@@ -101,7 +101,7 @@ public class ProcedureReadProcedure implements Procedure {
         throws ProcedureException {
 
         String name = (String) bindings.getValue("name");
-        CallContext.checkReadAccess("procedure/" + name);
+        CallContext.checkAccess("procedure/" + name, cx.readPermission(1));
         Procedure proc = cx.getLibrary().getProcedure(name);
         return getProcedureData(cx.getLibrary(), proc);
     }

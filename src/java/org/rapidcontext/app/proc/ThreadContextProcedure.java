@@ -120,7 +120,7 @@ public class ThreadContextProcedure implements Procedure {
         if (isOwner) {
             return getContextData(cx);
         } else {
-            CallContext.checkReadAccess("thread/" + threadId);
+            CallContext.checkAccess("thread/" + threadId, cx.readPermission(1));
             return getContextData(cx);
         }
     }

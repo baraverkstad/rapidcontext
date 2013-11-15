@@ -125,7 +125,7 @@ public class StorageCopyProcedure implements Procedure {
         } else if (src.endsWith("/")) {
             throw new ProcedureException("source path cannot be an index");
         }
-        CallContext.checkReadAccess(src);
+        CallContext.checkAccess(src, cx.readPermission(1));
         String dst = ((String) bindings.getValue("dst", "")).trim();
         if (dst.length() <= 0) {
             throw new ProcedureException("destination path cannot be empty");

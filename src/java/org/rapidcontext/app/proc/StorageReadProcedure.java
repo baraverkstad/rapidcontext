@@ -108,7 +108,7 @@ public class StorageReadProcedure implements Procedure {
         } else if (path.endsWith("/")) {
             throw new ProcedureException("path cannot be an index");
         }
-        CallContext.checkReadAccess(path);
+        CallContext.checkAccess(path, cx.readPermission(1));
         Storage storage = ApplicationContext.getInstance().getStorage();
         Path loadPath = new Path(path);
         Object res = storage.load(loadPath);

@@ -28,6 +28,7 @@ import org.rapidcontext.core.type.Channel;
 import org.rapidcontext.core.type.Connection;
 import org.rapidcontext.core.type.ConnectionException;
 import org.rapidcontext.core.type.Environment;
+import org.rapidcontext.core.type.Role;
 import org.rapidcontext.core.type.User;
 import org.rapidcontext.util.DateUtil;
 
@@ -267,6 +268,44 @@ public class CallContext {
     }
 
     /**
+     * Returns the permission required to read a path at the current
+     * call stack height. If the current call stack height is less or
+     * equal to the specified depth, a normal read permission is
+     * returned. Otherwise an internal permission is returned.
+     *
+     * @param depth          the max stack depth for read permission
+     *
+     * @return the permission required for reading (read or internal)
+     *
+     * @see Role#PERM_INTERNAL
+     * @see Role#PERM_READ
+     */
+    public String readPermission(int depth) {
+        return (stack.height() <= depth) ? Role.PERM_READ : Role.PERM_INTERNAL;
+    }
+
+    /**
+     * Checks if the currently authenticated user has the specified
+     * access permission to a storage path.
+     *
+     * @param path           the object storage path
+     * @param permission     the requested permission
+     *
+     * @throws ProcedureException if the current user didn't have
+     *             the requested access permission
+     */
+    public static void checkAccess(String path, String permission)
+    throws ProcedureException {
+
+        if (!SecurityContext.hasAccess(path, permission)) {
+            User user = SecurityContext.currentUser();
+            String id = (user == null) ? "anonymous user" : user.toString();
+            LOG.info(permission + " permission denied for " + path + ", " + id);
+            throw new ProcedureException("permission denied");
+        }
+    }
+
+    /**
      * Checks if the currently authenticated user has internal access
      * to a storage path.
      *
@@ -276,12 +315,7 @@ public class CallContext {
      *             internal access
      */
     public static void checkInternalAccess(String path) throws ProcedureException {
-        if (!SecurityContext.hasInternalAccess(path)) {
-            User user = SecurityContext.currentUser();
-            String userInfo = (user == null) ? "anonymous user" : user.toString();
-            LOG.info("internal permission denied for " + path + ", " + userInfo);
-            throw new ProcedureException("permission denied");
-        }
+        checkAccess(path, Role.PERM_INTERNAL);
     }
 
     /**
@@ -294,12 +328,7 @@ public class CallContext {
      *             read access
      */
     public static void checkReadAccess(String path) throws ProcedureException {
-        if (!SecurityContext.hasReadAccess(path)) {
-            User user = SecurityContext.currentUser();
-            String userInfo = (user == null) ? "anonymous user" : user.toString();
-            LOG.info("read permission denied for " + path + ", " + userInfo);
-            throw new ProcedureException("permission denied");
-        }
+        checkAccess(path, Role.PERM_READ);
     }
 
     /**
@@ -312,12 +341,7 @@ public class CallContext {
      *             search access
      */
     public static void checkSearchAccess(String path) throws ProcedureException {
-        if (!SecurityContext.hasSearchAccess(path)) {
-            User user = SecurityContext.currentUser();
-            String userInfo = (user == null) ? "anonymous user" : user.toString();
-            LOG.info("search permission denied for " + path + ", " + userInfo);
-            throw new ProcedureException("permission denied");
-        }
+        checkAccess(path, Role.PERM_SEARCH);
     }
 
     /**
@@ -330,12 +354,7 @@ public class CallContext {
      *             write access
      */
     public static void checkWriteAccess(String path) throws ProcedureException {
-        if (!SecurityContext.hasWriteAccess(path)) {
-            User user = SecurityContext.currentUser();
-            String userInfo = (user == null) ? "anonymous user" : user.toString();
-            LOG.info("write permission denied for " + path + ", " + userInfo);
-            throw new ProcedureException("permission denied");
-        }
+        checkAccess(path, Role.PERM_WRITE);
     }
 
     /**
@@ -426,11 +445,7 @@ public class CallContext {
      *             reserved
      */
     public void reserve(Procedure proc) throws ProcedureException {
-        if (getCallStack().height() <= 0) {
-            checkReadAccess("procedure/" + proc.getName());
-        } else {
-            checkInternalAccess("procedure/" + proc.getName());
-        }
+        checkAccess("procedure/" + proc.getName(), readPermission(0));
         getInterceptor().reserve(this, proc);
     }
 

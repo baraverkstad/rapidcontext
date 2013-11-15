@@ -109,7 +109,7 @@ public class UserAccessProcedure implements Procedure {
         if (userId.trim().length() <= 0) {
             return Boolean.valueOf(SecurityContext.hasAccess(path, perm));
         } else {
-            CallContext.checkReadAccess("user/" + userId);
+            CallContext.checkAccess("user/" + userId, cx.readPermission(1));
             User user = null;
             if (!userId.equalsIgnoreCase("anonymous")) {
                 user = User.find(cx.getStorage(), userId);

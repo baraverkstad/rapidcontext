@@ -18,7 +18,6 @@ import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.security.SecurityContext;
 
 /**
  * The built-in connection validate procedure.
@@ -99,9 +98,7 @@ public class ConnectionValidateProcedure implements Procedure {
     throws ProcedureException {
 
         String id = (String) bindings.getValue("connection");
-        if (!SecurityContext.hasInternalAccess("connection/" + id)) {
-            throw new ProcedureException("permission denied");
-        }
+        CallContext.checkAccess("connection/" + id, cx.readPermission(1));
         cx.connectionReserve(id);
         return "OK";
     }
