@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui>
+  <style>
+    html,
+    body,
+    table,
+    button {
+        font-size: 14px;
+    }
+    .widgetDialog {
+        border-color: #FFF;
+        background: #FFF;
+    }
+    .widgetDialogTitle {
+        padding: 10px 16px;
+        background: -moz-linear-gradient(top, #00AACC, #0077AA);
+        background: -ms-linear-gradient(top, #00AACC, #0077AA);
+        background: -o-linear-gradient(top, #00AACC, #0077AA);
+        background: -webkit-linear-gradient(top, #00AACC, #0077AA);
+        background: linear-gradient(top, #00AACC, #0077AA);
+        -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#00AACC', endColorstr='#0077AA')";
+        font-size: 20px;
+    }
+    .widgetDialogContent {
+        background: white;
+    }
+    .widgetTextField {
+        font-size: 14px;
+    }
+    .login-inset {
+        margin-bottom: 10px;
+        border-radius: 6px;
+        padding: 8px 10px;
+        box-shadow: 0 1px 2px #665500 inset;
+        background: -moz-linear-gradient(top, #FFFFF8, #FFFFDD);
+        background: -ms-linear-gradient(top, #FFFFF8, #FFFFDD);
+        background: -o-linear-gradient(top, #FFFFF8, #FFFFDD);
+        background: -webkit-linear-gradient(top, #FFFFF8, #FFFFDD);
+        background: linear-gradient(top, #FFFFF8, #FFFFDD);
+        -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFF8', endColorstr='#FFFFDD')";
+    }
+  </style>
+  <Dialog id="loginDialog" title="Login" system="true" closeable="false" resizeable="false" style="width: 400px;">
+    <Form id="loginForm">
+      <div id="loginCurrent" class="login-inset hidden">
+        You are currently logged in as <strong id="loginName">Name</strong>.
+        Please login as a user with access to this application.
+      </div>
+      <table w="100%" style="border-collapse: collapse;">
+        <tbody w="100%">
+          <tr>
+            <th class="label" style="width: 130px; padding-top: 10px; padding-right: 10px; text-align: right;">Login / Email:</th>
+            <td style="padding-top: 6px;" w="100%-140">
+              <TextField id="loginUser" name="user" w="100%-10" />
+              <FormValidator name="user" mandatory="true" message="A user name or email is required" style="padding: 3px 0 6px 0;" />
+            </td>
+          </tr>
+          <tr>
+            <th class="label" style="width: 130px; padding-top: 14px; padding-right: 10px; text-align: right;">Password:</th>
+            <td style="padding-top: 10px;" w="100%-140">
+              <TextField id="loginPassword" name="password" type="password" w="100%-10" />
+              <FormValidator id="loginPasswordError" name="password" mandatory="false" style="padding: 3px 0 6px 0;" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="margin: 15px 5px 0 5px; text-align: right;">
+        <Button id="loginAuth" type="submit" icon="OK" highlight="true">Login</Button>
+      </div>
+    </Form>
+  </Dialog>
+</ui>

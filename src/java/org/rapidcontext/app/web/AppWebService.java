@@ -30,8 +30,10 @@ import org.rapidcontext.app.plugin.PluginManager;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.js.JsSerializer;
+import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
+import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.type.Session;
 import org.rapidcontext.core.web.Mime;
 import org.rapidcontext.core.web.Request;
@@ -252,7 +254,8 @@ public class AppWebService extends FileWebService {
             if (request.matchPath("rapidcontext/files/")) {
                 processFile(request, new Path(PATH_FILES, request.getPath()));
             } else if (request.matchPath("rapidcontext/app/")) {
-                processApp(request, request.getPath(), baseUrl);
+                String appId = StringUtils.removeEnd(request.getPath(), "/");
+                processApp(request, appId, baseUrl);
             } else if (isRoot) {
                 processApp(request, appId(), baseUrl);
             }
@@ -287,8 +290,21 @@ public class AppWebService extends FileWebService {
      */
     protected void processApp(Request request, String appId, String baseUrl) {
         session(request, true);
-        Path path = PATH_FILES.child("index.tmpl", false);
-        Object obj = ApplicationContext.getInstance().getStorage().load(path);
+        Storage storage = ApplicationContext.getInstance().getStorage();
+        Path appPath = new Path("/app/" + appId);
+        Object app = storage.load(appPath);
+        if (app instanceof Dict) {
+            String loginAppId = ((Dict) app).getString("login", "login");
+            if (!SecurityContext.hasReadAccess(appPath.toString())) {
+                String msg = "unauthorized access to app " + appId +
+                             ", launching login app " + loginAppId;
+                LOG.log(Level.INFO, msg);
+                appId = loginAppId;
+            }
+        } else {
+            appId = null;
+        }
+        Object obj = storage.load(PATH_FILES.child("index.tmpl", false));
         if (obj instanceof Binary) {
             Binary template = (Binary) obj;
             try {
