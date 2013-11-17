@@ -58,10 +58,10 @@ RapidContext.Widget.Dialog = function (attrs/*, ... */) {
     var close = RapidContext.Widget.Icon({ ref: "DEFAULT", tooltip: "Close", "class": "widgetDialogClose" });
     var resize = RapidContext.Widget.Icon({ ref: "RESIZE", "class": "widgetDialogResize" });
     var content = MochiKit.DOM.DIV({ "class": "widgetDialogContent" });
-    RapidContext.Util.registerSizeConstraints(content, "100% - 20", "100% - 41");
     var o = MochiKit.DOM.DIV({}, title, close, resize, content);
     RapidContext.Widget._widgetMixin(o, arguments.callee);
     MochiKit.DOM.addElementClass(o, "widgetDialog");
+    o.resizeContent = o._resizeContent;
     o._setHidden(true);
     o.setAttrs(MochiKit.Base.update({ modal: false, system: false, center: true }, attrs));
     o.addAll(MochiKit.Base.extend(null, arguments, 1));
@@ -255,7 +255,7 @@ RapidContext.Widget.Dialog.prototype.resizeTo = function (width, height) {
     MochiKit.Style.setElementDimensions(this, dim);
     RapidContext.Util.registerSizeConstraints(this, null, null);
     MochiKit.Base.update(this, dim);
-    RapidContext.Util.resizeElements(this.lastChild);
+    this._resizeContent();
     RapidContext.Widget.emitSignal(this, "onresize", dim);
     return dim;
 };
@@ -272,10 +272,23 @@ RapidContext.Widget.Dialog.prototype.resizeTo = function (width, height) {
 RapidContext.Widget.Dialog.prototype.resizeToContent = function () {
     var content = this.lastChild;
     MochiKit.Style.setStyle(content, { width: "auto", height: "auto", overflow: "hidden" });
-    var x = Math.round(Math.max(content.scrollWidth, content.offsetWidth) + 4);
-    var y = Math.round(Math.max(content.scrollHeight, content.offsetHeight) + 25);
+    var x = Math.max(content.scrollWidth, content.offsetWidth) + 4;
+    var y = Math.max(content.scrollHeight, content.offsetHeight) + content.offsetTop + 2;
     MochiKit.Style.setStyle(content, { overflow: "auto" });
-    return this.resizeTo(x, y);
+    return this.resizeTo(Math.round(x), Math.round(y));
+}
+
+/**
+ * Called when dialog content should be resized.
+ */
+RapidContext.Widget.Dialog.prototype._resizeContent = function () {
+    // TODO: Allow content node to have different padding
+    var content = this.lastChild;
+    var dim = { w: this.w - 20, h: this.h - 20 };
+    dim.h -= content.offsetTop - 1;
+    MochiKit.Style.setElementDimensions(content, dim);
+    MochiKit.Base.update(content, dim);
+    RapidContext.Util.resizeElements(content);
 }
 
 /**
