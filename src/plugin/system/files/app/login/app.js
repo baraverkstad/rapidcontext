@@ -12,7 +12,8 @@ LoginApp.prototype.start = function () {
     this.proc = RapidContext.Procedure.mapAll({
         sessionInfo: "System.Session.Current",
         sessionLogin: "System.Session.Authenticate",
-        sessionLogout: "System.Session.Terminate"
+        sessionLogout: "System.Session.Terminate",
+        userSearch: "System.User.Search",
     });
 
     // Signal handlers
@@ -22,7 +23,7 @@ LoginApp.prototype.start = function () {
     var user = RapidContext.App.user();
     if (user && user.id) {
         $(this.ui.loginName).text(user.name || user.id);
-        $(this.ui.loginCurrent).removeClass("hidden");
+        $(this.ui.loginWarning).removeClass("hidden");
     }
     this.ui.loginDialog.show();
     this.ui.loginUser.focus();
@@ -66,7 +67,20 @@ LoginApp.prototype.login = function (login, password) {
     d.addCallback(function () {
         return self.proc.sessionInfo();
     });
-    // TODO: handle email lookup
+    if (/@/.test(login)) {
+        var s;
+        d.addCallback(function (session) {
+            s = session;
+            return self.proc.userSearch($.trim(login).toLowerCase());
+        });
+        d.addCallback(function (user) {
+            if (user == null) {
+                throw new Error("no user with that email address");
+            }
+            login = user.id;
+            return s;
+        });
+    }
     d.addCallback(function (session) {
         var realm = RapidContext.App.status().realm;
         var hash = CryptoJS.MD5(login + ":" + realm + ":" + password);
@@ -76,7 +90,10 @@ LoginApp.prototype.login = function (login, password) {
     d.addBoth(function (res) {
         self.ui.loginAuth.setAttrs({ disabled: false, icon: "OK" });
         if (res instanceof Error) {
-            self.ui.loginPasswordError.addError(self.ui.loginPassword, res.message);
+            var msg = res.message;
+            msg = msg.charAt(0).toUpperCase() + msg.substr(1);
+            $(self.ui.loginError).removeClass("hidden").text(msg);
+            $(self.ui.loginWarning).addClass("hidden");
             self.ui.loginDialog.resizeToContent();
         } else {
             window.location.reload();

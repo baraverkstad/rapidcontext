@@ -28,7 +28,19 @@
     .widgetTextField {
         font-size: 14px;
     }
-    .login-inset {
+    .login-error {
+        margin-bottom: 10px;
+        border-radius: 6px;
+        padding: 8px 10px;
+        box-shadow: 0 1px 2px #660000 inset;
+        background: -moz-linear-gradient(top, #FFF8F8, #FFDDDD);
+        background: -ms-linear-gradient(top, #FFF8F8, #FFDDDD);
+        background: -o-linear-gradient(top, #FFF8F8, #FFDDDD);
+        background: -webkit-linear-gradient(top, #FFF8F8, #FFDDDD);
+        background: linear-gradient(top, #FFF8F8, #FFDDDD);
+        -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFF8F8', endColorstr='#FFDDDD')";
+    }
+    .login-warning {
         margin-bottom: 10px;
         border-radius: 6px;
         padding: 8px 10px;
@@ -43,7 +55,9 @@
   </style>
   <Dialog id="loginDialog" title="Login" system="true" closeable="false" resizeable="false" style="width: 400px;">
     <Form id="loginForm">
-      <div id="loginCurrent" class="login-inset hidden">
+      <div id="loginError" class="login-error hidden">
+      </div>
+      <div id="loginWarning" class="login-warning hidden">
         You are currently logged in as <strong id="loginName">Name</strong>.
         Please login as a user with access to this application.
       </div>
@@ -60,7 +74,6 @@
             <th class="label" style="width: 130px; padding-top: 14px; padding-right: 10px; text-align: right;">Password:</th>
             <td style="padding-top: 10px;" w="100%-140">
               <TextField id="loginPassword" name="password" type="password" w="100%-10" />
-              <FormValidator id="loginPasswordError" name="password" mandatory="false" style="padding: 3px 0 6px 0;" />
             </td>
           </tr>
         </tbody>
