@@ -15,9 +15,7 @@ StartApp.prototype.start = function () {
     this.proc = RapidContext.Procedure.mapAll({
         appList: "System.App.List",
         changePassword: "System.User.ChangePassword",
-        sessionInfo: "System.Session.Current",
-        sessionLogin: "System.Session.Authenticate",
-        sessionLogout: "System.Session.Terminate"
+        sessionInfo: "System.Session.Current"
     });
     var status = RapidContext.App.status();
 
@@ -65,10 +63,8 @@ StartApp.prototype.start = function () {
     MochiKit.Signal.connect(this.proc.changePassword, "onresponse", this, "_changePasswordCallback");
 
     // Login dialog
-    MochiKit.Signal.connect(this.proc.sessionInfo, "onsuccess", this, "_loginUpdateNonce");
     MochiKit.Signal.connect(this.ui.loginCancel, "onclick", this.ui.loginDialog, "hide");
     MochiKit.Signal.connect(this.ui.loginAuth, "onclick", this, "_loginAuth");
-    MochiKit.Signal.connect(this.proc.sessionLogin, "onresponse", this, "_loginAuthCallback");
 
     // Tour wizard
     MochiKit.Signal.connect(this.ui.tourButton, "onclick", this, "_tourStart");
@@ -395,7 +391,7 @@ StartApp.prototype._changePasswordCallback = function (res) {
 StartApp.prototype._loginOut = function () {
     var user = RapidContext.App.user();
     if (user && user.id) {
-        this.proc.sessionLogout(null);
+        RapidContext.App.logout();
         this.ui.logoutDialog.show();
         this.ui.logoutDialog.resizeToContent();
     } else {
@@ -408,29 +404,20 @@ StartApp.prototype._loginOut = function () {
 };
 
 /**
- * Update the login nonce values from the session.
- */
-StartApp.prototype._loginUpdateNonce = function (data) {
-    this.ui.loginForm.update({ nonce: data.nonce });
-};
-
-/**
  * Shows the login authentication dialog.
  */
 StartApp.prototype._loginAuth = function () {
     if (this.ui.loginForm.validate()) {
-        var data = this.ui.loginForm.valueMap();
-        var realm = RapidContext.App.status().realm;
-        var hash = CryptoJS.MD5(data.user + ":" + realm + ":" + data.password);
-        hash = CryptoJS.MD5(hash.toString() + ":" + data.nonce).toString();
-        this.proc.sessionLogin(data.user, data.nonce, hash);
         this.ui.loginAuth.setAttrs({ disabled: true, icon: "LOADING" });
+        var data = this.ui.loginForm.valueMap();
+        var d = RapidContext.App.login($.trim(data.user), data.password);
+        d.addBoth(MochiKit.Base.bind("_loginAuthCallback", this));
     }
     this.ui.loginDialog.resizeToContent();
 };
 
 /**
- * Callback for the login authentication dialog.
+ * Callback for the login authentication.
  */
 StartApp.prototype._loginAuthCallback = function (res) {
     this.ui.loginAuth.setAttrs({ disabled: false, icon: "OK" });

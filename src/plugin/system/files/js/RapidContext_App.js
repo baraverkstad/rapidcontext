@@ -496,6 +496,66 @@ RapidContext.App.callProc = function (name, args) {
 };
 
 /**
+ * Performs an asynchronous login. This function returns a deferred object
+ * that will produce either a `callback` or an `errback` depending on the
+ * success of the login attempt. If the current session is already bound to a
+ * user, that session will be terminated and a new one will be created.
+ *
+ * @param {String} login the user login name or email address
+ * @param {String} password the password to autheticate the user
+ *
+ * @return {Deferred} a `MochiKit.Async.Deferred` object that will
+ *         callback with the response data on success
+ */
+RapidContext.App.login = function (login, password) {
+    var d = MochiKit.Async.wait(0);
+    var user = RapidContext.App.user();
+    if (user && user.id) {
+        d.addCallback(function () {
+            return RapidContext.App.logout();
+        });
+    }
+    d.addCallback(function () {
+        return RapidContext.App.callProc("System.Session.Current");
+    });
+    if (/@/.test(login)) {
+        var s;
+        d.addCallback(function (session) {
+            s = session;
+            return RapidContext.App.callProc("System.User.Search", [login]);
+        });
+        d.addCallback(function (user) {
+            if (user && user.id) {
+                login = user.id;
+                return s;
+            } else {
+                throw new Error("no user with that email address");
+            }
+        });
+    }
+    d.addCallback(function (session) {
+        var realm = RapidContext.App.status().realm;
+        var hash = CryptoJS.MD5(login + ":" + realm + ":" + password);
+        hash = CryptoJS.MD5(hash.toString() + ":" + session.nonce).toString();
+        var args = [login, session.nonce, hash];
+        return RapidContext.App.callProc("System.Session.Authenticate", args);
+    });
+    return d;
+};
+
+/**
+ * Performs an asyncronous logout. This function terminates the current
+ * session and returns a deferred object that will produce either a `callback`
+ * or an `errback` response.
+ *
+ * @return {Deferred} a `MochiKit.Async.Deferred` object that will
+ *         callback with the response data on success
+ */
+RapidContext.App.logout = function () {
+    return RapidContext.App.callProc("System.Session.Terminate", [null]);
+};
+
+/**
  * Performs an asynchronous HTTP request for a JSON data document and returns a
  * deferred response. If no request method has been specified, the `POST` or
  * `GET` methods are chosen depending on whether or not the params argument is

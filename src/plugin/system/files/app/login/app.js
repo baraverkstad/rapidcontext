@@ -45,7 +45,8 @@ LoginApp.prototype._loginAuth = function () {
     if (this.ui.loginForm.validate()) {
         this.ui.loginAuth.setAttrs({ disabled: true, icon: "LOADING" });
         var data = this.ui.loginForm.valueMap();
-        this.login(data.user, data.password);
+        var d = RapidContext.App.login($.trim(data.user), data.password);
+        d.addBoth(MochiKit.Base.bind("_loginAuthCb", this));
     } else {
         this.ui.loginUser.focus();
     }
@@ -53,50 +54,17 @@ LoginApp.prototype._loginAuth = function () {
 };
 
 /**
- * Handles the login call sequence.
+ * Handles the login authentication callback.
  */
-LoginApp.prototype.login = function (login, password) {
-    var self = this;
-    var d = MochiKit.Async.wait(0);
-    var user = RapidContext.App.user();
-    if (user && user.id) {
-        d.addCallback(function () {
-            return self.proc.sessionLogout(null);
-        });
+LoginApp.prototype._loginAuthCb = function (res) {
+    this.ui.loginAuth.setAttrs({ disabled: false, icon: "OK" });
+    if (res instanceof Error) {
+        var msg = res.message;
+        msg = msg.charAt(0).toUpperCase() + msg.substr(1);
+        $(this.ui.loginError).removeClass("hidden").text(msg);
+        $(this.ui.loginWarning).addClass("hidden");
+        this.ui.loginDialog.resizeToContent();
+    } else {
+        window.location.reload();
     }
-    d.addCallback(function () {
-        return self.proc.sessionInfo();
-    });
-    if (/@/.test(login)) {
-        var s;
-        d.addCallback(function (session) {
-            s = session;
-            return self.proc.userSearch($.trim(login).toLowerCase());
-        });
-        d.addCallback(function (user) {
-            if (user == null) {
-                throw new Error("no user with that email address");
-            }
-            login = user.id;
-            return s;
-        });
-    }
-    d.addCallback(function (session) {
-        var realm = RapidContext.App.status().realm;
-        var hash = CryptoJS.MD5(login + ":" + realm + ":" + password);
-        hash = CryptoJS.MD5(hash.toString() + ":" + session.nonce).toString();
-        return self.proc.sessionLogin(login, session.nonce, hash);
-    });
-    d.addBoth(function (res) {
-        self.ui.loginAuth.setAttrs({ disabled: false, icon: "OK" });
-        if (res instanceof Error) {
-            var msg = res.message;
-            msg = msg.charAt(0).toUpperCase() + msg.substr(1);
-            $(self.ui.loginError).removeClass("hidden").text(msg);
-            $(self.ui.loginWarning).addClass("hidden");
-            self.ui.loginDialog.resizeToContent();
-        } else {
-            window.location.reload();
-        }
-    });
 };
