@@ -56,6 +56,7 @@ import org.rapidcontext.app.proc.UserChangeProcedure;
 import org.rapidcontext.app.proc.UserAccessProcedure;
 import org.rapidcontext.app.proc.UserListProcedure;
 import org.rapidcontext.app.proc.UserPasswordChangeProcedure;
+import org.rapidcontext.app.proc.UserSearchProcedure;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.js.JsCompileInterceptor;
@@ -291,6 +292,7 @@ public class ApplicationContext {
             library.addBuiltIn(new UserChangeProcedure());
             library.addBuiltIn(new UserListProcedure());
             library.addBuiltIn(new UserPasswordChangeProcedure());
+            library.addBuiltIn(new UserSearchProcedure());
         } catch (ProcedureException e) {
             LOG.severe("failed to create built-in procedures: " +
                        e.getMessage());
