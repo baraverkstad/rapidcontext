@@ -508,12 +508,10 @@ RapidContext.App.callProc = function (name, args) {
  *         callback with the response data on success
  */
 RapidContext.App.login = function (login, password) {
-    var d = MochiKit.Async.wait(0);
+    var d = MochiKit.Async.wait(0, false);
     var user = RapidContext.App.user();
     if (user && user.id) {
-        d.addCallback(function () {
-            return RapidContext.App.logout();
-        });
+        d.addCallback(RapidContext.App.logout);
     }
     d.addCallback(function () {
         return RapidContext.App.callProc("System.Session.Current");
@@ -545,14 +543,21 @@ RapidContext.App.login = function (login, password) {
 
 /**
  * Performs an asyncronous logout. This function terminates the current
- * session and returns a deferred object that will produce either a `callback`
- * or an `errback` response.
+ * session and either reloads the browser window or returns a deferred object
+ * that will produce either a `callback` or an `errback` response.
+ *
+ * @param {Boolean} [reload] the reload browser flag, defaults to true
  *
  * @return {Deferred} a `MochiKit.Async.Deferred` object that will
  *         callback with the response data on success
  */
-RapidContext.App.logout = function () {
-    return RapidContext.App.callProc("System.Session.Terminate", [null]);
+RapidContext.App.logout = function (reload) {
+    var d = RapidContext.App.callProc("System.Session.Terminate", [null]);
+    if (typeof(reload) === "undefined" || reload) {
+        d.addBoth(function () {
+            window.location.reload();
+        });
+    }
 };
 
 /**
