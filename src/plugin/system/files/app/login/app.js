@@ -8,18 +8,7 @@ function LoginApp() {
  * Starts the app and initializes the UI.
  */
 LoginApp.prototype.start = function () {
-    // Create procedure callers
-    this.proc = RapidContext.Procedure.mapAll({
-        sessionInfo: "System.Session.Current",
-        sessionLogin: "System.Session.Authenticate",
-        sessionLogout: "System.Session.Terminate",
-        userSearch: "System.User.Search",
-    });
-
-    // Signal handlers
     MochiKit.Signal.connect(this.ui.loginForm, "onsubmit", this, "_loginAuth");
-
-    // Init UI
     var user = RapidContext.App.user();
     if (user && user.id) {
         $(this.ui.loginName).text(user.name || user.id);
@@ -33,9 +22,7 @@ LoginApp.prototype.start = function () {
  * Stops the app.
  */
 LoginApp.prototype.stop = function () {
-    for (var name in this.proc) {
-        MochiKit.Signal.disconnectAll(this.proc[name]);
-    }
+    // Nothing to do here
 }
 
 /**
