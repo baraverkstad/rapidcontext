@@ -156,6 +156,10 @@ follows:</p>
   <li><var>no-native-types</var> &mdash; Omits the mapping of values to numbers
       or booleans, using strings for all values. This is sometimes necessary
       when the database number type isn't compatible with JavaScript.</li>
+  <li><var>single-column</var> &mdash; Returns an array of the first column of
+      the result. This omits the dictionary or array wrapper around the row
+      result, making usage simpler. If multiple columns are encountered, an
+      error will be thrown (instead of silently ignoring it).</li>
   <li><var>single-row</var> &mdash; Returns only the first row of the result or
       <var>null</var> if no row was matched. This omits the array wrapper
       around the result, making usage simpler. If multiple rows are

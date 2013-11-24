@@ -530,11 +530,19 @@ public class JdbcChannel extends Channel {
         boolean flagColumnNames = hasFlag(flags, "column-names", true);
         boolean flagNativeTypes = hasFlag(flags, "native-types", true);
         boolean flagBinaryData = hasFlag(flags, "binary-data", false);
+        boolean flagSingleColumn = hasFlag(flags, "single-column", false);
         boolean flagSingleRow = hasFlag(flags, "single-row", false);
         try {
             int colCount = meta.getColumnCount();
             while (rs.next()) {
-                if (flagColumnNames) {
+                if (flagSingleColumn) {
+                    if (colCount != 1) {
+                        String msg = "too many columns in query results; " +
+                                     "expected 1, but found " + colCount;
+                        throw new ConnectionException(msg);
+                    }
+                    rows.add(createValue(meta, rs, 1, flagNativeTypes, flagBinaryData));
+                } else if (flagColumnNames) {
                     Dict rowDict = new Dict();
                     for (int i = 0; i < colCount; i++) {
                         Object value = createValue(meta, rs, i + 1, flagNativeTypes, flagBinaryData);
@@ -551,8 +559,8 @@ public class JdbcChannel extends Channel {
                 }
             }
         } catch (SQLException e) {
-            throw new ConnectionException("failed to extract query results: " +
-                                          e.getMessage());
+            String msg = "failed to extract query results: " + e.getMessage();
+            throw new ConnectionException(msg);
         }
         if (flagSingleRow) {
             if (rows.size() < 1) {
@@ -560,9 +568,9 @@ public class JdbcChannel extends Channel {
             } else if (rows.size() == 1) {
                 return rows.get(0);
             } else {
-                throw new ConnectionException("too many rows in query results; " +
-                                              "expected 1, but found " +
-                                              rows.size());
+                String msg = "too many rows in query results; expected 1, " +
+                             "but found " + rows.size();
+                throw new ConnectionException(msg);
             }
         }
         return rows;

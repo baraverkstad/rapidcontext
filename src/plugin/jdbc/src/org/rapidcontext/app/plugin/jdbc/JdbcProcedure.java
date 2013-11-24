@@ -93,7 +93,8 @@ public abstract class JdbcProcedure extends AddOnProcedure {
         defaults.set(BINDING_FLAGS, Bindings.DATA, "",
                      "Optional execution flags, currently '[no-]metadata', " +
                      "'[no-]column-names', '[no-]native-types', " +
-                     "'[no-]binary-data' and 'single-row' are supported.");
+                     "'[no-]binary-data', 'single-column' and 'single-row' " +
+                     "are supported.");
         defaults.seal();
     }
 
