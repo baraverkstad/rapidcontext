@@ -15,28 +15,29 @@
 package org.rapidcontext.app.proc;
 
 import org.rapidcontext.app.ApplicationContext;
-import org.rapidcontext.core.data.Binary;
+import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
+import org.rapidcontext.core.security.SecurityContext;
+import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
-import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.core.storage.Storage;
 
 /**
- * The built-in storage read procedure.
+ * The built-in storage list procedure.
  *
  * @author   Per Cederberg
  * @version  1.0
  */
-public class StorageReadProcedure implements Procedure {
+public class StorageListProcedure implements Procedure {
 
     /**
      * The procedure name constant.
      */
-    public static final String NAME = "System.Storage.Read";
+    public static final String NAME = "System.Storage.List";
 
     /**
      * The default bindings.
@@ -44,12 +45,12 @@ public class StorageReadProcedure implements Procedure {
     private Bindings defaults = new Bindings();
 
     /**
-     * Creates a new storage read procedure.
+     * Creates a new storage list procedure.
      *
      * @throws ProcedureException if the initialization failed
      */
-    public StorageReadProcedure() throws ProcedureException {
-        defaults.set("path", Bindings.ARGUMENT, "", "The object path to read");
+    public StorageListProcedure() throws ProcedureException {
+        defaults.set("path", Bindings.ARGUMENT, "", "The object path to search");
         defaults.seal();
     }
 
@@ -68,7 +69,7 @@ public class StorageReadProcedure implements Procedure {
      * @return the procedure description
      */
     public String getDescription() {
-        return "Reads an object from storage.";
+        return "Reads all objects on a storage path.";
     }
 
     /**
@@ -105,40 +106,24 @@ public class StorageReadProcedure implements Procedure {
         String path = ((String) bindings.getValue("path", "")).trim();
         if (path.length() <= 0) {
             throw new ProcedureException("path cannot be empty");
-        } else if (path.endsWith("/")) {
-            throw new ProcedureException("path cannot be an index");
+        } else if (!path.endsWith("/")) {
+            throw new ProcedureException("path must be an index");
         }
-        CallContext.checkAccess(path, cx.readPermission(1));
+        CallContext.checkSearchAccess(path);
         Storage storage = ApplicationContext.getInstance().getStorage();
-        Path loadPath = new Path(path);
-        return serialize(loadPath, storage.load(loadPath));
-    }
-
-    /**
-     * Returns a serialized representation of a storage object.
-     *
-     * @param path           the storage object path
-     * @param obj            the storage object
-     *
-     * @return the serialized representation of the object, or
-     *         null if no suitable serialization existed
-     */
-    public static Dict serialize(Path path, Object obj) {
-        if (obj instanceof Binary) {
-            Binary data = (Binary) obj;
-            Dict dict = new Dict();
-            dict.set("type", "file");
-            dict.set("name", path.name());
-            dict.set("mimeType", data.mimeType());
-            dict.set("size", new Long(data.size()));
-            return dict;
-        } else if (obj instanceof StorableObject) {
-            // TODO: remove or obfuscate passwords?
-            return ((StorableObject) obj).serialize();
-        } else if (obj instanceof Dict) {
-            return (Dict) obj;
-        } else {
-            return null;
+        Path searchPath = new Path(path);
+        Metadata[] meta = storage.lookupAll(searchPath);
+        Array res = new Array(meta.length);
+        for (int i = 0; i < meta.length; i++) {
+            Path loadPath = meta[i].path();
+            if (SecurityContext.hasReadAccess(loadPath.toString())) {
+                Object obj = storage.load(loadPath);
+                Dict dict = StorageReadProcedure.serialize(loadPath, obj);
+                if (dict != null) {
+                    res.add(dict);
+                }
+            }
         }
+        return res;
     }
 }
