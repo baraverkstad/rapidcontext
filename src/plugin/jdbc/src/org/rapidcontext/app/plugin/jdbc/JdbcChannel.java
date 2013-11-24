@@ -282,7 +282,6 @@ public class JdbcChannel extends Channel {
      *
      * @throws ConnectionException if the execution failed
      */
-    @SuppressWarnings("resource")
     protected Array executeStatement(PreparedStatement stmt)
     throws ConnectionException {
 
@@ -382,7 +381,6 @@ public class JdbcChannel extends Channel {
      *
      * @throws ConnectionException if the execution failed
      */
-    @SuppressWarnings("resource")
     protected Object executeQuery(PreparedStatement stmt, String flags)
     throws ConnectionException {
 
