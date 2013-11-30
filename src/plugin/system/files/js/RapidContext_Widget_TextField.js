@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -82,9 +82,12 @@ RapidContext.Widget.TextField = function (attrs/*, ...*/) {
 RapidContext.Widget.Classes.TextField = RapidContext.Widget.TextField;
 
 /**
- * Emitted when the text is modified. This event is triggered by both
- * keypress and paste events if the text content is modified. The DOM
- * standard onchange event may also be trigged (on blur).
+ * Emitted when the text is modified. This event is triggered by either
+ * user events (keypress, paste, cut, blur) or by setting the value via
+ * setAttrs(). The DOM standard onchange event has no 'event.detail'
+ * data and is triggered on blur. The synthetic onchange events all
+ * contain an 'event.detail' object with 'before', 'after' and 'cause'
+ * properties.
  *
  * @name RapidContext.Widget.TextField#onchange
  * @event
@@ -92,9 +95,9 @@ RapidContext.Widget.Classes.TextField = RapidContext.Widget.TextField;
 
 /**
  * Emitted when an item has been selected in the connected popup.
- * This event signal carries no event information.
+ * This event signal carries no 'event.detail' information.
  *
- * @name RapidContext.Widget.TextField#onpopupselect
+ * @name RapidContext.Widget.TextField#ondataavailable
  * @event
  */
 
@@ -121,7 +124,7 @@ RapidContext.Widget.TextField.prototype.setAttrs = function (attrs) {
     }
     if (typeof(locals.value) != "undefined") {
         this.value = locals.value;
-        this._handleChange();
+        this._handleChange(false, "set");
     }
     this.__setAttrs(attrs);
     this._render();
@@ -213,6 +216,9 @@ RapidContext.Widget.TextField.prototype.showPopup = function (attrs, items) {
     if (popup.childNodes.length > 0) {
         popup.setAttrs(MochiKit.Base.update({ delay: 30000 }, attrs));
         popup.show();
+        if (items && items.length == 1) {
+            popup.selectChild(0);
+        }
     }
 };
 
@@ -221,13 +227,14 @@ RapidContext.Widget.TextField.prototype.showPopup = function (attrs, items) {
  *
  * @param evt the MochiKit.Signal.Event object
  */
-RapidContext.Widget.TextField.prototype._handleChange = function (evt) {
+RapidContext.Widget.TextField.prototype._handleChange = function (evt, cause) {
     if (evt) {
-        var self = this;
-        setTimeout(MochiKit.Base.bind("_handleChange", this));
+        cause = "on" + evt.type();
+        setTimeout(MochiKit.Base.bind("_handleChange", this, false, cause));
     } else if (this.storedValue != this.value) {
+        var detail = { before: this.storedValue, after: this.value, cause: cause };
         this.storedValue = this.value;
-        RapidContext.Widget.emitSignal(this, "onchange", this.value);
+        RapidContext.Widget._fireEvent(this, "change", detail);
     }
 }
 
@@ -282,7 +289,7 @@ RapidContext.Widget.TextField.prototype._handleKeyDown = function (evt) {
                 popup.hide();
                 evt.stop();
                 if (popup.selectedChild() != null) {
-                    RapidContext.Widget.emitSignal(this, "onpopupselect");
+                    RapidContext.Widget._fireEvent(this, "dataavailable");
                 }
                 break;
             case "KEY_ESCAPE":
@@ -307,7 +314,7 @@ RapidContext.Widget.TextField.prototype._handleKeyDown = function (evt) {
 RapidContext.Widget.TextField.prototype._handleClick = function (evt) {
     this.blur();
     this.focus();
-    RapidContext.Widget.emitSignal(this, "onpopupselect");
+    RapidContext.Widget._fireEvent(this, "dataavailable")
 };
 
 /**
