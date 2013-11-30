@@ -75,7 +75,6 @@ ExampleApp.prototype.progressUpdate = function () {
 ExampleApp.prototype.autofocus = function (evt) {
     var popup = this.ui.popupField.popup();
     if (!popup || popup.isHidden()) {
-        RapidContext.Log.warn("onfocus popup hidden");
         this.autocomplete();
     }
 };
@@ -84,7 +83,6 @@ ExampleApp.prototype.autofocus = function (evt) {
  * Handle autocomplete change.
  */
 ExampleApp.prototype.autochange = function (evt) {
-    RapidContext.Log.warn("onchange detail", evt.event().detail);
     if (evt.event().detail && evt.event().detail.cause != "set") {
         this.autocomplete();
     }
