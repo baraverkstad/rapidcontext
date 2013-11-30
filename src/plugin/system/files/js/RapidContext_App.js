@@ -252,7 +252,7 @@ RapidContext.App.startApp = function (app, container) {
         d.addCallback(function () {
             launcher.creator = this[launcher.className] || window[launcher.className];
             if (launcher.creator == null) {
-                RapidContext.Log.error("app constructor " + launcher.className + " not defined", launcher);
+                RapidContext.Log.error("App constructor " + launcher.className + " not defined", launcher);
                 throw new Error("App constructor " + launcher.className + " not defined");
             }
             RapidContext.Util.registerFunctionNames(launcher.creator, launcher.className);
@@ -330,6 +330,7 @@ RapidContext.App.startApp = function (app, container) {
         if (err instanceof MochiKit.Async.CancelledError) {
             // Ignore cancellation errors
         } else {
+            RapidContext.Log.error("Failed to start app", err);
             MochiKit.Signal.disconnectAll(ui.root, "onclose");
             var label = MochiKit.DOM.STRONG(null, "Error: ");
             MochiKit.DOM.appendChildNodes(ui.root, label, err.message);
@@ -689,6 +690,7 @@ RapidContext.App.loadXHR = function (url, params, options) {
         options.method = options.method || "GET";
     }
     var nonCachedUrl = RapidContext.App._nonCachedUrl(url);
+    RapidContext.Log.log("Starting XHR loading", nonCachedUrl, options);
     var d = MochiKit.Async.doXHR(nonCachedUrl, options);
     if (options.timeout) {
         var canceller = function () {
@@ -699,8 +701,19 @@ RapidContext.App.loadXHR = function (url, params, options) {
             d.results[0].errback("Timeout on request to " + url);
         };
         var timer = MochiKit.Async.callLater(options.timeout, canceller);
-        d.addCallback(function (res) { timer.cancel(); return res; });
+        d.addCallback(function (res) {
+            timer.cancel();
+            return res;
+        });
     }
+    d.addBoth(function (res) {
+        if (res instanceof Error) {
+            RapidContext.Log.warning("Failed XHR loading", nonCachedUrl, res);
+        } else {
+            RapidContext.Log.log("Completed XHR loading", nonCachedUrl);
+        }
+        return res;
+    });
     RapidContext.App._addErrbackLogger(d);
     return d;
 };
