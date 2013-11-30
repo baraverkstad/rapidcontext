@@ -4,7 +4,8 @@
   <style>
 .startApp-about {
     position: relative;
-    background: url(images/backgrounds/about.png);
+    background: url("images/backgrounds/about.png");
+    -ms-filter: "none";
     color: #EEEEEE;
     box-shadow: 0 0 30px #000 inset;
 }
