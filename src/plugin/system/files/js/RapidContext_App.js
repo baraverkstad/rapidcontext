@@ -313,7 +313,7 @@ RapidContext.App.startApp = function (app, container) {
 
     // Convert to start app UI (if previously in single-app mode)
     if (launcher.id == "start" && instances.length == 1) {
-        var elems = [].slice.call(document.body.childNodes);
+        var elems = MochiKit.Base.extend([], document.body.childNodes);
         var opts = { title: instances[0].name, closeable: false, background: true };
         d.addCallback(function () {
             return RapidContext.App.callApp(instance, "initAppPane", null, opts);
