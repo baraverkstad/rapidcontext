@@ -8,12 +8,13 @@
     button {
         font-size: 14px;
     }
-    .widgetDialog {
-        border-color: #FFF;
-        background: #FFF;
+    body .widgetDialog {
+        border-color: #FFFFFF;
+        background: #FFFFFF;
     }
-    .widgetDialogTitle {
+    body .widgetDialogTitle {
         padding: 10px 16px;
+        background: #0099BB;
         background: -moz-linear-gradient(top, #00AACC, #0077AA);
         background: -ms-linear-gradient(top, #00AACC, #0077AA);
         background: -o-linear-gradient(top, #00AACC, #0077AA);
@@ -22,10 +23,11 @@
         -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#00AACC', endColorstr='#0077AA')";
         font-size: 20px;
     }
-    .widgetDialogContent {
-        background: white;
+    body .widgetDialogContent {
+        background: #FFFFFF;
+        -ms-filter: "none";
     }
-    .widgetTextField {
+    body .widgetTextField {
         font-size: 14px;
     }
     .login-error {
@@ -33,27 +35,27 @@
         border-radius: 6px;
         padding: 8px 10px;
         box-shadow: 0 1px 2px #660000 inset;
+        background: #FFDDDD;
         background: -moz-linear-gradient(top, #FFF8F8, #FFDDDD);
         background: -ms-linear-gradient(top, #FFF8F8, #FFDDDD);
         background: -o-linear-gradient(top, #FFF8F8, #FFDDDD);
         background: -webkit-linear-gradient(top, #FFF8F8, #FFDDDD);
         background: linear-gradient(top, #FFF8F8, #FFDDDD);
-        -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFF8F8', endColorstr='#FFDDDD')";
     }
     .login-warning {
         margin-bottom: 10px;
         border-radius: 6px;
         padding: 8px 10px;
         box-shadow: 0 1px 2px #665500 inset;
+        background: #FFFFDD;
         background: -moz-linear-gradient(top, #FFFFF8, #FFFFDD);
         background: -ms-linear-gradient(top, #FFFFF8, #FFFFDD);
         background: -o-linear-gradient(top, #FFFFF8, #FFFFDD);
         background: -webkit-linear-gradient(top, #FFFFF8, #FFFFDD);
         background: linear-gradient(top, #FFFFF8, #FFFFDD);
-        -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFF8', endColorstr='#FFFFDD')";
     }
   </style>
-  <Dialog id="loginDialog" title="Login" system="true" closeable="false" resizeable="false" style="width: 400px;">
+  <Dialog id="loginDialog" title="Login" system="true" closeable="false" resizeable="false" style="width: 450px;">
     <Form id="loginForm">
       <div id="loginError" class="login-error hidden">
       </div>
