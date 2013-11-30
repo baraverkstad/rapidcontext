@@ -334,7 +334,7 @@
             return signature + " {...}";
         } else if (o.nodeType === 1 || o.nodeType === 9) {
             o = o.documentElement || o.document || o;
-            var xml = o.outerHTML || o.outerXML || o.toString();
+            var xml = o.outerHTML || o.outerXML || o.xml || "" + o;
             if (o.childNodes && o.childNodes.length) {
                 return xml.replace(/>[\s\S]*</, ">...<");
             } else {
