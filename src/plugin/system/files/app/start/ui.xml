@@ -111,15 +111,15 @@
       <table w="100%" style="border-collapse: collapse; font-size: 11px;">
         <tbody w="100%">
           <tr>
-            <th class="label" style="width: 90px; padding-top: 6px; padding-right: 10px; text-align: right;">Login / Email:</th>
-            <td style="padding-top: 2px;" w="100%-100">
+            <th class="label" style="width: 100px; padding-top: 6px; padding-right: 10px; text-align: right;">Login / Email:</th>
+            <td style="padding-top: 2px;" w="100%-110">
               <TextField id="loginUser" name="user" w="100%-10" />
               <FormValidator name="user" mandatory="true" message="A user name is required" style="padding: 3px 0 6px 0;" />
             </td>
           </tr>
           <tr>
-            <th class="label" style="width: 90px; padding-top: 6px; padding-right: 10px; text-align: right;">Password:</th>
-            <td style="padding-top: 2px;" w="100%-100">
+            <th class="label" style="width: 100px; padding-top: 6px; padding-right: 10px; text-align: right;">Password:</th>
+            <td style="padding-top: 2px;" w="100%-110">
               <TextField id="loginPassword" name="password" type="password" w="100%-10" />
               <FormValidator id="loginPasswordError" name="password" mandatory="false" style="padding: 3px 0 6px 0;" />
             </td>
