@@ -223,6 +223,8 @@ RapidContext.Widget._eventHandler = function (className, methodName/*, ...*/) {
  * @param {Widget} node the widget DOM node
  * @param {String} sig the signal name ("onclick" or similar)
  * @param {Object} [...] the optional signal arguments
+ *
+ * @deprecated Use _fireEvent() instead to emit proper Event object.
  */
 RapidContext.Widget.emitSignal = function (node, sig/*, ...*/) {
     var args = $.makeArray(arguments);
@@ -234,7 +236,62 @@ RapidContext.Widget.emitSignal = function (node, sig/*, ...*/) {
             MochiKit.Logging.logError(msg, e);
         }
     }
-    setTimeout(later, 0);
+    setTimeout(later);
+};
+
+/**
+ * Creates a DOM event object.
+ *
+ * @param {String} evtType the event type name ("click" or similar)
+ * @param {Object} [detail] the optional event "detail" value
+ *
+ * @return {Event} a new Event object of the specified type
+ */
+RapidContext.Widget._createEvent = function (evtType, detail) {
+    var evt;
+    try {
+        evt = new Event(evtType);
+    } catch (msieFailsOfCourse) {
+        if (document.createEvent) {
+            evt = document.createEvent("Event");
+            evt.initEvent(evtType, true, true);
+        } else {
+            evt = document.createEventObject();
+            evt.type = evtType;
+        }
+    }
+    if (detail) {
+        evt.detail = detail;
+    }
+    return evt;
+};
+
+/**
+ * Fires an event (asynchronously) to all listeners. This function uses
+ * native DOM APIs, so all type of event listeners should be reached
+ * by the event.
+ *
+ * @param {Widget/Node} node the (widget) DOM node emitting the event
+ * @param {Event/String} evt the event object or type
+ * @param {Object} [detail] the optional event "detail" value
+ */
+RapidContext.Widget._fireEvent = function (node, evt, detail) {
+    if (typeof(evt) == "string") {
+        evt = RapidContext.Widget._createEvent(evt, detail);
+    }
+    function later() {
+        try {
+            if (node.dispatchEvent) {
+                return node.dispatchEvent(evt);
+            } else if (node.parentNode && node.fireEvent) {
+                // MSIE 6-8
+                return node.fireEvent("on" + evt.type, evt);
+            }
+        } catch (e) {
+            RapidContext.Log.error("Failed to fire event", evt, node);
+        }
+    }
+    setTimeout(later);
 };
 
 /**
