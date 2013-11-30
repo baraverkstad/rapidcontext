@@ -585,7 +585,11 @@ RapidContext.Util.resizeElements = function (/* ... */) {
             node.h = dim.h;
         }
         if (node != null && typeof(node.resizeContent) == "function") {
-            node.resizeContent();
+            try {
+                node.resizeContent();
+            } catch (e) {
+                RapidContext.Log.error("Error in resizeContent()", node, e);
+            }
         } else {
             node = node.firstChild;
             while (node != null) {
