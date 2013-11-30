@@ -285,7 +285,7 @@ RapidContext.Widget.Dialog.prototype._resizeContent = function () {
     // TODO: Allow content node to have different padding
     var content = this.lastChild;
     var dim = { w: Math.max(0, this.w - 20) || undefined,
-                h: Math.max(0, this.h - 20 - content.offsetTop - 1) || undefined };
+                h: Math.max(0, this.h - 18 - content.offsetTop) || undefined };
     MochiKit.Style.setElementDimensions(content, dim);
     MochiKit.Base.update(content, dim);
     RapidContext.Util.resizeElements(content);
