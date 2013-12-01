@@ -173,9 +173,6 @@ RapidContext.Widget.TextField.prototype.popup = function (create) {
         var popup = RapidContext.Widget.Popup({ style: style });
         MochiKit.DOM.insertSiblingNodesAfter(this, popup);
         MochiKit.Style.makePositioned(this.parentNode);
-        var pos = { x: this.offsetLeft + 1,
-                    y: this.offsetTop + this.offsetHeight + 1 };
-        MochiKit.Style.setElementPosition(popup, pos);
         MochiKit.Signal.connect(this, "onkeydown", this, "_handleKeyDown");
         MochiKit.Signal.connect(popup, "onclick", this, "_handleClick");
     }
@@ -214,6 +211,9 @@ RapidContext.Widget.TextField.prototype.showPopup = function (attrs, items) {
         }
     }
     if (popup.childNodes.length > 0) {
+        var pos = { x: this.offsetLeft + 1,
+                    y: this.offsetTop + this.offsetHeight + 1 };
+        MochiKit.Style.setElementPosition(popup, pos);
         popup.setAttrs(MochiKit.Base.update({ delay: 30000 }, attrs));
         popup.show();
         if (items && items.length == 1) {
