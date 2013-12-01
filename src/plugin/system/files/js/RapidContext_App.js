@@ -708,7 +708,7 @@ RapidContext.App.loadXHR = function (url, params, options) {
     }
     d.addBoth(function (res) {
         if (res instanceof Error) {
-            RapidContext.Log.warning("Failed XHR loading", nonCachedUrl, res);
+            RapidContext.Log.warn("Failed XHR loading", nonCachedUrl, res);
         } else {
             RapidContext.Log.log("Completed XHR loading", nonCachedUrl);
         }
@@ -752,7 +752,7 @@ RapidContext.App.loadScript = function (url) {
         RapidContext.Log.log("Completed loading script", url);
     });
     d.addErrback(function (e) {
-        RapidContext.Log.warning("Failed loading script", url + ": " + e.message);
+        RapidContext.Log.warn("Failed loading script", url + ": " + e.message);
         return e;
     });
     RapidContext.App._addErrbackLogger(d);
@@ -797,7 +797,7 @@ RapidContext.App.loadStyles = function (url) {
             RapidContext.Log.log("Completed loading stylesheet", url);
             d.callback();
         } else {
-            RapidContext.Log.warning("Failed loading stylesheet", url);
+            RapidContext.Log.warn("Failed loading stylesheet", url);
             msg = "Failed loading stylesheet " + url;
             d.errback(new URIError(msg, url));
         }
@@ -868,7 +868,7 @@ RapidContext.App._addErrbackLogger = function (d) {
     var logger = function (err) {
         if (!d.chained) {
             // TODO: Handle MochiKit.Async.CancelledError here?
-            RapidContext.Log.warning("Unhandled error in deferred", err);
+            RapidContext.Log.warn("Unhandled error in deferred", err);
         }
         return err;
     };

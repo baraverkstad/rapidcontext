@@ -126,7 +126,7 @@ RapidContext.UI._buildUIElem = function (node, ids) {
     if (RapidContext.Widget.Classes[name]) {
         if (name == "Table" && attrs.multiple) {
             // TODO: remove deprecated code, eventually...
-            RapidContext.Log.warning("Table 'multiple' attribute is deprecated, use 'select'", node);
+            RapidContext.Log.warn("Table 'multiple' attribute is deprecated, use 'select'", node);
             attrs.select = MochiKit.Base.bool(attrs.multiple) ? "multiple" : "one";
             delete attrs.multiple;
         }
