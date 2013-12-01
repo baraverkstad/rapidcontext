@@ -214,7 +214,8 @@ RapidContext.Widget.TextField.prototype.showPopup = function (attrs, items) {
         var pos = { x: this.offsetLeft + 1,
                     y: this.offsetTop + this.offsetHeight + 1 };
         MochiKit.Style.setElementPosition(popup, pos);
-        popup.setAttrs(MochiKit.Base.update({ delay: 30000 }, attrs));
+        var style = { width: Math.max(300, this.width) + "px" };
+        popup.setAttrs(MochiKit.Base.update({ delay: 30000, style: style }, attrs));
         popup.show();
         if (items && items.length == 1) {
             popup.selectChild(0);
