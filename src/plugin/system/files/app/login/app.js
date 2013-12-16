@@ -18,20 +18,22 @@ LoginApp.prototype.start = function () {
     }
     this.ui.loginDialog.show();
     this.ui.loginUser.focus();
-}
+};
 
 /**
  * Stops the app.
  */
 LoginApp.prototype.stop = function () {
     // Nothing to do here
-}
+};
 
 /**
  * Shows the login authentication dialog.
  */
 LoginApp.prototype._loginAuth = function () {
-    if (this.ui.loginForm.validate()) {
+    if (this.ui.loginAuth.isDisabled()) {
+        // Call already in progress
+    } else if (this.ui.loginForm.validate()) {
         this.ui.loginAuth.setAttrs({ disabled: true, icon: "LOADING" });
         var data = this.ui.loginForm.valueMap();
         var d = RapidContext.App.login($.trim(data.user), data.password);
