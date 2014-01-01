@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2014 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -24,12 +24,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.fileupload.FileItemStream;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.app.plugin.PluginManager;
+import org.rapidcontext.app.proc.StatusProcedure;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.js.JsSerializer;
+import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
@@ -256,6 +259,8 @@ public class AppWebService extends FileWebService {
             } else if (request.matchPath("rapidcontext/app/")) {
                 String appId = StringUtils.removeEnd(request.getPath(), "/");
                 processApp(request, appId, baseUrl);
+            } else if (request.matchPath("rapidcontext/status")) {
+                processStatus(request);
             } else if (isRoot) {
                 processApp(request, appId(), baseUrl);
             }
@@ -512,5 +517,25 @@ public class AppWebService extends FileWebService {
             res.set("trace", trace.toString());
         }
         request.sendText(Mime.JSON[0], JsSerializer.serialize(res, true));
+    }
+
+    /**
+     * Processes a system status request.
+     *
+     * @param request        the request to process
+     */
+    protected void processStatus(Request request) {
+        try {
+            ApplicationContext ctx = ApplicationContext.getInstance();
+            Object[] args = ArrayUtils.EMPTY_OBJECT_ARRAY;
+            String source = "web [" + request.getRemoteAddr() + "]";
+            Object obj = ctx.execute(StatusProcedure.NAME, args, source, null);
+            request.sendText(Mime.JSON[0], JsSerializer.serialize(obj, true));
+        } catch (ProcedureException e) {
+            LOG.warning("error in system status check: " + e.getMessage());
+            Dict res = new Dict();
+            res.set("error", e.getMessage());
+            request.sendText(Mime.JSON[0], JsSerializer.serialize(res, true));
+        }
     }
 }
