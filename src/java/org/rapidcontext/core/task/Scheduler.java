@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2014 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -94,6 +94,18 @@ public class Scheduler {
         boolean cancelled = task.cancel();
         synchronized (tasks) {
             return tasks.remove(task) || cancelled;
+        }
+    }
+
+    /**
+     * Removes all tasks from the scheduler queue.
+     */
+    public static void unscheduleAll() {
+        synchronized (tasks) {
+            while (tasks.size() > 0) {
+                Task task = (Task) tasks.get(0);
+                task.cancel();
+            }
         }
     }
 }
