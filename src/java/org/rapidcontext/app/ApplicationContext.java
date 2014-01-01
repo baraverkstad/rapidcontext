@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2014 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -16,6 +16,7 @@ package org.rapidcontext.app;
 
 import java.io.File;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -102,6 +103,16 @@ public class ApplicationContext {
     public static final Path PATH_CONFIG = new Path("/config");
 
     /**
+     * The class load time (system initialization time).
+     */
+    public static final Date INIT_TIME = new Date();
+
+    /**
+     * The context start (or reset) time.
+     */
+    public static Date START_TIME = new Date();
+
+    /**
      * The number of milliseconds between each run of the expired
      * session cleaner job.
      */
@@ -184,6 +195,7 @@ public class ApplicationContext {
      */
     protected static synchronized void destroy() {
         if (instance != null) {
+            Scheduler.unscheduleAll();
             instance.destroyAll();
             instance.storage.unmountAll();
             instance = null;
@@ -242,6 +254,7 @@ public class ApplicationContext {
         } catch (StorageException e) {
             LOG.severe("Failed to load security config: " + e.getMessage());
         }
+        START_TIME = new Date();
     }
 
     /**

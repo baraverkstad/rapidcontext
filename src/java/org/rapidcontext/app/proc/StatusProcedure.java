@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2014 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -13,6 +13,8 @@
  */
 
 package org.rapidcontext.app.proc;
+
+import java.util.Date;
 
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.app.plugin.PluginManager;
@@ -107,6 +109,9 @@ public class StatusProcedure implements Procedure {
         res.set("environment", getEnvironmentData(cx.getEnvironment()));
         // TODO: Allow multiple security realms (depending on web site)
         res.set("realm", User.DEFAULT_REALM);
+        res.set("initTime", ApplicationContext.INIT_TIME);
+        res.set("startTime", ApplicationContext.START_TIME);
+        res.set("currentTime", new Date());
         return res;
     }
 
