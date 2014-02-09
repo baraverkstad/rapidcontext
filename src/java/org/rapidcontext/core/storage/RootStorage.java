@@ -245,6 +245,7 @@ public class RootStorage extends Storage {
             LOG.warning(msg);
             throw new StorageException(msg);
         }
+        LOG.fine("mounting " + storage);
         storage.setMountInfo(path, readWrite, overlay, prio);
         updateStorageMetadata(storage, true);
         mountedStorages.add(storage);
@@ -273,6 +274,7 @@ public class RootStorage extends Storage {
             LOG.warning(msg);
             throw new StorageException(msg);
         }
+        LOG.fine("remounting " + storage);
         updateStorageMetadata(storage, false);
         storage.setMountInfo(storage.path(), readWrite, overlay, prio);
         updateStorageMetadata(storage, true);
@@ -298,6 +300,7 @@ public class RootStorage extends Storage {
             LOG.warning(msg);
             throw new StorageException(msg);
         }
+        LOG.fine("unmounting " + storage);
         updateStorageCache(path, null);
         mountedStorages.remove(mountedStorages.indexOf(storage));
         updateStorageMetadata(storage, false);
@@ -441,20 +444,21 @@ public class RootStorage extends Storage {
         Object   res = null;
         String   id;
 
-        LOG.fine("loading " + path + " from " + storage.path());
         res = cacheGet(storage.path(), path);
         if (res instanceof Index) {
             idx = (Index) res;
         } else if (res instanceof StorableObject) {
-            LOG.fine("loaded object " + path + " from cache");
+            LOG.fine("loaded cached object " + path + " from " + storage.path());
             return res;
         }
         res = storage.load(path);
-        LOG.fine("loaded " + path + " value: " + res);
         if (isCached && res instanceof Dict) {
             id = path.toIdent(1);
             res = initObject(id, (Dict) res);
             cacheAdd(storage.path(), path, res);
+        }
+        if (res != null) {
+            LOG.fine("loaded " + path + " from " + storage.path() + ": " + res);
         }
         if (idx != null && (res == null || res instanceof Index)) {
             return Index.merge(idx, (Index) res);
