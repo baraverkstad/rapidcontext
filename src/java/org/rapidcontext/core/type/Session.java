@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2014 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -182,17 +182,22 @@ public class Session extends StorableObject {
      * @param storage        the storage to use
      */
     public static void removeExpired(Storage storage) {
-        long        now = System.currentTimeMillis();
-        Date        active = new Date(now - 30L * DateUtils.MILLIS_PER_MINUTE);
-        Metadata[]  meta = storage.lookupAll(PATH);
-
+        Metadata[] meta = storage.lookupAll(PATH);
         // TODO: session expiry must be handled with iterator
         for (int i = 0; i < meta.length; i++) {
-            if (meta[i].lastModified().before(active)) {
-                Session session = find(storage, meta[i].path());
-                if (session != null && !session.isValid()) {
-                    LOG.fine("deleting invalid " + session);
+            Session session = find(storage, meta[i].path());
+            if (session != null) {
+                String userId = session.userId();
+                if (!session.isValid()) {
+                    LOG.fine("deleting " + session + ", invalid or expired");
                     remove(storage, session.id());
+                } else if (userId.length() > 0) {
+                    User user = User.find(storage, userId);
+                    if (user == null || !user.isEnabled()) {
+                        String msg = "no enabled user " + userId;
+                        LOG.fine("deleting " + session + ", " + msg);
+                        remove(storage, session.id());
+                    }
                 }
             }
         }
