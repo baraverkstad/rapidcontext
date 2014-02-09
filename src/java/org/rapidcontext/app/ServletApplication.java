@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2014 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -200,11 +200,11 @@ public class ServletApplication extends HttpServlet {
         processAuthReset();
 
         // Check for valid session
+        String sessionId = StringUtils.defaultString(request.getSessionId());
+        Session session = null;
         try {
-            String id = StringUtils.defaultString(request.getSessionId());
-            Session session = null;
-            if (id.length() > 0) {
-                session = Session.find(ctx.getStorage(), id);
+            if (sessionId.length() > 0) {
+                session = Session.find(ctx.getStorage(), sessionId);
             }
             if (session != null) {
                 Session.activeSession.set(session);
@@ -217,6 +217,11 @@ public class ServletApplication extends HttpServlet {
             }
         } catch (Exception e) {
             LOG.info(ip(request) + e.getMessage());
+            if (session != null) {
+                LOG.fine("request session " + session.id() +
+                         " invalid, removing from storage");
+                Session.remove(ctx.getStorage(), session.id());
+            }
         }
 
         // Check for authentication response
