@@ -185,7 +185,7 @@ public class ApplicationContext {
                 }
             };
             long delay = EXPIRED_INTERVAL_MILLIS;
-            Scheduler.schedule(sessionCleaner, delay, delay);
+            Scheduler.schedule(sessionCleaner, 1000, delay);
         }
         return instance;
     }

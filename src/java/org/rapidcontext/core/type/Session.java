@@ -129,7 +129,20 @@ public class Session extends StorableObject {
      *         null if not found
      */
     public static Session find(Storage storage, String id) {
-        Object obj = storage.load(new Path(PATH, id));
+        return find(storage, new Path(PATH, id));
+    }
+
+    /**
+     * Searches for a specific session in the storage.
+     *
+     * @param storage        the storage to search in
+     * @param path           the path to the session
+     *
+     * @return the session found, or
+     *         null if not found
+     */
+    private static Session find(Storage storage, Path path) {
+        Object obj = storage.load(path);
         return (obj instanceof Session) ? (Session) obj : null;
     }
 
@@ -176,8 +189,9 @@ public class Session extends StorableObject {
         // TODO: session expiry must be handled with iterator
         for (int i = 0; i < meta.length; i++) {
             if (meta[i].lastModified().before(active)) {
-                Session session = find(storage, meta[i].id());
+                Session session = find(storage, meta[i].path());
                 if (session != null && !session.isValid()) {
+                    LOG.fine("deleting invalid " + session);
                     remove(storage, session.id());
                 }
             }
