@@ -48,9 +48,6 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
 RapidContext.Widget.Form = function (attrs/*, ...*/) {
     var o = MochiKit.DOM.FORM(attrs);
     RapidContext.Widget._widgetMixin(o, arguments.callee);
-    // TODO: Remove this temporary bugfix when the reset() method has
-    //       been renamed or similar...
-    o.reset = RapidContext.Widget.Form.prototype.reset;
     o.addClass("widgetForm");
     o.setAttrs(attrs);
     o.addAll(MochiKit.Base.extend(null, arguments, 1));
@@ -112,6 +109,8 @@ RapidContext.Widget.Form.prototype.fieldMap = function () {
 /**
  * Resets all fields in the form to their default values.
  */
+// TODO: Consider renaming this method, since it collides with the reset()
+//       method on the DOM element...
 RapidContext.Widget.Form.prototype.reset = function () {
     this.validateReset();
     var fields = this.fields();
