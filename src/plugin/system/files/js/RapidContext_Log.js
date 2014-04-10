@@ -30,7 +30,7 @@
     // Function-level strict mode
     "use strict";
 
-    // Detect MSIE browser to force simplified console API
+    // Detect MSIE browser to force simplified console object logging
     var isMSIE = /MSIE/.test(window.navigator.userAgent);
 
     // The old console logging functions
@@ -164,7 +164,7 @@
             var args = _stringifyArgs.apply(null, arguments);
             if (consoleError && isMSIE) {
                 var ctx = (logContext ? logContext + ": " : "");
-                consoleError(ctx + args.join(", "));
+                consoleError.call(window.console, ctx + args.join(", "));
             } else if (consoleError) {
                 consoleError.apply(window.console, arguments);
             }
@@ -190,7 +190,7 @@
             var args = _stringifyArgs.apply(null, arguments);
             if (consoleWarn && isMSIE) {
                 var ctx = (logContext ? logContext + ": " : "");
-                consoleWarn(ctx + args.join(", "));
+                consoleWarn.call(window.console, ctx + args.join(", "));
             } else if (consoleWarn) {
                 consoleWarn.apply(window.console, arguments);
             }
@@ -216,7 +216,7 @@
             var args = _stringifyArgs.apply(null, arguments);
             if (consoleInfo && isMSIE) {
                 var ctx = (logContext ? logContext + ": " : "");
-                consoleInfo(ctx + args.join(", "));
+                consoleInfo.call(window.console, ctx + args.join(", "));
             } else if (consoleInfo) {
                 consoleInfo.apply(window.console, arguments);
             }
@@ -244,7 +244,7 @@
             var args = _stringifyArgs.apply(null, arguments);
             if (consoleLog && isMSIE) {
                 var ctx = (logContext ? logContext + ": " : "");
-                consoleLog(ctx + args.join(", "));
+                consoleLog.call(window.console, ctx + args.join(", "));
             } else if (consoleLog) {
                 consoleLog.apply(window.console, arguments);
             }
