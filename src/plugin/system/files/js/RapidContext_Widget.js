@@ -484,6 +484,8 @@ RapidContext.Widget.prototype.toggleClass = function (/* ... */) {
  * @return {Boolean} `true` if the widget is disabled, or
  *         `false` otherwise
  */
+// TODO: This function is unreachable in MSIE, due to a dynamic attribute
+//       with the same name (on all DOM nodes).
 RapidContext.Widget.prototype.isDisabled = function () {
     return this.disabled === true &&
            MochiKit.DOM.hasElementClass(this, "widgetDisabled");

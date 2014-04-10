@@ -189,7 +189,7 @@ HelpApp.prototype._treeOnSelect = function () {
  * Moves one step back in history (if possible).
  */
 HelpApp.prototype._historyBack = function () {
-    if (!this.ui.contentPrev.isDisabled()) {
+    if (!this.ui.contentPrev.disabled) {
         this._historyBlockUpdates = true;
         this._historyHead.push(this._currentUrl);
         this.loadContent(this._historyTail.pop());
@@ -201,7 +201,7 @@ HelpApp.prototype._historyBack = function () {
  * Moves one step forward in history (if possible).
  */
 HelpApp.prototype._historyForward = function () {
-    if (!this.ui.contentNext.isDisabled()) {
+    if (!this.ui.contentNext.disabled) {
         this._historyBlockUpdates = true;
         this._historyTail.push(this._currentUrl);
         this.loadContent(this._historyHead.pop());

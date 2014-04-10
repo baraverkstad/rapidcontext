@@ -31,7 +31,7 @@ LoginApp.prototype.stop = function () {
  * Shows the login authentication dialog.
  */
 LoginApp.prototype._loginAuth = function () {
-    if (this.ui.loginAuth.isDisabled()) {
+    if (this.ui.loginAuth.disabled) {
         // Call already in progress
     } else if (this.ui.loginForm.validate()) {
         this.ui.loginAuth.setAttrs({ disabled: true, icon: "LOADING" });
