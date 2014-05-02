@@ -147,6 +147,7 @@ RapidContext.Widget.FormValidator.prototype.reset = function () {
  * validation is performed by the `RapidContext.Widget.Form` widget.
  *
  * @param {Widget/Node} field the form field DOM node
+ * @param {String} [value] the form field value to check
  *
  * @return {Boolean/MochiKit.Async.Deferred} `true` if the form validated
  *         successfully, `false` if the validation failed, or a
@@ -154,13 +155,11 @@ RapidContext.Widget.FormValidator.prototype.reset = function () {
  *
  * @see RapidContext.Widget.Form#validate
  */
-RapidContext.Widget.FormValidator.prototype.verify = function (field) {
+RapidContext.Widget.FormValidator.prototype.verify = function (field, value) {
     if (!field.disabled) {
-        // TODO: use generic field value retrieval
-        var value = "";
-        if (typeof(field.getValue) == "function") {
+        if (arguments.length == 1 && typeof(field.getValue) == "function") {
             value = field.getValue();
-        } else {
+        } else if (arguments.length == 1) {
             value = field.value;
         }
         var stripped = MochiKit.Format.strip(value);
@@ -221,7 +220,9 @@ RapidContext.Widget.FormValidator.prototype.addError = function (field, message)
             if (this.display !== "text") {
                 icon = RapidContext.Widget.Icon({ ref: "ERROR", tooltip: message });
             }
-            this.addAll(icon, span);
+            if (!this.childNodes.length) {
+                this.addAll(icon, span);
+            }
             this.show();
         }
     }

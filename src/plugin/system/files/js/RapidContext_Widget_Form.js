@@ -244,6 +244,7 @@ RapidContext.Widget.Form.prototype.validators = function () {
 RapidContext.Widget.Form.prototype.validate = function () {
     var validators = this.validators();
     var fields = this.fields();
+    var values = this.valueMap();
     var success = true;
     var defers = [];
     for (var i = 0; i < validators.length; i++) {
@@ -252,7 +253,8 @@ RapidContext.Widget.Form.prototype.validate = function () {
     for (var i = 0; i < validators.length; i++) {
         for (var j = 0; j < fields.length; j++) {
             if (validators[i].name == fields[j].name) {
-                var res = validators[i].verify(fields[j]);
+                var name = fields[j].name;
+                var res = validators[i].verify(fields[j], values[name] || "");
                 if (res instanceof MochiKit.Async.Deferred) {
                     defers.push(res);
                 } else if (res === false) {
