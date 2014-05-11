@@ -15,11 +15,8 @@
     body .widgetDialogTitle {
         padding: 10px 16px;
         background: #0099BB;
-        background: -moz-linear-gradient(top, #00AACC, #0077AA);
-        background: -ms-linear-gradient(top, #00AACC, #0077AA);
-        background: -o-linear-gradient(top, #00AACC, #0077AA);
         background: -webkit-linear-gradient(top, #00AACC, #0077AA);
-        background: linear-gradient(top, #00AACC, #0077AA);
+        background: linear-gradient(to bottom, #00AACC, #0077AA);
         -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#00AACC', endColorstr='#0077AA')";
         font-size: 20px;
     }
@@ -36,11 +33,8 @@
         padding: 8px 10px;
         box-shadow: 0 1px 2px #660000 inset;
         background: #FFDDDD;
-        background: -moz-linear-gradient(top, #FFF8F8, #FFDDDD);
-        background: -ms-linear-gradient(top, #FFF8F8, #FFDDDD);
-        background: -o-linear-gradient(top, #FFF8F8, #FFDDDD);
         background: -webkit-linear-gradient(top, #FFF8F8, #FFDDDD);
-        background: linear-gradient(top, #FFF8F8, #FFDDDD);
+        background: linear-gradient(to bottom, #FFF8F8, #FFDDDD);
     }
     .login-warning {
         margin-bottom: 10px;
@@ -48,11 +42,8 @@
         padding: 8px 10px;
         box-shadow: 0 1px 2px #665500 inset;
         background: #FFFFDD;
-        background: -moz-linear-gradient(top, #FFFFF8, #FFFFDD);
-        background: -ms-linear-gradient(top, #FFFFF8, #FFFFDD);
-        background: -o-linear-gradient(top, #FFFFF8, #FFFFDD);
         background: -webkit-linear-gradient(top, #FFFFF8, #FFFFDD);
-        background: linear-gradient(top, #FFFFF8, #FFFFDD);
+        background: linear-gradient(to bottom, #FFFFF8, #FFFFDD);
     }
   </style>
   <Dialog id="loginDialog" title="Login" system="true" closeable="false" resizeable="false" style="width: 450px;">

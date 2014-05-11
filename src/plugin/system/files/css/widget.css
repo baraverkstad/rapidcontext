@@ -20,11 +20,8 @@
 .widgetInvalid {
     border: 1px solid #EECCCC;
     background-color: #FFFAFA;
-    background-image: -moz-linear-gradient(top, #FFFDFD, #FFFAFA);
-    background-image: -ms-linear-gradient(top, #FFFDFD, #FFFAFA);
-    background-image: -o-linear-gradient(top, #FFFDFD, #FFFAFA);
     background-image: -webkit-linear-gradient(top, #FFFDFD, #FFFAFA);
-    background-image: linear-gradient(top, #FFFDFD, #FFFAFA);
+    background-image: linear-gradient(to bottom, #FFFDFD, #FFFAFA);
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFDFD', endColorstr='#FFFAFA')";
 }
 
@@ -39,11 +36,8 @@
     padding: 2px 5px;
     color: #333333;
     background-color: #E0E0E0;
-    background-image: -moz-linear-gradient(top, #F8F8F8, #E0E0E0);
-    background-image: -ms-linear-gradient(top, #F8F8F8, #E0E0E0);
-    background-image: -o-linear-gradient(top, #F8F8F8, #E0E0E0);
     background-image: -webkit-linear-gradient(top, #F8F8F8, #E0E0E0);
-    background-image: linear-gradient(top, #F8F8F8, #E0E0E0);
+    background-image: linear-gradient(to bottom, #F8F8F8, #E0E0E0);
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#F8F8F8', endColorstr='#E0E0E0')";
     box-shadow: 0 1px 2px rgba(180, 180, 180, 0.5);
     text-shadow: 0 1px #FFFFFF;
@@ -57,11 +51,8 @@
     top: 0;
     color: #888888;
     background-color: #F8F8F8;
-    background-image: -moz-linear-gradient(top, #FFFFFF, #F8F8F8);
-    background-image: -ms-linear-gradient(top, #FFFFFF, #F8F8F8);
-    background-image: -o-linear-gradient(top, #FFFFFF, #F8F8F8);
     background-image: -webkit-linear-gradient(top, #FFFFFF, #F8F8F8);
-    background-image: linear-gradient(top, #FFFFFF, #F8F8F8);
+    background-image: linear-gradient(to bottom, #FFFFFF, #F8F8F8);
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#F8F8F8')";
     box-shadow: 0 1px 2px rgba(180, 180, 180, 0.5);
     text-shadow: 0 1px #FFFFFF;
@@ -74,11 +65,8 @@
 }
 .widgetButton:hover {
     background-color: #E8E8E8;
-    background-image: -moz-linear-gradient(top, #FFFFFF, #E8E8E8);
-    background-image: -ms-linear-gradient(top, #FFFFFF, #E8E8E8);
-    background-image: -o-linear-gradient(top, #FFFFFF, #E8E8E8);
     background-image: -webkit-linear-gradient(top, #FFFFFF, #E8E8E8);
-    background-image: linear-gradient(top, #FFFFFF, #E8E8E8);
+    background-image: linear-gradient(to bottom, #FFFFFF, #E8E8E8);
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#E8E8E8')";
 }
 .widgetButton:active {
@@ -149,11 +137,8 @@
     border-radius: 0 0 3px 3px;
     padding: 8px;
     background: #F8F8F8;
-    background-image: -moz-linear-gradient(top, #FFFFFF, #EEEEEE);
-    background-image: -ms-linear-gradient(top, #FFFFFF, #EEEEEE);
-    background-image: -o-linear-gradient(top, #FFFFFF, #EEEEEE);
     background-image: -webkit-linear-gradient(top, #FFFFFF, #EEEEEE);
-    background-image: linear-gradient(top, #FFFFFF, #EEEEEE);
+    background-image: linear-gradient(to bottom, #FFFFFF, #EEEEEE);
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#EEEEEE')";
     overflow: auto;
 }
@@ -335,11 +320,8 @@
     border-radius: 10px 10px;
     padding: 30px 60px;
     background-color: #F8FBFF;
-    background-image: -moz-linear-gradient(top, #FFFFFF, #F8FBFF);
-    background-image: -ms-linear-gradient(top, #FFFFFF, #F8FBFF);
-    background-image: -o-linear-gradient(top, #FFFFFF, #F8FBFF);
     background-image: -webkit-linear-gradient(top, #FFFFFF, #F8FBFF);
-    background-image: linear-gradient(top, #FFFFFF, #F8FBFF);
+    background-image: linear-gradient(to bottom, #FFFFFF, #F8FBFF);
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#F8FBFF')";
     box-shadow: 0 1px 3px #CCCCCC;
     color: #446688;
@@ -372,11 +354,8 @@
     border-radius: 4px;
     padding: 4px;
     background-color: #E8F8FF;
-    background-image: -moz-linear-gradient(top, #FDFDFF, #E8F8FF);
-    background-image: -ms-linear-gradient(top, #FDFDFF, #E8F8FF);
-    background-image: -o-linear-gradient(top, #FDFDFF, #E8F8FF);
     background-image: -webkit-linear-gradient(top, #FDFDFF, #E8F8FF);
-    background-image: linear-gradient(top, #FDFDFF, #E8F8FF);
+    background-image: linear-gradient(to bottom, #FDFDFF, #E8F8FF);
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FDFDFF', endColorstr='#E8F8FF')";
     color: rgb(30, 70, 110);
     cursor: default;
@@ -471,11 +450,8 @@
     border-right: 1px solid #BBBBBB;
     border-radius: 6px 6px 0 0;
     background: #EEEEEE;
-    background-image: -moz-linear-gradient(top, #DDDDDD, #EEEEEE);
-    background-image: -ms-linear-gradient(top, #DDDDDD, #EEEEEE);
-    background-image: -o-linear-gradient(top, #DDDDDD, #EEEEEE);
     background-image: -webkit-linear-gradient(top, #DDDDDD, #EEEEEE);
-    background-image: linear-gradient(top, #DDDDDD, #EEEEEE);
+    background-image: linear-gradient(to bottom, #DDDDDD, #EEEEEE);
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#DDDDDD', endColorstr='#EEEEEE')";
     box-shadow: 0 0 2px #FFFFFF inset;
     cursor: pointer;
@@ -493,11 +469,8 @@
     border-left: 1px solid #DDDDDD;
     border-right: 1px solid #DDDDDD;
     background: #FFFFFF;
-    background-image: -moz-linear-gradient(top, #E0F0F8, #FFFFFF);
-    background-image: -ms-linear-gradient(top, #E0F0F8, #FFFFFF);
-    background-image: -o-linear-gradient(top, #E0F0F8, #FFFFFF);
     background-image: -webkit-linear-gradient(top, #E0F0F8, #FFFFFF);
-    background-image: linear-gradient(top, #E0F0F8, #FFFFFF);
+    background-image: linear-gradient(to bottom, #E0F0F8, #FFFFFF);
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#E0F0F8', endColorstr='#FFFFFF')";
     color: black;
 }
@@ -621,7 +594,7 @@ th.widgetTableColumn.sortDesc {
 .widgetTextAreaHelp {
     color: #888;
 }
-.widgetTextArea:-moz-placeholder {
+.widgetTextArea::-moz-placeholder {
     color: #888;
 }
 .widgetTextArea:-ms-input-placeholder {
@@ -661,7 +634,7 @@ th.widgetTableColumn.sortDesc {
 .widgetTextFieldHelp {
     color: #888;
 }
-.widgetTextField:-moz-placeholder {
+.widgetTextField::-moz-placeholder {
     color: #888;
 }
 .widgetTextField:-ms-input-placeholder {
