@@ -320,8 +320,10 @@ public class JsSerializer {
      * @see org.rapidcontext.core.data.Dict
      */
     public static Object unwrap(Object obj) {
-        if (obj instanceof DataWrapper) {
-            return ((DataWrapper) obj).getData();
+        if (obj instanceof Undefined || obj == Scriptable.NOT_FOUND) {
+            return null;
+        } else if (obj instanceof DataWrapper) {
+            return unwrap(((DataWrapper) obj).getData());
         } else if (obj instanceof NativeArray) {
             NativeArray nativeArr = (NativeArray) obj;
             int length = (int) nativeArr.getLength();
@@ -345,8 +347,6 @@ public class JsSerializer {
                 dict.set(str, unwrap(value));
             }
             return dict;
-        } else if (obj instanceof Undefined || obj == Scriptable.NOT_FOUND) {
-            return null;
         } else if (obj instanceof Array) {
             Array oldArr = (Array) obj;
             Array newArr = new Array(oldArr.size());
