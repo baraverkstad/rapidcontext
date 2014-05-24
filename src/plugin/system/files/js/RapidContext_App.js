@@ -780,9 +780,12 @@ RapidContext.App.loadStyles = function (url) {
         }
         return null;
     }
-    var d = new MochiKit.Async.Deferred();
+    function isStylesheetLoaded(url, absoluteUrl) {
+        var sheet = findStylesheet(url) || findStylesheet(absoluteUrl);
+        return !!(sheet && sheet.cssRules && sheet.cssRules.length);
+    }
     var absoluteUrl = RapidContext.Util.resolveURI(url);
-    if (findStylesheet(url) || findStylesheet(absoluteUrl)) {
+    if (isStylesheetLoaded(url, absoluteUrl)) {
         RapidContext.Log.log("Stylesheet already loaded, skipping", url);
         return MochiKit.Async.wait(0);
     }
@@ -790,19 +793,25 @@ RapidContext.App.loadStyles = function (url) {
     var loadUrl = RapidContext.App._nonCachedUrl(url);
     var link = MochiKit.DOM.LINK({ rel: "stylesheet", type: "text/css", href: loadUrl });
     document.getElementsByTagName("head")[0].appendChild(link);
+    var d = new MochiKit.Async.Deferred();
     var img = MochiKit.DOM.IMG();
-    img.onerror = function () {
-        var sheet = findStylesheet(url) || findStylesheet(absoluteUrl);
-        if (sheet && sheet.cssRules && sheet.cssRules.length) {
+    img.onerror = d.callback.bind(d, 'URL loading finished');
+    img.src = loadUrl;
+    d.addBoth(function () {
+        if (!isStylesheetLoaded(url, absoluteUrl)) {
+            // Add 250 ms delay after URL loading to allow CSS parsing for
+            // browsers needing it (WebKit, Safari, Chrome)
+            return MochiKit.Async.wait(0.25);
+        }
+    });
+    d.addBoth(function () {
+        if (isStylesheetLoaded(url, absoluteUrl)) {
             RapidContext.Log.log("Completed loading stylesheet", url);
-            d.callback();
         } else {
             RapidContext.Log.warn("Failed loading stylesheet", url);
-            msg = "Failed loading stylesheet " + url;
-            d.errback(new URIError(msg, url));
+            throw new URIError("Failed loading stylesheet " + url, absoluteUrl);
         }
-    }
-    img.src = loadUrl;
+    });
     RapidContext.App._addErrbackLogger(d);
     return d;
 }
