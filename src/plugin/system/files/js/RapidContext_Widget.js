@@ -345,6 +345,7 @@ RapidContext.Widget.prototype._styleNode = function () {
  * @param {Object} attrs the widget and node attributes to set
  * @param {Boolean} [attrs.disabled] the disabled widget flag
  * @param {Boolean} [attrs.hidden] the hidden widget flag
+ * @param {String} [attrs.class] the CSS class names
  */
 RapidContext.Widget.prototype.setAttrs = function (attrs) {
     for (var name in attrs) {

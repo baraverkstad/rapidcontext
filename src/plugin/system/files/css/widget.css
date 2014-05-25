@@ -205,9 +205,11 @@
     display: inline-block;
     margin: 0;
     padding: 0;
+    cursor: pointer;
+}
+.widgetIconSprite {
     background-repeat: no-repeat;
     background-position: 0px 0px;
-    cursor: pointer;
     vertical-align: -25%;
     /* MSIE 7: Fix for CSS vertical-align not working correctly. */
     *vertical-align: 0;

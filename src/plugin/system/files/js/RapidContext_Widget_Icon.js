@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2014 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -24,10 +24,11 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  * @constructor
  * @param {Object} attrs the widget and node attributes to set
  * @param {String} [attrs.ref] the predefined icon name (reference)
+ * @param {String} [attrs.class] the icon CSS class names
  * @param {String} [attrs.url] the icon image URL
- * @param {String} [attrs.position] the icon position in the image
- * @param {Number} [attrs.width] the icon image width (in pixels)
- * @param {Number} [attrs.height] the icon image height (in pixels)
+ * @param {String} [attrs.position] the icon image position
+ * @param {Number} [attrs.width] the icon width (in pixels)
+ * @param {Number} [attrs.height] the icon height (in pixels)
  * @param {String} [attrs.tooltip] the icon tooltip text
  * @param {Boolean} [attrs.disabled] the disabled widget flag, defaults to
  *            false
@@ -36,8 +37,10 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  * @return {Widget} the widget DOM node
  *
  * @class The icon widget class. Used to provide a small clickable image, using
- *     the `<span>` HTML element. A number of predefined icon images suitable
- *     for different actions are available (using a single icon sprite image).
+ *     the `<i>` HTML element. The icons can be either image- or font-based,
+ *     causing slightly different behaviors with respect to size. A number of
+ *     predefined icons suitable for different actions are available (using the
+ *     Font-Awesome icon font).
  * @extends RapidContext.Widget
  *
  * @example {JavaScript}
@@ -54,7 +57,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  * </h3>
  */
 RapidContext.Widget.Icon = function (attrs) {
-    var o = MochiKit.DOM.SPAN();
+    var o = MochiKit.DOM.createDOM('i');
     RapidContext.Widget._widgetMixin(o, arguments.callee);
     o.setAttrs(attrs);
     o.addClass("widgetIcon");
@@ -86,39 +89,46 @@ RapidContext.Widget.Icon.prototype._containerNode = function () {
  *
  * @param {Object} attrs the widget and node attributes to set
  * @param {String} [attrs.ref] the predefined icon name (reference)
+ * @param {String} [attrs.class] the icon CSS class names
  * @param {String} [attrs.url] the icon image URL
- * @param {String} [attrs.position] the icon position in the image
- * @param {Number} [attrs.width] the icon image width (in pixels)
- * @param {Number} [attrs.height] the icon image height (in pixels)
+ * @param {String} [attrs.position] the icon image position
+ * @param {Number} [attrs.width] the icon width (in pixels)
+ * @param {Number} [attrs.height] the icon height (in pixels)
  * @param {String} [attrs.tooltip] the icon tooltip text
  * @param {Boolean} [attrs.disabled] the disabled widget flag
  * @param {Boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.Icon.prototype.setAttrs = function (attrs) {
     var locals = MochiKit.Base.update({}, attrs);
-    if (attrs.ref) {
-        var ref = RapidContext.Widget.Icon[attrs.ref] || {};
-        var def = RapidContext.Widget.Icon.DEFAULT;
-        MochiKit.Base.setdefault(locals, ref, def);
+    while (locals.ref) {
+        var ref = RapidContext.Widget.Icon[locals.ref] || {};
+        delete locals.ref;
+        MochiKit.Base.setdefault(locals, ref);
     }
     var styles = {};
     if (locals.url) {
+        this.addClass("widgetIconSprite");
         styles.backgroundImage = 'url("' + locals.url + '")';
+        delete locals.url;
     }
     if (locals.position) {
         styles.backgroundPosition = locals.position;
+        delete locals.position;
     }
     if (locals.width) {
         styles.width = locals.width + "px";
+        delete locals.width;
     }
     if (locals.height) {
         styles.height = locals.height + "px";
+        delete locals.height;
     }
     this.setStyle(styles);
-    if (locals.tooltip && !attrs.title) {
-        attrs.title = locals.tooltip;
+    if (locals.tooltip && !locals.title) {
+        locals.title = locals.tooltip;
+        delete locals.tooltip;
     }
-    this.__setAttrs(attrs);
+    this.__setAttrs(locals);
 };
 
 /**
@@ -128,249 +138,249 @@ MochiKit.Base.update(RapidContext.Widget.Icon, {
     /** The default icon definition, inherited by all others. */
     DEFAULT: { url: "rapidcontext/files/images/icons/icons_16x16.png", width: 16, height: 16 },
     /** The blank icon definition. */
-    BLANK: { position: "0px 0px", style: { cursor: "default" } },
+    BLANK: { ref: "DEFAULT", position: "0px 0px", style: { cursor: "default" } },
     /** The loading icon definition. */
-    LOADING: { url: "rapidcontext/files/images/icons/loading.gif", position: "0px 0px", tooltip: "Loading..." },
+    LOADING: { ref: "DEFAULT", url: "rapidcontext/files/images/icons/loading.gif", position: "0px 0px", tooltip: "Loading..." },
     /** The close icon definition. */
-    CLOSE: { position: "0px -16px", tooltip: "Close" },
+    CLOSE: { ref: "DEFAULT", position: "0px -16px", tooltip: "Close" },
     /** The close (inverse video) icon definition. */
-    CLOSE_INVERSE: { position: "0px -32px", tooltip: "Close" },
+    CLOSE_INVERSE: { ref: "DEFAULT", position: "0px -32px", tooltip: "Close" },
     /** The close active icon definition. */
-    CLOSE_ACTIVE: { position: "0px -48px", tooltip: "Close" },
+    CLOSE_ACTIVE: { ref: "DEFAULT", position: "0px -48px", tooltip: "Close" },
     /** The bluewhite close icon definition. */
-    CLOSE_BLUEWHITE: { position: "0px -64px", tooltip: "Close" },
+    CLOSE_BLUEWHITE: { ref: "DEFAULT", position: "0px -64px", tooltip: "Close" },
     /** The blue close icon definition. */
-    CLOSE_BLUE: { position: "0px -80px", tooltip: "Close" },
+    CLOSE_BLUE: { ref: "DEFAULT", position: "0px -80px", tooltip: "Close" },
     /** The resize icon definition. */
-    RESIZE: { position: "0px -96px", style: { cursor: "se-resize" } },
+    RESIZE: { ref: "DEFAULT", position: "0px -96px", style: { cursor: "se-resize" } },
     /** The ok icon definition. */
-    OK: { position: "-16px 0px", tooltip: "OK" },
+    OK: { ref: "DEFAULT", position: "-16px 0px", tooltip: "OK" },
     /** The stop icon definition. */
-    STOP: { position: "-16px -16px", tooltip: "Stop" },
+    STOP: { ref: "DEFAULT", position: "-16px -16px", tooltip: "Stop" },
     /** The yes icon definition. */
-    YES: { position: "-16px -32px", tooltip: "Yes" },
+    YES: { ref: "DEFAULT", position: "-16px -32px", tooltip: "Yes" },
     /** The no icon definition. */
-    NO: { position: "-16px -48px", tooltip: "No" },
+    NO: { ref: "DEFAULT", position: "-16px -48px", tooltip: "No" },
     /** The cancel icon definition. */
-    CANCEL: { position: "-16px -64px", tooltip: "Cancel" },
+    CANCEL: { ref: "DEFAULT", position: "-16px -64px", tooltip: "Cancel" },
     /** The up icon definition. */
-    UP: { position: "-32px -0px", tooltip: "Move up" },
+    UP: { ref: "DEFAULT", position: "-32px -0px", tooltip: "Move up" },
     /** The down icon definition. */
-    DOWN: { position: "-32px -16px", tooltip: "Move down" },
+    DOWN: { ref: "DEFAULT", position: "-32px -16px", tooltip: "Move down" },
     /** The left icon definition. */
-    LEFT: { position: "-32px -32px", tooltip: "Move left" },
+    LEFT: { ref: "DEFAULT", position: "-32px -32px", tooltip: "Move left" },
     /** The right icon definition. */
-    RIGHT: { position: "-32px -48px", tooltip: "Move right" },
+    RIGHT: { ref: "DEFAULT", position: "-32px -48px", tooltip: "Move right" },
     /** The first icon definition. */
-    FIRST: { position: "-32px -64px", tooltip: "First" },
+    FIRST: { ref: "DEFAULT", position: "-32px -64px", tooltip: "First" },
     /** The last icon definition. */
-    LAST: { position: "-32px -80px", tooltip: "Last" },
+    LAST: { ref: "DEFAULT", position: "-32px -80px", tooltip: "Last" },
     /** The previous icon definition. */
-    PREVIOUS: { position: "-32px -96px", tooltip: "Previous" },
+    PREVIOUS: { ref: "DEFAULT", position: "-32px -96px", tooltip: "Previous" },
     /** The next icon definition. */
-    NEXT: { position: "-32px -112px", tooltip: "Next" },
+    NEXT: { ref: "DEFAULT", position: "-32px -112px", tooltip: "Next" },
     /** The plus icon definition. */
-    PLUS: { position: "-32px -128px", tooltip: "Show" },
+    PLUS: { ref: "DEFAULT", position: "-32px -128px", tooltip: "Show" },
     /** The minus icon definition. */
-    MINUS: { position: "-32px -144px", tooltip: "Hide" },
+    MINUS: { ref: "DEFAULT", position: "-32px -144px", tooltip: "Hide" },
     /** The remove icon definition. */
-    REMOVE: { position: "-48px 0px", tooltip: "Remove" },
+    REMOVE: { ref: "DEFAULT", position: "-48px 0px", tooltip: "Remove" },
     /** The add icon definition. */
-    ADD: { position: "-48px -16px", tooltip: "Add" },
+    ADD: { ref: "DEFAULT", position: "-48px -16px", tooltip: "Add" },
     /** The copy icon definition. */
-    COPY: { position: "-48px -32px", tooltip: "Copy" },
+    COPY: { ref: "DEFAULT", position: "-48px -32px", tooltip: "Copy" },
     /** The cut icon definition. */
-    CUT: { position: "-48px -48px", tooltip: "Cut" },
+    CUT: { ref: "DEFAULT", position: "-48px -48px", tooltip: "Cut" },
     /** The delete icon definition. */
-    DELETE: { position: "-48px -64px", tooltip: "Delete" },
+    DELETE: { ref: "DEFAULT", position: "-48px -64px", tooltip: "Delete" },
     /** The reload icon definition. */
-    RELOAD: { position: "-48px -80px", tooltip: "Reload" },
+    RELOAD: { ref: "DEFAULT", position: "-48px -80px", tooltip: "Reload" },
     /** The edit icon definition. */
-    EDIT: { position: "-48px -96px", tooltip: "Edit" },
+    EDIT: { ref: "DEFAULT", position: "-48px -96px", tooltip: "Edit" },
     /** The white edit icon definition. */
-    EDIT_WHITE: { position: "-48px -112px", tooltip: "Edit" },
+    EDIT_WHITE: { ref: "DEFAULT", position: "-48px -112px", tooltip: "Edit" },
     /** The layout edit icon definition. */
-    EDIT_LAYOUT: { position: "-48px -128px", tooltip: "Edit" },
+    EDIT_LAYOUT: { ref: "DEFAULT", position: "-48px -128px", tooltip: "Edit" },
     /** The search icon definition. */
-    SEARCH: { position: "-48px -144px", tooltip: "Search" },
+    SEARCH: { ref: "DEFAULT", position: "-48px -144px", tooltip: "Search" },
     /** The expand icon definition. */
-    EXPAND: { position: "-48px -160px", tooltip: "Open in new window" },
+    EXPAND: { ref: "DEFAULT", position: "-48px -160px", tooltip: "Open in new window" },
     /** The asterisk icon definition. */
-    ASTERISK: { position: "-64px 0px", tooltip: "Mark" },
+    ASTERISK: { ref: "DEFAULT", position: "-64px 0px", tooltip: "Mark" },
     /** The select icon definition. */
-    SELECT: { position: "-64px -16px", tooltip: "Select / Unselect" },
+    SELECT: { ref: "DEFAULT", position: "-64px -16px", tooltip: "Select / Unselect" },
     /** The like icon definition. */
-    LIKE: { position: "-64px -32px", tooltip: "Like / Unlike" },
+    LIKE: { ref: "DEFAULT", position: "-64px -32px", tooltip: "Like / Unlike" },
     /** The red flag icon definition. */
-    FLAG_RED: { position: "-64px -48px", tooltip: "Flag" },
+    FLAG_RED: { ref: "DEFAULT", position: "-64px -48px", tooltip: "Flag" },
     /** The blue flag icon definition. */
-    FLAG_BLUE: { position: "-64px -64px", tooltip: "Flag" },
+    FLAG_BLUE: { ref: "DEFAULT", position: "-64px -64px", tooltip: "Flag" },
     /** The green flag icon definition. */
-    FLAG_GREEN: { position: "-64px -80px", tooltip: "Flag" },
+    FLAG_GREEN: { ref: "DEFAULT", position: "-64px -80px", tooltip: "Flag" },
     /** The yellow flag icon definition. */
-    FLAG_YELLOW: { position: "-64px -96px", tooltip: "Flag" },
+    FLAG_YELLOW: { ref: "DEFAULT", position: "-64px -96px", tooltip: "Flag" },
     /** The red tag icon definition. */
-    TAG_RED: { position: "-64px -112px", tooltip: "Tag" },
+    TAG_RED: { ref: "DEFAULT", position: "-64px -112px", tooltip: "Tag" },
     /** The blue tag icon definition. */
-    TAG_BLUE: { position: "-64px -128px", tooltip: "Tag" },
+    TAG_BLUE: { ref: "DEFAULT", position: "-64px -128px", tooltip: "Tag" },
     /** The green tag icon definition. */
-    TAG_GREEN: { position: "-64px -144px", tooltip: "Tag" },
+    TAG_GREEN: { ref: "DEFAULT", position: "-64px -144px", tooltip: "Tag" },
     /** The yellow tag icon definition. */
-    TAG_YELLOW: { position: "-64px -160px", tooltip: "Tag" },
+    TAG_YELLOW: { ref: "DEFAULT", position: "-64px -160px", tooltip: "Tag" },
     /** The options icon definition. */
-    OPTIONS: { position: "-80px 0px", tooltip: "Options" },
+    OPTIONS: { ref: "DEFAULT", position: "-80px 0px", tooltip: "Options" },
     /** The configure icon definition. */
-    CONFIG: { position: "-80px -16px", tooltip: "Configure" },
+    CONFIG: { ref: "DEFAULT", position: "-80px -16px", tooltip: "Configure" },
     /** The attach file icon definition. */
-    ATTACH: { position: "-80px -32px", tooltip: "Attach file" },
+    ATTACH: { ref: "DEFAULT", position: "-80px -32px", tooltip: "Attach file" },
     /** The automatic icon definition. */
-    AUTOMATIC: { position: "-80px -48px", tooltip: "Automatic actions" },
+    AUTOMATIC: { ref: "DEFAULT", position: "-80px -48px", tooltip: "Automatic actions" },
     /** The export icon definition. */
-    EXPORT: { position: "-80px -64px", tooltip: "Export" },
+    EXPORT: { ref: "DEFAULT", position: "-80px -64px", tooltip: "Export" },
     /** The information icon definition. */
-    INFO: { position: "-96px 0px", tooltip: "Information" },
+    INFO: { ref: "DEFAULT", position: "-96px 0px", tooltip: "Information" },
     /** The help icon definition. */
-    HELP: { position: "-96px -16px", tooltip: "Help" },
+    HELP: { ref: "DEFAULT", position: "-96px -16px", tooltip: "Help" },
     /** The warning icon definition. */
-    WARNING: { position: "-96px -32px", tooltip: "Warning" },
+    WARNING: { ref: "DEFAULT", position: "-96px -32px", tooltip: "Warning" },
     /** The error icon definition. */
-    ERROR: { position: "-96px -48px", tooltip: "Error" },
+    ERROR: { ref: "DEFAULT", position: "-96px -48px", tooltip: "Error" },
     /** The bar chart icon definition. */
-    BARCHART: { position: "-112px 0px", tooltip: "Bar chart" },
+    BARCHART: { ref: "DEFAULT", position: "-112px 0px", tooltip: "Bar chart" },
     /** The line chart icon definition. */
-    LINECHART: { position: "-112px -16px", tooltip: "Line chart" },
+    LINECHART: { ref: "DEFAULT", position: "-112px -16px", tooltip: "Line chart" },
     /** The curve chart icon definition. */
-    CURVECHART: { position: "-112px -32px", tooltip: "Curve chart" },
+    CURVECHART: { ref: "DEFAULT", position: "-112px -32px", tooltip: "Curve chart" },
     /** The pie chart icon definition. */
-    PIECHART: { position: "-112px -48px", tooltip: "Pie chart" },
+    PIECHART: { ref: "DEFAULT", position: "-112px -48px", tooltip: "Pie chart" },
     /** The organization chart icon definition. */
-    ORGCHART: { position: "-112px -64px", tooltip: "Organization chart" },
+    ORGCHART: { ref: "DEFAULT", position: "-112px -64px", tooltip: "Organization chart" },
     /** The web feed icon definition. */
-    FEED: { position: "-128px 0px", tooltip: "RSS/Atom feed" },
+    FEED: { ref: "DEFAULT", position: "-128px 0px", tooltip: "RSS/Atom feed" },
     /** The RSS icon definition. */
-    RSS: { position: "-128px -16px", tooltip: "RSS feed" },
+    RSS: { ref: "DEFAULT", position: "-128px -16px", tooltip: "RSS feed" },
     /** The CSS icon definition. */
-    CSS: { position: "-128px -32px", tooltip: "CSS" },
+    CSS: { ref: "DEFAULT", position: "-128px -32px", tooltip: "CSS" },
     /** The HTML icon definition. */
-    HTML: { position: "-128px -48px", tooltip: "HTML" },
+    HTML: { ref: "DEFAULT", position: "-128px -48px", tooltip: "HTML" },
     /** The XHTML icon definition. */
-    XHTML: { position: "-128px -64px", tooltip: "XHTML" },
+    XHTML: { ref: "DEFAULT", position: "-128px -64px", tooltip: "XHTML" },
     /** The font icon definition. */
-    FONT: { position: "-144px 0px", tooltip: "Font" },
+    FONT: { ref: "DEFAULT", position: "-144px 0px", tooltip: "Font" },
     /** The style icon definition. */
-    STYLE: { position: "-144px -16px", tooltip: "Style" },
+    STYLE: { ref: "DEFAULT", position: "-144px -16px", tooltip: "Style" },
     /** The text format icon definition. */
-    TEXT_FORMAT: { position: "-144px -32px", tooltip: "Text format" },
+    TEXT_FORMAT: { ref: "DEFAULT", position: "-144px -32px", tooltip: "Text format" },
     /** The calendar icon definition. */
-    CALENDAR: { position: "-144px -48px", tooltip: "Calendar" },
+    CALENDAR: { ref: "DEFAULT", position: "-144px -48px", tooltip: "Calendar" },
     /** The date icon definition. */
-    DATE: { position: "-144px -64px", tooltip: "Date" },
+    DATE: { ref: "DEFAULT", position: "-144px -64px", tooltip: "Date" },
     /** The layout icon definition. */
-    LAYOUT: { position: "-144px -80px", tooltip: "Layout" },
+    LAYOUT: { ref: "DEFAULT", position: "-144px -80px", tooltip: "Layout" },
     /** The table icon definition. */
-    TABLE: { position: "-144px -96px", tooltip: "Table" },
+    TABLE: { ref: "DEFAULT", position: "-144px -96px", tooltip: "Table" },
     /** The sum icon definition. */
-    SUM: { position: "-144px -112px", tooltip: "Sum" },
+    SUM: { ref: "DEFAULT", position: "-144px -112px", tooltip: "Sum" },
     /** The vector icon definition. */
-    VECTOR: { position: "-144px -128px", tooltip: "Vectors" },
+    VECTOR: { ref: "DEFAULT", position: "-144px -128px", tooltip: "Vectors" },
     /** The color icon definition. */
-    COLOR: { position: "-144px -144px", tooltip: "Color" },
+    COLOR: { ref: "DEFAULT", position: "-144px -144px", tooltip: "Color" },
     /** The HTML source icon definition. */
-    HTML_SOURCE: { position: "-144px -160px", tooltip: "HTML source" },
+    HTML_SOURCE: { ref: "DEFAULT", position: "-144px -160px", tooltip: "HTML source" },
     /** The plug-in icon definition. */
-    PLUGIN: { position: "-160px 0px", tooltip: "Plug-in" },
+    PLUGIN: { ref: "DEFAULT", position: "-160px 0px", tooltip: "Plug-in" },
     /** The add plug-in icon definition. */
-    PLUGIN_ADD: { position: "-160px -16px", tooltip: "Add plug-in" },
+    PLUGIN_ADD: { ref: "DEFAULT", position: "-160px -16px", tooltip: "Add plug-in" },
     /** The remove plug-in icon definition. */
-    PLUGIN_REMOVE: { position: "-160px -32px", tooltip: "Remove plug-in" },
+    PLUGIN_REMOVE: { ref: "DEFAULT", position: "-160px -32px", tooltip: "Remove plug-in" },
     /** The inactive plug-in icon definition. */
-    PLUGIN_INACTIVE: { position: "-160px -48px", tooltip: "Inactive plug-in" },
+    PLUGIN_INACTIVE: { ref: "DEFAULT", position: "-160px -48px", tooltip: "Inactive plug-in" },
     /** The plug-in error icon definition. */
-    PLUGIN_ERROR: { position: "-160px -64px", tooltip: "Plug-in error" },
+    PLUGIN_ERROR: { ref: "DEFAULT", position: "-160px -64px", tooltip: "Plug-in error" },
     /** The user icon definition. */
-    USER: { position: "-160px -80px", tooltip: "User" },
+    USER: { ref: "DEFAULT", position: "-160px -80px", tooltip: "User" },
     /** The group icon definition. */
-    GROUP: { position: "-160px -96px", tooltip: "Group" },
+    GROUP: { ref: "DEFAULT", position: "-160px -96px", tooltip: "Group" },
     /** The folder icon definition. */
-    FOLDER: { position: "-176px 0px", tooltip: "Folder" },
+    FOLDER: { ref: "DEFAULT", position: "-176px 0px", tooltip: "Folder" },
     /** The add folder icon definition. */
-    FOLDER_ADD: { position: "-176px -16px", tooltip: "Add folder" },
+    FOLDER_ADD: { ref: "DEFAULT", position: "-176px -16px", tooltip: "Add folder" },
     /** The lock icon definition. */
-    LOCK: { position: "-176px -32px", tooltip: "Lock" },
+    LOCK: { ref: "DEFAULT", position: "-176px -32px", tooltip: "Lock" },
     /** The key icon definition. */
-    KEY: { position: "-176px -48px", tooltip: "Key" },
+    KEY: { ref: "DEFAULT", position: "-176px -48px", tooltip: "Key" },
     /** The document icon definition. */
-    DOCUMENT: { position: "-192px 0px", tooltip: "Document" },
+    DOCUMENT: { ref: "DEFAULT", position: "-192px 0px", tooltip: "Document" },
     /** The Word document icon definition. */
-    DOCUMENT_WORD: { position: "-192px -16px", tooltip: "Word document" },
+    DOCUMENT_WORD: { ref: "DEFAULT", position: "-192px -16px", tooltip: "Word document" },
     /** The Excel document icon definition. */
-    DOCUMENT_EXCEL: { position: "-192px -32px", tooltip: "Excel document" },
+    DOCUMENT_EXCEL: { ref: "DEFAULT", position: "-192px -32px", tooltip: "Excel document" },
     /** The Office document icon definition. */
-    DOCUMENT_OFFICE: { position: "-192px -48px", tooltip: "Office document" },
+    DOCUMENT_OFFICE: { ref: "DEFAULT", position: "-192px -48px", tooltip: "Office document" },
     /** The PDF document icon definition. */
-    DOCUMENT_PDF: { position: "-192px -64px", tooltip: "PDF document" },
+    DOCUMENT_PDF: { ref: "DEFAULT", position: "-192px -64px", tooltip: "PDF document" },
     /** The document search icon definition. */
-    DOCUMENT_SEARCH: { position: "-192px -80px", tooltip: "Search document" },
+    DOCUMENT_SEARCH: { ref: "DEFAULT", position: "-192px -80px", tooltip: "Search document" },
     /** The code document icon definition. */
-    DOCUMENT_CODE: { position: "-192px -96px", tooltip: "Code document" },
+    DOCUMENT_CODE: { ref: "DEFAULT", position: "-192px -96px", tooltip: "Code document" },
     /** The text document icon definition. */
-    DOCUMENT_TEXT: { position: "-192px -112px", tooltip: "Text document" },
+    DOCUMENT_TEXT: { ref: "DEFAULT", position: "-192px -112px", tooltip: "Text document" },
     /** The contact icon definition. */
-    CONTACT: { position: "-208px 0px", tooltip: "Contact" },
+    CONTACT: { ref: "DEFAULT", position: "-208px 0px", tooltip: "Contact" },
     /** The phone icon definition. */
-    PHONE: { position: "-208px -16px", tooltip: "Phone number" },
+    PHONE: { ref: "DEFAULT", position: "-208px -16px", tooltip: "Phone number" },
     /** The mobile phone icon definition. */
-    PHONE_MOBILE: { position: "-208px -32px", tooltip: "Mobile phone number" },
+    PHONE_MOBILE: { ref: "DEFAULT", position: "-208px -32px", tooltip: "Mobile phone number" },
     /** The comment icon definition. */
-    COMMENT: { position: "-208px -48px", tooltip: "Comment" },
+    COMMENT: { ref: "DEFAULT", position: "-208px -48px", tooltip: "Comment" },
     /** The comments icon definition. */
-    COMMENTS: { position: "-208px -64px", tooltip: "Comments" },
+    COMMENTS: { ref: "DEFAULT", position: "-208px -64px", tooltip: "Comments" },
     /** The note icon definition. */
-    NOTE: { position: "-208px -80px", tooltip: "Note" },
+    NOTE: { ref: "DEFAULT", position: "-208px -80px", tooltip: "Note" },
     /** The application icon definition. */
-    APPLICATION: { position: "-224px 0px", tooltip: "Application" },
+    APPLICATION: { ref: "DEFAULT", position: "-224px 0px", tooltip: "Application" },
     /** The application terminal icon definition. */
-    APPLICATION_TERMINAL: { position: "-224px -16px", tooltip: "Terminal" },
+    APPLICATION_TERMINAL: { ref: "DEFAULT", position: "-224px -16px", tooltip: "Terminal" },
     /** The dialog icon definition. */
-    DIALOG: { position: "-224px -32px", tooltip: "Dialog" },
+    DIALOG: { ref: "DEFAULT", position: "-224px -32px", tooltip: "Dialog" },
     /** The script icon definition. */
-    SCRIPT: { position: "-224px -48px", tooltip: "Script" },
+    SCRIPT: { ref: "DEFAULT", position: "-224px -48px", tooltip: "Script" },
     /** The component icon definition. */
-    COMPONENT: { position: "-224px -64px", tooltip: "Component" },
+    COMPONENT: { ref: "DEFAULT", position: "-224px -64px", tooltip: "Component" },
     /** The components icon definition. */
-    COMPONENTS: { position: "-224px -80px", tooltip: "Components" },
+    COMPONENTS: { ref: "DEFAULT", position: "-224px -80px", tooltip: "Components" },
     /** The package icon definition. */
-    PACKAGE: { position: "-224px -96px", tooltip: "Package" },
+    PACKAGE: { ref: "DEFAULT", position: "-224px -96px", tooltip: "Package" },
     /** The textfield icon definition. */
-    TEXTFIELD: { position: "-224px -112px", tooltip: "Text field" },
+    TEXTFIELD: { ref: "DEFAULT", position: "-224px -112px", tooltip: "Text field" },
     /** The network drive icon definition. */
-    DRIVE_NETWORK: { position: "-240px 0px", tooltip: "Network drive" },
+    DRIVE_NETWORK: { ref: "DEFAULT", position: "-240px 0px", tooltip: "Network drive" },
     /** The monitor icon definition. */
-    MONITOR: { position: "-240px -16px", tooltip: "Monitor" },
+    MONITOR: { ref: "DEFAULT", position: "-240px -16px", tooltip: "Monitor" },
     /** The keyboard icon definition. */
-    KEYBOARD: { position: "-240px -32px", tooltip: "Keyboard" },
+    KEYBOARD: { ref: "DEFAULT", position: "-240px -32px", tooltip: "Keyboard" },
     /** The printer icon definition. */
-    PRINTER: { position: "-240px -48px", tooltip: "Printer" },
+    PRINTER: { ref: "DEFAULT", position: "-240px -48px", tooltip: "Printer" },
     /** The server icon definition. */
-    SERVER: { position: "-240px -64px", tooltip: "Server" },
+    SERVER: { ref: "DEFAULT", position: "-240px -64px", tooltip: "Server" },
     /** The disk icon definition. */
-    DISK: { position: "-240px -80px", tooltip: "Disk" },
+    DISK: { ref: "DEFAULT", position: "-240px -80px", tooltip: "Disk" },
     /** The database icon definition. */
-    DATABASE: { position: "-240px -96px", tooltip: "Database" },
+    DATABASE: { ref: "DEFAULT", position: "-240px -96px", tooltip: "Database" },
     /** The email icon definition. */
-    EMAIL: { position: "-240px -112px", tooltip: "Email" },
+    EMAIL: { ref: "DEFAULT", position: "-240px -112px", tooltip: "Email" },
     /** The image icon definition. */
-    IMAGE: { position: "-256px 0px", tooltip: "Image" },
+    IMAGE: { ref: "DEFAULT", position: "-256px 0px", tooltip: "Image" },
     /** The calculator icon definition. */
-    CALCULATOR: { position: "-256px -16px", tooltip: "Calculator" },
+    CALCULATOR: { ref: "DEFAULT", position: "-256px -16px", tooltip: "Calculator" },
     /** The home icon definition. */
-    HOME: { position: "-256px -32px", tooltip: "Home" },
+    HOME: { ref: "DEFAULT", position: "-256px -32px", tooltip: "Home" },
     /** The book icon definition. */
-    BOOK: { position: "-256px -48px", tooltip: "Book" },
+    BOOK: { ref: "DEFAULT", position: "-256px -48px", tooltip: "Book" },
     /** The open book icon definition. */
-    BOOK_OPEN: { position: "-256px -64px", tooltip: "Book" },
+    BOOK_OPEN: { ref: "DEFAULT", position: "-256px -64px", tooltip: "Book" },
     /** The clock icon definition. */
-    CLOCK: { position: "-256px -80px", tooltip: "Clock" },
+    CLOCK: { ref: "DEFAULT", position: "-256px -80px", tooltip: "Clock" },
     /** The delay icon definition. */
-    DELAY: { position: "-256px -96px", tooltip: "Delay" }
+    DELAY: { ref: "DEFAULT", position: "-256px -96px", tooltip: "Delay" }
 });
