@@ -19,16 +19,16 @@ h3 {
     margin-bottom: 6px;
 }
 h1 {
-    margin-top: 20px;
-    font-size: 20px;
+    margin-top: 2em;
+    font-size: 2.0em;
 }
 h2 {
-    margin-top: 15px;
-    font-size: 15px;
+    margin-top: 1.5em;
+    font-size: 1.5em;
 }
 h3 {
     margin-top: 0px;
-    font-size: 12px;
+    font-size: 1.2em;
 }
 hr {
     margin: 12px 0;
@@ -56,7 +56,7 @@ fieldset {
 }
 fieldset legend {
     padding: 0 3px;
-    font-size: 12px;
+    font-size: 1.2em;
     color: #666666;
 }
 a {
@@ -76,14 +76,14 @@ a img {
 }
 input,
 textarea {
-    font-size: 11px;
+    font-size: 1.1em;
     font-family: "Courier New", monospace;
     font-weight: bold;
 }
 pre,
 code {
     margin-top: 0px;
-    font-size: 11px;
+    font-size: 1.1em;
     font-family: "Courier New", monospace;
     color: #666666;
 }
@@ -145,7 +145,7 @@ div.query {
 }
 .query table.navigation {
     border: none;
-    font-size: 12px;
+    font-size: 1.2em;
 }
 .query table.navigation td {
     height: 26px;

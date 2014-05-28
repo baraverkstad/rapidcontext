@@ -8,7 +8,7 @@
     font-weight: bold;
     margin-top: 0px;
     margin-bottom: 6px;
-    font-size: 12px;
+    font-size: 1.2em;
 }
 .widgetHidden {
     display: none;
@@ -41,6 +41,7 @@
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#F8F8F8', endColorstr='#E0E0E0')";
     box-shadow: 0 1px 2px rgba(180, 180, 180, 0.5);
     text-shadow: 0 1px #FFFFFF;
+    font-size: 1.2em;
     cursor: pointer;
     /* MSIE 7: fix for button width */
     *overflow: visible;
@@ -224,12 +225,13 @@
     cursor: default;
 }
 
+
 /**
  * NavigationBar Style
  */
 .widgetNavigationBar {
     border: none;
-    font-size: 12px;
+    font-size: 1.2em;
     border-collapse: collapse;
 }
 .widgetNavigationBar td {
@@ -327,7 +329,7 @@
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#F8FBFF')";
     box-shadow: 0 1px 3px #CCCCCC;
     color: #446688;
-    font-size: 20px;
+    font-size: 2em;
     font-weight: bold;
     /* MSIE 7: fix for "display: inline-block" (actually uses inline display instead) */
     zoom: 1;
@@ -458,7 +460,7 @@
     box-shadow: 0 0 2px #FFFFFF inset;
     cursor: pointer;
     white-space: nowrap;
-    font-size: 13px;
+    font-size: 1.3em;
     color: #444444;
     -moz-user-select: none;
     -webkit-user-select: none;
@@ -576,7 +578,7 @@ th.widgetTableColumn.sortDesc {
     padding: 3px 5px;
     box-shadow: 0 0 2px #EEEEEE;
     font-family: "Courier New", Courier, monospace;
-    font-size: 11px;
+    font-size: 1.1em;
     resize: none;
 }
 .widgetTextArea.widgetInvalid {
@@ -617,7 +619,7 @@ th.widgetTableColumn.sortDesc {
     padding: 3px 5px;
     box-shadow: 0 0 2px #EEEEEE;
     font-family: "Courier New", Courier, monospace;
-    font-size: 11px;
+    font-size: 1.1em;
 }
 .widgetTextField.widgetInvalid {
     border: 1px solid #EECCCC;
