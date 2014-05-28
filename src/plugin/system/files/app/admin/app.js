@@ -77,8 +77,8 @@ AdminApp.prototype.start = function () {
         if (value) {
             var styles = { marginLeft: "3px" };
             var attrs = { ref: "EXPAND", tooltip: "Open in new window", style: styles };
-            var img = RapidContext.Widget.Icon(attrs);
-            var link = MochiKit.DOM.A({ href: value, target: "_blank" }, value, img);
+            var ico = RapidContext.Widget.Icon(attrs);
+            var link = MochiKit.DOM.A({ href: value, target: "_blank" }, value, ico);
             td.appendChild(link);
         }
     };
@@ -97,14 +97,6 @@ AdminApp.prototype.start = function () {
     MochiKit.Signal.connect(this.ui.pluginTable, "onselect", this, "_showPlugin");
     MochiKit.Signal.connect(this.ui.pluginLoad, "onclick", this, "_togglePlugin");
     MochiKit.Signal.connect(this.ui.pluginUnload, "onclick", this, "_togglePlugin");
-    var statusRenderer = function (td, value, data) {
-        if (value) {
-            td.appendChild(RapidContext.Widget.Icon({ ref: "OK", tooltip: "Loaded" }));
-        } else {
-            td.appendChild(RapidContext.Widget.Icon({ ref: "ERROR", tooltip: "Not loaded" }));
-        }
-    };
-    this.ui.pluginTable.getChildNodes()[0].setAttrs({ renderer: statusRenderer });
 
     // Procedure view
     MochiKit.Signal.connectOnce(this.ui.procTab, "onenter", this, "loadProcedures");
@@ -138,7 +130,8 @@ AdminApp.prototype.start = function () {
     // Batch view
     MochiKit.Signal.connect(this.ui.batchDelete, "onclick", this, "_clearBatch");
     MochiKit.Signal.connect(this.ui.batchDelay, "onclick", this, "_configBatchDelay");
-    MochiKit.Signal.connect(this.ui.batchResume, "onclick", this, "_toggleBatch");
+    MochiKit.Signal.connect(this.ui.batchPlay, "onclick", this, "_toggleBatch");
+    MochiKit.Signal.connect(this.ui.batchPause, "onclick", this, "_toggleBatch");
 
     // User view
     MochiKit.Signal.connectOnce(this.ui.userTab, "onenter", this, "loadUsers");
@@ -819,7 +812,7 @@ AdminApp.prototype._callbackShowProcedure = function (res) {
                 var value = this._defaults[b.name] || "";
                 var attrs = { name: "arg" + count, value: value, style: "margin-right: 6px;" };
                 var field = RapidContext.Widget.TextField(attrs);
-                var icon = RapidContext.Widget.Icon({ ref: "EDIT", style: { "verticalAlign": "middle" } });
+                var icon = RapidContext.Widget.Icon({ ref: "EDIT", style: { "verticalAlign": "middle", "fontSize": "1.6em" } });
                 icon.onclick = MochiKit.Base.bind("_editProcArg", this, count);
                 var col2 = MochiKit.DOM.TD({ style: "padding-right: 6px; white-space: nowrap;" }, field, icon);
                 var col3 = MochiKit.DOM.TD({ style: "padding-top: 4px;" }, b.description);
@@ -1332,7 +1325,8 @@ AdminApp.prototype._startBatch = function () {
         this._batch.stat.success = 0;
         this._batch.stat.failed = 0;
         this.ui.batchProgress.setAttrs({ min: 0, max: this._batch.queue.length, text: null });
-        MochiKit.DOM.replaceChildNodes(this.ui.batchResume, "Pause");
+        this.ui.batchPlay.hide();
+        this.ui.batchPause.show();
         this.ui.batchLoading.show();
         this._processBatch();
     }
@@ -1343,7 +1337,8 @@ AdminApp.prototype._startBatch = function () {
  */
 AdminApp.prototype._stopBatch = function () {
     this._batch.running = false;
-    MochiKit.DOM.replaceChildNodes(this.ui.batchResume, "Resume");
+    this.ui.batchPlay.show();
+    this.ui.batchPause.hide();
     this.ui.batchLoading.hide();
 }
 

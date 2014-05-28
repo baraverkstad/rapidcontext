@@ -116,7 +116,7 @@
                 <th class="label" style="padding-top: 4px; padding-right: 2px;">Add Parameter:</th>
                 <td style="padding-top: 2px;">
                   <TextField id="cxnEditAddParam" name="_add" size="25" />
-                  <Icon id="cxnEditAdd" ref="ADD" style="margin-left: 6px;" />
+                  <Icon id="cxnEditAdd" ref="ADD" style="margin-left: 6px; font-size: 1.4em; vertical-align: middle;" />
                 </td>
               </tr>
             </tbody>
@@ -200,7 +200,8 @@
             </tr>
             <tr>
               <td colspan="2" style="padding-top: 10px;">
-                <Button id="appLaunch" icon="OK" disabled="true" style="margin-right: 10px">
+                <Button id="appLaunch" disabled="true" style="margin-right: 10px">
+                  <Icon class="fa fa-play"/>
                   Launch
                 </Button>
                 <Button id="appLaunchWindow" icon="EXPAND" disabled="true">
@@ -226,13 +227,14 @@
                   <strong><Field name="name" /></strong>,
                   <Field name="approxSize" />,
                   <Field name="mimeType" />
-                  <Icon id="pluginFileDelete" ref="DELETE" style="margin-left: 3px;" />
+                  <Icon id="pluginFileDelete" ref="REMOVE" style="margin-left: 3px;" />
                 </Pane>
               </td>
             </tr>
           </tbody>
         </table>
-        <Button id="pluginInstall" icon="PLUGIN" style="margin-top: 4px;">
+        <Button id="pluginInstall" style="margin-top: 4px;">
+          <Icon class="fa fa-puzzle-piece"/>
           Install / Update Plug-In
         </Button>
         <Button id="pluginReset" icon="RELOAD" style="margin-top: 4px; margin-left: 10px;">
@@ -311,10 +313,12 @@
             </tr>
             <tr>
               <td colspan="2" style="padding-top: 4px;">
-                <Button id="pluginLoad" icon="OK" style="margin-right: 10px">
+                <Button id="pluginLoad" style="margin-right: 10px">
+                  <Icon class="fa fa-puzzle-piece"/>
                   Load
                 </Button>
-                <Button id="pluginUnload" icon="ERROR" style="margin-right: 10px">
+                <Button id="pluginUnload" style="margin-right: 10px">
+                  <Icon class="fa fa-sign-out"/>
                   Unload
                 </Button>
               </td>
@@ -380,10 +384,12 @@
             </tbody>
           </table>
           <div style="margin-top: 6px;">
-            <Button id="procExec" icon="OK" disabled="true" style="margin-right: 10px;">
+            <Button id="procExec" disabled="true" style="margin-right: 10px;">
+              <Icon class="fa fa-play"/>
               Execute
             </Button>
-            <Button id="procBatch" icon="DELAY" disabled="true">
+            <Button id="procBatch" disabled="true">
+              <Icon class="fa fa-clock-o"/>
               Execute Batch
             </Button>
           </div>
@@ -465,7 +471,7 @@
                     <option value="argument">Argument</option>
                   </select>
                   <TextField id="procEditAddName" helpText="&lt; Enter new name &gt;" />
-                  <Icon id="procEditAdd" ref="ADD" style="margin-left: 6px;" />
+                  <Icon id="procEditAdd" ref="ADD" style="margin-left: 6px; font-size: 1.4em; vertical-align: middle;" />
                 </td>
               </tr>
             </tbody>
@@ -485,8 +491,8 @@
       <Form id="batchForm">
         <h3>
           Batch Control:
-          <Icon id="batchDelete" ref="DELETE" style="margin-left: 3px;" />
-          <Icon id="batchDelay" ref="DELAY" style="margin-left: 3px;" />
+          <Icon id="batchDelete" ref="REMOVE" style="margin-left: 3px;" />
+          <Icon id="batchDelay" class="fa fa-clock-o" style="margin-left: 3px;" />
           <Icon id="batchLoading" ref="LOADING" style="margin-left: 3px;" />
         </h3>
         <table>
@@ -511,7 +517,14 @@
             </tr>
             <tr>
               <td colspan="2" style="padding-top: 4px;">
-                <Button id="batchResume" style="margin-top: 3px">Resume</Button>
+                <Button id="batchPlay" style="margin-top: 3px">
+                  <Icon class="fa fa-play"/>
+                  Resume Execution
+                </Button>
+                <Button id="batchPause" style="margin-top: 3px">
+                  <Icon class="fa fa-pause"/>
+                  Pause Execution
+                </Button>
               </td>
             </tr>
           </tbody>
@@ -609,7 +622,7 @@
       <div w="100%-125" h="50%" style="float: left; margin-left: 10px; padding-bottom: 6px;">
         <h3>
           Log Entries:
-          <Icon id="logClear" ref="DELETE" style="margin-left: 3px;" />
+          <Icon id="logClear" ref="REMOVE" style="margin-left: 3px;" />
           <Icon id="logReload" ref="RELOAD" style="margin-left: 3px;" />
         </h3>
         <Table id="logTable" w="100%" h="100%-22">
