@@ -10,7 +10,11 @@
     margin-bottom: 6px;
     font-size: 1.2em;
 }
-.widgetHidden {
+.widget.hidden,
+.widgetHidden,
+.widget.widgetHidden,
+.widget .widgetHidden {
+    /* Multiple & longer selectors to get higher priority */
     display: none;
 }
 .widgetDisabled {
@@ -58,9 +62,6 @@
     cursor: pointer;
     /* MSIE 7: fix for button width */
     *overflow: visible;
-}
-.widgetButton.widgetHidden {
-    display: none;
 }
 .widgetButton.widgetDisabled,
 .widgetButton.widgetDisabled:hover,
@@ -208,9 +209,6 @@
     font-weight: bold;
     color: #cc3333;
 }
-.widgetFormValidator.widgetHidden {
-    display: none;
-}
 .widgetFormValidator .widgetIcon {
     margin-right: 6px;
 }
@@ -236,9 +234,6 @@
     vertical-align: -25%;
     /* MSIE 7: Fix for CSS vertical-align not working correctly. */
     *vertical-align: 0;
-}
-.widgetIcon.widgetHidden {
-    display: none;
 }
 .widgetIcon.widgetDisabled {
     background-color: transparent;
@@ -356,9 +351,6 @@
     /* MSIE 7: fix for "display: inline-block" (actually uses inline display instead) */
     zoom: 1;
     *display: inline;
-}
-.widgetOverlayMessage.widgetHidden {
-    display: none;
 }
 
 
