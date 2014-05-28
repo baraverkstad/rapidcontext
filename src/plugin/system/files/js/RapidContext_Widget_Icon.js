@@ -140,9 +140,9 @@ MochiKit.Base.update(RapidContext.Widget.Icon, {
     /** The blank icon definition. */
     BLANK: { ref: "DEFAULT", position: "0px 0px", style: { cursor: "default" } },
     /** The loading icon definition. */
-    LOADING: { ref: "DEFAULT", url: "rapidcontext/files/images/icons/loading.gif", position: "0px 0px", tooltip: "Loading..." },
+    LOADING: { "class": "fa fa-refresh fa-spin", tooltip: "Loading..." },
     /** The close icon definition. */
-    CLOSE: { ref: "DEFAULT", position: "0px -16px", tooltip: "Close" },
+    CLOSE: { "class": "fa fa-times", tooltip: "Close" },
     /** The close (inverse video) icon definition. */
     CLOSE_INVERSE: { ref: "DEFAULT", position: "0px -32px", tooltip: "Close" },
     /** The close active icon definition. */
@@ -154,39 +154,39 @@ MochiKit.Base.update(RapidContext.Widget.Icon, {
     /** The resize icon definition. */
     RESIZE: { ref: "DEFAULT", position: "0px -96px", style: { cursor: "se-resize" } },
     /** The ok icon definition. */
-    OK: { ref: "DEFAULT", position: "-16px 0px", tooltip: "OK" },
+    OK: { "class": "fa fa-check", tooltip: "OK" },
     /** The stop icon definition. */
-    STOP: { ref: "DEFAULT", position: "-16px -16px", tooltip: "Stop" },
+    STOP: { "class": "fa fa-stop", tooltip: "Stop" },
     /** The yes icon definition. */
-    YES: { ref: "DEFAULT", position: "-16px -32px", tooltip: "Yes" },
+    YES: { "class": "fa fa-check-square-o", tooltip: "Yes" },
     /** The no icon definition. */
-    NO: { ref: "DEFAULT", position: "-16px -48px", tooltip: "No" },
+    NO: { "class": "fa fa-square-o", tooltip: "No" },
     /** The cancel icon definition. */
-    CANCEL: { ref: "DEFAULT", position: "-16px -64px", tooltip: "Cancel" },
+    CANCEL: { "class": "fa fa-times", tooltip: "Cancel" },
     /** The up icon definition. */
-    UP: { ref: "DEFAULT", position: "-32px -0px", tooltip: "Move up" },
+    UP: { "class": "fa fa-chevron-up", tooltip: "Move up" },
     /** The down icon definition. */
-    DOWN: { ref: "DEFAULT", position: "-32px -16px", tooltip: "Move down" },
+    DOWN: { "class": "fa fa-chevron-down", tooltip: "Move down" },
     /** The left icon definition. */
-    LEFT: { ref: "DEFAULT", position: "-32px -32px", tooltip: "Move left" },
+    LEFT: { "class": "fa fa-chevron-left", tooltip: "Move left" },
     /** The right icon definition. */
-    RIGHT: { ref: "DEFAULT", position: "-32px -48px", tooltip: "Move right" },
+    RIGHT: { "class": "fa fa-chevron-right", tooltip: "Move right" },
     /** The first icon definition. */
-    FIRST: { ref: "DEFAULT", position: "-32px -64px", tooltip: "First" },
+    FIRST: { "class": "fa fa-step-backward", tooltip: "First" },
     /** The last icon definition. */
-    LAST: { ref: "DEFAULT", position: "-32px -80px", tooltip: "Last" },
+    LAST: { "class": "fa fa-step-forward", tooltip: "Last" },
     /** The previous icon definition. */
-    PREVIOUS: { ref: "DEFAULT", position: "-32px -96px", tooltip: "Previous" },
+    PREVIOUS: { "class": "fa fa-caret-left", tooltip: "Previous" },
     /** The next icon definition. */
-    NEXT: { ref: "DEFAULT", position: "-32px -112px", tooltip: "Next" },
+    NEXT: { "class": "fa fa-caret-right", tooltip: "Next" },
     /** The plus icon definition. */
-    PLUS: { ref: "DEFAULT", position: "-32px -128px", tooltip: "Show" },
+    PLUS: { "class": "fa fa-plus-square-o", tooltip: "Show" },
     /** The minus icon definition. */
-    MINUS: { ref: "DEFAULT", position: "-32px -144px", tooltip: "Hide" },
+    MINUS: { "class": "fa fa-minus-square-o", tooltip: "Hide" },
     /** The remove icon definition. */
-    REMOVE: { ref: "DEFAULT", position: "-48px 0px", tooltip: "Remove" },
+    REMOVE: { "class": "fa fa-minus-square widget-red", tooltip: "Remove" },
     /** The add icon definition. */
-    ADD: { ref: "DEFAULT", position: "-48px -16px", tooltip: "Add" },
+    ADD: { "class": "fa fa-plus-square widget-green", tooltip: "Add" },
     /** The copy icon definition. */
     COPY: { ref: "DEFAULT", position: "-48px -32px", tooltip: "Copy" },
     /** The cut icon definition. */
@@ -194,23 +194,25 @@ MochiKit.Base.update(RapidContext.Widget.Icon, {
     /** The delete icon definition. */
     DELETE: { ref: "DEFAULT", position: "-48px -64px", tooltip: "Delete" },
     /** The reload icon definition. */
-    RELOAD: { ref: "DEFAULT", position: "-48px -80px", tooltip: "Reload" },
+    RELOAD: { "class": "fa fa-refresh", tooltip: "Reload" },
     /** The edit icon definition. */
-    EDIT: { ref: "DEFAULT", position: "-48px -96px", tooltip: "Edit" },
+    EDIT: { "class": "fa fa-pencil-square widget-yellow", tooltip: "Edit" },
     /** The white edit icon definition. */
     EDIT_WHITE: { ref: "DEFAULT", position: "-48px -112px", tooltip: "Edit" },
     /** The layout edit icon definition. */
     EDIT_LAYOUT: { ref: "DEFAULT", position: "-48px -128px", tooltip: "Edit" },
     /** The search icon definition. */
-    SEARCH: { ref: "DEFAULT", position: "-48px -144px", tooltip: "Search" },
+    SEARCH: { "class": "fa fa-search", tooltip: "Search" },
     /** The expand icon definition. */
-    EXPAND: { ref: "DEFAULT", position: "-48px -160px", tooltip: "Open in new window" },
+    EXPAND: { "class": "fa fa-external-link", tooltip: "Open in new window" },
     /** The asterisk icon definition. */
-    ASTERISK: { ref: "DEFAULT", position: "-64px 0px", tooltip: "Mark" },
+    ASTERISK: { "class": "fa fa-asterisk", tooltip: "Mark" },
     /** The select icon definition. */
-    SELECT: { ref: "DEFAULT", position: "-64px -16px", tooltip: "Select / Unselect" },
+    SELECT: { "class": "fa fa-star", tooltip: "Select / Unselect" },
     /** The like icon definition. */
-    LIKE: { ref: "DEFAULT", position: "-64px -32px", tooltip: "Like / Unlike" },
+    LIKE: { "class": "fa fa-heart", tooltip: "Like / Unlike" },
+    /** The flag icon definition. */
+    FLAG: { "class": "fa fa-flag", tooltip: "Flag" },
     /** The red flag icon definition. */
     FLAG_RED: { ref: "DEFAULT", position: "-64px -48px", tooltip: "Flag" },
     /** The blue flag icon definition. */
@@ -219,6 +221,8 @@ MochiKit.Base.update(RapidContext.Widget.Icon, {
     FLAG_GREEN: { ref: "DEFAULT", position: "-64px -80px", tooltip: "Flag" },
     /** The yellow flag icon definition. */
     FLAG_YELLOW: { ref: "DEFAULT", position: "-64px -96px", tooltip: "Flag" },
+    /** The tag icon definition. */
+    TAG: { "class": "fa fa-tag", tooltip: "Tag" },
     /** The red tag icon definition. */
     TAG_RED: { ref: "DEFAULT", position: "-64px -112px", tooltip: "Tag" },
     /** The blue tag icon definition. */
@@ -228,23 +232,23 @@ MochiKit.Base.update(RapidContext.Widget.Icon, {
     /** The yellow tag icon definition. */
     TAG_YELLOW: { ref: "DEFAULT", position: "-64px -160px", tooltip: "Tag" },
     /** The options icon definition. */
-    OPTIONS: { ref: "DEFAULT", position: "-80px 0px", tooltip: "Options" },
+    OPTIONS: { "class": "fa fa-cog", tooltip: "Options" },
     /** The configure icon definition. */
-    CONFIG: { ref: "DEFAULT", position: "-80px -16px", tooltip: "Configure" },
+    CONFIG: { "class": "fa fa-wrench", tooltip: "Configure" },
     /** The attach file icon definition. */
-    ATTACH: { ref: "DEFAULT", position: "-80px -32px", tooltip: "Attach file" },
+    ATTACH: { "class": "fa fa-paperclip", tooltip: "Attach file" },
     /** The automatic icon definition. */
-    AUTOMATIC: { ref: "DEFAULT", position: "-80px -48px", tooltip: "Automatic actions" },
+    AUTOMATIC: { "class": "fa fa-magic", tooltip: "Automatic actions" },
     /** The export icon definition. */
     EXPORT: { ref: "DEFAULT", position: "-80px -64px", tooltip: "Export" },
     /** The information icon definition. */
-    INFO: { ref: "DEFAULT", position: "-96px 0px", tooltip: "Information" },
+    INFO: { "class": "fa fa-info-circle", tooltip: "Information" },
     /** The help icon definition. */
-    HELP: { ref: "DEFAULT", position: "-96px -16px", tooltip: "Help" },
+    HELP: { "class": "fa fa-life-ring", tooltip: "Help" },
     /** The warning icon definition. */
-    WARNING: { ref: "DEFAULT", position: "-96px -32px", tooltip: "Warning" },
+    WARNING: { "class": "fa fa-exclamation-triangle", tooltip: "Warning" },
     /** The error icon definition. */
-    ERROR: { ref: "DEFAULT", position: "-96px -48px", tooltip: "Error" },
+    ERROR: { "class": "fa fa-exclamation-circle", tooltip: "Error" },
     /** The bar chart icon definition. */
     BARCHART: { ref: "DEFAULT", position: "-112px 0px", tooltip: "Bar chart" },
     /** The line chart icon definition. */
@@ -298,17 +302,17 @@ MochiKit.Base.update(RapidContext.Widget.Icon, {
     /** The plug-in error icon definition. */
     PLUGIN_ERROR: { ref: "DEFAULT", position: "-160px -64px", tooltip: "Plug-in error" },
     /** The user icon definition. */
-    USER: { ref: "DEFAULT", position: "-160px -80px", tooltip: "User" },
+    USER: { "class": "fa fa-user", tooltip: "User" },
     /** The group icon definition. */
-    GROUP: { ref: "DEFAULT", position: "-160px -96px", tooltip: "Group" },
+    GROUP: { "class": "fa fa-users", tooltip: "Group" },
     /** The folder icon definition. */
     FOLDER: { ref: "DEFAULT", position: "-176px 0px", tooltip: "Folder" },
     /** The add folder icon definition. */
     FOLDER_ADD: { ref: "DEFAULT", position: "-176px -16px", tooltip: "Add folder" },
     /** The lock icon definition. */
-    LOCK: { ref: "DEFAULT", position: "-176px -32px", tooltip: "Lock" },
+    LOCK: { "class": "fa fa-lock", tooltip: "Lock" },
     /** The key icon definition. */
-    KEY: { ref: "DEFAULT", position: "-176px -48px", tooltip: "Key" },
+    KEY: { "class": "fa fa-key", tooltip: "Key" },
     /** The document icon definition. */
     DOCUMENT: { ref: "DEFAULT", position: "-192px 0px", tooltip: "Document" },
     /** The Word document icon definition. */
@@ -346,9 +350,9 @@ MochiKit.Base.update(RapidContext.Widget.Icon, {
     /** The script icon definition. */
     SCRIPT: { ref: "DEFAULT", position: "-224px -48px", tooltip: "Script" },
     /** The component icon definition. */
-    COMPONENT: { ref: "DEFAULT", position: "-224px -64px", tooltip: "Component" },
+    COMPONENT: { "class": "fa fa-cube", tooltip: "Component" },
     /** The components icon definition. */
-    COMPONENTS: { ref: "DEFAULT", position: "-224px -80px", tooltip: "Components" },
+    COMPONENTS: { "class": "fa fa-cubes", tooltip: "Components" },
     /** The package icon definition. */
     PACKAGE: { ref: "DEFAULT", position: "-224px -96px", tooltip: "Package" },
     /** The textfield icon definition. */

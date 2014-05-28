@@ -24,12 +24,25 @@
     background-image: linear-gradient(to bottom, #FFFDFD, #FFFAFA);
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFDFD', endColorstr='#FFFAFA')";
 }
+.widget-red {
+    color: #993333;
+}
+.widget-green {
+    color: #008877;
+}
+.widget-blue {
+    color: #0088AA;
+}
+.widget-yellow {
+    color: #EE9900;
+}
 
 
 /**
  * Button Style
  */
 .widgetButton {
+    display: inline-block;
     min-height: 22px;
     border: 1px solid #AAAAAA;
     border-radius: 4px;
@@ -45,6 +58,9 @@
     cursor: pointer;
     /* MSIE 7: fix for button width */
     *overflow: visible;
+}
+.widgetButton.widgetHidden {
+    display: none;
 }
 .widgetButton.widgetDisabled,
 .widgetButton.widgetDisabled:hover,
@@ -80,7 +96,8 @@
     text-shadow: 0 1px #DDDDDD;
 }
 .widgetButton .widgetIcon {
-    margin: 0 6px 0 0;
+    margin: 0 3px 0 0;
+    color: #444444;
 }
 
 
@@ -204,11 +221,16 @@
  */
 .widgetIcon {
     display: inline-block;
+    min-width: 1.3em;
     margin: 0;
     padding: 0;
     cursor: pointer;
+    font-size: 1.2em;
+    line-height: 1.3em;
+    text-align: center;
 }
 .widgetIconSprite {
+    min-width: 0;
     background-repeat: no-repeat;
     background-position: 0px 0px;
     vertical-align: -25%;
@@ -460,7 +482,7 @@
     box-shadow: 0 0 2px #FFFFFF inset;
     cursor: pointer;
     white-space: nowrap;
-    font-size: 1.3em;
+    font-size: 13px;
     color: #444444;
     -moz-user-select: none;
     -webkit-user-select: none;

@@ -243,7 +243,8 @@ RapidContext.Widget.TableColumn.prototype._render = function (obj) {
             td.appendChild(RapidContext.Util.createTextNode(e));
         }
     } else if (typeof(value) == "boolean") {
-        td.appendChild(RapidContext.Widget.Icon({ ref: value ? "YES" : "NO" }));
+        var css = "fa " + (value ? "fa-check-square-o" : "fa-square-o");
+        td.appendChild(RapidContext.Widget.Icon({ "class": css }));
     } else {
         if (value == null || (typeof(value) == "number" && isNaN(value))) {
             value = "";
