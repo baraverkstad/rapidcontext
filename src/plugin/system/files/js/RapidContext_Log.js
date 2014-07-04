@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2014 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -33,11 +33,8 @@
     // Detect MSIE browser to force simplified console object logging
     var isMSIE = /MSIE/.test(window.navigator.userAgent);
 
-    // The old console logging functions
-    var consoleError = null;
-    var consoleWarn = null;
-    var consoleInfo = null;
-    var consoleLog = null;
+    // The original console log functions
+    var consoleBackup = {};
 
     // The current log level
     var logLevel = 3;
@@ -140,7 +137,7 @@
         if (typeof(value) !== "undefined") {
             logContext = value;
             if (value == null) {
-                _setupConsole();
+                _consoleSetup();
             }
         }
         return logContext;
@@ -156,19 +153,16 @@
      * @example
      * console.error('failed to initialize module');
      *
+     * @name error
+     * @function
      * @memberof RapidContext.Log
      */
-    function error(msg/**, ...*/) {
+    function logError(msg/**, ...*/) {
         if (logLevel >= 1) {
-            _setupConsole();
-            var args = _stringifyArgs.apply(null, arguments);
-            if (consoleError && isMSIE) {
-                var ctx = (logContext ? logContext + ": " : "");
-                consoleError.call(window.console, ctx + args.join(", "));
-            } else if (consoleError) {
-                consoleError.apply(window.console, arguments);
-            }
-            _store("error", args);
+            var args = Array.prototype.slice.apply(arguments);
+            var strs = args.map(stringify);
+            _consoleLog("error", args, strs);
+            _store("error", strs);
         }
     }
 
@@ -182,19 +176,16 @@
      * @example
      * console.warn('missing "data" attribute on document root:', document.body);
      *
+     * @name warn
+     * @function
      * @memberof RapidContext.Log
      */
-    function warn(msg/**, ...*/) {
+    function logWarn(msg/**, ...*/) {
         if (logLevel >= 2) {
-            _setupConsole();
-            var args = _stringifyArgs.apply(null, arguments);
-            if (consoleWarn && isMSIE) {
-                var ctx = (logContext ? logContext + ": " : "");
-                consoleWarn.call(window.console, ctx + args.join(", "));
-            } else if (consoleWarn) {
-                consoleWarn.apply(window.console, arguments);
-            }
-            _store("warn", args);
+            var args = Array.prototype.slice.apply(arguments);
+            var strs = args.map(stringify);
+            _consoleLog("warn", args, strs);
+            _store("warn", strs);
         }
     }
 
@@ -208,25 +199,22 @@
      * @example
      * console.info('authorization failed, user not logged in');
      *
+     * @name info
+     * @function
      * @memberof RapidContext.Log
      */
-    function info(msg/**, ...*/) {
+    function logInfo(msg/**, ...*/) {
         if (logLevel >= 3) {
-            _setupConsole();
-            var args = _stringifyArgs.apply(null, arguments);
-            if (consoleInfo && isMSIE) {
-                var ctx = (logContext ? logContext + ": " : "");
-                consoleInfo.call(window.console, ctx + args.join(", "));
-            } else if (consoleInfo) {
-                consoleInfo.apply(window.console, arguments);
-            }
-            _store("info", args);
+            var args = Array.prototype.slice.apply(arguments);
+            var strs = args.map(stringify);
+            _consoleLog("info", args, strs);
+            _store("info", strs);
         }
     }
 
     /**
-     * Logs a log (debug or trace) message with optional data. Also available
-     * as the global `console.log()` and `console.debug()` functions.
+     * Logs a debug message with optional data. Also available as the global
+     * `console.log()` and `console.debug()` functions.
      *
      * @param {String} msg the log message
      * @param {Object} [...] the additional log data or messages
@@ -236,45 +224,44 @@
      * ...
      * console.log('done AJAX call to URL:', url, responseCode);
      *
+     * @name debug
+     * @function
      * @memberof RapidContext.Log
      */
-    function log(msg/**, ...*/) {
+    function logDebug(msg/**, ...*/) {
         if (logLevel >= 4) {
-            _setupConsole();
-            var args = _stringifyArgs.apply(null, arguments);
-            if (consoleLog && isMSIE) {
-                var ctx = (logContext ? logContext + ": " : "");
-                consoleLog.call(window.console, ctx + args.join(", "));
-            } else if (consoleLog) {
-                consoleLog.apply(window.console, arguments);
-            }
-            _store("log", args);
+            var args = Array.prototype.slice.apply(arguments);
+            var strs = args.map(stringify);
+            _consoleLog("log", args, strs);
+            _store("log", strs);
         }
     }
 
     /**
      * Modifies the `console` object for logging. This replaces the default
      * `console.error`, `console.warn`, `console.info`, `console.log` and
-     * `console.debug` functions (if not previously modified). Also calls the
-     * `console.group` and `console.groupEnd` functions to adjust for the
-     * current log context.
+     * `console.debug` functions (if not previously modified).
      */
-    function _setupConsole() {
-        var isModified = (window.console.error !== error) ||
-                         (window.console.warn !== warn) ||
-                         (window.console.info !== info) ||
-                         (window.console.log !== log);
-        if (isModified) {
-            consoleError || (consoleError = window.console.error);
-            consoleWarn || (consoleWarn = window.console.warn);
-            consoleInfo || (consoleInfo = window.console.info);
-            consoleLog || (consoleLog = window.console.log);
-            window.console.error = error;
-            window.console.warn = warn;
-            window.console.info = info;
-            window.console.log = log;
-            window.console.debug = log;
+    function _consoleSetup() {
+        function overwrite(obj, key, value, backup) {
+            if (obj[key] !== value) {
+                backup[key] = obj[key];
+                obj[key] = value;
+            }
         }
+        window.console || (window.console = {});
+        overwrite(window.console, 'error', logError, consoleBackup);
+        overwrite(window.console, 'warn', logWarn, consoleBackup);
+        overwrite(window.console, 'info', logInfo, consoleBackup);
+        overwrite(window.console, 'log', logDebug, consoleBackup);
+        overwrite(window.console, 'debug', logDebug, consoleBackup);
+    }
+
+    /**
+     * Calls the `console.group` and `console.groupEnd` functions (if
+     * they exist) to adjust for the current log context.
+     */
+    function _consoleContext() {
         if (window.console._group && window.console._group !== logContext) {
             window.console._group = null;
             window.console.groupEnd && window.console.groupEnd();
@@ -282,6 +269,25 @@
         if (logContext && window.console._group !== logContext) {
             window.console._group = logContext;
             window.console.group && window.console.group(logContext + ":");
+        }
+    }
+
+    /**
+     * Logs a message to one of the console loggers.
+     *
+     * @param {String} loggerName the console logger name ('error', 'warn'...)
+     * @param {Array} args the log message & data (as raw objects)
+     * @param {Array} strs the log message & data (as strings)
+     */
+    function _consoleLog(loggerName, args, strs) {
+        _consoleSetup();
+        _consoleContext();
+        var logger = consoleBackup[loggerName];
+        if (typeof(logger) === 'function' && typeof(logger.apply) === 'function') {
+            logger.apply(window.console, args);
+        } else if (logger && isMSIE) {
+            var ctx = (logContext ? logContext + ": " : "");
+            logger(ctx + strs.join(", "));
         }
     }
 
@@ -305,17 +311,30 @@
     /**
      * Creates a string representation (suitable for logging) for any value or
      * object. The returned string is similar to a JSON representation of the
-     * value, but may also be simplified for increased readability.
+     * value, but may be simplified for increased readability.
      *
      * @param {Object} o the value or object to convert
-     * @param {Number} [depth=0] the current object depth (max is 4)
      *
      * @return {String} the string representation of the value
      *
      * @memberof RapidContext.Log
      */
-    function stringify(o, depth) {
-        depth = depth || 0;
+    function stringify(o) {
+        return _stringify(o, 0);
+    }
+
+    /**
+     * Internal stringify implementation that tracks of object graph
+     * depth.
+     *
+     * @param {Object} o the value or object to convert
+     * @param {Number} depth the current object depth (max is 4)
+     *
+     * @return {Array} the array of string representations
+     *
+     * @private
+     */
+    function _stringify(o, depth) {
         var type = typeof(o);
         if (o == null || type == "boolean" || type == "number") {
             return "" + o;
@@ -349,7 +368,7 @@
                     arr.push("...");
                     break;
                 }
-                arr.push(stringify(o[i], depth + 1));
+                arr.push(_stringify(o[i], depth + 1));
             }
             return "[" + arr.join(", ") + "]";
         } else {
@@ -367,31 +386,13 @@
                     arr.push(newline, "...");
                     break;
                 }
-                arr.push(newline, k, ": ", stringify(o[k], depth + 1));
+                arr.push(newline, k, ": ", _stringify(o[k], depth + 1));
             }
             if (arr.length > 0) {
                 arr.push("\n", indent);
             }
             return "{" + arr.join("") + "}";
         }
-    }
-
-    /**
-     * Creates a string representation (suitable for logging) for all the
-     * arguments to this function.
-     *
-     * @param {Object} [...] the values or objects to convert
-     *
-     * @return {Array} the array of string representations
-     *
-     * @private
-     */
-    function _stringifyArgs(/*...*/) {
-        var res = [];
-        for (var i = 0; i < arguments.length; i++) {
-            res.push(stringify(arguments[i]));
-        }
-        return res;
     }
 
     // Create namespaces
@@ -403,14 +404,13 @@
     module.clear = clear;
     module.level = level;
     module.context = context;
-    module.error = error;
-    module.warn = warn;
-    module.info = info;
-    module.log = module.debug = module.trace = log;
+    module.error = logError;
+    module.warn = logWarn;
+    module.info = logInfo;
+    module.log = module.debug = module.trace = logDebug;
     module.stringify = stringify;
 
     // Modify global console object
-    window.console || (window.console = {});
-    _setupConsole();
+    _consoleSetup();
 
 })(this);
