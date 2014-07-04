@@ -51,7 +51,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  * </TreeNode>
  */
 RapidContext.Widget.TreeNode = function (attrs/*, ...*/) {
-    var icon = RapidContext.Widget.Icon({ class: "fa" });
+    var icon = RapidContext.Widget.Icon({ "class": "fa" });
     var label = MochiKit.DOM.SPAN({ "class": "widgetTreeNodeText" });
     var div = MochiKit.DOM.DIV({ "class": "widgetTreeNodeLabel" }, icon, label);
     var o = MochiKit.DOM.DIV({}, div);
