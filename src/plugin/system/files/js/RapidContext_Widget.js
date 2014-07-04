@@ -120,7 +120,12 @@ RapidContext.Widget._widgetMixin = function (node/*, objOrClass, ...*/) {
             if (key in node) {
                 node[prevKey] = node[key];
             }
-            node[key] = obj[key];
+            try {
+                node[key] = obj[key];
+            } catch (e) {
+                var msg = "failed to overwrite '" + key + "' in DOM node";
+                RapidContext.Log.error(msg, node, e);
+            }
         }
     }
     return node;
@@ -485,8 +490,8 @@ RapidContext.Widget.prototype.toggleClass = function (/* ... */) {
  * @return {Boolean} `true` if the widget is disabled, or
  *         `false` otherwise
  */
-// TODO: This function is unreachable in MSIE, due to a dynamic attribute
-//       with the same name (on all DOM nodes).
+// FIXME: This function is unreachable in MSIE, due to a dynamic attribute
+//        with the same name (on all DOM nodes).
 RapidContext.Widget.prototype.isDisabled = function () {
     return this.disabled === true &&
            MochiKit.DOM.hasElementClass(this, "widgetDisabled");
