@@ -50,10 +50,8 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  * <TextField name="name" helpText="Your Name Here" />
  */
 RapidContext.Widget.TextField = function (attrs/*, ...*/) {
-    var text = "";
-    if (attrs != null && attrs.value != null) {
-        text = attrs.value;
-    }
+    var type = (attrs && attrs.type) || "text";
+    var text = (attrs && attrs.value) || "";
     for (var i = 1; i < arguments.length; i++) {
         var o = arguments[i];
         if (RapidContext.Util.isDOM(o)) {
@@ -62,7 +60,7 @@ RapidContext.Widget.TextField = function (attrs/*, ...*/) {
             text += o.toString();
         }
     }
-    var o = MochiKit.DOM.INPUT({ value: text });
+    var o = MochiKit.DOM.INPUT({ type: type, value: text });
     RapidContext.Widget._widgetMixin(o, arguments.callee);
     o.addClass("widgetTextField");
     o.focused = false;
