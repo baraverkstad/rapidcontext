@@ -216,8 +216,7 @@ RapidContext.Widget._eventHandler = function (className, methodName/*, ...*/) {
 
 /**
  * Emits an asynchronous signal to any listeners connected with
- * MochiKit.Signal. This function will log any errors to the default
- * error log in `MochiKit.Logging`.
+ * MochiKit.Signal.
  *
  * Note that this function is an internal helper function for the
  * widgets and shouldn't be called by external code.
@@ -234,8 +233,8 @@ RapidContext.Widget.emitSignal = function (node, sig/*, ...*/) {
         try {
             MochiKit.Signal.signal.apply(MochiKit.Signal, args);
         } catch (e) {
-            var msg = "Exception in signal '" + sig + "' handler";
-            MochiKit.Logging.logError(msg, e);
+            var msg = "exception in signal '" + sig + "' handler";
+            RapidContext.Log.error(msg, node, e);
         }
     }
     setTimeout(later);
@@ -288,9 +287,12 @@ RapidContext.Widget._fireEvent = function (node, evt, detail) {
             } else if (node.parentNode && node.fireEvent) {
                 // MSIE 6-8
                 return node.fireEvent("on" + evt.type, evt);
+            } else {
+                var msg = "cannot fire event, no dispatchEvent/fireEvent method";
+                RapidContext.Log.info(msg, evt, node);
             }
         } catch (e) {
-            RapidContext.Log.error("Failed to fire event", evt, node);
+            RapidContext.Log.error("exception when firing event", evt, node, e);
         }
     }
     setTimeout(later);
