@@ -25,7 +25,7 @@ import org.rapidcontext.util.StringUtil;
  * A data serializer for XML. This class currently only attempts to
  * render a machine-readable version of a data object, without any
  * efforts of parsing input data. The following basic requirements
- * must be met in order to serialize an object:<p>
+ * must be met in order to serialize an object:
  *
  * <ul>
  *   <li>No circular references are permitted.

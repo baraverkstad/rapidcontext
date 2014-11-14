@@ -61,17 +61,17 @@ public class Session extends StorableObject {
     public static final String KEY_USER = "user";
 
     /**
-     * The dictionary key for the creation date & time.
+     * The dictionary key for the creation timestamp.
      */
     public static final String KEY_CREATE_TIME = "createTime";
 
     /**
-     * The dictionary key for the destruction date & time.
+     * The dictionary key for the destruction timestamp.
      */
     public static final String KEY_DESTROY_TIME = "destroyTime";
 
     /**
-     * The dictionary key for the last access date & time.
+     * The dictionary key for the last access timestamp.
      */
     public static final String KEY_ACCESS_TIME = "accessTime";
 
@@ -392,35 +392,34 @@ public class Session extends StorableObject {
     }
 
     /**
-     * Returns the session creation date & time.
+     * Returns the session creation timestamp.
      *
-     * @return the session creation date & time.
+     * @return the session creation timestamp.
      */
     public Date createTime() {
         return dict.getDate(KEY_CREATE_TIME, new Date(0));
     }
 
     /**
-     * Returns the scheduled session destruction date & time.
+     * Returns the scheduled session destruction timestamp.
      *
-     * @return the session destruction date & time.
+     * @return the session destruction timestamp.
      */
     public Date destroyTime() {
         return dict.getDate(KEY_DESTROY_TIME, new Date(0));
     }
 
     /**
-     * Returns the session last access date & time.
+     * Returns the session last access timestamp.
      *
-     * @return the session last access date & time.
+     * @return the session last access timestamp.
      */
     public Date accessTime() {
         return dict.getDate(KEY_ACCESS_TIME, new Date(0));
     }
 
     /**
-     * Updates the session last access date & time to the current
-     * system time.
+     * Updates the session last access timestamp to the current system time.
      */
     public void updateAccessTime() {
         dict.set(KEY_ACCESS_TIME, new Date());

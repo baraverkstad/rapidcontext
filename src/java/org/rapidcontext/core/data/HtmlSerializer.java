@@ -27,7 +27,7 @@ import org.rapidcontext.util.DateUtil;
  * human-readable version of a data object, without any efforts of
  * making the result machine readable. It is only useful for
  * debugging or similar. The following basic requirements must be met
- * in order to serialize an object:<p>
+ * in order to serialize an object:
  *
  * <ul>
  *   <li>No circular references are permitted.

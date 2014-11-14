@@ -59,12 +59,12 @@ public class WebDavRequest implements HttpUtil {
     public static final String PROP_DISPLAY_NAME = "displayname";
 
     /**
-     * The WebDAV creation date & time property constant.
+     * The WebDAV creation datetime property constant.
      */
     public static final String PROP_CREATION_DATE = "creationdate";
 
     /**
-     * The WebDAV last modified date & time property constant.
+     * The WebDAV last modified datetime property constant.
      */
     public static final String PROP_LAST_MODIFIED = "getlastmodified";
 

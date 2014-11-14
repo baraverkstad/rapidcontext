@@ -41,7 +41,7 @@ import org.rapidcontext.util.StringUtil;
  * properties file format. The dictionary mapping to the properties
  * format is not exact, and may omit serialization of data in some
  * cases. The following basic requirements must be met in order to
- * serialize a dictionary into a properties file:<p>
+ * serialize a dictionary into a properties file:
  *
  * <ul>
  *   <li>No circular references are permitted.

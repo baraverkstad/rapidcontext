@@ -221,7 +221,7 @@ public abstract class WebService extends StorableObject implements HttpUtil {
     /**
      * Processes an HTTP OPTIONS request.
      *
-     * @param request
+     * @param request        the request to process
      */
     protected void doOptions(Request request) {
         headerAllow(request);

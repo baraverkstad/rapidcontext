@@ -110,7 +110,7 @@ public class Path {
      * Returns an object identifier based on this path. The
      * identifier will start at the specified position in this path.
      *
-     * @param pos            the position, 0 <= pos < length()
+     * @param pos            the position, from 0 to length()
      *
      * @return an object identifier for this path (without prefix)
      *
@@ -263,7 +263,7 @@ public class Path {
      * A zero position will return the first element traversed, i.e.
      * the one located in the root.
      *
-     * @param pos            the position, 0 <= pos < length()
+     * @param pos            the position, from 0 to length()
      *
      * @return the name of the element at the specified position, or
      *         null if the position is out of range
@@ -332,7 +332,7 @@ public class Path {
      * Creates a new path that starts at the specified position in
      * this path. I.e. this method removes a path prefix.
      *
-     * @param pos            the position, 0 <= pos < length()
+     * @param pos            the position, from 0 to length()
      *
      * @return a new path with the prefix removed, or
      *         a root path if the position was out of range

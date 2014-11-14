@@ -35,7 +35,7 @@ import org.rapidcontext.core.storage.StorableObject;
  * wrapping dictionary and array object for access inside the
  * JavaScript engine. The object mapping to JavaScript is not exact,
  * and may omit serialization of data in some cases. The following
- * basic requirements must be met in order to serialize an object:<p>
+ * basic requirements must be met in order to serialize an object:
  *
  * <ul>
  *   <li>No circular references are permitted.

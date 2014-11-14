@@ -150,7 +150,7 @@ public class StorageWebService extends WebService {
     /**
      * Processes an HTTP OPTIONS request.
      *
-     * @param request
+     * @param request        the request to process
      */
     protected void doOptions(Request request) {
         request.setResponseHeader(HEADER.ACCEPT_PATCH, Mime.JSON[0]);
