@@ -137,7 +137,7 @@
         if (typeof(value) !== "undefined") {
             logContext = value;
             if (value == null) {
-                _consoleSetup();
+                _consoleContext();
             }
         }
         return logContext;
