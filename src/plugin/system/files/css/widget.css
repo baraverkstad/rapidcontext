@@ -24,7 +24,6 @@
 .widgetInvalid {
     border: 1px solid #EECCCC;
     background-color: #FFFAFA;
-    background-image: -webkit-linear-gradient(top, #FFFDFD, #FFFAFA);
     background-image: linear-gradient(to bottom, #FFFDFD, #FFFAFA);
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFDFD', endColorstr='#FFFAFA')";
 }
@@ -53,7 +52,6 @@
     padding: 3px 6px;
     color: #333333;
     background-color: #E0E0E0;
-    background-image: -webkit-linear-gradient(top, #F8F8F8, #E0E0E0);
     background-image: linear-gradient(to bottom, #F8F8F8, #E0E0E0);
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#F8F8F8', endColorstr='#E0E0E0')";
     box-shadow: 0 1px 2px rgba(180, 180, 180, 0.5);
@@ -69,7 +67,6 @@
     top: 0;
     color: #888888;
     background-color: #F8F8F8;
-    background-image: -webkit-linear-gradient(top, #FFFFFF, #F8F8F8);
     background-image: linear-gradient(to bottom, #FFFFFF, #F8F8F8);
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#F8F8F8')";
     box-shadow: 0 1px 2px rgba(180, 180, 180, 0.5);
@@ -83,7 +80,6 @@
 }
 .widgetButton:hover {
     background-color: #E8E8E8;
-    background-image: -webkit-linear-gradient(top, #FFFFFF, #E8E8E8);
     background-image: linear-gradient(to bottom, #FFFFFF, #E8E8E8);
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#E8E8E8')";
 }
@@ -156,7 +152,6 @@
     border-radius: 0 0 3px 3px;
     padding: 8px;
     background: #F8F8F8;
-    background-image: -webkit-linear-gradient(top, #FFFFFF, #EEEEEE);
     background-image: linear-gradient(to bottom, #FFFFFF, #EEEEEE);
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#EEEEEE')";
     overflow: auto;
@@ -341,7 +336,6 @@
     border-radius: 10px 10px;
     padding: 30px 60px;
     background-color: #F8FBFF;
-    background-image: -webkit-linear-gradient(top, #FFFFFF, #F8FBFF);
     background-image: linear-gradient(to bottom, #FFFFFF, #F8FBFF);
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#F8FBFF')";
     box-shadow: 0 1px 3px #CCCCCC;
@@ -372,7 +366,6 @@
     border-radius: 4px;
     padding: 4px;
     background-color: #E8F8FF;
-    background-image: -webkit-linear-gradient(top, #FDFDFF, #E8F8FF);
     background-image: linear-gradient(to bottom, #FDFDFF, #E8F8FF);
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FDFDFF', endColorstr='#E8F8FF')";
     color: rgb(30, 70, 110);
@@ -461,35 +454,39 @@
 }
 .widgetTabContainerLabel {
     float: left;
-    margin-right: 2px;
+    margin-right: 1px;
     padding-left: 9px;
-    border-top: 1px solid #BBBBBB;
-    border-left: 1px solid #BBBBBB;
-    border-right: 1px solid #BBBBBB;
-    border-radius: 6px 6px 0 0;
-    background: #EEEEEE;
-    background-image: -webkit-linear-gradient(top, #DDDDDD, #EEEEEE);
-    background-image: linear-gradient(to bottom, #DDDDDD, #EEEEEE);
-    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#DDDDDD', endColorstr='#EEEEEE')";
-    box-shadow: 0 0 2px #FFFFFF inset;
+    border-top: 1px solid transparent;
+    border-left: 1px solid transparent;
+    border-right: 1px solid transparent;
+    border-radius: 4px 4px 0 0;
     cursor: pointer;
     white-space: nowrap;
     font-size: 13px;
-    color: #444444;
+    color: #666666;
     -moz-user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;
     user-select: none;
 }
-.widgetTabContainerLabel:hover,
-.widgetTabContainerLabel.selected {
+.widgetTabContainerLabel:first-child {
+    margin-left: 6px;
+}
+.widgetTabContainerLabel:hover {
+    background: #EEF6FF;
+    border-top: 1px solid #DDEEFF;
+    border-left: 1px solid #DDEEFF;
+    border-right: 1px solid #DDEEFF;
+    color: black;
+}
+.widgetTabContainerLabel.selected,
+.widgetTabContainerLabel.selected:hover {
     border-top: 1px solid #DDDDDD;
     border-left: 1px solid #DDDDDD;
     border-right: 1px solid #DDDDDD;
-    background: #FFFFFF;
-    background-image: -webkit-linear-gradient(top, #E0F0F8, #FFFFFF);
-    background-image: linear-gradient(to bottom, #E0F0F8, #FFFFFF);
-    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#E0F0F8', endColorstr='#FFFFFF')";
+    background: #EEEEEE;
+    background-image: linear-gradient(to bottom, #EEEEEE, #FFFFFF);
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#EEEEEE', endColorstr='#FFFFFF')";
     color: black;
 }
 .widgetTabContainerLabel div {
@@ -510,8 +507,8 @@
 .widgetTabContainerContent {
     position: relative;
     top: -1px;
-    border: 1px solid #DDDDDD;
-    padding: 10px 10px 10px 10px;
+    border-top: 1px solid #DDDDDD;
+    padding: 10px 10px 0 10px;
     clear: both;
     overflow: hidden;
     /* z-index: -1;  Required for IE6, but breaks in IE7 */
