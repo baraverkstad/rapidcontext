@@ -116,14 +116,18 @@
 .widgetDialogClose {
     position: absolute;
     top: 4px;
-    right: 5px;
+    right: 4px;
     z-index: 1;
 }
 .widgetDialogClose.widgetIcon {
-    background-position: 0px -32px;
+    min-width: 18px;
+    border-radius: 3px;
+    padding: 1px 0 0 0;
+    color: #FFF;
+    font-size: 13px;
 }
 .widgetDialogClose.widgetIcon:hover {
-    background-position: 0px -48px;
+    background: #EE6666;
 }
 .widgetDialogResize {
     position: absolute;
@@ -496,13 +500,18 @@
     padding-bottom: 5px;
 }
 .widgetTabContainerLabel .widgetIcon {
-    margin-left: 10px;
+    min-width: 1.2em;
+    margin-left: 6px;
     margin-right: -10px;
-    vertical-align: text-bottom;
-    background-position: 0px -16px;
+    border-radius: 3px;
+    padding: 1px 0;
+    color: #CCC;
+    font-size: inherit;
+    line-height: inherit;
 }
 .widgetTabContainerLabel .widgetIcon:hover {
-    background-position: 0px -48px;
+    background: #EE6666;
+    color: white;
 }
 .widgetTabContainerContent {
     position: relative;

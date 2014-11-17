@@ -55,7 +55,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  */
 RapidContext.Widget.Dialog = function (attrs/*, ... */) {
     var title = MochiKit.DOM.DIV({ "class": "widgetDialogTitle" }, "Dialog");
-    var close = RapidContext.Widget.Icon({ ref: "DEFAULT", tooltip: "Close", "class": "widgetDialogClose" });
+    var close = RapidContext.Widget.Icon({ "class": "widgetDialogClose fa fa-close", tooltip: "Close",  });
     var resize = RapidContext.Widget.Icon({ ref: "RESIZE", "class": "widgetDialogResize" });
     var content = MochiKit.DOM.DIV({ "class": "widgetDialogContent" });
     var o = MochiKit.DOM.DIV({}, title, close, resize, content);
