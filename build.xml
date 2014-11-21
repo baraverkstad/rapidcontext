@@ -144,9 +144,10 @@
         <include name="LICENSE.txt" />
       </fileset>
       <fileset dir="src/plugin/system/files">
-        <include name="images/*.png" />
-        <include name="images/backgrounds/*" />
         <include name="css/**" />
+        <include name="fonts/**" />
+        <include name="images/**" />
+        <exclude name="images/icons/**" />
       </fileset>
     </copy>
   </target>

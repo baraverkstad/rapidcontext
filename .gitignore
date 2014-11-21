@@ -1,7 +1,7 @@
 # Compile Target Files
-/classes
+/classes/
 /lib/rapidcontext-*.jar
-/plugin
+/plugin/
 
 # Plug-In Compile Files
 /src/plugin/*/build.number
@@ -15,8 +15,9 @@
 /doc.zip
 /doc/LICENSE.txt
 /doc/README.txt
-/doc/css
-/doc/images/favicon.png
+/doc/css/
+/doc/fonts/
+/doc/images/logotype*.ico
 /doc/images/logotype*.png
 /doc/images/backgrounds
 /doc/java/
