@@ -129,7 +129,9 @@ fields:</p>
 <p>The plug-in configuration is the first file to write when developing a
 plug-in. An example <var>plugin.properties</var> file is shown below:</p>
 
-<pre class="box blue code">
+<div class="box blue">
+  <i class="box-icon fa fa-code"></i>
+  <pre class="box-content code">
 <span class="comment"># General properties</span>
 id = example
 name = Example Plug-in
@@ -137,7 +139,8 @@ version = 1.0
 date =
 description = Provides tests and examples for the platform.
 className = org.rapidcontext.app.plugin.example.ExamplePlugin
-</pre>
+  </pre>
+</div>
 
 <p>Once the <var>plugin.properties</var> file has been created, the Ant script
 in <var>plugin-build.xml</var> can be used for packaging the plug-in.</p>
@@ -236,7 +239,9 @@ allows the creation of helper functions and comments to keep the code readable.
 See the example below for a JavaScript procedure that calls another procedure
 and filters its result:</p>
 
-<pre class="box blue code">
+<div class="box blue">
+  <i class="box-icon fa fa-code"></i>
+  <pre class="box-content code">
 <span class="comment">// Helper: Check if server thread has context</span>
 function hasContext(thread) {
     return thread.context != null;
@@ -252,7 +257,8 @@ var threads = listThreads();
 
 <span class="comment">// Filter threads and extract procedure names,</span>
 return threads.filter(hasContext).map(getProcName);
-</pre>
+  </pre>
+</div>
 
 <p>JavaScript procedures is a powerful tool for post-processing data in various
 situations. It is also often easier and more efficient to put this type of

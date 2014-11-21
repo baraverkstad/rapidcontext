@@ -77,7 +77,10 @@ server:</p>
 execution can easily be tested. Below follows some simple command examples
 (using a Unix or Cygwin environment):</p>
 
-<pre class="box blue code">PlugIn.CmdLine.Exec('dir', '', '')
+<div class="box blue">
+  <i class="box-icon fa fa-code"></i>
+  <pre class="box-content code">
+PlugIn.CmdLine.Exec('dir', '', '')
   <span class="comment">--> { exitValue: 0, output: 'cmdline http jdbc ...' }</span>
 
 PlugIn.CmdLine.Exec('test 0 -eq 1', '', '')
@@ -85,6 +88,7 @@ PlugIn.CmdLine.Exec('test 0 -eq 1', '', '')
 
 PlugIn.CmdLine.Exec('bash -c set', '', '')
   <span class="comment">--> { exitValue: 0, output: 'BASH=/bin/bash BASH_ARGC=() BASH_ARGV=...' }</span></pre>
+</div>
 
 <p>The result of a program execution is always an object with the following
 properties:</p>
@@ -127,11 +131,15 @@ similar.</p>
 starting with a <q><var>#</var></q> character will be analyzed, but only the
 lines matching the progress information format below will be used:</p>
 
-<pre class="box blue code"><span class="comment">...
+<div class="box blue">
+  <i class="box-icon fa fa-code"></i>
+  <pre class="box-content code">
+<span class="comment">...
 # progress: 34.9%
 # progress: 35.0%
 # progress: 35.3%
 ...</span></pre>
+</div>
 
 
 <h2 id="exec_env">4. Execution Environment</h2>
@@ -175,9 +183,12 @@ the procedure argument values at call time. Each procedure argument name must
 be prefixed with a <q><var>:</var></q> character in the command-line or
 environment string in order to be replaced:</p>
 
-<pre class="box blue code">
+<div class="box blue">
+  <i class="box-icon fa fa-code"></i>
+  <pre class="box-content code">
 <span class="comment"># Substituting a 'dirName' procedure argument</span>
 echo :dirName</pre>
+</div>
 
 
 <!--END-->

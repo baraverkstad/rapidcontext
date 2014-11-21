@@ -471,6 +471,7 @@ ol.box, ul.box {
     margin: 0;
     border: 0;
     padding: 0;
+    background: transparent;
 }
 pre.code.box {
     margin: 20px 40px;
