@@ -29,6 +29,7 @@ import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.app.plugin.PluginManager;
 import org.rapidcontext.app.proc.StatusProcedure;
+import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.js.JsSerializer;
@@ -69,11 +70,6 @@ public class AppWebService extends FileWebService {
     public static final String KEY_TITLE = "title";
 
     /**
-     * The dictionary key for the page icon (favicon).
-     */
-    public static final String KEY_FAVICON = "favicon";
-
-    /**
      * The dictionary key for the page language meta-data.
      */
     public static final String KEY_LANG = "lang";
@@ -82,6 +78,11 @@ public class AppWebService extends FileWebService {
      * The dictionary key for the page viewport meta-data.
      */
     public static final String KEY_VIEWPORT = "viewport";
+
+    /**
+     * The dictionary key for additional HTML headers.
+     */
+    public static final String KEY_HEADER = "header";
 
     /**
      * The storage web service used for the to "rapidcontext/storage"
@@ -149,7 +150,6 @@ public class AppWebService extends FileWebService {
         super(id, type, dict);
         dict.set(KEY_APP, appId());
         dict.set(KEY_TITLE, title());
-        dict.set(KEY_FAVICON, favicon());
         dict.set(KEY_LANG, lang());
         storage = new StorageWebService("id", "type", new Dict());
     }
@@ -175,16 +175,6 @@ public class AppWebService extends FileWebService {
     }
 
     /**
-     * Returns the icon (favicon) for the HTML web page.
-     *
-     * @return the web page favicon URL, or
-     *         the default RapidContext favicon if not defined
-     */
-    public String favicon() {
-        return dict.getString(KEY_FAVICON, "rapidcontext/files/images/favicon.png");
-    }
-
-    /**
      * Returns the page language ISO code.
      *
      * @return the page language ISO code, or
@@ -202,6 +192,21 @@ public class AppWebService extends FileWebService {
      */
     public String viewport() {
         return dict.getString(KEY_VIEWPORT, "width=700");
+    }
+
+    /**
+     * Returns the list of optional HTML headers.
+     *
+     * @return the list of HTML headers, or
+     *         an empty list if none defined
+     */
+    public ArrayList headerLines() {
+        ArrayList res = new ArrayList();
+        Array headers = dict.getArray(KEY_HEADER);
+        for (int i = 0; i < headers.size(); i++) {
+            res.add(headers.get(i).toString());
+        }
+        return res;
     }
 
     /**
@@ -356,11 +361,6 @@ public class AppWebService extends FileWebService {
             if (line.contains("%TITLE%")) {
                 line = line.replace("%TITLE%", title());
             }
-            if (line.contains("%FAVICON%")) {
-                String str = favicon();
-                line = line.replace("%FAVICON%", str);
-                line = line.replace("%FAVICON.MIME%", Mime.type(str));
-            }
             if (line.contains("%LANG%")) {
                 line = line.replace("%LANG%", lang());
             }
@@ -380,7 +380,14 @@ public class AppWebService extends FileWebService {
                 line = line.replace("%BASE_PATH%", str);
             }
             // Complex text replacement & printout
-            if (line.contains("%JS_FILES%")) {
+            if (line.contains("%HEADER%")) {
+                ArrayList headers = headerLines();
+                for (int i = 0; i < headers.size(); i++) {
+                    String str = (String) headers.get(i);
+                    res.append(line.replace("%HEADER%", str));
+                    res.append("\n");
+                }
+            } else if (line.contains("%JS_FILES%")) {
                 ArrayList files = resources("js", path());
                 for (int i = 0; i < files.size(); i++) {
                     String str = (String) files.get(i);
