@@ -15,7 +15,6 @@
     body .widgetDialogTitle {
         padding: 10px 16px;
         background: #0099BB;
-        background: -webkit-linear-gradient(top, #00AACC, #0077AA);
         background: linear-gradient(to bottom, #00AACC, #0077AA);
         -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#00AACC', endColorstr='#0077AA')";
         font-size: 20px;
@@ -33,7 +32,6 @@
         padding: 8px 10px;
         box-shadow: 0 1px 2px #660000 inset;
         background: #FFDDDD;
-        background: -webkit-linear-gradient(top, #FFF8F8, #FFDDDD);
         background: linear-gradient(to bottom, #FFF8F8, #FFDDDD);
     }
     .login-warning {
@@ -42,7 +40,6 @@
         padding: 8px 10px;
         box-shadow: 0 1px 2px #665500 inset;
         background: #FFFFDD;
-        background: -webkit-linear-gradient(top, #FFFFF8, #FFFFDD);
         background: linear-gradient(to bottom, #FFFFF8, #FFFFDD);
     }
   </style>
