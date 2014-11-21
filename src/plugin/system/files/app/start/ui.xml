@@ -45,7 +45,7 @@
       <Pane id="inlinePane" w="70%-14" h="100%" style="float: left; padding-left: 6px;">
         <Pane w="50%-25" class="startApp-inline yellow" style="float: left; clear: left;">
           <div style="padding: 0 10px;">
-            <img src="images/logotype-circle.png" style="float: right; width: 128px; height: 128px;" />
+            <img src="images/logotype-icon-256x256.png" style="float: right; width: 128px; height: 128px;" />
             <h1 style="font-family: Trebuchet MS; margin: 6px 0;">Welcome to RapidContext!</h1>
             <div style="font-size: 13px;">
               <p style="margin-top: 6px;">RapidContext is a platform for dynamic web applications and tools.</p>

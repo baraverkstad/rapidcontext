@@ -124,7 +124,7 @@ public class ControlPanel extends JFrame {
         getContentPane().setLayout(new GridBagLayout());
         try {
             logotype = ImageIO.read(getClass().getResource("logotype.png"));
-            Image img = ImageIO.read(getClass().getResource("logotype-circle.png"));
+            Image img = ImageIO.read(getClass().getResource("logotype-icon-256x256.png"));
             setIconImage(img);
             if (SystemUtils.IS_OS_MAC_OSX) {
                 MacApplication.get().setDockIconImage(img);
