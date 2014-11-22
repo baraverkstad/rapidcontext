@@ -123,12 +123,12 @@ description = A simple example app to play and experiment with.
 className = ExampleApp
 
 <span class="comment"># Resources array</span>
-resources.0.url = app/example/app.js
 resources.0.type = code
-resources.1.url = app/example/ui.xml
+resources.0.url = app/example/app.js
 resources.1.type = ui
-resources.2.url = app/example/icon.png
+resources.1.url = app/example/ui.xml
 resources.2.type = icon
+resources.2.url = app/example/icon.png
   </pre>
 </div>
 
@@ -172,11 +172,6 @@ reload.</p>
           through the RapidContext client API:s.</li>
     </ul>
   </li>
-  <li><var>resources.#.url</var> &mdash; The resource URL. Should be local and
-      relative to the server base directory. The resource file must be placed
-      in the corresponding location in <var>plugin/local/files/</var> to be
-      visible from the server (or the <var>files/</var> directory in your
-      plug-in).</li>
   <li>
     <var>resources.#.type</var> &mdash; The resource type. This may have one
     of the following values:
@@ -189,17 +184,26 @@ reload.</p>
           below). The interface specified in this file is built each time the
           app is launched.</li>
       <li><var>icon</var> &mdash; An icon displayed with the launcher for the
-          app. Should be a transparent GIF or PNG image in 48x48 size for
-          optimal viewing.</li>
+          app. Can be either a an image URL (48x48 pixels), an HTML snipplet
+          or a CSS class name.</li>
       <li><var>json</var> &mdash; A JSON data file that is loaded and provided
           as an app resource.</li>
-      <li><var>file</var> &mdash; A generic file resource with no special
-          handling.</li>
+      <li><var>*</var> &mdash; Other resource types may be used, but have no
+          special handling.</li>
     </ul>
   </li>
   <li><var>resource.#.id</var> &mdash; The optional resource identifier. All
       resources with an identifier can easily be accessed from the app
       JavaScript code, using <q><var>this.resource.[id]</code></q>.</li>
+  <li><var>resources.#.url</var> &mdash; The optional resource URL. Should be
+      local and relative to the server base directory. The resource file must
+      be placed in the corresponding location in <var>plugin/local/files/</var>
+      to be visible from the server (or the <var>files/</var> directory in your
+      plug-in).</li>
+  <li><var>resources.#.html</var> &mdash; The optional resource HTML. Used
+      as an alternative to image app icons.</li>
+  <li><var>resources.#.class</var> &mdash; The optional resource CSS class.
+      Used as an alternative to image app icons.</li>
   <li><var>resources.#.topic</var> &mdash; The optional resource help topic
       name. The corresponding resource URL should point to an HTML help
       document for the app. The topic name may contain <q>/</q> characters to
@@ -316,8 +320,8 @@ creation, an app resource is specified as follows:</p>
 <div class="box blue">
   <i class="box-icon fa fa-code"></i>
   <pre class="box-content code">
-resources.#.url = example/ui.xml
 resources.#.type = ui
+resources.#.url = example/ui.xml
   </pre>
 </div>
 
