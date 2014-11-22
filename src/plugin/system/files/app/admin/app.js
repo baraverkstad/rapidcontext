@@ -68,8 +68,7 @@ AdminApp.prototype.start = function () {
     // App view
     MochiKit.Signal.connectOnce(this.ui.appTab, "onenter", this, "loadApps");
     RapidContext.UI.connectProc(this.proc.appList, this.ui.appLoading, this.ui.appReload);
-    MochiKit.Signal.connect(this.proc.appList, "onsuccess", this.ui.appTable, "setData");
-    MochiKit.Signal.connect(this.proc.appList, "onsuccess", this, "_showApp");
+    MochiKit.Signal.connect(this.proc.appList, "onsuccess", this, "_callbackLoadApps");
     MochiKit.Signal.connect(this.ui.appTable, "onselect", this, "_showApp");
     MochiKit.Signal.connect(this.ui.appLaunch, "onclick", this, "_launchApp");
     MochiKit.Signal.connect(this.ui.appLaunchWindow, "onclick", this, "_launchAppWindow");
@@ -518,6 +517,16 @@ AdminApp.prototype.loadApps = function () {
 }
 
 /**
+ * Callback for the app list loading.
+ */
+AdminApp.prototype._callbackLoadApps = function () {
+    // Procedure call triggered an update of the cached app list,
+    // so the procedure results can be ignored here
+    this.ui.appTable.setData(RapidContext.App.apps());
+    this._showApp();
+}
+
+/**
  * Shows detailed app information.
  */
 AdminApp.prototype._showApp = function () {
@@ -525,14 +534,8 @@ AdminApp.prototype._showApp = function () {
     this.ui.appForm.reset();
     if (data) {
         this.ui.appForm.update(data);
-        var img = null;
-        for (var i = 0; i < data.resources.length; i++) {
-            var res = data.resources[i];
-            if (res.type == "icon") {
-                img = MochiKit.DOM.IMG({ src: res.url });
-            }
-        }
-        MochiKit.DOM.replaceChildNodes(this.ui.appIcon, img);
+        var iconNode = data.icon ? data.icon.cloneNode(true) : null;
+        MochiKit.DOM.replaceChildNodes(this.ui.appIcon, iconNode);
         var url = "rapidcontext/storage/app/" + data.id;
         MochiKit.DOM.setNodeAttribute(this.ui.appLink, "href", url);
         MochiKit.DOM.removeElementClass(this.ui.appLink, "hidden");

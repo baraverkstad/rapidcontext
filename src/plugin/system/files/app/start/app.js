@@ -154,8 +154,7 @@ StartApp.prototype._initApps = function () {
         var attrs = { style: { "padding": "4px 6px 6px 6px" } };
         var tdIcon = MochiKit.DOM.TD(attrs);
         if (app.icon) {
-            var img = MochiKit.DOM.IMG({ src: app.icon });
-            MochiKit.DOM.replaceChildNodes(tdIcon, img);
+            MochiKit.DOM.replaceChildNodes(tdIcon, app.icon.cloneNode(true));
         }
         var style = { marginLeft: "6px" };
         var iconAttrs = { ref: "EXPAND", tooltip: "Open in new window",

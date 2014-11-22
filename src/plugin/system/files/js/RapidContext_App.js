@@ -928,6 +928,19 @@ RapidContext.App._Cache = {
     },
     // Object comparator for 'id' property
     _cmpId: MochiKit.Base.keyComparator("id"),
+    // Builds an icon DOM node from a resource
+    _buildIcon: function (res) {
+        if (res.url) {
+            return $("<img/>").attr({ src: res.url })[0];
+        } else if (res.html) {
+            var node = $("<span/>").html(res.html)[0];
+            return node.childNodes.length === 1 ? node.childNodes[0] : node;
+        } else if (res["class"]) {
+            return $("<i/>").addClass(res["class"])[0];
+        } else {
+            return null;
+        }
+    },
     // Updates the cache data with the results from a procedure.
     update: function (proc, data) {
         switch (proc) {
@@ -964,8 +977,12 @@ RapidContext.App._Cache = {
                 }
                 for (var j = 0; j < launcher.resources.length; j++) {
                     if (launcher.resources[j].type == "icon") {
-                        launcher.icon = launcher.resources[j].url;
+                        launcher.icon = this._buildIcon(launcher.resources[j]);
                     }
+                }
+                if (!launcher.icon) {
+                    var cssClass = "fa fa-4x fa-question-circle unimportant";
+                    launcher.icon = this._buildIcon({ "class": cssClass });
                 }
                 if (launcher.className == null) {
                     RapidContext.Log.error("App missing 'className' property", launcher);
