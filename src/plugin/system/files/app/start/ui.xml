@@ -57,11 +57,12 @@
       </Pane>
     </Pane>
   </TabContainer>
-  <Pane id="infoBar" style="position: absolute; top: 10px; right: 12px;">
-    <strong>User: </strong>
-    <span id="infoUser" />
-    <strong style="padding-left: 10px;">Environment: </strong>
-    <span id="infoEnv" />
+  <Pane id="infoBar" style="position: absolute; top: 10px; right: 12px; font-size: 1.2em;">
+    <i class="fa fa-user"></i>
+    <span id="infoUser" style="padding-left: 0.5em;"/>
+    <i class="fa fa-plug" style="padding-left: 1.5em"></i>
+    <span id="infoEnv" style="padding-left: 0.5em" />
+    <i class="fa fa-caret-down" style="padding-left: 1em"></i>
   </Pane>
   <Popup id="menu" style="top: 26px; right: 10px; display: none; min-width: 200px; z-index: 10000; overflow: hidden;">
     <h3 id="menuTitle">Anonymous User</h3>
