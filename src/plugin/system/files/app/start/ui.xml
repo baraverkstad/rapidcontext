@@ -25,10 +25,6 @@
   </style>
   <TabContainer id="tabContainer" w="100%" h="100%">
     <Pane pageTitle="Start" style="position: relative;">
-      <p style="position: absolute; left: 0px; bottom: 0px; margin: 0px;">
-        <span class="label">App icons by: </span>
-        <a href="http://fasticon.com/" target="_blank">FastIcon.com</a>
-      </p>
       <div style="float: left; width: 30%; height: 100%; border-right: solid 1px #DDDDDD; padding-right: 6px;">
         <h3>
           Apps:
@@ -177,11 +173,11 @@
       &#187; <a href="http://www.mortbay.org/jetty/" target="_blank">Jetty WebServer</a>,
       copyright &#169; Mort Bay Consulting.</p>
 
-      <p>Images have kindly been provided and/or adapted from the following sources;<br/>
+      <p>Fonts and images have kindly been provided by or adapted from the following sources;<br/>
+      &#187; <a href="http://fontawesome.io/" target="_blank">Font Awesome</a>,
+      copyright &#169; Dave Gandy (icon font), and<br/>
       &#187; <a href="http://www.famfamfam.com/lab/icons/silk/" target="_blank">Silk
-      Icons by FamFamFam</a>, copyright &#169; Mark James (small widget icons),<br/>
-      &#187; <a href="http://fasticon.com/" target="_blank">FastIcon.com</a>,
-      copyright &#169; Dirceu Veiga (icons for built-in apps), and<br/>
+      Icons by FamFamFam</a>, copyright &#169; Mark James (some small icon images),<br/>
       &#187; <a href="http://dojotoolkit.org/" target="_blank">The Dojo Toolkit</a>,
       copyright &#169; The Dojo Foundation (Table widget textures).</p>
     </div>
