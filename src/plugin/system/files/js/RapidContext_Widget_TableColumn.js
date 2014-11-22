@@ -129,16 +129,9 @@ RapidContext.Widget.TableColumn.prototype.setAttrs = function (attrs) {
     }
     if (typeof(locals.sort) !== "undefined") {
         this.sort = locals.sort;
-        if (locals.sort == null || locals.sort == "none") {
-            MochiKit.DOM.removeElementClass(this, "sortAsc");
-            MochiKit.DOM.removeElementClass(this, "sortDesc");
-        } else if (locals.sort == "desc") {
-            MochiKit.DOM.removeElementClass(this, "sortAsc");
-            MochiKit.DOM.addElementClass(this, "sortDesc");
-        } else {
-            MochiKit.DOM.removeElementClass(this, "sortDesc");
-            MochiKit.DOM.addElementClass(this, "sortAsc");
-        }
+        $(this).toggleClass("sortNone", locals.sort === "none");
+        $(this).toggleClass("sortDesc", locals.sort === "desc");
+        $(this).toggleClass("sortAsc", locals.sort === "asc");
     }
     if (typeof(locals.maxLength) !== "undefined") {
         this.maxLength = parseInt(locals.maxLength);

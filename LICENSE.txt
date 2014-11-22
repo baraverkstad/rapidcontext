@@ -78,8 +78,6 @@ RapidContext LICENSE
       used as icon font
     o Silk Icons by FamFamFam (http://www.famfamfam.com/lab/icons/silk/),
       copyright (c) Mark James, used for some small icon images
-    o The Dojo Toolkit (http://dojotoolkit.org/),
-      copyright (c) The Dojo Foundation, used for Table widget textures
 
   Each of the above libraries and images is distributed under their own
   respective license. Please visit the links provided for details before

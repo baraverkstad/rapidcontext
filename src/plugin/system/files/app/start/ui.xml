@@ -177,9 +177,7 @@
       &#187; <a href="http://fontawesome.io/" target="_blank">Font Awesome</a>,
       copyright &#169; Dave Gandy (icon font), and<br/>
       &#187; <a href="http://www.famfamfam.com/lab/icons/silk/" target="_blank">Silk
-      Icons by FamFamFam</a>, copyright &#169; Mark James (some small icon images),<br/>
-      &#187; <a href="http://dojotoolkit.org/" target="_blank">The Dojo Toolkit</a>,
-      copyright &#169; The Dojo Foundation (Table widget textures).</p>
+      Icons by FamFamFam</a>, copyright &#169; Mark James (some small icon images).</p>
     </div>
     <div style="position: absolute; bottom: 15px; right: 15px;">
       <Button id="aboutClose" icon="OK" highlight="true" style="box-shadow: none;">Close</Button>

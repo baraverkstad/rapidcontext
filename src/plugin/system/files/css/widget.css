@@ -531,28 +531,28 @@ div.widgetTable {
     position: relative;
     overflow-x: hidden;
     overflow-y: auto;
+    border-radius: 0.3em;
 }
 div.widgetTable.compact {
-    max-height: 64px;
+    max-height: 7em;
 }
 table.widgetTable {
     width: 100%;
-    border: 1px solid #DDDDDD;
     border-collapse: collapse;
     cursor: default;
 }
 table.widgetTable td {
-    padding-top: 2px;
-    padding-bottom: 2px;
-    padding-left: 4px;
-    padding-right: 10px;
+    padding-top: 0.2em;
+    padding-bottom: 0.2em;
+    padding-left: 0.4em;
+    padding-right: 1em;
     background: white;
 }
 tr.widgetTableAlt td {
-    background: #e3edfa;
+    background: #f8f8f8;
 }
 table.widgetTable tr:hover td {
-    background: #a6c2e7;
+    background: #d8eaff;
 }
 table.widgetTable tbody tr.selected td {
     background: #ffffaa;
@@ -566,25 +566,44 @@ table.widgetTable tbody tr.selected:hover td {
  * Table Column Style
  */
 th.widgetTableColumn {
-    padding-top: 2px;
-    padding-bottom: 2px;
-    padding-left: 4px;
-    padding-right: 20px;
-    background-image: url(../images/backgrounds/tablecolumn.gif);
-    background-repeat: no-repeat;
-    background-position: top right;
+    position: relative;
+    padding-top: 0.2em;
+    padding-bottom: 0.2em;
+    padding-left: 0.4em;
+    padding-right: 2em;
+    background: #eeeeee;
+    background: linear-gradient(to bottom, #f0f0f0, #dddddd);
     text-align: left;
     -moz-user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;
     user-select: none;
 }
-th.widgetTableColumn.sortAsc {
-    background-image: url(../images/backgrounds/tablecolumn-up.gif);
+th.widgetTableColumn:after {
+    position: absolute;
+    top: 0.3em;
+    right: 0.3em;
+    color: #bbbbbb;
+    font-family: "FontAwesome";
+    content: "\f0dc";
 }
-
+th.widgetTableColumn.sortAsc,
 th.widgetTableColumn.sortDesc {
-    background-image: url(../images/backgrounds/tablecolumn-down.gif);
+    background: #f0d447;
+    background: linear-gradient(to bottom, #fff272, #f0d447);
+}
+th.widgetTableColumn.sortAsc:after {
+    top: 0.45em;
+    color: #000;
+    content: "\f0de";
+}
+th.widgetTableColumn.sortDesc:after {
+    top: 0em;
+    color: #000;
+    content: "\f0dd";
+}
+th.widgetTableColumn.sortNone:after {
+    content: "";
 }
 
 
