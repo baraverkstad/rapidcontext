@@ -60,7 +60,7 @@ RapidContext.Widget.TabContainer = function (attrs/*, ... */) {
     var o = MochiKit.DOM.DIV(attrs, labels, container);
     RapidContext.Widget._widgetMixin(o, arguments.callee);
     MochiKit.DOM.addElementClass(o, "widgetTabContainer");
-    RapidContext.Util.registerSizeConstraints(container, "100% - 20", "100% - 36");
+    RapidContext.Util.registerSizeConstraints(container, "100% - 20", "100% - 40");
     o.resizeContent = o._resizeContent;
     container.resizeContent = MochiKit.Base.noop;
     o._selectedIndex = -1;

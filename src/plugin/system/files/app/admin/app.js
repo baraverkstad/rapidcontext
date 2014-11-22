@@ -123,7 +123,7 @@ AdminApp.prototype.start = function () {
     this.ui.procExecResult.resizeContent = function () {
         var pos = MochiKit.Style.getElementPosition(this, this.parentNode);
         var dim = MochiKit.Style.getElementDimensions(this.parentNode);
-        MochiKit.Style.setElementDimensions(this, { h: dim.h - pos.y });
+        MochiKit.Style.setElementDimensions(this, { w: dim.w - 2, h: dim.h - pos.y - 2 });
     }
 
     // Batch view

@@ -334,7 +334,7 @@
           <Icon id="procTreeReload" ref="RELOAD" style="margin-left: 3px;" />
           <Icon id="procTreeLoading" ref="LOADING" style="margin-left: 3px;" />
         </h3>
-        <Tree id="procTree" w="100%" h="100%-22" />
+        <Tree id="procTree" w="100%" h="100%-26" />
       </div>
       <div w="65%-30" h="100%" style="float: left;">
         <Form id="procForm" style="width: 100%; height: 100%;">
@@ -393,7 +393,7 @@
               Execute Batch
             </Button>
           </div>
-          <Tree id="procExecResult" w="100%" h="10%" style="margin-top: 6px;">
+          <Tree id="procExecResult" w="100%-2" h="10%" style="margin-top: 6px;">
           </Tree>
         </Form>
       </div>
