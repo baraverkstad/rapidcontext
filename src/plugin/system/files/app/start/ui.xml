@@ -64,14 +64,14 @@
     <span id="infoEnv" style="padding-left: 0.5em" />
     <i class="fa fa-caret-down" style="padding-left: 1em"></i>
   </Pane>
-  <Popup id="menu" style="top: 26px; right: 10px; display: none; min-width: 200px; z-index: 10000; overflow: hidden;">
+  <Popup id="menu" style="top: 30px; right: 10px; display: none; min-width: 200px; z-index: 10000; overflow: hidden;">
     <h3 id="menuTitle">Anonymous User</h3>
-    <div id="menuAbout" class="widgetPopupItem">&#187; About RapidContext</div>
-    <div id="menuHelp" class="widgetPopupItem">&#187; Help &amp; Documentation</div>
-    <div id="menuAdmin" class="widgetPopupItem widgetPopupDisabled">&#187; Administration</div>
+    <div id="menuAbout" class="widgetPopupItem">About RapidContext</div>
+    <div id="menuHelp" class="widgetPopupItem">Help &amp; Documentation</div>
+    <div id="menuAdmin" class="widgetPopupItem widgetPopupDisabled">Administration</div>
     <hr/>
-    <div id="menuPassword" class="widgetPopupItem widgetPopupDisabled">&#187; Change Password</div>
-    <div id="menuLogInOut" class="widgetPopupItem">&#187; Login</div>
+    <div id="menuPassword" class="widgetPopupItem widgetPopupDisabled">Change Password</div>
+    <div id="menuLogInOut" class="widgetPopupItem">Login</div>
   </Popup>
   <Dialog id="passwordDialog" title="Change Password" system="true" resizeable="false" style="width: 400px; height: 160px;">
     <Form id="passwordForm">

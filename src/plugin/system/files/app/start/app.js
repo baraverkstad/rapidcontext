@@ -98,7 +98,7 @@ StartApp.prototype._initInfoMenu = function () {
     if (user && user.id) {
         MochiKit.DOM.replaceChildNodes(this.ui.infoUser, user.name || user.id);
         MochiKit.DOM.replaceChildNodes(this.ui.menuTitle, user.longName);
-        MochiKit.DOM.replaceChildNodes(this.ui.menuLogInOut, "\u00bb Logout");
+        MochiKit.DOM.replaceChildNodes(this.ui.menuLogInOut, "Logout");
         MochiKit.DOM.removeElementClass(this.ui.menuAdmin, "widgetPopupDisabled");
         MochiKit.DOM.removeElementClass(this.ui.menuPassword, "widgetPopupDisabled");
         var func = MochiKit.Base.partial(RapidContext.App.startApp, "admin", null);
@@ -107,7 +107,7 @@ StartApp.prototype._initInfoMenu = function () {
     } else {
         MochiKit.DOM.replaceChildNodes(this.ui.infoUser, "anonymous");
         MochiKit.DOM.replaceChildNodes(this.ui.menuTitle, "Anonymous User");
-        MochiKit.DOM.replaceChildNodes(this.ui.menuLogInOut, "\u00bb Login");
+        MochiKit.DOM.replaceChildNodes(this.ui.menuLogInOut, "Login");
         MochiKit.DOM.addElementClass(this.ui.menuAdmin, "widgetPopupDisabled");
         MochiKit.DOM.addElementClass(this.ui.menuPassword, "widgetPopupDisabled");
     }

@@ -143,11 +143,11 @@
             Mouseover for popup
           </span>
           <Popup id="popupMenu" delay="1500" style="width: 150px; overflow: hidden;">
-            <div class="widgetPopupItem">&#x00BB; The First Item</div>
-            <div class="widgetPopupItem">&#x00BB; The Second Item</div>
-            <div class="widgetPopupItem">&#x00BB; The Third Item</div>
+            <div class="widgetPopupItem">The First Item</div>
+            <div class="widgetPopupItem">The Second Item</div>
+            <div class="widgetPopupItem">The Third Item</div>
             <hr/>
-            <div class="widgetPopupItem widgetPopupDisabled">&#x00BB; Disabled Item</div>
+            <div class="widgetPopupItem widgetPopupDisabled">Disabled Item</div>
           </Popup>
           <TextField id="popupField" helpText="Focus for popup" style="margin: 0 0 0 10px;"></TextField>
         </fieldset>

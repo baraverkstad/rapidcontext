@@ -44,9 +44,9 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  * var attrs1 = { value: 1, "class": "widgetPopupItem" };
  * var attrs2 = { value: 2, "class": "widgetPopupItem" };
  * var attrs3 = { value: 3, "class": "widgetPopupItem widgetPopupDisabled" };
- * var item1 = MochiKit.DOM.DIV(attrs1, "\u00BB First Item");
- * var item2 = MochiKit.DOM.DIV(attrs2, "\u00BB Second Item");
- * var item3 = MochiKit.DOM.DIV(attrs3, "\u00BB Third Item");
+ * var item1 = MochiKit.DOM.DIV(attrs1, "First Item");
+ * var item2 = MochiKit.DOM.DIV(attrs2, "Second Item");
+ * var item3 = MochiKit.DOM.DIV(attrs3, "Third Item");
  * var hr = MochiKit.DOM.HR();
  * var examplePopup = RapidContext.Widget.Popup({}, item1, item2, hr, item3);
  *

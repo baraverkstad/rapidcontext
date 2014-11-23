@@ -199,8 +199,7 @@ RapidContext.Widget.TextField.prototype.showPopup = function (attrs, items) {
         MochiKit.DOM.replaceChildNodes(popup);
         for (var i = 0; i < items.length; i++) {
             if (typeof(items[i]) == "string") {
-                var node = MochiKit.DOM.DIV({ "class": "widgetPopupItem" },
-                                            "\u00BB " + items[i]);
+                var node = MochiKit.DOM.DIV({ "class": "widgetPopupItem" }, items[i]);
                 node.value = items[i];
                 popup.appendChild(node);
             } else {
