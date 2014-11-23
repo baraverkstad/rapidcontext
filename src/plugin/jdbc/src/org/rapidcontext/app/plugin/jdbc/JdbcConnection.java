@@ -106,10 +106,8 @@ public class JdbcConnection extends Connection {
         if (driver.length() == 0) {
             if (url.startsWith("jdbc:odbc")) {
                 dict.set("_" + JDBC_DRIVER, "sun.jdbc.odbc.JdbcOdbcDriver");
-            } else if (url.startsWith("jdbc:drizzle:") || url.startsWith("jdbc:mysql:thin:")) {
-                dict.set("_" + JDBC_DRIVER, "org.drizzle.jdbc.DrizzleDriver");
-            } else if (url.startsWith("jdbc:mysql:")) {
-                dict.set("_" + JDBC_DRIVER, "com.mysql.jdbc.Driver");
+            } else if (url.startsWith("jdbc:mariadb:") || url.startsWith("jdbc:mysql:")) {
+                dict.set("_" + JDBC_DRIVER, "org.mariadb.jdbc.Driver");
             } else if (url.startsWith("jdbc:postgresql:")) {
                 dict.set("_" + JDBC_DRIVER, "org.postgresql.Driver");
             } else if (url.startsWith("jdbc:oracle:")) {
