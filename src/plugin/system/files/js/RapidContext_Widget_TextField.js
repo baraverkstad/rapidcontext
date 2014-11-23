@@ -167,7 +167,8 @@ RapidContext.Widget.TextField.prototype.popup = function (create) {
     if (!this._popupCreated && create) {
         this.autocomplete = "off";
         this._popupCreated = true;
-        var style = { "max-height": "300px", "width": "300px" };
+        var dim = MochiKit.Style.getElementDimensions(this);
+        var style = { "max-height": "300px", "width": Math.max(dim.w - 5, 300) + "px" };
         var popup = RapidContext.Widget.Popup({ style: style });
         MochiKit.DOM.insertSiblingNodesAfter(this, popup);
         MochiKit.Style.makePositioned(this.parentNode);
@@ -211,8 +212,7 @@ RapidContext.Widget.TextField.prototype.showPopup = function (attrs, items) {
         var pos = { x: this.offsetLeft + 1,
                     y: this.offsetTop + this.offsetHeight + 1 };
         MochiKit.Style.setElementPosition(popup, pos);
-        var style = { width: Math.max(300, this.width) + "px" };
-        popup.setAttrs(MochiKit.Base.update({ delay: 30000, style: style }, attrs));
+        popup.setAttrs(MochiKit.Base.update({ delay: 30000 }, attrs));
         popup.show();
         if (items && items.length == 1) {
             popup.selectChild(0);
