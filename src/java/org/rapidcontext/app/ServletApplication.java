@@ -154,7 +154,7 @@ public class ServletApplication extends HttpServlet {
             }
             request.commit();
         } catch (IOException e) {
-            LOG.info("IO error when processing request: " + request);
+            LOG.log(Level.INFO, "IO error when processing request: " + request, e);
         }
         LOG.fine(ip(request) + "Request to " + request.getUrl() +
                  " processed in " + request.getProcessTime() +

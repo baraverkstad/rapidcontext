@@ -976,11 +976,7 @@ public class Request implements HttpUtil {
         }
         logResponse();
         if (!responseHeadersOnly) {
-            try {
-                FileUtil.copy(data.openStream(), response.getOutputStream());
-            } catch (Exception e) {
-                response.sendError(STATUS.NOT_FOUND);
-            }
+            FileUtil.copy(data.openStream(), response.getOutputStream());
         }
     }
 
