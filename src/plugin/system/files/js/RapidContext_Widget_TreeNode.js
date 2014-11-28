@@ -408,7 +408,7 @@ RapidContext.Widget.TreeNode.prototype.collapse = function () {
         MochiKit.DOM.addElementClass(container, "widgetHidden");
         var tree = this.tree();
         if (tree != null) {
-            tree._emitExpand(this);
+            tree._emitCollapse(this);
         }
     }
 };

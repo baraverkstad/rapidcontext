@@ -61,19 +61,36 @@ RapidContext.Widget.Tree = function (attrs/*, ...*/) {
 RapidContext.Widget.Classes.Tree = RapidContext.Widget.Tree;
 
 /**
- * Emitted when a tree node is expanded or collapsed. This event
- * signal contains the tree node as payload.
+ * Emitted when a tree node is expanded. This event signal contains
+ * the tree node as payload.
  *
  * @name RapidContext.Widget.Tree#onexpand
  * @event
  */
 
 /**
- * Emitted when the tree node selection changes. Note that it fires
- * both for unselect and select (normally both in sequence). This
- * event signal contains the currently selected tree node as payload.
+ * Emitted when a tree node is collapsed. This event signal contains
+ * the tree node as payload.
+ *
+ * @name RapidContext.Widget.Tree#oncollapse
+ * @event
+ */
+
+/**
+ * Emitted when a tree node is selected. It will be emitted after
+ * "onunselect" if another node was previously selected. This event
+ * signal contains the currently selected tree node as payload.
  *
  * @name RapidContext.Widget.Tree#onselect
+ * @event
+ */
+
+/**
+ * Emitted when a tree node selection is removed. It will be emitted
+ * before "onselect" if another node was previously selected. This
+ * event signal contains the previously selected tree node as payload.
+ *
+ * @name RapidContext.Widget.Tree#onunselect
  * @event
  */
 
@@ -197,7 +214,7 @@ RapidContext.Widget.Tree.prototype._handleSelect = function (node) {
     var prev = this.selectedChild();
     if (node == null) {
         this.selectedPath = null;
-        RapidContext.Widget.emitSignal(this, "onselect", null);
+        RapidContext.Widget.emitSignal(this, "onunselect", prev);
     } else {
         if (prev != null && prev !== node) {
             prev.unselect();
@@ -208,12 +225,21 @@ RapidContext.Widget.Tree.prototype._handleSelect = function (node) {
 };
 
 /**
- * Emits a signal when a node has been expanded or collapsed.
+ * Emits a signal when a node has been expanded.
  *
  * @param {Widget} node the affected tree node
  */
 RapidContext.Widget.Tree.prototype._emitExpand = function (node) {
     RapidContext.Widget.emitSignal(this, "onexpand", node);
+};
+
+/**
+ * Emits a signal when a node has been collapsed.
+ *
+ * @param {Widget} node the affected tree node
+ */
+RapidContext.Widget.Tree.prototype._emitCollapse = function (node) {
+    RapidContext.Widget.emitSignal(this, "oncollapse", node);
 };
 
 /**
