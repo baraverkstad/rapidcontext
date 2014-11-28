@@ -227,14 +227,7 @@ RapidContext.App.startApp = function (app, container) {
         launcher.resource = {};
         for (var i = 0; i < launcher.resources.length; i++) {
             var res = launcher.resources[i];
-            var url = res.url || "";
-            if (RapidContext._basePath) {
-                if (url.indexOf(RapidContext._basePath) == 0) {
-                    url = url.substring(RapidContext._basePath.length);
-                } else if (url.indexOf(":") < 0) {
-                    url = "rapidcontext/files/" + url;
-                }
-            }
+            var url = RapidContext.App._rebaseUrl(res.url);
             if (res.type == "code" || res.type == "js" || res.type == "javascript") {
                 d.addCallback(MochiKit.Base.partial(RapidContext.App.loadScript, url));
             } else if (res.type == "style" || res.type == "css") {
@@ -848,6 +841,25 @@ RapidContext.App.downloadFile = function (url, data) {
 };
 
 /**
+ * Returns a new relative URL adapted for a non-standard base path.
+ *
+ * @param {String} url the URL to modify
+ *
+ * @return {String} the rebased URL
+ */
+RapidContext.App._rebaseUrl = function (url) {
+    url = url || "";
+    if (RapidContext._basePath) {
+        if (url.indexOf(RapidContext._basePath) == 0) {
+            url = url.substring(RapidContext._basePath.length);
+        } else if (url.indexOf(":") < 0) {
+            url = "rapidcontext/files/" + url;
+        }
+    }
+    return url;
+}
+
+/**
  * Returns a non-cacheable version of the specified URL. This
  * function will add a request query parameter consisting of the
  * current time in milliseconds. Most web servers will ignore this
@@ -931,7 +943,8 @@ RapidContext.App._Cache = {
     // Builds an icon DOM node from a resource
     _buildIcon: function (res) {
         if (res.url) {
-            return $("<img/>").attr({ src: res.url })[0];
+            var url = RapidContext.App._rebaseUrl(res.url);
+            return $("<img/>").attr({ src: url })[0];
         } else if (res.html) {
             var node = $("<span/>").html(res.html)[0];
             return node.childNodes.length === 1 ? node.childNodes[0] : node;
