@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2014 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -83,7 +83,7 @@ public class FileWebService extends WebService {
      * @see #methods(Request)
      */
     protected String[] methodsImpl(Request request) {
-        return METHODS_GET_ONLY;
+        return METHODS_GET;
     }
 
     /**

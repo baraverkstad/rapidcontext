@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2014 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -50,12 +50,18 @@ public abstract class WebService extends StorableObject implements HttpUtil {
     /**
      * An array with only the HTTP GET method.
      */
-    public static final String[] METHODS_GET_ONLY = new String[] { METHOD.GET };
+    public static final String[] METHODS_GET = new String[] { METHOD.GET };
 
     /**
      * An array with only the HTTP POST method.
      */
-    public static final String[] METHODS_POST_ONLY = new String[] { METHOD.POST };
+    public static final String[] METHODS_POST = new String[] { METHOD.POST };
+
+    /**
+     * An array with only the HTTP GET and HTTP POST methods.
+     */
+    public static final String[] METHODS_GET_POST =
+        new String[] { METHOD.GET, METHOD.POST };
 
     /**
      * The dictionary key for the description text.

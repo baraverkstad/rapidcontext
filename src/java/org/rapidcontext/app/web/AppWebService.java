@@ -224,13 +224,13 @@ public class AppWebService extends FileWebService {
         if (request.matchPath("rapidcontext/storage/")) {
             return storage.methodsImpl(request);
         } else if (request.matchPath("rapidcontext/download")) {
-            return METHODS_POST_ONLY;
+            return METHODS_POST;
         } else if (request.matchPath("rapidcontext/upload")) {
-            return METHODS_POST_ONLY;
+            return METHODS_POST;
         } else if (request.matchPath("rapidcontext/procedure/")) {
-            return METHODS_POST_ONLY;
+            return METHODS_POST;
         } else {
-            return METHODS_GET_ONLY;
+            return METHODS_GET;
         }
     }
 
