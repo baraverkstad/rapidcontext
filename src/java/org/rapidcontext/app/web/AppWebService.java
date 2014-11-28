@@ -509,7 +509,7 @@ public class AppWebService extends FileWebService {
                 }
             }
             Object[] args = argList.toArray();
-            if (request.getParameter("trace", null) != null) {
+            if (request.getParameter("system:trace", null) != null) {
                 trace = new StringBuffer();
             }
             ApplicationContext ctx = ApplicationContext.getInstance();

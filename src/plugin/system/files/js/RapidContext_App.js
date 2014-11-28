@@ -470,7 +470,7 @@ RapidContext.App.callProc = function (name, args) {
     }
     var logLevel = RapidContext.Log.level();
     if (logLevel == "log" || logLevel == "all") {
-        params.trace = "true";
+        params["system:trace"] = 1;
     }
     var d = RapidContext.App.loadJSON("rapidcontext/procedure/" + name, params, options);
     d.addCallback(function (res) {
