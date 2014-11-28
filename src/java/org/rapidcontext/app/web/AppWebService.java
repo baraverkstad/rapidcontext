@@ -85,6 +85,12 @@ public class AppWebService extends FileWebService {
     public static final String KEY_HEADER = "header";
 
     /**
+     * The procedure web service used for the to "rapidcontext/procedure"
+     * URLs.
+     */
+    protected ProcedureWebService procedure;
+
+    /**
      * The storage web service used for the to "rapidcontext/storage"
      * URLs.
      */
@@ -151,6 +157,7 @@ public class AppWebService extends FileWebService {
         dict.set(KEY_APP, appId());
         dict.set(KEY_TITLE, title());
         dict.set(KEY_LANG, lang());
+        procedure = new ProcedureWebService("id", "type", new Dict());
         storage = new StorageWebService("id", "type", new Dict());
     }
 
@@ -221,13 +228,13 @@ public class AppWebService extends FileWebService {
      * @see #methods(Request)
      */
     protected String[] methodsImpl(Request request) {
-        if (request.matchPath("rapidcontext/storage/")) {
+        if (request.matchPath("rapidcontext/procedure/")) {
+            return procedure.methodsImpl(request);
+        } else if (request.matchPath("rapidcontext/storage/")) {
             return storage.methodsImpl(request);
         } else if (request.matchPath("rapidcontext/download")) {
             return METHODS_POST;
         } else if (request.matchPath("rapidcontext/upload")) {
-            return METHODS_POST;
-        } else if (request.matchPath("rapidcontext/procedure/")) {
             return METHODS_POST;
         } else {
             return METHODS_GET;
@@ -241,7 +248,9 @@ public class AppWebService extends FileWebService {
      * @param request the request to process
      */
     public void process(Request request) {
-        if (request.matchPath("rapidcontext/storage/")) {
+        if (request.matchPath("rapidcontext/procedure/")) {
+            procedure.process(request);
+        } else if (request.matchPath("rapidcontext/storage/")) {
             storage.process(request);
         } else if (!request.hasResponse()) {
             super.process(request);
@@ -282,8 +291,6 @@ public class AppWebService extends FileWebService {
             processDownload(request);
         } else if (request.matchPath("rapidcontext/upload")) {
             processUpload(request);
-        } else if (request.matchPath("rapidcontext/procedure/")) {
-            processProcedure(request);
         } else {
             super.doPost(request);
         }
@@ -481,49 +488,6 @@ public class AppWebService extends FileWebService {
             LOG.log(Level.WARNING, "failed to process file upload", e);
             errorBadRequest(request, e.getMessage());
         }
-    }
-
-    /**
-     * Processes a procedure execution request. This is used to trigger
-     * server-side procedure execution with the POST:ed data.
-     *
-     * @param request        the request to process
-     */
-    protected void processProcedure(Request request) {
-        session(request, true);
-        Dict res = new Dict();
-        res.set("data", null);
-        res.set("trace", null);
-        res.set("error", null);
-        String source = "web [" + request.getRemoteAddr() + "]";
-        LOG.fine(source + ": init procedure call " + request.getPath());
-        StringBuffer trace = null;
-        try {
-            ArrayList argList = new ArrayList();
-            String str = "";
-            for (int i = 0; str != null; i++) {
-                str = request.getParameter("arg" + i, null);
-                if (str != null) {
-                    LOG.fine(source + ": procedure arg " + (i + 1) + ":" + str);
-                    argList.add(JsSerializer.unserialize(str));
-                }
-            }
-            Object[] args = argList.toArray();
-            if (request.getParameter("system:trace", null) != null) {
-                trace = new StringBuffer();
-            }
-            ApplicationContext ctx = ApplicationContext.getInstance();
-            Object obj = ctx.execute(request.getPath(), args, source, trace);
-            res.set("data", obj);
-            LOG.fine(source + ": done procedure call " + request.getPath());
-        } catch (Exception e) {
-            res.set("error", e.getMessage());
-            LOG.fine(source + ": error in procedure call: " + e.getMessage());
-        }
-        if (trace != null) {
-            res.set("trace", trace.toString());
-        }
-        request.sendText(Mime.JSON[0], JsSerializer.serialize(res, true));
     }
 
     /**
