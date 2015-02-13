@@ -366,26 +366,27 @@
     position: absolute;
     overflow: auto;
     z-index: 20;
-    border: 1px solid #CDE;
+    border: 1px solid #CCC;
     border-radius: 3px;
     background: #FFFFFF;
-    color: rgb(30, 70, 110);
+    color: #1e466e;
     cursor: default;
     font-size: 1.2em;
     box-shadow: 0 10px 20px rgba(0,0,0,0.15);
 }
 .widgetPopup h3 {
     margin: 0 0 0.2em 0;
-    border-bottom: 1px solid #CDE;
     padding: 0.2em 0.6em;
-    background: #DEF;
-    color: #07A;
+    box-shadow: 0 1px 1px #DDD;
+    background: #F8F8F8;
+    color: #777;
     font-size: 1.2em;
+    text-shadow: 1px 1px #FFF;
 }
 .widgetPopup hr {
     margin: 0.2em 0 0.25em 0;
     border-top: 0px;
-    border-bottom: 1px solid #CDE;
+    border-bottom: 1px solid #EEE;
     border-left: 0px;
     border-right: 0px;
 }
@@ -398,12 +399,14 @@
     visibility: hidden;
     padding-right: 0.25em;
     font-family: FontAwesome;
-    color: #8BE;
-    content: "\f054";
+    content: "\f105";
+    color: #68A;
 }
 .widgetPopupItem.widgetPopupSelected {
-    background: #DEF;
-    color: #07A;
+    background: #EEFCFF;
+    background: linear-gradient(to bottom, #F8FEFF, #EEFCFF);
+    box-shadow: 0 0 1px #99b7d2;
+    text-shadow: 0 1px #FFF;
 }
 .widgetPopupItem.widgetPopupSelected:before {
     visibility: visible;
@@ -411,6 +414,8 @@
 .widgetPopupDisabled,
 .widgetPopupDisabled.widgetPopupItem.widgetPopupSelected {
     background: transparent;
+    box-shadow: none;
+    text-shadow: none;
     color: #ABC;
     cursor: default;
 }
@@ -489,10 +494,11 @@
     margin-left: 6px;
 }
 .widgetTabContainerLabel:hover {
-    background: #EEF6FF;
-    border-top: 1px solid #DDEEFF;
-    border-left: 1px solid #DDEEFF;
-    border-right: 1px solid #DDEEFF;
+    background: #EEFCFF;
+    background: linear-gradient(to bottom, #F8FEFF, #EEFCFF);
+    border-top: 1px solid #CCEEFF;
+    border-left: 1px solid #CCEEFF;
+    border-right: 1px solid #CCEEFF;
     color: black;
 }
 .widgetTabContainerLabel.selected,
@@ -501,7 +507,7 @@
     border-left: 1px solid #DDDDDD;
     border-right: 1px solid #DDDDDD;
     background: #EEEEEE;
-    background-image: linear-gradient(to bottom, #EEEEEE, #FFFFFF);
+    background: linear-gradient(to bottom, #EEEEEE, #FFFFFF);
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#EEEEEE', endColorstr='#FFFFFF')";
     color: black;
 }
