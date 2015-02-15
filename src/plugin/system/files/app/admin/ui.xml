@@ -415,7 +415,7 @@
             <Button id="procArgCancel" icon="CANCEL" style="margin-left: 10px;">
               Cancel
             </Button>
-            <Button id="procArgSave" icon="OK" style="margin-left: 10px;">
+            <Button id="procArgSave" icon="OK" highlight="true" style="margin-left: 10px;">
               Save
             </Button>
           </div>
@@ -481,7 +481,7 @@
           <Button id="procEditCancel" icon="CANCEL" style="margin-left: 10px;">
             Cancel
           </Button>
-          <Button id="procEditSave" icon="OK" style="margin-left: 10px;">
+          <Button id="procEditSave" icon="OK" highlight="true" style="margin-left: 10px;">
             Save
           </Button>
         </div>
@@ -599,7 +599,7 @@
             </tr>
             <tr>
               <td colspan="2" style="padding-top: 4px;">
-                <Button id="userSave" icon="OK" style="margin-right: 10px">
+                <Button id="userSave" icon="OK" highlight="true" style="margin-right: 10px">
                   Save
                 </Button>
               </td>
