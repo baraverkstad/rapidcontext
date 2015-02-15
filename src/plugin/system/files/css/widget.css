@@ -82,6 +82,7 @@
     background-color: #E8E8E8;
     background-image: linear-gradient(to bottom, #FFFFFF, #E8E8E8);
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#E8E8E8')";
+    box-shadow: 0 1px 3px rgba(180, 180, 180, 0.7);
 }
 .widgetButton:active {
     position: relative;
@@ -90,7 +91,16 @@
 }
 .widgetButtonHighlight {
     font-weight: bold;
-    text-shadow: 0 1px #DDDDDD;
+    letter-spacing: 0.03em;
+    border-color: #CBA;
+    background-color: #EEDD99;
+    background-image: linear-gradient(to bottom, #FFF8DD, #EEDD99);
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFF8DD', endColorstr='#EEDD99')";
+}
+.widgetButton.widgetButtonHighlight:hover {
+    background-color: #F8E8A8;
+    background-image: linear-gradient(to bottom, #FFFCEE, #F8E8A8);
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFCEE', endColorstr='#F8E8A8')";
 }
 .widgetButton .widgetIcon {
     margin: 0 3px 0 0;
