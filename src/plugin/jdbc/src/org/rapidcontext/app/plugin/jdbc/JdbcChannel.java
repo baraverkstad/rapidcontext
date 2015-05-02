@@ -291,7 +291,7 @@ public class JdbcChannel extends Channel {
             stmt.executeUpdate();
             try {
                 set = stmt.getGeneratedKeys();
-                while (set.next()) {
+                while (set != null && set.next()) {
                     res.add(set.getString(1));
                 }
             } catch (SQLException ignore) {
