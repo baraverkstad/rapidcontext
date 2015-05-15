@@ -23,6 +23,8 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
+
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.AddOnProcedure;
@@ -185,7 +187,7 @@ public class CmdLineExecProcedure extends AddOnProcedure {
                 if (value == null) {
                     value = "";
                 }
-                data = data.replaceAll("\\:" + names[i], value.toString());
+                data = StringUtils.replace(data, ":" + names[i], value.toString());
             }
         }
         return data;

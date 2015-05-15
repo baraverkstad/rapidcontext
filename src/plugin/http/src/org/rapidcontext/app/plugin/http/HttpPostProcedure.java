@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.core.proc.AddOnProcedure;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
@@ -192,7 +193,7 @@ public class HttpPostProcedure extends AddOnProcedure {
                 if (value == null) {
                     value = "";
                 }
-                data = data.replaceAll("\\:" + names[i], value.toString());
+                data = StringUtils.replace(data, ":" + names[i], value.toString());
             }
         }
         return data;
