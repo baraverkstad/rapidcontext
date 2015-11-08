@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2014 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2015 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -207,10 +207,11 @@ public class ServletApplication extends HttpServlet {
                 session = Session.find(ctx.getStorage(), sessionId);
             }
             if (session != null) {
+                session.validate();
                 Session.activeSession.set(session);
                 session.updateAccessTime();
-                session.validate(request.getRemoteAddr(),
-                                 request.getHeader("User-Agent"));
+                session.setIp(request.getRemoteAddr());
+                session.setClient(request.getHeader("User-Agent"));
                 if (!StringUtils.isEmpty(session.userId())) {
                     SecurityContext.auth(session.userId());
                 }
