@@ -282,8 +282,8 @@ public class SecurityContext {
             LOG.info("failed authentication: " + msg);
             throw new SecurityException(msg);
         }
-        test = BinaryUtil.hashMD5(user.getPasswordHash() + suffix);
-        if (user.getPasswordHash().length() > 0 && !test.equals(hash)) {
+        test = BinaryUtil.hashMD5(user.passwordHash() + suffix);
+        if (user.passwordHash().length() > 0 && !test.equals(hash)) {
             msg = "invalid password for user " + id;
             LOG.info("failed authentication: " + msg +
                      ", expected: " + test + ", received: " + hash);

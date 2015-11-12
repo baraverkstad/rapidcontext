@@ -125,7 +125,7 @@ public class User extends StorableObject {
         dict.set(KEY_DESCRIPTION, description());
         dict.setBoolean(KEY_ENABLED, isEnabled());
         dict.set(KEY_REALM, realm());
-        dict.set(KEY_PASSWORD, getPasswordHash());
+        dict.set(KEY_PASSWORD, passwordHash());
     }
 
     /**
@@ -141,7 +141,7 @@ public class User extends StorableObject {
         dict.set(KEY_DESCRIPTION, description());
         dict.setBoolean(KEY_ENABLED, isEnabled());
         dict.set(KEY_REALM, realm());
-        dict.set(KEY_PASSWORD, getPasswordHash());
+        dict.set(KEY_PASSWORD, passwordHash());
     }
 
     /**
@@ -247,7 +247,7 @@ public class User extends StorableObject {
      *
      * @see #verifyPasswordHash(String)
      */
-    public String getPasswordHash() {
+    public String passwordHash() {
         return dict.getString(KEY_PASSWORD, "");
     }
 
@@ -297,7 +297,7 @@ public class User extends StorableObject {
      *         false otherwise
      */
     public boolean verifyPasswordHash(String passwordHash) {
-        String hash = getPasswordHash();
+        String hash = passwordHash();
         return isEnabled() && (hash.length() == 0 || hash.equals(passwordHash));
     }
 
