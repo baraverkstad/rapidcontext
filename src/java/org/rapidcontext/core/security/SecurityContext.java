@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2015 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -254,7 +254,7 @@ public class SecurityContext {
     }
 
     /**
-     * Authenticates the specified used with an MD5 two-step hash.
+     * Authenticates the specified user with an MD5 two-step hash.
      * This method will verify that the user exists, is enabled and
      * that the password hash plus the specified suffix will MD5 hash
      * to the specified string, After a successful authentication the
@@ -264,7 +264,7 @@ public class SecurityContext {
      * @param suffix         the user password hash suffix to append
      * @param hash           the expected hashed result
      *
-     * @throws Exception if the user failed authentication
+     * @throws Exception if the authentication failed
      */
     public static void authHash(String id, String suffix, String hash)
     throws Exception {
@@ -287,6 +287,46 @@ public class SecurityContext {
             msg = "invalid password for user " + id;
             LOG.info("failed authentication: " + msg +
                      ", expected: " + test + ", received: " + hash);
+            throw new SecurityException(msg);
+        }
+        authUser.set(user);
+    }
+
+    /**
+     * Authenticates with a user authentication token. This method
+     * will verify that the user exists, is enabled and that the
+     * token is valid for the current user password. After a
+     * successful authentication the current user will be set to the
+     * user in the token.
+     *
+     * @param token          the authentication token
+     *
+     * @throws Exception if the authentication failed
+     */
+    public static void authToken(String token) throws Exception {
+        String[]  parts = User.decodeAuthToken(token);
+        String    id = parts[0];
+        User      user = User.find(dataStorage, id);
+        long      expiry = Long.parseLong(parts[1]);
+        String    msg;
+
+        if (user == null) {
+            msg = "user " + id + " does not exist";
+            LOG.info("failed authentication: " + msg);
+            throw new SecurityException(msg);
+        } else if (!user.isEnabled()) {
+            msg = "user " + id + " is disabled";
+            LOG.info("failed authentication: " + msg);
+            throw new SecurityException(msg);
+        } else if (expiry < System.currentTimeMillis()) {
+            msg = "token has expired";
+            LOG.info("failed authentication: " + msg);
+            throw new SecurityException(msg);
+        } else if (!user.verifyAuthToken(token)) {
+            msg = "invalid auth token for user " + id;
+            LOG.info("failed token authentication: " + msg +
+                     ", expected: " + user.createAuthToken(expiry) +
+                     ", received: " + token);
             throw new SecurityException(msg);
         }
         authUser.set(user);

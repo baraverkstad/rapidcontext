@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2014 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2015 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -41,6 +41,7 @@ import org.rapidcontext.app.proc.ProcedureTypesProcedure;
 import org.rapidcontext.app.proc.ProcedureWriteProcedure;
 import org.rapidcontext.app.proc.ResetProcedure;
 import org.rapidcontext.app.proc.SessionAuthenticateProcedure;
+import org.rapidcontext.app.proc.SessionAuthenticateTokenProcedure;
 import org.rapidcontext.app.proc.SessionCurrentProcedure;
 import org.rapidcontext.app.proc.SessionTerminateProcedure;
 import org.rapidcontext.app.proc.StatusProcedure;
@@ -54,6 +55,7 @@ import org.rapidcontext.app.proc.ThreadCreateProcedure;
 import org.rapidcontext.app.proc.ThreadInterruptProcedure;
 import org.rapidcontext.app.proc.ThreadListProcedure;
 import org.rapidcontext.app.proc.TypeListProcedure;
+import org.rapidcontext.app.proc.UserAuthenticationTokenProcedure;
 import org.rapidcontext.app.proc.UserChangeProcedure;
 import org.rapidcontext.app.proc.UserAccessProcedure;
 import org.rapidcontext.app.proc.UserListProcedure;
@@ -290,6 +292,7 @@ public class ApplicationContext {
             library.addBuiltIn(new ProcedureDeleteProcedure());
             library.addBuiltIn(new ResetProcedure());
             library.addBuiltIn(new SessionAuthenticateProcedure());
+            library.addBuiltIn(new SessionAuthenticateTokenProcedure());
             library.addBuiltIn(new SessionCurrentProcedure());
             library.addBuiltIn(new SessionTerminateProcedure());
             library.addBuiltIn(new StatusProcedure());
@@ -304,6 +307,7 @@ public class ApplicationContext {
             library.addBuiltIn(new ThreadListProcedure());
             library.addBuiltIn(new TypeListProcedure());
             library.addBuiltIn(new UserAccessProcedure());
+            library.addBuiltIn(new UserAuthenticationTokenProcedure());
             library.addBuiltIn(new UserChangeProcedure());
             library.addBuiltIn(new UserListProcedure());
             library.addBuiltIn(new UserPasswordChangeProcedure());

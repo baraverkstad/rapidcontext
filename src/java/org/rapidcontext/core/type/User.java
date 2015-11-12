@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2015 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -109,6 +109,32 @@ public class User extends StorableObject {
         throws StorageException {
 
         storage.store(user.path(), user);
+    }
+
+    /**
+     * Decodes a user authentication token.
+     *
+     * @param token          the token string
+     *
+     * @return the array of user id, expiry time and validation hash
+     */
+    public static String[] decodeAuthToken(String token) {
+        String raw = new String(BinaryUtil.decodeBase64(token));
+        return raw.split(":", 3);
+    }
+
+    /**
+     * Encodes a user authentication token.
+     *
+     * @param id             the user id
+     * @param expiry         the expire timestamp (in millis)
+     * @param hash           the data validation hash
+     *
+     * @return the authentication token to be used for login
+     */
+    public static String encodeAuthToken(String id, long expiry, String hash) {
+        String raw = id + ':' + expiry + ':' + hash;
+        return BinaryUtil.encodeBase64(raw.getBytes());
     }
 
     /**
@@ -280,7 +306,7 @@ public class User extends StorableObject {
             String str = id() + ":" + realm() + ":" + password;
             setPasswordHash(BinaryUtil.hashMD5(str));
         } catch (Exception e) {
-            LOG.severe("failed to create MD5 password hash: " + e.getMessage());
+            LOG.severe("failed to create password hash: " + e.getMessage());
         }
     }
 
@@ -299,6 +325,44 @@ public class User extends StorableObject {
     public boolean verifyPasswordHash(String passwordHash) {
         String hash = passwordHash();
         return isEnabled() && (hash.length() == 0 || hash.equals(passwordHash));
+    }
+
+    /**
+     * Creates an authentication token for this user. The token contains the
+     * user id, an expire timestamp and a validation hash containing both
+     * these values and the current user password. The authentication token
+     * can be used for password recovery via email or some other out-of-band
+     * delivery mechanism.
+     *
+     * @param expiryTime     the authentication token expire time (in millis)
+     *
+     * @return the authentication token
+     */
+    public String createAuthToken(long expiryTime) {
+        try {
+            String str = id() + ":" + expiryTime + ":" + passwordHash();
+            String hash = BinaryUtil.hashSHA256(str);
+            return encodeAuthToken(id(), expiryTime, hash);
+        } catch (Exception e) {
+            LOG.severe("failed to create auth token: " + e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Verifies that the specified authentication token is valid for this user.
+     *
+     * @param token          the authentication token
+     *
+     * @return true if the token is valid, or
+     *         false otherwise
+     */
+    public boolean verifyAuthToken(String token) {
+        String[]  parts = User.decodeAuthToken(token);
+        long      expiry = Long.parseLong(parts[1]);
+        boolean   isExpired = expiry < System.currentTimeMillis();
+
+        return isEnabled() && !isExpired && createAuthToken(expiry).equals(token);
     }
 
     /**
