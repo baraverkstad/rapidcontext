@@ -80,10 +80,15 @@ roles:</p>
       <var>admin</var> role. It is good practice to either disable this user
       or assign it a proper password.</li>
   <li><strong><var>admin</var> (role)</strong> &mdash; A built-in role that
-      provides full system access, everywhere. This role is required in order
-      to modify procedures, manage plug-ins, and all similar administrative
-      operations. This role <strong>should not be modified or removed</strong>
-      from the system. Instead, it should be assigned to users with care.</li>
+      provides full access to all objects. This role <strong>should not be
+      modified or removed</strong> from the system. Instead, it should be
+      assigned to users with care. In most installations, it should be the
+      only role with access to modify procedures, manage plug-ins, and
+      similar administrative operations.</li>
+  <li><strong><var>anonymous</var> (role)</strong> &mdash; A built-in role that
+      provides anonymous (i.e. public) access to system procedures and some
+      built-in apps. This role is required for the login app to function
+      properly.</li>
 </ul>
 
 <div class="box red" style="margin-top: 0;">
@@ -103,9 +108,8 @@ roles:</p>
 
 <h2 id="user_authentication">3.2. User Authentication</h2>
 
-<p>RapidContext require all users to authenticate with user name and password.
-The following protocols for user authentication are built-in and supported
-by default:</p>
+<p>RapidContext supports both authenticated and anonymous usage. The following
+protocols for user authentication are built-in and supported by default:</p>
 
 <ul class="box yellow">
   <li><strong>HTTP Digest Auth</strong> &mdash; Uses a browser built-in login
@@ -115,6 +119,10 @@ by default:</p>
       Uses HTTP POST to call a procedure with an MD5 hash similar to HTTP
       digest auth. This method uses a challenge-response scheme that avoids
       sending the password over the wire.</li>
+  <li><strong><var>System.Session.AuthenticateToken</var> Procedure</strong>
+      &mdash; Uses HTTP POST to call a procedure with an authentication token
+      that contains both user id and a password equivalent. This method is
+      used for "password recovery" via email or similar.</li>
 </ul>
 
 <div class="box red" style="margin-top: 0;">
@@ -270,6 +278,17 @@ users via the <var>auto</var> property:</p>
       users, regardless of their other roles. This is used to add permissions
       to logged in users.</li>
 </ul>
+
+<div class="box red" style="margin-top: 0;">
+  <i class="box-icon fa fa-minus-circle"></i>
+  <div class="box-content">
+    <h2 style="margin: 0;">Security Notice</h2>
+    <p>The <var>read</var> permission <strong>should not be provided for user
+    objects</strong>. Doing so allows other users to read the password hash
+    or to create new authentication tokens. Both would allow login access for
+    the user in question.</p>
+  </div>
+</div>
 
 
 <h2 id="role_management">3.6. Role Management &amp; Storage</h2>
