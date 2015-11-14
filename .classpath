@@ -15,5 +15,6 @@
 	<classpathentry kind="lib" path="lib/commons-pool-1.5.5.jar"/>
 	<classpathentry kind="lib" path="lib/uuid-2.1.5.jar"/>
 	<classpathentry kind="lib" path="lib/js-1.7R3.jar"/>
+	<classpathentry kind="lib" path="lib/commons-codec-1.6.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

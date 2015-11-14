@@ -18,6 +18,8 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import org.apache.commons.codec.binary.Base64;
+
 /**
  * A set of utility methods for handling binary data.
  *
@@ -41,7 +43,7 @@ public class BinaryUtil {
      */
     public static String hashMD5(String input)
     throws NoSuchAlgorithmException, UnsupportedEncodingException {
-        return toHexString(hashBytes("MD5", input.getBytes("UTF-8")));
+        return encodeHexString(hashBytes("MD5", input.getBytes("UTF-8")));
     }
 
     /**
@@ -59,7 +61,7 @@ public class BinaryUtil {
      */
     public static String hashSHA256(String input)
     throws NoSuchAlgorithmException, UnsupportedEncodingException {
-        return toHexString(hashBytes("SHA-256", input.getBytes("UTF-8")));
+        return encodeHexString(hashBytes("SHA-256", input.getBytes("UTF-8")));
     }
 
     /**
@@ -81,18 +83,40 @@ public class BinaryUtil {
     }
 
     /**
-     * Converts a byte array to a string with hexadecimal numbers.
+     * Encodes a byte array to a string with hexadecimal numbers.
      *
      * @param data           the byte array
      *
      * @return the hexadecimal string with the converted data
      */
-    public static String toHexString(byte[] data) {
+    public static String encodeHexString(byte[] data) {
         StringBuffer hexString = new StringBuffer();
         for (int i = 0; i < data.length; i++) {
             hexString.append(Character.forDigit(data[i] & 0xF0 >> 4, 16));
             hexString.append(Character.forDigit(data[i] & 0x0F, 16));
         }
         return hexString.toString();
+    }
+
+    /**
+     * Encodes a byte array to a string with Base64 characters (websafe).
+     *
+     * @param data           the byte array
+     *
+     * @return the Base64 string with the converted data
+     */
+    public static String encodeBase64(byte[] data) {
+        return Base64.encodeBase64URLSafeString(data);
+    }
+
+    /**
+     * Decodes a Base64 string back to the original byte array.
+     *
+     * @param data           the Base64-encoded string
+     *
+     * @return the decoded original byte array
+     */
+    public static byte[] decodeBase64(String data) {
+        return Base64.decodeBase64(data);
     }
 }
