@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2015 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -27,60 +27,57 @@ import java.security.NoSuchAlgorithmException;
 public class BinaryUtil {
 
     /**
-     * Performs an MD5 digest hash on the specified input string. The
-     * result will be returned as an hexadecimal string.
+     * Calculates the MD5 digest hash on the UTF-8 encoding of an input string.
+     * The result will be returned as an hexadecimal string.
      *
      * @param input          the input string
      *
      * @return the hexadecimal string with the MD5 hash
      *
      * @throws NoSuchAlgorithmException if the MD5 algorithm isn't
-     *             available
+     *             available (should be RuntimeException)
+     * @throws UnsupportedEncodingException if the UTF-8 encoding isn't
+     *             available (should be RuntimeException)
      */
-    public static String hashMD5(String input) throws NoSuchAlgorithmException {
-        try {
-            return toHexString(hashMD5(input.getBytes("UTF-8")));
-        } catch (UnsupportedEncodingException e) {
-            return toHexString(hashMD5(input.getBytes()));
-        }
+    public static String hashMD5(String input)
+    throws NoSuchAlgorithmException, UnsupportedEncodingException {
+        return toHexString(hashBytes("MD5", input.getBytes("UTF-8")));
     }
 
     /**
-     * Performs an MD5 digest hash on the specified byte array.
+     * Calculates the SHA-256 digest hash on the UTF-8 encoding of an input
+     * string. The result will be returned as an hexadecimal string.
      *
+     * @param input          the input string
+     *
+     * @return the hexadecimal string with the SHA-256 hash
+     *
+     * @throws NoSuchAlgorithmException if the SHA-256 algorithm isn't
+     *             available (should be RuntimeException)
+     * @throws UnsupportedEncodingException if the UTF-8 encoding isn't
+     *             available (should be RuntimeException)
+     */
+    public static String hashSHA256(String input)
+    throws NoSuchAlgorithmException, UnsupportedEncodingException {
+        return toHexString(hashBytes("SHA-256", input.getBytes("UTF-8")));
+    }
+
+    /**
+     * Performs a digest hash on the specified byte array.
+     *
+     * @param alg            the hash algorithm (e.g. "MD5" or "SHA-256")
      * @param data           the data to hash
      *
-     * @return the MD5 hash of the data
+     * @return the digest hash of the data
      *
-     * @throws NoSuchAlgorithmException if the MD5 algorithm isn't
-     *             available
+     * @throws NoSuchAlgorithmException if the hash algorithm isn't available
      */
-    public static byte[] hashMD5(byte[] data) throws NoSuchAlgorithmException {
-        MessageDigest digest = MessageDigest.getInstance("MD5");
+    public static byte[] hashBytes(String alg, byte[] data)
+    throws NoSuchAlgorithmException {
+        MessageDigest digest = MessageDigest.getInstance(alg);
         digest.reset();
         digest.update(data);
         return digest.digest();
-    }
-
-    /**
-     * Converts a string with hexadecimal numbers to a byte array.
-     *
-     * @param hexString      the hexadecimal string
-     *
-     * @return the byte array with the converted data
-     */
-    public static byte[] toBytes(String hexString) {
-        int     len = hexString.length();
-        byte[]  data = new byte[len / 2];
-        int     high;
-        int     low;
-
-        for (int i = 0; i < len; i += 2) {
-            high = Character.digit(hexString.charAt(i), 16);
-            low = Character.digit(hexString.charAt(i+1), 16);
-            data[i / 2] = (byte) ((high << 4) + low);
-        }
-        return data;
     }
 
     /**
@@ -91,15 +88,10 @@ public class BinaryUtil {
      * @return the hexadecimal string with the converted data
      */
     public static String toHexString(byte[] data) {
-        StringBuffer  hexString = new StringBuffer();
-        String        str;
-
+        StringBuffer hexString = new StringBuffer();
         for (int i = 0; i < data.length; i++) {
-            str = Integer.toHexString(data[i] & 0xFF);
-            if (str.length() < 2) {
-                hexString.append("0");
-            }
-            hexString.append(str);
+            hexString.append(Character.forDigit(data[i] & 0xF0 >> 4, 16));
+            hexString.append(Character.forDigit(data[i] & 0x0F, 16));
         }
         return hexString.toString();
     }
