@@ -493,45 +493,53 @@ RapidContext.App.callProc = function (name, args) {
  * Performs an asynchronous login. This function returns a deferred object
  * that will produce either a `callback` or an `errback` depending on the
  * success of the login attempt. If the current session is already bound to a
- * user, that session will be terminated and a new one will be created.
+ * user, that session will be terminated and a new one will be created. If an
+ * authentication token is specified, the login and password fields are not
+ * used (can be null).
  *
  * @param {String} login the user login name or email address
  * @param {String} password the password to autheticate the user
+ * @param {String} [token] the authentication token to indentify user/password
  *
  * @return {Deferred} a `MochiKit.Async.Deferred` object that will
  *         callback with the response data on success
  */
-RapidContext.App.login = function (login, password) {
+RapidContext.App.login = function (login, password, token) {
     var d = MochiKit.Async.wait(0, false);
     var user = RapidContext.App.user();
     if (user && user.id) {
         d.addCallback(RapidContext.App.logout);
     }
-    d.addCallback(function () {
-        return RapidContext.App.callProc("System.Session.Current");
-    });
-    if (/@/.test(login)) {
-        var s;
-        d.addCallback(function (session) {
-            s = session;
-            return RapidContext.App.callProc("System.User.Search", [login]);
+    if (token) {
+        d.addCallback(function () {
+            var args = [token];
+            return RapidContext.App.callProc("System.Session.AuthenticateToken", args);
         });
-        d.addCallback(function (user) {
-            if (user && user.id) {
-                login = user.id;
-                return s;
-            } else {
-                throw new Error("no user with that email address");
-            }
+    } else {
+        if (/@/.test(login)) {
+            d.addCallback(function () {
+                return RapidContext.App.callProc("System.User.Search", [login]);
+            });
+            d.addCallback(function (user) {
+                if (user && user.id) {
+                    login = user.id;
+                    return login;
+                } else {
+                    throw new Error("no user with that email address");
+                }
+            });
+        }
+        d.addCallback(function () {
+            return RapidContext.App.callProc("System.Session.Current");
+        });
+        d.addCallback(function (session) {
+            var realm = RapidContext.App.status().realm;
+            var hash = CryptoJS.MD5(login + ":" + realm + ":" + password);
+            hash = CryptoJS.MD5(hash.toString() + ":" + session.nonce).toString();
+            var args = [login, session.nonce, hash];
+            return RapidContext.App.callProc("System.Session.Authenticate", args);
         });
     }
-    d.addCallback(function (session) {
-        var realm = RapidContext.App.status().realm;
-        var hash = CryptoJS.MD5(login + ":" + realm + ":" + password);
-        hash = CryptoJS.MD5(hash.toString() + ":" + session.nonce).toString();
-        var args = [login, session.nonce, hash];
-        return RapidContext.App.callProc("System.Session.Authenticate", args);
-    });
     return d;
 };
 
