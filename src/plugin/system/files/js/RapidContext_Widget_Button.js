@@ -45,7 +45,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  * <Button id="closeBtn" icon="OK" highlight="true">Close</Button>
  */
 RapidContext.Widget.Button = function (attrs/*, ...*/) {
-    var o = MochiKit.DOM.BUTTON();
+    var o = MochiKit.DOM.BUTTON({ type: attrs.type || "button" });
     RapidContext.Widget._widgetMixin(o, arguments.callee);
     o.addClass("widgetButton");
     o.setAttrs(attrs);
