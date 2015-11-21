@@ -92,7 +92,7 @@ public class BinaryUtil {
     public static String encodeHexString(byte[] data) {
         StringBuffer hexString = new StringBuffer();
         for (int i = 0; i < data.length; i++) {
-            hexString.append(Character.forDigit(data[i] & 0xF0 >> 4, 16));
+            hexString.append(Character.forDigit((data[i] & 0xF0) >> 4, 16));
             hexString.append(Character.forDigit(data[i] & 0x0F, 16));
         }
         return hexString.toString();
