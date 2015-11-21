@@ -48,7 +48,7 @@ public class UserPasswordChangeProcedure implements Procedure {
         defaults.set("oldHash", Bindings.ARGUMENT, "",
                      "The hexadecimal MD5 hash of the current password. The " +
                      "MD5 hash is calculated from a string on the form " +
-                     "'<userId>:<realm>:<password>'.");
+                     "'<userId>:<realm>:<password>'. A login token may be used.");
         defaults.set("newHash", Bindings.ARGUMENT, "",
                      "The hexadecimal MD5 hash of the new password. The MD5 " +
                      "hash is calculated from a string on the form " +
@@ -110,7 +110,7 @@ public class UserPasswordChangeProcedure implements Procedure {
             throw new ProcedureException("user must be logged in");
         }
         String oldHash = bindings.getValue("oldHash").toString();
-        if (!user.verifyPasswordHash(oldHash)) {
+        if (!user.verifyPasswordHash(oldHash) && !user.verifyAuthToken(oldHash)) {
             throw new ProcedureException("invalid current password");
         }
         String newHash = bindings.getValue("newHash").toString();
