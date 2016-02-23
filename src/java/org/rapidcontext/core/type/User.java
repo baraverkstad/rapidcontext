@@ -359,7 +359,7 @@ public class User extends StorableObject {
      */
     public boolean verifyAuthToken(String token) {
         String[]  parts = User.decodeAuthToken(token);
-        long      expiry = Long.parseLong(parts[1]);
+        long      expiry = parts.length <= 1 ? 0L : Long.parseLong(parts[1]);
         boolean   isExpired = expiry < System.currentTimeMillis();
 
         return isEnabled() && !isExpired && createAuthToken(expiry).equals(token);
