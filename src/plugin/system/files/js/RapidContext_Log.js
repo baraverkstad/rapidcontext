@@ -238,6 +238,44 @@
     }
 
     /**
+     * Logs a number of browser meta-data parameters (INFO level).
+     *
+     * @memberof RapidContext.Log
+     */
+    function logBrowserInfo() {
+        function copy(obj, keys) {
+            var res = {};
+            for (var i = 0; i < keys.length; i++) {
+                var k = keys[i];
+                res[k] = obj[k];
+            }
+            return res;
+        }
+        context('Browser')
+        logInfo("location.href", location.href);
+        logInfo("navigator.userAgent", navigator.userAgent);
+        logInfo("navigator.language", navigator.language);
+        logInfo("screen", copy(screen, ["width", "height", "colorDepth"]));
+        logInfo("window", copy(window, ["innerWidth", "innerHeight", "devicePixelRatio"]));
+        logInfo("document.cookie", document.cookie);
+        context(null);
+    }
+
+    /**
+     * Handles window.onerror events (global uncaught errors).
+     */
+    function _windowErrorHandler(msg, src, line, col, error) {
+        var location = "unknown source";
+        if (error && error.stack) {
+            location = error.stack;
+        } else if (src && src !== "undefined") {
+            location = [src, line || 0, col || 0].join(':');
+        }
+        logError(msg, location);
+        return true;
+    }
+
+    /**
      * Modifies the `console` object for logging. This replaces the default
      * `console.error`, `console.warn`, `console.info`, `console.log` and
      * `console.debug` functions (if not previously modified).
@@ -372,26 +410,15 @@
             }
             return "[" + arr.join(", ") + "]";
         } else {
-            var indent = "";
-            for (var i = 0; i < depth; i++) {
-                indent += "    ";
-            }
-            var newline = "\n    " + indent;
             var arr = [];
             for (var k in o) {
-                if (arr.length > 0) {
-                    arr.push(",");
-                }
-                if (arr.length > 99) {
-                    arr.push(newline, "...");
+                if (arr.length > 20) {
+                    arr.push("...");
                     break;
                 }
-                arr.push(newline, k, ": ", _stringify(o[k], depth + 1));
+                arr.push(k + ": " + _stringify(o[k], depth + 1));
             }
-            if (arr.length > 0) {
-                arr.push("\n", indent);
-            }
-            return "{" + arr.join("") + "}";
+            return "{" + arr.join(", ") + "}";
         }
     }
 
@@ -408,9 +435,13 @@
     module.warn = logWarn;
     module.info = logInfo;
     module.log = module.debug = module.trace = logDebug;
+    module.logBrowserInfo = logBrowserInfo;
     module.stringify = stringify;
 
     // Modify global console object
     _consoleSetup();
+
+    // Install global error handler
+    window.onerror = _windowErrorHandler;
 
 })(this);
