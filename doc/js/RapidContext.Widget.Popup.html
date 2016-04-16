@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="JsDoc Toolkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="../css/style.css" type="text/css">
+    <link rel="stylesheet" href="../css/font-awesome-4.3.0.min.css" type="text/css">
+    <link rel="shortcut icon" type="image/x-icon" href="../images/logotype-icon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="../images/logotype-icon-16x16.png">
+    <link rel="icon" type="image/png" sizes="256x256" href="../images/logotype-icon-256x256.png">
+    <link rel="apple-touch-icon" sizes="256x256" href="../images/logotype-icon-256x256.png">
+    <title>RapidContext :: RapidContext.Widget.Popup</title>
+  </head>
+  <body class="doc">
+        <section class="header">
+      <div class="center">
+        <a href="http://www.rapidcontext.com/" class="logotype">
+          <img src="../images/logotype-icon-256x256.png" style="width: 128px; height: 128px;" />
+        </a>
+        <div class="text">
+          <a href="http://www.rapidcontext.com/">
+            <span style="font-size: 50px;">RapidContext</span><br/>
+            <span style="font-size: 24px; color: #caf3ff;">Access &gt; Discovery &gt; Insight</span><br/>
+            <span style="font-size: 18px; letter-spacing: 6px; line-height: 26px;">www.rapidcontext.com</span>
+          </a>
+        </div>
+      </div>
+      <div class="menu">
+        <a href="http://www.rapidcontext.com/doc/index.html">Docs</a>
+        &bull; <a href="https://github.com/cederberg/rapidcontext/releases">Downloads</a>
+        &bull; <a href="https://github.com/cederberg/rapidcontext">Project</a>
+      </div>
+    </section>
+    <section class="content center">
+
+
+<ol class="breadcrumb">
+  <li><a href="../index.html">Documentation</a></li>
+  <li><a href="index.html">JavaScript API</a></li>
+  <li class="active">RapidContext.Widget.Popup</li>
+</ol>
+
+<!--START-->
+
+<!-- ============================== class title ============================ -->
+            <h1 class="classTitle">
+
+                Class RapidContext.Widget.Popup
+            </h1>
+
+<!-- ============================== class summary ========================== -->
+            <p class="description">
+
+                    <i>Extends:</i>
+                    <a href="RapidContext.Widget.html">RapidContext.Widget</a><br /><br />
+
+
+                The popup widget class. Used to provide a popup menu or information
+    area, using a <var>&lt;div&gt;</var> HTML element. The <var>Popup</var> widget will automatically
+    disappear after a configurable amount of time, unless the user performs
+    keyboard or mouse actions related to the popup.
+
+                <br/><br/>
+
+
+                    <i>Source code:</i>
+                    <a href="src/RapidContext_Widget_Popup.js.html">RapidContext_Widget_Popup.js</a>
+
+            </p>
+
+<!-- ============================== constructor summary ==================== -->
+
+            <table class="summaryTable">
+                <caption>Class Summary</caption>
+                <tbody>
+                    <tr>
+                        <td class="attributes">&nbsp;</td>
+                        <td class="nameDescription" >
+                            <div class="fixedFont">
+                                <b><a href="RapidContext.Widget.Popup.html#constructor">RapidContext.Widget.Popup</a></b>(attrs)
+                            </div>
+                            <div class="description">Creates a new popup widget.</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+<!-- ============================== properties summary ===================== -->
+
+
+<!-- ============================== methods summary ======================== -->
+
+
+
+
+                <table class="summaryTable">
+                    <caption>Method Summary</caption>
+                    <tbody>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont"><b><a href="RapidContext.Widget.Popup.html#resetDelay">resetDelay</a></b>()
+                                </div>
+                                <div class="description">Resets the popup auto-hide timer.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont"><b><a href="RapidContext.Widget.Popup.html#selectChild">selectChild</a></b>(indexOrNode)
+                                </div>
+                                <div class="description">Marks a popup child as selected.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont"><b><a href="RapidContext.Widget.Popup.html#selectMove">selectMove</a></b>(offset)
+                                </div>
+                                <div class="description">Moves the current selection by a numeric offset.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont"><b><a href="RapidContext.Widget.Popup.html#selectedChild">selectedChild</a></b>()
+                                </div>
+                                <div class="description">Returns the currently selected child node.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont"><b><a href="RapidContext.Widget.Popup.html#setAttrs">setAttrs</a></b>(attrs)
+                                </div>
+                                <div class="description">Updates the widget or HTML DOM node attributes.</div>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+
+
+                <dl class="inheritsList">
+                <dt>Methods borrowed from class <a href="RapidContext.Widget.html">RapidContext.Widget</a>: </dt><dd><a href="RapidContext.Widget.html#addAll">addAll</a>, <a href="RapidContext.Widget.html#addChildNode">addChildNode</a>, <a href="RapidContext.Widget.html#addClass">addClass</a>, <a href="RapidContext.Widget.html#animate">animate</a>, <a href="RapidContext.Widget.html#blurAll">blurAll</a>, <a href="RapidContext.Widget.html#destroy">destroy</a>, <a href="RapidContext.Widget.html#disable">disable</a>, <a href="RapidContext.Widget.html#enable">enable</a>, <a href="RapidContext.Widget.html#getChildNodes">getChildNodes</a>, <a href="RapidContext.Widget.html#hasClass">hasClass</a>, <a href="RapidContext.Widget.html#hide">hide</a>, <a href="RapidContext.Widget.html#isDisabled">isDisabled</a>, <a href="RapidContext.Widget.html#isHidden">isHidden</a>, <a href="RapidContext.Widget.html#removeAll">removeAll</a>, <a href="RapidContext.Widget.html#removeChildNode">removeChildNode</a>, <a href="RapidContext.Widget.html#removeClass">removeClass</a>, <a href="RapidContext.Widget.html#setStyle">setStyle</a>, <a href="RapidContext.Widget.html#show">show</a>, <a href="RapidContext.Widget.html#toggleClass">toggleClass</a>, <a href="RapidContext.Widget.html#uid">uid</a></dd>
+                </dl>
+
+
+<!-- ============================== events summary ======================== -->
+
+
+
+
+                <table class="summaryTable">
+                    <caption>Event Summary</caption>
+                    <tbody>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont"><b><a href="RapidContext.Widget.Popup.html#event:onhide">onhide</a></b>()
+                                </div>
+                                <div class="description">Emitted when the popup is hidden.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont"><b><a href="RapidContext.Widget.Popup.html#event:onshow">onshow</a></b>()
+                                </div>
+                                <div class="description">Emitted when the popup is shown.</div>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+
+
+                <dl class="inheritsList">
+
+                </dl>
+
+
+
+<!-- ============================== constructor details ==================== -->
+
+            <div id="constructor" class="details">
+                <div class="sectionTitle">
+                    Class Detail
+                </div>
+
+                <div class="fixedFont">
+                        <b>RapidContext.Widget.Popup</b>(attrs)
+                </div>
+
+                <div class="description">
+                    Creates a new popup widget.
+
+                </div>
+
+
+
+                <pre class="code"><span class="label">JavaScript:</span>
+var attrs1 = { value: 1, "class": "widgetPopupItem" };
+var attrs2 = { value: 2, "class": "widgetPopupItem" };
+var attrs3 = { value: 3, "class": "widgetPopupItem widgetPopupDisabled" };
+var item1 = MochiKit.DOM.DIV(attrs1, "First Item");
+var item2 = MochiKit.DOM.DIV(attrs2, "Second Item");
+var item3 = MochiKit.DOM.DIV(attrs3, "Third Item");
+var hr = MochiKit.DOM.HR();
+var examplePopup = RapidContext.Widget.Popup({}, item1, item2, hr, item3);</pre>
+
+                <pre class="code"><span class="label">User Interface XML:</span>
+&lt;Popup id="examplePopup"&gt;
+  &lt;div value="1" class="widgetPopupItem"&gt;&amp;#187; First Item&lt;/div&gt;
+  &lt;div value="2" class="widgetPopupItem"&gt;&amp;#187; Second Item&lt;/div&gt;
+  &lt;hr /&gt;
+  &lt;div value="3" class="widgetPopupItem widgetPopupDisabled"&gt;&amp;#187; Third Item&lt;/div&gt;
+&lt;/Popup&gt;</pre>
+
+
+
+
+
+                        <dl class="detailList">
+                        <dt class="heading">Parameters:</dt>
+
+                            <dt>
+                                <span class="light fixedFont">{Object}</span>  <b>attrs</b>
+
+                            </dt>
+                                <dd>the widget and node attributes</dd>
+
+                            <dt>
+                                <span class="light fixedFont">{Number}</span>  <b>attrs.delay</b>
+                                <i>Optional</i>
+                            </dt>
+                                <dd>the widget auto-hide delay in
+           milliseconds, defaults to <var>5000</var></dd>
+
+                            <dt>
+                                <span class="light fixedFont">{Object}</span>  <b>attrs.showAnim</b>
+                                <i>Optional</i>
+                            </dt>
+                                <dd>the optional animation options
+              when showing the popup, defaults to none</dd>
+
+                            <dt>
+                                <span class="light fixedFont">{Object}</span>  <b>attrs.hideAnim</b>
+                                <i>Optional</i>
+                            </dt>
+                                <dd>the optional animation options
+           when hiding the popup, defaults to none</dd>
+
+                            <dt>
+                                <span class="light fixedFont">{Boolean}</span>  <b>attrs.hidden</b>
+                                <i>Optional</i>
+                            </dt>
+                                <dd>the hidden widget flag, defaults to <var>true</var></dd>
+
+                            <dt>
+                                <span class="light fixedFont">{Widget}</span>  <b>...</b>
+                                <i>Optional</i>
+                            </dt>
+                                <dd>the child widgets or DOM nodes</dd>
+
+                        </dl>
+
+
+
+
+
+                        <dl class="detailList">
+                        <dt class="heading">Returns:</dt>
+
+                                <dd><span class="light fixedFont">{Widget}</span> the widget DOM node</dd>
+
+                        </dl>
+
+
+
+
+            </div>
+
+
+<!-- ============================== field details ========================== -->
+
+
+<!-- ============================== method details ========================= -->
+
+                <div class="sectionTitle">
+                    Method Detail
+                </div>
+
+                    <div id="setAttrs" class="fixedFont">
+
+
+                    <b>setAttrs</b>(attrs)
+
+                    </div>
+                    <div class="description">
+                        Updates the widget or HTML DOM node attributes.
+
+
+                    </div>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{Object}</span> <b>attrs</b>
+
+                                </dt>
+                                <dd>the widget and node attributes to set</dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{Number}</span> <b>attrs.delay</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the widget auto-hide delay in
+           milliseconds, defaults to 5000</dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{Object}</span> <b>attrs.showAnim</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the optional animation options
+              when showing the popup, defaults to none</dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{Object}</span> <b>attrs.hideAnim</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the optional animation options
+           when hiding the popup, defaults to none</dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{Boolean}</span> <b>attrs.hidden</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the hidden widget flag</dd>
+
+                            </dl>
+
+
+
+
+
+
+
+
+                    <hr />
+
+                    <div id="resetDelay" class="fixedFont">
+
+
+                    <b>resetDelay</b>()
+
+                    </div>
+                    <div class="description">
+                        Resets the popup auto-hide timer. Might be called manually when
+receiving events on other widgets related to this one.
+
+
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+                    <hr />
+
+                    <div id="selectedChild" class="fixedFont">
+
+                    <span class="light">{Node}</span>
+                    <b>selectedChild</b>()
+
+                    </div>
+                    <div class="description">
+                        Returns the currently selected child node.
+
+
+                    </div>
+
+
+
+
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Returns:</dt>
+
+                                <dd><span class="light fixedFont">{Node}</span> the currently selected child node, or
+        null if no node is selected</dd>
+
+                            </dl>
+
+
+
+
+                    <hr />
+
+                    <div id="selectChild" class="fixedFont">
+
+
+                    <b>selectChild</b>(indexOrNode)
+
+                    </div>
+                    <div class="description">
+                        Marks a popup child as selected. The currently selected child will
+automatically be unselected by this method.
+
+
+                    </div>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{Number/Node}</span> <b>indexOrNode</b>
+
+                                </dt>
+                                <dd>the child node index or DOM node,
+           use a negative value to unselect</dd>
+
+                            </dl>
+
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Returns:</dt>
+
+                                <dd>the index of the newly selected child, or
+        -1 if none was selected</dd>
+
+                            </dl>
+
+
+
+
+                    <hr />
+
+                    <div id="selectMove" class="fixedFont">
+
+
+                    <b>selectMove</b>(offset)
+
+                    </div>
+                    <div class="description">
+                        Moves the current selection by a numeric offset.
+
+
+                    </div>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{Number}</span> <b>offset</b>
+
+                                </dt>
+                                <dd>the selection offset (a positive or
+           negative number)</dd>
+
+                            </dl>
+
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Returns:</dt>
+
+                                <dd>the index of the newly selected child, or
+        -1 if none was selected</dd>
+
+                            </dl>
+
+
+
+
+
+
+
+
+<!-- ============================== event details ========================= -->
+
+                <div class="sectionTitle">
+                    Event Detail
+                </div>
+
+                    <div id="event:onshow" class="fixedFont">
+
+
+                    <b>onshow</b>()
+
+                    </div>
+                    <div class="description">
+                        Emitted when the popup is shown. This event signal carries no
+event information.
+
+
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+                    <hr />
+
+                    <div id="event:onhide" class="fixedFont">
+
+
+                    <b>onhide</b>()
+
+                    </div>
+                    <div class="description">
+                        Emitted when the popup is hidden. This event signal carries no
+event information.
+
+
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!--END-->
+
+    </section>
+    <section class="footer center fineprint">
+      <hr>
+      Copyright &copy; 2007-2016 Per Cederberg. All rights reserved.
+    </section>
+
+  </body>
+</html>

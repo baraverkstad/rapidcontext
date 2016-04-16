@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="JsDoc Toolkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="../css/style.css" type="text/css">
+    <link rel="stylesheet" href="../css/font-awesome-4.3.0.min.css" type="text/css">
+    <link rel="shortcut icon" type="image/x-icon" href="../images/logotype-icon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="../images/logotype-icon-16x16.png">
+    <link rel="icon" type="image/png" sizes="256x256" href="../images/logotype-icon-256x256.png">
+    <link rel="apple-touch-icon" sizes="256x256" href="../images/logotype-icon-256x256.png">
+    <title>RapidContext :: RapidContext.Widget.NavigationBar</title>
+  </head>
+  <body class="doc">
+        <section class="header">
+      <div class="center">
+        <a href="http://www.rapidcontext.com/" class="logotype">
+          <img src="../images/logotype-icon-256x256.png" style="width: 128px; height: 128px;" />
+        </a>
+        <div class="text">
+          <a href="http://www.rapidcontext.com/">
+            <span style="font-size: 50px;">RapidContext</span><br/>
+            <span style="font-size: 24px; color: #caf3ff;">Access &gt; Discovery &gt; Insight</span><br/>
+            <span style="font-size: 18px; letter-spacing: 6px; line-height: 26px;">www.rapidcontext.com</span>
+          </a>
+        </div>
+      </div>
+      <div class="menu">
+        <a href="http://www.rapidcontext.com/doc/index.html">Docs</a>
+        &bull; <a href="https://github.com/cederberg/rapidcontext/releases">Downloads</a>
+        &bull; <a href="https://github.com/cederberg/rapidcontext">Project</a>
+      </div>
+    </section>
+    <section class="content center">
+
+
+<ol class="breadcrumb">
+  <li><a href="../index.html">Documentation</a></li>
+  <li><a href="index.html">JavaScript API</a></li>
+  <li class="active">RapidContext.Widget.NavigationBar</li>
+</ol>
+
+<!--START-->
+
+<!-- ============================== class title ============================ -->
+            <h1 class="classTitle">
+
+                Class RapidContext.Widget.NavigationBar
+            </h1>
+
+<!-- ============================== class summary ========================== -->
+            <p class="description">
+
+                    <i>Extends:</i>
+                    <a href="RapidContext.Widget.html">RapidContext.Widget</a><br /><br />
+
+
+                The navigation bar widget class. Used to show step-based progress or
+    location in a tree structure. In both cases, it allows the user to go
+    back to a previous step. The widget uses a <var>&lt;table&gt;</var> HTML element.
+
+                <br/><br/>
+
+
+                    <i>Source code:</i>
+                    <a href="src/RapidContext_Widget_NavigationBar.js.html">RapidContext_Widget_NavigationBar.js</a>
+
+            </p>
+
+<!-- ============================== constructor summary ==================== -->
+
+            <table class="summaryTable">
+                <caption>Class Summary</caption>
+                <tbody>
+                    <tr>
+                        <td class="attributes">&nbsp;</td>
+                        <td class="nameDescription" >
+                            <div class="fixedFont">
+                                <b><a href="RapidContext.Widget.NavigationBar.html#constructor">RapidContext.Widget.NavigationBar</a></b>(attrs)
+                            </div>
+                            <div class="description">Creates a new navigation bar widget.</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+<!-- ============================== properties summary ===================== -->
+
+
+
+
+                <table class="summaryTable">
+                    <caption>Field Summary</caption>
+                    <tbody>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont">
+                                <b><a href="RapidContext.Widget.NavigationBar.html#maxPosition">maxPosition</a></b>
+                                </div>
+                                <div class="description">The maximum position reached when
+    navigating.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont">
+                                <b><a href="RapidContext.Widget.NavigationBar.html#path">path</a></b>
+                                </div>
+                                <div class="description">The path being navigated.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont">
+                                <b><a href="RapidContext.Widget.NavigationBar.html#position">position</a></b>
+                                </div>
+                                <div class="description">The current position in the path (from 0)</div>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+
+
+                <dl class="inheritsList">
+
+                </dl>
+
+
+
+<!-- ============================== methods summary ======================== -->
+
+
+
+
+                <table class="summaryTable">
+                    <caption>Method Summary</caption>
+                    <tbody>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont"><b><a href="RapidContext.Widget.NavigationBar.html#moveTo">moveTo</a></b>(pos, path)
+                                </div>
+                                <div class="description">Moves the navigation bar to the specified position in the path.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont"><b><a href="RapidContext.Widget.NavigationBar.html#reset">reset</a></b>()
+                                </div>
+                                <div class="description">Resets the position and maximum position counters and moves to
+the first step in the path.</div>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+
+
+                <dl class="inheritsList">
+                <dt>Methods borrowed from class <a href="RapidContext.Widget.html">RapidContext.Widget</a>: </dt><dd><a href="RapidContext.Widget.html#addAll">addAll</a>, <a href="RapidContext.Widget.html#addChildNode">addChildNode</a>, <a href="RapidContext.Widget.html#addClass">addClass</a>, <a href="RapidContext.Widget.html#animate">animate</a>, <a href="RapidContext.Widget.html#blurAll">blurAll</a>, <a href="RapidContext.Widget.html#destroy">destroy</a>, <a href="RapidContext.Widget.html#disable">disable</a>, <a href="RapidContext.Widget.html#enable">enable</a>, <a href="RapidContext.Widget.html#getChildNodes">getChildNodes</a>, <a href="RapidContext.Widget.html#hasClass">hasClass</a>, <a href="RapidContext.Widget.html#hide">hide</a>, <a href="RapidContext.Widget.html#isDisabled">isDisabled</a>, <a href="RapidContext.Widget.html#isHidden">isHidden</a>, <a href="RapidContext.Widget.html#removeAll">removeAll</a>, <a href="RapidContext.Widget.html#removeChildNode">removeChildNode</a>, <a href="RapidContext.Widget.html#removeClass">removeClass</a>, <a href="RapidContext.Widget.html#setAttrs">setAttrs</a>, <a href="RapidContext.Widget.html#setStyle">setStyle</a>, <a href="RapidContext.Widget.html#show">show</a>, <a href="RapidContext.Widget.html#toggleClass">toggleClass</a>, <a href="RapidContext.Widget.html#uid">uid</a></dd>
+                </dl>
+
+
+<!-- ============================== events summary ======================== -->
+
+
+
+
+                <table class="summaryTable">
+                    <caption>Event Summary</caption>
+                    <tbody>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont"><b><a href="RapidContext.Widget.NavigationBar.html#event:onchange">onchange</a></b>()
+                                </div>
+                                <div class="description">Emitted when the navigation position changes.</div>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+
+
+                <dl class="inheritsList">
+
+                </dl>
+
+
+
+<!-- ============================== constructor details ==================== -->
+
+            <div id="constructor" class="details">
+                <div class="sectionTitle">
+                    Class Detail
+                </div>
+
+                <div class="fixedFont">
+                        <b>RapidContext.Widget.NavigationBar</b>(attrs)
+                </div>
+
+                <div class="description">
+                    Creates a new navigation bar widget.
+
+                </div>
+
+
+
+                <pre class="code"><span class="label">JavaScript:</span>
+var navBar = RapidContext.NavigationBar();
+navBar.moveTo(0, ["Step 1", "Step 2", "Step 3"]);</pre>
+
+                <pre class="code"><span class="label">User Interface XML:</span>
+&lt;NavigationBar id="navBar" /&gt;
+&lt;!-- No support for menu items in XML yet --&gt;</pre>
+
+
+
+
+
+                        <dl class="detailList">
+                        <dt class="heading">Parameters:</dt>
+
+                            <dt>
+                                <span class="light fixedFont">{Object}</span>  <b>attrs</b>
+
+                            </dt>
+                                <dd>the widget and node attributes</dd>
+
+                            <dt>
+                                <span class="light fixedFont">{Boolean}</span>  <b>attrs.hidden</b>
+                                <i>Optional</i>
+                            </dt>
+                                <dd>the hidden widget flag, defaults to false</dd>
+
+                        </dl>
+
+
+
+
+
+                        <dl class="detailList">
+                        <dt class="heading">Returns:</dt>
+
+                                <dd><span class="light fixedFont">{Widget}</span> the widget DOM node</dd>
+
+                        </dl>
+
+
+
+
+            </div>
+
+
+<!-- ============================== field details ========================== -->
+
+                <div class="sectionTitle">
+                    Field Detail
+                </div>
+
+                    <div id="position" class="fixedFont">
+
+                    <span class="light">{Number}</span>
+                    <b>position</b>
+
+                    </div>
+                    <div class="description">
+                        The current position in the path (from 0)
+
+
+                    </div>
+
+
+
+
+
+
+
+
+                    <hr />
+
+                    <div id="maxPosition" class="fixedFont">
+
+                    <span class="light">{Number}</span>
+                    <b>maxPosition</b>
+
+                    </div>
+                    <div class="description">
+                        The maximum position reached when
+    navigating.
+
+
+                    </div>
+
+
+
+
+
+
+
+
+                    <hr />
+
+                    <div id="path" class="fixedFont">
+
+                    <span class="light">{Array}</span>
+                    <b>path</b>
+
+                    </div>
+                    <div class="description">
+                        The path being navigated.
+
+
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- ============================== method details ========================= -->
+
+                <div class="sectionTitle">
+                    Method Detail
+                </div>
+
+                    <div id="reset" class="fixedFont">
+
+
+                    <b>reset</b>()
+
+                    </div>
+                    <div class="description">
+                        Resets the position and maximum position counters and moves to
+the first step in the path.
+
+
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+                    <hr />
+
+                    <div id="moveTo" class="fixedFont">
+
+
+                    <b>moveTo</b>(pos, path)
+
+                    </div>
+                    <div class="description">
+                        Moves the navigation bar to the specified position in the path.
+Optionally a new path may also be provided.
+
+
+                    </div>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{Number}</span> <b>pos</b>
+
+                                </dt>
+                                <dd>the new position to move to (from 0)</dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{Array}</span> <b>path</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the new path to navigate</dd>
+
+                            </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- ============================== event details ========================= -->
+
+                <div class="sectionTitle">
+                    Event Detail
+                </div>
+
+                    <div id="event:onchange" class="fixedFont">
+
+
+                    <b>onchange</b>()
+
+                    </div>
+                    <div class="description">
+                        Emitted when the navigation position changes. This is triggered
+either by the user moving forward or backward, or by a call to the
+<var>moveTo()</var> method. This event signal carries a reference to the
+widget itself.
+
+
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!--END-->
+
+    </section>
+    <section class="footer center fineprint">
+      <hr>
+      Copyright &copy; 2007-2016 Per Cederberg. All rights reserved.
+    </section>
+
+  </body>
+</html>

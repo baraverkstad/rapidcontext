@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="JsDoc Toolkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="../css/style.css" type="text/css">
+    <link rel="stylesheet" href="../css/font-awesome-4.3.0.min.css" type="text/css">
+    <link rel="shortcut icon" type="image/x-icon" href="../images/logotype-icon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="../images/logotype-icon-16x16.png">
+    <link rel="icon" type="image/png" sizes="256x256" href="../images/logotype-icon-256x256.png">
+    <link rel="apple-touch-icon" sizes="256x256" href="../images/logotype-icon-256x256.png">
+    <title>RapidContext :: RapidContext.Log</title>
+  </head>
+  <body class="doc">
+        <section class="header">
+      <div class="center">
+        <a href="http://www.rapidcontext.com/" class="logotype">
+          <img src="../images/logotype-icon-256x256.png" style="width: 128px; height: 128px;" />
+        </a>
+        <div class="text">
+          <a href="http://www.rapidcontext.com/">
+            <span style="font-size: 50px;">RapidContext</span><br/>
+            <span style="font-size: 24px; color: #caf3ff;">Access &gt; Discovery &gt; Insight</span><br/>
+            <span style="font-size: 18px; letter-spacing: 6px; line-height: 26px;">www.rapidcontext.com</span>
+          </a>
+        </div>
+      </div>
+      <div class="menu">
+        <a href="http://www.rapidcontext.com/doc/index.html">Docs</a>
+        &bull; <a href="https://github.com/cederberg/rapidcontext/releases">Downloads</a>
+        &bull; <a href="https://github.com/cederberg/rapidcontext">Project</a>
+      </div>
+    </section>
+    <section class="content center">
+
+
+<ol class="breadcrumb">
+  <li><a href="../index.html">Documentation</a></li>
+  <li><a href="index.html">JavaScript API</a></li>
+  <li class="active">RapidContext.Log</li>
+</ol>
+
+<!--START-->
+
+<!-- ============================== class title ============================ -->
+            <h1 class="classTitle">
+
+                Namespace RapidContext.Log
+            </h1>
+
+<!-- ============================== class summary ========================== -->
+            <p class="description">
+
+
+                Provides a logging service for debugging apps and server calls.<br/><br/>All log messages are filtered by log level and either discarded or
+stored to an internal array. This makes it possible to either show these
+in a developer console or to send them to a server for remote storage.<br/><br/>This module also replaces the built-in <var>console.error()</var>, <var>console.warn()</var>,
+<var>console.info()</var> and <var>console.log()</var> functions with its own versions,
+passing through the filtered log messages to the original functions. For
+browsers without a <var>console</var> object, a minimal version is provided.
+
+                <br/><br/>
+
+
+                    <i>Source code:</i>
+                    <a href="src/RapidContext_Log.js.html">RapidContext_Log.js</a>
+
+            </p>
+
+<!-- ============================== constructor summary ==================== -->
+
+            <table class="summaryTable">
+                <caption>Namespace Summary</caption>
+                <tbody>
+                    <tr>
+                        <td class="attributes">&nbsp;</td>
+                        <td class="nameDescription" >
+                            <div class="fixedFont">
+                                <b><a href="RapidContext.Log.html#constructor">RapidContext.Log</a></b>
+                            </div>
+                            <div class="description"></div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+<!-- ============================== properties summary ===================== -->
+
+
+<!-- ============================== methods summary ======================== -->
+
+
+
+
+                <table class="summaryTable">
+                    <caption>Method Summary</caption>
+                    <tbody>
+
+                        <tr>
+                            <td class="attributes">&lt;static&gt; &nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont">RapidContext.Log.<b><a href="RapidContext.Log.html#.clear">clear</a></b>()
+                                </div>
+                                <div class="description">Clears the log console and the array of stored messages.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&lt;static&gt; &nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont">RapidContext.Log.<b><a href="RapidContext.Log.html#.context">context</a></b>(value)
+                                </div>
+                                <div class="description">Returns and optionally sets the current log context.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&lt;static&gt; &nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont">RapidContext.Log.<b><a href="RapidContext.Log.html#.debug">debug</a></b>(msg)
+                                </div>
+                                <div class="description">Logs a debug message with optional data.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&lt;static&gt; &nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont">RapidContext.Log.<b><a href="RapidContext.Log.html#.error">error</a></b>(msg)
+                                </div>
+                                <div class="description">Logs an error message with optional data.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&lt;static&gt; &nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont">RapidContext.Log.<b><a href="RapidContext.Log.html#.history">history</a></b>()
+                                </div>
+                                <div class="description">Returns the history of filtered log entries.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&lt;static&gt; &nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont">RapidContext.Log.<b><a href="RapidContext.Log.html#.info">info</a></b>(msg)
+                                </div>
+                                <div class="description">Logs an information message with optional data.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&lt;static&gt; &nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont">RapidContext.Log.<b><a href="RapidContext.Log.html#.level">level</a></b>(value)
+                                </div>
+                                <div class="description">Returns and optionally sets the current log level.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&lt;static&gt; &nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont">RapidContext.Log.<b><a href="RapidContext.Log.html#.logBrowserInfo">logBrowserInfo</a></b>()
+                                </div>
+                                <div class="description">Logs a number of browser meta-data parameters (INFO level).</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&lt;static&gt; &nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont">RapidContext.Log.<b><a href="RapidContext.Log.html#.stringify">stringify</a></b>(o)
+                                </div>
+                                <div class="description">Creates a string representation (suitable for logging) for any value or
+object.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&lt;static&gt; &nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont">RapidContext.Log.<b><a href="RapidContext.Log.html#.warn">warn</a></b>(msg)
+                                </div>
+                                <div class="description">Logs a warning message with optional data.</div>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+
+
+
+<!-- ============================== events summary ======================== -->
+
+
+<!-- ============================== constructor details ==================== -->
+
+            <div id="constructor" class="details">
+                <div class="sectionTitle">
+                    Namespace Detail
+                </div>
+
+                <div class="fixedFont">
+                        <b>RapidContext.Log</b>
+                </div>
+
+                <div class="description">
+
+
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+            </div>
+
+
+<!-- ============================== field details ========================== -->
+
+
+<!-- ============================== method details ========================= -->
+
+                <div class="sectionTitle">
+                    Method Detail
+                </div>
+
+                    <div id=".clear" class="fixedFont">&lt;static&gt;
+
+
+                    <span class="light">RapidContext.Log.</span><b>clear</b>()
+
+                    </div>
+                    <div class="description">
+                        Clears the log console and the array of stored messages.
+
+
+                    </div>
+
+
+
+
+
+
+
+
+
+
+                            <dl class="detailList linkList">
+                            <dt class="heading">See:</dt>
+
+                                <dd><a href="RapidContext.Log.html#.history">RapidContext.Log.history</a></dd>
+
+                            </dl>
+
+
+                    <hr />
+
+                    <div id=".history" class="fixedFont">&lt;static&gt;
+
+                    <span class="light">{Array}</span>
+                    <span class="light">RapidContext.Log.</span><b>history</b>()
+
+                    </div>
+                    <div class="description">
+                        Returns the history of filtered log entries. Each log entry is a plain
+object with properties -- <var>id</var>, <var>time</var>, <var>level</var>, <var>context</var>, <var>message</var>
+and <var>data</var>.
+
+
+                    </div>
+
+
+
+
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Returns:</dt>
+
+                                <dd><span class="light fixedFont">{Array}</span> the array of log entries</dd>
+
+                            </dl>
+
+
+
+
+                    <hr />
+
+                    <div id=".level" class="fixedFont">&lt;static&gt;
+
+                    <span class="light">{String}</span>
+                    <span class="light">RapidContext.Log.</span><b>level</b>(value)
+
+                    </div>
+                    <div class="description">
+                        Returns and optionally sets the current log level. The supported log
+level values are -- <q>none</q>, <q>error</q>, <q>warn</q>, <q>info</q>, <q>log</q> and <q>all</q>.
+
+
+                    </div>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{String}</span> <b>value</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the new log level</dd>
+
+                            </dl>
+
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Returns:</dt>
+
+                                <dd><span class="light fixedFont">{String}</span> the current log level</dd>
+
+                            </dl>
+
+
+
+
+                    <hr />
+
+                    <div id=".context" class="fixedFont">&lt;static&gt;
+
+                    <span class="light">{String}</span>
+                    <span class="light">RapidContext.Log.</span><b>context</b>(value)
+
+                    </div>
+                    <div class="description">
+                        Returns and optionally sets the current log context. The log context is
+used to tag all subsequent log messages until the context is removed or
+modified.
+
+
+                    </div>
+
+
+
+                    <pre class="code">RapidContext.Log.context('mybutton.onclick');
+...
+console.warn('unsupported xyz value:', value);
+...
+RapidContext.Log.context(null);</pre>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{String}</span> <b>value</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the new log context, or null to clear</dd>
+
+                            </dl>
+
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Returns:</dt>
+
+                                <dd><span class="light fixedFont">{String}</span> the current log context, or null for none</dd>
+
+                            </dl>
+
+
+
+
+                    <hr />
+
+                    <div id=".error" class="fixedFont">&lt;static&gt;
+
+
+                    <span class="light">RapidContext.Log.</span><b>error</b>(msg)
+
+                    </div>
+                    <div class="description">
+                        Logs an error message with optional data. Also available as the global
+<var>console.error()</var> function.
+
+
+                    </div>
+
+
+
+                    <pre class="code">console.error('failed to initialize module');</pre>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{String}</span> <b>msg</b>
+
+                                </dt>
+                                <dd>the log message</dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{Object}</span> <b>...</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the additional log data or messages</dd>
+
+                            </dl>
+
+
+
+
+
+
+
+
+                    <hr />
+
+                    <div id=".warn" class="fixedFont">&lt;static&gt;
+
+
+                    <span class="light">RapidContext.Log.</span><b>warn</b>(msg)
+
+                    </div>
+                    <div class="description">
+                        Logs a warning message with optional data. Also available as the global
+<var>console.warn()</var> function.
+
+
+                    </div>
+
+
+
+                    <pre class="code">console.warn('missing "data" attribute on document root:', document.body);</pre>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{String}</span> <b>msg</b>
+
+                                </dt>
+                                <dd>the log message</dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{Object}</span> <b>...</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the additional log data or messages</dd>
+
+                            </dl>
+
+
+
+
+
+
+
+
+                    <hr />
+
+                    <div id=".info" class="fixedFont">&lt;static&gt;
+
+
+                    <span class="light">RapidContext.Log.</span><b>info</b>(msg)
+
+                    </div>
+                    <div class="description">
+                        Logs an information message with optional data. Also available as the
+global <var>console.info()</var> function.
+
+
+                    </div>
+
+
+
+                    <pre class="code">console.info('authorization failed, user not logged in');</pre>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{String}</span> <b>msg</b>
+
+                                </dt>
+                                <dd>the log message</dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{Object}</span> <b>...</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the additional log data or messages</dd>
+
+                            </dl>
+
+
+
+
+
+
+
+
+                    <hr />
+
+                    <div id=".debug" class="fixedFont">&lt;static&gt;
+
+
+                    <span class="light">RapidContext.Log.</span><b>debug</b>(msg)
+
+                    </div>
+                    <div class="description">
+                        Logs a debug message with optional data. Also available as the global
+<var>console.log()</var> and <var>console.debug()</var> functions.
+
+
+                    </div>
+
+
+
+                    <pre class="code">console.log('init AJAX call to URL:', url);
+...
+console.log('done AJAX call to URL:', url, responseCode);</pre>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{String}</span> <b>msg</b>
+
+                                </dt>
+                                <dd>the log message</dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{Object}</span> <b>...</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the additional log data or messages</dd>
+
+                            </dl>
+
+
+
+
+
+
+
+
+                    <hr />
+
+                    <div id=".logBrowserInfo" class="fixedFont">&lt;static&gt;
+
+
+                    <span class="light">RapidContext.Log.</span><b>logBrowserInfo</b>()
+
+                    </div>
+                    <div class="description">
+                        Logs a number of browser meta-data parameters (INFO level).
+
+
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+                    <hr />
+
+                    <div id=".stringify" class="fixedFont">&lt;static&gt;
+
+                    <span class="light">{String}</span>
+                    <span class="light">RapidContext.Log.</span><b>stringify</b>(o)
+
+                    </div>
+                    <div class="description">
+                        Creates a string representation (suitable for logging) for any value or
+object. The returned string is similar to a JSON representation of the
+value, but may be simplified for increased readability.
+
+
+                    </div>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{Object}</span> <b>o</b>
+
+                                </dt>
+                                <dd>the value or object to convert</dd>
+
+                            </dl>
+
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Returns:</dt>
+
+                                <dd><span class="light fixedFont">{String}</span> the string representation of the value</dd>
+
+                            </dl>
+
+
+
+
+
+
+
+
+<!-- ============================== event details ========================= -->
+
+
+    <!--END-->
+
+    </section>
+    <section class="footer center fineprint">
+      <hr>
+      Copyright &copy; 2007-2016 Per Cederberg. All rights reserved.
+    </section>
+
+  </body>
+</html>

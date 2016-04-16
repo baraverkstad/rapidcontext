@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="JsDoc Toolkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="../css/style.css" type="text/css">
+    <link rel="stylesheet" href="../css/font-awesome-4.3.0.min.css" type="text/css">
+    <link rel="shortcut icon" type="image/x-icon" href="../images/logotype-icon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="../images/logotype-icon-16x16.png">
+    <link rel="icon" type="image/png" sizes="256x256" href="../images/logotype-icon-256x256.png">
+    <link rel="apple-touch-icon" sizes="256x256" href="../images/logotype-icon-256x256.png">
+    <title>RapidContext :: RapidContext.UI</title>
+  </head>
+  <body class="doc">
+        <section class="header">
+      <div class="center">
+        <a href="http://www.rapidcontext.com/" class="logotype">
+          <img src="../images/logotype-icon-256x256.png" style="width: 128px; height: 128px;" />
+        </a>
+        <div class="text">
+          <a href="http://www.rapidcontext.com/">
+            <span style="font-size: 50px;">RapidContext</span><br/>
+            <span style="font-size: 24px; color: #caf3ff;">Access &gt; Discovery &gt; Insight</span><br/>
+            <span style="font-size: 18px; letter-spacing: 6px; line-height: 26px;">www.rapidcontext.com</span>
+          </a>
+        </div>
+      </div>
+      <div class="menu">
+        <a href="http://www.rapidcontext.com/doc/index.html">Docs</a>
+        &bull; <a href="https://github.com/cederberg/rapidcontext/releases">Downloads</a>
+        &bull; <a href="https://github.com/cederberg/rapidcontext">Project</a>
+      </div>
+    </section>
+    <section class="content center">
+
+
+<ol class="breadcrumb">
+  <li><a href="../index.html">Documentation</a></li>
+  <li><a href="index.html">JavaScript API</a></li>
+  <li class="active">RapidContext.UI</li>
+</ol>
+
+<!--START-->
+
+<!-- ============================== class title ============================ -->
+            <h1 class="classTitle">
+
+                Namespace RapidContext.UI
+            </h1>
+
+<!-- ============================== class summary ========================== -->
+            <p class="description">
+
+
+                Provides functions for creating and handling the
+    user interface of an app.
+
+                <br/><br/>
+
+
+                    <i>Source code:</i>
+                    <a href="src/RapidContext_UI.js.html">RapidContext_UI.js</a>
+
+            </p>
+
+<!-- ============================== constructor summary ==================== -->
+
+            <table class="summaryTable">
+                <caption>Namespace Summary</caption>
+                <tbody>
+                    <tr>
+                        <td class="attributes">&nbsp;</td>
+                        <td class="nameDescription" >
+                            <div class="fixedFont">
+                                <b><a href="RapidContext.UI.html#constructor">RapidContext.UI</a></b>
+                            </div>
+                            <div class="description"></div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+<!-- ============================== properties summary ===================== -->
+
+
+<!-- ============================== methods summary ======================== -->
+
+
+
+
+                <table class="summaryTable">
+                    <caption>Method Summary</caption>
+                    <tbody>
+
+                        <tr>
+                            <td class="attributes">&lt;static&gt; &nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont">RapidContext.UI.<b><a href="RapidContext.UI.html#.buildUI">buildUI</a></b>(node, ids)
+                                </div>
+                                <div class="description">Creates a tree of widgets from a parsed XML document.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&lt;static&gt; &nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont">RapidContext.UI.<b><a href="RapidContext.UI.html#.connectProc">connectProc</a></b>(proc, loadingIcon, reloadIcon)
+                                </div>
+                                <div class="description">Connects the default UI signals for a procedure.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&lt;static&gt; &nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont">RapidContext.UI.<b><a href="RapidContext.UI.html#.showError">showError</a></b>(args)
+                                </div>
+                                <div class="description">Displays an error message for the user.</div>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+
+
+
+<!-- ============================== events summary ======================== -->
+
+
+<!-- ============================== constructor details ==================== -->
+
+            <div id="constructor" class="details">
+                <div class="sectionTitle">
+                    Namespace Detail
+                </div>
+
+                <div class="fixedFont">
+                        <b>RapidContext.UI</b>
+                </div>
+
+                <div class="description">
+
+
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+            </div>
+
+
+<!-- ============================== field details ========================== -->
+
+
+<!-- ============================== method details ========================= -->
+
+                <div class="sectionTitle">
+                    Method Detail
+                </div>
+
+                    <div id=".showError" class="fixedFont">&lt;static&gt;
+
+
+                    <span class="light">RapidContext.UI.</span><b>showError</b>(args)
+
+                    </div>
+                    <div class="description">
+                        Displays an error message for the user. This operation may or may
+not block the user interface, while the message is being
+displayed (depending on implementation). This function can be
+used as an errback function in deferred calls. All arguments to
+this function will be concatenated and displayed.
+
+
+                    </div>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{String/Error}</span> <b>args</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the messages or errors to display</dd>
+
+                            </dl>
+
+
+
+
+
+
+
+
+                    <hr />
+
+                    <div id=".buildUI" class="fixedFont">&lt;static&gt;
+
+                    <span class="light">{Array/Object}</span>
+                    <span class="light">RapidContext.UI.</span><b>buildUI</b>(node, ids)
+
+                    </div>
+                    <div class="description">
+                        Creates a tree of widgets from a parsed XML document. This
+function will call <var>createWidget()</var> for any XML element node found,
+performing some basic adjustments on the element attributes
+before sending them as attributes to the widget constructor. Text
+nodes with non-whitespace content will be mapped to HTML DOM text
+nodes.
+
+
+                    </div>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{Object}</span> <b>node</b>
+
+                                </dt>
+                                <dd>the XML document or node</dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{Object}</span> <b>ids</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the optional node id mappings</dd>
+
+                            </dl>
+
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Returns:</dt>
+
+                                <dd><span class="light fixedFont">{Array/Object}</span> an array or an object with the root
+        widget(s) created</dd>
+
+                            </dl>
+
+
+
+
+                    <hr />
+
+                    <div id=".connectProc" class="fixedFont">&lt;static&gt;
+
+
+                    <span class="light">RapidContext.UI.</span><b>connectProc</b>(proc, loadingIcon, reloadIcon)
+
+                    </div>
+                    <div class="description">
+                        Connects the default UI signals for a procedure. This includes a default
+error handler, a loading icon with cancellation handler and a reload icon
+with the appropriate click handler.
+
+
+                    </div>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{Procedure}</span> <b>proc</b>
+
+                                </dt>
+                                <dd>the <var>RapidContext.Procedure</var> instance</dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{Icon}</span> <b>loadingIcon</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the loading icon, or <var>null</var></dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{Icon}</span> <b>reloadIcon</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the reload icon, or <var>null</var></dd>
+
+                            </dl>
+
+
+
+
+
+
+
+                            <dl class="detailList linkList">
+                            <dt class="heading">See:</dt>
+
+                                <dd><a href="RapidContext.Procedure.html">RapidContext.Procedure</a></dd>
+
+                            </dl>
+
+
+
+
+
+
+<!-- ============================== event details ========================= -->
+
+
+    <!--END-->
+
+    </section>
+    <section class="footer center fineprint">
+      <hr>
+      Copyright &copy; 2007-2016 Per Cederberg. All rights reserved.
+    </section>
+
+  </body>
+</html>

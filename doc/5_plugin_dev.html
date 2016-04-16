@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="css/style.css" type="text/css">
+    <link rel="stylesheet" href="css/font-awesome-4.3.0.min.css" type="text/css">
+    <link rel="shortcut icon" type="image/x-icon" href="images/logotype-icon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/logotype-icon-16x16.png">
+    <link rel="icon" type="image/png" sizes="256x256" href="images/logotype-icon-256x256.png">
+    <link rel="apple-touch-icon" sizes="256x256" href="images/logotype-icon-256x256.png">
+    <title>RapidContext :: Server &amp; Plug-In Development</title>
+  </head>
+  <body class="doc">
+    <section class="header">
+      <div class="center">
+        <a href="http://www.rapidcontext.com/" class="logotype">
+          <img src="images/logotype-icon-256x256.png" style="width: 128px; height: 128px;" />
+        </a>
+        <div class="text">
+          <a href="http://www.rapidcontext.com/">
+            <span style="font-size: 50px;">RapidContext</span><br/>
+            <span style="font-size: 24px; color: #caf3ff;">Access &gt; Discovery &gt; Insight</span><br/>
+            <span style="font-size: 18px; letter-spacing: 6px; line-height: 26px;">www.rapidcontext.com</span>
+          </a>
+        </div>
+      </div>
+      <div class="menu">
+        <a href="http://www.rapidcontext.com/doc/index.html">Docs</a>
+        &bull; <a href="https://github.com/cederberg/rapidcontext/releases">Downloads</a>
+        &bull; <a href="https://github.com/cederberg/rapidcontext">Project</a>
+      </div>
+    </section>
+    <section class="content center">
+
+<ol class="breadcrumb">
+  <li><a href="index.html">Documentation</a></li>
+  <li class="active">Server &amp; Plug-In Development</li>
+</ol>
+
+<!--START-->
+
+<h1>5. Server-side &amp; Plug-In Development</h1>
+
+<h2 id="plugin_struct">5.1. Plug-in Structure</h2>
+
+<p>All RapidContext server functionality is provided by plug-ins. The plug-ins
+are distributed as ZIP files named
+<var>[plugin identifier]-[version].plugin</var> and contain an internal
+directory structure like this (mirroring the overall storage structure):</p>
+
+<ul class="box yellow">
+  <table style="width: 100%;">
+    <tr>
+      <td><var>app/</var></td>
+      <td>App configuration files</td>
+    </tr>
+    <tr>
+      <td><var>connection/</var></td>
+      <td>Connection configuration files</td>
+    </tr>
+    <tr>
+      <td><var>environment/</var></td>
+      <td>Environment configuration files</td>
+    </tr>
+    <tr>
+      <td><var>files/</var></td>
+      <td>Contains files to serve via HTTP (maps directly to URL:s)</td>
+    </tr>
+    <tr>
+      <td><var>lib/</var></td>
+      <td>Java JAR libraries to load (server-side)</td>
+    </tr>
+    <tr>
+      <td><var>procedure/</var></td>
+      <td>Procedure configuration files</td>
+    </tr>
+    <tr>
+      <td><var>role/</var></td>
+      <td>Role configuration files</td>
+    </tr>
+    <tr>
+      <td><var>user/</var></td>
+      <td>User configuration files</td>
+    </tr>
+    <tr>
+      <td><var>plugin.properties</var></td>
+      <td>The plug-in configuration file (mandatory, see below)</td>
+    </tr>
+  </table>
+</ul>
+
+<p>The directories are names according to the type of objects contained. The
+exceptions being <var>files/</var> and <var>lib/</var> that are handled in a
+special way. The <var>files/</var> directory contains all the JavaScript code
+and images available for web browsers.</p>
+
+
+<h2 id="plugin_config">5.2. Plug-in Configuration</h2>
+
+<p>Each plug-in must contain a <var>plugin.properties</var> configuration file.
+It is the only mandatory content of a plug-in and consists of the following
+fields:</p>
+
+<ul class="box yellow">
+  <li><var>id</var> &mdash; The unique plug-in identifier. May only contain
+      ASCII alphanumeric characters without spaces or separators.</li>
+  <li><var>name</var> &mdash; The plug-in name as presented to the users.</li>
+  <li><var>version</var> &mdash; The plug-in version number. This number is
+      automatically modified if the Ant script in <var>plugin-build.xml</var>
+      is used for packaging the plug-in.</li>
+  <li><var>date</var> &mdash; The plug-in build date. This number is
+      automatically set if the Ant script in <var>plugin-build.xml</var> is
+      used for packaging the plug-in.</li>
+  <li><var>description</var> &mdash; The optional description text that
+      explains the functionality provided by the plug-in.</li>
+  <li><var>copyright</var> &mdash; The optional copyright statement text.</li>
+  <li><var>className</var> &mdash; The optional fully qualified name of
+      a Java class that handles the plug-in life-cycle. The class must be a
+      subclass of <var>org.rapidcontext.app.plugin.Plugin</var>.</li>
+</ul>
+
+<p>The plug-in configuration is the first file to write when developing a
+plug-in. An example <var>plugin.properties</var> file is shown below:</p>
+
+<div class="box blue">
+  <i class="box-icon fa fa-code"></i>
+  <pre class="box-content code">
+<span class="comment"># General properties</span>
+id = example
+name = Example Plug-in
+version = 1.0
+date =
+description = Provides tests and examples for the platform.
+className = org.rapidcontext.app.plugin.example.ExamplePlugin
+  </pre>
+</div>
+
+<p>Once the <var>plugin.properties</var> file has been created, the Ant script
+in <var>plugin-build.xml</var> can be used for packaging the plug-in.</p>
+
+
+<h2 id="procedures">5.3. Procedures &amp; Procedure Types</h2>
+
+<p>Server-side operations can be added by creating <strong>procedures</strong>.
+Procedures can be invoked from the client or from other procedures and may take
+arguments, modify data and/or return values.</p>
+
+<p>Each procedure has a specific type (or kind). The procedure type defines
+which Java code is used to execute the procedure, similar to a templating
+engine. Since most server-side operations are very similar, only a few
+different procedure types are needed. The built-in and standard plug-in
+procedure types are listed below, but more can be added by installing
+additional plug-ins.</p>
+
+<ul class="box yellow">
+  <li><var>built-in</var> &mdash; The built-in procedure type, used for one-off
+      procedures implemented directly in Java code. This type is normally only
+      used for platform operations.</li>
+  <li><var>cmdline.exec</var> &mdash; The command-line execution procedure
+      type, used for running shell commands on the server. Procedure arguments
+      can used as arguments on the command-line.</li>
+  <li><var>http.post</var> &mdash; The HTTP POST request procedure type, used
+      for sending data to a receiving URL. Procedure arguments can be inserted
+      into either the request headers and/or data payload.</li>
+  <li><var>javascript</var> &mdash; The JavaScript procedure type, used for
+      building a procedure in JavaScript (usually to provide business logic and
+      smarts to more basic procedures). Procedure arguments are available as
+      global variables during execution.</li>
+  <li><var>jdbc.query</var> &mdash; The JDBC query procedure type, used for
+      SQL SELECT queries returning results. Procedure arguments may be inserted
+      as literals into the SQL text.</li>
+  <li><var>jdbc.statement</var> &mdash; The JDBC statement procedure type, used
+      for SQL INSERT, UPDATE and DELETE statements (among others). Procedure
+      arguments may be inserted as literals into the SQL text.</li>
+</ul>
+
+
+<h2 id="procedure_editing">5.4. Procedure Editing</h2>
+
+<p>Using the <strong>Admin</strong> app, it is easy to create or edit
+procedures of any type (except <var>built-in</var>). The screenshot below
+shows the location of the <q>+</q> icon for adding a new procedure. Just next
+to it is the edit icon.</p>
+
+<p style="text-align: center;">
+  <img src="images/screenshot-procedure-buttons.png" />
+</p>
+
+<p>After clicking the add or edit icon, the following dialog is shown:</p>
+
+<p style="text-align: center;">
+  <img src="images/screenshot-procedure-edit.png" />
+</p>
+
+<p>Each procedure can have a number of custom configuration properties that
+control their execution. A property has one of four types, each with different
+semantics and expected values:</p>
+
+<ol class="box yellow">
+  <li><strong>Argument</strong> &mdash; The value should contain the procedure
+      argument description (as later shown in the <strong>Admin</strong> app).
+      Note that both the number and order of arguments are important. During
+      procedure execution, the property identifier is bound to the value
+      provided in the call.</li>
+  <li><strong>Connection</strong> &mdash; The value should contain a connection
+      identifier (connection reference). The connection will be reserved before
+      calling the procedure. For JavaScript procedures, the connection object
+      allows direct calls to methods such as <var>commit()</var> or
+      similar.</li>
+  <li><strong>Data</strong> &mdash; The value is a data string constant that
+      may or may not span multiple lines. Mostly useful for JavaScript
+      procedures.</li>
+  <li><strong>Procedure</strong> &mdash; The value contains a procedure
+      identifier (procedure reference). Only used for JavaScript procedures,
+      where it enables calling other procedures as functions.</li>
+</ol>
+
+<p>Procedures created or edited are stored to the <var>procedure/</var>
+directory inside the <var>local</var> plug-in. The files there can be copied to
+the corresponding plug-in development directory for packaging.</p>
+
+
+<h2 id="javascript">5.5. JavaScript Procedures</h2>
+
+<p>The <var>javascript</var> procedure type allows creating generic server-side
+logic with minimum effort. The procedure consists of JavaScript code, which is
+compiled upon the first call. Additional procedure properties are exposed as
+variables in the global scope and can be accessed or called directly.</p>
+
+<p>The JavaScript environment provided is compatible with EcmaScript 5.1 and
+allows the creation of helper functions and comments to keep the code readable.
+See the example below for a JavaScript procedure that calls another procedure
+and filters its result:</p>
+
+<div class="box blue">
+  <i class="box-icon fa fa-code"></i>
+  <pre class="box-content code">
+<span class="comment">// Helper: Check if server thread has context</span>
+function hasContext(thread) {
+    return thread.context != null;
+}
+
+<span class="comment">// Helper: Extract procedure name from server thread context</span>
+function getProcName(thread) {
+    return thread.context.procedure;
+}
+
+<span class="comment">// Using property bound to 'System.Thread.List' procedure</span>
+var threads = listThreads();
+
+<span class="comment">// Filter threads and extract procedure names,</span>
+return threads.filter(hasContext).map(getProcName);
+  </pre>
+</div>
+
+<p>JavaScript procedures is a powerful tool for post-processing data in various
+situations. It is also often easier and more efficient to put this type of
+functionality into a procedure, than to perform it in the web browser.
+Especially when the data set is large or when many separate queries are
+required. Here are a number of recommended uses for JavaScript procedures:</p>
+
+<ol class="box yellow">
+  <li><strong>Data Filtering</strong> &mdash; Perform additional checks to
+      remove items from a list is easy with the JavaScript <var>filter()</var>
+      method. Some checks are also much easier to express in JavaScript than in
+      SQL or similar.</li>
+  <li><strong>Data Merging</strong> &mdash; Merging data from multiple queries
+      and/or data sources is straight-forward in JavaScript. The easiest way is
+      of course to just return a new object with all results as properties.</li>
+  <li><strong>Data Transformation</strong> &mdash; Transforming data from one
+      format to another is often easy with a bit of JavaScript. Using a simple
+      <var>for</var> or <var>while</var> loop, any data list can easily be
+      transformed into a lookup table for example.</li>
+  <li><strong>Higher-Order Searches</strong> &mdash; Using a bit of JavaScript,
+      it is possible to build higher-order searches that use the results from
+      one query as input to the next one. Since a JavaScript procedure can
+      use many other procedures, results can be tailored in any way.</li>
+  <li><strong>Statistics</strong> &mdash; If the data source itself cannot
+      perform adequate statistical functions, the next best option is to use a
+      procedure. The transfer of large quantities of data is costly, so
+      processing closer to the data source is faster.</li>
+</ol>
+
+<p>A few additional tips to consider when developing JavaScript procedures:</p>
+
+<ul class="box yellow">
+  <li><strong>Debugging</strong> &mdash; When creating or modifying JavaScript
+      procedures, it is often very helpful to switch on trace logging. See the
+      <q>Logging</q> tab in the <strong>Admin</strong> app for controlling
+      this.</li>
+  <li><strong>Connection Reservation</strong> &mdash;  All connections required
+      by a procedure and <em>all its referenced sub-procedures</em> are
+      reserved before the execution starts. This guarantees that all resources
+      are available, but might be wasteful in some circumstances.</li>
+</ul>
+
+
+<!--END-->
+
+    </section>
+    <section class="footer center fineprint">
+      <hr>
+      Copyright &copy; 2007-2016 Per Cederberg. All rights reserved.
+    </section>
+  </body>
+</html>

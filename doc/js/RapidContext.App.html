@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="JsDoc Toolkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="../css/style.css" type="text/css">
+    <link rel="stylesheet" href="../css/font-awesome-4.3.0.min.css" type="text/css">
+    <link rel="shortcut icon" type="image/x-icon" href="../images/logotype-icon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="../images/logotype-icon-16x16.png">
+    <link rel="icon" type="image/png" sizes="256x256" href="../images/logotype-icon-256x256.png">
+    <link rel="apple-touch-icon" sizes="256x256" href="../images/logotype-icon-256x256.png">
+    <title>RapidContext :: RapidContext.App</title>
+  </head>
+  <body class="doc">
+        <section class="header">
+      <div class="center">
+        <a href="http://www.rapidcontext.com/" class="logotype">
+          <img src="../images/logotype-icon-256x256.png" style="width: 128px; height: 128px;" />
+        </a>
+        <div class="text">
+          <a href="http://www.rapidcontext.com/">
+            <span style="font-size: 50px;">RapidContext</span><br/>
+            <span style="font-size: 24px; color: #caf3ff;">Access &gt; Discovery &gt; Insight</span><br/>
+            <span style="font-size: 18px; letter-spacing: 6px; line-height: 26px;">www.rapidcontext.com</span>
+          </a>
+        </div>
+      </div>
+      <div class="menu">
+        <a href="http://www.rapidcontext.com/doc/index.html">Docs</a>
+        &bull; <a href="https://github.com/cederberg/rapidcontext/releases">Downloads</a>
+        &bull; <a href="https://github.com/cederberg/rapidcontext">Project</a>
+      </div>
+    </section>
+    <section class="content center">
+
+
+<ol class="breadcrumb">
+  <li><a href="../index.html">Documentation</a></li>
+  <li><a href="index.html">JavaScript API</a></li>
+  <li class="active">RapidContext.App</li>
+</ol>
+
+<!--START-->
+
+<!-- ============================== class title ============================ -->
+            <h1 class="classTitle">
+
+                Namespace RapidContext.App
+            </h1>
+
+<!-- ============================== class summary ========================== -->
+            <p class="description">
+
+
+                Provides functions for application bootstrap and server
+    communication.
+
+                <br/><br/>
+
+
+                    <i>Source code:</i>
+                    <a href="src/RapidContext_App.js.html">RapidContext_App.js</a>
+
+            </p>
+
+<!-- ============================== constructor summary ==================== -->
+
+            <table class="summaryTable">
+                <caption>Namespace Summary</caption>
+                <tbody>
+                    <tr>
+                        <td class="attributes">&nbsp;</td>
+                        <td class="nameDescription" >
+                            <div class="fixedFont">
+                                <b><a href="RapidContext.App.html#constructor">RapidContext.App</a></b>
+                            </div>
+                            <div class="description"></div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+<!-- ============================== properties summary ===================== -->
+
+
+<!-- ============================== methods summary ======================== -->
+
+
+
+
+                <table class="summaryTable">
+                    <caption>Method Summary</caption>
+                    <tbody>
+
+                        <tr>
+                            <td class="attributes">&lt;static&gt; &nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont">RapidContext.App.<b><a href="RapidContext.App.html#.apps">apps</a></b>()
+                                </div>
+                                <div class="description">Returns an array with app launchers.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&lt;static&gt; &nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont">RapidContext.App.<b><a href="RapidContext.App.html#.callApp">callApp</a></b>(app, method, args)
+                                </div>
+                                <div class="description">Performs an asynchronous call to a method in an app.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&lt;static&gt; &nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont">RapidContext.App.<b><a href="RapidContext.App.html#.callProc">callProc</a></b>(name, args)
+                                </div>
+                                <div class="description">Performs an asynchronous procedure call.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&lt;static&gt; &nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont">RapidContext.App.<b><a href="RapidContext.App.html#.downloadFile">downloadFile</a></b>(url, data)
+                                </div>
+                                <div class="description">Downloads a file to the user desktop.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&lt;static&gt; &nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont">RapidContext.App.<b><a href="RapidContext.App.html#.findApp">findApp</a></b>(app)
+                                </div>
+                                <div class="description">Finds the app launcher from an app instance, class name or
+launcher.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&lt;static&gt; &nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont">RapidContext.App.<b><a href="RapidContext.App.html#.init">init</a></b>(app)
+                                </div>
+                                <div class="description">Initializes the platform, API:s and RapidContext UI.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&lt;static&gt; &nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont">RapidContext.App.<b><a href="RapidContext.App.html#.loadJSON">loadJSON</a></b>(url, params, options)
+                                </div>
+                                <div class="description">Performs an asynchronous HTTP request for a JSON data document and returns a
+deferred response.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&lt;static&gt; &nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont">RapidContext.App.<b><a href="RapidContext.App.html#.loadScript">loadScript</a></b>(url)
+                                </div>
+                                <div class="description">Loads a JavaScript to the the current page asynchronously and returns a
+deferred response.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&lt;static&gt; &nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont">RapidContext.App.<b><a href="RapidContext.App.html#.loadStyles">loadStyles</a></b>(url)
+                                </div>
+                                <div class="description">Loads a CSS stylesheet to the the current page asynchronously and returns a
+deferred response.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&lt;static&gt; &nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont">RapidContext.App.<b><a href="RapidContext.App.html#.loadText">loadText</a></b>(url, params, options)
+                                </div>
+                                <div class="description">Performs an asynchronous HTTP request for a text document and returns a
+deferred response.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&lt;static&gt; &nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont">RapidContext.App.<b><a href="RapidContext.App.html#.loadXHR">loadXHR</a></b>(url, params, options)
+                                </div>
+                                <div class="description">Performs an asynchronous HTTP request and returns a deferred response.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&lt;static&gt; &nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont">RapidContext.App.<b><a href="RapidContext.App.html#.loadXML">loadXML</a></b>(url, params, options)
+                                </div>
+                                <div class="description">Performs an asynchronous HTTP request for an XML document and returns a
+deferred response.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&lt;static&gt; &nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont">RapidContext.App.<b><a href="RapidContext.App.html#.login">login</a></b>(login, password, token)
+                                </div>
+                                <div class="description">Performs an asynchronous login.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&lt;static&gt; &nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont">RapidContext.App.<b><a href="RapidContext.App.html#.logout">logout</a></b>(reload)
+                                </div>
+                                <div class="description">Performs an asyncronous logout.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&lt;static&gt; &nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont">RapidContext.App.<b><a href="RapidContext.App.html#.startApp">startApp</a></b>(app, container)
+                                </div>
+                                <div class="description">Creates and starts an app instance.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&lt;static&gt; &nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont">RapidContext.App.<b><a href="RapidContext.App.html#.status">status</a></b>()
+                                </div>
+                                <div class="description">Returns an object with status information about the platform and
+currently loaded environment.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&lt;static&gt; &nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont">RapidContext.App.<b><a href="RapidContext.App.html#.stopApp">stopApp</a></b>(app)
+                                </div>
+                                <div class="description">Stops an app instance.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&lt;static&gt; &nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont">RapidContext.App.<b><a href="RapidContext.App.html#.user">user</a></b>()
+                                </div>
+                                <div class="description">Returns an object with information about the user.</div>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+
+
+
+<!-- ============================== events summary ======================== -->
+
+
+<!-- ============================== constructor details ==================== -->
+
+            <div id="constructor" class="details">
+                <div class="sectionTitle">
+                    Namespace Detail
+                </div>
+
+                <div class="fixedFont">
+                        <b>RapidContext.App</b>
+                </div>
+
+                <div class="description">
+
+
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+            </div>
+
+
+<!-- ============================== field details ========================== -->
+
+
+<!-- ============================== method details ========================= -->
+
+                <div class="sectionTitle">
+                    Method Detail
+                </div>
+
+                    <div id=".init" class="fixedFont">&lt;static&gt;
+
+                    <span class="light">{Deferred}</span>
+                    <span class="light">RapidContext.App.</span><b>init</b>(app)
+
+                    </div>
+                    <div class="description">
+                        Initializes the platform, API:s and RapidContext UI. If an app
+identifier is provided, the default platform UI will not be
+created. Instead the app will be launched with the root document
+as its UI container.
+
+
+                    </div>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{String/Object}</span> <b>app</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the app id or class name to start</dd>
+
+                            </dl>
+
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Returns:</dt>
+
+                                <dd><span class="light fixedFont">{Deferred}</span> a <var>MochiKit.Async.Deferred</var> object that will
+        callback when the initialization has completed</dd>
+
+                            </dl>
+
+
+
+
+                    <hr />
+
+                    <div id=".status" class="fixedFont">&lt;static&gt;
+
+                    <span class="light">{Object}</span>
+                    <span class="light">RapidContext.App.</span><b>status</b>()
+
+                    </div>
+                    <div class="description">
+                        Returns an object with status information about the platform and
+currently loaded environment. The object returned is a copy of
+the internal data structure and can be modified without affecting
+the real data.
+
+
+                    </div>
+
+
+
+
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Returns:</dt>
+
+                                <dd><span class="light fixedFont">{Object}</span> the status data object</dd>
+
+                            </dl>
+
+
+
+
+                    <hr />
+
+                    <div id=".user" class="fixedFont">&lt;static&gt;
+
+                    <span class="light">{Object}</span>
+                    <span class="light">RapidContext.App.</span><b>user</b>()
+
+                    </div>
+                    <div class="description">
+                        Returns an object with information about the user. The object
+returned is a copy of the internal data structure and can be
+modified without affecting the real data.
+
+
+                    </div>
+
+
+
+
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Returns:</dt>
+
+                                <dd><span class="light fixedFont">{Object}</span> the user data object</dd>
+
+                            </dl>
+
+
+
+
+                    <hr />
+
+                    <div id=".apps" class="fixedFont">&lt;static&gt;
+
+                    <span class="light">{Array}</span>
+                    <span class="light">RapidContext.App.</span><b>apps</b>()
+
+                    </div>
+                    <div class="description">
+                        Returns an array with app launchers. The array returned is an
+internal data structure and should not be modified directly.
+
+
+                    </div>
+
+
+
+
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Returns:</dt>
+
+                                <dd><span class="light fixedFont">{Array}</span> the loaded app launchers (read-only)</dd>
+
+                            </dl>
+
+
+
+
+                    <hr />
+
+                    <div id=".findApp" class="fixedFont">&lt;static&gt;
+
+                    <span class="light">{Object}</span>
+                    <span class="light">RapidContext.App.</span><b>findApp</b>(app)
+
+                    </div>
+                    <div class="description">
+                        Finds the app launcher from an app instance, class name or
+launcher. In the last case, the matching cached launcher will be
+returned.
+
+
+                    </div>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{String/Object}</span> <b>app</b>
+
+                                </dt>
+                                <dd>the app id, instance, class name or
+       launcher</dd>
+
+                            </dl>
+
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Returns:</dt>
+
+                                <dd><span class="light fixedFont">{Object}</span> the read-only app launcher, or
+        <var>null</var> if not found</dd>
+
+                            </dl>
+
+
+
+
+                    <hr />
+
+                    <div id=".startApp" class="fixedFont">&lt;static&gt;
+
+                    <span class="light">{Deferred}</span>
+                    <span class="light">RapidContext.App.</span><b>startApp</b>(app, container)
+
+                    </div>
+                    <div class="description">
+                        Creates and starts an app instance. Normally apps are started in the default
+app tab container or in a provided widget DOM node. By specifying a newly
+created window object as the parent container, apps can also be launched
+into separate windows.<br/><br/>Note that when a new window is used, the returned deferred will callback
+immediately with a <var>null</var> app instance (normal app communication is not
+possible cross-window).
+
+
+                    </div>
+
+
+
+                    <pre class="code">// Starts the help app in a new tab
+RapidContext.App.startApp('help');
+
+// Starts the help app in a new window
+RapidContext.App.startApp('help', window.open());</pre>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{String/Object}</span> <b>app</b>
+
+                                </dt>
+                                <dd>the app id, class name or launcher</dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{Widget/Window}</span> <b>container</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the app container widget or
+           window, defaults to create a new pane in the app tab
+           container</dd>
+
+                            </dl>
+
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Returns:</dt>
+
+                                <dd><span class="light fixedFont">{Deferred}</span> a <var>MochiKit.Async.Deferred</var> object that will
+        callback with the app instance (or <var>null</var> if not available)</dd>
+
+                            </dl>
+
+
+
+
+                    <hr />
+
+                    <div id=".stopApp" class="fixedFont">&lt;static&gt;
+
+                    <span class="light">{Deferred}</span>
+                    <span class="light">RapidContext.App.</span><b>stopApp</b>(app)
+
+                    </div>
+                    <div class="description">
+                        Stops an app instance. If only the class name or launcher is specified, the
+most recently created instance will be stopped.
+
+
+                    </div>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{String/Object}</span> <b>app</b>
+
+                                </dt>
+                                <dd>the app id, instance, class name or launcher</dd>
+
+                            </dl>
+
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Returns:</dt>
+
+                                <dd><span class="light fixedFont">{Deferred}</span> a <var>MochiKit.Async.Deferred</var> object that will
+        callback when the app has been stopped</dd>
+
+                            </dl>
+
+
+
+
+                    <hr />
+
+                    <div id=".callApp" class="fixedFont">&lt;static&gt;
+
+                    <span class="light">{Deferred}</span>
+                    <span class="light">RapidContext.App.</span><b>callApp</b>(app, method, args)
+
+                    </div>
+                    <div class="description">
+                        Performs an asynchronous call to a method in an app. If only the class name
+or launcher is specified, the most recently created instance will be used.
+If no instance is running, one will be started. Also, before calling the app
+method, the app UI will be focused.
+
+
+                    </div>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{String/Object}</span> <b>app</b>
+
+                                </dt>
+                                <dd>the app id, instance, class name or launcher</dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{String}</span> <b>method</b>
+
+                                </dt>
+                                <dd>the app method name</dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{Mixed}</span> <b>args</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>additional parameters sent to method</dd>
+
+                            </dl>
+
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Returns:</dt>
+
+                                <dd><span class="light fixedFont">{Deferred}</span> a <var>MochiKit.Async.Deferred</var> object that will
+        callback with the result of the call on success</dd>
+
+                            </dl>
+
+
+
+
+                    <hr />
+
+                    <div id=".callProc" class="fixedFont">&lt;static&gt;
+
+                    <span class="light">{Deferred}</span>
+                    <span class="light">RapidContext.App.</span><b>callProc</b>(name, args)
+
+                    </div>
+                    <div class="description">
+                        Performs an asynchronous procedure call. This function returns a deferred
+object that will produce either a <var>callback</var> or an <var>errback</var> depending on
+the server response.
+
+
+                    </div>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{String}</span> <b>name</b>
+
+                                </dt>
+                                <dd>the procedure name</dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{Array}</span> <b>args</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the array of arguments, or <var>null</var></dd>
+
+                            </dl>
+
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Returns:</dt>
+
+                                <dd><span class="light fixedFont">{Deferred}</span> a <var>MochiKit.Async.Deferred</var> object that will
+        callback with the response data on success</dd>
+
+                            </dl>
+
+
+
+
+                    <hr />
+
+                    <div id=".login" class="fixedFont">&lt;static&gt;
+
+                    <span class="light">{Deferred}</span>
+                    <span class="light">RapidContext.App.</span><b>login</b>(login, password, token)
+
+                    </div>
+                    <div class="description">
+                        Performs an asynchronous login. This function returns a deferred object
+that will produce either a <var>callback</var> or an <var>errback</var> depending on the
+success of the login attempt. If the current session is already bound to a
+user, that session will be terminated and a new one will be created. If an
+authentication token is specified, the login and password fields are not
+used (can be null).
+
+
+                    </div>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{String}</span> <b>login</b>
+
+                                </dt>
+                                <dd>the user login name or email address</dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{String}</span> <b>password</b>
+
+                                </dt>
+                                <dd>the password to autheticate the user</dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{String}</span> <b>token</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the authentication token to indentify user/password</dd>
+
+                            </dl>
+
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Returns:</dt>
+
+                                <dd><span class="light fixedFont">{Deferred}</span> a <var>MochiKit.Async.Deferred</var> object that will
+        callback with the response data on success</dd>
+
+                            </dl>
+
+
+
+
+                    <hr />
+
+                    <div id=".logout" class="fixedFont">&lt;static&gt;
+
+                    <span class="light">{Deferred}</span>
+                    <span class="light">RapidContext.App.</span><b>logout</b>(reload)
+
+                    </div>
+                    <div class="description">
+                        Performs an asyncronous logout. This function terminates the current
+session and either reloads the browser window or returns a deferred object
+that will produce either a <var>callback</var> or an <var>errback</var> response.
+
+
+                    </div>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{Boolean}</span> <b>reload</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the reload browser flag, defaults to true</dd>
+
+                            </dl>
+
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Returns:</dt>
+
+                                <dd><span class="light fixedFont">{Deferred}</span> a <var>MochiKit.Async.Deferred</var> object that will
+        callback with the response data on success</dd>
+
+                            </dl>
+
+
+
+
+                    <hr />
+
+                    <div id=".loadJSON" class="fixedFont">&lt;static&gt;
+
+                    <span class="light">{Deferred}</span>
+                    <span class="light">RapidContext.App.</span><b>loadJSON</b>(url, params, options)
+
+                    </div>
+                    <div class="description">
+                        Performs an asynchronous HTTP request for a JSON data document and returns a
+deferred response. If no request method has been specified, the <var>POST</var> or
+<var>GET</var> methods are chosen depending on whether or not the params argument is
+<var>null</var>. The request parameters are specified as an object that will be
+encoded by the <var>MochiKit.Base.queryString</var> function. In addition to the
+default options in <var>MochiKit.Async.doXHR</var>, this function also accepts a
+timeout option for automatic request cancellation.<br/><br/>Note that this function is unsuitable for loading JavaScript source code,
+since using <var>eval()</var> will confuse some browser error messages and debuggers
+regarding the actual source location.
+
+
+                    </div>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{String}</span> <b>url</b>
+
+                                </dt>
+                                <dd>the URL to request</dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{Object}</span> <b>params</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the request parameters, or <var>null</var></dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{Object}</span> <b>options</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the request options, or <var>null</var></dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{String}</span> <b>options.method</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the HTTP method, <q>GET</q> or <q>POST</q></dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{Number}</span> <b>options.timeout</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the timeout in seconds, default is no timeout</dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{Object}</span> <b>options.headers</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the specific HTTP headers to use</dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{String}</span> <b>options.mimeType</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the override MIME type, default is
+            none</dd>
+
+                            </dl>
+
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Returns:</dt>
+
+                                <dd><span class="light fixedFont">{Deferred}</span> a <var>MochiKit.Async.Deferred</var> object that will
+        callback with the response text on success</dd>
+
+                            </dl>
+
+
+
+
+                    <hr />
+
+                    <div id=".loadText" class="fixedFont">&lt;static&gt;
+
+                    <span class="light">{Deferred}</span>
+                    <span class="light">RapidContext.App.</span><b>loadText</b>(url, params, options)
+
+                    </div>
+                    <div class="description">
+                        Performs an asynchronous HTTP request for a text document and returns a
+deferred response. If no request method has been specified, the <var>POST</var> or
+<var>GET</var> methods are chosen depending on whether or not the params argument is
+<var>null</var>. The request parameters are specified as an object that will be
+encoded by the <var>MochiKit.Base.queryString</var> function. In addition to the
+default options in <var>MochiKit.Async.doXHR</var>, this function also accepts a
+timeout option for automatic request cancellation.<br/><br/>Note that this function is unsuitable for loading JavaScript source code,
+since using <var>eval()</var> will confuse some browser error messages and debuggers
+regarding the actual source location.
+
+
+                    </div>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{String}</span> <b>url</b>
+
+                                </dt>
+                                <dd>the URL to request</dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{Object}</span> <b>params</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the request parameters, or <var>null</var></dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{Object}</span> <b>options</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the request options, or <var>null</var></dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{String}</span> <b>options.method</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the HTTP method, <q>GET</q> or <q>POST</q></dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{Number}</span> <b>options.timeout</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the timeout in seconds, default is no timeout</dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{Object}</span> <b>options.headers</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the specific HTTP headers to use</dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{String}</span> <b>options.mimeType</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the override MIME type, default is
+            none</dd>
+
+                            </dl>
+
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Returns:</dt>
+
+                                <dd><span class="light fixedFont">{Deferred}</span> a <var>MochiKit.Async.Deferred</var> object that will
+        callback with the response text on success</dd>
+
+                            </dl>
+
+
+
+
+                    <hr />
+
+                    <div id=".loadXML" class="fixedFont">&lt;static&gt;
+
+                    <span class="light">{Deferred}</span>
+                    <span class="light">RapidContext.App.</span><b>loadXML</b>(url, params, options)
+
+                    </div>
+                    <div class="description">
+                        Performs an asynchronous HTTP request for an XML document and returns a
+deferred response. If no request method has been specified, the <var>POST</var> or
+<var>GET</var> methods are chosen depending on whether or not the params argument is
+<var>null</var>. The request parameters are specified as an object that will be
+encoded by the <var>MochiKit.Base.queryString</var> function. In addition to the
+default options in <var>MochiKit.Async.doXHR</var>, this function also accepts a
+timeout option for automatic request cancellation.
+
+
+                    </div>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{String}</span> <b>url</b>
+
+                                </dt>
+                                <dd>the URL to request</dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{Object}</span> <b>params</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the request parameters, or <var>null</var></dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{Object}</span> <b>options</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the request options, or <var>null</var></dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{String}</span> <b>options.method</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the HTTP method, <q>GET</q> or <q>POST</q></dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{Number}</span> <b>options.timeout</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the timeout in seconds, default is no timeout</dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{Object}</span> <b>options.headers</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the specific HTTP headers to use</dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{String}</span> <b>options.mimeType</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the override MIME type, default is
+            none</dd>
+
+                            </dl>
+
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Returns:</dt>
+
+                                <dd><span class="light fixedFont">{Deferred}</span> a <var>MochiKit.Async.Deferred</var> object that will
+        callback with the parsed response XML document on success</dd>
+
+                            </dl>
+
+
+
+
+                    <hr />
+
+                    <div id=".loadXHR" class="fixedFont">&lt;static&gt;
+
+                    <span class="light">{Deferred}</span>
+                    <span class="light">RapidContext.App.</span><b>loadXHR</b>(url, params, options)
+
+                    </div>
+                    <div class="description">
+                        Performs an asynchronous HTTP request and returns a deferred response. If no
+request method has been specified, the <var>POST</var> or <var>GET</var> methods are chosen
+depending on whether or not the <var>params</var> argument is <var>null</var>. The request
+parameters are specified as an object that will be encoded by the
+<var>MochiKit.Base.queryString</var> function. In addition to the default options in
+<var>MochiKit.Async.doXHR</var>, this function also accepts a timeout option for
+automatic request cancellation.<br/><br/>Note that this function is unsuitable for loading JavaScript source code,
+since using <var>eval()</var> will confuse some browser error messages and debuggers
+regarding the actual source location.
+
+
+                    </div>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{String}</span> <b>url</b>
+
+                                </dt>
+                                <dd>the URL to request</dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{Object}</span> <b>params</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the request parameters, or <var>null</var></dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{Object}</span> <b>options</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the request options, or <var>null</var></dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{String}</span> <b>options.method</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the HTTP method, <q>GET</q> or <q>POST</q></dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{Number}</span> <b>options.timeout</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the timeout in seconds, default is no timeout</dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{Object}</span> <b>options.headers</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the specific HTTP headers to use</dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{String}</span> <b>options.mimeType</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the override MIME type, default is
+            none</dd>
+
+                            </dl>
+
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Returns:</dt>
+
+                                <dd><span class="light fixedFont">{Deferred}</span> a <var>MochiKit.Async.Deferred</var> object that will
+        callback with the XMLHttpRequest instance on success</dd>
+
+                            </dl>
+
+
+
+
+                    <hr />
+
+                    <div id=".loadScript" class="fixedFont">&lt;static&gt;
+
+                    <span class="light">{Deferred}</span>
+                    <span class="light">RapidContext.App.</span><b>loadScript</b>(url)
+
+                    </div>
+                    <div class="description">
+                        Loads a JavaScript to the the current page asynchronously and returns a
+deferred response. This function is only suitable for loading JavaScript
+source code, and not JSON data, since it loads the script by inserting a
+<var>&lt;script&gt;</var> tag in the document <var>&lt;head&gt;</var> tag. All function definitions and
+values must therefore be stored to global variables by the script to be
+accessible after loading. The deferred callback function will therefore not
+provide any data even on successful callback.<br/><br/>This method of script loading has the advantage that JavaScript debuggers
+(such as Firebug) will be able to handle the code properly (error messages,
+breakpoints, etc). If the script fails to load due to errors however, the
+returned deferred object may fail to <var>errback</var> in some cases.
+
+
+                    </div>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{String}</span> <b>url</b>
+
+                                </dt>
+                                <dd>the URL to the script</dd>
+
+                            </dl>
+
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Returns:</dt>
+
+                                <dd><span class="light fixedFont">{Deferred}</span> a <var>MochiKit.Async.Deferred</var> object that will
+        callback when the script has been loaded</dd>
+
+                            </dl>
+
+
+
+
+                    <hr />
+
+                    <div id=".loadStyles" class="fixedFont">&lt;static&gt;
+
+                    <span class="light">{Deferred}</span>
+                    <span class="light">RapidContext.App.</span><b>loadStyles</b>(url)
+
+                    </div>
+                    <div class="description">
+                        Loads a CSS stylesheet to the the current page asynchronously and returns a
+deferred response. The stylesheet is loaded by inserting a <var>&lt;link&gt;</var> tag in
+the document head tag, which means that the deferred callback function will
+not be provided with any data.
+
+
+                    </div>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{String}</span> <b>url</b>
+
+                                </dt>
+                                <dd>the URL to the stylesheet</dd>
+
+                            </dl>
+
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Returns:</dt>
+
+                                <dd><span class="light fixedFont">{Deferred}</span> a <var>MochiKit.Async.Deferred</var> object that will
+        callback when the stylesheet has been loaded</dd>
+
+                            </dl>
+
+
+
+
+                    <hr />
+
+                    <div id=".downloadFile" class="fixedFont">&lt;static&gt;
+
+
+                    <span class="light">RapidContext.App.</span><b>downloadFile</b>(url, data)
+
+                    </div>
+                    <div class="description">
+                        Downloads a file to the user desktop. This works by creating a new
+window or an inner frame which downloads the file from the server.
+Due to <var>Content-Disposition</var> headers being set on the server, the
+web browser will popup a dialog for the user to save the file.
+This function can also be used for saving a file that doesn't
+exist by first posting the file (text) content to the server.
+
+
+                    </div>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{String}</span> <b>url</b>
+
+                                </dt>
+                                <dd>the URL or filename to download</dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{String}</span> <b>data</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the optional file data (if not available
+           on the server-side)</dd>
+
+                            </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- ============================== event details ========================= -->
+
+
+    <!--END-->
+
+    </section>
+    <section class="footer center fineprint">
+      <hr>
+      Copyright &copy; 2007-2016 Per Cederberg. All rights reserved.
+    </section>
+
+  </body>
+</html>

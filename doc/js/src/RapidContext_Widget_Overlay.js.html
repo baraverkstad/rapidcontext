@@ -1,0 +1,111 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
+	.KEYW {color: #933;}
+	.COMM {color: #bbb; font-style: italic;}
+	.NUMB {color: #393;}
+	.STRN {color: #393;}
+	.REGX {color: #339;}
+	.line {border-right: 1px dotted #666; color: #666; font-style: normal;}
+	</style></head><body><pre><span class='line'>  1</span> <span class="COMM">/*
+<span class='line'>  2</span>  * RapidContext &lt;http://www.rapidcontext.com/>
+<span class='line'>  3</span>  * Copyright (c) 2007-2013 Per Cederberg. All rights reserved.
+<span class='line'>  4</span>  *
+<span class='line'>  5</span>  * This program is free software: you can redistribute it and/or
+<span class='line'>  6</span>  * modify it under the terms of the BSD license.
+<span class='line'>  7</span>  *
+<span class='line'>  8</span>  * This program is distributed in the hope that it will be useful,
+<span class='line'>  9</span>  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+<span class='line'> 10</span>  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+<span class='line'> 11</span>  *
+<span class='line'> 12</span>  * See the RapidContext LICENSE for more details.
+<span class='line'> 13</span>  */</span><span class="WHIT">
+<span class='line'> 14</span>
+<span class='line'> 15</span> </span><span class="COMM">// Namespace initialization</span><span class="WHIT">
+<span class='line'> 16</span> </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">typeof</span><span class="PUNC">(</span><span class="NAME">RapidContext</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="STRN">"undefined"</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 17</span> </span><span class="WHIT">    </span><span class="NAME">RapidContext</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 18</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 19</span> </span><span class="NAME">RapidContext.Widget</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">RapidContext.Widget</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> </span><span class="NAME">Classes</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 20</span>
+<span class='line'> 21</span> </span><span class="COMM">/**
+<span class='line'> 22</span>  * Creates a new overlay widget.
+<span class='line'> 23</span>  *
+<span class='line'> 24</span>  * @constructor
+<span class='line'> 25</span>  * @param {Object} attrs the widget and node attributes
+<span class='line'> 26</span>  * @param {Boolean} [attrs.loading] the display loading icon flag, defaults to
+<span class='line'> 27</span>  *            `true`
+<span class='line'> 28</span>  * @param {String} [attrs.message] the overlay message text, defaults to
+<span class='line'> 29</span>  *            "Working..."
+<span class='line'> 30</span>  * @param {Boolean} [attrs.dark] the dark overlay flag, defaults to `false`
+<span class='line'> 31</span>  * @param {Boolean} [attrs.hidden] the hidden widget flag, defaults to `true`
+<span class='line'> 32</span>  *
+<span class='line'> 33</span>  * @return {Widget} the widget DOM node
+<span class='line'> 34</span>  *
+<span class='line'> 35</span>  * @class The overlay widget class. Used to provide a layer on top of the
+<span class='line'> 36</span>  *     parent node, using a `&lt;div>` HTML element. This widget is useful for
+<span class='line'> 37</span>  *     disabling the user interface during an operation.
+<span class='line'> 38</span>  * @extends RapidContext.Widget
+<span class='line'> 39</span>  *
+<span class='line'> 40</span>  * @example {JavaScript}
+<span class='line'> 41</span>  * var workOverlay = RapidContext.WidgetOverlay({ message: "Doing Stuff..." });
+<span class='line'> 42</span>  *
+<span class='line'> 43</span>  * @example {User Interface XML}
+<span class='line'> 44</span>  * &lt;Overlay id="workOverlay" message="Doing Stuff..." />
+<span class='line'> 45</span>  */</span><span class="WHIT">
+<span class='line'> 46</span> </span><span class="NAME">RapidContext.Widget.Overlay</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">attrs</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 47</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">cover</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">MochiKit.DOM.DIV</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="WHIT"> </span><span class="STRN">"class"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"widgetOverlayCover"</span><span class="WHIT"> </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 48</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">msg</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">MochiKit.DOM.DIV</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="WHIT"> </span><span class="STRN">"class"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"widgetOverlayMessage"</span><span class="WHIT"> </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 49</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">o</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">MochiKit.DOM.DIV</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">cover</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">msg</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 50</span> </span><span class="WHIT">    </span><span class="NAME">RapidContext.Widget._widgetMixin</span><span class="PUNC">(</span><span class="NAME">o</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">arguments.callee</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 51</span> </span><span class="WHIT">    </span><span class="NAME">o.addClass</span><span class="PUNC">(</span><span class="STRN">"widgetOverlay"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 52</span> </span><span class="WHIT">    </span><span class="NAME">o.setAttrs</span><span class="PUNC">(</span><span class="NAME">MochiKit.Base.update</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="WHIT"> </span><span class="NAME">loading</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">message</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"Working..."</span><span class="WHIT"> </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">attrs</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 53</span> </span><span class="WHIT">    </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">o</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 54</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 55</span>
+<span class='line'> 56</span> </span><span class="COMM">// Register widget class</span><span class="WHIT">
+<span class='line'> 57</span> </span><span class="NAME">RapidContext.Widget.Classes.Overlay</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">RapidContext.Widget.Overlay</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 58</span>
+<span class='line'> 59</span> </span><span class="COMM">/**
+<span class='line'> 60</span>  * Returns the widget container DOM node.
+<span class='line'> 61</span>  *
+<span class='line'> 62</span>  * @return {Node} returns null, since child nodes are not supported
+<span class='line'> 63</span>  */</span><span class="WHIT">
+<span class='line'> 64</span> </span><span class="NAME">RapidContext.Widget.Overlay.prototype._containerNode</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 65</span> </span><span class="WHIT">    </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 66</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 67</span>
+<span class='line'> 68</span> </span><span class="COMM">/**
+<span class='line'> 69</span>  * Updates the widget or HTML DOM node attributes.
+<span class='line'> 70</span>  *
+<span class='line'> 71</span>  * @param {Object} attrs the widget and node attributes to set
+<span class='line'> 72</span>  * @param {Boolean} [attrs.loading] the display loading icon flag
+<span class='line'> 73</span>  * @param {String} [attrs.message] the overlay message text
+<span class='line'> 74</span>  * @param {Boolean} [attrs.hidden] the hidden widget flag
+<span class='line'> 75</span>  */</span><span class="WHIT">
+<span class='line'> 76</span> </span><span class="NAME">RapidContext.Widget.Overlay.prototype.setAttrs</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">attrs</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 77</span> </span><span class="WHIT">    </span><span class="NAME">attrs</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">MochiKit.Base.update</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">attrs</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 78</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">locals</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">RapidContext.Util.mask</span><span class="PUNC">(</span><span class="NAME">attrs</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="STRN">"loading"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">"message"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">"dark"</span><span class="PUNC">]</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 79</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">typeof</span><span class="PUNC">(</span><span class="NAME">locals.loading</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="STRN">"undefined"</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 80</span> </span><span class="WHIT">        </span><span class="NAME">this.showLoading</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">MochiKit.Base.bool</span><span class="PUNC">(</span><span class="NAME">locals.loading</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 81</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 82</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">typeof</span><span class="PUNC">(</span><span class="NAME">locals.message</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="STRN">"undefined"</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 83</span> </span><span class="WHIT">        </span><span class="NAME">this.message</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">locals.message</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="STRN">""</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 84</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 85</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">typeof</span><span class="PUNC">(</span><span class="NAME">locals.dark</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="STRN">"undefined"</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 86</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">locals.dark</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 87</span> </span><span class="WHIT">            </span><span class="NAME">this.addClass</span><span class="PUNC">(</span><span class="STRN">"widgetOverlayDark"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 88</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 89</span> </span><span class="WHIT">            </span><span class="NAME">this.removeClass</span><span class="PUNC">(</span><span class="STRN">"widgetOverlayDark"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 90</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 91</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 92</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.showLoading</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 93</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">icon</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">RapidContext.Widget.Icon</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="WHIT"> </span><span class="NAME">url</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"rapidcontext/files/images/icons/loading-overlay.gif"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">width</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">32</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">height</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">32</span><span class="WHIT"> </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 94</span> </span><span class="WHIT">        </span><span class="NAME">icon.setStyle</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="WHIT"> </span><span class="STRN">"margin-right"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"20px"</span><span class="WHIT"> </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 95</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 96</span> </span><span class="WHIT">    </span><span class="NAME">MochiKit.DOM.replaceChildNodes</span><span class="PUNC">(</span><span class="NAME">this.lastChild</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">icon</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.message</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 97</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">!</span><span class="NAME">this.showLoading</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="NAME">this.message</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 98</span> </span><span class="WHIT">        </span><span class="NAME">MochiKit.DOM.addElementClass</span><span class="PUNC">(</span><span class="NAME">this.lastChild</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">"widgetHidden"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 99</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>100</span> </span><span class="WHIT">        </span><span class="NAME">MochiKit.DOM.removeElementClass</span><span class="PUNC">(</span><span class="NAME">this.lastChild</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">"widgetHidden"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>101</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>102</span> </span><span class="WHIT">    </span><span class="NAME">this.__setAttrs</span><span class="PUNC">(</span><span class="NAME">attrs</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>103</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>104</span> </span></pre></body></html>

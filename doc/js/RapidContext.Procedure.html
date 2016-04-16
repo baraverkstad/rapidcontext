@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="JsDoc Toolkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="../css/style.css" type="text/css">
+    <link rel="stylesheet" href="../css/font-awesome-4.3.0.min.css" type="text/css">
+    <link rel="shortcut icon" type="image/x-icon" href="../images/logotype-icon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="../images/logotype-icon-16x16.png">
+    <link rel="icon" type="image/png" sizes="256x256" href="../images/logotype-icon-256x256.png">
+    <link rel="apple-touch-icon" sizes="256x256" href="../images/logotype-icon-256x256.png">
+    <title>RapidContext :: RapidContext.Procedure</title>
+  </head>
+  <body class="doc">
+        <section class="header">
+      <div class="center">
+        <a href="http://www.rapidcontext.com/" class="logotype">
+          <img src="../images/logotype-icon-256x256.png" style="width: 128px; height: 128px;" />
+        </a>
+        <div class="text">
+          <a href="http://www.rapidcontext.com/">
+            <span style="font-size: 50px;">RapidContext</span><br/>
+            <span style="font-size: 24px; color: #caf3ff;">Access &gt; Discovery &gt; Insight</span><br/>
+            <span style="font-size: 18px; letter-spacing: 6px; line-height: 26px;">www.rapidcontext.com</span>
+          </a>
+        </div>
+      </div>
+      <div class="menu">
+        <a href="http://www.rapidcontext.com/doc/index.html">Docs</a>
+        &bull; <a href="https://github.com/cederberg/rapidcontext/releases">Downloads</a>
+        &bull; <a href="https://github.com/cederberg/rapidcontext">Project</a>
+      </div>
+    </section>
+    <section class="content center">
+
+
+<ol class="breadcrumb">
+  <li><a href="../index.html">Documentation</a></li>
+  <li><a href="index.html">JavaScript API</a></li>
+  <li class="active">RapidContext.Procedure</li>
+</ol>
+
+<!--START-->
+
+<!-- ============================== class title ============================ -->
+            <h1 class="classTitle">
+
+                Class RapidContext.Procedure
+            </h1>
+
+<!-- ============================== class summary ========================== -->
+            <p class="description">
+
+
+                The procedure wrapper function. Used to provide a simplified way of
+  calling a procedure and connecting results through signals (instead of
+  using deferred callbacks).<br/><br/>  The actual calls are performed with normal function calls, but the results
+  are asynchronous. When called, the procedure function returns a
+  <var>MochiKit.Async.Deferred</var> object (as the normal API call), but the results
+  will also be signalled through the <var>onsuccess</var> signal.<br/><br/>  Differing from normal functions, a procedure function will also ensure
+  that only a single call is in progress at any time, automatically
+  cancelling any previous call if needed.
+
+                <br/><br/>
+
+
+                    <i>Source code:</i>
+                    <a href="src/RapidContext_Procedure.js.html">RapidContext_Procedure.js</a>
+
+            </p>
+
+<!-- ============================== constructor summary ==================== -->
+
+            <table class="summaryTable">
+                <caption>Class Summary</caption>
+                <tbody>
+                    <tr>
+                        <td class="attributes">&nbsp;</td>
+                        <td class="nameDescription" >
+                            <div class="fixedFont">
+                                <b><a href="RapidContext.Procedure.html#constructor">RapidContext.Procedure</a></b>(procedure)
+                            </div>
+                            <div class="description">Creates a new procedure caller function.</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+<!-- ============================== properties summary ===================== -->
+
+
+
+
+                <table class="summaryTable">
+                    <caption>Field Summary</caption>
+                    <tbody>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont">
+                                <b><a href="RapidContext.Procedure.html#args">args</a></b>
+                                </div>
+                                <div class="description">The arguments used in the last call.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont">
+                                <b><a href="RapidContext.Procedure.html#procedure">procedure</a></b>
+                                </div>
+                                <div class="description">The procedure name.</div>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+
+
+
+
+<!-- ============================== methods summary ======================== -->
+
+
+
+
+                <table class="summaryTable">
+                    <caption>Method Summary</caption>
+                    <tbody>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont"><b><a href="RapidContext.Procedure.html#cancel">cancel</a></b>()
+                                </div>
+                                <div class="description">Cancels any current execution of this procedure.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&lt;static&gt; &nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont">RapidContext.Procedure.<b><a href="RapidContext.Procedure.html#.mapAll">mapAll</a></b>(obj)
+                                </div>
+                                <div class="description">Creates a new procedure caller for each key-value-pair in the specified
+object.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont"><b><a href="RapidContext.Procedure.html#multicall">multicall</a></b>(args, transform)
+                                </div>
+                                <div class="description">Calls the procedure multiple times (in sequence) with different arguments
+(supplied as an array of argument arrays).</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont"><b><a href="RapidContext.Procedure.html#recall">recall</a></b>()
+                                </div>
+                                <div class="description">Calls the procedure with the same arguments as used in the last call.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont"><b><a href="RapidContext.Procedure.html#reset">reset</a></b>()
+                                </div>
+                                <div class="description">Cancels any current execution and removes the reference to the arguments of
+this procedure.</div>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+
+
+
+<!-- ============================== events summary ======================== -->
+
+
+
+
+                <table class="summaryTable">
+                    <caption>Event Summary</caption>
+                    <tbody>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont"><b><a href="RapidContext.Procedure.html#event:oncall">oncall</a></b>()
+                                </div>
+                                <div class="description">Emitted when the procedure is called.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont"><b><a href="RapidContext.Procedure.html#event:oncancel">oncancel</a></b>()
+                                </div>
+                                <div class="description">Emitted when a procedure call was cancelled.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont"><b><a href="RapidContext.Procedure.html#event:onerror">onerror</a></b>()
+                                </div>
+                                <div class="description">Emitted when a procedure call failed.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont"><b><a href="RapidContext.Procedure.html#event:onresponse">onresponse</a></b>()
+                                </div>
+                                <div class="description">Emitted when the procedure response has been received.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont"><b><a href="RapidContext.Procedure.html#event:onsuccess">onsuccess</a></b>()
+                                </div>
+                                <div class="description">Emitted when a procedure call returned a result.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont"><b><a href="RapidContext.Procedure.html#event:onupdate">onupdate</a></b>()
+                                </div>
+                                <div class="description">Emitted if a partial procedure result is available.</div>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+
+
+
+
+<!-- ============================== constructor details ==================== -->
+
+            <div id="constructor" class="details">
+                <div class="sectionTitle">
+                    Class Detail
+                </div>
+
+                <div class="fixedFont">
+                        <b>RapidContext.Procedure</b>(procedure)
+                </div>
+
+                <div class="description">
+                    Creates a new procedure caller function. This function can be called either
+as a constructor or as a plain function. In both cases it returns a new
+JavaScript function with additional methods.
+
+                </div>
+
+
+
+
+
+                        <dl class="detailList">
+                        <dt class="heading">Parameters:</dt>
+
+                            <dt>
+                                <span class="light fixedFont">{String}</span>  <b>procedure</b>
+
+                            </dt>
+                                <dd>the procedure name</dd>
+
+                        </dl>
+
+
+
+
+
+
+
+
+            </div>
+
+
+<!-- ============================== field details ========================== -->
+
+                <div class="sectionTitle">
+                    Field Detail
+                </div>
+
+                    <div id="procedure" class="fixedFont">
+
+                    <span class="light">{String}</span>
+                    <b>procedure</b>
+
+                    </div>
+                    <div class="description">
+                        The procedure name.
+
+
+                    </div>
+
+
+
+
+
+
+
+
+                    <hr />
+
+                    <div id="args" class="fixedFont">
+
+                    <span class="light">{Array}</span>
+                    <b>args</b>
+
+                    </div>
+                    <div class="description">
+                        The arguments used in the last call.
+
+
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- ============================== method details ========================= -->
+
+                <div class="sectionTitle">
+                    Method Detail
+                </div>
+
+                    <div id=".mapAll" class="fixedFont">&lt;static&gt;
+
+                    <span class="light">{Object}</span>
+                    <span class="light">RapidContext.Procedure.</span><b>mapAll</b>(obj)
+
+                    </div>
+                    <div class="description">
+                        Creates a new procedure caller for each key-value-pair in the specified
+object.
+
+
+                    </div>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{Object}</span> <b>obj</b>
+
+                                </dt>
+                                <dd>an object mapping keys to procedure names</dd>
+
+                            </dl>
+
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Returns:</dt>
+
+                                <dd><span class="light fixedFont">{Object}</span> an object mapping keys to procedure instances</dd>
+
+                            </dl>
+
+
+
+
+                    <hr />
+
+                    <div id="recall" class="fixedFont">
+
+                    <span class="light">{Deferred}</span>
+                    <b>recall</b>()
+
+                    </div>
+                    <div class="description">
+                        Calls the procedure with the same arguments as used in the last call. The
+call is asynchronous, so results will not be returned by this method.
+Instead the results will be available through the <var>onsuccess</var> signal, for
+example.<br/><br/>Note that any previously running call will automatically be cancelled, since
+only a single call can be processed at any time.
+
+
+                    </div>
+
+
+
+
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Returns:</dt>
+
+                                <dd><span class="light fixedFont">{Deferred}</span> a <var>MochiKit.Async.Deferred</var> object that will
+        callback with the response data or error</dd>
+
+                            </dl>
+
+
+
+
+                    <hr />
+
+                    <div id="multicall" class="fixedFont">
+
+                    <span class="light">{Deferred}</span>
+                    <b>multicall</b>(args, transform)
+
+                    </div>
+                    <div class="description">
+                        Calls the procedure multiple times (in sequence) with different arguments
+(supplied as an array of argument arrays). The calls are asynchronous, so
+results will not be returned by this method. Instead an array with the
+results will be available through the <var>onupdate</var> and <var>onsuccess</var> signals,
+for example.<br/><br/>Note that any previously running call will automatically be cancelled, since
+only a single call can be processed at any time. A result <var>transform</var>
+function can be supplied to transform each individual result. If the
+<var>transform</var> function throws an error, that result will be omitted.
+
+
+                    </div>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{Array}</span> <b>args</b>
+
+                                </dt>
+                                <dd>the array of argument arrays</dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{Function}</span> <b>transform</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the optional result transform function</dd>
+
+                            </dl>
+
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Returns:</dt>
+
+                                <dd><span class="light fixedFont">{Deferred}</span> a <var>MochiKit.Async.Deferred</var> object that will
+        callback with the response data or error</dd>
+
+                            </dl>
+
+
+
+
+                    <hr />
+
+                    <div id="cancel" class="fixedFont">
+
+
+                    <b>cancel</b>()
+
+                    </div>
+                    <div class="description">
+                        Cancels any current execution of this procedure. This method does nothing if
+no procedure call was currently executing.
+
+
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+                    <hr />
+
+                    <div id="reset" class="fixedFont">
+
+
+                    <b>reset</b>()
+
+                    </div>
+                    <div class="description">
+                        Cancels any current execution and removes the reference to the arguments of
+this procedure.
+
+
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- ============================== event details ========================= -->
+
+                <div class="sectionTitle">
+                    Event Detail
+                </div>
+
+                    <div id="event:oncall" class="fixedFont">
+
+
+                    <b>oncall</b>()
+
+                    </div>
+                    <div class="description">
+                        Emitted when the procedure is called. Each call corresponds to exactly one
+<var>oncall</var> and one <var>onresponse</var> event (even if the call was cancelled). No
+event data will be sent.
+
+
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+                    <hr />
+
+                    <div id="event:onupdate" class="fixedFont">
+
+
+                    <b>onupdate</b>()
+
+                    </div>
+                    <div class="description">
+                        Emitted if a partial procedure result is available. This event will only be
+emitted when performing a multi-call, along with the <var>oncall</var> and
+<var>onresponse</var> events (for each call). The partial procedure result will be
+sent as the event data.
+
+
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+                    <hr />
+
+                    <div id="event:onresponse" class="fixedFont">
+
+
+                    <b>onresponse</b>()
+
+                    </div>
+                    <div class="description">
+                        Emitted when the procedure response has been received. Each call corresponds
+to exactly one <var>oncall</var> and one <var>onresponse</var> event (even if the call was
+cancelled). The call response or error object will be sent as the event
+data.
+
+
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+                    <hr />
+
+                    <div id="event:onsuccess" class="fixedFont">
+
+
+                    <b>onsuccess</b>()
+
+                    </div>
+                    <div class="description">
+                        Emitted when a procedure call returned a result. This event is emitted after
+the <var>onresponse</var> event, but only if the procedure call actually succeeded.
+Use the <var>onerror</var> or <var>oncancel</var> signals for other result statuses. The call
+response object will be sent as the event data.
+
+
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+                    <hr />
+
+                    <div id="event:onerror" class="fixedFont">
+
+
+                    <b>onerror</b>()
+
+                    </div>
+                    <div class="description">
+                        Emitted when a procedure call failed. This event is emitted after the
+<var>onresponse</var> event, but only if the procedure call returned an error. Use
+the <var>onsuccess</var> or <var>oncancel</var> for other result statuses. The call error
+object will be sent as the event data.
+
+
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+                    <hr />
+
+                    <div id="event:oncancel" class="fixedFont">
+
+
+                    <b>oncancel</b>()
+
+                    </div>
+                    <div class="description">
+                        Emitted when a procedure call was cancelled. This event is emitted after the
+<var>onresponse</var> event, but only if the procedure call was cancelled. Use the
+<var>onsuccess</var> or <var>onerror</var> for other result statuses. No event data will be
+sent.
+
+
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!--END-->
+
+    </section>
+    <section class="footer center fineprint">
+      <hr>
+      Copyright &copy; 2007-2016 Per Cederberg. All rights reserved.
+    </section>
+
+  </body>
+</html>

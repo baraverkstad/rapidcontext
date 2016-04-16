@@ -1,0 +1,271 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
+	.KEYW {color: #933;}
+	.COMM {color: #bbb; font-style: italic;}
+	.NUMB {color: #393;}
+	.STRN {color: #393;}
+	.REGX {color: #339;}
+	.line {border-right: 1px dotted #666; color: #666; font-style: normal;}
+	</style></head><body><pre><span class='line'>  1</span> <span class="COMM">/*
+<span class='line'>  2</span>  * RapidContext &lt;http://www.rapidcontext.com/>
+<span class='line'>  3</span>  * Copyright (c) 2009-2010 Per Cederberg.
+<span class='line'>  4</span>  * All rights reserved.
+<span class='line'>  5</span>  *
+<span class='line'>  6</span>  * This program is free software: you can redistribute it and/or
+<span class='line'>  7</span>  * modify it under the terms of the BSD license.
+<span class='line'>  8</span>  *
+<span class='line'>  9</span>  * This program is distributed in the hope that it will be useful,
+<span class='line'> 10</span>  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+<span class='line'> 11</span>  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+<span class='line'> 12</span>  *
+<span class='line'> 13</span>  * See the RapidContext LICENSE for more details.
+<span class='line'> 14</span>  */</span><span class="WHIT">
+<span class='line'> 15</span>
+<span class='line'> 16</span> </span><span class="COMM">// Create default RapidContext object</span><span class="WHIT">
+<span class='line'> 17</span> </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">typeof</span><span class="PUNC">(</span><span class="NAME">RapidContext</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="STRN">"undefined"</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 18</span> </span><span class="WHIT">    </span><span class="NAME">RapidContext</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 19</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 20</span>
+<span class='line'> 21</span> </span><span class="COMM">/**
+<span class='line'> 22</span>  * Creates a new procedure caller function. This function can be called either
+<span class='line'> 23</span>  * as a constructor or as a plain function. In both cases it returns a new
+<span class='line'> 24</span>  * JavaScript function with additional methods.
+<span class='line'> 25</span>  *
+<span class='line'> 26</span>  * @constructor
+<span class='line'> 27</span>  * @param {String} procedure the procedure name
+<span class='line'> 28</span>  * @property {String} procedure The procedure name.
+<span class='line'> 29</span>  * @property {Array} args The arguments used in the last call.
+<span class='line'> 30</span>  *
+<span class='line'> 31</span>  * @class The procedure wrapper function. Used to provide a simplified way of
+<span class='line'> 32</span>  *   calling a procedure and connecting results through signals (instead of
+<span class='line'> 33</span>  *   using deferred callbacks).
+<span class='line'> 34</span>  *
+<span class='line'> 35</span>  *   The actual calls are performed with normal function calls, but the results
+<span class='line'> 36</span>  *   are asynchronous. When called, the procedure function returns a
+<span class='line'> 37</span>  *   `MochiKit.Async.Deferred` object (as the normal API call), but the results
+<span class='line'> 38</span>  *   will also be signalled through the `onsuccess` signal.
+<span class='line'> 39</span>  *
+<span class='line'> 40</span>  *   Differing from normal functions, a procedure function will also ensure
+<span class='line'> 41</span>  *   that only a single call is in progress at any time, automatically
+<span class='line'> 42</span>  *   cancelling any previous call if needed.
+<span class='line'> 43</span>  */</span><span class="WHIT">
+<span class='line'> 44</span> </span><span class="NAME">RapidContext.Procedure</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">procedure</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 45</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">proc</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 46</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">self</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">arguments.callee</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 47</span> </span><span class="WHIT">        </span><span class="NAME">self.args</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">MochiKit.Base.extend</span><span class="PUNC">(</span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">arguments</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 48</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">self.recall</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 49</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 50</span> </span><span class="WHIT">    </span><span class="NAME">MochiKit.Base.setdefault</span><span class="PUNC">(</span><span class="NAME">proc</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">RapidContext.Procedure.prototype</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 51</span> </span><span class="WHIT">    </span><span class="NAME">proc.procedure</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">procedure</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 52</span> </span><span class="WHIT">    </span><span class="NAME">proc.args</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 53</span> </span><span class="WHIT">    </span><span class="NAME">proc._deferred</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 54</span> </span><span class="WHIT">    </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">proc</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 55</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 56</span>
+<span class='line'> 57</span> </span><span class="COMM">/**
+<span class='line'> 58</span>  * Creates a new procedure caller for each key-value-pair in the specified
+<span class='line'> 59</span>  * object.
+<span class='line'> 60</span>  *
+<span class='line'> 61</span>  * @param {Object} obj an object mapping keys to procedure names
+<span class='line'> 62</span>  *
+<span class='line'> 63</span>  * @return {Object} an object mapping keys to procedure instances
+<span class='line'> 64</span>  */</span><span class="WHIT">
+<span class='line'> 65</span> </span><span class="NAME">RapidContext.Procedure.mapAll</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">obj</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 66</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">res</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 67</span> </span><span class="WHIT">    </span><span class="KEYW">for</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">k</span><span class="WHIT"> </span><span class="KEYW">in</span><span class="WHIT"> </span><span class="NAME">obj</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 68</span> </span><span class="WHIT">        </span><span class="NAME">res</span><span class="PUNC">[</span><span class="NAME">k</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">RapidContext.Procedure</span><span class="PUNC">(</span><span class="NAME">obj</span><span class="PUNC">[</span><span class="NAME">k</span><span class="PUNC">]</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 69</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 70</span> </span><span class="WHIT">    </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">res</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 71</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 72</span>
+<span class='line'> 73</span> </span><span class="COMM">/**
+<span class='line'> 74</span>  * Emitted when the procedure is called. Each call corresponds to exactly one
+<span class='line'> 75</span>  * `oncall` and one `onresponse` event (even if the call was cancelled). No
+<span class='line'> 76</span>  * event data will be sent.
+<span class='line'> 77</span>  *
+<span class='line'> 78</span>  * @name RapidContext.Procedure#oncall
+<span class='line'> 79</span>  * @event
+<span class='line'> 80</span>  */</span><span class="WHIT">
+<span class='line'> 81</span>
+<span class='line'> 82</span> </span><span class="COMM">/**
+<span class='line'> 83</span>  * Emitted if a partial procedure result is available. This event will only be
+<span class='line'> 84</span>  * emitted when performing a multi-call, along with the `oncall` and
+<span class='line'> 85</span>  * `onresponse` events (for each call). The partial procedure result will be
+<span class='line'> 86</span>  * sent as the event data.
+<span class='line'> 87</span>  *
+<span class='line'> 88</span>  * @name RapidContext.Procedure#onupdate
+<span class='line'> 89</span>  * @event
+<span class='line'> 90</span>  */</span><span class="WHIT">
+<span class='line'> 91</span>
+<span class='line'> 92</span> </span><span class="COMM">/**
+<span class='line'> 93</span>  * Emitted when the procedure response has been received. Each call corresponds
+<span class='line'> 94</span>  * to exactly one `oncall` and one `onresponse` event (even if the call was
+<span class='line'> 95</span>  * cancelled). The call response or error object will be sent as the event
+<span class='line'> 96</span>  * data.
+<span class='line'> 97</span>  *
+<span class='line'> 98</span>  * @name RapidContext.Procedure#onresponse
+<span class='line'> 99</span>  * @event
+<span class='line'>100</span>  */</span><span class="WHIT">
+<span class='line'>101</span>
+<span class='line'>102</span> </span><span class="COMM">/**
+<span class='line'>103</span>  * Emitted when a procedure call returned a result. This event is emitted after
+<span class='line'>104</span>  * the `onresponse` event, but only if the procedure call actually succeeded.
+<span class='line'>105</span>  * Use the `onerror` or `oncancel` signals for other result statuses. The call
+<span class='line'>106</span>  * response object will be sent as the event data.
+<span class='line'>107</span>  *
+<span class='line'>108</span>  * @name RapidContext.Procedure#onsuccess
+<span class='line'>109</span>  * @event
+<span class='line'>110</span>  */</span><span class="WHIT">
+<span class='line'>111</span>
+<span class='line'>112</span> </span><span class="COMM">/**
+<span class='line'>113</span>  * Emitted when a procedure call failed. This event is emitted after the
+<span class='line'>114</span>  * `onresponse` event, but only if the procedure call returned an error. Use
+<span class='line'>115</span>  * the `onsuccess` or `oncancel` for other result statuses. The call error
+<span class='line'>116</span>  * object will be sent as the event data.
+<span class='line'>117</span>  *
+<span class='line'>118</span>  * @name RapidContext.Procedure#onerror
+<span class='line'>119</span>  * @event
+<span class='line'>120</span>  */</span><span class="WHIT">
+<span class='line'>121</span>
+<span class='line'>122</span> </span><span class="COMM">/**
+<span class='line'>123</span>  * Emitted when a procedure call was cancelled. This event is emitted after the
+<span class='line'>124</span>  * `onresponse` event, but only if the procedure call was cancelled. Use the
+<span class='line'>125</span>  * `onsuccess` or `onerror` for other result statuses. No event data will be
+<span class='line'>126</span>  * sent.
+<span class='line'>127</span>  *
+<span class='line'>128</span>  * @name RapidContext.Procedure#oncancel
+<span class='line'>129</span>  * @event
+<span class='line'>130</span>  */</span><span class="WHIT">
+<span class='line'>131</span>
+<span class='line'>132</span> </span><span class="COMM">/**
+<span class='line'>133</span>  * Calls the procedure with the same arguments as used in the last call. The
+<span class='line'>134</span>  * call is asynchronous, so results will not be returned by this method.
+<span class='line'>135</span>  * Instead the results will be available through the `onsuccess` signal, for
+<span class='line'>136</span>  * example.
+<span class='line'>137</span>  *
+<span class='line'>138</span>  * Note that any previously running call will automatically be cancelled, since
+<span class='line'>139</span>  * only a single call can be processed at any time.
+<span class='line'>140</span>  *
+<span class='line'>141</span>  * @return {Deferred} a `MochiKit.Async.Deferred` object that will
+<span class='line'>142</span>  *         callback with the response data or error
+<span class='line'>143</span>  */</span><span class="WHIT">
+<span class='line'>144</span> </span><span class="NAME">RapidContext.Procedure.prototype.recall</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>145</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.args</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>146</span> </span><span class="WHIT">        </span><span class="KEYW">throw</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Error</span><span class="PUNC">(</span><span class="STRN">"No arguments supplied for procedure call to "</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">this.procedure</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>147</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>148</span> </span><span class="WHIT">    </span><span class="NAME">this.cancel</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>149</span> </span><span class="WHIT">    </span><span class="NAME">MochiKit.Signal.signal</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">"oncall"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>150</span> </span><span class="WHIT">    </span><span class="NAME">this._deferred</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">RapidContext.App.callProc</span><span class="PUNC">(</span><span class="NAME">this.procedure</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.args</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>151</span> </span><span class="WHIT">    </span><span class="NAME">this._deferred.addBoth</span><span class="PUNC">(</span><span class="NAME">MochiKit.Base.bind</span><span class="PUNC">(</span><span class="STRN">"_callback"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>152</span> </span><span class="WHIT">    </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._deferred</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>153</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>154</span>
+<span class='line'>155</span> </span><span class="COMM">/**
+<span class='line'>156</span>  * The procedure deferred callback handler. Dispatches the appropriate signals
+<span class='line'>157</span>  * depending on the result.
+<span class='line'>158</span>  *
+<span class='line'>159</span>  * @param {Object/Error} res the procedure result object
+<span class='line'>160</span>  */</span><span class="WHIT">
+<span class='line'>161</span> </span><span class="NAME">RapidContext.Procedure.prototype._callback</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">res</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>162</span> </span><span class="WHIT">    </span><span class="NAME">this._deferred</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>163</span> </span><span class="WHIT">    </span><span class="NAME">MochiKit.Signal.signal</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">"onresponse"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">res</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>164</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">res</span><span class="WHIT"> </span><span class="KEYW">instanceof</span><span class="WHIT"> </span><span class="NAME">MochiKit.Async.CancelledError</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>165</span> </span><span class="WHIT">        </span><span class="NAME">MochiKit.Signal.signal</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">"oncancel"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>166</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">res</span><span class="WHIT"> </span><span class="KEYW">instanceof</span><span class="WHIT"> </span><span class="NAME">Error</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>167</span> </span><span class="WHIT">        </span><span class="NAME">MochiKit.Signal.signal</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">"onerror"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">res</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>168</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>169</span> </span><span class="WHIT">        </span><span class="NAME">MochiKit.Signal.signal</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">"onsuccess"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">res</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>170</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>171</span> </span><span class="WHIT">    </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">res</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>172</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>173</span>
+<span class='line'>174</span> </span><span class="COMM">/**
+<span class='line'>175</span>  * Calls the procedure multiple times (in sequence) with different arguments
+<span class='line'>176</span>  * (supplied as an array of argument arrays). The calls are asynchronous, so
+<span class='line'>177</span>  * results will not be returned by this method. Instead an array with the
+<span class='line'>178</span>  * results will be available through the `onupdate` and `onsuccess` signals,
+<span class='line'>179</span>  * for example.
+<span class='line'>180</span>  *
+<span class='line'>181</span>  * Note that any previously running call will automatically be cancelled, since
+<span class='line'>182</span>  * only a single call can be processed at any time. A result `transform`
+<span class='line'>183</span>  * function can be supplied to transform each individual result. If the
+<span class='line'>184</span>  * `transform` function throws an error, that result will be omitted.
+<span class='line'>185</span>  *
+<span class='line'>186</span>  * @param {Array} args the array of argument arrays
+<span class='line'>187</span>  * @param {Function} [transform] the optional result transform function
+<span class='line'>188</span>  *
+<span class='line'>189</span>  * @return {Deferred} a `MochiKit.Async.Deferred` object that will
+<span class='line'>190</span>  *         callback with the response data or error
+<span class='line'>191</span>  */</span><span class="WHIT">
+<span class='line'>192</span> </span><span class="NAME">RapidContext.Procedure.prototype.multicall</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">args</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">transform</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>193</span> </span><span class="WHIT">    </span><span class="NAME">this.cancel</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>194</span> </span><span class="WHIT">    </span><span class="NAME">this._mapArgs</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>195</span> </span><span class="WHIT">    </span><span class="NAME">this._mapPos</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>196</span> </span><span class="WHIT">    </span><span class="NAME">this._mapRes</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>197</span> </span><span class="WHIT">    </span><span class="NAME">this._mapTransform</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">transform</span><span class="WHIT">
+<span class='line'>198</span> </span><span class="WHIT">    </span><span class="NAME">this._nextCall</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>199</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>200</span>
+<span class='line'>201</span> </span><span class="COMM">/**
+<span class='line'>202</span>  * The multicall deferred callback handler. Dispatches the appropriate signals
+<span class='line'>203</span>  * depending on the result.
+<span class='line'>204</span>  *
+<span class='line'>205</span>  * @param {Object/Error} res the procedure result object
+<span class='line'>206</span>  */</span><span class="WHIT">
+<span class='line'>207</span> </span><span class="NAME">RapidContext.Procedure.prototype._nextCall</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">res</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>208</span> </span><span class="WHIT">    </span><span class="NAME">this._deferred</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>209</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">typeof</span><span class="PUNC">(</span><span class="NAME">res</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="STRN">"undefined"</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>210</span> </span><span class="WHIT">        </span><span class="NAME">MochiKit.Signal.signal</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">"onresponse"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">res</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>211</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">res</span><span class="WHIT"> </span><span class="KEYW">instanceof</span><span class="WHIT"> </span><span class="NAME">MochiKit.Async.CancelledError</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>212</span> </span><span class="WHIT">            </span><span class="NAME">MochiKit.Signal.signal</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">"oncancel"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>213</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">res</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>214</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">res</span><span class="WHIT"> </span><span class="KEYW">instanceof</span><span class="WHIT"> </span><span class="NAME">Error</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>215</span> </span><span class="WHIT">            </span><span class="NAME">MochiKit.Signal.signal</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">"onerror"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">res</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>216</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">res</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>217</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>218</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this._mapTransform</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>219</span> </span><span class="WHIT">                </span><span class="NAME">this._mapRes.push</span><span class="PUNC">(</span><span class="NAME">res</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>220</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>221</span> </span><span class="WHIT">                </span><span class="KEYW">try</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>222</span> </span><span class="WHIT">                    </span><span class="NAME">res</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._mapTransform</span><span class="PUNC">(</span><span class="NAME">res</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>223</span> </span><span class="WHIT">                    </span><span class="NAME">this._mapRes.push</span><span class="PUNC">(</span><span class="NAME">res</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>224</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">catch</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">ignore</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>225</span> </span><span class="WHIT">                    </span><span class="COMM">// Skip results with mapping errors</span><span class="WHIT">
+<span class='line'>226</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>227</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>228</span> </span><span class="WHIT">            </span><span class="NAME">MochiKit.Signal.signal</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">"onupdate"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this._mapRes</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>229</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>230</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>231</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this._mapPos</span><span class="WHIT"> </span><span class="PUNC">&lt;</span><span class="WHIT"> </span><span class="NAME">this._mapArgs.length</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>232</span> </span><span class="WHIT">        </span><span class="NAME">this.args</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._mapArgs</span><span class="PUNC">[</span><span class="NAME">this._mapPos</span><span class="PUNC">++</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>233</span> </span><span class="WHIT">        </span><span class="NAME">MochiKit.Signal.signal</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">"oncall"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>234</span> </span><span class="WHIT">        </span><span class="NAME">this._deferred</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">RapidContext.App.callProc</span><span class="PUNC">(</span><span class="NAME">this.procedure</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.args</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>235</span> </span><span class="WHIT">        </span><span class="NAME">this._deferred.addBoth</span><span class="PUNC">(</span><span class="NAME">MochiKit.Base.bind</span><span class="PUNC">(</span><span class="STRN">"_nextCall"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>236</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._deferred</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>237</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>238</span> </span><span class="WHIT">        </span><span class="NAME">MochiKit.Signal.signal</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">"onsuccess"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this._mapRes</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>239</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._mapRes</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>240</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>241</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>242</span>
+<span class='line'>243</span> </span><span class="COMM">/**
+<span class='line'>244</span>  * Cancels any current execution of this procedure. This method does nothing if
+<span class='line'>245</span>  * no procedure call was currently executing.
+<span class='line'>246</span>  */</span><span class="WHIT">
+<span class='line'>247</span> </span><span class="NAME">RapidContext.Procedure.prototype.cancel</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>248</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this._deferred</span><span class="WHIT"> </span><span class="PUNC">!==</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>249</span> </span><span class="WHIT">        </span><span class="NAME">this._deferred.cancel</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>250</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>251</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>252</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>253</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>254</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>255</span>
+<span class='line'>256</span> </span><span class="COMM">/**
+<span class='line'>257</span>  * Cancels any current execution and removes the reference to the arguments of
+<span class='line'>258</span>  * this procedure.
+<span class='line'>259</span>  */</span><span class="WHIT">
+<span class='line'>260</span> </span><span class="NAME">RapidContext.Procedure.prototype.reset</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>261</span> </span><span class="WHIT">    </span><span class="NAME">this.cancel</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>262</span> </span><span class="WHIT">    </span><span class="NAME">this.args</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>263</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>264</span> </span></pre></body></html>

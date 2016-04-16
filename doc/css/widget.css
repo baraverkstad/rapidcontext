@@ -1,0 +1,781 @@
+/**
+ * Base Widget Style
+ */
+.widget {
+}
+.widget h3 {
+    font-family : Lucida Grande, Verdana, sans-serif;
+    font-weight: bold;
+    margin-top: 0px;
+    margin-bottom: 6px;
+    font-size: 1.2em;
+}
+.widget.hidden,
+.widgetHidden,
+.widget.widgetHidden,
+.widget .widgetHidden {
+    /* Multiple & longer selectors to get higher priority */
+    display: none;
+}
+.widgetDisabled {
+    background-color: #EEEEEE;
+    color: #888888;
+}
+.widgetInvalid {
+    border: 1px solid #EECCCC;
+    background-color: #FFFAFA;
+    background-image: linear-gradient(to bottom, #FFFDFD, #FFFAFA);
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFDFD', endColorstr='#FFFAFA')";
+}
+.widget-red {
+    color: #993333;
+}
+.widget-green {
+    color: #008877;
+}
+.widget-blue {
+    color: #0088AA;
+}
+.widget-yellow {
+    color: #EE9900;
+}
+
+
+/**
+ * Button Style
+ */
+.widgetButton {
+    display: inline-block;
+    min-height: 22px;
+    border: 1px solid #AAAAAA;
+    border-radius: 4px;
+    padding: 3px 6px;
+    color: #333333;
+    background-color: #E0E0E0;
+    background-image: linear-gradient(to bottom, #F8F8F8, #E0E0E0);
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#F8F8F8', endColorstr='#E0E0E0')";
+    box-shadow: 0 1px 2px rgba(180, 180, 180, 0.5);
+    text-shadow: 0 1px #FFFFFF;
+    font-size: 1.2em;
+    cursor: pointer;
+    /* MSIE 7: fix for button width */
+    *overflow: visible;
+}
+.widgetButton.widgetDisabled,
+.widgetButton.widgetDisabled:hover,
+.widgetButton.widgetDisabled:active {
+    top: 0;
+    color: #888888;
+    background-color: #F8F8F8;
+    background-image: linear-gradient(to bottom, #FFFFFF, #F8F8F8);
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#F8F8F8')";
+    box-shadow: 0 1px 2px rgba(180, 180, 180, 0.5);
+    text-shadow: 0 1px #FFFFFF;
+    cursor: default;
+}
+.widgetButton:focus {
+    outline: 0;
+    border-color: #AADDFF;
+    box-shadow: 0 0 4px rgba(50, 180, 255, 0.7);
+}
+.widgetButton:hover {
+    background-color: #E8E8E8;
+    background-image: linear-gradient(to bottom, #FFFFFF, #E8E8E8);
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#E8E8E8')";
+    box-shadow: 0 1px 3px rgba(180, 180, 180, 0.7);
+}
+.widgetButton:active {
+    position: relative;
+    top: 1px;
+    box-shadow: 0 0 2px #AAA inset;
+}
+.widgetButtonHighlight {
+    font-weight: bold;
+    letter-spacing: 0.03em;
+    border-color: #CBA;
+    background-color: #EEDD99;
+    background-image: linear-gradient(to bottom, #FFF8DD, #EEDD99);
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFF8DD', endColorstr='#EEDD99')";
+}
+.widgetButton.widgetButtonHighlight:hover {
+    background-color: #F8E8A8;
+    background-image: linear-gradient(to bottom, #FFFCEE, #F8E8A8);
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFCEE', endColorstr='#F8E8A8')";
+}
+.widgetButton .widgetIcon {
+    margin: 0 3px 0 0;
+    color: #444444;
+}
+
+
+/**
+ * Dialog Style
+ */
+.widgetDialog {
+    position: absolute;
+    background-color: #F0F0F0;
+    border-top: 1px solid #FFFFFF;
+    border-bottom: 1px solid #E0E0E0;
+    border-left: 1px solid #FFFFFF;
+    border-right: 1px solid #E0E0E0;
+    border-radius: 5px;
+    box-shadow: 0px 0px 4px #AAAAAA;
+    z-index: 100;
+    overflow: visible;
+}
+.widgetDialogClose {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    z-index: 1;
+}
+.widgetDialogClose.widgetIcon {
+    min-width: 18px;
+    border-radius: 3px;
+    padding: 1px 0 0 0;
+    color: #FFF;
+    font-size: 13px;
+}
+.widgetDialogClose.widgetIcon:hover {
+    background: #EE6666;
+}
+.widgetDialogResize {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    z-index: 1;
+    cursor: nw-resize;
+}
+.widgetDialogTitle {
+    margin: 2px 2px 0 2px;
+    border-radius: 3px 3px 0 0;
+    padding: 3px 6px;
+    overflow: hidden;
+    color: white;
+    background-color: #446688;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: default;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.widgetDialogContent {
+    margin: 0 2px 2px 2px;
+    border-radius: 0 0 3px 3px;
+    padding: 8px;
+    background: #F8F8F8;
+    background-image: linear-gradient(to bottom, #FFFFFF, #EEEEEE);
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#EEEEEE')";
+    overflow: auto;
+}
+
+
+/**
+ * Field Style
+ */
+.widgetField {
+}
+.widgetFieldMask {
+    cursor: pointer;
+}
+.widgetField .widgetIcon {
+    margin-left: 3px;
+}
+
+
+/**
+ * File Streamer Style
+ */
+.widgetFileStreamer {
+    margin: 0;
+    border: none;
+    padding: 0;
+}
+.widgetFileStreamer form {
+    margin: 0;
+    border: none;
+    padding: 0;
+}
+.widgetFileStreamer input {
+    margin: 0;
+}
+
+/**
+ * Form Style
+ */
+.widgetForm {
+}
+
+
+/**
+ * Form Validator Style
+ */
+.widgetFormValidator {
+    display: inline-block;
+    padding-left: 6px;
+    font-weight: bold;
+    color: #cc3333;
+}
+.widgetFormValidator .widgetIcon {
+    margin-right: 6px;
+}
+
+
+/**
+ * Icon Style
+ */
+.widgetIcon {
+    display: inline-block;
+    min-width: 1.3em;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+    font-size: 1.2em;
+    line-height: 1.3em;
+    text-align: center;
+}
+.widgetIconSprite {
+    min-width: 0;
+    background-repeat: no-repeat;
+    background-position: 0px 0px;
+    vertical-align: -25%;
+    /* MSIE 7: Fix for CSS vertical-align not working correctly. */
+    *vertical-align: 0;
+}
+.widgetIcon.widgetDisabled {
+    background-color: transparent;
+    opacity: 0.25;
+    filter: alpha(opacity=25);
+    cursor: default;
+}
+
+
+/**
+ * NavigationBar Style
+ */
+.widgetNavigationBar {
+    border: none;
+    font-size: 1.2em;
+    border-collapse: collapse;
+}
+.widgetNavigationBar td {
+    height: 26px;
+    padding: 5px 15px 0 15px;
+    font-weight: bold;
+}
+.widgetNavigationBar td.prev {
+    background: url(../images/backgrounds/navigation-bg-prev.gif) repeat-x;
+    cursor: pointer;
+}
+.widgetNavigationBar td.active {
+    background: url(../images/backgrounds/navigation-bg-active.gif) repeat-x;
+}
+.widgetNavigationBar td.next {
+    background: url(../images/backgrounds/navigation-bg-next.gif) repeat-x;
+}
+.widgetNavigationBar td.prev-prev,
+.widgetNavigationBar td.prev-active,
+.widgetNavigationBar td.prev-next,
+.widgetNavigationBar td.prev-end,
+.widgetNavigationBar td.active-prev,
+.widgetNavigationBar td.active-next,
+.widgetNavigationBar td.active-end,
+.widgetNavigationBar td.next-next,
+.widgetNavigationBar td.next-end {
+    width: 22px;
+    padding: 0;
+}
+.widgetNavigationBar td.prev-prev {
+    background: url(../images/backgrounds/navigation-prev-prev.gif) no-repeat;
+}
+.widgetNavigationBar td.prev-active {
+    background: url(../images/backgrounds/navigation-prev-active.gif) no-repeat;
+}
+.widgetNavigationBar td.prev-next {
+    background: url(../images/backgrounds/navigation-prev-next.gif) no-repeat;
+}
+.widgetNavigationBar td.prev-end {
+    background: url(../images/backgrounds/navigation-prev-end.gif) no-repeat;
+}
+.widgetNavigationBar td.active-prev {
+    background: url(../images/backgrounds/navigation-active-prev.gif) no-repeat;
+}
+.widgetNavigationBar td.active-next {
+    background: url(../images/backgrounds/navigation-active-next.gif) no-repeat;
+}
+.widgetNavigationBar td.active-end {
+    background: url(../images/backgrounds/navigation-active-end.gif) no-repeat;
+}
+.widgetNavigationBar td.next-next {
+    background: url(../images/backgrounds/navigation-next-next.gif) no-repeat;
+}
+.widgetNavigationBar td.next-end {
+    background: url(../images/backgrounds/navigation-next-end.gif) no-repeat;
+}
+
+
+/**
+ * Overlay Style
+ */
+.widgetOverlay {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    overflow: hidden;
+    text-align: center;
+}
+.widgetOverlayCover {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    opacity: 0.75;
+    filter: alpha(opacity=75);
+}
+.widgetOverlayDark .widgetOverlayCover {
+    background-color: black;
+}
+.widgetOverlayMessage {
+    display: inline-block;
+    position: relative;
+    top: 25%;
+    border: 1px solid #CCDDEE;
+    border-radius: 10px 10px;
+    padding: 30px 60px;
+    background-color: #F8FBFF;
+    background-image: linear-gradient(to bottom, #FFFFFF, #F8FBFF);
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#F8FBFF')";
+    box-shadow: 0 1px 3px #CCCCCC;
+    color: #446688;
+    font-size: 2em;
+    font-weight: bold;
+    /* MSIE 7: fix for "display: inline-block" (actually uses inline display instead) */
+    zoom: 1;
+    *display: inline;
+}
+
+
+/**
+ * Pane Style
+ */
+.widgetPane {
+}
+
+
+/**
+ * Popup Style
+ */
+.widgetPopup {
+    position: absolute;
+    overflow: auto;
+    z-index: 20;
+    border: 1px solid #CCC;
+    border-radius: 3px;
+    background: #FFFFFF;
+    color: #1e466e;
+    cursor: default;
+    font-size: 1.2em;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+.widgetPopup h3 {
+    margin: 0 0 0.2em 0;
+    padding: 0.2em 0.6em;
+    box-shadow: 0 1px 1px #DDD;
+    background: #F8F8F8;
+    color: #777;
+    font-size: 1.2em;
+    text-shadow: 1px 1px #FFF;
+}
+.widgetPopup hr {
+    margin: 0.2em 0 0.25em 0;
+    border-top: 0px;
+    border-bottom: 1px solid #EEE;
+    border-left: 0px;
+    border-right: 0px;
+}
+.widgetPopupItem {
+    padding: 0.25em 0.5em 0.25em 0.5em;
+    font-weight: bold;
+    cursor: pointer;
+}
+.widgetPopupItem:before {
+    visibility: hidden;
+    padding-right: 0.25em;
+    font-family: FontAwesome;
+    content: "\f105";
+    color: #68A;
+}
+.widgetPopupItem.widgetPopupSelected {
+    background: #EEFCFF;
+    background: linear-gradient(to bottom, #F8FEFF, #EEFCFF);
+    box-shadow: 0 0 1px #99b7d2;
+    text-shadow: 0 1px #FFF;
+}
+.widgetPopupItem.widgetPopupSelected:before {
+    visibility: visible;
+}
+.widgetPopupDisabled,
+.widgetPopupDisabled.widgetPopupItem.widgetPopupSelected {
+    background: transparent;
+    box-shadow: none;
+    text-shadow: none;
+    color: #ABC;
+    cursor: default;
+}
+.widgetPopupDisabled:before,
+.widgetPopupDisabled.widgetPopupItem.widgetPopupSelected:before {
+    visibility: hidden;
+}
+
+
+/**
+ * Progress Bar Style
+ */
+.widgetProgressBar {
+    overflow: hidden;
+    position: relative;
+    height: 14px;
+    width: 100%;
+    background: url(../images/backgrounds/progress-incomplete.gif) repeat-x;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #BBBBBB #888888 #888888 #BBBBBB;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+}
+.widgetProgressBarMeter {
+    height: 14px;
+    background: url(../images/backgrounds/progress-static.gif) repeat-x;
+}
+.widgetProgressBarMeter.animated {
+    background: url(../images/backgrounds/progress-animated.gif) repeat-x;
+}
+.widgetProgressBarText {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 14px;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    text-shadow: 0 1px 3px #000000;
+}
+
+
+/**
+ * Tab Container Style
+ */
+.widgetTabContainer {
+}
+.widgetTabContainerLabels {
+    position: relative;  /* Needed for z-index to work */
+    z-index: 2;
+    display: inline; /* Fixes float padding issues for IE 6 */
+}
+.widgetTabContainer > .widgetTabContainerLabels {
+    display: block; /* Reverses previous IE fix for compliant browsers */
+}
+.widgetTabContainerLabel {
+    float: left;
+    margin-right: 1px;
+    padding-left: 9px;
+    border-top: 1px solid transparent;
+    border-left: 1px solid transparent;
+    border-right: 1px solid transparent;
+    border-radius: 4px 4px 0 0;
+    cursor: pointer;
+    white-space: nowrap;
+    font-size: 13px;
+    color: #666666;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.widgetTabContainerLabel:first-child {
+    margin-left: 6px;
+}
+.widgetTabContainerLabel:hover {
+    background: #EEFCFF;
+    background: linear-gradient(to bottom, #F8FEFF, #EEFCFF);
+    border-top: 1px solid #CCEEFF;
+    border-left: 1px solid #CCEEFF;
+    border-right: 1px solid #CCEEFF;
+    color: black;
+}
+.widgetTabContainerLabel.selected,
+.widgetTabContainerLabel.selected:hover {
+    border-top: 1px solid #DDDDDD;
+    border-left: 1px solid #DDDDDD;
+    border-right: 1px solid #DDDDDD;
+    background: #EEEEEE;
+    background: linear-gradient(to bottom, #EEEEEE, #FFFFFF);
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#EEEEEE', endColorstr='#FFFFFF')";
+    color: black;
+}
+.widgetTabContainerLabel div {
+    padding: 4px 15px 4px 6px;
+}
+.widgetTabContainerLabel.selected div {
+    padding-bottom: 5px;
+}
+.widgetTabContainerLabel .widgetIcon {
+    min-width: 1.2em;
+    margin-left: 6px;
+    margin-right: -10px;
+    border-radius: 3px;
+    padding: 1px 0;
+    color: #CCC;
+    font-size: inherit;
+    line-height: inherit;
+}
+.widgetTabContainerLabel .widgetIcon:hover {
+    background: #EE6666;
+    color: white;
+}
+.widgetTabContainerContent {
+    position: relative;
+    top: -1px;
+    border-top: 1px solid #DDDDDD;
+    padding: 10px 10px 0 10px;
+    clear: both;
+    overflow: hidden;
+    /* z-index: -1;  Required for IE6, but breaks in IE7 */
+}
+
+
+/**
+ * Table Style
+ */
+div.widgetTable {
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border-radius: 0.3em;
+}
+div.widgetTable.compact {
+    max-height: 7em;
+}
+table.widgetTable {
+    width: 100%;
+    border-collapse: collapse;
+    cursor: default;
+}
+table.widgetTable td {
+    padding-top: 0.2em;
+    padding-bottom: 0.2em;
+    padding-left: 0.4em;
+    padding-right: 1em;
+    background: white;
+}
+tr.widgetTableAlt td {
+    background: #f8f8f8;
+}
+table.widgetTable tr:hover td {
+    background: #d8eaff;
+}
+table.widgetTable tbody tr.selected td {
+    background: #ffffaa;
+}
+table.widgetTable tbody tr.selected:hover td {
+    background: #ffff00;
+}
+
+
+/**
+ * Table Column Style
+ */
+th.widgetTableColumn {
+    position: relative;
+    padding-top: 0.2em;
+    padding-bottom: 0.2em;
+    padding-left: 0.4em;
+    padding-right: 2em;
+    background: #eeeeee;
+    background: linear-gradient(to bottom, #f0f0f0, #dddddd);
+    text-align: left;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+th.widgetTableColumn:after {
+    position: absolute;
+    top: 0.3em;
+    right: 0.3em;
+    color: #bbbbbb;
+    font-family: "FontAwesome";
+    content: "\f0dc";
+}
+th.widgetTableColumn.sortAsc,
+th.widgetTableColumn.sortDesc {
+    background: #f0d447;
+    background: linear-gradient(to bottom, #fff272, #f0d447);
+}
+th.widgetTableColumn.sortAsc:after {
+    top: 0.45em;
+    color: #000;
+    content: "\f0de";
+}
+th.widgetTableColumn.sortDesc:after {
+    top: 0em;
+    color: #000;
+    content: "\f0dd";
+}
+th.widgetTableColumn.sortNone:after {
+    content: "";
+}
+
+
+/**
+ * Text Area Style
+ */
+.widgetTextArea {
+    outline: 0;
+    border: 1px solid #CCCCCC;
+    border-radius: 3px 3px;
+    padding: 3px 5px;
+    box-shadow: 0 0 2px #EEEEEE;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 1.1em;
+    resize: none;
+}
+.widgetTextArea.widgetInvalid {
+    border: 1px solid #EECCCC;
+    box-shadow: 0 0 3px rgba(255, 180, 180, 0.7);
+}
+.widgetTextArea:focus {
+    outline: 0;
+    border-color: #AADDFF;
+    box-shadow: 0 0 4px rgba(50, 180, 255, 0.7);
+}
+.widgetTextArea.widgetInvalid:focus {
+    border-color: #AADDFF;
+    box-shadow: 0 0 4px rgba(50, 180, 255, 0.7);
+    background: white;
+}
+.widgetTextAreaHelp {
+    color: #888;
+}
+.widgetTextArea::-moz-placeholder {
+    color: #888;
+}
+.widgetTextArea:-ms-input-placeholder {
+    color: #888;
+}
+.widgetTextArea::-webkit-input-placeholder {
+    color: #888;
+}
+
+
+/**
+ * Text Field Style
+ */
+.widgetTextField {
+    outline: 0;
+    border: 1px solid #CCCCCC;
+    border-radius: 3px 3px;
+    padding: 3px 5px;
+    box-shadow: 0 0 2px #EEEEEE;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 1.1em;
+}
+.widgetTextField.widgetInvalid {
+    border: 1px solid #EECCCC;
+    box-shadow: 0 0 3px rgba(255,180,180,0.7);
+}
+.widgetTextField:focus {
+    outline: 0;
+    border-color: #AADDFF;
+    box-shadow: 0 0 4px rgba(50,180,255,0.7);
+}
+.widgetTextField.widgetInvalid:focus {
+    border-color: #AADDFF;
+    box-shadow: 0 0 4px rgba(50,180,255,0.7);
+    background: white;
+}
+.widgetTextFieldHelp {
+    color: #888;
+}
+.widgetTextField::-moz-placeholder {
+    color: #888;
+}
+.widgetTextField:-ms-input-placeholder {
+    color: #888;
+}
+.widgetTextField::-webkit-input-placeholder {
+    color: #888;
+}
+
+
+/**
+ * Tree Style
+ */
+.widgetTree {
+    position: relative;
+    overflow: auto;
+    border: 1px solid #DDDDDD;
+    background: white;
+}
+
+
+/**
+ * Tree Node Style
+ */
+.widgetTreeNode {
+    margin: 0px;
+    cursor: pointer;
+}
+.widgetTreeNode .selected {
+    background: #ffffaa;
+    font-weight: bold;
+}
+.widgetTreeNodeLabel {
+    padding-top: 1px;
+    padding-bottom: 1px;
+}
+.widgetTreeNodeLabel:hover {
+    background: #ddeeff;
+}
+.widgetTreeNodeLabel.selected:hover {
+    background: #ffff00;
+}
+.widgetTreeNodeText {
+    padding-left: 3px;
+}
+.widgetTreeNodeContainer {
+    padding-left: 16px;
+}
+
+
+/**
+ * Wizard Style
+ */
+.widgetWizard {
+    position: relative;
+    overflow: hidden;
+}
+.widgetWizardTitle {
+    border-bottom: 1px solid #DDDDDD;
+    padding-bottom: 3px;
+}
+.widgetWizardInfo {
+    color: #888;
+}
+.widgetWizardWait {
+    margin-right: 6px;
+}
+.widgetWizardButtons {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    z-index: 1;
+}

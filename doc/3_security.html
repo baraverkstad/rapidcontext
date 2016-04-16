@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="css/style.css" type="text/css">
+    <link rel="stylesheet" href="css/font-awesome-4.3.0.min.css" type="text/css">
+    <link rel="shortcut icon" type="image/x-icon" href="images/logotype-icon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/logotype-icon-16x16.png">
+    <link rel="icon" type="image/png" sizes="256x256" href="images/logotype-icon-256x256.png">
+    <link rel="apple-touch-icon" sizes="256x256" href="images/logotype-icon-256x256.png">
+    <title>RapidContext :: Security, Users &amp; Permissions</title>
+  </head>
+  <body class="doc">
+    <section class="header">
+      <div class="center">
+        <a href="http://www.rapidcontext.com/" class="logotype">
+          <img src="images/logotype-icon-256x256.png" style="width: 128px; height: 128px;" />
+        </a>
+        <div class="text">
+          <a href="http://www.rapidcontext.com/">
+            <span style="font-size: 50px;">RapidContext</span><br/>
+            <span style="font-size: 24px; color: #caf3ff;">Access &gt; Discovery &gt; Insight</span><br/>
+            <span style="font-size: 18px; letter-spacing: 6px; line-height: 26px;">www.rapidcontext.com</span>
+          </a>
+        </div>
+      </div>
+      <div class="menu">
+        <a href="http://www.rapidcontext.com/doc/index.html">Docs</a>
+        &bull; <a href="https://github.com/cederberg/rapidcontext/releases">Downloads</a>
+        &bull; <a href="https://github.com/cederberg/rapidcontext">Project</a>
+      </div>
+    </section>
+    <section class="content center">
+
+<ol class="breadcrumb">
+  <li><a href="index.html">Documentation</a></li>
+  <li class="active">Users &amp; Security</li>
+</ol>
+
+<!--START-->
+
+<h1>3. Security, Users &amp; Permissions</h1>
+
+<div class="box red" style="margin-top: 0;">
+  <i class="box-icon fa fa-minus-circle"></i>
+  <div class="box-content">
+    <h2 style="margin: 0;">Security Notice</h2>
+    <ul>
+      <li><strong>Read Security Notices</strong> &mdash; This chapter contains
+          a number of security notices. They are provided for your protection.
+          Read them.</li>
+      <li><strong>Understand Implications</strong> &mdash; The security
+          implications of installing RapidContext must be properly understood.
+          Especially for a production environment or for a server reachable
+          from an external network (Internet).</li>
+      <li><strong>Follow Advice &amp; Precautions</strong> &mdash; Take care
+          to follow the advice or best practices outlined in this chapter.
+          Please revisit this chapter after installation in order to
+          double-check on the issues outlined here.</li>
+    </ul>
+  </div>
+</div>
+
+<h2 id="default_users">3.1. Default Users &amp; Roles</h2>
+
+<p>The default installation of RapidContext contains the following users and
+roles:</p>
+
+<ul class="box yellow">
+  <li><strong><var>admin</var> (user)</strong> &mdash; Created if no other
+      users are detected on server startup. The password is initially set to
+      accept any value (an empty string). The user is also assigned the
+      <var>admin</var> role. It is good practice to either disable this user
+      or assign it a proper password.</li>
+  <li><strong><var>admin</var> (role)</strong> &mdash; A built-in role that
+      provides full access to all objects. This role <strong>should not be
+      modified or removed</strong> from the system. Instead, it should be
+      assigned to users with care. In most installations, it should be the
+      only role with access to modify procedures, manage plug-ins, and
+      similar administrative operations.</li>
+  <li><strong><var>anonymous</var> (role)</strong> &mdash; A built-in role that
+      provides anonymous (i.e. public) access to system procedures and some
+      built-in apps. This role is required for the login app to function
+      properly.</li>
+</ul>
+
+<div class="box red" style="margin-top: 0;">
+  <i class="box-icon fa fa-minus-circle"></i>
+  <div class="box-content">
+    <h2 style="margin: 0;">Security Notice</h2>
+    <ul>
+      <li><strong>Modify <var>admin</var> User Password</strong> &mdash; Either
+          disable the <var>admin</var> user or assign a strong password.</li>
+      <li><strong>Avoid <var>admin</var> Role Access</strong> &mdash; The
+          <var>admin</var> role should be avoided, if possible. Create new
+          roles with more limited access privileges for daily usage.</li>
+    </ul>
+  </div>
+</div>
+
+
+<h2 id="user_authentication">3.2. User Authentication</h2>
+
+<p>RapidContext supports both authenticated and anonymous usage. The following
+protocols for user authentication are built-in and supported by default:</p>
+
+<ul class="box yellow">
+  <li><strong>HTTP Digest Auth</strong> &mdash; Uses a browser built-in login
+      dialog for user authentication. This method uses a challenge-response
+      protocol that avoids sending the password over the wire.</li>
+  <li><strong><var>System.Session.Authenticate</var> Procedure</strong> &mdash;
+      Uses HTTP POST to call a procedure with an MD5 hash similar to HTTP
+      digest auth. This method uses a challenge-response scheme that avoids
+      sending the password over the wire.</li>
+  <li><strong><var>System.Session.AuthenticateToken</var> Procedure</strong>
+      &mdash; Uses HTTP POST to call a procedure with an authentication token
+      that contains both user id and a password equivalent. This method is
+      used for "password recovery" via email or similar.</li>
+</ul>
+
+<div class="box red" style="margin-top: 0;">
+  <i class="box-icon fa fa-minus-circle"></i>
+  <div class="box-content">
+    <h2 style="margin: 0;">Security Notice</h2>
+    <p>It is <strong>strongly recommended</strong> to only use user
+    authentication over secure channels (intranets, VPN tunnels or HTTPS).
+    Otherwise the communication is vulnerable to eavesdropping,
+    man-in-the-middle attacks or replay attacks.</p>
+  </div>
+</div>
+
+
+<h2 id="sessions">3.3. Sessions &amp; Persistent Cookie Authentication</h2>
+
+<p>After a successful authentication, a new session is initiated for the user.
+The <var>sessionid</var> HTTP cookie is sent to the web browser and no further
+authentication is required until the cookie expires or is invalidated. This
+avoids repeated authentication requests.</p>
+
+<p>Session cookies are not created when accessing the storage web service, but
+are used if already set. Instead, the storage web service relies on HTTP
+Digest authentication (due to WebDAV compatibility).</p>
+
+<div class="box green" style="margin-top: 0;">
+  <i class="box-icon fa fa-info-circle"></i>
+  <div class="box-content">
+    <h2 style="margin: 0;">Notice</h2>
+    <p>A user session can be invalidated in one of the following ways:</p>
+    <ul>
+      <li><strong>Session Expiry</strong> &mdash; Both the <var>sessionid</var>
+          cookie and the session itself is set to expire after 30 days.</li>
+      <li><strong>Logout</strong> &mdash; Users can logout from the user menu
+          (top right in the standard user interface).</li>
+      <li><strong>Forced Termination</strong> &mdash; The built-in procedure
+          <var>System.Session.Terminate</var> allows the early termination of
+          any user session.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="box red" style="margin-top: 0;">
+  <i class="box-icon fa fa-minus-circle"></i>
+  <div class="box-content">
+    <h2 style="margin: 0;">Security Notice</h2>
+    <p>Due to persistent cookie authentication, it is <strong>strongly
+    recommended</strong> to always logout from user accounts with highly
+    privileged access. Also, only secure communication channels (intranets,
+    VPN tunnels or HTTPS) should be used.</p>
+  </div>
+</div>
+
+
+<h2 id="user_management">3.4. User Management &amp; Storage</h2>
+
+<p>Users are managed with the built-in <strong>Admin</strong> app. Follow
+the steps below in order to edit or create a user:</p>
+
+<ol class="box yellow">
+  <li>Launch or go to the <strong>Admin</strong> app</li>
+  <li>Choose the <q>Users</q> tab</li>
+  <li>Select the appropriate user <strong>OR</strong> press the <q>+</q>
+      icon</li>
+  <li>Edit the user form (see screenshot for <var>admin</var> user)
+      <p class="figure">
+        <img src="images/screenshot-user-edit.png" />
+      </p></li>
+  <li>Press <q>Save</q> to store the changes</li>
+</ol>
+
+<div class="box green" style="margin-top: 0;">
+  <i class="box-icon fa fa-info-circle"></i>
+  <div class="box-content">
+    <h2 style="margin: 0;">Notice</h2>
+    <p>A few notes regarding user data storage:</p>
+    <ul>
+      <li><strong>Passwords</strong> &mdash; Passwords are stored with a
+          one-way MD5 hash (without salt). This makes them almost impossible
+          to decrypt, but a user with write permission can of course reset
+          any user password as needed.</li>
+      <li><strong>User Removal</strong> &ndash; Users can be removed by
+          deleting the corresponding file from storage, but this is
+          <strong>strongly discouraged</strong>. Use the
+          <q>Enabled</q> checkbox in the dialog above instead.</li>
+      <li><strong>Storage Location</strong> &ndash; The user objects can be
+          found in the <var>local</var> plug-in, with each user stored as
+          <var>user/[identifier]</var>. See the security notice below regarding
+          the correct permissions for this path.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="box red" style="margin-top: 0;">
+  <i class="box-icon fa fa-minus-circle"></i>
+  <div class="box-content">
+    <h2 style="margin: 0;">Security Notice</h2>
+    <ul>
+      <li><strong>Protect Password Hashes</strong> &mdash; Although the
+          actual password cannot be retrieved from a password hash, it is still
+          possible to login using only a user name and a password hash. This is
+          due to the workings of the HTTP Digest mechanism.</li>
+      <li><strong>Disable User <var>read</var> Access</strong> &mdash; Due to
+          the unsafe nature of the password hashes, all <var>read</var> access
+          to the <var>/user/**</var> storage path should be limited. Naturally,
+          <var>write</var> access must also be limited.</li>
+    </ul>
+  </div>
+</div>
+
+
+<h2 id="roles_access_control">3.5. Roles &amp; Access Control</h2>
+
+<p>All access control is assigned via roles. Each role provides an access
+control list, detailing a list of storage paths and the corresponding
+permissions. The permission names and their meanings are the following:</p>
+
+<ul class="box yellow">
+  <li><var>none</var> &mdash; Provides no access at all. This is used to block
+      access to a subpath, as this permission also stops further searching down
+      the access control list when matched.</li>
+  <li><var>internal</var> &mdash; Provides indirect read access to an object.
+      This is used to allow access to connections, procedures and similar when
+      used by another object (i.e. a procedure).</li>
+  <li><var>read</var> &mdash; Provides read (and execute) access to an object.
+      This also allows introspection into the object properties, source code
+      and similar. Implies <var>internal</var> access as well.</li>
+  <li><var>search</var> &mdash; Provides object listing and search permission.
+      Note that only objects with <var>read</var> permission are returned in
+      search results, regardless of this permission.</li>
+  <li><var>write</var> &mdash; Provides write (and delete) access to an object.
+      This is used when modifications to data or similar must be allowed. Note
+      that this <strong>does not</strong> imply either <var>read</var> or
+      <var>search</var> access to the same objects.</li>
+  <li><var>all</var> &mdash; Provides all permissions. This can be used as a
+      shorthand way to provide <var>read</var>, <var>search</var> and
+      <var>write</var> permission to objects, but it also provides any custom
+      permission requested.</li>
+  <li><var>...</var> &mdash; Any other permission name is considered a custom
+      permission. No automatic access control is performed for such permissions,
+      but they can be checked programmatically.</li>
+</ul>
+
+<p>Multiple roles may be assigned to each user, providing the user will the
+union of the role permissions. Roles can also be automatically assigned to
+users via the <var>auto</var> property:</p>
+
+<ul class="box yellow">
+  <li><var>auto = all</var> &mdash; Assigns the role to all users, including
+      anonymous, non-authenticated users. This is used to add permissions
+      for anonymous access.</li>
+  <li><var>auto = auth</var> &mdash; Assigns the role to all authenticated
+      users, regardless of their other roles. This is used to add permissions
+      to logged in users.</li>
+</ul>
+
+<div class="box red" style="margin-top: 0;">
+  <i class="box-icon fa fa-minus-circle"></i>
+  <div class="box-content">
+    <h2 style="margin: 0;">Security Notice</h2>
+    <p>The <var>read</var> permission <strong>should not be provided for user
+    objects</strong>. Doing so allows other users to read the password hash
+    or to create new authentication tokens. Both would allow login access for
+    the user in question.</p>
+  </div>
+</div>
+
+
+<h2 id="role_management">3.6. Role Management &amp; Storage</h2>
+
+<p>Roles are currently created and modified without any admin tools. The role
+objects can be found in storage as <var>role/[identifier]</var>. See below for
+an example role properties file:</p>
+
+<div class="box blue">
+  <i class="box-icon fa fa-code"></i>
+  <pre class="box-content code">
+<span class="comment"># General properties</span>
+id = demo
+type = role
+name = Demo
+description = Provides access to the demo app and procedures.
+
+<span class="comment"># Access array</span>
+access.0.path = app/demo
+access.0.permission = read
+access.1.path = procedure/Demo.**
+access.1.permission = read
+  </pre>
+</div>
+
+<p>The configuration for the <var>access</var> array (the access control list)
+supports the following properties:</p>
+
+<ul class="box yellow">
+  <li><var>access.#.path</var> &mdash; The storage path for the object. May
+      contain wildcard <var>?</var>, <var>*</var> or <var>**</var> characters
+      to match multiple objects. Only <var>**</var> will match <q>/</q>
+      characters (i.e. storage path separators). All path names are
+      case-sensitive.</li>
+  <li><var>access.#.regexp</var> &mdash; The storage path for the object, as
+      defined by a regular expression. This is used as an alternative to
+      <var>path</var> when more complex matching is necessary. Note that
+      regular expression syntax is tricky and requires proper escaping of
+      literal <q>.</q> characters (among others).</li>
+  <li><var>access.#.permission</var> &mdash; The access permissions to match
+      (see list above). May contain several permissions, separated by
+      <q>,</q> or <q> </q>.</li>
+</ul>
+
+<p>Permissions can be checked on all object access via the built-in procedures
+or web services. Additional permissions can be checked programmatically via the
+<var>System.User.Access</var> procedure.</p>
+
+<div class="box red" style="margin-top: 0;">
+  <i class="box-icon fa fa-minus-circle"></i>
+  <div class="box-content">
+    <h2 style="margin: 0;">Security Notice</h2>
+    <ul>
+      <li><strong>Disable Role <var>write</var> Access</strong> &mdash; Since
+          the role objects contain the access control lists, any user with
+          write access to any role object can open the system for full
+          access. Access to <var>role/**</var> should be very limited.</li>
+    </ul>
+  </div>
+</div>
+
+
+<h2 id="security_checklist">3.7. Security Checklist</h2>
+
+<p>Before installing a RapidContext server in production environment or on a
+server reachable from an external network (Internet), please check the
+following:</p>
+
+<ul class="box yellow">
+  <li><strong>Disable <var>admin</var> User</strong> &ndash; Make sure that the
+      <var>admin</var> user is either disabled or provided with a strong
+      password.</li>
+  <li><strong>Use Strong Passwords</strong> &ndash; Users should be encouraged
+      to use strong passwords in order to avoid risks with brute-force attacks
+      or password guessing.</li>
+  <li><strong>Encrypt Connections</strong> &ndash; All external communications
+      be encrypted, since information can otherwise be eavesdropped. Use an
+      HTTPS reverse proxy, an HTTPS servlet container, a VPN tunnel or
+      similar.</li>
+  <li><strong>Verify Access Controls</strong> &ndash; Test the access controls
+      for each role with a test user (having only that role). Verify that all
+      privileged resources are unavailable for any unprivileged role.</li>
+  <li><strong>Limit <var>admin</var> Role Access</strong> &ndash; The number of
+      users with the <var>admin</var> role should be limited, to avoid
+      potential abuse of the system. Create more limited roles for daily
+      usage.</li>
+</ul>
+
+
+<!--END-->
+
+    </section>
+    <section class="footer center fineprint">
+      <hr>
+      Copyright &copy; 2007-2016 Per Cederberg. All rights reserved.
+    </section>
+  </body>
+</html>

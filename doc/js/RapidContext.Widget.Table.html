@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="JsDoc Toolkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="../css/style.css" type="text/css">
+    <link rel="stylesheet" href="../css/font-awesome-4.3.0.min.css" type="text/css">
+    <link rel="shortcut icon" type="image/x-icon" href="../images/logotype-icon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="../images/logotype-icon-16x16.png">
+    <link rel="icon" type="image/png" sizes="256x256" href="../images/logotype-icon-256x256.png">
+    <link rel="apple-touch-icon" sizes="256x256" href="../images/logotype-icon-256x256.png">
+    <title>RapidContext :: RapidContext.Widget.Table</title>
+  </head>
+  <body class="doc">
+        <section class="header">
+      <div class="center">
+        <a href="http://www.rapidcontext.com/" class="logotype">
+          <img src="../images/logotype-icon-256x256.png" style="width: 128px; height: 128px;" />
+        </a>
+        <div class="text">
+          <a href="http://www.rapidcontext.com/">
+            <span style="font-size: 50px;">RapidContext</span><br/>
+            <span style="font-size: 24px; color: #caf3ff;">Access &gt; Discovery &gt; Insight</span><br/>
+            <span style="font-size: 18px; letter-spacing: 6px; line-height: 26px;">www.rapidcontext.com</span>
+          </a>
+        </div>
+      </div>
+      <div class="menu">
+        <a href="http://www.rapidcontext.com/doc/index.html">Docs</a>
+        &bull; <a href="https://github.com/cederberg/rapidcontext/releases">Downloads</a>
+        &bull; <a href="https://github.com/cederberg/rapidcontext">Project</a>
+      </div>
+    </section>
+    <section class="content center">
+
+
+<ol class="breadcrumb">
+  <li><a href="../index.html">Documentation</a></li>
+  <li><a href="index.html">JavaScript API</a></li>
+  <li class="active">RapidContext.Widget.Table</li>
+</ol>
+
+<!--START-->
+
+<!-- ============================== class title ============================ -->
+            <h1 class="classTitle">
+
+                Class RapidContext.Widget.Table
+            </h1>
+
+<!-- ============================== class summary ========================== -->
+            <p class="description">
+
+                    <i>Extends:</i>
+                    <a href="RapidContext.Widget.html">RapidContext.Widget</a><br /><br />
+
+
+                The table widget class. Used to provide a sortable and scrolling
+    data table, using an outer <var>&lt;div&gt;</var> HTML element around a <var>&lt;table&gt;</var>. The
+    <var>Table</var> widget can only have <var>TableColumn</var> child nodes, each providing a
+    visible data column in the table.
+
+                <br/><br/>
+
+
+                    <i>Source code:</i>
+                    <a href="src/RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>
+
+            </p>
+
+<!-- ============================== constructor summary ==================== -->
+
+            <table class="summaryTable">
+                <caption>Class Summary</caption>
+                <tbody>
+                    <tr>
+                        <td class="attributes">&nbsp;</td>
+                        <td class="nameDescription" >
+                            <div class="fixedFont">
+                                <b><a href="RapidContext.Widget.Table.html#constructor">RapidContext.Widget.Table</a></b>(attrs)
+                            </div>
+                            <div class="description">Creates a new data table widget.</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+<!-- ============================== properties summary ===================== -->
+
+
+<!-- ============================== methods summary ======================== -->
+
+
+
+
+                <table class="summaryTable">
+                    <caption>Method Summary</caption>
+                    <tbody>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont"><b><a href="RapidContext.Widget.Table.html#addChildNode">addChildNode</a></b>(child)
+                                </div>
+                                <div class="description">Adds a single child table column widget to this widget.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont"><b><a href="RapidContext.Widget.Table.html#addSelectedIds">addSelectedIds</a></b>()
+                                </div>
+                                <div class="description">Adds the specified row id values to the selection.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont"><b><a href="RapidContext.Widget.Table.html#clear">clear</a></b>()
+                                </div>
+                                <div class="description">Clears all the data in the table.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont"><b><a href="RapidContext.Widget.Table.html#getCellElem">getCellElem</a></b>(row, col)
+                                </div>
+                                <div class="description">Returns a table cell element.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont"><b><a href="RapidContext.Widget.Table.html#getColumnIndex">getColumnIndex</a></b>(field)
+                                </div>
+                                <div class="description">Returns the column index of a field.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont"><b><a href="RapidContext.Widget.Table.html#getData">getData</a></b>()
+                                </div>
+                                <div class="description">Returns an array with the data in the table.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont"><b><a href="RapidContext.Widget.Table.html#getIdKey">getIdKey</a></b>()
+                                </div>
+                                <div class="description">Returns the unique key identifier column field, or null if none
+was set.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont"><b><a href="RapidContext.Widget.Table.html#getRowCount">getRowCount</a></b>()
+                                </div>
+                                <div class="description">Returns the number of rows in the table.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont"><b><a href="RapidContext.Widget.Table.html#getRowId">getRowId</a></b>(index)
+                                </div>
+                                <div class="description">Returns the row id for the specified row index.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont"><b><a href="RapidContext.Widget.Table.html#getSelectedData">getSelectedData</a></b>()
+                                </div>
+                                <div class="description">Returns the currently selected row data.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont"><b><a href="RapidContext.Widget.Table.html#getSelectedIds">getSelectedIds</a></b>()
+                                </div>
+                                <div class="description">Returns the currently selected row ids.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont"><b><a href="RapidContext.Widget.Table.html#getSortKey">getSortKey</a></b>()
+                                </div>
+                                <div class="description">Returns the current sort key for the table.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont"><b><a href="RapidContext.Widget.Table.html#redraw">redraw</a></b>()
+                                </div>
+                                <div class="description">Redraws the table from updated source data.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont"><b><a href="RapidContext.Widget.Table.html#removeChildNode">removeChildNode</a></b>(child)
+                                </div>
+                                <div class="description">Removes a single child table column widget from this widget.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont"><b><a href="RapidContext.Widget.Table.html#removeSelectedIds">removeSelectedIds</a></b>()
+                                </div>
+                                <div class="description">Removes the specified row id values from the selection.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont"><b><a href="RapidContext.Widget.Table.html#setAttrs">setAttrs</a></b>(attrs)
+                                </div>
+                                <div class="description">Updates the widget or HTML DOM node attributes.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont"><b><a href="RapidContext.Widget.Table.html#setData">setData</a></b>(data)
+                                </div>
+                                <div class="description">Sets the table data.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont"><b><a href="RapidContext.Widget.Table.html#setIdKey">setIdKey</a></b>(key)
+                                </div>
+                                <div class="description">Sets the unique key identifier column field.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont"><b><a href="RapidContext.Widget.Table.html#setSelectedIds">setSelectedIds</a></b>()
+                                </div>
+                                <div class="description">Sets the selection to the specified row id values.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont"><b><a href="RapidContext.Widget.Table.html#sortData">sortData</a></b>(field, direction)
+                                </div>
+                                <div class="description">Sorts the table data by field and direction.</div>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+
+
+                <dl class="inheritsList">
+                <dt>Methods borrowed from class <a href="RapidContext.Widget.html">RapidContext.Widget</a>: </dt><dd><a href="RapidContext.Widget.html#addAll">addAll</a>, <a href="RapidContext.Widget.html#addClass">addClass</a>, <a href="RapidContext.Widget.html#animate">animate</a>, <a href="RapidContext.Widget.html#blurAll">blurAll</a>, <a href="RapidContext.Widget.html#destroy">destroy</a>, <a href="RapidContext.Widget.html#disable">disable</a>, <a href="RapidContext.Widget.html#enable">enable</a>, <a href="RapidContext.Widget.html#getChildNodes">getChildNodes</a>, <a href="RapidContext.Widget.html#hasClass">hasClass</a>, <a href="RapidContext.Widget.html#hide">hide</a>, <a href="RapidContext.Widget.html#isDisabled">isDisabled</a>, <a href="RapidContext.Widget.html#isHidden">isHidden</a>, <a href="RapidContext.Widget.html#removeAll">removeAll</a>, <a href="RapidContext.Widget.html#removeClass">removeClass</a>, <a href="RapidContext.Widget.html#setStyle">setStyle</a>, <a href="RapidContext.Widget.html#show">show</a>, <a href="RapidContext.Widget.html#toggleClass">toggleClass</a>, <a href="RapidContext.Widget.html#uid">uid</a></dd>
+                </dl>
+
+
+<!-- ============================== events summary ======================== -->
+
+
+
+
+                <table class="summaryTable">
+                    <caption>Event Summary</caption>
+                    <tbody>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont"><b><a href="RapidContext.Widget.Table.html#event:onclear">onclear</a></b>()
+                                </div>
+                                <div class="description">Emitted when the table data is cleared.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont"><b><a href="RapidContext.Widget.Table.html#event:onselect">onselect</a></b>()
+                                </div>
+                                <div class="description">Emitted when the table selection changes.</div>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+
+
+                <dl class="inheritsList">
+
+                </dl>
+
+
+
+<!-- ============================== constructor details ==================== -->
+
+            <div id="constructor" class="details">
+                <div class="sectionTitle">
+                    Class Detail
+                </div>
+
+                <div class="fixedFont">
+                        <b>RapidContext.Widget.Table</b>(attrs)
+                </div>
+
+                <div class="description">
+                    Creates a new data table widget.
+
+                </div>
+
+
+
+                <pre class="code"><span class="label">JavaScript:</span>
+var attrs1 = { field: "id", title: "Identifier", key: true, type: "number" };
+var attrs2 = { field: "name", title: "Name", maxLength: 50, sort: "asc" };
+var attrs3 = { field: "modified", title: "Last Modified", type: "datetime" };
+var col1 = RapidContext.Widget.TableColumn(attrs1);
+var col2 = RapidContext.Widget.TableColumn(attrs2);
+var col3 = RapidContext.Widget.TableColumn(attrs3);
+var exampleTable = RapidContext.Widget.Table({}, col1, col2, col3);
+RapidContext.Util.registerSizeConstraints(exampleTable, "50%", "100%");</pre>
+
+                <pre class="code"><span class="label">User Interface XML:</span>
+&lt;Table id="exampleTable" w="50%" h="100%"&gt;
+  &lt;TableColumn field="id" title="Identifier" key="true" type="number" /&gt;
+  &lt;TableColumn field="name" title="Name" maxLength="50" sort="asc" /&gt;
+  &lt;TableColumn field="modified" title="Last Modified" type="datetime" /&gt;
+&lt;/Table&gt;</pre>
+
+
+
+
+
+                        <dl class="detailList">
+                        <dt class="heading">Parameters:</dt>
+
+                            <dt>
+                                <span class="light fixedFont">{Object}</span>  <b>attrs</b>
+
+                            </dt>
+                                <dd>the widget and node attributes</dd>
+
+                            <dt>
+                                <span class="light fixedFont">{String}</span>  <b>attrs.select</b>
+                                <i>Optional</i>
+                            </dt>
+                                <dd>the row selection mode (<q>none</q>, <q>one</q> or
+           <q>multiple</q>), defaults to <q>one</q></dd>
+
+                            <dt>
+                                <span class="light fixedFont">{String}</span>  <b>attrs.key</b>
+                                <i>Optional</i>
+                            </dt>
+                                <dd>the unique key identifier column field,
+           defaults to null</dd>
+
+                            <dt>
+                                <span class="light fixedFont">{Boolean}</span>  <b>attrs.hidden</b>
+                                <i>Optional</i>
+                            </dt>
+                                <dd>the hidden widget flag, defaults to false</dd>
+
+                            <dt>
+                                <span class="light fixedFont">{Widget}</span>  <b>...</b>
+                                <i>Optional</i>
+                            </dt>
+                                <dd>the child table columns</dd>
+
+                        </dl>
+
+
+
+
+
+                        <dl class="detailList">
+                        <dt class="heading">Returns:</dt>
+
+                                <dd><span class="light fixedFont">{Widget}</span> the widget DOM node</dd>
+
+                        </dl>
+
+
+
+
+            </div>
+
+
+<!-- ============================== field details ========================== -->
+
+
+<!-- ============================== method details ========================= -->
+
+                <div class="sectionTitle">
+                    Method Detail
+                </div>
+
+                    <div id="setAttrs" class="fixedFont">
+
+
+                    <b>setAttrs</b>(attrs)
+
+                    </div>
+                    <div class="description">
+                        Updates the widget or HTML DOM node attributes.
+
+
+                    </div>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{Object}</span> <b>attrs</b>
+
+                                </dt>
+                                <dd>the widget and node attributes to set</dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{String}</span> <b>attrs.select</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the row selection mode (<q>none</q>, <q>one</q> or
+           <q>multiple</q>)</dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{String}</span> <b>attrs.key</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the unique key identifier column field</dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{Boolean}</span> <b>attrs.hidden</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the hidden widget flag</dd>
+
+                            </dl>
+
+
+
+
+
+
+
+
+                    <hr />
+
+                    <div id="addChildNode" class="fixedFont">
+
+
+                    <b>addChildNode</b>(child)
+
+                    </div>
+                    <div class="description">
+                        Adds a single child table column widget to this widget.
+
+
+                    </div>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{Widget}</span> <b>child</b>
+
+                                </dt>
+                                <dd>the table column widget to add</dd>
+
+                            </dl>
+
+
+
+
+
+
+
+
+                    <hr />
+
+                    <div id="removeChildNode" class="fixedFont">
+
+
+                    <b>removeChildNode</b>(child)
+
+                    </div>
+                    <div class="description">
+                        Removes a single child table column widget from this widget.
+This will also clear all the data in the table.
+
+
+                    </div>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{Widget}</span> <b>child</b>
+
+                                </dt>
+                                <dd>the table column widget to remove</dd>
+
+                            </dl>
+
+
+
+
+
+
+
+
+                    <hr />
+
+                    <div id="getColumnIndex" class="fixedFont">
+
+                    <span class="light">{Number}</span>
+                    <b>getColumnIndex</b>(field)
+
+                    </div>
+                    <div class="description">
+                        Returns the column index of a field.
+
+
+                    </div>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{String}</span> <b>field</b>
+
+                                </dt>
+                                <dd>the field name</dd>
+
+                            </dl>
+
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Returns:</dt>
+
+                                <dd><span class="light fixedFont">{Number}</span> the column index, or
+        -1 if not found</dd>
+
+                            </dl>
+
+
+
+
+                    <hr />
+
+                    <div id="getIdKey" class="fixedFont">
+
+                    <span class="light">{String}</span>
+                    <b>getIdKey</b>()
+
+                    </div>
+                    <div class="description">
+                        Returns the unique key identifier column field, or null if none
+was set.
+
+
+                    </div>
+
+
+
+
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Returns:</dt>
+
+                                <dd><span class="light fixedFont">{String}</span> the key column field name, or
+        null for none</dd>
+
+                            </dl>
+
+
+
+
+                    <hr />
+
+                    <div id="setIdKey" class="fixedFont">
+
+
+                    <b>setIdKey</b>(key)
+
+                    </div>
+                    <div class="description">
+                        Sets the unique key identifier column field. Note that this
+method will regenerate all row identifiers if the table already
+contains data.
+
+
+                    </div>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{String}</span> <b>key</b>
+
+                                </dt>
+                                <dd>the new key column field name</dd>
+
+                            </dl>
+
+
+
+
+
+
+
+
+                    <hr />
+
+                    <div id="getSortKey" class="fixedFont">
+
+                    <span class="light">{String}</span>
+                    <b>getSortKey</b>()
+
+                    </div>
+                    <div class="description">
+                        Returns the current sort key for the table.
+
+
+                    </div>
+
+
+
+
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Returns:</dt>
+
+                                <dd><span class="light fixedFont">{String}</span> the current sort field, or
+        null for none</dd>
+
+                            </dl>
+
+
+
+
+                    <hr />
+
+                    <div id="getCellElem" class="fixedFont">
+
+                    <span class="light">{Node}</span>
+                    <b>getCellElem</b>(row, col)
+
+                    </div>
+                    <div class="description">
+                        Returns a table cell element.
+
+
+                    </div>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{Number}</span> <b>row</b>
+
+                                </dt>
+                                <dd>the row index</dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{Number}</span> <b>col</b>
+
+                                </dt>
+                                <dd>the column index</dd>
+
+                            </dl>
+
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Returns:</dt>
+
+                                <dd><span class="light fixedFont">{Node}</span> the table cell element node, or
+        null if not found</dd>
+
+                            </dl>
+
+
+
+
+                    <hr />
+
+                    <div id="clear" class="fixedFont">
+
+
+                    <b>clear</b>()
+
+                    </div>
+                    <div class="description">
+                        Clears all the data in the table. The column headers will not be
+affected by this method. Use <var>removeAll()</var> or <var>removeChildNode()</var> to
+also remove columns.
+
+
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+                    <hr />
+
+                    <div id="getData" class="fixedFont">
+
+                    <span class="light">{Array}</span>
+                    <b>getData</b>()
+
+                    </div>
+                    <div class="description">
+                        Returns an array with the data in the table. The array returned
+should correspond exactly to the one previously set, i.e. it has
+not been sorted or modified in other ways.
+
+
+                    </div>
+
+
+
+
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Returns:</dt>
+
+                                <dd><span class="light fixedFont">{Array}</span> an array with the data in the table</dd>
+
+                            </dl>
+
+
+
+
+                    <hr />
+
+                    <div id="setData" class="fixedFont">
+
+
+                    <b>setData</b>(data)
+
+                    </div>
+                    <div class="description">
+                        Sets the table data. The table data is an array of objects, each
+having properties corresponding to the table column fields. Any
+object property not mapped to a table column will be ignored (i.e.
+a hidden column). See the <var>TableColumn</var> class for data mapping
+details. Note that automatically generated row ids will be reset
+by this method and any selection on such tables is lost.
+
+
+                    </div>
+
+
+
+                    <pre class="code">var data = [
+    { id: 1, name: "John Doe", modified: "@1300000000000" },
+    { id: 2, name: "First Last", modified: new Date() },
+    { id: 3, name: "Another Name", modified: "2004-11-30 13:33:20" }
+];
+table.setData(data);</pre>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{Array}</span> <b>data</b>
+
+                                </dt>
+                                <dd>an array with data objects</dd>
+
+                            </dl>
+
+
+
+
+
+
+
+
+                    <hr />
+
+                    <div id="sortData" class="fixedFont">
+
+
+                    <b>sortData</b>(field, direction)
+
+                    </div>
+                    <div class="description">
+                        Sorts the table data by field and direction.
+
+
+                    </div>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{String}</span> <b>field</b>
+
+                                </dt>
+                                <dd>the sort field</dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{String}</span> <b>direction</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the sort direction, either <q>asc</q> or
+           <q>desc</q></dd>
+
+                            </dl>
+
+
+
+
+
+
+
+
+                    <hr />
+
+                    <div id="redraw" class="fixedFont">
+
+
+                    <b>redraw</b>()
+
+                    </div>
+                    <div class="description">
+                        Redraws the table from updated source data. Note that this method
+will not add or remove rows and keeps the current row order
+intact. For a more complete redraw of the table, use <var>setData()</var>.
+
+
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+                    <hr />
+
+                    <div id="getRowCount" class="fixedFont">
+
+                    <span class="light">{Number}</span>
+                    <b>getRowCount</b>()
+
+                    </div>
+                    <div class="description">
+                        Returns the number of rows in the table. This is a convenience
+method for <var>getData().length</var>.
+
+
+                    </div>
+
+
+
+
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Returns:</dt>
+
+                                <dd><span class="light fixedFont">{Number}</span> the number of table rows</dd>
+
+                            </dl>
+
+
+
+
+                    <hr />
+
+                    <div id="getRowId" class="fixedFont">
+
+                    <span class="light">{String}</span>
+                    <b>getRowId</b>(index)
+
+                    </div>
+                    <div class="description">
+                        Returns the row id for the specified row index. If the row index
+is out of bounds, null will be returned. The row ids are the data
+values from the key column, or automatically generated internal
+values if no key column is set. Note that the row index uses the
+current table sort order.
+
+
+                    </div>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{Number}</span> <b>index</b>
+
+                                </dt>
+                                <dd>the row index, 0 &lt;= index &lt; row count</dd>
+
+                            </dl>
+
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Returns:</dt>
+
+                                <dd><span class="light fixedFont">{String}</span> the unique row id, or null if not found</dd>
+
+                            </dl>
+
+
+
+
+                    <hr />
+
+                    <div id="getSelectedIds" class="fixedFont">
+
+                    <span class="light">{Array}</span>
+                    <b>getSelectedIds</b>()
+
+                    </div>
+                    <div class="description">
+                        Returns the currently selected row ids. If no rows are selected,
+an empty array will be returned. The row ids are the data values
+from the key column, or automatically generated internal values
+if no key column is set.
+
+
+                    </div>
+
+
+
+
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Returns:</dt>
+
+                                <dd><span class="light fixedFont">{Array}</span> an array with the selected row ids</dd>
+
+                            </dl>
+
+
+
+
+                    <hr />
+
+                    <div id="getSelectedData" class="fixedFont">
+
+                    <span class="light">{Object/Array}</span>
+                    <b>getSelectedData</b>()
+
+                    </div>
+                    <div class="description">
+                        Returns the currently selected row data.
+
+
+                    </div>
+
+
+
+
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Returns:</dt>
+
+                                <dd><span class="light fixedFont">{Object/Array}</span> the data row selected, or
+        an array of selected data rows if multiple selection is enabled</dd>
+
+                            </dl>
+
+
+
+
+                    <hr />
+
+                    <div id="setSelectedIds" class="fixedFont">
+
+                    <span class="light">{Array}</span>
+                    <b>setSelectedIds</b>()
+
+                    </div>
+                    <div class="description">
+                        Sets the selection to the specified row id values. If the current
+selection is changed the select signal will be emitted.
+
+
+                    </div>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{String/Array}</span> <b>...</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the row ids or array with ids to select</dd>
+
+                            </dl>
+
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Returns:</dt>
+
+                                <dd><span class="light fixedFont">{Array}</span> an array with the row ids actually modified</dd>
+
+                            </dl>
+
+
+
+
+                    <hr />
+
+                    <div id="addSelectedIds" class="fixedFont">
+
+                    <span class="light">{Array}</span>
+                    <b>addSelectedIds</b>()
+
+                    </div>
+                    <div class="description">
+                        Adds the specified row id values to the selection. If the current
+selection is changed the select signal will be emitted.
+
+
+                    </div>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{String/Array}</span> <b>...</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the row ids or array with ids to select</dd>
+
+                            </dl>
+
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Returns:</dt>
+
+                                <dd><span class="light fixedFont">{Array}</span> an array with the new row ids actually selected</dd>
+
+                            </dl>
+
+
+
+
+                    <hr />
+
+                    <div id="removeSelectedIds" class="fixedFont">
+
+                    <span class="light">{Array}</span>
+                    <b>removeSelectedIds</b>()
+
+                    </div>
+                    <div class="description">
+                        Removes the specified row id values from the selection. If the
+current selection is changed the select signal will be emitted.
+
+
+                    </div>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{String/Array}</span> <b>...</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the row ids or array with ids to unselect</dd>
+
+                            </dl>
+
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Returns:</dt>
+
+                                <dd><span class="light fixedFont">{Array}</span> an array with the row ids actually unselected</dd>
+
+                            </dl>
+
+
+
+
+
+
+
+
+<!-- ============================== event details ========================= -->
+
+                <div class="sectionTitle">
+                    Event Detail
+                </div>
+
+                    <div id="event:onclear" class="fixedFont">
+
+
+                    <b>onclear</b>()
+
+                    </div>
+                    <div class="description">
+                        Emitted when the table data is cleared. This event signal carries
+no event information.
+
+
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+                    <hr />
+
+                    <div id="event:onselect" class="fixedFont">
+
+
+                    <b>onselect</b>()
+
+                    </div>
+                    <div class="description">
+                        Emitted when the table selection changes. This event signal
+carries no event information.
+
+
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!--END-->
+
+    </section>
+    <section class="footer center fineprint">
+      <hr>
+      Copyright &copy; 2007-2016 Per Cederberg. All rights reserved.
+    </section>
+
+  </body>
+</html>
