@@ -1,6 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2015 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2016 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -33,9 +33,7 @@ import com.eaio.uuid.UUID;
  * A logged-in user session. The session allows the user client to
  * avoid re-sending authentication data on each request. The browser
  * instead sends a persistent HTTP cookie, allowing the session to be
- * loaded from disk or other storages. An external connectivity
- * environment. The environment contains a list of adapter connection
- * pool, each with their own set of configuration parameter values.
+ * loaded from disk or other storages.
  *
  * @author   Per Cederberg
  * @version  1.0
