@@ -149,7 +149,7 @@
         { "topic": "toUpperCase", "url": "https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String/toUpperCase" },
         { "topic": "trim", "url": "https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String/trim" }
     ] },
-    { "topic": "Augment.js (1.0.0)", "url": "http://augmentjs.com/" },
+    { "topic": "Augment.js (1.0.0)", "url": "https://olivernn.github.io/augment.js/" },
     { "topic": "Crypto-JS MD5 (3.1.2)", "url": "http://code.google.com/p/crypto-js/#MD5" },
     { "topic": "jQuery (1.11.0)", "url": "http://api.jquery.com/" },
     { "topic": "MochiKit (1.5 Dev)", "children": [
