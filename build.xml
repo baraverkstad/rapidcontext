@@ -171,6 +171,11 @@
         <include name="**/*.html" />
       </fileset>
     </replaceregexp>
+    <replaceregexp match="\s+$" replace="" flags="g" byline="true">
+      <fileset dir="doc/java">
+        <include name="**/*.html" />
+      </fileset>
+    </replaceregexp>
   </target>
 
   <target name="doc-js">
@@ -186,6 +191,11 @@
       <arg value="-d=${basedir}/doc/js" />
       <arg line="${jsdoc.files}" />
     </java>
+    <replaceregexp match="\s+$" replace="" flags="g" byline="true">
+      <fileset dir="doc/js">
+        <include name="**/*.html" />
+      </fileset>
+    </replaceregexp>
   </target>
 
 
