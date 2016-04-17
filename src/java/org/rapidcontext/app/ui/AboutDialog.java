@@ -9,7 +9,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * See the RapidContext LICENSE.txt file for more details.
+ * See the RapidContext LICENSE for more details.
  */
 
 package org.rapidcontext.app.ui;
@@ -119,7 +119,7 @@ public class AboutDialog extends JDialog {
         link.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 try {
-                    AppUtils.openURL("http://www.rapidcontext.com/doc/LICENSE.txt");
+                    AppUtils.openURL("http://www.rapidcontext.com/doc/LICENSE.md");
                 } catch (Exception e) {
                     parent.error(e.getMessage());
                 }

@@ -13,8 +13,8 @@
 
 # Documentation Target Files
 /doc.zip
-/doc/LICENSE.txt
-/doc/README.txt
+/doc/LICENSE.md
+/doc/README.md
 /doc/css/
 /doc/fonts/
 /doc/images/logotype*.ico

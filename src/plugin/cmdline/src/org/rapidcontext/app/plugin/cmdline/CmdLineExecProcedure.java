@@ -9,7 +9,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * See the RapidContext LICENSE.txt file for more details.
+ * See the RapidContext LICENSE for more details.
  */
 
 package org.rapidcontext.app.plugin.cmdline;

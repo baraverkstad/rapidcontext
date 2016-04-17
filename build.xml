@@ -18,9 +18,9 @@
     <include name="**/*.html" />
     <include name="**/*.java" />
     <include name="**/*.js" />
+    <include name="**/*.md" />
     <include name="**/*.properties" />
     <include name="**/*.sh" />
-    <include name="**/*.txt" />
     <include name="**/*.xml" />
     <exclude name="tools/**" />
   </patternset>
@@ -140,8 +140,8 @@
   <target name="doc-copy">
     <copy todir="doc">
       <fileset dir="${basedir}">
-        <include name="README.txt" />
-        <include name="LICENSE.txt" />
+        <include name="README.md" />
+        <include name="LICENSE.md" />
       </fileset>
       <fileset dir="src/plugin/system/files">
         <include name="css/**" />
@@ -249,8 +249,8 @@
         <include name="bin/rapidcontext" />
       </zipfileset>
       <zipfileset dir="${basedir}" prefix="${build.name}-${build.version}">
-        <include name="README.txt" />
-        <include name="LICENSE.txt" />
+        <include name="README.md" />
+        <include name="LICENSE.md" />
         <include name="bin/*.bat" />
         <include name="bin/*.conf" />
         <include name="lib/**" />

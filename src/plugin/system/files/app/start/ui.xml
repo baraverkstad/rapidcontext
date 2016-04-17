@@ -148,7 +148,7 @@
     </div>
     <div style="padding: 150px 15px 25px 15px;">
       <p><strong>Version: </strong><span id="aboutVersion">1.0.0</span><br/>
-      <strong>License: </strong><a href="doc/LICENSE.txt" target="_blank">BSD License</a> (source code only)</p>
+      <strong>License: </strong><a href="doc/LICENSE.md" target="_blank">BSD License</a> (source code only)</p>
 
       <p>Copyright &#169; 2007-2014 by Per Cederberg. All rights reserved.<br/>
       Usage of the RapidContext name and logotype is restricted.<br/>
@@ -157,7 +157,7 @@
       for more information.</p>
 
       <p>This software would not be possible without the following software libraries;<br/>
-      &#187; <a href="http://www.mochikit.com/" target="_blank">MochiKit</a>,
+      &#187; <a href="https://mochi.github.io/mochikit/" target="_blank">MochiKit</a>,
       copyright &#169; Bob Ippolito,<br/>
       &#187; <a href="http://www.liquidx.net/plotkit/" target="_blank">PlotKit</a>,
       copyright &#169; Alastair Tse,<br/>
