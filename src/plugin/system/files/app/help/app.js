@@ -67,6 +67,9 @@ HelpApp.prototype.loadTopics = function() {
             topic.url = obj.url;
             topicUrls[obj.url] = topic;
         }
+        if (obj.external) {
+            topic.url = RapidContext.Util.resolveURI(obj.url);
+        }
         addAll(topic, topic.source, obj.children);
     }
 
@@ -115,7 +118,7 @@ HelpApp.prototype._treeInsertChildren = function (parentNode, topic) {
         var icon = { ref: "BOOK_OPEN", tooltip: "Documentation Topic" };
         if (!child.url) {
             icon = "FOLDER";
-        } else if (/https?:/.test(child.url)) {
+        } else if (/^https?:/.test(child.url)) {
             icon = { ref: "BOOK", tooltip: "External Documentation" };
         } else if (/#/.test(child.url)) {
             icon = { ref: "TAG_BLUE", tooltip: "Bookmark" };

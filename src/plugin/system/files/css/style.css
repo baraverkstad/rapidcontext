@@ -333,33 +333,6 @@ body.doc .center {
 
 
 /**
- * Documentation style for Javadoc
- */
-
-.doc .NavBarCell1,
-.doc .NavBarCell1Rev {
-    border: none;
-    padding: 2px;
-}
-.doc .TableHeadingColor,
-.doc .TableSubHeadingColor,
-.doc .NavBarCell1 {
-    border: none;
-    background: #CCEEFF;
-    color: #1E466E;
-}
-.doc .TableHeadingColor th,
-.doc .TableHeadingColor td,
-.doc .TableSubHeadingColor th,
-.doc .TableSubHeadingColor td,
-.doc .TableRowColor th,
-.doc .TableRowColor td {
-    border: 1px solid #AACCEE;
-    padding: 3px 6px;
-}
-
-
-/**
  * Documentation style for JSDoc 2.x
  */
 .doc h1.classTitle {
