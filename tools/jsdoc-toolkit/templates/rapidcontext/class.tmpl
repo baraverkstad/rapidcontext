@@ -3,11 +3,11 @@
 <html lang="en">
   <head>
     <meta charset="{+IO.encoding+}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="JsDoc Toolkit" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" href="../css/style.css" type="text/css">
-    <link rel="stylesheet" href="../css/widget.css" type="text/css">
-    <link rel="stylesheet" href="../css/font-awesome-4.2.0.min.css" type="text/css">
+    <link rel="stylesheet" href="../css/font-awesome-4.3.0.min.css" type="text/css">
     <link rel="shortcut icon" type="image/x-icon" href="../images/logotype-icon.ico">
     <link rel="icon" type="image/png" sizes="16x16" href="../images/logotype-icon-16x16.png">
     <link rel="icon" type="image/png" sizes="256x256" href="../images/logotype-icon-256x256.png">
@@ -17,16 +17,11 @@
   <body class="doc">
     {+include("static/header.html")+}
 
-<table class="navigation widgetNavigationBar">
-  <tr>
-    <td class="prev"><a href="../index.html">Documentation</a></td>
-    <td class='prev-prev'>&nbsp;</td>
-    <td class="prev"><a href="index.html">JavaScript API</a></td>
-    <td class='prev-active'>&nbsp;</td>
-    <td class='active'>{+data.alias+}</td>
-    <td class='active-end'>&nbsp;</td>
-  </tr>
-</table>
+<ol class="breadcrumb">
+  <li><a href="../index.html">Documentation</a></li>
+  <li><a href="index.html">JavaScript API</a></li>
+  <li class="active">{+data.alias+}</li>
+</ol>
 
 <!--START-->
 
