@@ -252,35 +252,6 @@ RapidContext.App.startApp = function (app, container) {
         });
     }
 
-    // Retrieve license data (if requested)
-    if (typeof(launcher.license) == "string") {
-        var status = RapidContext.App.status();
-        var user = RapidContext.App.user();
-        var cbDefer = RapidContext.App._Callback.create();
-        var url = "http://api.rapidcontext.com/license/1" +
-                  "?app=" + launcher.id +
-                  "&version=" + launcher.version +
-                  "&plugin=" + launcher.plugin +
-                  "&platform=" + status.version +
-                  "&server=" + status.guid +
-                  "&user=" + user.id +
-                  "&cb=" + cbDefer.func.displayName;
-        d.addCallback(function () {
-            ui.overlay.setAttrs({ message: "Verifying License..." });
-            var ld = MochiKit.Async.loadScript(url);
-            ld.addErrback(cbDefer.func);
-            return cbDefer;
-        });
-        cbDefer.addBoth(function (res) {
-            if (res instanceof Error) {
-                RapidContext.Log.error("License retrieval failed", res);
-            } else {
-                launcher.license = res;
-            }
-            return null;
-        });
-    }
-
     // Create app instance, build UI and start app
     d.addCallback(function () {
         RapidContext.Log.info("Starting app/" + launcher.id, launcher);
