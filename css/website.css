@@ -70,6 +70,7 @@ li {
 .header {
     padding: 60px 0 70px 0;
     font-family: 'Trebuchet MS';
+    font-size: 14px;
     background-color: #467b89;
     background-image: linear-gradient(120deg, #06293a, #98f3ff);
 }
@@ -93,6 +94,20 @@ li {
     left: 180px;
     text-shadow: 2px 2px 2px #002244;
 }
+@media screen and (max-width: 600px) {
+    body .header {
+        padding: 20px 0 20px 0;
+    }
+    body .header .logotype img {
+        max-width: 96px;
+        max-height: 96px;
+    }
+    body .header .text {
+        top: 5px;
+        left: 140px;
+        font-size: 10px;
+    }
+}
 .header .menu {
     position: absolute;
     top: 0px;
@@ -102,7 +117,6 @@ li {
     box-shadow: 0px 0px 2px #000000;
     background: #06293a;
     color: white;
-    font-size: 14px;
 }
 .content {
     padding: 20px 50px 20px 50px;
