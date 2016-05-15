@@ -226,14 +226,27 @@ public class ProcedureWebService extends WebService {
         ArrayList args = new ArrayList();
         Bindings bindings = proc.getBindings();
         String[] names = bindings.getNames();
+        Dict jsonArgs = null;
+        if (Mime.isInputMatch(request, Mime.JSON)) {
+            String input = request.getInputString();
+            LOG.fine(logPrefix + "arguments JSON: " + input);
+            Object obj = JsSerializer.unserialize(input);
+            if (obj instanceof Dict) {
+                jsonArgs = (Dict) obj;
+            }
+        }
         for (int i = 0; i < names.length; i++) {
             if (bindings.getType(names[i]) == Bindings.ARGUMENT) {
-                String str = request.getParameter("arg" + args.size(), null);
-                if (str == null) {
-                    str = request.getParameter(names[i], null);
+                if (jsonArgs != null) {
+                    args.add(jsonArgs.get(names[i], null));
+                } else {
+                    String str = request.getParameter("arg" + args.size(), null);
+                    if (str == null) {
+                        str = request.getParameter(names[i], null);
+                    }
+                    LOG.fine(logPrefix + "argument '" + names[i] + "': " + str);
+                    args.add(isTextFormat ? str : JsSerializer.unserialize(str));
                 }
-                LOG.fine(logPrefix + "argument '" + names[i] + "': " + str);
-                args.add(isTextFormat ? str : JsSerializer.unserialize(str));
             }
         }
         return args.toArray();
