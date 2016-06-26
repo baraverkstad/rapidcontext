@@ -19,9 +19,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -129,29 +131,28 @@ public class HttpPostProcedure extends AddOnProcedure {
         URL             url;
         LinkedHashMap   headers;
         String          str;
-        Object          obj;
 
-        obj = bindings.getValue(BINDING_URL, null);
+        str = bindings.getValue(BINDING_URL, "").toString();
+        str = replaceArguments(str, bindings, true);
         try {
-            if (con != null && obj != null) {
-                url = new URL(con.getUrl(), obj.toString());
+            if (con != null && !str.isEmpty()) {
+                url = new URL(con.getUrl(), str);
             } else if (con != null) {
                 url = con.getUrl();
             } else {
-                url = new URL(bindings.getValue(BINDING_URL).toString());
+                url = new URL(str);
             }
         } catch (MalformedURLException e) {
-            throw new ProcedureException("malformed URL: " + obj);
+            throw new ProcedureException("malformed URL: " + str);
         }
         headers = new LinkedHashMap();
         if (con != null) {
-            str = replaceArguments(con.getHeaders(), bindings);
-            parseHeaders(headers, str);
+            parseHeaders(headers, con.getHeaders());
         }
         str = (String) bindings.getValue(BINDING_HEADER, "");
-        parseHeaders(headers, replaceArguments(str, bindings));
+        parseHeaders(headers, replaceArguments(str, bindings, false));
         str = (String) bindings.getValue(BINDING_DATA);
-        str = replaceArguments(str, bindings);
+        str = replaceArguments(str, bindings, true);
         return sendPostRequest(cx, createConnection(url, headers), str);
     }
 
@@ -172,26 +173,34 @@ public class HttpPostProcedure extends AddOnProcedure {
 
     /**
      * Replaces any parameters with the corresponding argument value
-     * from the bindings.
+     * from the bindings. Optionally, this method also percent-encodes
+     * (URL encodes) the argument values.
      *
      * @param data           the data string to process
      * @param bindings       the bindings to use
+     * @param encode         the encode values flag
      *
      * @return the processed data string
      *
      * @throws ProcedureException if some parameter couldn't be found
      */
-    private static String replaceArguments(String data, Bindings bindings)
+    private static String replaceArguments(String data,
+                                           Bindings bindings,
+                                           boolean encode)
         throws ProcedureException {
 
         String[]  names = bindings.getNames();
-        Object    value;
+        String    value;
 
         for (int i = 0; i < names.length; i++) {
             if (bindings.getType(names[i]) == Bindings.ARGUMENT) {
-                value = bindings.getValue(names[i], null);
-                if (value == null) {
-                    value = "";
+                value = bindings.getValue(names[i], "").toString();
+                if (encode) {
+                    try {
+                        value = URLEncoder.encode(value, "utf8");
+                    } catch (UnsupportedEncodingException e) {
+                        throw new ProcedureException("unsupported encoding", e);
+                    }
                 }
                 data = StringUtils.replace(data, ":" + names[i], value.toString());
             }
