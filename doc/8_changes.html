@@ -44,6 +44,60 @@
 
 <h1>8. Change History</h1>
 
+<h2 id="0.16">Version 0.16 (2016-11-14)</h2>
+
+<div style="float: right; margin: 0 0 10px 10px;">
+  <img src="images/screenshot-login.png" style="width: 464px;"/>
+</div>
+
+<dl>
+  <dt>Anonymous Users &amp; Login Dialogs</dt>
+  <dd>
+    The built-in <b>Start</b> and <b>Help</b> apps can now be used by
+    anonymous users (non-logged-in users). Users can then login via the
+    top-right menu and any restricted app will automatically display the
+    new built-in login dialog if accessed without valid permissions.
+  </dd>
+
+  <dt>Refactored Access Control &amp; Permissions</dt>
+  <dd>
+    The role-based access controls have been refactored to support
+    different types of access (read, search, internal, etc) and to be
+    fully based on storage paths (instead of object types and names).
+    All hard-coded refereces to the built-in <code>admin</code> role
+    has also been removed, as the default configuration is now sufficient.
+  </dd>
+
+  <div style="float: right; margin: 0 0 10px 10px;">
+    <img src="images/screenshot-apps.png" style="width: 252px;"/>
+  </div>
+
+  <dt>New Icons &amp; Refined Widgets</dt>
+  <dd>
+    FontAwesome icons are now available and used for many of the standard
+    icons. This means better rendering in all sizes and in all resolutions.
+    The Table, Progress and Popup widgets have also been restyled for a more
+    modern look.
+  </dd>
+
+  <dt>Improved Documentation &amp; Help App</dt>
+  <dd>
+    The built-in <b>Help</b> app has been much improved, and the on-line
+    documentation is now much clearer and up-to-date. The built-in
+    <code>test</code> plug-in now provides an <b>Example</b> app that
+    shows all widgets and icons available.
+  </dd>
+
+  <dt>Bug Fixes &amp; API Changes</dt>
+  <dd>
+    Lots of minor API changes have also been made and several JavaScript
+    functions have been moved to the built-in <code>legacy</code> plug-in.
+    Also, a number of bugs have been fixed to improve storage handling,
+    session termination, connection management, etc.
+  </dd>
+</dl>
+
+
 <h2 id="0.15">Version 0.15 (2012-04-24)</h2>
 
 <div style="float: right; margin: 0 0 10px 10px;">
@@ -66,8 +120,6 @@
     easy to either change the password or logout.
   </dd>
 
-  <hr class="short" />
-
   <div style="float: left; margin: 0 10px 10px 0;">
     <img src="images/screenshot-start-window.png" />
   </div>
@@ -81,13 +133,11 @@
     the app launcher in the <strong>Start</strong> app.
   </dd>
 
-  <hr class="short" />
-
   <div style="float: right; margin: 20px 0 10px 10px;">
     <img src="images/screenshot-cxn-details.png" />
   </div>
 
-  <dt>Editing Connection Settings</dt>
+  <dt style="clear: left;">Editing Connection Settings</dt>
   <dd>
     Connections can now be created, edited and removed directly from the
     <strong>Admin</strong> app (in the new "Connections" tab).<br/><br/>
@@ -103,8 +153,6 @@
     field also displays the source plug-in for apps, connections and
     procedures.
   </dd>
-
-  <hr class="short" />
 
   <div style="float: right; margin: 0 0 10px 10px;">
       <img src="images/screenshot-widget.png" />
