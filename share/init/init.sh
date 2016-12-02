@@ -3,7 +3,7 @@
 # Simple init script for managing a RapidContext server.
 #
 # Install with symlink:
-#   ln -s /opt/rapidcontext/bin/init /etc/init.d/rapidcontext
+#   ln -s /opt/rapidcontext/share/init/init.sh /etc/init.d/rapidcontext
 #
 # The symlink created above is used to determine the location of
 # the server base directory. If installed some other way, make
@@ -26,19 +26,19 @@ if [ $# != 1 ] ; then
     exit 1
 fi
 PROGRAM="$0"
+COMMAND="$1"
 SYMLINK="$PROGRAM"
 while [ "$SYMLINK" != "" ] ; do
     cd `dirname $SYMLINK`
     PROGRAM=`pwd -P`/`basename $SYMLINK`
     SYMLINK=`readlink $PROGRAM`
 done
-COMMAND="$1"
 
 
 #
 # Locate base directory & files
 #
-cd `dirname $PROGRAM`/..
+cd `dirname $PROGRAM`/../..
 BASEDIR=`pwd -P`
 FILEATTR=(`ls -l plugin/system.zip`)
 USER=${FILEATTR[2]}

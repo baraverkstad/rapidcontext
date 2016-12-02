@@ -2,9 +2,8 @@
 #
 # Start script for command-line RapidContext handling.
 #
-# See accompanying "init" script for installing as a permanent
-# service. This script is used for locating the Java environment
-# and launching the application.
+# See accompanying "share/init" scripts for running as a service.
+# This script locates the Java environment and launches the app.
 #
 
 # Change to base application directory

@@ -245,15 +245,15 @@
       <zipfileset dir="${basedir}"
                   prefix="${build.name}-${build.version}"
                   filemode="755">
-        <include name="bin/init" />
         <include name="bin/rapidcontext" />
+        <include name="share/init/init.sh" />
       </zipfileset>
       <zipfileset dir="${basedir}" prefix="${build.name}-${build.version}">
         <include name="README.md" />
         <include name="LICENSE.md" />
-        <include name="bin/*.bat" />
-        <include name="bin/*.conf" />
+        <include name="bin/**" />
         <include name="lib/**" />
+        <include name="share/**" />
         <include name="plugin/system*.zip" />
         <include name="plugin/cmdline*.zip" />
         <include name="plugin/http*.zip" />
@@ -262,6 +262,8 @@
         <include name="plugin/test*.zip" />
         <include name="plugin/local/**" />
         <include name="doc.zip" />
+        <exclude name="bin/rapidcontext" />
+        <exclude name="share/init/init.sh" />
       </zipfileset>
       <zipfileset dir="src/plugin" prefix="${build.name}-${build.version}">
         <include name="plugin-build.xml" />
