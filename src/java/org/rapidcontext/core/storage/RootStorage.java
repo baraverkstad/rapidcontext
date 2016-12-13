@@ -223,11 +223,11 @@ public class RootStorage extends Storage {
      *
      * @throws StorageException if the storage couldn't be mounted
      */
-    public void mount(Storage storage,
-                      Path path,
-                      boolean readWrite,
-                      Path overlay,
-                      int prio)
+    public synchronized void mount(Storage storage,
+                                   Path path,
+                                   boolean readWrite,
+                                   Path overlay,
+                                   int prio)
     throws StorageException {
 
         String  msg;
@@ -265,7 +265,7 @@ public class RootStorage extends Storage {
      *
      * @throws StorageException if the storage couldn't be remounted
      */
-    public void remount(Path path, boolean readWrite, Path overlay, int prio)
+    public synchronized void remount(Path path, boolean readWrite, Path overlay, int prio)
     throws StorageException {
 
         Storage storage = getMountedStorage(path, true);
@@ -291,7 +291,7 @@ public class RootStorage extends Storage {
      *
      * @throws StorageException if the storage couldn't be unmounted
      */
-    public void unmount(Path path) throws StorageException {
+    public synchronized void unmount(Path path) throws StorageException {
         Storage  storage = getMountedStorage(path, true);
         String   msg;
 
@@ -310,7 +310,7 @@ public class RootStorage extends Storage {
     /**
      * Unmounts and destroys all mounted storages.
      */
-    public void unmountAll() {
+    public synchronized void unmountAll() {
         Storage  storage;
         String   msg;
 
@@ -510,7 +510,7 @@ public class RootStorage extends Storage {
      *
      * @throws StorageException if the data couldn't be written
      */
-    public void store(Path path, Object data) throws StorageException {
+    public synchronized void store(Path path, Object data) throws StorageException {
         Storage storage = getMountedStorage(path, false);
         if (storage != null && path.startsWith(PATH_STORAGE_CACHE)) {
             Path storageId = storage.path().subPath(PATH_STORAGE_CACHE.depth());
@@ -578,7 +578,7 @@ public class RootStorage extends Storage {
      *
      * @throws StorageException if the data couldn't be removed
      */
-    public void remove(Path path) throws StorageException {
+    public synchronized void remove(Path path) throws StorageException {
         Storage storage = getMountedStorage(path, false);
         if (storage != null && path.startsWith(PATH_STORAGE_CACHE)) {
             Path storageId = storage.path().subPath(PATH_STORAGE_CACHE.depth());
@@ -793,7 +793,7 @@ public class RootStorage extends Storage {
      *
      * @param force          the forced clean flag
      */
-    public void cacheClean(boolean force) {
+    public synchronized void cacheClean(boolean force) {
         Iterator iter = cacheStorages.values().iterator();
         while (iter.hasNext()) {
             cacheRemove((MemoryStorage) iter.next(), Path.ROOT, true, force);
