@@ -198,7 +198,7 @@ public class AppWebService extends FileWebService {
      *         "width=700" if not defined
      */
     public String viewport() {
-        return dict.getString(KEY_VIEWPORT, "width=700");
+        return dict.getString(KEY_VIEWPORT, "width=device-width, initial-scale=1");
     }
 
     /**
