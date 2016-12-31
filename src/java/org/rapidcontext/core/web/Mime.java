@@ -217,7 +217,11 @@ public class Mime {
      *         false otherwise
      */
     public static boolean isInputMatch(Request request, String[] mimes) {
-        return isMatch(request.getContentType(), mimes);
+        if (request.getContentType() == null) {
+            return false;
+        } else {
+            return isMatch(request.getContentType(), mimes);
+        }
     }
 
     /**
