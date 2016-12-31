@@ -793,7 +793,7 @@ public class RootStorage extends Storage {
      *
      * @param force          the forced clean flag
      */
-    public synchronized void cacheClean(boolean force) {
+    public void cacheClean(boolean force) {
         Iterator iter = cacheStorages.values().iterator();
         while (iter.hasNext()) {
             cacheRemove((MemoryStorage) iter.next(), Path.ROOT, true, force);

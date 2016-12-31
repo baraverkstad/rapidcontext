@@ -97,7 +97,7 @@ public class MemoryStorage extends Storage {
      * Destroys this storage. Note that the objects in the storage
      * will NOT be destroyed by this method.
      */
-    public void destroy() {
+    public synchronized void destroy() {
         objects.clear();
         meta.clear();
         objects = null;
@@ -184,7 +184,7 @@ public class MemoryStorage extends Storage {
      *
      * @throws StorageException if the data couldn't be written
      */
-    public void store(Path path, Object data) throws StorageException {
+    public synchronized void store(Path path, Object data) throws StorageException {
         String  msg;
 
         if (path.isIndex()) {
@@ -222,7 +222,7 @@ public class MemoryStorage extends Storage {
      *
      * @throws StorageException if the data couldn't be removed
      */
-    public void remove(Path path) throws StorageException {
+    public synchronized void remove(Path path) throws StorageException {
         if (!isReadWrite()) {
             String msg = "cannot remove from read-only storage at " + path();
             LOG.warning(msg);
