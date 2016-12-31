@@ -367,13 +367,6 @@ public abstract class JdbcProcedure extends AddOnProcedure {
         public String bind(Object value, ArrayList params) {
             if (value == null) {
                 return bindNull();
-            } else if (value instanceof String &&
-                       ((String) value).length() < 100) {
-
-                // Use prepared statement parameters sparingly,
-                // since some JDBC drivers have issues with them
-                // (Oracle JDBC protocol violations for example)
-                return cond(column, operator, literal((String) value));
             } else if (value instanceof Array) {
                 return bindData((Array) value, params);
             } else if (value instanceof Date) {
