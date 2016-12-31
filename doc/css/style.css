@@ -228,8 +228,24 @@ body.doc .center {
 .doc h2 .unimportant {
     font-size: 14px;
 }
+@media screen and (max-width: 400px) {
+    body.doc h1 {
+        font-size: 20px;
+    }
+    body.doc h2 {
+        font-size: 16px;
+    }
+}
+@media screen and (min-width: 401px) and (max-width: 600px) {
+    body.doc h1 {
+        font-size: 24px;
+    }
+    body.doc h2 {
+        font-size: 16px;
+    }
+}
 .doc table {
-    font-size: 14px;
+    font-size: inherit;
     border-collapse: collapse;
 }
 .doc p {
@@ -257,6 +273,9 @@ body.doc .center {
 .doc q {
     font-style: normal;
     color: #006633;
+}
+.doc img {
+    max-width: 100%;
 }
 .doc .header {
     padding: 30px 0 40px 0;
@@ -334,7 +353,16 @@ body.doc .center {
 .doc .content {
     padding: 0 50px 0 50px;
 }
-@media screen and (max-width: 960px) {
+@media screen and (max-width: 400px) {
+    body.doc .content {
+        padding: 0 15px 0 15px;
+        font-size: 0.9em;
+    }
+    body.doc .content.center {
+        max-width: calc(100% - 30px);
+    }
+}
+@media screen and (min-width: 401px) and (max-width: 600px) {
     body.doc .content {
         padding: 0 30px 0 30px;
     }
@@ -498,11 +526,13 @@ ol.box, ul.box {
     border: 0;
     padding: 0;
     background: transparent;
+    overflow: auto;
 }
 pre.code.box {
     margin: 20px 40px;
     border-left-width: 1px;
     padding: 10px 20px;
+    overflow: auto;
 }
 .grey,
 .box.grey {
@@ -553,6 +583,30 @@ pre.code.box {
 }
 .box.blue .box-icon {
     color: #AADDFF;
+}
+@media screen and (max-width: 400px) {
+    body .box {
+        margin: 0;
+    }
+    body .box .box-icon {
+        display: none;
+    }
+    body .box .box-content,
+    body .box pre.code.box-content {
+        margin: 0;
+    }
+}
+@media screen and (min-width: 401px) and (max-width: 600px) {
+    body .box {
+        margin: 10px 20px;
+    }
+    body .box .box-icon {
+        display: none;
+    }
+    body .box .box-content,
+    body .box pre.code.box-content {
+        margin: 0;
+    }
 }
 
 
