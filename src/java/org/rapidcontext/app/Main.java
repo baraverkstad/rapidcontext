@@ -172,6 +172,7 @@ public class Main {
             LOG.log(Level.SEVERE, "error starting server", e);
             exit(null, e.getMessage());
         }
+        System.out.println();
         System.out.print("Server started -- http://localhost");
         if (app.port != 80) {
             System.out.print(":");
