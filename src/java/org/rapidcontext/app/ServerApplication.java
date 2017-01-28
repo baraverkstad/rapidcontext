@@ -119,6 +119,14 @@ public class ServerApplication {
     }
 
     /**
+     * Initializes the stand-alone server application.
+     */
+    public void init() {
+        ApplicationContext.init(appDir, localDir, false);
+        port = findAvailablePort(port);
+    }
+
+    /**
      * Starts the stand-alone server application.
      *
      * @throws Exception if the server failed to start correctly
@@ -127,8 +135,7 @@ public class ServerApplication {
         if (isRunning()) {
             stop();
         }
-        ApplicationContext.init(appDir, localDir, false);
-        server = new Server(findAvailablePort(port));
+        server = new Server(port);
         Context root = new Context(server, "/", Context.NO_SESSIONS);
         root.setResourceBase(appDir.toString());
         root.addServlet(new ServletHolder(new ServletApplication()), "/*");

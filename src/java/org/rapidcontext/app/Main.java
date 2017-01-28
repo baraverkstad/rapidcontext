@@ -166,21 +166,21 @@ public class Main {
         if (args.length > 0) {
             exit(opts, "No arguments supported for server launch mode.");
         }
+        System.out.println();
+        System.out.print("RapidContext Server -- http://localhost");
+        if (app.port != 80) {
+            System.out.print(":");
+            System.out.print(app.port);
+        }
+        System.out.println("/");
+        System.out.println("Press Ctrl-C to quit");
+        System.out.println();
         try {
             app.start();
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "error starting server", e);
             exit(null, e.getMessage());
         }
-        System.out.println();
-        System.out.print("Server started -- http://localhost");
-        if (app.port != 80) {
-            System.out.print(":");
-            System.out.print(app.port);
-        }
-        System.out.println("/");
-        System.out.println("Press Ctrl-C to shutdown (or terminate process by other means).");
-        System.out.println();
     }
 
     /**
@@ -269,6 +269,7 @@ public class Main {
         } catch (IOException e) {
             exit(null, "Failed to setup local directory: " + e.getMessage());
         }
+        app.init();
         return app;
     }
 
