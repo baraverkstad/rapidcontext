@@ -24,6 +24,7 @@ import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.js.JsSerializer;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.Procedure;
+import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.type.WebService;
 import org.rapidcontext.core.web.Mime;
 import org.rapidcontext.core.web.Request;
@@ -197,9 +198,13 @@ public class ProcedureWebService extends WebService {
             res.set("data", ctx.execute(name, args, source, trace));
             LOG.fine(logPrefix + "done procedure call");
         } catch (Exception e) {
-            String msg = e.getMessage();
-            res.set("error", msg != null ? msg : e.toString());
-            LOG.log(Level.INFO, logPrefix + "error in procedure call", e);
+            String msg = e.getMessage() != null ? e.getMessage() : e.toString();
+            res.set("error", msg);
+            if (e instanceof ProcedureException) {
+                LOG.info(logPrefix + msg);
+            } else {
+                LOG.log(Level.WARNING, logPrefix + "internal error in procedure", e);
+            }
         }
         if (trace != null) {
             res.set("trace", trace.toString());
