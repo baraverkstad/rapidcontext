@@ -76,7 +76,7 @@ public class JdbcBuiltInConnectionWriteProcedure implements Procedure {
     public String getDescription() {
         return "Creates or overwrites a connection by creating a new one in " +
                "the local plug-in. Other versions of the connection may " +
-               "still exist in other plug-ins, but will be hiddedn. Only " +
+               "still exist in other plug-ins, but will be hidden. Only " +
                "connections in the local plug-in can be removed.";
     }
 
@@ -116,6 +116,7 @@ public class JdbcBuiltInConnectionWriteProcedure implements Procedure {
         String id = (String) bindings.getValue("id");
         Dict data = (Dict) bindings.getValue("data", null);
         Path path = JdbcConnection.PATH.descendant(new Path(id));
+        CallContext.checkWriteAccess(path.toString());
         if (data == null) {
             try {
                 storage.remove(path);

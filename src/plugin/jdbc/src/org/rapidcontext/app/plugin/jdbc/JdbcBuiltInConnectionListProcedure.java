@@ -19,6 +19,9 @@ import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
+import org.rapidcontext.core.security.SecurityContext;
+import org.rapidcontext.core.storage.Metadata;
+import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.type.Connection;
 
 /**
@@ -97,11 +100,16 @@ public class JdbcBuiltInConnectionListProcedure implements Procedure {
     public Object call(CallContext cx, Bindings bindings)
     throws ProcedureException {
 
-        Connection[] connections = Connection.findAll(cx.getStorage());
-        Array res = new Array(connections.length);
-        for (int i = 0; i < connections.length; i++) {
-            if (connections[i] instanceof JdbcConnection) {
-                res.add(connections[i].serialize().copy());
+        CallContext.checkSearchAccess(Connection.PATH.toString());
+        Metadata[] meta = cx.getStorage().lookupAll(Connection.PATH);
+        Array res = new Array(meta.length);
+        for (int i = 0; i < meta.length; i++) {
+            Path path = meta[i].path();
+            if (SecurityContext.hasReadAccess(path.toString())) {
+                Object obj = cx.getStorage().load(path);
+                if (obj instanceof JdbcConnection) {
+                    res.add(((JdbcConnection) obj).serialize().copy());
+                }
             }
         }
         return res;
