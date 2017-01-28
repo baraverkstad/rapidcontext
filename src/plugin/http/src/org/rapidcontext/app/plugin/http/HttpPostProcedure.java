@@ -341,16 +341,27 @@ public class HttpPostProcedure extends AddOnProcedure {
     private static String readStream(InputStream is, String charset)
     throws IOException {
 
-        StringBuilder   buffer = new StringBuilder();
-        BufferedReader  reader;
-        String          str;
-
-        reader = new BufferedReader(new InputStreamReader(is, charset));
-        while ((str = reader.readLine()) != null) {
-            buffer.append(str);
+        if (is == null) {
+            return "";
         }
-        is.close();
-        return buffer.toString();
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new InputStreamReader(is, charset));
+            StringBuilder buffer = new StringBuilder();
+            String str;
+            while ((str = reader.readLine()) != null) {
+                buffer.append(str);
+            }
+            return buffer.toString();
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (Throwable ignore) {
+                    // Do nothing here
+                }
+            }
+        }
     }
 
     /**
