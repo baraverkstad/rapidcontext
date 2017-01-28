@@ -14,6 +14,8 @@
 
 package org.rapidcontext.app.proc;
 
+import java.util.logging.Logger;
+
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
@@ -26,6 +28,12 @@ import org.rapidcontext.core.proc.ProcedureException;
  * @version  1.0
  */
 public class ProcedureDeleteProcedure implements Procedure {
+
+    /**
+     * The class logger.
+     */
+    private static final Logger LOG =
+        Logger.getLogger(ProcedureDeleteProcedure.class.getName());
 
     /**
      * The procedure name constant.
@@ -102,6 +110,7 @@ public class ProcedureDeleteProcedure implements Procedure {
             throw new ProcedureException("invalid procedure name");
         }
         CallContext.checkWriteAccess("procedure/" + name);
+        LOG.info("deleting procedure " + name);
         cx.getLibrary().deleteProcedure(name);
         return null;
     }

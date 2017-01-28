@@ -15,6 +15,7 @@
 package org.rapidcontext.app.proc;
 
 import java.io.File;
+import java.util.logging.Logger;
 
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.app.plugin.PluginException;
@@ -31,6 +32,12 @@ import org.rapidcontext.core.type.Session;
  * @version  1.0
  */
 public class PluginInstallProcedure implements Procedure {
+
+    /**
+     * The class logger.
+     */
+    private static final Logger LOG =
+        Logger.getLogger(PluginInstallProcedure.class.getName());
 
     /**
      * The procedure name constant.
@@ -117,6 +124,7 @@ public class PluginInstallProcedure implements Procedure {
         }
         CallContext.checkWriteAccess("plugin/" + fileId);
         try {
+            LOG.info("installing plugin " + file.getName());
             pluginId = ctx.installPlugin(file);
             session.removeFile(fileId);
             return pluginId;

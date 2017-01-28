@@ -14,6 +14,8 @@
 
 package org.rapidcontext.app.proc;
 
+import java.util.logging.Logger;
+
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
@@ -29,6 +31,12 @@ import org.rapidcontext.core.type.User;
  * @version  1.0
  */
 public class ThreadInterruptProcedure implements Procedure {
+
+    /**
+     * The class logger.
+     */
+    private static final Logger LOG =
+        Logger.getLogger(ThreadInterruptProcedure.class.getName());
 
     /**
      * The procedure name constant.
@@ -115,6 +123,7 @@ public class ThreadInterruptProcedure implements Procedure {
         if (!isOwner) {
             CallContext.checkWriteAccess("thread/" + threadId);
         }
+        LOG.info("interrupting thread " + threadId);
         cx.interrupt();
         return null;
     }

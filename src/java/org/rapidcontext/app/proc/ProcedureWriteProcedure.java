@@ -14,6 +14,8 @@
 
 package org.rapidcontext.app.proc;
 
+import java.util.logging.Logger;
+
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
@@ -27,6 +29,12 @@ import org.rapidcontext.core.proc.ProcedureException;
  * @version  1.0
  */
 public class ProcedureWriteProcedure implements Procedure {
+
+    /**
+     * The class logger.
+     */
+    private static final Logger LOG =
+        Logger.getLogger(ProcedureWriteProcedure.class.getName());
 
     /**
      * The procedure name constant.
@@ -107,6 +115,7 @@ public class ProcedureWriteProcedure implements Procedure {
             throw new ProcedureException("invalid procedure name");
         }
         CallContext.checkWriteAccess("procedure/" + name);
+        LOG.info("writing procedure " + name);
         Dict dict = new Dict();
         dict.set("name", name);
         dict.set("type", bindings.getValue("type"));

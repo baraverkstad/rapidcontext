@@ -14,6 +14,8 @@
 
 package org.rapidcontext.app.proc;
 
+import java.util.logging.Logger;
+
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
@@ -28,6 +30,12 @@ import org.rapidcontext.core.type.User;
  * @version  1.0
  */
 public class UserPasswordChangeProcedure implements Procedure {
+
+    /**
+     * The class logger.
+     */
+    private static final Logger LOG =
+        Logger.getLogger(UserPasswordChangeProcedure.class.getName());
 
     /**
      * The procedure name constant.
@@ -118,6 +126,7 @@ public class UserPasswordChangeProcedure implements Procedure {
             throw new ProcedureException("new password hash is malformed");
         }
         try {
+            LOG.info("updating " + user + " password");
             user.setPasswordHash(newHash);
             User.store(cx.getStorage(), user);
         } catch (Exception e) {

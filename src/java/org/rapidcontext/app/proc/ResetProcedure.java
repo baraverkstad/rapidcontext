@@ -14,6 +14,8 @@
 
 package org.rapidcontext.app.proc;
 
+import java.util.logging.Logger;
+
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
@@ -27,6 +29,12 @@ import org.rapidcontext.core.proc.ProcedureException;
  * @version  1.0
  */
 public class ResetProcedure implements Procedure {
+
+    /**
+     * The class logger.
+     */
+    private static final Logger LOG =
+        Logger.getLogger(ResetProcedure.class.getName());
 
     /**
      * The procedure name constant.
@@ -95,6 +103,7 @@ public class ResetProcedure implements Procedure {
         throws ProcedureException {
 
         CallContext.checkWriteAccess("plugin/system");
+        LOG.info("resetting app, reloading all plug-ins");
         ApplicationContext.getInstance().reset();
         return "OK";
     }

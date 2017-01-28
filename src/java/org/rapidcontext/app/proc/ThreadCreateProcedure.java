@@ -14,6 +14,8 @@
 
 package org.rapidcontext.app.proc;
 
+import java.util.logging.Logger;
+
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.proc.Bindings;
@@ -29,6 +31,12 @@ import org.rapidcontext.core.security.SecurityContext;
  * @version  1.0
  */
 public class ThreadCreateProcedure implements Procedure {
+
+    /**
+     * The class logger.
+     */
+    private static final Logger LOG =
+        Logger.getLogger(ThreadCreateProcedure.class.getName());
 
     /**
      * The procedure name constant.
@@ -127,6 +135,8 @@ public class ThreadCreateProcedure implements Procedure {
         String source = (String) cx.getAttribute(CallContext.ATTRIBUTE_SOURCE);
         String name = "Procedure Thread " + counter++;
         Thread thread = new Thread(new ProcedureExecutor(proc, args, source), name);
+        LOG.info("created " + name.toLowerCase() + " for " + proc + " by " +
+                 SecurityContext.currentUser());
         thread.start();
         return Integer.valueOf(thread.hashCode());
     }

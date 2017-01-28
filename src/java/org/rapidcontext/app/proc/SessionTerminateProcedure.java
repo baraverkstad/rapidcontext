@@ -14,6 +14,8 @@
 
 package org.rapidcontext.app.proc;
 
+import java.util.logging.Logger;
+
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
@@ -29,6 +31,12 @@ import org.rapidcontext.core.type.Session;
  * @version  1.0
  */
 public class SessionTerminateProcedure implements Procedure {
+
+    /**
+     * The class logger.
+     */
+    private static final Logger LOG =
+        Logger.getLogger(SessionTerminateProcedure.class.getName());
 
     /**
      * The procedure name constant.
@@ -112,6 +120,7 @@ public class SessionTerminateProcedure implements Procedure {
             String msg = "cannot find session with id " + id;
             throw new ProcedureException(msg);
         }
+        LOG.info("terminating " + session);
         session.invalidate();
         return "session terminated";
     }

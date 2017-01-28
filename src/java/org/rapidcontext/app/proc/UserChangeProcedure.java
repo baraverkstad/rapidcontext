@@ -14,6 +14,8 @@
 
 package org.rapidcontext.app.proc;
 
+import java.util.logging.Logger;
+
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
@@ -29,6 +31,12 @@ import org.rapidcontext.core.type.User;
  * @version  1.0
  */
 public class UserChangeProcedure implements Procedure {
+
+    /**
+     * The class logger.
+     */
+    private static final Logger LOG =
+        Logger.getLogger(UserChangeProcedure.class.getName());
 
     /**
      * The procedure name constant.
@@ -159,6 +167,7 @@ public class UserChangeProcedure implements Procedure {
         }
         user.setRoles(roles);
         try {
+            LOG.info("updating " + user);
             User.store(cx.getStorage(), user);
         } catch (StorageException e) {
             throw new ProcedureException(e.getMessage());

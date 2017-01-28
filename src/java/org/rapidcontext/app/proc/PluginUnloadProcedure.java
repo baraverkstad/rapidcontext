@@ -14,6 +14,8 @@
 
 package org.rapidcontext.app.proc;
 
+import java.util.logging.Logger;
+
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.app.plugin.PluginException;
 import org.rapidcontext.core.proc.Bindings;
@@ -28,6 +30,12 @@ import org.rapidcontext.core.proc.ProcedureException;
  * @version  1.0
  */
 public class PluginUnloadProcedure implements Procedure {
+
+    /**
+     * The class logger.
+     */
+    private static final Logger LOG =
+        Logger.getLogger(PluginUnloadProcedure.class.getName());
 
     /**
      * The procedure name constant.
@@ -103,6 +111,7 @@ public class PluginUnloadProcedure implements Procedure {
         String id = (String) bindings.getValue("pluginId");
         CallContext.checkWriteAccess("plugin/" + id);
         try {
+            LOG.info("unloading plugin " + id);
             ctx.unloadPlugin(id);
         } catch (PluginException e) {
             String msg = "failed to unload plug-in '" + id + "': " +

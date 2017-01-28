@@ -14,6 +14,8 @@
 
 package org.rapidcontext.app.proc;
 
+import java.util.logging.Logger;
+
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.app.plugin.PluginException;
 import org.rapidcontext.core.proc.Bindings;
@@ -28,6 +30,12 @@ import org.rapidcontext.core.proc.ProcedureException;
  * @version  1.0
  */
 public class PluginLoadProcedure implements Procedure {
+
+    /**
+     * The class logger.
+     */
+    private static final Logger LOG =
+        Logger.getLogger(PluginLoadProcedure.class.getName());
 
     /**
      * The procedure name constant.
@@ -108,6 +116,7 @@ public class PluginLoadProcedure implements Procedure {
             throw new ProcedureException(msg);
         }
         try {
+            LOG.info("loading plugin " + id);
             ctx.loadPlugin(id);
         } catch (PluginException e) {
             String msg = "failed to load plug-in '" + id + "': " +
