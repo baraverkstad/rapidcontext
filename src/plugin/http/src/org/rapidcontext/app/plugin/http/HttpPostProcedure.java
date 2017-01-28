@@ -244,6 +244,7 @@ public class HttpPostProcedure extends AddOnProcedure {
         con.setInstanceFollowRedirects(false);
         con.setConnectTimeout(10000);
         con.setReadTimeout(45000);
+        con.setRequestProperty("Connection", "close");
         con.setRequestProperty("Cache-Control", "no-cache");
         con.setRequestProperty("Accept", "text/*, application/*");
         con.setRequestProperty("Accept-Charset", "UTF-8");
