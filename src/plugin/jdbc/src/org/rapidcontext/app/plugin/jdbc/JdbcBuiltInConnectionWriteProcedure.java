@@ -31,6 +31,8 @@ import org.rapidcontext.core.type.Type;
  * saves or removes a JDBC connection from the data storage. Note
  * that only connections in the local plug-in can be removed.
  *
+ * @deprecate Use System.Storage.Write or HTTP storage API instead.
+ *
  * @author   Per Cederberg
  * @version  1.0
  */

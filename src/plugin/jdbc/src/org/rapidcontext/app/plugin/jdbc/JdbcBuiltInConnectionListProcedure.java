@@ -29,6 +29,8 @@ import org.rapidcontext.core.type.Connection;
  * provides a list of all currently available JDBC connections,
  * with some additional status information.
  *
+ * @deprecate Use System.Connection.List instead.
+ *
  * @author   Per Cederberg
  * @version  1.0
  */
