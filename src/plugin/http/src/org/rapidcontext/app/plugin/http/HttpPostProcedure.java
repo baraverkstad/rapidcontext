@@ -27,6 +27,8 @@ import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.core.proc.AddOnProcedure;
@@ -42,6 +44,12 @@ import org.rapidcontext.core.proc.ProcedureException;
  * @version  1.0
  */
 public class HttpPostProcedure extends AddOnProcedure {
+
+    /**
+     * The class logger.
+     */
+    private static final Logger LOG =
+        Logger.getLogger(HttpPostProcedure.class.getName());
 
     /**
      * The binding name for the HTTP connection.
@@ -275,8 +283,10 @@ public class HttpPostProcedure extends AddOnProcedure {
             con.setRequestProperty("Content-Type", mime);
             byte[] dataBytes = data.getBytes("UTF-8");
             con.setRequestProperty("Content-Length", "" + dataBytes.length);
-            if (cx.isTracing()) {
-                logRequest(cx, con, data);
+            if (LOG.isLoggable(Level.FINE) || cx.isTracing()) {
+                String log = requestLog(con, data);
+                LOG.fine(log);
+                cx.log(log);
             }
             OutputStream os = con.getOutputStream();
             try {
@@ -287,20 +297,30 @@ public class HttpPostProcedure extends AddOnProcedure {
 
             // Send request & handle response
             int httpCode = con.getResponseCode();
-            String httpMsg = con.getResponseMessage();
+            boolean success = (httpCode / 100 == 2);
             String charset = guessResponseCharset(con);
-            if (httpCode / 100 == 2) {
+            if (success) {
                 data = readStream(con.getInputStream(), charset);
             } else {
                 data = readStream(con.getErrorStream(), charset);
             }
-            if (cx.isTracing()) {
-                logResponse(cx, con, data);
+            if (LOG.isLoggable(Level.FINE) || cx.isTracing()) {
+                String log = responseLog(con, data);
+                LOG.fine(log);
+                cx.log(log);
             }
-            if (httpCode / 100 == 2) {
+            if (success) {
                 return data;
             } else {
-                throw new ProcedureException("HTTP " + httpCode + " " + httpMsg);
+                String msg = "error on HTTP " + con.getRequestMethod() + " " +
+                             con.getURL() + ": " + httpCode + " " +
+                             con.getResponseMessage();
+                if (data.length() > 0) {
+                    LOG.info(msg + "\n" + data);
+                } else {
+                    LOG.info(msg);
+                }
+                throw new ProcedureException(msg);
             }
         } catch (IOException e) {
             throw new ProcedureException(e.getMessage());
@@ -365,51 +385,62 @@ public class HttpPostProcedure extends AddOnProcedure {
     }
 
     /**
-     * Logs the HTTP request to the procedure call context.
+     * Returns a log string for the HTTP request.
      *
-     * @param cx             the procedure call context
      * @param con            the HTTP connection
      * @param data           the HTTP request data
+     *
+     * @return a log string with the HTTP request
      */
-    private static void logRequest(CallContext cx,
-                                   HttpURLConnection con,
-                                   String data) {
-
-        cx.log("HTTP " + con.getRequestMethod() + " " + con.getURL());
+    private static String requestLog(HttpURLConnection con, String data) {
+        StringBuilder buffer = new StringBuilder();
+        buffer.append("HTTP ");
+        buffer.append(con.getRequestMethod());
+        buffer.append(" ");
+        buffer.append(con.getURL());
+        buffer.append("\n");
         Iterator iter = con.getRequestProperties().keySet().iterator();
         while (iter.hasNext()) {
             String key = (String) iter.next();
-            cx.log("  " + key + ": " + con.getRequestProperty(key));
+            buffer.append(key);
+            buffer.append(": ");
+            buffer.append(con.getRequestProperty(key));
+            buffer.append("\n");
         }
         if (data != null) {
-            cx.log(data);
+            buffer.append(data);
+            buffer.append("\n");
         }
+        return buffer.toString();
     }
 
     /**
-     * Logs the HTTP response to the procedure call context.
+     * Returns a log string for the HTTP response.
      *
-     * @param cx             the procedure call context
      * @param con            the HTTP connection
      * @param data           the HTTP response data
      *
-     * @throws IOException if the HTTP response couldn't be extracted
+     * @return a log string with the HTTP response
      */
-    private static void logResponse(CallContext cx,
-                                    HttpURLConnection con,
-                                    String data)
-    throws IOException {
-
-        cx.log(con.getHeaderField(0));
+    private static String responseLog(HttpURLConnection con, String data) {
+        StringBuilder buffer = new StringBuilder();
+        buffer.append(con.getHeaderField(0));
+        buffer.append("\n");
         for (int i = 1; true; i++) {
             String key = con.getHeaderFieldKey(i);
-            if (key == null) {
+            String val = con.getHeaderField(i);
+            if (key == null || val == null) {
                 break;
             }
-            cx.log("  " + key + ": " + con.getHeaderField(i));
+            buffer.append(key);
+            buffer.append(": ");
+            buffer.append(con.getHeaderField(i));
+            buffer.append("\n");
         }
         if (data != null) {
-            cx.log(data);
+            buffer.append(data);
+            buffer.append("\n");
         }
+        return buffer.toString();
     }
 }
