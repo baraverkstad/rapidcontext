@@ -643,7 +643,7 @@ public class CallContext {
     public void log(String message) {
         if (isTracing()) {
             int indent = 2 * getCallStack().height() - 2;
-            logInternal(indent, "... " + logIndent(4, message));
+            logInternal(indent, logIndent(4, "... " + message));
         }
     }
 
@@ -722,7 +722,9 @@ public class CallContext {
         buffer.append(prefix);
         buffer.append(StringUtils.repeat(" ", indent));
         buffer.append(logIndent(prefix.length() + indent, message));
-        buffer.append("\n");
+        if (!message.endsWith("\n")) {
+            buffer.append("\n");
+        }
         if (buffer.length() > MAX_LOG_LENGTH) {
             buffer.delete(0, buffer.length() - MAX_LOG_LENGTH);
         }
