@@ -471,7 +471,7 @@ public class PluginManager {
         dict = config(pluginId);
         if (dict == null) {
             msg = "couldn't load " + pluginId + " plugin config file";
-            LOG.log(Level.WARNING, msg);
+            LOG.warning(msg);
             throw new PluginException(msg);
         }
 

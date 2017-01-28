@@ -83,7 +83,7 @@ public class ServletApplication extends HttpServlet {
                 tmpDir.deleteOnExit();
             }
         }
-        LOG.log(Level.FINE, "using temporary directory: " + tmpDir);
+        LOG.fine("using temporary directory: " + tmpDir);
         FileUtil.setTempDir(tmpDir);
         Mime.context = getServletContext();
         ctx = ApplicationContext.init(baseDir, baseDir, true);
@@ -219,7 +219,7 @@ public class ServletApplication extends HttpServlet {
         } catch (Exception e) {
             LOG.info(ip(request) + e.getMessage());
             if (session != null) {
-                LOG.fine("request session " + session.id() +
+                LOG.info("request session " + session.id() +
                          " invalid, removing from storage");
                 Session.remove(ctx.getStorage(), session.id());
             }

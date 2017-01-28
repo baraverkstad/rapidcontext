@@ -437,7 +437,7 @@ public class StorageWebService extends WebService {
             }
         } catch (JsException e) {
             String msg = "invalid input JSON: " + e.getMessage();
-            LOG.log(Level.WARNING, msg);
+            LOG.warning(msg);
             errorBadRequest(request, msg);
         } catch (Exception e) {
             LOG.log(Level.WARNING, "failed to write " + request.getPath(), e);
@@ -474,12 +474,12 @@ public class StorageWebService extends WebService {
                 }
             } else {
                 String msg = "failed to write " + request.getPath();
-                LOG.log(Level.WARNING, msg);
+                LOG.warning(msg);
                 errorInternal(request, msg);
             }
         } catch (JsException e) {
             String msg = "invalid input JSON: " + e.getMessage();
-            LOG.log(Level.WARNING, msg);
+            LOG.warning(msg);
             errorBadRequest(request, msg);
         }
     }
@@ -513,7 +513,7 @@ public class StorageWebService extends WebService {
                 }
             } else {
                 String msg = "failed to write " + request.getPath();
-                LOG.log(Level.WARNING, msg);
+                LOG.warning(msg);
                 errorInternal(request, msg);
             }
         } catch (IOException e) {
