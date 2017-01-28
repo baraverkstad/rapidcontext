@@ -21,10 +21,7 @@ import org.rapidcontext.core.proc.ProcedureException;
 
 /**
  * The built-in HTTP POST procedure. This procedure provides
- * simplified access to HTTP data sending and retrieval. It is
- * restricted to admin-only access for security reasons. Create a
- * more specified add-on procedure with the "http.post" type to
- * allow other users access to this functionality.
+ * simplified access to HTTP data sending and retrieval.
  *
  * @author   Per Cederberg
  * @version  1.0
