@@ -131,12 +131,12 @@ public class JdbcChannel extends Channel {
         try {
             if (con.isClosed()) {
                 String msg = "failed to reserve, connection channel already closed";
-                LOG.fine(prefix + msg);
+                LOG.warning(prefix + msg);
                 throw new ConnectionException(msg);
             }
         } catch (SQLException e) {
             String msg = "failed to reserve: " + e.getMessage();
-            LOG.fine(prefix + msg);
+            LOG.warning(prefix + msg);
             throw new ConnectionException(msg);
         }
     }
@@ -261,15 +261,14 @@ public class JdbcChannel extends Channel {
      * @throws ConnectionException if the execution failed
      */
     public Array executeStatement(String sql) throws ConnectionException {
-        try {
+        if (LOG.isLoggable(Level.FINE)) {
             LOG.fine(prefix + "executing statement: " + sql);
-            Array res = executeStatement(prepare(sql, null));
-            LOG.fine(prefix + "done executing statement: " + sql);
-            return res;
-        } catch (ConnectionException e) {
-            LOG.warning(prefix + e.getMessage());
-            throw e;
         }
+        Array res = executeStatement(prepare(sql, null));
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine(prefix + "done executing statement: " + sql);
+        }
+        return res;
     }
 
     /**
@@ -299,8 +298,9 @@ public class JdbcChannel extends Channel {
             }
             return res;
         } catch (SQLException e) {
-            throw new ConnectionException("failed to execute statement: " +
-                                          e.getMessage());
+            String msg = "failed to execute statement: " + e.getMessage();
+            LOG.warning(prefix + msg);
+            throw new ConnectionException(msg);
         } finally {
             try {
                 if (set != null) {
@@ -341,15 +341,14 @@ public class JdbcChannel extends Channel {
     public Object executeQuery(String sql, String flags)
     throws ConnectionException {
 
-        try {
+        if (LOG.isLoggable(Level.FINE)) {
             LOG.fine(prefix + "executing query: " + sql);
-            Object res = executeQuery(prepare(sql, null), flags);
-            LOG.fine(prefix + "done executing query: " + sql);
-            return res;
-        } catch (ConnectionException e) {
-            LOG.warning(prefix + e.getMessage());
-            throw e;
         }
+        Object res = executeQuery(prepare(sql, null), flags);
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine(prefix + "done executing query: " + sql);
+        }
+        return res;
     }
 
     /**
@@ -389,8 +388,9 @@ public class JdbcChannel extends Channel {
             set = stmt.executeQuery();
             return createResults(set, flags);
         } catch (SQLException e) {
-            throw new ConnectionException("failed to execute query: " +
-                                          e.getMessage());
+            String msg = "failed to execute query: " + e.getMessage();
+            LOG.warning(prefix + msg);
+            throw new ConnectionException(msg);
         } finally {
             if (set != null) {
                 try {
@@ -422,6 +422,9 @@ public class JdbcChannel extends Channel {
 
         PreparedStatement stmt;
         try {
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.fine("preparing SQL:\n" + sql + "\n" + params);
+            }
             stmt = con.prepareStatement(sql,
                                         ResultSet.TYPE_FORWARD_ONLY,
                                         ResultSet.CONCUR_READ_ONLY,
@@ -438,10 +441,10 @@ public class JdbcChannel extends Channel {
                 }
             }
             stmt.setQueryTimeout(timeout);
-            //stmt.setFetchSize(Integer.MIN_VALUE);
             return stmt;
         } catch (SQLException e) {
             String msg = "failed to prepare SQL: " + e.getMessage();
+            LOG.warning(prefix + msg + "\n" + sql + "\n" + params);
             throw new ConnectionException(msg);
         }
     }
@@ -463,8 +466,9 @@ public class JdbcChannel extends Channel {
         try {
             meta = rs.getMetaData();
         } catch (SQLException e) {
-            throw new ConnectionException("failed to retrieve query result meta-data: " +
-                                          e.getMessage());
+            String msg = "failed to fetch result meta-data: " + e.getMessage();
+            LOG.warning(prefix + msg);
+            throw new ConnectionException(msg);
         }
         if (hasFlag(flags, "metadata", false)) {
             Dict dict = new Dict();
@@ -505,8 +509,9 @@ public class JdbcChannel extends Channel {
                 cols.add(obj);
             }
         } catch (SQLException e) {
-            throw new ConnectionException("failed to extract query meta-data: " +
-                                       e.getMessage());
+            String msg = "failed to read result meta-data: " + e.getMessage();
+            LOG.warning(prefix + msg);
+            throw new ConnectionException(msg);
         }
         return cols;
     }
@@ -560,6 +565,7 @@ public class JdbcChannel extends Channel {
             }
         } catch (SQLException e) {
             String msg = "failed to extract query results: " + e.getMessage();
+            LOG.warning(prefix + msg);
             throw new ConnectionException(msg);
         }
         if (flagSingleRow) {
@@ -570,6 +576,7 @@ public class JdbcChannel extends Channel {
             } else {
                 String msg = "too many rows in query results; expected 1, " +
                              "but found " + rows.size();
+                LOG.info(prefix + msg);
                 throw new ConnectionException(msg);
             }
         }
@@ -608,8 +615,12 @@ public class JdbcChannel extends Channel {
                 try {
                     return DateUtil.formatIsoDateTime(rs.getTimestamp(column));
                 } catch (SQLException e) {
-                    // TODO: log this as a warning, it is here due to MySQL
-                    //       dates being '0000-00-00' and such
+                    try {
+                        LOG.info(prefix + "discarded invalid date/time: " +
+                                 rs.getString(column));
+                    } catch (Exception ignore) {
+                        // Nothing here
+                    }
                     return null;
                 }
             case Types.BINARY:
@@ -638,9 +649,10 @@ public class JdbcChannel extends Channel {
                 }
             }
         } catch (Exception e) {
-            throw new ConnectionException("failed to extract query result value " +
-                                          "for column " + column + ": " +
-                                          e.getMessage());
+            String msg = "failed to extract query result value for column " +
+                         column + ": " + e.getMessage();
+            LOG.warning(prefix + msg);
+            throw new ConnectionException(msg);
         }
     }
 
