@@ -161,6 +161,7 @@ public class HttpPostProcedure extends AddOnProcedure {
         parseHeaders(headers, replaceArguments(str, bindings, false));
         str = (String) bindings.getValue(BINDING_DATA);
         str = replaceArguments(str, bindings, true);
+        str = str.replace("\n", "&");
         return sendPostRequest(cx, createConnection(url, headers), str);
     }
 
