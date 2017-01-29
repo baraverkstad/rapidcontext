@@ -77,8 +77,8 @@ public class HttpPostProcedure extends AddOnProcedure {
      * @throws ProcedureException if the initialization failed
      */
     public HttpPostProcedure() throws ProcedureException {
-        defaults.set(BINDING_CONNECTION, Bindings.CONNECTION, null,
-                     "The HTTP connection pool name, set to null for none.");
+        defaults.set(BINDING_CONNECTION, Bindings.DATA, null,
+                     "The HTTP connection pool name, set to blank for none.");
         defaults.set(BINDING_URL, Bindings.DATA, "",
                      "The HTTP URL to send the data to. May be relative to " +
                      "the connection pool URL.");
@@ -108,13 +108,14 @@ public class HttpPostProcedure extends AddOnProcedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        String  str;
-        Object  obj;
-
-        obj = bindings.getValue(BINDING_CONNECTION, null);
-        if (obj != null && !HttpChannel.class.isInstance(obj)) {
-            str = "connection not of HTTP type: " + obj.getClass().getName();
-            throw new ProcedureException(str);
+        Object obj = bindings.getValue(BINDING_CONNECTION, null);
+        if (obj instanceof String) {
+            String str = (String) obj;
+            obj = (str.length() > 0) ? cx.connectionReserve(str) : null;
+        }
+        if (obj != null && !(obj instanceof HttpChannel)) {
+            throw new ProcedureException("connection not of HTTP type: " +
+                                         obj.getClass().getName());
         }
         return execCall(cx, (HttpChannel) obj, bindings);
     }
