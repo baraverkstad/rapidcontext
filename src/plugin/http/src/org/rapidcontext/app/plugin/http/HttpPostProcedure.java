@@ -14,24 +14,12 @@
 
 package org.rapidcontext.app.plugin.http;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import org.apache.commons.lang.StringUtils;
-import org.rapidcontext.core.proc.AddOnProcedure;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
@@ -43,13 +31,7 @@ import org.rapidcontext.core.proc.ProcedureException;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class HttpPostProcedure extends AddOnProcedure {
-
-    /**
-     * The class logger.
-     */
-    private static final Logger LOG =
-        Logger.getLogger(HttpPostProcedure.class.getName());
+public class HttpPostProcedure extends HttpProcedure {
 
     /**
      * The binding name for the HTTP connection.
@@ -77,6 +59,7 @@ public class HttpPostProcedure extends AddOnProcedure {
      * @throws ProcedureException if the initialization failed
      */
     public HttpPostProcedure() throws ProcedureException {
+        super();
         defaults.set(BINDING_CONNECTION, Bindings.DATA, null,
                      "The HTTP connection pool name, set to blank for none.");
         defaults.set(BINDING_URL, Bindings.DATA, "",
@@ -156,109 +139,15 @@ public class HttpPostProcedure extends AddOnProcedure {
         }
         headers = new LinkedHashMap();
         if (con != null) {
-            parseHeaders(headers, con.getHeaders());
+            addHeaders(headers, con.getHeaders());
         }
         str = (String) bindings.getValue(BINDING_HEADER, "");
-        parseHeaders(headers, replaceArguments(str, bindings, false));
+        addHeaders(headers, replaceArguments(str, bindings, false));
         str = (String) bindings.getValue(BINDING_DATA);
         str = replaceArguments(str, bindings, true);
         str = str.replace("\n", "&");
-        return sendPostRequest(cx, createConnection(url, headers), str);
-    }
-
-    /**
-     * Parses a string with HTTP headers into a result value map.
-     *
-     * @param map            the result name and value map
-     * @param data           the unparsed header string
-     */
-    private static void parseHeaders(LinkedHashMap map, String data) {
-        for (String line : data.split("[\\n\\r]+")) {
-            String[] parts = line.split("\\s*:\\s*", 2);
-            if (parts.length == 2) {
-                map.put(parts[0].trim(), parts[1].trim());
-            }
-        }
-    }
-
-    /**
-     * Replaces any parameters with the corresponding argument value
-     * from the bindings. Optionally, this method also percent-encodes
-     * (URL encodes) the argument values.
-     *
-     * @param data           the data string to process
-     * @param bindings       the bindings to use
-     * @param encode         the encode values flag
-     *
-     * @return the processed data string
-     *
-     * @throws ProcedureException if some parameter couldn't be found
-     */
-    private static String replaceArguments(String data,
-                                           Bindings bindings,
-                                           boolean encode)
-        throws ProcedureException {
-
-        String[]  names = bindings.getNames();
-        String    value;
-
-        for (int i = 0; i < names.length; i++) {
-            if (bindings.getType(names[i]) == Bindings.ARGUMENT) {
-                value = bindings.getValue(names[i], "").toString();
-                if (encode) {
-                    try {
-                        value = URLEncoder.encode(value, "utf8");
-                    } catch (UnsupportedEncodingException e) {
-                        throw new ProcedureException("unsupported encoding", e);
-                    }
-                }
-                data = StringUtils.replace(data, ":" + names[i], value.toString());
-            }
-        }
-        return data;
-    }
-
-    /**
-     * Creates an HTTP connection for the specified URL and headers.
-     *
-     * @param url            the URL to use
-     * @param headers        the additional HTTP headers
-     *
-     * @return the HTTP connection created
-     *
-     * @throws ProcedureException if the connection couldn't be created
-     */
-    private static HttpURLConnection createConnection(URL url, Map headers)
-    throws ProcedureException {
-
-        HttpURLConnection  con;
-        String             msg;
-
-        try {
-            con = (HttpURLConnection) url.openConnection();
-        } catch (IOException e) {
-            msg = "failed to open URL " + url + ":" + e.getMessage();
-            throw new ProcedureException(msg);
-        }
-        con.setDoInput(true);
-        con.setAllowUserInteraction(false);
-        con.setUseCaches(false);
-        con.setInstanceFollowRedirects(false);
-        con.setConnectTimeout(10000);
-        con.setReadTimeout(45000);
-        con.setRequestProperty("Connection", "close");
-        con.setRequestProperty("Cache-Control", "no-cache");
-        con.setRequestProperty("Accept", "text/*, application/*");
-        con.setRequestProperty("Accept-Charset", "UTF-8");
-        con.setRequestProperty("Accept-Encoding", "identity");
-        // TODO: Extract correct version number from JAR file
-        con.setRequestProperty("User-Agent", "RapidContext/1.0");
-        Iterator iter = headers.keySet().iterator();
-        while (iter.hasNext()) {
-            String str = (String) iter.next();
-            con.setRequestProperty(str, (String) headers.get(str));
-        }
-        return con;
+        HttpURLConnection urlCon = setup(url, headers, str.length() > 0);
+        return sendPostRequest(cx, urlCon, str);
     }
 
     /**
@@ -279,171 +168,14 @@ public class HttpPostProcedure extends AddOnProcedure {
     throws ProcedureException {
 
         try {
-            // Setup request
             con.setRequestMethod("POST");
-            con.setDoOutput(true);
-            String mime = "application/x-www-form-urlencoded;charset=UTF-8";
-            con.setRequestProperty("Content-Type", mime);
-            byte[] dataBytes = data.getBytes("UTF-8");
-            con.setRequestProperty("Content-Length", "" + dataBytes.length);
-            if (LOG.isLoggable(Level.FINE) || cx.isTracing()) {
-                String log = requestLog(con, data);
-                LOG.fine(log);
-                cx.log(log);
-            }
-            OutputStream os = con.getOutputStream();
-            try {
-                os.write(dataBytes);
-            } finally {
-                os.close();
-            }
-
-            // Send request & handle response
-            int httpCode = con.getResponseCode();
-            boolean success = (httpCode / 100 == 2);
-            String charset = guessResponseCharset(con);
-            if (success) {
-                data = readStream(con.getInputStream(), charset);
-            } else {
-                data = readStream(con.getErrorStream(), charset);
-            }
-            if (LOG.isLoggable(Level.FINE) || cx.isTracing()) {
-                String log = responseLog(con, data);
-                LOG.fine(log);
-                cx.log(log);
-            }
-            if (success) {
-                return data;
-            } else {
-                String msg = "error on HTTP " + con.getRequestMethod() + " " +
-                             con.getURL() + ": " + httpCode + " " +
-                             con.getResponseMessage();
-                if (data.length() > 0) {
-                    LOG.info(msg + "\n" + data);
-                } else {
-                    LOG.info(msg);
-                }
-                throw new ProcedureException(msg);
-            }
+            send(cx, con, data);
+            return receive(cx, con);
         } catch (IOException e) {
+            logResponse(cx, con, null);
             throw new ProcedureException(e.getMessage());
         } finally {
             con.disconnect();
         }
-    }
-
-    /**
-     * Attempts to guess the HTTP response character set based on the content
-     * type header. Defaults to UTF-8 if no proper character set was specified.
-     *
-     * @param con            the HTTP connection
-     *
-     * @return the HTTP response character set
-     */
-    private static String guessResponseCharset(HttpURLConnection con) {
-        String contentType = con.getContentType().replace(" ", "");
-        for (String param : contentType.split(";")) {
-            if (param.startsWith("charset=")) {
-                return  param.split("=", 2)[1];
-            }
-        }
-        return "UTF-8";
-    }
-
-    /**
-     * Reads data from an input stream until it ends. The data is expected to
-     * be in text format, using the specified encoding.
-     *
-     * @param is             the stream to read
-     * @param charset        the character set to use
-     *
-     * @return the text read from the stream
-     *
-     * @throws IOException if the data couldn't be read properly
-     */
-    private static String readStream(InputStream is, String charset)
-    throws IOException {
-
-        if (is == null) {
-            return "";
-        }
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(new InputStreamReader(is, charset));
-            StringBuilder buffer = new StringBuilder();
-            String str;
-            while ((str = reader.readLine()) != null) {
-                buffer.append(str);
-            }
-            return buffer.toString();
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (Throwable ignore) {
-                    // Do nothing here
-                }
-            }
-        }
-    }
-
-    /**
-     * Returns a log string for the HTTP request.
-     *
-     * @param con            the HTTP connection
-     * @param data           the HTTP request data
-     *
-     * @return a log string with the HTTP request
-     */
-    private static String requestLog(HttpURLConnection con, String data) {
-        StringBuilder buffer = new StringBuilder();
-        buffer.append("HTTP ");
-        buffer.append(con.getRequestMethod());
-        buffer.append(" ");
-        buffer.append(con.getURL());
-        buffer.append("\n");
-        Iterator iter = con.getRequestProperties().keySet().iterator();
-        while (iter.hasNext()) {
-            String key = (String) iter.next();
-            buffer.append(key);
-            buffer.append(": ");
-            buffer.append(con.getRequestProperty(key));
-            buffer.append("\n");
-        }
-        if (data != null) {
-            buffer.append(data);
-            buffer.append("\n");
-        }
-        return buffer.toString();
-    }
-
-    /**
-     * Returns a log string for the HTTP response.
-     *
-     * @param con            the HTTP connection
-     * @param data           the HTTP response data
-     *
-     * @return a log string with the HTTP response
-     */
-    private static String responseLog(HttpURLConnection con, String data) {
-        StringBuilder buffer = new StringBuilder();
-        buffer.append(con.getHeaderField(0));
-        buffer.append("\n");
-        for (int i = 1; true; i++) {
-            String key = con.getHeaderFieldKey(i);
-            String val = con.getHeaderField(i);
-            if (key == null || val == null) {
-                break;
-            }
-            buffer.append(key);
-            buffer.append(": ");
-            buffer.append(con.getHeaderField(i));
-            buffer.append("\n");
-        }
-        if (data != null) {
-            buffer.append(data);
-            buffer.append("\n");
-        }
-        return buffer.toString();
     }
 }
