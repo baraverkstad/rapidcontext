@@ -38,7 +38,7 @@ import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.util.FileUtil;
 import org.rapidcontext.util.HttpUtil;
-import org.rapidcontext.util.StringUtil;
+import org.rapidcontext.util.RegexUtil;
 
 /**
  * A request wrapper class. This class encapsulates the HTTP servlet
@@ -291,10 +291,11 @@ public class Request implements HttpUtil {
         if (requestProtocol == null) {
             String str1 = request.getHeader("X-Forwarded-Scheme");
             String str2 = request.getHeader("X-Forwarded-Proto");
-            String str3 = request.getScheme();
-            str1 = StringUtil.match(str1, RE_HEADER_VALUE);
-            str2 = StringUtil.match(str2, RE_HEADER_VALUE);
-            requestProtocol = StringUtil.first(str1, str2, str3);
+            str1 = RegexUtil.firstMatch(RE_HEADER_VALUE, str1);
+            str2 = RegexUtil.firstMatch(RE_HEADER_VALUE, str2);
+            String str3 = StringUtils.defaultIfEmpty(str1, str2);
+            String str4 = request.getScheme();
+            requestProtocol = StringUtils.defaultIfEmpty(str3, str4);
         }
         return requestProtocol;
     }
@@ -308,11 +309,12 @@ public class Request implements HttpUtil {
         if (requestHost == null) {
             String str1 = request.getHeader("X-Forwarded-Server");
             String str2 = request.getHeader("X-Forwarded-Host");
-            String str3 = request.getServerName();
-            str1 = StringUtil.match(str1, RE_HEADER_VALUE);
-            str2 = StringUtil.match(str2, RE_HEADER_VALUE);
+            str1 = RegexUtil.firstMatch(RE_HEADER_VALUE, str1);
+            str2 = RegexUtil.firstMatch(RE_HEADER_VALUE, str2);
             str2 = StringUtils.substringBefore(str2, ":");
-            requestHost = StringUtil.first(str1, str2, str3);
+            String str3 = StringUtils.defaultIfEmpty(str1, str2);
+            String str4 = request.getServerName();
+            requestHost = StringUtils.defaultIfEmpty(str3, str4);
         }
         return requestHost;
     }
@@ -326,8 +328,8 @@ public class Request implements HttpUtil {
         if (requestPort <= 0) {
             String str1 = request.getHeader("X-Forwarded-Port");
             String str2 = request.getHeader("X-Forwarded-Host");
-            str1 = StringUtil.match(str1, RE_HEADER_VALUE);
-            str2 = StringUtil.match(str2, RE_HEADER_VALUE);
+            str1 = RegexUtil.firstMatch(RE_HEADER_VALUE, str1);
+            str2 = RegexUtil.firstMatch(RE_HEADER_VALUE, str2);
             if (str1 != null) {
                 requestPort = Integer.parseInt(str1);
             } else if (str2 != null) {
@@ -379,7 +381,7 @@ public class Request implements HttpUtil {
         if (requestPath == null) {
             String path = request.getPathInfo();
             path = StringUtils.removeStart(path, "/");
-            requestPath = (path == null) ? "" : path;
+            requestPath = StringUtils.defaultIfEmpty(path, "");
         }
         return requestPath;
     }
@@ -441,10 +443,11 @@ public class Request implements HttpUtil {
         if (requestIp == null) {
             String str1 = request.getHeader("X-Forwarded-For");
             String str2 = request.getHeader("X-Real-IP");
-            String str3 = request.getRemoteAddr();
-            str1 = StringUtil.match(str1, RE_HEADER_VALUE);
-            str2 = StringUtil.match(str2, RE_HEADER_VALUE);
-            requestIp = (str1 != null) ? str1 : (str2 != null) ? str2 : str3;
+            str1 = RegexUtil.firstMatch(RE_HEADER_VALUE, str1);
+            str2 = RegexUtil.firstMatch(RE_HEADER_VALUE, str2);
+            String str3 = StringUtils.defaultIfEmpty(str1, str2);
+            String str4 = request.getRemoteAddr();
+            requestIp = StringUtils.defaultIfEmpty(str3, str4);
         }
         return requestIp;
     }
@@ -513,8 +516,7 @@ public class Request implements HttpUtil {
      *         the default value if no such parameter was found
      */
     public String getParameter(String name, String defVal) {
-        String  value = request.getParameter(name);
-
+        String value = request.getParameter(name);
         return (value == null) ? defVal : value;
     }
 
