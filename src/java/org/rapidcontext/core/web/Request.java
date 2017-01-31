@@ -313,7 +313,13 @@ public class Request implements HttpUtil {
             str2 = RegexUtil.firstMatch(RE_HEADER_VALUE, str2);
             str2 = StringUtils.substringBefore(str2, ":");
             String str3 = StringUtils.defaultIfEmpty(str1, str2);
-            String str4 = request.getServerName();
+            String str4;
+            try {
+                str4 = request.getServerName();
+            } catch (NumberFormatException ignore) {
+                // Bugfix for IPv6 host names in Jetty 6.x
+                str4 = "127.0.0.1";
+            }
             requestHost = StringUtils.defaultIfEmpty(str3, str4);
         }
         return requestHost;
