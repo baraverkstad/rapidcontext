@@ -27,6 +27,7 @@ import org.mozilla.javascript.Undefined;
 import org.mozilla.javascript.WrappedException;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
+import org.rapidcontext.core.data.TextEncoding;
 import org.rapidcontext.core.storage.StorableObject;
 
 /**
@@ -98,13 +99,13 @@ public class JsSerializer {
         } else if (obj instanceof Number) {
             serialize((Number) obj, buffer);
         } else if (obj instanceof Date) {
-            serialize("@" + ((Date) obj).getTime(), buffer);
+            buffer.append("\"@" + ((Date) obj).getTime() + "\"");
         } else if (obj instanceof Class) {
-            serialize(((Class) obj).getName(), buffer);
+            buffer.append(TextEncoding.encodeJson(((Class) obj).getName()));
         } else if (obj instanceof StorableObject) {
             serialize(((StorableObject) obj).serialize(), indent, buffer);
         } else {
-            serialize(obj.toString(), buffer);
+            buffer.append(TextEncoding.encodeJson(obj.toString()));
         }
     }
 
@@ -134,7 +135,7 @@ public class JsSerializer {
                 buffer.append(",");
             }
             buffer.append(prefix);
-            serialize(keys[i], buffer);
+            buffer.append(TextEncoding.encodeJson(keys[i]));
             buffer.append(infix);
             int nextindent = (indent < 0) ? indent : indent + 1;
             serialize(dict.get(keys[i]), nextindent, buffer);
@@ -170,58 +171,6 @@ public class JsSerializer {
             serialize(arr.get(i), indent, buffer);
         }
         buffer.append("]");
-    }
-
-    /**
-     * Serializes a string into a JavaScript literal (JSON). The
-     * string returned can be used as a constant inside JavaScript
-     * code or returned via a JSON API. The serialized result will
-     * be written into the specified string buffer.
-     *
-     * @param str            the string to convert, or null
-     * @param buffer         the string buffer to append into
-     */
-    private static void serialize(String str, StringBuilder buffer) {
-        if (str == null) {
-            buffer.append("null");
-        } else {
-            buffer.append('"');
-            for (int i = 0; i < str.length(); i++) {
-                char chr = str.charAt(i);
-                switch (chr) {
-                case '\\':
-                    buffer.append("\\\\");
-                    break;
-                case '\"':
-                    buffer.append("\\\"");
-                    break;
-                case '\n':
-                    buffer.append("\\n");
-                    break;
-                case '\r':
-                    buffer.append("\\r");
-                    break;
-                case '\t':
-                    buffer.append("\\t");
-                    break;
-                default:
-                    if (chr != '\'' && chr != '<' && 32 <= chr && chr < 127) {
-                        buffer.append(chr);
-                    } else {
-                        buffer.append("\\u");
-                        if (chr <= 0x000F) {
-                            buffer.append("000");
-                        } else if (chr <= 0x00FF) {
-                            buffer.append("00");
-                        } else if (chr <= 0x0FFF) {
-                            buffer.append("0");
-                        }
-                        buffer.append(Integer.toHexString(chr).toUpperCase());
-                    }
-                }
-            }
-            buffer.append('"');
-        }
     }
 
     /**

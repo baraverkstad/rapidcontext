@@ -19,7 +19,6 @@ import java.util.Date;
 import org.apache.commons.lang.CharUtils;
 import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.core.storage.StorableObject;
-import org.rapidcontext.util.StringUtil;
 
 /**
  * A data serializer for XML. This class currently only attempts to
@@ -79,13 +78,13 @@ public class XmlSerializer {
             tagEnd(id, buffer);
         } else if (obj instanceof Class) {
             tagStart(id, "class", buffer);
-            buffer.append(StringUtil.escapeXml(((Class) obj).getName()));
+            buffer.append(TextEncoding.encodeXml(((Class) obj).getName(), false));
             tagEnd(id, buffer);
         } else if (obj instanceof StorableObject) {
             serialize(id, ((StorableObject) obj).serialize(), indent, buffer);
         } else {
             tagStart(id, null, buffer);
-            buffer.append(StringUtil.escapeXml(obj.toString()));
+            buffer.append(TextEncoding.encodeXml(obj.toString(), false));
             tagEnd(id, buffer);
         }
     }

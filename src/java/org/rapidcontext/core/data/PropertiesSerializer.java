@@ -33,6 +33,7 @@ import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.util.StringUtil;
 
@@ -510,41 +511,18 @@ public class PropertiesSerializer {
     private static void write(PrintWriter os, String name, String value)
         throws IOException {
 
-        boolean  newline = true;
-        char     c;
-
         if (name == null || name.length() <= 0) {
             throw new IOException("property names cannot be blank");
         } else if (name.indexOf(' ') >= 0) {
             throw new IOException("property name '" + name +
                                   "' contains a space character");
-        } else if (!StringUtil.isIsoLatin1(name)) {
+        } else if (!StringUtils.isAsciiPrintable(name)) {
             throw new IOException("property name '" + name +
-                                  "' is not printable ISO-8859-1");
+                                  "' is not printable ASCII");
         }
         os.print(name);
         os.print(" = ");
-        for (int i = 0; i < value.length(); i++) {
-            c = value.charAt(i);
-            switch (c) {
-            case ' ':
-                if (newline) {
-                    os.print("\\");
-                }
-                os.print(" ");
-                newline = false;
-                break;
-            case '\n':
-                os.println("\\n\\");
-                newline = true;
-                break;
-            case '\r':
-                break;
-            default:
-                os.print(StringUtil.escapeProperty(c));
-                newline = false;
-            }
-        }
+        os.print(TextEncoding.encodeProperty(value, true));
         os.println();
     }
 
