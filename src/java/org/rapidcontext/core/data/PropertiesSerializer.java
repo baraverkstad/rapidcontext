@@ -35,7 +35,6 @@ import java.util.zip.ZipFile;
 
 import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.core.storage.StorableObject;
-import org.rapidcontext.util.StringUtil;
 
 /**
  * A dictionary serializer and unserializer for the standard Java
@@ -298,7 +297,7 @@ public class PropertiesSerializer {
      */
     private static int toIndex(String str) {
         int index = -1;
-        if (StringUtil.isNumber(str)) {
+        if (StringUtils.isNumeric(str)) {
             try {
                 index = Integer.parseInt(str);
             } catch (NumberFormatException ignore) {
@@ -321,9 +320,9 @@ public class PropertiesSerializer {
     private static Object toValue(String value) {
         if (value.equals("true") || value.equals("false")) {
             return Boolean.valueOf(value);
-        } else if (StringUtil.isNumber(value)) {
+        } else if (StringUtils.isNumeric(value)) {
             return Integer.valueOf(value);
-        } else if (value.startsWith("@") && StringUtil.isNumber(value.substring(1))) {
+        } else if (value.startsWith("@") && StringUtils.isNumeric(value.substring(1))) {
             return new Date(Long.parseLong(value.substring(1)));
         } else {
             return value;

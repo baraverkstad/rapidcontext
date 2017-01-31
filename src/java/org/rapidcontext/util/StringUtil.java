@@ -26,40 +26,6 @@ import java.util.regex.Pattern;
 public class StringUtil {
 
     /**
-     * Checks if a character is a numeric ASCII character.
-     *
-     * @param c              the character to check
-     *
-     * @return true if the character is a number, or
-     *         false otherwise
-     */
-    public static boolean isNumber(char c) {
-        return 0x30 <= c && c <= 0x39;
-    }
-
-    /**
-     * Checks if all characters in a string are numeric ASCII
-     * characters. The string must also be at least one character
-     * long and no whitespace characters are accepted.
-     *
-     * @param str            the string to check
-     *
-     * @return true if the string is numeric, or
-     *         false otherwise
-     */
-    public static boolean isNumber(String str) {
-        if (str == null || str.length() <= 0) {
-            return false;
-        }
-        for (int i = 0; i < str.length(); i++) {
-            if (!isNumber(str.charAt(i))) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
      * Returns the first non-empty value of the argument strings.
      *
      * @param str1           the first string to check
