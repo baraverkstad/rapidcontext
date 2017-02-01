@@ -20,6 +20,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.LinkedHashMap;
 
+import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.core.data.TextEncoding;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
@@ -47,7 +48,7 @@ public class HttpPostProcedure extends HttpProcedure {
     /**
      * The binding name for the additional HTTP headers.
      */
-    public static final String BINDING_HEADER = "header";
+    public static final String BINDING_HEADERS = "headers";
 
     /**
      * The binding name for the HTTP POST data (name and value pairs).
@@ -64,12 +65,19 @@ public class HttpPostProcedure extends HttpProcedure {
         defaults.set(BINDING_CONNECTION, Bindings.DATA, null,
                      "The HTTP connection pool name, set to blank for none.");
         defaults.set(BINDING_URL, Bindings.DATA, "",
-                     "The HTTP URL to send the data to. May be relative to " +
-                     "the connection pool URL.");
-        defaults.set(BINDING_HEADER, Bindings.DATA, "",
-                     "The additional HTTP headers or blank for none.");
+                     "The HTTP URL, optionally containing argument template " +
+                     "variables (e.g. ':arg' or '@arg'). May be blank or " +
+                     "relative to the connection pool URL.");
+        defaults.set(BINDING_HEADERS, Bindings.DATA, "",
+                     "Any additional HTTP headers, optionally containing " +
+                     "argument template variables (e.g. ':arg' or '@arg'). " +
+                     "Headers are listed in 'Name: Value' pairs, separated " +
+                     "by line breaks. Leave blank for default headers.");
         defaults.set(BINDING_DATA, Bindings.DATA, "",
-                     "The HTTP POST data to send or blank for none.");
+                     "The HTTP payload data to send, optionally containing " +
+                     "argument template variables (e.g. ':arg' or '@arg'). " +
+                     "Data must be URL-encoded, but may be split into " +
+                     "lines (automatically joined by '&' characters).");
         defaults.seal();
     }
 
@@ -92,16 +100,7 @@ public class HttpPostProcedure extends HttpProcedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        Object obj = bindings.getValue(BINDING_CONNECTION, null);
-        if (obj instanceof String) {
-            String str = (String) obj;
-            obj = (str.length() > 0) ? cx.connectionReserve(str) : null;
-        }
-        if (obj != null && !(obj instanceof HttpChannel)) {
-            throw new ProcedureException("connection not of HTTP type: " +
-                                         obj.getClass().getName());
-        }
-        return execCall(cx, (HttpChannel) obj, bindings);
+        return execCall(cx, bindings);
     }
 
     /**
@@ -109,7 +108,6 @@ public class HttpPostProcedure extends HttpProcedure {
      * and with the specified call bindings.
      *
      * @param cx             the procedure call context
-     * @param con            the HTTP connection or null for none
      * @param bindings       the call bindings to use
      *
      * @return the result of the call, or
@@ -118,56 +116,19 @@ public class HttpPostProcedure extends HttpProcedure {
      * @throws ProcedureException if the call execution caused an
      *             error
      */
-    static Object execCall(CallContext cx, HttpChannel con, Bindings bindings)
+    protected static Object execCall(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        URL             url;
-        LinkedHashMap   headers;
-        String          str;
-
-        str = bindings.getValue(BINDING_URL, "").toString();
-        str = bindings.processTemplate(str, TextEncoding.URL);
-        try {
-            if (con != null && !str.isEmpty()) {
-                url = new URL(con.getUrl(), str);
-            } else if (con != null) {
-                url = con.getUrl();
-            } else {
-                url = new URL(str);
-            }
-        } catch (MalformedURLException e) {
-            throw new ProcedureException("malformed URL: " + str);
-        }
-        headers = new LinkedHashMap();
-        if (con != null) {
-            addHeaders(headers, con.getHeaders());
-        }
-        str = (String) bindings.getValue(BINDING_HEADER, "");
-        addHeaders(headers, bindings.processTemplate(str, TextEncoding.NONE));
-        str = (String) bindings.getValue(BINDING_DATA);
-        str = bindings.processTemplate(str, TextEncoding.URL);
-        str = str.replace("\n", "&");
-        HttpURLConnection urlCon = setup(url, headers, str.length() > 0);
-        return sendPostRequest(cx, urlCon, str);
-    }
-
-    /**
-     * Sends an HTTP POST request and returns the response as a string.
-     *
-     * @param cx             the procedure call context
-     * @param con            the HTTP connection to use
-     * @param data           the HTTP POST payload (form URL-encoded)
-     *
-     * @return the response text data
-     *
-     * @throws ProcedureException if the request sending caused an
-     *             exception
-     */
-    private static String sendPostRequest(CallContext cx,
-                                          HttpURLConnection con,
-                                          String data)
-    throws ProcedureException {
-
+        HttpChannel channel = getChannel(cx, bindings);
+        URL url = getUrl(bindings, channel);
+        LinkedHashMap headers = getHeaders(bindings, channel);
+        String data = bindings.getValue(BINDING_DATA).toString();
+        data = bindings.processTemplate(data, TextEncoding.URL);
+        data = data.replace("\n", "&");
+        data = data.replace("&&", "&");
+        data = StringUtils.removeStart(data, "&");
+        data = StringUtils.removeEnd(data, "&");
+        HttpURLConnection con = setup(url, headers, data.length() > 0);
         try {
             con.setRequestMethod("POST");
             send(cx, con, data);
@@ -178,5 +139,92 @@ public class HttpPostProcedure extends HttpProcedure {
         } finally {
             con.disconnect();
         }
+    }
+
+    /**
+     * Returns the optional HTTP connection from the bindings.
+     *
+     * @param cx             the procedure call context
+     * @param bindings       the call bindings to use
+     *
+     * @return the HTTP connection to use, or null for none
+     *
+     * @throws ProcedureException if the bindings couldn't be read, or
+     *             if the connection was invalid
+     */
+    private static HttpChannel getChannel(CallContext cx, Bindings bindings)
+    throws ProcedureException {
+
+        Object obj = null;
+        if (bindings.hasName(BINDING_CONNECTION)) {
+            obj = bindings.getValue(BINDING_CONNECTION, null);
+        }
+        if (obj instanceof String) {
+            String str = ((String) obj).trim();
+            obj = (str.length() > 0) ? cx.connectionReserve(str) : null;
+        }
+        if (obj != null && !(obj instanceof HttpChannel)) {
+            throw new ProcedureException("connection not of HTTP type: " +
+                                         obj.getClass().getName());
+        }
+        return (HttpChannel) obj;
+    }
+
+    /**
+     * Returns the URL from the bindings and/or connection.
+     *
+     * @param bindings       the call bindings to use
+     * @param con            the optional connection
+     *
+     * @return the resolved URL
+     *
+     * @throws ProcedureException if the bindings couldn't be read, or
+     *             if the URL was malformed
+     */
+    private static URL getUrl(Bindings bindings, HttpChannel con)
+    throws ProcedureException {
+
+        String str = bindings.getValue(BINDING_URL, "").toString().trim();
+        str = bindings.processTemplate(str, TextEncoding.URL);
+        try {
+            if (con != null && !str.isEmpty()) {
+                return new URL(con.getUrl(), str);
+            } else if (con != null) {
+                return con.getUrl();
+            } else {
+                return new URL(str);
+            }
+        } catch (MalformedURLException e) {
+            throw new ProcedureException("malformed URL: " + str);
+        }
+    }
+
+    /**
+     * Returns the additional HTTP headers from the bindings and/or
+     * connection.
+     *
+     * @param bindings       the call bindings to use
+     * @param con            the optional connection
+     *
+     * @return the parsed and prepared HTTP headers
+     *
+     * @throws ProcedureException if the bindings couldn't be read
+     */
+    private static LinkedHashMap getHeaders(Bindings bindings, HttpChannel con)
+    throws ProcedureException {
+
+        LinkedHashMap headers = new LinkedHashMap();
+        if (con != null) {
+            addHeaders(headers, con.getHeaders());
+        }
+        String str = "";
+        if (bindings.hasName("header")) {
+            // TODO: Remove this legacy binding name (2017-02-01)
+            str = bindings.getValue("header", "").toString();
+        } else if (bindings.hasName(BINDING_HEADERS)) {
+            str = bindings.getValue(BINDING_HEADERS, "").toString();
+        }
+        addHeaders(headers, bindings.processTemplate(str, TextEncoding.NONE));
+        return headers;
     }
 }

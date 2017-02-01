@@ -46,10 +46,14 @@ public class HttpPostBuiltInProcedure implements Procedure {
     public HttpPostBuiltInProcedure() throws ProcedureException {
         defaults.set(HttpPostProcedure.BINDING_URL, Bindings.ARGUMENT, "",
                      "The HTTP URL to send the data to.");
-        defaults.set(HttpPostProcedure.BINDING_HEADER, Bindings.ARGUMENT, "",
-                     "The additional HTTP headers or blank for none.");
+        defaults.set(HttpPostProcedure.BINDING_HEADERS, Bindings.ARGUMENT, "",
+                     "Any additional HTTP headers. Headers are listed in " +
+                     "'Name: Value' pairs, separated by line breaks. Leave " +
+                     "blank for default headers.");
         defaults.set(HttpPostProcedure.BINDING_DATA, Bindings.ARGUMENT, "",
-                     "The HTTP POST data to send or blank for none.");
+                     "The HTTP payload data to send. Data must be " +
+                     "URL-encoded, but may be split into  lines " +
+                     "(automatically joined by '&' characters).");
         this.defaults.seal();
     }
 
@@ -102,6 +106,6 @@ public class HttpPostBuiltInProcedure implements Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        return HttpPostProcedure.execCall(cx, null, bindings);
+        return HttpPostProcedure.execCall(cx, bindings);
     }
 }
