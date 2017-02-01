@@ -297,7 +297,7 @@ public class PropertiesSerializer {
      */
     private static int toIndex(String str) {
         int index = -1;
-        if (StringUtils.isNumeric(str)) {
+        if (str.length() > 0 && StringUtils.isNumeric(str)) {
             try {
                 index = Integer.parseInt(str);
             } catch (NumberFormatException ignore) {
@@ -320,7 +320,7 @@ public class PropertiesSerializer {
     private static Object toValue(String value) {
         if (value.equals("true") || value.equals("false")) {
             return Boolean.valueOf(value);
-        } else if (StringUtils.isNumeric(value)) {
+        } else if (value.length() > 0 && StringUtils.isNumeric(value)) {
             return Integer.valueOf(value);
         } else if (value.startsWith("@") && StringUtils.isNumeric(value.substring(1))) {
             return new Date(Long.parseLong(value.substring(1)));
