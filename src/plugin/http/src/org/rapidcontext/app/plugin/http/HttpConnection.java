@@ -39,7 +39,7 @@ public class HttpConnection extends Connection {
     /**
      * The HTTP header configuration parameter name.
      */
-    public static final String HTTP_HEADER = "header";
+    public static final String HTTP_HEADERS = "headers";
 
     /**
      * Creates a new HTTP connection from a serialized representation.

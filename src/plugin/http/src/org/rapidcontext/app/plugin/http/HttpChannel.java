@@ -140,6 +140,11 @@ public class HttpChannel extends Channel {
      *         an empty string if not set
      */
     public String getHeaders() {
-        return this.params.getString(HttpConnection.HTTP_HEADER, "");
+        if (this.params.containsKey("header")) {
+            // TODO: Remove this legacy parameter name (2017-02-01)
+            return this.params.getString("header", "");
+        } else {
+            return this.params.getString(HttpConnection.HTTP_HEADERS, "");
+        }
     }
 }
