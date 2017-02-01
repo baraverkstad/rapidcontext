@@ -14,7 +14,6 @@
 
 package org.rapidcontext.app.plugin.http;
 
-import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -130,12 +129,9 @@ public class HttpPostProcedure extends HttpProcedure {
         data = StringUtils.removeEnd(data, "&");
         HttpURLConnection con = setup(url, headers, data.length() > 0);
         try {
-            con.setRequestMethod("POST");
+            setRequestMethod(con, "POST");
             send(cx, con, data);
             return receive(cx, con);
-        } catch (IOException e) {
-            logResponse(cx, con, null);
-            throw new ProcedureException(e.getMessage());
         } finally {
             con.disconnect();
         }

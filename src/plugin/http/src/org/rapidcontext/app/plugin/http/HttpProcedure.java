@@ -18,7 +18,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -120,56 +122,110 @@ public abstract class HttpProcedure extends AddOnProcedure {
     }
 
     /**
+     * Sets the HTTP method of the HTTP connection. This method uses
+     * reflection if an "unsupported" method is specified (e.g.
+     * "PATCH").
+     *
+     * @param con            the HTTP connection
+     * @param method         the HTTP method
+     *
+     * @throws ProcedureException if the request method couldn't be set
+     */
+    protected static void setRequestMethod(HttpURLConnection con, String method)
+    throws ProcedureException {
+        try {
+            con.setRequestMethod(method);
+        } catch (ProtocolException ignore) {
+            // Do nothing here
+        } catch (SecurityException ignore) {
+            // Do nothing here
+        }
+        if (!con.getRequestMethod().equals(method)) {
+            try {
+                Field field = HttpURLConnection.class.getDeclaredField("method");
+                field.setAccessible(true);
+                field.set(con, method);
+                if (con instanceof sun.net.www.protocol.https.HttpsURLConnectionImpl) {
+                    field = con.getClass().getDeclaredField("delegate");
+                    field.setAccessible(true);
+                    HttpURLConnection delegate = (HttpURLConnection) field.get(con);
+                    field = HttpURLConnection.class.getDeclaredField("method");
+                    field.setAccessible(true);
+                    field.set(delegate, method);
+                }
+            } catch (Exception e) {
+                String msg = "failed to use HTTP " + method + ": " + e.getMessage();
+                LOG.log(Level.WARNING, msg, e);
+                throw new ProcedureException(msg);
+            }
+        }
+    }
+
+    /**
      * Sends the HTTP request and uploads any data provided.
      *
      * @param cx             the procedure call context
      * @param con            the HTTP connection
      * @param data           the data payload, or null
      *
-     * @throws IOException if the connection couldn't be established
+     * @throws ProcedureException if the connection couldn't be established
      */
     protected static void send(CallContext cx, HttpURLConnection con, String data)
-    throws IOException {
+    throws ProcedureException {
 
-        if (data != null && data.length() > 0) {
-            byte[] dataBytes = data.getBytes("UTF-8");
-            con.setRequestProperty("Content-Length", "" + dataBytes.length);
-            logRequest(cx, con, data);
-            OutputStream os = con.getOutputStream();
-            try {
-                os.write(dataBytes);
-            } finally {
-                os.close();
+        try {
+            if (data != null && data.length() > 0) {
+                byte[] dataBytes = data.getBytes("UTF-8");
+                con.setRequestProperty("Content-Length", "" + dataBytes.length);
+                logRequest(cx, con, data);
+                OutputStream os = con.getOutputStream();
+                try {
+                    os.write(dataBytes);
+                } finally {
+                    os.close();
+                }
+            } else {
+                logRequest(cx, con, data);
             }
-        } else {
-            logRequest(cx, con, data);
+            con.connect();
+        } catch (IOException e) {
+            String msg = "http connection failed: " + e.getMessage();
+            LOG.log(Level.INFO, msg, e);
+            throw new ProcedureException(msg);
         }
-        con.connect();
     }
 
     /**
-     * Receives the HTTP response and processes its content.
+     * Receives the HTTP response and processes its text content.
      *
      * @param cx             the procedure call context
      * @param con            the HTTP connection
      *
      * @return the HTTP response data
      *
-     * @throws IOException if the response couldn't be read
-     * @throws ProcedureException if the response contained an HTTP
-     *             error code
+     * @throws ProcedureException if the response couldn't be read or
+     *             contained an HTTP error code
      */
     protected static String receive(CallContext cx, HttpURLConnection con)
-    throws IOException, ProcedureException {
+    throws ProcedureException {
 
-        int httpCode = con.getResponseCode();
-        boolean success = (httpCode / 100 == 2);
-        String text = responseText(con);
-        logResponse(cx, con, text);
-        if (success) {
-            return text;
-        } else {
-            String msg = "error on " + logHttpId(con);
+        try {
+            int httpCode = con.getResponseCode();
+            boolean success = (httpCode / 100 == 2);
+            String text = responseText(con);
+            logResponse(cx, con, text);
+            if (success) {
+                return text;
+            } else {
+                String msg = con.getHeaderField(0);
+                if (StringUtils.isNotEmpty(text)) {
+                    msg += ": " + text;
+                }
+                throw new ProcedureException(msg);
+            }
+        } catch (IOException e) {
+            String msg = "error on " + logHttpId(con) + ": " + e.getMessage();
+            LOG.log(Level.INFO, msg, e);
             throw new ProcedureException(msg);
         }
     }
@@ -216,7 +272,7 @@ public abstract class HttpProcedure extends AddOnProcedure {
 
     /**
      * Returns an HTTP connection debug identifier with relevant
-     * parameters from the request/response pair.
+     * parameters from the request.
      *
      * @param con            the HTTP connection
      *
@@ -228,14 +284,6 @@ public abstract class HttpProcedure extends AddOnProcedure {
         buffer.append(con.getRequestMethod());
         buffer.append(" ");
         buffer.append(con.getURL());
-        buffer.append(": ");
-        try {
-            buffer.append(con.getResponseCode());
-            buffer.append(" ");
-            buffer.append(con.getResponseMessage());
-        } catch (Exception e) {
-            buffer.append(e.toString());
-        }
         return buffer.toString();
     }
 
@@ -313,7 +361,8 @@ public abstract class HttpProcedure extends AddOnProcedure {
         }
         try {
             if (con.getResponseCode() / 100 != 2) {
-                String msg = "error on " + logHttpId(con);
+                String msg = "error on " + logHttpId(con) + ": " +
+                             con.getHeaderField(0);
                 if (data != null && data.length() > 0) {
                     LOG.info(msg + "\n" + data);
                 } else {
@@ -321,7 +370,7 @@ public abstract class HttpProcedure extends AddOnProcedure {
                 }
             }
         } catch (Exception e) {
-            LOG.info("error on " + logHttpId(con));
+            LOG.log(Level.INFO, "error on " + logHttpId(con), e);
         }
     }
 }
