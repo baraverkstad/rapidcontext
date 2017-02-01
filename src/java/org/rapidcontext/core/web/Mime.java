@@ -125,6 +125,14 @@ public class Mime {
     };
 
     /**
+     * The MIME types commonly used for posting forms or building
+     * URLs on the web.
+     */
+    public static final String[] WWW_FORM = {
+        "application/x-www-form-urlencoded"
+    };
+
+    /**
      * The helper servlet context. This can be set by the application
      * to access the servlet container MIME type configuration.
      */

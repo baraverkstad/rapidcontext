@@ -33,6 +33,7 @@ import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.core.proc.AddOnProcedure;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
+import org.rapidcontext.core.web.Mime;
 import org.rapidcontext.util.FileUtil;
 
 /**
@@ -115,8 +116,7 @@ public abstract class HttpProcedure extends AddOnProcedure {
             con.setRequestProperty(str, (String) headers.get(str));
         }
         if (data && con.getRequestProperty("Content-Type") == null) {
-            String mime = "application/x-www-form-urlencoded;charset=UTF-8";
-            con.setRequestProperty("Content-Type", mime);
+            con.setRequestProperty("Content-Type", Mime.WWW_FORM[0]);
         }
         return con;
     }

@@ -24,6 +24,7 @@ import org.rapidcontext.core.data.TextEncoding;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
+import org.rapidcontext.core.web.Mime;
 
 /**
  * An HTTP POST procedure. This procedure provides simplified access
@@ -75,8 +76,10 @@ public class HttpPostProcedure extends HttpProcedure {
         defaults.set(BINDING_DATA, Bindings.DATA, "",
                      "The HTTP payload data to send, optionally containing " +
                      "argument template variables (e.g. ':arg' or '@arg'). " +
-                     "Data must be URL-encoded, but may be split into " +
-                     "lines (automatically joined by '&' characters).");
+                     "Data should be URL-encoded, unless a 'Content-Type' " +
+                     "header is specified. URL-encoded data may be split " +
+                     "into lines, which are automatically joined by '&' " +
+                     "characters).");
         defaults.seal();
     }
 
@@ -121,12 +124,23 @@ public class HttpPostProcedure extends HttpProcedure {
         HttpChannel channel = getChannel(cx, bindings);
         URL url = getUrl(bindings, channel);
         LinkedHashMap headers = getHeaders(bindings, channel);
+        String contentType = (String) headers.get("Content-Type");
+        boolean isFormData = contentType == null ||
+                             Mime.isMatch(contentType, Mime.WWW_FORM);
         String data = bindings.getValue(BINDING_DATA).toString();
-        data = bindings.processTemplate(data, TextEncoding.URL);
-        data = data.replace("\n", "&");
-        data = data.replace("&&", "&");
-        data = StringUtils.removeStart(data, "&");
-        data = StringUtils.removeEnd(data, "&");
+        if (isFormData) {
+            data = bindings.processTemplate(data, TextEncoding.URL);
+            data = data.replace("\n", "&");
+            data = data.replace("&&", "&");
+            data = StringUtils.removeStart(data, "&");
+            data = StringUtils.removeEnd(data, "&");
+        } else if (Mime.isMatch(contentType, Mime.JSON)) {
+            data = bindings.processTemplate(data, TextEncoding.JSON);
+        } else if (Mime.isMatch(contentType, Mime.XML)) {
+            data = bindings.processTemplate(data, TextEncoding.XML);
+        } else {
+            data = bindings.processTemplate(data, TextEncoding.NONE);
+        }
         HttpURLConnection con = setup(url, headers, data.length() > 0);
         try {
             setRequestMethod(con, "POST");
