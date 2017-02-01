@@ -20,6 +20,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.LinkedHashMap;
 
+import org.rapidcontext.core.data.TextEncoding;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
@@ -125,7 +126,7 @@ public class HttpPostProcedure extends HttpProcedure {
         String          str;
 
         str = bindings.getValue(BINDING_URL, "").toString();
-        str = replaceArguments(str, bindings, true);
+        str = bindings.processTemplate(str, TextEncoding.URL);
         try {
             if (con != null && !str.isEmpty()) {
                 url = new URL(con.getUrl(), str);
@@ -142,9 +143,9 @@ public class HttpPostProcedure extends HttpProcedure {
             addHeaders(headers, con.getHeaders());
         }
         str = (String) bindings.getValue(BINDING_HEADER, "");
-        addHeaders(headers, replaceArguments(str, bindings, false));
+        addHeaders(headers, bindings.processTemplate(str, TextEncoding.NONE));
         str = (String) bindings.getValue(BINDING_DATA);
-        str = replaceArguments(str, bindings, true);
+        str = bindings.processTemplate(str, TextEncoding.URL);
         str = str.replace("\n", "&");
         HttpURLConnection urlCon = setup(url, headers, str.length() > 0);
         return sendPostRequest(cx, urlCon, str);

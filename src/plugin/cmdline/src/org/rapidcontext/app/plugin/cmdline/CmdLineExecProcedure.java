@@ -23,10 +23,9 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.StringUtils;
-
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.data.Dict;
+import org.rapidcontext.core.data.TextEncoding;
 import org.rapidcontext.core.proc.AddOnProcedure;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
@@ -131,10 +130,10 @@ public class CmdLineExecProcedure extends AddOnProcedure {
         File dir = ApplicationContext.getInstance().getBaseDir();
         String str = bindings.getValue(BINDING_COMMAND).toString();
         // TODO: parse command-line properly, avoid StringTokenizer
-        String cmd = replaceArguments(str, bindings).trim();
+        String cmd = bindings.processTemplate(str, TextEncoding.NONE).trim();
         str = ((String) bindings.getValue(BINDING_DIRECTORY, "")).trim();
         if (str.length() > 0) {
-            str = replaceArguments(str, bindings);
+            str = bindings.processTemplate(str, TextEncoding.NONE);
             if (str.startsWith("/")) {
                 dir = new File(str);
             } else {
@@ -144,7 +143,7 @@ public class CmdLineExecProcedure extends AddOnProcedure {
         String[] env = null;
         str = ((String) bindings.getValue(BINDING_ENVIRONMENT, "")).trim();
         if (str.length() > 0) {
-            env = replaceArguments(str, bindings).split(";");
+            env = bindings.processTemplate(str, TextEncoding.NONE).split(";");
         }
         Runtime runtime = Runtime.getRuntime();
         LOG.fine("init exec: " + cmd);
@@ -164,33 +163,6 @@ public class CmdLineExecProcedure extends AddOnProcedure {
         } finally {
             LOG.fine("done exec: " + cmd);
         }
-    }
-
-    /**
-     * Replaces any parameters with the corresponding argument value
-     * from the bindings.
-     *
-     * @param data           the data string to process
-     * @param bindings       the bindings to use
-     *
-     * @return the processed data string
-     *
-     * @throws ProcedureException if some parameter couldn't be found
-     */
-    private static String replaceArguments(String data, Bindings bindings)
-        throws ProcedureException {
-
-        String[] names = bindings.getNames();
-        for (int i = 0; i < names.length; i++) {
-            if (bindings.getType(names[i]) == Bindings.ARGUMENT) {
-                Object value = bindings.getValue(names[i], null);
-                if (value == null) {
-                    value = "";
-                }
-                data = StringUtils.replace(data, ":" + names[i], value.toString());
-            }
-        }
-        return data;
     }
 
     /**

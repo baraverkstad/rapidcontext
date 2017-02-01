@@ -1,6 +1,6 @@
 /**
  * RapidContext HTTP plug-in <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2012 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2017 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the BSD license.
@@ -18,10 +18,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -31,7 +29,6 @@ import java.util.logging.Logger;
 
 import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.core.proc.AddOnProcedure;
-import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.util.FileUtil;
@@ -73,41 +70,6 @@ public abstract class HttpProcedure extends AddOnProcedure {
                 map.put(parts[0].trim(), parts[1].trim());
             }
         }
-    }
-
-    /**
-     * Replaces any parameters with the corresponding argument value
-     * from the bindings. Optionally, this method also percent-encodes
-     * (URL encodes) the argument values.
-     *
-     * @param data           the data string to process
-     * @param bindings       the bindings to use
-     * @param urlencode      the encode values flag
-     *
-     * @return the processed data string
-     *
-     * @throws ProcedureException if some parameter couldn't be found
-     */
-    protected static String replaceArguments(String data,
-                                             Bindings bindings,
-                                             boolean urlencode)
-    throws ProcedureException {
-
-        String[] names = bindings.getNames();
-        for (int i = 0; i < names.length; i++) {
-            if (bindings.getType(names[i]) == Bindings.ARGUMENT) {
-                String value = bindings.getValue(names[i], "").toString();
-                if (urlencode) {
-                    try {
-                        value = URLEncoder.encode(value, "utf8");
-                    } catch (UnsupportedEncodingException e) {
-                        throw new ProcedureException("unsupported encoding", e);
-                    }
-                }
-                data = StringUtils.replace(data, ":" + names[i], value.toString());
-            }
-        }
-        return data;
     }
 
     /**

@@ -17,8 +17,10 @@ package org.rapidcontext.core.proc;
 
 import java.util.LinkedHashSet;
 
+import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
+import org.rapidcontext.core.data.TextEncoding;
 
 /**
  * A procedure bindings container. The procedure bindings contain
@@ -365,5 +367,34 @@ public class Bindings {
             }
         }
         return -1;
+    }
+
+    /**
+     * Replaces template variables with the corresponding argument
+     * value from the bindings. This method supports both raw (e.g.
+     * "@key") and encoded (e.g. ":key") template variables.
+     *
+     * @param tpl            the template string to process
+     * @param encoding       the text encoding for values
+     *
+     * @return the processed template string
+     */
+    public String processTemplate(String tpl, TextEncoding encoding) {
+        for (int i = 0; i < data.size(); i++) {
+            Dict bind = data.getDict(i);
+            String key = bind.getString("name", null);
+            String type = bind.getString("type", "");
+            if (type.equals("4") || type.equals("argument")) {
+                String val = bind.getString("value", "");
+                if (StringUtils.contains(tpl, "@" + key)) {
+                    tpl = StringUtils.replace(tpl, "@" + key, val);
+                }
+                if (StringUtils.contains(tpl, ":" + key)) {
+                    val = TextEncoding.encode(encoding, val);
+                    tpl = StringUtils.replace(tpl, ":" + key, val);
+                }
+            }
+        }
+        return tpl;
     }
 }
