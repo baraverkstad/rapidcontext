@@ -26,52 +26,46 @@ import org.apache.commons.lang.CharUtils;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class TextEncoding {
+public enum TextEncoding {
 
     /**
-     * The available text encoding types.
+     * No encoding (i.e. raw pass-through)
      */
-    public enum Type {
+    NONE,
 
-        /**
-         * No encoding (i.e. raw pass-through)
-         */
-        NONE,
+    /**
+     * ASCII printable encoding. Replaces any non-ASCII (7-bit)
+     * or control characters with space chars.
+     */
+    ASCII,
 
-        /**
-         * ASCII printable encoding. Replaces any non-ASCII (7-bit)
-         * or control characters with space chars.
-         */
-        ASCII,
+    /**
+     * Java properties encoding. Similar to Java strings but
+     * without quote chars.
+     */
+    PROPERTIES,
 
-        /**
-         * Java properties encoding. Similar to Java strings but
-         * without quote chars.
-         */
-        PROPERTIES,
+    /**
+     * Java string encoding with quote chars around the result.
+     */
+    JAVA,
 
-        /**
-         * Java string encoding with quote chars around the result.
-         */
-        JAVA,
+    /**
+     * JSON string encoding with quote chars around the result.
+     */
+    JSON,
 
-        /**
-         * JSON string encoding with quote chars around the result.
-         */
-        JSON,
+    /**
+     * XML string encoding. This encoding escapes all non-ASCII
+     * characters to XML entities.
+     */
+    XML,
 
-        /**
-         * XML string encoding. This encoding escapes all non-ASCII
-         * characters to XML entities.
-         */
-        XML,
-
-        /**
-         * The "application/x-www-form-urlencoded" encoding, i.e. for
-         * URLs and form data. Always encodes chars using UTF-8.
-         */
-        URL
-    }
+    /**
+     * The "application/x-www-form-urlencoded" encoding, i.e. for
+     * URLs and form data. Always encodes chars using UTF-8.
+     */
+    URL;
 
     /**
      * Encodes a string with the specified encoding.
@@ -82,7 +76,7 @@ public class TextEncoding {
      * @return the encoded text string, or
      *         an empty string if input was null
      */
-    public static String encode(Type encoding, String str) {
+    public static String encode(TextEncoding encoding, String str) {
         switch (encoding) {
         case ASCII:
             return encodeAscii(str, false);
