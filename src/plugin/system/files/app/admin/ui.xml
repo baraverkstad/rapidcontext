@@ -53,7 +53,7 @@
             <tr>
               <th class="label" style="padding-right: 4px;">Description:</th>
               <td>
-                <Field name="description" />
+                <Field name="description" style="white-space: pre-line;" />
               </td>
             </tr>
             <tr id="cxnTemplate" class="hidden">
@@ -150,7 +150,7 @@
               <td>
                 <h2 style="margin: 0;"><Field name="name" /></h2>
                 <span style="white-space: pre-line;">
-                  <Field name="description" />
+                  <Field name="description" style="white-space: pre-line;" />
                 </span>
               </td>
             </tr>
@@ -369,7 +369,7 @@
               <tr>
                 <th class="label" style="padding-right: 4px;">Description:</th>
                 <td>
-                  <Field name="description" />
+                  <Field name="description" style="white-space: pre-line;"/>
                 </td>
               </tr>
             </tbody>

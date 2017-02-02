@@ -818,7 +818,7 @@ AdminApp.prototype._callbackShowProcedure = function (res) {
                 var icon = RapidContext.Widget.Icon({ ref: "EDIT", style: { "verticalAlign": "middle", "fontSize": "1.6em" } });
                 icon.onclick = MochiKit.Base.bind("_editProcArg", this, count);
                 var col2 = MochiKit.DOM.TD({ style: "padding-right: 6px; white-space: nowrap;" }, field, icon);
-                var col3 = MochiKit.DOM.TD({ style: "padding-top: 4px;" }, b.description);
+                var col3 = MochiKit.DOM.TD({ style: "padding-top: 4px; white-space: pre-line;" }, b.description);
                 var tr = MochiKit.DOM.TR({}, col1, col2, col3);
                 this.ui.procArgTable.appendChild(tr);
                 count++;
@@ -983,7 +983,7 @@ AdminApp.prototype._renderProcEdit = function () {
         var defaults = data.defaults[data.type][b.name];
         var strong = MochiKit.DOM.STRONG({}, b.name + ": ");
         var icon = (defaults == null) ? RapidContext.Widget.Icon({ ref: "REMOVE" }) : null;
-        var style = { "padding-top": icon ? "0px" : "3px", "padding-bottom": "4px" };
+        var style = { "padding-top": icon ? "0px" : "3px", "padding-bottom": "4px", "white-space": "pre-line" };
         var div = MochiKit.DOM.DIV({ style: style }, strong, icon, b.description);
         var attrs = { name: "binding." + b.name, value: b.value,
                       style: { "width": "100%", "margin-bottom": "8px" } };
