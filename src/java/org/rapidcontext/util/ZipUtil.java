@@ -1,7 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
- * All rights reserved.
+ * Copyright (c) 2007-2017 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -39,9 +38,7 @@ public class ZipUtil {
      *             destination files couldn't be written
      */
     public static void unpackZip(File zipFile, File dir) throws IOException {
-        ZipFile  zip;
-
-        zip = new ZipFile(zipFile);
+        ZipFile zip = new ZipFile(zipFile);
         try {
             unpackZip(zip, dir);
         } finally {
@@ -60,19 +57,14 @@ public class ZipUtil {
      *             destination files couldn't be written
      */
     public static void unpackZip(ZipFile zip, File dir) throws IOException {
-        Enumeration  entries;
-        ZipEntry     entry;
-        File         file;
-        String       name;
-
-        entries = zip.entries();
+        Enumeration entries = zip.entries();
         while (entries.hasMoreElements()) {
-            entry = (ZipEntry) entries.nextElement();
-            name = entry.getName();
+            ZipEntry entry = (ZipEntry) entries.nextElement();
+            String name = entry.getName();
             while (name.startsWith("/")) {
                 name = name.substring(1);
             }
-            file = new File(dir, name);
+            File file = new File(dir, name);
             file.getParentFile().mkdirs();
             if (!entry.isDirectory()) {
                 FileUtil.copy(zip.getInputStream(entry), file);

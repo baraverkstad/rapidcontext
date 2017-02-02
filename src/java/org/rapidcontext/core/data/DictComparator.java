@@ -1,7 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
- * All rights reserved.
+ * Copyright (c) 2007-2017 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -55,9 +54,8 @@ public class DictComparator implements Comparator {
      * @throws ClassCastException if the values were not comparable
      */
     public int compare(Object o1, Object o2) throws ClassCastException {
-        Dict  d1 = (Dict) o1;
-        Dict  d2 = (Dict) o2;
-
+        Dict d1 = (Dict) o1;
+        Dict d2 = (Dict) o2;
         if (d1 == null && d2 == null) {
             return 0;
         } else if (d1 == null) {
@@ -84,9 +82,8 @@ public class DictComparator implements Comparator {
      * @throws ClassCastException if the values were not comparable
      */
     private int compareValues(Object o1, Object o2) throws ClassCastException {
-        Comparable  c1 = (Comparable) o1;
-        Comparable  c2 = (Comparable) o2;
-
+        Comparable c1 = (Comparable) o1;
+        Comparable c2 = (Comparable) o2;
         if (c1 == null && c2 == null) {
             return 0;
         } else if (c1 == null) {

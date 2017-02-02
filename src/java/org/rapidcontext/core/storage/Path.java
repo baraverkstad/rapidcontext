@@ -25,8 +25,8 @@ import org.apache.commons.lang.StringUtils;
  * some simple help methods to access and work with the path and to
  * locate the object addressed by it.
  *
- * @author Per Cederberg
- * @version 1.0
+ * @author   Per Cederberg
+ * @version  1.0
  */
 public class Path {
 

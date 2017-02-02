@@ -1,7 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
- * All rights reserved.
+ * Copyright (c) 2007-2017 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -24,7 +23,7 @@ import org.mozilla.javascript.EvaluatorException;
  * A JavaScript error handler. This class collects any JavaScript
  * errors and warnings and makes them available in a handy format.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 class JsErrorHandler implements ErrorReporter {
@@ -62,8 +61,7 @@ class JsErrorHandler implements ErrorReporter {
      *         an empty string if no errors have occurred
      */
     public String getErrorText() {
-        StringBuffer  buffer = new StringBuffer();
-
+        StringBuilder buffer = new StringBuilder();
         for (int i = 0; i < errors.size(); i++) {
             if (i > 0) {
                 buffer.append("\n\n");
@@ -87,18 +85,13 @@ class JsErrorHandler implements ErrorReporter {
      * engine when an error is encountered.
      *
      * @param msg            the error message
-     * @param srcName        the source file name
+     * @param file           the source file name
      * @param line           the source file line number
-     * @param lineSrc        the source file line text (or null)
-     * @param lineOffset     the source file line offset
+     * @param src            the source file line text (or null)
+     * @param col            the source file line offset
      */
-    public void error(String msg,
-                      String srcName,
-                      int line,
-                      String lineSrc,
-                      int lineOffset) {
-
-        errors.add(format(msg, srcName, line, lineSrc, lineOffset));
+    public void error(String msg, String file, int line, String src, int col) {
+        errors.add(format(msg, file, line, src, col));
     }
 
     /**
@@ -106,18 +99,13 @@ class JsErrorHandler implements ErrorReporter {
      * engine when a warning is encountered.
      *
      * @param msg            the warning message
-     * @param srcName        the source file name
+     * @param file           the source file name
      * @param line           the source file line number
-     * @param lineSrc        the source file line text (or null)
-     * @param lineOffset     the source file line offset
+     * @param src            the source file line text (or null)
+     * @param col            the source file line offset
      */
-    public void warning(String msg,
-                        String srcName,
-                        int line,
-                        String lineSrc,
-                        int lineOffset) {
-
-        warnings.add(format(msg, srcName, line, lineSrc, lineOffset));
+    public void warning(String msg, String file, int line, String src, int col) {
+        warnings.add(format(msg, file, line, src, col));
     }
 
     /**
@@ -126,51 +114,45 @@ class JsErrorHandler implements ErrorReporter {
      * encountered.
      *
      * @param msg            the warning message
-     * @param srcName        the source file name
+     * @param file           the source file name
      * @param line           the source file line number
-     * @param lineSrc        the source file line text (or null)
-     * @param lineOffset     the source file line offset
+     * @param src            the source file line text (or null)
+     * @param col            the source file line offset
      *
      * @return a new run-time evaluator exception
      */
     public EvaluatorException runtimeError(String msg,
-                                           String srcName,
+                                           String file,
                                            int line,
-                                           String lineSrc,
-                                           int lineOffset) {
+                                           String src,
+                                           int col) {
 
-        return new EvaluatorException(msg, srcName, line, lineSrc, lineOffset);
+        return new EvaluatorException(msg, file, line, src, col);
     }
 
     /**
      * Formats an error or a warning message.
      *
      * @param msg            the detailed message
-     * @param srcName        the source file name
+     * @param file           the source file name
      * @param line           the source file line number
-     * @param lineSrc        the source file line text (or null)
-     * @param lineOffset     the source file line offset
+     * @param src            the source file line text (or null)
+     * @param col            the source file line offset
      *
      * @return the formatted message
      */
-    private String format(String msg,
-                          String srcName,
-                          int line,
-                          String lineSrc,
-                          int lineOffset) {
-
-        StringBuffer  buffer = new StringBuffer();
-
-        buffer.append(srcName);
+    private String format(String msg, String file, int line, String src, int col) {
+        StringBuilder buffer = new StringBuilder();
+        buffer.append(file);
         buffer.append(", line ");
         buffer.append(line);
         buffer.append(": ");
         buffer.append(msg);
-        if (lineSrc != null) {
+        if (src != null) {
             buffer.append("\n\n");
-            buffer.append(lineSrc);
+            buffer.append(src);
             buffer.append("\n");
-            for (int i = 1; i < lineOffset; i++) {
+            for (int i = 1; i < col; i++) {
                 buffer.append(" ");
             }
             buffer.append("^");

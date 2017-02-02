@@ -1,7 +1,6 @@
 /**
  * RapidContext command-line plug-in <http://www.rapidcontext.com/>
- * Copyright (c) 2008-2010 Per Cederberg & Dynabyte AB.
- * All rights reserved.
+ * Copyright (c) 2008-2017 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the BSD license.
@@ -49,10 +48,9 @@ public class CmdLinePlugin extends Plugin {
      * @throws StorageException if the initialization failed
      */
     public void init() throws StorageException {
-        Library  lib = ApplicationContext.getInstance().getLibrary();
-
         try {
             Library.registerType("cmdline.exec", CmdLineExecProcedure.class);
+            Library lib = ApplicationContext.getInstance().getLibrary();
             lib.addBuiltIn(new CmdLineExecBuiltInProcedure());
         } catch (ProcedureException e) {
             throw new StorageException(e.getMessage());
@@ -66,8 +64,7 @@ public class CmdLinePlugin extends Plugin {
      * @throws StorageException if the destruction failed
      */
     public void destroy() throws StorageException {
-        Library  lib = ApplicationContext.getInstance().getLibrary();
-
+        Library lib = ApplicationContext.getInstance().getLibrary();
         lib.removeBuiltIn(CmdLineExecBuiltInProcedure.NAME);
         Library.unregisterType("cmdline.exec");
     }

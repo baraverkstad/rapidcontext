@@ -1,7 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
- * All rights reserved.
+ * Copyright (c) 2007-2017 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -25,7 +24,7 @@ import org.rapidcontext.core.proc.ProcedureException;
  * makes sure that all JavaScript procedures are compiled during the
  * reservation phase before the actual calls.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class JsCompileInterceptor extends Interceptor {
@@ -52,14 +51,12 @@ public class JsCompileInterceptor extends Interceptor {
      *             reserved
      */
     public void reserve(CallContext cx, Procedure proc)
-        throws ProcedureException {
-
-        JsProcedure  jsProc;
+    throws ProcedureException {
 
         if (proc instanceof JsProcedure) {
-            jsProc = (JsProcedure) proc;
-            if (!jsProc.isCompiled()) {
-                jsProc.compile();
+            JsProcedure js = (JsProcedure) proc;
+            if (!js.isCompiled()) {
+                js.compile();
             }
         }
         super.reserve(cx, proc);

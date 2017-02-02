@@ -1,7 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2010 Per Cederberg & Dynabyte AB.
- * All rights reserved.
+ * Copyright (c) 2007-2017 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -161,13 +160,11 @@ public class Bindings {
      * @return the input name set
      */
     private LinkedHashSet getNames(LinkedHashSet set) {
-        Dict  bind;
-
         if (parent != null) {
             parent.getNames(set);
         }
         for (int i = 0; i < data.size(); i++) {
-            bind = data.getDict(i);
+            Dict bind = data.getDict(i);
             set.add(bind.getString("name", null));
         }
         return set;
@@ -183,8 +180,7 @@ public class Bindings {
      * @throws ProcedureException if the binding name wasn't found
      */
     public int getType(String name) throws ProcedureException {
-        String  type = find(name).getString("type", null);
-
+        String type = find(name).getString("type", null);
         if (type == null) {
             throw new ProcedureException("no binding type for '" + name + "' found");
         }
@@ -227,8 +223,7 @@ public class Bindings {
      *             if the value was null
      */
     public Object getValue(String name) throws ProcedureException {
-        Object  value = find(name).get("value");
-
+        Object value = find(name).get("value");
         if (value == null) {
             throw new ProcedureException("no binding value for '" + name + "' found");
         }
@@ -248,8 +243,7 @@ public class Bindings {
     public Object getValue(String name, Object defaultValue)
         throws ProcedureException {
 
-        Object  value = find(name).get("value");
-
+        Object value = find(name).get("value");
         return (value == null) ? defaultValue : value;
     }
 
@@ -265,7 +259,6 @@ public class Bindings {
      */
     public String getDescription(String name) throws ProcedureException {
         String desc = find(name).getString("description", "");
-
         if (desc.equals("") && parent.hasName(name)) {
             return parent.getDescription(name);
         } else if (desc.equals("") && getType(name) == ARGUMENT) {
@@ -293,20 +286,17 @@ public class Bindings {
     public void set(String name, int type, Object value, String description)
         throws ProcedureException {
 
-        Dict  bind;
-        int   index;
-
-        index = findLocal(name);
+        int index = findLocal(name);
         try {
             if (index <= 0) {
-                bind = new Dict();
+                Dict bind = new Dict();
                 bind.set("name", name);
                 bind.set("type", toTypeName(type));
                 bind.set("value", value);
                 bind.set("description", description);
                 data.add(bind);
             } else {
-                bind = data.getDict(index);
+                Dict bind = data.getDict(index);
                 bind.set("type", toTypeName(type));
                 bind.set("value", value);
                 bind.set("description", description);
@@ -338,8 +328,7 @@ public class Bindings {
      *             in the hierarchy
      */
     private Dict find(String name) throws ProcedureException {
-        int  index = findLocal(name);
-
+        int index = findLocal(name);
         if (index >= 0) {
             return data.getDict(index);
         } else if (parent != null) {
@@ -358,10 +347,8 @@ public class Bindings {
      *         -1 if not found
      */
     private int findLocal(String name) {
-        Dict  bind;
-
         for (int i = 0; i < data.size(); i++) {
-            bind = data.getDict(i);
+            Dict bind = data.getDict(i);
             if (name.equals(bind.getString("name", null))) {
                 return i;
             }

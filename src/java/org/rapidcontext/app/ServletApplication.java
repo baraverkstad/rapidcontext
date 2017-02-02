@@ -44,7 +44,7 @@ import org.rapidcontext.util.FileUtil;
  * The main application servlet. This servlet handles all incoming
  * web requests.
  *
- * @author Per Cederberg
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class ServletApplication extends HttpServlet {

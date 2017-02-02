@@ -1,7 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
- * All rights reserved.
+ * Copyright (c) 2007-2017 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -127,14 +126,13 @@ public class ConnectionWrapper implements Scriptable {
      *         false otherwise
      */
     public boolean has(String name, Scriptable start) {
-        Method[]  methods = channel.getClass().getMethods();
-
         if (name.equals("getConnection") ||
             name.equals("validate") ||
             name.equals("invalidate")) {
             // Hide internal methods for connection handling
             return false;
         }
+        Method[] methods = channel.getClass().getMethods();
         for (int i = 0; i < methods.length; i++) {
             if (methods[i].getName().equals(name) &&
                 (methods[i].getModifiers() & Modifier.PUBLIC) > 0) {
@@ -488,14 +486,11 @@ public class ConnectionWrapper implements Scriptable {
                            Scriptable thisObj,
                            Object[] args) {
 
-            Channel   target = parent.getConnection();
-            Method[]  methods = target.getClass().getMethods();
-            Object    res;
-            String    msg;
-
             for (int i = 0; i < args.length; i++) {
                 args[i] = JsSerializer.unwrap(args[i]);
             }
+            Channel target = parent.getConnection();
+            Method[] methods = target.getClass().getMethods();
             for (int i = 0; i < methods.length; i++) {
                 if (isMatching(methods[i], args)) {
                     // TODO: call context stack should be pushed & popped
@@ -504,19 +499,19 @@ public class ConnectionWrapper implements Scriptable {
                     cx.logCall(signature, args);
                     try {
                         methods[i].setAccessible(true);
-                        res = methods[i].invoke(target, args);
+                        Object res = methods[i].invoke(target, args);
                         cx.logResponse(res);
+                        return JsSerializer.wrap(res, scope);
                     } catch (Exception e) {
                         cx.logError(e);
-                        msg = "call to " + this.methodName + " failed: " +
-                              e.getClass().getName() + ": " + e.getMessage();
+                        String msg = "call to " + this.methodName + " failed: " +
+                                     e.getClass().getName() + ": " + e.getMessage();
                         throw new EvaluatorException(msg);
                     }
-                    return JsSerializer.wrap(res, scope);
                 }
             }
-            msg = "connection has no matching call method " +
-                  this.methodName + " for the specified arguments";
+            String msg = "connection has no matching call method " +
+                         this.methodName + " for the specified arguments";
             throw new EvaluatorException(msg);
         }
 
@@ -546,14 +541,12 @@ public class ConnectionWrapper implements Scriptable {
          *         false otherwise
          */
         private boolean isMatching(Method m, Object[] args) {
-            Class[]  types;
-
             if (!m.getName().equals(this.methodName)) {
                 return false;
             } else if ((m.getModifiers() & Modifier.PUBLIC) <= 0) {
                 return false;
             }
-            types = m.getParameterTypes();
+            Class[] types = m.getParameterTypes();
             if (types.length != args.length) {
                 return false;
             }

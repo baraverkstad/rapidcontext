@@ -1,7 +1,6 @@
 /*
  * RapidContext <http://www.rapidcontext.com/>
- * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
- * All rights reserved.
+ * Copyright (c) 2007-2017 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -21,7 +20,7 @@ import java.util.ArrayList;
  * A procedure call stack. The stack contains an ordered list of the
  * procedures currently being called.
  *
- * @author   Per Cederberg, Dynabyte AB
+ * @author   Per Cederberg
  * @version  1.0
  */
 public class CallStack {
@@ -80,8 +79,7 @@ public class CallStack {
      * @return an array with all the procedures on the stack
      */
     public Procedure[] toArray() {
-        Procedure[]  res = new Procedure[stack.size()];
-
+        Procedure[] res = new Procedure[stack.size()];
         stack.toArray(res);
         return res;
     }
