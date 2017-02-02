@@ -16,13 +16,13 @@ package org.rapidcontext.core.type;
 
 import java.util.logging.Logger;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.storage.StorageException;
-import org.rapidcontext.util.ArrayUtil;
 import org.rapidcontext.util.BinaryUtil;
 
 /**
@@ -413,7 +413,7 @@ public class User extends StorableObject {
             dict.set(KEY_ROLE, list);
         }
         for (int i = 0; i < list.size(); i++) {
-            if (ArrayUtil.indexOf(roles, list.getString(i, "")) < 0) {
+            if (ArrayUtils.indexOf(roles, list.getString(i, "")) < 0) {
                 list.remove(i);
                 i--;
             }
