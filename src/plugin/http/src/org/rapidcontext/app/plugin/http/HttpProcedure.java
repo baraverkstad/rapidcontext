@@ -23,13 +23,15 @@ import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang.StringUtils;
+import org.rapidcontext.core.data.Dict;
+import org.rapidcontext.core.js.JsException;
+import org.rapidcontext.core.js.JsSerializer;
 import org.rapidcontext.core.proc.AddOnProcedure;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
@@ -58,21 +60,6 @@ public abstract class HttpProcedure extends AddOnProcedure {
      */
     protected HttpProcedure() throws ProcedureException {
         super();
-    }
-
-    /**
-     * Parses a string with HTTP headers and adds them into a map.
-     *
-     * @param map            the result name and value map
-     * @param data           the unparsed header strings
-     */
-    protected static void addHeaders(LinkedHashMap map, String data) {
-        for (String line : data.split("[\\n\\r]+")) {
-            String[] parts = line.split("\\s*:\\s*", 2);
-            if (parts.length == 2) {
-                map.put(parts[0].trim(), parts[1].trim());
-            }
-        }
     }
 
     /**
@@ -200,13 +187,20 @@ public abstract class HttpProcedure extends AddOnProcedure {
      *
      * @param cx             the procedure call context
      * @param con            the HTTP connection
+     * @param metadata       the response wrapper flag
+     * @param jsonData       the JSON response data flag
+     * @param jsonError      the JSON response error flag
      *
      * @return the HTTP response data
      *
      * @throws ProcedureException if the response couldn't be read or
      *             contained an HTTP error code
      */
-    protected static String receive(CallContext cx, HttpURLConnection con)
+    protected static Object receive(CallContext cx,
+                                    HttpURLConnection con,
+                                    boolean metadata,
+                                    boolean jsonData,
+                                    boolean jsonError)
     throws ProcedureException {
 
         try {
@@ -214,8 +208,37 @@ public abstract class HttpProcedure extends AddOnProcedure {
             boolean success = (httpCode / 100 == 2);
             String text = responseText(con);
             logResponse(cx, con, text);
-            if (success) {
-                return text;
+            Object data = text;
+            if ((jsonData && success) || jsonError) {
+                try {
+                    data = JsSerializer.unserialize(text);
+                } catch (JsException e) {
+                    String msg = "invalid json: " + e.getMessage();
+                    LOG.log(Level.INFO, msg, e);
+                    throw new ProcedureException(msg);
+                }
+            }
+            if (metadata) {
+                Dict dict = new Dict();
+                Dict headers = new Dict();
+                dict.setBoolean("success", success);
+                dict.set("response", con.getHeaderField(0));
+                dict.setInt("responseCode", httpCode);
+                dict.set("responseMessage", con.getResponseMessage());
+                dict.set("headers", headers);
+                for (int i = 1; true; i++) {
+                    String key = con.getHeaderFieldKey(i);
+                    String val = con.getHeaderField(i);
+                    if (key == null || val == null) {
+                        break;
+                    }
+                    headers.set(key, val);
+                }
+                dict.set("data", success ? data : null);
+                dict.set("error", success ? null : data);
+                return dict;
+            } else if (success || jsonError) {
+                return data;
             } else {
                 String msg = con.getHeaderField(0);
                 if (StringUtils.isNotEmpty(text)) {
@@ -240,7 +263,7 @@ public abstract class HttpProcedure extends AddOnProcedure {
      * @return the HTTP response character set, or
      *         UTF-8 if not specified
      */
-    protected static String responseCharset(HttpURLConnection con) {
+    private static String responseCharset(HttpURLConnection con) {
         String contentType = con.getContentType().replace(" ", "");
         for (String param : contentType.split(";")) {
             if (param.startsWith("charset=")) {
@@ -262,7 +285,7 @@ public abstract class HttpProcedure extends AddOnProcedure {
      * @throws IOException if the response couldn't be read properly
      */
     @SuppressWarnings("resource")
-    protected static String responseText(HttpURLConnection con) throws IOException {
+    private static String responseText(HttpURLConnection con) throws IOException {
         boolean success = (con.getResponseCode() / 100 == 2);
         InputStream is = success ? con.getInputStream() : con.getErrorStream();
         ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -278,7 +301,7 @@ public abstract class HttpProcedure extends AddOnProcedure {
      *
      * @return an HTTP connection debug identifier
      */
-    protected static String logHttpId(HttpURLConnection con) {
+    private static String logHttpId(HttpURLConnection con) {
         StringBuilder buffer = new StringBuilder();
         buffer.append("HTTP ");
         buffer.append(con.getRequestMethod());
@@ -294,9 +317,9 @@ public abstract class HttpProcedure extends AddOnProcedure {
      * @param con            the HTTP connection
      * @param data           the HTTP request data
      */
-    protected static void logRequest(CallContext cx,
-                                     HttpURLConnection con,
-                                     String data) {
+    private static void logRequest(CallContext cx,
+                                   HttpURLConnection con,
+                                   String data) {
 
         if (LOG.isLoggable(Level.FINE) || cx.isTracing()) {
             StringBuilder buffer = new StringBuilder();
@@ -332,9 +355,9 @@ public abstract class HttpProcedure extends AddOnProcedure {
      * @param con            the HTTP connection
      * @param data           the HTTP response data
      */
-    protected static void logResponse(CallContext cx,
-                                      HttpURLConnection con,
-                                      String data) {
+    private static void logResponse(CallContext cx,
+                                    HttpURLConnection con,
+                                    String data) {
 
         if (LOG.isLoggable(Level.FINE) || cx.isTracing()) {
             StringBuilder buffer = new StringBuilder();

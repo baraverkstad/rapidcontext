@@ -20,20 +20,18 @@ import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
 
 /**
- * The built-in HTTP POST procedure. This procedure provides
- * simplified access to HTTP data sending and retrieval.
+ * An HTTP request procedure for any HTTP method. This procedure
+ * provides simple access to HTTP request sending and data retrieval.
  *
  * @author   Per Cederberg
  * @version  1.0
- *
- * @deprecated Use HttpRequestBuiltInProcedure instead (2017-02-01)
  */
-public class HttpPostBuiltInProcedure implements Procedure {
+public class HttpRequestBuiltInProcedure implements Procedure {
 
     /**
      * The procedure name constant.
      */
-    public static final String NAME = "PlugIn.Http.Post";
+    public static final String NAME = "PlugIn.Http.Request";
 
     /**
      * The default bindings.
@@ -41,13 +39,17 @@ public class HttpPostBuiltInProcedure implements Procedure {
     private Bindings defaults = new Bindings();
 
     /**
-     * Creates a new HTTP POST procedure.
+     * Creates a new HTTP request procedure.
      *
      * @throws ProcedureException if the initialization failed
      */
-    public HttpPostBuiltInProcedure() throws ProcedureException {
+    public HttpRequestBuiltInProcedure() throws ProcedureException {
+        defaults.set(HttpRequestProcedure.BINDING_CONNECTION, Bindings.ARGUMENT, "",
+                     "The HTTP connection pool name, set to blank for none.");
         defaults.set(HttpRequestProcedure.BINDING_URL, Bindings.ARGUMENT, "",
-                     "The HTTP URL to send the data to.");
+                     "The HTTP URL.");
+        defaults.set(HttpRequestProcedure.BINDING_METHOD, Bindings.ARGUMENT, "",
+                     "The HTTP method to use (e.g. 'GET' or 'POST').");
         defaults.set(HttpRequestProcedure.BINDING_HEADERS, Bindings.ARGUMENT, "",
                      "Any additional HTTP headers. Headers are listed in " +
                      "'Name: Value' pairs, separated by line breaks. Leave " +
@@ -57,6 +59,11 @@ public class HttpPostBuiltInProcedure implements Procedure {
                      "URL-encoded, unless a 'Content-Type' header is " +
                      "specified. URL-encoded data may be split into lines, " +
                      "which are automatically joined by '&' characters).");
+        defaults.set(HttpRequestProcedure.BINDING_FLAGS, Bindings.ARGUMENT, "",
+                     "Optional execution flags (space separated):\n" +
+                     "json -- parse response text as JSON data\n" +
+                     "jsonerror -- parse response errors as JSON\n" +
+                     "metadata -- wrap all responses in meta object");
         this.defaults.seal();
     }
 
@@ -75,8 +82,7 @@ public class HttpPostBuiltInProcedure implements Procedure {
      * @return the procedure description
      */
     public String getDescription() {
-        return "Sends an HTTP POST request and returns the result. " +
-               "DEPRECATED: Use PlugIn.Http.Request instead.";
+        return "Sends an HTTP request and returns the result.";
     }
 
     /**
@@ -108,10 +114,8 @@ public class HttpPostBuiltInProcedure implements Procedure {
      *             error
      */
     public Object call(CallContext cx, Bindings bindings)
-    throws ProcedureException {
+        throws ProcedureException {
 
-        bindings.set(HttpRequestProcedure.BINDING_METHOD, Bindings.ARGUMENT, "POST", null);
-        bindings.set(HttpRequestProcedure.BINDING_FLAGS, Bindings.ARGUMENT, "", null);
         return HttpRequestProcedure.execCall(cx, bindings);
     }
 }
