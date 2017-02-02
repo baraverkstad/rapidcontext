@@ -69,7 +69,7 @@ public class Type extends StorableObject {
     /**
      * The storable object initializer constructor arguments.
      */
-    private static final Class[] CONSTRUCTOR_ARGS = new Class[] {
+    private static final Class<?>[] CONSTRUCTOR_ARGS = new Class[] {
         String.class, String.class, Dict.class
     };
 
@@ -96,13 +96,13 @@ public class Type extends StorableObject {
      */
     public static Type[] findAll(Storage storage) {
         Object[] objs = storage.loadAll(PATH);
-        ArrayList list = new ArrayList(objs.length);
+        ArrayList<Object> list = new ArrayList<>(objs.length);
         for (int i = 0; i < objs.length; i++) {
             if (objs[i] instanceof Type) {
                 list.add(objs[i]);
             }
         }
-        return (Type[]) list.toArray(new Type[list.size()]);
+        return list.toArray(new Type[list.size()]);
     }
 
     /**
@@ -117,13 +117,10 @@ public class Type extends StorableObject {
      * @return the Java object constructor, or
      *         null if not found
      */
-    public static Constructor constructor(Storage storage, Dict dict) {
-        String  typeId = dict.getString(KEY_TYPE, null);
-        String  className = dict.getString(KEY_CLASSNAME, null);
-        Type    type;
-        Class   cls = null;
-        String  msg;
-
+    public static Constructor<?> constructor(Storage storage, Dict dict) {
+        String typeId = dict.getString(KEY_TYPE, null);
+        String className = dict.getString(KEY_CLASSNAME, null);
+        Class<?> cls = null;
         if (typeId == null) {
             return null;
         } else if (className != null) {
@@ -131,7 +128,7 @@ public class Type extends StorableObject {
         } else if (typeId.equals("type")) {
             cls = Type.class;
         } else {
-            type = find(storage, typeId);
+            Type type = find(storage, typeId);
             if (type != null) {
                 cls = type.initializer();
             }
@@ -140,9 +137,9 @@ public class Type extends StorableObject {
             try {
                 return cls.getConstructor(CONSTRUCTOR_ARGS);
             } catch (Exception e) {
-                msg = "invalid initializer class for type " + typeId +
-                      ": no constructor " + cls.getName() +
-                      "(String, String, Dict) found";
+                String msg = "invalid initializer class for type " + typeId +
+                             ": no constructor " + cls.getName() +
+                             "(String, String, Dict) found";
                 LOG.log(Level.WARNING, msg, e);
             }
         }
@@ -158,15 +155,13 @@ public class Type extends StorableObject {
      * @return the class found in the class loader, or
      *         null if not found
      */
-    protected static Class loadClass(String className, String objId) {
-        ClassLoader  loader = ApplicationContext.getInstance().getClassLoader();
-        String       msg;
-
+    protected static Class<?> loadClass(String className, String objId) {
+        ClassLoader loader = ApplicationContext.getInstance().getClassLoader();
         try {
             return (className == null) ? null : loader.loadClass(className);
         } catch (Exception e) {
-            msg = "couldn't find or load " + objId + " initializer class " +
-                  className;
+            String msg = "couldn't find or load " + objId +
+                         " initializer class " + className;
             LOG.warning(msg);
             return null;
         }
@@ -191,22 +186,21 @@ public class Type extends StorableObject {
      * @throws StorageException if the initialization failed
      */
     protected void init() throws StorageException {
-        Class   cls = initializer();
-        String  msg;
-
+        Class<?> cls = initializer();
         if (cls != null) {
             if (!StorableObject.class.isAssignableFrom(cls)) {
-                msg = "invalid initializer class for " + this + ": class " +
-                      cls.getName() + " is not a subclass of StorableObject";
+                String msg = "invalid initializer class for " + this +
+                             ": class " + cls.getName() +
+                             " is not a subclass of StorableObject";
                 LOG.warning(msg);
                 throw new StorageException(msg);
             }
             try {
                 cls.getConstructor(CONSTRUCTOR_ARGS);
             } catch (Exception e) {
-                msg = "invalid initializer class for " + this +
-                      ": no constructor " + cls.getName() +
-                      "(String, String, Dict) found";
+                String msg = "invalid initializer class for " + this +
+                             ": no constructor " + cls.getName() +
+                             "(String, String, Dict) found";
                 LOG.warning(msg);
                 throw new StorageException(msg);
             }
@@ -227,7 +221,7 @@ public class Type extends StorableObject {
      *
      * @return the type initializer class
      */
-    public Class initializer() {
+    public Class<?> initializer() {
         return loadClass(dict.getString(KEY_INITIALIZER, null), toString());
     }
 
@@ -241,13 +235,12 @@ public class Type extends StorableObject {
      *         an empty array if it didn't exist
      */
     public Array properties() {
-        Array   arr = null;
-        String  msg;
-
+        Array arr = null;
         try {
             arr = dict.getArray(KEY_PROPERTY);
         } catch (ClassCastException e) {
-            msg = this + " contains 'property' attribute that isn't a proper array";
+            String msg = this + " contains 'property' attribute that " +
+                         "isn't a proper array";
             LOG.warning(msg);
         }
         return (arr == null) ? new Array(0) : arr;
@@ -264,11 +257,9 @@ public class Type extends StorableObject {
      *         null if not found
      */
     public Type parentType(Storage storage) {
-        String[]  parts = id().split("/");
-        Type      type = null;
-
+        String[] parts = id().split("/");
         for (int i = parts.length - 1; i > 0; i++) {
-            type = find(storage, StringUtils.join(parts, '/', 0, i));
+            Type type = find(storage, StringUtils.join(parts, '/', 0, i));
             if (type != null) {
                 return type;
             }

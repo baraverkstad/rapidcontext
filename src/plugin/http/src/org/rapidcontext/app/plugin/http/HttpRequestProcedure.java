@@ -145,8 +145,8 @@ public class HttpRequestProcedure extends HttpProcedure {
         boolean metadata = hasFlag(flags, "metadata", false);
         HttpChannel channel = getChannel(cx, bindings);
         URL url = getUrl(bindings, channel);
-        LinkedHashMap headers = getHeaders(bindings, channel);
-        String contentType = (String) headers.get("Content-Type");
+        LinkedHashMap<String,String> headers = getHeaders(bindings, channel);
+        String contentType = headers.get("Content-Type");
         boolean isFormData = contentType == null ||
                              Mime.isMatch(contentType, Mime.WWW_FORM);
         String data = bindings.getValue(BINDING_DATA).toString();
@@ -242,10 +242,10 @@ public class HttpRequestProcedure extends HttpProcedure {
      *
      * @throws ProcedureException if the bindings couldn't be read
      */
-    private static LinkedHashMap getHeaders(Bindings bindings, HttpChannel con)
+    private static LinkedHashMap<String,String> getHeaders(Bindings bindings, HttpChannel con)
     throws ProcedureException {
 
-        LinkedHashMap headers = new LinkedHashMap();
+        LinkedHashMap<String,String> headers = new LinkedHashMap<>();
         if (con != null) {
             addHeaders(headers, con.getHeaders());
         }
@@ -266,7 +266,7 @@ public class HttpRequestProcedure extends HttpProcedure {
      * @param map            the result name and value map
      * @param data           the unparsed header strings
      */
-    private static void addHeaders(LinkedHashMap map, String data) {
+    private static void addHeaders(LinkedHashMap<String,String> map, String data) {
         for (String line : data.split("[\\n\\r]+")) {
             String[] parts = line.split("\\s*:\\s*", 2);
             if (parts.length == 2) {

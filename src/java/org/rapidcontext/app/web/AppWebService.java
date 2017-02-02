@@ -121,8 +121,8 @@ public class AppWebService extends FileWebService {
      *
      * @return a sorted list of all matching files found in storage
      */
-    protected static ArrayList resources(String type, Path base) {
-        ArrayList res = new ArrayList();
+    protected static ArrayList<String> resources(String type, Path base) {
+        ArrayList<String> res = new ArrayList<>();
         ApplicationContext ctx = ApplicationContext.getInstance();
         Path storagePath = new Path(PATH_FILES, type + "/");
         Metadata[] meta = ctx.getStorage().lookupAll(storagePath);
@@ -207,8 +207,8 @@ public class AppWebService extends FileWebService {
      * @return the list of HTML headers, or
      *         an empty list if none defined
      */
-    public ArrayList headerLines() {
-        ArrayList res = new ArrayList();
+    public ArrayList<String> headerLines() {
+        ArrayList<String> res = new ArrayList<>();
         Array headers = dict.getArray(KEY_HEADER);
         for (int i = 0; i < headers.size(); i++) {
             res.add(headers.get(i).toString());
@@ -352,69 +352,78 @@ public class AppWebService extends FileWebService {
     protected String processAppTemplate(Binary template, String baseUrl, String appId)
     throws IOException {
 
-        InputStreamReader is = new InputStreamReader(template.openStream(), "UTF-8");
-        BufferedReader reader = new BufferedReader(is);
         StringBuilder res = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            // Simple text replacement
-            if (line.contains("%APP_ID%")) {
-                if (appId == null || appId.equals("")) {
-                    line = line.replace("%APP_ID%", "null");
-                } else {
-                    line = line.replace("%APP_ID%", "'" + appId + "'");
-                }
-            }
-            if (line.contains("%TITLE%")) {
-                line = line.replace("%TITLE%", title());
-            }
-            if (line.contains("%LANG%")) {
-                line = line.replace("%LANG%", lang());
-            }
-            if (line.contains("%VIEWPORT%")) {
-                line = line.replace("%VIEWPORT%", viewport());
-            }
-            if (line.contains("%BASE_URL%")) {
-                line = line.replace("%BASE_URL%", baseUrl);
-            }
-            if (line.contains("%BASE_PATH%")) {
-                if (PATH_FILES.equals(path())) {
-                    // Skip this line, no config needed
-                    continue;
-                }
-                String str = StringUtils.removeStart(path().toString(),
-                                                     PATH_FILES.toString());
-                line = line.replace("%BASE_PATH%", str);
-            }
-            // Complex text replacement & printout
-            if (line.contains("%HEADER%")) {
-                ArrayList headers = headerLines();
-                for (int i = 0; i < headers.size(); i++) {
-                    String str = (String) headers.get(i);
-                    res.append(line.replace("%HEADER%", str));
-                    res.append("\n");
-                }
-            } else if (line.contains("%JS_FILES%")) {
-                ArrayList files = resources("js", path());
-                for (int i = 0; i < files.size(); i++) {
-                    String str = (String) files.get(i);
-                    res.append(line.replace("%JS_FILES%", str));
-                    res.append("\n");
-                }
-            } else if (line.contains("%CSS_FILES%")) {
-                ArrayList files = resources("css", path());
-                for (int i = 0; i < files.size(); i++) {
-                    String str = (String) files.get(i);
-                    res.append(line.replace("%CSS_FILES%", str));
-                    res.append("\n");
-                }
-            } else {
-                res.append(line);
-                res.append("\n");
+        try (
+            InputStreamReader is = new InputStreamReader(template.openStream(), "UTF-8");
+            BufferedReader reader = new BufferedReader(is);
+        ) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                processAppTemplateLine(res, line, baseUrl, appId);
             }
         }
-        reader.close();
         return res.toString();
+    }
+
+    /**
+     * Processes a line from the HTMP template file for an app.
+     *
+     * @param res            the result buffer
+     * @param line           the line to process
+     * @param baseUrl        the base URL for requests
+     * @param appId          the app identifier, or null for 'start'
+     */
+    private void processAppTemplateLine(StringBuilder res, String line, String baseUrl, String appId) {
+        // Simple text replacement
+        if (line.contains("%APP_ID%")) {
+            if (appId == null || appId.equals("")) {
+                line = line.replace("%APP_ID%", "null");
+            } else {
+                line = line.replace("%APP_ID%", "'" + appId + "'");
+            }
+        }
+        if (line.contains("%TITLE%")) {
+            line = line.replace("%TITLE%", title());
+        }
+        if (line.contains("%LANG%")) {
+            line = line.replace("%LANG%", lang());
+        }
+        if (line.contains("%VIEWPORT%")) {
+            line = line.replace("%VIEWPORT%", viewport());
+        }
+        if (line.contains("%BASE_URL%")) {
+            line = line.replace("%BASE_URL%", baseUrl);
+        }
+        if (line.contains("%BASE_PATH%")) {
+            if (PATH_FILES.equals(path())) {
+                // Skip this line, no config needed
+                return;
+            }
+            String str = StringUtils.removeStart(path().toString(),
+                                                 PATH_FILES.toString());
+            line = line.replace("%BASE_PATH%", str);
+        }
+
+        // Complex text replacement & printout
+        if (line.contains("%HEADER%")) {
+            for (String str : headerLines()) {
+                res.append(line.replace("%HEADER%", str));
+                res.append("\n");
+            }
+        } else if (line.contains("%JS_FILES%")) {
+            for (String str : resources("js", path())) {
+                res.append(line.replace("%JS_FILES%", str));
+                res.append("\n");
+            }
+        } else if (line.contains("%CSS_FILES%")) {
+            for (String str : resources("css", path())) {
+                res.append(line.replace("%CSS_FILES%", str));
+                res.append("\n");
+            }
+        } else {
+            res.append(line);
+            res.append("\n");
+        }
     }
 
     /**
@@ -454,7 +463,7 @@ public class AppWebService extends FileWebService {
      * @param request        the request to process
      */
     protected void processUpload(Request request) {
-        Session session = (Session) Session.activeSession.get();
+        Session session = Session.activeSession.get();
         if (session == null) {
             errorUnauthorized(request);
             return;

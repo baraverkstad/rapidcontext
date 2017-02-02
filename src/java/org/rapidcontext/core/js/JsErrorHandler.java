@@ -31,12 +31,12 @@ class JsErrorHandler implements ErrorReporter {
     /**
      * The list of errors found.
      */
-    private ArrayList errors = new ArrayList();
+    private ArrayList<String> errors = new ArrayList<>();
 
     /**
      * The list of warnings found.
      */
-    private ArrayList warnings = new ArrayList();
+    private ArrayList<String> warnings = new ArrayList<>();
 
     /**
      * Creates a new JavaScript error handler.

@@ -143,12 +143,9 @@ public class Bindings {
      * @return an array with all binding names
      */
     public String[] getNames() {
-        LinkedHashSet  set = getNames(new LinkedHashSet());
-        String[]       res;
-
-        res = new String[set.size()];
-        set.toArray(res);
-        return res;
+        LinkedHashSet<String> set = getNames(new LinkedHashSet<String>());
+        String[] res = new String[set.size()];
+        return set.toArray(res);
     }
 
     /**
@@ -159,7 +156,7 @@ public class Bindings {
      *
      * @return the input name set
      */
-    private LinkedHashSet getNames(LinkedHashSet set) {
+    private LinkedHashSet<String> getNames(LinkedHashSet<String> set) {
         if (parent != null) {
             parent.getNames(set);
         }

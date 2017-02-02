@@ -110,7 +110,7 @@ public class PluginInstallProcedure implements Procedure {
         throws ProcedureException {
 
         ApplicationContext  ctx = ApplicationContext.getInstance();
-        Session             session = (Session) Session.activeSession.get();
+        Session             session = Session.activeSession.get();
         String              fileId;
         File                file;
         String              pluginId;

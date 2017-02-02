@@ -45,7 +45,7 @@ public class MemoryStorage extends Storage {
     /**
      * The data storage map. Indexed by the storage path.
      */
-    private LinkedHashMap objects = new LinkedHashMap();
+    private LinkedHashMap<Path,Object> objects = new LinkedHashMap<>();
 
     /**
      * The metadata storage map. Indexed by the storage path. This
@@ -53,7 +53,7 @@ public class MemoryStorage extends Storage {
      * object. It will also contain all the parent indices, all the
      * way back to the root index.
      */
-    private LinkedHashMap meta = new LinkedHashMap();
+    private LinkedHashMap<Path,Object> meta = new LinkedHashMap<>();
 
     /**
      * The show storage info flag. When set to true, the
@@ -242,13 +242,10 @@ public class MemoryStorage extends Storage {
      * @param updateParent   the parent index update flag
      */
     private void remove(Path path, boolean updateParent) {
-        Object  obj = meta.get(path);
-        Index   idx;
-        Array   arr;
-
+        Object obj = meta.get(path);
         if (path.isIndex() && obj instanceof Index) {
-            idx = (Index) obj;
-            arr = idx.indices();
+            Index idx = (Index) obj;
+            Array arr = idx.indices();
             for (int i = 0; i < arr.size(); i++) {
                 remove(path.child(arr.getString(i, null), true), false);
             }

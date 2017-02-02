@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.LinkedList;
 
 import org.rapidcontext.core.js.JsSerializer;
@@ -84,7 +83,7 @@ public class ScriptApplication {
 
         ctx = ApplicationContext.init(appDir, localDir, true);
         SecurityContext.auth(user);
-        exec(ctx, new LinkedList(Arrays.asList(params)));
+        exec(ctx, new LinkedList<>(Arrays.asList(params)));
         ApplicationContext.destroy();
     }
 
@@ -120,16 +119,19 @@ public class ScriptApplication {
     public void runFile(String[] prefix, File file)
     throws SecurityException, FileNotFoundException, IOException {
 
-        BufferedReader  reader;
-        int             lines = 0;
-
-        reader = new BufferedReader(new FileReader(file));
-        while (reader.readLine() != null) {
-            lines++;
+        int lines = 0;
+        try (
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+        ) {
+            while (reader.readLine() != null) {
+                lines++;
+            }
         }
-        reader.close();
-        reader = new BufferedReader(new FileReader(file));
-        execStream(prefix, reader, lines);
+        try (
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+        ) {
+            execStream(prefix, reader, lines);
+        }
     }
 
     /**
@@ -138,16 +140,12 @@ public class ScriptApplication {
      * @param ctx            the application context
      * @param params         the procedure name and arguments
      */
-    private void exec(ApplicationContext ctx, LinkedList params) {
-        String        name;
-        String[]      args;
-        StringBuffer  traceBuffer = (trace ? new StringBuffer() : null);
-        Object        res;
-
+    private void exec(ApplicationContext ctx, LinkedList<String> params) {
+        StringBuffer traceBuffer = (trace ? new StringBuffer() : null);
         try {
-            name = (String) params.removeFirst();
-            args = (String[]) params.toArray(new String[params.size()]);
-            res = ctx.execute(name, args, source, traceBuffer);
+            String name = params.removeFirst();
+            String[] args = params.toArray(new String[params.size()]);
+            Object res = ctx.execute(name, args, source, traceBuffer);
             System.out.println(JsSerializer.serialize(res, true));
         } catch (ProcedureException e) {
             System.err.println("ERROR: " + e.getMessage());
@@ -170,17 +168,12 @@ public class ScriptApplication {
     private void execStream(String[] prefix, BufferedReader reader, int lines)
     throws IOException {
 
-        ApplicationContext  ctx;
-        String              line;
-        int                 pos = 0;
-        long                startTime;
-        Date                doneTime = null;
-        double              d;
-        LinkedList          params;
-
-        ctx = ApplicationContext.init(appDir, localDir, true);
+        ApplicationContext ctx = ApplicationContext.init(appDir, localDir, true);
         SecurityContext.auth(user);
-        startTime = System.currentTimeMillis();
+        long startTime = System.currentTimeMillis();
+        Date doneTime = null;
+        String line;
+        int pos = 0;
         while ((line = reader.readLine()) != null) {
             pos++;
             System.out.print("Processing command " + pos);
@@ -194,7 +187,7 @@ public class ScriptApplication {
             if (line.trim().length() <= 0) {
                 System.out.println("    <empty, skipped>");
             } else {
-                params = new LinkedList(Arrays.asList(prefix));
+                LinkedList<String> params = new LinkedList<>(Arrays.asList(prefix));
                 params.addAll(Arrays.asList(line.split("\\s+")));
                 System.out.println("  " + toString(params));
                 System.out.print("  ==> ");
@@ -209,12 +202,11 @@ public class ScriptApplication {
                 }
             }
             if (lines > 0 && pos % 10 == 0) {
-                d = System.currentTimeMillis() - startTime;
+                double d = System.currentTimeMillis() - startTime;
                 d = (d / pos) * (lines - pos);
                 doneTime = new Date(System.currentTimeMillis() + (long) d);
             }
         }
-        reader.close();
         ApplicationContext.destroy();
     }
 
@@ -225,15 +217,13 @@ public class ScriptApplication {
      *
      * @return the string representation
      */
-    private String toString(LinkedList params) {
-        StringBuffer  buffer = new StringBuffer();
-        Iterator      iter = params.iterator();
-
-        while (iter.hasNext()) {
+    private String toString(LinkedList<String> params) {
+        StringBuilder buffer = new StringBuilder();
+        for (String str : params) {
             if (buffer.length() > 0) {
                 buffer.append(" ");
             }
-            buffer.append(iter.next());
+            buffer.append(str);
         }
         return buffer.toString();
     }

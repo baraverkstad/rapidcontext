@@ -24,7 +24,7 @@ import java.util.Comparator;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class DictComparator implements Comparator {
+public class DictComparator implements Comparator<Object> {
 
     /**
      * The dictionary key name to compare.
@@ -81,9 +81,10 @@ public class DictComparator implements Comparator {
      *
      * @throws ClassCastException if the values were not comparable
      */
+    @SuppressWarnings("unchecked")
     private int compareValues(Object o1, Object o2) throws ClassCastException {
-        Comparable c1 = (Comparable) o1;
-        Comparable c2 = (Comparable) o2;
+        Comparable<Object> c1 = (Comparable<Object>) o1;
+        Comparable<Object> c2 = (Comparable<Object>) o2;
         if (c1 == null && c2 == null) {
             return 0;
         } else if (c1 == null) {

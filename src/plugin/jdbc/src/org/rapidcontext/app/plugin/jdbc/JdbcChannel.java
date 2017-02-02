@@ -417,7 +417,7 @@ public class JdbcChannel extends Channel {
      *
       @throws ConnectionException if the statement couldn't be prepared
      */
-    protected PreparedStatement prepare(String sql, ArrayList params)
+    protected PreparedStatement prepare(String sql, ArrayList<Object> params)
     throws ConnectionException {
 
         PreparedStatement stmt;
@@ -628,15 +628,18 @@ public class JdbcChannel extends Channel {
             case Types.LONGVARBINARY:
             case Types.VARBINARY:
                 if (binaryData) {
-                    ByteArrayOutputStream os = new ByteArrayOutputStream();
-                    InputStream is = rs.getBinaryStream(column);
-                    int count;
-                    byte[] buffer = new byte[16384];
-                    while ((count = is.read(buffer)) > 0 && os.size() < 1000000) {
-                        os.write(buffer, 0, count);
+                    try (
+                        ByteArrayOutputStream os = new ByteArrayOutputStream();
+                        InputStream is = rs.getBinaryStream(column);
+                    ) {
+                        int count;
+                        byte[] buffer = new byte[16384];
+                        while ((count = is.read(buffer)) > 0 && os.size() < 1000000) {
+                            os.write(buffer, 0, count);
+                        }
+                        is.close();
+                        return os.toByteArray();
                     }
-                    is.close();
-                    return os.toByteArray();
                 } else {
                     return rs.getString(column);
                 }

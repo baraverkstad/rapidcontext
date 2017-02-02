@@ -219,7 +219,7 @@ class ProcedureWrapper implements Function {
      *
      * @return the default value of this object
      */
-    public Object getDefaultValue(Class typeHint) {
+    public Object getDefaultValue(Class<?> typeHint) {
         return ScriptableObject.getDefaultValue(this, typeHint);
     }
 

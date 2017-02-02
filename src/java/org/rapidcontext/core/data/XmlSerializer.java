@@ -78,7 +78,7 @@ public class XmlSerializer {
             tagEnd(id, buffer);
         } else if (obj instanceof Class) {
             tagStart(id, "class", buffer);
-            buffer.append(TextEncoding.encodeXml(((Class) obj).getName(), false));
+            buffer.append(TextEncoding.encodeXml(((Class<?>) obj).getName(), false));
             tagEnd(id, buffer);
         } else if (obj instanceof StorableObject) {
             serialize(id, ((StorableObject) obj).serialize(), indent, buffer);

@@ -16,7 +16,6 @@ package org.rapidcontext.core.storage;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -87,7 +86,7 @@ public class RootStorage extends Storage {
      * indexed by their parent storage path (not their own actual
      * storage paths).
      */
-    private HashMap cacheStorages = new HashMap();
+    private HashMap<Path,MemoryStorage> cacheStorages = new HashMap<>();
 
     /**
      * Creates a new root storage.
@@ -137,9 +136,7 @@ public class RootStorage extends Storage {
                     return storage;
                 }
             }
-            Iterator iter = cacheStorages.values().iterator();
-            while (iter.hasNext()) {
-                Storage storage = (Storage) iter.next();
+            for (MemoryStorage storage : cacheStorages.values()) {
                 if (path.startsWith(storage.path())) {
                     return storage;
                 }
@@ -192,7 +189,7 @@ public class RootStorage extends Storage {
     throws StorageException {
 
         Path cachePath = Storage.PATH_STORAGE_CACHE.descendant(path.subPath(1));
-        MemoryStorage cache = (MemoryStorage) cacheStorages.get(path);
+        MemoryStorage cache = cacheStorages.get(path);
         if (overlay != null && cache == null) {
             cache = new MemoryStorage(true, true);
             cache.setMountInfo(cachePath, true, overlay, 0);
@@ -368,10 +365,8 @@ public class RootStorage extends Storage {
      *         null if not found
      */
     private Metadata lookupObject(Storage storage, Path path) {
-        MemoryStorage  cache;
-        Metadata       meta = null;
-
-        cache = (MemoryStorage) cacheStorages.get(storage.path());
+        Metadata meta = null;
+        MemoryStorage cache = cacheStorages.get(storage.path());
         if (cache != null) {
             meta = cache.lookup(path);
         }
@@ -439,12 +434,9 @@ public class RootStorage extends Storage {
      *         null if not found
      */
     private Object loadObject(Storage storage, Path path) {
-        boolean  isCached = cacheStorages.containsKey(storage.path());
-        Index    idx = null;
-        Object   res = null;
-        String   id;
-
-        res = cacheGet(storage.path(), path);
+        boolean isCached = cacheStorages.containsKey(storage.path());
+        Index idx = null;
+        Object res = cacheGet(storage.path(), path);
         if (res instanceof Index) {
             idx = (Index) res;
         } else if (res instanceof StorableObject) {
@@ -453,7 +445,7 @@ public class RootStorage extends Storage {
         }
         res = storage.load(path);
         if (isCached && res instanceof Dict) {
-            id = path.toIdent(1);
+            String id = path.toIdent(1);
             res = initObject(id, (Dict) res);
             cacheAdd(storage.path(), path, res);
         }
@@ -478,7 +470,7 @@ public class RootStorage extends Storage {
      *         the input dictionary if no type matched
      */
     private Object initObject(String id, Dict dict) {
-        Constructor constr = Type.constructor(this, dict);
+        Constructor<?> constr = Type.constructor(this, dict);
         if (constr != null) {
             String typeId = dict.getString(KEY_TYPE, null);
             Object[] args = new Object[] { id, typeId, dict };
@@ -618,7 +610,7 @@ public class RootStorage extends Storage {
                 storage = (Storage) mountedStorages.get(i);
                 Path overlay = storage.mountOverlayPath();
                 boolean isMatch = (overlay != null) && path.startsWith(overlay);
-                if (storage.isReadWrite() && isMatch) {
+                if (storage.isReadWrite() && isMatch && overlay != null) {
                     Path subpath = path.subPath(overlay.depth());
                     storage.remove(subpath);
                 }
@@ -637,7 +629,7 @@ public class RootStorage extends Storage {
      *         null if not found
      */
     private Object cacheGet(Path storagePath, Path path) {
-        MemoryStorage cache = (MemoryStorage) cacheStorages.get(storagePath);
+        MemoryStorage cache = cacheStorages.get(storagePath);
         Object res = cache.load(path);
         if (res != null) {
             LOG.fine("cache " + cache.path() + ": loaded " + path);
@@ -660,7 +652,7 @@ public class RootStorage extends Storage {
      * @param data           the object to store
      */
     private void cacheAdd(Path storagePath, Path path, Object data) {
-        MemoryStorage cache = (MemoryStorage) cacheStorages.get(storagePath);
+        MemoryStorage cache = cacheStorages.get(storagePath);
         if (cache != null) {
             cacheReplace(cache, path, data, cache.load(path));
         }
@@ -677,12 +669,11 @@ public class RootStorage extends Storage {
     private void cacheRemove(Path storagePath, Path path) {
         if (storagePath == null) {
             LOG.fine("removing " + path + " from all caches");
-            Iterator iter = cacheStorages.keySet().iterator();
-            while (iter.hasNext()) {
-                cacheRemove((Path) iter.next(), path);
+            for (Path cachePath : cacheStorages.keySet()) {
+                cacheRemove(cachePath, path);
             }
         } else {
-            MemoryStorage cache = (MemoryStorage) cacheStorages.get(storagePath);
+            MemoryStorage cache = cacheStorages.get(storagePath);
             if (cache != null) {
                 LOG.fine("removing " + path + " from cache " + cache.path());
                 cacheRemove(cache, path, false, true);
@@ -794,9 +785,8 @@ public class RootStorage extends Storage {
      * @param force          the forced clean flag
      */
     public void cacheClean(boolean force) {
-        Iterator iter = cacheStorages.values().iterator();
-        while (iter.hasNext()) {
-            cacheRemove((MemoryStorage) iter.next(), Path.ROOT, true, force);
+        for (MemoryStorage storage : cacheStorages.values()) {
+            cacheRemove(storage, Path.ROOT, true, force);
         }
     }
 }

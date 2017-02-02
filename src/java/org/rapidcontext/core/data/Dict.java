@@ -15,7 +15,6 @@
 package org.rapidcontext.core.data;
 
 import java.util.Date;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -51,7 +50,7 @@ public class Dict {
     /**
      * A hash map with names and values.
      */
-    private LinkedHashMap map = null;
+    private LinkedHashMap<String,Object> map = null;
 
     /**
      * The sealed flag. When this flag is set to true, no further
@@ -76,7 +75,7 @@ public class Dict {
      */
     public Dict(int initialCapacity) {
         if (initialCapacity > 0) {
-            map = new LinkedHashMap(initialCapacity);
+            map = new LinkedHashMap<>(initialCapacity);
         }
     }
 
@@ -86,11 +85,9 @@ public class Dict {
      * @return a string representation of this object
      */
     public String toString() {
-        StringBuilder  buffer = new StringBuilder();
-        String[]       keys;
-
+        StringBuilder buffer = new StringBuilder();
         buffer.append("{");
-        keys = keys();
+        String[] keys = keys();
         for (int i = 0; i < 3 && i < keys.length; i++) {
             if (i > 0) {
                 buffer.append(",");
@@ -117,23 +114,16 @@ public class Dict {
      * @return a deep copy of this object
      */
     public Dict copy() {
-        Dict      res;
-        Iterator  iter;
-        Object    name;
-        Object    value;
-
-        res = new Dict(size());
+        Dict res = new Dict(size());
         if (map != null) {
-            iter = map.keySet().iterator();
-            while (iter.hasNext()) {
-                name = iter.next();
-                value = map.get(name);
+            for (String key : map.keySet()) {
+                Object value = map.get(key);
                 if (value instanceof Dict) {
                     value = ((Dict) value).copy();
                 } else if (value instanceof Array) {
                     value = ((Array) value).copy();
                 }
-                res.map.put(name, value);
+                res.map.put(key, value);
             }
         }
         return res;
@@ -148,16 +138,10 @@ public class Dict {
      * @param recursive      the recursive flag
      */
     public void seal(boolean recursive) {
-        Iterator  iter;
-        Object    name;
-        Object    value;
-
         sealed = true;
         if (recursive && map != null) {
-            iter = map.keySet().iterator();
-            while (iter.hasNext()) {
-                name = iter.next();
-                value = map.get(name);
+            for (String key : map.keySet()) {
+                Object value = map.get(key);
                 if (value instanceof Dict) {
                     ((Dict) value).seal(recursive);
                 } else if (value instanceof Array) {
@@ -217,19 +201,13 @@ public class Dict {
      *         null if the value wasn't found
      */
     public String keyOf(Object value) {
-        Iterator  iter;
-        String    name;
-        Object    obj;
-
         if (map != null) {
-            iter = map.keySet().iterator();
-            while (iter.hasNext()) {
-                name = (String) iter.next();
-                obj = map.get(name);
+            for (String key : map.keySet()) {
+                Object obj = map.get(key);
                 if (obj == null && value == null) {
-                    return name;
+                    return key;
                 } else if (obj != null && obj.equals(value)) {
-                    return name;
+                    return key;
                 }
             }
         }
@@ -246,7 +224,7 @@ public class Dict {
         if (size() <= 0) {
             return ArrayUtils.EMPTY_STRING_ARRAY;
         } else {
-            return (String[]) map.keySet().toArray(new String[map.size()]);
+            return map.keySet().toArray(new String[map.size()]);
         }
     }
 
@@ -274,8 +252,7 @@ public class Dict {
      *         the default value if the key is not defined
      */
     public Object get(String key, Object defaultValue) {
-        Object  value = get(key);
-
+        Object value = get(key);
         return (value == null) ? defaultValue : value;
     }
 
@@ -292,8 +269,7 @@ public class Dict {
      *         the default value if the key is not defined
      */
     public String getString(String key, String defaultValue) {
-        Object  value = get(key);
-
+        Object value = get(key);
         if (value == null) {
             return defaultValue;
         } else if (value instanceof String) {
@@ -319,8 +295,7 @@ public class Dict {
      *         the default value if the key is not defined
      */
     public boolean getBoolean(String key, boolean defaultValue) {
-        Object  value = get(key);
-
+        Object value = get(key);
         if (value == null) {
             return defaultValue;
         } else if (value instanceof Boolean) {
@@ -352,8 +327,7 @@ public class Dict {
     public int getInt(String key, int defaultValue)
         throws NumberFormatException {
 
-        Object  value = get(key);
-
+        Object value = get(key);
         if (value == null) {
             return defaultValue;
         } else if (value instanceof Number) {
@@ -382,8 +356,7 @@ public class Dict {
     public Date getDate(String key, Date defaultValue)
         throws NumberFormatException {
 
-        Object  value = get(key);
-
+        Object value = get(key);
         if (value == null) {
             return defaultValue;
         } else if (value instanceof Date) {
@@ -443,18 +416,16 @@ public class Dict {
     public void set(String key, Object value)
         throws NullPointerException, UnsupportedOperationException {
 
-        String  msg;
-
         if (sealed) {
-            msg = "cannot modify sealed dictionary";
+            String msg = "cannot modify sealed dictionary";
             throw new UnsupportedOperationException(msg);
         }
         if (key == null || key.length() == 0) {
-            msg = "property key cannot be null or empty";
+            String msg = "property key cannot be null or empty";
             throw new NullPointerException(msg);
         }
         if (map == null) {
-            map = new LinkedHashMap();
+            map = new LinkedHashMap<>();
         }
         map.put(key, value);
     }
@@ -507,9 +478,7 @@ public class Dict {
      */
     public void setAll(Dict dict) {
         if (dict != null && dict.size() > 0) {
-            Iterator iter = dict.map.keySet().iterator();
-            while (iter.hasNext()) {
-                String key = (String) iter.next();
+            for (String key : dict.map.keySet()) {
                 set(key, dict.map.get(key));
             }
         }
@@ -532,9 +501,8 @@ public class Dict {
     public String add(String key, Object value)
         throws UnsupportedOperationException {
 
-        String  keyName = key;
-        int     attempt = 0;
-
+        String keyName = key;
+        int attempt = 0;
         while (containsKey(keyName)) {
             attempt++;
             keyName = key + "_" + attempt;
@@ -596,9 +564,7 @@ public class Dict {
      */
     public void addAll(Dict dict) {
         if (dict != null && dict.size() > 0) {
-            Iterator iter = dict.map.keySet().iterator();
-            while (iter.hasNext()) {
-                String key = (String) iter.next();
+            for (String key : dict.map.keySet()) {
                 add(key, dict.map.get(key));
             }
         }

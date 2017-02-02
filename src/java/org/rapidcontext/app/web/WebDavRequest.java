@@ -18,7 +18,6 @@ import java.io.StringReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -116,12 +115,13 @@ public class WebDavRequest implements HttpUtil {
     /**
      * The default properties for a collection.
      */
-    private static LinkedHashMap PROPS_COLLECTION = new LinkedHashMap();
+    private static LinkedHashMap<String,String> PROPS_COLLECTION =
+        new LinkedHashMap<>();
 
     /**
      * The default properties for a file.
      */
-    private static LinkedHashMap PROPS_FILE = new LinkedHashMap();
+    private static LinkedHashMap<String,String> PROPS_FILE = new LinkedHashMap<>();
 
     /**
      * The date format used for the creation date property.
@@ -169,12 +169,12 @@ public class WebDavRequest implements HttpUtil {
      * The properties found in the query. This will contain all
      * properties if the query doesn't specify any properties.
      */
-    private LinkedHashMap properties = new LinkedHashMap();
+    private LinkedHashMap<String,String> properties = new LinkedHashMap<>();
 
     /**
      * The property namespace URI to abbreviation map.
      */
-    private LinkedHashMap propertyNS = null;
+    private LinkedHashMap<String,String> propertyNS = null;
 
     /**
      * The lock request information (if parsed and available).
@@ -185,7 +185,7 @@ public class WebDavRequest implements HttpUtil {
      * The array with result XML fragments. Each resource added will
      * be converted into XML snipplet added here.
      */
-    private ArrayList results = new ArrayList();
+    private ArrayList<String> results = new ArrayList<>();
 
     /**
      * Creates a new WebDAV request.
@@ -265,10 +265,8 @@ public class WebDavRequest implements HttpUtil {
      * @param isCollection   the collection flag
      */
     private void parsePropFind(Element node, boolean isCollection) {
-        LinkedHashMap  defaults;
-        String         name;
-
-        defaults = isCollection ? PROPS_COLLECTION : PROPS_FILE;
+        LinkedHashMap<String,String> defaults;
+         defaults = isCollection ? PROPS_COLLECTION : PROPS_FILE;
         if (node == null) {
             properties.putAll(defaults);
         } else {
@@ -283,7 +281,8 @@ public class WebDavRequest implements HttpUtil {
                         properties.put(child.getLocalName(), null);
                     }
                 } else {
-                    name = child.getNamespaceURI() + ":" + child.getLocalName();
+                    String name = child.getNamespaceURI() + ":" +
+                                  child.getLocalName();
                     properties.put(name, null);
                 }
                 child = child.getNextSibling();
@@ -365,7 +364,7 @@ public class WebDavRequest implements HttpUtil {
      * @param size           the resource size (in bytes)
      */
     public void addResource(String href, Date created, Date modified, long size) {
-        LinkedHashMap  props = new LinkedHashMap();
+        LinkedHashMap<String,String>  props = new LinkedHashMap<>();
         String         name;
         String         str;
 
@@ -421,20 +420,15 @@ public class WebDavRequest implements HttpUtil {
      * @param href           the root-relative resource link
      * @param props          the resource properties
      */
-    private void addResource(String href, LinkedHashMap props) {
-        StringBuilder  buffer = new StringBuilder();
-        Iterator       iter = props.keySet().iterator();
-        ArrayList      fails = new ArrayList();
-        String         key;
-        String         value;
-
+    private void addResource(String href, LinkedHashMap<String,String> props) {
+        StringBuilder buffer = new StringBuilder();
         xmlTagBegin(buffer, 1, "response");
         xmlTag(buffer, 2, "href", Helper.encodeUrl(href), false);
         xmlTagBegin(buffer, 2, "propstat");
         xmlTagBegin(buffer, 3, "prop");
-        while (iter.hasNext()) {
-            key = (String) iter.next();
-            value = (String) props.get(key);
+        ArrayList<String> fails = new ArrayList<>();
+        for (String key : props.keySet()) {
+            String value = props.get(key);
             if (value == null) {
                 fails.add(key);
             } else if (propertyValues) {
@@ -450,9 +444,9 @@ public class WebDavRequest implements HttpUtil {
             xmlTagBegin(buffer, 2, "propstat");
             xmlTagBegin(buffer, 3, "prop");
             for (int i = 0; i < fails.size(); i++) {
-                key = (String) fails.get(i);
+                String key = fails.get(i);
                 if (key.indexOf(':') > 0) {
-                    value = StringUtils.substringBeforeLast(key, ":");
+                    String value = StringUtils.substringBeforeLast(key, ":");
                     key = StringUtils.substringAfterLast(key, ":");
                     buffer.append(StringUtils.repeat("  ", 4));
                     buffer.append("<");
@@ -485,14 +479,14 @@ public class WebDavRequest implements HttpUtil {
      */
     private String namespace(String href) {
         if (propertyNS == null) {
-            propertyNS = new LinkedHashMap();
+            propertyNS = new LinkedHashMap<>();
         }
         if (!propertyNS.containsKey(href)) {
             char value = (char) ('E' + propertyNS.size());
             propertyNS.put(href, String.valueOf(value));
             LOG.fine("reserved namespace '" + propertyNS.get(href) + "' for " + href);
         }
-        return (String) propertyNS.get(href);
+        return propertyNS.get(href);
     }
 
     /**

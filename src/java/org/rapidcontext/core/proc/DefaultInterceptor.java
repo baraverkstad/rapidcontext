@@ -47,25 +47,21 @@ public class DefaultInterceptor extends Interceptor {
      *             reserved
      */
     public void reserve(CallContext cx, Procedure proc)
-        throws ProcedureException {
-
-        Bindings  bindings;
-        String[]  names;
-        String    value;
+    throws ProcedureException {
 
         if (cx.getCallStack().contains(proc)) {
             return;
         }
-        bindings = proc.getBindings();
+        Bindings bindings = proc.getBindings();
         cx.getCallStack().push(proc, bindings);
         try {
-            names = bindings.getNames();
+            String[] names = bindings.getNames();
             for (int i = 0; i < names.length; i++) {
                 if (bindings.getType(names[i]) == Bindings.CONNECTION) {
-                    value = (String) bindings.getValue(names[i], null);
+                    String value = (String) bindings.getValue(names[i], null);
                     cx.connectionReserve(value);
                 } else if (bindings.getType(names[i]) == Bindings.PROCEDURE) {
-                    value = (String) bindings.getValue(names[i]);
+                    String value = (String) bindings.getValue(names[i]);
                     cx.reserve(cx.getLibrary().getProcedure(value));
                 }
             }
@@ -128,7 +124,7 @@ public class DefaultInterceptor extends Interceptor {
 
         try {
             String[] names = bindings.getNames();
-            ArrayList args = new ArrayList(names.length);
+            ArrayList<Object> args = new ArrayList<>(names.length);
             for (int i = 0; i < names.length; i++) {
                 if (bindings.getType(names[i]) == Bindings.ARGUMENT) {
                     args.add(bindings.getValue(names[i], null));

@@ -38,11 +38,10 @@ public class ZipUtil {
      *             destination files couldn't be written
      */
     public static void unpackZip(File zipFile, File dir) throws IOException {
-        ZipFile zip = new ZipFile(zipFile);
-        try {
+        try (
+            ZipFile zip = new ZipFile(zipFile);
+        ) {
             unpackZip(zip, dir);
-        } finally {
-            zip.close();
         }
     }
 
@@ -57,9 +56,9 @@ public class ZipUtil {
      *             destination files couldn't be written
      */
     public static void unpackZip(ZipFile zip, File dir) throws IOException {
-        Enumeration entries = zip.entries();
+        Enumeration<? extends ZipEntry> entries = zip.entries();
         while (entries.hasMoreElements()) {
-            ZipEntry entry = (ZipEntry) entries.nextElement();
+            ZipEntry entry = entries.nextElement();
             String name = entry.getName();
             while (name.startsWith("/")) {
                 name = name.substring(1);

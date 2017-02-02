@@ -65,7 +65,7 @@ public class MacApplication {
      * @throws Exception if the Apple-specific classes couldn't be found
      */
     private MacApplication() throws Exception {
-        Class cls = Class.forName(APP_CLASS);
+        Class<?> cls = Class.forName(APP_CLASS);
         app = call(cls, "getApplication");
     }
 
@@ -121,7 +121,7 @@ public class MacApplication {
      * @return the method found, or
      *         null if not found
      */
-    private Method find(Class cls, String name) {
+    private Method find(Class<?> cls, String name) {
         Method[]  methods = cls.getMethods();
         for (int i = 0; i < methods.length; i++) {
             if (methods[i].getName().equals(name)) {
@@ -142,7 +142,7 @@ public class MacApplication {
      *
      * @throws Exception if a reflection error occurred
      */
-    private Object call(Class cls, String name) throws Exception {
+    private Object call(Class<?> cls, String name) throws Exception {
         return find(cls, name).invoke(null, new Object[] {});
     }
 
@@ -177,7 +177,7 @@ public class MacApplication {
         throws ClassNotFoundException {
 
         ClassLoader loader = getClass().getClassLoader();
-        Class cls = Class.forName(className);
+        Class<?> cls = Class.forName(className);
         return Proxy.newProxyInstance(loader, new Class[] { cls }, handler);
     }
 

@@ -77,24 +77,25 @@ public class PropertiesSerializer {
      * @throws IOException if the data couldn't be serialized
      */
     public static String serialize(Object obj) throws IOException {
-        StringWriter  buffer = new StringWriter();
-        PrintWriter   os = new PrintWriter(buffer);
-        String        msg;
-
-        if (obj == null) {
-            // Nothing to write
-        } else if (obj instanceof Dict) {
-            write(os, "", (Dict) obj);
-        } else if (obj instanceof Array) {
-            write(os, "", (Array) obj);
-        } else if (obj instanceof StorableObject) {
-            write(os, "", ((StorableObject) obj).serialize());
-        } else {
-            msg = "Cannot serialize " + obj.getClass();
-            throw new InvalidPropertiesFormatException(msg);
+        try (
+            StringWriter buffer = new StringWriter();
+            PrintWriter os = new PrintWriter(buffer);
+        ) {
+            if (obj == null) {
+                // Nothing to write
+            } else if (obj instanceof Dict) {
+                write(os, "", (Dict) obj);
+            } else if (obj instanceof Array) {
+                write(os, "", (Array) obj);
+            } else if (obj instanceof StorableObject) {
+                write(os, "", ((StorableObject) obj).serialize());
+            } else {
+                String msg = "Cannot serialize " + obj.getClass();
+                throw new InvalidPropertiesFormatException(msg);
+            }
+            os.flush();
+            return buffer.toString();
         }
-        os.close();
-        return buffer.toString();
     }
 
     /**
@@ -164,13 +165,8 @@ public class PropertiesSerializer {
     private static Dict read(InputStream is, BufferedReader r)
     throws IOException {
 
-        Dict         res = new Dict();
-        Properties   props;
-        Enumeration  e;
-        String       str;
-
         // Read properties file (but doesn't preserve ordering)
-        props = new Properties();
+        Properties props = new Properties();
         try {
             props.load(is);
         } finally {
@@ -182,7 +178,9 @@ public class PropertiesSerializer {
         }
 
         // Add properties in file order (uses simplified parsing)
+        Dict res = new Dict();
         try {
+            String str;
             while ((str = r.readLine()) != null) {
                 if (str.indexOf("=") > 0) {
                     str = str.substring(0, str.indexOf("=")).trim();
@@ -205,9 +203,9 @@ public class PropertiesSerializer {
         }
 
         // Add any additional properties
-        e = props.propertyNames();
+        Enumeration<?> e = props.propertyNames();
         while (e.hasMoreElements()) {
-            str = (String) e.nextElement();
+            String str = (String) e.nextElement();
             add(res, str, props.getProperty(str));
         }
 
@@ -230,9 +228,8 @@ public class PropertiesSerializer {
      * @param value          the property value
      */
     private static void add(Dict dict, String name, String value) {
-        String[]  path = name.split("\\.");
-        Object    parent = dict;
-
+        String[] path = name.split("\\.");
+        Object parent = dict;
         for (int i = 0; i < path.length - 1; i++) {
             Object child = getKey(parent, path[i]);
             if (!(child instanceof Dict || child instanceof Array)) {
@@ -339,11 +336,9 @@ public class PropertiesSerializer {
      * @param dict           the dictionary to modify
      */
     private static void removeArrayNulls(Dict dict) {
-        String[]  keys = dict.keys();
-        Object    obj;
-
+        String[] keys = dict.keys();
         for (int i = 0; i < keys.length; i++) {
-            obj = dict.get(keys[i]);
+            Object obj = dict.get(keys[i]);
             if (obj instanceof Dict) {
                 removeArrayNulls((Dict) obj);
             } else if (obj instanceof Array) {
@@ -362,10 +357,8 @@ public class PropertiesSerializer {
      * @param arr            the array to modify
      */
     private static void removeArrayNulls(Array arr) {
-        Object    obj;
-
         for (int i = 0; i < arr.size(); i++) {
-            obj = arr.get(i);
+            Object obj = arr.get(i);
             if (obj == null) {
                 arr.remove(i--);
             } else if (obj instanceof Dict) {
@@ -391,15 +384,11 @@ public class PropertiesSerializer {
      *             file
      */
     public static void write(File file, Dict dict) throws IOException {
-        OutputStreamWriter  os;
-        PrintWriter         w;
-
-        os = new OutputStreamWriter(new FileOutputStream(file), "ISO-8859-1");
-        w = new PrintWriter(os);
-        try {
+        try (
+            FileOutputStream os = new FileOutputStream(file);
+            PrintWriter w = new PrintWriter(new OutputStreamWriter(os, "ISO-8859-1"));
+        ) {
             write(w, "", dict);
-        } finally {
-            w.close();
         }
     }
 
@@ -419,14 +408,12 @@ public class PropertiesSerializer {
     private static void write(PrintWriter os, String prefix, Dict dict)
         throws IOException {
 
-        String[]  keys = dict.keys();
-        Object    obj;
-
         if (prefix.length() == 0) {
             os.println("# General properties");
         }
+        String[] keys = dict.keys();
         for (int i = 0; i < keys.length; i++) {
-            obj = dict.get(keys[i]);
+            Object obj = dict.get(keys[i]);
             if (keys[i].startsWith("_")) {
                 // Skip saving transient data
             } else if (obj instanceof Dict || obj instanceof Array) {
@@ -436,7 +423,7 @@ public class PropertiesSerializer {
             }
         }
         for (int i = 0; i < keys.length; i++) {
-            obj = dict.get(keys[i]);
+            Object obj = dict.get(keys[i]);
             if (keys[i].startsWith("_")) {
                 // Skip saving transient data
             } else if (obj instanceof Dict || obj instanceof Array) {
@@ -479,11 +466,9 @@ public class PropertiesSerializer {
     private static void write(PrintWriter os, String prefix, Array arr)
         throws IOException {
 
-        Object  obj;
-        int     pos = 0;
-
+        int pos = 0;
         for (int i = 0; i < arr.size(); i++) {
-            obj = arr.get(i);
+            Object obj = arr.get(i);
             if (obj instanceof Dict) {
                 write(os, prefix + pos + ".", (Dict) obj);
                 pos++;
@@ -559,11 +544,9 @@ public class PropertiesSerializer {
                                            String prefix,
                                            Dict dict) {
 
-        String[]  keys = dict.keys();
-        Object    obj;
-
+        String[] keys = dict.keys();
         for (int i = 0; i < keys.length; i++) {
-            obj = dict.get(keys[i]);
+            Object obj = dict.get(keys[i]);
             if (keys[i].startsWith("_")) {
                 // Skip converting transient values
             } else if (obj instanceof Dict) {
@@ -595,11 +578,9 @@ public class PropertiesSerializer {
                                            String prefix,
                                            Array arr) {
 
-        Object  obj;
-        int     pos = 0;
-
+        int pos = 0;
         for (int i = 0; i < arr.size(); i++) {
-            obj = arr.get(i);
+            Object obj = arr.get(i);
             if (obj instanceof Dict) {
                 toProperties(props, prefix + pos + ".", (Dict) obj);
                 pos++;

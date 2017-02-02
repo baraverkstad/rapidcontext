@@ -385,17 +385,12 @@ public class Main {
      */
     public static Properties buildInfo() {
         Properties info = new Properties();
-        InputStream is = Main.class.getResourceAsStream("build.properties");
-        try {
+        try (
+            InputStream is = Main.class.getResourceAsStream("build.properties");
+        ) {
             info.load(is);
         } catch (IOException ignore) {
             // Ignore exception on loading properties
-        } finally {
-            try {
-                is.close();
-            } catch (Exception ignore) {
-                // Ignore exception on closing file
-            }
         }
         return info;
     }

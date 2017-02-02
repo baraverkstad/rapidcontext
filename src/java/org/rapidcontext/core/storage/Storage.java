@@ -27,7 +27,7 @@ import org.rapidcontext.core.data.Array;
  * @author   Per Cederberg
  * @version  1.0
  */
-public abstract class Storage extends StorableObject implements Comparable {
+public abstract class Storage extends StorableObject implements Comparable<Storage> {
 
     /**
      * The dictionary key for the read-write flag.
@@ -103,7 +103,7 @@ public abstract class Storage extends StorableObject implements Comparable {
     /**
      * Compares this storage with another.
      *
-     * @param obj            the object to compare with
+     * @param other          the object to compare with
      *
      * @return a negative integer, zero, or a positive integer as
      *         this object is less than, equal to, or greater than
@@ -111,8 +111,7 @@ public abstract class Storage extends StorableObject implements Comparable {
      *
      * @throws ClassCastException if the object wasn't comparable
      */
-    public int compareTo(Object obj) throws ClassCastException {
-        Storage  other = (Storage) obj;
+    public int compareTo(Storage other) throws ClassCastException {
         int      cmp1 = mountOverlayPrio() - other.mountOverlayPrio();
         int      cmp2 = mountTime().compareTo(other.mountTime());
 
@@ -244,10 +243,9 @@ public abstract class Storage extends StorableObject implements Comparable {
      *         an empty array if no objects were found
      */
     public Metadata[] lookupAll(Path path) {
-        ArrayList  list = new ArrayList();
-
+        ArrayList<Metadata> list = new ArrayList<>();
         lookupAll(path, list);
-        return (Metadata[]) list.toArray(new Metadata[list.size()]);
+        return list.toArray(new Metadata[list.size()]);
     }
 
     /**
@@ -259,23 +257,18 @@ public abstract class Storage extends StorableObject implements Comparable {
      * @param path           the storage location
      * @param list           the list where to add results
      */
-    private void lookupAll(Path path, ArrayList list) {
-        Metadata  meta;
-        Index     idx;
-        Array     arr;
-        Path      child;
-
-        meta = lookup(path);
+    private void lookupAll(Path path, ArrayList<Metadata> list) {
+        Metadata meta = lookup(path);
         if (meta != null && meta.isIndex()) {
-            idx = (Index) load(path);
-            arr = idx.indices();
+            Index idx = (Index) load(path);
+            Array arr = idx.indices();
             for (int i = 0; arr != null && i < arr.size(); i++) {
-                child = path.child(arr.getString(i, null), true);
+                Path child = path.child(arr.getString(i, null), true);
                 lookupAll(child, list);
             }
             arr = idx.objects();
             for (int i = 0; arr != null && i < arr.size(); i++) {
-                child = path.child(arr.getString(i, null), false);
+                Path child = path.child(arr.getString(i, null), false);
                 lookupAll(child, list);
             }
         } else if (meta != null) {
@@ -308,8 +301,7 @@ public abstract class Storage extends StorableObject implements Comparable {
      *         an empty array if no objects were found
      */
     public Object[] loadAll(Path path) {
-        ArrayList  list = new ArrayList();
-
+        ArrayList<Object> list = new ArrayList<>();
         loadAll(path, list);
         return list.toArray();
     }
@@ -323,23 +315,18 @@ public abstract class Storage extends StorableObject implements Comparable {
      * @param path           the storage location
      * @param list           the list where to add results
      */
-    private void loadAll(Path path, ArrayList list) {
-        Object  obj;
-        Index   idx;
-        Array   arr;
-        Path    child;
-
-        obj = load(path);
+    private void loadAll(Path path, ArrayList<Object> list) {
+        Object obj = load(path);
         if (obj != null && obj instanceof Index) {
-            idx = (Index) obj;
-            arr = idx.indices();
+            Index idx = (Index) obj;
+            Array arr = idx.indices();
             for (int i = 0; arr != null && i < arr.size(); i++) {
-                child = path.child(arr.getString(i, null), true);
+                Path child = path.child(arr.getString(i, null), true);
                 loadAll(child, list);
             }
             arr = idx.objects();
             for (int i = 0; arr != null && i < arr.size(); i++) {
-                child = path.child(arr.getString(i, null), false);
+                Path child = path.child(arr.getString(i, null), false);
                 loadAll(child, list);
             }
         } else if (obj != null) {

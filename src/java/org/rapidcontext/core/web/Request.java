@@ -956,9 +956,11 @@ public class Request implements HttpUtil {
             byte[] data = ((String) responseData).getBytes("UTF-8");
             response.setContentLength(data.length);
             logResponse();
-            OutputStream os = response.getOutputStream();
-            os.write(data);
-            os.close();
+            try (
+                OutputStream os = response.getOutputStream();
+            ) {
+                os.write(data);
+            }
         }
     }
 

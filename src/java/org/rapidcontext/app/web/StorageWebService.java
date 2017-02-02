@@ -578,7 +578,7 @@ public class StorageWebService extends WebService {
                 data = ctx.getStorage().load(path);
                 meta = ctx.getStorage().lookup(path);
             }
-            if (data == null || meta == null) {
+            if (path == null || data == null || meta == null) {
                 errorNotFound(request);
                 return;
             }
@@ -755,7 +755,7 @@ public class StorageWebService extends WebService {
             if (path != null) {
                 meta = ctx.getStorage().lookup(path);
             }
-            if (meta == null) {
+            if (path == null || meta == null) {
                 errorNotFound(request);
                 return;
             }

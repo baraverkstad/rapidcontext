@@ -247,7 +247,7 @@ public class ConnectionWrapper implements Scriptable {
      *
      * @return the default value of this object
      */
-    public Object getDefaultValue(Class typeHint) {
+    public Object getDefaultValue(Class<?> typeHint) {
         return ScriptableObject.getDefaultValue(this, typeHint);
     }
 
@@ -456,7 +456,7 @@ public class ConnectionWrapper implements Scriptable {
          *
          * @return the default value of this object
          */
-        public Object getDefaultValue(Class typeHint) {
+        public Object getDefaultValue(Class<?> typeHint) {
             return ScriptableObject.getDefaultValue(this, typeHint);
         }
 
@@ -546,7 +546,7 @@ public class ConnectionWrapper implements Scriptable {
             } else if ((m.getModifiers() & Modifier.PUBLIC) <= 0) {
                 return false;
             }
-            Class[] types = m.getParameterTypes();
+            Class<?>[] types = m.getParameterTypes();
             if (types.length != args.length) {
                 return false;
             }
@@ -567,7 +567,7 @@ public class ConnectionWrapper implements Scriptable {
          * @return true if the object matches the type, or
          *         false otherwise
          */
-        private boolean isMatching(Class type, Object obj) {
+        private boolean isMatching(Class<?> type, Object obj) {
             if (type == Boolean.TYPE) {
                 return obj instanceof Boolean;
             } else if (type == Integer.TYPE ) {

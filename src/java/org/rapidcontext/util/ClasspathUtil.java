@@ -37,7 +37,7 @@ public abstract class ClasspathUtil {
      * @return the class loader for the class, or
      *         the system class loader if null
      */
-    public static ClassLoader classLoader(Class cls) {
+    public static ClassLoader classLoader(Class<?> cls) {
         if (cls == null || cls.getClassLoader() == null) {
             return ClassLoader.getSystemClassLoader();
         } else {
@@ -53,7 +53,7 @@ public abstract class ClasspathUtil {
      * @return the resource URL for the class, or
      *         null if not found
      */
-    public static URL locate(Class cls) {
+    public static URL locate(Class<?> cls) {
         String path = cls.getName().replace('.', '/') + ".class";
         return locate(cls, path);
     }
@@ -70,7 +70,7 @@ public abstract class ClasspathUtil {
      * @return the resource URL, or
      *         null if not found
      */
-    public static URL locate(Class cls, String path) {
+    public static URL locate(Class<?> cls, String path) {
         if (path.startsWith("classpath:")) {
             path = path.substring(10);
         }
@@ -91,7 +91,7 @@ public abstract class ClasspathUtil {
      * @return the absolute file system location for the class, or
      *         null if not found
      */
-    public static File locateFile(Class cls) {
+    public static File locateFile(Class<?> cls) {
         URL     url = locate(cls);
         String  path;
         String  str;
@@ -137,7 +137,7 @@ public abstract class ClasspathUtil {
      * @return the JAR manifest data, or
      *         null if not found
      */
-    public static Manifest manifest(Class cls) {
+    public static Manifest manifest(Class<?> cls) {
         URL url = locate(cls);
         if (url.toExternalForm().toLowerCase().startsWith("jar:")) {
             try {
@@ -160,7 +160,7 @@ public abstract class ClasspathUtil {
      * @return the attribute value, or
      *         null if not found
      */
-    public static String manifestAttribute(Class cls, String name) {
+    public static String manifestAttribute(Class<?> cls, String name) {
         Manifest mf = manifest(cls);
         if (mf != null) {
             return mf.getMainAttributes().getValue(name);

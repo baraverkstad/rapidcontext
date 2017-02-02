@@ -47,6 +47,7 @@ public class HttpPlugin extends Plugin {
      *
      * @throws StorageException if the initialization failed
      */
+    @SuppressWarnings("deprecation")
     public void init() throws StorageException {
         Library  lib = ApplicationContext.getInstance().getLibrary();
 
@@ -66,6 +67,7 @@ public class HttpPlugin extends Plugin {
      *
      * @throws StorageException if the destruction failed
      */
+    @SuppressWarnings("deprecation")
     public void destroy() throws StorageException {
         Library  lib = ApplicationContext.getInstance().getLibrary();
 

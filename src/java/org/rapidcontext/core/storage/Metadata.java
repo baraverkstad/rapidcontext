@@ -88,7 +88,7 @@ public class Metadata extends StorableObject {
      *
      * @return the object category
      */
-    public static String category(Class clazz) {
+    public static String category(Class<?> clazz) {
         if (Index.class.isAssignableFrom(clazz)) {
             return CATEGORY_INDEX;
         } else if (Binary.class.isAssignableFrom(clazz)) {
@@ -161,7 +161,7 @@ public class Metadata extends StorableObject {
      * @param storagePath    the absolute storage path
      * @param modified       the last modified time, or negative for now
      */
-    public Metadata(Class clazz, Path path, Path storagePath, long modified) {
+    public Metadata(Class<?> clazz, Path path, Path storagePath, long modified) {
         this(category(clazz), clazz, path, storagePath, new Long(modified));
     }
 
@@ -173,7 +173,7 @@ public class Metadata extends StorableObject {
      * @param storagePath    the absolute storage path
      * @param modified       the last modified time
      */
-    public Metadata(Class clazz, Path path, Path storagePath, Date modified) {
+    public Metadata(Class<?> clazz, Path path, Path storagePath, Date modified) {
         this(category(clazz), clazz, path, storagePath, modified);
     }
 
@@ -186,7 +186,7 @@ public class Metadata extends StorableObject {
      * @param storagePath    the absolute storage path
      * @param modified       the last modified date, or null for now
      */
-    public Metadata(String category, Class clazz, Path path, Path storagePath, Object modified) {
+    public Metadata(String category, Class<?> clazz, Path path, Path storagePath, Object modified) {
         super(null, "metadata");
         dict.remove(KEY_ID);
         dict.set(KEY_CATEGORY, category);
@@ -232,7 +232,7 @@ public class Metadata extends StorableObject {
      * @return true if the object category is a matching object, or
      *         false otherwise
      */
-    public boolean isObject(Class clazz) {
+    public boolean isObject(Class<?> clazz) {
         return isObject() && clazz.isAssignableFrom(classInstance());
     }
 
@@ -264,8 +264,8 @@ public class Metadata extends StorableObject {
      *
      * @return the class for the object
      */
-    public Class classInstance() {
-        return (Class) dict.get(KEY_CLASS);
+    public Class<?> classInstance() {
+        return (Class<?>) dict.get(KEY_CLASS);
     }
 
     /**

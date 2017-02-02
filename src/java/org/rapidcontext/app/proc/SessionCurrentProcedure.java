@@ -102,7 +102,7 @@ public class SessionCurrentProcedure implements Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        Session session = (Session) Session.activeSession.get();
+        Session session = Session.activeSession.get();
         return (session == null) ? null : serialize(cx.getStorage(), session);
     }
 

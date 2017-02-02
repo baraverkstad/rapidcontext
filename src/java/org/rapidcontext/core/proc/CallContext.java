@@ -16,7 +16,6 @@ package org.rapidcontext.core.proc;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -148,7 +147,7 @@ public class CallContext {
      * reserved and stored here. The channels stored in this map are
      * indexed by their connection id.
      */
-    private HashMap connections = new HashMap();
+    private HashMap<String,Channel> connections = new HashMap<>();
 
     /**
      * The context call stack.
@@ -160,7 +159,7 @@ public class CallContext {
      * storing generic objects in the call context, which is useful
      * for setting flags or storing objects across procedures.
      */
-    private HashMap attributes = new HashMap();
+    private HashMap<String,Object> attributes = new HashMap<>();
 
     /**
      * The call interrupted flag. Once this flag has been set, it
@@ -599,7 +598,7 @@ public class CallContext {
                 throw new ProcedureException(msg);
             }
         }
-        return (Channel) connections.get(id);
+        return connections.get(id);
     }
 
     /**
@@ -612,9 +611,7 @@ public class CallContext {
      * @see #connectionReserve(String)
      */
     public void connectionReleaseAll(boolean commit) {
-        Iterator iter = connections.values().iterator();
-        while (iter.hasNext()) {
-            Channel channel = (Channel) iter.next();
+        for (Channel channel : connections.values()) {
             if (commit) {
                 channel.commit();
             } else {

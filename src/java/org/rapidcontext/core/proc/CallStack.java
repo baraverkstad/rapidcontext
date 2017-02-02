@@ -28,7 +28,7 @@ public class CallStack {
     /**
      * The call stack.
      */
-    private ArrayList stack = new ArrayList();
+    private ArrayList<Procedure> stack = new ArrayList<>();
 
     /**
      * Checks if the specified procedure exists in the call stack.

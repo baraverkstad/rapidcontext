@@ -65,16 +65,13 @@ public abstract class JdbcProcedure extends AddOnProcedure {
     protected static JdbcChannel connectionReserve(CallContext cx, Bindings bindings)
     throws ProcedureException {
 
-        String  str;
-        Object  obj;
-
-        obj = bindings.getValue(BINDING_DB);
+        Object obj = bindings.getValue(BINDING_DB);
         if (obj instanceof String) {
             obj = cx.connectionReserve((String) obj);
         }
         if (!JdbcChannel.class.isInstance(obj)) {
-            str = "connection not of JDBC type: " + obj.getClass().getName();
-            throw new ProcedureException(str);
+            String msg = "connection not of JDBC type: " + obj.getClass().getName();
+            throw new ProcedureException(msg);
         }
         return (JdbcChannel) obj;
     }
@@ -117,10 +114,8 @@ public abstract class JdbcProcedure extends AddOnProcedure {
     public Object call(CallContext cx, Bindings bindings)
     throws ProcedureException {
 
-        JdbcChannel  con = connectionReserve(cx, bindings);
-        String       flags;
-
-        flags = (String) bindings.getValue(BINDING_FLAGS, "");
+        JdbcChannel con = connectionReserve(cx, bindings);
+        String flags = (String) bindings.getValue(BINDING_FLAGS, "");
         return execute(con, prepare(con, cx, bindings), flags.toLowerCase());
     }
 
@@ -160,30 +155,26 @@ public abstract class JdbcProcedure extends AddOnProcedure {
                                         Bindings bindings)
     throws ProcedureException {
 
-        String        sql = (String) bindings.getValue(BINDING_SQL);
-        String[]      names = bindings.getNames();
-        ArrayList     fields = new ArrayList();
-        SqlField      field;
-        StringBuffer  buffer = new StringBuffer();
-        ArrayList     params = new ArrayList();
-        Object        value;
-        int           pos;
-
+        String sql = (String) bindings.getValue(BINDING_SQL);
+        String[] names = bindings.getNames();
+        ArrayList<SqlField> fields = new ArrayList<>();
         for (int i = 0; i < names.length; i++) {
             if (bindings.getType(names[i]) == Bindings.ARGUMENT) {
-                pos = 0;
+                int pos = 0;
                 while ((pos = sql.indexOf(":" + names[i], pos)) >= 0) {
-                    field = new SqlField(sql, pos, names[i]);
+                    SqlField field = new SqlField(sql, pos, names[i]);
                     fields.add(field);
                     pos = field.endPos;
                 }
             }
         }
         Collections.sort(fields);
-        pos = 0;
+        ArrayList<Object> params = new ArrayList<>();
+        StringBuffer buffer = new StringBuffer();
+        int pos = 0;
         for (int i = 0; i < fields.size(); i++) {
-            field = (SqlField) fields.get(i);
-            value = bindings.getValue(field.fieldName, null);
+            SqlField field = fields.get(i);
+            Object value = bindings.getValue(field.fieldName, null);
             buffer.append(sql.substring(pos, field.startPos));
             buffer.append(field.bind(value, params));
             pos = field.endPos;
@@ -208,7 +199,7 @@ public abstract class JdbcProcedure extends AddOnProcedure {
      * @author   Per Cederberg
      * @version  1.0
      */
-    private static class SqlField implements Comparable {
+    private static class SqlField implements Comparable<SqlField> {
 
         /**
          * A regular expression to find the SQL WHERE clause.
@@ -290,8 +281,8 @@ public abstract class JdbcProcedure extends AddOnProcedure {
          * @throws ClassCastException if the other object isn't an
          *             SQLField instance
          */
-        public int compareTo(Object obj) throws ClassCastException {
-            return this.startPos - ((SqlField) obj).startPos;
+        public int compareTo(SqlField obj) throws ClassCastException {
+            return this.startPos - obj.startPos;
         }
 
         /**
@@ -305,15 +296,13 @@ public abstract class JdbcProcedure extends AddOnProcedure {
          */
         private int findOperator(String sql, int end) {
             Matcher m = RE_WHERE.matcher(sql);
-            String  opChars = "=!?";
-            int     pos = end - 1;
-            char    c;
-
             if (!m.find() || m.end() > end) {
                 return -1;
             }
+            String opChars = "=!?";
+            int pos = end - 1;
             while (pos >= 0) {
-                c = sql.charAt(pos);
+                char c = sql.charAt(pos);
                 if (!Character.isWhitespace(c) && opChars.indexOf(c) < 0) {
                     pos++;
                     break;
@@ -337,12 +326,10 @@ public abstract class JdbcProcedure extends AddOnProcedure {
          *         a negative number if not found
          */
         public int findColumn(String sql, int end) {
-            String  extraChars = "'`\".";
-            int     pos = end - 1;
-            char    c;
-
+            String extraChars = "'`\".";
+            int pos = end - 1;
             while (pos >= 0) {
-                c = sql.charAt(pos);
+                char c = sql.charAt(pos);
                 if (!Character.isJavaIdentifierPart(c) && extraChars.indexOf(c) < 0) {
                     pos++;
                     break;
@@ -364,7 +351,7 @@ public abstract class JdbcProcedure extends AddOnProcedure {
          *
          * @return the new SQL text for the field
          */
-        public String bind(Object value, ArrayList params) {
+        public String bind(Object value, ArrayList<Object> params) {
             if (value == null) {
                 return bindNull();
             } else if (value instanceof Array) {
@@ -386,9 +373,8 @@ public abstract class JdbcProcedure extends AddOnProcedure {
          *
          * @return the new SQL text for the field
          */
-        private String bindData(Array value, ArrayList params) {
-            String  op;
-
+        private String bindData(Array value, ArrayList<Object> params) {
+            String op;
             if (operator == null) {
                 op = null;
             } else if (operator.equals("=")) {
@@ -411,8 +397,7 @@ public abstract class JdbcProcedure extends AddOnProcedure {
          * @return the new SQL text for the field
          */
         private String bindNull() {
-            String  op;
-
+            String op;
             if (operator == null) {
                 op = null;
             } else if (operator.equals("=")) {
@@ -476,8 +461,7 @@ public abstract class JdbcProcedure extends AddOnProcedure {
          * @return the corresponding SQL string literal
          */
         private String literal(String str) {
-            StringBuffer  buffer = new StringBuffer();
-
+            StringBuffer buffer = new StringBuffer();
             buffer.append("'");
             for (int i = 0; i < str.length(); i++) {
                 switch (str.charAt(i)) {
@@ -501,9 +485,8 @@ public abstract class JdbcProcedure extends AddOnProcedure {
          * @return the corresponding SQL number literal
          */
         private String literal(Number num) {
-            int     i = num.intValue();
-            double  d = num.doubleValue();
-
+            int i = num.intValue();
+            double d = num.doubleValue();
             if (i == d) {
                 return String.valueOf(i);
             } else {
@@ -520,8 +503,7 @@ public abstract class JdbcProcedure extends AddOnProcedure {
          * @return the corresponding SQL list of literals
          */
         private String literal(Array list) {
-            StringBuffer  buffer = new StringBuffer();
-
+            StringBuffer buffer = new StringBuffer();
             buffer.append("(");
             for (int i = 0; i < list.size(); i++) {
                 if (i > 0) {

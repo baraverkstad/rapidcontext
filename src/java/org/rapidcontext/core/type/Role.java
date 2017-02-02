@@ -133,15 +133,14 @@ public class Role extends StorableObject {
      * @return an array of all roles found
      */
     public static Role[] findAll(Storage storage) {
-        Object[]   objs = storage.loadAll(PATH);
-        ArrayList  list = new ArrayList(objs.length);
-
+        Object[] objs = storage.loadAll(PATH);
+        ArrayList<Role> list = new ArrayList<>(objs.length);
         for (int i = 0; i < objs.length; i++) {
             if (objs[i] instanceof Role) {
-                list.add(objs[i]);
+                list.add((Role) objs[i]);
             }
         }
-        return (Role[]) list.toArray(new Role[list.size()]);
+        return list.toArray(new Role[list.size()]);
     }
 
     /**
@@ -225,10 +224,11 @@ public class Role extends StorableObject {
             Dict dict = arr.getDict(i);
             if (matchPath(dict, path)) {
                 String perms = dict.getString(ACCESS_PERMISSION, "").trim();
-                HashSet set = (HashSet) dict.get("_" + ACCESS_PERMISSION);
+                @SuppressWarnings("unchecked")
+                HashSet<String> set = (HashSet<String>) dict.get("_" + ACCESS_PERMISSION);
                 if (set == null) {
                     String[] list = perms.split("[,;\\s]+");
-                    set = new HashSet(list.length + 1);
+                    set = new HashSet<>(list.length + 1);
                     for (int j = 0; j < list.length; j++) {
                         if (list[j].equalsIgnoreCase(PERM_NONE)) {
                             set.add(PERM_NONE);
@@ -305,6 +305,6 @@ public class Role extends StorableObject {
             }
             dict.set("_" + ACCESS_REGEX, m);
         }
-        return m.matcher(path).matches();
+        return (m != null) ? m.matcher(path).matches() : false;
     }
 }

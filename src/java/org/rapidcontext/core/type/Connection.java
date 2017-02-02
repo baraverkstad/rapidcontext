@@ -123,15 +123,14 @@ public abstract class Connection extends StorableObject {
      * @return an array of all connections found
      */
     public static Connection[] findAll(Storage storage) {
-        Object[]   objs = storage.loadAll(PATH);
-        ArrayList  list = new ArrayList(objs.length);
-
+        Object[] objs = storage.loadAll(PATH);
+        ArrayList<Connection> list = new ArrayList<>(objs.length);
         for (int i = 0; i < objs.length; i++) {
             if (objs[i] instanceof Connection) {
-                list.add(objs[i]);
+                list.add((Connection) objs[i]);
             }
         }
-        return (Connection[]) list.toArray(new Connection[list.size()]);
+        return list.toArray(new Connection[list.size()]);
     }
 
     /**

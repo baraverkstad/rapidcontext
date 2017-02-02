@@ -49,7 +49,7 @@ public class Array {
     /**
      * A list of indexable array values.
      */
-    private ArrayList list = null;
+    private ArrayList<Object> list = null;
 
     /**
      * The sealed flag. When this flag is set to true, no further
@@ -74,7 +74,7 @@ public class Array {
      */
     public Array(int initialCapacity) {
         if (initialCapacity > 0) {
-            list = new ArrayList(initialCapacity);
+            list = new ArrayList<>(initialCapacity);
         }
     }
 
@@ -84,10 +84,9 @@ public class Array {
      * @return a string representation of this object
      */
     public String toString() {
-        StringBuilder  buffer = new StringBuilder();
-        int            len = size();
-
+        StringBuilder buffer = new StringBuilder();
         buffer.append("[");
+        int len = size();
         for (int i = 0; i < 5 && i < len; i++) {
             if (i > 0) {
                 buffer.append(",");
@@ -112,12 +111,9 @@ public class Array {
      * @return a deep copy of this array
      */
     public Array copy() {
-        Array   res;
-        Object  value;
-
-        res = new Array(size());
+        Array res = new Array(size());
         for (int i = 0; i < size(); i++) {
-            value = list.get(i);
+            Object value = list.get(i);
             if (value instanceof Dict) {
                 value = ((Dict) value).copy();
             } else if (value instanceof Array) {
@@ -137,12 +133,10 @@ public class Array {
      * @param recursive      the recursive flag
      */
     public void seal(boolean recursive) {
-        Object  value;
-
         sealed = true;
         if (recursive && list != null) {
             for (int i = 0; i < list.size(); i++) {
-                value = list.get(i);
+                Object value = list.get(i);
                 if (value instanceof Dict) {
                     ((Dict) value).seal(recursive);
                 } else if (value instanceof Array) {
@@ -203,8 +197,7 @@ public class Array {
      *         false otherwise
      */
     public boolean containsAll(Array arr) {
-        int sz = (arr == null) ? 0 : arr.size();
-        for (int i = 0; i < sz; i++) {
+        for (int i = 0; arr != null && i < arr.size(); i++) {
             if (!containsValue(arr.get(i))) {
                 return false;
             }
@@ -224,8 +217,7 @@ public class Array {
      *         false otherwise
      */
     public boolean containsAny(Array arr) {
-        int sz = (arr == null) ? 0 : arr.size();
-        for (int i = 0; i < sz; i++) {
+        for (int i = 0; arr != null && i < arr.size(); i++) {
             if (containsValue(arr.get(i))) {
                 return true;
             }
@@ -271,8 +263,7 @@ public class Array {
      *         the default value if the index is not defined
      */
     public Object get(int index, Object defaultValue) {
-        Object  value = get(index);
-
+        Object value = get(index);
         return (value == null) ? defaultValue : value;
     }
 
@@ -289,8 +280,7 @@ public class Array {
      *         the default value if the index is not defined
      */
     public String getString(int index, String defaultValue) {
-        Object  value = get(index);
-
+        Object value = get(index);
         if (value == null) {
             return defaultValue;
         } else if (value instanceof String) {
@@ -316,8 +306,7 @@ public class Array {
      *         the default value if the index is not defined
      */
     public boolean getBoolean(int index, boolean defaultValue) {
-        Object  value = get(index);
-
+        Object value = get(index);
         if (value == null) {
             return defaultValue;
         } else if (value instanceof Boolean) {
@@ -349,8 +338,7 @@ public class Array {
     public int getInt(int index, int defaultValue)
         throws NumberFormatException {
 
-        Object  value = get(index);
-
+        Object value = get(index);
         if (value == null) {
             return defaultValue;
         } else if (value instanceof Number) {
@@ -379,8 +367,7 @@ public class Array {
     public Date getDate(int index, Date defaultValue)
         throws NumberFormatException {
 
-        Object  value = get(index);
-
+        Object value = get(index);
         if (value == null) {
             return defaultValue;
         } else if (value instanceof Date) {
@@ -448,7 +435,7 @@ public class Array {
             throw new UnsupportedOperationException(msg);
         }
         if (list == null) {
-            list = new ArrayList(index + 1);
+            list = new ArrayList<>(index + 1);
         }
         while (index >= list.size()) {
             list.add(null);
@@ -505,7 +492,6 @@ public class Array {
      */
     public int add(Object value) throws UnsupportedOperationException {
         int index = size();
-
         if (sealed) {
             String msg = "cannot modify sealed array";
             throw new UnsupportedOperationException(msg);
@@ -561,7 +547,7 @@ public class Array {
         }
         if (arr != null && arr.size() > 0) {
             if (list == null) {
-                list = new ArrayList(arr.size());
+                list = new ArrayList<>(arr.size());
             } else {
                 list.ensureCapacity(list.size() + arr.size());
             }
@@ -688,7 +674,7 @@ public class Array {
     public void sort()
         throws UnsupportedOperationException, ClassCastException {
 
-        sort((Comparator) null);
+        sort((Comparator<Object>) null);
     }
 
     /**
@@ -723,7 +709,7 @@ public class Array {
      * @throws ClassCastException if the array values were not
      *             comparable
      */
-    public void sort(Comparator c)
+    public void sort(Comparator<Object> c)
         throws UnsupportedOperationException, ClassCastException {
 
         if (sealed) {
@@ -732,7 +718,7 @@ public class Array {
         }
         if (list != null) {
             if (c == null) {
-                Collections.sort(list);
+                Collections.sort(list, null);
             } else {
                 Collections.sort(list, c);
             }

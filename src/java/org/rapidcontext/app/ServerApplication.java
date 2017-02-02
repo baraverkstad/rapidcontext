@@ -15,7 +15,6 @@
 package org.rapidcontext.app;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.ServerSocket;
 
 import org.mortbay.jetty.Server;
@@ -66,21 +65,12 @@ public class ServerApplication {
      *         false otherwise
      */
     public static boolean isPortAvailable(int port) {
-        ServerSocket  socket = null;
-
-        try {
-            socket = new ServerSocket(port);
+        try (
+            ServerSocket socket = new ServerSocket(port);
+        ) {
             return true;
         } catch (Exception e) {
             return false;
-        } finally {
-            if (socket != null) {
-                try {
-                    socket.close();
-                } catch (IOException e) {
-                    // Ignore errors on close
-                }
-            }
         }
     }
 

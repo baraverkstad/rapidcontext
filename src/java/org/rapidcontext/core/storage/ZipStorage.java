@@ -66,7 +66,7 @@ public class ZipStorage extends Storage {
      * The ZIP entries and index map. Indexed by the storage path and
      * linked to either the Index or the ZipEntry objects.
      */
-    protected HashMap entries = new HashMap();
+    protected HashMap<Path,Object> entries = new HashMap<>();
 
     /**
      * Creates a new read-only ZIP file storage.
@@ -91,9 +91,9 @@ public class ZipStorage extends Storage {
         idx.addObject(PATH_STORAGEINFO.name());
         idx.updateLastModified(new Date(file().lastModified()));
         entries.put(Path.ROOT, idx);
-        Enumeration e = zip.entries();
+        Enumeration<? extends ZipEntry> e = zip.entries();
         while (e.hasMoreElements()) {
-            ZipEntry entry = (ZipEntry) e.nextElement();
+            ZipEntry entry = e.nextElement();
             String name = entry.getName();
             if (entry.isDirectory() && !name.endsWith("/")) {
                 name += "/";

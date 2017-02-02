@@ -55,7 +55,7 @@ public class SecurityContext {
      * is set to null, no user is currently authenticated for the
      * thread.
      */
-    private static ThreadLocal authUser = new ThreadLocal();
+    private static ThreadLocal<User> authUser = new ThreadLocal<>();
 
     /**
      * The cache of all user roles available. This array will be reset
@@ -99,7 +99,7 @@ public class SecurityContext {
      *         null if no user is currently authenticated
      */
     public static User currentUser() {
-        return (User) authUser.get();
+        return authUser.get();
     }
 
     /**

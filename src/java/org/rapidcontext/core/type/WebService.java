@@ -81,7 +81,7 @@ public abstract class WebService extends StorableObject implements HttpUtil {
     /**
      * The array of matcher objects.
      */
-    protected ArrayList matchers;
+    protected ArrayList<WebMatcher> matchers;
 
     /**
      * Searches for all matchers in all web services in the storage.
@@ -91,15 +91,14 @@ public abstract class WebService extends StorableObject implements HttpUtil {
      * @return an array of all matchers found
      */
     public static WebMatcher[] findAllMatchers(Storage storage) {
-        Object[]   objs = storage.loadAll(PATH);
-        ArrayList  list = new ArrayList();
-
+        ArrayList<WebMatcher> list = new ArrayList<>();
+        Object[] objs = storage.loadAll(PATH);
         for (int i = 0; i < objs.length; i++) {
             if (objs[i] instanceof WebService) {
                 list.addAll(((WebService) objs[i]).matchers);
             }
         }
-        return (WebMatcher[]) list.toArray(new WebMatcher[list.size()]);
+        return list.toArray(new WebMatcher[list.size()]);
     }
 
     /**
@@ -114,8 +113,8 @@ public abstract class WebService extends StorableObject implements HttpUtil {
         dict.set(KEY_DESCRIPTION, description());
         Array arr = dict.getArray(KEY_MATCH);
         int size = (arr == null) ? 0 : arr.size();
-        matchers = new ArrayList(size);
-        for (int i = 0; i < size; i++) {
+        matchers = new ArrayList<>(size);
+        for (int i = 0; arr != null && i < size; i++) {
             matchers.add(new WebMatcher(this, arr.getDict(i)));
         }
     }
@@ -139,11 +138,11 @@ public abstract class WebService extends StorableObject implements HttpUtil {
      * @return the array of HTTP method names supported
      */
     public String[] methods(Request request) {
-        LinkedHashSet set = new LinkedHashSet();
+        LinkedHashSet<String> set = new LinkedHashSet<>();
         set.add(METHOD.OPTIONS);
         set.addAll(Arrays.asList(methodsImpl(request)));
         for (int i = 0; i < matchers.size(); i++) {
-            WebMatcher m = (WebMatcher) matchers.get(i);
+            WebMatcher m = matchers.get(i);
             if (m.method() != null && m.match(request) > 0) {
                 set.add(m.method());
             }
@@ -151,7 +150,7 @@ public abstract class WebService extends StorableObject implements HttpUtil {
         if (set.contains(METHOD.GET)) {
             set.add(METHOD.HEAD);
         }
-        return (String[]) set.toArray(new String[set.size()]);
+        return set.toArray(new String[set.size()]);
     }
 
     /**
@@ -178,7 +177,7 @@ public abstract class WebService extends StorableObject implements HttpUtil {
      *         null if not available
      */
     public Session session(Request request, boolean create) {
-        Session session = (Session) Session.activeSession.get();
+        Session session = Session.activeSession.get();
         if (create && session == null) {
             String ip = request.getRemoteAddr();
             String client = request.getHeader("User-Agent");

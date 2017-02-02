@@ -70,15 +70,14 @@ public class Environment extends StorableObject {
      * @return an array of all environments found
      */
     public static Environment[] findAll(Storage storage) {
-        Object[]   objs = storage.loadAll(PATH);
-        ArrayList  list = new ArrayList(objs.length);
-
+        Object[] objs = storage.loadAll(PATH);
+        ArrayList<Environment> list = new ArrayList<>(objs.length);
         for (int i = 0; i < objs.length; i++) {
             if (objs[i] instanceof Environment) {
-                list.add(objs[i]);
+                list.add((Environment) objs[i]);
             }
         }
-        return (Environment[]) list.toArray(new Environment[list.size()]);
+        return list.toArray(new Environment[list.size()]);
     }
 
     /**

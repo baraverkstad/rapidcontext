@@ -116,7 +116,7 @@ public class PluginManager {
      * A list of all temporary files created. When destroying all
      * plug-ins, all these files are deleted.
      */
-    private ArrayList tempFiles = new ArrayList();
+    private ArrayList<File> tempFiles = new ArrayList<>();
 
     /**
      * Returns the plug-in storage path for a specified plug-in id.
@@ -456,19 +456,14 @@ public class PluginManager {
      * @throws PluginException if the plug-in loading failed
      */
     public void load(String pluginId) throws PluginException {
-        Plugin       plugin;
-        Dict         dict;
-        String       className;
-        Class        cls;
-        Constructor  constr;
-        String       msg;
+        String  msg;
 
         // Load plug-in configuration
         if (SYSTEM_PLUGIN.equals(pluginId) || LOCAL_PLUGIN.equals(pluginId)) {
             msg = "cannot force loading of system or local plug-ins";
             throw new PluginException(msg);
         }
-        dict = config(pluginId);
+        Dict dict = config(pluginId);
         if (dict == null) {
             msg = "couldn't load " + pluginId + " plugin config file";
             LOG.warning(msg);
@@ -480,11 +475,13 @@ public class PluginManager {
         loadJarFiles(pluginId);
 
         // Create plug-in instance
+        Plugin plugin;
         Library.builtInPlugin = pluginId;
-        className = dict.getString(Plugin.KEY_CLASSNAME, null);
+        String className = dict.getString(Plugin.KEY_CLASSNAME, null);
         if (className == null || className.trim().length() <= 0) {
             plugin = new Plugin(dict);
         } else {
+            Class<?> cls;
             try {
                 cls = classLoader.loadClass(className);
             } catch (Throwable e) {
@@ -499,6 +496,7 @@ public class PluginManager {
                 LOG.warning(msg);
                 throw new PluginException(msg);
             }
+            Constructor<?> constr;
             try {
                 constr = cls.getConstructor(new Class[] { Dict.class});
             } catch (Throwable e) {
@@ -606,7 +604,7 @@ public class PluginManager {
         storage.cacheClean(true);
         classLoader = new PluginClassLoader();
         while (tempFiles.size() > 0) {
-            File file = (File) tempFiles.remove(tempFiles.size() - 1);
+            File file = tempFiles.remove(tempFiles.size() - 1);
             try {
                 file.delete();
             } catch (Exception ignore) {

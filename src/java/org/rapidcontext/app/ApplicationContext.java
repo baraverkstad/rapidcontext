@@ -18,7 +18,6 @@ import java.io.File;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -158,7 +157,8 @@ public class ApplicationContext {
     /**
      * The thread call context map.
      */
-    private Map threadContext = Collections.synchronizedMap(new HashMap());
+    private Map<Thread, CallContext> threadContext =
+        Collections.synchronizedMap(new HashMap<Thread, CallContext>());
 
     /**
      * Creates and initializes the application context. If the start
@@ -324,13 +324,10 @@ public class ApplicationContext {
      * plug-in "lib" directories.
      */
     private void initPlugins() {
-        Array   list;
-        String  pluginId;
-
-        list = config.getArray("plugins");
+        Array list = config.getArray("plugins");
         for (int i = 0; i < list.size(); i++) {
             try {
-                pluginId = list.getString(i, null);
+                String pluginId = list.getString(i, null);
                 loadPlugin(pluginId);
             } catch (PluginException e) {
                 LOG.warning("failed to load plugin " +
@@ -484,18 +481,15 @@ public class ApplicationContext {
      *             or if the plug-in initialization failed
      */
     public void loadPlugin(String pluginId) throws PluginException {
-        Array   pluginList;
-        String  msg;
-
         pluginManager.load(pluginId);
-        pluginList = config.getArray("plugins");
+        Array pluginList = config.getArray("plugins");
         if (!pluginList.containsValue(pluginId)) {
             pluginList.add(pluginId);
             try {
                 storage.store(PATH_CONFIG, config);
             } catch (StorageException e) {
-                msg = "failed to update application config: " +
-                      e.getMessage();
+                String msg = "failed to update application config: " +
+                             e.getMessage();
                 throw new PluginException(msg);
             }
         }
@@ -510,17 +504,14 @@ public class ApplicationContext {
      * @throws PluginException if the plug-in deinitialization failed
      */
     public void unloadPlugin(String pluginId) throws PluginException {
-        Array   pluginList;
-        String  msg;
-
         pluginManager.unload(pluginId);
         library.clearCache();
-        pluginList = config.getArray("plugins");
+        Array pluginList = config.getArray("plugins");
         pluginList.remove(pluginList.indexOf(pluginId));
         try {
             storage.store(PATH_CONFIG, config);
         } catch (StorageException e) {
-            msg = "failed to update application config: " + e.getMessage();
+            String msg = "failed to update application config: " + e.getMessage();
             throw new PluginException(msg);
         }
     }
@@ -544,8 +535,7 @@ public class ApplicationContext {
                           StringBuffer trace)
         throws ProcedureException {
 
-        CallContext  cx = new CallContext(storage, env, library);
-
+        CallContext cx = new CallContext(storage, env, library);
         threadContext.put(Thread.currentThread(), cx);
         cx.setAttribute(CallContext.ATTRIBUTE_USER,
                         SecurityContext.currentUser());
@@ -572,15 +562,13 @@ public class ApplicationContext {
      * @param source         the call source information
      */
     public void executeAsync(String name, Object[] args, String source) {
-        CallContext  cx = new CallContext(storage, env, library);
-        Object       res;
-
+        CallContext cx = new CallContext(storage, env, library);
         threadContext.put(Thread.currentThread(), cx);
         cx.setAttribute(CallContext.ATTRIBUTE_USER,
                         SecurityContext.currentUser());
         cx.setAttribute(CallContext.ATTRIBUTE_SOURCE, source);
         try {
-            res = cx.execute(name, args);
+            Object res = cx.execute(name, args);
             cx.setAttribute(CallContext.ATTRIBUTE_RESULT, res);
         } catch (Exception e) {
             cx.setAttribute(CallContext.ATTRIBUTE_ERROR, e.getMessage());
@@ -604,7 +592,7 @@ public class ApplicationContext {
      *         null if no context was active
      */
     public CallContext findContext(Thread thread) {
-        return (CallContext) threadContext.get(thread);
+        return threadContext.get(thread);
     }
 
     /**
@@ -617,15 +605,10 @@ public class ApplicationContext {
      *         null if no context was active
      */
     public CallContext findContext(int threadId) {
-        Iterator   iter;
-        Object     obj;
-
         synchronized (threadContext) {
-            iter = threadContext.keySet().iterator();
-            while (iter.hasNext()) {
-                obj = iter.next();
-                if (obj.hashCode() == threadId) {
-                    return (CallContext) threadContext.get(obj);
+            for (Thread thread : threadContext.keySet()) {
+                if (thread.hashCode() == threadId) {
+                    return threadContext.get(thread);
                 }
             }
         }

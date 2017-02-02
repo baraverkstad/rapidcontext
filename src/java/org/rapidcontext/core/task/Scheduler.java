@@ -45,7 +45,7 @@ public class Scheduler {
     /**
      * The list of currently scheduled tasks.
      */
-    private static ArrayList tasks = new ArrayList();
+    private static ArrayList<Task> tasks = new ArrayList<>();
 
     /**
      * Schedules a recurring task. Only a single task with the same
@@ -67,7 +67,7 @@ public class Scheduler {
         }
         synchronized (tasks) {
             for (int i = 0; i < tasks.size(); i++) {
-                Task other = (Task) tasks.get(i);
+                Task other = tasks.get(i);
                 if (other.id.equals(task.id) && other.nextExecutionTime > 0L) {
                     LOG.fine("failed to schedule task '" + task.id +
                              "', already scheduled");
@@ -103,7 +103,7 @@ public class Scheduler {
     public static void unscheduleAll() {
         synchronized (tasks) {
             while (tasks.size() > 0) {
-                Task task = (Task) tasks.get(0);
+                Task task = tasks.get(0);
                 task.cancel();
             }
         }

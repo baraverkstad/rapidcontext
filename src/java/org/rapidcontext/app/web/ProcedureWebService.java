@@ -228,7 +228,7 @@ public class ProcedureWebService extends WebService {
         throws Exception {
 
         boolean isTextFormat = inputType().equalsIgnoreCase("text");
-        ArrayList args = new ArrayList();
+        ArrayList<Object> args = new ArrayList<>();
         Bindings bindings = proc.getBindings();
         String[] names = bindings.getNames();
         Dict jsonArgs = null;

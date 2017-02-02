@@ -111,7 +111,7 @@ public class SessionTerminateProcedure implements Procedure {
         Session session = null;
         String id = (String) bindings.getValue("sessionId", "");
         if (id == null || id.trim().equals("")) {
-            session = (Session) Session.activeSession.get();
+            session = Session.activeSession.get();
         } else {
             CallContext.checkWriteAccess("session/" + id);
             session = Session.find(cx.getStorage(), id);

@@ -101,7 +101,7 @@ public class JsSerializer {
         } else if (obj instanceof Date) {
             buffer.append("\"@" + ((Date) obj).getTime() + "\"");
         } else if (obj instanceof Class) {
-            buffer.append(TextEncoding.encodeJson(((Class) obj).getName()));
+            buffer.append(TextEncoding.encodeJson(((Class<?>) obj).getName()));
         } else if (obj instanceof StorableObject) {
             serialize(((StorableObject) obj).serialize(), indent, buffer);
         } else {

@@ -144,7 +144,7 @@ public class ServletApplication extends HttpServlet {
                     LOG.fine(ip(request) + "Processed during web service matching");
                 }
             }
-            Session s = (Session) Session.activeSession.get();
+            Session s = Session.activeSession.get();
             if ((s == null || !s.isValid()) && request.getSessionId() != null) {
                 request.setSessionId(null, 0);
             }
@@ -170,7 +170,7 @@ public class ServletApplication extends HttpServlet {
      * it if newly created.
      */
     private void processAuthReset() {
-        Session session = (Session) Session.activeSession.get();
+        Session session = Session.activeSession.get();
         Session.activeSession.set(null);
         if (session != null && !session.isValid()) {
             LOG.fine("session " + session.id() + " invalided (expired on " +

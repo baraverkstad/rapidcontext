@@ -22,7 +22,6 @@ import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeSet;
 import java.util.logging.Level;
@@ -73,7 +72,9 @@ public abstract class HttpProcedure extends AddOnProcedure {
      *
      * @throws ProcedureException if the connection couldn't be created
      */
-    protected static HttpURLConnection setup(URL url, Map headers, boolean data)
+    protected static HttpURLConnection setup(URL url,
+                                             Map<String,String> headers,
+                                             boolean data)
     throws ProcedureException {
 
         HttpURLConnection con;
@@ -97,10 +98,8 @@ public abstract class HttpProcedure extends AddOnProcedure {
         con.setRequestProperty("Accept-Encoding", "identity");
         // TODO: Extract correct version number from JAR file
         con.setRequestProperty("User-Agent", "RapidContext/1.0");
-        Iterator iter = headers.keySet().iterator();
-        while (iter.hasNext()) {
-            String str = (String) iter.next();
-            con.setRequestProperty(str, (String) headers.get(str));
+        for (String key : headers.keySet()) {
+            con.setRequestProperty(key, headers.get(key));
         }
         if (data && con.getRequestProperty("Content-Type") == null) {
             con.setRequestProperty("Content-Type", Mime.WWW_FORM[0]);
@@ -165,11 +164,10 @@ public abstract class HttpProcedure extends AddOnProcedure {
                 byte[] dataBytes = data.getBytes("UTF-8");
                 con.setRequestProperty("Content-Length", "" + dataBytes.length);
                 logRequest(cx, con, data);
-                OutputStream os = con.getOutputStream();
-                try {
+                try (
+                    OutputStream os = con.getOutputStream();
+                ) {
                     os.write(dataBytes);
-                } finally {
-                    os.close();
                 }
             } else {
                 logRequest(cx, con, data);
@@ -328,10 +326,8 @@ public abstract class HttpProcedure extends AddOnProcedure {
             buffer.append(" ");
             buffer.append(con.getURL());
             buffer.append("\n");
-            TreeSet keys = new TreeSet(con.getRequestProperties().keySet());
-            Iterator iter = keys.iterator();
-            while (iter.hasNext()) {
-                String key = (String) iter.next();
+            TreeSet<String> keys = new TreeSet<>(con.getRequestProperties().keySet());
+            for (String key : keys) {
                 buffer.append(key);
                 buffer.append(": ");
                 buffer.append(con.getRequestProperty(key));

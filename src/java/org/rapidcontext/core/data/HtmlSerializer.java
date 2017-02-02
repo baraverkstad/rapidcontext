@@ -69,7 +69,7 @@ public class HtmlSerializer {
         } else if (obj instanceof Date) {
             buffer.append(DateUtil.formatIsoDateTime((Date) obj));
         } else if (obj instanceof Class) {
-            serialize(((Class) obj).getName(), buffer);
+            serialize(((Class<?>) obj).getName(), buffer);
         } else if (obj instanceof StorableObject) {
             serialize(((StorableObject) obj).serialize(), buffer);
         } else {

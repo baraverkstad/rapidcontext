@@ -51,7 +51,7 @@ public class Library {
     /**
      * The map of procedure type names and implementation classes.
      */
-    private static HashMap types = new HashMap();
+    private static HashMap<String,Class<?>> types = new HashMap<>();
 
     /**
      * The identifier of the currently loading plug-in.
@@ -71,21 +71,21 @@ public class Library {
      * @see #addBuiltIn(Procedure)
      * @see #removeBuiltIn(String)
      */
-    private HashMap builtIns = new HashMap();
+    private HashMap<String,Procedure> builtIns = new HashMap<>();
 
     /**
      * The map of built-in procedure plugin identifiers. The map is
      * indexed by the procedure name and contains the plug-in
      * identifier for the procedure.
      */
-    private HashMap builtInPlugins = new HashMap();
+    private HashMap<String,String> builtInPlugins = new HashMap<>();
 
     /**
      * The map of cached procedures. The map is indexed by the
      * procedure name and is populated automatically from the data
      * store upon procedure requests.
      */
-    private HashMap cache = new HashMap();
+    private HashMap<String,AddOnProcedure> cache = new HashMap<>();
 
     /**
      * The procedure call interceptor.
@@ -106,13 +106,11 @@ public class Library {
      *
      * @see #unregisterType(String)
      */
-    public static void registerType(String type, Class cls)
-        throws ProcedureException {
-
-        String  msg;
+    public static void registerType(String type, Class<?> cls)
+    throws ProcedureException {
 
         if (types.containsKey(type)) {
-            msg = "procedure type " + type + " is already registered";
+            String msg = "procedure type " + type + " is already registered";
             LOG.warning(msg);
             throw new ProcedureException(msg);
         }
@@ -141,8 +139,7 @@ public class Library {
      * @return an array with all procedure type names
      */
     public static String[] getTypes() {
-        String[]  res = new String[types.size()];
-
+        String[] res = new String[types.size()];
         types.keySet().toArray(res);
         return res;
     }
@@ -158,10 +155,8 @@ public class Library {
      *         null if the procedure creation failed
      */
     public static Bindings getDefaultBindings(String type) {
-        AddOnProcedure  proc;
-
         try {
-            proc = (AddOnProcedure) ((Class) types.get(type)).newInstance();
+            AddOnProcedure proc = (AddOnProcedure) types.get(type).newInstance();
             return proc.getBindings();
         } catch (Exception ignore) {
             return null;
@@ -198,12 +193,12 @@ public class Library {
      * @throws ProcedureException if the procedures couldn't be listed
      */
     public String[] getProcedureNames() throws ProcedureException {
-        LinkedHashSet set = new LinkedHashSet(builtIns.keySet());
+        LinkedHashSet<String> set = new LinkedHashSet<>(builtIns.keySet());
         Metadata[] objs = storage.lookupAll(PATH_PROC);
         for (int i = 0; i < objs.length; i++) {
             set.add(objs[i].path().name());
         }
-        return (String[]) set.toArray(new String[set.size()]);
+        return set.toArray(new String[set.size()]);
     }
 
     /**
@@ -217,18 +212,15 @@ public class Library {
      *             or failed to load correctly
      */
     public Procedure getProcedure(String name) throws ProcedureException {
-        AddOnProcedure  proc;
-        Metadata        meta;
-
         // TODO: remove this legacy conversion before 1.0
         if (name.startsWith("ReTracer.")) {
             name = "System" + name.substring(8);
         }
         if (builtIns.containsKey(name)) {
-            return (Procedure) builtIns.get(name);
+            return builtIns.get(name);
         }
-        proc = (AddOnProcedure) cache.get(name);
-        meta = storage.lookup(PATH_PROC.child(name, false));
+        AddOnProcedure proc = cache.get(name);
+        Metadata meta = storage.lookup(PATH_PROC.child(name, false));
         if (meta == null) {
             throw new ProcedureException("no procedure '" + name + "' found");
         }
@@ -250,7 +242,7 @@ public class Library {
     public String getProcedurePluginId(String name) {
         Metadata meta = storage.lookup(PATH_PROC.child(name, false));
         if (builtInPlugins.containsKey(name)) {
-            return (String) builtInPlugins.get(name);
+            return builtInPlugins.get(name);
         } else if (meta != null) {
             return PluginManager.pluginId(meta);
         }
@@ -303,19 +295,13 @@ public class Library {
      *
      * @throws ProcedureException if the procedure couldn't be loaded
      */
-    public Procedure loadProcedure(String name)
-        throws ProcedureException {
-
-        AddOnProcedure  proc;
-        Dict            data;
-        String          msg;
-
-        data = (Dict) storage.load(PATH_PROC.child(name, false));
+    public Procedure loadProcedure(String name) throws ProcedureException {
+        Dict data = (Dict) storage.load(PATH_PROC.child(name, false));
         if (data == null) {
-            msg = "no procedure '" + name + "' found";
+            String msg = "no procedure '" + name + "' found";
             throw new ProcedureException(msg);
         }
-        proc = createProcedure(data);
+        AddOnProcedure proc = createProcedure(data);
         cache.put(proc.getName(), proc);
         return proc;
     }
@@ -375,18 +361,13 @@ public class Library {
      *             created due to errors in the data object
      */
     private AddOnProcedure createProcedure(Dict data) throws ProcedureException {
-        AddOnProcedure  proc;
-        String          name;
-        String          type;
-        String          msg;
-        Object          obj;
-
-        name = data.getString("name", null);
+        String msg;
+        String name = data.getString("name", null);
         if (name == null) {
             msg = "failed to find required procedure property 'name'";
             throw new ProcedureException(msg);
         }
-        type = data.getString("type", null);
+        String type = data.getString("type", null);
         if (type == null) {
             msg = "failed to create procedure '" + name + "': " +
                   "missing required procedure property 'type'";
@@ -397,25 +378,23 @@ public class Library {
             throw new ProcedureException(msg);
         }
         try {
-            obj = ((Class) types.get(type)).newInstance();
+            Object obj = types.get(type).newInstance();
+            AddOnProcedure proc = (AddOnProcedure) obj;
+            proc.setData(data);
+            return proc;
         } catch (IllegalAccessException e) {
             msg = "failed to create procedure '" + name + "' as type '" +
                   type + "': illegal access to class or constructor";
+            throw new ProcedureException(msg);
+        } catch (ClassCastException e) {
+            msg = "failed to create procedure '" + name + "' as type '" +
+                  type + "': class doesn't subclass AddOnProcedure";
             throw new ProcedureException(msg);
         } catch (Throwable e) {
             msg = "failed to create procedure '" + name + "' as type '" +
                   type + "': " + e.toString();
             throw new ProcedureException(msg);
         }
-        try {
-            proc = (AddOnProcedure) obj;
-        } catch (ClassCastException e) {
-            msg = "failed to create procedure '" + name + "' as type '" +
-                  type + "': class doesn't subclass AddOnProcedure";
-            throw new ProcedureException(msg);
-        }
-        proc.setData(data);
-        return proc;
     }
 
     /**
