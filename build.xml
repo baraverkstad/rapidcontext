@@ -79,12 +79,11 @@
     <javac srcdir="src/java"
            destdir="classes"
            classpathref="build.classpath"
-           target="1.5"
-           source="1.5"
+           target="1.7"
+           source="1.7"
            debug="on"
            deprecation="on">
-      <!-- TODO: Remove this hack once Java behaves properly -->
-      <compilerarg value="-Xbootclasspath/p:${basedir}/lib/js-1.7R3.jar" />
+      <compilerarg value="-Xlint:unchecked"/>
     </javac>
     <copy file="build.properties" todir="classes/org/rapidcontext/app/"/>
     <propertyfile file="classes/org/rapidcontext/app/build.properties">

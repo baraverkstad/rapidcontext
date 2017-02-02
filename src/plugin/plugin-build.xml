@@ -68,11 +68,13 @@
     <javac srcdir="src"
            destdir="classes"
            classpathref="build.classpath"
-           target="1.5"
-           source="1.5"
+           target="1.7"
+           source="1.7"
            debug="on"
            deprecation="on"
-           includeantruntime="off" />
+           includeantruntime="off">
+      <compilerarg value="-Xlint:unchecked"/>
+    </javac>
     <mkdir dir="lib" />
     <jar jarfile="lib/${plugin.id}-${build.version}.jar" level="9">
       <fileset dir="classes" />
