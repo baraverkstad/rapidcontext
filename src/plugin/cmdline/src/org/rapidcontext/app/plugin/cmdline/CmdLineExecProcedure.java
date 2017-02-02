@@ -1,6 +1,6 @@
 /**
  * RapidContext command-line plug-in <http://www.rapidcontext.com/>
- * Copyright (c) 2008-2013 Per Cederberg. All rights reserved.
+ * Copyright (c) 2008-2017 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the BSD license.

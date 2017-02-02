@@ -1,4 +1,17 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  RapidContext <http://www.rapidcontext.com/>
+  Copyright (c) 2007-2017 Per Cederberg. All rights reserved.
+
+  This program is free software: you can redistribute it and/or
+  modify it under the terms of the BSD license.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+  See the RapidContext LICENSE for more details.
+-->
 
 <project default="package">
 
@@ -312,6 +325,20 @@
         <exclude name="${build.title}.app/**/bin/*" />
       </zipfileset>
     </zip>
+  </target>
+
+
+<!-- TOOLING & HELPER TARGETS -->
+
+  <target name="util-copyright" description="Updates copyright years in sources">
+    <replaceregexp match="(20\d\d)-20\d\d" replace="\1-2017" flags="g" byline="true">
+      <fileset dir=".">
+        <patternset refid="pattern.srcfiles" />
+        <exclude name="doc/external/**"/>
+        <exclude name="src/plugin/legacy/**"/>
+        <exclude name="src/plugin/system/files/js/crypto-*.js"/>
+      </fileset>
+    </replaceregexp>
   </target>
 
 </project>
