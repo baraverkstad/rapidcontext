@@ -160,19 +160,20 @@ public abstract class HttpProcedure extends AddOnProcedure {
     throws ProcedureException {
 
         try {
+            byte[] bytes = null;
             if (data != null && data.length() > 0) {
-                byte[] dataBytes = data.getBytes("UTF-8");
-                con.setRequestProperty("Content-Length", "" + dataBytes.length);
-                logRequest(cx, con, data);
+                bytes = data.getBytes("UTF-8");
+                con.setRequestProperty("Content-Length", "" + bytes.length);
+            }
+            logRequest(cx, con, data);
+            con.connect();
+            if (bytes != null) {
                 try (
                     OutputStream os = con.getOutputStream();
                 ) {
-                    os.write(dataBytes);
+                    os.write(bytes);
                 }
-            } else {
-                logRequest(cx, con, data);
             }
-            con.connect();
         } catch (IOException e) {
             String msg = "http connection failed: " + e.getMessage();
             LOG.log(Level.INFO, msg, e);
