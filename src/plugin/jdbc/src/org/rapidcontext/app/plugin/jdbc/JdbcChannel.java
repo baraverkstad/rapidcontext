@@ -284,12 +284,10 @@ public class JdbcChannel extends Channel {
     protected Array executeStatement(PreparedStatement stmt)
     throws ConnectionException {
 
-        ResultSet set = null;
         try {
             Array res = new Array(10);
             stmt.executeUpdate();
-            try {
-                set = stmt.getGeneratedKeys();
+            try (ResultSet set = stmt.getGeneratedKeys()) {
                 while (set != null && set.next()) {
                     res.add(set.getString(1));
                 }
@@ -303,9 +301,6 @@ public class JdbcChannel extends Channel {
             throw new ConnectionException(msg);
         } finally {
             try {
-                if (set != null) {
-                    set.close();
-                }
                 stmt.close();
             } catch (SQLException ignore) {
                 // Do nothing
@@ -383,22 +378,15 @@ public class JdbcChannel extends Channel {
     protected Object executeQuery(PreparedStatement stmt, String flags)
     throws ConnectionException {
 
-        ResultSet set = null;
         try {
-            set = stmt.executeQuery();
-            return createResults(set, flags);
+            try (ResultSet set = stmt.executeQuery()) {
+                return createResults(set, flags);
+            }
         } catch (SQLException e) {
             String msg = "failed to execute query: " + e.getMessage();
             LOG.warning(prefix + msg);
             throw new ConnectionException(msg);
         } finally {
-            if (set != null) {
-                try {
-                    set.close();
-                } catch (SQLException ignore) {
-                    // Do nothing
-                }
-            }
             try {
                 stmt.close();
             } catch (SQLException ignore) {
