@@ -126,7 +126,7 @@ public class StorageWriteProcedure implements Procedure {
             throw new ProcedureException("path cannot be empty");
         }
         CallContext.checkWriteAccess(path);
-        LOG.info("writing to storage path " + path);
+        LOG.fine("writing to storage path " + path);
         Object data = bindings.getValue("data", "");
         boolean isString = data instanceof String;
         boolean isDict = data instanceof Dict;

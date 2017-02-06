@@ -127,7 +127,7 @@ public class StorageDeleteProcedure implements Procedure {
     public static boolean delete(Path path) {
         Storage storage = ApplicationContext.getInstance().getStorage();
         try {
-            LOG.info("deleting storage path " + path);
+            LOG.fine("deleting storage path " + path);
             storage.remove(path);
             return true;
         } catch (Exception e) {
