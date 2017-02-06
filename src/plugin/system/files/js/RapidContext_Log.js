@@ -48,6 +48,15 @@
     // The current log context
     var logContext = null;
 
+    // The last published log event
+    var publishedId = -1;
+
+    // The log levels filterer out for publishing
+    var publishLevels = /error|warn/;
+
+    // The currently running publisher timer
+    var publisherTimer = null;
+
     /**
      * Clears the log console and the array of stored messages.
      *
@@ -344,6 +353,45 @@
         while (logHistory.length > 100) {
             logHistory.shift();
         }
+        if (publisherTimer == null) {
+            publisherTimer = setTimeout(_publishEvents, 100);
+        }
+    }
+
+    /**
+     * Publishes stored events (above a threshold level) to the server.
+     *
+     * @private
+     */
+    function _publishEvents() {
+        var events = [];
+        var lastId = 0;
+        for (var i = 0; i < logHistory.length; i++) {
+            var evt = logHistory[i];
+            lastId = evt.id;
+            if (evt.id > publishedId && publishLevels.test(evt.level)) {
+                events.push(evt);
+            }
+        }
+        if (events.length <= 0) {
+            publishedId = lastId;
+            publisherTimer = null;
+            return;
+        }
+        var opts = {
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(events)
+        };
+        var d = $.ajax("rapidcontext/log", opts);
+        d.then(function (res) {
+            publishedId = lastId;
+            publisherTimer = setTimeout(_publishEvents, 10000);
+        });
+        d.fail(function (err) {
+            logError("failed to publish eventlog", err);
+            publisherTimer = setTimeout(_publishEvents, 30000);
+        });
     }
 
     /**
