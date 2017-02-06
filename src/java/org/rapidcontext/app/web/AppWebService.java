@@ -85,14 +85,17 @@ public class AppWebService extends FileWebService {
     public static final String KEY_HEADER = "header";
 
     /**
-     * The procedure web service used for the to "rapidcontext/procedure"
-     * URLs.
+     * The log web service used for the "rapidcontext/log" URLs.
+     */
+    protected LogWebService logger;
+
+    /**
+     * The procedure web service used for the "rapidcontext/procedure/" URLs.
      */
     protected ProcedureWebService procedure;
 
     /**
-     * The storage web service used for the to "rapidcontext/storage"
-     * URLs.
+     * The storage web service used for the "rapidcontext/storage/" URLs.
      */
     protected StorageWebService storage;
 
@@ -157,6 +160,7 @@ public class AppWebService extends FileWebService {
         dict.set(KEY_APP, appId());
         dict.set(KEY_TITLE, title());
         dict.set(KEY_LANG, lang());
+        logger = new LogWebService("id", "type", new Dict());
         procedure = new ProcedureWebService("id", "type", new Dict());
         storage = new StorageWebService("id", "type", new Dict());
     }
@@ -228,7 +232,9 @@ public class AppWebService extends FileWebService {
      * @see #methods(Request)
      */
     protected String[] methodsImpl(Request request) {
-        if (request.matchPath("rapidcontext/procedure/")) {
+        if (request.matchPath("rapidcontext/log")) {
+            return logger.methodsImpl(request);
+        } else if (request.matchPath("rapidcontext/procedure/")) {
             return procedure.methodsImpl(request);
         } else if (request.matchPath("rapidcontext/storage/")) {
             return storage.methodsImpl(request);
@@ -248,7 +254,9 @@ public class AppWebService extends FileWebService {
      * @param request the request to process
      */
     public void process(Request request) {
-        if (request.matchPath("rapidcontext/procedure/")) {
+        if (request.matchPath("rapidcontext/log")) {
+            logger.process(request);
+        } else if (request.matchPath("rapidcontext/procedure/")) {
             procedure.process(request);
         } else if (request.matchPath("rapidcontext/storage/")) {
             storage.process(request);
