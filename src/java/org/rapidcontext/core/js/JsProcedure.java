@@ -96,24 +96,17 @@ public class JsProcedure extends AddOnProcedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        Context     scriptContext;
-        Scriptable  scope;
-        String[]    names;
-        int         type;
-        Object      value;
-
         if (script == null) {
             compile();
         }
-        scriptContext = ContextFactory.getGlobal().enterContext();
+        Context scriptContext = ContextFactory.getGlobal().enterContext();
         try {
-            scriptContext.setLanguageVersion(Context.VERSION_1_7);
-            // TODO: Adjust the standard objects available here
-            scope = scriptContext.initStandardObjects();
-            names = bindings.getNames();
+            scriptContext.setLanguageVersion(Context.VERSION_ES6);
+            Scriptable scope = scriptContext.initStandardObjects();
+            String[] names = bindings.getNames();
             for (int i = 0; i < names.length; i++) {
-                type = bindings.getType(names[i]);
-                value = bindings.getValue(names[i], null);
+                int type = bindings.getType(names[i]);
+                Object value = bindings.getValue(names[i], null);
                 if (BINDING_CODE.equals(names[i])) {
                     // Do nothing
                 } else if (type == Bindings.DATA) {
@@ -129,9 +122,9 @@ public class JsProcedure extends AddOnProcedure {
                     ScriptableObject.putProperty(scope, names[i], value);
                 }
             }
-            value = script.exec(scriptContext, scope);
+            Object res = script.exec(scriptContext, scope);
             boolean unwrapResult = (cx.getCallStack().height() <= 1);
-            return unwrapResult ? JsSerializer.unwrap(value) : value;
+            return unwrapResult ? JsSerializer.unwrap(res) : res;
         } catch (Exception e) {
             throw createException(e);
         } finally {
