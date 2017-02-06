@@ -93,7 +93,7 @@ public class JdbcChannel extends Channel {
         this.sqlPing = parent.ping();
         this.timeout = parent.timeout();
         try {
-            LOG.info(prefix + "creating connection for " + parent.url());
+            LOG.fine(prefix + "creating connection for " + parent.url());
             DriverManager.setLoginTimeout(timeout);
             con = parent.driver().connect(parent.url(), props);
             con.setAutoCommit(parent.autoCommit());
@@ -179,7 +179,7 @@ public class JdbcChannel extends Channel {
      */
     protected void close() {
         try {
-            LOG.info(prefix + "closing connection");
+            LOG.fine(prefix + "closing connection");
             con.close();
             LOG.fine(prefix + "done closing connection");
         } catch (SQLException e) {
