@@ -112,7 +112,7 @@ public class LogWebService extends WebService{
             }
             request.sendText(Mime.TEXT[0], "OK");
         } catch (Exception e) {
-            request.sendText(Mime.TEXT[0], "ERROR: " + e.toString());
+            request.sendError(STATUS.BAD_REQUEST, Mime.TEXT[0], "ERROR: " + e.toString());
         }
     }
 
@@ -192,24 +192,22 @@ public class LogWebService extends WebService{
             buffer.append(" [");
             buffer.append(request.getRemoteAddr());
             buffer.append("]: ");
-            buffer.append(StringUtils.substringBefore(msg, "\n"));
-            Session s = Session.activeSession.get();
-            if (s != null) {
-                buffer.append("\n  session = ");
-                buffer.append(s.id());
-                buffer.append("\n  user = ");
-                buffer.append(s.userId());
-            }
-            buffer.append("\n  userAgent = ");
-            buffer.append(request.getHeader("User-Agent"));
-            if (StringUtils.contains(msg, '\n')) {
-                buffer.append("\n");
-                buffer.append(StringUtils.substringAfter(msg, "\n"));
-            }
+            buffer.append(msg);
             if (data != null) {
                 buffer.append("\n");
                 buffer.append(data);
             }
+            Session s = Session.activeSession.get();
+            if (s != null) {
+                buffer.append("\n# session = ");
+                buffer.append(s.id());
+                if (StringUtils.isNotEmpty(s.userId())) {
+                    buffer.append("\n# user = ");
+                    buffer.append(s.userId());
+                }
+            }
+            buffer.append("\n# userAgent = ");
+            buffer.append(request.getHeader("User-Agent"));
             LOG.log(level, buffer.toString());
         }
     }
