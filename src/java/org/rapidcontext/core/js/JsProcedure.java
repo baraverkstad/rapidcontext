@@ -99,10 +99,12 @@ public class JsProcedure extends AddOnProcedure {
         if (script == null) {
             compile();
         }
-        Context scriptContext = ContextFactory.getGlobal().enterContext();
+        Context scriptContext = Context.enter();
         try {
             scriptContext.setLanguageVersion(Context.VERSION_ES6);
             Scriptable scope = scriptContext.initStandardObjects();
+            Object console = Context.javaToJS(new ConsoleObject(getName()), scope);
+            ScriptableObject.putProperty(scope, "console", console);
             String[] names = bindings.getNames();
             for (int i = 0; i < names.length; i++) {
                 int type = bindings.getType(names[i]);
