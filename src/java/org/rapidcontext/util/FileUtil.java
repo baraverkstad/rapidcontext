@@ -99,36 +99,24 @@ public abstract class FileUtil {
      * Copies the data from an input stream to an output stream. Both
      * the streams will be closed when this function returns.
      *
-     * @param is             the input stream to read
-     * @param os             the output stream to write
+     * @param input          the input stream to read
+     * @param output         the output stream to write
      *
      * @throws IOException if the input stream couldn't be read or if
      *             the output stream couldn't be written
      */
-    public static void copy(InputStream is, OutputStream os)
+    public static void copy(InputStream input, OutputStream output)
     throws IOException {
 
-        byte[]  buffer = new byte[16384];
-        int     size;
-
-        try {
+        try (InputStream is = input; OutputStream os = output) {
+            byte[] buffer = new byte[16384];
+            int size;
             do {
                 size = is.read(buffer);
                 if (size > 0) {
                     os.write(buffer, 0, size);
                 }
             } while (size > 0);
-        } finally {
-            try {
-                is.close();
-            } catch (IOException ignore) {
-                // Do nothing
-            }
-            try {
-                os.close();
-            } catch (IOException ignore) {
-                // Do nothing
-            }
         }
     }
 
