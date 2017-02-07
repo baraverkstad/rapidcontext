@@ -32,6 +32,7 @@ import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.rapidcontext.core.data.Binary;
@@ -941,36 +942,36 @@ public class Request implements HttpUtil {
     /**
      * Sends the text data response to the underlying HTTP response
      * object.
-     *
-     * @throws IOException if an IO error occurred while attempting
-     *             to commit the response
      */
-    private void commitText() throws IOException {
+    private void commitText() {
         response.setStatus(responseCode);
         commitHeaders(false, 0);
         response.setContentType(responseMimeType);
-        if (responseData == null) {
-            response.setContentLength(0);
-            logResponse();
-        } else {
-            byte[] data = ((String) responseData).getBytes("UTF-8");
-            response.setContentLength(data.length);
-            logResponse();
+        byte[] data = ArrayUtils.EMPTY_BYTE_ARRAY;
+        if (responseData instanceof String) {
+            try {
+                data = ((String) responseData).getBytes("UTF-8");
+            } catch (UnsupportedEncodingException ignore) {
+                // Silly Java exception doesn't happen
+            }
+        }
+        response.setContentLength(data.length);
+        logResponse();
+        if (data.length > 0) {
             try (
                 OutputStream os = response.getOutputStream();
             ) {
                 os.write(data);
+            } catch (IOException e) {
+                LOG.log(Level.FINE, "IO error processing " + toString(), e);
             }
         }
     }
 
     /**
      * Sends the file response to the underlying HTTP response object.
-     *
-     * @throws IOException if an IO error occurred while attempting to
-     *             commit the response
      */
-    private void commitBinary() throws IOException {
+    private void commitBinary() {
         Binary data = (Binary) responseData;
         long modified = request.getDateHeader(HEADER.IF_MODIFIED_SINCE);
         if (modified != -1 && data.lastModified() < modified + 1000) {
@@ -986,7 +987,11 @@ public class Request implements HttpUtil {
         }
         logResponse();
         if (!responseHeadersOnly) {
-            FileUtil.copy(data.openStream(), response.getOutputStream());
+            try {
+                FileUtil.copy(data.openStream(), response.getOutputStream());
+            } catch (IOException e) {
+                LOG.log(Level.FINE, "IO error processing " + toString(), e);
+            }
         }
     }
 
