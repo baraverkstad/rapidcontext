@@ -323,7 +323,7 @@ public class AppWebService extends FileWebService {
             if (!SecurityContext.hasReadAccess(appPath.toString())) {
                 String msg = "unauthorized access to app " + appId +
                              ", launching login app " + loginAppId;
-                LOG.info(msg);
+                LOG.fine(msg);
                 appId = loginAppId;
             }
         } else {
