@@ -148,7 +148,7 @@ public class ScriptApplication {
             Object res = ctx.execute(name, args, source, traceBuffer);
             System.out.println(JsSerializer.serialize(res, true));
         } catch (ProcedureException e) {
-            System.err.println("ERROR: " + e.getMessage());
+            System.out.println("ERROR: " + e.getMessage());
         }
         if (traceBuffer != null) {
             System.out.println();
