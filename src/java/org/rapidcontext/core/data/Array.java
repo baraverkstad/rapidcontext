@@ -125,6 +125,16 @@ public class Array {
     }
 
     /**
+     * Checks if this array is sealed.
+     *
+     * @return true if this array has been sealed, or
+     *         false otherwise
+     */
+    public boolean isSealed() {
+        return sealed;
+    }
+
+    /**
      * Seals this array and prohibits any further modifications.
      * If the seal is applied recursively, any dictionary or array
      * values in this object will also be sealed. Once sealed, this

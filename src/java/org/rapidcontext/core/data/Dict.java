@@ -130,6 +130,16 @@ public class Dict {
     }
 
     /**
+     * Checks if this dictionary is sealed.
+     *
+     * @return true if this dictionary has been sealed, or
+     *         false otherwise
+     */
+    public boolean isSealed() {
+        return sealed;
+    }
+
+    /**
      * Seals this dictionary and prohibits further modifications. If
      * the seal is applied recursively, any dictionary or array
      * values in this object will also be sealed. Once sealed, this
