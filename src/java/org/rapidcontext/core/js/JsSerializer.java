@@ -19,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang.StringUtils;
+import org.mozilla.javascript.ConsString;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContextFactory;
 import org.mozilla.javascript.NativeArray;
@@ -273,6 +274,8 @@ public class JsSerializer {
             return null;
         } else if (obj instanceof DataWrapper) {
             return unwrap(((DataWrapper) obj).getData());
+        } else if (obj instanceof ConsString) {
+            return obj.toString();
         } else if (obj instanceof NativeArray) {
             NativeArray nativeArr = (NativeArray) obj;
             int length = (int) nativeArr.getLength();
