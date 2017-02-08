@@ -18,7 +18,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.mozilla.javascript.Context;
-import org.mozilla.javascript.ContextFactory;
 import org.mozilla.javascript.Script;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
@@ -102,7 +101,7 @@ public class JsProcedure extends AddOnProcedure {
         Context scriptContext = Context.enter();
         try {
             scriptContext.setLanguageVersion(Context.VERSION_ES6);
-            Scriptable scope = scriptContext.initStandardObjects();
+            Scriptable scope = scriptContext.initSafeStandardObjects();
             Object console = Context.javaToJS(new ConsoleObject(getName()), scope);
             ScriptableObject.putProperty(scope, "console", console);
             String[] names = bindings.getNames();
@@ -150,9 +149,9 @@ public class JsProcedure extends AddOnProcedure {
         StringBuffer    code = new StringBuffer();
         int             idx;
 
-        cx = ContextFactory.getGlobal().enterContext();
+        cx = Context.enter();
         try {
-            cx.setLanguageVersion(Context.VERSION_1_7);
+            cx.setLanguageVersion(Context.VERSION_ES6);
             cx.setErrorReporter(errorHandler);
             str = (String) getBindings().getValue(BINDING_CODE);
             lines = str.split("\n");
