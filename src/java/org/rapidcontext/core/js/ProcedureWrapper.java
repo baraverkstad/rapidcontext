@@ -19,6 +19,7 @@ import org.mozilla.javascript.Function;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.WrappedException;
+import org.mozilla.javascript.Wrapper;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
@@ -30,7 +31,7 @@ import org.rapidcontext.core.proc.ProcedureException;
  * @author   Per Cederberg
  * @version  1.0
  */
-class ProcedureWrapper implements Function {
+class ProcedureWrapper implements Function, Wrapper {
 
     /**
      * The procedure library.
@@ -277,5 +278,14 @@ class ProcedureWrapper implements Function {
                                 Scriptable scope,
                                 Object[] args) {
         return null;
+    }
+
+    /**
+     * Returns the wrapped object.
+     *
+     * @return the unwrapped object
+     */
+    public Object unwrap() {
+        return proc;
     }
 }

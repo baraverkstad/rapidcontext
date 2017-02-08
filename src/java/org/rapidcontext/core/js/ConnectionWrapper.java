@@ -22,6 +22,7 @@ import org.mozilla.javascript.EvaluatorException;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.Wrapper;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.type.Channel;
 
@@ -32,7 +33,7 @@ import org.rapidcontext.core.type.Channel;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class ConnectionWrapper implements Scriptable {
+public class ConnectionWrapper implements Scriptable, Wrapper {
 
     /**
      * The procedure call context in use.
@@ -260,6 +261,15 @@ public class ConnectionWrapper implements Scriptable {
      */
     public boolean hasInstance(Scriptable instance) {
         return false;
+    }
+
+    /**
+     * Returns the wrapped object.
+     *
+     * @return the unwrapped object
+     */
+    public Object unwrap() {
+        return channel;
     }
 
 
