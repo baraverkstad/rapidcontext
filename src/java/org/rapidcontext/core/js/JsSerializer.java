@@ -25,7 +25,9 @@ import org.mozilla.javascript.ContextFactory;
 import org.mozilla.javascript.NativeArray;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.Undefined;
+import org.mozilla.javascript.UniqueTag;
 import org.mozilla.javascript.WrappedException;
+import org.mozilla.javascript.Wrapper;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.TextEncoding;
@@ -246,8 +248,10 @@ public class JsSerializer {
      * @see org.rapidcontext.core.data.Dict
      */
     public static Object wrap(Object obj, Scriptable scope) {
-        if (obj instanceof Dict || obj instanceof Array) {
-            return new DataWrapper(obj, scope);
+        if (obj instanceof Dict) {
+            return new DictWrapper((Dict) obj, scope);
+        } else if (obj instanceof Array) {
+            return new ArrayWrapper((Array) obj, scope);
         } else {
             return obj;
         }
@@ -270,10 +274,12 @@ public class JsSerializer {
      * @see org.rapidcontext.core.data.Dict
      */
     public static Object unwrap(Object obj) {
-        if (obj instanceof Undefined || obj == Scriptable.NOT_FOUND) {
+        if (obj == null || obj == UniqueTag.NULL_VALUE) {
             return null;
-        } else if (obj instanceof DataWrapper) {
-            return unwrap(((DataWrapper) obj).getData());
+        } else if (obj instanceof Undefined || obj == UniqueTag.NOT_FOUND) {
+            return null;
+        } else if (obj instanceof Wrapper) {
+            return ((Wrapper) obj).unwrap();
         } else if (obj instanceof ConsString) {
             return obj.toString();
         } else if (obj instanceof NativeArray) {
@@ -299,22 +305,6 @@ public class JsSerializer {
                 dict.set(str, unwrap(value));
             }
             return dict;
-        } else if (obj instanceof Array) {
-            Array oldArr = (Array) obj;
-            Array newArr = new Array(oldArr.size());
-            for (int i = 0; i < oldArr.size(); i++) {
-                newArr.set(i, unwrap(oldArr.get(i)));
-            }
-            return newArr;
-        } else if (obj instanceof Dict) {
-            Dict oldDict = (Dict) obj;
-            Dict newDict = new Dict(oldDict.size());
-            String[] keys = oldDict.keys();
-            for (int i = 0; i < keys.length; i++) {
-                String key = keys[i].toString();
-                newDict.set(key, unwrap(oldDict.get(key)));
-            }
-            return newDict;
         } else {
             return obj;
         }
