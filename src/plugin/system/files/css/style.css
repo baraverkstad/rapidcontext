@@ -554,6 +554,15 @@ pre.code.box {
 .box.yellow .box-icon {
     color: #DDDDBB;
 }
+.box.orange {
+    border-color: #FFEEAA;
+    background-color: #F8F0CC;
+    background-image: linear-gradient(to bottom, #FFFEF0, #F8F0CC);
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFEF0', endColorstr='#F8F0CC')";
+}
+.box.orange .box-icon {
+    color: #EEDDAA;
+}
 .red,
 .box.red {
     border-color: #EECCCC;
