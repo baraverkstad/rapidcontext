@@ -541,7 +541,7 @@ pre.code.box {
     background-image: linear-gradient(to bottom, #FDFDFD, #EEEEEE);
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FDFDFD', endColorstr='#EEEEEE')";
 }
-.box.yellow .box-icon {
+.box.grey .box-icon {
     color: #DDDDDD;
 }
 .yellow,
