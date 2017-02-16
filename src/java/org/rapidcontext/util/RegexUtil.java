@@ -26,9 +26,9 @@ import java.util.regex.Pattern;
 public class RegexUtil {
 
     /**
-     * Returns the first match of a regular expression from a string.
+     * Returns the first match for a regular expression.
      *
-     * @param re            the compiled regex
+     * @param re            the compiled regex pattern
      * @param str           the string to match
      *
      * @return the matched substring, or
@@ -40,5 +40,27 @@ public class RegexUtil {
         }
         Matcher m = re.matcher(str);
         return (m != null && m.find()) ? m.group() : null;
+    }
+
+    /**
+     * Returns the first match from an array of regular expressions.
+     *
+     * @param arr           the array of compiled regex patterns
+     * @param str           the string to match
+     *
+     * @return the matched substring, or
+     *         null if no match was found
+     */
+    public static String firstMatch(Pattern[] arr, String str) {
+        if (str == null) {
+            return null;
+        }
+        for (Pattern re : arr) {
+            Matcher m = re.matcher(str);
+            if (m != null && m.find()) {
+                return m.group();
+            }
+        }
+        return null;
     }
 }

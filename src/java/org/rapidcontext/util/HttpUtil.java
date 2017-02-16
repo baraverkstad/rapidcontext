@@ -15,6 +15,7 @@
 package org.rapidcontext.util;
 
 import java.net.URI;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -477,6 +478,58 @@ public interface HttpUtil {
      * Some static utility methods for HTTP.
      */
     public abstract class Helper {
+
+        /**
+         * The list of recognized browsers.
+         */
+        private static Pattern[] BROWSERS = {
+            Pattern.compile("Edge/[^\\s;]+"),
+            Pattern.compile("Chrome/[^\\s;]+"),
+            Pattern.compile("Firefox/[^\\s;]+"),
+            Pattern.compile("Safari/[^\\s;]+"),
+            Pattern.compile("MSIE/[^\\s;]+")
+        };
+
+        /**
+         * The list of recognized platforms (operating systems).
+         */
+        private static Pattern[] PLATFORMS = {
+            Pattern.compile("Android [^;)]+"),
+            Pattern.compile("iPhone OS [\\d_]+"),
+            Pattern.compile("Windows [^;)]+"),
+            Pattern.compile("Mac OS X [^;)]+"),
+            Pattern.compile("Linux [^;)]+")
+        };
+
+        /**
+         * The list of recognized devices.
+         */
+        private static Pattern[] DEVICES = {
+            Pattern.compile("iPad|iPhone|iPod"),
+            Pattern.compile("Tablet"),
+            Pattern.compile("Mobile"),
+        };
+
+        /**
+         * Returns the browser best matching the user agent string.
+         *
+         * @param userAgent      the request User-Agent header
+         *
+         * @return the browser info matching the user agent, or
+         *         null for no match
+         */
+        public static String browserInfo(String userAgent) {
+            String browser = RegexUtil.firstMatch(BROWSERS, userAgent);
+            String platform = RegexUtil.firstMatch(PLATFORMS, userAgent);
+            String device = RegexUtil.firstMatch(DEVICES, userAgent);
+            if (browser != null && platform != null) {
+                return browser.replaceFirst("/", " ") + ", " +
+                       platform.replaceAll("_", ".") + ", " +
+                       StringUtils.defaultIfEmpty(device, "Desktop/Other");
+            } else {
+                return null;
+            }
+        }
 
         /**
          * Encodes a URL with proper URL encoding.

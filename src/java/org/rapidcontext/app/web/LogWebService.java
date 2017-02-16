@@ -206,8 +206,15 @@ public class LogWebService extends WebService{
                     buffer.append(s.userId());
                 }
             }
-            buffer.append("\n# userAgent = ");
-            buffer.append(request.getHeader("User-Agent"));
+            String userAgent = request.getHeader("User-Agent");
+            String browser = Helper.browserInfo(userAgent);
+            if (browser != null) {
+                buffer.append("\n# browser = ");
+                buffer.append(browser);
+            } else {
+                buffer.append("\n# userAgent = ");
+                buffer.append(request.getHeader("User-Agent"));
+            }
             LOG.log(level, buffer.toString());
         }
     }
