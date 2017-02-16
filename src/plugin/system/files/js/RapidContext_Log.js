@@ -389,8 +389,8 @@
             publisherTimer = setTimeout(_publishEvents, 10000);
         });
         d.fail(function (err) {
-            logError("failed to publish eventlog", err);
-            publisherTimer = setTimeout(_publishEvents, 30000);
+            logInfo("failed to upload errorlog", err);
+            publisherTimer = setTimeout(_publishEvents, 10000);
         });
     }
 
