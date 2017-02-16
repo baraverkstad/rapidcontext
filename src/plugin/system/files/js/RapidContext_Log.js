@@ -424,19 +424,33 @@
         var type = typeof(o);
         if (o == null || type == "boolean" || type == "number") {
             return "" + o;
-        } else if (type == "string" && depth > 0) {
-            return '"' + o.replace(/"/g, '\\"').replace(/\n/g, "\\n") + '"';
         } else if (type == "string") {
-            return o;
+            return (depth > 0) ? JSON.stringify(o) : o;
         } else if (type == "function") {
             var name = o.name || o.displayName || "";
-            var signature = o.toString().replace(/\)[\s\S]*/, "") + ")";
+            var signature = o.toString().replace(/\)[\s\S]*/, ")");
             if (/function\s+\(/.test(signature) && name) {
                 signature = signature.replace(/function\s+/, "function " + name);
             } else if (!(/function/.test(signature))) {
                 signature = "function ()";
             }
             return signature + " {...}";
+        } else if (o instanceof Error) {
+            var arr = [o.toString()];
+            if (typeof(o.number) === "number") {
+                arr.push(" (code: ", o.number & 0xFFFF);
+                arr.push(", facility: ", o.number >> 16 & 0x1FFF, ")");
+            }
+            if (o.stack) {
+                var stack = ("" + o.stack).trim();
+                stack = stack.replace(o.toString() + "\n", "");
+                stack = stack.replace(/https?:.*\//g, "");
+                stack = stack.replace(/\?[^:\s]+:/g, ":");
+                stack = stack.replace(/@(.*)/mg, " ($1)");
+                stack = stack.replace(/^(\s+at\s+)?/mg, "    at ");
+                arr.push("\n", stack);
+            }
+            return arr.join("");
         } else if (o.nodeType === 1 || o.nodeType === 9) {
             o = o.documentElement || o.document || o;
             var xml = o.outerHTML || o.outerXML || o.xml || "" + o;
