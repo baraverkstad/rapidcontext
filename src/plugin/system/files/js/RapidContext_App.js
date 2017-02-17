@@ -873,7 +873,9 @@ RapidContext.App._addErrbackLogger = function (d) {
         return err;
     };
     var adder = function () {
-        if (!d.chained) {
+        var lastCb = d.chain && d.chain[d.chain.length - 1];
+        var errback = lastCb && lastCb[1];
+        if (!d.chained && !errback) {
             d.addErrback(logger);
         }
     };
