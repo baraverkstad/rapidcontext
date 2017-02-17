@@ -487,7 +487,7 @@ public interface HttpUtil {
             Pattern.compile("Chrome/[^\\s;]+"),
             Pattern.compile("Firefox/[^\\s;]+"),
             Pattern.compile("Safari/[^\\s;]+"),
-            Pattern.compile("MSIE/[^\\s;]+")
+            Pattern.compile("MSIE [^\\s;]+")
         };
 
         /**
@@ -495,10 +495,10 @@ public interface HttpUtil {
          */
         private static Pattern[] PLATFORMS = {
             Pattern.compile("Android [^;)]+"),
-            Pattern.compile("iPhone OS [\\d_]+"),
-            Pattern.compile("Windows [^;)]+"),
+            Pattern.compile("(iPhone|CPU) OS [\\d_]+"),
             Pattern.compile("Mac OS X [^;)]+"),
-            Pattern.compile("Linux [^;)]+")
+            Pattern.compile("Linux [^;)]+"),
+            Pattern.compile("Windows [^;)]+")
         };
 
         /**
