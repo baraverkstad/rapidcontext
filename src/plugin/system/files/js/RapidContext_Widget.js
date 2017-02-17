@@ -123,8 +123,11 @@ RapidContext.Widget._widgetMixin = function (node/*, objOrClass, ...*/) {
             try {
                 node[key] = obj[key];
             } catch (e) {
-                var msg = "failed to overwrite '" + key + "' in DOM node";
-                RapidContext.Log.warn(msg, node, e);
+                // MSIE: cannot overwrite isDisabled property, skip logging
+                if (key !== 'isDisabled' || !/MSIE/.test(navigator.userAgent)) {
+                    var msg = "failed to overwrite '" + key + "' in DOM node";
+                    RapidContext.Log.warn(msg, e, node);
+                }
             }
         }
     }
