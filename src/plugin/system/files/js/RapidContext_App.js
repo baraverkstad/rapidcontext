@@ -442,7 +442,7 @@ RapidContext.App.callProc = function (name, args) {
             RapidContext.Log.log("Server trace " + name, res.trace);
         }
         if (res.error != null) {
-            RapidContext.Log.error("Call error " + name, res.error);
+            RapidContext.Log.warn("Call error " + name, res.error);
             throw new Error(res.error);
         } else {
             RapidContext.Log.log("Call response " + name, res.data);
