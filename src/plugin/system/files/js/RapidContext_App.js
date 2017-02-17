@@ -747,14 +747,14 @@ RapidContext.App.loadStyles = function (url) {
         var styles = document.styleSheets;
         for (var i = 0; i < styles.length; i++) {
             if (MochiKit.Text.startsWith(url, styles[i].href)) {
-                return styles[i];
+                return styles[i].cssRules || styles[i].rules;
             }
         }
         return null;
     }
     function isStylesheetLoaded(url, absoluteUrl) {
         var sheet = findStylesheet(url) || findStylesheet(absoluteUrl);
-        return !!(sheet && sheet.cssRules && sheet.cssRules.length);
+        return !!(sheet && sheet.length);
     }
     var absoluteUrl = RapidContext.Util.resolveURI(url);
     if (isStylesheetLoaded(url, absoluteUrl)) {
