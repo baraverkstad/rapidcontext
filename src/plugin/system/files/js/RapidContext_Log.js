@@ -347,7 +347,7 @@
      * @private
      */
     function _store(level, args) {
-        var data = (args.length > 1) ? args.slice(1).join(", ") : null;
+        var data = (args.length > 1) ? args.slice(1).join("\n") : null;
         logHistory.push({ id: ++logCount, time: new Date(), level: level,
                           context: logContext, message: args[0], data: data });
         while (logHistory.length > 100) {
