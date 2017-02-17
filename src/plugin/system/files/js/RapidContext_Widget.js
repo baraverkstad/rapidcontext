@@ -124,7 +124,7 @@ RapidContext.Widget._widgetMixin = function (node/*, objOrClass, ...*/) {
                 node[key] = obj[key];
             } catch (e) {
                 var msg = "failed to overwrite '" + key + "' in DOM node";
-                RapidContext.Log.error(msg, node, e);
+                RapidContext.Log.warn(msg, node, e);
             }
         }
     }
@@ -289,10 +289,10 @@ RapidContext.Widget._fireEvent = function (node, evt, detail) {
                 return node.fireEvent("on" + evt.type, evt);
             } else {
                 var msg = "cannot fire event, no dispatchEvent/fireEvent method";
-                RapidContext.Log.info(msg, evt, node);
+                RapidContext.Log.warn(msg, evt, node);
             }
         } catch (e) {
-            RapidContext.Log.error("exception when firing event", evt, node, e);
+            RapidContext.Log.warn("exception when firing event", evt, node, e);
         }
     }
     setTimeout(later);
