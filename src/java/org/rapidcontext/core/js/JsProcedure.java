@@ -162,7 +162,7 @@ public class JsProcedure extends AddOnProcedure {
             // TODO: remove this backwards-compatibility hack
             if (idx >= 0) {
                 str = lines[idx];
-                if (!str.contains("return")) {
+                if (!str.contains("return") && !str.contains("throw")) {
                     lines[idx] = "return " + str;
                 }
             }
