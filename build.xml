@@ -25,6 +25,12 @@
   <path id="build.classpath">
     <fileset dir="lib" includes="**/*.jar" />
   </path>
+  <path id="build.classpath.test">
+    <path refid="build.classpath" />
+    <fileset dir="test/lib" includes="**/*.jar" />
+    <pathelement path="classes" />
+    <pathelement path="test/classes" />
+  </path>
   <property name="build.sysclasspath" value="ignore" />
   <patternset id="pattern.srcfiles">
     <include name="**/*.css" />
@@ -132,6 +138,43 @@
   </target>
 
 
+<!-- TEST TARGETS -->
+  <target name="test"
+          depends="test-clean,test-compile,test-run"
+          description="Runs available automated tests">
+  </target>
+
+  <target name="test-clean">
+    <delete quiet="true" includeemptydirs="true">
+      <fileset dir="test/classes" />
+    </delete>
+    <mkdir dir="test/classes" />
+  </target>
+
+  <target name="test-compile">
+    <javac srcdir="test/src/java"
+           destdir="test/classes"
+           classpathref="build.classpath.test"
+           target="1.7"
+           source="1.7"
+           debug="on"
+           deprecation="on">
+      <compilerarg value="-Xlint:unchecked"/>
+    </javac>
+  </target>
+
+  <target name="test-run">
+    <junit haltonfailure="on">
+      <classpath refid="build.classpath.test">
+      </classpath>
+      <batchtest>
+        <fileset dir="test/src/java" includes="**/*Test*.java" />
+      </batchtest>
+      <formatter type="brief" usefile="false" />
+    </junit>
+  </target>
+
+
 <!-- DOCUMENTATION TARGETS -->
   <target name="doc"
           depends="doc-clean,doc-copy,doc-java,doc-js"
@@ -213,7 +256,7 @@
 
 <!-- PACKAGING TARGETS -->
   <target name="package"
-          depends="compile,doc,package-clean,package-war,package-zip,package-mac"
+          depends="compile,test,doc,package-clean,package-war,package-zip,package-mac"
           description="Builds and packages the application for distribution">
   </target>
 
