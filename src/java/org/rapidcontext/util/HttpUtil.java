@@ -484,10 +484,11 @@ public interface HttpUtil {
          */
         private static Pattern[] BROWSERS = {
             Pattern.compile("Edge/[^\\s;]+"),
-            Pattern.compile("Chrome/[^\\s;]+"),
-            Pattern.compile("Firefox/[^\\s;]+"),
-            Pattern.compile("Safari/[^\\s;]+"),
-            Pattern.compile("MSIE [^\\s;]+")
+            Pattern.compile("(Chrome|CriOS)/[^\\s;]+"),
+            Pattern.compile("(Firefox|FxiOS)/[^\\s;]+"),
+            Pattern.compile("Version/\\S+.* Safari/[^\\s;]+"),
+            Pattern.compile("MSIE [^\\s;]+"),
+            Pattern.compile("Trident/.*rv:[^\\s;)]+")
         };
 
         /**
@@ -523,9 +524,17 @@ public interface HttpUtil {
             String platform = RegexUtil.firstMatch(PLATFORMS, userAgent);
             String device = RegexUtil.firstMatch(DEVICES, userAgent);
             if (browser != null && platform != null) {
-                return browser.replaceFirst("/", " ") + ", " +
-                       platform.replaceAll("_", ".") + ", " +
-                       StringUtils.defaultIfEmpty(device, "Desktop/Other");
+                browser = browser.replaceFirst("CriOS", "Chrome iOS");
+                browser = browser.replaceFirst("FxiOS", "Firefox iOS");
+                browser = browser.replaceFirst("Trident/.*rv:", "MSIE ");
+                browser = browser.replaceFirst("Version/(\\S+).*", "Safari $1");
+                browser = browser.replaceFirst("/", " ");
+                if (platform.contains("OS")) {
+                    platform = platform.replaceAll("(iPhone|CPU) OS", "iOS");
+                    platform = platform.replaceAll("_", ".");
+                }
+                device = StringUtils.defaultIfEmpty(device, "Desktop/Other");
+                return browser + ", " + platform + ", " + device;
             } else {
                 return null;
             }
