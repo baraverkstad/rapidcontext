@@ -17,6 +17,7 @@ package org.rapidcontext.core.type;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.storage.Path;
@@ -112,7 +113,8 @@ public class User extends StorableObject {
     }
 
     /**
-     * Decodes a user authentication token.
+     * Decodes a user authentication token. If the token isn't valid, the
+     * missing parts will be filled with empty values.
      *
      * @param token          the token string
      *
@@ -120,7 +122,18 @@ public class User extends StorableObject {
      */
     public static String[] decodeAuthToken(String token) {
         String raw = new String(BinaryUtil.decodeBase64(token));
-        return raw.split(":", 3);
+        String[] parts = raw.split(":", 3);
+        if (parts.length != 3) {
+            String[] copy = new String[3];
+            copy[0] = (parts.length > 0) ? parts[0] : "";
+            copy[1] = (parts.length > 1) ? parts[1] : "";
+            copy[2] = (parts.length > 2) ? parts[2] : "";
+            parts = copy;
+        }
+        if (parts[1].length() <= 0 || !StringUtils.isNumeric(parts[1])) {
+            parts[1] = "0";
+        }
+        return parts;
     }
 
     /**
@@ -359,7 +372,7 @@ public class User extends StorableObject {
      */
     public boolean verifyAuthToken(String token) {
         String[]  parts = User.decodeAuthToken(token);
-        long      expiry = parts.length <= 1 ? 0L : Long.parseLong(parts[1]);
+        long      expiry = Long.parseLong(parts[1]);
         boolean   isExpired = expiry < System.currentTimeMillis();
 
         return isEnabled() && !isExpired && createAuthToken(expiry).equals(token);
