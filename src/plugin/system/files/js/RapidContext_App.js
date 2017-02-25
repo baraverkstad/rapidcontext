@@ -679,7 +679,9 @@ RapidContext.App.loadXHR = function (url, params, options) {
         });
     }
     d.addBoth(function (res) {
-        if (res instanceof Error) {
+        if (res instanceof MochiKit.Async.CancelledError) {
+            RapidContext.Log.log("Cancelled XHR loading", nonCachedUrl);
+        } else if (res instanceof Error) {
             RapidContext.Log.warn("Failed XHR loading", nonCachedUrl, res);
         } else {
             RapidContext.Log.log("Completed XHR loading", nonCachedUrl);
