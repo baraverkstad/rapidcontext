@@ -88,6 +88,14 @@ public class Library {
     private HashMap<String,AddOnProcedure> cache = new HashMap<>();
 
     /**
+     * The map of active procedure traces. The map is indexed by the
+     * procedure name and an entry is only added if all calls to the
+     * procedure should be traced (which affects performance
+     * slightly).
+     */
+    private HashMap<String,Boolean> traces = new HashMap<>();
+
+    /**
      * The procedure call interceptor.
      */
     private Interceptor interceptor = new DefaultInterceptor();
@@ -416,6 +424,33 @@ public class Library {
             this.interceptor = new DefaultInterceptor();
         } else {
             this.interceptor = i;
+        }
+    }
+
+    /**
+     * Checks if all calls to a procedure should be traced.
+     *
+     * @param name           the name of the procedure
+     *
+     * @return true if all calls should be traced, or
+     *         false otherwise
+     */
+    public boolean isTracing(String name) {
+        return traces.containsKey(name);
+    }
+
+    /**
+     * Sets or clears the call tracing for a procedure.
+     *
+     * @param name           the name of the procedure
+     * @param enabled        true to enabled tracing,
+     *                       false to disable
+     */
+    public void setTracing(String name, boolean enabled) {
+        if (enabled) {
+            traces.put(name, Boolean.TRUE);
+        } else {
+            traces.remove(name);
         }
     }
 }

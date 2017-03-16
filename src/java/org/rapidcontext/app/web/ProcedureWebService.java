@@ -184,17 +184,18 @@ public class ProcedureWebService extends WebService {
      * @return the process result dictionary (with "data" or "error" keys)
      */
     protected Dict processCall(String name, Request request, String source) {
+        boolean isTraceReq = request.getParameter("system:trace", null) != null;
         String logPrefix = source + "-->" + name + "(): ";
-        StringBuffer trace = null;
+        StringBuilder trace = null;
         Dict res = new Dict();
         try {
-            if (request.getParameter("system:trace", null) != null) {
-                trace = new StringBuffer();
-            }
             LOG.fine(logPrefix + "init procedure call");
             ApplicationContext ctx = ApplicationContext.getInstance();
             Procedure proc = ctx.getLibrary().getProcedure(name);
             Object[] args = processArgs(proc, request, logPrefix);
+            if (isTraceReq || ctx.getLibrary().isTracing(name)) {
+                trace = new StringBuilder();
+            }
             res.set("data", ctx.execute(name, args, source, trace));
             LOG.fine(logPrefix + "done procedure call");
         } catch (Exception e) {

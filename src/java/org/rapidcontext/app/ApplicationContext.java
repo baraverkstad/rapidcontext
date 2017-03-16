@@ -532,7 +532,7 @@ public class ApplicationContext {
     public Object execute(String name,
                           Object[] args,
                           String source,
-                          StringBuffer trace)
+                          StringBuilder trace)
         throws ProcedureException {
 
         CallContext cx = new CallContext(storage, env, library);

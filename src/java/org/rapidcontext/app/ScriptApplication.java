@@ -141,7 +141,7 @@ public class ScriptApplication {
      * @param params         the procedure name and arguments
      */
     private void exec(ApplicationContext ctx, LinkedList<String> params) {
-        StringBuffer traceBuffer = (trace ? new StringBuffer() : null);
+        StringBuilder traceBuffer = (trace ? new StringBuilder() : null);
         try {
             String name = params.removeFirst();
             String[] args = params.toArray(new String[params.size()]);

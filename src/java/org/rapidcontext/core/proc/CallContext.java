@@ -710,9 +710,9 @@ public class CallContext {
      * @param message        the message text
      */
     private void logInternal(int indent, String message) {
-        StringBuffer buffer = (StringBuffer) attributes.get(ATTRIBUTE_LOG_BUFFER);
+        StringBuilder buffer = (StringBuilder) attributes.get(ATTRIBUTE_LOG_BUFFER);
         if (buffer == null) {
-            buffer = new StringBuffer();
+            buffer = new StringBuilder();
             attributes.put(ATTRIBUTE_LOG_BUFFER, buffer);
         }
         String prefix = DateUtil.formatIsoTime(new Date()) + ": ";
