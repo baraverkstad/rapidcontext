@@ -76,7 +76,7 @@ public class ProcedureWriteProcedure implements Procedure {
     public String getDescription() {
         return "Creates or overwrites a procedure by creating a new one in " +
                "the local plug-in. Other versions of the procedure may " +
-               "still exist in other plug-ins, but will be hiddedn.";
+               "still exist in other plug-ins, but will be hidden.";
     }
 
     /**
