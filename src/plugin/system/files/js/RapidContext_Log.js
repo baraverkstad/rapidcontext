@@ -437,7 +437,7 @@
             return signature + " {...}";
         } else if (o instanceof Error) {
             var arr = [o.toString()];
-            if (typeof(o.number) === "number") {
+            if (typeof(o.number) === "number" && o.number != 0) {
                 arr.push(" (code: ", o.number & 0xFFFF);
                 arr.push(", facility: ", o.number >> 16 & 0x1FFF, ")");
             }
