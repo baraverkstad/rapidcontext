@@ -207,7 +207,9 @@ public class ProcedureWebService extends WebService {
             }
         }
         if (trace != null) {
-            res.set("trace", trace.toString());
+            String logTrace = trace.toString();
+            res.set("trace", logTrace);
+            LOG.log(Level.INFO, logPrefix + "execution trace:\n" + logTrace);
         }
         return res;
     }
