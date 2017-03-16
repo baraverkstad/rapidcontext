@@ -460,7 +460,7 @@ StartApp.prototype._tourStop = function () {
  * Changes the active page in the guided tour.
  */
 StartApp.prototype._tourChange = function () {
-    var d = MochiKit.Async.wait(1);
+    var d = MochiKit.Async.wait(0);
     switch (this.ui.tourWizard.activePageIndex()) {
     case 1:
         d.addBoth(function() {

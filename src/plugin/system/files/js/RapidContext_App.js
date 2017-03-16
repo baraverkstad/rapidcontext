@@ -196,7 +196,7 @@ RapidContext.App.startApp = function (app, container) {
     var instance = null;
     var instances = RapidContext.App._instances();
     var startApp = RapidContext.App.findApp("start");
-    var d = MochiKit.Async.wait(0.1);
+    var d = MochiKit.Async.wait(0);
     var ui = null;
 
     // Initialize app UI container
