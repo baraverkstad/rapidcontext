@@ -221,7 +221,8 @@ RapidContext.App.startApp = function (app, container) {
     MochiKit.Signal.connect(ui.root, "onclose", d, "cancel");
 
     // Load app resources
-    RapidContext.Log.context("RapidContext.App.startApp(" + launcher.id + ")");
+    var logCtx = "RapidContext.App.startApp(" + launcher.id + ")";
+    RapidContext.Log.context(logCtx);
     if (launcher.creator == null) {
         RapidContext.Log.info("Loading app/" + launcher.id + " resources", launcher);
         launcher.resource = {};
@@ -300,16 +301,14 @@ RapidContext.App.startApp = function (app, container) {
             MochiKit.DOM.appendChildNodes(ui.root, label, err.message);
             ui.overlay.hide();
         }
+        RapidContext.Log.context(null);
         return err;
     });
     d.addCallback(function () {
+        RapidContext.Log.context(null);
         return instance;
     });
-    d.addBoth(function (res) {
-        RapidContext.Log.context(null);
-        return res;
-    });
-    RapidContext.App._addErrbackLogger(d);
+    RapidContext.App._addErrbackLogger(d, logCtx);
     return d;
 };
 
@@ -370,16 +369,17 @@ RapidContext.App.callApp = function (app, method) {
         RapidContext.Log.error("No matching app launcher found", app);
         throw new Error("No matching app launcher found");
     }
+    var logCtx = "RapidContext.App.callApp(" + launcher.id + "," + method + ")";
     if (!(launcher.instances && launcher.instances.length)) {
         d = RapidContext.App.startApp(app);
     } else {
         var pos = MochiKit.Base.findIdentical(launcher.instances, app);
         var instance = (pos >= 0) ? app : launcher.instances[launcher.instances.length - 1];
         d = MochiKit.Async.wait(0, instance);
-        RapidContext.App._addErrbackLogger(d);
+        RapidContext.App._addErrbackLogger(d, logCtx);
     }
     d.addCallback(function (instance) {
-        RapidContext.Log.context("RapidContext.App.callApp(" + launcher.id + "," + method + ")");
+        RapidContext.Log.context(logCtx);
         var child = instance.ui.root;
         var parent = MochiKit.DOM.getFirstParentByTagAndClassName(child, null, "widget");
         if (parent != null && typeof(parent.selectChild) == "function") {
@@ -387,20 +387,21 @@ RapidContext.App.callApp = function (app, method) {
         }
         var methodName = launcher.className + "." + method;
         if (instance == null || instance[method] == null) {
-            RapidContext.Log.error("No app method " + methodName + " found");
-            throw new Error("No app method " + methodName + " found");
+            var msg = "No app method " + methodName + " found";
+            RapidContext.Log.error(msg);
+            RapidContext.Log.context(null);
+            throw new Error(msg);
         }
         RapidContext.Log.log("Calling app method " + methodName, args);
         try {
             return instance[method].apply(instance, args);
         } catch (e) {
-            RapidContext.Log.error("In call to " + methodName, e);
-            throw new Error("In call to " + methodName + ": " + e.message);
+            var msg = "Caught error in " + methodName;
+            RapidContext.Log.error(msg, e);
+            RapidContext.Log.context(null);
+            throw new Error(msg + ": " + e.toString());
         }
-    });
-    d.addBoth(function (res) {
         RapidContext.Log.context(null);
-        return res;
     });
     return d;
 };
@@ -688,7 +689,7 @@ RapidContext.App.loadXHR = function (url, params, options) {
         }
         return res;
     });
-    RapidContext.App._addErrbackLogger(d);
+    RapidContext.App._addErrbackLogger(d, "RapidContext.App.loadXHR(" + nonCachedUrl + ")");
     return d;
 };
 
@@ -729,7 +730,7 @@ RapidContext.App.loadScript = function (url) {
         RapidContext.Log.warn("Failed loading script", url + ": " + e.message);
         return e;
     });
-    RapidContext.App._addErrbackLogger(d);
+    RapidContext.App._addErrbackLogger(d, "RapidContext.App.loadScript(" + url + ")");
     return d;
 };
 
@@ -786,7 +787,7 @@ RapidContext.App.loadStyles = function (url) {
             throw new URIError("Failed loading stylesheet " + url, absoluteUrl);
         }
     });
-    RapidContext.App._addErrbackLogger(d);
+    RapidContext.App._addErrbackLogger(d, "RapidContext.App.loadStyles()");
     return d;
 }
 
@@ -865,22 +866,23 @@ RapidContext.App._nonCachedUrl = function (url) {
  * callback functions.
  *
  * @param {Deferred} d the `MochiKit.Async.Deferred` object to modify
+ * @param {String} logCtx the log context to identify the source
  */
-RapidContext.App._addErrbackLogger = function (d) {
-    var logger = function (err) {
-        if (!d.chained) {
-            // TODO: Handle MochiKit.Async.CancelledError here?
-            RapidContext.Log.warn("Unhandled error in deferred", err);
+RapidContext.App._addErrbackLogger = function (d, logCtx) {
+    function logger(err) {
+        if (!d.chained && !(err instanceof MochiKit.Async.CancelledError)) {
+            RapidContext.Log.warn(logCtx + " deferred: unhandled error", err);
         }
         return err;
-    };
-    var adder = function () {
+    }
+    function adder() {
         var lastCb = d.chain && d.chain[d.chain.length - 1];
         var errback = lastCb && lastCb[1];
         if (!d.chained && !errback) {
+            RapidContext.Log.warn(logCtx + " deferred: no error handler");
             d.addErrback(logger);
         }
-    };
+    }
     MochiKit.Async.callLater(0, adder);
 };
 
