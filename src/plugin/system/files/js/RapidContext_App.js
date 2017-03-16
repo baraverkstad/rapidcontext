@@ -884,26 +884,6 @@ RapidContext.App._addErrbackLogger = function (d) {
     MochiKit.Async.callLater(0, adder);
 };
 
-RapidContext.App._Callback = {
-    nextId: MochiKit.Base.counter(),
-    create: function () {
-        var id = "cb" + this.nextId();
-        var d = new MochiKit.Async.Deferred();
-        var func = MochiKit.Base.bind("handle", this, id, d);
-        func.displayName = "RapidContext.App._Callback." + id;
-        this[id] = d.func = func;
-        return d;
-    },
-    handle: function (id, d, data) {
-        delete this[id];
-        if (data instanceof Error) {
-            d.errback(data);
-        } else {
-            d.callback(data);
-        }
-    }
-}
-
 /**
  * The application data cache. Contains the most recently retrieved
  * data for some commonly used objects in the execution environment.
