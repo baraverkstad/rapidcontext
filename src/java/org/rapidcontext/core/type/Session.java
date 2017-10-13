@@ -16,6 +16,7 @@ package org.rapidcontext.core.type;
 
 import java.io.File;
 import java.util.Date;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,8 +27,6 @@ import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.storage.StorageException;
-
-import com.eaio.uuid.UUID;
 
 /**
  * A logged-in user session. The session allows the user client to
@@ -224,7 +223,7 @@ public class Session extends StorableObject {
      * @param client         the browser user agent string
      */
     public Session(String userId, String ip, String client) {
-        super(new UUID().toString(), "session");
+        super(UUID.randomUUID().toString(), "session");
         long now = System.currentTimeMillis();
         userId = (userId == null) ? null : userId.trim();
         dict.set(KEY_USER, userId);

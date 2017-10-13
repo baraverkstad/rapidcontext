@@ -19,9 +19,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Logger;
-
-import com.eaio.uuid.UUID;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.rapidcontext.app.plugin.PluginException;
@@ -232,7 +231,7 @@ public class ApplicationContext {
         if (this.config == null) {
             LOG.severe("failed to load application config");
         } else if (!this.config.containsKey("guid")) {
-            this.config.set("guid", new UUID().toString());
+            this.config.set("guid", UUID.randomUUID().toString());
             try {
                 storage.store(PATH_CONFIG, this.config);
             } catch (Exception e) {
