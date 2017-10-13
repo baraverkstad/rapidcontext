@@ -175,7 +175,7 @@ public class ServletApplication extends HttpServlet {
         Session session = Session.activeSession.get();
         Session.activeSession.set(null);
         if (session != null && !session.isValid()) {
-            LOG.fine("session " + session.id() + " invalided (expired on " +
+            LOG.fine("session " + session.id() + " invalid (expired on " +
                      session.destroyTime() + "), removing from storage");
             Session.remove(ctx.getStorage(), session.id());
         } else if (session != null && session.isNew()) {

@@ -89,14 +89,19 @@ public class Session extends StorableObject {
     public static final String KEY_FILES = "_files";
 
     /**
-     * The default maximum session age (30 days).
+     * The expiry timeout (after last access) for anonymous users (30 minutes).
      */
-    public static final long MAX_AGE_MILLIS = 30L * DateUtils.MILLIS_PER_DAY;
+    public static final long EXPIRY_ANON_MILLIS = 30L * DateUtils.MILLIS_PER_MINUTE;
 
     /**
-     * The default active session time (10 minutes).
+     * The expiry timeout (after last access) for logged in users (30 days).
      */
-    public static final long ACTIVE_MILLIS = 10L * DateUtils.MILLIS_PER_MINUTE;
+    public static final long EXPIRY_AUTH_MILLIS = 30L * DateUtils.MILLIS_PER_DAY;
+
+    /**
+     * The default active session time (5 minutes).
+     */
+    public static final long ACTIVE_MILLIS = 5L * DateUtils.MILLIS_PER_MINUTE;
 
     /**
      * The currently active session (for the current thread).
@@ -214,16 +219,21 @@ public class Session extends StorableObject {
     /**
      * Creates a new session for the specified user.
      *
-     * @param user           the user id
+     * @param userId         the user id
      * @param ip             the source IP address
      * @param client         the browser user agent string
      */
-    public Session(String user, String ip, String client) {
+    public Session(String userId, String ip, String client) {
         super(new UUID().toString(), "session");
         long now = System.currentTimeMillis();
-        dict.set(KEY_USER, user);
+        userId = (userId == null) ? null : userId.trim();
+        dict.set(KEY_USER, userId);
         dict.set(KEY_CREATE_TIME, new Date(now));
-        dict.set(KEY_DESTROY_TIME, new Date(now + MAX_AGE_MILLIS));
+        if (userId != null && userId.length() > 0) {
+            dict.set(KEY_DESTROY_TIME, new Date(now + EXPIRY_AUTH_MILLIS));
+        } else {
+            dict.set(KEY_DESTROY_TIME, new Date(now + EXPIRY_ANON_MILLIS));
+        }
         dict.set(KEY_ACCESS_TIME, new Date(now));
         dict.set(KEY_IP, ip);
         dict.set(KEY_CLIENT, client);
@@ -234,11 +244,13 @@ public class Session extends StorableObject {
 
     /**
      * Checks if this object is in active use. This method returns
-     * true during 600 seconds after the last access, thereafter
+     * true during some minutes after the last access, thereafter
      * false.
      *
      * @return true if the object is active, or
      *         false otherwise
+     *
+     * @see #ACTIVE_MILLIS
      */
     protected boolean isActive() {
         long now = System.currentTimeMillis();
@@ -304,9 +316,7 @@ public class Session extends StorableObject {
      */
     public boolean isValid() {
         long now = System.currentTimeMillis();
-        long active = 30L * DateUtils.MILLIS_PER_MINUTE;
-        return now < destroyTime().getTime() &&
-               (userId().length() > 0 || now < accessTime().getTime() + active);
+        return now < destroyTime().getTime();
     }
 
     /**
@@ -374,7 +384,13 @@ public class Session extends StorableObject {
      * Updates the session last access timestamp to the current system time.
      */
     public void updateAccessTime() {
-        dict.set(KEY_ACCESS_TIME, new Date());
+        long now = System.currentTimeMillis();
+        dict.set(KEY_ACCESS_TIME, new Date(now));
+        if (userId().length() > 0) {
+            dict.set(KEY_DESTROY_TIME, new Date(now + EXPIRY_AUTH_MILLIS));
+        } else {
+            dict.set(KEY_DESTROY_TIME, new Date(now + EXPIRY_ANON_MILLIS));
+        }
         modified = true;
     }
 
