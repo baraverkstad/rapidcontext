@@ -117,8 +117,8 @@ public class PluginInstallProcedure implements Procedure {
         String              msg;
 
         fileId = (String) bindings.getValue("sessionFileId");
-        file = session.file(fileId);
-        if (file == null || !file.canRead()) {
+        file = (session == null) ? null : session.file(fileId);
+        if (session == null || file == null || !file.canRead()) {
             msg = "failed to read session file with id '" + fileId + "'";
             throw new ProcedureException(msg);
         }

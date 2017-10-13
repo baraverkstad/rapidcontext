@@ -144,7 +144,6 @@ public class ProcedureWebService extends WebService {
     protected void processProcedure(Request request) {
         String name = prefix() + request.getPath();
         String source = "web [" + request.getRemoteAddr() + "]";
-        session(request, true);
         long startTime = System.currentTimeMillis();
         Dict res = processCall(name, request, source);
         long execTime = System.currentTimeMillis() - startTime;
