@@ -144,9 +144,11 @@ public class ServletApplication extends HttpServlet {
                     LOG.fine(ip(request) + "Processed during web service matching");
                 }
             }
-            Session s = Session.activeSession.get();
-            if ((s == null || !s.isValid()) && request.getSessionId() != null) {
-                request.setSessionId(null, 0);
+            Session session = Session.activeSession.get();
+            if (session != null && session.isValid()) {
+                request.setSessionId(session.id());
+            } else if (request.getSessionId() != null) {
+                request.setSessionId(null);
             }
             LOG.fine(ip(request) + "Sending response data");
             if (!request.hasResponse()) {

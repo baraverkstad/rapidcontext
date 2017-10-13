@@ -63,6 +63,11 @@ public class Request implements HttpUtil {
     public static final String SESSION_COOKIE = "sessionid";
 
     /**
+     * The session expiry time in seconds (defaults to one year).
+     */
+    public static final int SESSION_EXPIRY = 365 * 24 * 60 * 60;
+
+    /**
      * The no response type. This type is used when no request
      * response has been issued.
      */
@@ -840,17 +845,17 @@ public class Request implements HttpUtil {
     /**
      * Sets the session id cookie in the HTTP response. This method
      * can also be used to clear the session cookie in the web
-     * browser (by setting a null value).
+     * browser (by setting a null value), or to renew the cookie (by
+     * re-setting the same value).
      *
      * @param sessionId      the session identifier
-     * @param expiry         the maximum age of the cookie in seconds
      */
-    public void setSessionId(String sessionId, int expiry) {
+    public void setSessionId(String sessionId) {
         String value = (sessionId == null) ? "deleted" : sessionId;
         Cookie cookie = new Cookie(SESSION_COOKIE, value);
         cookie.setPath(request.getContextPath() + "/");
         cookie.setSecure(request.isSecure());
-        cookie.setMaxAge((sessionId == null) ? 0 : expiry);
+        cookie.setMaxAge((sessionId == null) ? 0 : SESSION_EXPIRY);
         response.addCookie(cookie);
     }
 

@@ -185,10 +185,6 @@ public abstract class WebService extends StorableObject implements HttpUtil {
             String userId = (user == null) ? null : user.id();
             session = new Session(userId, ip, client);
             Session.activeSession.set(session);
-            long destroy = session.destroyTime().getTime();
-            long now = System.currentTimeMillis();
-            int expiry = (int) ((destroy - now) / 1000);
-            request.setSessionId(session.id(), expiry);
         }
         return session;
     }
