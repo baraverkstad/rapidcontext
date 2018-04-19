@@ -1,5 +1,5 @@
 /*
- * RapidContext <http://www.rapidcontext.com/>
+ * RapidContext <https://www.rapidcontext.com/>
  * Copyright (c) 2009-2017 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or

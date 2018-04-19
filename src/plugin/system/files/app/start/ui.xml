@@ -140,7 +140,7 @@
   </Dialog>
   <Dialog id="about" title="About RapidContext" w="544" h="515" modal="true" resizeable="false" class="startApp-about">
     <div style="position: absolute; top: 35px; left: 185px; font-family: Trebuchet MS;">
-      <a href="http://www.rapidcontext.com/" target="_blank">
+      <a href="https://www.rapidcontext.com/" target="_blank">
         <span style="font-size: 40px; color: white;">RapidContext</span><br/>
         <span style="font-size: 19px; color: #88AACC;">Access &gt; Discovery &gt; Insight</span><br/>
         <span style="font-size: 12px; color: #EEEEEE; letter-spacing: 6px; line-height: 24px;">www.rapidcontext.com</span><br/>
@@ -153,7 +153,7 @@
       <p>Copyright &#169; 2007-2017 by Per Cederberg. All rights reserved.<br/>
       Usage of the RapidContext name and logotype is restricted.<br/>
       Please visit the
-      <a href="http://www.rapidcontext.com/" target="_blank">RapidContext project web site</a>
+      <a href="https://www.rapidcontext.com/" target="_blank">RapidContext project web site</a>
       for more information.</p>
 
       <p>This software would not be possible without the following software libraries;<br/>

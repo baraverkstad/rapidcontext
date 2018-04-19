@@ -1,5 +1,5 @@
 /*
- * RapidContext <http://www.rapidcontext.com/>
+ * RapidContext <https://www.rapidcontext.com/>
  * Copyright (c) 2007-2017 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
@@ -119,7 +119,7 @@ public class AboutDialog extends JDialog {
         link.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 try {
-                    AppUtils.openURL("http://www.rapidcontext.com/doc/LICENSE.md");
+                    AppUtils.openURL("https://www.rapidcontext.com/doc/LICENSE.md");
                 } catch (Exception e) {
                     parent.error(e.getMessage());
                 }
@@ -158,11 +158,11 @@ public class AboutDialog extends JDialog {
         c.anchor = GridBagConstraints.WEST;
         c.insets = new Insets(10, 15, 0, 15);
         getContentPane().add(label, c);
-        link = new HyperLink("http://www.rapidcontext.com/");
+        link = new HyperLink("https://www.rapidcontext.com/");
         link.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 try {
-                    AppUtils.openURL("http://www.rapidcontext.com/");
+                    AppUtils.openURL("https://www.rapidcontext.com/");
                 } catch (Exception e) {
                     parent.error(e.getMessage());
                 }

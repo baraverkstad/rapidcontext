@@ -1,5 +1,5 @@
 /*
- * RapidContext <http://www.rapidcontext.com/>
+ * RapidContext <https://www.rapidcontext.com/>
  * Copyright (c) 2007-2009 Per Cederberg & Dynabyte AB.
  * All rights reserved.
  *
