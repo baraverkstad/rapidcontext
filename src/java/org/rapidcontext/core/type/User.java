@@ -80,6 +80,11 @@ public class User extends StorableObject {
     public static final String KEY_ROLE = "role";
 
     /**
+     * The dictionary key for the user settings dictionary.
+     */
+    public static final String KEY_SETTINGS = "settings";
+
+    /**
      * The user object storage path.
      */
     public static final Path PATH = new Path("/user/");
@@ -438,6 +443,43 @@ public class User extends StorableObject {
             } else if (!list.containsValue(name)) {
                 list.add(name);
             }
+        }
+    }
+
+    /**
+     * Returns the user settings dictionary.
+     *
+     * @return a dictionary with user settings, or
+     *         a new empty dictionary if not set
+     */
+    public Dict settings() {
+        Dict settings = dict.getDict(KEY_SETTINGS);
+        return settings == null ? new Dict() : settings;
+    }
+
+    /**
+     * Merges updates into the user settings dictionary. Keys with null values
+     * will be removed from settings and other keys will be overwritten. Any
+     * key not listed in the updates will remain unmodified.
+     *
+     * @param updates        the dictionary with updates
+     */
+    public void updateSettings(Dict updates) {
+        Dict settings = this.settings();
+        String[] keys = updates.keys();
+        for (int i = 0; i < keys.length; i++) {
+            String key = keys[i];
+            Object val = updates.get(key);
+            if (val == null) {
+                settings.remove(key);
+            } else {
+                settings.set(key, val);
+            }
+        }
+        if (settings.size() > 0) {
+            dict.set(KEY_SETTINGS, settings);
+        } else {
+            dict.remove(KEY_SETTINGS);
         }
     }
 }
