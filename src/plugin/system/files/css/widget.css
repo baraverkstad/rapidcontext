@@ -61,30 +61,26 @@
     /* MSIE 7: fix for button width */
     *overflow: visible;
 }
-.widgetButton.widgetDisabled,
-.widgetButton.widgetDisabled:hover,
-.widgetButton.widgetDisabled:active {
-    top: 0;
+.widgetButton.widgetDisabled {
+    border-color: #CCCCCC;
     color: #888888;
     background-color: #F8F8F8;
     background-image: linear-gradient(to bottom, #FFFFFF, #F8F8F8);
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#F8F8F8')";
-    box-shadow: 0 1px 2px rgba(180, 180, 180, 0.5);
-    text-shadow: 0 1px #FFFFFF;
     cursor: default;
 }
-.widgetButton:focus {
+.widgetButton:not(.widgetDisabled):focus {
     outline: 0;
     border-color: #AADDFF;
     box-shadow: 0 0 4px rgba(50, 180, 255, 0.7);
 }
-.widgetButton:hover {
+.widgetButton:not(.widgetDisabled):hover {
     background-color: #E8E8E8;
     background-image: linear-gradient(to bottom, #FFFFFF, #E8E8E8);
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#E8E8E8')";
     box-shadow: 0 1px 3px rgba(180, 180, 180, 0.7);
 }
-.widgetButton:active {
+.widgetButton:not(.widgetDisabled):active {
     position: relative;
     top: 1px;
     box-shadow: 0 0 2px #AAA inset;
@@ -92,12 +88,14 @@
 .widgetButtonHighlight {
     font-weight: bold;
     letter-spacing: 0.03em;
+}
+.widgetButtonHighlight:not(.widgetDisabled) {
     border-color: #CBA;
     background-color: #EEDD99;
     background-image: linear-gradient(to bottom, #FFF8DD, #EEDD99);
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFF8DD', endColorstr='#EEDD99')";
 }
-.widgetButton.widgetButtonHighlight:hover {
+.widgetButton.widgetButtonHighlight:not(.widgetDisabled):hover {
     background-color: #F8E8A8;
     background-image: linear-gradient(to bottom, #FFFCEE, #F8E8A8);
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFCEE', endColorstr='#F8E8A8')";
