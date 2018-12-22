@@ -22,6 +22,7 @@
 /doc/images/logotype*.png
 /doc/images/backgrounds
 /doc/java/
+!/doc/java/topics.json
 /doc/js/
 
 # Package Target Files
