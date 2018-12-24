@@ -1,4 +1,6 @@
-FROM openjdk:8-jdk-alpine AS build
+ARG BASEREPO=arm32v7/openjdk
+
+FROM ${BASEREPO}:8-jdk-alpine AS build
 ARG VERSION
 RUN apk update && \
     apk add --no-cache \
@@ -7,8 +9,7 @@ ADD . /opt/rapidcontext/
 RUN cd /opt/rapidcontext/ && \
     ant -Dbuild.version=${VERSION:-$(date +%Y%m%d)} compile doc
 
-
-FROM openjdk:8-jdk-alpine
+FROM ${BASEREPO}:8-jdk-alpine
 COPY --from=build /opt/rapidcontext/doc.zip /opt/rapidcontext/
 COPY --from=build /opt/rapidcontext/lib/ /opt/rapidcontext/lib/
 COPY --from=build /opt/rapidcontext/plugin/ /opt/rapidcontext/plugin/
