@@ -11,7 +11,7 @@ RUN cd /opt/rapidcontext/ && \
     mkdir /opt/plugin
 
 
-FROM amd64/openjdk:8-jdk-alpine
+FROM arm32v6/openjdk:8-jdk-alpine
 COPY --from=build /opt/rapidcontext/doc.zip /opt/rapidcontext/
 COPY --from=build /opt/rapidcontext/lib/ /opt/rapidcontext/lib/
 COPY --from=build /opt/rapidcontext/plugin/ /opt/rapidcontext/plugin/
