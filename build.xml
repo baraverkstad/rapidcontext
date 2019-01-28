@@ -114,7 +114,7 @@
         <property name="java.class.path" value="${toString:plugin.classpath}" />
       </ant>
       <delete quiet="true" includeemptydirs="true">
-        <fileset dir="plugin/@{id}" />
+        <fileset dir="plugin/@{id}" defaultexcludes="false" />
         <fileset dir="plugin" includes="@{id}.zip" />
       </delete>
       <copy tofile="plugin/@{id}.zip">
