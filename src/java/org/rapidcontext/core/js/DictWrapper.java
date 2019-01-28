@@ -14,6 +14,8 @@
 
 package org.rapidcontext.core.js;
 
+import java.util.Arrays;
+
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.Wrapper;
@@ -143,7 +145,8 @@ public class DictWrapper implements Scriptable, Wrapper {
      * @return an array of defined property keys
      */
     public Object[] getIds() {
-        return dict.keys();
+        String[] keys = dict.keys();
+        return Arrays.copyOf(keys, keys.length, Object[].class);
     }
 
     /**

@@ -143,7 +143,7 @@ public class ArrayWrapper implements Scriptable, Wrapper {
      * @return an array of defined property keys
      */
     public Object[] getIds() {
-        return new String[] { "length" };
+        return new Object[0];
     }
 
     /**

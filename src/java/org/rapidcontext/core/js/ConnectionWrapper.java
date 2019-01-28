@@ -238,7 +238,7 @@ public class ConnectionWrapper implements Scriptable, Wrapper {
      * @return an array of defined property keys
      */
     public Object[] getIds() {
-        return new String[0];
+        return new Object[0];
     }
 
     /**
@@ -456,7 +456,7 @@ public class ConnectionWrapper implements Scriptable, Wrapper {
          * @return an array of defined property keys
          */
         public Object[] getIds() {
-            return new String[0];
+            return new Object[0];
         }
 
         /**
