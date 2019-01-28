@@ -125,6 +125,7 @@ public class JsSerializer {
      * @param buffer         the string buffer to append into
      */
     private static void serialize(Dict dict, int indent, StringBuilder buffer) {
+        int indentNext = (indent < 0) ? indent : indent + 1;
         String prefix = "";
         String infix = ":";
         if (indent >= 0) {
@@ -140,8 +141,7 @@ public class JsSerializer {
             buffer.append(prefix);
             buffer.append(TextEncoding.encodeJson(keys[i]));
             buffer.append(infix);
-            int nextindent = (indent < 0) ? indent : indent + 1;
-            serialize(dict.get(keys[i]), nextindent, buffer);
+            serialize(dict.get(keys[i]), indentNext, buffer);
         }
         if (keys.length > 0 && indent >= 0) {
             buffer.append("\n");
@@ -163,15 +163,22 @@ public class JsSerializer {
      * @param buffer         the string buffer to append into
      */
     private static void serialize(Array arr, int indent, StringBuilder buffer) {
+        int indentNext = (indent < 0) ? indent : indent + 1;
+        String prefix = "";
+        if (indent >= 0) {
+            prefix = "\n" + StringUtils.repeat("  ", indent + 1);
+        }
         buffer.append("[");
         for (int i = 0; i < arr.size(); i++) {
             if (i > 0) {
                 buffer.append(",");
-                if (indent >= 0) {
-                    buffer.append(" ");
-                }
             }
-            serialize(arr.get(i), indent, buffer);
+            buffer.append(prefix);
+            serialize(arr.get(i), indentNext, buffer);
+        }
+        if (arr.size() > 0 && indent >= 0) {
+            buffer.append("\n");
+            buffer.append(StringUtils.repeat("  ", indent));
         }
         buffer.append("]");
     }
