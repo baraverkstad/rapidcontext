@@ -14,6 +14,9 @@
 
 package org.rapidcontext.core.js;
 
+import org.mozilla.javascript.BaseFunction;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.NativeArray;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.Wrapper;
@@ -121,7 +124,7 @@ public class ArrayWrapper implements Scriptable, Wrapper {
      *         false otherwise
      */
     public boolean has(String name, Scriptable start) {
-        return name.equals("length");
+        return name.equals("length") || name.equals("toJSON");
     }
 
     /**
@@ -169,6 +172,21 @@ public class ArrayWrapper implements Scriptable, Wrapper {
     public Object get(String name, Scriptable start) {
         if (name.equals("length")) {
             return new Integer(arr.size());
+        } else if (name.equals("toJSON")) {
+            return new BaseFunction(start, ScriptableObject.getFunctionPrototype(start)) {
+                public String getFunctionName() {
+                    return "toJSON";
+                }
+                public int getArity() {
+                    return 1;
+                }
+                public int getLength() {
+                    return 1;
+                }
+                public Object call(Context cx, Scriptable scope, Scriptable thisObj, Object[] args) {
+                    return new NativeArray(getArray());
+                }
+            };
         }
         return NOT_FOUND;
     }
@@ -191,6 +209,19 @@ public class ArrayWrapper implements Scriptable, Wrapper {
             return val;
         }
         return NOT_FOUND;
+    }
+
+    /**
+     * Returns an array with all indexed properties from this object.
+     *
+     * @return an array with all values
+     */
+    public Object[] getArray() {
+        Object[] copy = new Object[arr.size()];
+        for (int i = 0; i < copy.length; i++) {
+            copy[i] = get(i, null);
+        }
+        return copy;
     }
 
     /**
