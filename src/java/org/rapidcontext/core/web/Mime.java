@@ -82,6 +82,14 @@ public class Mime {
     };
 
     /**
+     * The MIME types commonly used for Markdown text.
+     */
+    public static final String[] MARKDOWN = {
+        "text/markdown",
+        "text/x-markdown"
+    };
+
+    /**
      * The MIME types commonly used for GIF images.
      */
     public static final String[] GIF = {
@@ -182,6 +190,8 @@ public class Mime {
             return JSON[0];
         } else if (fileName.endsWith(".xml")) {
             return XML[0];
+        } else if (fileName.endsWith(".md")) {
+            return MARKDOWN[0];
         } else if (fileName.endsWith(".gif")) {
             return GIF[0];
         } else if (fileName.endsWith(".jpg") || fileName.endsWith(".jpeg")) {
