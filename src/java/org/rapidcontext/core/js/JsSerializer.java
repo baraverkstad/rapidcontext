@@ -309,7 +309,9 @@ public class JsSerializer {
                 } else {
                     value = scr.get(str, scr);
                 }
-                dict.set(str, unwrap(value));
+                if (str != null && str.length() > 0) {
+                    dict.set(str, unwrap(value));
+                }
             }
             return dict;
         } else {
