@@ -390,8 +390,9 @@ public class CallContext {
      * lookup and proper calls to reserve(), call() and
      * releaseAll(). Before execution all required resources will be
      * reserved, and once the execution terminates they will be
-     * released. The arguments must be specified in the same order
-     * as in the default bindings for the procedure.
+     * released (if at the bottom of the call stack). The arguments
+     * must be specified in the same order as in the default bindings
+     * for the procedure.
      *
      * @param name           the procedure name
      * @param args           the call arguments
@@ -407,8 +408,10 @@ public class CallContext {
 
         Procedure proc = library.getProcedure(name);
         boolean commit = false;
-        setAttribute(ATTRIBUTE_PROCEDURE, proc);
-        setAttribute(ATTRIBUTE_START_TIME, new Date());
+        if (stack.height() == 0) {
+            setAttribute(ATTRIBUTE_PROCEDURE, proc);
+            setAttribute(ATTRIBUTE_START_TIME, new Date());
+        }
         try {
             reserve(proc);
             Object res = call(proc, args);
@@ -426,8 +429,10 @@ public class CallContext {
                 throw new ProcedureException(msg, e);
             }
         } finally {
-            releaseAll(commit);
-            setAttribute(ATTRIBUTE_END_TIME, new Date());
+            if (stack.height() == 0) {
+                releaseAll(commit);
+                setAttribute(ATTRIBUTE_END_TIME, new Date());
+            }
         }
     }
 

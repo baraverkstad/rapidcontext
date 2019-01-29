@@ -32,6 +32,7 @@ import org.rapidcontext.app.proc.PluginInstallProcedure;
 import org.rapidcontext.app.proc.PluginListProcedure;
 import org.rapidcontext.app.proc.PluginLoadProcedure;
 import org.rapidcontext.app.proc.PluginUnloadProcedure;
+import org.rapidcontext.app.proc.ProcedureCallProcedure;
 import org.rapidcontext.app.proc.ProcedureDeleteProcedure;
 import org.rapidcontext.app.proc.ProcedureListProcedure;
 import org.rapidcontext.app.proc.ProcedureReadProcedure;
@@ -286,6 +287,7 @@ public class ApplicationContext {
             library.addBuiltIn(new PluginListProcedure());
             library.addBuiltIn(new PluginLoadProcedure());
             library.addBuiltIn(new PluginUnloadProcedure());
+            library.addBuiltIn(new ProcedureCallProcedure());
             library.addBuiltIn(new ProcedureListProcedure());
             library.addBuiltIn(new ProcedureReadProcedure());
             library.addBuiltIn(new ProcedureTraceProcedure());
