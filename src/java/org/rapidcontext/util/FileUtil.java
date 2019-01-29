@@ -14,11 +14,13 @@
 
 package org.rapidcontext.util;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 
 import org.apache.commons.lang.StringUtils;
@@ -49,6 +51,49 @@ public abstract class FileUtil {
             return file.getCanonicalFile();
         } catch (IOException ignore) {
             return file;
+        }
+    }
+
+    /**
+     * Reads a file containing text content in the specified
+     * character set.
+     *
+     * @param file           the input file to read
+     * @param charset        the name of a supported charset/encoding
+     *
+     * @return the text content of the file
+     *
+     * @throws IOException if the file couldn't be read
+     */
+    public static String readText(File file, String charset) throws IOException {
+        try (FileInputStream is = new FileInputStream(file)) {
+            return readText(is, charset);
+        }
+    }
+
+    /**
+     * Reads an input stream containing text content in the specified
+     * character set.
+     *
+     * @param is             the input stream to read
+     * @param charset        the name of a supported charset/encoding
+     *
+     * @return the text content of the input stream
+     *
+     * @throws IOException if the input stream couldn't be read
+     */
+    public static String readText(InputStream is, String charset) throws IOException {
+        try (
+            InputStreamReader stream = new InputStreamReader(is, charset);
+            BufferedReader reader = new BufferedReader(stream);
+        ) {
+            StringBuilder res = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                res.append(line);
+                res.append('\n');
+            }
+            return res.toString();
         }
     }
 

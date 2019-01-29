@@ -14,6 +14,9 @@
 
 package org.rapidcontext.app.proc;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
@@ -24,6 +27,8 @@ import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.core.storage.Storage;
+import org.rapidcontext.core.web.Mime;
+import org.rapidcontext.util.FileUtil;
 
 /**
  * The built-in storage read procedure.
@@ -32,6 +37,12 @@ import org.rapidcontext.core.storage.Storage;
  * @version  1.0
  */
 public class StorageReadProcedure implements Procedure {
+
+    /**
+     * The class logger.
+     */
+    private static final Logger LOG =
+        Logger.getLogger(StorageReadProcedure.class.getName());
 
     /**
      * The procedure name constant.
@@ -125,12 +136,21 @@ public class StorageReadProcedure implements Procedure {
      */
     public static Dict serialize(Path path, Object obj) {
         if (obj instanceof Binary) {
+
             Binary data = (Binary) obj;
             Dict dict = new Dict();
             dict.set("type", "file");
             dict.set("name", path.name());
             dict.set("mimeType", data.mimeType());
             dict.set("size", new Long(data.size()));
+            if (Mime.isText(data.mimeType())) {
+                try {
+                    dict.set("text", FileUtil.readText(data.openStream(), "UTF-8"));
+                } catch (Exception e) {
+                    String msg = "invalid data read: " + e.getMessage();
+                    LOG.log(Level.WARNING, msg, e);
+                }
+            }
             return dict;
         } else if (obj instanceof StorableObject) {
             // TODO: remove or obfuscate passwords?

@@ -208,6 +208,24 @@ public class Mime {
     }
 
     /**
+     * Checks if a specified content type is a known MIME type for text
+     * content.
+     *
+     * @param contentType    the content type to analyze
+     *
+     * @return true if the MIME type is for text content, or
+     *         false otherwise
+     */
+    public static boolean isText(String contentType) {
+        return contentType.startsWith("text/") ||
+               isMatch(contentType, HTML) ||
+               isMatch(contentType, JS) ||
+               isMatch(contentType, JSON) ||
+               isMatch(contentType, XML) ||
+               isMatch(contentType, SVG);
+    }
+
+    /**
      * Checks if a specified content type matches one of the specified
      * MIME types. Note that this method checks for any match, without
      * regard for any embedded quality or encoding value.

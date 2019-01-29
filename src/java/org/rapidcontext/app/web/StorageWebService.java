@@ -43,6 +43,7 @@ import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.type.WebService;
 import org.rapidcontext.core.web.Mime;
 import org.rapidcontext.core.web.Request;
+import org.rapidcontext.util.FileUtil;
 
 /**
  * A storage API web service. This service is used for accessing the
@@ -361,6 +362,14 @@ public class StorageWebService extends WebService {
         dict.set("name", path.name());
         dict.set("mimeType", data.mimeType());
         dict.set("size", new Long(data.size()));
+        if (Mime.isText(data.mimeType())) {
+            try {
+                dict.set("text", FileUtil.readText(data.openStream(), "UTF-8"));
+            } catch (Exception e) {
+                String msg = "invalid data read: " + e.getMessage();
+                LOG.log(Level.WARNING, msg, e);
+            }
+        }
         return dict;
     }
 
