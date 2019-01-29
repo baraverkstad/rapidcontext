@@ -29,22 +29,12 @@ import org.rapidcontext.core.data.Array;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class ArrayWrapper implements Scriptable, Wrapper {
+public class ArrayWrapper extends ScriptableObject implements Wrapper {
 
     /**
      * The encapsulated array.
      */
     private Array arr;
-
-    /**
-     * The object prototype.
-     */
-    private Scriptable prototype;
-
-    /**
-     * The object parent scope.
-     */
-    private Scriptable parentScope;
 
     /**
      * Creates a new JavaScript array wrapper.
@@ -53,9 +43,12 @@ public class ArrayWrapper implements Scriptable, Wrapper {
      * @param parentScope    the object parent scope
      */
     public ArrayWrapper(Array arr, Scriptable parentScope) {
+        super(parentScope, getArrayPrototype(parentScope));
         this.arr = arr;
-        this.prototype = ScriptableObject.getClassPrototype(parentScope, "Array");
-        this.parentScope = parentScope;
+        // Warning: This apparently also calls put() with the specified value...
+        //          which works this time, but not always.
+        defineProperty("length", (Object) null, DONTENUM | PERMANENT);
+        defineProperty("toJSON", (Object) null, DONTENUM | PERMANENT);
     }
 
     /**
@@ -64,43 +57,7 @@ public class ArrayWrapper implements Scriptable, Wrapper {
      * @return the class name
      */
     public String getClassName() {
-        return "Array";
-    }
-
-    /**
-     * Returns the prototype of the object.
-     *
-     * @return the prototype of the object
-     */
-    public Scriptable getPrototype() {
-        return this.prototype;
-    }
-
-    /**
-     * Sets the prototype of the object.
-     *
-     * @param prototype      the prototype object
-     */
-    public void setPrototype(Scriptable prototype) {
-        this.prototype = prototype;
-    }
-
-    /**
-     * Returns the parent (enclosing) scope of the object.
-     *
-     * @return the parent (enclosing) scope of the object
-     */
-    public Scriptable getParentScope() {
-        return this.parentScope;
-    }
-
-    /**
-     * Sets the parent (enclosing) scope of the object.
-     *
-     * @param parentScope    the parent scope of the object
-     */
-    public void setParentScope(Scriptable parentScope) {
-        this.parentScope = parentScope;
+        return "ArrayWrapper";
     }
 
     /**
@@ -112,19 +69,6 @@ public class ArrayWrapper implements Scriptable, Wrapper {
      */
     public boolean hasInstance(Scriptable instance) {
         return false;
-    }
-
-    /**
-     * Checks if a property is defined in this object.
-     *
-     * @param name           the name of the property
-     * @param start          the object in which the lookup began
-     *
-     * @return true if the property is defined, or
-     *         false otherwise
-     */
-    public boolean has(String name, Scriptable start) {
-        return name.equals("length") || name.equals("toJSON");
     }
 
     /**
@@ -141,26 +85,6 @@ public class ArrayWrapper implements Scriptable, Wrapper {
     }
 
     /**
-     * Returns an array of defined property keys.
-     *
-     * @return an array of defined property keys
-     */
-    public Object[] getIds() {
-        return new Object[0];
-    }
-
-    /**
-     * Returns the default value of this object.
-     *
-     * @param typeHint       type type hint class
-     *
-     * @return the default value of this object
-     */
-    public Object getDefaultValue(Class<?> typeHint) {
-        return ScriptableObject.getDefaultValue(this, typeHint);
-    }
-
-    /**
      * Returns a named property from this object.
      *
      * @param name           the name of the property
@@ -173,7 +97,7 @@ public class ArrayWrapper implements Scriptable, Wrapper {
         if (name.equals("length")) {
             return new Integer(arr.size());
         } else if (name.equals("toJSON")) {
-            return new BaseFunction(start, ScriptableObject.getFunctionPrototype(start)) {
+            return new BaseFunction(start, getFunctionPrototype(start)) {
                 public String getFunctionName() {
                     return "toJSON";
                 }
@@ -187,8 +111,9 @@ public class ArrayWrapper implements Scriptable, Wrapper {
                     return new NativeArray(getArray());
                 }
             };
+        } else {
+            return super.get(name, start);
         }
-        return NOT_FOUND;
     }
 
     /**
@@ -240,6 +165,8 @@ public class ArrayWrapper implements Scriptable, Wrapper {
             while (arr.size() > len) {
                 arr.remove(arr.size() - 1);
             }
+        } else {
+            super.put(name, start, value);
         }
     }
 
@@ -252,15 +179,6 @@ public class ArrayWrapper implements Scriptable, Wrapper {
      */
     public void put(int index, Scriptable start, Object value) {
         arr.set(index, value);
-    }
-
-    /**
-     * Removes a property from this object.
-     *
-     * @param name           the name of the property
-     */
-    public void delete(String name) {
-        // Do nothing
     }
 
     /**

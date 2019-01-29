@@ -28,22 +28,12 @@ import org.rapidcontext.core.data.Dict;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class DictWrapper implements Scriptable, Wrapper {
+public class DictWrapper extends ScriptableObject implements Wrapper {
 
     /**
      * The encapsulated dictionary.
      */
     private Dict dict;
-
-    /**
-     * The object prototype.
-     */
-    private Scriptable prototype;
-
-    /**
-     * The object parent scope.
-     */
-    private Scriptable parentScope;
 
     /**
      * Creates a new JavaScript dictionary wrapper.
@@ -52,9 +42,8 @@ public class DictWrapper implements Scriptable, Wrapper {
      * @param parentScope    the object parent scope
      */
     public DictWrapper(Dict dict, Scriptable parentScope) {
+        super(parentScope, getObjectPrototype(parentScope));
         this.dict = dict;
-        this.prototype = ScriptableObject.getObjectPrototype(parentScope);
-        this.parentScope = parentScope;
     }
 
     /**
@@ -63,43 +52,7 @@ public class DictWrapper implements Scriptable, Wrapper {
      * @return the class name
      */
     public String getClassName() {
-        return "Dict";
-    }
-
-    /**
-     * Returns the prototype of the object.
-     *
-     * @return the prototype of the object
-     */
-    public Scriptable getPrototype() {
-        return this.prototype;
-    }
-
-    /**
-     * Sets the prototype of the object.
-     *
-     * @param prototype      the prototype object
-     */
-    public void setPrototype(Scriptable prototype) {
-        this.prototype = prototype;
-    }
-
-    /**
-     * Returns the parent (enclosing) scope of the object.
-     *
-     * @return the parent (enclosing) scope of the object
-     */
-    public Scriptable getParentScope() {
-        return this.parentScope;
-    }
-
-    /**
-     * Sets the parent (enclosing) scope of the object.
-     *
-     * @param parentScope    the parent scope of the object
-     */
-    public void setParentScope(Scriptable parentScope) {
-        this.parentScope = parentScope;
+        return "DictWrapper";
     }
 
     /**
@@ -123,20 +76,7 @@ public class DictWrapper implements Scriptable, Wrapper {
      *         false otherwise
      */
     public boolean has(String name, Scriptable start) {
-        return dict.containsKey(name);
-    }
-
-    /**
-     * Checks if an index is defined in this object.
-     *
-     * @param index          the index of the property
-     * @param start          the object in which the lookup began
-     *
-     * @return true if the index is defined, or
-     *         false otherwise
-     */
-    public boolean has(int index, Scriptable start) {
-        return false;
+        return dict.containsKey(name) || super.has(name, start);
     }
 
     /**
@@ -147,17 +87,6 @@ public class DictWrapper implements Scriptable, Wrapper {
     public Object[] getIds() {
         String[] keys = dict.keys();
         return Arrays.copyOf(keys, keys.length, Object[].class);
-    }
-
-    /**
-     * Returns the default value of this object.
-     *
-     * @param typeHint       type type hint class
-     *
-     * @return the default value of this object
-     */
-    public Object getDefaultValue(Class<?> typeHint) {
-        return ScriptableObject.getDefaultValue(this, typeHint);
     }
 
     /**
@@ -176,21 +105,9 @@ public class DictWrapper implements Scriptable, Wrapper {
                 dict.set(name, val);
             }
             return val;
+        } else {
+            return super.get(name, start);
         }
-        return NOT_FOUND;
-    }
-
-    /**
-     * Returns an indexed property from this object.
-     *
-     * @param index          the index of the property
-     * @param start          the object in which the lookup began
-     *
-     * @return the value of the property, or
-     *         NOT_FOUND if not found
-     */
-    public Object get(int index, Scriptable start) {
-        return NOT_FOUND;
     }
 
     /**
@@ -201,18 +118,9 @@ public class DictWrapper implements Scriptable, Wrapper {
      * @param value          the value to set
      */
     public void put(String name, Scriptable start, Object value) {
-        dict.set(name, value);
-    }
-
-    /**
-     * Sets an indexed property in this object.
-     *
-     * @param index          the index of the property
-     * @param start          the object in which the lookup began
-     * @param value          the value to set
-     */
-    public void put(int index, Scriptable start, Object value) {
-        // Do nothing
+        if (name != null && name.length() > 0) {
+            dict.set(name, value);
+        }
     }
 
     /**
@@ -221,16 +129,10 @@ public class DictWrapper implements Scriptable, Wrapper {
      * @param name           the name of the property
      */
     public void delete(String name) {
-        dict.remove(name);
-    }
-
-    /**
-     * Removes an indexed property from this object.
-     *
-     * @param index          the index of the property
-     */
-    public void delete(int index) {
-        // Do nothing
+        if (dict.containsKey(name)) {
+            dict.remove(name);
+        }
+        super.delete(name);
     }
 
     /**
