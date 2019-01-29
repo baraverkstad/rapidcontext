@@ -120,6 +120,7 @@ public class ThreadCreateProcedure implements Procedure {
             throw new ProcedureException("permission denied");
         }
         String proc = bindings.getValue("procedure").toString();
+        CallContext.checkAccess("procedure/" + proc, cx.readPermission(1));
         Object[] args = null;
         Object obj = bindings.getValue("arguments");
         if (obj instanceof Array) {
