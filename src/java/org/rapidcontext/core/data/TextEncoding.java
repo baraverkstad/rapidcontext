@@ -207,7 +207,7 @@ public enum TextEncoding {
                     buffer.append("\\r");
                     break;
                 default:
-                    if (c != '\'' && c != '<' && 32 <= c && c < 127) {
+                    if (32 <= c && c < 127) {
                         buffer.append(c);
                     } else {
                         buffer.append(String.format("\\u%04x", new Integer(c)));
