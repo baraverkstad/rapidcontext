@@ -750,17 +750,18 @@ RapidContext.App.loadStyles = function (url) {
         var styles = document.styleSheets;
         for (var i = 0; i < styles.length; i++) {
             if (MochiKit.Text.startsWith(url, styles[i].href)) {
-                return styles[i].cssRules || styles[i].rules;
+                return styles[i];
             }
         }
         return null;
     }
     function isStylesheetLoaded(url, absoluteUrl) {
-        var sheet = findStylesheet(url) || findStylesheet(absoluteUrl);
-        return !!(sheet && sheet.length);
+        var styles = findStylesheet(url) || findStylesheet(absoluteUrl);
+        var rules = styles && (styles.cssRules || styles.rules);
+        return !!rules && rules.length > 0;
     }
     var absoluteUrl = RapidContext.Util.resolveURI(url);
-    if (isStylesheetLoaded(url, absoluteUrl)) {
+    if (findStylesheet(url) || findStylesheet(absoluteUrl)) {
         RapidContext.Log.log("Stylesheet already loaded, skipping", url);
         return MochiKit.Async.wait(0);
     }
