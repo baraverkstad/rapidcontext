@@ -317,7 +317,7 @@ public class PropertiesSerializer {
     private static Object toValue(String value) {
         if (value.equals("true") || value.equals("false")) {
             return Boolean.valueOf(value);
-        } else if (value.length() > 0 && StringUtils.isNumeric(value)) {
+        } else if (value.length() > 0 && value.length() <= 9 && StringUtils.isNumeric(value)) {
             return Integer.valueOf(value);
         } else if (value.startsWith("@") && StringUtils.isNumeric(value.substring(1))) {
             return new Date(Long.parseLong(value.substring(1)));
