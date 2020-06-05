@@ -95,7 +95,7 @@ public class ArrayWrapper extends ScriptableObject implements Wrapper {
      */
     public Object get(String name, Scriptable start) {
         if (name.equals("length")) {
-            return new Integer(arr.size());
+            return Integer.valueOf(arr.size());
         } else if (name.equals("toJSON")) {
             return new BaseFunction(start, getFunctionPrototype(start)) {
                 public String getFunctionName() {

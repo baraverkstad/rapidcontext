@@ -142,7 +142,7 @@ public class StorageReadProcedure implements Procedure {
             dict.set("type", "file");
             dict.set("name", path.name());
             dict.set("mimeType", data.mimeType());
-            dict.set("size", new Long(data.size()));
+            dict.set("size", Long.valueOf(data.size()));
             if (Mime.isText(data.mimeType())) {
                 try {
                     dict.set("text", FileUtil.readText(data.openStream(), "UTF-8"));

@@ -361,7 +361,7 @@ public class StorageWebService extends WebService {
         dict.set("type", "file");
         dict.set("name", path.name());
         dict.set("mimeType", data.mimeType());
-        dict.set("size", new Long(data.size()));
+        dict.set("size", Long.valueOf(data.size()));
         if (Mime.isText(data.mimeType())) {
             try {
                 dict.set("text", FileUtil.readText(data.openStream(), "UTF-8"));
@@ -386,7 +386,7 @@ public class StorageWebService extends WebService {
 
         dict = meta.serialize().copy();
         dict.remove(Metadata.KEY_TYPE);
-        dict.set("processTime", new Long(request.getProcessTime()));
+        dict.set("processTime", Long.valueOf(request.getProcessTime()));
         return dict;
     }
 

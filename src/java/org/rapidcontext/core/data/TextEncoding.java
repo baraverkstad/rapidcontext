@@ -165,7 +165,7 @@ public enum TextEncoding {
                 if (CharUtils.isAsciiPrintable(c)) {
                     buffer.append(c);
                 } else {
-                    buffer.append(String.format("\\u%04x", new Integer(c)));
+                    buffer.append(String.format("\\u%04x", Integer.valueOf(c)));
                 }
             }
         }
@@ -210,7 +210,7 @@ public enum TextEncoding {
                     if (32 <= c && c < 127) {
                         buffer.append(c);
                     } else {
-                        buffer.append(String.format("\\u%04x", new Integer(c)));
+                        buffer.append(String.format("\\u%04x", Integer.valueOf(c)));
                     }
                 }
             }

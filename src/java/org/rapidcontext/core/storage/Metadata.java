@@ -162,7 +162,7 @@ public class Metadata extends StorableObject {
      * @param modified       the last modified time, or negative for now
      */
     public Metadata(Class<?> clazz, Path path, Path storagePath, long modified) {
-        this(category(clazz), clazz, path, storagePath, new Long(modified));
+        this(category(clazz), clazz, path, storagePath, Long.valueOf(modified));
     }
 
     /**
