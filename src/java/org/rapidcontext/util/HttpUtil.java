@@ -33,52 +33,52 @@ public interface HttpUtil {
      */
     public static interface METHOD {
 
-        /** <tt>OPTIONS</tt> (HTTP/1.1 - RFC 2616) */
+        /** <code>OPTIONS</code> (HTTP/1.1 - RFC 2616) */
         public static final String OPTIONS = "OPTIONS";
 
-        /** <tt>GET</tt> (HTTP/1.1 - RFC 2616) */
+        /** <code>GET</code> (HTTP/1.1 - RFC 2616) */
         public static final String GET = "GET";
 
-        /** <tt>HEAD</tt> (HTTP/1.1 - RFC 2616) */
+        /** <code>HEAD</code> (HTTP/1.1 - RFC 2616) */
         public static final String HEAD = "HEAD";
 
-        /** <tt>POST</tt> (HTTP/1.1 - RFC 2616) */
+        /** <code>POST</code> (HTTP/1.1 - RFC 2616) */
         public static final String POST = "POST";
 
-        /** <tt>PUT</tt> (HTTP/1.1 - RFC 2616) */
+        /** <code>PUT</code> (HTTP/1.1 - RFC 2616) */
         public static final String PUT = "PUT";
 
-        /** <tt>PATCH</tt> (HTTP PATCH - RFC 5789) */
+        /** <code>PATCH</code> (HTTP PATCH - RFC 5789) */
         public static final String PATCH = "PATCH";
 
-        /** <tt>DELETE</tt> (HTTP/1.1 - RFC 2616) */
+        /** <code>DELETE</code> (HTTP/1.1 - RFC 2616) */
         public static final String DELETE = "DELETE";
 
-        /** <tt>TRACE</tt> (HTTP/1.1 - RFC 2616) */
+        /** <code>TRACE</code> (HTTP/1.1 - RFC 2616) */
         public static final String TRACE = "TRACE";
 
-        /** <tt>CONNECT</tt> (HTTP/1.1 - RFC 2616) */
+        /** <code>CONNECT</code> (HTTP/1.1 - RFC 2616) */
         public static final String CONNECT = "CONNECT";
 
-        /** <tt>PROPFIND</tt> (WebDAV - RFC 4918) */
+        /** <code>PROPFIND</code> (WebDAV - RFC 4918) */
         public static final String PROPFIND = "PROPFIND";
 
-        /** <tt>PROPPATCH</tt> (WebDAV - RFC 4918) */
+        /** <code>PROPPATCH</code> (WebDAV - RFC 4918) */
         public static final String PROPPATCH = "PROPPATCH";
 
-        /** <tt>MKCOL</tt> (WebDAV - RFC 4918) */
+        /** <code>MKCOL</code> (WebDAV - RFC 4918) */
         public static final String MKCOL = "MKCOL";
 
-        /** <tt>COPY</tt> (WebDAV - RFC 4918) */
+        /** <code>COPY</code> (WebDAV - RFC 4918) */
         public static final String COPY = "COPY";
 
-        /** <tt>MOVE</tt> (WebDAV - RFC 4918) */
+        /** <code>MOVE</code> (WebDAV - RFC 4918) */
         public static final String MOVE = "MOVE";
 
-        /** <tt>LOCK</tt> (WebDAV - RFC 4918) */
+        /** <code>LOCK</code> (WebDAV - RFC 4918) */
         public static final String LOCK = "LOCK";
 
-        /** <tt>UNLOCK</tt> (WebDAV - RFC 4918) */
+        /** <code>UNLOCK</code> (WebDAV - RFC 4918) */
         public static final String UNLOCK = "UNLOCK";
     }
 
@@ -91,107 +91,107 @@ public interface HttpUtil {
 
         // 1xx Informational
 
-        /** <tt>100 Continue</tt> (HTTP/1.1 - RFC 2616) */
+        /** <code>100 Continue</code> (HTTP/1.1 - RFC 2616) */
         public static final int CONTINUE = 100;
-        /** <tt>101 Switching Protocols</tt> (HTTP/1.1 - RFC 2616)*/
+        /** <code>101 Switching Protocols</code> (HTTP/1.1 - RFC 2616)*/
         public static final int SWITCHING_PROTOCOLS = 101;
 
         // 2xx Successful
 
-        /** <tt>200 OK</tt> (HTTP/1.0 - RFC 1945) */
+        /** <code>200 OK</code> (HTTP/1.0 - RFC 1945) */
         public static final int OK = 200;
-        /** <tt>201 Created</tt> (HTTP/1.0 - RFC 1945) */
+        /** <code>201 Created</code> (HTTP/1.0 - RFC 1945) */
         public static final int CREATED = 201;
-        /** <tt>202 Accepted</tt> (HTTP/1.0 - RFC 1945) */
+        /** <code>202 Accepted</code> (HTTP/1.0 - RFC 1945) */
         public static final int ACCEPTED = 202;
-        /** <tt>203 Non Authoritative Information</tt> (HTTP/1.1 - RFC 2616) */
+        /** <code>203 Non Authoritative Information</code> (HTTP/1.1 - RFC 2616) */
         public static final int NON_AUTHORITATIVE_INFORMATION = 203;
-        /** <tt>204 No Content</tt> (HTTP/1.0 - RFC 1945) */
+        /** <code>204 No Content</code> (HTTP/1.0 - RFC 1945) */
         public static final int NO_CONTENT = 204;
-        /** <tt>205 Reset Content</tt> (HTTP/1.1 - RFC 2616) */
+        /** <code>205 Reset Content</code> (HTTP/1.1 - RFC 2616) */
         public static final int RESET_CONTENT = 205;
-        /** <tt>206 Partial Content</tt> (HTTP/1.1 - RFC 2616) */
+        /** <code>206 Partial Content</code> (HTTP/1.1 - RFC 2616) */
         public static final int PARTIAL_CONTENT = 206;
-        /** <tt>207 Multi-Status</tt> (WebDAV - RFC 4918) */
+        /** <code>207 Multi-Status</code> (WebDAV - RFC 4918) */
         public static final int MULTI_STATUS = 207;
 
         // 3xx Redirection
 
-        /** <tt>300 Multiple Choices</tt> (HTTP/1.1 - RFC 2616) */
+        /** <code>300 Multiple Choices</code> (HTTP/1.1 - RFC 2616) */
         public static final int MULTIPLE_CHOICES = 300;
-        /** <tt>301 Moved Permanently</tt> (HTTP/1.0 - RFC 1945) */
+        /** <code>301 Moved Permanently</code> (HTTP/1.0 - RFC 1945) */
         public static final int MOVED_PERMANENTLY = 301;
-        /** <tt>302 Found</tt> (HTTP/1.1 - RFC 2616) */
+        /** <code>302 Found</code> (HTTP/1.1 - RFC 2616) */
         public static final int FOUND = 302;
-        /** <tt>303 See Other</tt> (HTTP/1.1 - RFC 2616) */
+        /** <code>303 See Other</code> (HTTP/1.1 - RFC 2616) */
         public static final int SEE_OTHER = 303;
-        /** <tt>304 Not Modified</tt> (HTTP/1.0 - RFC 1945) */
+        /** <code>304 Not Modified</code> (HTTP/1.0 - RFC 1945) */
         public static final int NOT_MODIFIED = 304;
-        /** <tt>305 Use Proxy</tt> (HTTP/1.1 - RFC 2616) */
+        /** <code>305 Use Proxy</code> (HTTP/1.1 - RFC 2616) */
         public static final int USE_PROXY = 305;
-        /** <tt>307 Temporary Redirect</tt> (HTTP/1.1 - RFC 2616) */
+        /** <code>307 Temporary Redirect</code> (HTTP/1.1 - RFC 2616) */
         public static final int TEMPORARY_REDIRECT = 307;
 
         // 4xx Client Error
 
-        /** <tt>400 Bad Request</tt> (HTTP/1.1 - RFC 2616) */
+        /** <code>400 Bad Request</code> (HTTP/1.1 - RFC 2616) */
         public static final int BAD_REQUEST = 400;
-        /** <tt>401 Unauthorized</tt> (HTTP/1.0 - RFC 1945) */
+        /** <code>401 Unauthorized</code> (HTTP/1.0 - RFC 1945) */
         public static final int UNAUTHORIZED = 401;
-        /** <tt>402 Payment Required</tt> (HTTP/1.1 - RFC 2616) */
+        /** <code>402 Payment Required</code> (HTTP/1.1 - RFC 2616) */
         public static final int PAYMENT_REQUIRED = 402;
-        /** <tt>403 Forbidden</tt> (HTTP/1.0 - RFC 1945) */
+        /** <code>403 Forbidden</code> (HTTP/1.0 - RFC 1945) */
         public static final int FORBIDDEN = 403;
-        /** <tt>404 Not Found</tt> (HTTP/1.0 - RFC 1945) */
+        /** <code>404 Not Found</code> (HTTP/1.0 - RFC 1945) */
         public static final int NOT_FOUND = 404;
-        /** <tt>405 Method Not Allowed</tt> (HTTP/1.1 - RFC 2616) */
+        /** <code>405 Method Not Allowed</code> (HTTP/1.1 - RFC 2616) */
         public static final int METHOD_NOT_ALLOWED = 405;
-        /** <tt>406 Not Acceptable</tt> (HTTP/1.1 - RFC 2616) */
+        /** <code>406 Not Acceptable</code> (HTTP/1.1 - RFC 2616) */
         public static final int NOT_ACCEPTABLE = 406;
-        /** <tt>407 Proxy Authentication Required</tt> (HTTP/1.1 - RFC 2616)*/
+        /** <code>407 Proxy Authentication Required</code> (HTTP/1.1 - RFC 2616)*/
         public static final int PROXY_AUTHENTICATION_REQUIRED = 407;
-        /** <tt>408 Request Timeout</tt> (HTTP/1.1 - RFC 2616) */
+        /** <code>408 Request Timeout</code> (HTTP/1.1 - RFC 2616) */
         public static final int REQUEST_TIMEOUT = 408;
-        /** <tt>409 Conflict</tt> (HTTP/1.1 - RFC 2616) */
+        /** <code>409 Conflict</code> (HTTP/1.1 - RFC 2616) */
         public static final int CONFLICT = 409;
-        /** <tt>410 Gone</tt> (HTTP/1.1 - RFC 2616) */
+        /** <code>410 Gone</code> (HTTP/1.1 - RFC 2616) */
         public static final int GONE = 410;
-        /** <tt>411 Length Required</tt> (HTTP/1.1 - RFC 2616) */
+        /** <code>411 Length Required</code> (HTTP/1.1 - RFC 2616) */
         public static final int LENGTH_REQUIRED = 411;
-        /** <tt>412 Precondition Failed</tt> (HTTP/1.1 - RFC 2616) */
+        /** <code>412 Precondition Failed</code> (HTTP/1.1 - RFC 2616) */
         public static final int PRECONDITION_FAILED = 412;
-        /** <tt>413 Request Entity Too Large</tt> (HTTP/1.1 - RFC 2616) */
+        /** <code>413 Request Entity Too Large</code> (HTTP/1.1 - RFC 2616) */
         public static final int REQUEST_ENTITY_TOO_LARGE = 413;
-        /** <tt>414 Request-URI Too Long</tt> (HTTP/1.1 - RFC 2616) */
+        /** <code>414 Request-URI Too Long</code> (HTTP/1.1 - RFC 2616) */
         public static final int REQUEST_URI_TOO_LONG = 414;
-        /** <tt>415 Unsupported Media Type</tt> (HTTP/1.1 - RFC 2616) */
+        /** <code>415 Unsupported Media Type</code> (HTTP/1.1 - RFC 2616) */
         public static final int UNSUPPORTED_MEDIA_TYPE = 415;
-        /** <tt>416 Requested Range Not Satisfiable</tt> (HTTP/1.1 - RFC 2616) */
+        /** <code>416 Requested Range Not Satisfiable</code> (HTTP/1.1 - RFC 2616) */
         public static final int REQUESTED_RANGE_NOT_SATISFIABLE = 416;
-        /** <tt>417 Expectation Failed</tt> (HTTP/1.1 - RFC 2616) */
+        /** <code>417 Expectation Failed</code> (HTTP/1.1 - RFC 2616) */
         public static final int EXPECTATION_FAILED = 417;
-        /** <tt>422 Unprocessable Entity</tt> (WebDAV - RFC 4918) */
+        /** <code>422 Unprocessable Entity</code> (WebDAV - RFC 4918) */
         public static final int UNPROCESSABLE_ENTITY = 422;
-        /** <tt>423 Locked</tt> (WebDAV - RFC 4918) */
+        /** <code>423 Locked</code> (WebDAV - RFC 4918) */
         public static final int LOCKED = 423;
-        /** <tt>424 Failed Dependency</tt> (WebDAV - RFC 4918) */
+        /** <code>424 Failed Dependency</code> (WebDAV - RFC 4918) */
         public static final int FAILED_DEPENDENCY = 424;
 
         // 5xx Server Error
 
-        /** <tt>500 Server Error</tt> (HTTP/1.0 - RFC 1945) */
+        /** <code>500 Server Error</code> (HTTP/1.0 - RFC 1945) */
         public static final int INTERNAL_SERVER_ERROR = 500;
-        /** <tt>501 Not Implemented</tt> (HTTP/1.0 - RFC 1945) */
+        /** <code>501 Not Implemented</code> (HTTP/1.0 - RFC 1945) */
         public static final int NOT_IMPLEMENTED = 501;
-        /** <tt>502 Bad Gateway</tt> (HTTP/1.0 - RFC 1945) */
+        /** <code>502 Bad Gateway</code> (HTTP/1.0 - RFC 1945) */
         public static final int BAD_GATEWAY = 502;
-        /** <tt>503 Service Unavailable</tt> (HTTP/1.0 - RFC 1945) */
+        /** <code>503 Service Unavailable</code> (HTTP/1.0 - RFC 1945) */
         public static final int SERVICE_UNAVAILABLE = 503;
-        /** <tt>504 Gateway Timeout</tt> (HTTP/1.1 - RFC 2616) */
+        /** <code>504 Gateway Timeout</code> (HTTP/1.1 - RFC 2616) */
         public static final int GATEWAY_TIMEOUT = 504;
-        /** <tt>505 HTTP Version Not Supported</tt> (HTTP/1.1 - RFC 2616) */
+        /** <code>505 HTTP Version Not Supported</code> (HTTP/1.1 - RFC 2616) */
         public static final int HTTP_VERSION_NOT_SUPPORTED = 505;
-        /** <tt>507 Insufficient Storage</tt> (WebDAV - RFC 4918) */
+        /** <code>507 Insufficient Storage</code> (WebDAV - RFC 4918) */
         public static final int INSUFFICIENT_STORAGE = 507;
 
         /**
