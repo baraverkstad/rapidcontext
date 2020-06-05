@@ -496,9 +496,9 @@ public class PluginManager {
                 LOG.warning(msg);
                 throw new PluginException(msg);
             }
-            Constructor<?> constr;
+            Constructor<?> ctor;
             try {
-                constr = cls.getConstructor(new Class[] { Dict.class});
+                ctor = cls.getConstructor(new Class[] { Dict.class});
             } catch (Throwable e) {
                 msg = pluginId + " plugin class " + className +
                       " missing constructor with valid signature";
@@ -506,7 +506,7 @@ public class PluginManager {
                 throw new PluginException(msg + ": " + e.getMessage());
             }
             try {
-                plugin = (Plugin) constr.newInstance(new Object[] { dict });
+                plugin = (Plugin) ctor.newInstance(new Object[] { dict });
             } catch (Throwable e) {
                 msg = "couldn't create " + pluginId + " plugin instance for " +
                       className;

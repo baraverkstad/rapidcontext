@@ -164,7 +164,7 @@ public class Library {
      */
     public static Bindings getDefaultBindings(String type) {
         try {
-            AddOnProcedure proc = (AddOnProcedure) types.get(type).newInstance();
+            AddOnProcedure proc = (AddOnProcedure) types.get(type).getDeclaredConstructor().newInstance();
             return proc.getBindings();
         } catch (Exception ignore) {
             return null;
@@ -386,7 +386,7 @@ public class Library {
             throw new ProcedureException(msg);
         }
         try {
-            Object obj = types.get(type).newInstance();
+            Object obj = types.get(type).getDeclaredConstructor().newInstance();
             AddOnProcedure proc = (AddOnProcedure) obj;
             proc.setData(data);
             return proc;
