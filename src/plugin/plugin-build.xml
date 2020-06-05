@@ -68,8 +68,8 @@
     <javac srcdir="src"
            destdir="classes"
            classpathref="build.classpath"
-           target="1.7"
-           source="1.7"
+           target="8"
+           source="8"
            debug="on"
            deprecation="on"
            includeantruntime="off">

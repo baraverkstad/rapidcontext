@@ -85,8 +85,8 @@
     <javac srcdir="src/java"
            destdir="classes"
            classpathref="build.classpath"
-           target="1.7"
-           source="1.7"
+           target="8"
+           source="8"
            debug="on"
            deprecation="on">
       <compilerarg value="-Xlint:unchecked"/>
@@ -155,8 +155,8 @@
     <javac srcdir="test/src/java"
            destdir="test/classes"
            classpathref="build.classpath.test"
-           target="1.7"
-           source="1.7"
+           target="8"
+           source="8"
            debug="on"
            deprecation="on">
       <compilerarg value="-Xlint:unchecked"/>
