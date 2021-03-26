@@ -244,7 +244,9 @@ public class ProcedureWebService extends WebService {
         }
         for (int i = 0; i < names.length; i++) {
             if (bindings.getType(names[i]) == Bindings.ARGUMENT) {
-                if (jsonArgs != null) {
+                if (jsonArgs != null && names[i].equals("json")) {
+                    args.add(jsonArgs);
+                } else if (jsonArgs != null) {
                     args.add(jsonArgs.get(names[i], null));
                 } else {
                     String str = request.getParameter("arg" + args.size(), null);
