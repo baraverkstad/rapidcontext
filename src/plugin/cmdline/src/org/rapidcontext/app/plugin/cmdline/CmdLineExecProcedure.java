@@ -210,6 +210,7 @@ public class CmdLineExecProcedure extends AddOnProcedure {
         Dict res = new Dict();
         res.setInt("exitValue", exitValue);
         res.set("output", output);
+        res.set("error", error);
         return res;
     }
 
