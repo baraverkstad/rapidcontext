@@ -62,6 +62,7 @@ if [ "$LOGFILE" != "" ] ; then
 fi
 
 # Setup JAVA_OPTS variable
+JAVA_OPTS="$JAVA_OPTS -Dorg.mortbay.jetty.Request.maxFormContentSize=1000000"
 case "$JAVA_OPTS" in
 (*-DDEBUG*)
     JAVA_OPTS="$JAVA_OPTS -Djava.util.logging.config.file=lib/debug.properties"

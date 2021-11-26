@@ -9,7 +9,7 @@ for %%x in (%0) do pushd %%~dpsx
 cd ..
 for %%x in (lib\rapidcontext-*.jar) do set _JARFILE=%%~x
 
-::Check for command-line execution 
+::Check for command-line execution
 if not "%1" == "" goto JAVA
 start javaw.exe %_JAVA_OPTS% -jar %_JARFILE%
 goto DONE
@@ -21,6 +21,7 @@ set _JAVA=%JAVA_HOME%\bin\java.exe
 
 ::Check for debug flag in Java options
 :OPTIONS
+set _JAVA_OPTS=%_JAVA_OPTS% -Dorg.mortbay.jetty.Request.maxFormContentSize=1000000
 echo %_JAVA_OPTS% | find "DDEBUG" > nul
 if errorlevel 1 goto RUNAPP
 set _JAVA_OPTS=%_JAVA_OPTS% -Djava.util.logging.config.file=lib\debug.properties
