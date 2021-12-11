@@ -765,7 +765,7 @@ public class Request implements HttpUtil {
         responseMimeType = data.mimeType();
         responseData = data;
         if (limitCache) {
-            response.setHeader(HEADER.CACHE_CONTROL, "private");
+            response.setHeader(HEADER.CACHE_CONTROL, "no-store, max-age=0");
         }
     }
 
@@ -916,7 +916,7 @@ public class Request implements HttpUtil {
     }
 
     /**
-     * Sets the HTTP cache, expires and last modified headers. If the
+     * Sets the HTTP cache-control and last modified headers. If the
      * last modified time is zero (0) or negative, the current system
      * time will be used instead.
      *
@@ -926,17 +926,8 @@ public class Request implements HttpUtil {
      */
     private void commitHeaders(boolean cache, long lastModified) {
         if (!response.containsHeader(HEADER.CACHE_CONTROL)) {
-            String cacheControl = cache ? "public" : "no-cache";
+            String cacheControl = cache ? "public, max-age=86400" : "no-store, max-age=0";
             response.setHeader(HEADER.CACHE_CONTROL, cacheControl);
-        }
-        if (!response.containsHeader(HEADER.EXPIRES)) {
-            if (cache) {
-                long nextHour = System.currentTimeMillis() +
-                                DateUtils.MILLIS_PER_HOUR;
-                response.setDateHeader(HEADER.EXPIRES, nextHour);
-            } else {
-                response.setHeader(HEADER.EXPIRES, "-1");
-            }
         }
         if (lastModified <= 0) {
             lastModified = System.currentTimeMillis();
