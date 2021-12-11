@@ -13,9 +13,11 @@ Group=rapidcontext
 PermissionsStartOnly=true
 Environment="LANG=C.UTF-8"
 Environment="PIDFILE=/var/run/rapidcontext.pid"
-Environment="LOGFILE=/var/log/rapidcontext.log"
-ExecStartPre=/bin/sh -ec "touch $PIDFILE $LOGFILE ; chown rapidcontext:rapidcontext $PIDFILE $LOGFILE"
+ExecStartPre=/bin/sh -ce "touch $PIDFILE ; chown rapidcontext:rapidcontext $PIDFILE"
 ExecStart=/opt/rapidcontext/bin/rapidcontext --server --port 8180 --local /opt/rapidcontext-local
+Restart=always
+StandardOutput=journal+console
+StandardError=inherit
 
 [Install]
 WantedBy=multi-user.target
