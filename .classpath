@@ -15,6 +15,7 @@
 	<classpathentry kind="lib" path="lib/commons-fileupload-1.4.jar"/>
 	<classpathentry kind="lib" path="lib/commons-lang-2.5.jar"/>
 	<classpathentry kind="lib" path="lib/commons-pool-1.5.5.jar"/>
+	<classpathentry kind="lib" path="lib/commons-text-1.9.jar"/>
 	<classpathentry kind="lib" path="lib/jetty-6.1.9.jar"/>
 	<classpathentry kind="lib" path="lib/jetty-util-6.1.9.jar"/>
 	<classpathentry kind="lib" path="lib/rhino-1.7.13.jar"/>

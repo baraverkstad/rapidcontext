@@ -16,8 +16,8 @@ package org.rapidcontext.core.data;
 
 import java.util.Date;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.util.DateUtil;
 
@@ -132,16 +132,16 @@ public class HtmlSerializer {
             String text = StringUtils.substringAfter(str, "$");
             text = StringUtils.defaultIfEmpty(text, url);
             buffer.append("<a href='");
-            buffer.append(StringEscapeUtils.escapeHtml(url));
+            buffer.append(StringEscapeUtils.escapeHtml4(url));
             buffer.append("'>");
-            buffer.append(StringEscapeUtils.escapeHtml(text));
+            buffer.append(StringEscapeUtils.escapeHtml4(text));
             buffer.append("</a>");
         } else if (str.indexOf("\n") >= 0) {
             buffer.append("<pre>");
-            buffer.append(StringEscapeUtils.escapeHtml(str));
+            buffer.append(StringEscapeUtils.escapeHtml4(str));
             buffer.append("</pre>");
         } else {
-            buffer.append(StringEscapeUtils.escapeHtml(str));
+            buffer.append(StringEscapeUtils.escapeHtml4(str));
         }
     }
 }

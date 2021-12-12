@@ -26,8 +26,8 @@ import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.web.Mime;
 import org.rapidcontext.core.web.Request;
@@ -636,7 +636,7 @@ public class WebDavRequest implements HttpUtil {
         buffer.append(tag);
         buffer.append(">");
         if (escapeContent) {
-            buffer.append(StringEscapeUtils.escapeXml(content));
+            buffer.append(StringEscapeUtils.escapeXml11(content));
         } else {
             buffer.append(content);
         }
