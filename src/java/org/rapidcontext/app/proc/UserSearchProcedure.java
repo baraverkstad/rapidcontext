@@ -123,7 +123,7 @@ public class UserSearchProcedure implements Procedure {
                         dict.set(User.KEY_TYPE, user.type());
                         dict.set(User.KEY_REALM, user.realm());
                         dict.set(User.KEY_EMAIL, user.email());
-                        dict.set(User.KEY_ENABLED, user.isEnabled());
+                        dict.set(User.KEY_ENABLED, Boolean.valueOf(user.isEnabled()));
                         return dict;
                     }
                 }
