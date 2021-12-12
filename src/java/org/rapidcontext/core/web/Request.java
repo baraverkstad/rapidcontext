@@ -655,9 +655,9 @@ public class Request implements HttpUtil {
      * @return the request input stream data as a string
      */
     public String getInputString() {
-        try {
+        try (InputStream is = request.getInputStream()) {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
-            FileUtil.copy(request.getInputStream(), os);
+            FileUtil.copy(is, os);
             return os.toString("UTF-8");
         } catch (IOException e) {
             LOG.warning("failed to read request input data: " + e.getMessage());
@@ -982,8 +982,11 @@ public class Request implements HttpUtil {
         }
         logResponse();
         if (!responseHeadersOnly) {
-            try {
-                FileUtil.copy(data.openStream(), response.getOutputStream());
+            try (
+                InputStream is = data.openStream();
+                OutputStream os = response.getOutputStream()
+            ) {
+                FileUtil.copy(is, os);
             } catch (IOException e) {
                 LOG.log(Level.FINE, "IO error processing " + toString(), e);
             }

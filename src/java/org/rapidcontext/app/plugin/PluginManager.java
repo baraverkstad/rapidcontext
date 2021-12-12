@@ -16,6 +16,7 @@ package org.rapidcontext.app.plugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -648,7 +649,9 @@ public class PluginManager {
             Binary data = (Binary) storage.load(path);
             File tmpFile = FileUtil.tempFile(path.name());
             tempFiles.add(tmpFile);
-            FileUtil.copy(data.openStream(), tmpFile);
+            try (InputStream is = data.openStream()) {
+                FileUtil.copy(is, tmpFile);
+            }
             classLoader.addJar(tmpFile);
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "failed to load JAR file: " + path, e);

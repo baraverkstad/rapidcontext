@@ -17,6 +17,7 @@ package org.rapidcontext.app.web;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -498,7 +499,9 @@ public class AppWebService extends FileWebService {
             }
             session.removeFile(fileId);
             File file = FileUtil.tempFile(fileName);
-            FileUtil.copy(stream.openStream(), file);
+            try (InputStream is = stream.openStream()) {
+                FileUtil.copy(is, file);
+            }
             session.addFile(fileId, file);
             request.sendText(Mime.TEXT[0], "Session file " + fileId + " uploaded");
         } catch (IOException e) {

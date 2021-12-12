@@ -15,6 +15,7 @@
 package org.rapidcontext.app.proc;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -170,9 +171,9 @@ public class StorageCopyProcedure implements Procedure {
                 return false;
             }
         } else if (data instanceof Binary) {
-            try {
+            try (InputStream is = ((Binary) data).openStream()) {
                 File file = FileUtil.tempFile(src.name());
-                FileUtil.copy(((Binary) data).openStream(), file);
+                FileUtil.copy(is, file);
                 storage.store(dst, file);
                 return true;
             } catch (Exception e) {

@@ -17,6 +17,7 @@ package org.rapidcontext.core.storage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -207,9 +208,9 @@ public class DirStorage extends Storage {
                 throw new StorageException(msg);
             }
         } else if (data instanceof Binary) {
-            try {
+            try (InputStream is = ((Binary) data).openStream()) {
                 tmp = FileUtil.tempFile(file.getName());
-                FileUtil.copy(((Binary) data).openStream(), tmp);
+                FileUtil.copy(is, tmp);
             } catch (Exception e) {
                 String msg = "failed to write temporary file " + tmp + ": " +
                              e.getMessage();

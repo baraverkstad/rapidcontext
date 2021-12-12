@@ -16,6 +16,7 @@ package org.rapidcontext.app.web;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -363,8 +364,8 @@ public class StorageWebService extends WebService {
         dict.set("mimeType", data.mimeType());
         dict.set("size", Long.valueOf(data.size()));
         if (Mime.isText(data.mimeType())) {
-            try {
-                dict.set("text", FileUtil.readText(data.openStream(), "UTF-8"));
+            try (InputStream is = data.openStream()) {
+                dict.set("text", FileUtil.readText(is, "UTF-8"));
             } catch (Exception e) {
                 String msg = "invalid data read: " + e.getMessage();
                 LOG.log(Level.WARNING, msg, e);
@@ -510,10 +511,10 @@ public class StorageWebService extends WebService {
             errorBadRequest(request, "cannot store data in a directory");
             return;
         }
-        try {
-            Path path = new Path(request.getPath());
-            Path normalizedPath = normalizePath(path);
-            Binary data = new Binary.BinaryStream(request.getInputStream(), -1);
+        Path path = new Path(request.getPath());
+        Path normalizedPath = normalizePath(path);
+        try (InputStream is = request.getInputStream()) {
+            Binary data = new Binary.BinaryStream(is, -1);
             if (StorageWriteProcedure.store(path, data)) {
                 if (normalizedPath == null) {
                     request.sendText(STATUS.CREATED, null, null);

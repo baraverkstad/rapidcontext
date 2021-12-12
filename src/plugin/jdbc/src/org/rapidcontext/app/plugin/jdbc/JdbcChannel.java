@@ -233,14 +233,18 @@ public class JdbcChannel extends Channel {
             res.setInt("driverVersionMajor", meta.getDriverMajorVersion());
             res.setInt("driverVersionMinor", meta.getDriverMinorVersion());
             Array schemas = new Array();
-            Array tmp = (Array) createResults(meta.getCatalogs(), "no-column-names");
-            for (int i = 0; i < tmp.size(); i++) {
-                schemas.add(tmp.getArray(i).get(0));
+            try (ResultSet rs = meta.getCatalogs()) {
+                Array tmp = (Array) createResults(rs, "no-column-names");
+                for (int i = 0; i < tmp.size(); i++) {
+                    schemas.add(tmp.getArray(i).get(0));
+                }
             }
-            tmp = (Array) createResults(meta.getSchemas(), "no-column-names");
-            for (int i = 0; i < tmp.size(); i++) {
-                Array row = tmp.getArray(i);
-                schemas.add(row.get(0) + "." + row.get(1));
+            try (ResultSet rs = meta.getSchemas()) {
+                Array tmp = (Array) createResults(rs, "no-column-names");
+                for (int i = 0; i < tmp.size(); i++) {
+                    Array row = tmp.getArray(i);
+                    schemas.add(row.get(0) + "." + row.get(1));
+                }
             }
             res.set("schema", schemas);
             return res;
@@ -264,9 +268,14 @@ public class JdbcChannel extends Channel {
         if (LOG.isLoggable(Level.FINE)) {
             LOG.fine(prefix + "executing statement: " + sql);
         }
-        Array res = executeStatement(prepare(sql, null));
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.fine(prefix + "done executing statement: " + sql);
+        Array res = null;
+        try (PreparedStatement stmt = prepare(sql, null)) {
+            res = executeStatement(stmt);
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.fine(prefix + "done executing statement: " + sql);
+            }
+        } catch (SQLException ignore) {
+            // Do nothing
         }
         return res;
     }
@@ -284,10 +293,10 @@ public class JdbcChannel extends Channel {
     protected Array executeStatement(PreparedStatement stmt)
     throws ConnectionException {
 
-        try {
+        try (PreparedStatement local = stmt) {
             Array res = new Array(10);
-            stmt.executeUpdate();
-            try (ResultSet set = stmt.getGeneratedKeys()) {
+            local.executeUpdate();
+            try (ResultSet set = local.getGeneratedKeys()) {
                 while (set != null && set.next()) {
                     res.add(set.getString(1));
                 }
@@ -299,12 +308,6 @@ public class JdbcChannel extends Channel {
             String msg = "failed to execute statement: " + e.getMessage();
             LOG.warning(prefix + msg);
             throw new ConnectionException(msg);
-        } finally {
-            try {
-                stmt.close();
-            } catch (SQLException ignore) {
-                // Do nothing
-            }
         }
     }
 
@@ -339,9 +342,14 @@ public class JdbcChannel extends Channel {
         if (LOG.isLoggable(Level.FINE)) {
             LOG.fine(prefix + "executing query: " + sql);
         }
-        Object res = executeQuery(prepare(sql, null), flags);
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.fine(prefix + "done executing query: " + sql);
+        Object res = null;
+        try (PreparedStatement stmt = prepare(sql, null)) {
+            res = executeQuery(stmt, flags);
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.fine(prefix + "done executing query: " + sql);
+            }
+        } catch (SQLException ignore) {
+            // Do nothing
         }
         return res;
     }

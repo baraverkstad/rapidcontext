@@ -142,7 +142,9 @@ public class PropertiesSerializer {
      */
     public static Dict read(ZipFile zip, ZipEntry entry) throws IOException {
         InputStreamReader r = new InputStreamReader(zip.getInputStream(entry));
-        return read(zip.getInputStream(entry), new BufferedReader(r));
+        try (InputStream is = zip.getInputStream(entry)) {
+            return read(is, new BufferedReader(r));
+        }
     }
 
     /**

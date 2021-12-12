@@ -181,29 +181,30 @@ public class CmdLineExecProcedure extends AddOnProcedure {
 
         StringBuffer output = new StringBuffer();
         StringBuffer error = new StringBuffer();
-        InputStream isOut = process.getInputStream();
-        InputStream isErr = process.getErrorStream();
         byte[] buffer = new byte[4096];
         int exitValue = 0;
         process.getOutputStream().close();
-        while (true) {
-            if (cx.isInterrupted()) {
-                // TODO: isOut.close();
-                // TODO: isErr.close();
-                process.destroy();
-                throw new IOException("procedure call interrupted");
-            }
-            try {
-                readStream(isOut, buffer, output);
-                readStream(isErr, buffer, error);
-                log(cx, error);
-                exitValue = process.exitValue();
-                break;
-            } catch (IllegalThreadStateException e) {
+        try (
+            InputStream isOut = process.getInputStream();
+            InputStream isErr = process.getErrorStream()
+        ) {
+            while (true) {
+                if (cx.isInterrupted()) {
+                    process.destroy();
+                    throw new IOException("procedure call interrupted");
+                }
                 try {
-                    Thread.sleep(50);
-                } catch (InterruptedException ignore) {
-                    // Ignore this exception
+                    readStream(isOut, buffer, output);
+                    readStream(isErr, buffer, error);
+                    log(cx, error);
+                    exitValue = process.exitValue();
+                    break;
+                } catch (IllegalThreadStateException e) {
+                    try {
+                        Thread.sleep(50);
+                    } catch (InterruptedException ignore) {
+                        // Ignore this exception
+                    }
                 }
             }
         }

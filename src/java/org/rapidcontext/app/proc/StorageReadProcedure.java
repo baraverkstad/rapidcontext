@@ -14,6 +14,7 @@
 
 package org.rapidcontext.app.proc;
 
+import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -144,8 +145,8 @@ public class StorageReadProcedure implements Procedure {
             dict.set("mimeType", data.mimeType());
             dict.set("size", Long.valueOf(data.size()));
             if (Mime.isText(data.mimeType())) {
-                try {
-                    dict.set("text", FileUtil.readText(data.openStream(), "UTF-8"));
+                try (InputStream is = data.openStream()) {
+                    dict.set("text", FileUtil.readText(is, "UTF-8"));
                 } catch (Exception e) {
                     String msg = "invalid data read: " + e.getMessage();
                     LOG.log(Level.WARNING, msg, e);

@@ -15,6 +15,7 @@
 package org.rapidcontext.app.plugin.jdbc;
 
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -116,7 +117,13 @@ public abstract class JdbcProcedure extends AddOnProcedure {
 
         JdbcChannel con = connectionReserve(cx, bindings);
         String flags = (String) bindings.getValue(BINDING_FLAGS, "");
-        return execute(con, prepare(con, cx, bindings), flags.toLowerCase());
+        Object res = null;
+        try (PreparedStatement stmt = prepare(con, cx, bindings)) {
+            res = execute(con, stmt, flags.toLowerCase());
+        } catch (SQLException ignore) {
+            // Do nothing
+        }
+        return res;
     }
 
     /**

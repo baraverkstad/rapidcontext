@@ -14,6 +14,8 @@
 
 package org.rapidcontext.app.ui;
 
+import java.io.InputStream;
+
 import org.apache.commons.lang3.SystemUtils;
 
 /**
@@ -39,9 +41,9 @@ public class AppUtils {
      *         false otherwise
      */
     public static boolean hasCommand(String command) {
-        try {
-            Process proc = Runtime.getRuntime().exec("which " + command);
-            return proc.getInputStream().read() != -1;
+        String cmdline = "which " + command;
+        try (InputStream is = Runtime.getRuntime().exec(cmdline).getInputStream()) {
+            return is.read() != -1;
         } catch (Exception ignore) {
             return false;
         }

@@ -16,6 +16,7 @@ package org.rapidcontext.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -66,7 +67,9 @@ public class ZipUtil {
             File file = new File(dir, name);
             file.getParentFile().mkdirs();
             if (!entry.isDirectory()) {
-                FileUtil.copy(zip.getInputStream(entry), file);
+                try (InputStream is = zip.getInputStream(entry)) {
+                    FileUtil.copy(is, file);
+                }
             }
         }
     }
