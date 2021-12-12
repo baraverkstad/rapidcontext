@@ -17,7 +17,7 @@ package org.rapidcontext.util;
 import java.net.URI;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * A set of utility methods and constants for the HTTP protocol.

@@ -17,7 +17,7 @@ package org.rapidcontext.core.data;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-import org.apache.commons.lang.CharUtils;
+import org.apache.commons.lang3.CharUtils;
 
 /**
  * A text encoding/escaping helper. Always encodes to printable ASCII

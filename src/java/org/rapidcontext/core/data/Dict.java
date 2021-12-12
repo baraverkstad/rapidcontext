@@ -17,7 +17,7 @@ package org.rapidcontext.core.data;
 import java.util.Date;
 import java.util.LinkedHashMap;
 
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 
 /**
  * A general data dictionary. Compared to the standard Map interface,

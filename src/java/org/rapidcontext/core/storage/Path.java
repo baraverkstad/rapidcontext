@@ -16,8 +16,8 @@ package org.rapidcontext.core.storage;
 
 import java.util.Arrays;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * A data storage path. This class encapsulates the path (directory

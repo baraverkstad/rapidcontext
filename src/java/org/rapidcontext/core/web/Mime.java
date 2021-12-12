@@ -18,7 +18,7 @@ import java.io.File;
 
 import javax.servlet.ServletContext;
 
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 
 /**
  * A MIME type helper class.

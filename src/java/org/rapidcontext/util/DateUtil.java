@@ -16,7 +16,7 @@ package org.rapidcontext.util;
 
 import java.util.Date;
 
-import org.apache.commons.lang.time.FastDateFormat;
+import org.apache.commons.lang3.time.FastDateFormat;
 
 /**
  * A set of utility methods for handling date and time objects.

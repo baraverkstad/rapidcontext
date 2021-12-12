@@ -16,8 +16,8 @@ package org.rapidcontext.core.data;
 
 import java.util.Date;
 
-import org.apache.commons.lang.CharUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.CharUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.core.storage.StorableObject;
 
 /**

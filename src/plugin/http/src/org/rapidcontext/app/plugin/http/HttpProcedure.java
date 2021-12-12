@@ -27,7 +27,7 @@ import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.js.JsException;
 import org.rapidcontext.core.js.JsSerializer;

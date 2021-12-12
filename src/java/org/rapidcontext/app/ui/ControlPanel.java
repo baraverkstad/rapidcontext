@@ -39,7 +39,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
-import org.apache.commons.lang.SystemUtils;
+import org.apache.commons.lang3.SystemUtils;
 import org.rapidcontext.app.Main;
 import org.rapidcontext.app.ServerApplication;
 

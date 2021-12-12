@@ -29,7 +29,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.commons.lang.SystemUtils;
+import org.apache.commons.lang3.SystemUtils;
 import org.rapidcontext.app.ui.ControlPanel;
 import org.rapidcontext.util.ClasspathUtil;
 import org.rapidcontext.util.FileUtil;

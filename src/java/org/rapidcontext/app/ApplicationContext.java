@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.rapidcontext.app.plugin.PluginException;
 import org.rapidcontext.app.plugin.PluginManager;
 import org.rapidcontext.app.proc.AppListProcedure;
