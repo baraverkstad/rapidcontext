@@ -244,7 +244,7 @@ public class Dict {
      * @param key            the dictionary key name
      *
      * @return the dictionary key value, or
-     *         null if the key is not defined
+     *         null if the key or value is not defined
      */
     public Object get(String key) {
         return (map == null) ? null : map.get(key);
@@ -259,7 +259,7 @@ public class Dict {
      * @param defaultValue   the default value
      *
      * @return the dictionary key value value, or
-     *         the default value if the key is not defined
+     *         the default value if the key or value is not defined
      */
     public Object get(String key, Object defaultValue) {
         Object value = get(key);
@@ -276,7 +276,7 @@ public class Dict {
      * @param defaultValue   the default value
      *
      * @return the dictionary key value, or
-     *         the default value if the key is not defined
+     *         the default value if the key or value is not defined
      */
     public String getString(String key, String defaultValue) {
         Object value = get(key);
@@ -302,7 +302,7 @@ public class Dict {
      * @param defaultValue   the default value
      *
      * @return the dictionary key value, or
-     *         the default value if the key is not defined
+     *         the default value if the key or value is not defined
      */
     public boolean getBoolean(String key, boolean defaultValue) {
         Object value = get(key);
@@ -329,7 +329,7 @@ public class Dict {
      * @param defaultValue   the default value
      *
      * @return the dictionary key value, or
-     *         the default value if the key is not defined
+     *         the default value if the key or value is not defined
      *
      * @throws NumberFormatException if the value didn't contain a
      *             valid integer
@@ -358,7 +358,7 @@ public class Dict {
      * @param defaultValue   the default value
      *
      * @return the dictionary key value, or
-     *         the default value if the key is not defined
+     *         the default value if the key or value is not defined
      *
      * @throws NumberFormatException if the value didn't contain a
      *             valid date, number or numeric string
@@ -389,12 +389,13 @@ public class Dict {
      * @param key            the dictionary key name
      *
      * @return the dictionary key value, or
-     *         null if the key is not defined
+     *         an empty dictionary if the key or value is not defined
      *
      * @throws ClassCastException if the value is not a dictionary
      */
     public Dict getDict(String key) throws ClassCastException {
-        return (Dict) get(key);
+        Dict dict = (Dict) get(key);
+        return (dict == null) ? new Dict() : dict;
     }
 
     /**
@@ -404,12 +405,13 @@ public class Dict {
      * @param key            the dictionary key name
      *
      * @return the dictionary key value, or
-     *         null if the key is not defined
+     *         an empty array if the key or value is not defined
      *
      * @throws ClassCastException if the value is not an array
      */
     public Array getArray(String key) throws ClassCastException {
-        return (Array) get(key);
+        Array arr = (Array) get(key);
+        return (arr == null) ? new Array() : arr;
     }
 
     /**

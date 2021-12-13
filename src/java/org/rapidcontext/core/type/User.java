@@ -393,7 +393,7 @@ public class User extends StorableObject {
      */
     public boolean hasRole(String name) {
         Array roles = dict.getArray(KEY_ROLE);
-        for (int i = 0; roles != null && i < roles.size(); i++) {
+        for (int i = 0; i < roles.size(); i++) {
             if (name.equalsIgnoreCase(roles.getString(i, ""))) {
                 return true;
             }
@@ -408,7 +408,7 @@ public class User extends StorableObject {
      */
     public String[] roles() {
         Array roles = dict.getArray(KEY_ROLE);
-        if (roles == null || roles.size() <= 0) {
+        if (roles.size() <= 0) {
             return new String[0];
         } else {
             String[] res = new String[roles.size()];
@@ -426,10 +426,6 @@ public class User extends StorableObject {
      */
     public void setRoles(String[] roles) {
         Array list = dict.getArray(KEY_ROLE);
-        if (list == null) {
-            list = new Array();
-            dict.set(KEY_ROLE, list);
-        }
         for (int i = 0; i < list.size(); i++) {
             if (ArrayUtils.indexOf(roles, list.getString(i, "")) < 0) {
                 list.remove(i);
@@ -444,6 +440,7 @@ public class User extends StorableObject {
                 }
             }
         }
+        dict.set(KEY_ROLE, list);
     }
 
     /**
@@ -453,8 +450,7 @@ public class User extends StorableObject {
      *         a new empty dictionary if not set
      */
     public Dict settings() {
-        Dict settings = dict.getDict(KEY_SETTINGS);
-        return settings == null ? new Dict() : settings;
+        return dict.getDict(KEY_SETTINGS);
     }
 
     /**

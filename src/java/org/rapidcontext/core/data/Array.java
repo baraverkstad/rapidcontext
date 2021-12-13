@@ -254,7 +254,7 @@ public class Array {
      * @param index          the array index
      *
      * @return the array element value, or
-     *         null if the index is not defined
+     *         null if the index or value is not defined
      */
     public Object get(int index) {
         return containsIndex(index) ? list.get(index) : null;
@@ -269,7 +269,7 @@ public class Array {
      * @param defaultValue   the default value
      *
      * @return the array element value, or
-     *         the default value if the index is not defined
+     *         the default value if the index or value is not defined
      */
     public Object get(int index, Object defaultValue) {
         Object value = get(index);
@@ -286,7 +286,7 @@ public class Array {
      * @param defaultValue   the default value
      *
      * @return the array element value, or
-     *         the default value if the index is not defined
+     *         the default value if the index or value is not defined
      */
     public String getString(int index, String defaultValue) {
         Object value = get(index);
@@ -312,7 +312,7 @@ public class Array {
      * @param defaultValue   the default value
      *
      * @return the array element value, or
-     *         the default value if the index is not defined
+     *         the default value if the index or value is not defined
      */
     public boolean getBoolean(int index, boolean defaultValue) {
         Object value = get(index);
@@ -339,7 +339,7 @@ public class Array {
      * @param defaultValue   the default value
      *
      * @return the array element value, or
-     *         the default value if the index is not defined
+     *         the default value if the index or value is not defined
      *
      * @throws NumberFormatException if the value didn't contain a
      *             valid integer
@@ -368,7 +368,7 @@ public class Array {
      * @param defaultValue   the default value
      *
      * @return the array element value, or
-     *         the default value if the index is not defined
+     *         the default value if the index or value is not defined
      *
      * @throws NumberFormatException if the value didn't contain a
      *             valid date, number or numeric string
@@ -399,13 +399,13 @@ public class Array {
      * @param index          the array index
      *
      * @return the array element value, or
-     *         null if the index is not defined
+     *         an empty dictionary if the index or value is not defined
      *
      * @throws ClassCastException if the value is not a dictionary
-     *             instance (or null)
      */
     public Dict getDict(int index) throws ClassCastException {
-        return (Dict) get(index);
+        Dict dict = (Dict) get(index);
+        return (dict == null) ? new Dict() : dict;
     }
 
     /**
@@ -415,13 +415,13 @@ public class Array {
      * @param index          the array index
      *
      * @return the array element value, or
-     *         null if the index is not defined
+     *         an empty array if the index or value is not defined
      *
      * @throws ClassCastException if the value is not an array
-     *             instance (or null)
      */
     public Array getArray(int index) throws ClassCastException {
-        return (Array) get(index);
+        Array arr = (Array) get(index);
+        return (arr == null) ? new Array() : arr;
     }
 
     /**

@@ -235,15 +235,14 @@ public class Type extends StorableObject {
      *         an empty array if it didn't exist
      */
     public Array properties() {
-        Array arr = null;
         try {
-            arr = dict.getArray(KEY_PROPERTY);
+            return dict.getArray(KEY_PROPERTY);
         } catch (ClassCastException e) {
             String msg = this + " contains 'property' attribute that " +
                          "isn't a proper array";
             LOG.warning(msg);
+            return new Array(0);
         }
-        return (arr == null) ? new Array(0) : arr;
     }
 
     /**

@@ -220,7 +220,7 @@ public class Role extends StorableObject {
      */
     public boolean hasAccess(String path, String permission) {
         Array arr = dict.getArray(KEY_ACCESS);
-        for (int i = 0; arr != null && i < arr.size(); i++) {
+        for (int i = 0; i < arr.size(); i++) {
             Dict dict = arr.getDict(i);
             if (matchPath(dict, path)) {
                 String perms = dict.getString(ACCESS_PERMISSION, "").trim();
