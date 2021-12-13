@@ -97,52 +97,28 @@ public class ThreadListProcedure implements Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        CallContext.checkSearchAccess("thread/");
-        Array res = new Array(100);
-        ThreadGroup root = Thread.currentThread().getThreadGroup().getParent();
-        while (root.getParent() != null) {
-            root = root.getParent();
-        }
-        listThreads(root, res);
-        return res;
-    }
-
-    /**
-     * Retrieves information about all threads running in the JVM
-     * and adds information about them to a list.
-     *
-     * @param group          the thread group to visit
-     * @param list           the data list
-     */
-    private void listThreads(ThreadGroup group, Array list) {
         ApplicationContext ctx = ApplicationContext.getInstance();
-        int size = group.activeCount();
-        Thread[] threads = new Thread[size * 2];
-        size = group.enumerate(threads, false);
-        for (int i = 0; i < size; i++) {
-            int id = threads[i].hashCode();
+        CallContext.checkSearchAccess("thread/");
+        Array res = new Array();
+        for (Thread t : Thread.getAllStackTraces().keySet()) {
+            int id = t.hashCode();
             if (SecurityContext.hasReadAccess("thread/" + id)) {
                 Dict dict = new Dict();
-                dict.setInt("id", threads[i].hashCode());
-                dict.set("name", threads[i].getName());
-                dict.setInt("priority", threads[i].getPriority());
-                dict.set("group", group.getName());
-                dict.setBoolean("daemon", threads[i].isDaemon());
-                dict.setBoolean("alive", threads[i].isAlive());
-                CallContext cx = ctx.findContext(threads[i]);
-                if (cx == null) {
+                dict.setInt("id", t.hashCode());
+                dict.set("name", t.getName());
+                dict.setInt("priority", t.getPriority());
+                dict.set("group", t.getThreadGroup().getName());
+                dict.setBoolean("daemon", t.isDaemon());
+                dict.setBoolean("alive", t.isAlive());
+                CallContext threadCx = ctx.findContext(t);
+                if (threadCx == null) {
                     dict.set("context", null);
                 } else {
-                    dict.set("context", ThreadContextProcedure.getContextData(cx));
+                    dict.set("context", ThreadContextProcedure.getContextData(threadCx));
                 }
-                list.add(dict);
+                res.add(dict);
             }
         }
-        size = group.activeGroupCount();
-        ThreadGroup[] groups = new ThreadGroup[size * 2];
-        size = group.enumerate(groups, false);
-        for (int i = 0; i < size; i++) {
-            listThreads(groups[i], list);
-        }
+        return res;
     }
 }
