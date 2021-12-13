@@ -486,32 +486,31 @@ public class CallContext {
 
         Bindings bindings = proc.getBindings();
         Bindings callBindings = new Bindings(bindings);
-        String[] names = bindings.getNames();
         int pos = 0;
-        for (int i = 0; i < names.length; i++) {
-            if (bindings.getType(names[i]) == Bindings.PROCEDURE) {
-                Object value = bindings.getValue(names[i]);
+        for (String name : bindings.getNames()) {
+            if (bindings.getType(name) == Bindings.PROCEDURE) {
+                Object value = bindings.getValue(name);
                 value = library.getProcedure((String) value);
-                callBindings.set(names[i], Bindings.PROCEDURE, value, null);
-            } else if (bindings.getType(names[i]) == Bindings.CONNECTION) {
-                Object value = bindings.getValue(names[i], null);
+                callBindings.set(name, Bindings.PROCEDURE, value, null);
+            } else if (bindings.getType(name) == Bindings.CONNECTION) {
+                Object value = bindings.getValue(name, null);
                 if (value != null) {
                     value = connections.get(value);
                     if (value == null) {
-                        String msg = "no connection defined for '" + names[i] +
+                        String msg = "no connection defined for '" + name +
                                      "'";
                         throw new ProcedureException(msg);
                     }
                 }
-                callBindings.set(names[i], Bindings.CONNECTION, value, null);
-            } else if (bindings.getType(names[i]) == Bindings.ARGUMENT) {
+                callBindings.set(name, Bindings.CONNECTION, value, null);
+            } else if (bindings.getType(name) == Bindings.ARGUMENT) {
                 if (pos >= args.length) {
                     String msg = "missing argument " + (pos + 1) + " '" +
-                                 names[i] + "' in call to '" + proc.getName() +
+                                 name + "' in call to '" + proc.getName() +
                                  "'";
                     throw new ProcedureException(msg);
                 }
-                callBindings.set(names[i], Bindings.ARGUMENT, args[pos], null);
+                callBindings.set(name, Bindings.ARGUMENT, args[pos], null);
                 pos++;
             }
         }
@@ -746,19 +745,12 @@ public class CallContext {
         } else {
             StringBuilder buffer = new StringBuilder();
             String indentStr = StringUtils.repeat(" ", indent);
-            String[] lines = text.split("\n");
-            for (int i = 0; i < lines.length; i++) {
-                if (lines[i].trim().length() <= 0) {
-                    if (i > 0) {
-                        buffer.append("\n");
-                    }
-                } else {
-                    if (i > 0) {
-                        buffer.append("\n");
-                        buffer.append(indentStr);
-                    }
-                    buffer.append(lines[i]);
-                }
+            for (String line : text.split("\n")) {
+                boolean isEmpty = line.trim().length() <= 0;
+                boolean isNext = buffer.length() > 0;
+                buffer.append(isNext ? "\n" : "");
+                buffer.append(isNext && !isEmpty ? indentStr : "");
+                buffer.append(!isEmpty ? line : "");
             }
             return buffer.toString();
         }

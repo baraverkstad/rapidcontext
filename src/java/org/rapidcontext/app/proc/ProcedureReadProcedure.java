@@ -145,12 +145,12 @@ public class ProcedureReadProcedure implements Procedure {
     static Array getBindingsData(Bindings bindings) throws ProcedureException {
         String[] names = bindings.getNames();
         Array res = new Array(names.length);
-        for (int i = 0; i < names.length; i++) {
+        for (String s : names) {
             Dict dict = new Dict();
-            dict.set("name", names[i]);
-            dict.set("type", bindings.getTypeName(names[i]));
-            dict.set("value", bindings.getValue(names[i], ""));
-            dict.set("description", bindings.getDescription(names[i]));
+            dict.set("name", s);
+            dict.set("type", bindings.getTypeName(s));
+            dict.set("value", bindings.getValue(s, ""));
+            dict.set("description", bindings.getDescription(s));
             res.add(dict);
         }
         return res;

@@ -98,9 +98,9 @@ public class ProcedureListProcedure implements Procedure {
         CallContext.checkSearchAccess("procedure/");
         String[] names = cx.getLibrary().getProcedureNames();
         Array list = new Array(names.length);
-        for (int i = 0; i < names.length; i++) {
-            if (SecurityContext.hasReadAccess("procedure/" + names[i])) {
-                list.add(names[i]);
+        for (String s : names) {
+            if (SecurityContext.hasReadAccess("procedure/" + s)) {
+                list.add(s);
             }
         }
         list.sort();

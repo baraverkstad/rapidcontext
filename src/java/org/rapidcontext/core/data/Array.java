@@ -145,8 +145,7 @@ public class Array {
     public void seal(boolean recursive) {
         sealed = true;
         if (recursive && list != null) {
-            for (int i = 0; i < list.size(); i++) {
-                Object value = list.get(i);
+            for (Object value : list) {
                 if (value instanceof Dict) {
                     ((Dict) value).seal(recursive);
                 } else if (value instanceof Array) {

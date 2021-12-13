@@ -102,8 +102,8 @@ public class TypeListProcedure implements Procedure {
     throws ProcedureException {
         Type[] types = Type.findAll(cx.getStorage());
         Array res = new Array(types.length);
-        for (int i = 0; i < types.length; i++) {
-            res.add(types[i].serialize().copy());
+        for (Type t : types) {
+            res.add(t.serialize().copy());
         }
         return res;
     }

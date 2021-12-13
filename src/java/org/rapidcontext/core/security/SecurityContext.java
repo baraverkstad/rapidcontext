@@ -186,8 +186,7 @@ public class SecurityContext {
     public static boolean hasAccess(User user, String path, String permission) {
         path = StringUtils.removeStart(path, "/");
         permission = permission.toLowerCase().trim();
-        for (int i = 0; i < roleCache.length; i++) {
-            Role role = roleCache[i];
+        for (Role role : roleCache) {
             if (role.hasUser(user) && role.hasAccess(path, permission)) {
                 return true;
             }

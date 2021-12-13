@@ -232,7 +232,6 @@ public class ProcedureWebService extends WebService {
         boolean isTextFormat = inputType().equalsIgnoreCase("text");
         ArrayList<Object> args = new ArrayList<>();
         Bindings bindings = proc.getBindings();
-        String[] names = bindings.getNames();
         Dict jsonArgs = null;
         if (Mime.isInputMatch(request, Mime.JSON)) {
             String input = request.getInputString();
@@ -242,18 +241,18 @@ public class ProcedureWebService extends WebService {
                 jsonArgs = (Dict) obj;
             }
         }
-        for (int i = 0; i < names.length; i++) {
-            if (bindings.getType(names[i]) == Bindings.ARGUMENT) {
-                if (jsonArgs != null && names[i].equals("json")) {
+        for (String name : bindings.getNames()) {
+            if (bindings.getType(name) == Bindings.ARGUMENT) {
+                if (jsonArgs != null && name.equals("json")) {
                     args.add(jsonArgs);
                 } else if (jsonArgs != null) {
-                    args.add(jsonArgs.get(names[i], null));
+                    args.add(jsonArgs.get(name, null));
                 } else {
                     String str = request.getParameter("arg" + args.size(), null);
                     if (str == null) {
-                        str = request.getParameter(names[i], null);
+                        str = request.getParameter(name, null);
                     }
-                    LOG.fine(logPrefix + "argument '" + names[i] + "': " + str);
+                    LOG.fine(logPrefix + "argument '" + name + "': " + str);
                     args.add(isTextFormat ? str : JsSerializer.unserialize(str));
                 }
             }

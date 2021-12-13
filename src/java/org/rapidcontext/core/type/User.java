@@ -436,12 +436,12 @@ public class User extends StorableObject {
                 i--;
             }
         }
-        for (int i = 0; roles != null && i < roles.length; i++) {
-            String name = roles[i].trim();
-            if (name.length() <= 0) {
-                // Skip whitespace
-            } else if (!list.containsValue(name)) {
-                list.add(name);
+        if (roles != null) {
+            for (String name : roles) {
+                name = name.trim();
+                if (name.length() > 0 && !list.containsValue(name)) {
+                    list.add(name);
+                }
             }
         }
     }
@@ -466,9 +466,7 @@ public class User extends StorableObject {
      */
     public void updateSettings(Dict updates) {
         Dict settings = this.settings();
-        String[] keys = updates.keys();
-        for (int i = 0; i < keys.length; i++) {
-            String key = keys[i];
+        for (String key : updates.keys()) {
             Object val = updates.get(key);
             if (val == null) {
                 settings.remove(key);

@@ -182,10 +182,9 @@ public class Session extends StorableObject {
      * @param storage        the storage to use
      */
     public static void removeExpired(Storage storage) {
-        Metadata[] meta = storage.lookupAll(PATH);
-        // TODO: session expiry must be handled with iterator
-        for (int i = 0; i < meta.length; i++) {
-            Session session = find(storage, meta[i].path());
+        // TODO: session expiry should be handled with iterator
+        for (Metadata meta : storage.lookupAll(PATH)) {
+            Session session = find(storage, meta.path());
             if (session != null) {
                 String userId = session.userId();
                 if (!session.isValid()) {
@@ -487,9 +486,8 @@ public class Session extends StorableObject {
      * moved from their original location, they wont be deleted.
      */
     public void removeAllFiles() {
-        String ids[] = files().keys();
-        for (int i = 0; i < ids.length; i++) {
-            removeFile(ids[i]);
+        for (String id : files().keys()) {
+            removeFile(id);
         }
     }
 

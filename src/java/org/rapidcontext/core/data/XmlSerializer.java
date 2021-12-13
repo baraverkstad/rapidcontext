@@ -98,12 +98,11 @@ public class XmlSerializer {
      * @param buffer         the string buffer to append into
      */
     private static void serialize(String id, Dict dict, int indent, StringBuilder buffer) {
-        String[] keys = dict.keys();
         tagStart(id, "object", buffer);
-        for (int i = 0; i < keys.length; i++) {
+        for (String key : dict.keys()) {
             buffer.append("\n");
             buffer.append(StringUtils.repeat("  ", indent + 1));
-            serialize(keys[i], dict.get(keys[i]), indent + 1, buffer);
+            serialize(key, dict.get(key), indent + 1, buffer);
         }
         buffer.append("\n");
         buffer.append(StringUtils.repeat("  ", indent));

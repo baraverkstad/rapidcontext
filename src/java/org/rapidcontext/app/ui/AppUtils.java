@@ -68,9 +68,9 @@ public class AppUtils {
         } else if (hasCommand("kde-open")) {
             Runtime.getRuntime().exec("kde-open " + url);
         } else {
-            for (int i = 0; i < BROWSERS.length; i++) {
-                if (hasCommand(BROWSERS[i])) {
-                    Runtime.getRuntime().exec(BROWSERS[i] + " " + url);
+            for (String cmd : BROWSERS) {
+                if (hasCommand(cmd)) {
+                    Runtime.getRuntime().exec(cmd + " " + url);
                     return;
                 }
             }

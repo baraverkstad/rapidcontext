@@ -125,9 +125,9 @@ public abstract class Connection extends StorableObject {
     public static Connection[] findAll(Storage storage) {
         Object[] objs = storage.loadAll(PATH);
         ArrayList<Connection> list = new ArrayList<>(objs.length);
-        for (int i = 0; i < objs.length; i++) {
-            if (objs[i] instanceof Connection) {
-                list.add((Connection) objs[i]);
+        for (Object o : objs) {
+            if (o instanceof Connection) {
+                list.add((Connection) o);
             }
         }
         return list.toArray(new Connection[list.size()]);

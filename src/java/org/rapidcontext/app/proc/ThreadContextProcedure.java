@@ -181,8 +181,8 @@ public class ThreadContextProcedure implements Procedure {
         res.set("log", (log == null) ? "" : log.toString());
         Procedure[] procs = cx.getCallStack().toArray();
         Array list = new Array(procs.length);
-        for (int i = 0; i < procs.length; i++) {
-            list.add(procs[i].getName());
+        for (Procedure p : procs) {
+            list.add(p.getName());
         }
         res.set("stack", list);
         return res;

@@ -310,17 +310,17 @@ public class Main {
      *         null otherwise
      */
     private static File locateAppDir() {
-        File[] dirs = { new File("."),
-                        SystemUtils.getUserDir(),
-                        ClasspathUtil.locateFile(ServerApplication.class) };
-
-        for (int i = 0; i < dirs.length; i++) {
-            File file = dirs[i];
-            for (int j = 0; file != null && j < 4; j++) {
-                if (isAppDir(file)) {
-                    return file;
+        File[] dirs = {
+            new File("."),
+            SystemUtils.getUserDir(),
+            ClasspathUtil.locateFile(ServerApplication.class)
+        };
+        for (File f : dirs) {
+            for (int j = 0; f != null && j < 4; j++) {
+                if (isAppDir(f)) {
+                    return f;
                 }
-                file = file.getParentFile();
+                f = f.getParentFile();
             }
         }
         return null;

@@ -112,9 +112,8 @@ public abstract class FileUtil {
     public static void copy(File src, File dst) throws IOException {
         if (src.isDirectory()) {
             dst.mkdirs();
-            File[] files = src.listFiles();
-            for (int i = 0; i < files.length; i++) {
-                copy(files[i], new File(dst, files[i].getName()));
+            for (File file : src.listFiles()) {
+                copy(file, new File(dst, file.getName()));
             }
         } else {
             copy(new FileInputStream(src), dst);
@@ -199,8 +198,8 @@ public abstract class FileUtil {
         if (dir != null && dir.isDirectory()) {
             File[] files = dir.listFiles();
             if (files != null) {
-                for (int i = 0; i < files.length; i++) {
-                    delete(files[i]);
+                for (File f : files) {
+                    delete(f);
                 }
             }
         }
@@ -221,12 +220,12 @@ public abstract class FileUtil {
     public static void deleteEmptyDirs(File dir) throws IOException {
         File[] files = dir.listFiles();
         if (files != null) {
-            for (int i = 0; i < files.length; i++) {
-                if (files[i].isDirectory()) {
-                    deleteEmptyDirs(files[i]);
-                    File[] subfiles = files[i].listFiles();
+            for (File f : files) {
+                if (f.isDirectory()) {
+                    deleteEmptyDirs(f);
+                    File[] subfiles = f.listFiles();
                     if (subfiles == null || subfiles.length == 0) {
-                        delete(files[i]);
+                        delete(f);
                     }
                 }
             }

@@ -338,9 +338,8 @@ public class PropertiesSerializer {
      * @param dict           the dictionary to modify
      */
     private static void removeArrayNulls(Dict dict) {
-        String[] keys = dict.keys();
-        for (int i = 0; i < keys.length; i++) {
-            Object obj = dict.get(keys[i]);
+        for (String key : dict.keys()) {
+            Object obj = dict.get(key);
             if (obj instanceof Dict) {
                 removeArrayNulls((Dict) obj);
             } else if (obj instanceof Array) {
@@ -414,26 +413,26 @@ public class PropertiesSerializer {
             os.println("# General properties");
         }
         String[] keys = dict.keys();
-        for (int i = 0; i < keys.length; i++) {
-            Object obj = dict.get(keys[i]);
-            if (keys[i].startsWith("_")) {
+        for (String k : keys) {
+            Object obj = dict.get(k);
+            if (k.startsWith("_")) {
                 // Skip saving transient data
             } else if (obj instanceof Dict || obj instanceof Array) {
                 // Skip to last
             } else {
-                write(os, prefix + keys[i], dict.getString(keys[i], ""));
+                write(os, prefix + k, dict.getString(k, ""));
             }
         }
-        for (int i = 0; i < keys.length; i++) {
-            Object obj = dict.get(keys[i]);
-            if (keys[i].startsWith("_")) {
+        for (String k : keys) {
+            Object obj = dict.get(k);
+            if (k.startsWith("_")) {
                 // Skip saving transient data
             } else if (obj instanceof Dict || obj instanceof Array) {
                 if (prefix.length() == 0) {
                     os.println();
                     os.print("# ");
-                    os.print(keys[i].substring(0, 1).toUpperCase());
-                    os.print(keys[i].substring(1));
+                    os.print(k.substring(0, 1).toUpperCase());
+                    os.print(k.substring(1));
                     if (obj instanceof Dict) {
                         os.println(" object");
                     } else {
@@ -441,9 +440,9 @@ public class PropertiesSerializer {
                     }
                 }
                 if (obj instanceof Dict) {
-                    write(os, prefix + keys[i] + ".", (Dict) obj);
+                    write(os, prefix + k + ".", (Dict) obj);
                 } else {
-                    write(os, prefix + keys[i] + ".", (Array) obj);
+                    write(os, prefix + k + ".", (Array) obj);
                 }
             } else {
                 // Already handled
@@ -546,17 +545,16 @@ public class PropertiesSerializer {
                                            String prefix,
                                            Dict dict) {
 
-        String[] keys = dict.keys();
-        for (int i = 0; i < keys.length; i++) {
-            Object obj = dict.get(keys[i]);
-            if (keys[i].startsWith("_")) {
+        for (String key : dict.keys()) {
+            Object obj = dict.get(key);
+            if (key.startsWith("_")) {
                 // Skip converting transient values
             } else if (obj instanceof Dict) {
-                toProperties(props, prefix + keys[i] + ".", (Dict) obj);
+                toProperties(props, prefix + key + ".", (Dict) obj);
             } else if (obj instanceof Array) {
-                toProperties(props, prefix + keys[i] + ".", (Array) obj);
+                toProperties(props, prefix + key + ".", (Array) obj);
             } else {
-                props.setProperty(prefix + keys[i], dict.getString(keys[i], ""));
+                props.setProperty(prefix + key, dict.getString(key, ""));
             }
         }
         return props;

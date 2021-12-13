@@ -202,9 +202,8 @@ public class Library {
      */
     public String[] getProcedureNames() throws ProcedureException {
         LinkedHashSet<String> set = new LinkedHashSet<>(builtIns.keySet());
-        Metadata[] objs = storage.lookupAll(PATH_PROC);
-        for (int i = 0; i < objs.length; i++) {
-            set.add(objs[i].path().name());
+        for (Metadata meta : storage.lookupAll(PATH_PROC)) {
+            set.add(meta.path().name());
         }
         return set.toArray(new String[set.size()]);
     }

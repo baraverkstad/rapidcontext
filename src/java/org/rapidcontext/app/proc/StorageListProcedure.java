@@ -114,8 +114,8 @@ public class StorageListProcedure implements Procedure {
         Path searchPath = new Path(path);
         Metadata[] meta = storage.lookupAll(searchPath);
         Array res = new Array(meta.length);
-        for (int i = 0; i < meta.length; i++) {
-            Path loadPath = meta[i].path();
+        for (Metadata m : meta) {
+            Path loadPath = m.path();
             if (SecurityContext.hasReadAccess(loadPath.toString())) {
                 Object obj = storage.load(loadPath);
                 Dict dict = StorageReadProcedure.serialize(loadPath, obj);

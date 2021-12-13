@@ -105,8 +105,8 @@ public class JdbcBuiltInConnectionListProcedure implements Procedure {
         CallContext.checkSearchAccess(Connection.PATH.toString());
         Metadata[] meta = cx.getStorage().lookupAll(Connection.PATH);
         Array res = new Array(meta.length);
-        for (int i = 0; i < meta.length; i++) {
-            Path path = meta[i].path();
+        for (Metadata m : meta) {
+            Path path = m.path();
             if (SecurityContext.hasReadAccess(path.toString())) {
                 Object obj = cx.getStorage().load(path);
                 if (obj instanceof JdbcConnection) {

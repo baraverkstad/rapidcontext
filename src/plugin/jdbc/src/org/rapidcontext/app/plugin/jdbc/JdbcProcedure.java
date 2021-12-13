@@ -163,13 +163,12 @@ public abstract class JdbcProcedure extends AddOnProcedure {
     throws ProcedureException {
 
         String sql = (String) bindings.getValue(BINDING_SQL);
-        String[] names = bindings.getNames();
         ArrayList<SqlField> fields = new ArrayList<>();
-        for (int i = 0; i < names.length; i++) {
-            if (bindings.getType(names[i]) == Bindings.ARGUMENT) {
+        for (String name : bindings.getNames()) {
+            if (bindings.getType(name) == Bindings.ARGUMENT) {
                 int pos = 0;
-                while ((pos = sql.indexOf(":" + names[i], pos)) >= 0) {
-                    SqlField field = new SqlField(sql, pos, names[i]);
+                while ((pos = sql.indexOf(":" + name, pos)) >= 0) {
+                    SqlField field = new SqlField(sql, pos, name);
                     fields.add(field);
                     pos = field.endPos;
                 }
@@ -179,8 +178,7 @@ public abstract class JdbcProcedure extends AddOnProcedure {
         ArrayList<Object> params = new ArrayList<>();
         StringBuffer buffer = new StringBuffer();
         int pos = 0;
-        for (int i = 0; i < fields.size(); i++) {
-            SqlField field = fields.get(i);
+        for (SqlField field : fields) {
             Object value = bindings.getValue(field.fieldName, null);
             buffer.append(sql.substring(pos, field.startPos));
             buffer.append(field.bind(value, params));

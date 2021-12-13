@@ -55,13 +55,12 @@ public class DefaultInterceptor extends Interceptor {
         Bindings bindings = proc.getBindings();
         cx.getCallStack().push(proc, bindings);
         try {
-            String[] names = bindings.getNames();
-            for (int i = 0; i < names.length; i++) {
-                if (bindings.getType(names[i]) == Bindings.CONNECTION) {
-                    String value = (String) bindings.getValue(names[i], null);
+            for (String name : bindings.getNames()) {
+                if (bindings.getType(name) == Bindings.CONNECTION) {
+                    String value = (String) bindings.getValue(name, null);
                     cx.connectionReserve(value);
-                } else if (bindings.getType(names[i]) == Bindings.PROCEDURE) {
-                    String value = (String) bindings.getValue(names[i]);
+                } else if (bindings.getType(name) == Bindings.PROCEDURE) {
+                    String value = (String) bindings.getValue(name);
                     cx.reserve(cx.getLibrary().getProcedure(value));
                 }
             }
@@ -125,9 +124,9 @@ public class DefaultInterceptor extends Interceptor {
         try {
             String[] names = bindings.getNames();
             ArrayList<Object> args = new ArrayList<>(names.length);
-            for (int i = 0; i < names.length; i++) {
-                if (bindings.getType(names[i]) == Bindings.ARGUMENT) {
-                    args.add(bindings.getValue(names[i], null));
+            for (String name : names) {
+                if (bindings.getType(name) == Bindings.ARGUMENT) {
+                    args.add(bindings.getValue(name, null));
                 }
             }
             cx.logCall(proc.getName(), args.toArray());

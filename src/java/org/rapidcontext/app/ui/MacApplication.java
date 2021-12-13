@@ -122,10 +122,9 @@ public class MacApplication {
      *         null if not found
      */
     private Method find(Class<?> cls, String name) {
-        Method[]  methods = cls.getMethods();
-        for (int i = 0; i < methods.length; i++) {
-            if (methods[i].getName().equals(name)) {
-                return methods[i];
+        for (Method m : cls.getMethods()) {
+            if (m.getName().equals(name)) {
+                return m;
             }
         }
         return null;

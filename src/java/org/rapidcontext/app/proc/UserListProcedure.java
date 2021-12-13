@@ -106,8 +106,8 @@ public class UserListProcedure implements Procedure {
         Storage storage = cx.getStorage();
         Metadata[] meta = storage.lookupAll(User.PATH);
         Array res = new Array(meta.length);
-        for (int i = 0; i < meta.length; i++) {
-            Path path = meta[i].path();
+        for (Metadata m : meta) {
+            Path path = m.path();
             if (SecurityContext.hasReadAccess(path.toString())) {
                 Object obj = storage.load(path);
                 if (obj instanceof User) {

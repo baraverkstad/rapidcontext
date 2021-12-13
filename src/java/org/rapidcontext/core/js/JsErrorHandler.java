@@ -62,11 +62,11 @@ class JsErrorHandler implements ErrorReporter {
      */
     public String getErrorText() {
         StringBuilder buffer = new StringBuilder();
-        for (int i = 0; i < errors.size(); i++) {
-            if (i > 0) {
+        for (String s : errors) {
+            if (buffer.length() > 0) {
                 buffer.append("\n\n");
             }
-            buffer.append(errors.get(i));
+            buffer.append(s);
         }
         return buffer.toString();
     }

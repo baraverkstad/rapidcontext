@@ -144,9 +144,7 @@ public class DictWrapper extends ScriptableObject implements Wrapper {
      */
     public Object unwrap() {
         if (!dict.isSealed()) {
-            String[] keys = dict.keys();
-            for (int i = 0; i < keys.length; i++) {
-                String key = keys[i];
+            for (String key : dict.keys()) {
                 dict.set(key, JsSerializer.unwrap(dict.get(key)));
             }
         }

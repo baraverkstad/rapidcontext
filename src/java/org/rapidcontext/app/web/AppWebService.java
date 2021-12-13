@@ -129,13 +129,12 @@ public class AppWebService extends FileWebService {
         ArrayList<String> res = new ArrayList<>();
         ApplicationContext ctx = ApplicationContext.getInstance();
         Path storagePath = new Path(PATH_FILES, type + "/");
-        Metadata[] meta = ctx.getStorage().lookupAll(storagePath);
         String rootPath = PATH_FILES.toString();
         String basePath = base.toString();
         String ver = version();
-        for (int i = 0; i < meta.length; i++) {
-            String file = meta[i].path().toString();
-            if (meta[i].isBinary() && file.endsWith("." + type)) {
+        for (Metadata meta : ctx.getStorage().lookupAll(storagePath)) {
+            String file = meta.path().toString();
+            if (meta.isBinary() && file.endsWith("." + type)) {
                 if (file.startsWith(basePath)) {
                     file = StringUtils.removeStart(file, basePath);
                 } else {

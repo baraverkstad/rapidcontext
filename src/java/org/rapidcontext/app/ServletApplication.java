@@ -121,7 +121,6 @@ public class ServletApplication extends HttpServlet {
     throws ServletException, IOException {
 
         Request       request = new Request(req, resp);
-        WebMatcher[]  matchers = ctx.getWebMatchers();
         WebMatcher    bestMatcher = null;
         int           bestScore = 0;
 
@@ -129,11 +128,11 @@ public class ServletApplication extends HttpServlet {
             LOG.fine(ip(request) + "Processing authentication info");
             processAuthCheck(request);
             LOG.fine(ip(request) + "Finding best matching web service");
-            for (int i = 0; i < matchers.length; i++) {
-                int score = matchers[i].match(request);
+            for (WebMatcher matcher : ctx.getWebMatchers()) {
+                int score = matcher.match(request);
                 if (score > bestScore) {
                     bestScore = score;
-                    bestMatcher = matchers[i];
+                    bestMatcher = matcher;
                 }
             }
             if (bestMatcher != null) {

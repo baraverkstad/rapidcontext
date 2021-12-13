@@ -275,9 +275,8 @@ public class Mime {
     public static boolean isOutputMatch(Request request, String[] mimes) {
         String header = request.getHeader("Accept");
         if (header != null) {
-            String[] accept = header.split(",");
-            for (int i = 0; i < accept.length; i++) {
-                if (isMatch(accept[i], mimes)) {
+            for (String s : header.split(",")) {
+                if (isMatch(s, mimes)) {
                     return true;
                 }
             }

@@ -97,14 +97,13 @@ public class ProcedureTypesProcedure implements Procedure {
         throws ProcedureException {
 
         Dict res = new Dict();
-        String[] names = Library.getTypes();
-        for (int i = 0; i < names.length; i++) {
-            Bindings defs = Library.getDefaultBindings(names[i]);
+        for (String name : Library.getTypes()) {
+            Bindings defs = Library.getDefaultBindings(name);
             if (defs != null) {
                 Dict dict = new Dict();
-                dict.set("type", names[i]);
+                dict.set("type", name);
                 dict.set("bindings", ProcedureReadProcedure.getBindingsData(defs));
-                res.set(names[i], dict);
+                res.set(name, dict);
             }
         }
         return res;

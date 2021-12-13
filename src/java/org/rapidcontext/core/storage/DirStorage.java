@@ -132,10 +132,9 @@ public class DirStorage extends Storage {
             if (path.isRoot()) {
                 idx.addObject(PATH_STORAGEINFO.name());
             }
-            File[] files = file.listFiles();
-            for (int i = 0; i < files.length; i++) {
-                String name = files[i].getName();
-                if (files[i].isDirectory()) {
+            for (File f : file.listFiles()) {
+                String name = f.getName();
+                if (f.isDirectory()) {
                     idx.addIndex(name);
                 } else {
                     idx.addObject(StringUtils.removeEnd(name, SUFFIX_PROPS));

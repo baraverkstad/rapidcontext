@@ -97,9 +97,9 @@ public class Type extends StorableObject {
     public static Type[] findAll(Storage storage) {
         Object[] objs = storage.loadAll(PATH);
         ArrayList<Object> list = new ArrayList<>(objs.length);
-        for (int i = 0; i < objs.length; i++) {
-            if (objs[i] instanceof Type) {
-                list.add(objs[i]);
+        for (Object o : objs) {
+            if (o instanceof Type) {
+                list.add(o);
             }
         }
         return list.toArray(new Type[list.size()]);

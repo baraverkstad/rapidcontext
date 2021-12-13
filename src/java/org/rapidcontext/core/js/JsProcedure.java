@@ -104,23 +104,22 @@ public class JsProcedure extends AddOnProcedure {
             Scriptable scope = scriptContext.initSafeStandardObjects();
             Object console = Context.javaToJS(new ConsoleObject(getName()), scope);
             ScriptableObject.putProperty(scope, "console", console);
-            String[] names = bindings.getNames();
-            for (int i = 0; i < names.length; i++) {
-                int type = bindings.getType(names[i]);
-                Object value = bindings.getValue(names[i], null);
-                if (BINDING_CODE.equals(names[i])) {
+            for (String name : bindings.getNames()) {
+                int type = bindings.getType(name);
+                Object value = bindings.getValue(name, null);
+                if (BINDING_CODE.equals(name)) {
                     // Do nothing
                 } else if (type == Bindings.DATA) {
-                    ScriptableObject.putProperty(scope, names[i], value);
+                    ScriptableObject.putProperty(scope, name, value);
                 } else if (type == Bindings.PROCEDURE) {
                     value = new ProcedureWrapper(cx, (Procedure) value, scope);
-                    ScriptableObject.putProperty(scope, names[i], value);
+                    ScriptableObject.putProperty(scope, name, value);
                 } else if (type == Bindings.CONNECTION) {
                     value = new ConnectionWrapper(cx, (Channel) value, scope);
-                    ScriptableObject.putProperty(scope, names[i], value);
+                    ScriptableObject.putProperty(scope, name, value);
                 } else if (type == Bindings.ARGUMENT) {
                     value = JsSerializer.wrap(value, scope);
-                    ScriptableObject.putProperty(scope, names[i], value);
+                    ScriptableObject.putProperty(scope, name, value);
                 }
             }
             Object res = script.exec(scriptContext, scope);
@@ -167,8 +166,8 @@ public class JsProcedure extends AddOnProcedure {
                 }
             }
             code.append("(function () {\n");
-            for (int i = 0; i < lines.length; i++) {
-                code.append(lines[i]);
+            for (String s : lines) {
+                code.append(s);
                 code.append("\n");
             }
             code.append("})();");

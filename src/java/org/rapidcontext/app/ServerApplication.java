@@ -90,9 +90,9 @@ public class ServerApplication {
         if (port > 0 && isPortAvailable(port)) {
             return port;
         }
-        for (int i = 0; i < PORTS.length; i++) {
-            if (isPortAvailable(PORTS[i])) {
-                return PORTS[i];
+        for (int p : PORTS) {
+            if (isPortAvailable(p)) {
+                return p;
             }
         }
         return 0;

@@ -301,11 +301,11 @@ public class JsSerializer {
             Scriptable scr = (Scriptable) obj;
             Object[] keys = scr.getIds();
             Dict dict = new Dict(keys.length);
-            for (int i = 0; i < keys.length; i++) {
-                String str = keys[i].toString();
+            for (Object k : keys) {
+                String str = k.toString();
                 Object value = null;
-                if (keys[i] instanceof Integer) {
-                    value = scr.get(((Integer) keys[i]).intValue(), scr);
+                if (k instanceof Integer) {
+                    value = scr.get(((Integer) k).intValue(), scr);
                 } else {
                     value = scr.get(str, scr);
                 }

@@ -110,16 +110,16 @@ public class AppListProcedure implements Procedure {
         CallContext.checkSearchAccess(PATH_APP.toString());
         ApplicationContext ctx = ApplicationContext.getInstance();
         Storage storage = cx.getStorage();
-        Metadata[] list = storage.lookupAll(PATH_APP);
-        Array res = new Array(list.length);
-        for (int i = 0; i < list.length; i++) {
-            Path path = list[i].path();
+        Metadata[] metas = storage.lookupAll(PATH_APP);
+        Array res = new Array(metas.length);
+        for (Metadata m : metas) {
+            Path path = m.path();
             if (SecurityContext.hasReadAccess(path.toString()) &&
-                Dict.class.isAssignableFrom(list[i].classInstance())) {
+                Dict.class.isAssignableFrom(m.classInstance())) {
 
                 Dict dict = new Dict();
                 dict.set("id", path.toIdent(PATH_APP));
-                String pluginId = PluginManager.pluginId(list[i]);
+                String pluginId = PluginManager.pluginId(m);
                 if (pluginId != null) {
                     Dict plugin = ctx.pluginConfig(pluginId);
                     if (plugin != null) {
@@ -127,7 +127,7 @@ public class AppListProcedure implements Procedure {
                         dict.set("version", plugin.get("version"));
                     }
                 }
-                dict.addAll((Dict) storage.load(list[i].path()));
+                dict.addAll((Dict) storage.load(m.path()));
                 res.add(dict);
             }
         }

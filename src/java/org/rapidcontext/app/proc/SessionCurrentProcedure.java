@@ -127,9 +127,8 @@ public class SessionCurrentProcedure implements Procedure {
             res.set("user", UserListProcedure.serialize(user));
         }
         Dict dict = new Dict();
-        String[] ids = session.files().keys();
-        for (int i = 0; i < ids.length; i++) {
-            dict.set(ids[i], serialize(session.file(ids[i])));
+        for (String id : session.files().keys()) {
+            dict.set(id, serialize(session.file(id)));
         }
         res.remove(Session.KEY_FILES);
         res.set("files", dict);

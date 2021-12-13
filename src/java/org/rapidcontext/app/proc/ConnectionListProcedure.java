@@ -101,10 +101,10 @@ public class ConnectionListProcedure implements Procedure {
     throws ProcedureException {
 
         CallContext.checkSearchAccess(Connection.PATH.toString());
-        Metadata[] meta = cx.getStorage().lookupAll(Connection.PATH);
-        Array res = new Array(meta.length);
-        for (int i = 0; i < meta.length; i++) {
-            Path path = meta[i].path();
+        Metadata[] metas = cx.getStorage().lookupAll(Connection.PATH);
+        Array res = new Array(metas.length);
+        for (Metadata m : metas) {
+            Path path = m.path();
             if (SecurityContext.hasReadAccess(path.toString())) {
                 Object obj = cx.getStorage().load(path);
                 Dict dict = null;
@@ -119,7 +119,7 @@ public class ConnectionListProcedure implements Procedure {
                     }
                 }
                 if (dict != null) {
-                    dict.add("plugin", PluginManager.pluginId(meta[i]));
+                    dict.add("plugin", PluginManager.pluginId(m));
                     res.add(dict);
                 }
             }

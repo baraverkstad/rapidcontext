@@ -135,9 +135,9 @@ public class Role extends StorableObject {
     public static Role[] findAll(Storage storage) {
         Object[] objs = storage.loadAll(PATH);
         ArrayList<Role> list = new ArrayList<>(objs.length);
-        for (int i = 0; i < objs.length; i++) {
-            if (objs[i] instanceof Role) {
-                list.add((Role) objs[i]);
+        for (Object o : objs) {
+            if (o instanceof Role) {
+                list.add((Role) o);
             }
         }
         return list.toArray(new Role[list.size()]);
@@ -229,23 +229,23 @@ public class Role extends StorableObject {
                 if (set == null) {
                     String[] list = perms.split("[,;\\s]+");
                     set = new HashSet<>(list.length + 1);
-                    for (int j = 0; j < list.length; j++) {
-                        if (list[j].equalsIgnoreCase(PERM_NONE)) {
+                    for (String s : list) {
+                        if (s.equalsIgnoreCase(PERM_NONE)) {
                             set.add(PERM_NONE);
-                        } else if (list[j].equalsIgnoreCase(PERM_ALL)) {
+                        } else if (s.equalsIgnoreCase(PERM_ALL)) {
                             set.add(PERM_ALL);
-                        } else if (list[j].equalsIgnoreCase(PERM_WRITE)) {
+                        } else if (s.equalsIgnoreCase(PERM_WRITE)) {
                             set.add(PERM_WRITE);
-                        } else if (list[j].equalsIgnoreCase(PERM_SEARCH)) {
+                        } else if (s.equalsIgnoreCase(PERM_SEARCH)) {
                             set.add(PERM_SEARCH);
-                        } else if (list[j].equalsIgnoreCase(PERM_READ)) {
+                        } else if (s.equalsIgnoreCase(PERM_READ)) {
                             set.add(PERM_INTERNAL);
                             set.add(PERM_READ);
-                        } else if (list[j].length() <= 0) {
+                        } else if (s.length() <= 0) {
                             set.add(PERM_INTERNAL);
                             set.add(PERM_READ);
                         } else {
-                            set.add(list[j].toLowerCase());
+                            set.add(s.toLowerCase());
                         }
                     }
                     dict.set("_" + ACCESS_PERMISSION, set);

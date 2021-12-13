@@ -697,10 +697,9 @@ public class RootStorage extends Storage {
                              boolean force) {
 
         String debugPrefix = "cache " + cache.path() + ": ";
-        Metadata[] metas = cache.lookupAll(basePath);
-        for (int i = 0; i < metas.length; i++) {
+        for (Metadata meta : cache.lookupAll(basePath)) {
             boolean keepObject = false;
-            Path path = metas[i].path();
+            Path path = meta.path();
             Object obj = cache.load(path);
             if (obj instanceof StorableObject) {
                 StorableObject storable = (StorableObject) obj;

@@ -107,9 +107,8 @@ public class UserSearchProcedure implements Procedure {
 
         Storage storage = cx.getStorage();
         String email = bindings.getValue("email", "").toString().trim();
-        Metadata[] meta = storage.lookupAll(User.PATH);
-        for (int i = 0; i < meta.length; i++) {
-            Path path = meta[i].path();
+        for (Metadata meta : storage.lookupAll(User.PATH)) {
+            Path path = meta.path();
             Object obj = storage.load(path);
             if (obj instanceof User) {
                 User user = (User) obj;

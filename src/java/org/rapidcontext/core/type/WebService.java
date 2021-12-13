@@ -92,10 +92,9 @@ public abstract class WebService extends StorableObject implements HttpUtil {
      */
     public static WebMatcher[] findAllMatchers(Storage storage) {
         ArrayList<WebMatcher> list = new ArrayList<>();
-        Object[] objs = storage.loadAll(PATH);
-        for (int i = 0; i < objs.length; i++) {
-            if (objs[i] instanceof WebService) {
-                list.addAll(((WebService) objs[i]).matchers);
+        for (Object o : storage.loadAll(PATH)) {
+            if (o instanceof WebService) {
+                list.addAll(((WebService) o).matchers);
             }
         }
         return list.toArray(new WebMatcher[list.size()]);
@@ -141,8 +140,7 @@ public abstract class WebService extends StorableObject implements HttpUtil {
         LinkedHashSet<String> set = new LinkedHashSet<>();
         set.add(METHOD.OPTIONS);
         set.addAll(Arrays.asList(methodsImpl(request)));
-        for (int i = 0; i < matchers.size(); i++) {
-            WebMatcher m = matchers.get(i);
+        for (WebMatcher m : matchers) {
             if (m.method() != null && m.match(request) > 0) {
                 set.add(m.method());
             }

@@ -66,8 +66,7 @@ public class Scheduler {
             return false;
         }
         synchronized (tasks) {
-            for (int i = 0; i < tasks.size(); i++) {
-                Task other = tasks.get(i);
+            for (Task other : tasks) {
                 if (other.id.equals(task.id) && other.nextExecutionTime > 0L) {
                     LOG.fine("failed to schedule task '" + task.id +
                              "', already scheduled");

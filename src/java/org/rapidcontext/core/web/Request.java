@@ -607,9 +607,11 @@ public class Request implements HttpUtil {
      */
     public String getSessionId() {
         Cookie[] cookies = request.getCookies();
-        for (int i = 0; cookies != null && i < cookies.length; i++) {
-            if (SESSION_COOKIE.equals(cookies[i].getName())) {
-                return cookies[i].getValue();
+        if (cookies != null) {
+            for (Cookie c : cookies) {
+                if (SESSION_COOKIE.equals(c.getName())) {
+                    return c.getValue();
+                }
             }
         }
         return null;

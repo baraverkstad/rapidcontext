@@ -84,14 +84,12 @@ public class HtmlSerializer {
      * @param buffer         the string buffer to append into
      */
     private static void serialize(Dict dict, StringBuilder buffer) {
-        String[]  keys = dict.keys();
-
         buffer.append("<table>\n<tbody>\n");
-        for (int i = 0; i < keys.length; i++) {
+        for (String key : dict.keys()) {
             buffer.append("<tr>\n<th>");
-            serialize(keys[i], buffer);
+            serialize(key, buffer);
             buffer.append("</th>\n<td>");
-            serialize(dict.get(keys[i]), buffer);
+            serialize(dict.get(key), buffer);
             buffer.append("</td>\n</tr>\n");
         }
         buffer.append("</tbody>\n</table>\n");

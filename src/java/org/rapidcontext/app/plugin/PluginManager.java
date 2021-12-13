@@ -212,9 +212,8 @@ public class PluginManager {
      * @param baseDir        the base plug-in directory
      */
     private void initStorages(File baseDir) {
-        File[] files = baseDir.listFiles();
-        for (int i = 0; i < files.length; i++) {
-            String id = pluginId(files[i]);
+        for (File f : baseDir.listFiles()) {
+            String id = pluginId(f);
             if (id != null && !isAvailable(id)) {
                 try {
                     createStorage(id);
@@ -320,9 +319,9 @@ public class PluginManager {
             new File(builtinDir, pluginId + ".zip"),
             new File(builtinDir, pluginId)
         };
-        for (int i = 0; i < files.length; i++) {
-            if (files[i].canRead()) {
-                return files[i];
+        for (File f : files) {
+            if (f.canRead()) {
+                return f;
             }
         }
         return null;
@@ -591,10 +590,9 @@ public class PluginManager {
      * this.
      */
     public void unloadAll() {
-        Object[] objs = storage.loadAll(PATH_PLUGIN);
-        for (int i = 0; i < objs.length; i++) {
-            if (objs[i] instanceof Plugin) {
-                String pluginId = ((Plugin) objs[i]).id();
+        for (Object o : storage.loadAll(PATH_PLUGIN)) {
+            if (o instanceof Plugin) {
+                String pluginId = ((Plugin) o).id();
                 try {
                     unload(pluginId);
                 } catch (PluginException e) {
@@ -623,14 +621,11 @@ public class PluginManager {
      * @param pluginId       the unique plug-in id
      */
     private void loadJarFiles(String pluginId) {
-        Metadata[]  meta;
-        String      name;
-
-        meta = storage.lookupAll(storagePath(pluginId).descendant(PATH_LIB));
-        for (int i = 0; i < meta.length; i++) {
-            name = meta[i].path().name();
-            if (meta[i].isBinary() && name.toLowerCase().endsWith(".jar")) {
-                loadJarFile(meta[i].path());
+        Path path = storagePath(pluginId).descendant(PATH_LIB);
+        for (Metadata meta : storage.lookupAll(path)) {
+            String name = meta.path().name();
+            if (meta.isBinary() && name.toLowerCase().endsWith(".jar")) {
+                loadJarFile(meta.path());
             }
         }
     }

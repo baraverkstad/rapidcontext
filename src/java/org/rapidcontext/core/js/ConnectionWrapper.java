@@ -133,10 +133,9 @@ public class ConnectionWrapper implements Scriptable, Wrapper {
             // Hide internal methods for connection handling
             return false;
         }
-        Method[] methods = channel.getClass().getMethods();
-        for (int i = 0; i < methods.length; i++) {
-            if (methods[i].getName().equals(name) &&
-                (methods[i].getModifiers() & Modifier.PUBLIC) > 0) {
+        for (Method m : channel.getClass().getMethods()) {
+            if (m.getName().equals(name) &&
+                (m.getModifiers() & Modifier.PUBLIC) > 0) {
                 return true;
             }
         }
@@ -500,16 +499,15 @@ public class ConnectionWrapper implements Scriptable, Wrapper {
                 args[i] = JsSerializer.unwrap(args[i]);
             }
             Channel target = parent.getConnection();
-            Method[] methods = target.getClass().getMethods();
-            for (int i = 0; i < methods.length; i++) {
-                if (isMatching(methods[i], args)) {
+            for (Method m : target.getClass().getMethods()) {
+                if (isMatching(m, args)) {
                     // TODO: call context stack should be pushed & popped
                     String signature = target.getConnection().path() + "#" +
                                        this.methodName;
                     cx.logCall(signature, args);
                     try {
-                        methods[i].setAccessible(true);
-                        Object res = methods[i].invoke(target, args);
+                        m.setAccessible(true);
+                        Object res = m.invoke(target, args);
                         cx.logResponse(res);
                         return JsSerializer.wrap(res, scope);
                     } catch (Exception e) {

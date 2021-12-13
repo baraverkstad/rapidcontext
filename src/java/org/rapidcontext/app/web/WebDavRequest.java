@@ -443,8 +443,7 @@ public class WebDavRequest implements HttpUtil {
         if (fails.size() > 0) {
             xmlTagBegin(buffer, 2, "propstat");
             xmlTagBegin(buffer, 3, "prop");
-            for (int i = 0; i < fails.size(); i++) {
-                String key = fails.get(i);
+            for (String key : fails) {
                 if (key.indexOf(':') > 0) {
                     String value = StringUtils.substringBeforeLast(key, ":");
                     key = StringUtils.substringAfterLast(key, ":");
@@ -542,8 +541,8 @@ public class WebDavRequest implements HttpUtil {
 
         buffer.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
         buffer.append("<D:multistatus xmlns:D=\"DAV:\">\n");
-        for (int i = 0; i < results.size(); i++) {
-            buffer.append(results.get(i));
+        for (String s : results) {
+            buffer.append(s);
         }
         xmlTagEnd(buffer, 0, "multistatus");
         request.sendText(STATUS.MULTI_STATUS, Mime.XML[0], buffer.toString());
