@@ -231,11 +231,8 @@ public class Dict {
      * @return an array with all dictionary key names
      */
     public String[] keys() {
-        if (size() <= 0) {
-            return ArrayUtils.EMPTY_STRING_ARRAY;
-        } else {
-            return map.keySet().toArray(new String[map.size()]);
-        }
+        String[] empty = ArrayUtils.EMPTY_STRING_ARRAY;
+        return (size() <= 0) ? empty : map.keySet().toArray(empty);
     }
 
     /**

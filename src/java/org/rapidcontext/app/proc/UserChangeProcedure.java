@@ -16,6 +16,7 @@ package org.rapidcontext.app.proc;
 
 import java.util.logging.Logger;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
@@ -141,11 +142,7 @@ public class UserChangeProcedure implements Procedure {
         String[] roles = null;
         Object obj = bindings.getValue("roles");
         if (obj instanceof Array) {
-            Array list = (Array) obj;
-            roles = new String[list.size()];
-            for (int i = 0; i < list.size(); i++) {
-                roles[i] = list.get(i).toString();
-            }
+            roles = ((Array) obj).values(ArrayUtils.EMPTY_STRING_ARRAY);
         } else {
             roles = obj.toString().split("[ ,]+");
         }

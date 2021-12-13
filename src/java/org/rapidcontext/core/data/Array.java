@@ -20,6 +20,8 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 /**
  * A general data array. Compared to the standard ArrayList, this
  * class provides a number of improvements;
@@ -257,6 +259,27 @@ public class Array implements Iterable<Object> {
      */
     public int indexOf(Object value) {
         return (list == null) ? -1 : list.indexOf(value);
+    }
+
+    /**
+     * Returns an array with all the values in this array.
+     *
+     * @return an array with all values
+     */
+    public Object[] values() {
+        return (list == null) ? ArrayUtils.EMPTY_OBJECT_ARRAY : list.toArray();
+    }
+
+    /**
+     * Returns an array with all the values in this array. If the provided
+     * array is too small, a new one of the same type is allocated.
+     *
+     * @param arr            the array to store the values
+     *
+     * @return an array with all values
+     */
+    public <T> T[] values(T[] arr) {
+        return ((list == null) ? new ArrayList<>(0) : list).toArray(arr);
     }
 
     /**

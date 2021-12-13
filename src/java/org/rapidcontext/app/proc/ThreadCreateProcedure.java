@@ -124,11 +124,7 @@ public class ThreadCreateProcedure implements Procedure {
         Object[] args = null;
         Object obj = bindings.getValue("arguments");
         if (obj instanceof Array) {
-            Array data = (Array) obj;
-            args = new Object[data.size()];
-            for (int i = 0; i < args.length; i++) {
-                args[i] = data.get(i);
-            }
+            args = ((Array) obj).values();
         } else {
             args = new Object[1];
             args[0] = obj;

@@ -142,11 +142,7 @@ public class ArrayWrapper extends ScriptableObject implements Wrapper {
      * @return an array with all values
      */
     public Object[] getArray() {
-        Object[] copy = new Object[arr.size()];
-        for (int i = 0; i < copy.length; i++) {
-            copy[i] = get(i, null);
-        }
-        return copy;
+        return arr.values();
     }
 
     /**

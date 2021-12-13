@@ -406,16 +406,7 @@ public class User extends StorableObject {
      * @return an array with all the roles
      */
     public String[] roles() {
-        Array roles = dict.getArray(KEY_ROLE);
-        if (roles.size() <= 0) {
-            return new String[0];
-        } else {
-            String[] res = new String[roles.size()];
-            for (int i = 0; i < roles.size(); i++) {
-                res[i] = roles.get(i).toString();
-            }
-            return res;
-        }
+        return dict.getArray(KEY_ROLE).values(ArrayUtils.EMPTY_STRING_ARRAY);
     }
 
     /**
