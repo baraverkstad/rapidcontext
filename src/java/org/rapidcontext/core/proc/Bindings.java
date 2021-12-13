@@ -160,8 +160,8 @@ public class Bindings {
         if (parent != null) {
             parent.getNames(set);
         }
-        for (int i = 0; i < data.size(); i++) {
-            Dict bind = data.getDict(i);
+        for (Object o : data) {
+            Dict bind = (Dict) o;
             set.add(bind.getString("name", null));
         }
         return set;
@@ -364,8 +364,8 @@ public class Bindings {
      * @return the processed template string
      */
     public String processTemplate(String tpl, TextEncoding encoding) {
-        for (int i = 0; i < data.size(); i++) {
-            Dict bind = data.getDict(i);
+        for (Object o : data) {
+            Dict bind = (Dict) o;
             String key = bind.getString("name", null);
             String type = bind.getString("type", "");
             if (type.equals("4") || type.equals("argument")) {

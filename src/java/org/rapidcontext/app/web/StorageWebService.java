@@ -601,8 +601,8 @@ public class StorageWebService extends WebService {
                 idx = (Index) data;
                 arr = idx.paths();
                 LOG.fine("Paths: " + arr);
-                for (int i = 0; i < arr.size(); i++) {
-                    path = (Path) arr.get(i);
+                for (Object o : arr) {
+                    path = (Path) o;
                     data = ctx.getStorage().load(path);
                     meta = ctx.getStorage().lookup(path);
                     if (data != null && meta != null) {

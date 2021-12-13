@@ -234,15 +234,16 @@ public class JdbcChannel extends Channel {
             res.setInt("driverVersionMinor", meta.getDriverMinorVersion());
             Array schemas = new Array();
             try (ResultSet rs = meta.getCatalogs()) {
-                Array tmp = (Array) createResults(rs, "no-column-names");
-                for (int i = 0; i < tmp.size(); i++) {
-                    schemas.add(tmp.getArray(i).get(0));
+                Array arr = (Array) createResults(rs, "no-column-names");
+                for (Object o : arr) {
+                    Array row = (Array) o;
+                    schemas.add(row.get(0));
                 }
             }
             try (ResultSet rs = meta.getSchemas()) {
-                Array tmp = (Array) createResults(rs, "no-column-names");
-                for (int i = 0; i < tmp.size(); i++) {
-                    Array row = tmp.getArray(i);
+                Array arr = (Array) createResults(rs, "no-column-names");
+                for (Object o : arr) {
+                    Array row = (Array) o;
                     schemas.add(row.get(0) + "." + row.get(1));
                 }
             }

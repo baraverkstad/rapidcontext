@@ -21,7 +21,6 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
-import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.StorableObject;
@@ -219,9 +218,8 @@ public class Role extends StorableObject {
      *         false otherwise
      */
     public boolean hasAccess(String path, String permission) {
-        Array arr = dict.getArray(KEY_ACCESS);
-        for (int i = 0; i < arr.size(); i++) {
-            Dict dict = arr.getDict(i);
+        for (Object o : dict.getArray(KEY_ACCESS)) {
+            Dict dict = (Dict) o;
             if (matchPath(dict, path)) {
                 String perms = dict.getString(ACCESS_PERMISSION, "").trim();
                 @SuppressWarnings("unchecked")

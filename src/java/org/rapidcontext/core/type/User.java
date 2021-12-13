@@ -392,9 +392,8 @@ public class User extends StorableObject {
      *         false otherwise
      */
     public boolean hasRole(String name) {
-        Array roles = dict.getArray(KEY_ROLE);
-        for (int i = 0; i < roles.size(); i++) {
-            if (name.equalsIgnoreCase(roles.getString(i, ""))) {
+        for (Object o : dict.getArray(KEY_ROLE)) {
+            if (name.equalsIgnoreCase(o.toString())) {
                 return true;
             }
         }

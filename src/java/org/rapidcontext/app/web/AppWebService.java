@@ -30,7 +30,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.app.plugin.PluginManager;
 import org.rapidcontext.app.proc.StatusProcedure;
-import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.js.JsSerializer;
@@ -213,9 +212,8 @@ public class AppWebService extends FileWebService {
      */
     public ArrayList<String> headerLines() {
         ArrayList<String> res = new ArrayList<>();
-        Array headers = dict.getArray(KEY_HEADER);
-        for (int i = 0; i < headers.size(); i++) {
-            res.add(headers.get(i).toString());
+        for (Object o : dict.getArray(KEY_HEADER)) {
+            res.add(o.toString());
         }
         return res;
     }

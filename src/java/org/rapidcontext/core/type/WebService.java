@@ -111,10 +111,9 @@ public abstract class WebService extends StorableObject implements HttpUtil {
         super(id, type, dict);
         dict.set(KEY_DESCRIPTION, description());
         Array arr = dict.getArray(KEY_MATCH);
-        int size = (arr == null) ? 0 : arr.size();
-        matchers = new ArrayList<>(size);
-        for (int i = 0; arr != null && i < size; i++) {
-            matchers.add(new WebMatcher(this, arr.getDict(i)));
+        matchers = new ArrayList<>(arr.size());
+        for (Object o : arr) {
+            matchers.add(new WebMatcher(this, (Dict) o));
         }
     }
 

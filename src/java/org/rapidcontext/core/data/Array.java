@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Iterator;
 
 /**
  * A general data array. Compared to the standard ArrayList, this
@@ -44,7 +45,7 @@ import java.util.Date;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class Array {
+public class Array implements Iterable<Object> {
 
     /**
      * A list of indexable array values.
@@ -104,6 +105,11 @@ public class Array {
         return buffer.toString();
     }
 
+    @Override
+    public Iterator<Object> iterator() {
+        return (list == null) ? Collections.emptyIterator() : list.iterator();
+    }
+
     /**
      * Creates a copy of this array. The copy is a "deep copy", as
      * all dictionary and array values will be recursively copied.
@@ -112,14 +118,15 @@ public class Array {
      */
     public Array copy() {
         Array res = new Array(size());
-        for (int i = 0; i < size(); i++) {
-            Object value = list.get(i);
-            if (value instanceof Dict) {
-                value = ((Dict) value).copy();
-            } else if (value instanceof Array) {
-                value = ((Array) value).copy();
+        if (list != null) {
+            for (Object value : list) {
+                if (value instanceof Dict) {
+                    value = ((Dict) value).copy();
+                } else if (value instanceof Array) {
+                    value = ((Array) value).copy();
+                }
+                res.list.add(value);
             }
-            res.list.add(value);
         }
         return res;
     }
@@ -206,9 +213,11 @@ public class Array {
      *         false otherwise
      */
     public boolean containsAll(Array arr) {
-        for (int i = 0; arr != null && i < arr.size(); i++) {
-            if (!containsValue(arr.get(i))) {
-                return false;
+        if (arr != null) {
+            for (Object o : arr) {
+                if (!containsValue(o)) {
+                    return false;
+                }
             }
         }
         return true;
@@ -226,9 +235,11 @@ public class Array {
      *         false otherwise
      */
     public boolean containsAny(Array arr) {
-        for (int i = 0; arr != null && i < arr.size(); i++) {
-            if (containsValue(arr.get(i))) {
-                return true;
+        if (arr != null) {
+            for (Object o : arr) {
+                if (containsValue(o)) {
+                    return true;
+                }
             }
         }
         return false;
@@ -560,8 +571,8 @@ public class Array {
             } else {
                 list.ensureCapacity(list.size() + arr.size());
             }
-            for (int i = 0; i < arr.size(); i++) {
-                add(arr.get(i));
+            for (Object o : arr) {
+                add(o);
             }
         }
     }
@@ -602,8 +613,7 @@ public class Array {
             return arr;
         } else {
             Array res = new Array(arr.size());
-            for (int i = 0; i < arr.size(); i++) {
-                Object value = arr.get(i);
+            for (Object value : arr) {
                 if (!containsValue(value)) {
                     res.add(value);
                 }
@@ -630,8 +640,7 @@ public class Array {
             return this;
         } else {
             Array res = new Array(Math.min(size(), arr.size()));
-            for (int i = 0; i < arr.size(); i++) {
-                Object value = arr.get(i);
+            for (Object value : arr) {
                 if (containsValue(value)) {
                     res.add(value);
                 }

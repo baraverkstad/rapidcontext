@@ -26,7 +26,6 @@ import java.util.logging.Logger;
 
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Library;
@@ -166,9 +165,8 @@ public class PluginManager {
      *         null if not found
      */
     public static String pluginId(Metadata meta) {
-        Array paths = meta.storagePaths();
-        for (int i = 0; i < paths.size(); i++) {
-            Path path = (Path) paths.get(i);
+        for (Object o : meta.storagePaths()) {
+            Path path = (Path) o;
             if (path.startsWith(PATH_STORAGE_PLUGIN)) {
                 return path.name();
             }

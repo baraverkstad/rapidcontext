@@ -19,7 +19,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.ObjectUtils;
-import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 
 /**
@@ -245,13 +244,11 @@ public class MemoryStorage extends Storage {
         Object obj = meta.get(path);
         if (path.isIndex() && obj instanceof Index) {
             Index idx = (Index) obj;
-            Array arr = idx.indices();
-            for (int i = 0; i < arr.size(); i++) {
-                remove(path.child(arr.getString(i, null), true), false);
+            for (Object o : idx.indices()) {
+                remove(path.child(o.toString(), true), false);
             }
-            arr = idx.objects();
-            for (int i = 0; i < arr.size(); i++) {
-                remove(path.child(arr.getString(i, null), false), false);
+            for (Object o : idx.objects()) {
+                remove(path.child(o.toString(), false), false);
             }
         }
         objects.remove(path);

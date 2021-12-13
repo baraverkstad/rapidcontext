@@ -14,7 +14,6 @@
 
 package org.rapidcontext.app.plugin.jdbc;
 
-import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
@@ -132,12 +131,12 @@ public class JdbcBuiltInConnectionWriteProcedure implements Procedure {
             data.remove(JdbcConnection.KEY_ID);
             res.set(JdbcConnection.KEY_TYPE, type.id());
             data.remove(JdbcConnection.KEY_TYPE);
-            Array props = type.properties();
-            for (int i = 0; i < props.size(); i++) {
-                String name = props.getDict(i).getString("name", null);
+            for (Object o : type.properties()) {
+                Dict dict = (Dict) o;
+                String name = dict.getString("name", null);
                 if (data.containsKey(name)) {
                     res.set(name, data.get(name));
-                } else if (props.getDict(i).getBoolean("required", false)) {
+                } else if (dict.getBoolean("required", false)) {
                     throw new ProcedureException("missing required '" + name +
                                                  "' property");
                 }

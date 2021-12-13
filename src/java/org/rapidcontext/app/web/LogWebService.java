@@ -145,10 +145,9 @@ public class LogWebService extends WebService{
      * @param arr            the array containing message dicts
      */
     private static void logMessages(Request request, Array arr) {
-        for (int i = 0; i < arr.size(); i++) {
-            Object obj = arr.get(i);
-            if (obj instanceof Dict) {
-                logMessage(request, (Dict) obj);
+        for (Object o : arr) {
+            if (o instanceof Dict) {
+                logMessage(request, (Dict) o);
             }
         }
     }

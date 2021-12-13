@@ -468,8 +468,7 @@ public class PropertiesSerializer {
         throws IOException {
 
         int pos = 0;
-        for (int i = 0; i < arr.size(); i++) {
-            Object obj = arr.get(i);
+        for (Object obj : arr) {
             if (obj instanceof Dict) {
                 write(os, prefix + pos + ".", (Dict) obj);
                 pos++;
@@ -579,8 +578,7 @@ public class PropertiesSerializer {
                                            Array arr) {
 
         int pos = 0;
-        for (int i = 0; i < arr.size(); i++) {
-            Object obj = arr.get(i);
+        for (Object obj : arr) {
             if (obj instanceof Dict) {
                 toProperties(props, prefix + pos + ".", (Dict) obj);
                 pos++;

@@ -107,8 +107,8 @@ public class PluginListProcedure implements Procedure {
         Dict dict = (Dict) ctx.getStorage().load(Storage.PATH_STORAGEINFO);
         Array arr = dict.getArray("storages");
         Array res = new Array(arr.size());
-        for (int i = 0; i < arr.size(); i++) {
-            Path path = ((Storage) arr.get(i)).path();
+        for (Object o : arr) {
+            Path path = ((Storage) o).path();
             if (SecurityContext.hasReadAccess(path.toString())) {
                 if (path.startsWith(PluginManager.PATH_STORAGE_PLUGIN)) {
                     String pluginId = path.name();

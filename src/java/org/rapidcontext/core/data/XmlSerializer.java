@@ -119,10 +119,10 @@ public class XmlSerializer {
      */
     private static void serialize(String id, Array arr, int indent, StringBuilder buffer) {
         tagStart(id, "array", buffer);
-        for (int i = 0; i < arr.size(); i++) {
+        for (Object o : arr) {
             buffer.append("\n");
             buffer.append(StringUtils.repeat("  ", indent + 1));
-            serialize("item", arr.get(i), indent + 1, buffer);
+            serialize("item", o, indent + 1, buffer);
         }
         buffer.append("\n");
         buffer.append(StringUtils.repeat("  ", indent));

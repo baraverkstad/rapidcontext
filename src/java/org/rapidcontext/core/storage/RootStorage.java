@@ -130,8 +130,8 @@ public class RootStorage extends Storage {
         } else if (exact) {
             return (Storage) metadata.load(path.child("storage", false));
         } else {
-            for (int i = 0; i < mountedStorages.size(); i++) {
-                Storage storage = (Storage) mountedStorages.get(i);
+            for (Object o : mountedStorages) {
+                Storage storage = (Storage) o;
                 if (path.startsWith(storage.path())) {
                     return storage;
                 }
@@ -341,8 +341,8 @@ public class RootStorage extends Storage {
             return (meta == null) ? null : new Metadata(path, meta);
         } else {
             meta = metadata.lookup(path);
-            for (int i = 0; i < mountedStorages.size(); i++) {
-                storage = (Storage) mountedStorages.get(i);
+            for (Object o : mountedStorages) {
+                storage = (Storage) o;
                 Path overlay = storage.mountOverlayPath();
                 if (overlay != null && path.startsWith(overlay)) {
                     Path subpath = path.subPath(overlay.depth());
@@ -404,8 +404,8 @@ public class RootStorage extends Storage {
             } else if (res != null && res != ObjectUtils.NULL) {
                 return res;
             }
-            for (int i = 0; i < mountedStorages.size(); i++) {
-                storage = (Storage) mountedStorages.get(i);
+            for (Object o : mountedStorages) {
+                storage = (Storage) o;
                 Path overlay = storage.mountOverlayPath();
                 if (overlay != null && path.startsWith(overlay)) {
                     Path subpath = path.subPath(overlay.depth());
@@ -538,8 +538,8 @@ public class RootStorage extends Storage {
             storage.store(storage.localPath(path), data);
         } else {
             boolean stored = false;
-            for (int i = 0; i < mountedStorages.size(); i++) {
-                storage = (Storage) mountedStorages.get(i);
+            for (Object o : mountedStorages) {
+                storage = (Storage) o;
                 Path overlay = storage.mountOverlayPath();
                 if (overlay != null && path.startsWith(overlay)) {
                     Path subpath = path.subPath(overlay.depth());
@@ -606,8 +606,8 @@ public class RootStorage extends Storage {
             if (caching) {
                 cacheRemove(null, path);
             }
-            for (int i = 0; i < mountedStorages.size(); i++) {
-                storage = (Storage) mountedStorages.get(i);
+            for (Object o : mountedStorages) {
+                storage = (Storage) o;
                 Path overlay = storage.mountOverlayPath();
                 boolean isMatch = (overlay != null) && path.startsWith(overlay);
                 if (storage.isReadWrite() && isMatch && overlay != null) {

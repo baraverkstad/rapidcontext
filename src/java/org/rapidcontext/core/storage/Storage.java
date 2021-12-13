@@ -17,8 +17,6 @@ package org.rapidcontext.core.storage;
 import java.util.ArrayList;
 import java.util.Date;
 
-import org.rapidcontext.core.data.Array;
-
 /**
  * The persistent data storage and retrieval class. This base class
  * is extended by storage services to provide actual data lookup and
@@ -261,14 +259,12 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
         Metadata meta = lookup(path);
         if (meta != null && meta.isIndex()) {
             Index idx = (Index) load(path);
-            Array arr = idx.indices();
-            for (int i = 0; arr != null && i < arr.size(); i++) {
-                Path child = path.child(arr.getString(i, null), true);
+            for (Object o : idx.indices()) {
+                Path child = path.child(o.toString(), true);
                 lookupAll(child, list);
             }
-            arr = idx.objects();
-            for (int i = 0; arr != null && i < arr.size(); i++) {
-                Path child = path.child(arr.getString(i, null), false);
+            for (Object o : idx.objects()) {
+                Path child = path.child(o.toString(), false);
                 lookupAll(child, list);
             }
         } else if (meta != null) {
@@ -319,14 +315,12 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
         Object obj = load(path);
         if (obj != null && obj instanceof Index) {
             Index idx = (Index) obj;
-            Array arr = idx.indices();
-            for (int i = 0; arr != null && i < arr.size(); i++) {
-                Path child = path.child(arr.getString(i, null), true);
+            for (Object o : idx.indices()) {
+                Path child = path.child(o.toString(), true);
                 loadAll(child, list);
             }
-            arr = idx.objects();
-            for (int i = 0; arr != null && i < arr.size(); i++) {
-                Path child = path.child(arr.getString(i, null), false);
+            for (Object o : idx.objects()) {
+                Path child = path.child(o.toString(), false);
                 loadAll(child, list);
             }
         } else if (obj != null) {

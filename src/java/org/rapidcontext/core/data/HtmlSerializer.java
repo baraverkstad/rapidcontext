@@ -103,9 +103,9 @@ public class HtmlSerializer {
      */
     private static void serialize(Array arr, StringBuilder buffer) {
         buffer.append("<ol>\n");
-        for (int i = 0; i < arr.size(); i++) {
+        for (Object o : arr) {
             buffer.append("<li>");
-            serialize(arr.get(i), buffer);
+            serialize(o, buffer);
             buffer.append("</li>\n");
         }
         buffer.append("</ol>\n");

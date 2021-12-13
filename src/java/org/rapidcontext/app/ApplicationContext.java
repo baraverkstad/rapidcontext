@@ -329,14 +329,12 @@ public class ApplicationContext {
      * plug-in "lib" directories.
      */
     private void initPlugins() {
-        Array list = config.getArray("plugins");
-        for (int i = 0; i < list.size(); i++) {
+        for (Object o : config.getArray("plugins")) {
+            String pluginId = o.toString();
             try {
-                String pluginId = list.getString(i, null);
                 loadPlugin(pluginId);
             } catch (PluginException e) {
-                LOG.warning("failed to load plugin " +
-                            list.getString(i, null) + ": " +
+                LOG.warning("failed to load plugin " + pluginId + ": " +
                             e.getMessage());
             }
         }

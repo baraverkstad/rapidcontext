@@ -132,7 +132,7 @@ public class Index extends StorableObject {
      * @return an array of sub-index names
      */
     public Array indices() {
-        return (Array) dict.get(KEY_IDXS);
+        return dict.getArray(KEY_IDXS);
     }
 
     /**
@@ -141,7 +141,7 @@ public class Index extends StorableObject {
      * @return an array of object names
      */
     public Array objects() {
-        return (Array) dict.get(KEY_OBJS);
+        return dict.getArray(KEY_OBJS);
     }
 
     /**
@@ -151,17 +151,13 @@ public class Index extends StorableObject {
      * @return an array of path objects
      */
     public Array paths() {
-        Array  res = new Array();
-        Path   path = path();
-        Array  arr;
-
-        arr = indices();
-        for (int i = 0; arr != null && i < arr.size(); i++) {
-            res.add(path.child(arr.getString(i, null), true));
+        Array res = new Array();
+        Path path = path();
+        for (Object o : indices()) {
+            res.add(path.child(o.toString(), true));
         }
-        arr = objects();
-        for (int i = 0; arr != null && i < arr.size(); i++) {
-            res.add(path.child(arr.getString(i, null), false));
+        for (Object o : objects()) {
+            res.add(path.child(o.toString(), false));
         }
         return res;
     }

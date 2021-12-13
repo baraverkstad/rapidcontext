@@ -82,10 +82,11 @@ public class PluginUpgradeStorage extends WrappedStorage {
             dict.set(KEY_ID, path.name());
             dict.set(User.KEY_NAME, dict.getString(User.KEY_DESCRIPTION, ""));
             dict.set(User.KEY_DESCRIPTION, "");
-            Array list = dict.getArray(User.KEY_ROLE);
-            for (int i = 0; i < list.size(); i++) {
-                list.set(i, list.getString(i, "").toLowerCase());
+            Array list = new Array();
+            for (Object o: dict.getArray(User.KEY_ROLE)) {
+                list.add(o.toString().toLowerCase());
             }
+            dict.set(User.KEY_ROLE, list);
         }
     }
 
@@ -96,8 +97,8 @@ public class PluginUpgradeStorage extends WrappedStorage {
      * @param arr            the array of access data
      */
     private void transformRoleAccess(Array arr) {
-        for (int i = 0; arr != null && i < arr.size(); i++) {
-            Dict dict = arr.getDict(i);
+        for (Object o : arr) {
+            Dict dict = (Dict) o;
             String type = dict.getString("type", null);
             String name = dict.getString("name", null);
             String regex = dict.getString("regexp", null);
