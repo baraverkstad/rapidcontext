@@ -22,6 +22,7 @@ import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
+import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.type.Session;
 import org.rapidcontext.core.type.User;
@@ -122,10 +123,10 @@ public class SessionCurrentProcedure implements Procedure {
         User user = (userId == null) ? null : User.find(storage, userId);
         if (user == null) {
             res.set("user", null);
-            res.set("nonce", "" + session.accessTime().getTime());
         } else {
             res.set("user", UserListProcedure.serialize(user));
         }
+        res.set("nonce", SecurityContext.nonce());
         Dict dict = new Dict();
         for (String id : session.files().keys()) {
             dict.set(id, serialize(session.file(id)));
