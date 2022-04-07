@@ -154,7 +154,7 @@ public class CmdLineExecProcedure extends AddOnProcedure {
         }
         try {
             // TODO: investigate using ProcessBuilder instead
-            Process process = runtime.exec(cmd, env, dir);
+            Process process = runtime.exec(cmd.split(" "), env, dir);
             return waitFor(process, cx);
         } catch (IOException e) {
             str = "error executing '" + cmd + "': " + e.getMessage();

@@ -27,10 +27,12 @@ import org.apache.commons.lang3.SystemUtils;
 public class AppUtils {
 
     /**
-     * The default array of Linux browsers.
+     * The default array of browser open commands (on Linux).
      */
-    private static final String[] BROWSERS =
-        { "google-chrome", "firefox", "mozilla", "opera", "konqueror" };
+    private static final String[] BROWSERS = {
+        "xdg-open", "gnome-open", "kde-open",
+        "google-chrome", "firefox", "mozilla"
+    };
 
     /**
      * Checks if a command is available (in a Unix environment).
@@ -41,8 +43,8 @@ public class AppUtils {
      *         false otherwise
      */
     public static boolean hasCommand(String command) {
-        String cmdline = "which " + command;
-        try (InputStream is = Runtime.getRuntime().exec(cmdline).getInputStream()) {
+        String[] cmd = {"which", command};
+        try (InputStream is = Runtime.getRuntime().exec(cmd).getInputStream()) {
             return is.read() != -1;
         } catch (Exception ignore) {
             return false;
@@ -57,20 +59,15 @@ public class AppUtils {
      * @throws Exception if the URL failed to open or if no browser was found
      */
     public static void openURL(String url) throws Exception {
+        Runtime runtime = Runtime.getRuntime();
         if (SystemUtils.IS_OS_MAC_OSX) {
-            Runtime.getRuntime().exec("open " + url);
+            runtime.exec(new String[]{"open", url});
         } else if (SystemUtils.IS_OS_WINDOWS) {
-            Runtime.getRuntime().exec("cmd.exe /C start " + url);
-        } else if (hasCommand("xdg-open")) {
-            Runtime.getRuntime().exec("xdg-open " + url);
-        } else if (hasCommand("gnome-open")) {
-            Runtime.getRuntime().exec("gnome-open " + url);
-        } else if (hasCommand("kde-open")) {
-            Runtime.getRuntime().exec("kde-open " + url);
+            runtime.exec(new String[]{"cmd.exe", "/C", "start", url});
         } else {
             for (String cmd : BROWSERS) {
                 if (hasCommand(cmd)) {
-                    Runtime.getRuntime().exec(cmd + " " + url);
+                    runtime.exec(new String[]{cmd, url});
                     return;
                 }
             }
