@@ -18,7 +18,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
@@ -28,6 +27,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.js.JsException;
 import org.rapidcontext.core.js.JsSerializer;
@@ -128,16 +128,11 @@ public abstract class HttpProcedure extends AddOnProcedure {
         }
         if (!con.getRequestMethod().equals(method)) {
             try {
-                Field field = HttpURLConnection.class.getDeclaredField("method");
-                field.setAccessible(true);
-                field.set(con, method);
-                if (con instanceof sun.net.www.protocol.https.HttpsURLConnectionImpl) {
-                    field = con.getClass().getDeclaredField("delegate");
-                    field.setAccessible(true);
-                    HttpURLConnection delegate = (HttpURLConnection) field.get(con);
-                    field = HttpURLConnection.class.getDeclaredField("method");
-                    field.setAccessible(true);
-                    field.set(delegate, method);
+                FieldUtils.writeField(con, "method", method, true);
+                String className = "sun.net.www.protocol.https.HttpsURLConnectionImpl";
+                if (Class.forName(className).isInstance(con)) {
+                    Object delegate = FieldUtils.readField(con, "delegate", true);
+                    FieldUtils.writeField(delegate, "method", method, true);
                 }
             } catch (Exception e) {
                 String msg = "failed to use HTTP " + method + ": " + e.getMessage();
