@@ -16,6 +16,7 @@ package org.rapidcontext.app.proc;
 
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.SecurityContext;
@@ -108,9 +109,9 @@ public class SessionAuthenticateProcedure implements Procedure {
 
         Session session = Session.activeSession.get();
         if (session == null) {
-            throw new ProcedureException("no current session found");
+            return response(false, "no active session found", null);
         } else if (session.userId().length() > 0) {
-            throw new ProcedureException("session already authenticated");
+            return response(true, "session already authenticated", session.userId());
         }
         String userId = bindings.getValue("user").toString();
         String nonce = bindings.getValue("nonce").toString();
@@ -119,9 +120,26 @@ public class SessionAuthenticateProcedure implements Procedure {
             SecurityContext.verifyNonce(nonce);
             SecurityContext.authHash(userId, ":" + nonce, hash);
             session.setUserId(userId);
-            return userId + " logged in";
+            return response(true, "successful authentication", userId);
         } catch (Exception e) {
-            throw new ProcedureException("invalid user or password");
+            return response(false, e.getMessage(), null);
         }
+    }
+
+    /**
+     * Builds an authentication response object.
+     *
+     * @param success        the authentication success flag
+     * @param message        the success or error message
+     * @param userId         the user identifier, or null
+     *
+     * @return the authentication response object
+     */
+    public static Dict response(boolean success, String message, String userId) {
+        Dict res = new Dict();
+        res.set("success", success);
+        res.set(success ? "message" : "error", message);
+        res.set("user", userId);
+        return res;
     }
 }

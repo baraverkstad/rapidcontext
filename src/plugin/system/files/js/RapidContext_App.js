@@ -512,6 +512,12 @@ RapidContext.App.login = function (login, password, token) {
             return RapidContext.App.callProc("System.Session.Authenticate", args);
         });
     }
+    d.addCallback(function (res) {
+        if (!res.success || res.error) {
+            RapidContext.Log.info("login failed", login, res.error);
+            throw new Error(res.error || "authentication failed");
+        }
+    });
     return d;
 };
 

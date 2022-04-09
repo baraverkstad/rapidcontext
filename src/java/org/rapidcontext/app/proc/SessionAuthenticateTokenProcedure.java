@@ -20,6 +20,7 @@ import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.type.Session;
+import static org.rapidcontext.app.proc.SessionAuthenticateProcedure.response;
 
 /**
  * The built-in session authentication token procedure.
@@ -101,18 +102,18 @@ public class SessionAuthenticateTokenProcedure implements Procedure {
 
         Session session = Session.activeSession.get();
         if (session == null) {
-            throw new ProcedureException("no current session found");
+            return response(false, "no active session found", null);
         } else if (session.userId().length() > 0) {
-            throw new ProcedureException("session already authenticated");
+            return response(true, "session already authenticated", session.userId());
         }
         String token = bindings.getValue("token").toString();
         try {
             SecurityContext.authToken(token);
             String userId = SecurityContext.currentUser().id();
             session.setUserId(userId);
-            return userId + " logged in, please change password";
+            return response(true, "token valid, please change password", userId);
         } catch (Exception e) {
-            throw new ProcedureException("invalid authentication token");
+            return response(false, e.getMessage(), null);
         }
     }
 }
