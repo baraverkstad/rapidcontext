@@ -41,16 +41,19 @@ if (typeof(RapidContext) == "undefined") {
  *   cancelling any previous call if needed.
  */
 RapidContext.Procedure = function (procedure) {
-    var proc = function () {
-        var self = arguments.callee;
-        self.args = MochiKit.Base.extend(null, arguments);
+    function self() {
+        self.args = Array.prototype.slice.call(arguments);
         return self.recall();
     }
-    MochiKit.Base.setdefault(proc, RapidContext.Procedure.prototype);
-    proc.procedure = procedure;
-    proc.args = null;
-    proc._deferred = null;
-    return proc;
+    self.procedure = procedure;
+    self.args = null;
+    self._deferred = null;
+    for (var k in RapidContext.Procedure.prototype) {
+        if (!self[k]) {
+            self[k] = RapidContext.Procedure.prototype[k];
+        }
+    }
+    return self;
 };
 
 /**
@@ -147,7 +150,7 @@ RapidContext.Procedure.prototype.recall = function () {
     this.cancel();
     MochiKit.Signal.signal(this, "oncall");
     this._deferred = RapidContext.App.callProc(this.procedure, this.args);
-    this._deferred.addBoth(MochiKit.Base.bind("_callback", this));
+    this._deferred.addBoth(this._callback.bind(this));
     return this._deferred;
 };
 
@@ -231,7 +234,7 @@ RapidContext.Procedure.prototype._nextCall = function (res) {
         this.args = this._mapArgs[this._mapPos++];
         MochiKit.Signal.signal(this, "oncall");
         this._deferred = RapidContext.App.callProc(this.procedure, this.args);
-        this._deferred.addBoth(MochiKit.Base.bind("_nextCall", this));
+        this._deferred.addBoth(this._nextCall.bind(this));
         return this._deferred;
     } else {
         MochiKit.Signal.signal(this, "onsuccess", this._mapRes);
