@@ -883,14 +883,15 @@ RapidContext.App._addErrbackLogger = function (d, logCtx) {
         return err;
     }
     function adder() {
-        var lastCb = d.chain && d.chain[d.chain.length - 1];
-        var errback = lastCb && lastCb[1];
+        var pair = d.chain && d.chain[d.chain.length - 1];
+        var errback = pair && pair[1];
         if (!d.chained && !errback) {
-            RapidContext.Log.warn(logCtx + " deferred: no error handler");
+            var msg = logCtx + " deferred: no error handler, chain length:";
+            RapidContext.Log.warn(msg, d.chain.length);
             d.addErrback(logger);
         }
     }
-    MochiKit.Async.callLater(0, adder);
+    setTimeout(adder);
 };
 
 /**
