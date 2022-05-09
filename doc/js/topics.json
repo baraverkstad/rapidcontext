@@ -46,21 +46,6 @@
         { "topic": "recall", "url": "doc/js/RapidContext.Procedure.html#recall" },
         { "topic": "reset", "url": "doc/js/RapidContext.Procedure.html#reset" }
     ] },
-    { "topic": "RapidContext.SVG", "url": "doc/js/RapidContext.SVG.html", "children": [
-        { "topic": "CIRCLE", "url": "doc/js/RapidContext.SVG.html#.CIRCLE" },
-        { "topic": "DEFS", "url": "doc/js/RapidContext.SVG.html#.DEFS" },
-        { "topic": "G", "url": "doc/js/RapidContext.SVG.html#.G" },
-        { "topic": "LINE", "url": "doc/js/RapidContext.SVG.html#.LINE" },
-        { "topic": "PATH", "url": "doc/js/RapidContext.SVG.html#.PATH" },
-        { "topic": "RADIALGRADIENT", "url": "doc/js/RapidContext.SVG.html#.RADIALGRADIENT" },
-        { "topic": "RECT", "url": "doc/js/RapidContext.SVG.html#.RECT" },
-        { "topic": "STOP", "url": "doc/js/RapidContext.SVG.html#.STOP" },
-        { "topic": "SVG", "url": "doc/js/RapidContext.SVG.html#.SVG" },
-        { "topic": "TEXT", "url": "doc/js/RapidContext.SVG.html#.TEXT" },
-        { "topic": "moveToBottom", "url": "doc/js/RapidContext.SVG.html#.moveToBottom" },
-        { "topic": "moveToTop", "url": "doc/js/RapidContext.SVG.html#.moveToTop" },
-        { "topic": "rotate", "url": "doc/js/RapidContext.SVG.html#.rotate" }
-    ] },
     { "topic": "RapidContext.Storage", "url": "doc/js/RapidContext.Storage.html", "children": [
         { "topic": "path", "url": "doc/js/RapidContext.Storage.html#.path" },
         { "topic": "read", "url": "doc/js/RapidContext.Storage.html#.read" },

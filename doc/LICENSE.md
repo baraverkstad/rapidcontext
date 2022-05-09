@@ -15,7 +15,7 @@ materials distributed with RapidContext (see section 3 below).
 
 BSD License
 -----------
-Copyright (c) 2007-2016 Per Cederberg. All rights reserved.
+Copyright (c) 2007-2022 Per Cederberg. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
@@ -31,7 +31,7 @@ modification, are permitted provided that the following conditions are met:
      following (or similar) acknowledgment text:
 
         This product includes software from the RapidContext project and
-        its contributors. Please visit http://www.rapidcontext.com/ for
+        its contributors. Please visit https://www.rapidcontext.com/ for
         more information.
 
   4. Names of persons or organizations contributing to this software may

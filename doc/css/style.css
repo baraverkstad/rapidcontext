@@ -541,7 +541,7 @@ pre.code.box {
     background-image: linear-gradient(to bottom, #FDFDFD, #EEEEEE);
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FDFDFD', endColorstr='#EEEEEE')";
 }
-.box.yellow .box-icon {
+.box.grey .box-icon {
     color: #DDDDDD;
 }
 .yellow,
@@ -553,6 +553,15 @@ pre.code.box {
 }
 .box.yellow .box-icon {
     color: #DDDDBB;
+}
+.box.orange {
+    border-color: #FFEEAA;
+    background-color: #F8F0CC;
+    background-image: linear-gradient(to bottom, #FFFEF0, #F8F0CC);
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFEF0', endColorstr='#F8F0CC')";
+}
+.box.orange .box-icon {
+    color: #EEDDAA;
 }
 .red,
 .box.red {
