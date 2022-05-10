@@ -4,15 +4,6 @@
   <style>
 .startApp-about {
     position: relative;
-    background: url("images/backgrounds/about.png");
-    -ms-filter: "none";
-    color: #EEEEEE;
-    box-shadow: 0 0 30px #000 inset;
-}
-.startApp-about a:link,
-.startApp-about a:active,
-.startApp-about a:visited {
-    color: #88AACC;
 }
 .startApp-inline {
     position: relative;
@@ -135,15 +126,22 @@
       <p style="font-size: 15px;">Please close your web browser in order to complete the logout process.</p>
     </div>
   </Dialog>
-  <Dialog id="about" title="About RapidContext" w="544" h="515" modal="true" resizeable="false" class="startApp-about">
-    <div style="position: absolute; top: 35px; left: 185px; font-family: Trebuchet MS;">
-      <a href="https://www.rapidcontext.com/" target="_blank">
-        <span style="font-size: 40px; color: white;">RapidContext</span><br/>
-        <span style="font-size: 19px; color: #88AACC;">Access &#183; Discovery &#183; Insight</span><br/>
-        <span style="font-size: 12px; color: #EEEEEE; letter-spacing: 6px; line-height: 24px;">www.rapidcontext.com</span><br/>
-      </a>
+  <Dialog id="about" title="About RapidContext" w="544" h="500" modal="true" resizeable="false" class="startApp-about">
+    <div class="about-header" style="position: absolute; top: 0; left: 0; right: 0; padding: 20px 0; font-size: 1.3rem;">
+      <div class="center">
+        <a href="https://www.rapidcontext.com/" target="_blank" class="logotype" style="margin-left: 3em;">
+          <img src="/images/logotype.png" />
+        </a>
+        <div class="text">
+          <a href="https://www.rapidcontext.com/" target="_blank">
+            <span style="font-size: 3.6em;">RapidContext</span><br/>
+            <span style="font-size: 1.75em; color: #caf3ff;">Access &#183; Discovery &#183; Insight</span><br/>
+            <span style="font-size: 1.3em; letter-spacing: 0.34em; line-height: 1.8em;">www.rapidcontext.com</span>
+          </a>
+        </div>
+      </div>
     </div>
-    <div style="padding: 150px 15px 25px 15px;">
+    <div style="padding: 17em 15px 25px 15px;">
       <p><strong>Version: </strong><span id="aboutVersion">1.0.0</span><br/>
       <strong>License: </strong><a href="doc/LICENSE.md" target="_blank">BSD License</a> (source code only)</p>
 
