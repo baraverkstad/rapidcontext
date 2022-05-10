@@ -293,12 +293,36 @@ body.doc .center {
 .doc .header .logotype {
     position: relative;
     left: 20px;
+    display: inline-block;
+    width: 128px;
+    height: 128px;
+    border: 1px solid #000b;
+    border-radius: 50% 50%;
+    background: radial-gradient(farthest-corner at 40% 30%, #fff, #eee, #888);
+    box-shadow: 1px 1px 5px #0008;
+    overflow: hidden;
+}
+.doc .header .logotype:before {
+    position: absolute;
+    top: 0;
+    left: -10%;
+    width: 45%;
+    height: 100%;
+    content: '';
+    background: linear-gradient(to right, #fff2 0%, #fff2 77%, #fff7 92%, #fff0 100%);
+    transform: skewX(-35deg);
+    z-index: 1;
+}
+.doc .header .logotype img {
+    height: 73%;
+    width: 73%;
+    padding: 12.5% 13.5%;
 }
 .doc .header .text {
     position: absolute;
     top: 5px;
     left: 180px;
-    text-shadow: 2px 2px 2px #002244;
+    text-shadow: 2px 2px 2px #024a;
 }
 @media screen and (max-width: 400px) {
     body.doc .header {
@@ -309,10 +333,8 @@ body.doc .center {
     }
     body.doc .header .logotype {
         left: 0;
-    }
-    body.doc .header .logotype img {
-        max-width: 64px;
-        max-height: 64px;
+        width: 64px;
+        height: 64px;
     }
     body.doc .header .text {
         top: 4px;
@@ -329,10 +351,8 @@ body.doc .center {
     }
     body.doc .header .logotype {
         left: 0;
-    }
-    body.doc .header .logotype img {
-        max-width: 96px;
-        max-height: 96px;
+        width: 96px;
+        height: 96px;
     }
     body.doc .header .text {
         top: 5px;
