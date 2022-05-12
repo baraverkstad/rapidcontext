@@ -16,7 +16,7 @@
     <section class="header">
       <div class="center">
         <a href="https://www.rapidcontext.com/" class="logotype">
-          <img src="images/logotype.png" />
+          <img src="images/logotype.png">
         </a>
         <div class="text">
           <a href="https://www.rapidcontext.com/">
@@ -50,46 +50,48 @@ are distributed as ZIP files named
 <var>[plugin identifier]-[version].plugin</var> and contain an internal
 directory structure like this (mirroring the overall storage structure):</p>
 
-<ul class="box yellow">
+<div class="box yellow">
   <table style="width: 100%;">
-    <tr>
-      <td><var>app/</var></td>
-      <td>App configuration files</td>
-    </tr>
-    <tr>
-      <td><var>connection/</var></td>
-      <td>Connection configuration files</td>
-    </tr>
-    <tr>
-      <td><var>environment/</var></td>
-      <td>Environment configuration files</td>
-    </tr>
-    <tr>
-      <td><var>files/</var></td>
-      <td>Contains files to serve via HTTP (maps directly to URL:s)</td>
-    </tr>
-    <tr>
-      <td><var>lib/</var></td>
-      <td>Java JAR libraries to load (server-side)</td>
-    </tr>
-    <tr>
-      <td><var>procedure/</var></td>
-      <td>Procedure configuration files</td>
-    </tr>
-    <tr>
-      <td><var>role/</var></td>
-      <td>Role configuration files</td>
-    </tr>
-    <tr>
-      <td><var>user/</var></td>
-      <td>User configuration files</td>
-    </tr>
-    <tr>
-      <td><var>plugin.properties</var></td>
-      <td>The plug-in configuration file (mandatory, see below)</td>
-    </tr>
+    <tbody>
+      <tr>
+        <td><var>app/</var></td>
+        <td>App configuration files</td>
+      </tr>
+      <tr>
+        <td><var>connection/</var></td>
+        <td>Connection configuration files</td>
+      </tr>
+      <tr>
+        <td><var>environment/</var></td>
+        <td>Environment configuration files</td>
+      </tr>
+      <tr>
+        <td><var>files/</var></td>
+        <td>Contains files to serve via HTTP (maps directly to URL:s)</td>
+      </tr>
+      <tr>
+        <td><var>lib/</var></td>
+        <td>Java JAR libraries to load (server-side)</td>
+      </tr>
+      <tr>
+        <td><var>procedure/</var></td>
+        <td>Procedure configuration files</td>
+      </tr>
+      <tr>
+        <td><var>role/</var></td>
+        <td>Role configuration files</td>
+      </tr>
+      <tr>
+        <td><var>user/</var></td>
+        <td>User configuration files</td>
+      </tr>
+      <tr>
+        <td><var>plugin.properties</var></td>
+        <td>The plug-in configuration file (mandatory, see below)</td>
+      </tr>
+    </tbody>
   </table>
-</ul>
+</div>
 
 <p>The directories are names according to the type of objects contained. The
 exceptions being <var>files/</var> and <var>lib/</var> that are handled in a
@@ -185,13 +187,13 @@ shows the location of the <q>+</q> icon for adding a new procedure. Just next
 to it is the edit icon.</p>
 
 <p style="text-align: center;">
-  <img src="images/screenshot-procedure-buttons.png" />
+  <img src="images/screenshot-procedure-buttons.png">
 </p>
 
 <p>After clicking the add or edit icon, the following dialog is shown:</p>
 
 <p style="text-align: center;">
-  <img src="images/screenshot-procedure-edit.png" />
+  <img src="images/screenshot-procedure-edit.png">
 </p>
 
 <p>Each procedure can have a number of custom configuration properties that
