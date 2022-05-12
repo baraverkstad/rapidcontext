@@ -17,45 +17,52 @@
  * @namespace Provides a logging service for debugging apps and server calls.
  *
  * All log messages are filtered by log level and either discarded or
- * stored to an internal array. This makes it possible to either show these
- * in a developer console or to send them to a server for remote storage.
+ * stored to an internal array. Log messages on the error or warning levels
+ * are also sent to the server for remote logging.
  *
- * This module also replaces the built-in `console.error()`, `console.warn()`,
- * `console.info()` and `console.log()` functions with its own versions,
- * passing through the filtered log messages to the original functions. For
- * browsers without a `console` object, a minimal version is provided.
+ * This module replaces the built-in `console.error()`, `console.warn()`,
+ * `console.info()`, `console.log()` and `console.debug()` functions with its
+ * own versions, passing through the log messages if not filtered.
  */
-(function (window, undefined) {
+(function (window) {
 
-    // Function-level strict mode
-    "use strict";
+    // The original console logger functions
+    var backup = {};
 
-    // Detect MSIE browser to force simplified console object logging
-    var isMSIE = /MSIE/.test(window.navigator.userAgent);
+    // The current log state
+    var state = {
+        count: 0,
+        level: 3,
+        context: null,
+        history: [],
+        publish: {
+            last: 0,
+            timer: null
+        }
+    };
 
-    // The original console log functions
-    var consoleBackup = {};
-
-    // The current log level
-    var logLevel = 3;
-
-    // The current log message count
-    var logCount = 0;
-
-    // The current log history
-    var logHistory = [];
-
-    // The current log context
-    var logContext = null;
-
-    // The last published log event
-    var publishedId = -1;
-
-    // The log levels filterer out for publishing
-    var publishLevels = /error|warn/;
-
-    // The currently running publisher timer
-    var publisherTimer = null;
+    /**
+     * Modifies the `console` object for logging. This replaces the default
+     * `console.error`, `console.warn`, `console.info`, `console.log` and
+     * `console.debug` functions.
+     */
+    function _init() {
+        function overwrite(obj, key, fn) {
+            if (obj[key] !== fn) {
+                backup[key] = obj[key] || function () {};
+                obj[key] = fn;
+            }
+        }
+        if (typeof(window.console) !== "object") {
+            window.console = {};
+        }
+        overwrite(window.console, "error", error);
+        overwrite(window.console, "warn", warn);
+        overwrite(window.console, "info", info);
+        overwrite(window.console, "log", debug);
+        overwrite(window.console, "debug", debug);
+        overwrite(window, "onerror", _onerror);
+    }
 
     /**
      * Clears the log console and the array of stored messages.
@@ -65,8 +72,8 @@
      * @memberof RapidContext.Log
      */
     function clear() {
-        logHistory = [];
-        if (window.console && window.console.clear) {
+        state.history = [];
+        if (window.console && typeof(window.console.clear) === "function") {
             window.console.clear();
         }
     }
@@ -81,7 +88,7 @@
      * @memberof RapidContext.Log
      */
     function history() {
-        return logHistory.slice(0);
+        return state.history.slice(0);
     }
 
     /**
@@ -96,28 +103,28 @@
     function level(value) {
         if (typeof(value) !== "undefined") {
             if (value === 0 || /^none/i.test(value)) {
-                logLevel = 0;
+                state.level = 0;
             } else if (value === 1 || /^err/i.test(value)) {
-                logLevel = 1;
+                state.level = 1;
             } else if (value === 2 || /^warn/i.test(value)) {
-                logLevel = 2;
+                state.level = 2;
             } else if (value === 3 || /^info/i.test(value)) {
-                logLevel = 3;
+                state.level = 3;
             } else if (value === 4 || /^(log|debug|trace)/i.test(value)) {
-                logLevel = 4;
+                state.level = 4;
             } else {
-                logLevel = 5;
+                state.level = 5;
             }
         }
-        if (logLevel <= 0) {
+        if (state.level <= 0) {
             return "none";
-        } else if (logLevel <= 1) {
+        } else if (state.level <= 1) {
             return "error";
-        } else if (logLevel <= 2) {
+        } else if (state.level <= 2) {
             return "warn";
-        } else if (logLevel <= 3) {
+        } else if (state.level <= 3) {
             return "info";
-        } else if (logLevel <= 4) {
+        } else if (state.level <= 4) {
             return "log";
         } else {
             return "all";
@@ -144,12 +151,13 @@
      */
     function context(value) {
         if (typeof(value) !== "undefined") {
-            logContext = value;
-            if (value == null) {
-                _consoleContext();
+            state.context = value;
+            if (!value) {
+                // Clear group immediately, but create new group on first log
+                _group();
             }
         }
-        return logContext;
+        return state.context;
     }
 
     /**
@@ -162,16 +170,13 @@
      * @example
      * console.error('failed to initialize module');
      *
-     * @name error
-     * @function
      * @memberof RapidContext.Log
      */
-    function logError(msg/**, ...*/) {
-        if (logLevel >= 1) {
+    function error(msg/**, ...*/) {
+        if (state.level >= 1) {
             var args = Array.prototype.slice.apply(arguments);
-            var strs = args.map(stringify);
-            _consoleLog("error", args, strs);
-            _store("error", strs);
+            _log("error", args);
+            _store("error", args.map(stringify));
         }
     }
 
@@ -185,16 +190,13 @@
      * @example
      * console.warn('missing "data" attribute on document root:', document.body);
      *
-     * @name warn
-     * @function
      * @memberof RapidContext.Log
      */
-    function logWarn(msg/**, ...*/) {
-        if (logLevel >= 2) {
+    function warn(msg/**, ...*/) {
+        if (state.level >= 2) {
             var args = Array.prototype.slice.apply(arguments);
-            var strs = args.map(stringify);
-            _consoleLog("warn", args, strs);
-            _store("warn", strs);
+            _log("warn", args);
+            _store("warn", args.map(stringify));
         }
     }
 
@@ -208,16 +210,13 @@
      * @example
      * console.info('authorization failed, user not logged in');
      *
-     * @name info
-     * @function
      * @memberof RapidContext.Log
      */
-    function logInfo(msg/**, ...*/) {
-        if (logLevel >= 3) {
+    function info(msg/**, ...*/) {
+        if (state.level >= 3) {
             var args = Array.prototype.slice.apply(arguments);
-            var strs = args.map(stringify);
-            _consoleLog("info", args, strs);
-            _store("info", strs);
+            _log("info", args);
+            _store("info", args.map(stringify));
         }
     }
 
@@ -233,108 +232,64 @@
      * ...
      * console.log('done AJAX call to URL:', url, responseCode);
      *
-     * @name debug
-     * @function
      * @memberof RapidContext.Log
      */
-    function logDebug(msg/**, ...*/) {
-        if (logLevel >= 4) {
+    function debug(msg/**, ...*/) {
+        if (state.level >= 4) {
             var args = Array.prototype.slice.apply(arguments);
-            var strs = args.map(stringify);
-            _consoleLog("log", args, strs);
-            _store("log", strs);
+            _log("log", args);
+            _store("log", args.map(stringify));
         }
-    }
-
-    /**
-     * Logs a number of browser meta-data parameters (INFO level).
-     *
-     * @memberof RapidContext.Log
-     */
-    function logBrowserInfo() {
-        function copy(obj, keys) {
-            var res = {};
-            for (var i = 0; i < keys.length; i++) {
-                var k = keys[i];
-                res[k] = obj[k];
-            }
-            return res;
-        }
-        context('Browser')
-        logInfo("location.href", location.href);
-        logInfo("navigator.userAgent", navigator.userAgent);
-        logInfo("navigator.language", navigator.language);
-        logInfo("screen", copy(screen, ["width", "height", "colorDepth"]));
-        logInfo("window", copy(window, ["innerWidth", "innerHeight", "devicePixelRatio"]));
-        logInfo("document.cookie", document.cookie);
-        context(null);
     }
 
     /**
      * Handles window.onerror events (global uncaught errors).
      */
-    function _windowErrorHandler(msg, src, line, col, error) {
-        var location = "unknown source";
-        if (error && error.stack) {
-            location = error.stack;
-        } else if (src && src !== "undefined") {
-            location = [src, line || 0, col || 0].join(':');
+    function _onerror(msg, url, line, col, err) {
+        if (err instanceof Error && err.stack) {
+            error(msg || "Uncaught error", err);
+        } else {
+            var location = [url, line, col].filter(Boolean).join(":");
+            error(msg || "Uncaught error", location, err);
         }
-        logError(msg, location);
         return true;
-    }
-
-    /**
-     * Modifies the `console` object for logging. This replaces the default
-     * `console.error`, `console.warn`, `console.info`, `console.log` and
-     * `console.debug` functions (if not previously modified).
-     */
-    function _consoleSetup() {
-        function overwrite(obj, key, value, backup) {
-            if (obj[key] !== value) {
-                backup[key] = obj[key];
-                obj[key] = value;
-            }
-        }
-        window.console || (window.console = {});
-        overwrite(window.console, 'error', logError, consoleBackup);
-        overwrite(window.console, 'warn', logWarn, consoleBackup);
-        overwrite(window.console, 'info', logInfo, consoleBackup);
-        overwrite(window.console, 'log', logDebug, consoleBackup);
-        overwrite(window.console, 'debug', logDebug, consoleBackup);
-    }
-
-    /**
-     * Calls the `console.group` and `console.groupEnd` functions (if
-     * they exist) to adjust for the current log context.
-     */
-    function _consoleContext() {
-        if (window.console._group && window.console._group !== logContext) {
-            window.console._group = null;
-            window.console.groupEnd && window.console.groupEnd();
-        }
-        if (logContext && window.console._group !== logContext) {
-            window.console._group = logContext;
-            window.console.group && window.console.group(logContext + ":");
-        }
     }
 
     /**
      * Logs a message to one of the console loggers.
      *
-     * @param {String} loggerName the console logger name ('error', 'warn'...)
+     * @param {String} level the log level (i.e. function 'error', 'warn'...)
      * @param {Array} args the log message & data (as raw objects)
-     * @param {Array} strs the log message & data (as strings)
      */
-    function _consoleLog(loggerName, args, strs) {
-        _consoleSetup();
-        _consoleContext();
-        var logger = consoleBackup[loggerName];
-        if (typeof(logger) === 'function' && typeof(logger.apply) === 'function') {
+    function _log(level, args) {
+        var logger = backup[level];
+        if (typeof(logger) === "function") {
+            _group(state.context);
             logger.apply(window.console, args);
-        } else if (logger && isMSIE) {
-            var ctx = (logContext ? logContext + ": " : "");
-            logger(ctx + strs.join(", "));
+        }
+    }
+
+    /**
+     * Calls the `console.group` and `console.groupEnd` functions (if
+     * they exist) to change the group label (if needed).
+     *
+     * @param {String} label the log context label
+     */
+    function _group(label) {
+        var console = window.console;
+        if (console._group !== label) {
+            if (console._group) {
+                delete console._group;
+                if (typeof(console.groupEnd) === "function") {
+                    console.groupEnd();
+                }
+            }
+            if (label) {
+                console._group = label;
+                if (typeof(console.group) === "function") {
+                    console.group(label + ":");
+                }
+            }
         }
     }
 
@@ -343,39 +298,38 @@
      *
      * @param {String} level the message log level
      * @param {Array} args the log message arguments (as strings)
-     *
-     * @private
      */
     function _store(level, args) {
-        var data = (args.length > 1) ? args.slice(1).join("\n") : null;
-        logHistory.push({ id: ++logCount, time: new Date(), level: level,
-                          context: logContext, message: args[0], data: data });
-        while (logHistory.length > 100) {
-            logHistory.shift();
-        }
-        if (publisherTimer == null) {
-            publisherTimer = setTimeout(_publishEvents, 100);
+        state.history.push({
+            id: ++state.count,
+            time: new Date(),
+            level: level,
+            context: state.context,
+            message: args[0],
+            data: (args.length > 1) ? args.slice(1).join("\n") : null
+        });
+        state.history.splice(0, Math.max(0, state.history.length - 100));
+        if (!state.publish.timer) {
+            state.publish.timer = setTimeout(_publish, 100);
         }
     }
 
     /**
      * Publishes stored events (above a threshold level) to the server.
-     *
-     * @private
      */
-    function _publishEvents() {
+    function _publish() {
         var events = [];
         var lastId = 0;
-        for (var i = 0; i < logHistory.length; i++) {
-            var evt = logHistory[i];
+        for (var i = 0; i < state.history.length; i++) {
+            var evt = state.history[i];
             lastId = evt.id;
-            if (evt.id > publishedId && publishLevels.test(evt.level)) {
+            if (evt.id > state.publish.last && /error|warn/.test(evt.level)) {
                 events.push(evt);
             }
         }
         if (events.length <= 0) {
-            publishedId = lastId;
-            publisherTimer = null;
+            state.publish.last = lastId;
+            state.publish.timer = null;
             return;
         }
         var opts = {
@@ -385,12 +339,12 @@
         };
         var d = $.ajax("rapidcontext/log", opts);
         d.then(function (res) {
-            publishedId = lastId;
-            publisherTimer = setTimeout(_publishEvents, 10000);
+            state.publish.last = lastId;
+            state.publish.timer = setTimeout(_publish, 10000);
         });
         d.fail(function (err) {
-            logInfo("failed to upload errorlog", err);
-            publisherTimer = setTimeout(_publishEvents, 10000);
+            info("failed to upload errorlog", err);
+            state.publish.timer = setTimeout(_publish, 10000);
         });
     }
 
@@ -399,88 +353,41 @@
      * object. The returned string is similar to a JSON representation of the
      * value, but may be simplified for increased readability.
      *
-     * @param {Object} o the value or object to convert
+     * @param {Object} val the value or object to convert
      *
      * @return {String} the string representation of the value
      *
      * @memberof RapidContext.Log
      */
-    function stringify(o) {
-        return _stringify(o, 0);
-    }
-
-    /**
-     * Internal stringify implementation that tracks of object graph
-     * depth.
-     *
-     * @param {Object} o the value or object to convert
-     * @param {Number} depth the current object depth (max is 4)
-     *
-     * @return {Array} the array of string representations
-     *
-     * @private
-     */
-    function _stringify(o, depth) {
-        var type = typeof(o);
-        if (o == null || type == "boolean" || type == "number") {
-            return "" + o;
-        } else if (type == "string") {
-            return (depth > 0) ? JSON.stringify(o) : o;
-        } else if (type == "function") {
-            var name = o.name || o.displayName || "";
-            var signature = o.toString().replace(/\)[\s\S]*/, ")");
-            if (/function\s+\(/.test(signature) && name) {
-                signature = signature.replace(/function\s+/, "function " + name);
-            } else if (!(/function/.test(signature))) {
-                signature = "function ()";
+    function stringify(val) {
+        var isObject = Object.prototype.toString.call(val) === "[object Object]";
+        var isArray = val instanceof Array;
+        var isSerializable = typeof(val.toJSON) === "function";
+        if (val && (isObject || isArray || isSerializable)) {
+            try {
+                return JSON.stringify(val, null, 2);
+            } catch (e) {
+                return String(val);
             }
-            return signature + " {...}";
-        } else if (o instanceof Error) {
-            var arr = [o.toString()];
-            if (typeof(o.number) === "number" && o.number != 0) {
-                arr.push(" (code: ", o.number & 0xFFFF);
-                arr.push(", facility: ", o.number >> 16 & 0x1FFF, ")");
+        } else if (val instanceof Error) {
+            var parts = [val.toString()];
+            if (val.stack) {
+                var stack = String(val.stack).trim()
+                    .replace(val.toString() + "\n", "")
+                    .replace(/https?:.*\//g, "")
+                    .replace(/\?[^:\s]+:/g, ":")
+                    .replace(/@(.*)/mg, " ($1)")
+                    .replace(/^(\s+at\s+)?/mg, "    at ");
+                parts.push("\n", stack);
             }
-            if (o.stack) {
-                var stack = ("" + o.stack).trim();
-                stack = stack.replace(o.toString() + "\n", "");
-                stack = stack.replace(/https?:.*\//g, "");
-                stack = stack.replace(/\?[^:\s]+:/g, ":");
-                stack = stack.replace(/@(.*)/mg, " ($1)");
-                stack = stack.replace(/^(\s+at\s+)?/mg, "    at ");
-                arr.push("\n", stack);
-            }
-            return arr.join("");
-        } else if (o.nodeType === 1 || o.nodeType === 9) {
-            o = o.documentElement || o.document || o;
-            var xml = o.outerHTML || o.outerXML || o.xml || "" + o;
-            if (o.childNodes && o.childNodes.length) {
-                return xml.replace(/>[\s\S]*</, ">...<");
-            } else {
-                return xml.replace(/>[\s\S]*/, " />");
-            }
-        } else if (depth > 3) {
-            return "...";
-        } else if (typeof(o.length) == "number") {
-            var arr = [];
-            for (var i = 0; i < o.length; i++) {
-                if (i > 20) {
-                    arr.push("...");
-                    break;
-                }
-                arr.push(_stringify(o[i], depth + 1));
-            }
-            return "[" + arr.join(", ") + "]";
+            return parts.join("");
+        } else if (val && (val.nodeType === 1 || val.nodeType === 9)) {
+            var el = val.documentElement || val.document || val;
+            var xml = el.outerHTML || el.outerXML || el.xml || String(el);
+            var children = el.childNodes && el.childNodes.length;
+            return xml.replace(/>[^<]*/, children ? ">..." : "/>");
         } else {
-            var arr = [];
-            for (var k in o) {
-                if (arr.length > 20) {
-                    arr.push("...");
-                    break;
-                }
-                arr.push(k + ": " + _stringify(o[k], depth + 1));
-            }
-            return "{" + arr.join(", ") + "}";
+            return String(val);
         }
     }
 
@@ -493,17 +400,13 @@
     module.clear = clear;
     module.level = level;
     module.context = context;
-    module.error = logError;
-    module.warn = logWarn;
-    module.info = logInfo;
-    module.log = module.debug = module.trace = logDebug;
-    module.logBrowserInfo = logBrowserInfo;
+    module.error = error;
+    module.warn = warn;
+    module.info = info;
+    module.log = module.debug = module.trace = debug;
     module.stringify = stringify;
 
-    // Modify global console object
-    _consoleSetup();
-
-    // Install global error handler
-    window.onerror = _windowErrorHandler;
+    // Install console loggers and global error handler
+    _init();
 
 })(this);
