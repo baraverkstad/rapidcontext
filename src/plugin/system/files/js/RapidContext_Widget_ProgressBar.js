@@ -16,7 +16,7 @@
 if (typeof(RapidContext) == "undefined") {
     RapidContext = {};
 }
-RapidContext.Widget = RapidContext.Widget || { Classes: {}};
+RapidContext.Widget = RapidContext.Widget || { Classes: {} };
 
 /**
  * Creates a new progress bar widget.
@@ -58,7 +58,7 @@ RapidContext.Widget.ProgressBar = function (attrs) {
     var meter = MochiKit.DOM.DIV({ "class": "widgetProgressBarMeter" });
     var text = MochiKit.DOM.DIV({ "class": "widgetProgressBarText" });
     var o = MochiKit.DOM.DIV({}, meter, text);
-    RapidContext.Widget._widgetMixin(o, arguments.callee);
+    RapidContext.Widget._widgetMixin(o, RapidContext.Widget.ProgressBar);
     o.addClass("widgetProgressBar");
     o.setAttrs(MochiKit.Base.update({ min: 0, max: 100, value: 0 }, attrs));
     return o;
@@ -112,8 +112,8 @@ RapidContext.Widget.ProgressBar.prototype.setAttrs = function (attrs) {
         var value = Math.min(Math.max(parseFloat(attrs.value), this.min), this.max);
         if (!isNaN(value)) {
             attrs.value = value;
-            var ratio = (value - this.min) / (this.max - this.min);
-            attrs.ratio = attrs.ratio || ratio;
+            var calc = (value - this.min) / (this.max - this.min);
+            attrs.ratio = attrs.ratio || calc;
         } else {
             delete attrs.value;
         }
@@ -180,7 +180,7 @@ RapidContext.Widget.ProgressBar.prototype._remainingTime = function () {
         return res;
     }
     return null;
-}
+};
 
 /**
  * Redraws the progress bar meter and text.

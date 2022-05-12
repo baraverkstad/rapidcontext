@@ -16,7 +16,7 @@
 if (typeof(RapidContext) == "undefined") {
     RapidContext = {};
 }
-RapidContext.Widget = RapidContext.Widget || { Classes: {}};
+RapidContext.Widget = RapidContext.Widget || { Classes: {} };
 
 /**
  * Creates a new overlay widget.
@@ -47,7 +47,7 @@ RapidContext.Widget.Overlay = function (attrs) {
     var cover = MochiKit.DOM.DIV({ "class": "widgetOverlayCover" });
     var msg = MochiKit.DOM.DIV({ "class": "widgetOverlayMessage" });
     var o = MochiKit.DOM.DIV({}, cover, msg);
-    RapidContext.Widget._widgetMixin(o, arguments.callee);
+    RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Overlay);
     o.addClass("widgetOverlay");
     o.setAttrs(MochiKit.Base.update({ loading: true, message: "Working..." }, attrs));
     return o;
@@ -90,7 +90,11 @@ RapidContext.Widget.Overlay.prototype.setAttrs = function (attrs) {
         }
     }
     if (this.showLoading) {
-        var icon = RapidContext.Widget.Icon({ url: "rapidcontext/files/images/icons/loading-overlay.gif", width: 32, height: 32 });
+        var icon = RapidContext.Widget.Icon({
+            url: "rapidcontext/files/images/icons/loading-overlay.gif",
+            width: 32,
+            height: 32
+        });
         icon.setStyle({ "margin-right": "20px" });
     }
     MochiKit.DOM.replaceChildNodes(this.lastChild, icon, this.message);

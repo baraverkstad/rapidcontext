@@ -16,7 +16,7 @@
 if (typeof(RapidContext) == "undefined") {
     RapidContext = {};
 }
-RapidContext.Widget = RapidContext.Widget || { Classes: {}};
+RapidContext.Widget = RapidContext.Widget || { Classes: {} };
 
 /**
  * Creates a new field widget.
@@ -52,7 +52,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  */
 RapidContext.Widget.Field = function (attrs) {
     var o = MochiKit.DOM.SPAN();
-    RapidContext.Widget._widgetMixin(o, arguments.callee);
+    RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Field);
     o.addClass("widgetField");
     o.setAttrs(MochiKit.Base.update({ name: "", value: "", maxLength: -1, mask: false }, attrs));
     o.defaultValue = o.value;
@@ -114,7 +114,7 @@ RapidContext.Widget.Field.prototype.setAttrs = function (attrs) {
     }
     this.__setAttrs(attrs);
     this.redraw();
-}
+};
 
 /**
  * Redraws the field from updated values or status. Note that this

@@ -16,7 +16,7 @@
 if (typeof(RapidContext) == "undefined") {
     RapidContext = {};
 }
-RapidContext.Widget = RapidContext.Widget || { Classes: {}};
+RapidContext.Widget = RapidContext.Widget || { Classes: {} };
 
 /**
  * Creates a new file streamer widget.
@@ -51,10 +51,14 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  * });
  */
 RapidContext.Widget.FileStreamer = function (attrs) {
-    var defs = { src: "about:blank", scrolling: "no",
-                 border: "0", frameborder: "0" };
+    var defs = {
+        src: "about:blank",
+        scrolling: "no",
+        border: "0",
+        frameborder: "0"
+    };
     var o = MochiKit.DOM.createDOM("iframe", defs);
-    RapidContext.Widget._widgetMixin(o, arguments.callee);
+    RapidContext.Widget._widgetMixin(o, RapidContext.Widget.FileStreamer);
     o.addClass("widgetFileStreamer");
     o.setAttrs(MochiKit.Base.update({ url: "", name: "file", size: "30" }, attrs));
     // TODO: create some kind of utility function for these idioms
@@ -152,13 +156,13 @@ RapidContext.Widget.FileStreamer.prototype._initDocument = function () {
         head = doc.createElement("head");
         body.parentElement.insertBefore(head, body);
     }
-    var attrs = { rel: "stylesheet", href: this.cssUrl, type: "text/css" };
-    var link = MochiKit.DOM.createDOM("link", attrs);
+    var linkAttrs = { rel: "stylesheet", href: this.cssUrl, type: "text/css" };
+    var link = MochiKit.DOM.createDOM("link", linkAttrs);
     head.appendChild(link);
-    var attrs = { type: "file", name: this.inputName, size: this.inputSize };
-    var input = MochiKit.DOM.INPUT(attrs);
-    var attrs = { method: "POST", action: this.formUrl, enctype: "multipart/form-data" };
-    var form = MochiKit.DOM.FORM(attrs, input);
+    var inputAttrs = { type: "file", name: this.inputName, size: this.inputSize };
+    var input = MochiKit.DOM.INPUT(inputAttrs);
+    var formAttrs = { method: "POST", action: this.formUrl, enctype: "multipart/form-data" };
+    var form = MochiKit.DOM.FORM(formAttrs, input);
     input.onchange = MochiKit.Base.bind("_handleChange", this);
     body.className = "widgetFileStreamer";
     MochiKit.DOM.replaceChildNodes(body, form);

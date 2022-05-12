@@ -55,9 +55,11 @@ RapidContext.App.init = function (app) {
     MochiKit.DOM.replaceChildNodes(document.body, overlay);
 
     // Load platform data
-    var list = [ RapidContext.App.callProc("System.Status"),
-                 RapidContext.App.callProc("System.Session.Current"),
-                 RapidContext.App.callProc("System.App.List") ];
+    var list = [
+        RapidContext.App.callProc("System.Status"),
+        RapidContext.App.callProc("System.Session.Current"),
+        RapidContext.App.callProc("System.App.List")
+    ];
     var d = MochiKit.Async.gatherResults(list);
 
     // Launch app
@@ -157,8 +159,8 @@ RapidContext.App._cbAssign = function (obj, key) {
     return function (data) {
         obj[key] = data;
         return data;
-    }
-}
+    };
+};
 
 /**
  * Creates and starts an app instance. Normally apps are started in the default
@@ -202,12 +204,12 @@ RapidContext.App.startApp = function (app, container) {
     // Initialize app UI container
     launcher.instances = launcher.instances || [];
     if ($.isWindow(container)) {
-        var url = "rapidcontext/app/" + launcher.id;
-        container.location.href = RapidContext.Util.resolveURI(url);
+        var href = "rapidcontext/app/" + launcher.id;
+        container.location.href = RapidContext.Util.resolveURI(href);
         return d;
     } else if (startApp && startApp.instances && startApp.instances.length) {
-        var opts = { title: launcher.name, closeable: (launcher.launch != "once") };
-        ui = startApp.instances[0].initAppPane(container, opts);
+        var paneOpts = { title: launcher.name, closeable: (launcher.launch != "once") };
+        ui = startApp.instances[0].initAppPane(container, paneOpts);
     } else if (instances.length == 1 && launcher.id != "start") {
         // Switch from single-app to multi-app mode
         d = RapidContext.App.startApp("start");
@@ -216,7 +218,10 @@ RapidContext.App.startApp = function (app, container) {
         });
         return d;
     } else {
-        var ui = { root: document.body, overlay: document.body.childNodes[0] };
+        ui = {
+            root: document.body,
+            overlay: document.body.childNodes[0]
+        };
     }
     MochiKit.Signal.connect(ui.root, "onclose", d, "cancel");
 
@@ -256,16 +261,16 @@ RapidContext.App.startApp = function (app, container) {
     // Create app instance, build UI and start app
     d.addCallback(function () {
         RapidContext.Log.info("Starting app/" + launcher.id, launcher);
-        var fun = launcher.creator;
-        instance = new fun();
+        /* eslint new-cap: "off" */
+        instance = new launcher.creator();
         launcher.instances.push(instance);
         var props = MochiKit.Base.setdefault({ ui: ui }, launcher);
         delete props.creator;
         delete props.instances;
         MochiKit.Base.setdefault(instance, props);
         MochiKit.Signal.disconnectAll(ui.root, "onclose");
-        MochiKit.Signal.connect(ui.root, "onclose",
-                                MochiKit.Base.partial(RapidContext.App.stopApp, instance));
+        var halt = MochiKit.Base.partial(RapidContext.App.stopApp, instance);
+        MochiKit.Signal.connect(ui.root, "onclose", halt);
         if (launcher.ui != null) {
             var widgets = RapidContext.UI.buildUI(launcher.ui, ui);
             MochiKit.DOM.appendChildNodes(ui.root, widgets);
@@ -338,8 +343,8 @@ RapidContext.App.stopApp = function (app) {
     if (app.ui.root != null) {
         RapidContext.Widget.destroyWidget(app.ui.root);
     }
-    for (var n in app.ui) {
-        delete app.ui[n];
+    for (var k in app.ui) {
+        delete app.ui[k];
     }
     for (var n in app) {
         delete app[n];
@@ -396,12 +401,12 @@ RapidContext.App.callApp = function (app, method) {
         try {
             return instance[method].apply(instance, args);
         } catch (e) {
-            var msg = "Caught error in " + methodName;
-            RapidContext.Log.error(msg, e);
+            var reason = "Caught error in " + methodName;
+            RapidContext.Log.error(reason, e);
+            throw new Error(reason + ": " + e.toString());
+        } finally {
             RapidContext.Log.context(null);
-            throw new Error(msg + ": " + e.toString());
         }
-        RapidContext.Log.context(null);
     });
     return d;
 };
@@ -600,7 +605,9 @@ RapidContext.App.loadJSON = function (url, params, options) {
  */
 RapidContext.App.loadText = function (url, params, options) {
     var d = RapidContext.App.loadXHR(url, params, options);
-    d.addCallback(function (res) { return res.responseText; });
+    d.addCallback(function (res) {
+        return res.responseText;
+    });
     return d;
 };
 
@@ -626,8 +633,12 @@ RapidContext.App.loadText = function (url, params, options) {
  *         callback with the parsed response XML document on success
  */
 RapidContext.App.loadXML = function (url, params, options) {
+    options = options || {};
+    options.responseType = "document";
     var d = RapidContext.App.loadXHR(url, params, options);
-    d.addCallback(function (res) { return res.responseXML; });
+    d.addCallback(function (res) {
+        return res.responseXML;
+    });
     return d;
 };
 
@@ -720,8 +731,8 @@ RapidContext.App.loadXHR = function (url, params, options) {
  */
 RapidContext.App.loadScript = function (url) {
     var absoluteUrl = RapidContext.Util.resolveURI(url);
-    var selector1 = 'script[src^="' + url + '"]';
-    var selector2 = 'script[src^="' + absoluteUrl + '"]';
+    var selector1 = "script[src^='" + url + "']";
+    var selector2 = "script[src^='" + absoluteUrl + "']";
     var elems = MochiKit.Selector.findDocElements(selector1, selector2);
     if (elems.length > 0) {
         RapidContext.Log.log("Script already loaded, skipping", url);
@@ -763,7 +774,7 @@ RapidContext.App.loadStyles = function (url) {
     }
     function isStylesheetLoaded(url, absoluteUrl) {
         var styles = findStylesheet(url) || findStylesheet(absoluteUrl);
-        var rules = styles && (styles.cssRules || styles.rules);
+        var rules = styles && (styles.cssRules || styles.rules);
         return !!rules && rules.length > 0;
     }
     var absoluteUrl = RapidContext.Util.resolveURI(url);
@@ -777,13 +788,15 @@ RapidContext.App.loadStyles = function (url) {
     document.getElementsByTagName("head")[0].appendChild(link);
     var d = new MochiKit.Async.Deferred();
     var img = MochiKit.DOM.IMG();
-    img.onerror = d.callback.bind(d, 'URL loading finished');
+    img.onerror = d.callback.bind(d, "URL loading finished");
     img.src = loadUrl;
     d.addBoth(function () {
         if (!isStylesheetLoaded(url, absoluteUrl)) {
             // Add 250 ms delay after URL loading to allow CSS parsing for
             // browsers needing it (WebKit, Safari, Chrome)
             return MochiKit.Async.wait(0.25);
+        } else {
+            return true;
         }
     });
     d.addBoth(function () {
@@ -796,7 +809,7 @@ RapidContext.App.loadStyles = function (url) {
     });
     RapidContext.App._addErrbackLogger(d, "RapidContext.App.loadStyles()");
     return d;
-}
+};
 
 /**
  * Downloads a file to the user desktop. This works by creating a new
@@ -813,17 +826,26 @@ RapidContext.App.loadStyles = function (url) {
 RapidContext.App.downloadFile = function (url, data) {
     if (data == null) {
         url = url + ((url.indexOf("?") < 0) ? "?" : "&") + "download";
-        var attrs = { src: url, border: "0", frameborder: "0",
-                      height: "0", width: "0" };
+        var attrs = {
+            src: url,
+            border: "0",
+            frameborder: "0",
+            height: "0",
+            width: "0"
+        };
         var iframe = MochiKit.DOM.createDOM("iframe", attrs);
         document.body.appendChild(iframe);
     } else {
         var name = MochiKit.DOM.INPUT({ name: "fileName", value: url });
         var file = MochiKit.DOM.INPUT({ name: "fileData", value: data });
         var flag = MochiKit.DOM.INPUT({ name: "download", value: "1" });
-        var attrs = { action: "rapidcontext/download", method: "POST",
-                      target: "_blank", style: { display: "none" } };
-        var form = MochiKit.DOM.FORM(attrs, name, file, flag);
+        var formAttrs = {
+            action: "rapidcontext/download",
+            method: "POST",
+            target: "_blank",
+            style: { display: "none" }
+        };
+        var form = MochiKit.DOM.FORM(formAttrs, name, file, flag);
         document.body.appendChild(form);
         form.submit();
     }
@@ -846,7 +868,7 @@ RapidContext.App._rebaseUrl = function (url) {
         }
     }
     return url;
-}
+};
 
 /**
  * Returns a non-cacheable version of the specified URL. This
@@ -950,10 +972,12 @@ RapidContext.App._Cache = {
             }
             break;
         case "System.App.List":
-            var idxs = {};
-            for (var i = 0; i < this.apps.length; i++) {
-                idxs[this.apps[i].id] = i;
-            }
+            var apps = this.apps.reduce(function (o, app) {
+                if (app.instances !== null) {
+                    o[app.id] = app;
+                }
+                return o;
+            }, {});
             for (var i = 0; i < data.length; i++) {
                 // TODO: use deep clone
                 var launcher = MochiKit.Base.update(null, data[i]);
@@ -973,22 +997,13 @@ RapidContext.App._Cache = {
                 if (launcher.className == null) {
                     RapidContext.Log.error("App missing 'className' property", launcher);
                 }
-                var pos = idxs[launcher.id];
-                if (pos >= 0) {
-                    delete idxs[launcher.id];
-                    MochiKit.Base.update(this.apps[pos], launcher);
+                if (launcher.id in apps) {
+                    MochiKit.Base.update(apps[launcher.id], launcher);
                 } else {
-                    this.apps.push(launcher);
+                    apps[launcher.id] = launcher;
                 }
             }
-            // TODO: use separate list of app instances...
-            var arr = MochiKit.Base.values(idxs).reverse();
-            for (var i = 0; i < arr.length; i++) {
-                var pos = arr[i];
-                if (this.apps[pos].instances == null) {
-                    this.apps.splice(pos, 1);
-                }
-            }
+            this.apps = MochiKit.Base.values(apps);
             RapidContext.Log.log("Updated cached apps", this.apps);
             break;
         }

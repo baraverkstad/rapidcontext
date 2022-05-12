@@ -16,7 +16,7 @@
 if (typeof(RapidContext) == "undefined") {
     RapidContext = {};
 }
-RapidContext.Widget = RapidContext.Widget || { Classes: {}};
+RapidContext.Widget = RapidContext.Widget || { Classes: {} };
 
 /**
  * Creates a new form widget.
@@ -47,7 +47,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  */
 RapidContext.Widget.Form = function (attrs/*, ...*/) {
     var o = MochiKit.DOM.FORM(attrs);
-    RapidContext.Widget._widgetMixin(o, arguments.callee);
+    RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Form);
     o.addClass("widgetForm");
     o.setAttrs(attrs);
     o.addAll(MochiKit.Base.extend(null, arguments, 1));
@@ -247,9 +247,9 @@ RapidContext.Widget.Form.prototype.validate = function () {
     var values = this.valueMap();
     var success = true;
     var defers = [];
-    for (var i = 0; i < validators.length; i++) {
-        validators[i].reset();
-    }
+    validators.forEach(function (validator) {
+        validator.reset();
+    });
     for (var i = 0; i < validators.length; i++) {
         for (var j = 0; j < fields.length; j++) {
             if (validators[i].name == fields[j].name) {

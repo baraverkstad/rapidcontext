@@ -16,7 +16,7 @@
 if (typeof(RapidContext) == "undefined") {
     RapidContext = {};
 }
-RapidContext.Widget = RapidContext.Widget || { Classes: {}};
+RapidContext.Widget = RapidContext.Widget || { Classes: {} };
 
 /**
  * Creates a new icon widget.
@@ -57,8 +57,8 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  * </h3>
  */
 RapidContext.Widget.Icon = function (attrs) {
-    var o = MochiKit.DOM.createDOM('i');
-    RapidContext.Widget._widgetMixin(o, arguments.callee);
+    var o = MochiKit.DOM.createDOM("i");
+    RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Icon);
     o.setAttrs(attrs);
     o.addClass("widgetIcon");
     return o;
@@ -108,7 +108,7 @@ RapidContext.Widget.Icon.prototype.setAttrs = function (attrs) {
     var styles = {};
     if (locals.url) {
         this.addClass("widgetIconSprite");
-        styles.backgroundImage = 'url("' + locals.url + '")';
+        styles.backgroundImage = "url('" + locals.url + "')";
         delete locals.url;
     }
     if (locals.position) {

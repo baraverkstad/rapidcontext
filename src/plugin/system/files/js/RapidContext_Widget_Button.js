@@ -16,7 +16,7 @@
 if (typeof(RapidContext) == "undefined") {
     RapidContext = {};
 }
-RapidContext.Widget = RapidContext.Widget || { Classes: {}};
+RapidContext.Widget = RapidContext.Widget || { Classes: {} };
 
 /**
  * Creates a new button widget.
@@ -45,8 +45,8 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  * <Button id="closeBtn" icon="OK" highlight="true">Close</Button>
  */
 RapidContext.Widget.Button = function (attrs/*, ...*/) {
-    var o = MochiKit.DOM.BUTTON({ type: attrs.type || "button" });
-    RapidContext.Widget._widgetMixin(o, arguments.callee);
+    var o = MochiKit.DOM.BUTTON({ type: attrs.type || "button" });
+    RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Button);
     o.addClass("widgetButton");
     o.setAttrs(attrs);
     o.addAll(MochiKit.Base.extend(null, arguments, 1));

@@ -16,7 +16,7 @@
  * @name RapidContext.Storage
  * @namespace Provides functions for accessing the server storage (BETA).
  */
-(function (window, undefined) {
+(function (window) {
 
     /**
      * Returns a storage URL for a resource. If the resource is an
@@ -89,13 +89,14 @@
      * @memberof RapidContext.Storage
      */
     function write(pathOrObj, data) {
+        var opts;
         if (typeof(pathOrObj) == "string" && data == null) {
-            var opts = { method: "DELETE" };
+            opts = { method: "DELETE" };
             return RapidContext.App.loadXHR(storageUrl(pathOrObj), null, opts);
         } else {
             var json = JSON.stringify(data || pathOrObj);
             var headers = { "Content-Type": "application/json" };
-            var opts = { method: "POST", sendContent: json, headers: headers };
+            opts = { method: "POST", sendContent: json, headers: headers };
             return RapidContext.App.loadXHR(storageUrl(pathOrObj), null, opts);
         }
     }

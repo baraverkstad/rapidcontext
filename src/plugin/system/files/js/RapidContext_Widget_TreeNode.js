@@ -16,7 +16,7 @@
 if (typeof(RapidContext) == "undefined") {
     RapidContext = {};
 }
-RapidContext.Widget = RapidContext.Widget || { Classes: {}};
+RapidContext.Widget = RapidContext.Widget || { Classes: {} };
 
 /**
  * Creates a new tree node widget.
@@ -55,7 +55,7 @@ RapidContext.Widget.TreeNode = function (attrs/*, ...*/) {
     var label = MochiKit.DOM.SPAN({ "class": "widgetTreeNodeText" });
     var div = MochiKit.DOM.DIV({ "class": "widgetTreeNodeLabel" }, icon, label);
     var o = MochiKit.DOM.DIV({}, div);
-    RapidContext.Widget._widgetMixin(o, arguments.callee);
+    RapidContext.Widget._widgetMixin(o, RapidContext.Widget.TreeNode);
     MochiKit.DOM.addElementClass(o, "widgetTreeNode");
     var args = MochiKit.Base.flattenArguments(arguments);
     var folder = (args.length > 1);

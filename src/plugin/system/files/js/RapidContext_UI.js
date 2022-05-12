@@ -39,7 +39,7 @@ RapidContext.UI.showError = function () {
     if (arguments.length == 1 &&
         arguments[0] instanceof MochiKit.Async.CancelledError) {
         // Ignore async cancellation errors
-        return;
+        return null;
     }
     var msg = "";
     for (var i = 0; i < arguments.length; i++) {
@@ -88,14 +88,12 @@ RapidContext.UI.buildUI = function (node, ids) {
         } catch (e) {
             RapidContext.Log.error("Failed to build UI element", node, e);
         }
-    } else if (node.nodeType === 3) { // Node.TEXT_NODE
+    } else if (node.nodeType === 3 || node.nodeType === 4) {
+        // Node.TEXT_NODE or Node.CDATA_SECTION_NODE
         var str = node.nodeValue;
-        if (str != null && MochiKit.Format.strip(str) != "") {
+        if (str && MochiKit.Format.strip(str) && node.nodeType === 3) {
             return RapidContext.Util.createTextNode(str.replace(/\s+/g, " "));
-        }
-    } else if (node.nodeType === 4) { // Node.CDATA_SECTION_NODE
-        var str = node.nodeValue;
-        if (str != null && str != "") {
+        } else if (str && node.nodeType === 4) {
             return RapidContext.Util.createTextNode(str);
         }
     }
@@ -123,6 +121,7 @@ RapidContext.UI._buildUIElem = function (node, ids) {
     var attrs = RapidContext.Util.dict(RapidContext.Util.attributeArray(node));
     var locals = RapidContext.Util.mask(attrs, ["id", "w", "h", "a"]);
     var children = RapidContext.UI.buildUI(node.childNodes, ids);
+    var widget;
     if (RapidContext.Widget.Classes[name]) {
         if (name == "Table" && attrs.multiple) {
             // TODO: remove deprecated code, eventually...
@@ -130,9 +129,9 @@ RapidContext.UI._buildUIElem = function (node, ids) {
             attrs.select = MochiKit.Base.bool(attrs.multiple) ? "multiple" : "one";
             delete attrs.multiple;
         }
-        var widget = RapidContext.Widget.createWidget(name, attrs, children);
+        widget = RapidContext.Widget.createWidget(name, attrs, children);
     } else {
-        var widget = MochiKit.DOM.createDOM(name, attrs, children);
+        widget = MochiKit.DOM.createDOM(name, attrs, children);
     }
     if (locals.id) {
         if (ids) {
@@ -153,23 +152,23 @@ RapidContext.UI._buildUIElem = function (node, ids) {
  * @param {String} css the CSS rules to inject
  */
 RapidContext.UI._buildUIStylesheet = function (css) {
-    var style = document.createElement('style');
-    style.setAttribute('type', 'text/css');
-    document.getElementsByTagName('head')[0].appendChild(style);
+    var style = document.createElement("style");
+    style.setAttribute("type", "text/css");
+    document.getElementsByTagName("head")[0].appendChild(style);
     try {
         style.innerHTML = css;
     } catch (e) {
         var parts = css.split(/\s*[{}]\s*/);
         for (var i = 0; i < parts.length; i += 2) {
             var rules = parts[i].split(/\s*,\s*/);
-            var styles = parts[i+1];
+            var styles = parts[i + 1];
             for (var j = 0; j < rules.length; j++) {
                 var rule = MochiKit.Format.strip(rules[j].replace(/\s+/, " "));
                 style.styleSheet.addRule(rule, styles);
             }
         }
     }
-}
+};
 
 /**
  * Connects the default UI signals for a procedure. This includes a default

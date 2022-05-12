@@ -16,7 +16,7 @@
 if (typeof(RapidContext) == "undefined") {
     RapidContext = {};
 }
-RapidContext.Widget = RapidContext.Widget || { Classes: {}};
+RapidContext.Widget = RapidContext.Widget || { Classes: {} };
 
 /**
  * Creates a new text field widget.
@@ -53,15 +53,15 @@ RapidContext.Widget.TextField = function (attrs/*, ...*/) {
     var type = (attrs && attrs.type) || "text";
     var text = (attrs && attrs.value) || "";
     for (var i = 1; i < arguments.length; i++) {
-        var o = arguments[i];
-        if (RapidContext.Util.isDOM(o)) {
-            text += MochiKit.DOM.scrapeText(o);
-        } else if (o != null) {
-            text += o.toString();
+        var arg = arguments[i];
+        if (RapidContext.Util.isDOM(arg)) {
+            text += MochiKit.DOM.scrapeText(arg);
+        } else if (arg != null) {
+            text += String(arg);
         }
     }
     var o = MochiKit.DOM.INPUT({ type: type, value: text });
-    RapidContext.Widget._widgetMixin(o, arguments.callee);
+    RapidContext.Widget._widgetMixin(o, RapidContext.Widget.TextField);
     o.addClass("widgetTextField");
     o.focused = false;
     o._popupCreated = false;
@@ -209,8 +209,10 @@ RapidContext.Widget.TextField.prototype.showPopup = function (attrs, items) {
         }
     }
     if (popup.childNodes.length > 0) {
-        var pos = { x: this.offsetLeft + 1,
-                    y: this.offsetTop + this.offsetHeight + 1 };
+        var pos = {
+            x: this.offsetLeft + 1,
+            y: this.offsetTop + this.offsetHeight + 1
+        };
         MochiKit.Style.setElementPosition(popup, pos);
         popup.setAttrs(MochiKit.Base.update({ delay: 30000 }, attrs));
         popup.show();
@@ -234,7 +236,7 @@ RapidContext.Widget.TextField.prototype._handleChange = function (evt, cause) {
         this.storedValue = this.value;
         RapidContext.Widget._fireEvent(this, "change", detail);
     }
-}
+};
 
 /**
  * Handles focus and blur events for this widget.
@@ -246,7 +248,7 @@ RapidContext.Widget.TextField.prototype._handleFocus = function (evt) {
     if (evt.type() == "focus") {
         this.focused = true;
         if (this.value != value) {
-            this.value = value
+            this.value = value;
         }
     } else if (evt.type() == "blur") {
         this.focused = false;
@@ -312,7 +314,7 @@ RapidContext.Widget.TextField.prototype._handleKeyDown = function (evt) {
 RapidContext.Widget.TextField.prototype._handleClick = function (evt) {
     this.blur();
     this.focus();
-    RapidContext.Widget._fireEvent(this, "dataavailable")
+    RapidContext.Widget._fireEvent(this, "dataavailable");
 };
 
 /**

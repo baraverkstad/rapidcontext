@@ -16,7 +16,7 @@
 if (typeof(RapidContext) == "undefined") {
     RapidContext = {};
 }
-RapidContext.Widget = RapidContext.Widget || { Classes: {}};
+RapidContext.Widget = RapidContext.Widget || { Classes: {} };
 
 /**
  * Creates a new tab container widget.
@@ -58,7 +58,7 @@ RapidContext.Widget.TabContainer = function (attrs/*, ... */) {
     var labels = MochiKit.DOM.DIV({ "class": "widgetTabContainerLabels" });
     var container = MochiKit.DOM.DIV({ "class": "widgetTabContainerContent" });
     var o = MochiKit.DOM.DIV(attrs, labels, container);
-    RapidContext.Widget._widgetMixin(o, arguments.callee);
+    RapidContext.Widget._widgetMixin(o, RapidContext.Widget.TabContainer);
     MochiKit.DOM.addElementClass(o, "widgetTabContainer");
     RapidContext.Util.registerSizeConstraints(container, "100% - 20", "100% - 40");
     o.resizeContent = o._resizeContent;
@@ -103,8 +103,8 @@ RapidContext.Widget.TabContainer.prototype.addChildNode = function (child) {
         // TODO: potential memory leak with stale child object references
         icon.onclick = RapidContext.Widget._eventHandler("TabContainer", "_handleClose", child);
     }
-    var label = MochiKit.DOM.DIV({ "class": "widgetTabContainerLabel" },
-                                 MochiKit.DOM.DIV({}, text, icon));
+    var labelAttrs = { "class": "widgetTabContainerLabel" };
+    var label = MochiKit.DOM.DIV(labelAttrs, MochiKit.DOM.DIV({}, text, icon));
     // TODO: potential memory leak with stale child object references
     label.onclick = RapidContext.Widget._eventHandler("TabContainer", "selectChild", child);
     this.firstChild.appendChild(label);
@@ -177,8 +177,9 @@ RapidContext.Widget.TabContainer.prototype.selectedChild = function () {
  */
 RapidContext.Widget.TabContainer.prototype.selectChild = function (indexOrChild) {
     var children = this.getChildNodes();
+    var label;
     if (this._selectedIndex >= 0) {
-        var label = this.firstChild.childNodes[this._selectedIndex];
+        label = this.firstChild.childNodes[this._selectedIndex];
         MochiKit.DOM.removeElementClass(label, "selected");
         children[this._selectedIndex]._handleExit();
     }
@@ -192,7 +193,7 @@ RapidContext.Widget.TabContainer.prototype.selectChild = function (indexOrChild)
     }
     this._selectedIndex = (index < 0 || index >= children.length) ? -1 : index;
     if (this._selectedIndex >= 0) {
-        var label = this.firstChild.childNodes[this._selectedIndex];
+        label = this.firstChild.childNodes[this._selectedIndex];
         MochiKit.DOM.addElementClass(label, "selected");
         children[this._selectedIndex]._handleEnter();
     }

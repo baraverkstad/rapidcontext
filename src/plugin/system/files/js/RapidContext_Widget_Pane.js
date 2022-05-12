@@ -16,7 +16,7 @@
 if (typeof(RapidContext) == "undefined") {
     RapidContext = {};
 }
-RapidContext.Widget = RapidContext.Widget || { Classes: {}};
+RapidContext.Widget = RapidContext.Widget || { Classes: {} };
 
 /**
  * Creates a new pane widget.
@@ -58,7 +58,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  */
 RapidContext.Widget.Pane = function (attrs/*, ... */) {
     var o = MochiKit.DOM.DIV();
-    RapidContext.Widget._widgetMixin(o, arguments.callee);
+    RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Pane);
     o.addClass("widgetPane");
     o.setAttrs(MochiKit.Base.update({ pageTitle: "Page", pageStatus: "ANY", pageCloseable: false }, attrs));
     o.addAll(MochiKit.Base.extend(null, arguments, 1));

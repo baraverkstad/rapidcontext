@@ -230,13 +230,13 @@ RapidContext.Util.registerFunctionNames = function (obj, name) {
         var isProto = (o === Object.prototype || o === Function.prototype);
         var isNode = isObj && (typeof(o.nodeType) === "number");
         var isVisited = (MochiKit.Base.findIdentical(stack, o) >= 0);
-        if (isFunc && isAnon && !o.hasOwnProperty("displayName")) {
+        if (isFunc && isAnon && !o.displayName) {
             o.displayName = name;
         }
         if ((isObj || isFunc) && !isProto && !isNode && !isVisited) {
             stack.push(o);
             for (var prop in o) {
-                if (o.hasOwnProperty(prop)) {
+                if (Object.prototype.hasOwnProperty.call(o, prop)) {
                     worker(o[prop], name + "." + prop, stack);
                 }
             }
@@ -263,26 +263,27 @@ RapidContext.Util.registerFunctionNames = function (obj, name) {
  *     as URL.js.
  */
 RapidContext.Util.resolveURI = function (uri, base) {
+    var pos;
     base = base || document.baseURI || document.getElementsByTagName("base")[0].href;
     if (uri.indexOf(":") > 0) {
         return uri;
     } else if (uri.indexOf("#") == 0) {
-        var pos = base.lastIndexOf("#");
+        pos = base.lastIndexOf("#");
         if (pos >= 0) {
             base = base.substring(0, pos);
         }
         return base + uri;
     } else if (uri.indexOf("/") == 0) {
-        var pos = base.indexOf("/", base.indexOf("://") + 3);
+        pos = base.indexOf("/", base.indexOf("://") + 3);
         base = base.substring(0, pos);
         return base + uri;
     } else if (uri.indexOf("../") == 0) {
-        var pos = base.lastIndexOf("/");
+        pos = base.lastIndexOf("/");
         base = base.substring(0, pos);
         uri = uri.substring(3);
         return RapidContext.Util.resolveURI(uri, base);
     } else {
-        var pos = base.lastIndexOf("/");
+        pos = base.lastIndexOf("/");
         base = base.substring(0, pos + 1);
         return base + uri;
     }
@@ -297,7 +298,7 @@ RapidContext.Util.NS = {
     SVG: "http://www.w3.org/2000/svg",
     XUL: "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 };
-RapidContext.Util.NS.HTML = [undefined, null, '', RapidContext.Util.NS.XHTML];
+RapidContext.Util.NS.HTML = [undefined, null, "", RapidContext.Util.NS.XHTML];
 
 /**
  * Returns `true` if the specified object looks like a DOM node. Otherwise,
@@ -456,7 +457,7 @@ RapidContext.Util.createDOMFuncExt = function (ns, tag, args, attrs/*, ...*/) {
         var myChildren = MochiKit.Base.extend([], children);
         MochiKit.Base.extend(myChildren, arguments, args.length + 1);
         return RapidContext.Util.createDOMExt(ns, tag, myAttrs, myChildren);
-    }
+    };
 };
 
 /**
@@ -512,31 +513,39 @@ RapidContext.Util.blurAll = function (node) {
  * ==> Evaluates the size constraints for both nodes
  */
 RapidContext.Util.registerSizeConstraints = function (node, width, height, aspect) {
+    function buildFunction(formula, percentageFormula) {
+        /* eslint no-new-func: "off" */
+        var code = "return " + formula.replace(/%/g, percentageFormula) + ";";
+        return new Function("w", "h", code);
+    }
     node = MochiKit.DOM.getElement(node);
     var sc = node.sizeConstraints = { w: null, h: null, a: null };
     if (typeof(width) == "number") {
-        sc.w = function (w, h) { return width; }
+        sc.w = function (w, h) {
+            return width;
+        };
     } else if (typeof(width) == "function") {
         sc.w = width;
     } else if (typeof(width) == "string") {
-        var code = "return " + width.replace(/%/g, "*0.01*w") + ";";
-        sc.w = new Function("w", "h", code);
+        sc.w = buildFunction(width, "*0.01*w");
     }
     if (typeof(height) == "number") {
-        sc.h = function (w, h) { return height; }
+        sc.h = function (w, h) {
+            return height;
+        };
     } else if (typeof(height) == "function") {
         sc.h = height;
     } else if (typeof(height) == "string") {
-        var code = "return " + height.replace(/%/g, "*0.01*h") + ";";
-        sc.h = new Function("w", "h", code);
+        sc.h = buildFunction(height, "*0.01*h");
     }
     if (typeof(aspect) == "number") {
-        sc.a = function (w, h) { return aspect; }
+        sc.a = function (w, h) {
+            return aspect;
+        };
     } else if (typeof(aspect) == "function") {
         sc.a = aspect;
     } else if (typeof(aspect) == "string") {
-        var code = "return " + aspect.replace(/%/g, "*0.01*w/h") + ";";
-        sc.a = new Function("w", "h", code);
+        sc.a = buildFunction(aspect, "*0.01*w/h");
     }
 };
 

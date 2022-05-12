@@ -16,7 +16,7 @@
 if (typeof(RapidContext) == "undefined") {
     RapidContext = {};
 }
-RapidContext.Widget = RapidContext.Widget || { Classes: {}};
+RapidContext.Widget = RapidContext.Widget || { Classes: {} };
 
 /**
  * Creates a new form validator widget.
@@ -61,9 +61,10 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  */
 RapidContext.Widget.FormValidator = function (attrs) {
     var o = MochiKit.DOM.SPAN();
-    RapidContext.Widget._widgetMixin(o, arguments.callee);
+    RapidContext.Widget._widgetMixin(o, RapidContext.Widget.FormValidator);
     o.addClass("widgetFormValidator");
-    o.setAttrs(MochiKit.Base.update({ name: "", mandatory: true, display: "both", message: null, validator: null }, attrs));
+    var defaults = { name: "", mandatory: true, display: "both", message: null, validator: null };
+    o.setAttrs(MochiKit.Base.update(defaults, attrs));
     o.fields = [];
     o.hide();
     return o;
@@ -156,6 +157,7 @@ RapidContext.Widget.FormValidator.prototype.reset = function () {
  * @see RapidContext.Widget.Form#validate
  */
 RapidContext.Widget.FormValidator.prototype.verify = function (field, value) {
+    var msg;
     if (!field.disabled) {
         if (arguments.length == 1 && typeof(field.getValue) == "function") {
             value = field.getValue();
@@ -165,12 +167,12 @@ RapidContext.Widget.FormValidator.prototype.verify = function (field, value) {
         var stripped = MochiKit.Format.strip(value);
         if (MochiKit.Format.strip(value) == "") {
             if (this.mandatory) {
-                var msg = "This field is required";
+                msg = "This field is required";
                 this.addError(field, msg);
                 return false;
             }
         } else if (this.regex != null && !this.regex.test(stripped)) {
-            var msg = "The field format is incorrect";
+            msg = "The field format is incorrect";
             this.addError(field, msg);
             return false;
         } else if (typeof(this.validator) == "function") {

@@ -16,7 +16,7 @@
 if (typeof(RapidContext) == "undefined") {
     RapidContext = {};
 }
-RapidContext.Widget = RapidContext.Widget || { Classes: {}};
+RapidContext.Widget = RapidContext.Widget || { Classes: {} };
 
 /**
  * Creates a new data table column widget.
@@ -71,7 +71,7 @@ RapidContext.Widget.TableColumn = function (attrs) {
         throw new Error("The 'field' attribute cannot be null for a TableColumn");
     }
     var o = MochiKit.DOM.TH();
-    RapidContext.Widget._widgetMixin(o, arguments.callee);
+    RapidContext.Widget._widgetMixin(o, RapidContext.Widget.TableColumn);
     o.addClass("widgetTableColumn");
     o.setAttrs(MochiKit.Base.update({ title: attrs.field, type: "string", key: false }, attrs));
     o.onclick = RapidContext.Widget._eventHandler(null, "_handleClick");
@@ -117,7 +117,9 @@ RapidContext.Widget.TableColumn.prototype._containerNode = function () {
  */
 RapidContext.Widget.TableColumn.prototype.setAttrs = function (attrs) {
     attrs = MochiKit.Base.update({}, attrs);
-    var locals = RapidContext.Util.mask(attrs, ["title", "field", "type", "sort", "maxLength", "key", "tooltip", "renderer"]);
+    var locals = RapidContext.Util.mask(attrs, [
+        "title", "field", "type", "sort", "maxLength", "key", "tooltip", "renderer"
+    ]);
     if (typeof(locals.title) !== "undefined") {
         MochiKit.DOM.replaceChildNodes(this, locals.title);
     }

@@ -196,9 +196,9 @@ RapidContext.Procedure.prototype.multicall = function (args, transform) {
     this._mapArgs = args;
     this._mapPos = 0;
     this._mapRes = [];
-    this._mapTransform = transform
+    this._mapTransform = transform;
     this._nextCall();
-}
+};
 
 /**
  * The multicall deferred callback handler. Dispatches the appropriate signals
@@ -240,7 +240,7 @@ RapidContext.Procedure.prototype._nextCall = function (res) {
         MochiKit.Signal.signal(this, "onsuccess", this._mapRes);
         return this._mapRes;
     }
-}
+};
 
 /**
  * Cancels any current execution of this procedure. This method does nothing if

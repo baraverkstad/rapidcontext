@@ -16,7 +16,7 @@
 if (typeof(RapidContext) == "undefined") {
     RapidContext = {};
 }
-RapidContext.Widget = RapidContext.Widget || { Classes: {}};
+RapidContext.Widget = RapidContext.Widget || { Classes: {} };
 
 /**
  * Creates a new data table widget.
@@ -60,7 +60,7 @@ RapidContext.Widget.Table = function (attrs/*, ...*/) {
     var tbody = MochiKit.DOM.TBODY();
     var table = MochiKit.DOM.TABLE({ "class": "widgetTable" }, thead, tbody);
     var o = MochiKit.DOM.DIV({}, table);
-    RapidContext.Widget._widgetMixin(o, arguments.callee);
+    RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Table);
     MochiKit.DOM.addElementClass(o, "widgetTable");
     o.resizeContent = o._resizeContent;
     o._rows = [];
@@ -355,8 +355,8 @@ RapidContext.Widget.Table.prototype.redraw = function () {
         }
     }
     this._renderRows();
-    for (var i = 0; i < this._selected.length; i++) {
-        this._markSelection(this._selected[i]);
+    for (var k = 0; k < this._selected.length; k++) {
+        this._markSelection(this._selected[k]);
     }
 };
 
@@ -392,7 +392,7 @@ RapidContext.Widget.Table.prototype._renderRows = function () {
  */
 RapidContext.Widget.Table.prototype.getRowCount = function () {
     return this._rows.length;
-}
+};
 
 /**
  * Returns the row id for the specified row index. If the row index
@@ -411,7 +411,7 @@ RapidContext.Widget.Table.prototype.getRowId = function (index) {
     } else {
         return null;
     }
-}
+};
 
 /**
  * Returns the currently selected row ids. If no rows are selected,
@@ -564,7 +564,7 @@ RapidContext.Widget.Table.prototype._handleMouseDown = function (evt) {
     } else {
         return true;
     }
-}
+};
 
 /**
  * Handles the mouse up event by changing the selection if appropriate.
@@ -604,8 +604,8 @@ RapidContext.Widget.Table.prototype._handleMouseUp = function (evt) {
                     this._selected.push(i);
                 }
             } else {
-                for (var i = start; i >= row; i--) {
-                    this._selected.push(i);
+                for (var j = start; j >= row; j--) {
+                    this._selected.push(j);
                 }
             }
             this._markSelection();

@@ -16,7 +16,7 @@
 if (typeof(RapidContext) == "undefined") {
     RapidContext = {};
 }
-RapidContext.Widget = RapidContext.Widget || { Classes: {}};
+RapidContext.Widget = RapidContext.Widget || { Classes: {} };
 
 /**
  * Creates a new navigation bar widget.
@@ -48,7 +48,7 @@ RapidContext.Widget.NavigationBar = function (attrs) {
     var tr = MochiKit.DOM.TR();
     var tbody = MochiKit.DOM.TBODY({}, tr);
     var o = MochiKit.DOM.TABLE({}, tbody);
-    RapidContext.Widget._widgetMixin(o, arguments.callee);
+    RapidContext.Widget._widgetMixin(o, RapidContext.Widget.NavigationBar);
     o.addClass("widgetNavigationBar");
     o.setAttrs(attrs);
     o.moveTo(0, ["Start"]);
@@ -140,7 +140,7 @@ RapidContext.Widget.NavigationBar.prototype._handleClick = function (evt) {
     var node = evt.target();
     if (node.className === "prev") {
         var step = 0;
-        while (node = node.previousSibling) {
+        while ((node = node.previousSibling) != null) {
             step++;
         }
         this.moveTo(step / 2);

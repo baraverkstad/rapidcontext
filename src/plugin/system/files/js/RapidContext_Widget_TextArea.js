@@ -16,7 +16,7 @@
 if (typeof(RapidContext) == "undefined") {
     RapidContext = {};
 }
-RapidContext.Widget = RapidContext.Widget || { Classes: {}};
+RapidContext.Widget = RapidContext.Widget || { Classes: {} };
 
 /**
  * Creates a new text area (or text box) widget.
@@ -54,15 +54,15 @@ RapidContext.Widget.TextArea = function (attrs/*, ...*/) {
         text = attrs.value;
     }
     for (var i = 1; i < arguments.length; i++) {
-        var o = arguments[i];
-        if (RapidContext.Util.isDOM(o)) {
-            text += MochiKit.DOM.scrapeText(o);
-        } else if (o != null) {
-            text += o.toString();
+        var arg = arguments[i];
+        if (RapidContext.Util.isDOM(arg)) {
+            text += MochiKit.DOM.scrapeText(arg);
+        } else if (arg != null) {
+            text += String(arg);
         }
     }
     var o = MochiKit.DOM.TEXTAREA({ value: text });
-    RapidContext.Widget._widgetMixin(o, arguments.callee);
+    RapidContext.Widget._widgetMixin(o, RapidContext.Widget.TextArea);
     o.addClass("widgetTextArea");
     o.focused = false;
     o.setAttrs(MochiKit.Base.update({ helpText: "", value: text }, attrs));
@@ -165,7 +165,7 @@ RapidContext.Widget.TextArea.prototype._handleChange = function (evt) {
         this.storedValue = this.value;
         RapidContext.Widget.emitSignal(this, "onchange", this.value);
     }
-}
+};
 
 /**
  * Handles focus and blur events for this widget.
@@ -177,7 +177,7 @@ RapidContext.Widget.TextArea.prototype._handleFocus = function (evt) {
     if (evt.type() == "focus") {
         this.focused = true;
         if (this.value != value) {
-            this.value = value
+            this.value = value;
         }
     } else if (evt.type() == "blur") {
         this.focused = false;

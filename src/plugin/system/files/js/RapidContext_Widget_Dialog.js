@@ -16,7 +16,7 @@
 if (typeof(RapidContext) == "undefined") {
     RapidContext = {};
 }
-RapidContext.Widget = RapidContext.Widget || { Classes: {}};
+RapidContext.Widget = RapidContext.Widget || { Classes: {} };
 
 /**
  * Creates a new dialog widget.
@@ -55,11 +55,11 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  */
 RapidContext.Widget.Dialog = function (attrs/*, ... */) {
     var title = MochiKit.DOM.DIV({ "class": "widgetDialogTitle" }, "Dialog");
-    var close = RapidContext.Widget.Icon({ "class": "widgetDialogClose fa fa-close", tooltip: "Close",  });
+    var close = RapidContext.Widget.Icon({ "class": "widgetDialogClose fa fa-close", tooltip: "Close" });
     var resize = RapidContext.Widget.Icon({ ref: "RESIZE", "class": "widgetDialogResize" });
     var content = MochiKit.DOM.DIV({ "class": "widgetDialogContent" });
     var o = MochiKit.DOM.DIV({}, title, close, resize, content);
-    RapidContext.Widget._widgetMixin(o, arguments.callee);
+    RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Dialog);
     MochiKit.DOM.addElementClass(o, "widgetDialog");
     o.resizeContent = o._resizeContent;
     o._setHidden(true);
@@ -140,7 +140,9 @@ RapidContext.Widget.Dialog.prototype._styleNode = function () {
  */
 RapidContext.Widget.Dialog.prototype.setAttrs = function (attrs) {
     attrs = MochiKit.Base.update({}, attrs);
-    var locals = RapidContext.Util.mask(attrs, ["title", "modal", "system", "center", "resizeable", "closeable", "hidden"]);
+    var locals = RapidContext.Util.mask(attrs, [
+        "title", "modal", "system", "center", "resizeable", "closeable", "hidden"
+    ]);
     if (typeof(locals.title) != "undefined") {
         MochiKit.DOM.replaceChildNodes(this.firstChild, locals.title);
     }
@@ -217,8 +219,10 @@ RapidContext.Widget.Dialog.prototype._setHiddenDialog = function (value) {
 RapidContext.Widget.Dialog.prototype.moveTo = function (x, y) {
     var parentDim = MochiKit.Style.getElementDimensions(this.parentNode);
     var dim = MochiKit.Style.getElementDimensions(this);
-    var pos = { x: Math.max(0, Math.min(x, parentDim.w - dim.w - 2)),
-                y: Math.max(0, Math.min(y, parentDim.h - dim.h - 2)) };
+    var pos = {
+        x: Math.max(0, Math.min(x, parentDim.w - dim.w - 2)),
+        y: Math.max(0, Math.min(y, parentDim.h - dim.h - 2))
+    };
     MochiKit.Style.setElementPosition(this, pos);
     RapidContext.Widget.emitSignal(this, "onmove", pos);
 };
@@ -231,8 +235,10 @@ RapidContext.Widget.Dialog.prototype.moveTo = function (x, y) {
 RapidContext.Widget.Dialog.prototype.moveToCenter = function () {
     var parentDim = MochiKit.Style.getElementDimensions(this.parentNode);
     var dim = MochiKit.Style.getElementDimensions(this);
-    var pos = { x: Math.round(Math.max(0, (parentDim.w - dim.w) / 2)),
-                y: Math.round(Math.max(0, (parentDim.h - dim.h) / 2.618)) };
+    var pos = {
+        x: Math.round(Math.max(0, (parentDim.w - dim.w) / 2)),
+        y: Math.round(Math.max(0, (parentDim.h - dim.h) / 2.618))
+    };
     MochiKit.Style.setElementPosition(this, pos);
     RapidContext.Widget.emitSignal(this, "onmove", pos);
 };
@@ -250,8 +256,10 @@ RapidContext.Widget.Dialog.prototype.moveToCenter = function () {
 RapidContext.Widget.Dialog.prototype.resizeTo = function (width, height) {
     var parentDim = MochiKit.Style.getElementDimensions(this.parentNode);
     var pos = MochiKit.Style.getElementPosition(this, this.parentNode);
-    var dim = { w: Math.max(150, Math.min(width, parentDim.w - pos.x - 2)),
-                h: Math.max(100, Math.min(height, parentDim.h - pos.y - 2)) };
+    var dim = {
+        w: Math.max(150, Math.min(width, parentDim.w - pos.x - 2)),
+        h: Math.max(100, Math.min(height, parentDim.h - pos.y - 2))
+    };
     MochiKit.Style.setElementDimensions(this, dim);
     RapidContext.Util.registerSizeConstraints(this, null, null);
     MochiKit.Base.update(this, dim);
@@ -276,7 +284,7 @@ RapidContext.Widget.Dialog.prototype.resizeToContent = function () {
     var y = Math.max(content.scrollHeight, content.offsetHeight) + content.offsetTop + 2;
     MochiKit.Style.setStyle(content, { overflow: "auto" });
     return this.resizeTo(Math.round(x), Math.round(y));
-}
+};
 
 /**
  * Called when dialog content should be resized.
@@ -284,12 +292,14 @@ RapidContext.Widget.Dialog.prototype.resizeToContent = function () {
 RapidContext.Widget.Dialog.prototype._resizeContent = function () {
     // TODO: Allow content node to have different padding
     var content = this.lastChild;
-    var dim = { w: Math.max(0, this.w - 20) || undefined,
-                h: Math.max(0, this.h - 18 - content.offsetTop) || undefined };
+    var dim = {
+        w: Math.max(0, this.w - 20) || undefined,
+        h: Math.max(0, this.h - 18 - content.offsetTop) || undefined
+    };
     MochiKit.Style.setElementDimensions(content, dim);
     MochiKit.Base.update(content, dim);
     RapidContext.Util.resizeElements(content);
-}
+};
 
 /**
  * Resets the scroll offsets for all child elements in the dialog.
@@ -300,10 +310,12 @@ RapidContext.Widget.Dialog.prototype.resetScroll = function () {
             node.scrollTop = 0;
             node.scrollLeft = 0;
             return node.childNodes;
+        } else {
+            return undefined;
         }
     }
     MochiKit.Base.nodeWalk(this, visitor);
-}
+};
 
 /**
  * Initiates a dialog move drag operation. This will install a mouse
@@ -327,8 +339,9 @@ RapidContext.Widget.Dialog.prototype._handleMoveStart = function (evt) {
  */
 RapidContext.Widget.Dialog.prototype._handleMove = function (evt) {
     var pos = evt.mouse().page;
-    this.moveTo(this._offsetPos.x + pos.x - this._startPos.x,
-                this._offsetPos.y + pos.y - this._startPos.y);
+    var x = this._offsetPos.x + pos.x - this._startPos.x;
+    var y = this._offsetPos.y + pos.y - this._startPos.y;
+    this.moveTo(x, y);
 };
 
 /**
@@ -344,7 +357,9 @@ RapidContext.Widget.Dialog.prototype._handleResizeStart = function (evt) {
     // TODO: correct handling of drag event, since IE seems to get
     //       problems when mouse enters other HTML elements
     MochiKit.Signal.connect(document, "onmousemove", this, "_handleResize");
-    MochiKit.Signal.connect(document, "onmousedown", function (evt) { evt.stop(); });
+    MochiKit.Signal.connect(document, "onmousedown", function (evt) {
+        evt.stop();
+    });
     MochiKit.Signal.connect(document, "onmouseup", this, "_stopDrag");
 };
 
@@ -355,8 +370,9 @@ RapidContext.Widget.Dialog.prototype._handleResizeStart = function (evt) {
  */
 RapidContext.Widget.Dialog.prototype._handleResize = function (evt) {
     var pos = evt.mouse().page;
-    this.resizeTo(this._offsetDim.w + pos.x - this._startPos.x,
-                  this._offsetDim.h + pos.y - this._startPos.y);
+    var w = this._offsetDim.w + pos.x - this._startPos.x;
+    var h = this._offsetDim.h + pos.y - this._startPos.y;
+    this.resizeTo(w, h);
 };
 
 /**

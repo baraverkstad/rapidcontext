@@ -16,7 +16,7 @@
 if (typeof(RapidContext) == "undefined") {
     RapidContext = {};
 }
-RapidContext.Widget = RapidContext.Widget || { Classes: {}};
+RapidContext.Widget = RapidContext.Widget || { Classes: {} };
 
 /**
  * Creates a new popup widget.
@@ -60,7 +60,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  */
 RapidContext.Widget.Popup = function (attrs/*, ...*/) {
     var o = MochiKit.DOM.DIV();
-    RapidContext.Widget._widgetMixin(o, arguments.callee);
+    RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Popup);
     o.addClass("widgetPopup");
     o._setHidden(true);
     o.selectedIndex = -1;
@@ -182,15 +182,16 @@ RapidContext.Widget.Popup.prototype.selectedChild = function () {
  *         -1 if none was selected
  */
 RapidContext.Widget.Popup.prototype.selectChild = function (indexOrNode) {
+    var index;
     var node = this.selectedChild();
     if (node != null) {
         MochiKit.DOM.removeElementClass(node, "widgetPopupSelected");
     }
-    var node = RapidContext.Util.childNode(this, indexOrNode);
+    node = RapidContext.Util.childNode(this, indexOrNode);
     if (typeof(indexOrNode) == "number") {
-        var index = indexOrNode;
+        index = indexOrNode;
     } else {
-        var index = MochiKit.Base.findIdentical(this.childNodes, node);
+        index = MochiKit.Base.findIdentical(this.childNodes, node);
     }
     if (index >= 0 && node != null) {
         this.selectedIndex = index;

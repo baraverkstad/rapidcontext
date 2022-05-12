@@ -124,7 +124,7 @@ RapidContext.Widget._widgetMixin = function (node/*, objOrClass, ...*/) {
                 node[key] = obj[key];
             } catch (e) {
                 // MSIE: cannot overwrite isDisabled property, skip logging
-                if (key !== 'isDisabled' || !/MSIE/.test(navigator.userAgent)) {
+                if (key !== "isDisabled" || !/MSIE/.test(navigator.userAgent)) {
                     var msg = "failed to overwrite '" + key + "' in DOM node";
                     RapidContext.Log.warn(msg, e, node);
                 }
@@ -286,10 +286,10 @@ RapidContext.Widget._fireEvent = function (node, evt, detail) {
     function later() {
         try {
             if (node.dispatchEvent) {
-                return node.dispatchEvent(evt);
+                node.dispatchEvent(evt);
             } else if (node.parentNode && node.fireEvent) {
                 // MSIE 6-8
-                return node.fireEvent("on" + evt.type, evt);
+                node.fireEvent("on" + evt.type, evt);
             } else {
                 var msg = "cannot fire event, no dispatchEvent/fireEvent method";
                 RapidContext.Log.warn(msg, evt, node);
@@ -358,6 +358,7 @@ RapidContext.Widget.prototype._styleNode = function () {
  * @param {String} [attrs.class] the CSS class names
  */
 RapidContext.Widget.prototype.setAttrs = function (attrs) {
+    /* eslint max-depth: "off" */
     for (var name in attrs) {
         var value = attrs[name];
         if (name == "disabled") {
@@ -410,8 +411,10 @@ RapidContext.Widget.prototype.setAttrs = function (attrs) {
  */
 RapidContext.Widget.prototype.setStyle = function (styles) {
     styles = MochiKit.Base.update({}, styles);
-    var posDimNames = ["width", "height", "zIndex", "z-index",
-                       "position", "top", "bottom", "left", "right"];
+    var posDimNames = [
+        "width", "height", "zIndex", "z-index",
+        "position", "top", "bottom", "left", "right"
+    ];
     var posDimStyles = RapidContext.Util.mask(styles, posDimNames);
     MochiKit.Style.setStyle(this, posDimStyles);
     MochiKit.Style.setStyle(this._styleNode(), styles);

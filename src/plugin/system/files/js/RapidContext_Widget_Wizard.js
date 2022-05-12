@@ -16,7 +16,7 @@
 if (typeof(RapidContext) == "undefined") {
     RapidContext = {};
 }
-RapidContext.Widget = RapidContext.Widget || { Classes: {}};
+RapidContext.Widget = RapidContext.Widget || { Classes: {} };
 
 /**
  * Creates a new wizard widget.
@@ -59,23 +59,31 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {}};
  */
 RapidContext.Widget.Wizard = function (attrs/*, ... */) {
     var o = MochiKit.DOM.DIV(attrs);
-    RapidContext.Widget._widgetMixin(o, arguments.callee);
+    RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Wizard);
     o.addClass("widgetWizard");
     o.resizeContent = o._resizeContent;
     o._selectedIndex = -1;
     o.appendChild(MochiKit.DOM.H3({ "class": "widgetWizardTitle" }));
-    var bCancel = RapidContext.Widget.Button({ icon:"CANCEL", style: { "margin-right": "10px" }},
-                                             "Cancel");
-    var bPrev = RapidContext.Widget.Button({ icon: "PREVIOUS", style: { "margin-right": "10px" }},
-                                           "Previous");
-    var bNext = RapidContext.Widget.Button({},
-                                           "Next",
-                                           RapidContext.Widget.Icon({ ref: "NEXT", style: { margin: "0 0 0 6px" }}));
-    var bDone = RapidContext.Widget.Button({ icon: "OK", highlight: true },
-                                           "Finish");
+    var bCancel = RapidContext.Widget.Button(
+        { icon: "CANCEL", style: { "margin-right": "10px" } },
+        "Cancel"
+    );
+    var bPrev = RapidContext.Widget.Button(
+        { icon: "PREVIOUS", style: { "margin-right": "10px" } },
+        "Previous"
+    );
+    var bNext = RapidContext.Widget.Button(
+        {},
+        "Next",
+        RapidContext.Widget.Icon({ ref: "NEXT", style: { margin: "0 0 0 6px" } })
+    );
+    var bDone = RapidContext.Widget.Button(
+        { icon: "OK", highlight: true },
+        "Finish"
+    );
     bCancel.hide();
-    o.appendChild(MochiKit.DOM.DIV({ "class": "widgetWizardButtons" },
-                                   bCancel, bPrev, bNext, bDone));
+    var divAttrs = { "class": "widgetWizardButtons" };
+    o.appendChild(MochiKit.DOM.DIV(divAttrs, bCancel, bPrev, bNext, bDone));
     MochiKit.Signal.connect(bCancel, "onclick", o, "cancel");
     MochiKit.Signal.connect(bPrev, "onclick", o, "previous");
     MochiKit.Signal.connect(bNext, "onclick", o, "next");
@@ -228,12 +236,13 @@ RapidContext.Widget.Wizard.prototype.activePageIndex = function () {
  * @see #previous
  */
 RapidContext.Widget.Wizard.prototype.activatePage = function (indexOrPage) {
+    var index, page;
     if (typeof(indexOrPage) == "number") {
-        var index = indexOrPage;
-        var page = this.childNodes[index + 2];
+        index = indexOrPage;
+        page = this.childNodes[index + 2];
     } else {
-        var page = indexOrPage;
-        var index = MochiKit.Base.findIdentical(this.childNodes, page, 2) - 2;
+        page = indexOrPage;
+        index = MochiKit.Base.findIdentical(this.childNodes, page, 2) - 2;
     }
     if (index < 0 || index >= this.getChildNodes().length) {
         throw new RangeError("Page index out of bounds: " + index);
