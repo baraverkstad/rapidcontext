@@ -7,9 +7,13 @@ function AdminApp() {
     this._cxnIds = null;
     this._cxnCount = 0;
     this._currentProc = null;
-    this._batch = { running: false, delay: 5, queue: [],
-                    stat: { success: 0, failed: 0 },
-                    func: MochiKit.Base.bind("_processBatch", this) };
+    this._batch = {
+        running: false,
+        delay: 5,
+        queue: [],
+        stat: { success: 0, failed: 0 },
+        func: MochiKit.Base.bind("_processBatch", this)
+    };
 }
 
 /**
@@ -45,7 +49,7 @@ AdminApp.prototype.start = function () {
     MochiKit.Signal.connect(this.ui.cxnEdit, "onclick", this, "_editConnection");
     MochiKit.Signal.connect(this.ui.cxnEditType, "onchange", this, "_updateConnectionEdit");
     MochiKit.Signal.connect(this.ui.cxnEditShowAll, "onchange", this, "_updateConnectionEdit");
-    MochiKit.Signal.connect(this.ui.cxnEditForm, "onclick", this, "_addRemoveConnectionProps")
+    MochiKit.Signal.connect(this.ui.cxnEditForm, "onclick", this, "_addRemoveConnectionProps");
     MochiKit.Signal.connect(this.ui.cxnEditCancel, "onclick", this.ui.cxnEditDialog, "hide");
     MochiKit.Signal.connect(this.ui.cxnEditSave, "onclick", this, "_storeConnection");
     var statusRenderer = function (td, value, data) {
@@ -124,7 +128,7 @@ AdminApp.prototype.start = function () {
         var pos = MochiKit.Style.getElementPosition(this, this.parentNode);
         var dim = MochiKit.Style.getElementDimensions(this.parentNode);
         MochiKit.Style.setElementDimensions(this, { w: dim.w - 2, h: dim.h - pos.y - 2 });
-    }
+    };
 
     // Batch view
     MochiKit.Signal.connect(this.ui.batchDelete, "onclick", this, "_clearBatch");
@@ -176,7 +180,7 @@ AdminApp.prototype.start = function () {
     }
     this._showProcedure();
     this._stopBatch();
-}
+};
 
 /**
  * Stops the app.
@@ -185,15 +189,16 @@ AdminApp.prototype.stop = function () {
     for (var name in this.proc) {
         MochiKit.Signal.disconnectAll(this.proc[name]);
     }
-}
+};
 
 /**
  * Updates the type cache.
  */
 AdminApp.prototype._updateTypeCache = function (res) {
+    var type;
     this._types = {};
     for (var i = 0; i < res.length; i++) {
-        var type = res[i];
+        type = res[i];
         this._types[type.id] = type;
         type.property = type.property || [];
         type.properties = {};
@@ -204,7 +209,7 @@ AdminApp.prototype._updateTypeCache = function (res) {
         delete type.property;
     }
     for (var id in this._types) {
-        var type = this._types[id];
+        type = this._types[id];
         var parts = id.split("/");
         while (parts.length > 1) {
             parts.pop();
@@ -215,7 +220,7 @@ AdminApp.prototype._updateTypeCache = function (res) {
             }
         }
     }
-}
+};
 
 /**
  * Validates all connections. The connection list is updated before
@@ -226,7 +231,7 @@ AdminApp.prototype._validateConnections = function () {
     this.ui.overlay.show();
     var d = this.proc.cxnList();
     d.addBoth(MochiKit.Base.bind("_validateCallback", this));
-}
+};
 
 /**
  * Connection validation callback handler. This method will iterate
@@ -255,7 +260,7 @@ AdminApp.prototype._validateCallback = function () {
         d.addBoth(MochiKit.Base.method(this, "_validateCallback"));
         return d;
     }
-}
+};
 
 /**
  * Shows the specified connection in the Admin UI. This method will
@@ -270,9 +275,13 @@ AdminApp.prototype.showConnection = function (id) {
     var cxnList = this.proc.cxnList;
     var cxnTable = this.ui.cxnTable;
     var d = this.proc.cxnValidate(id);
-    d.addBoth(function () { return cxnList(); });
-    d.addCallback(function () { cxnTable.setSelectedIds(id); });
-}
+    d.addBoth(function () {
+        return cxnList();
+    });
+    d.addCallback(function () {
+        cxnTable.setSelectedIds(id);
+    });
+};
 
 /**
  * Shows detailed connection information.
@@ -303,8 +312,10 @@ AdminApp.prototype._showConnection = function () {
     while (this.ui.cxnTemplate.previousSibling.className == "template") {
         RapidContext.Widget.destroyWidget(this.ui.cxnTemplate.previousSibling);
     }
-    var hidden = ["lastAccess", "id", "type", "plugin", "maxOpen", "_maxOpen",
-                  "_usedChannels", "_openChannels", "_lastUsedTime"];
+    var hidden = [
+        "lastAccess", "id", "type", "plugin", "maxOpen", "_maxOpen",
+        "_usedChannels", "_openChannels", "_lastUsedTime"
+    ];
     RapidContext.Util.mask(data, hidden);
     for (var k in data) {
         if (!/^_/.test(k) || !(k.substr(1) in data)) {
@@ -325,14 +336,14 @@ AdminApp.prototype._showConnection = function () {
             MochiKit.DOM.insertSiblingNodesBefore(this.ui.cxnTemplate, tr);
         }
     }
-}
+};
 
 /**
  * Opens the connection editing dialog for a new connection.
  */
 AdminApp.prototype._addConnection = function () {
     this._initConnectionEdit({});
-}
+};
 
 /**
  * Removes a connection (after user confirmation).
@@ -346,7 +357,7 @@ AdminApp.prototype._removeConnection = function () {
         d.addErrback(RapidContext.UI.showError);
         d.addCallback(MochiKit.Base.method(this.proc.cxnList, "recall"));
     }
-}
+};
 
 /**
  * Opens the connection editing dialog for an existing connection.
@@ -354,7 +365,7 @@ AdminApp.prototype._removeConnection = function () {
 AdminApp.prototype._editConnection = function () {
     var data = this.ui.cxnTable.getSelectedData();
     this._initConnectionEdit(data);
-}
+};
 
 /**
  * Initializes the connection editing dialog.
@@ -384,7 +395,7 @@ AdminApp.prototype._initConnectionEdit = function (data) {
     d.addCallback(MochiKit.Base.bind("show", this.ui.cxnEditDialog));
     d.addErrback(RapidContext.UI.showError);
     return d;
-}
+};
 
 /**
  * Updates the connection editing dialog.
@@ -407,25 +418,29 @@ AdminApp.prototype._updateConnectionEdit = function () {
         MochiKit.DOM.replaceChildNodes(this.ui.cxnEditTypeDescr);
     }
     for (var name in data) {
-        var value = MochiKit.Format.strip(data[name]);
-        if (!/^_/.test(name) && !(name in props) && !(name in hiddenProps) && value) {
-            props[name] = { name: name, title: name, custom: true,
-                            description: "User-specified parameter." };
+        var val = MochiKit.Format.strip(data[name]);
+        if (!/^_/.test(name) && !(name in props) && !(name in hiddenProps) && val) {
+            props[name] = {
+                name: name,
+                title: name,
+                custom: true,
+                description: "User-specified parameter."
+            };
             if (/password$/i.test(name)) {
                 props[name].format = "password";
             }
         }
     }
-    for (var name in props) {
-        var p = props[name];
-        var title = p.title || RapidContext.Util.toTitleCase(name);
-        var value = (data[name] != null) ? "" + data[name] : "";
-        var defaultValue = (data["_" + name] != null) ? "" + data["_" + name] : "";
+    for (var k in props) {
+        var p = props[k];
+        var title = p.title || RapidContext.Util.toTitleCase(p.name);
+        var value = (data[p.name] != null) ? "" + data[p.name] : "";
+        var defaultValue = (data["_" + p.name] != null) ? "" + data["_" + p.name] : "";
         var valueLines = AdminApp.splitLines(value, 58);
         var tr = this.ui.cxnEditTemplate.cloneNode(true);
         tr.className = "template";
         MochiKit.DOM.appendChildNodes(tr.firstChild, title + ":");
-        var attrs = { name: name, cols: 58, size: 60 };
+        var attrs = { name: p.name, cols: 58, size: 60 };
         if (defaultValue) {
             attrs.placeholder = defaultValue;
         }
@@ -447,8 +462,8 @@ AdminApp.prototype._updateConnectionEdit = function () {
             MochiKit.DOM.appendChildNodes(tr.lastChild, icon);
         }
         if (p.required && p.format != "password") {
-            var attrs = { name: name, display: "icon" };
-            var validator = RapidContext.Widget.FormValidator(attrs);
+            var validatorAttrs = { name: p.name, display: "icon" };
+            var validator = RapidContext.Widget.FormValidator(validatorAttrs);
             MochiKit.DOM.appendChildNodes(tr.lastChild, validator);
         }
         if (p.description) {
@@ -461,7 +476,7 @@ AdminApp.prototype._updateConnectionEdit = function () {
         MochiKit.DOM.insertSiblingNodesBefore(this.ui.cxnEditTemplate, tr);
     }
     this.ui.cxnEditForm.update(data);
-}
+};
 
 /**
  * Handles addition and removal of custom connection parameters.
@@ -481,7 +496,7 @@ AdminApp.prototype._addRemoveConnectionProps = function (evt) {
         var tr = MochiKit.DOM.getFirstParentByTagAndClassName(elem, "TR");
         RapidContext.Widget.destroyWidget(tr);
     }
-}
+};
 
 /**
  * Stores the edited or new connection to the RapidContext storage.
@@ -507,14 +522,14 @@ AdminApp.prototype._storeConnection = function () {
         d.addCallback(MochiKit.Base.method(this.ui.cxnEditDialog, "hide"));
         d.addCallback(MochiKit.Base.method(this, "showConnection", data.id));
     }
-}
+};
 
 /**
  * Loads the app list.
  */
 AdminApp.prototype.loadApps = function () {
     this.proc.appList();
-}
+};
 
 /**
  * Callback for the app list loading.
@@ -524,7 +539,7 @@ AdminApp.prototype._callbackLoadApps = function () {
     // so the procedure results can be ignored here
     this.ui.appTable.setData(RapidContext.App.apps());
     this._showApp();
-}
+};
 
 /**
  * Shows detailed app information.
@@ -548,7 +563,7 @@ AdminApp.prototype._showApp = function () {
     }
     this.ui.appLaunch.setAttrs({ disabled: !data });
     this.ui.appLaunchWindow.setAttrs({ disabled: !data });
-}
+};
 
 /**
  * Launches the currently selected app.
@@ -556,7 +571,7 @@ AdminApp.prototype._showApp = function () {
 AdminApp.prototype._launchApp = function () {
     var data = this.ui.appTable.getSelectedData();
     RapidContext.App.startApp(data.id);
-}
+};
 
 /**
  * Launches the currently selected app in separate window.
@@ -564,14 +579,14 @@ AdminApp.prototype._launchApp = function () {
 AdminApp.prototype._launchAppWindow = function () {
     var data = this.ui.appTable.getSelectedData();
     RapidContext.App.startApp(data.id, window.open());
-}
+};
 
 /**
  * Loads the table of available plug-ins.
  */
 AdminApp.prototype.loadPlugins = function () {
     return this.proc.plugInList();
-}
+};
 
 /**
  * Shows the details for the currently selected plug-in.
@@ -600,7 +615,7 @@ AdminApp.prototype._showPlugin = function () {
         this.ui.pluginLoad.hide();
         this.ui.pluginUnload.hide();
     }
-}
+};
 
 /**
  * Loads or unloads the currently selected plug-in.
@@ -619,8 +634,8 @@ AdminApp.prototype._togglePlugin = function () {
     }
     // TODO: This should be handled internally on the server...
     d.addBoth(MochiKit.Base.bind("resetServer", this));
-    d.addBoth(MochiKit.Base.bind("loadPlugins", this))
-}
+    d.addBoth(MochiKit.Base.bind("loadPlugins", this));
+};
 
 /**
  * Initializes the plug-in file upload and installation interface.
@@ -630,7 +645,7 @@ AdminApp.prototype._pluginUploadInit = function () {
     this.ui.pluginProgress.hide();
     this.ui.pluginFileInfo.hide();
     this.ui.pluginInstall.disable();
-}
+};
 
 /**
  * Handles the plug-in file upload init.
@@ -640,7 +655,7 @@ AdminApp.prototype._pluginUploadStart = function () {
     this.ui.pluginProgress.show();
     this.ui.pluginProgress.setAttrs({ min: 0, max: 100, ratio: 0 });
     this._pluginUploadProgress();
-}
+};
 
 /**
  * Shows the progress for the plug-in file upload.
@@ -661,7 +676,7 @@ AdminApp.prototype._pluginUploadProgress = function (res) {
             this.ui.pluginProgress.setAttrs({ ratio: res.files.progress });
         }
     }
-}
+};
 
 /**
  * Shows the information for an uploaded plug-in file.
@@ -682,7 +697,7 @@ AdminApp.prototype._pluginUploadInfo = function (file) {
     }
     this.ui.pluginUploadForm.update(file);
     this.ui.pluginInstall.enable();
-}
+};
 
 /**
  * Performs a plug-in installation.
@@ -708,7 +723,7 @@ AdminApp.prototype._pluginInstall = function () {
     d.addBoth(function () {
         self.ui.overlay.hide();
     });
-}
+};
 
 /**
  * Sends a server reset (restart) request.
@@ -716,18 +731,20 @@ AdminApp.prototype._pluginInstall = function () {
 AdminApp.prototype.resetServer = function (e) {
     var d = RapidContext.App.callProc("System.Reset");
     if (e instanceof MochiKit.Signal.Event) {
-        d.addCallback(function (data) { alert("Server reset complete"); });
+        d.addCallback(function (data) {
+            alert("Server reset complete");
+        });
         d.addErrback(RapidContext.UI.showError);
     }
     return d;
-}
+};
 
 /**
  * Loads the procedures for the procedure tree.
  */
 AdminApp.prototype.loadProcedures = function () {
     this.proc.procList();
-}
+};
 
 /**
  * Callback function for loading the procedure tree.
@@ -743,7 +760,7 @@ AdminApp.prototype._callbackProcedures = function (res) {
     }
     this.ui.procTree.removeAllMarked();
     this._showProcedure();
-}
+};
 
 /**
  * Shows the specified procedure in the procedure tree and in the
@@ -760,7 +777,7 @@ AdminApp.prototype.showProcedure = function (name) {
     } else {
         node.select();
     }
-}
+};
 
 /**
  * Loads detailed procedure information.
@@ -783,7 +800,7 @@ AdminApp.prototype._showProcedure = function () {
         d.addBoth(MochiKit.Base.bind("_callbackShowProcedure", this));
         this.ui.procLoading.show();
     }
-}
+};
 
 /**
  * Callback function for showing detailed procedure information.
@@ -813,9 +830,12 @@ AdminApp.prototype._callbackShowProcedure = function (res) {
                 var text = RapidContext.Util.toTitleCase(b.name).replace(" ", "\u00A0") + ":";
                 var col1 = MochiKit.DOM.TD(attrs, text);
                 var value = this._defaults[b.name] || "";
-                var attrs = { name: "arg" + count, value: value, style: "margin-right: 6px;" };
-                var field = RapidContext.Widget.TextField(attrs);
-                var icon = RapidContext.Widget.Icon({ ref: "EDIT", style: { "verticalAlign": "middle", "fontSize": "1.6em" } });
+                var fieldAttrs = { name: "arg" + count, value: value, style: "margin-right: 6px;" };
+                var field = RapidContext.Widget.TextField(fieldAttrs);
+                var icon = RapidContext.Widget.Icon({
+                    ref: "EDIT",
+                    style: { "verticalAlign": "middle", "fontSize": "1.6em" }
+                });
                 icon.onclick = MochiKit.Base.bind("_editProcArg", this, count);
                 var col2 = MochiKit.DOM.TD({ style: "padding-right: 6px; white-space: nowrap;" }, field, icon);
                 var col3 = MochiKit.DOM.TD({ style: "padding-top: 4px; white-space: pre-line;" }, b.description);
@@ -829,7 +849,7 @@ AdminApp.prototype._callbackShowProcedure = function (res) {
         this.ui.procExecResult.removeAll();
         RapidContext.Util.resizeElements(this.ui.procExecResult);
     }
-}
+};
 
 /**
  * Returns the current procedure arguments array. Each argument in
@@ -849,7 +869,7 @@ AdminApp.prototype._getProcArgs = function () {
         args.push({ type: type, value: value });
     }
     return args;
-}
+};
 
 /**
  * Opens the procedure argument editor for a specific argument.
@@ -861,7 +881,7 @@ AdminApp.prototype._editProcArg = function (idx) {
     this.ui.procArgForm.update(args[idx]);
     this.ui.procArgForm.argumentIndex = idx;
     this.ui.procArgDialog.show();
-}
+};
 
 /**
  * Updates a procedure argument after editing in the dialog.
@@ -874,6 +894,7 @@ AdminApp.prototype._updateProcArg = function () {
     var field = td.firstChild;
     field.dataType = form.type;
     var lines = form.value.split("\n");
+    var text;
     if (form.type === "string" && lines.length <= 1) {
         field.disabled = false;
         field.dataValue = undefined;
@@ -881,7 +902,7 @@ AdminApp.prototype._updateProcArg = function () {
     } else if (form.type === "json") {
         field.disabled = true;
         field.dataValue = form.value;
-        var text = "JSON object";
+        text = "JSON object";
         try {
             var o = MochiKit.Base.evalJSON(form.value);
             if (o instanceof Array) {
@@ -894,21 +915,26 @@ AdminApp.prototype._updateProcArg = function () {
     } else {
         field.disabled = true;
         field.dataValue = form.value;
-        var text = lines.length + " lines, " + form.value.length + " chars";
+        text = lines.length + " lines, " + form.value.length + " chars";
         field.setAttrs({ value: text });
     }
     this.ui.procArgDialog.hide();
-}
+};
 
 /**
  * Opens the procedure editing dialog for a new procedure.
  */
 AdminApp.prototype._addProcedure = function () {
-    var data = { name: "", type: "javascript", description: "",
-                 bindings: {}, defaults: {} };
+    var data = {
+        name: "",
+        type: "javascript",
+        description: "",
+        bindings: {},
+        defaults: {}
+    };
     var d = this._initProcEdit(data);
     d.addCallback(MochiKit.Base.bind("_updateProcEdit", this));
-}
+};
 
 /**
  * Removes the currently shown procedure (if in the local plug-in).
@@ -920,15 +946,20 @@ AdminApp.prototype._removeProcedure = function () {
         this.ui.overlay.setAttrs({ message: "Deleting..." });
         this.proc.procDelete(p.name);
     }
-}
+};
 
 /**
  * Opens the procedure editing dialog for an existing procedure.
  */
 AdminApp.prototype._editProcedure = function () {
     var p = this._currentProc;
-    var data = { name: p.name, type: p.type, description: p.description,
-                 bindings: {}, defaults: {} };
+    var data = {
+        name: p.name,
+        type: p.type,
+        description: p.description,
+        bindings: {},
+        defaults: {}
+    };
     for (var i = 0; i < p.bindings.length; i++) {
         var b = MochiKit.Base.clone(p.bindings[i]);
         if (b.type === "argument") {
@@ -938,7 +969,7 @@ AdminApp.prototype._editProcedure = function () {
         data.bindings[b.name] = b;
     }
     this._initProcEdit(data);
-}
+};
 
 /**
  * Initializes the procedure editing dialog.
@@ -953,7 +984,7 @@ AdminApp.prototype._initProcEdit = function (data) {
         for (var i = 0; i < types.length; i++) {
             var k = types[i];
             select.appendChild(MochiKit.DOM.OPTION({ value: k }, k));
-            var values = res[k].bindings
+            var values = res[k].bindings;
             var keys = MochiKit.Base.map(MochiKit.Base.itemgetter("name"), values);
             data.defaults[k] = RapidContext.Util.dict(keys, values);
         }
@@ -962,7 +993,7 @@ AdminApp.prototype._initProcEdit = function (data) {
     d.addCallback(MochiKit.Base.bind("show", this.ui.procEditDialog));
     d.addErrback(RapidContext.UI.showError);
     return d;
-}
+};
 
 /**
  * Renders the procedure editing form from the data object stored in
@@ -974,10 +1005,12 @@ AdminApp.prototype._renderProcEdit = function () {
     RapidContext.Widget.destroyWidget(this.ui.procEditData.childNodes);
     RapidContext.Widget.destroyWidget(this.ui.procEditProcs.childNodes);
     RapidContext.Widget.destroyWidget(this.ui.procEditArgs.childNodes);
-    var parents = { connection: this.ui.procEditConns,
-                    data: this.ui.procEditData,
-                    procedure: this.ui.procEditProcs,
-                    argument: this.ui.procEditArgs };
+    var parents = {
+        connection: this.ui.procEditConns,
+        data: this.ui.procEditData,
+        procedure: this.ui.procEditProcs,
+        argument: this.ui.procEditArgs
+    };
     for (var k in data.bindings) {
         var b = data.bindings[k];
         var defaults = data.defaults[data.type][b.name];
@@ -985,14 +1018,18 @@ AdminApp.prototype._renderProcEdit = function () {
         var icon = (defaults == null) ? RapidContext.Widget.Icon({ ref: "REMOVE" }) : null;
         var style = { "padding-top": icon ? "0px" : "3px", "padding-bottom": "4px", "white-space": "pre-line" };
         var div = MochiKit.DOM.DIV({ style: style }, strong, icon, b.description);
-        var attrs = { name: "binding." + b.name, value: b.value,
-                      style: { "width": "100%", "margin-bottom": "8px" } };
+        var attrs = {
+            name: "binding." + b.name,
+            value: b.value,
+            style: { "width": "100%", "margin-bottom": "8px" }
+        };
+        var field;
         if (b.value.indexOf("\n") < 0) {
-            var field = RapidContext.Widget.TextField(attrs);
+            field = RapidContext.Widget.TextField(attrs);
         } else {
             attrs.rows = Math.min(20, b.value.match(/\n/g).length + 2);
             attrs.wrap = "off";
-            var field = RapidContext.Widget.TextArea(attrs);
+            field = RapidContext.Widget.TextArea(attrs);
         }
         var container = MochiKit.DOM.DIV({}, div, field);
         if (icon) {
@@ -1004,14 +1041,13 @@ AdminApp.prototype._renderProcEdit = function () {
         }
         parents[b.type].appendChild(container);
     }
-    for (var k in parents) {
-        var node = parents[k];
+    Object.values(parents).forEach(function (node) {
         if (node.childNodes.length == 0) {
             var style = { "padding-top": "3px" };
             var div = MochiKit.DOM.DIV({ style: style }, "< None >");
             node.appendChild(div);
         }
-    }
+    });
     var className = (data.type == "javascript") ? "" : "hidden";
     this.ui.procEditProcs.parentNode.className = className;
     var opts = this.ui.procEditAddType.getElementsByTagName("option");
@@ -1022,7 +1058,7 @@ AdminApp.prototype._renderProcEdit = function () {
         this.ui.procEditAddType.selectedIndex = 3;
     }
     this.ui.procEditForm.update(data);
-}
+};
 
 /**
  * Adds a procedure binding from the input control.
@@ -1044,7 +1080,7 @@ AdminApp.prototype._addProcBinding = function () {
         this.ui.procEditAddName.setAttrs({ value: "" });
         this._updateProcEdit();
     }
-}
+};
 
 /**
  * Updates the procedure editing data from the form values. This
@@ -1058,7 +1094,8 @@ AdminApp.prototype._updateProcEdit = function () {
     data.name = values.name;
     data.type = values.type;
     data.description = values.description;
-    for (var k in values) {
+    var k, b;
+    for (k in values) {
         if (k.indexOf("binding.") == 0) {
             var name = k.substring(8);
             if (data.bindings[name]) {
@@ -1067,22 +1104,22 @@ AdminApp.prototype._updateProcEdit = function () {
         }
     }
     var defaults = data.defaults[data.type];
-    for (var k in defaults) {
+    for (k in defaults) {
         if (data.bindings[k] == null) {
-            var b = MochiKit.Base.clone(defaults[k]);
+            b = MochiKit.Base.clone(defaults[k]);
             b.value = (b.type == "data") ? "\n" : "";
             data.bindings[k] = b;
         }
     }
-    for (var k in data.bindings) {
-        var b = data.bindings[k];
+    for (k in data.bindings) {
+        b = data.bindings[k];
         var v = MochiKit.Format.strip(b.value);
         if (defaults[k] == null && v == "" && b.description != "") {
             delete data.bindings[k];
         }
     }
     this._renderProcEdit();
-}
+};
 
 /**
  * Saves the procedure from the procedure edit dialog.
@@ -1107,7 +1144,7 @@ AdminApp.prototype._saveProcedure = function () {
     d.addCallback(MochiKit.Base.bind("recall", this.proc.procList));
     d.addCallback(MochiKit.Base.bind("showProcedure", this, data.name));
     d.addErrback(RapidContext.UI.showError);
-}
+};
 
 /**
  * Executes a procedure call for the current procedure.
@@ -1139,7 +1176,7 @@ AdminApp.prototype._executeProcedure = function () {
     this.ui.procExecResult.removeAll();
     var d = RapidContext.App.callProc(proc.name, args);
     d.addBoth(MochiKit.Base.bind("_callbackExecute", this));
-}
+};
 
 /**
  * Callback function for procedure execution.
@@ -1155,7 +1192,7 @@ AdminApp.prototype._callbackExecute = function (res) {
     } else {
         this._showExecData(this.ui.procExecResult, res);
     }
-}
+};
 
 /**
  * Expands a procedure result tree node by adding child data nodes.
@@ -1203,9 +1240,9 @@ AdminApp.prototype._showExecData = function (node, data) {
             }
         } else {
             try {
-                if (value.hasOwnProperty("toString")) {
-                    var str = value.toString();
-                    return truncate ? MochiKit.Text.truncate(str, 50, "...") : str;
+                if (Object.prototype.hasOwnProperty.call(value, "toString")) {
+                    var s = value.toString();
+                    return truncate ? MochiKit.Text.truncate(s, 50, "...") : s;
                 }
             } catch (ignore) {
                 // Fallback to key enumeration
@@ -1238,11 +1275,13 @@ AdminApp.prototype._showExecData = function (node, data) {
             node.addAll(child);
         }
     } else {
-        var attrs = { name: dataLabel(type, data, true),
-                      tooltip: dataLabel(type, data, false) };
-        node.addAll(RapidContext.Widget.TreeNode(attrs));
+        var nodeAttrs = {
+            name: dataLabel(type, data, true),
+            tooltip: dataLabel(type, data, false)
+        };
+        node.addAll(RapidContext.Widget.TreeNode(nodeAttrs));
     }
-}
+};
 
 /**
  * Creates a new set of batch calls for the current procedure.
@@ -1252,7 +1291,8 @@ AdminApp.prototype._createBatch = function () {
     var args = [];
     var count = null;
     var values = this._getProcArgs();
-    for (var i = 0; i < proc.bindings.length; i++) {
+    var i, j;
+    for (i = 0; i < proc.bindings.length; i++) {
         var b = proc.bindings[i];
         if (b.type == "argument") {
             var value = values[args.length].value;
@@ -1273,9 +1313,11 @@ AdminApp.prototype._createBatch = function () {
                 if (count == null) {
                     count = value.length;
                 } else if (value.length != count) {
-                    var msg = "Mismatching line count for field " + name +
-                              ": expected " + count + ", but found " +
-                              value.length;
+                    var msg = (
+                        "Mismatching line count for field " + name +
+                        ": expected " + count + ", but found " +
+                        value.length
+                    );
                     RapidContext.UI.showError(msg);
                     return;
                 }
@@ -1287,37 +1329,35 @@ AdminApp.prototype._createBatch = function () {
         RapidContext.UI.showError("Multiple argument values required for batch creation");
         return;
     }
-    for (var i = 0; i < count; i++) {
+    for (i = 0; i < count; i++) {
         var callArgs = [];
-        for (var j = 0; j < args.length; j++) {
-            var value = args[j];
-            if (value instanceof Array) {
-                callArgs.push(value[i]);
+        for (j = 0; j < args.length; j++) {
+            var arg = args[j];
+            if (arg instanceof Array) {
+                callArgs.push(arg[i]);
             } else {
-                callArgs.push(value);
+                callArgs.push(arg);
             }
         }
         this._batch.queue.push({ proc: proc.name, args: callArgs });
     }
     this.ui.tabContainer.selectChild(this.ui.batchTab);
     this._startBatch();
-}
+};
 
 /**
  * Configure the batch delay.
  */
 AdminApp.prototype._configBatchDelay = function () {
-    var value;
-
-    value = prompt("Enter order processing delay (in seconds):",
-                   "" + this._batch.delay);
+    var msg = "Enter order processing delay (in seconds):";
+    var value = prompt(msg, "" + this._batch.delay);
     if (value != null) {
         value = parseInt(value, 10);
         if (!isNaN(value)) {
             this._batch.delay = Math.max(value, 0);
         }
     }
-}
+};
 
 /**
  * Starts the batch processing if not already running.
@@ -1333,7 +1373,7 @@ AdminApp.prototype._startBatch = function () {
         this.ui.batchLoading.show();
         this._processBatch();
     }
-}
+};
 
 /**
  * Stops the batch processing if running.
@@ -1343,7 +1383,7 @@ AdminApp.prototype._stopBatch = function () {
     this.ui.batchPlay.show();
     this.ui.batchPause.hide();
     this.ui.batchLoading.hide();
-}
+};
 
 /**
  * Toggles the batch processing.
@@ -1354,7 +1394,7 @@ AdminApp.prototype._toggleBatch = function () {
     } else {
         this._startBatch();
     }
-}
+};
 
 /**
  * Stops the batch processing and clears the queue.
@@ -1366,7 +1406,7 @@ AdminApp.prototype._clearBatch = function () {
     this._batch.stat.failed = 0;
     this.ui.batchForm.reset();
     this.ui.batchProgress.setAttrs({ min: 0, max: 0, text: "Stopped" });
-}
+};
 
 /**
  * Processes the first item in the batch queue.
@@ -1383,7 +1423,7 @@ AdminApp.prototype._processBatch = function () {
             d.addBoth(MochiKit.Base.bind("_callbackBatch", this));
         }
     }
-}
+};
 
 /**
  * Callback function for batch processing.
@@ -1391,7 +1431,6 @@ AdminApp.prototype._processBatch = function () {
  * @param {Object} res the call result data or error
  */
 AdminApp.prototype._callbackBatch = function (res) {
-    var delay;
     if (res instanceof Error) {
         this._batch.stat.failed++;
     } else {
@@ -1409,24 +1448,26 @@ AdminApp.prototype._callbackBatch = function (res) {
     } else {
         this._stopBatch();
     }
-}
+};
 
 /**
  * Loads the list of users.
  */
 AdminApp.prototype.loadUsers = function () {
     this.proc.userList();
-}
+};
 
 /**
  * Modifies the user form for adding a new user.
  */
 AdminApp.prototype._addUser = function () {
     this.ui.userForm.reset();
-    this.ui.userForm.update({ enabled: true,
-                              passwordHint: "Minimum 5 characters" });
+    this.ui.userForm.update({
+        enabled: true,
+        passwordHint: "Minimum 5 characters"
+    });
     this.ui.userId.enable();
-}
+};
 
 /**
  * Modifies the user form for editing an existing user.
@@ -1434,11 +1475,13 @@ AdminApp.prototype._addUser = function () {
 AdminApp.prototype._editUser = function () {
     var data = this.ui.userTable.getSelectedData();
     this.ui.userForm.reset();
-    var extra = { roles: (data.role) ? data.role.join(" ") : "",
-                  passwordHint: "Leave blank for unmodified" };
+    var extra = {
+        roles: (data.role) ? data.role.join(" ") : "",
+        passwordHint: "Leave blank for unmodified"
+    };
     this.ui.userForm.update(MochiKit.Base.update(extra, data));
     this.ui.userId.disable();
-}
+};
 
 /**
  * Saves the user modification form.
@@ -1446,15 +1489,12 @@ AdminApp.prototype._editUser = function () {
 AdminApp.prototype._saveUser = function () {
     var data = this.ui.userForm.valueMap();
     if (this.ui.userForm.validate()) {
-        this.proc.userChange(data.id,
-                             data.name,
-                             data.email,
-                             data.description,
-                             data.enabled ? "1" : "0",
-                             data.password,
-                             data.roles);
+        var desc = data.description;
+        var enabled = data.enabled ? "1" : "0";
+        var pwd = data.password;
+        this.proc.userChange(data.id, data.name, data.email, desc, enabled, pwd, data.roles);
     }
-}
+};
 
 /**
  * Sets a new log level.
@@ -1549,7 +1589,7 @@ AdminApp.storageWrite = function (path, data) {
         }
     });
     return d;
-}
+};
 
 /**
  * Removes an object from the RapidContext storage. Note that only
@@ -1575,7 +1615,7 @@ AdminApp.storageDelete = function (path) {
         }
     });
     return d;
-}
+};
 
 /**
  * Splits a text string into multiple lines. Existing line breaks
@@ -1609,7 +1649,7 @@ AdminApp.splitLines = function (str, maxlen, keepspace) {
             if (!keepspace && m) {
                 line += m[0];
             } else {
-                m = /[^\s\).:,;=-]*$/.exec(line);
+                m = /[^\s).:,;=-]*$/.exec(line);
                 if (m && m.index > 0) {
                     line = line.substring(0, m.index);
                 }
@@ -1625,12 +1665,11 @@ AdminApp.splitLines = function (str, maxlen, keepspace) {
         }
     }
     var re = /\n|\r\n|\r/g;
-    var m;
     var pos = 0;
-    while ((m = re.exec(str)) != null) {
+    while (re.exec(str) != null) {
         splitPush(str.substring(pos, re.lastIndex));
         pos = re.lastIndex;
     }
     splitPush(str.substring(pos));
     return lines;
-}
+};

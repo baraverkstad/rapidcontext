@@ -126,8 +126,7 @@ StartApp.prototype._initApps = function () {
     var admin = null;
 
     // Find app instances and manual launchers
-    for (var i = 0; i < apps.length; i++) {
-        var app = apps[i];
+    apps.forEach(function (app) {
         if (app.instances) {
             instances += app.instances.length;
         }
@@ -138,7 +137,9 @@ StartApp.prototype._initApps = function () {
         } else if (app.launch == "auto" || app.launch == "manual" || app.launch == "window") {
             launchers.push(app);
         }
-    }
+    });
+
+    // Add helps and admin apps to the bottom
     if (help) {
         launchers.push(help);
     }
@@ -147,18 +148,14 @@ StartApp.prototype._initApps = function () {
     }
 
     // Redraw the app launcher table
-    var rows = [];
-    for (var i = 0; i < launchers.length; i++) {
-        var app = launchers[i];
+    var rows = launchers.map(function (app) {
         // TODO: Should use a template widget...
-        var attrs = { style: { "padding": "4px 6px 6px 6px" } };
-        var tdIcon = MochiKit.DOM.TD(attrs);
+        var tdIcon = MochiKit.DOM.TD({ style: { "padding": "4px 6px 6px 6px" } });
         if (app.icon) {
             MochiKit.DOM.replaceChildNodes(tdIcon, app.icon.cloneNode(true));
         }
-        var style = { marginLeft: "6px" };
-        var iconAttrs = { ref: "EXPAND", tooltip: "Open in new window",
-                          style: style };
+        var iconStyle = { marginLeft: "6px" };
+        var iconAttrs = { ref: "EXPAND", tooltip: "Open in new window", style: iconStyle };
         var expIcon = RapidContext.Widget.Icon(iconAttrs);
         if (app.launch == "window") {
             expIcon.addClass("launch-window");
@@ -175,8 +172,8 @@ StartApp.prototype._initApps = function () {
         }
         var tdName = MochiKit.DOM.TD(attrs, title, desc);
         var attrs = { "class": "clickable", "data-appid": app.id };
-        rows.push(MochiKit.DOM.TR(attrs, tdIcon, tdName));
-    }
+        return MochiKit.DOM.TR(attrs, tdIcon, tdName);
+    });
     MochiKit.DOM.replaceChildNodes(this.ui.appTable, rows);
 
     // Start auto and inline apps
@@ -207,8 +204,12 @@ StartApp.prototype._initStartupApp = function (app) {
         style = { clear: "both" };
     }
     var color = this.gradients.shift() || "grey";
-    var attrs = { pageTitle: app.name, pageCloseable: true,
-                  "class": "startApp-inline " + color, style: style };
+    var attrs = {
+        pageTitle: app.name,
+        pageCloseable: true,
+        "class": "startApp-inline " + color,
+        style: style
+    };
     var pane = new RapidContext.Widget.Pane(attrs);
     this.ui.inlinePane.insertBefore(pane, this.ui.inlinePane.firstChild);
     if (app.startPage == "left" || app.startPage == "right") {
@@ -274,7 +275,7 @@ StartApp.prototype._showAppModifiers = function (visible) {
 StartApp.prototype._handleAppLaunch = function (evt) {
     var tr = evt.target();
     if (tr.tagName != "TR") {
-        tr = MochiKit.DOM.getFirstParentByTagAndClassName(tr, 'TR');
+        tr = MochiKit.DOM.getFirstParentByTagAndClassName(tr, "TR");
     }
     if (tr != null) {
         var appId = MochiKit.DOM.getNodeAttribute(tr, "data-appid");
@@ -333,7 +334,7 @@ StartApp.prototype.startApp = function (app, container) {
 /**
  * Hides the info popup menu instantly.
  */
-StartApp.prototype._hideInfoPopup = function() {
+StartApp.prototype._hideInfoPopup = function () {
     this.ui.menu.setAttrs({ hideAnim: { effect: "fade", duration: 0 } });
     this.ui.menu.hide();
     this.ui.menu.setAttrs({ hideAnim: { effect: "fade", duration: 0.2, delay: 0.2 } });
@@ -440,8 +441,14 @@ StartApp.prototype._tourStart = function () {
     if (this.ui.tourDialog.isHidden()) {
         document.body.appendChild(this.ui.tourDialog);
         var dim = MochiKit.Style.getViewportDimensions();
-        var opts = { effect: "Move", mode: "absolute", duration: 1.5, transition: "spring",
-                     x: Math.floor(dim.w * 0.1), y: Math.floor(dim.h - 400) };
+        var opts = {
+            effect: "Move",
+            mode: "absolute",
+            duration: 1.5,
+            transition: "spring",
+            x: Math.floor(dim.w * 0.1),
+            y: Math.floor(dim.h - 400)
+        };
         MochiKit.Style.setElementPosition(this.ui.tourDialog, { x: opts.x, y: -200 });
         this.ui.tourDialog.animate(opts);
         this.ui.tourWizard.activatePage(0);
@@ -463,15 +470,15 @@ StartApp.prototype._tourChange = function () {
     var d = MochiKit.Async.wait(0);
     switch (this.ui.tourWizard.activePageIndex()) {
     case 1:
-        d.addBoth(function() {
+        d.addBoth(function () {
             return RapidContext.App.callApp("StartApp", "_tourLocateStart");
         });
         break;
     case 2:
-        d.addBoth(function() {
+        d.addBoth(function () {
             return RapidContext.App.callApp("help", "loadTopics");
         });
-        d.addBoth(function() {
+        d.addBoth(function () {
             return MochiKit.Async.wait(1);
         });
         d.addBoth(MochiKit.Base.bind("_tourLocateHelp", this));
@@ -499,7 +506,6 @@ StartApp.prototype._tourLocateStart = function () {
 StartApp.prototype._tourLocateHelp = function () {
     var tab = this.ui.tabContainer.selectedChild();
     var box = this._getBoundingBox(tab.firstChild.nextSibling);
-    var diag = this._getBoundingBox(this.ui.tourDialog);
     box.h = 200;
     this._tourLocate(box);
 };
@@ -536,16 +542,20 @@ StartApp.prototype._tourLocateUser = function () {
 StartApp.prototype._tourLocate = function () {
     document.body.appendChild(this.ui.tourLocator);
     this.ui.tourLocator.animate({ effect: "cancel" });
-    var box = this._getBoundingBox(this.ui.tourDialog);
-    MochiKit.Style.setElementDimensions(this.ui.tourLocator, box);
-    MochiKit.Style.setElementPosition(this.ui.tourLocator, box);
+    var dialogBox = this._getBoundingBox(this.ui.tourDialog);
+    MochiKit.Style.setElementDimensions(this.ui.tourLocator, dialogBox);
+    MochiKit.Style.setElementPosition(this.ui.tourLocator, dialogBox);
     MochiKit.Style.setOpacity(this.ui.tourLocator, 0.3);
     MochiKit.Style.showElement(this.ui.tourLocator);
     var box = this._getBoundingBox.apply(this, arguments);
-    var style = { left: box.x + "px", top: box.y + "px",
-                  width: box.w + "px", height: box.h + "px" };
-    this.ui.tourLocator.animate({ effect: "Morph", duration: 3.0,
-                                  transition: "spring", style: style });
+    var style = {
+        left: box.x + "px",
+        top: box.y + "px",
+        width: box.w + "px",
+        height: box.h + "px"
+    };
+    var opts = { effect: "Morph", duration: 3.0, transition: "spring", style: style };
+    this.ui.tourLocator.animate(opts);
     this.ui.tourLocator.animate({ effect: "fade", delay: 2.4, queue: "parallel" });
 };
 

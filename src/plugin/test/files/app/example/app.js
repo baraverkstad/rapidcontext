@@ -10,7 +10,7 @@ function ExampleApp() {
 /**
  * Starts the app and initializes the UI.
  */
-ExampleApp.prototype.start = function() {
+ExampleApp.prototype.start = function () {
 
     // Create procedure callers
     this.proc = RapidContext.Procedure.mapAll({
@@ -39,7 +39,7 @@ ExampleApp.prototype.start = function() {
 /**
  * Stops the app.
  */
-ExampleApp.prototype.stop = function() {
+ExampleApp.prototype.stop = function () {
     // Usually not much to do here
     clearInterval(this.interval);
 };
@@ -55,19 +55,19 @@ ExampleApp.prototype.progressConfig = function () {
     attrs.novalue = !cfg.value;
     attrs.notime = !cfg.time;
     this.ui.progressBar.setAttrs(attrs);
-}
+};
 
 /**
  * Updates the progress bar value.
  */
 ExampleApp.prototype.progressUpdate = function () {
-    this.progress += 0.5
+    this.progress += 0.5;
     if (this.progress >= 110) {
         this.progress = 0;
         this.ui.progressBar.setAttrs({ min: 0, max: 100 });
     }
     this.ui.progressBar.setAttrs({ value: Math.floor(this.progress) });
-}
+};
 
 /**
  * Handle autocomplete focus.

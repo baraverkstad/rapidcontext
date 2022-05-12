@@ -12,7 +12,7 @@ function HelpApp() {
 /**
  * Starts the app and initializes the UI.
  */
-HelpApp.prototype.start = function() {
+HelpApp.prototype.start = function () {
     MochiKit.Signal.connect(this.ui.topicReload, "onclick", this, "loadTopics");
     MochiKit.Signal.connect(this.ui.topicTree, "onexpand", this, "_treeOnExpand");
     MochiKit.Signal.connect(this.ui.topicTree, "onselect", this, "_treeOnSelect");
@@ -25,7 +25,7 @@ HelpApp.prototype.start = function() {
 /**
  * Stops the app.
  */
-HelpApp.prototype.stop = function() {
+HelpApp.prototype.stop = function () {
     // Nothing to do here
 };
 
@@ -35,7 +35,7 @@ HelpApp.prototype.stop = function() {
  * the server, but only unifies the topic data from apps and the
  * previously loaded platform topics.
  */
-HelpApp.prototype.loadTopics = function() {
+HelpApp.prototype.loadTopics = function () {
     var root = this._topics = { path: [], child: {}, children: [] };
     var topicUrls = this._topicUrls = {};
 
@@ -230,7 +230,7 @@ HelpApp.prototype._historySave = function (url) {
 /**
  * Clears the content view from any loaded topic data.
  */
-HelpApp.prototype.clearContent = function() {
+HelpApp.prototype.clearContent = function () {
     this._currentUrl = "";
     this.ui.contentLoading.hide();
     this.ui.contentLink.className = "hidden";
@@ -270,7 +270,7 @@ HelpApp.prototype.loadContent = function (url) {
 /**
  * Callback function for content HTML document retrieval.
  */
-HelpApp.prototype._callbackContent = function(data) {
+HelpApp.prototype._callbackContent = function (data) {
     this.ui.contentLoading.hide();
     if (data instanceof Error) {
         RapidContext.UI.showError(data);
@@ -295,7 +295,7 @@ HelpApp.prototype._callbackContent = function(data) {
  *
  * @param {String} html the HTML data to display
  */
-HelpApp.prototype._showContentHtml = function(html) {
+HelpApp.prototype._showContentHtml = function (html) {
     html = html.replace(/^[\s\S]*<body[^>]*>/i, "");
     html = html.replace(/<\/body>[\s\S]*$/i, "");
     html = html.replace(/^[\s\S]*<!--START-->/, "");
@@ -303,34 +303,34 @@ HelpApp.prototype._showContentHtml = function(html) {
     html = html.replace(/^[\s\S]*(<div class="document">)/i, "$1");
     this.ui.contentText.innerHTML = html;
     var baseUrl = RapidContext.Util.resolveURI("");
-    var nodes = this.ui.contentText.getElementsByTagName("a");
-    for (var i = 0; i < nodes.length; i++) {
-        var href = nodes[i].getAttribute("href");
+    var links = this.ui.contentText.getElementsByTagName("a");
+    for (var i = 0; i < links.length; i++) {
+        var href = links[i].getAttribute("href");
         if (href && href != "") {
             href = RapidContext.Util.resolveURI(href, this._currentUrl);
             if (href.indexOf(baseUrl) == 0) {
                 href = href.substring(baseUrl.length);
             }
-            if (nodes[i].hasAttribute("target")) {
-                nodes[i].setAttribute("target", "doc");
+            if (links[i].hasAttribute("target")) {
+                links[i].setAttribute("target", "doc");
             }
             if (href.indexOf("://") > 0) {
-                nodes[i].setAttribute("target", "doc");
+                links[i].setAttribute("target", "doc");
             } else {
-                nodes[i].setAttribute("href", href);
+                links[i].setAttribute("href", href);
             }
         }
     }
-    var nodes = this.ui.contentText.getElementsByTagName("img");
-    for (var i = 0; i < nodes.length; i++) {
-        var href = nodes[i].getAttribute("src");
-        if (href && href != "") {
-            href = RapidContext.Util.resolveURI(href, this._currentUrl);
-            if (href.indexOf(baseUrl) == 0) {
-                href = href.substring(baseUrl.length);
+    var images = this.ui.contentText.getElementsByTagName("img");
+    for (var j = 0; j < images.length; j++) {
+        var src = images[j].getAttribute("src");
+        if (src) {
+            src = RapidContext.Util.resolveURI(src, this._currentUrl);
+            if (src.indexOf(baseUrl) == 0) {
+                src = src.substring(baseUrl.length);
             }
-            if (href.indexOf("://") < 0) {
-                nodes[i].setAttribute("src", href);
+            if (src.indexOf("://") < 0) {
+                images[i].setAttribute("src", src);
             }
         }
     }
@@ -384,7 +384,7 @@ HelpApp.prototype._scrollLink = function (name) {
             afterFinish: function (effect) {
                 MochiKit.Style.setOpacity(effect.element, 0);
             }
-        }
+        };
         this.ui.contentLocator.animate(opts);
     }
 };
