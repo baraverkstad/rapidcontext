@@ -1,13 +1,6 @@
 /**
  * Base Widget Style
  */
-.widget h3 {
-    font-family: "Lucida Grande", Verdana, sans-serif;
-    font-weight: bold;
-    margin-top: 0;
-    margin-bottom: 6px;
-    font-size: 1.2em;
-}
 .widget.hidden,
 .widgetHidden,
 .widget.widgetHidden,
@@ -594,7 +587,7 @@ th.widgetTableColumn.sortNone::after {
     border-radius: 3px 3px;
     padding: 3px 5px;
     box-shadow: 0 0 2px #eee;
-    font-family: "Courier New", Courier, monospace;
+    font-family: ui-monospace, "Courier New", monospace;
     font-size: 1.1em;
     resize: none;
 }
@@ -629,7 +622,7 @@ th.widgetTableColumn.sortNone::after {
     border-radius: 3px 3px;
     padding: 3px 5px;
     box-shadow: 0 0 2px #eee;
-    font-family: "Courier New", Courier, monospace;
+    font-family: ui-monospace, "Courier New", monospace;
     font-size: 1.1em;
 }
 .widgetTextField.widgetInvalid {
