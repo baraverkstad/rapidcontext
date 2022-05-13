@@ -22,8 +22,14 @@
  */
 (function (window) {
 
-    // Required browser features (in use)
-    var REQUIRED_FEATURES = [
+    /**
+     * List of all required browser features.
+     *
+     * @name REQUIRED
+     * @memberof RapidContext.Browser
+     * @constant
+     */
+    var REQUIRED = [
         "Array.isArray",
         "Array.prototype.filter",
         "Array.prototype.forEach",
@@ -56,8 +62,15 @@
         "console.warn"
     ];
 
-    // Optional browser features (potential future use)
-    var OPTIONAL_FEATURES = [
+    /**
+     * List of all optional (or recommended) browser features. These are
+     * not used in built-in libraries and apps, but will be in the future.
+     *
+     * @name OPTIONAL
+     * @memberof RapidContext.Browser
+     * @constant
+     */
+    var OPTIONAL = [
         "AbortController",
         "AbortSignal",
         "Array.from",
@@ -111,6 +124,24 @@
         { test: "async () => await Promise.resolve(true)", name: "async/await functions" },
         "display: flex"
     ];
+
+    /**
+     * Checks if the browser supports all required APIs.
+     *
+     * @return {Boolean} true if the browser is supported, or false otherwise
+     *
+     * @memberof RapidContext.Browser
+     */
+    function isSupported() {
+        var hasRequired = supports(REQUIRED);
+        var hasOptional = supports(OPTIONAL);
+        if (!hasRequired) {
+            console.error("browser: required features are missing", info());
+        } else if (!hasOptional) {
+            console.warn("browser: some recommended features are missing", info());
+        }
+        return hasRequired;
+    }
 
     /**
      * Returns browser information version and platform information.
@@ -293,18 +324,11 @@
     var module = RapidContext.Browser || (RapidContext.Browser = {});
 
     // Export namespace symbols
+    module.REQUIRED = REQUIRED;
+    module.OPTIONAL = OPTIONAL;
+    module.isSupported = isSupported;
     module.info = info;
     module.cookie = cookie;
     module.supports = supports;
-
-    // Run post-load browser checks
-    window.addEventListener("load", function () {
-        if (!supports(REQUIRED_FEATURES)) {
-            console.error("browser: required features are missing", info());
-        }
-        if (!supports(OPTIONAL_FEATURES)) {
-            console.warn("browser: some optional features are missing", info());
-        }
-    });
 
 })(this);

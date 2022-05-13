@@ -45,6 +45,10 @@ RapidContext.App.init = function (app) {
     RapidContext.Log.context("RapidContext.App.init()");
     RapidContext.Log.info("Initializing RapidContext");
     RapidContext.Util.registerFunctionNames(RapidContext, "RapidContext");
+    if (!RapidContext.Browser.isSupported()) {
+        MochiKit.DOM.removeElementClass("unsupported-browser", "hidden");
+        return MochiKit.Async.fail(new Error("Unsupported browser"));
+    }
 
     // Setup UI
     RapidContext.Util.registerSizeConstraints(document.body, "100%-20", "100%-20");
