@@ -330,7 +330,7 @@ HelpApp.prototype._showContentHtml = function (html) {
                 src = src.substring(baseUrl.length);
             }
             if (src.indexOf("://") < 0) {
-                images[i].setAttribute("src", src);
+                images[j].setAttribute("src", src);
             }
         }
     }
