@@ -123,11 +123,8 @@ RapidContext.Widget._widgetMixin = function (node/*, objOrClass, ...*/) {
             try {
                 node[key] = obj[key];
             } catch (e) {
-                // MSIE: cannot overwrite isDisabled property, skip logging
-                if (key !== "isDisabled" || !/MSIE/.test(navigator.userAgent)) {
-                    var msg = "failed to overwrite '" + key + "' in DOM node";
-                    RapidContext.Log.warn(msg, e, node);
-                }
+                var msg = "failed to overwrite '" + key + "' in DOM node";
+                RapidContext.Log.warn(msg, e, node);
             }
         }
     }
@@ -287,11 +284,8 @@ RapidContext.Widget._fireEvent = function (node, evt, detail) {
         try {
             if (node.dispatchEvent) {
                 node.dispatchEvent(evt);
-            } else if (node.parentNode && node.fireEvent) {
-                // MSIE 6-8
-                node.fireEvent("on" + evt.type, evt);
             } else {
-                var msg = "cannot fire event, no dispatchEvent/fireEvent method";
+                var msg = "cannot fire event, no dispatchEvent method";
                 RapidContext.Log.warn(msg, evt, node);
             }
         } catch (e) {
@@ -386,11 +380,7 @@ RapidContext.Widget.prototype.setAttrs = function (attrs) {
         } else if (value != null) {
             MochiKit.DOM.setNodeAttribute(this, name, value);
             if (typeof(value) != "object") {
-                try {
-                    this[name] = value;
-                } catch (ignore) {
-                    // IE8: breaks on setting button.type property
-                }
+                this[name] = value;
             }
         } else {
             this.removeAttribute(name);
@@ -498,8 +488,6 @@ RapidContext.Widget.prototype.toggleClass = function (/* ... */) {
  * @return {Boolean} `true` if the widget is disabled, or
  *         `false` otherwise
  */
-// FIXME: This function is unreachable in MSIE, due to a dynamic attribute
-//        with the same name (on all DOM nodes).
 RapidContext.Widget.prototype.isDisabled = function () {
     return this.disabled === true &&
            MochiKit.DOM.hasElementClass(this, "widgetDisabled");

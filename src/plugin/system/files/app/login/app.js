@@ -9,8 +9,6 @@ function LoginApp() {
  */
 LoginApp.prototype.start = function () {
     MochiKit.Signal.connect(this.ui.loginForm, "onsubmit", this, "_loginAuth");
-    // FIXME: MSIE 7 doesn't submit form on Enter... sigh!
-    MochiKit.Signal.connect(this.ui.loginAuth, "onclick", this, "_loginAuth");
     var user = RapidContext.App.user();
     if (user && user.id) {
         $(this.ui.loginName).text(user.name || user.id);

@@ -354,8 +354,6 @@ RapidContext.Widget.Dialog.prototype._handleResizeStart = function (evt) {
     this._offsetDim = MochiKit.Style.getElementDimensions(this);
     this._startPos = evt.mouse().page;
     evt.stop();
-    // TODO: correct handling of drag event, since IE seems to get
-    //       problems when mouse enters other HTML elements
     MochiKit.Signal.connect(document, "onmousemove", this, "_handleResize");
     MochiKit.Signal.connect(document, "onmousedown", function (evt) {
         evt.stop();

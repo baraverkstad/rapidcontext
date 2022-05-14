@@ -33,10 +33,6 @@ StartApp.prototype.start = function () {
     var show = { effect: "appear", duration: 0.2 };
     var hide = { effect: "fade", duration: 0.2, delay: 0.2 };
     this.ui.menu.setAttrs({ showAnim: show, hideAnim: hide });
-    if (/MSIE/.test(navigator.userAgent)) {
-        // TODO: MSIE 6.0 sets div width to 100%, so we hack the width
-        this.ui.menu.style.width = "250px";
-    }
     MochiKit.Signal.connect(this.proc.sessionInfo, "onsuccess", this, "_initInfoMenu");
     MochiKit.Signal.connect(this.ui.infoBar, "onmousemove", this.ui.menu, "show");
     MochiKit.Signal.connect(this.ui.infoBar, "onmouseleave", this.ui.menu, "hide");
@@ -165,11 +161,7 @@ StartApp.prototype._initApps = function () {
         var style = { margin: "0", lineHeight: "18px", color: "#1E466E" };
         var title = MochiKit.DOM.H3({ style: style }, app.name, expIcon);
         var desc = MochiKit.DOM.SPAN(null, app.description);
-        try {
-            desc.style.whiteSpace = "pre-line";
-        } catch (ignore) {
-            // May throw error in MSIE 7 since the style is unrecognized
-        }
+        desc.style.whiteSpace = "pre-line";
         var tdName = MochiKit.DOM.TD(attrs, title, desc);
         var attrs = { "class": "clickable", "data-appid": app.id };
         return MochiKit.DOM.TR(attrs, tdIcon, tdName);
