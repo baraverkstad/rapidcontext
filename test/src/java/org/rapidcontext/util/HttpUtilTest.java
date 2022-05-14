@@ -44,8 +44,12 @@ public class HttpUtilTest {
         // Edge
         ua = "Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.10136";
         assertThat(HttpUtil.Helper.browserInfo(ua), startsWith("Edge 12.10136, Windows NT 10.0, Desktop"));
+        ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.67 Safari/537.36 Edg/100.0.1185.39";
+        assertThat(HttpUtil.Helper.browserInfo(ua), startsWith("Edg 100.0.1185.39, Windows NT 10.0, Desktop"));
         ua = "Mozilla/5.0 (Windows Phone 10.0; Android 4.2.1; Microsoft; Lumia 950) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2486.0 Mobile Safari/537.36 Edge/13.10586";
         assertThat(HttpUtil.Helper.browserInfo(ua), is("Edge 13.10586, Android 4.2.1, Mobile"));
+        ua = "Mozilla/5.0 (Linux; Android 10; HD1913) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.61 Mobile Safari/537.36 EdgA/100.0.1185.50";
+        assertThat(HttpUtil.Helper.browserInfo(ua), is("EdgA 100.0.1185.50, Android 10, Mobile"));
 
         // MSIE
         ua = "Mozilla/5.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727)";

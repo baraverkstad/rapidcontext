@@ -483,12 +483,12 @@ public interface HttpUtil {
          * The list of recognized browsers.
          */
         private static Pattern[] BROWSERS = {
-            Pattern.compile("Edge/[^\\s;]+"),
+            Pattern.compile("Edg(e|A|iOS|)/([^\\s;]+)"),
             Pattern.compile("(Chrome|CriOS)/[^\\s;]+"),
             Pattern.compile("(Firefox|FxiOS)/[^\\s;]+"),
             Pattern.compile("Version/\\S+.* Safari/[^\\s;]+"),
             Pattern.compile("MSIE [^\\s;]+"),
-            Pattern.compile("Trident/.*rv:[^\\s;)]+")
+            Pattern.compile("(MSIE |Trident/.*rv:)[^\\s;)]+")
         };
 
         /**
