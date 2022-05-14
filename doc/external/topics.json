@@ -151,7 +151,7 @@
     ] },
     { "topic": "Augment.js (1.0.0)", "url": "https://olivernn.github.io/augment.js/" },
     { "topic": "Crypto-JS MD5 (3.1.2)", "url": "http://code.google.com/p/crypto-js/#MD5" },
-    { "topic": "jQuery (1.11.0)", "url": "http://api.jquery.com/" },
+    { "topic": "jQuery (3.6.0)", "url": "http://api.jquery.com/" },
     { "topic": "MochiKit (1.5 Dev)", "children": [
         { "topic": "MochiKit.Async", "url": "doc/external/mochikit/Async.html", "children": [
             { "topic": "AlreadyCalledError", "url": "doc/external/mochikit/Async.html#fn-alreadycallederror" },
