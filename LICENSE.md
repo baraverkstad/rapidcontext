@@ -60,8 +60,6 @@ This software would not be possible without the following software libraries:
     copyright (c) Alastair Tse
   - jQuery, http://jquery.com/,
     copyright (c) jQuery Foundation, Inc.
-  - Augment.js, https://olivernn.github.io/augment.js/,
-    copyright (c) Oliver Nightingale
   - Crypto-JS, http://code.google.com/p/crypto-js,
     copyright (c) Jeff Mott
   - Mozilla Rhino, http://www.mozilla.org/rhino/,
