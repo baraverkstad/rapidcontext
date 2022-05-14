@@ -174,7 +174,7 @@
             return res;
         }
         var BROWSERS = {
-            "Edge": /Edge\/([^\s;]+)/,
+            "Edge": /Edg(?:e|A|iOS|)\/([^\s;]+)/,
             "Chrome": /Chrome\/([^\s;]+)/,
             "Chrome iOS": /CriOS\/([^\s;]+)/,
             "Firefox": /Firefox\/([^\s;]+)/,
