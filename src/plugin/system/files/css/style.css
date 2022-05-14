@@ -78,7 +78,6 @@ input,
 textarea {
     font-size: 1.1em;
     font-family: ui-monospace, "Courier New", monospace;
-    font-weight: bold;
 }
 pre,
 code {
