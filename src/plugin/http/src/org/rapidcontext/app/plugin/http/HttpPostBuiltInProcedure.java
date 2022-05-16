@@ -28,6 +28,7 @@ import org.rapidcontext.core.proc.ProcedureException;
  *
  * @deprecated Use HttpRequestBuiltInProcedure instead (2017-02-01)
  */
+@Deprecated
 public class HttpPostBuiltInProcedure implements Procedure {
 
     /**
