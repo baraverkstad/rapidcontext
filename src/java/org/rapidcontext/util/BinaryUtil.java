@@ -26,7 +26,7 @@ import org.apache.commons.codec.binary.Base64;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class BinaryUtil {
+public final class BinaryUtil {
 
     /**
      * Calculates the MD5 digest hash on the UTF-8 encoding of an input string.
@@ -119,4 +119,7 @@ public class BinaryUtil {
     public static byte[] decodeBase64(String data) {
         return Base64.decodeBase64(data);
     }
+
+    // No instances
+    private BinaryUtil() {}
 }

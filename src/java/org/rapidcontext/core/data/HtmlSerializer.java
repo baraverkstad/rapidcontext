@@ -36,7 +36,7 @@ import org.rapidcontext.util.DateUtil;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class HtmlSerializer {
+public final class HtmlSerializer {
 
     /**
      * Serializes an object into an HTML representation. The string
@@ -142,4 +142,7 @@ public class HtmlSerializer {
             buffer.append(StringEscapeUtils.escapeHtml4(str));
         }
     }
+
+    // No instances
+    private HtmlSerializer() {}
 }

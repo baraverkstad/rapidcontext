@@ -72,6 +72,11 @@ public class ScriptApplication {
     public boolean trace = false;
 
     /**
+     * Creates a new command-line application instance.
+     */
+    public ScriptApplication() {}
+
+    /**
      * Runs a single command.
      *
      * @param params         the procedure name and arguments

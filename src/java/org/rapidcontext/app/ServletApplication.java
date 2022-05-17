@@ -66,6 +66,11 @@ public class ServletApplication extends HttpServlet {
     private ApplicationContext ctx = null;
 
     /**
+     * Creates a new application servlet instance.
+     */
+    public ServletApplication() {}
+
+    /**
      * Initializes this servlet.
      *
      * @throws ServletException if the initialization failed

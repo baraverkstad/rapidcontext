@@ -41,7 +41,7 @@ import org.rapidcontext.util.FileUtil;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class Main {
+public final class Main {
 
     /**
      * The class logger.
@@ -394,4 +394,7 @@ public class Main {
         }
         return info;
     }
+
+    // No instances
+    private Main() {}
 }

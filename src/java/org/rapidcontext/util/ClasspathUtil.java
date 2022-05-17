@@ -27,7 +27,7 @@ import java.util.jar.Manifest;
  * @author   Per Cederberg
  * @version  1.0
  */
-public abstract class ClasspathUtil {
+public final class ClasspathUtil {
 
     /**
      * Returns the class loader for the specified class.
@@ -167,4 +167,7 @@ public abstract class ClasspathUtil {
         }
         return null;
     }
+
+    // No instances
+    private ClasspathUtil() {}
 }

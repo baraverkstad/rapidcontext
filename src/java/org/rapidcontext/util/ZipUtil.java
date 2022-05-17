@@ -27,7 +27,7 @@ import java.util.zip.ZipFile;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class ZipUtil {
+public final class ZipUtil {
 
     /**
      * Unpacks a ZIP file into a specified directory.
@@ -73,4 +73,7 @@ public class ZipUtil {
             }
         }
     }
+
+    // No instances
+    private ZipUtil() {}
 }

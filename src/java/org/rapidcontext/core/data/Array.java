@@ -107,6 +107,11 @@ public class Array implements Iterable<Object> {
         return buffer.toString();
     }
 
+    /**
+     * Returns an iterator for all elements in the array.
+     *
+     * @return the object iterator
+     */
     @Override
     public Iterator<Object> iterator() {
         return (list == null) ? Collections.emptyIterator() : list.iterator();
@@ -275,6 +280,7 @@ public class Array implements Iterable<Object> {
      * array is too small, a new one of the same type is allocated.
      *
      * @param arr            the array to store the values
+     * @param <T>            the base type for all values
      *
      * @return an array with all values
      */

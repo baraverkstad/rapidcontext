@@ -27,7 +27,7 @@ import java.util.logging.Logger;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class Scheduler {
+public final class Scheduler {
     // TODO: create threads when needed, terminate when no longer used
     // TODO: add support for one-off (potentially long-running) tasks
 
@@ -107,4 +107,7 @@ public class Scheduler {
             }
         }
     }
+
+    // No instances
+    private Scheduler() {}
 }

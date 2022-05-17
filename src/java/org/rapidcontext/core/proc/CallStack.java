@@ -31,6 +31,11 @@ public class CallStack {
     private ArrayList<Procedure> stack = new ArrayList<>();
 
     /**
+     * Creates a new empty procedure call stack.
+     */
+    public CallStack() {}
+
+    /**
      * Checks if the specified procedure exists in the call stack.
      *
      * @param proc           the procedure definition

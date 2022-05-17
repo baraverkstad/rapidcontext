@@ -87,7 +87,7 @@ public interface HttpUtil {
      * The HTTP status codes as defined in RFC1945 (HTTP/1.0), RFC2616
      * (HTTP/1.1), and RFC4918 (WebDAV).
      */
-    public static abstract class STATUS {
+    public static interface STATUS {
 
         // 1xx Informational
 
@@ -477,12 +477,12 @@ public interface HttpUtil {
     /**
      * Some static utility methods for HTTP.
      */
-    public abstract class Helper {
+    public static final class Helper {
 
         /**
          * The list of recognized browsers.
          */
-        private static Pattern[] BROWSERS = {
+        private static final Pattern[] BROWSERS = {
             Pattern.compile("Edg(e|A|iOS|)/([^\\s;]+)"),
             Pattern.compile("(Chrome|CriOS)/[^\\s;]+"),
             Pattern.compile("(Firefox|FxiOS)/[^\\s;]+"),
@@ -494,7 +494,7 @@ public interface HttpUtil {
         /**
          * The list of recognized platforms (operating systems).
          */
-        private static Pattern[] PLATFORMS = {
+        private static final Pattern[] PLATFORMS = {
             Pattern.compile("Android [^;)]+"),
             Pattern.compile("(iPhone|CPU) OS [\\d_]+"),
             Pattern.compile("Mac OS X [^;)]+"),
@@ -505,7 +505,7 @@ public interface HttpUtil {
         /**
          * The list of recognized devices.
          */
-        private static Pattern[] DEVICES = {
+        private static final Pattern[] DEVICES = {
             Pattern.compile("iPad|iPhone|iPod"),
             Pattern.compile("Tablet"),
             Pattern.compile("Mobile"),
@@ -595,5 +595,8 @@ public interface HttpUtil {
                 return href;
             }
         }
+
+        // No instances
+        private Helper() {}
     }
 }

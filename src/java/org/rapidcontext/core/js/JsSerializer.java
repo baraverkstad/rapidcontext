@@ -49,7 +49,7 @@ import org.rapidcontext.core.storage.StorableObject;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class JsSerializer {
+public final class JsSerializer {
 
     /**
      * The class logger.
@@ -318,4 +318,7 @@ public class JsSerializer {
             return obj;
         }
     }
+
+    // No instances
+    private JsSerializer() {}
 }

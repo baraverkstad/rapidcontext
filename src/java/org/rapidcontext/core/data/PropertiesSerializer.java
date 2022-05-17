@@ -64,7 +64,7 @@ import org.rapidcontext.core.storage.StorableObject;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class PropertiesSerializer {
+public final class PropertiesSerializer {
 
     /**
      * Serializes an object into an properties representation. The
@@ -592,4 +592,7 @@ public class PropertiesSerializer {
         }
         return props;
     }
+
+    // No instances
+    private PropertiesSerializer() {}
 }

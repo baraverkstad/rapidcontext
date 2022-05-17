@@ -69,6 +69,11 @@ public class LogFormatter extends Formatter {
     }
 
     /**
+     * Creates a new log formatter instance.
+     */
+    public LogFormatter() {}
+
+    /**
      * Formats the specified log record for output.
      *
      * @param record         the log record to format

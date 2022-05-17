@@ -24,17 +24,13 @@ import org.apache.commons.lang3.time.FastDateFormat;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class DateUtil {
+public final class DateUtil {
 
-    /**
-     * The ISO date format.
-     */
+    // The ISO date format.
     private static final FastDateFormat ISO_DATE_FORMAT =
         FastDateFormat.getInstance("yyyy-MM-dd");
 
-    /**
-     * The ISO date and time format.
-     */
+    // The ISO date and time format.
     private static final FastDateFormat ISO_DATETIME_FORMAT =
         FastDateFormat.getInstance("yyyy-MM-dd HH:mm:ss");
 
@@ -79,4 +75,7 @@ public class DateUtil {
     public static String formatIsoTime(Date date) {
         return (date == null) ? null : ISO_TIME_FORMAT.format(date);
     }
+
+    // No instances
+    private DateUtil() {}
 }

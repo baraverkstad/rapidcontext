@@ -99,6 +99,11 @@ public class ServerApplication {
     }
 
     /**
+     * Creates a new stand-alone application instance.
+     */
+    public ServerApplication() {}
+
+    /**
      * Checks if the server is currently running.
      *
      * @return true if the server is running, or

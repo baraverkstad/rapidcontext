@@ -26,7 +26,7 @@ import org.apache.commons.lang3.ArrayUtils;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class Mime {
+public final class Mime {
 
     /**
      * The MIME types commonly used for text files.
@@ -283,4 +283,7 @@ public class Mime {
         }
         return false;
     }
+
+    // No instances
+    private Mime() {}
 }

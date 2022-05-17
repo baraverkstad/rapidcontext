@@ -31,7 +31,7 @@ import org.apache.commons.lang3.StringUtils;
  * @author   Per Cederberg
  * @version  1.0
  */
-public abstract class FileUtil {
+public final class FileUtil {
 
     /**
      * The base temporary directory to use.
@@ -329,4 +329,7 @@ public abstract class FileUtil {
         file.deleteOnExit();
         return file;
     }
+
+    // No instances
+    private FileUtil() {}
 }

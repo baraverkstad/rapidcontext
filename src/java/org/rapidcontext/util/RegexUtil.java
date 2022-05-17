@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class RegexUtil {
+public final class RegexUtil {
 
     /**
      * Returns the first match for a regular expression.
@@ -63,4 +63,7 @@ public class RegexUtil {
         }
         return null;
     }
+
+    // No instances
+    private RegexUtil() {}
 }

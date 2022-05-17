@@ -35,7 +35,7 @@ import org.rapidcontext.core.storage.StorableObject;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class XmlSerializer {
+public final class XmlSerializer {
 
     /**
      * Serializes an object into an XML representation. The string
@@ -176,4 +176,7 @@ public class XmlSerializer {
             buffer.append(c);
         }
     }
+
+    // No instances
+    private XmlSerializer() {}
 }

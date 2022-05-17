@@ -35,7 +35,7 @@ import org.rapidcontext.util.BinaryUtil;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class SecurityContext {
+public final class SecurityContext {
 
     /**
      * The class logger.
@@ -338,4 +338,7 @@ public class SecurityContext {
     public static void authClear() {
         authUser.set(null);
     }
+
+    // No instances
+    private SecurityContext() {}
 }

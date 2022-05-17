@@ -24,11 +24,9 @@ import org.apache.commons.lang3.SystemUtils;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class AppUtils {
+public final class AppUtils {
 
-    /**
-     * The default array of browser open commands (on Linux).
-     */
+    // The default array of browser open commands (on Linux).
     private static final String[] BROWSERS = {
         "xdg-open", "gnome-open", "kde-open",
         "google-chrome", "firefox", "mozilla"
@@ -74,4 +72,7 @@ public class AppUtils {
             throw new Exception("No browser found.");
         }
     }
+
+    // No instances
+    private AppUtils() {}
 }
