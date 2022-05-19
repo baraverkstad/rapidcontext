@@ -14,11 +14,12 @@
 
 package org.rapidcontext.core.js;
 
-import org.mozilla.javascript.BaseFunction;
+import org.mozilla.javascript.Callable;
 import org.mozilla.javascript.Context;
-import org.mozilla.javascript.NativeArray;
+import org.mozilla.javascript.LambdaFunction;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.ScriptRuntime;
 import org.mozilla.javascript.Wrapper;
 import org.rapidcontext.core.data.Array;
 
@@ -45,10 +46,11 @@ public class ArrayWrapper extends ScriptableObject implements Wrapper {
     public ArrayWrapper(Array arr, Scriptable parentScope) {
         super(parentScope, getArrayPrototype(parentScope));
         this.arr = arr;
-        // Warning: This apparently also calls put() with the specified value...
-        //          which works this time, but not always.
-        defineProperty("length", (Object) null, DONTENUM | PERMANENT);
-        defineProperty("toJSON", (Object) null, DONTENUM | PERMANENT);
+        setAttributes("length", DONTENUM | PERMANENT);
+        setAttributes("toJSON", READONLY | DONTENUM | PERMANENT);
+        for (int i = 0; i < arr.size(); i++) {
+            setAttributes(String.valueOf(i), EMPTY);
+        }
     }
 
     /**
@@ -65,7 +67,7 @@ public class ArrayWrapper extends ScriptableObject implements Wrapper {
      *
      * @param instance       the object to check
      *
-     * @return always returns false as this is not a class
+     * @return always returns false (no instances possible)
      */
     public boolean hasInstance(Scriptable instance) {
         return false;
@@ -94,25 +96,26 @@ public class ArrayWrapper extends ScriptableObject implements Wrapper {
      *         NOT_FOUND if not found
      */
     public Object get(String name, Scriptable start) {
-        if (name.equals("length")) {
+        switch (name) {
+        case "length":
             return Integer.valueOf(arr.size());
-        } else if (name.equals("toJSON")) {
-            return new BaseFunction(start, getFunctionPrototype(start)) {
-                public String getFunctionName() {
-                    return "toJSON";
-                }
-                public int getArity() {
-                    return 1;
-                }
-                public int getLength() {
-                    return 1;
-                }
+        case "toJSON":
+            return new LambdaFunction(this, name, 0, new Callable() {
                 public Object call(Context cx, Scriptable scope, Scriptable thisObj, Object[] args) {
-                    return new NativeArray(getArray());
+                    Object[] values = new Object[arr.size()];
+                    for (int i = 0; i < arr.size(); i++) {
+                        values[i] = get(i, thisObj);
+                    }
+                    return cx.newArray(scope, values);
                 }
-            };
-        } else {
-            return super.get(name, start);
+            });
+        default:
+            double idx = ScriptRuntime.toNumber(name);
+            if (!Double.isNaN(idx) && idx >= 0 && idx < Integer.MAX_VALUE) {
+                return get((int) idx, start);
+            } else {
+                return super.get(name, start);
+            }
         }
     }
 
@@ -127,22 +130,11 @@ public class ArrayWrapper extends ScriptableObject implements Wrapper {
      */
     public Object get(int index, Scriptable start) {
         if (arr.containsIndex(index)) {
-            Object val = JsSerializer.wrap(arr.get(index), this);
-            if (!arr.isSealed()) {
-                arr.set(index, val);
-            }
-            return val;
+            // FIXME: fetch from wrapped object cache
+            // FIXME: store to wrapped object cache
+            return JsSerializer.wrap(arr.get(index), this);
         }
         return NOT_FOUND;
-    }
-
-    /**
-     * Returns an array with all indexed properties from this object.
-     *
-     * @return an array with all values
-     */
-    public Object[] getArray() {
-        return arr.values();
     }
 
     /**
@@ -153,16 +145,27 @@ public class ArrayWrapper extends ScriptableObject implements Wrapper {
      * @param value          the value to set
      */
     public void put(String name, Scriptable start, Object value) {
-        if (name.equals("length") && value instanceof Number) {
-            int len = ((Number) value).intValue();
-            while (arr.size() < len) {
-                arr.add(null);
-            }
-            while (arr.size() > len) {
-                arr.remove(arr.size() - 1);
+        double idx;
+        if (name.equals("length")) {
+            idx = ScriptRuntime.toNumber(value);
+            if (!Double.isNaN(idx) && idx >= 0 && idx < Integer.MAX_VALUE) {
+                long len = ScriptRuntime.toUint32(idx);
+                while (arr.size() < len) {
+                    put(arr.size(), start, null);
+                }
+                while (arr.size() > len) {
+                    int last = arr.size() - 1;
+                    arr.remove(last);
+                    super.delete(String.valueOf(last));
+                }
             }
         } else {
-            super.put(name, start, value);
+            idx = ScriptRuntime.toNumber(name);
+            if (!Double.isNaN(idx) && idx >= 0 && idx < Integer.MAX_VALUE) {
+                put((int) ScriptRuntime.toUint32(idx), start, value);
+            } else {
+                super.put(name, start, value);
+            }
         }
     }
 
@@ -175,6 +178,7 @@ public class ArrayWrapper extends ScriptableObject implements Wrapper {
      */
     public void put(int index, Scriptable start, Object value) {
         arr.set(index, value);
+        setAttributes(String.valueOf(index), EMPTY);
     }
 
     /**
@@ -195,6 +199,7 @@ public class ArrayWrapper extends ScriptableObject implements Wrapper {
      * @return the unwrapped object
      */
     public Object unwrap() {
+        // FIXME: clear wrapped object cache
         if (!arr.isSealed()) {
             for (int i = 0; i < arr.size(); i++) {
                 arr.set(i, JsSerializer.unwrap(arr.get(i)));

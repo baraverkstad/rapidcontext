@@ -14,8 +14,6 @@
 
 package org.rapidcontext.core.js;
 
-import java.util.Arrays;
-
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.Wrapper;
@@ -44,6 +42,9 @@ public class DictWrapper extends ScriptableObject implements Wrapper {
     public DictWrapper(Dict dict, Scriptable parentScope) {
         super(parentScope, getObjectPrototype(parentScope));
         this.dict = dict;
+        for (String key : dict.keys()) {
+            setAttributes(key, EMPTY);
+        }
     }
 
     /**
@@ -60,33 +61,10 @@ public class DictWrapper extends ScriptableObject implements Wrapper {
      *
      * @param instance       the object to check
      *
-     * @return always returns false as this is not a class
+     * @return always returns false (no instances possible)
      */
     public boolean hasInstance(Scriptable instance) {
         return false;
-    }
-
-    /**
-     * Checks if a property is defined in this object.
-     *
-     * @param name           the name of the property
-     * @param start          the object in which the lookup began
-     *
-     * @return true if the property is defined, or
-     *         false otherwise
-     */
-    public boolean has(String name, Scriptable start) {
-        return dict.containsKey(name) || super.has(name, start);
-    }
-
-    /**
-     * Returns an array of defined property keys.
-     *
-     * @return an array of defined property keys
-     */
-    public Object[] getIds() {
-        String[] keys = dict.keys();
-        return Arrays.copyOf(keys, keys.length, Object[].class);
     }
 
     /**
@@ -100,11 +78,9 @@ public class DictWrapper extends ScriptableObject implements Wrapper {
      */
     public Object get(String name, Scriptable start) {
         if (dict.containsKey(name)) {
-            Object val = JsSerializer.wrap(dict.get(name), this);
-            if (!dict.isSealed()) {
-                dict.set(name, val);
-            }
-            return val;
+            // FIXME: fetch from wrapped object cache
+            // FIXME: store to wrapped object cache
+            return JsSerializer.wrap(dict.get(name), this);
         } else {
             return super.get(name, start);
         }
@@ -120,6 +96,7 @@ public class DictWrapper extends ScriptableObject implements Wrapper {
     public void put(String name, Scriptable start, Object value) {
         if (name != null && name.length() > 0) {
             dict.set(name, value);
+            setAttributes(name, EMPTY);
         }
     }
 

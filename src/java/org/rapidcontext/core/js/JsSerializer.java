@@ -32,6 +32,7 @@ import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.TextEncoding;
 import org.rapidcontext.core.storage.StorableObject;
+import org.rapidcontext.util.DateUtil;
 
 /**
  * An object serializer and unserializer for the JavaScript object
@@ -102,7 +103,7 @@ public final class JsSerializer {
         } else if (obj instanceof Number) {
             serialize((Number) obj, buffer);
         } else if (obj instanceof Date) {
-            buffer.append("\"@" + ((Date) obj).getTime() + "\"");
+            buffer.append(TextEncoding.encodeJson(DateUtil.asEpochMillis((Date) obj)));
         } else if (obj instanceof Class) {
             buffer.append(TextEncoding.encodeJson(((Class<?>) obj).getName()));
         } else if (obj instanceof StorableObject) {
@@ -255,10 +256,14 @@ public final class JsSerializer {
      * @see org.rapidcontext.core.data.Dict
      */
     public static Object wrap(Object obj, Scriptable scope) {
-        if (obj instanceof Dict) {
+        if (obj instanceof StorableObject) {
+            return new DictWrapper(((StorableObject) obj).serialize(), scope);
+        } else if (obj instanceof Dict) {
             return new DictWrapper((Dict) obj, scope);
         } else if (obj instanceof Array) {
             return new ArrayWrapper((Array) obj, scope);
+        } else if (obj instanceof Date) {
+            return DateUtil.asEpochMillis((Date) obj);
         } else {
             return obj;
         }

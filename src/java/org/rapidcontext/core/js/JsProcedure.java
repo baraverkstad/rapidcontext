@@ -112,7 +112,7 @@ public class JsProcedure extends AddOnProcedure {
                 } else if (type == Bindings.DATA) {
                     ScriptableObject.putProperty(scope, name, value);
                 } else if (type == Bindings.PROCEDURE) {
-                    value = new ProcedureWrapper(cx, (Procedure) value, scope);
+                    value = new ProcedureWrapper(cx, name, (Procedure) value, scope);
                     ScriptableObject.putProperty(scope, name, value);
                 } else if (type == Bindings.CONNECTION) {
                     value = new ConnectionWrapper(cx, (Channel) value, scope);

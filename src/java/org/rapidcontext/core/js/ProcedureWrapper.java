@@ -14,12 +14,12 @@
 
 package org.rapidcontext.core.js;
 
+import org.mozilla.javascript.BaseFunction;
 import org.mozilla.javascript.Context;
-import org.mozilla.javascript.Function;
 import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.WrappedException;
 import org.mozilla.javascript.Wrapper;
+import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
@@ -31,7 +31,7 @@ import org.rapidcontext.core.proc.ProcedureException;
  * @author   Per Cederberg
  * @version  1.0
  */
-class ProcedureWrapper implements Function, Wrapper {
+class ProcedureWrapper extends BaseFunction implements Wrapper {
 
     /**
      * The procedure library.
@@ -39,32 +39,28 @@ class ProcedureWrapper implements Function, Wrapper {
     private CallContext cx = null;
 
     /**
-     * The procedure name.
+     * The bound procedure name.
+     */
+    private String name;
+
+    /**
+     * The wrapped procedure.
      */
     private Procedure proc = null;
-
-    /**
-     * The object prototype.
-     */
-    private Scriptable prototype;
-
-    /**
-     * The object parent scope.
-     */
-    private Scriptable parentScope;
 
     /**
      * Creates a new procedure wrapper call function.
      *
      * @param cx             the procedure call context
+     * @param name           the bound procedure name
      * @param proc           the procedure definition
      * @param parentScope    the object parent scope
      */
-    ProcedureWrapper(CallContext cx, Procedure proc, Scriptable parentScope) {
+    ProcedureWrapper(CallContext cx, String name, Procedure proc, Scriptable parentScope) {
+        super(parentScope, getFunctionPrototype(parentScope));
         this.cx = cx;
+        this.name = name;
         this.proc = proc;
-        this.prototype = ScriptableObject.getFunctionPrototype(parentScope);
-        this.parentScope = parentScope;
     }
 
     /**
@@ -73,7 +69,18 @@ class ProcedureWrapper implements Function, Wrapper {
      * @return the class name
      */
     public String getClassName() {
-        return "Procedure";
+        return "ProcedureWrapper";
+    }
+
+    /**
+     * Checks for JavaScript instance objects (always returns false).
+     *
+     * @param instance       the object to check
+     *
+     * @return always returns false (no instances possible)
+     */
+    public boolean hasInstance(Scriptable instance) {
+        return false;
     }
 
     /**
@@ -86,153 +93,26 @@ class ProcedureWrapper implements Function, Wrapper {
      *         NOT_FOUND if not found
      */
     public Object get(String name, Scriptable start) {
-        return NOT_FOUND;
-    }
-
-    /**
-     * Returns an indexed property from this object.
-     *
-     * @param index          the index of the property
-     * @param start          the object in which the lookup began
-     *
-     * @return the value of the property, or
-     *         NOT_FOUND if not found
-     */
-    public Object get(int index, Scriptable start) {
-        return NOT_FOUND;
-    }
-
-    /**
-     * Checks if a property is defined in this object.
-     *
-     * @param name           the name of the property
-     * @param start          the object in which the lookup began
-     *
-     * @return true if the property is defined, or
-     *         false otherwise
-     */
-    public boolean has(String name, Scriptable start) {
-        return false;
-    }
-
-    /**
-     * Checks if an index is defined in this object.
-     *
-     * @param index          the index of the property
-     * @param start          the object in which the lookup began
-     *
-     * @return true if the index is defined, or
-     *         false otherwise
-     */
-    public boolean has(int index, Scriptable start) {
-        return false;
-    }
-
-    /**
-     * Sets a property in this object.
-     *
-     * @param name           the name of the property
-     * @param start          the object in which the lookup began
-     * @param value          the value to set
-     */
-    public void put(String name, Scriptable start, Object value) {
-        // Do nothing, procedure is read-only
-    }
-
-    /**
-     * Sets an indexed property in this object.
-     *
-     * @param index          the index of the property
-     * @param start          the object in which the lookup began
-     * @param value          the value to set
-     */
-    public void put(int index, Scriptable start, Object value) {
-        // Do nothing, procedure is read-only
-    }
-
-    /**
-     * Removes a property from this object.
-     *
-     * @param name           the name of the property
-     */
-    public void delete(String name) {
-        // Do nothing, procedure is read-only
-    }
-
-    /**
-     * Removes an indexed property from this object.
-     *
-     * @param index          the index of the property
-     */
-    public void delete(int index) {
-        // Do nothing, procedure is read-only
-    }
-
-    /**
-     * Returns the prototype of the object.
-     *
-     * @return the prototype of the object
-     */
-    public Scriptable getPrototype() {
-        return this.prototype;
-    }
-
-    /**
-     * Sets the prototype of the object.
-     *
-     * @param prototype      the prototype object
-     */
-    public void setPrototype(Scriptable prototype) {
-        // Do nothing, procedure is read-only
-    }
-
-    /**
-     * Returns the parent (enclosing) scope of the object.
-     *
-     * @return the parent (enclosing) scope of the object
-     */
-    public Scriptable getParentScope() {
-        return this.parentScope;
-    }
-
-    /**
-     * Sets the parent (enclosing) scope of the object.
-     *
-     * @param parentScope    the parent scope of the object
-     */
-    public void setParentScope(Scriptable parentScope) {
-        // Do nothing, procedure is read-only
-    }
-
-    /**
-     * Returns an array of defined property keys.
-     *
-     * @return an array of defined property keys
-     */
-    public Object[] getIds() {
-        return new Object[0];
-    }
-
-    /**
-     * Returns the default value of this object.
-     *
-     * @param typeHint       type type hint class
-     *
-     * @return the default value of this object
-     */
-    public Object getDefaultValue(Class<?> typeHint) {
-        return ScriptableObject.getDefaultValue(this, typeHint);
-    }
-
-    /**
-     * Checks for JavaScript instance objects (always returns false).
-     *
-     * @param instance       the object to check
-     *
-     * @return always returns false as this is not a class
-     */
-    public boolean hasInstance(Scriptable instance) {
-        return false;
+        switch (name) {
+        case "name":
+            return this.name;
+        case "arity":
+        case "length":
+            Bindings bindings = proc.getBindings();
+            int args = 0;
+            try {
+                for (String key : bindings.getNames()) {
+                    if (bindings.getType(key) == Bindings.ARGUMENT) {
+                        args++;
+                    }
+                }
+            } catch (ProcedureException ignore) {
+                // Ignore this exception
+            }
+            return Integer.valueOf(args);
+        default:
+            return super.get(name, start);
+        }
     }
 
     /**
@@ -261,23 +141,6 @@ class ProcedureWrapper implements Function, Wrapper {
         } catch (ProcedureException e) {
             throw new WrappedException(e);
         }
-    }
-
-    /**
-     * Calls this function as a constructor. This method will not do
-     * anything.
-     *
-     * @param scriptContext  the current script context
-     * @param scope          the enclosing scope of the caller except
-     *                       when the function is called from a closure
-     * @param args           the array of arguments
-     *
-     * @return always returns null
-     */
-    public Scriptable construct(Context scriptContext,
-                                Scriptable scope,
-                                Object[] args) {
-        return null;
     }
 
     /**

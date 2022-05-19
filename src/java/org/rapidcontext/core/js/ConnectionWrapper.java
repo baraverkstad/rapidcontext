@@ -16,10 +16,12 @@ package org.rapidcontext.core.js;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.HashSet;
+import java.util.Set;
 
+import org.mozilla.javascript.BaseFunction;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.EvaluatorException;
-import org.mozilla.javascript.Function;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.Wrapper;
@@ -33,27 +35,25 @@ import org.rapidcontext.core.type.Channel;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class ConnectionWrapper implements Scriptable, Wrapper {
+public class ConnectionWrapper extends ScriptableObject implements Wrapper {
+
+    // Hidden method names
+    private static final Set<String> HIDDEN = Set.of(
+        "getConnection", "validate", "invalidate",
+        "equals", "getClass", "hashCode", "notify", "notifyAll", "wait"
+    );
 
     /**
      * The procedure call context in use.
      */
-    CallContext cx = null;
+    private CallContext cx = null;
 
     /**
      * The encapsulated connection channel.
      */
     private Channel channel;
 
-    /**
-     * The object prototype.
-     */
-    private Scriptable prototype;
-
-    /**
-     * The object parent scope.
-     */
-    private Scriptable parentScope;
+    private HashSet<String> methods = new HashSet<>();
 
     /**
      * Creates a new JavaScript connection wrapper.
@@ -63,10 +63,17 @@ public class ConnectionWrapper implements Scriptable, Wrapper {
      * @param parentScope    the object parent scope
      */
     public ConnectionWrapper(CallContext cx, Channel channel, Scriptable parentScope) {
+        super(parentScope, getObjectPrototype(parentScope));
         this.cx = cx;
         this.channel = channel;
-        this.prototype = ScriptableObject.getObjectPrototype(parentScope);
-        this.parentScope = parentScope;
+        for (Method m : channel.getClass().getMethods()) {
+            boolean isPublic = (m.getModifiers() & Modifier.PUBLIC) > 0;
+            String name = m.getName();
+            if (isPublic && !HIDDEN.contains(name)) {
+                methods.add(name);
+                setAttributes(name, READONLY | PERMANENT);
+            }
+        }
     }
 
     /**
@@ -84,7 +91,18 @@ public class ConnectionWrapper implements Scriptable, Wrapper {
      * @return the class name
      */
     public String getClassName() {
-        return "Connection";
+        return "ConnectionWrapper";
+    }
+
+    /**
+     * Checks for JavaScript instance objects (always returns false).
+     *
+     * @param instance       the object to check
+     *
+     * @return always returns false (no instances possible)
+     */
+    public boolean hasInstance(Scriptable instance) {
+        return false;
     }
 
     /**
@@ -97,169 +115,11 @@ public class ConnectionWrapper implements Scriptable, Wrapper {
      *         NOT_FOUND if not found
      */
     public Object get(String name, Scriptable start) {
-        if (has(name, start)) {
-            return new ConnectionMethodWrapper(name, this);
+        if (methods.contains(name)) {
+            return new ConnectionMethodWrapper(name);
         } else {
-            return NOT_FOUND;
+            return super.get(name, start);
         }
-    }
-
-    /**
-     * Returns an indexed property from this object.
-     *
-     * @param index          the index of the property
-     * @param start          the object in which the lookup began
-     *
-     * @return the value of the property, or
-     *         NOT_FOUND if not found
-     */
-    public Object get(int index, Scriptable start) {
-        return NOT_FOUND;
-    }
-
-    /**
-     * Checks if a property is defined in this object.
-     *
-     * @param name           the name of the property
-     * @param start          the object in which the lookup began
-     *
-     * @return true if the property is defined, or
-     *         false otherwise
-     */
-    public boolean has(String name, Scriptable start) {
-        if (name.equals("getConnection") ||
-            name.equals("validate") ||
-            name.equals("invalidate")) {
-            // Hide internal methods for connection handling
-            return false;
-        }
-        for (Method m : channel.getClass().getMethods()) {
-            if (m.getName().equals(name) &&
-                (m.getModifiers() & Modifier.PUBLIC) > 0) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Checks if an index is defined in this object.
-     *
-     * @param index          the index of the property
-     * @param start          the object in which the lookup began
-     *
-     * @return true if the index is defined, or
-     *         false otherwise
-     */
-    public boolean has(int index, Scriptable start) {
-        return false;
-    }
-
-    /**
-     * Sets a property in this object.
-     *
-     * @param name           the name of the property
-     * @param start          the object in which the lookup began
-     * @param value          the value to set
-     */
-    public void put(String name, Scriptable start, Object value) {
-        // Do nothing, connection is read-only
-    }
-
-    /**
-     * Sets an indexed property in this object.
-     *
-     * @param index          the index of the property
-     * @param start          the object in which the lookup began
-     * @param value          the value to set
-     */
-    public void put(int index, Scriptable start, Object value) {
-        // Do nothing, connection is read-only
-    }
-
-    /**
-     * Removes a property from this object.
-     *
-     * @param name           the name of the property
-     */
-    public void delete(String name) {
-        // Do nothing, connection is read-only
-    }
-
-    /**
-     * Removes an indexed property from this object.
-     *
-     * @param index          the index of the property
-     */
-    public void delete(int index) {
-        // Do nothing, connection is read-only
-    }
-
-    /**
-     * Returns the prototype of the object.
-     *
-     * @return the prototype of the object
-     */
-    public Scriptable getPrototype() {
-        return this.prototype;
-    }
-
-    /**
-     * Sets the prototype of the object.
-     *
-     * @param prototype      the prototype object
-     */
-    public void setPrototype(Scriptable prototype) {
-        // Do nothing, connection is read-only
-    }
-
-    /**
-     * Returns the parent (enclosing) scope of the object.
-     *
-     * @return the parent (enclosing) scope of the object
-     */
-    public Scriptable getParentScope() {
-        return this.parentScope;
-    }
-
-    /**
-     * Sets the parent (enclosing) scope of the object.
-     *
-     * @param parentScope    the parent scope of the object
-     */
-    public void setParentScope(Scriptable parentScope) {
-        // Do nothing, connection is read-only
-    }
-
-    /**
-     * Returns an array of defined property keys.
-     *
-     * @return an array of defined property keys
-     */
-    public Object[] getIds() {
-        return new Object[0];
-    }
-
-    /**
-     * Returns the default value of this object.
-     *
-     * @param typeHint       type type hint class
-     *
-     * @return the default value of this object
-     */
-    public Object getDefaultValue(Class<?> typeHint) {
-        return ScriptableObject.getDefaultValue(this, typeHint);
-    }
-
-    /**
-     * Checks for JavaScript instance objects (always returns false).
-     *
-     * @param instance       the object to check
-     *
-     * @return always returns false as this is not a class
-     */
-    public boolean hasInstance(Scriptable instance) {
-        return false;
     }
 
     /**
@@ -281,7 +141,7 @@ public class ConnectionWrapper implements Scriptable, Wrapper {
      * @author   Per Cederberg
      * @version  1.0
      */
-    private class ConnectionMethodWrapper implements Function {
+    private class ConnectionMethodWrapper extends BaseFunction {
 
         /**
          * The method name.
@@ -289,27 +149,13 @@ public class ConnectionWrapper implements Scriptable, Wrapper {
         private String methodName;
 
         /**
-         * The function prototype.
-         */
-        private Scriptable functionPrototype;
-
-        /**
-         * The parent connection wrapper.
-         */
-        private ConnectionWrapper parent;
-
-        /**
          * Creates a new connection method wrapper.
          *
          * @param methodName     the method name
-         * @param parent         the object parent scope
          */
-        public ConnectionMethodWrapper(String methodName,
-                                       ConnectionWrapper parent) {
+        public ConnectionMethodWrapper(String methodName) {
+            super(ConnectionWrapper.this, getFunctionPrototype(ConnectionWrapper.this));
             this.methodName = methodName;
-            this.functionPrototype =
-                ScriptableObject.getFunctionPrototype(parent);
-            this.parent = parent;
         }
 
         /**
@@ -318,7 +164,18 @@ public class ConnectionWrapper implements Scriptable, Wrapper {
          * @return the class name
          */
         public String getClassName() {
-            return "ConnectionFunction";
+            return "ConnectionMethodWrapper";
+        }
+
+        /**
+         * Checks for JavaScript instance objects (always returns false).
+         *
+         * @param instance       the object to check
+         *
+         * @return always returns false (no instances possible)
+         */
+        public boolean hasInstance(Scriptable instance) {
+            return false;
         }
 
         /**
@@ -331,153 +188,22 @@ public class ConnectionWrapper implements Scriptable, Wrapper {
          *         NOT_FOUND if not found
          */
         public Object get(String name, Scriptable start) {
-            return NOT_FOUND;
-        }
-
-        /**
-         * Returns an indexed property from this object.
-         *
-         * @param index          the index of the property
-         * @param start          the object in which the lookup began
-         *
-         * @return the value of the property, or
-         *         NOT_FOUND if not found
-         */
-        public Object get(int index, Scriptable start) {
-            return NOT_FOUND;
-        }
-
-        /**
-         * Checks if a property is defined in this object.
-         *
-         * @param name           the name of the property
-         * @param start          the object in which the lookup began
-         *
-         * @return true if the property is defined, or
-         *         false otherwise
-         */
-        public boolean has(String name, Scriptable start) {
-            return false;
-        }
-
-        /**
-         * Checks if an index is defined in this object.
-         *
-         * @param index          the index of the property
-         * @param start          the object in which the lookup began
-         *
-         * @return true if the index is defined, or
-         *         false otherwise
-         */
-        public boolean has(int index, Scriptable start) {
-            return false;
-        }
-
-        /**
-         * Sets a property in this object.
-         *
-         * @param name           the name of the property
-         * @param start          the object in which the lookup began
-         * @param value          the value to set
-         */
-        public void put(String name, Scriptable start, Object value) {
-            // Do nothing, connection method is read-only
-        }
-
-        /**
-         * Sets an indexed property in this object.
-         *
-         * @param index          the index of the property
-         * @param start          the object in which the lookup began
-         * @param value          the value to set
-         */
-        public void put(int index, Scriptable start, Object value) {
-            // Do nothing, connection method is read-only
-        }
-
-        /**
-         * Removes a property from this object.
-         *
-         * @param name           the name of the property
-         */
-        public void delete(String name) {
-            // Do nothing, connection method is read-only
-        }
-
-        /**
-         * Removes an indexed property from this object.
-         *
-         * @param index          the index of the property
-         */
-        public void delete(int index) {
-            // Do nothing, connection method is read-only
-        }
-
-        /**
-         * Returns the prototype of the object.
-         *
-         * @return the prototype of the object
-         */
-        public Scriptable getPrototype() {
-            return this.functionPrototype;
-        }
-
-        /**
-         * Sets the prototype of the object.
-         *
-         * @param prototype      the prototype object
-         */
-        public void setPrototype(Scriptable prototype) {
-            // Do nothing, connection method is read-only
-        }
-
-        /**
-         * Returns the parent (enclosing) scope of the object.
-         *
-         * @return the parent (enclosing) scope of the object
-         */
-        public Scriptable getParentScope() {
-            return this.parent;
-        }
-
-        /**
-         * Sets the parent (enclosing) scope of the object.
-         *
-         * @param parentScope    the parent scope of the object
-         */
-        public void setParentScope(Scriptable parentScope) {
-            // Do nothing, connection method is read-only
-        }
-
-        /**
-         * Returns an array of defined property keys.
-         *
-         * @return an array of defined property keys
-         */
-        public Object[] getIds() {
-            return new Object[0];
-        }
-
-        /**
-         * Returns the default value of this object.
-         *
-         * @param typeHint       type type hint class
-         *
-         * @return the default value of this object
-         */
-        public Object getDefaultValue(Class<?> typeHint) {
-            return ScriptableObject.getDefaultValue(this, typeHint);
-        }
-
-        /**
-         * Checks for JavaScript instance objects (always returns false).
-         *
-         * @param instance       the object to check
-         *
-         * @return always returns false as this is not a class
-         */
-        public boolean hasInstance(Scriptable instance) {
-            return false;
+            switch (name) {
+            case "name":
+                return methodName;
+            case "arity":
+            case "length":
+                Channel target = ConnectionWrapper.this.getConnection();
+                for (Method m : target.getClass().getMethods()) {
+                    boolean isPublic = (m.getModifiers() & Modifier.PUBLIC) > 0;
+                    if (isPublic && m.getName().equals(methodName)) {
+                        return Integer.valueOf(m.getParameterCount());
+                    }
+                }
+                return Integer.valueOf(0);
+            default:
+                return super.get(name, start);
+            }
         }
 
         /**
@@ -498,7 +224,7 @@ public class ConnectionWrapper implements Scriptable, Wrapper {
             for (int i = 0; i < args.length; i++) {
                 args[i] = JsSerializer.unwrap(args[i]);
             }
-            Channel target = parent.getConnection();
+            Channel target = ConnectionWrapper.this.getConnection();
             for (Method m : target.getClass().getMethods()) {
                 if (isMatching(m, args)) {
                     // TODO: call context stack should be pushed & popped
@@ -521,20 +247,6 @@ public class ConnectionWrapper implements Scriptable, Wrapper {
             String msg = "connection has no matching call method " +
                          this.methodName + " for the specified arguments";
             throw new EvaluatorException(msg);
-        }
-
-        /**
-         * Calls this function as a constructor. This method will
-         * not do anything.
-         *
-         * @param cx             the current script context
-         * @param scope          the scope to execute the function in
-         * @param args           the array of arguments
-         *
-         * @return always returns null
-         */
-        public Scriptable construct(Context cx, Scriptable scope, Object[] args) {
-            return null;
         }
 
         /**
