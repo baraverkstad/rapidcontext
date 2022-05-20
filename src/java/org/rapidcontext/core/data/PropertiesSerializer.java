@@ -27,14 +27,15 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import org.apache.commons.lang3.CharUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.core.storage.StorableObject;
+import org.rapidcontext.util.DateUtil;
 
 /**
  * A dictionary serializer and unserializer for the standard Java
@@ -45,14 +46,13 @@ import org.rapidcontext.core.storage.StorableObject;
  *
  * <ul>
  *   <li>No circular references are permitted.
- *   <li>String, Integer, Boolean, Array and Dict objects are
- *       supported.
- *   <li>Other object types are converted to strings with toString().
- *   <li>Property key names must consist only of printable
- *       ISO-8859-1 character, without any spaces or dots.
- *   <li>Property key names should never consist of only numeric
- *       characters, since they will then be confused with array
- *       indices.
+ *   <li>String, Integer, Boolean, Array, Dict and StorableObject
+ *       values are supported.
+ *   <li>Other value types are converted to strings.
+ *   <li>Property key names should consist of printable ISO-8859-1
+ *       characters, without spaces or dots.
+ *   <li>Property key names should not be numeric, as that will
+ *       convert to an array index.
  *   <li>Array null values will be omitted, renumbering the
  *       remaining indices.
  * </ul>
@@ -115,12 +115,15 @@ public final class PropertiesSerializer {
      * @throws IOException if an error occurred while reading the
      *             file
      */
-    @SuppressWarnings("resource")
     public static Dict read(File file)
     throws FileNotFoundException, IOException {
 
-        FileReader r = new FileReader(file);
-        return read(new FileInputStream(file), new BufferedReader(r));
+        try (
+            InputStream is = new FileInputStream(file);
+            BufferedReader br = new BufferedReader(new FileReader(file));
+        ) {
+            return read(is, br);
+        }
     }
 
     /**
@@ -141,9 +144,12 @@ public final class PropertiesSerializer {
      *             file
      */
     public static Dict read(ZipFile zip, ZipEntry entry) throws IOException {
-        InputStreamReader r = new InputStreamReader(zip.getInputStream(entry));
-        try (InputStream is = zip.getInputStream(entry)) {
-            return read(is, new BufferedReader(r));
+        try (
+            InputStream is = zip.getInputStream(entry);
+            InputStreamReader ir = new InputStreamReader(zip.getInputStream(entry));
+            BufferedReader br = new BufferedReader(ir);
+        ) {
+            return read(is, br);
         }
     }
 
@@ -169,45 +175,26 @@ public final class PropertiesSerializer {
 
         // Read properties file (but doesn't preserve ordering)
         Properties props = new Properties();
-        try {
-            props.load(is);
-        } finally {
-            try {
-                is.close();
-            } catch (Exception ignore) {
-                // Ignore exception on closing file
-            }
-        }
+        props.load(is);
 
         // Add properties in file order (uses simplified parsing)
         Dict res = new Dict();
-        try {
-            String str;
-            while ((str = r.readLine()) != null) {
-                if (str.indexOf("=") > 0) {
-                    str = str.substring(0, str.indexOf("=")).trim();
-                } else if (str.indexOf(":") > 0) {
-                    str = str.substring(0, str.indexOf(":")).trim();
-                } else {
-                    str = null;
-                }
-                if (str != null && props.containsKey(str)) {
-                    add(res, str, props.getProperty(str));
-                    props.remove(str);
-                }
+        r.lines().forEach((str) -> {
+            if (str.indexOf("=") > 0) {
+                str = str.substring(0, str.indexOf("=")).trim();
+            } else if (str.indexOf(":") > 0) {
+                str = str.substring(0, str.indexOf(":")).trim();
+            } else {
+                str = null;
             }
-        } finally {
-            try {
-                r.close();
-            } catch (Exception ignore) {
-                // Ignore exception on closing file
+            if (str != null && props.containsKey(str)) {
+                add(res, str, props.getProperty(str));
+                props.remove(str);
             }
-        }
+        });
 
         // Add any additional properties
-        Enumeration<?> e = props.propertyNames();
-        while (e.hasMoreElements()) {
-            String str = (String) e.nextElement();
+        for (String str : props.stringPropertyNames()) {
             add(res, str, props.getProperty(str));
         }
 
@@ -387,9 +374,10 @@ public final class PropertiesSerializer {
     public static void write(File file, Dict dict) throws IOException {
         try (
             FileOutputStream os = new FileOutputStream(file);
-            PrintWriter w = new PrintWriter(new OutputStreamWriter(os, "ISO-8859-1"));
+            OutputStreamWriter ow = new OutputStreamWriter(os, "ISO-8859-1");
+            PrintWriter pw = new PrintWriter(ow);
         ) {
-            write(w, "", dict);
+            write(pw, "", dict);
         }
     }
 
@@ -403,12 +391,8 @@ public final class PropertiesSerializer {
      * @param os             the output stream
      * @param prefix         the property name prefix
      * @param dict           the dictionary object
-     *
-     * @throws IOException if one of the dictionary keys wasn't valid
      */
-    private static void write(PrintWriter os, String prefix, Dict dict)
-        throws IOException {
-
+    private static void write(PrintWriter os, String prefix, Dict dict) {
         if (prefix.length() == 0) {
             os.println("# General properties");
         }
@@ -416,9 +400,11 @@ public final class PropertiesSerializer {
         for (String k : keys) {
             Object obj = dict.get(k);
             if (k.startsWith("_")) {
-                // Skip saving transient data
+                // Skip transient values
             } else if (obj instanceof Dict || obj instanceof Array) {
-                // Skip to last
+                // Write after other values
+            } else if (obj instanceof Date) {
+                write(os, prefix + k, DateUtil.asEpochMillis((Date) obj));
             } else {
                 write(os, prefix + k, dict.getString(k, ""));
             }
@@ -426,7 +412,7 @@ public final class PropertiesSerializer {
         for (String k : keys) {
             Object obj = dict.get(k);
             if (k.startsWith("_")) {
-                // Skip saving transient data
+                // Skip transient values
             } else if (obj instanceof Dict || obj instanceof Array) {
                 if (prefix.length() == 0) {
                     os.println();
@@ -445,7 +431,7 @@ public final class PropertiesSerializer {
                     write(os, prefix + k + ".", (Array) obj);
                 }
             } else {
-                // Already handled
+                // Already written
             }
         }
     }
@@ -461,11 +447,8 @@ public final class PropertiesSerializer {
      * @param os             the output stream
      * @param prefix         the property name prefix
      * @param arr            the array object
-     *
-     * @throws IOException if one of the dictionary keys wasn't valid
      */
-    private static void write(PrintWriter os, String prefix, Array arr)
-        throws IOException {
+    private static void write(PrintWriter os, String prefix, Array arr) {
 
         int pos = 0;
         for (Object obj : arr) {
@@ -489,25 +472,20 @@ public final class PropertiesSerializer {
      * @param os               the output stream to use
      * @param name             the property name
      * @param value            the property value
-     *
-     * @throws IOException if the property name wasn't valid
      */
-    private static void write(PrintWriter os, String name, String value)
-        throws IOException {
-
-        if (name == null || name.length() <= 0) {
-            throw new IOException("property names cannot be blank");
-        } else if (name.indexOf(' ') >= 0) {
-            throw new IOException("property name '" + name +
-                                  "' contains a space character");
-        } else if (!StringUtils.isAsciiPrintable(name)) {
-            throw new IOException("property name '" + name +
-                                  "' is not printable ASCII");
+    private static void write(PrintWriter os, String name, String value) {
+        if (name != null && name.length() > 0) {
+            for (int i = 0; i < name.length(); i ++) {
+                char c = name.charAt(i);
+                if (c == ' ' || !CharUtils.isAsciiPrintable(c)) {
+                    name = name.replace(c, '_');
+                }
+            }
+            os.print(name);
+            os.print(" = ");
+            os.print(TextEncoding.encodeProperty(value, true));
+            os.println();
         }
-        os.print(name);
-        os.print(" = ");
-        os.print(TextEncoding.encodeProperty(value, true));
-        os.println();
     }
 
     /**
