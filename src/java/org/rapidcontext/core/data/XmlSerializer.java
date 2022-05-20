@@ -29,8 +29,11 @@ import org.rapidcontext.util.DateUtil;
  *
  * <ul>
  *   <li>No circular references are permitted.
- *   <li>String, Integer, Boolean, Array and Dict objects are supported.
- *   <li>Key names must only consist of valid XML tag characters.
+ *   <li>String, Integer, Boolean, Array, Dict and StorableObject
+ *       values are supported.
+ *   <li>Other value types are converted to strings.
+ *   <li>Key names should consist of valid XML tag characters (or
+ *       will be transformed).
  * </ul>
  *
  * @author   Per Cederberg
@@ -77,6 +80,10 @@ public final class XmlSerializer {
             tagStart(id, "date", buffer);
             buffer.append(DateUtil.asEpochMillis((Date) obj));
             tagEnd(id, buffer);
+        } else if (obj instanceof Number) {
+            tagStart(id, "number", buffer);
+            buffer.append(TextEncoding.encodeXml(obj.toString(), false));
+            tagEnd(id, buffer);
         } else if (obj instanceof Class) {
             tagStart(id, "class", buffer);
             buffer.append(TextEncoding.encodeXml(((Class<?>) obj).getName(), false));
@@ -101,9 +108,11 @@ public final class XmlSerializer {
     private static void serialize(String id, Dict dict, int indent, StringBuilder buffer) {
         tagStart(id, "object", buffer);
         for (String key : dict.keys()) {
-            buffer.append("\n");
-            buffer.append(StringUtils.repeat("  ", indent + 1));
-            serialize(key, dict.get(key), indent + 1, buffer);
+            if (!key.startsWith("_")) { // Skip transient values
+                buffer.append("\n");
+                buffer.append(StringUtils.repeat("  ", indent + 1));
+                serialize(key, dict.get(key), indent + 1, buffer);
+            }
         }
         buffer.append("\n");
         buffer.append(StringUtils.repeat("  ", indent));
