@@ -30,7 +30,9 @@ import org.rapidcontext.util.DateUtil;
  *
  * <ul>
  *   <li>No circular references are permitted.
- *   <li>String, Integer, Boolean, Array and Dict objects are supported.
+ *   <li>String, Integer, Boolean, Array, Dict and StorableObject
+ *       values are supported.
+ *   <li>Other value types are converted to strings.
  * </ul>
  *
  * @author   Per Cederberg
@@ -67,7 +69,13 @@ public final class HtmlSerializer {
         } else if (obj instanceof Array) {
             serialize((Array) obj, buffer);
         } else if (obj instanceof Date) {
-            buffer.append(DateUtil.formatIsoDateTime((Date) obj));
+            buffer.append("<time datetime='");
+            buffer.append(DateUtil.asDateTimeUTC((Date) obj));
+            buffer.append("'>");
+            buffer.append(DateUtil.asDateTimeUTC((Date) obj));
+            buffer.append(" <code>");
+            buffer.append(DateUtil.asEpochMillis((Date) obj));
+            buffer.append("</code></time>");
         } else if (obj instanceof Class) {
             serialize(((Class<?>) obj).getName(), buffer);
         } else if (obj instanceof StorableObject) {
@@ -86,11 +94,13 @@ public final class HtmlSerializer {
     private static void serialize(Dict dict, StringBuilder buffer) {
         buffer.append("<table>\n<tbody>\n");
         for (String key : dict.keys()) {
-            buffer.append("<tr>\n<th>");
-            serialize(key, buffer);
-            buffer.append("</th>\n<td>");
-            serialize(dict.get(key), buffer);
-            buffer.append("</td>\n</tr>\n");
+            if (!key.startsWith("_")) { // Skip transient values
+                buffer.append("<tr>\n<th>");
+                serialize(key, buffer);
+                buffer.append("</th>\n<td>");
+                serialize(dict.get(key), buffer);
+                buffer.append("</td>\n</tr>\n");
+            }
         }
         buffer.append("</tbody>\n</table>\n");
     }
