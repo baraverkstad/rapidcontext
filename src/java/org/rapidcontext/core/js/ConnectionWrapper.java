@@ -46,7 +46,7 @@ public class ConnectionWrapper extends ScriptableObject implements Wrapper {
     /**
      * The procedure call context in use.
      */
-    private CallContext cx = null;
+    private CallContext cx;
 
     /**
      * The encapsulated connection channel.

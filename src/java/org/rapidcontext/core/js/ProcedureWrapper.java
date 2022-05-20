@@ -36,7 +36,7 @@ class ProcedureWrapper extends BaseFunction implements Wrapper {
     /**
      * The procedure library.
      */
-    private CallContext cx = null;
+    private CallContext cx;
 
     /**
      * The bound procedure name.
@@ -46,7 +46,7 @@ class ProcedureWrapper extends BaseFunction implements Wrapper {
     /**
      * The wrapped procedure.
      */
-    private Procedure proc = null;
+    private Procedure proc;
 
     /**
      * Creates a new procedure wrapper call function.

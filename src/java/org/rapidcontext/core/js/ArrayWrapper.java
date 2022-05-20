@@ -14,6 +14,8 @@
 
 package org.rapidcontext.core.js;
 
+import java.util.HashMap;
+
 import org.mozilla.javascript.Callable;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.LambdaFunction;
@@ -36,6 +38,11 @@ public class ArrayWrapper extends ScriptableObject implements Wrapper {
      * The encapsulated array.
      */
     private Array arr;
+
+    /**
+     * The cache of wrapped objects.
+     */
+    private HashMap<Integer, Object> cache = new HashMap<>();
 
     /**
      * Creates a new JavaScript array wrapper.
@@ -130,9 +137,10 @@ public class ArrayWrapper extends ScriptableObject implements Wrapper {
      */
     public Object get(int index, Scriptable start) {
         if (arr.containsIndex(index)) {
-            // FIXME: fetch from wrapped object cache
-            // FIXME: store to wrapped object cache
-            return JsSerializer.wrap(arr.get(index), this);
+            if (!cache.containsKey(index)) {
+                cache.put(index, JsSerializer.wrap(arr.get(index), this));
+            }
+            return cache.get(index);
         }
         return NOT_FOUND;
     }
@@ -156,6 +164,7 @@ public class ArrayWrapper extends ScriptableObject implements Wrapper {
                 while (arr.size() > len) {
                     int last = arr.size() - 1;
                     arr.remove(last);
+                    cache.remove(last);
                     super.delete(String.valueOf(last));
                 }
             }
@@ -178,6 +187,7 @@ public class ArrayWrapper extends ScriptableObject implements Wrapper {
      */
     public void put(int index, Scriptable start, Object value) {
         arr.set(index, value);
+        cache.remove(index);
         setAttributes(String.valueOf(index), EMPTY);
     }
 
@@ -189,6 +199,7 @@ public class ArrayWrapper extends ScriptableObject implements Wrapper {
     public void delete(int index) {
         // Emulates JS semantics by not renumbering array
         arr.set(index, null);
+        cache.remove(index);
     }
 
     /**

@@ -14,6 +14,8 @@
 
 package org.rapidcontext.core.js;
 
+import java.util.HashMap;
+
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.Wrapper;
@@ -32,6 +34,11 @@ public class DictWrapper extends ScriptableObject implements Wrapper {
      * The encapsulated dictionary.
      */
     private Dict dict;
+
+    /**
+     * The cache of wrapped objects.
+     */
+    private HashMap<String, Object> cache = new HashMap<>();
 
     /**
      * Creates a new JavaScript dictionary wrapper.
@@ -78,9 +85,10 @@ public class DictWrapper extends ScriptableObject implements Wrapper {
      */
     public Object get(String name, Scriptable start) {
         if (dict.containsKey(name)) {
-            // FIXME: fetch from wrapped object cache
-            // FIXME: store to wrapped object cache
-            return JsSerializer.wrap(dict.get(name), this);
+            if (!cache.containsKey(name)) {
+                cache.put(name, JsSerializer.wrap(dict.get(name), this));
+            }
+            return cache.get(name);
         } else {
             return super.get(name, start);
         }
@@ -96,6 +104,7 @@ public class DictWrapper extends ScriptableObject implements Wrapper {
     public void put(String name, Scriptable start, Object value) {
         if (name != null && name.length() > 0) {
             dict.set(name, value);
+            cache.remove(name);
             setAttributes(name, EMPTY);
         }
     }
@@ -106,9 +115,8 @@ public class DictWrapper extends ScriptableObject implements Wrapper {
      * @param name           the name of the property
      */
     public void delete(String name) {
-        if (dict.containsKey(name)) {
-            dict.remove(name);
-        }
+        dict.remove(name);
+        cache.remove(name);
         super.delete(name);
     }
 
