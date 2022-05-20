@@ -19,6 +19,7 @@ import java.util.Date;
 import org.apache.commons.lang3.CharUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.core.storage.StorableObject;
+import org.rapidcontext.util.DateUtil;
 
 /**
  * A data serializer for XML. This class currently only attempts to
@@ -74,7 +75,7 @@ public final class XmlSerializer {
             serialize(id, (Array) obj, indent, buffer);
         } else if (obj instanceof Date) {
             tagStart(id, "date", buffer);
-            buffer.append("@" + ((Date) obj).getTime());
+            buffer.append(DateUtil.asEpochMillis((Date) obj));
             tagEnd(id, buffer);
         } else if (obj instanceof Class) {
             tagStart(id, "class", buffer);

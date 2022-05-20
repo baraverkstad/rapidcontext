@@ -15,6 +15,7 @@
 package org.rapidcontext.util;
 
 import java.util.Date;
+import java.util.TimeZone;
 
 import org.apache.commons.lang3.time.FastDateFormat;
 
@@ -26,30 +27,43 @@ import org.apache.commons.lang3.time.FastDateFormat;
  */
 public final class DateUtil {
 
-    // The ISO date format.
-    private static final FastDateFormat ISO_DATE_FORMAT =
-        FastDateFormat.getInstance("yyyy-MM-dd");
+    // The UTC time zone
+    private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
+
+    // The UTC date and time format
+    private static final FastDateFormat UTC_DATETIME =
+        FastDateFormat.getInstance("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", UTC);
 
     // The ISO date and time format.
     private static final FastDateFormat ISO_DATETIME_FORMAT =
         FastDateFormat.getInstance("yyyy-MM-dd HH:mm:ss");
 
-    /**
-     * The ISO time format.
-     */
+    // The ISO time format.
     private static final FastDateFormat ISO_TIME_FORMAT =
         FastDateFormat.getInstance("HH:mm:ss");
 
     /**
-     * Formats a date to an ISO date representation. Note that the
-     * time component of the date value will be ignored.
+     * Formats a date and time in Unix (millisecond) epoch format
+     * (i.e. "@1653037430316").
      *
-     * @param date           the date to convert
+     * @param date           the date and time to convert
      *
-     * @return the ISO date string
+     * @return the epoch millisecond string
      */
-    public static String formatIsoDate(Date date) {
-        return (date == null) ? null : ISO_DATE_FORMAT.format(date);
+    public static String asEpochMillis(Date date) {
+        return (date == null) ? null : "@" + date.getTime();
+    }
+
+    /**
+     * Formats a date and time in an ISO 8601 datetime representation
+     * for the UTC timezone.
+     *
+     * @param date           the date and time to convert
+     *
+     * @return the ISO 8601 datetime string in UTC
+     */
+    public static String asDateTimeUTC(Date date) {
+        return (date == null) ? null : UTC_DATETIME.format(date);
     }
 
     /**

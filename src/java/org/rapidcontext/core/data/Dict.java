@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.rapidcontext.util.DateUtil;
 
 /**
  * A general data dictionary. Compared to the standard Map interface,
@@ -282,7 +283,7 @@ public class Dict {
         } else if (value instanceof String) {
             return (String) value;
         } else if (value instanceof Date) {
-            return "@" + ((Date) value).getTime();
+            return DateUtil.asEpochMillis((Date) value);
         } else {
             return value.toString();
         }

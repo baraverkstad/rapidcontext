@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.Iterator;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.rapidcontext.util.DateUtil;
 
 /**
  * A general data array. Compared to the standard ArrayList, this
@@ -335,7 +336,7 @@ public class Array implements Iterable<Object> {
         } else if (value instanceof String) {
             return (String) value;
         } else if (value instanceof Date) {
-            return "@" + ((Date) value).getTime();
+            return DateUtil.asEpochMillis((Date) value);
         } else {
             return value.toString();
         }

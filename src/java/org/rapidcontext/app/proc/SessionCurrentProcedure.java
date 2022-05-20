@@ -117,8 +117,8 @@ public class SessionCurrentProcedure implements Procedure {
      */
     public static Dict serialize(Storage storage, Session session) {
         Dict res = session.serialize().copy();
-        res.set("creationDate", DateUtil.formatIsoDateTime(session.createTime()));
-        res.set("lastAccessDate", DateUtil.formatIsoDateTime(session.accessTime()));
+        res.set("creationDate", DateUtil.asDateTimeUTC(session.createTime()));
+        res.set("lastAccessDate", DateUtil.asDateTimeUTC(session.accessTime()));
         String userId = session.userId();
         User user = (userId == null) ? null : User.find(storage, userId);
         if (user == null) {
@@ -150,7 +150,7 @@ public class SessionCurrentProcedure implements Procedure {
         dict.set("mimeType", Mime.type(file));
         Date date = new Date(file.lastModified());
         dict.set("creationTime", date);
-        dict.set("creationDate", DateUtil.formatIsoDateTime(date));
+        dict.set("creationDate", DateUtil.asDateTimeUTC(date));
         return dict;
     }
 }
