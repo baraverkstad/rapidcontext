@@ -26,8 +26,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -38,11 +38,10 @@ import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.util.DateUtil;
 
 /**
- * A dictionary serializer and unserializer for the standard Java
- * properties file format. The dictionary mapping to the properties
- * format is not exact, and may omit serialization of data in some
- * cases. The following basic requirements must be met in order to
- * serialize a dictionary into a properties file:
+ * A data serializer for the Java properties file format. The mapping
+ * to the properties format is not exact, and may omit serialization
+ * of data in some cases. The following basic requirements must be
+ * met in order to serialize an object:
  *
  * <ul>
  *   <li>No circular references are permitted.
@@ -67,33 +66,21 @@ import org.rapidcontext.util.DateUtil;
 public final class PropertiesSerializer {
 
     /**
-     * Serializes an object into an properties representation. The
-     * string returned can be used as a properties.
+     * Serializes an object into a properties representation.
      *
-     * @param obj            the object to convert, or null
+     * @param obj            the object to serialize, or null
      *
-     * @return an properties file representation
+     * @return a properties file representation
      *
      * @throws IOException if the data couldn't be serialized
      */
     public static String serialize(Object obj) throws IOException {
         try (
             StringWriter buffer = new StringWriter();
-            PrintWriter os = new PrintWriter(buffer);
+            PrintWriter pw = new PrintWriter(buffer);
         ) {
-            if (obj == null) {
-                // Nothing to write
-            } else if (obj instanceof Dict) {
-                write(os, "", (Dict) obj);
-            } else if (obj instanceof Array) {
-                write(os, "", (Array) obj);
-            } else if (obj instanceof StorableObject) {
-                write(os, "", ((StorableObject) obj).serialize());
-            } else {
-                String msg = "Cannot serialize " + obj.getClass();
-                throw new InvalidPropertiesFormatException(msg);
-            }
-            os.flush();
+            write(pw, "", obj);
+            pw.flush();
             return buffer.toString();
         }
     }
@@ -358,35 +345,51 @@ public final class PropertiesSerializer {
     }
 
     /**
-     * Writes the contents of a dictionary into a properties file.
-     * The key names from the dictionary are preserved, but contained
-     * array indices will be renumbered from zero while omitting null
-     * values. Contained dictionary or array values will be written
-     * recursively by appending dot ('.') characters between each
-     * element. All other values are stored as strings.
+     * Serializes an object into a properties file.
      *
-     * @param file           the file to save
-     * @param dict           the dictionary object
+     * @param file           the file to write
+     * @param obj            the object value, or null
      *
-     * @throws IOException if an error occurred while writing the
-     *             file
+     * @throws IOException if the data couldn't be serialized
      */
-    public static void write(File file, Dict dict) throws IOException {
+    public static void write(File file, Object obj) throws IOException {
         try (
             FileOutputStream os = new FileOutputStream(file);
             OutputStreamWriter ow = new OutputStreamWriter(os, "ISO-8859-1");
             PrintWriter pw = new PrintWriter(ow);
         ) {
-            write(pw, "", dict);
+            write(pw, "", obj);
         }
     }
 
     /**
-     * Writes the contents of a dictionary to an output stream. The
-     * key names from the dictionary are preserved. Contained
-     * dictionary or array values will be written recursively by
-     * appending dot ('.') characters between each element. All
-     * other values are stored as strings.
+     * Serializes a value to an output stream.
+     *
+     * @param os             the output stream
+     * @param prefix         the property name prefix (or name)
+     * @param obj            the object value, or null
+     */
+    private static void write(PrintWriter os, String prefix, Object obj) {
+        if (obj == null) {
+            // Nothing to write
+        } else if (obj instanceof Dict) {
+            write(os, prefix, (Dict) obj);
+        } else if (obj instanceof Array) {
+            write(os, prefix, (Array) obj);
+        } else if (obj instanceof StorableObject) {
+            write(os, prefix, ((StorableObject) obj).serialize());
+        } else if (obj instanceof Date) {
+            write(os, prefix, DateUtil.asEpochMillis((Date) obj));
+        } else {
+            write(os, prefix, obj.toString());
+        }
+    }
+
+    /**
+     * Serializes a dictionary to an output stream. The key names
+     * from the dictionary are preserved. Contained dictionary or
+     * array values will be written recursively by appending dot
+     * ('.') characters between each element.
      *
      * @param os             the output stream
      * @param prefix         the property name prefix
@@ -397,95 +400,79 @@ public final class PropertiesSerializer {
             os.println("# General properties");
         }
         String[] keys = dict.keys();
+        ArrayList<String> delayed = new ArrayList<>();
         for (String k : keys) {
             Object obj = dict.get(k);
             if (k.startsWith("_")) {
                 // Skip transient values
-            } else if (obj instanceof Dict || obj instanceof Array) {
-                // Write after other values
-            } else if (obj instanceof Date) {
-                write(os, prefix + k, DateUtil.asEpochMillis((Date) obj));
+            } else if (obj instanceof Dict || obj instanceof Array || obj instanceof StorableObject) {
+                delayed.add(k);
             } else {
-                write(os, prefix + k, dict.getString(k, ""));
+                write(os, prefix + k, obj);
             }
         }
-        for (String k : keys) {
+        for (String k : delayed) {
             Object obj = dict.get(k);
-            if (k.startsWith("_")) {
-                // Skip transient values
-            } else if (obj instanceof Dict || obj instanceof Array) {
-                if (prefix.length() == 0) {
-                    os.println();
-                    os.print("# ");
-                    os.print(k.substring(0, 1).toUpperCase());
-                    os.print(k.substring(1));
-                    if (obj instanceof Dict) {
-                        os.println(" object");
-                    } else {
-                        os.println(" array");
-                    }
-                }
-                if (obj instanceof Dict) {
-                    write(os, prefix + k + ".", (Dict) obj);
+            if (prefix.length() == 0) {
+                os.println();
+                os.print("# ");
+                os.print(k.substring(0, 1).toUpperCase());
+                os.print(k.substring(1));
+                if (obj instanceof Array) {
+                    os.println(" array");
                 } else {
-                    write(os, prefix + k + ".", (Array) obj);
+                    os.println(" object");
                 }
-            } else {
-                // Already written
             }
+            write(os, prefix + k + ".", obj);
         }
     }
 
     /**
-     * Writes the contents of an array to an output stream. The array
-     * order is preserved, but indices will be renumbered from zero
-     * while omitting null values. Contained dictionary or array
-     * values will be written recursively by appending dot ('.')
-     * characters characters between each element. All other values
-     * are stored as strings.
+     * Serializes an array to an output stream. The array order is
+     * preserved, but indices will be renumbered from zero and null
+     * values are omitted. Contained dictionary or array values will
+     * be written recursively by appending dot ('.') characters
+     * characters between each element.
      *
      * @param os             the output stream
      * @param prefix         the property name prefix
      * @param arr            the array object
      */
     private static void write(PrintWriter os, String prefix, Array arr) {
-
         int pos = 0;
         for (Object obj : arr) {
-            if (obj instanceof Dict) {
-                write(os, prefix + pos + ".", (Dict) obj);
-                pos++;
-            } else if (obj instanceof Array) {
-                write(os, prefix + pos + ".", (Array) obj);
+            if (obj instanceof Dict || obj instanceof Array || obj instanceof StorableObject) {
+                write(os, prefix + pos + ".", obj);
                 pos++;
             } else if (obj != null) {
-                write(os, prefix + pos, obj.toString());
+                write(os, prefix + pos, obj);
                 pos++;
             }
         }
     }
 
     /**
-     * Writes a property name and value definition to an output
-     * stream.
+     * Serializes a property name and value to an output stream.
      *
      * @param os               the output stream to use
      * @param name             the property name
      * @param value            the property value
      */
     private static void write(PrintWriter os, String name, String value) {
-        if (name != null && name.length() > 0) {
-            for (int i = 0; i < name.length(); i ++) {
-                char c = name.charAt(i);
-                if (c == ' ' || !CharUtils.isAsciiPrintable(c)) {
-                    name = name.replace(c, '_');
-                }
-            }
-            os.print(name);
-            os.print(" = ");
-            os.print(TextEncoding.encodeProperty(value, true));
-            os.println();
+        if (name == null || name.trim().length() == 0) {
+            name = "value";
         }
+        for (int i = 0; i < name.length(); i ++) {
+            char c = name.charAt(i);
+            if (c == ' ' || !CharUtils.isAsciiPrintable(c)) {
+                name = name.replace(c, '_');
+            }
+        }
+        os.print(name);
+        os.print(" = ");
+        os.print(TextEncoding.encodeProperty(value, true));
+        os.println();
     }
 
     // No instances

@@ -199,7 +199,7 @@ public class DirStorage extends Storage {
             try {
                 file = new File(dir, path.name() + SUFFIX_PROPS);
                 tmp = FileUtil.tempFile(file.getName());
-                PropertiesSerializer.write(tmp, (Dict) data);
+                PropertiesSerializer.write(tmp, data);
             } catch (Exception e) {
                 String msg = "failed to write temporary file " + tmp + ": " +
                              e.getMessage();
