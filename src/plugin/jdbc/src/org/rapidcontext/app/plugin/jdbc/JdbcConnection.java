@@ -16,7 +16,6 @@ package org.rapidcontext.app.plugin.jdbc;
 
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.data.PropertiesSerializer;
 import org.rapidcontext.core.storage.StorageException;
 import org.rapidcontext.core.type.Channel;
 import org.rapidcontext.core.type.Connection;
@@ -242,9 +241,12 @@ public class JdbcConnection extends Connection {
      *             properly
      */
     protected Channel createChannel() throws ConnectionException {
-        Properties   props;
-
-        props = PropertiesSerializer.toProperties(dict);
+        Properties props = new Properties();
+        for (String key : dict.keys()) {
+            if (!key.startsWith("_")) {
+                props.setProperty(key, dict.getString(key, ""));
+            }
+        }
         props.remove(KEY_ID);
         props.remove(KEY_TYPE);
         props.remove(KEY_MAX_OPEN);
