@@ -121,8 +121,8 @@ public final class Mime {
      * The MIME types commonly used for ICO images.
      */
     public static final String[] ICO = {
-        "image/x-icon",
-        "image/vnd.microsoft.icon"
+        "image/vnd.microsoft.icon",
+        "image/x-icon"
     };
 
     /**
@@ -172,12 +172,6 @@ public final class Mime {
      */
     public static String type(String fileName) {
         fileName = fileName.toLowerCase();
-        if (context != null) {
-            String mime = context.getMimeType(fileName);
-            if (mime != null && mime.trim().length() > 0) {
-                return mime;
-            }
-        }
         if (fileName.endsWith(".txt")) {
             return TEXT[0];
         } else if (fileName.endsWith(".html") || fileName.endsWith(".htm")) {
@@ -202,9 +196,13 @@ public final class Mime {
             return SVG[0];
         } else if (fileName.endsWith(".ico")) {
             return ICO[0];
-        } else {
-            return BIN[0];
+        } else if (context != null) {
+            String mime = context.getMimeType(fileName);
+            if (mime != null && mime.trim().length() > 0) {
+                return mime;
+            }
         }
+        return BIN[0];
     }
 
     /**
