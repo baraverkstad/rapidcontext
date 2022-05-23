@@ -102,21 +102,17 @@ public class FileWebService extends WebService {
      * @param path           the storage path to the binary file
      */
     protected void processFile(Request request, Path path) {
-        ApplicationContext  ctx = ApplicationContext.getInstance();
-        Object              obj = null;
-        boolean             cache;
-
+        ApplicationContext ctx = ApplicationContext.getInstance();
         if (path.isIndex()) {
             path = path.child("index.html", false);
         }
-        obj = ctx.getStorage().load(path);
+        Object obj = ctx.getStorage().load(path);
         if (obj instanceof Binary) {
             if (request.getParameter("download") != null) {
                 String str = "attachment; filename=" + path.name();
                 request.setResponseHeader("Content-Disposition", str);
             }
-            cache = ctx.getConfig().getBoolean("responseNoCache", false);
-            request.sendBinary((Binary) obj, cache);
+            request.sendBinary((Binary) obj);
         } else if (obj instanceof Index) {
             request.sendRedirect(request.getUrl() + "/");
         } else if (obj != null) {

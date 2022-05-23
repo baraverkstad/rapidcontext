@@ -750,24 +750,18 @@ public class Request implements HttpUtil {
     /**
      * Sends the contents of a file as the request response. The file
      * name extension will be used for determining the MIME type for
-     * the file contents. The cache header for the file may be
-     * limited to private by setting the limit cache header. Any
-     * previous response will be cleared.
+     * the file contents. Any previous response will be cleared.
      *
      * @param data           the file containing the response
-     * @param limitCache     the limited cache flag
      *
      * @see #sendClear()
      */
-    public void sendBinary(Binary data, boolean limitCache) {
+    public void sendBinary(Binary data) {
         sendClear();
         responseType = BINARY_RESPONSE;
         responseCode = STATUS.OK;
         responseMimeType = data.mimeType();
         responseData = data;
-        if (limitCache) {
-            response.setHeader(HEADER.CACHE_CONTROL, "no-store, max-age=0");
-        }
     }
 
     /**

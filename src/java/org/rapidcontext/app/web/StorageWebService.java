@@ -206,7 +206,7 @@ public class StorageWebService extends WebService {
             if (res == null) {
                 errorNotFound(request);
             } else if (isDefault && res instanceof Binary) {
-                request.sendBinary((Binary) res, true);
+                request.sendBinary((Binary) res);
             } else if (isDefault || isHtml) {
                 sendHtml(request, path, meta, res);
             } else if (isJson) {
