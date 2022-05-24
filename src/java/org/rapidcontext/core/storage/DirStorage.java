@@ -27,6 +27,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.PropertiesSerializer;
+import org.rapidcontext.core.web.Mime;
 import org.rapidcontext.util.FileUtil;
 
 /**
@@ -93,17 +94,20 @@ public class DirStorage extends Storage {
         File  file;
 
         if (PATH_STORAGEINFO.equals(path)) {
-            return new Metadata(Dict.class, path, path(), mountTime());
+            return new Metadata(Dict.class, path, path(), null, mountTime());
         }
         file = locateFile(path);
         if (file == null) {
             return null;
-        } else if (file.isDirectory()) {
-            return new Metadata(Index.class, path, path(), file.lastModified());
+        }
+        String mime = Mime.type(file.getName());
+        Date modified = new Date(file.lastModified());
+        if (file.isDirectory()) {
+            return new Metadata(Index.class, path, path(), null, modified);
         } else if (file.getName().endsWith(SUFFIX_PROPS)) {
-            return new Metadata(Dict.class, path, path(), file.lastModified());
+            return new Metadata(Dict.class, path, path(), mime, modified);
         } else {
-            return new Metadata(Binary.class, path, path(), file.lastModified());
+            return new Metadata(Binary.class, path, path(), mime, modified);
         }
     }
 

@@ -59,6 +59,12 @@ public class Metadata extends StorableObject {
     public static final String KEY_STORAGEPATHS = "storagePaths";
 
     /**
+     * The dictionary key for the object MIME type. The value stored
+     * is the MIME type of the object (prior to loading) if known.
+     */
+    public static final String KEY_MIMETYPE = "mimeType";
+
+    /**
      * The dictionary key for the last modified date. The value stored
      * is a Date object.
      */
@@ -159,22 +165,11 @@ public class Metadata extends StorableObject {
      * @param clazz          the object class
      * @param path           the absolute object path
      * @param storagePath    the absolute storage path
-     * @param modified       the last modified time, or negative for now
+     * @param mime           the MIME type, or null for unknown
+     * @param modified       the last modified date, or null for now
      */
-    public Metadata(Class<?> clazz, Path path, Path storagePath, long modified) {
-        this(category(clazz), clazz, path, storagePath, Long.valueOf(modified));
-    }
-
-    /**
-     * Creates a new metadata container.
-     *
-     * @param clazz          the object class
-     * @param path           the absolute object path
-     * @param storagePath    the absolute storage path
-     * @param modified       the last modified time
-     */
-    public Metadata(Class<?> clazz, Path path, Path storagePath, Date modified) {
-        this(category(clazz), clazz, path, storagePath, modified);
+    public Metadata(Class<?> clazz, Path path, Path storagePath, String mime, Date modified) {
+        this(category(clazz), clazz, path, storagePath, mime, modified);
     }
 
     /**
@@ -184,9 +179,10 @@ public class Metadata extends StorableObject {
      * @param clazz          the object class
      * @param path           the absolute object path
      * @param storagePath    the absolute storage path
+     * @param mime           the MIME type, or null for unknown
      * @param modified       the last modified date, or null for now
      */
-    public Metadata(String category, Class<?> clazz, Path path, Path storagePath, Object modified) {
+    public Metadata(String category, Class<?> clazz, Path path, Path storagePath, String mime, Date modified) {
         super(null, "metadata");
         dict.remove(KEY_ID);
         dict.set(KEY_CATEGORY, category);
@@ -194,13 +190,8 @@ public class Metadata extends StorableObject {
         dict.set(KEY_PATH, path);
         dict.set(KEY_STORAGEPATHS, new Array());
         dict.getArray(KEY_STORAGEPATHS).add(storagePath);
-        if (modified instanceof Date) {
-            dict.set(KEY_MODIFIED, modified);
-        } else if (modified instanceof Long && ((Long) modified).longValue() > 0) {
-            dict.set(KEY_MODIFIED, new Date(((Long) modified).longValue()));
-        } else {
-            dict.set(KEY_MODIFIED, new Date());
-        }
+        dict.set(KEY_MIMETYPE, mime);
+        dict.set(KEY_MODIFIED, (modified == null) ? new Date() : modified);
     }
 
     /**
@@ -294,6 +285,15 @@ public class Metadata extends StorableObject {
      */
     public Array storagePaths() {
         return (Array) dict.get(KEY_STORAGEPATHS);
+    }
+
+    /**
+     * Returns the MIME type for the object.
+     *
+     * @return the MIME type for the object, or null
+     */
+    public String mimeType() {
+        return dict.getString(KEY_MIMETYPE, null);
     }
 
     /**

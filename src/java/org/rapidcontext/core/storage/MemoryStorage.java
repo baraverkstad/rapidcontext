@@ -138,12 +138,12 @@ public class MemoryStorage extends Storage {
      */
     public Metadata lookup(Path path) {
         if (storageInfo && PATH_STORAGEINFO.equals(path)) {
-            return new Metadata(Dict.class, path, path(), mountTime());
+            return new Metadata(Dict.class, path, path(), null, mountTime());
         }
         Object obj = meta.get(path);
         if (obj instanceof Index) {
             Index idx = (Index) obj;
-            return new Metadata(Index.class, path, path(), idx.lastModified());
+            return new Metadata(Index.class, path, path(), null, idx.lastModified());
         } else {
             return (Metadata) obj;
         }
@@ -208,7 +208,7 @@ public class MemoryStorage extends Storage {
             remove(path);
         }
         objects.put(path, data);
-        meta.put(path, new Metadata(data.getClass(), path, path(), -1));
+        meta.put(path, new Metadata(data.getClass(), path, path(), null, null));
         indexInsert(path);
     }
 
