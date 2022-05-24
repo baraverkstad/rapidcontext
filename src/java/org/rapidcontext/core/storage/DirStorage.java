@@ -15,6 +15,7 @@
 package org.rapidcontext.core.storage;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -143,8 +144,8 @@ public class DirStorage extends Storage {
             idx.updateLastModified(new Date(file.lastModified()));
             return idx;
         } else if (file.getName().endsWith(SUFFIX_PROPS)) {
-            try {
-                return PropertiesSerializer.read(file);
+            try (InputStream is = new FileInputStream(file)) {
+                return PropertiesSerializer.unserialize(is);
             } catch (FileNotFoundException e) {
                 msg = "failed to find file " + file.toString();
                 LOG.log(Level.SEVERE, msg, e);

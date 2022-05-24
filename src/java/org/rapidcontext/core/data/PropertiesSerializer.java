@@ -15,11 +15,9 @@
 package org.rapidcontext.core.data;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -29,8 +27,6 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Properties;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 import org.apache.commons.lang3.CharUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -86,69 +82,40 @@ public final class PropertiesSerializer {
     }
 
     /**
-     * Reads a file containing properties and returns the contents
-     * in a dictionary. The property names from the file are
-     * normally preserved, except for structural interpretation. Dot
+     * Unserializes an object from a properties representation,
+     * typically a properties file. The property names are preserved
+     * as dictionary keys, except for structural interpretation. Dot
      * ('.') characters in names are interpreted as sub-object
      * separators, and numbers are interpreted as an array indices.
-     * The dictionary values are stored as booleans, integers or
-     * strings.
+     * Values are stored as booleans, integers or strings.
      *
-     * @param file           the file to load
+     * @param is             the input stream to load
      *
-     * @return the dictionary read from the file
+     * @return the object read
      *
-     * @throws FileNotFoundException if the file couldn't be found
-     * @throws IOException if an error occurred while reading the
-     *             file
+     * @throws IOException if an error occurred while reading
      */
-    public static Dict read(File file)
-    throws FileNotFoundException, IOException {
-
+    public static Object unserialize(InputStream is) throws IOException {
+        byte[] buffer = is.readAllBytes();
         try (
-            InputStream is = new FileInputStream(file);
-            BufferedReader br = new BufferedReader(new FileReader(file));
+            ByteArrayInputStream bs = new ByteArrayInputStream(buffer);
+            ByteArrayInputStream rs = new ByteArrayInputStream(buffer);
+            BufferedReader br = new BufferedReader(new InputStreamReader(rs));
         ) {
-            return read(is, br);
+            return unserialize(bs, br);
         }
     }
 
     /**
-     * Reads a ZIP file entry containing properties and returns the
-     * contents in a dictionary. The property names from the file are
-     * normally preserved, except for structural interpretation. Dot
+     * Unserializes an object from a properties representation,
+     * typically a properties file. The property names are preserved
+     * as dictionary keys, except for structural interpretation. Dot
      * ('.') characters in names are interpreted as sub-object
      * separators, and numbers are interpreted as an array indices.
-     * The dictionary values are stored as booleans, integers or
-     * strings.
+     * Values are stored as booleans, integers or strings.
      *
-     * @param zip            the ZIP file
-     * @param entry          the ZIP file entry to load
-     *
-     * @return the dictionary read from the file
-     *
-     * @throws IOException if an error occurred while reading the
-     *             file
-     */
-    public static Dict read(ZipFile zip, ZipEntry entry) throws IOException {
-        try (
-            InputStream is = zip.getInputStream(entry);
-            InputStreamReader ir = new InputStreamReader(zip.getInputStream(entry));
-            BufferedReader br = new BufferedReader(ir);
-        ) {
-            return read(is, br);
-        }
-    }
-
-    /**
-     * Reads an input stream and returns the contents in a
-     * dictionary. The property names from the file are normally
-     * preserved, except for structural interpretation. Dot ('.')
-     * characters in names are interpreted as sub-object separators,
-     * and numbers are interpreted as an array indices. The
-     * dictionary values are stored as booleans, integers or strings.
      * Note that the input stream is read twice in order to preserve
-     * the same ordering as in the file.
+     * the original ordering.
      *
      * @param is             the input stream
      * @param r              the input stream reader (used for order)
@@ -157,24 +124,19 @@ public final class PropertiesSerializer {
      *
      * @throws IOException if an error occurred while reading
      */
-    private static Dict read(InputStream is, BufferedReader r)
+    private static Dict unserialize(InputStream is, BufferedReader r)
     throws IOException {
 
         // Read properties file (but doesn't preserve ordering)
         Properties props = new Properties();
         props.load(is);
 
-        // Add properties in file order (uses simplified parsing)
+        // Add properties in file order (using simplified parsing)
         Dict res = new Dict();
         r.lines().forEach((str) -> {
-            if (str.indexOf("=") > 0) {
-                str = str.substring(0, str.indexOf("=")).trim();
-            } else if (str.indexOf(":") > 0) {
-                str = str.substring(0, str.indexOf(":")).trim();
-            } else {
-                str = null;
-            }
-            if (str != null && props.containsKey(str)) {
+            str = StringUtils.substringBefore(str, '=').trim();
+            str = StringUtils.substringBefore(str, ':').trim();
+            if (props.containsKey(str)) {
                 add(res, str, props.getProperty(str));
                 props.remove(str);
             }

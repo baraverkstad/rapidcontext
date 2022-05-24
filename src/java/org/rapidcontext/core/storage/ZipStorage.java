@@ -190,8 +190,8 @@ public class ZipStorage extends Storage {
         } else if (obj instanceof ZipEntry) {
             ZipEntry entry = (ZipEntry) obj;
             if (entry.getName().endsWith(DirStorage.SUFFIX_PROPS)) {
-                try {
-                    return PropertiesSerializer.read(zip, entry);
+                try (InputStream is = zip.getInputStream(entry)) {
+                    return PropertiesSerializer.unserialize(is);
                 } catch (IOException e) {
                     String msg = "failed to read ZIP file " + zip + ":" + entry;
                     LOG.log(Level.SEVERE, msg, e);
