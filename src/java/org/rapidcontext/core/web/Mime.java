@@ -29,14 +29,14 @@ import org.apache.commons.lang3.ArrayUtils;
 public final class Mime {
 
     /**
-     * The MIME types commonly used for text files.
+     * The MIME types commonly used for plain text.
      */
     public static final String[] TEXT = {
         "text/plain"
     };
 
     /**
-     * The MIME types commonly used for HTML files.
+     * The MIME types commonly used for HTML.
      */
     public static final String[] HTML = {
         "text/html",
@@ -46,14 +46,14 @@ public final class Mime {
     };
 
     /**
-     * The MIME types commonly used for CSS files.
+     * The MIME types commonly used for CSS.
      */
     public static final String[] CSS = {
         "text/css"
     };
 
     /**
-     * The MIME types commonly used for JavaScript files.
+     * The MIME types commonly used for JavaScript.
      */
     public static final String[] JS = {
         "text/javascript",
@@ -62,7 +62,7 @@ public final class Mime {
     };
 
     /**
-     * The MIME types commonly used for JSON files and data.
+     * The MIME types commonly used for JSON.
      */
     public static final String[] JSON = {
         "application/json",
@@ -74,7 +74,16 @@ public final class Mime {
     };
 
     /**
-     * The MIME types commonly used for XML files.
+     * The MIME types commonly used for Java Properties.
+     */
+    public static final String[] PROPERTIES = {
+        "text/x-java-properties",
+        "text/x-properties",
+        "text/properties"
+    };
+
+    /**
+     * The MIME types commonly used for XML.
      */
     public static final String[] XML = {
         "text/xml",
@@ -82,7 +91,18 @@ public final class Mime {
     };
 
     /**
-     * The MIME types commonly used for Markdown text.
+     * The MIME types commonly used for YAML.
+     */
+    public static final String[] YAML = {
+        "application/yaml",
+        "application/x-yaml",
+        "text/yaml",
+        "text/x-yaml",
+        "text/vnd.yaml"
+    };
+
+    /**
+     * The MIME types commonly used for Markdown.
      */
     public static final String[] MARKDOWN = {
         "text/markdown",
@@ -126,15 +146,14 @@ public final class Mime {
     };
 
     /**
-     * The MIME types commonly used for binary files and data.
+     * The MIME types commonly used for binary data.
      */
     public static final String[] BIN = {
         "application/octet-stream"
     };
 
     /**
-     * The MIME types commonly used for posting forms or building
-     * URLs on the web.
+     * The MIME types commonly used for web form data.
      */
     public static final String[] WWW_FORM = {
         "application/x-www-form-urlencoded"
@@ -182,8 +201,12 @@ public final class Mime {
             return JS[0];
         } else if (fileName.endsWith(".json")) {
             return JSON[0];
+        } else if (fileName.endsWith(".properties")) {
+            return PROPERTIES[0];
         } else if (fileName.endsWith(".xml")) {
             return XML[0];
+        } else if (fileName.endsWith(".yml") || fileName.endsWith(".yaml")) {
+            return YAML[0];
         } else if (fileName.endsWith(".md")) {
             return MARKDOWN[0];
         } else if (fileName.endsWith(".gif")) {
@@ -219,7 +242,9 @@ public final class Mime {
                isMatch(contentType, HTML) ||
                isMatch(contentType, JS) ||
                isMatch(contentType, JSON) ||
+               isMatch(contentType, PROPERTIES) ||
                isMatch(contentType, XML) ||
+               isMatch(contentType, YAML) ||
                isMatch(contentType, SVG);
     }
 
