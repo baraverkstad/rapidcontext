@@ -174,7 +174,6 @@ public class StorageWebService extends WebService {
         boolean             isProps = false;
         boolean             isXml = false;
         boolean             isDefault = true;
-        Dict                dict;
 
         // TODO: Change to read-access here once a solution has been devised
         //       to disable search queries for certain paths and/or users.
@@ -210,25 +209,19 @@ public class StorageWebService extends WebService {
             } else if (isDefault || isHtml) {
                 sendHtml(request, path, meta, res);
             } else if (isJson) {
-                dict = new Dict();
-                dict.set("metadata", serializeMetadata(meta, request));
-                dict.set("data", res);
-                request.sendText(Mime.JSON[0], JsSerializer.serialize(dict, true));
+                request.sendText(Mime.JSON[0], JsSerializer.serialize(res, true));
             } else if (isProps) {
                 request.sendText(Mime.TEXT[0], PropertiesSerializer.serialize(res));
             } else if (isXml) {
-                dict = new Dict();
-                dict.set("metadata", serializeMetadata(meta, request));
-                dict.set("data", res);
-                request.sendText(Mime.XML[0], XmlSerializer.serialize("results", dict));
+                request.sendText(Mime.XML[0], XmlSerializer.serialize("results", res));
             } else {
                 request.sendError(STATUS.NOT_ACCEPTABLE);
             }
         } catch (Exception e) {
             LOG.log(Level.WARNING, "failed to process storage request", e);
             // TODO: How do users want their error messages?
-            dict = new Dict();
-            dict.set("error", e.getMessage());
+            Dict dict = new Dict();
+            dict.set("error", e.toString());
             res = dict;
             if (isJson) {
                 request.sendText(Mime.JSON[0], JsSerializer.serialize(res, true));
