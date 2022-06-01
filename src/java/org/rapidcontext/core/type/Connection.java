@@ -219,24 +219,6 @@ public abstract class Connection extends StorableObject {
     }
 
     /**
-     * Returns a serialized representation of this object. Used when
-     * accessing the object from outside pure Java.
-     *
-     * @return the serialized representation of this object
-     */
-    public Dict serialize() {
-        dict.setInt("_openChannels", openChannels());
-        dict.setInt("_usedChannels", usedChannels());
-        dict.set("_lastUsedTime", lastUsed());
-        if (lastError == null) {
-            dict.remove("_lastError");
-        } else {
-            dict.set("_lastError", lastError);
-        }
-        return dict;
-    }
-
-    /**
      * Returns the maximum number of open channels. If the config
      * parameter hasn't been set, a default value of four (4) will be
      * returned.
@@ -419,6 +401,23 @@ public abstract class Connection extends StorableObject {
      * @param channel        the channel to destroy
      */
     protected abstract void destroyChannel(Channel channel);
+
+    /**
+     * Returns a serialized representation of this object. Used when
+     * persisting to permanent storage or when accessing the object
+     * from outside pure Java. Returns a shallow copy of the contained
+     * dictionary.
+     *
+     * @return the serialized representation of this object
+     */
+    public Dict serialize() {
+        Dict copy = super.serialize();
+        copy.setInt("_openChannels", openChannels());
+        copy.setInt("_usedChannels", usedChannels());
+        copy.set("_lastUsedTime", lastUsed());
+        copy.set("_lastError", lastError());
+        return copy;
+    }
 
 
     /**

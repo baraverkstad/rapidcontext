@@ -109,7 +109,7 @@ public class ConnectionListProcedure implements Procedure {
                 Object obj = cx.getStorage().load(path);
                 Dict dict = null;
                 if (obj instanceof Connection) {
-                    dict = ((Connection) obj).serialize().copy();
+                    dict = ((Connection) obj).serialize();
                 } else if (obj instanceof Dict) {
                     dict = (Dict) obj;
                     if (!dict.containsKey("_error")) {

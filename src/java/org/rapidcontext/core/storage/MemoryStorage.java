@@ -104,18 +104,6 @@ public class MemoryStorage extends Storage {
     }
 
     /**
-     * Returns a serialized representation of this object. Used when
-     * accessing the object from outside pure Java.
-     *
-     * @return the serialized representation of this object
-     */
-    public Dict serialize() {
-        dict.setInt("_objectCount", objects.size());
-        dict.setInt("_metadataCount", meta.size());
-        return dict;
-    }
-
-    /**
      * Returns the number of objects currently in this storage. This
      * number does not include indexes or metadata objects, since
      * those are dynamically inserted and removed.
@@ -321,5 +309,20 @@ public class MemoryStorage extends Storage {
                 }
             }
         }
+    }
+
+    /**
+     * Returns a serialized representation of this object. Used when
+     * persisting to permanent storage or when accessing the object
+     * from outside pure Java. Returns a shallow copy of the contained
+     * dictionary.
+     *
+     * @return the serialized representation of this object
+     */
+    public Dict serialize() {
+        Dict copy = super.serialize();
+        copy.setInt("_objectCount", objects.size());
+        copy.setInt("_metadataCount", meta.size());
+        return copy;
     }
 }

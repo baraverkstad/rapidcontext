@@ -103,7 +103,7 @@ public class TypeListProcedure implements Procedure {
         Type[] types = Type.findAll(cx.getStorage());
         Array res = new Array(types.length);
         for (Type t : types) {
-            res.add(t.serialize().copy());
+            res.add(t.serialize());
         }
         return res;
     }

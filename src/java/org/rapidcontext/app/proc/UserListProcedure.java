@@ -127,7 +127,7 @@ public class UserListProcedure implements Procedure {
      * @return the serialized dictionary for the user
      */
     public static Dict serialize(User user) {
-        Dict dict = user.serialize().copy();
+        Dict dict = user.serialize();
         dict.remove("password");
         if (!dict.containsKey("role")) {
             dict.set("role", new Array(0));

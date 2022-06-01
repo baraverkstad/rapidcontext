@@ -233,12 +233,12 @@ public class StorableObject {
     /**
      * Returns a serialized representation of this object. Used when
      * persisting to permanent storage or when accessing the object
-     * from outside pure Java. By default this method will return the
-     * contained dictionary.
+     * from outside pure Java. Returns a shallow copy of the contained
+     * dictionary.
      *
      * @return the serialized representation of this object
      */
     public Dict serialize() {
-        return dict;
+        return dict.copy();
     }
 }

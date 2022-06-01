@@ -99,7 +99,7 @@ public class JdbcBuiltInConnectionInfoProcedure implements Procedure {
     throws ProcedureException {
 
         JdbcChannel channel = JdbcProcedure.connectionReserve(cx, bindings);
-        Dict res = channel.getConnection().serialize().copy();
+        Dict res = channel.getConnection().serialize();
         try {
             res.set("_metadata", channel.metadata());
         } catch (ConnectionException e) {

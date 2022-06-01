@@ -110,7 +110,7 @@ public class JdbcBuiltInConnectionListProcedure implements Procedure {
             if (SecurityContext.hasReadAccess(path.toString())) {
                 Object obj = cx.getStorage().load(path);
                 if (obj instanceof JdbcConnection) {
-                    res.add(((JdbcConnection) obj).serialize().copy());
+                    res.add(((JdbcConnection) obj).serialize());
                 }
             }
         }

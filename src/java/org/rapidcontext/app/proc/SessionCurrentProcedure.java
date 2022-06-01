@@ -116,7 +116,7 @@ public class SessionCurrentProcedure implements Procedure {
      * @return the serialized session dictionary
      */
     public static Dict serialize(Storage storage, Session session) {
-        Dict res = session.serialize().copy();
+        Dict res = session.serialize();
         res.set("creationDate", DateUtil.asDateTimeUTC(session.createTime()));
         res.set("lastAccessDate", DateUtil.asDateTimeUTC(session.accessTime()));
         String userId = session.userId();

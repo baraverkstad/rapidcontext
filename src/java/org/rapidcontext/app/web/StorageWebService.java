@@ -378,7 +378,7 @@ public class StorageWebService extends WebService {
     private Dict serializeMetadata(Metadata meta, Request request) {
         Dict  dict = new Dict();
 
-        dict = meta.serialize().copy();
+        dict = meta.serialize();
         dict.remove(Metadata.KEY_TYPE);
         dict.set("processTime", Long.valueOf(request.getProcessTime()));
         return dict;

@@ -286,17 +286,6 @@ public class Session extends StorableObject {
     }
 
     /**
-     * Returns a serialized representation of this object. Used when
-     * accessing the object from outside pure Java.
-     *
-     * @return the serialized representation of this object
-     */
-    public Dict serialize() {
-        dict.setBoolean("_valid", isValid());
-        return dict;
-    }
-
-    /**
      * Checks if this session is new (hasn't been stored).
      *
      * @return true if the session is new, or
@@ -511,5 +500,19 @@ public class Session extends StorableObject {
      */
     public void invalidate() {
         dict.set(KEY_DESTROY_TIME, new Date(0));
+    }
+
+    /**
+     * Returns a serialized representation of this object. Used when
+     * persisting to permanent storage or when accessing the object
+     * from outside pure Java. Returns a shallow copy of the contained
+     * dictionary.
+     *
+     * @return the serialized representation of this object
+     */
+    public Dict serialize() {
+        Dict copy = super.serialize();
+        copy.setBoolean("_valid", isValid());
+        return copy;
     }
 }
