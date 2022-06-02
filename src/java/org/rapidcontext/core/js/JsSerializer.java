@@ -19,15 +19,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
-import org.mozilla.javascript.ConsString;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContextFactory;
-import org.mozilla.javascript.NativeArray;
-import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.Undefined;
-import org.mozilla.javascript.UniqueTag;
 import org.mozilla.javascript.WrappedException;
-import org.mozilla.javascript.Wrapper;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.TextEncoding;
@@ -72,7 +66,7 @@ public final class JsSerializer {
      */
     public static String serialize(Object obj, boolean indent) {
         StringBuilder buffer = new StringBuilder();
-        serialize(unwrap(obj), indent ? 0 : -1, buffer);
+        serialize(JsRuntime.unwrap(obj), indent ? 0 : -1, buffer);
         if (indent) {
             buffer.append("\n");
         }
@@ -229,7 +223,7 @@ public final class JsSerializer {
                                     "unserialize",
                                     1,
                                     null);
-            return unwrap(obj);
+            return JsRuntime.unwrap(obj);
         } catch (WrappedException e) {
             msg = "Caught unserialization exception for text: " + str;
             LOG.log(Level.WARNING, msg, e);
@@ -240,87 +234,6 @@ public final class JsSerializer {
             throw new JsException(msg, e);
         } finally {
             Context.exit();
-        }
-    }
-
-    /**
-     * Wraps a Java object for JavaScript access. This method only
-     * handles String, Number, Boolean and Data instances.
-     *
-     * @param obj            the object to wrap
-     * @param scope          the parent scope
-     *
-     * @return the wrapped object
-     *
-     * @see org.rapidcontext.core.data.Array
-     * @see org.rapidcontext.core.data.Dict
-     */
-    public static Object wrap(Object obj, Scriptable scope) {
-        if (obj instanceof StorableObject) {
-            return new DictWrapper(((StorableObject) obj).serialize(), scope);
-        } else if (obj instanceof Dict) {
-            return new DictWrapper((Dict) obj, scope);
-        } else if (obj instanceof Array) {
-            return new ArrayWrapper((Array) obj, scope);
-        } else if (obj instanceof Date) {
-            return DateUtil.asEpochMillis((Date) obj);
-        } else {
-            return obj;
-        }
-    }
-
-    /**
-     * Removes all JavaScript classes and replaces them with the
-     * corresponding Java objects. This method will use instances of
-     * Dict and Array to replace native JavaScript objects and arrays.
-     * Also, it will replace both JavaScript "null" and "undefined"
-     * with null. Any Dict or Array object encountered will be
-     * traversed and copied recursively. Other objects will be
-     * returned as-is.
-     *
-     * @param obj            the object to unwrap
-     *
-     * @return the unwrapped object
-     *
-     * @see org.rapidcontext.core.data.Array
-     * @see org.rapidcontext.core.data.Dict
-     */
-    public static Object unwrap(Object obj) {
-        if (obj == null || obj == UniqueTag.NULL_VALUE) {
-            return null;
-        } else if (obj instanceof Undefined || obj == UniqueTag.NOT_FOUND) {
-            return null;
-        } else if (obj instanceof Wrapper) {
-            return ((Wrapper) obj).unwrap();
-        } else if (obj instanceof ConsString) {
-            return obj.toString();
-        } else if (obj instanceof NativeArray) {
-            NativeArray nativeArr = (NativeArray) obj;
-            int length = (int) nativeArr.getLength();
-            Array arr = new Array(length);
-            for (int i = 0; i < length; i++) {
-                arr.set(i, unwrap(nativeArr.get(i, nativeArr)));
-            }
-            return arr;
-        } else if (obj instanceof Scriptable) {
-            Scriptable scr = (Scriptable) obj;
-            Object[] keys = scr.getIds();
-            Dict dict = new Dict(keys.length);
-            for (Object k : keys) {
-                String str = k.toString();
-                Object value = null;
-                if (k instanceof Integer) {
-                    value = scr.get(((Integer) k).intValue(), scr);
-                } else {
-                    value = scr.get(str, scr);
-                }
-                if (str != null && str.length() > 0) {
-                    dict.set(str, unwrap(value));
-                }
-            }
-            return dict;
-        } else {
-            return obj;
         }
     }
 

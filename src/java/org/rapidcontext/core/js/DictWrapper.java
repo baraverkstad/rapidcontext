@@ -86,7 +86,7 @@ public class DictWrapper extends ScriptableObject implements Wrapper {
     public Object get(String name, Scriptable start) {
         if (dict.containsKey(name)) {
             if (!cache.containsKey(name)) {
-                cache.put(name, JsSerializer.wrap(dict.get(name), this));
+                cache.put(name, JsRuntime.wrap(dict.get(name), this));
             }
             return cache.get(name);
         } else {
@@ -130,7 +130,7 @@ public class DictWrapper extends ScriptableObject implements Wrapper {
     public Object unwrap() {
         if (!dict.isSealed()) {
             for (String key : dict.keys()) {
-                dict.set(key, JsSerializer.unwrap(dict.get(key)));
+                dict.set(key, JsRuntime.unwrap(dict.get(key)));
             }
         }
         return dict;

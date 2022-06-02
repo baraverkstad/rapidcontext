@@ -92,7 +92,7 @@ public class ConsoleObject {
      */
     private void logInternal(Level level, Object ...args) {
         for (int i = 0; i < args.length; i++) {
-            args[i] = JsSerializer.unwrap(args[i]);
+            args[i] = JsRuntime.unwrap(args[i]);
         }
         LOG.log(level, procName + ": " + StringUtils.join(args, " "));
     }

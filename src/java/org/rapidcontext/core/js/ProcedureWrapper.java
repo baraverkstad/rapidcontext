@@ -133,11 +133,11 @@ class ProcedureWrapper extends BaseFunction implements Wrapper {
 
         if (!(proc instanceof JsProcedure)) {
             for (int i = 0; i < args.length; i++) {
-                args[i] = JsSerializer.unwrap(args[i]);
+                args[i] = JsRuntime.unwrap(args[i]);
             }
         }
         try {
-            return JsSerializer.wrap(cx.call(proc, args), scope);
+            return JsRuntime.wrap(cx.call(proc, args), scope);
         } catch (ProcedureException e) {
             throw new WrappedException(e);
         }

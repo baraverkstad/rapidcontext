@@ -138,7 +138,7 @@ public class ArrayWrapper extends ScriptableObject implements Wrapper {
     public Object get(int index, Scriptable start) {
         if (arr.containsIndex(index)) {
             if (!cache.containsKey(index)) {
-                cache.put(index, JsSerializer.wrap(arr.get(index), this));
+                cache.put(index, JsRuntime.wrap(arr.get(index), this));
             }
             return cache.get(index);
         }
@@ -213,7 +213,7 @@ public class ArrayWrapper extends ScriptableObject implements Wrapper {
         // FIXME: clear wrapped object cache
         if (!arr.isSealed()) {
             for (int i = 0; i < arr.size(); i++) {
-                arr.set(i, JsSerializer.unwrap(arr.get(i)));
+                arr.set(i, JsRuntime.unwrap(arr.get(i)));
             }
         }
         return arr;

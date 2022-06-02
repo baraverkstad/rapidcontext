@@ -118,13 +118,13 @@ public class JsProcedure extends AddOnProcedure {
                     value = new ConnectionWrapper(cx, (Channel) value, scope);
                     ScriptableObject.putProperty(scope, name, value);
                 } else if (type == Bindings.ARGUMENT) {
-                    value = JsSerializer.wrap(value, scope);
+                    value = JsRuntime.wrap(value, scope);
                     ScriptableObject.putProperty(scope, name, value);
                 }
             }
             Object res = script.exec(scriptContext, scope);
             boolean unwrapResult = (cx.getCallStack().height() <= 1);
-            return unwrapResult ? JsSerializer.unwrap(res) : res;
+            return unwrapResult ? JsRuntime.unwrap(res) : res;
         } catch (Exception e) {
             throw createException(e);
         } finally {

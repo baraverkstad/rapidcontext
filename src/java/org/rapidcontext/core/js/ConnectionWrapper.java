@@ -222,7 +222,7 @@ public class ConnectionWrapper extends ScriptableObject implements Wrapper {
                            Object[] args) {
 
             for (int i = 0; i < args.length; i++) {
-                args[i] = JsSerializer.unwrap(args[i]);
+                args[i] = JsRuntime.unwrap(args[i]);
             }
             Channel target = ConnectionWrapper.this.getConnection();
             for (Method m : target.getClass().getMethods()) {
@@ -235,7 +235,7 @@ public class ConnectionWrapper extends ScriptableObject implements Wrapper {
                         m.setAccessible(true);
                         Object res = m.invoke(target, args);
                         cx.logResponse(res);
-                        return JsSerializer.wrap(res, scope);
+                        return JsRuntime.wrap(res, scope);
                     } catch (Exception e) {
                         cx.logError(e);
                         String msg = "call to " + this.methodName + " failed: " +
