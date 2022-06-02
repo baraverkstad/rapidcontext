@@ -194,24 +194,10 @@ public class DirStorage extends Storage {
             LOG.warning(msg);
             throw new StorageException(msg);
         }
-        if (data instanceof StorableObject) {
-            data = ((StorableObject) data).serialize();
-        }
         File dir = locateDir(path);
         File file = new File(dir, path.name());
         File tmp = null;
-        if (data instanceof Dict) {
-            try {
-                file = new File(dir, path.name() + SUFFIX_PROPS);
-                tmp = FileUtil.tempFile(file.getName());
-                PropertiesSerializer.write(tmp, data);
-            } catch (Exception e) {
-                String msg = "failed to write temporary file " + tmp + ": " +
-                             e.getMessage();
-                LOG.warning(msg);
-                throw new StorageException(msg);
-            }
-        } else if (data instanceof Binary) {
+        if (data instanceof Binary) {
             try (InputStream is = ((Binary) data).openStream()) {
                 tmp = FileUtil.tempFile(file.getName());
                 FileUtil.copy(is, tmp);
@@ -224,9 +210,17 @@ public class DirStorage extends Storage {
         } else if (data instanceof File) {
             tmp = (File) data;
         } else {
-            String msg = "cannot store unsupported data type at " + path();
-            LOG.warning(msg);
-            throw new StorageException(msg);
+            try {
+                file = new File(dir, path.name() + SUFFIX_PROPS);
+                tmp = FileUtil.tempFile(file.getName());
+                data = sterilize(data);
+                PropertiesSerializer.write(tmp, data);
+            } catch (Exception e) {
+                String msg = "failed to write temporary file " + tmp + ": " +
+                             e.getMessage();
+                LOG.warning(msg);
+                throw new StorageException(msg);
+            }
         }
         dir.mkdirs();
         if (!tmp.renameTo(file)) {
@@ -317,6 +311,31 @@ public class DirStorage extends Storage {
             return null;
         } else {
             return file.canRead() ? file : null;
+        }
+    }
+
+    /**
+     * Prepares a object for serialization. This will remove any
+     * transient keys and convert a StorableObject to a Dict. Other
+     * values will be returned unmodified.
+     *
+     * @param obj            the object to sterilize
+     *
+     * @return the object value for serialization
+     */
+    private static Object sterilize(Object obj) {
+        if (obj instanceof StorableObject) {
+            Dict copy = ((StorableObject) obj).serialize();
+            for (String key : copy.keys()) {
+                if (key.startsWith("_")) {
+                    copy.remove(key);
+                } else {
+                    copy.set(key, sterilize(copy.get(key)));
+                }
+            }
+            return copy;
+        } else {
+            return obj;
         }
     }
 }

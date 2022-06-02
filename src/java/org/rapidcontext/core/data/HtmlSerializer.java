@@ -94,13 +94,11 @@ public final class HtmlSerializer {
     private static void serialize(Dict dict, StringBuilder buffer) {
         buffer.append("<table>\n<tbody>\n");
         for (String key : dict.keys()) {
-            if (!key.startsWith("_")) { // Skip transient values
-                buffer.append("<tr>\n<th>");
-                serialize(key, buffer);
-                buffer.append("</th>\n<td>");
-                serialize(dict.get(key), buffer);
-                buffer.append("</td>\n</tr>\n");
-            }
+            buffer.append("<tr>\n<th>");
+            serialize(key, buffer);
+            buffer.append("</th>\n<td>");
+            serialize(dict.get(key), buffer);
+            buffer.append("</td>\n</tr>\n");
         }
         buffer.append("</tbody>\n</table>\n");
     }

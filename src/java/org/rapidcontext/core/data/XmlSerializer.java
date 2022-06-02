@@ -108,11 +108,9 @@ public final class XmlSerializer {
     private static void serialize(String id, Dict dict, int indent, StringBuilder buffer) {
         tagStart(id, "object", buffer);
         for (String key : dict.keys()) {
-            if (!key.startsWith("_")) { // Skip transient values
-                buffer.append("\n");
-                buffer.append(StringUtils.repeat("  ", indent + 1));
-                serialize(key, dict.get(key), indent + 1, buffer);
-            }
+            buffer.append("\n");
+            buffer.append(StringUtils.repeat("  ", indent + 1));
+            serialize(key, dict.get(key), indent + 1, buffer);
         }
         buffer.append("\n");
         buffer.append(StringUtils.repeat("  ", indent));

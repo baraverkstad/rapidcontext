@@ -365,9 +365,7 @@ public final class PropertiesSerializer {
         ArrayList<String> delayed = new ArrayList<>();
         for (String k : keys) {
             Object obj = dict.get(k);
-            if (k.startsWith("_")) {
-                // Skip transient values
-            } else if (obj instanceof Dict || obj instanceof Array || obj instanceof StorableObject) {
+            if (obj instanceof Dict || obj instanceof Array || obj instanceof StorableObject) {
                 delayed.add(k);
             } else {
                 write(os, prefix + k, obj);
