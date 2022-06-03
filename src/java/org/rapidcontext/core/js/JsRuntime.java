@@ -22,13 +22,17 @@ import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.NativeArray;
 import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.Undefined;
 import org.mozilla.javascript.UniqueTag;
 import org.mozilla.javascript.WrappedException;
 import org.mozilla.javascript.Wrapper;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
+import org.rapidcontext.core.proc.CallContext;
+import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.storage.StorableObject;
+import org.rapidcontext.core.type.Channel;
 import org.rapidcontext.util.DateUtil;
 
 /**
@@ -63,7 +67,9 @@ public final class JsRuntime {
         try (Context cx = Context.enter()) {
             cx.setLanguageVersion(Context.VERSION_ES6);
             cx.setErrorReporter(errors);
-            Scriptable scope = cx.initSafeStandardObjects();
+            ScriptableObject scope = cx.initSafeStandardObjects();
+            Object console = Context.javaToJS(new ConsoleObject(name), scope);
+            scope.defineProperty("console", console, ScriptableObject.READONLY | ScriptableObject.PERMANENT);
             StringBuilder code = new StringBuilder();
             code.append("function ");
             code.append(name);
@@ -77,6 +83,7 @@ public final class JsRuntime {
             code.append(") {\n");
             code.append(body);
             code.append("\n}");
+            LOG.fine("compiling JS code: " + code);
             Function f = cx.compileFunction(scope, code.toString(), name, 1, null);
             if (errors.getErrorCount() > 0) {
                 throw new JsException(errors.getErrorText());
@@ -86,7 +93,7 @@ public final class JsRuntime {
             if (errors.getErrorCount() > 0) {
                 throw new JsException(errors.getErrorText());
             }
-            throw createException(e);
+            throw createException("syntax error", e);
         }
     }
 
@@ -95,40 +102,50 @@ public final class JsRuntime {
      *
      * @param f              the compiled function
      * @param args           the argument values (will be wrapped)
+     * @param procCx         the optional procedure call context or null
      *
      * @return the function return value (possibly wrapped)
      *
      * @throws JsException if the call failed or threw an exception
      */
-    public static Object call(Function f, Object[] args) throws JsException {
+    public static Object call(Function f, Object[] args, CallContext procCx) throws JsException {
         try (Context cx = Context.enter()) {
             cx.setLanguageVersion(Context.VERSION_ES6);
-            Scriptable scope = cx.initSafeStandardObjects();
+            ScriptableObject scope = cx.initSafeStandardObjects();
             Object[] safeArgs = new Object[args.length];
             for (int i = 0; i < args.length; i++) {
-                safeArgs[i] = wrap(args[i], scope);
+                if (args[i] instanceof Procedure) {
+                    safeArgs[i] = new ProcedureWrapper(procCx, (Procedure) args[i], scope);
+                } else if (args[i] instanceof Channel) {
+                    safeArgs[i] = new ConnectionWrapper(procCx, (Channel) args[i], scope);
+                } else {
+                    safeArgs[i] = wrap(args[i], scope);
+                }
             }
+            LOG.fine("calling JS: " + f + ", args:" + safeArgs.length);
             return f.call(cx, scope, null, safeArgs);
         } catch (Exception e) {
-            throw createException(e);
+            throw createException("uncaught", e);
         }
     }
 
     /**
      * Creates a procedure exception from any exception type.
      *
+     * @param prefix         the message prefix text
      * @param e              the exception to convert
      *
      * @return the procedure exception
      */
-    private static JsException createException(Throwable e) {
+    private static JsException createException(String prefix, Throwable e) {
         if (e instanceof JsException) {
             return (JsException) e;
         } else if (e instanceof WrappedException) {
-            return createException(((WrappedException) e).getWrappedException());
+            return createException(prefix, ((WrappedException) e).getWrappedException());
         } else {
-            LOG.log(Level.WARNING, "Caught unhandled exception", e);
-            return new JsException("Caught unhandled exception", e);
+            String msg = prefix + ": " + e.getMessage();
+            LOG.log(Level.WARNING, msg, e);
+            return new JsException(msg, e);
         }
     }
 

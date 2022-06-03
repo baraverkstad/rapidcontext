@@ -14,20 +14,14 @@
 
 package org.rapidcontext.core.js;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ArrayList;
 
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.Script;
-import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.ScriptableObject;
-import org.mozilla.javascript.WrappedException;
+import org.apache.commons.lang3.RegExUtils;
+import org.mozilla.javascript.Function;
 import org.rapidcontext.core.proc.AddOnProcedure;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
-import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.type.Channel;
 
 /**
  * A JavaScript procedure. This procedure will execute generic
@@ -39,20 +33,14 @@ import org.rapidcontext.core.type.Channel;
 public class JsProcedure extends AddOnProcedure {
 
     /**
-     * The class logger.
-     */
-    private static final Logger LOG =
-        Logger.getLogger(JsProcedure.class.getName());
-
-    /**
      * The binding name for the JavaScript code.
      */
     public static final String BINDING_CODE = "code";
 
     /**
-     * The compiled script code. Set to null upon code changes.
+     * The compiled JavaScript function.
      */
-    private Script script = null;
+    private Function func = null;
 
     /**
      * Creates a new JavaScript procedure.
@@ -73,7 +61,7 @@ public class JsProcedure extends AddOnProcedure {
      *         false otherwise
      */
     public boolean isCompiled() {
-        return script != null;
+        return func != null;
     }
 
     /**
@@ -95,40 +83,23 @@ public class JsProcedure extends AddOnProcedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        if (script == null) {
+        if (func == null) {
             compile();
         }
-        Context scriptContext = Context.enter();
-        try {
-            scriptContext.setLanguageVersion(Context.VERSION_ES6);
-            Scriptable scope = scriptContext.initSafeStandardObjects();
-            Object console = Context.javaToJS(new ConsoleObject(getName()), scope);
-            ScriptableObject.putProperty(scope, "console", console);
-            for (String name : bindings.getNames()) {
-                int type = bindings.getType(name);
-                Object value = bindings.getValue(name, null);
-                if (BINDING_CODE.equals(name)) {
-                    // Do nothing
-                } else if (type == Bindings.DATA) {
-                    ScriptableObject.putProperty(scope, name, value);
-                } else if (type == Bindings.PROCEDURE) {
-                    value = new ProcedureWrapper(cx, name, (Procedure) value, scope);
-                    ScriptableObject.putProperty(scope, name, value);
-                } else if (type == Bindings.CONNECTION) {
-                    value = new ConnectionWrapper(cx, (Channel) value, scope);
-                    ScriptableObject.putProperty(scope, name, value);
-                } else if (type == Bindings.ARGUMENT) {
-                    value = JsRuntime.wrap(value, scope);
-                    ScriptableObject.putProperty(scope, name, value);
-                }
+        ArrayList<Object> args = new ArrayList<>();
+        for (String arg : bindings.getNames()) {
+            // Note: All bindings are added as arguments here, as scope
+            //       variables are bound at compile-time...
+            if (!BINDING_CODE.equals(arg)) {
+                args.add(bindings.getValue(arg, null));
             }
-            Object res = script.exec(scriptContext, scope);
+        }
+        try {
+            Object res = JsRuntime.call(func, args.toArray(), cx);
             boolean unwrapResult = (cx.getCallStack().height() <= 1);
             return unwrapResult ? JsRuntime.unwrap(res) : res;
-        } catch (Exception e) {
-            throw createException(e);
-        } finally {
-            Context.exit();
+        } catch (JsException e) {
+            throw new ProcedureException( "In " + getName(), e);
         }
     }
 
@@ -141,66 +112,22 @@ public class JsProcedure extends AddOnProcedure {
      *             correctly
      */
     public void compile() throws ProcedureException {
-        JsErrorHandler  errorHandler = new JsErrorHandler();
-        Context         cx;
-        String[]        lines;
-        String          str;
-        StringBuffer    code = new StringBuffer();
-        int             idx;
-
-        cx = Context.enter();
-        try {
-            cx.setLanguageVersion(Context.VERSION_ES6);
-            cx.setErrorReporter(errorHandler);
-            str = (String) getBindings().getValue(BINDING_CODE);
-            lines = str.split("\n");
-            idx = lines.length - 1;
-            while (idx >= 0 && lines[idx].trim().length() <= 0) {
-                idx--;
+        String name = RegExUtils.replaceAll(getName(), "[^a-zA-Z0-9_$]", "_");
+        String code = (String) getBindings().getValue(BINDING_CODE);
+        ArrayList<String> args = new ArrayList<>();
+        for (String arg : getBindings().getNames()) {
+            // Note: All bindings are added as arguments here, as scope
+            //       variables are bound at compile-time...
+            if (!BINDING_CODE.equals(arg)) {
+                args.add(arg);
             }
-            // TODO: remove this backwards-compatibility hack
-            if (idx >= 0) {
-                str = lines[idx];
-                if (!str.contains("return") && !str.contains("throw")) {
-                    lines[idx] = "return " + str;
-                }
-            }
-            code.append("(function () {\n");
-            for (String s : lines) {
-                code.append(s);
-                code.append("\n");
-            }
-            code.append("})();");
-            script = cx.compileString(code.toString(), getName(), 0, null);
-            if (errorHandler.getErrorCount() > 0) {
-                throw new ProcedureException(errorHandler.getErrorText());
-            }
-        } catch (Exception e) {
-            script = null;
-            if (errorHandler.getErrorCount() > 0) {
-                throw new ProcedureException(errorHandler.getErrorText());
-            }
-            throw createException(e);
-        } finally {
-            Context.exit();
         }
-    }
-
-    /**
-     * Creates a procedure exception from any exception type.
-     *
-     * @param e              the exception to convert
-     *
-     * @return the procedure exception
-     */
-    private ProcedureException createException(Throwable e) {
-        if (e instanceof ProcedureException) {
-            return (ProcedureException) e;
-        } else if (e instanceof WrappedException) {
-            return createException(((WrappedException) e).getWrappedException());
-        } else {
-            LOG.log(Level.WARNING, "Caught unhandled exception", e);
-            return new ProcedureException("Caught unhandled exception", e);
+        this.func = null;
+        try {
+            String[] argNames = args.toArray(new String[args.size()]);
+            this.func = JsRuntime.compile(name, argNames, code);
+        } catch (Exception e) {
+            throw new ProcedureException("In " + getName(), e);
         }
     }
 }

@@ -61,7 +61,7 @@ public final class JsonSerializer {
                 serializeFunction = JsRuntime.compile("serialize", args, body);
             }
             Object[] args = new Object[] { obj, Integer.valueOf(indent ? 2 : 0) };
-            return JsRuntime.call(serializeFunction, args).toString();
+            return JsRuntime.call(serializeFunction, args, null).toString();
         } catch (JsException ignore) {
             return "null";
         }
@@ -85,7 +85,7 @@ public final class JsonSerializer {
                 unserializeFunction = JsRuntime.compile("unserialize", args, body);
             }
             Object[] args = new Object[] { json };
-            return JsRuntime.unwrap(JsRuntime.call(unserializeFunction, args));
+            return JsRuntime.unwrap(JsRuntime.call(unserializeFunction, args, null));
         } catch (JsException e) {
             throw new IOException("Failed to unserialize JSON", e);
         }

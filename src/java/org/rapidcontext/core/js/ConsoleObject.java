@@ -35,17 +35,17 @@ public class ConsoleObject {
         Logger.getLogger(ConsoleObject.class.getName());
 
     /**
-     * The procedure name.
+     * The log prefix.
      */
-    private String procName;
+    private String prefix;
 
     /**
-     * Creates a new console object for the specified procedure.
+     * Creates a new console object with a specific prefix.
      *
-     * @param procName       the procedure name
+     * @param prefix         the logging prefix text
      */
-    public ConsoleObject(String procName) {
-        this.procName = procName;
+    public ConsoleObject(String prefix) {
+        this.prefix = prefix;
     }
 
     /**
@@ -94,6 +94,6 @@ public class ConsoleObject {
         for (int i = 0; i < args.length; i++) {
             args[i] = JsRuntime.unwrap(args[i]);
         }
-        LOG.log(level, procName + ": " + StringUtils.join(args, " "));
+        LOG.log(level, this.prefix + ": " + StringUtils.join(args, " "));
     }
 }

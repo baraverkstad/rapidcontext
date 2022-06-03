@@ -39,11 +39,6 @@ class ProcedureWrapper extends BaseFunction implements Wrapper {
     private CallContext cx;
 
     /**
-     * The bound procedure name.
-     */
-    private String name;
-
-    /**
      * The wrapped procedure.
      */
     private Procedure proc;
@@ -52,14 +47,12 @@ class ProcedureWrapper extends BaseFunction implements Wrapper {
      * Creates a new procedure wrapper call function.
      *
      * @param cx             the procedure call context
-     * @param name           the bound procedure name
      * @param proc           the procedure definition
      * @param parentScope    the object parent scope
      */
-    ProcedureWrapper(CallContext cx, String name, Procedure proc, Scriptable parentScope) {
+    ProcedureWrapper(CallContext cx, Procedure proc, Scriptable parentScope) {
         super(parentScope, getFunctionPrototype(parentScope));
         this.cx = cx;
-        this.name = name;
         this.proc = proc;
     }
 
@@ -95,7 +88,7 @@ class ProcedureWrapper extends BaseFunction implements Wrapper {
     public Object get(String name, Scriptable start) {
         switch (name) {
         case "name":
-            return this.name;
+            return "wrapped " + this.proc.getName();
         case "arity":
         case "length":
             Bindings bindings = proc.getBindings();
