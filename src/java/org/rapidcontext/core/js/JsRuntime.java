@@ -15,12 +15,16 @@
 package org.rapidcontext.core.js;
 
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.mozilla.javascript.Context;
+import org.mozilla.javascript.Function;
 import org.mozilla.javascript.NativeArray;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.Undefined;
 import org.mozilla.javascript.UniqueTag;
+import org.mozilla.javascript.WrappedException;
 import org.mozilla.javascript.Wrapper;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
@@ -34,6 +38,99 @@ import org.rapidcontext.util.DateUtil;
  * @version  1.0
  */
 public final class JsRuntime {
+
+    /**
+     * The class logger.
+     */
+    private static final Logger LOG =
+        Logger.getLogger(JsRuntime.class.getName());
+
+    /**
+     * Compiles a JavaScript function for later use.
+     *
+     * @param name           the function name (must be valid JS)
+     * @param args           the argument names
+     * @param body           the function body (i.e. source code)
+     *
+     * @return a compiled function object
+     *
+     * @throws JsException if the source code didn't compile
+     */
+    public static Function compile(String name, String[] args, String body)
+    throws JsException {
+
+        JsErrorHandler errors = new JsErrorHandler();
+        try (Context cx = Context.enter()) {
+            cx.setLanguageVersion(Context.VERSION_ES6);
+            cx.setErrorReporter(errors);
+            Scriptable scope = cx.initSafeStandardObjects();
+            StringBuilder code = new StringBuilder();
+            code.append("function ");
+            code.append(name);
+            code.append("(");
+            for (String arg : args) {
+                if (code.charAt(code.length() - 1) != '(') {
+                    code.append(", ");
+                }
+                code.append(arg);
+            }
+            code.append(") {\n");
+            code.append(body);
+            code.append("\n}");
+            Function f = cx.compileFunction(scope, code.toString(), name, 1, null);
+            if (errors.getErrorCount() > 0) {
+                throw new JsException(errors.getErrorText());
+            }
+            return f;
+        } catch (Exception e) {
+            if (errors.getErrorCount() > 0) {
+                throw new JsException(errors.getErrorText());
+            }
+            throw createException(e);
+        }
+    }
+
+    /**
+     * Calls a previously compiled JavaScript function.
+     *
+     * @param f              the compiled function
+     * @param args           the argument values (will be wrapped)
+     *
+     * @return the function return value (possibly wrapped)
+     *
+     * @throws JsException if the call failed or threw an exception
+     */
+    public static Object call(Function f, Object[] args) throws JsException {
+        try (Context cx = Context.enter()) {
+            cx.setLanguageVersion(Context.VERSION_ES6);
+            Scriptable scope = cx.initSafeStandardObjects();
+            Object[] safeArgs = new Object[args.length];
+            for (int i = 0; i < args.length; i++) {
+                safeArgs[i] = wrap(args[i], scope);
+            }
+            return f.call(cx, scope, null, safeArgs);
+        } catch (Exception e) {
+            throw createException(e);
+        }
+    }
+
+    /**
+     * Creates a procedure exception from any exception type.
+     *
+     * @param e              the exception to convert
+     *
+     * @return the procedure exception
+     */
+    private static JsException createException(Throwable e) {
+        if (e instanceof JsException) {
+            return (JsException) e;
+        } else if (e instanceof WrappedException) {
+            return createException(((WrappedException) e).getWrappedException());
+        } else {
+            LOG.log(Level.WARNING, "Caught unhandled exception", e);
+            return new JsException("Caught unhandled exception", e);
+        }
+    }
 
     /**
      * Wraps a Java object for JavaScript access. This method only

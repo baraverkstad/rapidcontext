@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.js.JsSerializer;
+import org.rapidcontext.core.data.JsonSerializer;
 import org.rapidcontext.core.type.Session;
 import org.rapidcontext.core.type.WebService;
 import org.rapidcontext.core.web.Mime;
@@ -98,7 +98,7 @@ public class LogWebService extends WebService{
         try {
             if (Mime.isInputMatch(request, Mime.JSON)) {
                 String input = request.getInputString();
-                Object obj = JsSerializer.unserialize(input);
+                Object obj = JsonSerializer.unserialize(input);
                 if (obj instanceof Dict) {
                     logMessage(request, (Dict) obj);
                 } else if (obj instanceof Array) {

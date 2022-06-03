@@ -30,10 +30,9 @@ import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.HtmlSerializer;
+import org.rapidcontext.core.data.JsonSerializer;
 import org.rapidcontext.core.data.PropertiesSerializer;
 import org.rapidcontext.core.data.XmlSerializer;
-import org.rapidcontext.core.js.JsException;
-import org.rapidcontext.core.js.JsSerializer;
 import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.DirStorage;
 import org.rapidcontext.core.storage.Index;
@@ -209,7 +208,7 @@ public class StorageWebService extends WebService {
             } else if (isDefault || isHtml) {
                 sendHtml(request, path, meta, res);
             } else if (isJson) {
-                request.sendText(Mime.JSON[0], JsSerializer.serialize(res, true));
+                request.sendText(Mime.JSON[0], JsonSerializer.serialize(res, true));
             } else if (isProps) {
                 request.sendText(Mime.TEXT[0], PropertiesSerializer.serialize(res));
             } else if (isXml) {
@@ -224,7 +223,7 @@ public class StorageWebService extends WebService {
             dict.set("error", e.toString());
             res = dict;
             if (isJson) {
-                request.sendText(Mime.JSON[0], JsSerializer.serialize(res, true));
+                request.sendText(Mime.JSON[0], JsonSerializer.serialize(res, true));
             } else if (isXml) {
                 request.sendText(Mime.XML[0], XmlSerializer.serialize("error", res));
             } else {
@@ -417,7 +416,7 @@ public class StorageWebService extends WebService {
             return;
         }
         try {
-            Object data = JsSerializer.unserialize(request.getInputString());
+            Object data = JsonSerializer.unserialize(request.getInputString());
             Path path = new Path(request.getPath());
             Storage storage = ApplicationContext.getInstance().getStorage();
             Object prev = storage.load(path);
@@ -436,15 +435,12 @@ public class StorageWebService extends WebService {
             } else {
                 dict.setAll((Dict) data);
                 storage.store(path, dict);
-                request.sendText(Mime.JSON[0], JsSerializer.serialize(dict, true));
+                request.sendText(Mime.JSON[0], JsonSerializer.serialize(dict, true));
             }
-        } catch (JsException e) {
-            String msg = "invalid input JSON: " + e.getMessage();
-            LOG.warning(msg);
-            errorBadRequest(request, msg);
         } catch (Exception e) {
-            LOG.log(Level.WARNING, "failed to write " + request.getPath(), e);
-            errorInternal(request, e.getMessage());
+            String msg = "failed to write " + request.getPath() + ": " + e.getMessage();
+            LOG.log(Level.WARNING, msg, e);
+            errorBadRequest(request, msg);
         }
     }
 
@@ -468,7 +464,7 @@ public class StorageWebService extends WebService {
         try {
             Path path = new Path(request.getPath());
             Path normalizedPath = normalizePath(path);
-            Object data = JsSerializer.unserialize(request.getInputString());
+            Object data = JsonSerializer.unserialize(request.getInputString());
             if (StorageWriteProcedure.store(path, data)) {
                 if (normalizedPath == null) {
                     request.sendText(STATUS.CREATED, null, null);
@@ -480,9 +476,9 @@ public class StorageWebService extends WebService {
                 LOG.warning(msg);
                 errorInternal(request, msg);
             }
-        } catch (JsException e) {
-            String msg = "invalid input JSON: " + e.getMessage();
-            LOG.warning(msg);
+        } catch (Exception e) {
+            String msg = "failed to write " + request.getPath() + ": " + e.getMessage();
+            LOG.log(Level.WARNING, msg, e);
             errorBadRequest(request, msg);
         }
     }

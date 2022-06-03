@@ -29,8 +29,7 @@ import java.util.logging.Logger;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.js.JsException;
-import org.rapidcontext.core.js.JsSerializer;
+import org.rapidcontext.core.data.JsonSerializer;
 import org.rapidcontext.core.proc.AddOnProcedure;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
@@ -205,8 +204,8 @@ public abstract class HttpProcedure extends AddOnProcedure {
             Object data = text;
             if ((jsonData && success) || jsonError) {
                 try {
-                    data = JsSerializer.unserialize(text);
-                } catch (JsException e) {
+                    data = JsonSerializer.unserialize(text);
+                } catch (Exception e) {
                     String msg = "invalid json: " + e.getMessage();
                     LOG.log(Level.INFO, msg, e);
                     throw new ProcedureException(msg);

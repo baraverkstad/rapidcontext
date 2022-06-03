@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
 
-import org.rapidcontext.core.js.JsSerializer;
+import org.rapidcontext.core.data.JsonSerializer;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.SecurityContext;
 
@@ -151,7 +151,7 @@ public class ScriptApplication {
             String name = params.removeFirst();
             String[] args = params.toArray(new String[params.size()]);
             Object res = ctx.execute(name, args, source, traceBuffer);
-            System.out.println(JsSerializer.serialize(res, true));
+            System.out.println(JsonSerializer.serialize(res, true));
         } catch (ProcedureException e) {
             System.out.println("ERROR: " + e.getMessage());
         }

@@ -20,7 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
-import org.rapidcontext.core.js.JsSerializer;
+import org.rapidcontext.core.data.JsonSerializer;
 import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.type.Channel;
@@ -664,7 +664,7 @@ public class CallContext {
                     if (i > 0) {
                         buffer.append(", ");
                     }
-                    String str = JsSerializer.serialize(args[i], false);
+                    String str = JsonSerializer.serialize(args[i], false);
                     if (str.length() > 250) {
                         str = str.substring(0, 250) + "...";
                     }
@@ -685,7 +685,7 @@ public class CallContext {
      */
     public void logResponse(Object obj) {
         if (isTracing()) {
-            String str = JsSerializer.serialize(obj, true);
+            String str = JsonSerializer.serialize(obj, true);
             if (str.length() > 1000) {
                 str = str.substring(0, 1000) + "...";
             }

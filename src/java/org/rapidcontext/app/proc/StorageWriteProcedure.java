@@ -21,9 +21,9 @@ import java.util.logging.Logger;
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
+import org.rapidcontext.core.data.JsonSerializer;
 import org.rapidcontext.core.data.PropertiesSerializer;
 import org.rapidcontext.core.data.XmlSerializer;
-import org.rapidcontext.core.js.JsSerializer;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
@@ -153,7 +153,7 @@ public class StorageWriteProcedure implements Procedure {
             // Conversion handled in storage layer
         } else if (fmt.equalsIgnoreCase("json")) {
             if (isDict) {
-                String str = JsSerializer.serialize(data, true);
+                String str = JsonSerializer.serialize(data, true);
                 data = new Binary.BinaryString(str);
             }
         } else if (fmt.equalsIgnoreCase("xml")) {

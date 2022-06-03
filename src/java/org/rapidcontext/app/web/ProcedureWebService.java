@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.js.JsSerializer;
+import org.rapidcontext.core.data.JsonSerializer;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
@@ -166,10 +166,10 @@ public class ProcedureWebService extends WebService {
                 request.sendError(STATUS.BAD_REQUEST, Mime.TEXT[0], error);
             } else {
                 Object data = res.get("data");
-                request.sendText(Mime.JSON[0], JsSerializer.serialize(data, true));
+                request.sendText(Mime.JSON[0], JsonSerializer.serialize(data, true));
             }
         } else {
-            request.sendText(Mime.JSON[0], JsSerializer.serialize(res, true));
+            request.sendText(Mime.JSON[0], JsonSerializer.serialize(res, true));
         }
     }
 
@@ -236,7 +236,7 @@ public class ProcedureWebService extends WebService {
         if (Mime.isInputMatch(request, Mime.JSON)) {
             String input = request.getInputString();
             LOG.fine(logPrefix + "arguments JSON: " + input);
-            Object obj = JsSerializer.unserialize(input);
+            Object obj = JsonSerializer.unserialize(input);
             if (obj instanceof Dict) {
                 jsonArgs = (Dict) obj;
             }
@@ -253,7 +253,7 @@ public class ProcedureWebService extends WebService {
                         str = request.getParameter(name, null);
                     }
                     LOG.fine(logPrefix + "argument '" + name + "': " + str);
-                    args.add(isTextFormat ? str : JsSerializer.unserialize(str));
+                    args.add(isTextFormat ? str : JsonSerializer.unserialize(str));
                 }
             }
         }

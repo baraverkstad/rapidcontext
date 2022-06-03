@@ -32,7 +32,7 @@ import org.rapidcontext.app.plugin.PluginManager;
 import org.rapidcontext.app.proc.StatusProcedure;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.js.JsSerializer;
+import org.rapidcontext.core.data.JsonSerializer;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Metadata;
@@ -518,12 +518,12 @@ public class AppWebService extends FileWebService {
             Object[] args = ArrayUtils.EMPTY_OBJECT_ARRAY;
             String source = "web [" + request.getRemoteAddr() + "]";
             Object obj = ctx.execute(StatusProcedure.NAME, args, source, null);
-            request.sendText(Mime.JSON[0], JsSerializer.serialize(obj, true));
+            request.sendText(Mime.JSON[0], JsonSerializer.serialize(obj, true));
         } catch (ProcedureException e) {
             LOG.warning("error in system status check: " + e.getMessage());
             Dict res = new Dict();
             res.set("error", e.getMessage());
-            request.sendText(Mime.JSON[0], JsSerializer.serialize(res, true));
+            request.sendText(Mime.JSON[0], JsonSerializer.serialize(res, true));
         }
     }
 }
