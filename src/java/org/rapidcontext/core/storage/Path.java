@@ -43,13 +43,13 @@ public class Path {
      * indices (i.e. the parent path). The root index has a zero
      * length array.
      */
-    private String[] parts = null;
+    private String[] parts;
 
     /**
      * The index flag. This flag is set if the path corresponds
      * to an index (a directory, a list of objects and files).
      */
-    private boolean index = false;
+    private boolean index;
 
     /**
      * Creates a new path from a string representation (similar to
@@ -70,29 +70,20 @@ public class Path {
      */
     public Path(Path parent, String path) {
         this.parts = (parent == null) ? ArrayUtils.EMPTY_STRING_ARRAY : parent.parts;
-        path = StringUtils.stripStart(path, "/");
         this.index = path.equals("") || path.endsWith("/");
-        path = StringUtils.stripEnd(path, "/");
+        path = StringUtils.strip(path, "/");
         if (!path.equals("")) {
-            String[] child = path.split("/");
-            String[] res = new String[this.parts.length + child.length];
-            for (int i = 0; i < this.parts.length; i ++) {
-                res[i] = this.parts[i];
-            }
-            for (int i = 0; i < child.length; i++) {
-                res[this.parts.length + i] = child[i];
-            }
-            this.parts = res;
+            this.parts = ArrayUtils.addAll(this.parts, path.split("/"));
         }
     }
 
     /**
      * Creates a new path from the specified parts.
      *
-     * @param parts          the array of path components
+     * @param parts          the path components
      * @param isIndex        the index flag
      */
-    public Path(String[] parts, boolean isIndex) {
+    protected Path(String[] parts, boolean isIndex) {
         this.parts = parts;
         this.index = isIndex;
     }
@@ -118,6 +109,9 @@ public class Path {
      */
     public String toIdent(int pos) {
         StringBuilder buffer = new StringBuilder();
+        if (pos < 0) {
+            pos = Math.max(0, parts.length + pos);
+        }
         for (int i = pos; i < parts.length; i++) {
             if (i > pos) {
                 buffer.append("/");
@@ -131,23 +125,6 @@ public class Path {
     }
 
     /**
-     * Returns an object identifier based on this path. The
-     * identifier will start after the specified prefix. If the
-     * prefix does not match this path, it is ignored.
-     *
-     * @param prefix         the path prefix to remove
-     *
-     * @return an object identifier for this path (without prefix)
-     */
-    public String toIdent(Path prefix) {
-        if (prefix != null && prefix.length() < length() && startsWith(prefix)) {
-            return toIdent(prefix.length());
-        } else {
-            return toIdent(0);
-        }
-    }
-
-    /**
      * Checks if this path is identical to another path. The two
      * paths will be considered equal if they have the same length,
      * all elements are equal and the index flag is identical.
@@ -158,9 +135,8 @@ public class Path {
      *         false otherwise
      */
     public boolean equals(Object obj) {
-        return obj instanceof Path &&
-               index == ((Path) obj).index &&
-               Arrays.equals(parts, ((Path) obj).parts);
+        Path path = (obj instanceof Path) ? (Path) obj : null;
+        return path != null && this.index == path.index && Arrays.equals(this.parts, path.parts);
     }
 
     /**
@@ -169,7 +145,7 @@ public class Path {
      * @return a hash code for this object
      */
     public int hashCode() {
-        return Arrays.hashCode(parts);
+        return Arrays.hashCode(this.parts);
     }
 
     /**
@@ -179,7 +155,7 @@ public class Path {
      *         false otherwise
      */
     public boolean isRoot() {
-        return isIndex() && parts.length == 0;
+        return this.index && this.parts.length == 0;
     }
 
     /**
@@ -189,7 +165,7 @@ public class Path {
      *         false otherwise
      */
     public boolean isIndex() {
-        return index;
+        return this.index;
     }
 
     /**
@@ -207,19 +183,11 @@ public class Path {
     public boolean startsWith(Path path) {
         if (path == null) {
             return true;
-        } else if (parts.length < path.parts.length) {
-            return false;
         }
-        for (int i = 0; i < path.parts.length; i++) {
-            if (!parts[i].equals(path.parts[i])) {
-                return false;
-            }
-        }
-        if (parts.length == path.parts.length) {
-            return index == path.index;
-        } else {
-            return path.index;
-        }
+        int len = path.parts.length;
+        return len <= this.parts.length &&
+               Arrays.equals(this.parts, 0, len, path.parts, 0, len) &&
+               ((len < this.parts.length) ? path.index : this.index == path.index);
     }
 
     /**
@@ -255,7 +223,7 @@ public class Path {
      *         null for the root index
      */
     public String name() {
-        return (parts.length > 0) ? parts[parts.length - 1] : null;
+        return name(parts.length - 1);
     }
 
     /**
@@ -269,11 +237,7 @@ public class Path {
      *         null if the position is out of range
      */
     public String name(int pos) {
-        if (0 <= pos && pos < parts.length) {
-            return parts[pos];
-        } else {
-            return null;
-        }
+        return (0 <= pos && pos < parts.length) ? parts[pos] : null;
     }
 
     /**
@@ -282,15 +246,8 @@ public class Path {
      * @return a new path to the parent index
      */
     public Path parent() {
-        if (isRoot()) {
-            return this;
-        } else {
-            String[] newParts = new String[parts.length - 1];
-            for (int i = 0; i < parts.length - 1; i++) {
-                newParts[i] = parts[i];
-            }
-            return new Path(newParts, true);
-        }
+        int len = this.parts.length - 1;
+        return (len <= 0) ? ROOT : new Path(Arrays.copyOf(this.parts, len), true);
     }
 
     /**
@@ -302,10 +259,7 @@ public class Path {
      * @return a new path to a child index or object
      */
     public Path child(String name, boolean isIndex) {
-        String[] newParts = new String[parts.length + 1];
-        for (int i = 0; i < parts.length; i++) {
-            newParts[i] = parts[i];
-        }
+        String[] newParts = Arrays.copyOf(this.parts, this.parts.length + 1);
         newParts[newParts.length - 1] = name;
         return new Path(newParts, isIndex);
     }
@@ -313,19 +267,12 @@ public class Path {
     /**
      * Creates a new path to a descendant index or object.
      *
-     * @param subpath        the relative descendant path
+     * @param path           the relative descendant path
      *
      * @return a new path to a descendant index or object
      */
-    public Path descendant(Path subpath) {
-        String[] newParts = new String[parts.length + subpath.parts.length];
-        for (int i = 0; i < parts.length; i++) {
-            newParts[i] = parts[i];
-        }
-        for (int i = 0; i < subpath.parts.length; i++) {
-            newParts[parts.length + i] = subpath.parts[i];
-        }
-        return new Path(newParts, subpath.index);
+    public Path descendant(Path path) {
+        return new Path(ArrayUtils.addAll(this.parts, path.parts), path.index);
     }
 
     /**
@@ -340,12 +287,11 @@ public class Path {
     public Path subPath(int pos) {
         if (pos <= 0) {
             return this;
+        } else if (pos >= this.parts.length) {
+            return ROOT;
         }
-        int len = Math.max(Math.min(parts.length - pos, parts.length), 0);
-        String[] newParts = new String[len];
-        for (int i = 0; i < len; i++) {
-            newParts[i] = parts[i + pos];
-        }
-        return new Path(newParts, index || len == 0);
+        int len = Math.max(Math.min(this.parts.length - pos, this.parts.length), 0);
+        String[] range = Arrays.copyOfRange(this.parts, pos, pos + len);
+        return new Path(range, this.index || len == 0);
     }
 }

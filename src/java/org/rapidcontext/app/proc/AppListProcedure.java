@@ -118,7 +118,7 @@ public class AppListProcedure implements Procedure {
                 Dict.class.isAssignableFrom(m.classInstance())) {
 
                 Dict dict = new Dict();
-                dict.set("id", path.toIdent(PATH_APP));
+                dict.set("id", path.toIdent(PATH_APP.depth()));
                 String pluginId = PluginManager.pluginId(m);
                 if (pluginId != null) {
                     Dict plugin = ctx.pluginConfig(pluginId);
