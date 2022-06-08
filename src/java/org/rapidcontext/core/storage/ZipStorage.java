@@ -76,7 +76,7 @@ public class ZipStorage extends Storage {
      * @throws IOException if the ZIP couldn't be opened properly
      */
     public ZipStorage(File zipFile) throws IOException {
-        super("zip", false);
+        super(StringUtils.removeEnd(zipFile.getName(), ".zip"), "zip", false);
         dict.set(KEY_FILE, zipFile);
         this.zip = new ZipFile(zipFile);
         init();

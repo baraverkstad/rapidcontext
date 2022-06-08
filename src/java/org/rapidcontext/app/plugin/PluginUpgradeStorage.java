@@ -39,7 +39,7 @@ public class PluginUpgradeStorage extends WrappedStorage {
      * @param backend        the storage to wrap
      */
     public PluginUpgradeStorage(Storage backend) {
-        super("plugin", backend);
+        super(backend.id(), "plugin", backend);
     }
 
     /**

@@ -35,11 +35,12 @@ public class WrappedStorage extends Storage {
     /**
      * Creates a new wrapped (or encapsulated) storage.
      *
+     * @param id             the storage identifier
      * @param storageType    the storage type name
      * @param wrapped        the encapsulated storage
      */
-    public WrappedStorage(String storageType, Storage wrapped) {
-        super(storageType, wrapped.isReadWrite());
+    public WrappedStorage(String id, String storageType, Storage wrapped) {
+        super(id, storageType, wrapped.isReadWrite());
         dict.add("storage", wrapped);
         this.wrapped = wrapped;
     }

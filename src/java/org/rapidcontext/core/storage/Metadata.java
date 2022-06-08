@@ -134,8 +134,7 @@ public class Metadata extends StorableObject {
      * @param meta           the metadata container to copy
      */
     public Metadata(Path path, Metadata meta) {
-        super(null, "metadata");
-        dict.remove(KEY_ID);
+        super(path.toString(), "metadata");
         dict.setAll(meta.dict);
         dict.set(KEY_PATH, path);
     }
@@ -150,8 +149,7 @@ public class Metadata extends StorableObject {
      * @param meta2          the second metadata object
      */
     private Metadata(Metadata meta1, Metadata meta2) {
-        super(null, "metadata");
-        dict.remove(KEY_ID);
+        super(meta1.id(), "metadata");
         dict.setAll(meta1.dict);
         dict.set(KEY_STORAGEPATHS, meta1.storagePaths().union(meta2.storagePaths()));
         if (isIndex() && meta2.lastModified().after(meta1.lastModified())) {
@@ -183,8 +181,7 @@ public class Metadata extends StorableObject {
      * @param modified       the last modified date, or null for now
      */
     public Metadata(String category, Class<?> clazz, Path path, Path storagePath, String mime, Date modified) {
-        super(null, "metadata");
-        dict.remove(KEY_ID);
+        super(path.toString(), "metadata");
         dict.set(KEY_CATEGORY, category);
         dict.set(KEY_CLASS, clazz);
         dict.set(KEY_PATH, path);

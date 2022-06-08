@@ -71,7 +71,7 @@ public class RootStorage extends Storage {
      * their corresponding mount path (appended to form an object
      * path instead of an index path).
      */
-    private MemoryStorage metadata = new MemoryStorage(true, false);
+    private MemoryStorage metadata = new MemoryStorage("metadata", true, false);
 
     /**
      * The sorted array of mounted storages. This array is sorted
@@ -94,7 +94,7 @@ public class RootStorage extends Storage {
      * @param readWrite      the read write flag
      */
     public RootStorage(boolean readWrite) {
-        super("root", readWrite);
+        super("/", "root", readWrite);
         dict.set("storages", mountedStorages);
         try {
             metadata.store(PATH_STORAGEINFO, dict);
@@ -191,7 +191,7 @@ public class RootStorage extends Storage {
         Path cachePath = Storage.PATH_STORAGE_CACHE.descendant(path.subPath(1));
         MemoryStorage cache = cacheStorages.get(path);
         if (overlay != null && cache == null) {
-            cache = new MemoryStorage(true, true);
+            cache = new MemoryStorage("cache", true, true);
             cache.setMountInfo(cachePath, true, overlay, 0);
             updateStorageMetadata(cache, true);
             cacheStorages.put(path, cache);

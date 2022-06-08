@@ -89,12 +89,12 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
     /**
      * Creates a new storage.
      *
+     * @param id             the storage identifier
      * @param storageType    the storage type name
      * @param readWrite      the read write flag
      */
-    protected Storage(String storageType, boolean readWrite) {
-        super(null, "storage/" + storageType);
-        dict.remove(KEY_ID);
+    protected Storage(String id, String storageType, boolean readWrite) {
+        super(id, "storage/" + storageType);
         dict.setBoolean(KEY_READWRITE, readWrite);
     }
 

@@ -63,11 +63,12 @@ public class MemoryStorage extends Storage {
     /**
      * Creates a new memory storage.
      *
+     * @param id             the storage identifier
      * @param readWrite      the read write flag
      * @param storageInfo    the show storage info flag
      */
-    public MemoryStorage(boolean readWrite, boolean storageInfo) {
-        super("memory", readWrite);
+    public MemoryStorage(String id, boolean readWrite, boolean storageInfo) {
+        super(id, "memory", readWrite);
         this.storageInfo = storageInfo;
         if (storageInfo) {
             try {

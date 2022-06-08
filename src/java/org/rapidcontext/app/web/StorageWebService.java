@@ -378,6 +378,7 @@ public class StorageWebService extends WebService {
         Dict  dict = new Dict();
 
         dict = meta.serialize();
+        dict.remove(Metadata.KEY_ID);
         dict.remove(Metadata.KEY_TYPE);
         dict.set("processTime", Long.valueOf(request.getProcessTime()));
         return dict;

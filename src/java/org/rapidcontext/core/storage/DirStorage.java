@@ -67,7 +67,7 @@ public class DirStorage extends Storage {
      * @param readWrite      the read write flag
      */
     public DirStorage(File dir, boolean readWrite) {
-        super("dir", readWrite);
+        super(dir.getName(), "dir", readWrite);
         dict.set(KEY_DIR, dir);
     }
 
