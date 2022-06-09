@@ -15,43 +15,40 @@
 package org.rapidcontext.core.storage;
 
 import java.util.Date;
-
-import org.rapidcontext.core.data.Array;
+import java.util.TreeSet;
+import java.util.stream.Stream;
 
 /**
  * An index dictionary. An index is an object containing the names
  * of objects and sub-indices.<p>
  *
  * IMPORTANT: The index objects shouldn't be modified directly by
- * outside the owning storage implementation. Use the copy() method
- * to create a copy if changes need to be made elsewhere.
+ * outside the owning storage implementation.
  *
  * @author   Per Cederberg
  * @version  1.0
  */
-public class Index extends StorableObject {
+public class Index {
 
     /**
-     * The dictionary key for the storage path. The value stored is a
-     * Path object.
+     * The storage path for this index.
      */
-    public static final String KEY_PATH = "path";
+    private Path path;
 
     /**
-     * The dictionary key for the last modified date. The value stored
-     * is a Date object.
+     * The last modified date for changes to the index.
      */
-    public static final String KEY_MODIFIED = "lastModified";
+    private Date modified;
 
     /**
-     * The dictionary key for the array of indices.
+     * The set of sub-indices contained.
      */
-    public static final String KEY_IDXS = "indices";
+    private TreeSet<String> indices;
 
     /**
-     * The dictionary key for the array of objects.
+     * The set of objects contained.
      */
-    public static final String KEY_OBJS = "objects";
+    private TreeSet<String> objects;
 
     /**
      * Merges two index dictionaries. Note that this may modify one
@@ -68,9 +65,12 @@ public class Index extends StorableObject {
         } else if (two == null) {
             return one;
         } else {
-            Array idxs = one.indices().union(two.indices());
-            Array objs = one.objects().union(two.objects());
-            return new Index(one.path(), idxs, objs);
+            Index res = new Index(one.path());
+            res.indices.addAll(one.indices);
+            res.indices.addAll(two.indices);
+            res.objects.addAll(one.objects);
+            res.objects.addAll(two.objects);
+            return res;
         }
     }
 
@@ -80,23 +80,34 @@ public class Index extends StorableObject {
      * @param path           the storage path for the index
      */
     public Index(Path path) {
-        this(path, new Array(), new Array());
+        this.path = path;
+        this.modified = new Date();
+        this.indices = new TreeSet<>();
+        this.objects = new TreeSet<>();
     }
 
     /**
-     * Creates a new index with the specified entries.
+     * Creates an index copy with a different path. Note that the
+     * source index content will be referenced, not copied. So any
+     * changes will propagate to both indices.
      *
      * @param path           the storage path for the index
-     * @param indices        the initial index array
-     * @param objects        the initial object array
+     * @param source         the source index to copy
      */
-    public Index(Path path, Array indices, Array objects) {
-        super(null, "index");
-        dict.remove(KEY_ID);
-        dict.set(KEY_PATH, path);
-        updateLastModified(null);
-        dict.set(KEY_IDXS, indices);
-        dict.set(KEY_OBJS, objects);
+    public Index(Path path, Index source) {
+        this.path = path;
+        this.modified = new Date();
+        this.indices = source.indices;
+        this.objects = source.objects;
+    }
+
+    /**
+     * Checks if this index is empty.
+     *
+     * @return true if the index is empty, or false otherwise
+     */
+    public boolean isEmpty() {
+        return this.indices.size() + this.objects.size() == 0;
     }
 
     /**
@@ -105,7 +116,7 @@ public class Index extends StorableObject {
      * @return the storage path for the index
      */
     public Path path() {
-        return (Path) dict.get(KEY_PATH);
+        return this.path;
     }
 
     /**
@@ -114,7 +125,7 @@ public class Index extends StorableObject {
      * @return the last modified date
      */
     public Date lastModified() {
-        return (Date) dict.get(KEY_MODIFIED);
+        return this.modified;
     }
 
     /**
@@ -123,7 +134,7 @@ public class Index extends StorableObject {
      * @param date           the date to set, or null for now
      */
     public void updateLastModified(Date date) {
-        dict.set(KEY_MODIFIED, (date == null) ? new Date() : date);
+        this.modified = (date == null) ? new Date() : date;
     }
 
     /**
@@ -131,8 +142,8 @@ public class Index extends StorableObject {
      *
      * @return an array of sub-index names
      */
-    public Array indices() {
-        return dict.getArray(KEY_IDXS);
+    public Stream<String> indices() {
+        return this.indices.stream();
     }
 
     /**
@@ -140,26 +151,21 @@ public class Index extends StorableObject {
      *
      * @return an array of object names
      */
-    public Array objects() {
-        return dict.getArray(KEY_OBJS);
+    public Stream<String> objects() {
+        return this.objects.stream();
     }
 
     /**
-     * Returns an array of paths corresponding to all sub-indexes and
+     * Returns a stream of paths corresponding to all indices and
      * objects in this index.
      *
-     * @return an array of path objects
+     * @return a stream path objects
      */
-    public Array paths() {
-        Array res = new Array();
-        Path path = path();
-        for (Object o : indices()) {
-            res.add(path.child(o.toString(), true));
-        }
-        for (Object o : objects()) {
-            res.add(path.child(o.toString(), false));
-        }
-        return res;
+    public Stream<Path> paths() {
+        return Stream.concat(
+            indices().map((item) -> this.path.child(item, true)),
+            objects().map((item) -> this.path.child(item, false))
+        );
     }
 
     /**
@@ -172,13 +178,7 @@ public class Index extends StorableObject {
      *         false otherwise
      */
     public boolean addIndex(String name) {
-        Array arr = indices();
-        if (!arr.containsValue(name)) {
-            arr.add(name);
-            return true;
-        } else {
-            return false;
-        }
+        return this.indices.add(name);
     }
 
     /**
@@ -191,13 +191,7 @@ public class Index extends StorableObject {
      *         false otherwise
      */
     public boolean addObject(String name) {
-        Array arr = objects();
-        if (!arr.containsValue(name)) {
-            arr.add(name);
-            return true;
-        } else {
-            return false;
-        }
+        return this.objects.add(name);
     }
 
     /**
@@ -209,14 +203,7 @@ public class Index extends StorableObject {
      *         false otherwise
      */
     public boolean removeIndex(String name) {
-        Array arr = indices();
-        int pos = arr.indexOf(name);
-        if (arr.containsIndex(pos)) {
-            arr.remove(pos);
-            return true;
-        } else {
-            return false;
-        }
+        return this.indices.remove(name);
     }
 
     /**
@@ -228,13 +215,6 @@ public class Index extends StorableObject {
      *         false otherwise
      */
     public boolean removeObject(String name) {
-        Array arr = objects();
-        int pos = arr.indexOf(name);
-        if (arr.containsIndex(pos)) {
-            arr.remove(pos);
-            return true;
-        } else {
-            return false;
-        }
+        return this.objects.remove(name);
     }
 }

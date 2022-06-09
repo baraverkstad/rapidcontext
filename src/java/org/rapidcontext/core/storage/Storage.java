@@ -259,14 +259,7 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
         Metadata meta = lookup(path);
         if (meta != null && meta.isIndex()) {
             Index idx = (Index) load(path);
-            for (Object o : idx.indices()) {
-                Path child = path.child(o.toString(), true);
-                lookupAll(child, list);
-            }
-            for (Object o : idx.objects()) {
-                Path child = path.child(o.toString(), false);
-                lookupAll(child, list);
-            }
+            idx.paths().forEach((item) -> lookupAll(item, list));
         } else if (meta != null) {
             list.add(meta);
         }
@@ -315,14 +308,7 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
         Object obj = load(path);
         if (obj != null && obj instanceof Index) {
             Index idx = (Index) obj;
-            for (Object o : idx.indices()) {
-                Path child = path.child(o.toString(), true);
-                loadAll(child, list);
-            }
-            for (Object o : idx.objects()) {
-                Path child = path.child(o.toString(), false);
-                loadAll(child, list);
-            }
+            idx.paths().forEach((item) -> loadAll(item, list));
         } else if (obj != null) {
             list.add(obj);
         }

@@ -393,7 +393,7 @@ public class RootStorage extends Storage {
             res = storage.load(storage.localPath(path));
             if (res instanceof Index) {
                 idx = (Index) res;
-                return new Index(path, idx.indices(), idx.objects());
+                return new Index(path, idx);
             } else {
                 return res;
             }

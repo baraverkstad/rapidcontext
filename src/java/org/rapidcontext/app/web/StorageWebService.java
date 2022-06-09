@@ -283,14 +283,14 @@ public class StorageWebService extends WebService {
         html.append("<hr/><p><strong>Data Formats:</strong>");
         if (meta.isIndex()) {
             html.append(" &nbsp;<a href='index.json'>JSON</a>");
+            html.append(" &nbsp;<a href='index.properties'>PROPERTIES</a>");
             html.append(" &nbsp;<a href='index.xml'>XML</a>");
         } else {
             html.append(" &nbsp;<a href='" + path.name() + ".json'>JSON</a>");
+            html.append(" &nbsp;<a href='" + path.name() + ".properties'>PROPERTIES</a>");
             html.append(" &nbsp;<a href='" + path.name() + ".xml'>XML</a>");
             if (meta.isBinary()) {
                 html.append(" &nbsp;<a href='" + path.name() + "'>RAW</a>");
-            } else {
-                html.append(" &nbsp;<a href='" + path.name() + ".properties'>PROPERTIES</a>");
             }
         }
         html.append("</p></div>\n</body>\n</html>\n");
@@ -308,34 +308,22 @@ public class StorageWebService extends WebService {
      * @return the serialized representation of the index
      */
     private Dict serializeIndex(Index idx, boolean linkify) {
-        Dict   dict = new Dict();
-        Array  arr;
-
-        dict.set("type", "index");
-        arr = idx.indices().copy();
-        arr.sort();
-        for (int i = 0; i < arr.size(); i++) {
-            String name = arr.getString(i, null);
-            if (name.startsWith(".")) {
-                arr.remove(i--);
-            } else if (linkify) {
-                arr.set(i, "$href$" + name + "/");
+        Array indices = new Array();
+        idx.indices().filter((item) -> !item.startsWith(".")).forEach((item) -> {
+            indices.add((linkify ? "$href$" : "") + item + "/");
+        });
+        Array objects = new Array();
+        idx.objects().filter((item) -> !item.startsWith(".")).forEach((item) -> {
+            if (linkify) {
+                objects.add("$href$" + item + ".html$" + item);
             } else {
-                arr.set(i, name + "/");
+                objects.add(item);
             }
-        }
-        dict.set("directories", arr);
-        arr = idx.objects().copy();
-        arr.sort();
-        for (int i = 0; i < arr.size(); i++) {
-            String name = arr.getString(i, null);
-            if (name.startsWith(".")) {
-                arr.remove(i--);
-            } else if (linkify) {
-                arr.set(i, "$href$" + name + ".html$" + name);
-            }
-        }
-        dict.set("objects", arr);
+        });
+        Dict dict = new Dict();
+        dict.set("type", "index");
+        dict.set("directories", indices);
+        dict.set("objects", objects);
         return dict;
     }
 
@@ -553,58 +541,46 @@ public class StorageWebService extends WebService {
      * @param request        the request to process
      */
     protected void doPropFind(Request request) {
-        ApplicationContext  ctx = ApplicationContext.getInstance();
-        Path                path = new Path(request.getPath());
-        String              href;
-        WebDavRequest       davRequest;
-        Metadata            meta = null;
-        Object              data = null;
-        Index               idx;
-        Array               arr;
-        String              str;
-
         if (!SecurityContext.hasWriteAccess(request.getPath())) {
             errorUnauthorized(request);
             return;
         }
         try {
-            davRequest = new WebDavRequest(request);
+            WebDavRequest davRequest = new WebDavRequest(request);
             if (davRequest.depth() < 0 || davRequest.depth() > 1) {
                 davRequest.sendErrorFiniteDepth();
                 return;
             }
-            path = normalizePath(path);
-            if (path != null) {
-                data = ctx.getStorage().load(path);
-                meta = ctx.getStorage().lookup(path);
-            }
+            ApplicationContext ctx = ApplicationContext.getInstance();
+            Path path = normalizePath(new Path(request.getPath()));
+            Metadata meta = (path != null) ? ctx.getStorage().lookup(path) : null;
+            Object data = (path != null) ? ctx.getStorage().load(path) : null;
             if (path == null || data == null || meta == null) {
                 errorNotFound(request);
                 return;
             }
-            href = request.getAbsolutePath();
-            if (path.isIndex() && !href.endsWith("/")) {
-                href += "/";
-            }
+            String suffix = (path.isIndex() && !request.getPath().endsWith("/")) ? "/" : "";
+            String href = request.getAbsolutePath() + suffix;
             addResource(davRequest, href, meta, data);
             if (davRequest.depth() > 0 && data instanceof Index) {
-                idx = (Index) data;
-                arr = idx.paths();
-                LOG.fine("Paths: " + arr);
-                for (Object o : arr) {
-                    path = (Path) o;
-                    data = ctx.getStorage().load(path);
-                    meta = ctx.getStorage().lookup(path);
-                    if (data != null && meta != null) {
-                        str = href + path.name();
-                        if (path.isIndex()) {
+                Index idx = (Index) data;
+                idx.paths().forEach((p) -> {
+                    Object d = ctx.getStorage().load(p);
+                    Metadata m = ctx.getStorage().lookup(p);
+                    if (d != null && m != null) {
+                        String str = href + p.name();
+                        if (p.isIndex()) {
                             str += "/";
-                        } else if (meta.isObject()) {
+                        } else if (m.isObject()) {
                             str += DirStorage.SUFFIX_PROPS;
                         }
-                        addResource(davRequest, str, meta, data);
+                        try {
+                            addResource(davRequest, str, m, d);
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
                     }
-                }
+                });
             }
             davRequest.sendMultiResponse();
         } catch (Exception e) {
