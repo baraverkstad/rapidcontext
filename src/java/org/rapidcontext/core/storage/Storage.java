@@ -14,7 +14,6 @@
 
 package org.rapidcontext.core.storage;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -218,6 +217,17 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
     }
 
     /**
+     * Returns a new storage query for this storage.
+     *
+     * @param base           the base path (must be an index)
+     *
+     * @return the storage query
+     */
+    public Query query(Path base) {
+        return new Query(this, base);
+    }
+
+    /**
      * Searches for an object at the specified location and returns
      * metadata about the object if found. The path may locate either
      * an index or a specific object.
@@ -228,42 +238,6 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
      *         null if not found
      */
     public abstract Metadata lookup(Path path);
-
-    /**
-     * Searches for all objects at the specified location and returns
-     * metadata about the ones found. The path may locate either an
-     * index or a specific object. Any indices found by this method
-     * will be traversed recursively instead of being returned.
-     *
-     * @param path           the storage location
-     *
-     * @return the array of object metadata, or
-     *         an empty array if no objects were found
-     */
-    public Metadata[] lookupAll(Path path) {
-        ArrayList<Metadata> list = new ArrayList<>();
-        lookupAll(path, list);
-        return list.toArray(new Metadata[list.size()]);
-    }
-
-    /**
-     * Searches for all objects at the specified location and returns
-     * metadata about the ones found. The path may locate either an
-     * index or a specific object. Any indices found by this method
-     * will be traversed recursively instead of being returned.
-     *
-     * @param path           the storage location
-     * @param list           the list where to add results
-     */
-    private void lookupAll(Path path, ArrayList<Metadata> list) {
-        Metadata meta = lookup(path);
-        if (meta != null && meta.isIndex()) {
-            Index idx = (Index) load(path);
-            idx.paths().forEach((item) -> lookupAll(item, list));
-        } else if (meta != null) {
-            list.add(meta);
-        }
-    }
 
     /**
      * Loads an object from the specified location. The path may
@@ -277,42 +251,6 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
      *         null if not found
      */
     public abstract Object load(Path path);
-
-    /**
-     * Loads all object from the specified location. The path may
-     * locate either an index or a specific object. Any indices
-     * found by this method will be traversed recursively instead
-     * of being returned.
-     *
-     * @param path           the storage location
-     *
-     * @return the array of data read, or
-     *         an empty array if no objects were found
-     */
-    public Object[] loadAll(Path path) {
-        ArrayList<Object> list = new ArrayList<>();
-        loadAll(path, list);
-        return list.toArray();
-    }
-
-    /**
-     * Loads all object from the specified location. The path may
-     * locate either an index or a specific object. Any indices
-     * found by this method will be traversed recursively instead
-     * of being returned.
-     *
-     * @param path           the storage location
-     * @param list           the list where to add results
-     */
-    private void loadAll(Path path, ArrayList<Object> list) {
-        Object obj = load(path);
-        if (obj != null && obj instanceof Index) {
-            Index idx = (Index) obj;
-            idx.paths().forEach((item) -> loadAll(item, list));
-        } else if (obj != null) {
-            list.add(obj);
-        }
-    }
 
     /**
      * Stores an object at the specified location. The path must

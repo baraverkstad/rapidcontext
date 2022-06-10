@@ -14,7 +14,7 @@
 
 package org.rapidcontext.core.type;
 
-import java.util.ArrayList;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.core.data.Dict;
@@ -49,6 +49,17 @@ public class Environment extends StorableObject {
     public static final Path PATH = new Path("/environment/");
 
     /**
+     * Returns a stream of all environments found in the storage.
+     *
+     * @param storage        the storage to search
+     *
+     * @return a stream of environment instances found
+     */
+    public static Stream<Environment> all(Storage storage) {
+        return storage.query(PATH).objects(Environment.class);
+    }
+
+    /**
      * Searches for a specific environment in the storage.
      *
      * @param storage        the storage to search in
@@ -60,24 +71,6 @@ public class Environment extends StorableObject {
     public static Environment find(Storage storage, String id) {
         Object obj = storage.load(new Path(PATH, id));
         return (obj instanceof Environment) ? (Environment) obj : null;
-    }
-
-    /**
-     * Searches for all environments in the storage.
-     *
-     * @param storage        the storage to search in
-     *
-     * @return an array of all environments found
-     */
-    public static Environment[] findAll(Storage storage) {
-        Object[] objs = storage.loadAll(PATH);
-        ArrayList<Environment> list = new ArrayList<>(objs.length);
-        for (Object o : objs) {
-            if (o instanceof Environment) {
-                list.add((Environment) o);
-            }
-        }
-        return list.toArray(new Environment[list.size()]);
     }
 
     /**

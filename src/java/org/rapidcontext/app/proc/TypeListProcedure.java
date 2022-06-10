@@ -100,11 +100,8 @@ public class TypeListProcedure implements Procedure {
      */
     public Object call(CallContext cx, Bindings bindings)
     throws ProcedureException {
-        Type[] types = Type.findAll(cx.getStorage());
-        Array res = new Array(types.length);
-        for (Type t : types) {
-            res.add(t.serialize());
-        }
+        Array res = new Array();
+        Type.all(cx.getStorage()).forEach(t -> res.add(t.serialize()));
         return res;
     }
 }

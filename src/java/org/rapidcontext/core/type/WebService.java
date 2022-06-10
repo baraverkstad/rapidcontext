@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.core.data.Array;
@@ -84,20 +85,26 @@ public abstract class WebService extends StorableObject implements HttpUtil {
     protected ArrayList<WebMatcher> matchers;
 
     /**
-     * Searches for all matchers in all web services in the storage.
+     * Returns a stream of all web services found in the storage.
+     *
+     * @param storage        the storage to search
+     *
+     * @return a stream of web service instances found
+     */
+    public static Stream<WebService> all(Storage storage) {
+        return storage.query(PATH).objects(WebService.class);
+    }
+
+    /**
+     * Returns a stream of all web matchers found in the storage
+     * (tied to a web service).
      *
      * @param storage        the storage to search in
      *
-     * @return an array of all matchers found
+     * @return a stream of web matcher instances found
      */
-    public static WebMatcher[] findAllMatchers(Storage storage) {
-        ArrayList<WebMatcher> list = new ArrayList<>();
-        for (Object o : storage.loadAll(PATH)) {
-            if (o instanceof WebService) {
-                list.addAll(((WebService) o).matchers);
-            }
-        }
-        return list.toArray(new WebMatcher[list.size()]);
+    public static Stream<WebMatcher> matchers(Storage storage) {
+        return all(storage).flatMap(o -> o.matchers.stream());
     }
 
     /**

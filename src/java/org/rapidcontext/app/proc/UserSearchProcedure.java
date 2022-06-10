@@ -14,14 +14,15 @@
 
 package org.rapidcontext.app.proc;
 
+import java.util.Objects;
+import java.util.Optional;
+
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.SecurityContext;
-import org.rapidcontext.core.storage.Metadata;
-import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.type.User;
 
@@ -106,16 +107,15 @@ public class UserSearchProcedure implements Procedure {
         throws ProcedureException {
 
         Storage storage = cx.getStorage();
-        String email = bindings.getValue("email", "").toString().trim();
-        for (Metadata meta : storage.lookupAll(User.PATH)) {
-            Path path = meta.path();
-            Object obj = storage.load(path);
-            if (obj instanceof User) {
-                User user = (User) obj;
+        String match = bindings.getValue("email", "").toString().trim();
+        Optional<Dict> first = storage.query(User.PATH).paths().map(path -> {
+            Object o = storage.load(path);
+            if (o instanceof User) {
+                User user = (User) o;
                 // TODO: Should really also compare with realm
-                if (user.email().equalsIgnoreCase(email)) {
+                if (user.email().equalsIgnoreCase(match)) {
                     if (SecurityContext.hasReadAccess(path.toString())) {
-                        return UserListProcedure.serialize((User) obj);
+                        return UserListProcedure.serialize(user);
                     } else {
                         Dict dict = new Dict();
                         dict.set(User.KEY_ID, user.id());
@@ -127,7 +127,8 @@ public class UserSearchProcedure implements Procedure {
                     }
                 }
             }
-        }
-        return null;
+            return null;
+        }).filter(Objects::nonNull).findFirst();
+        return first.isPresent() ? first.get() : null;
     }
 }

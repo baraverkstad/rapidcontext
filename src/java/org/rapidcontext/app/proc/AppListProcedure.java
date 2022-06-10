@@ -23,8 +23,6 @@ import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.security.SecurityContext;
-import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.Storage;
 
@@ -110,27 +108,27 @@ public class AppListProcedure implements Procedure {
         CallContext.checkSearchAccess(PATH_APP.toString());
         ApplicationContext ctx = ApplicationContext.getInstance();
         Storage storage = cx.getStorage();
-        Metadata[] metas = storage.lookupAll(PATH_APP);
-        Array res = new Array(metas.length);
-        for (Metadata m : metas) {
-            Path path = m.path();
-            if (SecurityContext.hasReadAccess(path.toString()) &&
-                Dict.class.isAssignableFrom(m.classInstance())) {
-
-                Dict dict = new Dict();
-                dict.set("id", path.toIdent(PATH_APP.depth()));
-                String pluginId = PluginManager.pluginId(m);
-                if (pluginId != null) {
-                    Dict plugin = ctx.pluginConfig(pluginId);
-                    if (plugin != null) {
-                        dict.set("plugin", plugin.get(Plugin.KEY_ID));
-                        dict.set("version", plugin.get("version"));
+        Array res = new Array();
+        storage.query(PATH_APP)
+            .filterReadAccess()
+            .metadatas()
+            .forEach(meta -> {
+                Object o = storage.load(meta.path());
+                if (o instanceof Dict) {
+                    Dict dict = new Dict();
+                    dict.set("id", meta.path().toIdent(PATH_APP.depth()));
+                    String pluginId = PluginManager.pluginId(meta);
+                    if (pluginId != null) {
+                        Dict plugin = ctx.pluginConfig(pluginId);
+                        if (plugin != null) {
+                            dict.set("plugin", plugin.get(Plugin.KEY_ID));
+                            dict.set("version", plugin.get("version"));
+                        }
                     }
+                    dict.addAll((Dict) o);
+                    res.add(dict);
                 }
-                dict.addAll((Dict) storage.load(m.path()));
-                res.add(dict);
-            }
-        }
+            });
         res.sort("name");
         return res;
     }

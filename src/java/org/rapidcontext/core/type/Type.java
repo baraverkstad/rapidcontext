@@ -15,9 +15,9 @@
 package org.rapidcontext.core.type;
 
 import java.lang.reflect.Constructor;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.app.ApplicationContext;
@@ -74,6 +74,17 @@ public class Type extends StorableObject {
     };
 
     /**
+     * Returns a stream of all types found in the storage.
+     *
+     * @param storage        the storage to search
+     *
+     * @return a stream of type instances found
+     */
+    public static Stream<Type> all(Storage storage) {
+        return storage.query(PATH).objects(Type.class);
+    }
+
+    /**
      * Searches for a specific type in the storage.
      *
      * @param storage        the storage to search in
@@ -85,24 +96,6 @@ public class Type extends StorableObject {
     public static Type find(Storage storage, String id) {
         Object obj = storage.load(new Path(PATH, id));
         return (obj instanceof Type) ? (Type) obj : null;
-    }
-
-    /**
-     * Searches for all types in the storage.
-     *
-     * @param storage        the storage to search in
-     *
-     * @return an array of all types found
-     */
-    public static Type[] findAll(Storage storage) {
-        Object[] objs = storage.loadAll(PATH);
-        ArrayList<Object> list = new ArrayList<>(objs.length);
-        for (Object o : objs) {
-            if (o instanceof Type) {
-                list.add(o);
-            }
-        }
-        return list.toArray(new Type[list.size()]);
     }
 
     /**

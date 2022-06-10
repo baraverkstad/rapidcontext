@@ -15,7 +15,7 @@
 package org.rapidcontext.core.proc;
 
 import java.util.HashMap;
-import java.util.LinkedHashSet;
+import java.util.TreeSet;
 import java.util.logging.Logger;
 
 import org.rapidcontext.app.plugin.PluginManager;
@@ -201,10 +201,8 @@ public class Library {
      * @throws ProcedureException if the procedures couldn't be listed
      */
     public String[] getProcedureNames() throws ProcedureException {
-        LinkedHashSet<String> set = new LinkedHashSet<>(builtIns.keySet());
-        for (Metadata meta : storage.lookupAll(PATH_PROC)) {
-            set.add(meta.path().name());
-        }
+        TreeSet<String> set = new TreeSet<>(builtIns.keySet());
+        storage.query(PATH_PROC).paths().forEach(path -> set.add(path.name()));
         return set.toArray(new String[set.size()]);
     }
 

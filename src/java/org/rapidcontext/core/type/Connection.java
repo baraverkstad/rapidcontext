@@ -14,7 +14,6 @@
 
 package org.rapidcontext.core.type;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -113,24 +112,6 @@ public abstract class Connection extends StorableObject {
     public static Connection find(Storage storage, String id) {
         Object obj = storage.load(new Path(PATH, id));
         return (obj instanceof Connection) ? (Connection) obj : null;
-    }
-
-    /**
-     * Searches for all connections in the storage.
-     *
-     * @param storage        the storage to search in
-     *
-     * @return an array of all connections found
-     */
-    public static Connection[] findAll(Storage storage) {
-        Object[] objs = storage.loadAll(PATH);
-        ArrayList<Connection> list = new ArrayList<>(objs.length);
-        for (Object o : objs) {
-            if (o instanceof Connection) {
-                list.add((Connection) o);
-            }
-        }
-        return list.toArray(new Connection[list.size()]);
     }
 
     /**

@@ -21,9 +21,7 @@ import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.security.SecurityContext;
-import org.rapidcontext.core.storage.Metadata;
-import org.rapidcontext.core.storage.Path;
+import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.type.Connection;
 
 /**
@@ -101,17 +99,18 @@ public class ConnectionListProcedure implements Procedure {
     throws ProcedureException {
 
         CallContext.checkSearchAccess(Connection.PATH.toString());
-        Metadata[] metas = cx.getStorage().lookupAll(Connection.PATH);
-        Array res = new Array(metas.length);
-        for (Metadata m : metas) {
-            Path path = m.path();
-            if (SecurityContext.hasReadAccess(path.toString())) {
-                Object obj = cx.getStorage().load(path);
+        Array res = new Array();
+        Storage storage = cx.getStorage();
+        storage.query(Connection.PATH)
+            .filterReadAccess()
+            .metadatas()
+            .forEach(meta -> {
+                Object o = storage.load(meta.path());
                 Dict dict = null;
-                if (obj instanceof Connection) {
-                    dict = ((Connection) obj).serialize();
-                } else if (obj instanceof Dict) {
-                    dict = (Dict) obj;
+                if (o instanceof Connection) {
+                    dict = ((Connection) o).serialize();
+                } else if (o instanceof Dict) {
+                    dict = (Dict) o;
                     if (!dict.containsKey("_error")) {
                         String msg = "failed to initialize: plug-in for " +
                                      "connnection type probably not loaded";
@@ -119,11 +118,10 @@ public class ConnectionListProcedure implements Procedure {
                     }
                 }
                 if (dict != null) {
-                    dict.add("plugin", PluginManager.pluginId(m));
+                    dict.add("plugin", PluginManager.pluginId(meta));
                     res.add(dict);
                 }
-            }
-        }
+            });
         return res;
     }
 }

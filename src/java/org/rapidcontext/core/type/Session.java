@@ -19,10 +19,10 @@ import java.util.Date;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.core.storage.Storage;
@@ -110,6 +110,17 @@ public class Session extends StorableObject {
     public static ThreadLocal<Session> activeSession = new ThreadLocal<>();
 
     /**
+     * Returns a stream of all sessions found in the storage.
+     *
+     * @param storage        the storage to search
+     *
+     * @return a stream of session instances found
+     */
+    public static Stream<Session> all(Storage storage) {
+        return storage.query(PATH).objects(Session.class);
+    }
+
+    /**
      * The initial creation flag.
      */
     private boolean created = false;
@@ -182,24 +193,20 @@ public class Session extends StorableObject {
      * @param storage        the storage to use
      */
     public static void removeExpired(Storage storage) {
-        // TODO: session expiry should be handled with iterator
-        for (Metadata meta : storage.lookupAll(PATH)) {
-            Session session = find(storage, meta.path());
-            if (session != null) {
-                String userId = session.userId();
-                if (!session.isValid()) {
-                    LOG.fine("deleting " + session + ", invalid or expired");
+        all(storage).forEach(session -> {
+            String userId = session.userId();
+            if (!session.isValid()) {
+                LOG.fine("deleting " + session + ", invalid or expired");
+                remove(storage, session.id());
+            } else if (userId.length() > 0) {
+                User user = User.find(storage, userId);
+                if (user == null || !user.isEnabled()) {
+                    String msg = "no enabled user " + userId;
+                    LOG.fine("deleting " + session + ", " + msg);
                     remove(storage, session.id());
-                } else if (userId.length() > 0) {
-                    User user = User.find(storage, userId);
-                    if (user == null || !user.isEnabled()) {
-                        String msg = "no enabled user " + userId;
-                        LOG.fine("deleting " + session + ", " + msg);
-                        remove(storage, session.id());
-                    }
                 }
             }
-        }
+        });
     }
 
     /**

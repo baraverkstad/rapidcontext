@@ -79,7 +79,7 @@ public final class SecurityContext {
      */
     public static void init(Storage storage) throws StorageException {
         dataStorage = storage;
-        int count = dataStorage.lookupAll(User.PATH).length;
+        long count = dataStorage.query(User.PATH).paths().count();
         if (count <= 0) {
             LOG.info("creating default 'admin' user");
             User user = new User("admin");
@@ -89,7 +89,7 @@ public final class SecurityContext {
             user.setRoles(new String[] { "admin" });
             User.store(dataStorage, user);
         }
-        roleCache = Role.findAll(dataStorage);
+        roleCache = Role.all(dataStorage).toArray(Role[]::new);
     }
 
     /**

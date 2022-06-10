@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,7 +34,6 @@ import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.JsonSerializer;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.SecurityContext;
-import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.type.Session;
@@ -124,27 +122,27 @@ public class AppWebService extends FileWebService {
      *
      * @return a sorted list of all matching files found in storage
      */
-    protected static ArrayList<String> resources(String type, Path base) {
-        ArrayList<String> res = new ArrayList<>();
-        ApplicationContext ctx = ApplicationContext.getInstance();
+    protected static String[] resources(String type, Path base) {
+        Storage storage = ApplicationContext.getInstance().getStorage();
         Path storagePath = new Path(PATH_FILES, type + "/");
         String rootPath = PATH_FILES.toString();
         String basePath = base.toString();
         String ver = version();
-        for (Metadata meta : ctx.getStorage().lookupAll(storagePath)) {
-            String file = meta.path().toString();
-            if (meta.isBinary() && file.endsWith("." + type)) {
+        return storage.query(storagePath)
+            .filterExtension("." + type)
+            .paths()
+            .map(path -> {
+                String file = path.toString();
                 if (file.startsWith(basePath)) {
                     file = StringUtils.removeStart(file, basePath);
                 } else {
                     file = StringUtils.removeStart(file, rootPath);
                     file = "rapidcontext/files/" + file;
                 }
-                res.add(file + "?" + ver);
-            }
-        }
-        Collections.sort(res);
-        return res;
+                return file + "?" + ver;
+            })
+            .sorted()
+            .toArray(String[]::new);
     }
 
     /**

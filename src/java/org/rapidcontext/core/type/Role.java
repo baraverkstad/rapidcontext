@@ -14,11 +14,11 @@
 
 package org.rapidcontext.core.type;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.core.data.Dict;
@@ -125,21 +125,14 @@ public class Role extends StorableObject {
     public static final Path PATH = new Path("/role/");
 
     /**
-     * Searches for all roles in the storage.
+     * Returns a stream of all roles found in the storage.
      *
-     * @param storage        the storage to search in
+     * @param storage        the storage to search
      *
-     * @return an array of all roles found
+     * @return a stream of role instances found
      */
-    public static Role[] findAll(Storage storage) {
-        Object[] objs = storage.loadAll(PATH);
-        ArrayList<Role> list = new ArrayList<>(objs.length);
-        for (Object o : objs) {
-            if (o instanceof Role) {
-                list.add((Role) o);
-            }
-        }
-        return list.toArray(new Role[list.size()]);
+    public static Stream<Role> all(Storage storage) {
+        return storage.query(PATH).objects(Role.class);
     }
 
     /**

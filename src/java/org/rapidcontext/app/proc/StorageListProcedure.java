@@ -21,8 +21,6 @@ import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.security.SecurityContext;
-import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.Storage;
 
@@ -103,27 +101,25 @@ public class StorageListProcedure implements Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        String path = ((String) bindings.getValue("path", "")).trim();
-        if (path.length() <= 0) {
+        String search = ((String) bindings.getValue("path", "")).trim();
+        if (search.length() <= 0) {
             throw new ProcedureException("path cannot be empty");
-        } else if (!path.endsWith("/")) {
+        } else if (!search.endsWith("/")) {
             throw new ProcedureException("path must be an index");
         }
-        CallContext.checkSearchAccess(path);
+        CallContext.checkSearchAccess(search);
         Storage storage = ApplicationContext.getInstance().getStorage();
-        Path searchPath = new Path(path);
-        Metadata[] meta = storage.lookupAll(searchPath);
-        Array res = new Array(meta.length);
-        for (Metadata m : meta) {
-            Path loadPath = m.path();
-            if (SecurityContext.hasReadAccess(loadPath.toString())) {
-                Object obj = storage.load(loadPath);
-                Dict dict = StorageReadProcedure.serialize(loadPath, obj);
+        Array res = new Array();
+        storage.query(new Path(search))
+            .filterReadAccess()
+            .paths()
+            .forEach(path -> {
+                Object o = storage.load(path);
+                Dict dict = StorageReadProcedure.serialize(path, o);
                 if (dict != null) {
                     res.add(dict);
                 }
-            }
-        }
+            });
         return res;
     }
 }

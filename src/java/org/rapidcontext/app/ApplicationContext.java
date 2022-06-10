@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -251,8 +252,8 @@ public class ApplicationContext {
         initLibrary();
         initPlugins();
         // TODO: Remove singleton environment reference
-        Environment[] envs = Environment.findAll(storage);
-        env = (envs.length > 0) ? envs[0] : null;
+        Optional<Environment> first = Environment.all(storage).findFirst();
+        env = first.isPresent() ? first.get() : null;
         try {
             SecurityContext.init(storage);
         } catch (StorageException e) {
@@ -397,7 +398,7 @@ public class ApplicationContext {
      */
     public WebMatcher[] getWebMatchers() {
         if (matchers == null) {
-            matchers = WebService.findAllMatchers(storage);
+            matchers = WebService.matchers(storage).toArray(WebMatcher[]::new);
         }
         return matchers;
     }

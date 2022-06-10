@@ -515,7 +515,7 @@ public class PluginManager {
 
         // Initialize plug-in instance
         try {
-            storage.loadAll(storagePath(pluginId).descendant(Type.PATH));
+            Type.all(storage).forEach(o -> { /* Force refresh cached types */ });
             // TODO: plug-in initialization should be handled by storage
             plugin.init();
             storage.store(pluginPath(pluginId), plugin);
@@ -588,14 +588,15 @@ public class PluginManager {
      * this.
      */
     public void unloadAll() {
-        for (Object o : storage.loadAll(PATH_PLUGIN)) {
-            if (o instanceof Plugin) {
-                String pluginId = ((Plugin) o).id();
-                try {
-                    unload(pluginId);
-                } catch (PluginException e) {
-                    LOG.warning("failed to unload " + pluginId + " plugin");
-                }
+        String[] ids = storage.query(PATH_PLUGIN)
+            .objects(Plugin.class)
+            .map(p -> p.id())
+            .toArray(String[]::new);
+        for (String pluginId : ids) {
+            try {
+                unload(pluginId);
+            } catch (PluginException e) {
+                LOG.warning("failed to unload " + pluginId + " plugin");
             }
         }
         storage.cacheClean(true);
@@ -620,12 +621,11 @@ public class PluginManager {
      */
     private void loadJarFiles(String pluginId) {
         Path path = storagePath(pluginId).descendant(PATH_LIB);
-        for (Metadata meta : storage.lookupAll(path)) {
-            String name = meta.path().name();
-            if (meta.isBinary() && name.toLowerCase().endsWith(".jar")) {
-                loadJarFile(meta.path());
-            }
-        }
+        storage.query(path)
+            .filterExtension(".jar")
+            .metadatas()
+            .filter(meta -> meta != null && meta.isBinary())
+            .forEach(meta -> loadJarFile(meta.path()));
     }
 
     /**

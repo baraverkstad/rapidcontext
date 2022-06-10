@@ -20,9 +20,6 @@ import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.security.SecurityContext;
-import org.rapidcontext.core.storage.Metadata;
-import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.type.User;
 
@@ -104,17 +101,11 @@ public class UserListProcedure implements Procedure {
 
         CallContext.checkSearchAccess(User.PATH.toString());
         Storage storage = cx.getStorage();
-        Metadata[] meta = storage.lookupAll(User.PATH);
-        Array res = new Array(meta.length);
-        for (Metadata m : meta) {
-            Path path = m.path();
-            if (SecurityContext.hasReadAccess(path.toString())) {
-                Object obj = storage.load(path);
-                if (obj instanceof User) {
-                    res.add(serialize((User) obj));
-                }
-            }
-        }
+        Array res = new Array();
+        storage.query(User.PATH)
+            .filterReadAccess()
+            .objects(User.class)
+            .forEach(user -> res.add(serialize(user)));
         res.sort("id");
         return res;
     }
