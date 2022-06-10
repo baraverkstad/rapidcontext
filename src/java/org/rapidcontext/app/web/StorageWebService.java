@@ -14,16 +14,13 @@
 
 package org.rapidcontext.app.web;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.app.ApplicationContext;
-import org.rapidcontext.app.proc.StorageCopyProcedure;
 import org.rapidcontext.app.proc.StorageDeleteProcedure;
 import org.rapidcontext.app.proc.StorageWriteProcedure;
 import org.rapidcontext.core.data.Array;
@@ -34,7 +31,6 @@ import org.rapidcontext.core.data.JsonSerializer;
 import org.rapidcontext.core.data.PropertiesSerializer;
 import org.rapidcontext.core.data.XmlSerializer;
 import org.rapidcontext.core.security.SecurityContext;
-import org.rapidcontext.core.storage.DirStorage;
 import org.rapidcontext.core.storage.Index;
 import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
@@ -47,9 +43,8 @@ import org.rapidcontext.util.FileUtil;
 
 /**
  * A storage API web service. This service is used for accessing the
- * raw data storage through HTTP or WebDAV and provides a view of the
- * storage hierarchy similar to a file system. Note that WebDAV makes
- * use of extended HTTP methods.
+ * raw data storage through HTTP and provides a view of the
+ * storage hierarchy similar to a file system.
  *
  * @author   Per Cederberg
  * @version  1.0
@@ -70,12 +65,7 @@ public class StorageWebService extends WebService {
         METHOD.POST,
         METHOD.PATCH,
         METHOD.PUT,
-        METHOD.DELETE,
-        METHOD.PROPFIND,
-        METHOD.MKCOL,
-        METHOD.MOVE,
-        METHOD.LOCK,
-        METHOD.UNLOCK
+        METHOD.DELETE
     };
 
     /**
@@ -122,30 +112,6 @@ public class StorageWebService extends WebService {
      */
     protected String[] methodsImpl(Request request) {
         return METHODS;
-    }
-
-    /**
-     * Processes a request for this handler. This method assumes
-     * local request paths (removal of the mapped URL base).
-     *
-     * @param request the request to process
-     */
-    public void process(Request request) {
-        request.setResponseHeader(HEADER.DAV, "2");
-        request.setResponseHeader("MS-Author-Via", "DAV");
-        if (request.hasMethod(METHOD.PROPFIND)) {
-            doPropFind(request);
-        } else if (request.hasMethod(METHOD.MKCOL)) {
-            doMkCol(request);
-        } else if (request.hasMethod(METHOD.MOVE)) {
-            doMove(request);
-        } else if (request.hasMethod(METHOD.LOCK)) {
-            doLock(request);
-        } else if (request.hasMethod(METHOD.UNLOCK)) {
-            doUnlock(request);
-        } else {
-            super.process(request);
-        }
     }
 
     /**
@@ -417,10 +383,10 @@ public class StorageWebService extends WebService {
                 errorNotFound(request);
             } else if (dict == null){
                 String msg = "resource is not object";
-                request.sendError(STATUS.UNPROCESSABLE_ENTITY, null, msg);
+                request.sendError(STATUS.BAD_REQUEST, null, msg);
             } else if (!(data instanceof Dict)) {
                 String msg = "patch data should be JSON object";
-                request.sendError(STATUS.UNPROCESSABLE_ENTITY, null, msg);
+                request.sendError(STATUS.NOT_ACCEPTABLE, null, msg);
             } else {
                 dict.setAll((Dict) data);
                 storage.store(path, dict);
@@ -536,239 +502,9 @@ public class StorageWebService extends WebService {
     }
 
     /**
-     * Processes a WebDAV PROPFIND request.
-     *
-     * @param request        the request to process
-     */
-    protected void doPropFind(Request request) {
-        if (!SecurityContext.hasWriteAccess(request.getPath())) {
-            errorUnauthorized(request);
-            return;
-        }
-        try {
-            WebDavRequest davRequest = new WebDavRequest(request);
-            if (davRequest.depth() < 0 || davRequest.depth() > 1) {
-                davRequest.sendErrorFiniteDepth();
-                return;
-            }
-            ApplicationContext ctx = ApplicationContext.getInstance();
-            Path path = normalizePath(new Path(request.getPath()));
-            Metadata meta = (path != null) ? ctx.getStorage().lookup(path) : null;
-            Object data = (path != null) ? ctx.getStorage().load(path) : null;
-            if (path == null || data == null || meta == null) {
-                errorNotFound(request);
-                return;
-            }
-            String suffix = (path.isIndex() && !request.getPath().endsWith("/")) ? "/" : "";
-            String href = request.getAbsolutePath() + suffix;
-            addResource(davRequest, href, meta, data);
-            if (davRequest.depth() > 0 && data instanceof Index) {
-                Index idx = (Index) data;
-                idx.paths().forEach((p) -> {
-                    Object d = ctx.getStorage().load(p);
-                    Metadata m = ctx.getStorage().lookup(p);
-                    if (d != null && m != null) {
-                        String str = href + p.name();
-                        if (p.isIndex()) {
-                            str += "/";
-                        } else if (m.isObject()) {
-                            str += DirStorage.SUFFIX_PROPS;
-                        }
-                        try {
-                            addResource(davRequest, str, m, d);
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                });
-            }
-            davRequest.sendMultiResponse();
-        } catch (Exception e) {
-            LOG.log(Level.WARNING, "failed to process WebDAV propfind request", e);
-            errorInternal(request, e.getMessage());
-        }
-    }
-
-    /**
-     * Adds a resource to the WebDAV response.
-     *
-     * @param request        the WebDAV request container
-     * @param href           the root-relative resource link
-     * @param meta           the resource meta-data
-     * @param data           the resource object
-     *
-     * @throws Exception if the resource couldn't be added
-     */
-    private void addResource(WebDavRequest request,
-                             String href,
-                             Metadata meta,
-                             Object data)
-    throws Exception {
-
-        Date modified = meta.lastModified();
-        if (data instanceof Index) {
-            request.addResource(href, modified, modified, 0);
-        } else if (data instanceof File) {
-            // TODO: storage file
-            File file = (File) data;
-            request.addResource(href, modified, modified, file.length());
-        } else {
-            String str = PropertiesSerializer.serialize(data);
-            byte[] bytes = str.getBytes("ISO-8859-1");
-            request.addResource(href, modified, modified, bytes.length);
-        }
-    }
-
-    /**
-     * Processes a WebDAV MKCOL request.
-     *
-     * @param request        the request to process
-     */
-    protected void doMkCol(Request request) {
-        ApplicationContext  ctx = ApplicationContext.getInstance();
-        Path                path;
-        Metadata            meta;
-
-        if (!SecurityContext.hasWriteAccess(request.getPath())) {
-            errorUnauthorized(request);
-            return;
-        }
-        try {
-            path = new Path(request.getPath());
-            if (!path.isIndex()) {
-                path = path.parent().child(path.name(), true);
-            }
-            meta = ctx.getStorage().lookup(path);
-            if (meta != null) {
-                request.sendError(STATUS.FORBIDDEN);
-            } else {
-                ctx.getStorage().store(path.child("dummy", false), new Dict());
-                ctx.getStorage().remove(path.child("dummy", false));
-                request.sendText(STATUS.CREATED, null, null);
-            }
-        } catch (Exception e) {
-            LOG.log(Level.WARNING, "failed to create dir " + request.getPath(), e);
-            errorInternal(request, e.getMessage());
-        }
-    }
-
-    /**
-     * Processes a WebDAV MOVE request.
-     *
-     * @param request        the request to process
-     */
-    protected void doMove(Request request) {
-        String path = request.getPath();
-        String prefix = StringUtils.substringBeforeLast(request.getUrl(), path);
-        prefix = StringUtils.removeEnd(prefix, "/");
-        String href = request.getHeader(HEADER.DESTINATION);
-        if (!SecurityContext.hasWriteAccess(path)) {
-            errorUnauthorized(request);
-            return;
-        } else if (href == null) {
-            errorBadRequest(request, "missing Destination header");
-            return;
-        }
-        href = Helper.decodeUrl(href);
-        if (!href.startsWith(prefix)) {
-            request.sendError(STATUS.BAD_GATEWAY);
-            return;
-        }
-        Path dst = new Path(href.substring(prefix.length()));
-        Path src = normalizePath(new Path(path));
-        if (!SecurityContext.hasWriteAccess(dst.toString())) {
-            errorUnauthorized(request);
-            return;
-        } else if (src == null) {
-            errorNotFound(request);
-        } else if (src.isIndex()) {
-            // TODO: add support for collection moves
-            errorForbidden(request);
-        } else {
-            boolean success = StorageCopyProcedure.copy(src, dst, false) &&
-                              StorageDeleteProcedure.delete(src);
-            if (success) {
-                href = Helper.encodeUrl(prefix + dst.toString());
-                request.setResponseHeader(HEADER.LOCATION, href);
-                request.sendText(STATUS.CREATED, null, null);
-            } else {
-                String msg = "failed to move " + request.getPath();
-                errorInternal(request, msg);
-            }
-        }
-    }
-
-    /**
-     * Processes a WebDAV LOCK request.
-     *
-     * @param request        the request to process
-     */
-    protected void doLock(Request request) {
-        ApplicationContext  ctx = ApplicationContext.getInstance();
-        Path                path = new Path(request.getPath());
-        String              href;
-        WebDavRequest       davRequest;
-        Dict                lockInfo;
-        Metadata            meta = null;
-
-        if (!SecurityContext.hasWriteAccess(request.getPath())) {
-            errorUnauthorized(request);
-            return;
-        }
-        try {
-            davRequest = new WebDavRequest(request);
-            if (davRequest.depth() > 0) {
-                errorBadRequest(request, "invalid lock depth header");
-                return;
-            }
-            lockInfo = davRequest.lockInfo();
-            if (lockInfo == null) {
-                // TODO: allow lock refresh with missing body!
-                errorBadRequest(request, "missing DAV:lockinfo request body");
-                return;
-            }
-            path = normalizePath(path);
-            if (path != null) {
-                meta = ctx.getStorage().lookup(path);
-            }
-            if (path == null || meta == null) {
-                errorNotFound(request);
-                return;
-            }
-            href = request.getAbsolutePath();
-            if (path.isIndex() && !href.endsWith("/")) {
-                href += "/";
-            }
-            lockInfo.set("href", href);
-            lockInfo.set("token", "locktoken:" + System.currentTimeMillis());
-            // TODO: on lock fail, return multi-status response
-            // TODO: lock refresh...
-            davRequest.sendLockResponse(lockInfo, 60);
-        } catch (Exception e) {
-            LOG.log(Level.WARNING, "failed to process WebDAV lock request", e);
-            errorInternal(request, e.getMessage());
-        }
-    }
-
-    /**
-     * Processes a WebDAV UNLOCK request.
-     *
-     * @param request        the request to process
-     */
-    protected void doUnlock(Request request) {
-        if (!SecurityContext.hasWriteAccess(request.getPath())) {
-            errorUnauthorized(request);
-            return;
-        }
-        // TODO: remove lock
-        request.sendText(STATUS.NO_CONTENT, null, null);
-    }
-
-    /**
      * Attempts to correct or normalize the specified path if no data
      * can be found at the specified location. This is necessary in
-     * order to provide "*.properties" file access to data objects
-     * and to adjust for some WebDAV client bugs.
+     * order to provide "*.properties" file access to data objects.
      *
      * @param path           the path to normalize
      *
@@ -798,11 +534,6 @@ public class StorageWebService extends WebService {
                     meta = storage.lookup(lookupPath);
                 }
             }
-        }
-        // Fix for Windows WebDAV (omitting trailing /)
-        if (meta == null && !path.isIndex()) {
-            lookupPath = path.parent().child(pathName, true);
-            meta = storage.lookup(lookupPath);
         }
         return (meta == null) ? null : lookupPath;
     }

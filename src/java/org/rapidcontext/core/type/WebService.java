@@ -34,8 +34,8 @@ import org.rapidcontext.util.HttpUtil;
 /**
  * An HTTP web service (request handler). This is a generic type, providing
  * basic support for matching HTTP requests to the actual handlers (file
- * handler, app handler, WebDAV, etc). A custom web service usually subclasses
- * this class directly.
+ * handler, app handler, etc). A custom web service usually subclasses this
+ * class directly.
  *
  * @author   Per Cederberg
  * @version  1.0

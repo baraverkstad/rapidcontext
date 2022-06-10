@@ -29,7 +29,7 @@ public interface HttpUtil {
 
     /**
      * The HTTP methods as defined in RFC1945 (HTTP/1.0), RFC2616
-     * (HTTP/1.1), RFC5789 (PATCH) and RFC4918 (WebDAV).
+     * (HTTP/1.1) and RFC5789 (PATCH).
      */
     public static interface METHOD {
 
@@ -59,33 +59,12 @@ public interface HttpUtil {
 
         /** <code>CONNECT</code> (HTTP/1.1 - RFC 2616) */
         public static final String CONNECT = "CONNECT";
-
-        /** <code>PROPFIND</code> (WebDAV - RFC 4918) */
-        public static final String PROPFIND = "PROPFIND";
-
-        /** <code>PROPPATCH</code> (WebDAV - RFC 4918) */
-        public static final String PROPPATCH = "PROPPATCH";
-
-        /** <code>MKCOL</code> (WebDAV - RFC 4918) */
-        public static final String MKCOL = "MKCOL";
-
-        /** <code>COPY</code> (WebDAV - RFC 4918) */
-        public static final String COPY = "COPY";
-
-        /** <code>MOVE</code> (WebDAV - RFC 4918) */
-        public static final String MOVE = "MOVE";
-
-        /** <code>LOCK</code> (WebDAV - RFC 4918) */
-        public static final String LOCK = "LOCK";
-
-        /** <code>UNLOCK</code> (WebDAV - RFC 4918) */
-        public static final String UNLOCK = "UNLOCK";
     }
 
 
     /**
-     * The HTTP status codes as defined in RFC1945 (HTTP/1.0), RFC2616
-     * (HTTP/1.1), and RFC4918 (WebDAV).
+     * The HTTP status codes as defined in RFC1945 (HTTP/1.0) and
+     * RFC2616 (HTTP/1.1).
      */
     public static interface STATUS {
 
@@ -112,8 +91,6 @@ public interface HttpUtil {
         public static final int RESET_CONTENT = 205;
         /** <code>206 Partial Content</code> (HTTP/1.1 - RFC 2616) */
         public static final int PARTIAL_CONTENT = 206;
-        /** <code>207 Multi-Status</code> (WebDAV - RFC 4918) */
-        public static final int MULTI_STATUS = 207;
 
         // 3xx Redirection
 
@@ -170,12 +147,6 @@ public interface HttpUtil {
         public static final int REQUESTED_RANGE_NOT_SATISFIABLE = 416;
         /** <code>417 Expectation Failed</code> (HTTP/1.1 - RFC 2616) */
         public static final int EXPECTATION_FAILED = 417;
-        /** <code>422 Unprocessable Entity</code> (WebDAV - RFC 4918) */
-        public static final int UNPROCESSABLE_ENTITY = 422;
-        /** <code>423 Locked</code> (WebDAV - RFC 4918) */
-        public static final int LOCKED = 423;
-        /** <code>424 Failed Dependency</code> (WebDAV - RFC 4918) */
-        public static final int FAILED_DEPENDENCY = 424;
 
         // 5xx Server Error
 
@@ -191,8 +162,6 @@ public interface HttpUtil {
         public static final int GATEWAY_TIMEOUT = 504;
         /** <code>505 HTTP Version Not Supported</code> (HTTP/1.1 - RFC 2616) */
         public static final int HTTP_VERSION_NOT_SUPPORTED = 505;
-        /** <code>507 Insufficient Storage</code> (WebDAV - RFC 4918) */
-        public static final int INSUFFICIENT_STORAGE = 507;
 
         /**
          * Returns the HTTP status text corresponding to a status code.
@@ -222,8 +191,6 @@ public interface HttpUtil {
                 return "Reset Content";
             case STATUS.PARTIAL_CONTENT:
                 return "Partial Content";
-            case STATUS.MULTI_STATUS:
-                return "Multi-Status";
             case STATUS.MULTIPLE_CHOICES:
                 return "Multiple Choices";
             case STATUS.MOVED_PERMANENTLY:
@@ -274,12 +241,6 @@ public interface HttpUtil {
                 return "Requested Range Not Satisfiable";
             case STATUS.EXPECTATION_FAILED:
                 return "Expectation Failed";
-            case STATUS.UNPROCESSABLE_ENTITY:
-                return "Unprocessable Entity";
-            case STATUS.LOCKED:
-                return "Locked";
-            case STATUS.FAILED_DEPENDENCY:
-                return "Failed Dependency";
             case STATUS.INTERNAL_SERVER_ERROR:
                 return "Internal Server Error";
             case STATUS.NOT_IMPLEMENTED:
@@ -292,8 +253,6 @@ public interface HttpUtil {
                 return "Gateway Timeout";
             case STATUS.HTTP_VERSION_NOT_SUPPORTED:
                 return "HTTP Version Not Supported";
-            case STATUS.INSUFFICIENT_STORAGE:
-                return "Insufficient Storage";
             default:
                 return "Unknown";
             }
@@ -303,7 +262,7 @@ public interface HttpUtil {
 
     /**
      * A number of standard HTTP headers as defined in RFC1945
-     * (HTTP/1.0), RFC2616 (HTTP/1.1), and RFC4918 (WebDAV).
+     * (HTTP/1.0) and RFC2616 (HTTP/1.1).
      */
     public static interface HEADER {
 
@@ -364,15 +323,6 @@ public interface HttpUtil {
         /** RFC 1945 (HTTP/1.0) Section 10.6, RFC 2616 (HTTP/1.1) Section 14.18 */
         public static final String DATE = "Date";
 
-        /** RFC 4918 (WebDAV) Section 10.1 */
-        public static final String DAV = "DAV";
-
-        /** RFC 4918 (WebDAV) Section 10.2 */
-        public static final String DEPTH = "Depth";
-
-        /** RFC 4918 (WebDAV) Section 10.3 */
-        public static final String DESTINATION = "Destination";
-
         /** RFC 2616 (HTTP/1.1) Section 14.19 */
         public static final String ETAG = "ETag";
 
@@ -387,9 +337,6 @@ public interface HttpUtil {
 
         /** RFC 2616 (HTTP/1.1) Section 14.23 */
         public static final String HOST = "Host";
-
-        /** RFC 4918 (WebDAV) Section 10.4 */
-        public static final String IF = "If";
 
         /** RFC 2616 (HTTP/1.1) Section 14.24 */
         public static final String IF_MATCH = "If-Match";
@@ -412,14 +359,8 @@ public interface HttpUtil {
         /** RFC 1945 (HTTP/1.0) Section 10.11, RFC 2616 (HTTP/1.1) Section 14.30 */
         public static final String LOCATION = "Location";
 
-        /** RFC 4918 (WebDAV) Section 10.5 */
-        public static final String LOCK_TOKEN = "Lock-Token";
-
         /** RFC 2616 (HTTP/1.1) Section 14.31 */
         public static final String MAX_FORWARDS = "Max-Forwards";
-
-        /** RFC 4918 (WebDAV) Section 10.6 */
-        public static final String OVERWRITE = "Overwrite";
 
         /** RFC 1945 (HTTP/1.0) Section 10.12, RFC 2616 (HTTP/1.1) Section 14.32 */
         public static final String PRAGMA = "Pragma";
@@ -444,9 +385,6 @@ public interface HttpUtil {
 
         /** RFC 2616 (HTTP/1.1) Section 14.39 */
         public static final String TE = "TE";
-
-        /** RFC 4918 (WebDAV) Section 10.7 */
-        public static final String TIMEOUT = "Timeout";
 
         /** RFC 2616 (HTTP/1.1) Section 14.40 */
         public static final String TRAILER = "Trailer";
