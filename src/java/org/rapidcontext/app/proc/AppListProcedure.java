@@ -14,8 +14,6 @@
 
 package org.rapidcontext.app.proc;
 
-import org.rapidcontext.app.ApplicationContext;
-import org.rapidcontext.app.plugin.Plugin;
 import org.rapidcontext.app.plugin.PluginManager;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
@@ -106,7 +104,6 @@ public class AppListProcedure implements Procedure {
         throws ProcedureException {
 
         CallContext.checkSearchAccess(PATH_APP.toString());
-        ApplicationContext ctx = ApplicationContext.getInstance();
         Storage storage = cx.getStorage();
         Array res = new Array();
         storage.query(PATH_APP)
@@ -115,17 +112,11 @@ public class AppListProcedure implements Procedure {
             .forEach(meta -> {
                 Object o = storage.load(meta.path());
                 if (o instanceof Dict) {
-                    Dict dict = new Dict();
-                    dict.set("id", meta.path().toIdent(PATH_APP.depth()));
-                    String pluginId = PluginManager.pluginId(meta);
-                    if (pluginId != null) {
-                        Dict plugin = ctx.pluginConfig(pluginId);
-                        if (plugin != null) {
-                            dict.set("plugin", plugin.get(Plugin.KEY_ID));
-                            dict.set("version", plugin.get("version"));
-                        }
+                    Dict dict = ((Dict) o).copy();
+                    if (!dict.containsKey("id")) {
+                        dict.set("id", meta.path().toIdent(PATH_APP.depth()));
                     }
-                    dict.addAll((Dict) o);
+                    dict.set("plugin", PluginManager.pluginId(meta));
                     res.add(dict);
                 }
             });

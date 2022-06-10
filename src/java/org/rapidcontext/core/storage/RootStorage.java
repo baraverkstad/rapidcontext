@@ -434,7 +434,7 @@ public class RootStorage extends Storage {
      *         null if not found
      */
     private Object loadObject(Storage storage, Path path) {
-        boolean isCached = cacheStorages.containsKey(storage.path());
+        boolean isCacheable = cacheStorages.containsKey(storage.path());
         Index idx = null;
         Object res = cacheGet(storage.path(), path);
         if (res instanceof Index) {
@@ -444,7 +444,7 @@ public class RootStorage extends Storage {
             return res;
         }
         res = storage.load(path);
-        if (isCached && res instanceof Dict) {
+        if (isCacheable && res instanceof Dict) {
             String id = path.toIdent(1);
             res = initObject(id, (Dict) res);
             cacheAdd(storage.path(), path, res);
@@ -487,6 +487,8 @@ public class RootStorage extends Storage {
                 dict.add("_error", msg);
                 return dict;
             }
+        } else if (!dict.containsKey(KEY_ID)) {
+            dict.set(KEY_ID, id);
         }
         return dict;
     }

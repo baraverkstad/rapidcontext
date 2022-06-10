@@ -138,7 +138,7 @@
         <Table id="appTable" w="100%" h="100%-22">
           <TableColumn title="Identifier" field="id" sort="asc" key="true" />
           <TableColumn title="Name" field="name" />
-          <TableColumn title="Version" field="version" />
+          <TableColumn title="Plug-in" field="plugin" />
         </Table>
       </div>
       <Form id="appForm" w="65%-30" h="100%" style="float: left;">
@@ -162,12 +162,6 @@
                   <Field name="id" />
                   <Icon ref="EXPAND" style="margin-left: 3px;" />
                 </a>
-              </td>
-            </tr>
-            <tr>
-              <th class="label" style="padding-right: 4px;">Version:</th>
-              <td>
-                <Field name="version" />
               </td>
             </tr>
             <tr>
