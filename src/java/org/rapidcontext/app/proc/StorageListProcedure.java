@@ -14,7 +14,9 @@
 
 package org.rapidcontext.app.proc;
 
+import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.app.ApplicationContext;
+import org.rapidcontext.app.web.FileWebService;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
@@ -110,10 +112,24 @@ public class StorageListProcedure implements Procedure {
         CallContext.checkSearchAccess(search);
         Storage storage = ApplicationContext.getInstance().getStorage();
         Array res = new Array();
-        storage.query(new Path(search))
+        storage.queryFiles(new Path(search))
             .filterReadAccess()
             .paths()
             .forEach(path -> {
+                boolean isDataPath = (
+                    !path.startsWith(FileWebService.PATH_FILES) &&
+                    !path.startsWith(Storage.PATH_STORAGE)
+                );
+                if (isDataPath) {
+                    for (String ext : Storage.EXT_ALL) {
+                        String name = path.name();
+                        if (StringUtils.endsWithIgnoreCase(name, ext)) {
+                            name = StringUtils.removeEndIgnoreCase(name, ext);
+                            path = path.parent().child(name, false);
+                            break;
+                        }
+                    }
+                }
                 Object o = storage.load(path);
                 Dict dict = StorageReadProcedure.serialize(path, o);
                 if (dict != null) {

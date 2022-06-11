@@ -42,6 +42,11 @@ public class Query {
     private Path base;
 
     /**
+     * The hidden file extensions.
+     */
+    private String[] hiddenExts;
+
+    /**
      * The path predicate filters to apply.
      */
     private ArrayList<Predicate<Path>> filters = new ArrayList<>();
@@ -51,10 +56,12 @@ public class Query {
      *
      * @param storage        the storage to query
      * @param base           the base path
+     * @param hiddenExts     the hidden file extensions
      */
-    public Query(Storage storage, Path base) {
+    public Query(Storage storage, Path base, String[] hiddenExts) {
         this.storage = storage;
         this.base = base;
+        this.hiddenExts = hiddenExts;
     }
 
     /**
@@ -109,17 +116,14 @@ public class Query {
                     return allPaths(path);
                 } else {
                     String name = path.name();
-                    for (String ext : Storage.EXT_ALL) {
+                    for (String ext : this.hiddenExts) {
                         if (StringUtils.endsWithIgnoreCase(name, ext)) {
                             name = StringUtils.removeEndIgnoreCase(name, ext);
-                            if (idx.hasObject(name)) {
-                                return Stream.empty();
-                            } else {
-                                return Stream.of(path.parent().child(name, false));
-                            }
+                            path = idx.hasObject(name) ? null : path.parent().child(name, false);
+                            break;
                         }
                     }
-                    return Stream.of(path);
+                    return Stream.ofNullable(path);
                 }
             });
         }

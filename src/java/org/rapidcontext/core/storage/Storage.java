@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Date;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.core.data.JsonSerializer;
 import org.rapidcontext.core.data.PropertiesSerializer;
@@ -316,14 +317,28 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
     }
 
     /**
-     * Returns a new storage query for this storage.
+     * Returns a new storage query for this storage. Supported data
+     * file extensions will automatically be hidden by this query.
      *
      * @param base           the base path (must be an index)
      *
      * @return the storage query
      */
     public Query query(Path base) {
-        return new Query(this, base);
+        return new Query(this, base, EXT_ALL);
+    }
+
+    /**
+     * Returns a new storage query for this storage without hiding
+     * supported data file extensions. Use this for storage paths
+     * containing binary files or similar.
+     *
+     * @param base           the base path (must be an index)
+     *
+     * @return the storage query
+     */
+    public Query queryFiles(Path base) {
+        return new Query(this, base, ArrayUtils.EMPTY_STRING_ARRAY);
     }
 
     /**

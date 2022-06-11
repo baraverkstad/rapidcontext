@@ -300,8 +300,7 @@ public class StorageWebService extends WebService {
      * @return serialized representation of the file
      */
     private Dict serializeBinary(Binary data, Request request, Path path) {
-        Dict  dict = new Dict();
-
+        Dict dict = new Dict();
         dict.set("type", "file");
         dict.set("name", path.name());
         dict.set("mimeType", data.mimeType());
