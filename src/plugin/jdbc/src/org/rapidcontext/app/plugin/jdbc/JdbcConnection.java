@@ -14,6 +14,7 @@
 
 package org.rapidcontext.app.plugin.jdbc;
 
+import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.storage.StorageException;
@@ -95,14 +96,19 @@ public class JdbcConnection extends Connection {
      * @throws StorageException if the initialization failed
      */
     protected void init() throws StorageException {
-        String  driver;
-        String  url;
-        String  ping;
-
-        driver = dict.getString(JDBC_DRIVER, "").trim();
-        url = dict.getString(JDBC_URL, "").trim().toLowerCase();
-        ping = dict.getString(JDBC_PING, "").trim();
+        String driver = dict.getString(JDBC_DRIVER, "").trim();
+        String url = dict.getString(JDBC_URL, "").trim().toLowerCase();
+        String ping = dict.getString(JDBC_PING, "").trim();
         if (driver.length() == 0) {
+            // Adjust older MySQL connection URLs (for default driver)
+            if (url.startsWith("jdbc:mysql:thin:")) {
+                url = StringUtils.replaceOnce(url, "jdbc:mysql:thin:", "jdbc:mariadb:");
+                dict.set("_" + JDBC_URL, url);
+            } else if (url.startsWith("jdbc:mysql:")) {
+                url = StringUtils.replaceOnce(url, "jdbc:mysql:", "jdbc:mariadb:");
+                dict.set("_" + JDBC_URL, url);
+            }
+            // Set default driver
             if (url.startsWith("jdbc:odbc")) {
                 dict.set("_" + JDBC_DRIVER, "sun.jdbc.odbc.JdbcOdbcDriver");
             } else if (url.startsWith("jdbc:mariadb:") || url.startsWith("jdbc:mysql:")) {
@@ -149,17 +155,15 @@ public class JdbcConnection extends Connection {
      *             or wasn't of the correct Java type
      */
     public Driver driver() throws ConnectionException {
-        ClassLoader  loader;
-        String       driverClass;
-        String       msg;
-
+        String driverClass;
         if (dict.containsKey("_" + JDBC_DRIVER)) {
             driverClass = dict.getString("_" + JDBC_DRIVER, "");
         } else {
             driverClass = dict.getString(JDBC_DRIVER, "");
         }
+        String msg;
         try {
-            loader = ApplicationContext.getInstance().getClassLoader();
+            ClassLoader loader = ApplicationContext.getInstance().getClassLoader();
             return (Driver) loader.loadClass(driverClass).getDeclaredConstructor().newInstance();
         } catch (ClassNotFoundException e) {
             msg = "couldn't find or load JDBC driver class " + driverClass +
@@ -182,7 +186,11 @@ public class JdbcConnection extends Connection {
      * @return the JDBC connection URL
      */
     public String url() {
-        return dict.getString(JDBC_URL, "");
+        if (dict.containsKey("_" + JDBC_URL)) {
+            return dict.getString("_" + JDBC_URL, "");
+        } else {
+            return dict.getString(JDBC_URL, "");
+        }
     }
 
     /**

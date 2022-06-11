@@ -94,8 +94,9 @@ public class JdbcChannel extends Channel {
         this.timeout = parent.timeout();
         try {
             LOG.fine(prefix + "creating connection for " + parent.url());
+            DriverManager.registerDriver(parent.driver());
             DriverManager.setLoginTimeout(timeout);
-            con = parent.driver().connect(parent.url(), props);
+            con = DriverManager.getConnection(parent.url(), props);
             con.setAutoCommit(parent.autoCommit());
             LOG.fine(prefix + "done creating connection for " + parent.url());
         } catch (SQLException e) {
