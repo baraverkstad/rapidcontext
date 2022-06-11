@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.core.security.SecurityContext;
 
 /**
@@ -107,6 +108,17 @@ public class Query {
                 if (path.isIndex()) {
                     return allPaths(path);
                 } else {
+                    String name = path.name();
+                    for (String ext : Storage.EXT_ALL) {
+                        if (StringUtils.endsWithIgnoreCase(name, ext)) {
+                            name = StringUtils.removeEndIgnoreCase(name, ext);
+                            if (idx.hasObject(name)) {
+                                return Stream.empty();
+                            } else {
+                                return Stream.of(path.parent().child(name, false));
+                            }
+                        }
+                    }
                     return Stream.of(path);
                 }
             });

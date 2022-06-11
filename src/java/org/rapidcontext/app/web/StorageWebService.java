@@ -79,14 +79,16 @@ public class StorageWebService extends WebService {
     public static final String EXT_JSON = ".json";
 
     /**
-     * The properties file extension.
-     */
-    public static final String EXT_PROPERTIES = ".properties";
-
-    /**
      * The XML file extension.
      */
     public static final String EXT_XML = ".xml";
+
+    /**
+     * The list of supported file extensions.
+     */
+    public static final String[] EXT_ALL = {
+        EXT_HTML, EXT_JSON, Storage.EXT_PROPERTIES, EXT_XML
+    };
 
     /**
      * Creates a new storage web service from a serialized representation.
@@ -130,49 +132,35 @@ public class StorageWebService extends WebService {
      * @param request        the request to process
      */
     protected void doGet(Request request) {
-        ApplicationContext  ctx = ApplicationContext.getInstance();
-        Path                orig = new Path(request.getPath());
-        Metadata            meta = null;
-        Object              res = null;
-        boolean             isHtml = false;
-        boolean             isJson = false;
-        boolean             isProps = false;
-        boolean             isXml = false;
-        boolean             isDefault = true;
-
         // TODO: Change to read-access here once a solution has been devised
         //       to disable search queries for certain paths and/or users.
         if (!SecurityContext.hasWriteAccess(request.getPath())) {
             errorUnauthorized(request);
             return;
         }
+        Path path = new Path(request.getPath());
+        Metadata meta = lookup(path);
+        boolean isExact = meta != null && path.equals(meta.path());
+        boolean isHtml = !isExact && StringUtils.endsWithIgnoreCase(path.name(), EXT_HTML);
+        boolean isJson = !isExact && StringUtils.endsWithIgnoreCase(path.name(), EXT_JSON);
+        boolean isProps = !isExact && StringUtils.endsWithIgnoreCase(path.name(), Storage.EXT_PROPERTIES);
+        boolean isXml = !isExact && StringUtils.endsWithIgnoreCase(path.name(), EXT_XML);
+        boolean isDefault = (!isHtml && !isJson && !isProps && !isXml);
         try {
-            // TODO: Extend data lookup via query language
-            Path path = normalizePath(orig);
-            if (path != null && !path.equals(orig)) {
-                isHtml = StringUtils.endsWith(orig.name(), EXT_HTML);
-                isJson = StringUtils.endsWith(orig.name(), EXT_JSON);
-                isXml = StringUtils.endsWith(orig.name(), EXT_XML);
-            }
-            isProps = StringUtils.endsWith(orig.name(), EXT_PROPERTIES);
-            isDefault = (!isHtml && !isJson && !isProps && !isXml);
-            if (path != null) {
-                res = ctx.getStorage().load(path);
-                meta = ctx.getStorage().lookup(path);
-            }
+            Storage storage = ApplicationContext.getInstance().getStorage();
+            Object res = (meta == null) ? null : storage.load(meta.path());
             if (res instanceof Index) {
                 res = serializeIndex((Index) res, isDefault || isHtml);
             } else if (res instanceof Binary && !isDefault) {
                 res = serializeBinary((Binary) res, request, path);
             }
-
             // Render result as raw data, Properties, HTML, JSON or XML
-            if (res == null) {
+            if (meta == null || res == null) {
                 errorNotFound(request);
             } else if (isDefault && res instanceof Binary) {
                 request.sendBinary((Binary) res);
             } else if (isDefault || isHtml) {
-                sendHtml(request, path, meta, res);
+                sendHtml(request, meta.path(), meta, res);
             } else if (isJson) {
                 request.sendText(Mime.JSON[0], JsonSerializer.serialize(res, true));
             } else if (isProps) {
@@ -187,11 +175,10 @@ public class StorageWebService extends WebService {
             // TODO: How do users want their error messages?
             Dict dict = new Dict();
             dict.set("error", e.toString());
-            res = dict;
             if (isJson) {
-                request.sendText(Mime.JSON[0], JsonSerializer.serialize(res, true));
+                request.sendText(Mime.JSON[0], JsonSerializer.serialize(dict, true));
             } else if (isXml) {
-                request.sendText(Mime.XML[0], XmlSerializer.serialize("error", res));
+                request.sendText(Mime.XML[0], XmlSerializer.serialize("error", dict));
             } else {
                 errorInternal(request, e.getMessage());
             }
@@ -274,15 +261,30 @@ public class StorageWebService extends WebService {
      * @return the serialized representation of the index
      */
     private Dict serializeIndex(Index idx, boolean linkify) {
+        boolean isDataPath = (
+            !idx.path().startsWith(FileWebService.PATH_FILES) &&
+            !idx.path().startsWith(Storage.PATH_STORAGE)
+        );
         Array indices = new Array();
         idx.indices().filter((item) -> !item.startsWith(".")).forEach((item) -> {
             indices.add((linkify ? "$href$" : "") + item + "/");
         });
         Array objects = new Array();
         idx.objects().filter((item) -> !item.startsWith(".")).forEach((item) -> {
-            if (linkify) {
+            if (isDataPath) {
+                for (String ext : EXT_ALL) {
+                    if (StringUtils.endsWithIgnoreCase(item, ext)) {
+                        item = StringUtils.removeEndIgnoreCase(item, ext);
+                        if (idx.hasObject(item)) {
+                            item = null;
+                        }
+                        break;
+                    }
+                }
+            }
+            if (linkify && item != null) {
                 objects.add("$href$" + item + ".html$" + item);
-            } else {
+            } else if (item != null) {
                 objects.add(item);
             }
         });
@@ -418,10 +420,10 @@ public class StorageWebService extends WebService {
         }
         try {
             Path path = new Path(request.getPath());
-            Path normalizedPath = normalizePath(path);
+            Metadata meta = lookup(path);
             Object data = JsonSerializer.unserialize(request.getInputString());
             if (StorageWriteProcedure.store(path, data)) {
-                if (normalizedPath == null) {
+                if (meta == null) {
                     request.sendText(STATUS.CREATED, null, null);
                 } else {
                     request.sendText(STATUS.OK, null, null);
@@ -456,11 +458,11 @@ public class StorageWebService extends WebService {
             return;
         }
         Path path = new Path(request.getPath());
-        Path normalizedPath = normalizePath(path);
+        Metadata meta = lookup(path);
         try (InputStream is = request.getInputStream()) {
             Binary data = new Binary.BinaryStream(is, -1);
             if (StorageWriteProcedure.store(path, data)) {
-                if (normalizedPath == null) {
+                if (meta == null) {
                     request.sendText(STATUS.CREATED, null, null);
                 } else {
                     request.sendText(STATUS.OK, null, null);
@@ -488,12 +490,12 @@ public class StorageWebService extends WebService {
             errorUnauthorized(request);
             return;
         }
-        Path path = normalizePath(new Path(request.getPath()));
-        if (path == null) {
+        Metadata meta = lookup(new Path(request.getPath()));
+        if (meta == null) {
             errorNotFound(request);
             return;
         }
-        if (StorageDeleteProcedure.delete(path)) {
+        if (StorageDeleteProcedure.delete(meta.path())) {
             request.sendText(STATUS.NO_CONTENT, null, null);
         } else {
             String msg = "failed to delete " + request.getPath();
@@ -502,39 +504,28 @@ public class StorageWebService extends WebService {
     }
 
     /**
-     * Attempts to correct or normalize the specified path if no data
-     * can be found at the specified location. This is necessary in
-     * order to provide "*.properties" file access to data objects.
+     * Searches for metadata about a specified path. If no object is
+     * found, a second attempt is made without any supported data
+     * format extension.
      *
-     * @param path           the path to normalize
+     * @param path           the storage location
      *
-     * @return the normalized path
+     * @return the metadata for the object, or null if not found
      */
-    private Path normalizePath(Path path) {
+    private Metadata lookup(Path path) {
         Storage storage = ApplicationContext.getInstance().getStorage();
-        String pathName = path.name();
-        Path lookupPath = path;
-        Metadata meta = storage.lookup(lookupPath);
+        Metadata meta = storage.lookup(path);
         if (meta == null) {
-            String str = pathName;
-            if (StringUtils.endsWith(str, EXT_HTML)) {
-                str = StringUtils.removeEnd(str, EXT_HTML);
-            } else if (StringUtils.endsWith(str, EXT_JSON)) {
-                str = StringUtils.removeEnd(str, EXT_JSON);
-            } else if (StringUtils.endsWith(str, EXT_PROPERTIES)) {
-                str = StringUtils.removeEnd(str, EXT_PROPERTIES);
-            } else if (StringUtils.endsWith(str, EXT_XML)) {
-                str = StringUtils.removeEnd(str, EXT_XML);
-            }
-            if (!StringUtils.equals(pathName, str)) {
-                lookupPath = path.parent().child(str, false);
-                meta = storage.lookup(lookupPath);
-                if (meta == null && "index".equals(str)) {
-                    lookupPath = path.parent();
-                    meta = storage.lookup(lookupPath);
+            for (String ext : EXT_ALL) {
+                if (StringUtils.endsWithIgnoreCase(path.name(), ext)) {
+                    String name = StringUtils.removeEndIgnoreCase(path.name(), ext);
+                    boolean isIndex = StringUtils.equalsIgnoreCase(name, "index");
+                    path = isIndex ? path.parent() : path.parent().child(name, false);
+                    meta = storage.lookup(path);
+                    break;
                 }
             }
         }
-        return (meta == null) ? null : lookupPath;
+        return meta;
     }
 }

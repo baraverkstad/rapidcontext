@@ -138,6 +138,28 @@ public class Index {
     }
 
     /**
+     * Checks if a specified sub-index name is present.
+     *
+     * @param name           the sub-index name to check
+     *
+     * @return true if the name is found, or false otherwise
+     */
+    public boolean hasIndex(String name) {
+        return this.indices.contains(name);
+    }
+
+    /**
+     * Checks if a specified object name is present.
+     *
+     * @param name           the object name to check
+     *
+     * @return true if the name is found, or false otherwise
+     */
+    public boolean hasObject(String name) {
+        return this.objects.contains(name);
+    }
+
+    /**
      * Returns an array of sub-index names.
      *
      * @return an array of sub-index names

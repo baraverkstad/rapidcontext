@@ -14,7 +14,13 @@
 
 package org.rapidcontext.core.storage;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Date;
+
+import org.apache.commons.lang3.StringUtils;
+import org.rapidcontext.core.data.PropertiesSerializer;
 
 /**
  * The persistent data storage and retrieval class. This base class
@@ -72,6 +78,16 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
         PATH_STORAGE.child("cache", true);
 
     /**
+     * The file extension for properties data.
+     */
+    public static final String EXT_PROPERTIES = ".properties";
+
+    /**
+     * The list of file extensions supported for data.
+     */
+    public static final String[] EXT_ALL = { EXT_PROPERTIES };
+
+    /**
      * The storage information path. Each storage implementation
      * should provide introspection abilities by returning it's
      * own dictionary when queried for this path.
@@ -84,6 +100,43 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
      * storage mount, making them deterministically comparable.
      */
     private static long lastMountTime = 0L;
+
+    /**
+     * Checks if the specified path may have been serialized into a
+     * filename. The check is performed by attempting to add the
+     * supported data file extensions to see if one of them matches.
+     *
+     * @param path           the storage path
+     * @param filename       the filename or file path to check
+     *
+     * @return true if the path may have been serialized, or
+     *         false otherwise
+     */
+    protected static boolean isSerialized(Path path, String filename) {
+        return !StringUtils.endsWith(filename, path.name()) &&
+               Arrays.stream(EXT_ALL).anyMatch(ext -> StringUtils.endsWithIgnoreCase(filename, ext));
+    }
+
+    /**
+     * Attempts to unserialize a data stream into a supported data
+     * object.
+     *
+     * @param filename       the filename (to choose format)
+     * @param is             the file data stream
+     *
+     * @return the object read, or null if not supported
+     *
+     * @throws IOException if the unserialization failed
+     */
+    protected static Object unserialize(String filename, InputStream is)
+    throws IOException {
+
+        if (StringUtils.endsWithIgnoreCase(filename, EXT_PROPERTIES)) {
+            return PropertiesSerializer.unserialize(is);
+        } else {
+            return null;
+        }
+    }
 
     /**
      * Creates a new storage.
@@ -142,8 +195,8 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
      * @return the local storage path
      */
     protected Path localPath(Path path) {
-        if (path != null && !path.isRoot() && path.startsWith(path())) {
-            return path.subPath(path().length());
+        if (path != null && !path.isRoot() && path.startsWith(this.path())) {
+            return path.subPath(this.path().depth());
         } else {
             return path;
         }

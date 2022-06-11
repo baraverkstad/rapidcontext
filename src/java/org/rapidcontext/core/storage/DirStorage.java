@@ -16,14 +16,12 @@ package org.rapidcontext.core.storage;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.PropertiesSerializer;
@@ -53,12 +51,6 @@ public class DirStorage extends Storage {
      * a file object.
      */
     public static final String KEY_DIR = "dir";
-
-    /**
-     * The file suffix used for properties files. These files are
-     * used for serializing dictionary objects to files.
-     */
-    public static final String SUFFIX_PROPS = ".properties";
 
     /**
      * Creates a new directory storage.
@@ -104,7 +96,7 @@ public class DirStorage extends Storage {
         Date modified = new Date(file.lastModified());
         if (file.isDirectory()) {
             return new Metadata(Index.class, path, path(), null, modified);
-        } else if (file.getName().endsWith(SUFFIX_PROPS)) {
+        } else if (isSerialized(path, file.getName())) {
             return new Metadata(Dict.class, path, path(), mime, modified);
         } else {
             return new Metadata(Binary.class, path, path(), mime, modified);
@@ -142,18 +134,14 @@ public class DirStorage extends Storage {
                 if (f.isDirectory()) {
                     idx.addIndex(name);
                 } else {
-                    idx.addObject(StringUtils.removeEnd(name, SUFFIX_PROPS));
+                    idx.addObject(name);
                 }
             }
             idx.updateLastModified(new Date(file.lastModified()));
             return idx;
-        } else if (file.getName().endsWith(SUFFIX_PROPS)) {
+        } else if (isSerialized(path, file.getName())) {
             try (InputStream is = new FileInputStream(file)) {
-                return PropertiesSerializer.unserialize(is);
-            } catch (FileNotFoundException e) {
-                msg = "failed to find file " + file.toString();
-                LOG.log(Level.SEVERE, msg, e);
-                return null;
+                return unserialize(file.getName(), is);
             } catch (IOException e) {
                 msg = "failed to read file " + file.toString();
                 LOG.log(Level.SEVERE, msg, e);
@@ -210,8 +198,12 @@ public class DirStorage extends Storage {
         } else if (data instanceof File) {
             tmp = (File) data;
         } else {
+            if (path.name().endsWith(EXT_PROPERTIES)) {
+                file = new File(dir, path.name());
+            } else {
+                file = new File(dir, path.name() + EXT_PROPERTIES);
+            }
             try {
-                file = new File(dir, path.name() + SUFFIX_PROPS);
                 tmp = FileUtil.tempFile(file.getName());
                 data = sterilize(data);
                 PropertiesSerializer.write(tmp, data);
@@ -270,27 +262,23 @@ public class DirStorage extends Storage {
     }
 
     /**
-     * Locates the last directory referenced by the specified path.
-     * If the path is an index, the directory returned will be the
-     * index directory itself. Otherwise the parent directory will be
-     * returned.
+     * Locates the directory referenced by a path. If the path is an
+     * index, the directory returned will be the index directory.
+     * Otherwise the parent directory will be returned.
      *
      * @param path           the storage location
      *
-     * @return the last directory referenced by the path
+     * @return the directory referenced by the path
      */
     private File locateDir(Path path) {
-        File subDir = dir();
-        for (int i = 0; i < path.depth(); i++) {
-            subDir = new File(subDir, path.name(i));
-        }
-        return subDir;
+        Path p = (path.isIndex() ? path : path.parent());
+        return new File(dir(), p.toIdent(0));
     }
 
     /**
-     * Locates the file references by the specified path. If no file
-     * is named exactly as the last path name, the properties file
-     * extension is appended to the name.
+     * Locates an existing file referenced by a path. If no file
+     * is named exactly as the path, the built-in storage data file
+     * extensions are checked for a match.
      *
      * @param path           the storage location
      *
@@ -298,19 +286,21 @@ public class DirStorage extends Storage {
      *         null if no existing file was found
      */
     private File locateFile(Path path) {
-        File    dir = locateDir(path);
-        File    file = dir;
-
-        if (!path.isIndex()) {
-            file = new File(dir, path.name());
-            if (!file.canRead()) {
-                file = new File(dir, path.name() + SUFFIX_PROPS);
-            }
-        }
-        if (file.isDirectory() != path.isIndex()) {
-            return null;
+        File dir = locateDir(path);
+        if (path.isIndex()) {
+            return dir.isDirectory() && dir.canRead() ? dir : null;
         } else {
-            return file.canRead() ? file : null;
+            File file = new File(dir, path.name());
+            if (!file.isDirectory() && file.canRead()) {
+                return file;
+            }
+            for (String ext : EXT_ALL) {
+                file = new File(dir, path.name() + ext);
+                if (!file.isDirectory() && file.canRead()) {
+                    return file;
+                }
+            }
+            return null;
         }
     }
 

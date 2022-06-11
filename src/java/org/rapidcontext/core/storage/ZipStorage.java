@@ -28,7 +28,6 @@ import java.util.zip.ZipFile;
 import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.data.PropertiesSerializer;
 import org.rapidcontext.core.web.Mime;
 
 /**
@@ -87,22 +86,19 @@ public class ZipStorage extends Storage {
      * entries and creates all the indexes.
      */
     public void init() {
-        Index idx = new Index(Path.ROOT);
-        idx.addObject(PATH_STORAGEINFO.name());
-        idx.updateLastModified(new Date(file().lastModified()));
-        entries.put(Path.ROOT, idx);
+        Index root = new Index(Path.ROOT);
+        root.addObject(PATH_STORAGEINFO.name());
+        root.updateLastModified(new Date(file().lastModified()));
+        entries.put(Path.ROOT, root);
         Enumeration<? extends ZipEntry> e = zip.entries();
         while (e.hasMoreElements()) {
             ZipEntry entry = e.nextElement();
             String name = entry.getName();
             if (entry.isDirectory() && !name.endsWith("/")) {
                 name += "/";
-            } else {
-                name = StringUtils.removeEnd(name, DirStorage.SUFFIX_PROPS);
             }
             Path path = new Path(name);
-            Path parent = path.parent();
-            idx = (Index) entries.get(parent);
+            Index idx = (Index) entries.get(path.parent());
             if (path.isIndex()) {
                 idx.addIndex(path.name());
                 idx = new Index(path);
@@ -153,7 +149,7 @@ public class ZipStorage extends Storage {
         if (PATH_STORAGEINFO.equals(path)) {
             return new Metadata(Dict.class, path, path(), null, mountTime());
         }
-        Object obj = entries.get(path);
+        Object obj = locateEntry(path);
         if (obj instanceof Index) {
             Index idx = (Index) obj;
             return new Metadata(Index.class, path, path(), null, idx.lastModified());
@@ -161,7 +157,7 @@ public class ZipStorage extends Storage {
             ZipEntry entry = (ZipEntry) obj;
             String mime = Mime.type(entry.getName());
             Date modified = new Date(entry.getTime());
-            if (entry.getName().endsWith(DirStorage.SUFFIX_PROPS)) {
+            if (isSerialized(path, entry.getName())) {
                 return new Metadata(Dict.class, path, path(), mime, modified);
             } else {
                 return new Metadata(Binary.class, path, path(), mime, modified);
@@ -186,14 +182,14 @@ public class ZipStorage extends Storage {
         if (PATH_STORAGEINFO.equals(path)) {
             return dict;
         }
-        Object obj = entries.get(path);
+        Object obj = locateEntry(path);
         if (obj instanceof Index) {
             return obj;
         } else if (obj instanceof ZipEntry) {
             ZipEntry entry = (ZipEntry) obj;
-            if (entry.getName().endsWith(DirStorage.SUFFIX_PROPS)) {
+            if (isSerialized(path, entry.getName())) {
                 try (InputStream is = zip.getInputStream(entry)) {
-                    return PropertiesSerializer.unserialize(is);
+                    return unserialize(entry.getName(), is);
                 } catch (IOException e) {
                     String msg = "failed to read ZIP file " + zip + ":" + entry;
                     LOG.log(Level.SEVERE, msg, e);
@@ -239,6 +235,30 @@ public class ZipStorage extends Storage {
         LOG.warning(msg);
         throw new StorageException(msg);
     }
+
+    /**
+     * Locates an existing ZIP file entry or index referenced by a path.
+     * If no exact match is found, the storage data file extensions are
+     * tried for a match.
+     *
+     * @param path           the storage location
+     *
+     * @return the ZIP file entry or index referenced by the path, or
+     *         null if no match found
+     */
+    private Object locateEntry(Path path) {
+        Object obj = entries.get(path);
+        if (obj == null && !path.isIndex()) {
+            for (String ext : EXT_ALL) {
+                obj = entries.get(path.parent().child(path.name() + ext, false));
+                if (obj != null) {
+                    break;
+                }
+            }
+        }
+        return obj;
+    }
+
 
     /**
      * An encapsulated ZIP file entry for binary data.
