@@ -74,11 +74,6 @@ public class StorageWebService extends WebService {
     public static final String EXT_HTML = ".html";
 
     /**
-     * The JSON file extension.
-     */
-    public static final String EXT_JSON = ".json";
-
-    /**
      * The XML file extension.
      */
     public static final String EXT_XML = ".xml";
@@ -87,7 +82,7 @@ public class StorageWebService extends WebService {
      * The list of supported file extensions.
      */
     public static final String[] EXT_ALL = {
-        EXT_HTML, EXT_JSON, Storage.EXT_PROPERTIES, EXT_XML
+        EXT_HTML, Storage.EXT_JSON, Storage.EXT_PROPERTIES, EXT_XML
     };
 
     /**
@@ -142,7 +137,7 @@ public class StorageWebService extends WebService {
         Metadata meta = lookup(path);
         boolean isExact = meta != null && path.equals(meta.path());
         boolean isHtml = !isExact && StringUtils.endsWithIgnoreCase(path.name(), EXT_HTML);
-        boolean isJson = !isExact && StringUtils.endsWithIgnoreCase(path.name(), EXT_JSON);
+        boolean isJson = !isExact && StringUtils.endsWithIgnoreCase(path.name(), Storage.EXT_JSON);
         boolean isProps = !isExact && StringUtils.endsWithIgnoreCase(path.name(), Storage.EXT_PROPERTIES);
         boolean isXml = !isExact && StringUtils.endsWithIgnoreCase(path.name(), EXT_XML);
         boolean isDefault = (!isHtml && !isJson && !isProps && !isXml);

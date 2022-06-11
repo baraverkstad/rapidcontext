@@ -15,8 +15,12 @@
 package org.rapidcontext.core.data;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 
 import org.rapidcontext.core.js.JsRuntime;
+import org.rapidcontext.util.FileUtil;
 import org.mozilla.javascript.Function;
 import org.rapidcontext.core.js.JsException;
 
@@ -44,6 +48,22 @@ public final class JsonSerializer {
     private static Function unserializeFunction = null;
 
     /**
+     * Serializes an object into a JSON representation.
+     *
+     * @param obj            the object to convert, or null
+     * @param os             the output stream to write to
+     *
+     * @throws IOException if the data couldn't be serialized
+     */
+    public static void serialize(Object obj, OutputStream os) throws IOException {
+        try (OutputStreamWriter ow = new OutputStreamWriter(os, "UTF-8")) {
+            ow.write(serialize(obj, true));
+            ow.write("\n");
+            ow.flush();
+        }
+    }
+
+    /**
      * Serializes an object into a JSON representation. If the
      * indentation flag is set, the JSON data will be indented and
      * formatted. Otherwise a minimal string will be returned.
@@ -65,6 +85,20 @@ public final class JsonSerializer {
         } catch (JsException ignore) {
             return "null";
         }
+    }
+
+    /**
+     * Unserializes JSON data into a Java object. Returns the
+     * corresponding String, Number, Boolean, Dict or Array value.
+     *
+     * @param is             the input stream to load
+     *
+     * @return the Java data representation
+     *
+     * @throws IOException if the unserialization failed
+     */
+    public static Object unserialize(InputStream is) throws IOException {
+        return unserialize(FileUtil.readText(is, "UTF-8"));
     }
 
     /**

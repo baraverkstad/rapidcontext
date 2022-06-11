@@ -16,10 +16,11 @@ package org.rapidcontext.core.storage;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
+import java.io.OutputStream;
 import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
+import org.rapidcontext.core.data.JsonSerializer;
 import org.rapidcontext.core.data.PropertiesSerializer;
 
 /**
@@ -83,9 +84,14 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
     public static final String EXT_PROPERTIES = ".properties";
 
     /**
+     * The file extension for JSON data.
+     */
+    public static final String EXT_JSON = ".json";
+
+    /**
      * The list of file extensions supported for data.
      */
-    public static final String[] EXT_ALL = { EXT_PROPERTIES };
+    public static final String[] EXT_ALL = { EXT_PROPERTIES, EXT_JSON };
 
     /**
      * The storage information path. Each storage implementation
@@ -114,15 +120,53 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
      */
     protected static boolean isSerialized(Path path, String filename) {
         return !StringUtils.endsWith(filename, path.name()) &&
-               Arrays.stream(EXT_ALL).anyMatch(ext -> StringUtils.endsWithIgnoreCase(filename, ext));
+               isSerializedFormat(filename);
     }
 
     /**
-     * Attempts to unserialize a data stream into a supported data
-     * object.
+     * Checks if the specified filename has a supported serialized
+     * data format.
+     *
+     * @param filename       the filename or file path to check
+     *
+     * @return true if file format is supported, or
+     *         false otherwise
+     */
+    protected static boolean isSerializedFormat(String filename) {
+        for (String ext : EXT_ALL) {
+            if (StringUtils.endsWithIgnoreCase(filename, ext)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Serializes a data object into a data stream.
      *
      * @param filename       the filename (to choose format)
-     * @param is             the file data stream
+     * @param obj            the object to write
+     * @param os             the output data stream
+     *
+     * @throws IOException if the serialization failed
+     */
+    protected static void serialize(String filename, Object obj, OutputStream os)
+    throws IOException {
+
+        if (StringUtils.endsWithIgnoreCase(filename, EXT_PROPERTIES)) {
+            PropertiesSerializer.serialize(obj, os);
+        } else if (StringUtils.endsWithIgnoreCase(filename, EXT_JSON)) {
+            JsonSerializer.serialize(obj, os);
+        } else {
+            throw new IOException("unsupported file type: " + filename);
+        }
+    }
+
+    /**
+     * Unserializes a data stream into a data object.
+     *
+     * @param filename       the filename (to choose format)
+     * @param is             the input data stream
      *
      * @return the object read, or null if not supported
      *
@@ -133,8 +177,10 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
 
         if (StringUtils.endsWithIgnoreCase(filename, EXT_PROPERTIES)) {
             return PropertiesSerializer.unserialize(is);
+        } else if (StringUtils.endsWithIgnoreCase(filename, EXT_JSON)) {
+            return JsonSerializer.unserialize(is);
         } else {
-            return null;
+            throw new IOException("unsupported file type: " + filename);
         }
     }
 

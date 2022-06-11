@@ -16,6 +16,7 @@ package org.rapidcontext.core.storage;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
@@ -24,7 +25,6 @@ import java.util.logging.Logger;
 
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.data.PropertiesSerializer;
 import org.rapidcontext.core.web.Mime;
 import org.rapidcontext.util.FileUtil;
 
@@ -198,7 +198,7 @@ public class DirStorage extends Storage {
         } else if (data instanceof File) {
             tmp = (File) data;
         } else {
-            if (path.name().endsWith(EXT_PROPERTIES)) {
+            if (isSerializedFormat(path.name())) {
                 file = new File(dir, path.name());
             } else {
                 file = new File(dir, path.name() + EXT_PROPERTIES);
@@ -206,7 +206,9 @@ public class DirStorage extends Storage {
             try {
                 tmp = FileUtil.tempFile(file.getName());
                 data = sterilize(data);
-                PropertiesSerializer.write(tmp, data);
+                try (FileOutputStream os = new FileOutputStream(tmp)) {
+                    serialize(file.getName(), data, os);
+                }
             } catch (Exception e) {
                 String msg = "failed to write temporary file " + tmp + ": " +
                              e.getMessage();

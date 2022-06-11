@@ -21,6 +21,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -60,6 +61,23 @@ import org.rapidcontext.util.DateUtil;
  * @version  1.0
  */
 public final class PropertiesSerializer {
+
+    /**
+     * Serializes an object into a properties representation.
+     *
+     * @param obj            the object to serialize, or null
+     * @param os             the output stream to write to
+     *
+     * @throws IOException if the data couldn't be serialized
+     */
+    public static void serialize(Object obj, OutputStream os) throws IOException {
+        try (
+            OutputStreamWriter ow = new OutputStreamWriter(os, "ISO-8859-1");
+            PrintWriter pw = new PrintWriter(ow);
+        ) {
+            write(pw, "", obj);
+        }
+    }
 
     /**
      * Serializes an object into a properties representation.
@@ -373,7 +391,11 @@ public final class PropertiesSerializer {
         }
         for (String k : delayed) {
             Object obj = dict.get(k);
-            if (prefix.length() == 0) {
+            boolean isEmpty = (
+                (obj instanceof Dict && ((Dict) obj).size() == 0) ||
+                (obj instanceof Array && ((Array) obj).size() == 0)
+            );
+            if (!isEmpty && prefix.length() == 0) {
                 os.println();
                 os.print("# ");
                 os.print(k.substring(0, 1).toUpperCase());
