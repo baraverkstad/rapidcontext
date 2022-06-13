@@ -80,11 +80,10 @@ public class RootStorage extends Storage {
     private Array mountedStorages = new Array();
 
     /**
-     * The map of cache memory storages. For each mounted and
-     * overlaid storage, a corresponding cache storage is created to
-     * contain any StorableObject instances. The cache storages are
-     * indexed by their parent storage path (not their own actual
-     * storage paths).
+     * The map of memory storages (caches). For each mounted storage
+     * (with overlay), a corresponding cache storage is created to
+     * contain any StorableObject instances loaded. The caches are
+     * indexed by the mount path (of the corresponding storage).
      */
     private HashMap<Path,MemoryStorage> cacheStorages = new HashMap<>();
 
@@ -179,25 +178,26 @@ public class RootStorage extends Storage {
      * Creates or removes a cache memory storage for the specified
      * path.
      *
-     * @param path           the storage mount path
+     * @param mountPath      the storage mount path
      * @param overlay        the root overlay path
      *
      * @throws StorageException if the cache couldn't be created or
      *             removed
      */
-    private void updateStorageCache(Path path, Path overlay)
+    private void updateStorageCache(Path mountPath, Path overlay)
     throws StorageException {
 
-        Path cachePath = Storage.PATH_STORAGE_CACHE.descendant(path.subPath(1));
-        MemoryStorage cache = cacheStorages.get(path);
+        Path ident = mountPath.subPath(PATH_STORAGE.depth());
+        Path cachePath = PATH_STORAGE_CACHE.descendant(ident);
+        MemoryStorage cache = cacheStorages.get(mountPath);
         if (overlay != null && cache == null) {
             cache = new MemoryStorage("cache", true, true);
             cache.setMountInfo(cachePath, true, overlay, 0);
             updateStorageMetadata(cache, true);
-            cacheStorages.put(path, cache);
+            cacheStorages.put(mountPath, cache);
         } else if (overlay == null && cache != null) {
             updateStorageMetadata(cache, false);
-            cacheStorages.remove(path);
+            cacheStorages.remove(mountPath);
             cacheRemove(cache, Path.ROOT, false, true);
             cache.destroy();
         }
@@ -289,11 +289,9 @@ public class RootStorage extends Storage {
      * @throws StorageException if the storage couldn't be unmounted
      */
     public synchronized void unmount(Path path) throws StorageException {
-        Storage  storage = getMountedStorage(path, true);
-        String   msg;
-
+        Storage storage = getMountedStorage(path, true);
         if (storage == null) {
-            msg = "no mounted storage found matching path: " + path;
+            String msg = "no mounted storage found matching path: " + path;
             LOG.warning(msg);
             throw new StorageException(msg);
         }
@@ -308,15 +306,12 @@ public class RootStorage extends Storage {
      * Unmounts and destroys all mounted storages.
      */
     public synchronized void unmountAll() {
-        Storage  storage;
-        String   msg;
-
         while (mountedStorages.size() > 0) {
-            storage = (Storage) mountedStorages.get(mountedStorages.size() - 1);
+            Storage storage = (Storage) mountedStorages.get(mountedStorages.size() - 1);
             try {
                 unmount(storage.path());
             } catch (Exception e) {
-                msg = "failed to unmount storage at " + storage.path();
+                String msg = "failed to unmount storage at " + storage.path();
                 LOG.log(Level.WARNING, msg, e);
             }
         }
@@ -333,44 +328,43 @@ public class RootStorage extends Storage {
      *         null if not found
      */
     public Metadata lookup(Path path) {
-        Storage   storage = getMountedStorage(path, false);
-        Metadata  meta = null;
-
+        Storage storage = getMountedStorage(path, false);
         if (storage != null) {
-            meta = storage.lookup(storage.localPath(path));
+            Metadata meta = storage.lookup(storage.localPath(path));
             return (meta == null) ? null : new Metadata(path, meta);
         } else {
-            meta = metadata.lookup(path);
+            Metadata meta = metadata.lookup(path);
             for (Object o : mountedStorages) {
-                storage = (Storage) o;
-                Path overlay = storage.mountOverlayPath();
-                if (overlay != null && path.startsWith(overlay)) {
-                    Path subpath = path.subPath(overlay.depth());
-                    meta = Metadata.merge(meta, lookupObject(storage, subpath));
-                }
+                meta = Metadata.merge(meta, lookupOverlay((Storage) o, path));
             }
             return meta;
         }
     }
 
     /**
-     * Searches for an object in a specified storage. The object will
-     * be looked up primarily in the cache and thereafter in the
-     * actual storage.
+     * Searches for an object in an overlay storage. The object will
+     * be looked up in both the cache and the actual storage. If the
+     * storage doesn't have an overlay path that matches the query
+     * path, null will be returned.
      *
-     * @param storage        the storage to search in
+     * @param storage        the overlay storage
      * @param path           the storage location
      *
      * @return the metadata for the object, or
      *         null if not found
      */
-    private Metadata lookupObject(Storage storage, Path path) {
-        Metadata meta = null;
-        MemoryStorage cache = cacheStorages.get(storage.path());
-        if (cache != null) {
-            meta = cache.lookup(path);
+    private Metadata lookupOverlay(Storage storage, Path path) {
+        Path overlay = storage.mountOverlayPath();
+        if (overlay == null || !path.startsWith(overlay)) {
+            return null;
+        } else {
+            MemoryStorage cache = cacheStorages.get(storage.path());
+            Path queryPath = path.subPath(overlay.depth());
+            return Metadata.merge(
+                (cache == null) ? null : cache.lookup(queryPath),
+                storage.lookup(queryPath)
+            );
         }
-        return Metadata.merge(meta, storage.lookup(path));
     }
 
     /**
@@ -385,47 +379,59 @@ public class RootStorage extends Storage {
      *         null if not found
      */
     public Object load(Path path) {
-        Storage  storage = getMountedStorage(path, false);
-        Object   res;
-        Index    idx = null;
-
+        Storage storage = getMountedStorage(path, false);
         if (storage != null) {
-            res = storage.load(storage.localPath(path));
-            if (res instanceof Index) {
-                idx = (Index) res;
-                return new Index(path, idx);
-            } else {
-                return res;
-            }
-        } else {
-            res = metadata.load(path);
-            if (res instanceof Index) {
-                idx = (Index) res;
-            } else if (res != null && res != ObjectUtils.NULL) {
-                return res;
-            }
+            Object res = storage.load(storage.localPath(path));
+            return (res instanceof Index) ? new Index(path, (Index) res) : res;
+        } else if (path.isIndex()) {
+            Index idx = (Index) metadata.load(path);
             for (Object o : mountedStorages) {
-                storage = (Storage) o;
-                Path overlay = storage.mountOverlayPath();
-                if (overlay != null && path.startsWith(overlay)) {
-                    Path subpath = path.subPath(overlay.depth());
-                    res = loadObject(storage, subpath);
-                    if (res instanceof Index) {
-                        idx = Index.merge(idx, (Index) res);
-                    } else if (res != null) {
-                        return res;
+                idx = Index.merge(idx, loadOverlayIndex((Storage) o, path));
+            }
+            return idx;
+        } else {
+            Object res = metadata.load(path);
+            if (res == null || res == ObjectUtils.NULL) {
+                for (Object o : mountedStorages) {
+                    res = loadOverlayObject((Storage) o, path);
+                    if (res != null) {
+                        break;
                     }
                 }
             }
+            return res;
         }
-        return idx;
     }
 
     /**
-     * Loads an object from the specified storage. The storage cache
+     * Loads an index from all overlay storages. The returned index
+     * will be merged from all matching overlay storages and their
+     * corresponding caches.
+     *
+     * @param storage        the storage to load from
+     * @param path           the storage location
+     *
+     * @return the merged index, or
+     *         null if not found
+     */
+    private Index loadOverlayIndex(Storage storage, Path path) {
+        Path overlay = storage.mountOverlayPath();
+        if (overlay == null || !path.startsWith(overlay)) {
+            return null;
+        } else {
+            Path queryPath = path.subPath(overlay.depth());
+            return Index.merge(
+                (Index) cacheGet(storage.path(), queryPath),
+                (Index) storage.load(queryPath)
+            );
+        }
+    }
+
+    /**
+     * Loads an object from an overlay storage. The storage cache
      * will be used primarily, if it exists. If an object is found in
      * the storage that can be cached, it will be initialized and
-     * cached by this method.
+     * cached.
      *
      * @param storage        the storage to load from
      * @param path           the storage location
@@ -433,35 +439,33 @@ public class RootStorage extends Storage {
      * @return the data read, or
      *         null if not found
      */
-    private Object loadObject(Storage storage, Path path) {
-        boolean isCacheable = cacheStorages.containsKey(storage.path());
-        Index idx = null;
-        Object res = cacheGet(storage.path(), path);
-        if (res instanceof Index) {
-            idx = (Index) res;
-        } else if (res instanceof StorableObject) {
-            LOG.fine("loaded cached object " + path + " from " + storage.path());
-            return res;
-        }
-        res = storage.load(path);
-        if (isCacheable && res instanceof Dict) {
-            String id = path.toIdent(1);
-            res = initObject(id, (Dict) res);
-            cacheAdd(storage.path(), path, res);
-        }
-        if (res != null) {
-            LOG.fine("loaded " + path + " from " + storage.path() + ": " + res);
-        }
-        if (idx != null && (res == null || res instanceof Index)) {
-            return Index.merge(idx, (Index) res);
+    private Object loadOverlayObject(Storage storage, Path path) {
+        Path overlay = storage.mountOverlayPath();
+        if (overlay == null || !path.startsWith(overlay)) {
+            return null;
         } else {
+            Path mountPath = storage.path();
+            Path queryPath = path.subPath(overlay.depth());
+            Object res = cacheGet(mountPath, queryPath);
+            if (res instanceof StorableObject) {
+                LOG.fine("loaded cached object " + queryPath + " from " + mountPath);
+                return res;
+            }
+            res = storage.load(queryPath);
+            if (res instanceof Dict && cacheStorages.containsKey(mountPath)) {
+                res = initObject(queryPath.toIdent(1), (Dict) res);
+                cacheAdd(mountPath, queryPath, res);
+            }
+            if (res != null) {
+                LOG.fine("loaded " + queryPath + " from " + mountPath + ": " + res);
+            }
             return res;
         }
     }
 
     /**
-     * Initializes an object with the corresponding object type (if
-     * found).
+     * Initializes a loaded object with the corresponding object type.
+     * If no type is registered, the dictionary is returned as-is.
      *
      * @param id             the object id
      * @param dict           the dictionary data
@@ -470,6 +474,12 @@ public class RootStorage extends Storage {
      *         the input dictionary if no type matched
      */
     private Object initObject(String id, Dict dict) {
+        if (!dict.containsKey(KEY_ID)) {
+            Dict copy = new Dict();
+            copy.set(KEY_ID, id);
+            copy.setAll(dict);
+            dict = copy;
+        }
         Constructor<?> ctor = Type.constructor(this, dict);
         if (ctor != null) {
             String typeId = dict.getString(KEY_TYPE, null);
@@ -487,8 +497,6 @@ public class RootStorage extends Storage {
                 dict.add("_error", msg);
                 return dict;
             }
-        } else if (!dict.containsKey(KEY_ID)) {
-            dict.set(KEY_ID, id);
         }
         return dict;
     }
