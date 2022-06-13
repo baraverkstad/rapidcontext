@@ -118,7 +118,8 @@ dd {
  * Storage API styles
  */
 div.query {
-    margin: 30px 40px;
+    margin: 30px 40px 0 40px;
+    padding-bottom: 30px;
 }
 .query h2 {
     margin-top: 0;
