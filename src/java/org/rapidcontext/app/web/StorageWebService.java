@@ -30,6 +30,7 @@ import org.rapidcontext.core.data.HtmlSerializer;
 import org.rapidcontext.core.data.JsonSerializer;
 import org.rapidcontext.core.data.PropertiesSerializer;
 import org.rapidcontext.core.data.XmlSerializer;
+import org.rapidcontext.core.data.YamlSerializer;
 import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Index;
 import org.rapidcontext.core.storage.Metadata;
@@ -79,10 +80,15 @@ public class StorageWebService extends WebService {
     public static final String EXT_XML = ".xml";
 
     /**
+     * The YAML file extension.
+     */
+    public static final String EXT_YAML = ".yaml";
+
+    /**
      * The list of supported file extensions.
      */
     public static final String[] EXT_ALL = {
-        EXT_HTML, Storage.EXT_JSON, Storage.EXT_PROPERTIES, EXT_XML
+        EXT_HTML, Storage.EXT_JSON, Storage.EXT_PROPERTIES, EXT_XML, EXT_YAML
     };
 
     /**
@@ -140,21 +146,21 @@ public class StorageWebService extends WebService {
         boolean isJson = !isExact && StringUtils.endsWithIgnoreCase(path.name(), Storage.EXT_JSON);
         boolean isProps = !isExact && StringUtils.endsWithIgnoreCase(path.name(), Storage.EXT_PROPERTIES);
         boolean isXml = !isExact && StringUtils.endsWithIgnoreCase(path.name(), EXT_XML);
-        boolean isDefault = (!isHtml && !isJson && !isProps && !isXml);
+        boolean isYaml = !isExact && StringUtils.endsWithIgnoreCase(path.name(), EXT_YAML);
         try {
             Storage storage = ApplicationContext.getInstance().getStorage();
             Object res = (meta == null) ? null : storage.load(meta.path());
             if (res instanceof Index) {
-                res = serializeIndex((Index) res, isDefault || isHtml);
-            } else if (res instanceof Binary && !isDefault) {
+                res = serializeIndex((Index) res, isExact || isHtml);
+            } else if (res instanceof Binary && !isExact) {
                 res = serializeBinary((Binary) res, request, path);
             }
             // Render result as raw data, Properties, HTML, JSON or XML
             if (meta == null || res == null) {
                 errorNotFound(request);
-            } else if (isDefault && res instanceof Binary) {
+            } else if (res instanceof Binary) {
                 request.sendBinary((Binary) res);
-            } else if (isDefault || isHtml) {
+            } else if (isExact || isHtml) {
                 sendHtml(request, meta.path(), meta, res);
             } else if (isJson) {
                 request.sendText(Mime.JSON[0], JsonSerializer.serialize(res, true));
@@ -162,6 +168,8 @@ public class StorageWebService extends WebService {
                 request.sendText(Mime.TEXT[0], PropertiesSerializer.serialize(res));
             } else if (isXml) {
                 request.sendText(Mime.XML[0], XmlSerializer.serialize("results", res));
+            } else if (isYaml) {
+                request.sendText(Mime.YAML[0], YamlSerializer.serialize(res));
             } else {
                 request.sendError(STATUS.NOT_ACCEPTABLE);
             }
@@ -174,6 +182,8 @@ public class StorageWebService extends WebService {
                 request.sendText(Mime.JSON[0], JsonSerializer.serialize(dict, true));
             } else if (isXml) {
                 request.sendText(Mime.XML[0], XmlSerializer.serialize("error", dict));
+            } else if (isYaml) {
+                request.sendText(Mime.YAML[0], YamlSerializer.serialize(dict));
             } else {
                 errorInternal(request, e.getMessage());
             }
@@ -229,17 +239,13 @@ public class StorageWebService extends WebService {
         html.append("<h2>Query Results</h2>");
         html.append(HtmlSerializer.serialize(res));
         html.append("<hr/><p><strong>Data Formats:</strong>");
-        if (meta.isIndex()) {
-            html.append(" &nbsp;<a href='index.json'>JSON</a>");
-            html.append(" &nbsp;<a href='index.properties'>PROPERTIES</a>");
-            html.append(" &nbsp;<a href='index.xml'>XML</a>");
-        } else {
-            html.append(" &nbsp;<a href='" + path.name() + ".json'>JSON</a>");
-            html.append(" &nbsp;<a href='" + path.name() + ".properties'>PROPERTIES</a>");
-            html.append(" &nbsp;<a href='" + path.name() + ".xml'>XML</a>");
-            if (meta.isBinary()) {
-                html.append(" &nbsp;<a href='" + path.name() + "'>RAW</a>");
-            }
+        String link = meta.isIndex() ? "index" : path.name();
+        html.append(" &nbsp;<a href='" + link + Storage.EXT_JSON + "'>JSON</a>");
+        html.append(" &nbsp;<a href='" + link + Storage.EXT_PROPERTIES + "'>PROPERTIES</a>");
+        html.append(" &nbsp;<a href='" + link + EXT_XML + "'>XML</a>");
+        html.append(" &nbsp;<a href='" + link + EXT_YAML + "'>YAML</a>");
+        if (meta.isBinary()) {
+            html.append(" &nbsp;<a href='" + link + "'>RAW</a>");
         }
         html.append("</p></div>\n</body>\n</html>\n");
         request.sendText(Mime.HTML[0], html.toString());

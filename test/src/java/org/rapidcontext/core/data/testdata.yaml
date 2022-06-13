@@ -1,0 +1,8 @@
+a: one
+b: 2
+c: '@0'
+object:
+    key: value
+array:
+  - item 1
+  - item 2

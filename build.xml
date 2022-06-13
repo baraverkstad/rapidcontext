@@ -161,6 +161,11 @@
            deprecation="on">
       <compilerarg value="-Xlint:unchecked"/>
     </javac>
+    <copy todir="test/classes">
+      <fileset dir="test/src/java">
+        <exclude name="*.java"/>
+      </fileset>
+    </copy>
   </target>
 
   <target name="test-run">
