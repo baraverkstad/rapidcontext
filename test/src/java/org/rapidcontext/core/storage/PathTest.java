@@ -21,9 +21,9 @@ import org.junit.Test;
 /**
  * Unit tests for the Path class.
  */
+@SuppressWarnings("javadoc")
 public class PathTest {
 
-    @SuppressWarnings("javadoc")
     @Test
     public void testEquals() {
         assertNotEquals(new Path(""), null);
@@ -35,7 +35,6 @@ public class PathTest {
         assertNotEquals(new Path("/a"), new Path("/a/"));
     }
 
-    @SuppressWarnings("javadoc")
     @Test
     public void testToIdent() {
         Path p = new Path("/a/b/c/d");
@@ -45,7 +44,6 @@ public class PathTest {
         assertEquals(p.toIdent(10), "");
     }
 
-    @SuppressWarnings("javadoc")
     @Test
     public void testStartWith() {
         Path p = new Path("/a/b/c/d");
@@ -63,7 +61,6 @@ public class PathTest {
         assertFalse(p.startsWith(new Path("/b/c/")));
     }
 
-    @SuppressWarnings("javadoc")
     @Test
     public void testDepth() {
         assertEquals(Path.ROOT.depth(), 0);
@@ -72,7 +69,6 @@ public class PathTest {
         assertEquals(new Path("/a/b/c/d").depth(), 3);
     }
 
-    @SuppressWarnings("javadoc")
     @Test
     public void testParent() {
         Path p = new Path("/a/b/c/d");
@@ -82,7 +78,6 @@ public class PathTest {
         assertEquals(p.parent().parent().parent().parent(), Path.ROOT);
     }
 
-    @SuppressWarnings("javadoc")
     @Test
     public void testChild() {
         assertEquals(Path.ROOT.child("a", false), new Path("/a"));
@@ -90,7 +85,6 @@ public class PathTest {
         assertEquals(Path.ROOT.child("a", true), new Path("/a/"));
     }
 
-    @SuppressWarnings("javadoc")
     @Test
     public void testDescendant() {
         Path p = new Path("/a/b/c/");
@@ -100,7 +94,6 @@ public class PathTest {
         assertEquals(p.descendant(new Path("/e/")), new Path("/a/b/c/e/"));
     }
 
-    @SuppressWarnings("javadoc")
     @Test
     public void testSubPath() {
         Path p = new Path("/a/b/c/d");
