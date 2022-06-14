@@ -16,6 +16,7 @@ package org.rapidcontext.core.data;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.Objects;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.rapidcontext.util.DateUtil;
@@ -78,6 +79,29 @@ public class Dict {
         if (initialCapacity > 0) {
             map = new LinkedHashMap<>(initialCapacity);
         }
+    }
+
+    /**
+     * Checks if this dictionary is identical to another one. The two
+     * dictionaries will be considered equal if they have the same
+     * size and all keys and values are equal.
+     *
+     * @param obj            the object to compare with
+     *
+     * @return true if the two dictionaries are equal, or
+     *         false otherwise
+     */
+    public boolean equals(final Object obj) {
+        return (obj instanceof Dict) && Objects.equals(this.map, ((Dict) obj).map);
+    }
+
+    /**
+     * Returns a hash code for this object.
+     *
+     * @return a hash code for this object
+     */
+    public int hashCode() {
+        return Objects.hashCode(this.map);
     }
 
     /**

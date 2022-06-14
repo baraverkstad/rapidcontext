@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Objects;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.rapidcontext.util.DateUtil;
@@ -80,6 +81,29 @@ public class Array implements Iterable<Object> {
         if (initialCapacity > 0) {
             list = new ArrayList<>(initialCapacity);
         }
+    }
+
+    /**
+     * Checks if this array is identical to another one. The two
+     * arrays will be considered equal if they have the same length
+     * and all elements are equal.
+     *
+     * @param obj            the object to compare with
+     *
+     * @return true if the two arrays are equal, or
+     *         false otherwise
+     */
+    public boolean equals(final Object obj) {
+        return (obj instanceof Array) && Objects.equals(this.list, ((Array) obj).list);
+    }
+
+    /**
+     * Returns a hash code for this object.
+     *
+     * @return a hash code for this object
+     */
+    public int hashCode() {
+        return Objects.hashCode(this.list);
     }
 
     /**
