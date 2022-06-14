@@ -18,11 +18,11 @@ import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.app.ApplicationContext;
+import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.data.JsonSerializer;
-import org.rapidcontext.core.data.PropertiesSerializer;
 import org.rapidcontext.core.data.XmlSerializer;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
@@ -65,10 +65,11 @@ public class StorageWriteProcedure implements Procedure {
         defaults.set("data", Bindings.ARGUMENT, "", "The data to write");
         defaults.set("format", Bindings.ARGUMENT, "",
             "The data format, available values are:\n" +
-            "  binary -- (default) save as binary data\n" +
+            "  binary -- save as binary data (default)\n" +
             "  properties -- serialize to properties format\n" +
             "  json -- serialize to JSON format\n" +
-            "  xml -- serialize to XML format");
+            "  xml -- serialize to XML format\n" +
+            "  yaml -- serialize to YAML format");
         defaults.seal();
     }
 
@@ -129,37 +130,34 @@ public class StorageWriteProcedure implements Procedure {
         LOG.fine("writing to storage path " + path);
         Object data = bindings.getValue("data", "");
         boolean isString = data instanceof String;
-        boolean isDict = data instanceof Dict;
-        boolean isBinary = data instanceof Binary ||
-                           data instanceof File;
+        boolean isStruct = data instanceof Dict || data instanceof Array;
+        boolean isBinary = data instanceof Binary || data instanceof File;
         if (isString) {
             data = new Binary.BinaryString((String) data);
-        } else if (!isString && !isDict && !isBinary) {
+        } else if (!isString && !isStruct && !isBinary) {
             throw new ProcedureException("input data type not supported");
         }
         String fmt = ((String) bindings.getValue("format", "")).trim();
-        if (fmt.equalsIgnoreCase("binary") || fmt.length() <= 0) {
-            if (isDict) {
-                try {
-                    String str = PropertiesSerializer.serialize(data);
-                    data = new Binary.BinaryString(str);
-                } catch (Exception e) {
-                    String msg = "invalid data: " + e.getMessage();
-                    LOG.log(Level.WARNING, msg, e);
-                    throw new ProcedureException(msg);
-                }
+        if (fmt.equals("") || fmt.equalsIgnoreCase("binary")) {
+            if (!isString && !isBinary) {
+                throw new ProcedureException("binary format requires binary data");
             }
         } else if (fmt.equalsIgnoreCase("properties")) {
-            // Conversion handled in storage layer
+            if (!StringUtils.endsWithIgnoreCase(path, Storage.EXT_PROPERTIES)) {
+                path += Storage.EXT_PROPERTIES;
+            }
         } else if (fmt.equalsIgnoreCase("json")) {
-            if (isDict) {
-                String str = JsonSerializer.serialize(data, true);
-                data = new Binary.BinaryString(str);
+            if (!StringUtils.endsWithIgnoreCase(path, Storage.EXT_JSON)) {
+                path += Storage.EXT_JSON;
             }
         } else if (fmt.equalsIgnoreCase("xml")) {
-            if (isDict) {
+            if (isStruct) {
                 String str = XmlSerializer.serialize("data", data);
                 data = new Binary.BinaryString(str);
+            }
+        } else if (fmt.equalsIgnoreCase("yaml")) {
+            if (!StringUtils.endsWithIgnoreCase(path, Storage.EXT_YAML)) {
+                path += Storage.EXT_YAML;
             }
         } else {
             throw new ProcedureException("invalid data format: " + fmt);
