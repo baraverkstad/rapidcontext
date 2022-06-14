@@ -30,7 +30,7 @@ import org.rapidcontext.util.FileUtil;
 public class YamlSerializerTest {
 
     @Test
-    public void testSerializeValues() {
+    public void testTypeSupport() {
         assertEquals("test\n", YamlSerializer.serialize("test"));
         assertEquals("123\n", YamlSerializer.serialize(Integer.valueOf(123)));
         assertEquals("true\n", YamlSerializer.serialize(Boolean.TRUE));
@@ -38,11 +38,26 @@ public class YamlSerializerTest {
     }
 
     @Test
-    public void testSerializeFull() throws IOException {
+    public void testSerialize() throws IOException {
+        try (InputStream is = getClass().getResourceAsStream("testdata.yaml")) {
+            String text = FileUtil.readText(is, "UTF-8");
+            assertEquals(text, YamlSerializer.serialize(buildDict()));
+        }
+    }
+
+    @Test
+    public void testUnserialize() throws IOException {
+        try (InputStream is = getClass().getResourceAsStream("testdata.yaml")) {
+            assertEquals(buildDict(), YamlSerializer.unserialize(is));
+        }
+    }
+
+    private Dict buildDict() {
         Dict root = new Dict();
         root.add("a", "one");
         root.addInt("b", 2);
-        root.add("c", new Date(0));
+        root.addBoolean("c", false);
+        root.add("d", new Date(0));
         Dict dict = new Dict();
         dict.add("key", "value");
         root.add("object", dict);
@@ -50,8 +65,6 @@ public class YamlSerializerTest {
         arr.add("item 1");
         arr.add("item 2");
         root.add("array", arr);
-        try (InputStream is = getClass().getResourceAsStream("testdata.yaml")) {
-            assertEquals(FileUtil.readText(is, "UTF-8"), YamlSerializer.serialize(root));
-        }
+        return root;
     }
 }

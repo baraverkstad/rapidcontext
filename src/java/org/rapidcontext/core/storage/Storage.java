@@ -23,6 +23,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.core.data.JsonSerializer;
 import org.rapidcontext.core.data.PropertiesSerializer;
+import org.rapidcontext.core.data.YamlSerializer;
 
 /**
  * The persistent data storage and retrieval class. This base class
@@ -90,9 +91,14 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
     public static final String EXT_JSON = ".json";
 
     /**
+     * The file extension for YAML data.
+     */
+    public static final String EXT_YAML = ".yaml";
+
+    /**
      * The list of file extensions supported for data.
      */
-    public static final String[] EXT_ALL = { EXT_PROPERTIES, EXT_JSON };
+    public static final String[] EXT_ALL = { EXT_PROPERTIES, EXT_JSON, EXT_YAML };
 
     /**
      * The storage information path. Each storage implementation
@@ -158,6 +164,8 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
             PropertiesSerializer.serialize(obj, os);
         } else if (StringUtils.endsWithIgnoreCase(filename, EXT_JSON)) {
             JsonSerializer.serialize(obj, os);
+        } else if (StringUtils.endsWithIgnoreCase(filename, EXT_YAML)) {
+            YamlSerializer.serialize(obj, os);
         } else {
             throw new IOException("unsupported file type: " + filename);
         }
@@ -180,6 +188,8 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
             return PropertiesSerializer.unserialize(is);
         } else if (StringUtils.endsWithIgnoreCase(filename, EXT_JSON)) {
             return JsonSerializer.unserialize(is);
+        } else if (StringUtils.endsWithIgnoreCase(filename, EXT_YAML)) {
+            return YamlSerializer.unserialize(is);
         } else {
             throw new IOException("unsupported file type: " + filename);
         }

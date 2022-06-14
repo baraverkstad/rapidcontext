@@ -15,16 +15,23 @@
 package org.rapidcontext.core.data;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
+import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.util.DateUtil;
 import org.snakeyaml.engine.v2.api.Dump;
 import org.snakeyaml.engine.v2.api.DumpSettings;
+import org.snakeyaml.engine.v2.api.Load;
+import org.snakeyaml.engine.v2.api.LoadSettings;
 import org.snakeyaml.engine.v2.common.FlowStyle;
 
 /**
@@ -47,11 +54,16 @@ public class YamlSerializer {
     /**
      * The YAML serialization settings to use.
      */
-    private static DumpSettings settings = DumpSettings.builder()
+    private static DumpSettings dumpSettings = DumpSettings.builder()
         .setDefaultFlowStyle(FlowStyle.BLOCK)
         .setIndent(4)
         .setIndicatorIndent(2)
         .build();
+
+    /**
+     * The YAML unserialization settings to use.
+     */
+    private static LoadSettings loadSettings = LoadSettings.builder().build();
 
     /**
      * Serializes an object into a YAML representation.
@@ -76,7 +88,20 @@ public class YamlSerializer {
      * @return a YAML file representation
      */
     public static String serialize(Object obj) {
-        return new Dump(settings).dumpToString(toYaml(obj));
+        return new Dump(dumpSettings).dumpToString(toYaml(obj));
+    }
+
+    /**
+     * Unserializes an object from a YAML representation.
+     *
+     * @param is             the input stream to load
+     *
+     * @return the object read
+     *
+     * @throws IOException if an error occurred while reading
+     */
+    public static Object unserialize(InputStream is) throws IOException {
+        return fromYaml(new Load(loadSettings).loadFromInputStream(is));
     }
 
     /**
@@ -111,23 +136,15 @@ public class YamlSerializer {
      */
     private static Object toYaml(Dict dict) {
         LinkedHashMap<String,Object> map = new LinkedHashMap<>();
-        LinkedList<String> delayed = new LinkedList<>();
         for (String k : dict.keys()) {
             Object v = dict.get(k);
-            if (v instanceof Dict || v instanceof Array || v instanceof StorableObject) {
-                delayed.add(k);
-            } else {
-                map.put(k, toYaml(dict.get(k)));
-            }
-        }
-        for (String k : delayed) {
-            Object v = dict.get(k);
             boolean isEmpty = (
+                v == null ||
                 (v instanceof Dict && ((Dict) v).size() == 0) ||
                 (v instanceof Array && ((Array) v).size() == 0)
             );
             if (!isEmpty) {
-                map.put(k, toYaml(v));
+                map.put(k, toYaml(dict.get(k)));
             }
         }
         return map;
@@ -148,6 +165,76 @@ public class YamlSerializer {
             }
         }
         return list;
+    }
+
+    /**
+     * Converts a YAML-serialized object to a native one.
+     *
+     * @param obj            the unserialized object to convert
+     *
+     * @return the converted object
+     */
+    @SuppressWarnings("unchecked")
+    private static Object fromYaml(Object obj) {
+        if (obj instanceof Map) {
+            return fromYaml((Map<Object, Object>) obj);
+        } else if (obj instanceof List) {
+            return fromYaml((List<Object>) obj);
+        } else if (obj instanceof String) {
+            return fromYaml((String) obj);
+        } else {
+            return obj;
+        }
+    }
+
+    /**
+     * Converts a YAML-serialized map to a Dict object.
+     *
+     * @param map            the unserialized map to convert
+     *
+     * @return the Dict containing the map data
+     */
+    private static Dict fromYaml(Map<Object, Object> map) {
+        Dict dict = new Dict(map.size());
+        for (var entry : map.entrySet()) {
+            dict.add(Objects.toString(entry.getKey()), fromYaml(entry.getValue()));
+        }
+        return dict;
+    }
+
+    /**
+     * Converts a YAML-serialized list to an Array object.
+     *
+     * @param list           the unserialized list to convert
+     *
+     * @return the Array containing the list data
+     */
+    private static Array fromYaml(List<Object> list) {
+        Array arr = new Array(list.size());
+        for (Object item : list) {
+            arr.add(fromYaml(item));
+        }
+        return arr;
+    }
+
+    /**
+     * Converts a YAML-serialized string to a Boolean, Integer, Date
+     * or other native Java type.
+     *
+     * @param str            the unserialized string to convert
+     *
+     * @return the object value
+     */
+    private static Object fromYaml(String str) {
+        if (str.equals("true") || str.equals("false")) {
+            return Boolean.valueOf(str);
+        } else if (str.length() > 0 && str.length() <= 9 && StringUtils.isNumeric(str)) {
+            return Integer.valueOf(str);
+        } else if (str.startsWith("@") && StringUtils.isNumeric(str.substring(1))) {
+            return new Date(Long.parseLong(str.substring(1)));
+        } else {
+            return str;
+        }
     }
 
     // No instances

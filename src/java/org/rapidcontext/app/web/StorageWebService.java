@@ -80,15 +80,10 @@ public class StorageWebService extends WebService {
     public static final String EXT_XML = ".xml";
 
     /**
-     * The YAML file extension.
-     */
-    public static final String EXT_YAML = ".yaml";
-
-    /**
      * The list of supported file extensions.
      */
     public static final String[] EXT_ALL = {
-        EXT_HTML, Storage.EXT_JSON, Storage.EXT_PROPERTIES, EXT_XML, EXT_YAML
+        EXT_HTML, Storage.EXT_JSON, Storage.EXT_PROPERTIES, EXT_XML, Storage.EXT_YAML
     };
 
     /**
@@ -146,7 +141,7 @@ public class StorageWebService extends WebService {
         boolean isJson = !isExact && StringUtils.endsWithIgnoreCase(path.name(), Storage.EXT_JSON);
         boolean isProps = !isExact && StringUtils.endsWithIgnoreCase(path.name(), Storage.EXT_PROPERTIES);
         boolean isXml = !isExact && StringUtils.endsWithIgnoreCase(path.name(), EXT_XML);
-        boolean isYaml = !isExact && StringUtils.endsWithIgnoreCase(path.name(), EXT_YAML);
+        boolean isYaml = !isExact && StringUtils.endsWithIgnoreCase(path.name(), Storage.EXT_YAML);
         try {
             Storage storage = ApplicationContext.getInstance().getStorage();
             Object res = (meta == null) ? null : storage.load(meta.path());
@@ -243,7 +238,7 @@ public class StorageWebService extends WebService {
         html.append(" &nbsp;<a href='" + link + Storage.EXT_JSON + "'>JSON</a>");
         html.append(" &nbsp;<a href='" + link + Storage.EXT_PROPERTIES + "'>PROPERTIES</a>");
         html.append(" &nbsp;<a href='" + link + EXT_XML + "'>XML</a>");
-        html.append(" &nbsp;<a href='" + link + EXT_YAML + "'>YAML</a>");
+        html.append(" &nbsp;<a href='" + link + Storage.EXT_YAML + "'>YAML</a>");
         if (meta.isBinary()) {
             html.append(" &nbsp;<a href='" + link + "'>RAW</a>");
         }

@@ -1,6 +1,7 @@
 a: one
 b: 2
-c: '@0'
+c: false
+d: '@0'
 object:
     key: value
 array:
