@@ -273,7 +273,7 @@ public class StorageWebService extends WebService {
         Array objects = new Array();
         idx.objects().filter((item) -> !item.startsWith(".")).forEach((item) -> {
             if (isDataPath) {
-                for (String ext : EXT_ALL) {
+                for (String ext : Storage.EXT_ALL) {
                     if (StringUtils.endsWithIgnoreCase(item, ext)) {
                         item = StringUtils.removeEndIgnoreCase(item, ext);
                         if (idx.hasObject(item)) {

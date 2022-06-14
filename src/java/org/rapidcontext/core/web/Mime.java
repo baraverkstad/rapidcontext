@@ -94,11 +94,11 @@ public final class Mime {
      * The MIME types commonly used for YAML.
      */
     public static final String[] YAML = {
-        "application/yaml",
-        "application/x-yaml",
         "text/yaml",
         "text/x-yaml",
-        "text/vnd.yaml"
+        "text/vnd.yaml",
+        "application/yaml",
+        "application/x-yaml"
     };
 
     /**
