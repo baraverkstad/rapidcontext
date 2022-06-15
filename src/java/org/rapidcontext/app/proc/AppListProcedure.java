@@ -113,9 +113,6 @@ public class AppListProcedure implements Procedure {
                 Object o = storage.load(meta.path());
                 if (o instanceof Dict) {
                     Dict dict = ((Dict) o).copy();
-                    if (!dict.containsKey("id")) {
-                        dict.set("id", meta.path().toIdent(PATH_APP.depth()));
-                    }
                     dict.set("plugin", PluginManager.pluginId(meta));
                     res.add(dict);
                 }
