@@ -37,7 +37,7 @@ import org.rapidcontext.core.web.Request;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class LogWebService extends WebService{
+public class LogWebService extends WebService {
 
     /**
      * The class logger.

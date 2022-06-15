@@ -24,15 +24,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.fileupload.FileItemStream;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.app.plugin.PluginManager;
-import org.rapidcontext.app.proc.StatusProcedure;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.data.JsonSerializer;
-import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.Storage;
@@ -43,8 +39,8 @@ import org.rapidcontext.util.FileUtil;
 
 /**
  * An app web service. This service extends the file web service with
- * a RapidContext API and a default app launcher page. The API pages
- * are available under the "/rapidcontext/" path.
+ * a RapidContext API and a default app launcher page. All provided
+ * APIs are available under the "rapidcontext/" sub-path.
  *
  * @author   Per Cederberg
  * @version  1.0
@@ -88,9 +84,14 @@ public class AppWebService extends FileWebService {
     public static final String KEY_HEADER = "header";
 
     /**
-     * The log web service used for the "rapidcontext/log" URLs.
+     * The log web service used for the "rapidcontext/log" URL.
      */
     protected LogWebService logger;
+
+    /**
+     * The status web service used for the "rapidcontext/status" URL.
+     */
+    protected StatusWebService status;
 
     /**
      * The procedure web service used for the "rapidcontext/procedure/" URLs.
@@ -163,6 +164,7 @@ public class AppWebService extends FileWebService {
         dict.set(KEY_TITLE, title());
         dict.set(KEY_LANG, lang());
         logger = new LogWebService("id", "type", new Dict());
+        status = new StatusWebService("id", "type", new Dict());
         procedure = new ProcedureWebService("id", "type", new Dict());
         storage = new StorageWebService("id", "type", new Dict());
     }
@@ -245,6 +247,8 @@ public class AppWebService extends FileWebService {
     protected String[] methodsImpl(Request request) {
         if (request.matchPath("rapidcontext/log")) {
             return logger.methodsImpl(request);
+        } else if (request.matchPath("rapidcontext/status")) {
+            return status.methodsImpl(request);
         } else if (request.matchPath("rapidcontext/procedure/")) {
             return procedure.methodsImpl(request);
         } else if (request.matchPath("rapidcontext/storage/")) {
@@ -267,6 +271,8 @@ public class AppWebService extends FileWebService {
     public void process(Request request) {
         if (request.matchPath("rapidcontext/log")) {
             logger.process(request);
+        } else if (request.matchPath("rapidcontext/status")) {
+            status.process(request);
         } else if (request.matchPath("rapidcontext/procedure/")) {
             procedure.process(request);
         } else if (request.matchPath("rapidcontext/storage/")) {
@@ -292,8 +298,6 @@ public class AppWebService extends FileWebService {
             } else if (request.matchPath("rapidcontext/app/")) {
                 String appId = StringUtils.removeEnd(request.getPath(), "/");
                 processApp(request, appId, baseUrl);
-            } else if (request.matchPath("rapidcontext/status")) {
-                processStatus(request);
             } else if (isRoot) {
                 processApp(request, appId(), baseUrl);
             }
@@ -518,26 +522,6 @@ public class AppWebService extends FileWebService {
         } catch (IOException e) {
             LOG.log(Level.WARNING, "failed to process file upload", e);
             errorBadRequest(request, e.getMessage());
-        }
-    }
-
-    /**
-     * Processes a system status request.
-     *
-     * @param request        the request to process
-     */
-    protected void processStatus(Request request) {
-        try {
-            ApplicationContext ctx = ApplicationContext.getInstance();
-            Object[] args = ArrayUtils.EMPTY_OBJECT_ARRAY;
-            String source = "web [" + request.getRemoteAddr() + "]";
-            Object obj = ctx.execute(StatusProcedure.NAME, args, source, null);
-            request.sendText(Mime.JSON[0], JsonSerializer.serialize(obj, true));
-        } catch (ProcedureException e) {
-            LOG.warning("error in system status check: " + e.getMessage());
-            Dict res = new Dict();
-            res.set("error", e.getMessage());
-            request.sendText(Mime.JSON[0], JsonSerializer.serialize(res, true));
         }
     }
 }
