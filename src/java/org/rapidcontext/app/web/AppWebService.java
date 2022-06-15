@@ -63,6 +63,11 @@ public class AppWebService extends FileWebService {
     public static final String KEY_APP = "app";
 
     /**
+     * The dictionary key for the login app identifier.
+     */
+    public static final String KEY_LOGIN = "login";
+
+    /**
      * The dictionary key for the page title.
      */
     public static final String KEY_TITLE = "title";
@@ -170,6 +175,16 @@ public class AppWebService extends FileWebService {
      */
     public String appId() {
         return dict.getString(KEY_APP, "start");
+    }
+
+    /**
+     * Returns the app identifier for non-authenticated users.
+     *
+     * @return the login app identifier, or
+     *         "login" if not specified
+     */
+    public String loginId() {
+        return dict.getString(KEY_LOGIN, "login");
     }
 
     /**
@@ -315,7 +330,8 @@ public class AppWebService extends FileWebService {
         Path appPath = new Path("/app/" + appId);
         Object app = storage.load(appPath);
         if (app instanceof Dict) {
-            String loginAppId = ((Dict) app).getString("login", "login");
+            // FIXME: Remove legacy support for 'login' property for app
+            String loginAppId = ((Dict) app).getString("login", loginId());
             if (!SecurityContext.hasReadAccess(appPath.toString())) {
                 String msg = "unauthorized access to app " + appId +
                              ", launching login app " + loginAppId;
