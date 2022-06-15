@@ -14,9 +14,8 @@
 
 package org.rapidcontext.core.storage;
 
-import java.util.Arrays;
+import java.util.Objects;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -35,21 +34,31 @@ public class Path {
      * paths, so this is not a unique instance. It is only here
      * for convenience.
      */
-    public static final Path ROOT = new Path("");
+    public static final Path ROOT = new Path(null, "", true);
 
     /**
-     * The path components. The last element in this array is the
-     * object name, and any previous elements correspond to parent
-     * indices (i.e. the parent path). The root index has a zero
-     * length array.
+     * The parent path reference. Will be null for the path root.
      */
-    private String[] parts;
+    private Path parent;
 
     /**
-     * The index flag. This flag is set if the path corresponds
-     * to an index (a directory, a list of objects and files).
+     * The path element name. The full name is constructed by
+     * prepending all parent names with separators.
+     */
+    private String name;
+
+    /**
+     * The index flag. This flag is set if the path element
+     * corresponds to an index (i.e. a directory, a list of objects
+     * and files).
      */
     private boolean index;
+
+    /**
+     * The total number of path elements (including this one). The
+     * root path element is not counted.
+     */
+    private int length;
 
     /**
      * Creates a new path from a string representation (similar to
@@ -58,7 +67,7 @@ public class Path {
      * @param path           the string path to parse
      */
     public Path(String path) {
-        this(null, path);
+        this(ROOT, path);
     }
 
     /**
@@ -69,23 +78,35 @@ public class Path {
      * @param path           the string path to parse
      */
     public Path(Path parent, String path) {
-        this.parts = (parent == null) ? ArrayUtils.EMPTY_STRING_ARRAY : parent.parts;
-        this.index = path.equals("") || path.endsWith("/");
-        path = StringUtils.strip(path, "/");
-        if (!path.equals("")) {
-            this.parts = ArrayUtils.addAll(this.parts, path.split("/"));
+        String normalized = StringUtils.strip(path, "/");
+        if (normalized.equals("")) {
+            this.parent = null;
+            this.name = "";
+            this.index = true;
+        } else {
+            String[] parts = normalized.split("/");
+            this.parent = parent;
+            for (int i = 0; i < parts.length - 1; i++) {
+                this.parent = new Path(this.parent, parts[i], true);
+            }
+            this.name = parts[parts.length - 1];
+            this.index = path.endsWith("/");
         }
+        this.length = isRoot() ? 0 : this.parent.length + 1;
     }
 
     /**
      * Creates a new path from the specified parts.
      *
-     * @param parts          the path components
-     * @param isIndex        the index flag
+     * @param parent         the parent index path
+     * @param name           the element name
+     * @param index          the index flag
      */
-    protected Path(String[] parts, boolean isIndex) {
-        this.parts = parts;
-        this.index = isIndex;
+    private Path(Path parent, String name, boolean index) {
+        this.parent = parent;
+        this.name = name;
+        this.index = index;
+        this.length = isRoot() ? 0 : this.parent.length + 1;
     }
 
     /**
@@ -94,7 +115,7 @@ public class Path {
      * @return a string representation of this object
      */
     public String toString() {
-        return (parts.length == 0) ? "/" : "/" + toIdent(0);
+        return "/" + toIdent(0);
     }
 
     /**
@@ -104,24 +125,18 @@ public class Path {
      * @param pos            the position, from 0 to length()
      *
      * @return an object identifier for this path (without prefix)
-     *
-     * @see #subPath(int)
      */
     public String toIdent(int pos) {
-        StringBuilder buffer = new StringBuilder();
         if (pos < 0) {
-            pos = Math.max(0, parts.length + pos);
+            pos = Math.max(0, length() + pos);
         }
-        for (int i = pos; i < parts.length; i++) {
-            if (i > pos) {
-                buffer.append("/");
-            }
-            buffer.append(parts[i]);
+        if (pos + 1 > length) {
+            return "";
+        } else if (pos + 1 == length) {
+            return name + (index ? "/" : "");
+        } else {
+            return parent.toIdent(pos) + name + (index ? "/" : "");
         }
-        if (index) {
-            buffer.append("/");
-        }
-        return buffer.toString();
     }
 
     /**
@@ -136,7 +151,10 @@ public class Path {
      */
     public boolean equals(Object obj) {
         Path path = (obj instanceof Path) ? (Path) obj : null;
-        return path != null && this.index == path.index && Arrays.equals(this.parts, path.parts);
+        return path != null &&
+               this.index == path.index &&
+               Objects.equals(this.name, path.name) &&
+               Objects.equals(this.parent, path.parent);
     }
 
     /**
@@ -145,7 +163,7 @@ public class Path {
      * @return a hash code for this object
      */
     public int hashCode() {
-        return Arrays.hashCode(this.parts);
+        return isRoot() ? 0 : this.parent.hashCode() * 31 + this.name.hashCode();
     }
 
     /**
@@ -155,7 +173,7 @@ public class Path {
      *         false otherwise
      */
     public boolean isRoot() {
-        return this.index && this.parts.length == 0;
+        return this.parent == null;
     }
 
     /**
@@ -181,13 +199,9 @@ public class Path {
      *         false otherwise
      */
     public boolean startsWith(Path path) {
-        if (path == null) {
-            return true;
-        }
-        int len = path.parts.length;
-        return len <= this.parts.length &&
-               Arrays.equals(this.parts, 0, len, path.parts, 0, len) &&
-               ((len < this.parts.length) ? path.index : this.index == path.index);
+        return path == null ||
+               equals(path) ||
+               (this.parent != null && this.parent.startsWith(path));
     }
 
     /**
@@ -200,7 +214,7 @@ public class Path {
      * @return the path directory depth
      */
     public int depth() {
-        return parts.length - (isIndex() ? 0 : 1);
+        return this.length - (this.index ? 0 : 1);
     }
 
     /**
@@ -212,7 +226,7 @@ public class Path {
      * @return the path length
      */
     public int length() {
-        return parts.length;
+        return this.length;
     }
 
     /**
@@ -223,7 +237,7 @@ public class Path {
      *         null for the root index
      */
     public String name() {
-        return name(parts.length - 1);
+        return this.name;
     }
 
     /**
@@ -237,7 +251,13 @@ public class Path {
      *         null if the position is out of range
      */
     public String name(int pos) {
-        return (0 <= pos && pos < parts.length) ? parts[pos] : null;
+        if (pos + 1 > this.length) {
+            return null;
+        } else if (pos + 1 == this.length) {
+            return this.name;
+        } else {
+            return this.parent.name(pos);
+        }
     }
 
     /**
@@ -246,8 +266,7 @@ public class Path {
      * @return a new path to the parent index
      */
     public Path parent() {
-        int len = this.parts.length - 1;
-        return (len <= 0) ? ROOT : new Path(Arrays.copyOf(this.parts, len), true);
+        return isRoot() ? ROOT : parent;
     }
 
     /**
@@ -259,9 +278,7 @@ public class Path {
      * @return a new path to a child index or object
      */
     public Path child(String name, boolean isIndex) {
-        String[] newParts = Arrays.copyOf(this.parts, this.parts.length + 1);
-        newParts[newParts.length - 1] = name;
-        return new Path(newParts, isIndex);
+        return new Path(this, name, isIndex);
     }
 
     /**
@@ -272,26 +289,27 @@ public class Path {
      * @return a new path to a descendant index or object
      */
     public Path descendant(Path path) {
-        return new Path(ArrayUtils.addAll(this.parts, path.parts), path.index);
+        if (path.isRoot()) {
+            return this;
+        } else {
+            return new Path(descendant(path.parent()), path.name, path.index);
+        }
     }
 
     /**
-     * Creates a new path that starts at the specified position in
-     * this path. I.e. this method removes a path prefix.
+     * Creates a new path that is relative to another path.
      *
-     * @param pos            the position, from 0 to length()
+     * @param path           the path to relate to
      *
-     * @return a new path with the prefix removed, or
-     *         a root path if the position was out of range
+     * @return a new path with the common prefix removed
      */
-    public Path subPath(int pos) {
-        if (pos <= 0) {
-            return this;
-        } else if (pos >= this.parts.length) {
+    public Path relativeTo(Path path) {
+        if (equals(path)) {
             return ROOT;
+        } else if (isRoot()) {
+            return new Path(ROOT, StringUtils.repeat("../", path.depth()));
+        } else {
+            return new Path(this.parent.relativeTo(path), this.name, this.index);
         }
-        int len = Math.max(Math.min(this.parts.length - pos, this.parts.length), 0);
-        String[] range = Arrays.copyOfRange(this.parts, pos, pos + len);
-        return new Path(range, this.index || len == 0);
     }
 }

@@ -253,7 +253,7 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
      */
     protected Path localPath(Path path) {
         if (path != null && !path.isRoot() && path.startsWith(this.path())) {
-            return path.subPath(this.path().depth());
+            return path.relativeTo(this.path());
         } else {
             return path;
         }

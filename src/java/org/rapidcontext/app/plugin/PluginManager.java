@@ -149,7 +149,7 @@ public class PluginManager {
      * @return the plug-in instance path
      */
     public static Path pluginPath(String pluginId) {
-        Path storagePath = storagePath(pluginId).subPath(1);
+        Path storagePath = storagePath(pluginId).relativeTo(Storage.PATH_STORAGE);
         Path cachePath = Storage.PATH_STORAGE_CACHE.descendant(storagePath);
         return cachePath.descendant(PATH_PLUGIN.child(pluginId, false));
     }
