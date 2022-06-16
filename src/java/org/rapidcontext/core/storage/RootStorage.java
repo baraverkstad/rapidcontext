@@ -337,7 +337,7 @@ public class RootStorage extends Storage {
             for (Object o : mountedStorages) {
                 meta = Metadata.merge(meta, lookupOverlay((Storage) o, path));
             }
-            return meta;
+            return (meta == null) ? null : new Metadata(path, meta);
         }
     }
 
