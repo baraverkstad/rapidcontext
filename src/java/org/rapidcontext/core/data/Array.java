@@ -370,8 +370,8 @@ public class Array implements Iterable<Object> {
      * Returns the array boolean value for the specified index. If
      * the index is not defined or if the value is set to null, a
      * default value will be returned instead. If the value object
-     * is not a boolean, any object that does not equal FALSE, "",
-     * "false" or 0 will be converted to true.
+     * is not a boolean, any object that does not equal "", "0", "f",
+     * "false", "no" or "off" is considered true.
      *
      * @param index          the array index
      * @param defaultValue   the default value
@@ -386,10 +386,8 @@ public class Array implements Iterable<Object> {
         } else if (value instanceof Boolean) {
             return ((Boolean) value).booleanValue();
         } else {
-            return !value.equals(Boolean.FALSE) &&
-                   !value.equals("") &&
-                   !value.equals("false") &&
-                   !value.equals(Integer.valueOf(0));
+            String str = value.toString().toLowerCase().trim();
+            return ArrayUtils.contains(Dict.OFF, str);
         }
     }
 

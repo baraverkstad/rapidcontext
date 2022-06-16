@@ -50,6 +50,11 @@ import org.rapidcontext.util.DateUtil;
 public class Dict {
 
     /**
+     * All the recognized false values.
+     */
+    protected static final String[] OFF = { "", "0", "f", "false", "no", "off" };
+
+    /**
      * A hash map with names and values.
      */
     private LinkedHashMap<String,Object> map = null;
@@ -317,8 +322,8 @@ public class Dict {
      * Returns the dictionary boolean value for the specified key. If
      * the key is not defined or if the value is set to null, a
      * default value will be returned instead. If the value object
-     * is not a boolean, any object that does not equal FALSE, "",
-     * "false" or 0 will be converted to true.
+     * is not a boolean, any object that does not equal "", "0", "f",
+     * "false", "no" or "off" is considered true.
      *
      * @param key            the dictionary key name
      * @param defaultValue   the default value
@@ -333,10 +338,8 @@ public class Dict {
         } else if (value instanceof Boolean) {
             return ((Boolean) value).booleanValue();
         } else {
-            return !value.equals(Boolean.FALSE) &&
-                   !value.equals("") &&
-                   !value.equals("false") &&
-                   !value.equals(Integer.valueOf(0));
+            String str = value.toString().toLowerCase().trim();
+            return ArrayUtils.contains(OFF, str);
         }
     }
 
