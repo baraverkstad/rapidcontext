@@ -111,7 +111,7 @@ public class Query {
         if (idx == null) {
             return Stream.empty();
         } else {
-            return idx.paths().flatMap(path -> {
+            return idx.paths(parent).flatMap(path -> {
                 if (path.isIndex()) {
                     return allPaths(path);
                 } else {

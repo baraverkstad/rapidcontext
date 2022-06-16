@@ -145,8 +145,8 @@ public class StorageWebService extends WebService {
         try {
             Storage storage = ApplicationContext.getInstance().getStorage();
             Object res = (meta == null) ? null : storage.load(meta.path());
-            if (res instanceof Index) {
-                res = serializeIndex((Index) res, isExact || isHtml);
+            if (res instanceof Index && meta != null) {
+                res = serializeIndex(meta.path(), (Index) res, isExact || isHtml);
             } else if (res instanceof Binary && !isExact) {
                 res = serializeBinary((Binary) res, request, path);
             }
@@ -251,15 +251,16 @@ public class StorageWebService extends WebService {
      * the HTML link flag is set, all the references in the index
      * will be prefixed by "$href$" (being serialized into HTML links).
      *
+     * @param path           the index base path
      * @param idx            the index to serialize
      * @param linkify        the HTML link flag
      *
      * @return the serialized representation of the index
      */
-    private Dict serializeIndex(Index idx, boolean linkify) {
+    private Dict serializeIndex(Path path, Index idx, boolean linkify) {
         boolean isDataPath = (
-            !idx.path().startsWith(FileWebService.PATH_FILES) &&
-            !idx.path().startsWith(Storage.PATH_STORAGE)
+            !path.startsWith(FileWebService.PATH_FILES) &&
+            !path.startsWith(Storage.PATH_STORAGE)
         );
         Array indices = new Array();
         idx.indices().filter((item) -> !item.startsWith(".")).forEach((item) -> {

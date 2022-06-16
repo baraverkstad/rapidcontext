@@ -86,7 +86,7 @@ public class ZipStorage extends Storage {
      * entries and creates all the indexes.
      */
     public void init() {
-        Index root = new Index(Path.ROOT);
+        Index root = new Index();
         root.addObject(PATH_STORAGEINFO.name());
         root.updateLastModified(new Date(file().lastModified()));
         entries.put(Path.ROOT, root);
@@ -101,7 +101,7 @@ public class ZipStorage extends Storage {
             Index idx = (Index) entries.get(path.parent());
             if (path.isIndex()) {
                 idx.addIndex(path.name());
-                idx = new Index(path);
+                idx = new Index();
                 idx.updateLastModified(new Date(entry.getTime()));
                 entries.put(path, idx);
             } else {

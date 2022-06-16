@@ -233,7 +233,7 @@ public class MemoryStorage extends Storage {
         Object obj = meta.get(path);
         if (path.isIndex() && obj instanceof Index) {
             Index idx = (Index) obj;
-            idx.paths().forEach((item) -> remove(item, false));
+            idx.paths(path).forEach((item) -> remove(item, false));
         }
         objects.remove(path);
         meta.remove(path);
@@ -257,7 +257,7 @@ public class MemoryStorage extends Storage {
         boolean  modified = false;
 
         if (idx == null) {
-            idx = new Index(parent);
+            idx = new Index();
         }
         if (path.isIndex()) {
             modified = idx.addIndex(path.name());

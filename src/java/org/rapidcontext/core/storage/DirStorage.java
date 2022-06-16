@@ -125,7 +125,7 @@ public class DirStorage extends Storage {
         if (file == null) {
             return null;
         } else if (path.isIndex()) {
-            Index idx = new Index(path);
+            Index idx = new Index();
             if (path.isRoot()) {
                 idx.addObject(PATH_STORAGEINFO.name());
             }

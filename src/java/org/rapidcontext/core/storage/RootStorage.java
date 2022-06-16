@@ -337,6 +337,7 @@ public class RootStorage extends Storage {
             for (Object o : mountedStorages) {
                 meta = Metadata.merge(meta, lookupOverlay((Storage) o, path));
             }
+            LOG.fine("metadata lookup on " + path + ": " + meta);
             return (meta == null) ? null : new Metadata(path, meta);
         }
     }
@@ -381,8 +382,7 @@ public class RootStorage extends Storage {
     public Object load(Path path) {
         Storage storage = getMountedStorage(path, false);
         if (storage != null) {
-            Object res = storage.load(storage.localPath(path));
-            return (res instanceof Index) ? new Index(path, (Index) res) : res;
+            return storage.load(storage.localPath(path));
         } else if (path.isIndex()) {
             Index idx = (Index) metadata.load(path);
             for (Object o : mountedStorages) {

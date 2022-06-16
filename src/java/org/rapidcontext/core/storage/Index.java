@@ -31,11 +31,6 @@ import java.util.stream.Stream;
 public class Index {
 
     /**
-     * The storage path for this index.
-     */
-    private Path path;
-
-    /**
      * The last modified date for changes to the index.
      */
     private Date modified;
@@ -65,7 +60,7 @@ public class Index {
         } else if (two == null) {
             return one;
         } else {
-            Index res = new Index(one.path());
+            Index res = new Index();
             res.indices.addAll(one.indices);
             res.indices.addAll(two.indices);
             res.objects.addAll(one.objects);
@@ -76,29 +71,11 @@ public class Index {
 
     /**
      * Creates a new empty index.
-     *
-     * @param path           the storage path for the index
      */
-    public Index(Path path) {
-        this.path = path;
+    public Index() {
         this.modified = new Date();
         this.indices = new TreeSet<>();
         this.objects = new TreeSet<>();
-    }
-
-    /**
-     * Creates an index copy with a different path. Note that the
-     * source index content will be referenced, not copied. So any
-     * changes will propagate to both indices.
-     *
-     * @param path           the storage path for the index
-     * @param source         the source index to copy
-     */
-    public Index(Path path, Index source) {
-        this.path = path;
-        this.modified = new Date();
-        this.indices = source.indices;
-        this.objects = source.objects;
     }
 
     /**
@@ -108,15 +85,6 @@ public class Index {
      */
     public boolean isEmpty() {
         return this.indices.size() + this.objects.size() == 0;
-    }
-
-    /**
-     * Returns the storage path for the index.
-     *
-     * @return the storage path for the index
-     */
-    public Path path() {
-        return this.path;
     }
 
     /**
@@ -181,12 +149,14 @@ public class Index {
      * Returns a stream of paths corresponding to all indices and
      * objects in this index.
      *
+     * @param basePath       the path of this index
+     *
      * @return a stream path objects
      */
-    public Stream<Path> paths() {
+    public Stream<Path> paths(Path basePath) {
         return Stream.concat(
-            indices().map((item) -> this.path.child(item, true)),
-            objects().map((item) -> this.path.child(item, false))
+            indices().map((item) -> basePath.child(item, true)),
+            objects().map((item) -> basePath.child(item, false))
         );
     }
 
