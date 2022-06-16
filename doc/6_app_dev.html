@@ -486,11 +486,18 @@ available and custom ones can also be implemented in Java.</p>
   <li><var>login</var> &mdash; The app identifier for the alternative launcher
       to use for non-authorized users (only for <var>webservice/app</var>
       type). Defaults to <q><var>login</var></q>.</li>
+  <li><var>catchAll</var> &mdash; The optional flag to match all requests
+      (excluding static files) for a <var>webservice/app</var> launcher.
+      This allows for the creation of a single-page application with URL-based
+      navigation.</li>
   <li><var>title</var> &mdash; The web page title (only for
       <var>webservice/app</var> type). Defaults to
       <q><var>RapidContext</var></q>.</li>
   <li><var>lang</var> &mdash; The web page ISO language code (only for
       <var>webservice/app</var> type). Defaults to <q><var>en</var></q>.</li>
+  <li><var>viewport</var> &mdash; The web page meta viewport tag (only for
+      <var>webservice/app</var> type). Defaults to
+      <q><var>width=device-width, initial-scale=1</var></q>.</li>
   <li><var>header.#</var> &mdash; The optional HTML headers to add to the page
       (only for <var>webservice/app</var> type). Normally used for favicons
       and similar metadata.</li>

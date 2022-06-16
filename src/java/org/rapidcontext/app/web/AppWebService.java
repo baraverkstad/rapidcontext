@@ -30,6 +30,7 @@ import org.rapidcontext.app.plugin.PluginManager;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.security.SecurityContext;
+import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.type.Session;
@@ -62,6 +63,11 @@ public class AppWebService extends FileWebService {
      * The dictionary key for the login app identifier.
      */
     public static final String KEY_LOGIN = "login";
+
+    /**
+     * The dictionary key for the catch all flag.
+     */
+    public static final String KEY_CATCH_ALL = "catchAll";
 
     /**
      * The dictionary key for the page title.
@@ -173,10 +179,10 @@ public class AppWebService extends FileWebService {
      * Returns the app identifier for the default launcher.
      *
      * @return the app identifier for the default launcher, or
-     *         "start" if no app identifier was specified
+     *         null if the "index.html" file contains the app
      */
     public String appId() {
-        return dict.getString(KEY_APP, "start");
+        return dict.getString(KEY_APP, null);
     }
 
     /**
@@ -187,6 +193,16 @@ public class AppWebService extends FileWebService {
      */
     public String loginId() {
         return dict.getString(KEY_LOGIN, "login");
+    }
+
+    /**
+     * Returns the catch all requests setting (defaults to false).
+     *
+     * @return true if all non-matched requests to launch the app, or
+     *         false otherwise
+     */
+    public boolean isCatchAll() {
+        return dict.getBoolean(KEY_CATCH_ALL, false);
     }
 
     /**
@@ -213,7 +229,7 @@ public class AppWebService extends FileWebService {
      * Returns the page viewport meta data.
      *
      * @return the page viewport meta data, or
-     *         "width=700" if not defined
+     *         a full device width setting if not defined
      */
     public String viewport() {
         return dict.getString(KEY_VIEWPORT, "width=device-width, initial-scale=1");
@@ -298,8 +314,13 @@ public class AppWebService extends FileWebService {
             } else if (request.matchPath("rapidcontext/app/")) {
                 String appId = StringUtils.removeEnd(request.getPath(), "/");
                 processApp(request, appId, baseUrl);
-            } else if (isRoot) {
-                processApp(request, appId(), baseUrl);
+            } else if (isRoot || isCatchAll()) {
+                String appId = appId();
+                if (appId == null) {
+                    processFile(request, new Path(path(), "index.html"));
+                } else {
+                    processApp(request, appId, baseUrl);
+                }
             }
         }
     }
@@ -320,45 +341,41 @@ public class AppWebService extends FileWebService {
     }
 
     /**
-     * Processes an HTML app launcher request. This method loads the
-     * app launcher template from storage and replaces all template
-     * variables with their corresponding search results and values.
+     * Processes an app launch request. This loads the app launcher
+     * template from storage and replaces all template variables with
+     * their corresponding search results and values.
      *
      * @param request        the request to process
-     * @param appId          the app identifier to launch (or null)
+     * @param appId          the app identifier to launch
      * @param baseUrl        the base URL for requests
      */
     protected void processApp(Request request, String appId, String baseUrl) {
         session(request, true);
         Storage storage = ApplicationContext.getInstance().getStorage();
-        Path appPath = new Path("/app/" + appId);
-        Object app = storage.load(appPath);
-        if (app instanceof Dict) {
-            // FIXME: Remove legacy support for 'login' property for app
-            String loginAppId = ((Dict) app).getString("login", loginId());
-            if (!SecurityContext.hasReadAccess(appPath.toString())) {
-                String msg = "unauthorized access to app " + appId +
-                             ", launching login app " + loginAppId;
-                LOG.fine(msg);
-                appId = loginAppId;
-            }
-        } else {
+        Metadata meta = storage.lookup(new Path("/app/" + appId));
+        if (meta == null || !meta.isObject(Dict.class)) {
+            LOG.warning(this + " misconfigured; app '" + appId + "' not found,");
             appId = null;
+        } else if (!SecurityContext.hasReadAccess(meta.path().toString())) {
+            LOG.fine("unauthorized access to app '" + appId + "', launching login");
+            // FIXME: Remove the 'login' property on the app object
+            Dict app = (Dict) storage.load(new Path("/app/" + appId));
+            appId = app.getString("login", loginId());
         }
-        Object obj = storage.load(PATH_FILES.child("index.tmpl", false));
-        if (obj instanceof Binary) {
-            Binary template = (Binary) obj;
+        Object tpl = storage.load(PATH_FILES.child("index.tmpl", false));
+        if (appId != null && tpl instanceof Binary) {
             try {
-                String str = processAppTemplate(template, baseUrl, appId);
+                String str = processAppTemplate((Binary) tpl, baseUrl, appId);
                 request.sendText(Mime.HTML[0], str);
             } catch (IOException e) {
                 LOG.log(Level.WARNING, "failed to launch app: " + appId, e);
                 errorInternal(request, e.getMessage());
             }
+        } else if (appId == null) {
+            errorNotFound(request);
         } else {
-            String str = "app template 'index.tmpl' not found";
-            LOG.log(Level.WARNING, "app template 'index.tmpl' not found");
-            errorInternal(request, str);
+            LOG.warning("app template 'index.tmpl' not found");
+            errorInternal(request, "app template 'index.tmpl' not found");
         }
     }
 
