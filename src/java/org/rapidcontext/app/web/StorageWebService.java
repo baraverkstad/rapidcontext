@@ -35,6 +35,7 @@ import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Index;
 import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
+import org.rapidcontext.core.storage.RootStorage;
 import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.type.WebService;
@@ -258,10 +259,7 @@ public class StorageWebService extends WebService {
      * @return the serialized representation of the index
      */
     private Dict serializeIndex(Path path, Index idx, boolean linkify) {
-        boolean isDataPath = (
-            !path.startsWith(FileWebService.PATH_FILES) &&
-            !path.startsWith(Storage.PATH_STORAGE)
-        );
+        boolean isDataPath = !RootStorage.isBinaryPath(path);
         Array indices = new Array();
         idx.indices().filter((item) -> !item.startsWith(".")).forEach((item) -> {
             indices.add((linkify ? "$href$" : "") + item + "/");

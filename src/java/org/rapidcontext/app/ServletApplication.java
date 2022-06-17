@@ -29,7 +29,6 @@ import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.RootStorage;
-import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.storage.StorageException;
 import org.rapidcontext.core.storage.ZipStorage;
 import org.rapidcontext.core.type.Session;
@@ -97,7 +96,7 @@ public class ServletApplication extends HttpServlet {
             File docZip = new File(baseDir, "doc.zip");
             ZipStorage docStore = new ZipStorage(docZip);
             RootStorage root = (RootStorage) ctx.getStorage();
-            Path storagePath = Storage.PATH_STORAGE.child("doc", true);
+            Path storagePath = RootStorage.PATH_STORAGE.child("doc", true);
             root.mount(docStore, storagePath, false, DOC_PATH, 0);
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "failed to mount doc storage", e);

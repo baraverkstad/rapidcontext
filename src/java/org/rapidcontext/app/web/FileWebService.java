@@ -19,6 +19,7 @@ import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.storage.Index;
 import org.rapidcontext.core.storage.Path;
+import org.rapidcontext.core.storage.RootStorage;
 import org.rapidcontext.core.type.WebService;
 import org.rapidcontext.core.web.Request;
 
@@ -32,11 +33,6 @@ import org.rapidcontext.core.web.Request;
  * @version  1.0
  */
 public class FileWebService extends WebService {
-
-    /**
-     * The web files storage path.
-     */
-    public static final Path PATH_FILES = new Path("/files/");
 
     /**
      * The dictionary key for the base storage path for files.
@@ -63,7 +59,7 @@ public class FileWebService extends WebService {
     public Path path() {
         Object obj = dict.get(KEY_PATH);
         if (obj == null) {
-            return PATH_FILES;
+            return RootStorage.PATH_FILES;
         } else if (obj instanceof Path) {
             return (Path) obj;
         } else {

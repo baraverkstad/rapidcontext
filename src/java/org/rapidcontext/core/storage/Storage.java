@@ -19,7 +19,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Date;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.core.data.JsonSerializer;
 import org.rapidcontext.core.data.PropertiesSerializer;
@@ -34,6 +33,13 @@ import org.rapidcontext.core.data.YamlSerializer;
  * @version  1.0
  */
 public abstract class Storage extends StorableObject implements Comparable<Storage> {
+
+    /**
+     * The storage information path. Each storage implementation
+     * should provide introspection abilities by returning it's
+     * own dictionary when queried for this path.
+     */
+    public static final Path PATH_STORAGEINFO = new Path("/storageinfo");
 
     /**
      * The dictionary key for the read-write flag.
@@ -70,17 +76,6 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
     public static final String KEY_MOUNT_OVERLAY_PRIO = "mountOverlayPrio";
 
     /**
-     * The base storage path for mounting a storage to the root.
-     */
-    public static final Path PATH_STORAGE = new Path("/storage/");
-
-    /**
-     * The base storage path for the storage caches.
-     */
-    public static final Path PATH_STORAGE_CACHE =
-        PATH_STORAGE.child("cache", true);
-
-    /**
      * The file extension for properties data.
      */
     public static final String EXT_PROPERTIES = ".properties";
@@ -99,13 +94,6 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
      * The list of file extensions supported for data.
      */
     public static final String[] EXT_ALL = { EXT_PROPERTIES, EXT_JSON, EXT_YAML };
-
-    /**
-     * The storage information path. Each storage implementation
-     * should provide introspection abilities by returning it's
-     * own dictionary when queried for this path.
-     */
-    public static final Path PATH_STORAGEINFO = new Path("/storageinfo");
 
     /**
      * The system time of the last mount info update. This value is
@@ -336,19 +324,6 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
      */
     public Query query(Path base) {
         return new Query(this, base, EXT_ALL);
-    }
-
-    /**
-     * Returns a new storage query for this storage without hiding
-     * supported data file extensions. Use this for storage paths
-     * containing binary files or similar.
-     *
-     * @param base           the base path (must be an index)
-     *
-     * @return the storage query
-     */
-    public Query queryFiles(Path base) {
-        return new Query(this, base, ArrayUtils.EMPTY_STRING_ARRAY);
     }
 
     /**

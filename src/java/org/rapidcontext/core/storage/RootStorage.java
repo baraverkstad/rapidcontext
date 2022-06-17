@@ -60,6 +60,26 @@ public class RootStorage extends Storage {
         Logger.getLogger(RootStorage.class.getName());
 
     /**
+     * The storage path for public web files.
+     */
+    public static final Path PATH_FILES = new Path("/files/");
+
+    /**
+     * The storage path to the JAR library files.
+     */
+    public static final Path PATH_LIB = new Path("/lib/");
+
+    /**
+     * The storage path for mounted storages.
+     */
+    public static final Path PATH_STORAGE = new Path("/storage/");
+
+    /**
+     * The storage path for mounted storage caches.
+     */
+    public static final Path PATH_STORAGE_CACHE = new Path(PATH_STORAGE, "cache/");
+
+    /**
      * The number of seconds between each run of the object cache
      * cleaner job.
      */
@@ -86,6 +106,22 @@ public class RootStorage extends Storage {
      * indexed by the mount path (of the corresponding storage).
      */
     private HashMap<Path,MemoryStorage> cacheStorages = new HashMap<>();
+
+    /**
+     * Checks if a path corresponds to a known binary file path.
+     *
+     * @param path           the path to check
+     *
+     * @return true if the path is known to contain only files, or
+     *         false otherwise
+     */
+    public static boolean isBinaryPath(Path path) {
+        return (
+            path.startsWith(PATH_FILES) ||
+            path.startsWith(PATH_LIB) ||
+            path.startsWith(PATH_STORAGE)
+        );
+    }
 
     /**
      * Creates a new root storage.

@@ -58,7 +58,7 @@ public class PluginManager {
      * The storage path to the mounted plug-in file storages.
      */
     public static final Path PATH_STORAGE_PLUGIN =
-        Storage.PATH_STORAGE.child("plugin", true);
+        RootStorage.PATH_STORAGE.child("plugin", true);
 
     /**
      * The storage path to the loaded plug-in objects.
@@ -69,11 +69,6 @@ public class PluginManager {
      * The platform information path.
      */
     public static final Path PATH_INFO = new Path("/platform");
-
-    /**
-     * The storage path to the JAR library files.
-     */
-    private static final Path PATH_LIB = new Path("/lib/");
 
     /**
      * The identifier of the system plug-in.
@@ -149,8 +144,8 @@ public class PluginManager {
      * @return the plug-in instance path
      */
     public static Path pluginPath(String pluginId) {
-        Path storagePath = storagePath(pluginId).relativeTo(Storage.PATH_STORAGE);
-        Path cachePath = Storage.PATH_STORAGE_CACHE.descendant(storagePath);
+        Path ident = storagePath(pluginId).relativeTo(RootStorage.PATH_STORAGE);
+        Path cachePath = RootStorage.PATH_STORAGE_CACHE.descendant(ident);
         return cachePath.descendant(PATH_PLUGIN.child(pluginId, false));
     }
 
@@ -620,8 +615,8 @@ public class PluginManager {
      * @param pluginId       the unique plug-in id
      */
     private void loadJarFiles(String pluginId) {
-        Path path = storagePath(pluginId).descendant(PATH_LIB);
-        storage.queryFiles(path)
+        Path path = storagePath(pluginId).descendant(RootStorage.PATH_LIB);
+        storage.query(path)
             .filterExtension(".jar")
             .metadatas()
             .filter(meta -> meta != null && meta.isBinary())

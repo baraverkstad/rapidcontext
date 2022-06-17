@@ -32,6 +32,7 @@ import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
+import org.rapidcontext.core.storage.RootStorage;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.type.Session;
 import org.rapidcontext.core.web.Mime;
@@ -136,11 +137,11 @@ public class AppWebService extends FileWebService {
      */
     protected static String[] resources(String type, Path base) {
         Storage storage = ApplicationContext.getInstance().getStorage();
-        Path storagePath = new Path(PATH_FILES, type + "/");
-        String rootPath = PATH_FILES.toString();
+        Path storagePath = new Path(RootStorage.PATH_FILES, type + "/");
+        String rootPath = RootStorage.PATH_FILES.toString();
         String basePath = base.toString();
         String ver = version();
-        return storage.queryFiles(storagePath)
+        return storage.query(storagePath)
             .filterExtension("." + type)
             .paths()
             .map(path -> {
@@ -310,7 +311,7 @@ public class AppWebService extends FileWebService {
             String baseUrl = StringUtils.removeEnd(request.getUrl(), path);
             boolean isRoot = path.equals("") || path.startsWith("index.htm");
             if (request.matchPath("rapidcontext/files/")) {
-                processFile(request, new Path(PATH_FILES, request.getPath()));
+                processFile(request, new Path(RootStorage.PATH_FILES, request.getPath()));
             } else if (request.matchPath("rapidcontext/app/")) {
                 String appId = StringUtils.removeEnd(request.getPath(), "/");
                 processApp(request, appId, baseUrl);
@@ -362,7 +363,7 @@ public class AppWebService extends FileWebService {
             Dict app = (Dict) storage.load(new Path("/app/" + appId));
             appId = app.getString("login", loginId());
         }
-        Object tpl = storage.load(PATH_FILES.child("index.tmpl", false));
+        Object tpl = storage.load(RootStorage.PATH_FILES.child("index.tmpl", false));
         if (appId != null && tpl instanceof Binary) {
             try {
                 String str = processAppTemplate((Binary) tpl, baseUrl, appId);
@@ -436,12 +437,12 @@ public class AppWebService extends FileWebService {
             line = line.replace("%BASE_URL%", baseUrl);
         }
         if (line.contains("%BASE_PATH%")) {
-            if (PATH_FILES.equals(path())) {
+            if (RootStorage.PATH_FILES.equals(path())) {
                 // Skip this line, no config needed
                 return;
             }
             String str = StringUtils.removeStart(path().toString(),
-                                                 PATH_FILES.toString());
+                                                 RootStorage.PATH_FILES.toString());
             line = line.replace("%BASE_PATH%", str);
         }
 

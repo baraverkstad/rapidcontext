@@ -111,9 +111,12 @@ public class Query {
         if (idx == null) {
             return Stream.empty();
         } else {
+            boolean isBinaryPath = RootStorage.isBinaryPath(parent);
             return idx.paths(parent).flatMap(path -> {
                 if (path.isIndex()) {
                     return allPaths(path);
+                } else if (isBinaryPath) {
+                    return Stream.of(path);
                 } else {
                     String name = path.name();
                     for (String ext : this.hiddenExts) {
