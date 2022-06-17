@@ -42,9 +42,9 @@ public class Query {
     private Path base;
 
     /**
-     * The hidden file extensions.
+     * The maximum path depth to return;
      */
-    private String[] hiddenExts;
+    private int maxDepth = Integer.MAX_VALUE;
 
     /**
      * The path predicate filters to apply.
@@ -56,12 +56,10 @@ public class Query {
      *
      * @param storage        the storage to query
      * @param base           the base path
-     * @param hiddenExts     the hidden file extensions
      */
-    public Query(Storage storage, Path base, String[] hiddenExts) {
+    public Query(Storage storage, Path base) {
         this.storage = storage;
         this.base = base;
-        this.hiddenExts = hiddenExts;
     }
 
     /**
@@ -77,13 +75,26 @@ public class Query {
     }
 
     /**
+     * Adds a path depth filter to all results. A depth of zero (0)
+     * will only match child paths directly on the base path.
+     *
+     * @param depth          the additional depth, or -1 for any
+     *
+     * @return this query instance
+     */
+    public Query filterDepth(int depth) {
+        this.maxDepth = (depth < 0) ? Integer.MAX_VALUE : this.base.depth() + depth;
+        return this;
+    }
+
+    /**
      * Adds a file name extension filter to all results.
      *
      * @param ext            the file extension to match
      *
      * @return this query instance
      */
-    public Query filterExtension(String ext) {
+    public Query filterFileExtension(String ext) {
         return filter(path -> path.name().toLowerCase().endsWith(ext));
     }
 
@@ -111,15 +122,16 @@ public class Query {
         if (idx == null) {
             return Stream.empty();
         } else {
+            boolean isMaxDepth = parent.depth() >= this.maxDepth;
             boolean isBinaryPath = RootStorage.isBinaryPath(parent);
             return idx.paths(parent).flatMap(path -> {
                 if (path.isIndex()) {
-                    return allPaths(path);
+                    return isMaxDepth ? Stream.empty() : allPaths(path);
                 } else if (isBinaryPath) {
                     return Stream.of(path);
                 } else {
                     String name = path.name();
-                    for (String ext : this.hiddenExts) {
+                    for (String ext : Storage.EXT_ALL) {
                         if (StringUtils.endsWithIgnoreCase(name, ext)) {
                             name = StringUtils.removeEndIgnoreCase(name, ext);
                             path = idx.hasObject(name) ? null : path.parent().child(name, false);

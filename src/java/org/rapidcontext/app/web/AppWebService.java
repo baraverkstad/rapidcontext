@@ -142,7 +142,7 @@ public class AppWebService extends FileWebService {
         String basePath = base.toString();
         String ver = version();
         return storage.query(storagePath)
-            .filterExtension("." + type)
+            .filterFileExtension("." + type)
             .paths()
             .map(path -> {
                 String file = path.toString();

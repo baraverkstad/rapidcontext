@@ -323,7 +323,7 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
      * @return the storage query
      */
     public Query query(Path base) {
-        return new Query(this, base, EXT_ALL);
+        return new Query(this, base);
     }
 
     /**

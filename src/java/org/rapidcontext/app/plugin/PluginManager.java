@@ -617,7 +617,7 @@ public class PluginManager {
     private void loadJarFiles(String pluginId) {
         Path path = storagePath(pluginId).descendant(RootStorage.PATH_LIB);
         storage.query(path)
-            .filterExtension(".jar")
+            .filterFileExtension(".jar")
             .metadatas()
             .filter(meta -> meta != null && meta.isBinary())
             .forEach(meta -> loadJarFile(meta.path()));
