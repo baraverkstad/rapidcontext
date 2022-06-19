@@ -108,14 +108,13 @@ RapidContext.App.user = function () {
 };
 
 /**
- * Returns an array with app launchers. The array returned is an
- * internal data structure and should not be modified directly.
+ * Returns an array with app launchers. The data returned is an
+ * internal data structure and should not be modified.
  *
  * @return {Array} the loaded app launchers (read-only)
  */
 RapidContext.App.apps = function () {
-    // TODO: use deep clone, but copy instance array content
-    return RapidContext.App._Cache.apps;
+    return MochiKit.Base.values(RapidContext.App._Cache.apps);
 };
 
 /**
@@ -237,19 +236,18 @@ RapidContext.App.startApp = function (app, container) {
         launcher.resource = {};
         for (var i = 0; i < launcher.resources.length; i++) {
             var res = launcher.resources[i];
-            var url = RapidContext.App._rebaseUrl(res.url);
-            if (res.type == "code" || res.type == "js" || res.type == "javascript") {
-                d.addCallback(MochiKit.Base.partial(RapidContext.App.loadScript, url));
-            } else if (res.type == "style" || res.type == "css") {
-                d.addCallback(MochiKit.Base.partial(RapidContext.App.loadStyles, url));
+            if (res.type == "code") {
+                d.addCallback(MochiKit.Base.partial(RapidContext.App.loadScript, res.url));
+            } else if (res.type == "style") {
+                d.addCallback(MochiKit.Base.partial(RapidContext.App.loadStyles, res.url));
             } else if (res.type == "ui") {
-                d.addCallback(MochiKit.Base.partial(RapidContext.App.loadXML, url));
+                d.addCallback(MochiKit.Base.partial(RapidContext.App.loadXML, res.url));
                 d.addCallback(RapidContext.App._cbAssign(launcher, "ui"));
             } else if (res.type == "json" && res.id != null) {
-                d.addCallback(MochiKit.Base.partial(RapidContext.App.loadJSON, url, null, null));
+                d.addCallback(MochiKit.Base.partial(RapidContext.App.loadJSON, res.url, null, null));
                 d.addCallback(RapidContext.App._cbAssign(launcher.resource, res.id));
             } else if (res.id != null) {
-                launcher.resource[res.id] = url;
+                launcher.resource[res.id] = res.url;
             }
         }
         d.addCallback(function () {
@@ -927,7 +925,8 @@ RapidContext.App._addErrbackLogger = function (d, logCtx) {
 RapidContext.App._Cache = {
     status: null,
     user: null,
-    apps: [],
+    apps: {},
+
     // Compares two object on the 'id' property
     compareId: function (a, b) {
         // TODO: replace with MochiKit.Base.keyComparator once #331 is fixed
@@ -937,22 +936,58 @@ RapidContext.App._Cache = {
             return this._cmpId(a, b);
         }
     },
+
     // Object comparator for 'id' property
     _cmpId: MochiKit.Base.keyComparator("id"),
-    // Builds an icon DOM node from a resource
-    _buildIcon: function (res) {
-        if (res.url) {
-            var url = RapidContext.App._rebaseUrl(res.url);
-            return $("<img/>").attr({ src: url })[0];
-        } else if (res.html) {
-            var node = $("<span/>").html(res.html)[0];
-            return node.childNodes.length === 1 ? node.childNodes[0] : node;
-        } else if (res["class"]) {
-            return $("<i/>").addClass(res["class"])[0];
-        } else {
-            return null;
+
+    // Normalizes an app manifest and its resources
+    _normalizeApp: function (app) {
+        function toType(type, url) {
+            var isJs = !type && /\.js$/i.test(url);
+            var isCss = !type && /\.css$/i.test(url);
+            if (type == "code" || type == "js" || type == "javascript" || isJs) {
+                return "code";
+            } else if (type == "style" || type == "css" || isCss) {
+                return "style";
+            } else if (type == "json" || (!type && /\.json$/i.test(url))) {
+                return "json";
+            } else if (type == "ui" || (!type && /ui\.xml$/i.test(url))) {
+                return "ui";
+            } else {
+                return type;
+            }
         }
+        function toIcon(res) {
+            if (res.url) {
+                return $("<img/>").attr({ src: res.url }).get(0);
+            } else if (res.html) {
+                var node = $("<span/>").html(res.html).get(0);
+                return node.childNodes.length === 1 ? node.childNodes[0] : node;
+            } else if (res["class"]) {
+                return $("<i/>").addClass(res["class"]).get(0);
+            } else {
+                return null;
+            }
+        }
+        function toResource(res) {
+            res = (typeof(res) === "string") ? { url: res } : res;
+            res.type = toType(res.type, res.url);
+            res.url = RapidContext.App._rebaseUrl(res.url);
+            if (!app.icon && res.type === "icon") {
+                app.icon = toIcon(res);
+            }
+            return res;
+        }
+        app = MochiKit.Base.update(null, app);
+        app.launch = app.launch || "manual";
+        app.resources = [].concat(app.resources).filter(Boolean).map(toResource);
+        if (!app.icon) {
+            var cssClass = "fa fa-4x fa-question-circle unimportant";
+            app.icon = toIcon({ "class": cssClass });
+        }
+        return app;
     },
+
     // Updates the cache data with the results from a procedure.
     update: function (proc, data) {
         switch (proc) {
@@ -976,38 +1011,14 @@ RapidContext.App._Cache = {
             }
             break;
         case "System.App.List":
-            var apps = this.apps.reduce(function (o, app) {
-                if (app.instances !== null) {
-                    o[app.id] = app;
-                }
-                return o;
-            }, {});
             for (var i = 0; i < data.length; i++) {
-                // TODO: use deep clone
-                var launcher = MochiKit.Base.update(null, data[i]);
-                launcher.launch = launcher.launch || "manual";
-                if (!(launcher.resources instanceof Array)) {
-                    launcher.resources = [];
-                }
-                for (var j = 0; j < launcher.resources.length; j++) {
-                    if (launcher.resources[j].type == "icon") {
-                        launcher.icon = this._buildIcon(launcher.resources[j]);
-                    }
-                }
-                if (!launcher.icon) {
-                    var cssClass = "fa fa-4x fa-question-circle unimportant";
-                    launcher.icon = this._buildIcon({ "class": cssClass });
-                }
+                var launcher = this._normalizeApp(data[i]);
                 if (launcher.className == null) {
                     RapidContext.Log.error("App missing 'className' property", launcher);
                 }
-                if (launcher.id in apps) {
-                    MochiKit.Base.update(apps[launcher.id], launcher);
-                } else {
-                    apps[launcher.id] = launcher;
-                }
+                launcher.instances = (this.apps[launcher.id] || {}).instances;
+                this.apps[launcher.id] = launcher;
             }
-            this.apps = MochiKit.Base.values(apps);
             RapidContext.Log.log("Updated cached apps", this.apps);
             break;
         }
