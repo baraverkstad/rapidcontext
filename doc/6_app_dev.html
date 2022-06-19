@@ -189,11 +189,12 @@ reload.</p>
   <li><var>resources.#.id</var> &mdash; The optional resource identifier. All
       resources with an identifier can easily be accessed from the app
       JavaScript code, using <q><var>this.resource.[id]</var></q>.</li>
-  <li><var>resources.#.url</var> &mdash; The optional resource URL. Should be
-      local and relative to the server base directory. The resource file must
-      be placed in the corresponding location in <var>plugin/local/files/</var>
-      to be visible from the server (or the <var>files/</var> directory in your
-      plug-in).</li>
+  <li><var>resources.#.url</var> &mdash; The optional resource URL. If local,
+      it should relative to the root <var>files/</var> storage directory. The
+      files should thus be placed either in <var>plugin/local/files/</var> or
+      in <var>files/</var> inside your plug-in. Local resource URLs support
+      glob matching (e.g. <q><var>myapp/*.js</var></q> or
+      <q><var>dir/myapp/**</var></q>).</li>
   <li><var>resources.#.html</var> &mdash; The optional resource HTML. Used
       as an alternative to image app icons.</li>
   <li><var>resources.#.class</var> &mdash; The optional resource CSS class.

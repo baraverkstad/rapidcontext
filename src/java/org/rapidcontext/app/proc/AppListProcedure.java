@@ -14,6 +14,9 @@
 
 package org.rapidcontext.app.proc;
 
+import java.util.regex.Pattern;
+
+import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.app.plugin.PluginManager;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
@@ -21,8 +24,11 @@ import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
+import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
+import org.rapidcontext.core.storage.RootStorage;
 import org.rapidcontext.core.storage.Storage;
+import org.rapidcontext.util.RegexUtil;
 
 /**
  * The built-in app list procedure.
@@ -105,19 +111,50 @@ public class AppListProcedure implements Procedure {
 
         CallContext.checkSearchAccess(PATH_APP.toString());
         Storage storage = cx.getStorage();
-        Array res = new Array();
-        storage.query(PATH_APP)
+        Dict[] apps = storage.query(PATH_APP)
             .filterReadAccess()
-            .metadatas()
-            .forEach(meta -> {
-                Object o = storage.load(meta.path());
-                if (o instanceof Dict) {
-                    Dict dict = ((Dict) o).copy();
-                    dict.set("plugin", PluginManager.pluginId(meta));
-                    res.add(dict);
-                }
-            });
+            .metadatas(Dict.class)
+            .map(meta -> loadApp(storage, meta))
+            .toArray(Dict[]::new);
+        Array res = new Array(apps.length);
+        for (Dict app : apps) {
+            res.add(app);
+        }
         res.sort("name");
         return res;
+    }
+
+    private Dict loadApp(Storage storage, Metadata meta) {
+        Dict dict = ((Dict) storage.load(meta.path())).copy();
+        dict.set("plugin", PluginManager.pluginId(meta));
+        Array arr = dict.getArray("resources");
+        for (int i = 0; i < arr.size(); i++) {
+            Object obj = arr.get(i);
+            Dict resource = (obj instanceof Dict) ? (Dict) obj : new Dict();
+            String url = resource.getString("url", obj.toString());
+            if (!url.contains("//:") && StringUtils.containsAny(url, "*?")) {
+                arr.remove(i--);
+                for (String str : resolveFiles(storage, url)) {
+                    Dict copy = resource.copy();
+                    copy.set("url", str);
+                    arr.add(copy);
+                }
+            }
+        }
+        return dict;
+    }
+
+    private String[] resolveFiles(Storage storage, String url) {
+        Path base = new Path(RootStorage.PATH_FILES, url);
+        while (StringUtils.containsAny(base.toString(), "*?")) {
+            base = base.parent();
+        }
+        Pattern re = Pattern.compile(RegexUtil.fromGlob(url) + "$");
+        return storage.query(base)
+            .filterReadAccess()
+            .paths()
+            .filter(path -> re.matcher(path.toString()).find())
+            .map(path -> path.toIdent(1))
+            .toArray(String[]::new);
     }
 }

@@ -64,6 +64,22 @@ public final class RegexUtil {
         return null;
     }
 
+    /**
+     * Converts a glob expression to a regular expression. Handles
+     * the special characters '?', '*' and '**'.
+     *
+     * @param glob           the glob to convert
+     *
+     * @return the corresponding regular expression
+     */
+    public static String fromGlob(String glob) {
+        String re = "\\Q" + glob.replace("\\E", "\\E\\\\E\\Q") + "\\E";
+        re = re.replace("?", "\\E[^/]\\Q");
+        re = re.replace("*", "\\E[^/]*\\Q");
+        re = re.replace("**", "\\E.*\\Q");
+        return re;
+    }
+
     // No instances
     private RegexUtil() {}
 }

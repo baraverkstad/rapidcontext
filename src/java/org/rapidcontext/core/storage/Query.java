@@ -167,6 +167,18 @@ public class Query {
     }
 
     /**
+     * Returns the stream of metadata found for objects of a
+     * specified type.
+     *
+     * @param clazz          the class required for objects
+     *
+     * @return the stream of metadata found
+     */
+    public Stream<Metadata> metadatas(Class<?> clazz) {
+        return metadatas().filter(meta -> meta.isObject(clazz));
+    }
+
+    /**
      * Returns the stream of objects found.
      *
      * @return the stream of objects found
