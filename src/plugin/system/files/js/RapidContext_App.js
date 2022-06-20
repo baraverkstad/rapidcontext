@@ -972,7 +972,9 @@ RapidContext.App._Cache = {
         function toResource(res) {
             res = (typeof(res) === "string") ? { url: res } : res;
             res.type = toType(res.type, res.url);
-            res.url = RapidContext.App._rebaseUrl(res.url);
+            if (res.url) {
+                res.url = RapidContext.App._rebaseUrl(res.url);
+            }
             if (!app.icon && res.type === "icon") {
                 app.icon = toIcon(res);
             }
