@@ -154,7 +154,7 @@ public class AppWebService extends FileWebService {
                 }
                 return file + "?" + ver;
             })
-            .sorted()
+            .sorted(String.CASE_INSENSITIVE_ORDER)
             .toArray(String[]::new);
     }
 
