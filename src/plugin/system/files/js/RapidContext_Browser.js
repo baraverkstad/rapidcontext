@@ -57,7 +57,10 @@
         "console.error",
         "console.info",
         "console.log",
-        "console.warn"
+        "console.warn",
+        "document.querySelectorAll",
+        { test: "'head' in document", name: "document.head shortcut" },
+        { test: "'onload' in HTMLLinkElement.prototype", name: "<link> element onload" }
     ];
 
     /**
@@ -141,6 +144,66 @@
             console.warn("browser: some recommended features are missing", info());
         }
         return hasRequired;
+    }
+
+    /**
+     * Checks for browser support for one or more specified APIs. Supports
+     * checking JavaScript APIs, JavaScript syntax and CSS support.
+     *
+     * @param {String/Object/Array} feature one or more features to check
+     * @param {String/Object} [...] the additional features to check
+     * @return {Boolean} true if supported, or false otherwise
+     *
+     * @example
+     * RapidContext.Browser.supports("Array.isArray") ==> true;
+     * RapidContext.Browser.supports({ test: "let a = 2; a === 2", name: "Let statements" }) ==> true;
+     * RapidContext.Browser.supports("display: flex") ==> false;
+     *
+     * @memberof RapidContext.Browser
+     */
+    function supports(feature/*, ...*/) {
+        function checkCSS(code) {
+            try {
+                return CSS.supports(code);
+            } catch (ignore) {
+                return false;
+            }
+        }
+        function checkPath(base, path) {
+            while (base && path.length > 0) {
+                base = base[path.shift()];
+            }
+            return typeof(base) === "function";
+        }
+        function checkEval(code) {
+            try {
+                var val = eval(code);
+                return val !== undefined && val !== null;
+            } catch (ignore) {
+                return false;
+            }
+        }
+        function check(test) {
+            var isCSS = /^[a-z-]+:/i.test(test);
+            var isPath = /^[a-z]+(\.[a-z]+)*$/i.test(test);
+            var isValid = (
+                (isCSS && checkCSS(test)) ||
+                (isPath && checkPath(window, test.split("."))) ||
+                (!isCSS && !isPath && checkEval(test))
+            );
+            return isValid;
+        }
+        var res = true;
+        var features = Array.isArray(feature) ? feature : Array.prototype.slice.apply(arguments);
+        for (var i = 0; i < features.length; i++) {
+            var def = features[i].test ? features[i] : { test: features[i] };
+            if (!check(def.test)) {
+                var explain = [def.name, def.test].filter(Boolean).join(": ");
+                console.warn("browser: missing support for " + explain);
+                res = false;
+            }
+        }
+        return res;
     }
 
     /**
@@ -259,66 +322,6 @@
         }
     }
 
-    /**
-     * Checks for browser support for one or more specified APIs. Supports
-     * checking JavaScript APIs, JavaScript syntax and CSS support.
-     *
-     * @param {String/Object/Array} feature one or more features to check
-     * @param {String/Object} [...] the additional features to check
-     * @return {Boolean} true if supported, or false otherwise
-     *
-     * @example
-     * RapidContext.Browser.supports("Array.isArray") ==> true;
-     * RapidContext.Browser.supports({ test: "let a = 2; a === 2", name: "Let statements" }) ==> true;
-     * RapidContext.Browser.supports("display: flex") ==> false;
-     *
-     * @memberof RapidContext.Browser
-     */
-    function supports(feature/*, ...*/) {
-        function checkCSS(code) {
-            try {
-                return CSS.supports(code);
-            } catch (ignore) {
-                return false;
-            }
-        }
-        function checkPath(base, path) {
-            while (base && path.length > 0) {
-                base = base[path.shift()];
-            }
-            return typeof(base) === "function";
-        }
-        function checkEval(code) {
-            try {
-                var val = eval(code);
-                return val !== undefined && val !== null;
-            } catch (ignore) {
-                return false;
-            }
-        }
-        function check(test) {
-            var isCSS = /^[a-z-]+:/i.test(test);
-            var isPath = /^[a-z]+(\.[a-z]+)*$/i.test(test);
-            var isValid = (
-                (isCSS && checkCSS(test)) ||
-                (isPath && checkPath(window, test.split("."))) ||
-                (!isCSS && !isPath && checkEval(test))
-            );
-            return isValid;
-        }
-        var res = true;
-        var features = Array.isArray(feature) ? feature : Array.prototype.slice.apply(arguments);
-        for (var i = 0; i < features.length; i++) {
-            var def = features[i].test ? features[i] : { test: features[i] };
-            if (!check(def.test)) {
-                var explain = [def.name, def.test].filter(Boolean).join(": ");
-                console.warn("browser: missing support for " + explain);
-                res = false;
-            }
-        }
-        return res;
-    }
-
     // Create namespaces
     var RapidContext = window.RapidContext || (window.RapidContext = {});
     var module = RapidContext.Browser || (RapidContext.Browser = {});
@@ -327,8 +330,8 @@
     module.REQUIRED = REQUIRED;
     module.OPTIONAL = OPTIONAL;
     module.isSupported = isSupported;
+    module.supports = supports;
     module.info = info;
     module.cookie = cookie;
-    module.supports = supports;
 
 })(this);
