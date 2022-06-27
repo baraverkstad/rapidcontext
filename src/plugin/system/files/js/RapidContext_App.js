@@ -414,25 +414,21 @@ RapidContext.App.callApp = function (app, method) {
 };
 
 /**
- * Performs an asynchronous procedure call. This function returns a deferred
- * object that will produce either a `callback` or an `errback` depending on
- * the server response.
+ * Performs an asynchronous procedure call.
  *
  * @param {String} name the procedure name
  * @param {Array} [args] the array of arguments, or `null`
  *
- * @return {Deferred} a `MochiKit.Async.Deferred` object that will
- *         callback with the response data on success
+ * @return {Promise} a `RapidContext.Async` promise that will
+ *         resolve with the response data on success
  */
 RapidContext.App.callProc = function (name, args) {
-    var params = {};
-    var options = { timeout: 60 };
-
     // TODO: remove this legacy name conversion
     if (name.indexOf("RapidContext.") == 0) {
         name = "System" + name.substring(8);
     }
     RapidContext.Log.log("Call request " + name, args);
+    var params = {};
     for (var i = 0; args != null && i < args.length; i++) {
         if (args[i] == null) {
             params["arg" + i] = "null";
@@ -444,8 +440,9 @@ RapidContext.App.callProc = function (name, args) {
     if (logLevel == "log" || logLevel == "all") {
         params["system:trace"] = 1;
     }
-    var d = RapidContext.App.loadJSON("rapidcontext/procedure/" + name, params, options);
-    d.addCallback(function (res) {
+    var url = "rapidcontext/procedure/" + name;
+    var options = { method: "POST", timeout: 60000 };
+    return RapidContext.App.loadJSON(url, params, options).then(function (res) {
         if (res.trace != null) {
             RapidContext.Log.log("Server trace " + name, res.trace);
         }
@@ -455,17 +452,11 @@ RapidContext.App.callProc = function (name, args) {
         } else {
             RapidContext.Log.log("Call response " + name, res.data);
         }
+        if (name.indexOf("System.") == 0 && !res.error && res.data) {
+            RapidContext.App._Cache.update(name, res.data);
+        }
         return res.data;
     });
-    if (name.indexOf("System.") == 0) {
-        d.addCallback(function (res) {
-            if (res) {
-                RapidContext.App._Cache.update(name, res);
-            }
-            return res;
-        });
-    }
-    return d;
 };
 
 /**
@@ -548,269 +539,159 @@ RapidContext.App.logout = function (reload) {
 };
 
 /**
- * Performs an asynchronous HTTP request for a JSON data document and returns a
- * deferred response. If no request method has been specified, the `POST` or
- * `GET` methods are chosen depending on whether or not the params argument is
- * `null`. The request parameters are specified as an object that will be
- * encoded by the `MochiKit.Base.queryString` function. In addition to the
- * default options in `MochiKit.Async.doXHR`, this function also accepts a
- * timeout option for automatic request cancellation.
- *
- * Note that this function is unsuitable for loading JavaScript source code,
- * since using `eval()` will confuse some browser error messages and debuggers
- * regarding the actual source location.
+ * Performs an asynchronous HTTP request and parses the JSON response. The
+ * request parameters are automatically encoded to query string or JSON format,
+ * depending on the `Content-Type` header. The parameters will be sent either
+ * in the URL or as the request payload (depending on the HTTP `method`).
  *
  * @param {String} url the URL to request
  * @param {Object} [params] the request parameters, or `null`
  * @param {Object} [options] the request options, or `null`
- * @config {String} [method] the HTTP method, "GET" or "POST"
- * @config {Number} [timeout] the timeout in seconds, default is no timeout
+ * @config {String} [method] the HTTP method, default is `GET`
+ * @config {Number} [timeout] the timeout in milliseconds, default is 30s
  * @config {Object} [headers] the specific HTTP headers to use
- * @config {String} [mimeType] the override MIME type, default is
- *             none
  *
- * @return {Deferred} a `MochiKit.Async.Deferred` object that will
- *         callback with the response text on success
+ * @return {Promise} a `RapidContext.Async` promise that will
+ *         resolve with the parsed response JSON on success
  */
 RapidContext.App.loadJSON = function (url, params, options) {
-    var d = RapidContext.App.loadXHR(url, params, options);
-    d.addCallback(function (res) {
-        return JSON.parse(res.responseText);
+    var opts = MochiKit.Base.update({ responseType: "json" }, options);
+    return RapidContext.App.loadXHR(url, params, opts).then(function (xhr) {
+        return xhr.response;
     });
-    return d;
 };
 
 /**
- * Performs an asynchronous HTTP request for a text document and returns a
- * deferred response. If no request method has been specified, the `POST` or
- * `GET` methods are chosen depending on whether or not the params argument is
- * `null`. The request parameters are specified as an object that will be
- * encoded by the `MochiKit.Base.queryString` function. In addition to the
- * default options in `MochiKit.Async.doXHR`, this function also accepts a
- * timeout option for automatic request cancellation.
- *
- * Note that this function is unsuitable for loading JavaScript source code,
- * since using `eval()` will confuse some browser error messages and debuggers
- * regarding the actual source location.
+ * Performs an asynchronous HTTP request for a text document. The request
+ * parameters are automatically encoded to query string or JSON format,
+ * depending on the `Content-Type` header. The parameters will be sent either
+ * in the URL or as the request payload (depending on the HTTP `method`).
  *
  * @param {String} url the URL to request
  * @param {Object} [params] the request parameters, or `null`
  * @param {Object} [options] the request options, or `null`
  * @config {String} [method] the HTTP method, "GET" or "POST"
- * @config {Number} [timeout] the timeout in seconds, default is no timeout
+ * @config {Number} [timeout] the timeout in milliseconds, default is 30s
  * @config {Object} [headers] the specific HTTP headers to use
- * @config {String} [mimeType] the override MIME type, default is
- *             none
  *
- * @return {Deferred} a `MochiKit.Async.Deferred` object that will
- *         callback with the response text on success
+ * @return {Promise} a `RapidContext.Async` promise that will
+ *         resolve with the response text on success
  */
 RapidContext.App.loadText = function (url, params, options) {
-    var d = RapidContext.App.loadXHR(url, params, options);
-    d.addCallback(function (res) {
-        return res.responseText;
+    var opts = MochiKit.Base.update({ responseType: "text" }, options);
+    return RapidContext.App.loadXHR(url, params, opts).then(function (xhr) {
+        return xhr.responseText;
     });
-    return d;
 };
 
 /**
- * Performs an asynchronous HTTP request for an XML document and returns a
- * deferred response. If no request method has been specified, the `POST` or
- * `GET` methods are chosen depending on whether or not the params argument is
- * `null`. The request parameters are specified as an object that will be
- * encoded by the `MochiKit.Base.queryString` function. In addition to the
- * default options in `MochiKit.Async.doXHR`, this function also accepts a
- * timeout option for automatic request cancellation.
+ * Performs an asynchronous HTTP request for an XML document. The request
+ * parameters are automatically encoded to query string or JSON format,
+ * depending on the `Content-Type` header. The parameters will be sent either
+ * in the URL or as the request payload (depending on the HTTP `method`).
  *
  * @param {String} url the URL to request
  * @param {Object} [params] the request parameters, or `null`
  * @param {Object} [options] the request options, or `null`
  * @config {String} [method] the HTTP method, "GET" or "POST"
- * @config {Number} [timeout] the timeout in seconds, default is no timeout
+ * @config {Number} [timeout] the timeout in milliseconds, default is 30s
  * @config {Object} [headers] the specific HTTP headers to use
- * @config {String} [mimeType] the override MIME type, default is
- *             none
  *
- * @return {Deferred} a `MochiKit.Async.Deferred` object that will
- *         callback with the parsed response XML document on success
+ * @return {Promise} a `RapidContext.Async` promise that will
+ *         resolve with the parsed response XML document on success
  */
 RapidContext.App.loadXML = function (url, params, options) {
-    options = options || {};
-    options.responseType = "document";
-    var d = RapidContext.App.loadXHR(url, params, options);
-    d.addCallback(function (res) {
-        return res.responseXML;
+    var opts = MochiKit.Base.update({ responseType: "document" }, options);
+    return RapidContext.App.loadXHR(url, params, opts).then(function (xhr) {
+        return xhr.responseXML;
     });
-    return d;
 };
 
 /**
- * Performs an asynchronous HTTP request and returns a deferred response. If no
- * request method has been specified, the `POST` or `GET` methods are chosen
- * depending on whether or not the `params` argument is `null`. The request
- * parameters are specified as an object that will be encoded by the
- * `MochiKit.Base.queryString` function. In addition to the default options in
- * `MochiKit.Async.doXHR`, this function also accepts a timeout option for
- * automatic request cancellation.
- *
- * Note that this function is unsuitable for loading JavaScript source code,
- * since using `eval()` will confuse some browser error messages and debuggers
- * regarding the actual source location.
+ * Performs an asynchronous HTTP request. The request parameters are
+ * automatically encoded to query string or JSON format, depending on the
+ * `Content-Type` header. The parameters will be sent either in the URL or as
+ * the request payload (depending on the HTTP `method`).
  *
  * @param {String} url the URL to request
  * @param {Object} [params] the request parameters, or `null`
  * @param {Object} [options] the request options, or `null`
- * @config {String} [method] the HTTP method, "GET" or "POST"
- * @config {Number} [timeout] the timeout in seconds, default is no timeout
+ * @config {String} [method] the HTTP method, default is `GET`
+ * @config {Number} [timeout] the timeout in milliseconds, default is 30s
  * @config {Object} [headers] the specific HTTP headers to use
- * @config {String} [mimeType] the override MIME type, default is
- *             none
  *
- * @return {Deferred} a `MochiKit.Async.Deferred` object that will
- *         callback with the XMLHttpRequest instance on success
+ * @return {Promise} a `RapidContext.Async` promise that will
+ *         resolve with the XMLHttpRequest instance on success
  */
 RapidContext.App.loadXHR = function (url, params, options) {
-    options = options || {};
-    if (options.method == "GET" && params != null) {
-        url += "?" + MochiKit.Base.queryString(params);
-    } else if (params != null) {
-        options.method = options.method || "POST";
-        options.headers = options.headers || {};
-        options.headers["Content-Type"] = "application/x-www-form-urlencoded";
-        options.sendContent = MochiKit.Base.queryString(params);
-    } else {
-        options.method = options.method || "GET";
+    var opts = MochiKit.Base.update({ method: "GET", headers: {}, timeout: 30000 }, options);
+    opts.timeout = (opts.timeout < 1000) ? opts.timeout * 1000 : opts.timeout;
+    var hasBody = params && ["PATCH", "POST", "PUT"].indexOf(opts.method) >= 0;
+    url += (params && !hasBody) ? "?" + MochiKit.Base.queryString(params) : "";
+    if (params && hasBody && opts.headers["Content-Type"] === "application/json") {
+        opts.body = JSON.stringify(params);
+    } else if (params && hasBody) {
+        opts.headers["Content-Type"] = "application/x-www-form-urlencoded";
+        opts.body = MochiKit.Base.queryString(params);
     }
     var nonCachedUrl = RapidContext.App._nonCachedUrl(url);
-    RapidContext.Log.log("Starting XHR loading", nonCachedUrl, options);
-    var d = MochiKit.Async.doXHR(nonCachedUrl, options);
-    if (options.timeout) {
-        var canceller = function () {
-            // TODO: Supply error to cancel() instead of this hack, when
-            // supported in MochiKit (#323). This work-around is necessary
-            // due to MochiKit internally using wait() in doXHR().
-            d.results[0].canceller();
-            d.results[0].errback("Timeout on request to " + url);
-        };
-        var timer = MochiKit.Async.callLater(options.timeout, canceller);
-        d.addCallback(function (res) {
-            timer.cancel();
-            return res;
-        });
-    }
-    d.addBoth(function (res) {
-        if (res instanceof MochiKit.Async.CancelledError) {
-            RapidContext.Log.log("Cancelled XHR loading", nonCachedUrl);
-        } else if (res instanceof Error) {
-            RapidContext.Log.warn("Failed XHR loading", nonCachedUrl, res);
-        } else {
+    RapidContext.Log.log("Starting XHR loading", nonCachedUrl, opts);
+    return RapidContext.Async.xhr(nonCachedUrl, opts).then(
+        function (res) {
             RapidContext.Log.log("Completed XHR loading", nonCachedUrl);
+            return res;
+        },
+        function (err) {
+            RapidContext.Log.warn("Failed XHR loading", nonCachedUrl, err);
+            return Promise.reject(err);
         }
-        return res;
-    });
-    RapidContext.App._addErrbackLogger(d, "RapidContext.App.loadXHR(" + nonCachedUrl + ")");
-    return d;
+    );
 };
 
 /**
- * Loads a JavaScript to the the current page asynchronously and returns a
- * deferred response. This function is only suitable for loading JavaScript
- * source code, and not JSON data, since it loads the script by inserting a
- * `<script>` tag in the document `<head>` tag. All function definitions and
- * values must therefore be stored to global variables by the script to be
- * accessible after loading. The deferred callback function will therefore not
- * provide any data even on successful callback.
- *
- * This method of script loading has the advantage that JavaScript debuggers
- * (such as Firebug) will be able to handle the code properly (error messages,
- * breakpoints, etc). If the script fails to load due to errors however, the
- * returned deferred object may fail to `errback` in some cases.
+ * Loads a JavaScript to the the current page. The script is loaded by
+ * inserting a `<script>` tag in the document `<head>`. Function definitions
+ * and values must therefore be stored to global variables by the script to
+ * become accessible after loading. If the script is already loaded, the
+ * promise will resolve immediately.
  *
  * @param {String} url the URL to the script
  *
- * @return {Deferred} a `MochiKit.Async.Deferred` object that will
- *         callback when the script has been loaded
+ * @return {Promise} a `RapidContext.Async` promise that will
+ *         resolve when the script has loaded
+ *
+ * @see Use dynamic `import()` instead, if supported by the environment.
  */
 RapidContext.App.loadScript = function (url) {
-    var absoluteUrl = RapidContext.Util.resolveURI(url);
-    var selector1 = "script[src^='" + url + "']";
-    var selector2 = "script[src^='" + absoluteUrl + "']";
-    var elems = MochiKit.Selector.findDocElements(selector1, selector2);
-    if (elems.length > 0) {
-        RapidContext.Log.log("Script already loaded, skipping", url);
-        return MochiKit.Async.wait(0);
+    var selector = ["script[src*='", url, "']"].join("");
+    if (document.querySelectorAll(selector).length > 0) {
+        RapidContext.Log.log("script already loaded, skipping", url);
+        return RapidContext.Async.wait(0);
+    } else {
+        RapidContext.Log.log("loading script", url);
+        return RapidContext.Async.script(RapidContext.App._nonCachedUrl(url));
     }
-    RapidContext.Log.log("Starting script loading", url);
-    var d = MochiKit.Async.loadScript(RapidContext.App._nonCachedUrl(url));
-    d.addCallback(function () {
-        RapidContext.Log.log("Completed loading script", url);
-    });
-    d.addErrback(function (e) {
-        RapidContext.Log.warn("Failed loading script", url + ": " + e.message);
-        return e;
-    });
-    RapidContext.App._addErrbackLogger(d, "RapidContext.App.loadScript(" + url + ")");
-    return d;
 };
 
 /**
- * Loads a CSS stylesheet to the the current page asynchronously and returns a
- * deferred response. The stylesheet is loaded by inserting a `<link>` tag in
- * the document head tag, which means that the deferred callback function will
- * not be provided with any data.
+ * Loads a CSS stylesheet to the the current page asynchronously. The
+ * stylesheet is loaded by inserting a `<link>` tag in the document `head`.
+ * If the stylesheet is already loaded, the promise will resolve immediately.
  *
  * @param {String} url the URL to the stylesheet
  *
- * @return {Deferred} a `MochiKit.Async.Deferred` object that will
+ * @return {Promise} a `RapidContext.Async` promise that will
  *         callback when the stylesheet has been loaded
  */
 RapidContext.App.loadStyles = function (url) {
-    function findStylesheet(url) {
-        var styles = document.styleSheets;
-        for (var i = 0; i < styles.length; i++) {
-            if (MochiKit.Text.startsWith(url, styles[i].href)) {
-                return styles[i];
-            }
-        }
-        return null;
+    var selector = ["link[href*='", url, "']"].join("");
+    if (document.querySelectorAll(selector).length > 0) {
+        RapidContext.Log.log("stylesheet already loaded, skipping", url);
+        return RapidContext.Async.wait(0);
+    } else {
+        RapidContext.Log.log("loading stylesheet", url);
+        return RapidContext.Async.css(RapidContext.App._nonCachedUrl(url));
     }
-    function isStylesheetLoaded(url, absoluteUrl) {
-        var styles = findStylesheet(url) || findStylesheet(absoluteUrl);
-        var rules = styles && (styles.cssRules || styles.rules);
-        return !!rules && rules.length > 0;
-    }
-    var absoluteUrl = RapidContext.Util.resolveURI(url);
-    if (findStylesheet(url) || findStylesheet(absoluteUrl)) {
-        RapidContext.Log.log("Stylesheet already loaded, skipping", url);
-        return MochiKit.Async.wait(0);
-    }
-    RapidContext.Log.log("Starting stylesheet loading", url);
-    var loadUrl = RapidContext.App._nonCachedUrl(url);
-    var link = MochiKit.DOM.LINK({ rel: "stylesheet", type: "text/css", href: loadUrl });
-    document.getElementsByTagName("head")[0].appendChild(link);
-    var d = new MochiKit.Async.Deferred();
-    var img = MochiKit.DOM.IMG();
-    img.onerror = d.callback.bind(d, "URL loading finished");
-    img.src = loadUrl;
-    d.addBoth(function () {
-        if (!isStylesheetLoaded(url, absoluteUrl)) {
-            // Add 250 ms delay after URL loading to allow CSS parsing for
-            // browsers needing it (WebKit, Safari, Chrome)
-            return MochiKit.Async.wait(0.25);
-        } else {
-            return true;
-        }
-    });
-    d.addBoth(function () {
-        if (isStylesheetLoaded(url, absoluteUrl)) {
-            RapidContext.Log.log("Completed loading stylesheet", url);
-        } else {
-            RapidContext.Log.warn("Failed loading stylesheet", url);
-            throw new URIError("Failed loading stylesheet " + url, absoluteUrl);
-        }
-    });
-    RapidContext.App._addErrbackLogger(d, "RapidContext.App.loadStyles()");
-    return d;
 };
 
 /**
