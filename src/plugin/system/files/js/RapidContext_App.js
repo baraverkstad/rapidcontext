@@ -405,7 +405,7 @@ RapidContext.App.callApp = function (app, method) {
         } catch (e) {
             var reason = "Caught error in " + methodName;
             RapidContext.Log.error(reason, e);
-            throw new Error(reason + ": " + e.toString());
+            throw new Error(reason + ": " + e.toString(), { cause: e });
         } finally {
             RapidContext.Log.context(null);
         }
@@ -1018,8 +1018,8 @@ RapidContext.App._Cache = {
                 if (launcher.className == null) {
                     RapidContext.Log.error("App missing 'className' property", launcher);
                 }
-                launcher.instances = (this.apps[launcher.id] || {}).instances;
-                this.apps[launcher.id] = launcher;
+                launcher.instances = (this.apps[launcher.id] || {}).instances || [];
+                this.apps[launcher.id] = MochiKit.Base.update(this.apps[launcher.id], launcher);
             }
             RapidContext.Log.log("Updated cached apps", this.apps);
             break;
