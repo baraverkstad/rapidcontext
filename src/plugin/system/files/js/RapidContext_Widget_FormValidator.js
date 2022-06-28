@@ -150,9 +150,9 @@ RapidContext.Widget.FormValidator.prototype.reset = function () {
  * @param {Widget/Node} field the form field DOM node
  * @param {String} [value] the form field value to check
  *
- * @return {Boolean/MochiKit.Async.Deferred} `true` if the form validated
- *         successfully, `false` if the validation failed, or a
- *         `MochiKit.Async.Deferred` instance if the validation was deferred
+ * @return {Boolean/Promise} `true` if the form validated successfully,
+ *         `false` if the validation failed, or a
+ *         `RapidContext.Async` instance that either resolves or rejects
  *
  * @see RapidContext.Widget.Form#validate
  */
@@ -176,21 +176,17 @@ RapidContext.Widget.FormValidator.prototype.verify = function (field, value) {
             this.addError(field, msg);
             return false;
         } else if (typeof(this.validator) == "function") {
-            var res = this.validator(value);
-            if (res instanceof MochiKit.Async.Deferred) {
-                var self = this;
-                res.addErrback(function (e) {
-                    self.addError(field, e.message);
-                    return e;
+            var addError = this.addError.bind(this);
+            return new RapidContext.Async(this.validator(value))
+                .then(function (res) {
+                    var failed = res === false || typeof(res) == "string";
+                    return failed ? Promise.reject(res) : res;
+                })
+                .catch(function (err) {
+                    var msg = (err && err.message) || err || "validation failed";
+                    addError(field, msg);
+                    Promise.reject(new RangeError([field, ": ", msg].join("")));
                 });
-                return res;
-            } else if (typeof(res) == "string") {
-                this.addError(field, res);
-                return false;
-            } else if (res === false) {
-                this.addError(field, "Field validation failed");
-                return false;
-            }
         }
     }
     return true;

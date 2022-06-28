@@ -236,17 +236,16 @@ RapidContext.Widget.Form.prototype.validators = function () {
 /**
  * Validates this form using the form validators found.
  *
- * @return {Boolean/MochiKit.Async.Deferred} `true` if the form
- *         validated successfully, `false` if the validation failed,
- *         or a `MochiKit.Async.Deferred` instance if the validation
- *         was deferred
+ * @return {Boolean/Promise} `true` if the form validated successfully,
+ *         `false` if the validation failed, or a `Promise` instance that
+ *         either resolves or rejects
  */
 RapidContext.Widget.Form.prototype.validate = function () {
     var validators = this.validators();
     var fields = this.fields();
     var values = this.valueMap();
     var success = true;
-    var defers = [];
+    var promises = [];
     validators.forEach(function (validator) {
         validator.reset();
     });
@@ -255,18 +254,19 @@ RapidContext.Widget.Form.prototype.validate = function () {
             if (validators[i].name == fields[j].name) {
                 var name = fields[j].name;
                 var res = validators[i].verify(fields[j], values[name] || "");
-                if (res instanceof MochiKit.Async.Deferred) {
-                    defers.push(res);
+                if (res instanceof Promise) {
+                    promises.push(res);
                 } else if (res === false) {
                     success = false;
                 }
             }
         }
     }
+    // FIXME: Add API that always returns promise?
     if (!success) {
         return false;
-    } else if (defers.length > 0) {
-        return MochiKit.Async.gatherResults(defers);
+    } else if (promises.length > 0) {
+        return Promise.all(promises);
     } else {
         return true;
     }
