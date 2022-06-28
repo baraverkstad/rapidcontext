@@ -167,7 +167,7 @@
                                 if (member.isStatic) output += "&lt;static&gt; ";
                             !}&nbsp;</td>
                             <td class="nameDescription">
-                                <div class="fixedFont"><if test="member.isStatic && member.memberOf != '_global_'">{+member.memberOf+}.</if><b>{+new Link().toSymbol(member.alias).withText(member.name.replace(/\^\d+$/, ''))+}</b>{+makeSignature(member.params)+}
+                                <div class="fixedFont" {!if (member.deprecated){output += 'style="text-decoration: line-through;"'}!}><if test="member.isStatic && member.memberOf != '_global_'">{+member.memberOf+}.</if><b>{+new Link().toSymbol(member.alias).withText(member.name.replace(/\^\d+$/, ''))+}</b>{+makeSignature(member.params)+}
                                 </div>
                                 <div class="description">{+resolveLinks(summarize(member.desc))+}</div>
                             </td>
