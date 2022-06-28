@@ -33,13 +33,11 @@
      * @private
      */
     function storageUrl(pathOrObj) {
-        if (typeof(pathOrObj) != "string") {
-            pathOrObj = path(pathOrObj);
-        }
-        if (!pathOrObj) {
+        var ident = (typeof(pathOrObj) === "string") ? pathOrObj : path(pathOrObj);
+        if (!ident) {
             throw new Error("Invalid object or storage path");
         }
-        return "rapidcontext/storage/" + pathOrObj.replace(/^\//, "");
+        return "rapidcontext/storage/" + ident.replace(/^\//, "");
     }
 
     /**
@@ -63,16 +61,15 @@
      *
      * @param {String/Object} pathOrObj the path or object to read
      *
-     * @return {Deferred} a `MochiKit.Async.Deferred` object that will
-     *         callback with the JSON data object
+     * @return {Promise} a `RapidContext.Async` promise that will
+     *         resolve with the object data
      *
      * @memberof RapidContext.Storage
      */
     function read(pathOrObj) {
-        var url = storageUrl(pathOrObj) + ".json";
-        var d = RapidContext.App.loadJSON(url, null, null);
-        d.addCallback(MochiKit.Base.itemgetter("data"));
-        return d;
+        var url = storageUrl(pathOrObj);
+        url += MochiKit.Text.endsWith("/", url) ? "index.json" : ".json";
+        return RapidContext.App.loadJSON(url, null, null);
     }
 
     /**
@@ -83,21 +80,19 @@
      * @param {String/Object} pathOrObj the path or object to write
      * @param {Object} [data] the object to write (if path was string)
      *
-     * @return {Deferred} a `MochiKit.Async.Deferred` object that will
-     *         callback with the XMLHttpRequest instance on success
+     * @return {Promise} a `RapidContext.Async` promise that will
+     *         resolve when the object has been written
      *
      * @memberof RapidContext.Storage
      */
     function write(pathOrObj, data) {
-        var opts;
+        var url = storageUrl(pathOrObj);
         if (typeof(pathOrObj) == "string" && data == null) {
-            opts = { method: "DELETE" };
-            return RapidContext.App.loadXHR(storageUrl(pathOrObj), null, opts);
+            return RapidContext.App.loadXHR(url, null, { method: "DELETE" });
         } else {
-            var json = JSON.stringify(data || pathOrObj);
             var headers = { "Content-Type": "application/json" };
-            opts = { method: "POST", sendContent: json, headers: headers };
-            return RapidContext.App.loadXHR(storageUrl(pathOrObj), null, opts);
+            var opts = { method: "POST", headers: headers };
+            return RapidContext.App.loadXHR(url, data || pathOrObj, opts);
         }
     }
 
@@ -110,16 +105,16 @@
      * @param {String/Object} pathOrObj the path or object to write
      * @param {Object} data the partial object properties
      *
-     * @return {Deferred} a `MochiKit.Async.Deferred` object that will
-     *         callback with the updated data object on success
+     * @return {Promise} a `RapidContext.Async` promise that will
+     *         resolve with the updated data object on success
      *
      * @memberof RapidContext.Storage
      */
     function update(pathOrObj, data) {
-        var json = JSON.stringify(data);
+        var url = storageUrl(pathOrObj);
         var headers = { "Content-Type": "application/json" };
-        var opts = { method: "PATCH", sendContent: json, headers: headers };
-        return RapidContext.App.loadJSON(storageUrl(pathOrObj), null, opts);
+        var opts = { method: "PATCH", headers: headers };
+        return RapidContext.App.loadJSON(url, data, opts);
     }
 
     // Create namespaces
