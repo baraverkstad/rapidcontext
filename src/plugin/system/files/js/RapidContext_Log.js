@@ -362,7 +362,7 @@
     function stringify(val) {
         var isObject = Object.prototype.toString.call(val) === "[object Object]";
         var isArray = val instanceof Array;
-        var isSerializable = typeof(val.toJSON) === "function";
+        var isSerializable = val && typeof(val.toJSON) === "function";
         if (val && (isObject || isArray || isSerializable)) {
             try {
                 return JSON.stringify(val, null, 2);
