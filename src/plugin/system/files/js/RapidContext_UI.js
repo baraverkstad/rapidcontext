@@ -29,30 +29,17 @@ if (typeof(RapidContext.UI) == "undefined") {
 /**
  * Displays an error message for the user. This operation may or may
  * not block the user interface, while the message is being
- * displayed (depending on implementation). This function can be
- * used as an errback function in deferred calls. All arguments to
- * this function will be concatenated and displayed.
+ * displayed (depending on implementation). All arguments will be
+ * concatenated and displayed.
  *
  * @param {String/Error} [args] the messages or errors to display
  */
 RapidContext.UI.showError = function () {
-    if (arguments.length == 1 &&
-        arguments[0] instanceof MochiKit.Async.CancelledError) {
-        // Ignore async cancellation errors
-        return null;
-    }
-    var msg = "";
-    for (var i = 0; i < arguments.length; i++) {
-        if (arguments[i] == null) {
-            msg += "null";
-        } else if (arguments[i] instanceof Error) {
-            msg += arguments[i].message;
-        } else {
-            msg += arguments[i].toString();
-        }
-    }
+    var msg = Array.prototype.slice(arguments).map(function (arg) {
+        var isError = arg instanceof Error && arg.message;
+        return isError ? arg.message : arg;
+    }).join(", ");
     alert("Error: " + msg);
-    return arguments[arguments.length - 1];
 };
 
 /**
