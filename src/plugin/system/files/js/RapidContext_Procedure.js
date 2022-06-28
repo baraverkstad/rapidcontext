@@ -29,11 +29,11 @@ if (typeof(RapidContext) == "undefined") {
  *
  * @class The procedure wrapper function. Used to provide a simplified way of
  *   calling a procedure and connecting results through signals (instead of
- *   using deferred callbacks).
+ *   using promise callbacks).
  *
  *   The actual calls are performed with normal function calls, but the results
  *   are asynchronous. When called, the procedure function returns a
- *   `MochiKit.Async.Deferred` object (as the normal API call), but the results
+ *   `RapidContext.Async` promise (as the normal API call), but the results
  *   will also be signalled through the `onsuccess` signal.
  *
  *   Differing from normal functions, a procedure function will also ensure
@@ -47,7 +47,7 @@ RapidContext.Procedure = function (procedure) {
     }
     self.procedure = procedure;
     self.args = null;
-    self._deferred = null;
+    self._promise = null;
     for (var k in RapidContext.Procedure.prototype) {
         if (!self[k]) {
             self[k] = RapidContext.Procedure.prototype[k];
@@ -67,7 +67,7 @@ RapidContext.Procedure = function (procedure) {
 RapidContext.Procedure.mapAll = function (obj) {
     var res = {};
     for (var k in obj) {
-        res[k] = new RapidContext.Procedure(obj[k]);
+        res[k] = RapidContext.Procedure(obj[k]);
     }
     return res;
 };
@@ -140,8 +140,8 @@ RapidContext.Procedure.mapAll = function (obj) {
  * Note that any previously running call will automatically be cancelled, since
  * only a single call can be processed at any time.
  *
- * @return {Deferred} a `MochiKit.Async.Deferred` object that will
- *         callback with the response data or error
+ * @return {Promise} a `RapidContext.Async` promise that will resolve with
+ *         the response data or error
  */
 RapidContext.Procedure.prototype.recall = function () {
     if (this.args === null) {
@@ -149,28 +149,27 @@ RapidContext.Procedure.prototype.recall = function () {
     }
     this.cancel();
     MochiKit.Signal.signal(this, "oncall");
-    this._deferred = RapidContext.App.callProc(this.procedure, this.args);
-    this._deferred.addBoth(this._callback.bind(this));
-    return this._deferred;
+    var cb = this._callback.bind(this);
+    this._promise = RapidContext.App.callProc(this.procedure, this.args).then(cb, cb);
+    return this._promise;
 };
 
 /**
- * The procedure deferred callback handler. Dispatches the appropriate signals
+ * The procedure promise callback handler. Dispatches the appropriate signals
  * depending on the result.
  *
  * @param {Object/Error} res the procedure result object
  */
 RapidContext.Procedure.prototype._callback = function (res) {
-    this._deferred = null;
+    this._promise = null;
     MochiKit.Signal.signal(this, "onresponse", res);
-    if (res instanceof MochiKit.Async.CancelledError) {
-        MochiKit.Signal.signal(this, "oncancel");
-    } else if (res instanceof Error) {
+    if (res instanceof Error) {
         MochiKit.Signal.signal(this, "onerror", res);
+        return Promise.reject(res);
     } else {
         MochiKit.Signal.signal(this, "onsuccess", res);
+        return res;
     }
-    return res;
 };
 
 /**
@@ -188,8 +187,8 @@ RapidContext.Procedure.prototype._callback = function (res) {
  * @param {Array} args the array of argument arrays
  * @param {Function} [transform] the optional result transform function
  *
- * @return {Deferred} a `MochiKit.Async.Deferred` object that will
- *         callback with the response data or error
+ * @return {Promise} a `RapidContext.Async` promise that will resolve with
+ *         the response data or error
  */
 RapidContext.Procedure.prototype.multicall = function (args, transform) {
     this.cancel();
@@ -201,21 +200,18 @@ RapidContext.Procedure.prototype.multicall = function (args, transform) {
 };
 
 /**
- * The multicall deferred callback handler. Dispatches the appropriate signals
+ * The multicall promise callback handler. Dispatches the appropriate signals
  * depending on the result.
  *
  * @param {Object/Error} res the procedure result object
  */
 RapidContext.Procedure.prototype._nextCall = function (res) {
-    this._deferred = null;
+    this._promise = null;
     if (typeof(res) != "undefined") {
         MochiKit.Signal.signal(this, "onresponse", res);
-        if (res instanceof MochiKit.Async.CancelledError) {
-            MochiKit.Signal.signal(this, "oncancel");
-            return res;
-        } else if (res instanceof Error) {
+        if (res instanceof Error) {
             MochiKit.Signal.signal(this, "onerror", res);
-            return res;
+            return Promise.reject(res);
         } else {
             if (this._mapTransform == null) {
                 this._mapRes.push(res);
@@ -233,9 +229,9 @@ RapidContext.Procedure.prototype._nextCall = function (res) {
     if (this._mapPos < this._mapArgs.length) {
         this.args = this._mapArgs[this._mapPos++];
         MochiKit.Signal.signal(this, "oncall");
-        this._deferred = RapidContext.App.callProc(this.procedure, this.args);
-        this._deferred.addBoth(this._nextCall.bind(this));
-        return this._deferred;
+        var cb = this._nextCall.bind(this);
+        this._promise = RapidContext.App.callProc(this.procedure, this.args).then(cb, cb);
+        return this._promise;
     } else {
         MochiKit.Signal.signal(this, "onsuccess", this._mapRes);
         return this._mapRes;
@@ -247,8 +243,9 @@ RapidContext.Procedure.prototype._nextCall = function (res) {
  * no procedure call was currently executing.
  */
 RapidContext.Procedure.prototype.cancel = function () {
-    if (this._deferred !== null) {
-        this._deferred.cancel();
+    if (this._promise !== null) {
+        this._promise.cancel();
+        this._promise = null;
         return true;
     } else {
         return false;
