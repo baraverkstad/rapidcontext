@@ -37,8 +37,8 @@ if (typeof(RapidContext.App) == "undefined") {
  *
  * @param {String/Object} [app] the app id or class name to start
  *
- * @return {Deferred} a `MochiKit.Async.Deferred` object that will
- *         callback when the initialization has completed
+ * @return {Promise} a promise that will resolve when initialization has
+ *         either completed or failed
  */
 RapidContext.App.init = function (app) {
     // Setup libraries
@@ -47,7 +47,7 @@ RapidContext.App.init = function (app) {
     RapidContext.Util.registerFunctionNames(RapidContext, "RapidContext");
     if (!RapidContext.Browser.isSupported()) {
         MochiKit.DOM.removeElementClass("unsupported-browser", "hidden");
-        return MochiKit.Async.fail(new Error("Unsupported browser"));
+        return Promise.reject(new Error("Unsupported browser"));
     }
 
     // Setup UI
@@ -58,28 +58,32 @@ RapidContext.App.init = function (app) {
     var overlay = new RapidContext.Widget.Overlay({ message: "Loading..." });
     MochiKit.DOM.replaceChildNodes(document.body, overlay);
 
-    // Load platform data
-    var list = [
+    // Load platform data (into cache)
+    var cachedData = [
         RapidContext.App.callProc("System.Status"),
         RapidContext.App.callProc("System.Session.Current"),
         RapidContext.App.callProc("System.App.List")
     ];
-    var d = MochiKit.Async.gatherResults(list);
 
     // Launch app
-    d.addBoth(function () {
-        RapidContext.Log.context(null);
-    });
-    d.addCallback(function () {
-        try {
-            return RapidContext.App.startApp(app || "start");
-        } catch (e) {
-            RapidContext.UI.showError(e);
-            return RapidContext.App.startApp("start");
-        }
-    });
-    d.addErrback(RapidContext.UI.showError);
-    return d;
+    return Promise.all(cachedData)
+        .then(function () {
+            if (app && app !== "start") {
+                return RapidContext.App.startApp(app || "start").catch(function (err) {
+                    RapidContext.UI.showError(err);
+                    return RapidContext.App.startApp("start");
+                });
+            } else {
+                return RapidContext.App.startApp("start");
+            }
+        })
+        .catch(function (err) {
+            RapidContext.UI.showError(err);
+            return Promise.reject(err);
+        })
+        .finally(function () {
+            RapidContext.Log.context(null);
+        });
 };
 
 /**
@@ -158,13 +162,6 @@ RapidContext.App.findApp = function (app) {
     return null;
 };
 
-RapidContext.App._cbAssign = function (obj, key) {
-    return function (data) {
-        obj[key] = data;
-        return data;
-    };
-};
-
 /**
  * Creates and starts an app instance. Normally apps are started in the default
  * app tab container or in a provided widget DOM node. By specifying a newly
@@ -180,8 +177,8 @@ RapidContext.App._cbAssign = function (obj, key) {
  *            window, defaults to create a new pane in the app tab
  *            container
  *
- * @return {Deferred} a `MochiKit.Async.Deferred` object that will
- *         callback with the app instance (or `null` if not available)
+ * @return {Promise} a `RapidContext.Async` promise that will
+ *         resolve when the app has launched
  *
  * @example
  * // Starts the help app in a new tab
@@ -191,67 +188,32 @@ RapidContext.App._cbAssign = function (obj, key) {
  * RapidContext.App.startApp('help', window.open());
  */
 RapidContext.App.startApp = function (app, container) {
-
-    // Setup variables and find app launcher
-    var launcher = RapidContext.App.findApp(app);
-    if (launcher == null) {
-        RapidContext.Log.error("No matching app launcher found", app);
-        throw new Error("No matching app launcher found: " + app);
-    }
-    var instance = null;
-    var instances = RapidContext.App._instances();
-    var startApp = RapidContext.App.findApp("start");
-    var d = MochiKit.Async.wait(0);
-    var ui = null;
-
-    // Initialize app UI container
-    launcher.instances = launcher.instances || [];
-    if ($.isWindow(container)) {
-        var href = "rapidcontext/app/" + launcher.id;
-        container.location.href = RapidContext.Util.resolveURI(href);
-        return d;
-    } else if (startApp && startApp.instances && startApp.instances.length) {
-        var paneOpts = { title: launcher.name, closeable: (launcher.launch != "once") };
-        ui = startApp.instances[0].initAppPane(container, paneOpts);
-    } else if (instances.length == 1 && launcher.id != "start") {
-        // Switch from single-app to multi-app mode
-        d = RapidContext.App.startApp("start");
-        d.addCallback(function (instance) {
-            return RapidContext.App.startApp(app, container);
-        });
-        return d;
-    } else {
-        ui = {
-            root: document.body,
-            overlay: document.body.childNodes[0]
-        };
-    }
-    MochiKit.Signal.connect(ui.root, "onclose", d, "cancel");
-
-    // Load app resources
-    var logCtx = "RapidContext.App.startApp(" + launcher.id + ")";
-    RapidContext.Log.context(logCtx);
-    if (launcher.creator == null) {
-        RapidContext.Log.info("Loading app/" + launcher.id + " resources", launcher);
-        launcher.resource = {};
-        for (var i = 0; i < launcher.resources.length; i++) {
-            var res = launcher.resources[i];
-            if (res.type == "code") {
-                d.addCallback(MochiKit.Base.partial(RapidContext.App.loadScript, res.url));
-            } else if (res.type == "style") {
-                d.addCallback(MochiKit.Base.partial(RapidContext.App.loadStyles, res.url));
-            } else if (res.type == "ui") {
-                d.addCallback(MochiKit.Base.partial(RapidContext.App.loadXML, res.url));
-                d.addCallback(RapidContext.App._cbAssign(launcher, "ui"));
-            } else if (res.type == "json" && res.id != null) {
-                d.addCallback(MochiKit.Base.partial(RapidContext.App.loadJSON, res.url, null, null));
-                d.addCallback(RapidContext.App._cbAssign(launcher.resource, res.id));
-            } else if (res.id != null) {
+    function loadResource(launcher, res) {
+        if (res.type == "code") {
+            return RapidContext.App.loadScript(res.url);
+        } else if (res.type == "style") {
+            return RapidContext.App.loadStyles(res.url);
+        } else if (res.type == "ui") {
+            return RapidContext.App.loadXML(res.url).then(function (node) {
+                launcher.ui = node;
+            });
+        } else if (res.type == "json" && res.id != null) {
+            return RapidContext.App.loadJSON(res.url).then(function (data) {
+                launcher.resource[res.id] = data;
+            });
+        } else {
+            if (res.id != null) {
                 launcher.resource[res.id] = res.url;
             }
+            return Promise.resolve(res);
         }
-        d.addCallback(function () {
-            launcher.creator = this[launcher.className] || window[launcher.className];
+    }
+    function load(launcher) {
+        RapidContext.Log.info("Loading app/" + launcher.id + " resources", launcher);
+        launcher.resource = {};
+        var promises = launcher.resources.map(loadResource.bind(null, launcher));
+        return Promise.all(promises).then(function () {
+            launcher.creator = window[launcher.className];
             if (launcher.creator == null) {
                 RapidContext.Log.error("App constructor " + launcher.className + " not defined", launcher);
                 throw new Error("App constructor " + launcher.className + " not defined");
@@ -259,64 +221,86 @@ RapidContext.App.startApp = function (app, container) {
             RapidContext.Util.registerFunctionNames(launcher.creator, launcher.className);
         });
     }
-
-    // Create app instance, build UI and start app
-    d.addCallback(function () {
-        RapidContext.Log.info("Starting app/" + launcher.id, launcher);
-        /* eslint new-cap: "off" */
-        instance = new launcher.creator();
-        launcher.instances.push(instance);
-        var props = MochiKit.Base.setdefault({ ui: ui }, launcher);
-        delete props.creator;
-        delete props.instances;
-        MochiKit.Base.setdefault(instance, props);
-        MochiKit.Signal.disconnectAll(ui.root, "onclose");
-        var halt = MochiKit.Base.partial(RapidContext.App.stopApp, instance);
-        MochiKit.Signal.connect(ui.root, "onclose", halt);
-        if (launcher.ui != null) {
-            var widgets = RapidContext.UI.buildUI(launcher.ui, ui);
-            MochiKit.DOM.appendChildNodes(ui.root, widgets);
-            RapidContext.Util.resizeElements(ui.root);
-        }
-        ui.overlay.hide();
-        ui.overlay.setAttrs({ message: "Working..." });
-        return RapidContext.App.callApp(instance, "start");
-    });
-
-    // Convert to start app UI (if previously in single-app mode)
-    if (launcher.id == "start" && instances.length == 1) {
-        var elems = MochiKit.Base.extend([], document.body.childNodes);
-        var opts = { title: instances[0].name, closeable: false, background: true };
-        d.addCallback(function () {
-            return RapidContext.App.callApp(instance, "initAppPane", null, opts);
-        });
-        d.addCallback(function (ui) {
-            ui.root.removeAll();
-            ui.root.addAll(elems);
-            RapidContext.Util.resizeElements(ui.root);
-        });
+    function launch(launcher, ui) {
+        RapidContext.Log.context("RapidContext.App.startApp(" + launcher.id + ")");
+        return RapidContext.Async.wait(0)
+            .then((launcher.creator == null) ? load.bind(null, launcher) : function () {})
+            .then(function () {
+                RapidContext.Log.info("Starting app/" + launcher.id, launcher);
+                /* eslint new-cap: "off" */
+                var instance = new launcher.creator();
+                launcher.instances.push(instance);
+                var props = MochiKit.Base.setdefault({ ui: ui }, launcher);
+                delete props.creator;
+                delete props.instances;
+                MochiKit.Base.setdefault(instance, props);
+                MochiKit.Signal.disconnectAll(ui.root, "onclose");
+                var halt = MochiKit.Base.partial(RapidContext.App.stopApp, instance);
+                MochiKit.Signal.connect(ui.root, "onclose", halt);
+                if (launcher.ui != null) {
+                    var widgets = RapidContext.UI.buildUI(launcher.ui, ui);
+                    MochiKit.DOM.appendChildNodes(ui.root, widgets);
+                    RapidContext.Util.resizeElements(ui.root);
+                }
+                ui.overlay.hide();
+                ui.overlay.setAttrs({ message: "Working..." });
+                return RapidContext.App.callApp(instance, "start");
+            })
+            .catch(function (err) {
+                RapidContext.Log.error("Failed to start app", err);
+                MochiKit.Signal.disconnectAll(ui.root, "onclose");
+                var label = MochiKit.DOM.STRONG(null, "Error: ");
+                MochiKit.DOM.appendChildNodes(ui.root, label, err.message);
+                ui.overlay.hide();
+                return Promise.reject(err);
+            })
+            .finally(function () {
+                RapidContext.Log.context(null);
+            });
     }
-
-    // Report errors and return app instance
-    d.addErrback(function (err) {
-        if (err instanceof MochiKit.Async.CancelledError) {
-            // Ignore cancellation errors
-        } else {
-            RapidContext.Log.error("Failed to start app", err);
-            MochiKit.Signal.disconnectAll(ui.root, "onclose");
-            var label = MochiKit.DOM.STRONG(null, "Error: ");
-            MochiKit.DOM.appendChildNodes(ui.root, label, err.message);
-            ui.overlay.hide();
+    function moveAppToStart(instance, elems) {
+        var start = RapidContext.App.findApp("start").instances[0];
+        var opts = { title: instance.name, closeable: false, background: true };
+        var ui = start.initAppPane(null, opts);
+        ui.root.removeAll();
+        ui.root.addAll(elems);
+        RapidContext.Util.resizeElements(ui.root);
+    }
+    return new RapidContext.Async(function (resolve, reject) {
+        var launcher = RapidContext.App.findApp(app);
+        if (launcher == null) {
+            var msg = "No matching app launcher found";
+            RapidContext.Log.error(msg, app);
+            throw new Error([msg, ": ", app].join(""));
         }
-        RapidContext.Log.context(null);
-        return err;
+        var instances = RapidContext.App._instances();
+        var start = RapidContext.App.findApp("start");
+        if ($.isWindow(container)) {
+            // Launch app into separate window/tab
+            var href = "rapidcontext/app/" + launcher.id;
+            container.location.href = RapidContext.Util.resolveURI(href);
+            resolve();
+        } else if (start && start.instances && start.instances.length > 0) {
+            // Launch app into start app tab
+            var paneOpts = { title: launcher.name, closeable: (launcher.launch != "once") };
+            var paneUi = start.instances[0].initAppPane(container, paneOpts);
+            resolve(launch(launcher, paneUi));
+        } else if (instances.length > 0) {
+            // Switch from single-app to multi-app mode
+            var elems = Array.prototype.slice.call(document.body.childNodes);
+            var moveApp = moveAppToStart.bind(null, instances[0], elems);
+            var overlay = new RapidContext.Widget.Overlay({ message: "Loading..." });
+            document.body.insertBefore(overlay, document.body.childNodes[0]);
+            var promise = launch(start, { root: document.body, overlay: overlay }).then(moveApp);
+            // FIXME: double calls to this ?
+            var recall = RapidContext.App.startApp.bind(null, launcher.id, container);
+            resolve((launcher.id === "start") ? promise : promise.then(recall));
+        } else {
+            // Launch single-app mode
+            var ui = { root: document.body, overlay: document.body.childNodes[0] };
+            resolve(launch(launcher, ui));
+        }
     });
-    d.addCallback(function () {
-        RapidContext.Log.context(null);
-        return instance;
-    });
-    RapidContext.App._addErrbackLogger(d, logCtx);
-    return d;
 };
 
 /**
@@ -325,34 +309,37 @@ RapidContext.App.startApp = function (app, container) {
  *
  * @param {String/Object} app the app id, instance, class name or launcher
  *
- * @return {Deferred} a `MochiKit.Async.Deferred` object that will
- *         callback when the app has been stopped
+ * @return {Promise} a `RapidContext.Async` promise that will
+ *         resolve when the app has been stopped
  */
 RapidContext.App.stopApp = function (app) {
-    var launcher = RapidContext.App.findApp(app);
-    if (!(launcher && launcher.instances && launcher.instances.length)) {
-        RapidContext.Log.error("No running app instance found", app);
-        throw new Error("No running app instance found");
-    }
-    RapidContext.Log.info("Stopping app " + launcher.name);
-    var pos = MochiKit.Base.findIdentical(launcher.instances, app);
-    if (pos < 0) {
-        app = launcher.instances.pop();
-    } else {
-        launcher.instances.splice(pos, 1);
-    }
-    app.stop();
-    if (app.ui.root != null) {
-        RapidContext.Widget.destroyWidget(app.ui.root);
-    }
-    for (var k in app.ui) {
-        delete app.ui[k];
-    }
-    for (var n in app) {
-        delete app[n];
-    }
-    MochiKit.Signal.disconnectAllTo(app);
-    return MochiKit.Async.wait(0);
+    return new RapidContext.Async(function (resolve, reject) {
+        var launcher = RapidContext.App.findApp(app);
+        if (!launcher || launcher.instances.length <= 0) {
+            var msg = "No running app instance found";
+            RapidContext.Log.error(msg, app);
+            throw new Error([msg, ": ", app].join(""));
+        }
+        RapidContext.Log.info("Stopping app " + launcher.name);
+        var pos = MochiKit.Base.findIdentical(launcher.instances, app);
+        if (pos < 0) {
+            app = launcher.instances.pop();
+        } else {
+            launcher.instances.splice(pos, 1);
+        }
+        app.stop();
+        if (app.ui.root != null) {
+            RapidContext.Widget.destroyWidget(app.ui.root);
+        }
+        for (var k in app.ui) {
+            delete app.ui[k];
+        }
+        for (var n in app) {
+            delete app[n];
+        }
+        MochiKit.Signal.disconnectAllTo(app);
+        resolve();
+    });
 };
 
 /**
@@ -365,52 +352,47 @@ RapidContext.App.stopApp = function (app) {
  * @param {String} method the app method name
  * @param {Mixed} [args] additional parameters sent to method
  *
- * @return {Deferred} a `MochiKit.Async.Deferred` object that will
- *         callback with the result of the call on success
+ * @return {Promise} a `RapidContext.Async` promise that will
+ *         resolve with the result of the call on success
  */
 RapidContext.App.callApp = function (app, method) {
-    var args = MochiKit.Base.extend([], arguments, 2);
-    var launcher = RapidContext.App.findApp(app);
-    var d;
-    if (launcher == null) {
-        RapidContext.Log.error("No matching app launcher found", app);
-        throw new Error("No matching app launcher found");
-    }
-    var logCtx = "RapidContext.App.callApp(" + launcher.id + "," + method + ")";
-    if (!(launcher.instances && launcher.instances.length)) {
-        d = RapidContext.App.startApp(app);
-    } else {
-        var pos = MochiKit.Base.findIdentical(launcher.instances, app);
-        var instance = (pos >= 0) ? app : launcher.instances[launcher.instances.length - 1];
-        d = MochiKit.Async.wait(0, instance);
-        RapidContext.App._addErrbackLogger(d, logCtx);
-    }
-    d.addCallback(function (instance) {
-        RapidContext.Log.context(logCtx);
-        var child = instance.ui.root;
-        var parent = MochiKit.DOM.getFirstParentByTagAndClassName(child, null, "widget");
-        if (parent != null && typeof(parent.selectChild) == "function") {
-            parent.selectChild(child);
+    return new RapidContext.Async(function (resolve, reject) {
+        var args = Array.prototype.slice.call(arguments, 2);
+        var launcher = RapidContext.App.findApp(app);
+        if (launcher == null) {
+            var msg = "No matching app launcher found";
+            RapidContext.Log.error(msg, app);
+            throw new Error([msg, ": ", app].join(""));
         }
-        var methodName = launcher.className + "." + method;
-        if (instance == null || instance[method] == null) {
-            var msg = "No app method " + methodName + " found";
-            RapidContext.Log.error(msg);
+        var exists = launcher.instances.length > 0;
+        var promise = exists ? RapidContext.Async.wait(0) : RapidContext.App.startApp(app);
+        return promise.then(function () {
+            RapidContext.Log.context("RapidContext.App.callApp(" + launcher.id + "," + method + ")");
+            var pos = MochiKit.Base.findIdentical(launcher.instances, app);
+            var instance = (pos >= 0) ? app : launcher.instances[launcher.instances.length - 1];
+            var child = instance.ui.root;
+            var parent = MochiKit.DOM.getFirstParentByTagAndClassName(child, null, "widget");
+            if (parent != null && typeof(parent.selectChild) == "function") {
+                parent.selectChild(child);
+            }
+            var methodName = launcher.className + "." + method;
+            if (instance[method] == null) {
+                var msg = "No app method " + methodName + " found";
+                RapidContext.Log.error(msg);
+                throw new Error(msg);
+            }
+            RapidContext.Log.log("Calling app method " + methodName, args);
+            try {
+                return instance[method].apply(instance, args);
+            } catch (e) {
+                var reason = "Caught error in " + methodName;
+                RapidContext.Log.error(reason, e);
+                throw new Error(reason + ": " + e.toString(), { cause: e });
+            }
+        }).finally(function () {
             RapidContext.Log.context(null);
-            throw new Error(msg);
-        }
-        RapidContext.Log.log("Calling app method " + methodName, args);
-        try {
-            return instance[method].apply(instance, args);
-        } catch (e) {
-            var reason = "Caught error in " + methodName;
-            RapidContext.Log.error(reason, e);
-            throw new Error(reason + ": " + e.toString(), { cause: e });
-        } finally {
-            RapidContext.Log.context(null);
-        }
+        });
     });
-    return d;
 };
 
 /**
@@ -460,63 +442,64 @@ RapidContext.App.callProc = function (name, args) {
 };
 
 /**
- * Performs an asynchronous login. This function returns a deferred object
- * that will produce either a `callback` or an `errback` depending on the
- * success of the login attempt. If the current session is already bound to a
+ * Performs an asynchronous login. If the current session is already bound to a
  * user, that session will be terminated and a new one will be created. If an
  * authentication token is specified, the login and password fields are not
  * used (can be null).
  *
  * @param {String} login the user login name or email address
- * @param {String} password the password to autheticate the user
- * @param {String} [token] the authentication token to indentify user/password
+ * @param {String} password the password to authenticate the user
+ * @param {String} [token] the authentication token to identify user/password
  *
- * @return {Deferred} a `MochiKit.Async.Deferred` object that will
- *         callback with the response data on success
+ * @return {Promise} a `RapidContext.Async` promise that resolves when
+ *         the authentication has either succeeded or failed
  */
 RapidContext.App.login = function (login, password, token) {
-    var d = MochiKit.Async.wait(0, false);
-    var user = RapidContext.App.user();
-    if (user && user.id) {
-        d.addCallback(RapidContext.App.logout);
-    }
-    if (token) {
-        d.addCallback(function () {
-            var args = [token];
-            return RapidContext.App.callProc("System.Session.AuthenticateToken", args);
-        });
-    } else {
-        if (/@/.test(login)) {
-            d.addCallback(function () {
-                return RapidContext.App.callProc("System.User.Search", [login]);
-            });
-            d.addCallback(function (user) {
-                if (user && user.id) {
-                    login = user.id;
-                    return login;
-                } else {
-                    throw new Error("no user with that email address");
-                }
-            });
-        }
-        d.addCallback(function () {
-            return RapidContext.App.callProc("System.Session.Current");
-        });
-        d.addCallback(function (session) {
-            var realm = RapidContext.App.status().realm;
-            var hash = CryptoJS.MD5(login + ":" + realm + ":" + password);
-            hash = CryptoJS.MD5(hash.toString() + ":" + session.nonce).toString();
-            var args = [login, session.nonce, hash];
-            return RapidContext.App.callProc("System.Session.Authenticate", args);
+    function searchLogin() {
+        var proc = "System.User.Search";
+        return RapidContext.App.callProc(proc, [login]).then(function (user) {
+            if (user && user.id) {
+                return login = user.id;
+            } else {
+                throw new Error("no user with that email address");
+            }
         });
     }
-    d.addCallback(function (res) {
+    function getNonce() {
+        var proc = "System.Session.Current";
+        return RapidContext.App.callProc(proc).then(function (session) {
+            return session.nonce;
+        });
+    }
+    function passwordAuth(nonce) {
+        var realm = RapidContext.App.status().realm;
+        var hash = CryptoJS.MD5(login + ":" + realm + ":" + password);
+        hash = CryptoJS.MD5(hash.toString() + ":" + nonce).toString();
+        var args = [login, nonce, hash];
+        return RapidContext.App.callProc("System.Session.Authenticate", args);
+    }
+    function tokenAuth() {
+        return RapidContext.App.callProc("System.Session.AuthenticateToken", [token]);
+    }
+    function verifyAuth(res) {
         if (!res.success || res.error) {
-            RapidContext.Log.info("login failed", login, res.error);
+            console.info("login failed", login, res.error);
             throw new Error(res.error || "authentication failed");
         }
-    });
-    return d;
+    }
+    var promise = RapidContext.Async.wait(0);
+    var user = RapidContext.App.user();
+    if (user && user.id) {
+        promise = promise.then(RapidContext.App.logout);
+    }
+    if (token) {
+        return promise.then(tokenAuth).then(verifyAuth);
+    } else {
+        if (/@/.test(login)) {
+            promise = promise.then(searchLogin);
+        }
+        return promise.then(getNonce).then(passwordAuth).then(verifyAuth);
+    }
 };
 
 /**
@@ -526,16 +509,17 @@ RapidContext.App.login = function (login, password, token) {
  *
  * @param {Boolean} [reload] the reload browser flag, defaults to true
  *
- * @return {Deferred} a `MochiKit.Async.Deferred` object that will
- *         callback with the response data on success
+ * @return {Promise} a `RapidContext.Async` promise that will
+ *         resolve when user is logged out
  */
 RapidContext.App.logout = function (reload) {
-    var d = RapidContext.App.callProc("System.Session.Terminate", [null]);
-    if (typeof(reload) === "undefined" || reload) {
-        d.addBoth(function () {
+    var promise = RapidContext.App.callProc("System.Session.Terminate", [null]);
+    if (reload !== false) {
+        promise.then(function () {
             window.location.reload();
         });
     }
+    return promise;
 };
 
 /**
@@ -767,36 +751,6 @@ RapidContext.App._rebaseUrl = function (url) {
 RapidContext.App._nonCachedUrl = function (url) {
     var timestamp = new Date().getTime() % 100000;
     return url + ((url.indexOf("?") < 0) ? "?" : "&") + timestamp;
-};
-
-/**
- * Adds an error logger to a `MochiKit.Async.Deferred` object. The
- * logger will actually be added in the next JavaScript event loop,
- * ensuring that any other callbacks or handlers have already been
- * added to the deferred object. This is useful for catching
- * programmer errors and similar that cause exceptions inside
- * callback functions.
- *
- * @param {Deferred} d the `MochiKit.Async.Deferred` object to modify
- * @param {String} logCtx the log context to identify the source
- */
-RapidContext.App._addErrbackLogger = function (d, logCtx) {
-    function logger(err) {
-        if (!d.chained && !(err instanceof MochiKit.Async.CancelledError)) {
-            RapidContext.Log.warn(logCtx + " deferred: unhandled error", err);
-        }
-        return err;
-    }
-    function adder() {
-        var pair = d.chain && d.chain[d.chain.length - 1];
-        var errback = pair && pair[1];
-        if (!d.chained && !errback) {
-            var msg = logCtx + " deferred: no error handler, chain length:";
-            RapidContext.Log.warn(msg, d.chain.length);
-            d.addErrback(logger);
-        }
-    }
-    setTimeout(adder);
 };
 
 /**
