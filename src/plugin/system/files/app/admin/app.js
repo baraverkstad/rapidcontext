@@ -88,11 +88,8 @@ AdminApp.prototype.start = function () {
 
     // Plug-in view
     MochiKit.Signal.connectOnce(this.ui.pluginTab, "onenter", this, "loadPlugins");
-    MochiKit.Signal.connect(this.ui.pluginTab, "onenter", this, "_pluginUploadInit");
-    MochiKit.Signal.connect(this.ui.pluginFile, "onselect", this, "_pluginUploadStart");
-    MochiKit.Signal.connect(this.ui.pluginInstall, "onclick", this, "_pluginInstall");
+    MochiKit.Signal.connect(this.ui.pluginFile, "onchange", this, "_pluginUpload");
     MochiKit.Signal.connect(this.ui.pluginReset, "onclick", this, "resetServer");
-    MochiKit.Signal.connect(this.ui.pluginFileDelete, "onclick", this, "_pluginUploadInit");
     RapidContext.UI.connectProc(this.proc.plugInList, this.ui.pluginLoading, this.ui.pluginReload);
     MochiKit.Signal.connect(this.proc.plugInList, "onsuccess", this.ui.pluginTable, "setData");
     MochiKit.Signal.connect(this.proc.plugInList, "onsuccess", this, "_showPlugin");
@@ -612,88 +609,51 @@ AdminApp.prototype._togglePlugin = function () {
 };
 
 /**
- * Initializes the plug-in file upload and installation interface.
+ * Handles the plug-in file upload and installation.
  */
-AdminApp.prototype._pluginUploadInit = function () {
-    this.ui.pluginFile.show();
-    this.ui.pluginProgress.hide();
-    this.ui.pluginFileInfo.hide();
-    this.ui.pluginInstall.disable();
-};
-
-/**
- * Handles the plug-in file upload init.
- */
-AdminApp.prototype._pluginUploadStart = function () {
-    this.ui.pluginFile.hide();
-    this.ui.pluginProgress.show();
-    this.ui.pluginProgress.setAttrs({ min: 0, max: 100, ratio: 0 });
-    this._pluginUploadProgress();
-};
-
-/**
- * Shows the progress for the plug-in file upload.
- *
- * @param {Object} [res] the optional session data object
- */
-AdminApp.prototype._pluginUploadProgress = function (res) {
-    var selfCallback = this._pluginUploadProgress.bind(this);
-    function pluginLoadStatus() {
-        return RapidContext.App.callProc("System.Session.Current")
-            .then(selfCallback, selfCallback);
-    }
-    if (res && res.files && res.files.plugin) {
-        this._pluginUploadInfo(res.files.plugin);
-    } else {
-        RapidContext.Async.wait(0).then(pluginLoadStatus);
-        if (res && res.files && res.files.progress) {
-            this.ui.pluginProgress.setAttrs({ ratio: res.files.progress });
+AdminApp.prototype._pluginUpload = function () {
+    function initProgress(widget, size) {
+        var text;
+        if (size > 1000000) {
+            text = MochiKit.Format.roundToFixed(size / 1048576, 1) + " MiB";
+        } else if (size > 2000) {
+            text = MochiKit.Format.roundToFixed(size / 1024, 1) + " KiB";
+        } else {
+            text = size + " bytes";
         }
+        widget.setAttrs({ min: 0, max: size, value: 0, text: text });
     }
-};
-
-/**
- * Shows the information for an uploaded plug-in file.
- *
- * @param {Object} file the session file data object
- */
-AdminApp.prototype._pluginUploadInfo = function (file) {
-    this.ui.pluginFile.hide();
-    this.ui.pluginProgress.hide();
-    this.ui.pluginFileInfo.show();
-    var value = parseInt(file.size);
-    if (value > 1000000) {
-        file.approxSize = MochiKit.Format.roundToFixed(value / 1048576, 1) + " MiB";
-    } else if (value > 2000) {
-        file.approxSize = MochiKit.Format.roundToFixed(value / 1024, 1) + " KiB";
-    } else {
-        file.approxSize = file.size + " bytes";
+    function updateProgress(evt) {
+        this.ui.pluginProgress.setAttrs({ value: evt.loaded });
     }
-    this.ui.pluginUploadForm.update(file);
-    this.ui.pluginInstall.enable();
-};
-
-/**
- * Performs a plug-in installation.
- */
-AdminApp.prototype._pluginInstall = function () {
-    var self = this;
-    var id;
-    this.ui.overlay.setAttrs({ message: "Installing..." });
-    this.ui.overlay.show();
-    RapidContext.App.callProc("System.PlugIn.Install", ["plugin"])
+    function install() {
+        return RapidContext.App.callProc("System.PlugIn.Install", ["plugin"]);
+    }
+    function select() {
+        this.ui.pluginTable.setSelectedIds(pluginId);
+        this._showPlugin();
+    }
+    function done() {
+        $(this.ui.pluginInstall).removeClass("widgetHidden");
+        this.ui.pluginReset.show();
+        this.ui.pluginProgress.hide();
+    }
+    $(this.ui.pluginInstall).addClass("widgetHidden");
+    this.ui.pluginReset.hide();
+    this.ui.pluginProgress.show();
+    var pluginId;
+    var file = this.ui.pluginFile.files[0];
+    initProgress(this.ui.pluginProgress, file.size);
+    RapidContext.App.uploadFile("plugin", file, updateProgress.bind(this))
+        .then(install)
         .then(function (res) {
-            id = res;
+            pluginId = res;
         })
         .then(this.resetServer.bind(this))
         .then(this.loadPlugins.bind(this))
-        .then(function () {
-            self.ui.pluginTable.setSelectedIds(id);
-            self._pluginUploadInit();
-            self._showPlugin();
-        })
+        .then(select.bind(this))
         .catch(RapidContext.UI.showError)
-        .finally(this.ui.overlay.hide.bind(this.ui.overlay));
+        .finally(done.bind(this));
 };
 
 /**

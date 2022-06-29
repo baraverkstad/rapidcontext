@@ -210,30 +210,15 @@
     <Pane id="pluginTab" pageTitle="Plug-Ins">
       <Form id="pluginUploadForm" w="100%" style="margin-bottom: 10px; border-bottom: solid 1px #DDDDDD; padding-bottom: 10px;">
         <h3>Software Install &amp; Update:</h3>
-        <table>
-          <tbody>
-            <tr>
-              <th class="label" style="padding-right: 4px; padding-top: 4px;">Plug-in File:</th>
-              <td>
-                <FileStreamer id="pluginFile" url="rapidcontext/upload/plugin" />
-                <ProgressBar id="pluginProgress" style="width: 500px" />
-                <Pane id="pluginFileInfo" style="padding-left: 4px;">
-                  <strong><Field name="name" /></strong>,
-                  <Field name="approxSize" />,
-                  <Field name="mimeType" />
-                  <Icon id="pluginFileDelete" ref="REMOVE" style="margin-left: 3px;" />
-                </Pane>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <Button id="pluginInstall" style="margin-top: 4px;">
+        <label id="pluginInstall" class="widgetButton">
           <Icon class="fa fa-puzzle-piece"/>
-          Install / Update Plug-In
-        </Button>
-        <Button id="pluginReset" icon="RELOAD" style="margin-top: 4px; margin-left: 10px;">
+          Install Plug-in
+          <input id="pluginFile" type="file" accept=".plugin,.zip" class="hidden"/>
+        </label>
+        <Button id="pluginReset" icon="RELOAD" style="margin-left: 10px;">
           Reset Server
         </Button>
+        <ProgressBar id="pluginProgress" hidden="true" novalue="true"/>
       </Form>
       <div w="45%" h="100%-100" style="float: left; padding-right: 20px;">
         <h3>

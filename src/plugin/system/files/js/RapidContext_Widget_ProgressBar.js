@@ -171,11 +171,9 @@ RapidContext.Widget.ProgressBar.prototype._remainingTime = function () {
         } else if (res.hours >= 1) {
             res.text = res.hours + ":" + pad("" + res.minutes, 2, "0") + " hours";
         } else if (res.minutes >= 1) {
-            res.text = res.minutes + ":" + pad("" + res.seconds, 2, "0") + " minutes";
-        } else if (res.seconds >= 1) {
-            res.text = res.seconds + " seconds";
+            res.text = res.minutes + ":" + pad("" + res.seconds, 2, "0") + " min";
         } else {
-            res.text = res.millis + " milliseconds";
+            res.text = res.seconds + " sec";
         }
         return res;
     }
@@ -208,5 +206,5 @@ RapidContext.Widget.ProgressBar.prototype._render = function () {
     if (this.timeRemaining && percent < 100) {
         info.push(this.timeRemaining + " remaining");
     }
-    MochiKit.DOM.replaceChildNodes(this.lastChild, info.join(" \u2014 "));
+    MochiKit.DOM.replaceChildNodes(this.lastChild, info.join(" \u2022 "));
 };

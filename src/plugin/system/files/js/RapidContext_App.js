@@ -719,6 +719,27 @@ RapidContext.App.downloadFile = function (url, data) {
 };
 
 /**
+ * Uploads a file to the server. The upload is handled by an
+ * asynchronous HTTP request.
+ *
+ * @param {String} id the upload identifier to use
+ * @param {File} file the file object to upload
+ * @param {Function} [onProgress] the progress event handler
+ */
+RapidContext.App.uploadFile = function (id, file, onProgress) {
+    var formData = new FormData();
+    formData.append("file", file);
+    var opts = {
+        method: "POST",
+        body: formData,
+        timeout: 300000,
+        progress: onProgress,
+        log: id + " upload"
+    };
+    return RapidContext.Async.xhr("rapidcontext/upload/" + id, opts);
+};
+
+/**
  * Returns a new relative URL adapted for a non-standard base path.
  *
  * @param {String} url the URL to modify
