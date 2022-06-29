@@ -315,12 +315,7 @@ StartApp.prototype.initAppPane = function (pane, opts) {
  * @param {Widget} [container] the optional container widget
  */
 StartApp.prototype.startApp = function (app, container) {
-    try {
-        var d = RapidContext.App.startApp(app, container);
-        d.addErrback(RapidContext.UI.showError);
-    } catch (e) {
-        RapidContext.UI.showError(e);
-    }
+    RapidContext.App.startApp(app, container).catch(RapidContext.UI.showError);
 };
 
 /**
@@ -402,8 +397,8 @@ StartApp.prototype._loginAuth = function () {
     if (this.ui.loginForm.validate()) {
         this.ui.loginAuth.setAttrs({ disabled: true, icon: "LOADING" });
         var data = this.ui.loginForm.valueMap();
-        var d = RapidContext.App.login($.trim(data.user), data.password);
-        d.addBoth(MochiKit.Base.bind("_loginAuthCallback", this));
+        var cb = this._loginAuthCallback.bind(this);
+        RapidContext.App.login($.trim(data.user), data.password).then(cb, cb);
     }
     this.ui.loginDialog.resizeToContent();
 };
@@ -459,30 +454,24 @@ StartApp.prototype._tourStop = function () {
  * Changes the active page in the guided tour.
  */
 StartApp.prototype._tourChange = function () {
-    var d = MochiKit.Async.wait(0);
+    var promise = RapidContext.Async.wait(0);
     switch (this.ui.tourWizard.activePageIndex()) {
     case 1:
-        d.addBoth(function () {
-            return RapidContext.App.callApp("StartApp", "_tourLocateStart");
-        });
+        promise = promise.then(this._tourLocateStart.bind(this));
         break;
     case 2:
-        d.addBoth(function () {
-            return RapidContext.App.callApp("help", "loadTopics");
-        });
-        d.addBoth(function () {
-            return MochiKit.Async.wait(1);
-        });
-        d.addBoth(MochiKit.Base.bind("_tourLocateHelp", this));
+        promise = RapidContext.App.callApp("help", "loadTopics")
+            .then(RapidContext.Async.wait.bind(null, 1))
+            .then(this._tourLocateHelp.bind(this));
         break;
     case 3:
-        d.addBoth(MochiKit.Base.bind("_tourLocateTabs", this));
+        promise = promise.then(this._tourLocateTabs.bind(this));
         break;
     case 4:
-        d.addBoth(MochiKit.Base.bind("_tourLocateUser", this));
+        promise = promise.then(this._tourLocateUser.bind(this));
         break;
     }
-    d.addErrback(RapidContext.UI.showError);
+    return promise.catch(RapidContext.UI.showError);
 };
 
 /**
