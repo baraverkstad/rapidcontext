@@ -24,7 +24,6 @@ AdminApp.prototype.start = function () {
     this.proc = RapidContext.Procedure.mapAll({
         typeList: "System.Type.List",
         cxnList: "System.Connection.List",
-        cxnValidate: "System.Connection.Validate",
         appList: "System.App.List",
         plugInList: "System.PlugIn.List",
         procList: "System.Procedure.List",
@@ -227,39 +226,18 @@ AdminApp.prototype._updateTypeCache = function (res) {
  * the validation starts.
  */
 AdminApp.prototype._validateConnections = function () {
+    function validate(con) {
+        return RapidContext.App.callProc("System.Connection.Validate", [con.id]);
+    }
     this.ui.overlay.setAttrs({ message: "Validating..." });
     this.ui.overlay.show();
-    var d = this.proc.cxnList();
-    d.addBoth(MochiKit.Base.bind("_validateCallback", this));
-};
-
-/**
- * Connection validation callback handler. This method will iterate
- * over all the connections in the connection table one by one. This
- * callback method will be called between each validation.
- *
- * @return {Deferred} a MochiKit.Async.Deferred that will callback
- *         when the validation is complete
- */
-AdminApp.prototype._validateCallback = function () {
-    if (this._cxnIds == null) {
-        var data = this.ui.cxnTable.getData();
-        this._cxnIds = MochiKit.Base.map(MochiKit.Base.itemgetter("id"), data);
-        this._cxnCount = this._cxnIds.length;
-    }
-    if (this._cxnIds.length == 0) {
-        this._cxnIds = null;
-        this.ui.overlay.hide();
-        return this.proc.cxnList();
-    } else {
-        var id = this._cxnIds.shift();
-        var pos = this._cxnCount - this._cxnIds.length;
-        var msg = "Validating " + pos + " of " + this._cxnCount + "...";
-        this.ui.overlay.setAttrs({ message: msg });
-        var d = this.proc.cxnValidate(id);
-        d.addBoth(MochiKit.Base.method(this, "_validateCallback"));
-        return d;
-    }
+    this.proc.cxnList()
+        .then(function (data) {
+            return Promise.allSettled(data.map(validate));
+        })
+        .catch(function () {})
+        .then(this.proc.cxnList.recall.bind(this.proc.cxnList))
+        .finally(this.ui.overlay.hide.bind(this.ui.overlay));
 };
 
 /**
@@ -272,15 +250,10 @@ AdminApp.prototype._validateCallback = function () {
  */
 AdminApp.prototype.showConnection = function (id) {
     this.ui.tabContainer.selectChild(this.ui.cxnTab);
-    var cxnList = this.proc.cxnList;
-    var cxnTable = this.ui.cxnTable;
-    var d = this.proc.cxnValidate(id);
-    d.addBoth(function () {
-        return cxnList();
-    });
-    d.addCallback(function () {
-        cxnTable.setSelectedIds(id);
-    });
+    RapidContext.App.callProc("System.Connection.Validate", [id])
+        .catch(function () {})
+        .then(this.proc.cxnList.recall.bind(this.proc.cxnList))
+        .then(this.ui.cxnTable.setSelectedIds.bind(this.ui.cxnTable, id));
 };
 
 /**
@@ -353,9 +326,9 @@ AdminApp.prototype._removeConnection = function () {
     var msg = "Delete the connection '" + data.id + "'?";
     if (confirm(msg)) {
         var path = "connection/" + data.id;
-        var d = AdminApp.storageDelete(path);
-        d.addErrback(RapidContext.UI.showError);
-        d.addCallback(MochiKit.Base.method(this.proc.cxnList, "recall"));
+        RapidContext.Storage.write(path, null)
+            .then(this.proc.cxnList.recall.bind(this.proc.cxnList))
+            .catch(RapidContext.UI.showError);
     }
 };
 
@@ -375,26 +348,25 @@ AdminApp.prototype._initConnectionEdit = function (data) {
     this.ui.cxnEditForm.reset();
     this.ui.cxnEditForm.update(data);
     var self = this;
-    var d = this.proc.typeList();
-    d.addCallback(function () {
-        var select = self.ui.cxnEditType;
-        while (select.firstChild.nextSibling) {
-            RapidContext.Widget.destroyWidget(select.firstChild.nextSibling);
-        }
-        for (var k in self._types) {
-            if (/connection\//.test(k)) {
-                var attrs = { value: k };
-                if (data.type === k) {
-                    attrs.selected = true;
-                }
-                select.appendChild(MochiKit.DOM.OPTION(attrs, k));
+    this.proc.typeList()
+        .then(function () {
+            var select = self.ui.cxnEditType;
+            while (select.firstChild.nextSibling) {
+                RapidContext.Widget.destroyWidget(select.firstChild.nextSibling);
             }
-        }
-    });
-    d.addCallback(MochiKit.Base.bind("_updateConnectionEdit", this));
-    d.addCallback(MochiKit.Base.bind("show", this.ui.cxnEditDialog));
-    d.addErrback(RapidContext.UI.showError);
-    return d;
+            for (var k in self._types) {
+                if (/connection\//.test(k)) {
+                    var attrs = { value: k };
+                    if (data.type === k) {
+                        attrs.selected = true;
+                    }
+                    select.appendChild(MochiKit.DOM.OPTION(attrs, k));
+                }
+            }
+        })
+        .then(this._updateConnectionEdit.bind(this))
+        .then(this.ui.cxnEditDialog.show.bind(this.ui.cxnEditDialog))
+        .catch(RapidContext.UI.showError);
 };
 
 /**
@@ -513,14 +485,18 @@ AdminApp.prototype._storeConnection = function () {
                 delete data[name];
             }
         }
-        var d = AdminApp.storageWrite(path, data);
-        if (prevData.id && prevData.id != data.id) {
-            var oldPath = "connection/" + prevData.id;
-            d.addCallback(MochiKit.Base.partial(AdminApp.storageDelete, oldPath));
-        }
-        d.addErrback(RapidContext.UI.showError);
-        d.addCallback(MochiKit.Base.method(this.ui.cxnEditDialog, "hide"));
-        d.addCallback(MochiKit.Base.method(this, "showConnection", data.id));
+        RapidContext.Storage.write(path, data)
+            .then(function () {
+                if (prevData.id && prevData.id != data.id) {
+                    var oldPath = "connection/" + prevData.id;
+                    return RapidContext.Storage.write(oldPath, null);
+                } else {
+                    return true;
+                }
+            })
+            .then(this.ui.cxnEditDialog.hide.bind(this.ui.cxnEditDialog))
+            .then(this.showConnection.bind(this, data.id))
+            .catch(RapidContext.UI.showError);
     }
 };
 
@@ -621,20 +597,18 @@ AdminApp.prototype._showPlugin = function () {
  * Loads or unloads the currently selected plug-in.
  */
 AdminApp.prototype._togglePlugin = function () {
+    function showRestartMesssage() {
+        alert("Note: Unloading Java resources requires a full server restart.");
+    }
     this.ui.pluginReload.hide();
     this.ui.pluginLoading.show();
     var data = this.ui.pluginTable.getSelectedData();
     var proc = data.loaded ? "System.PlugIn.Unload" : "System.PlugIn.Load";
-    var d = RapidContext.App.callProc(proc, [data.id]);
-    d.addErrback(RapidContext.UI.showError);
-    if (data.loaded && data.className) {
-        d.addCallback(function () {
-            alert("Note: Unloading Java resources requires a full server restart.");
-        });
-    }
-    // TODO: This should be handled internally on the server...
-    d.addBoth(MochiKit.Base.bind("resetServer", this));
-    d.addBoth(MochiKit.Base.bind("loadPlugins", this));
+    RapidContext.App.callProc(proc, [data.id])
+        .catch(RapidContext.UI.showError)
+        .then((data.loaded && data.className) ? showRestartMesssage : function () {})
+        .then(this.resetServer.bind(this))
+        .then(this.loadPlugins.bind(this));
 };
 
 /**
@@ -663,15 +637,15 @@ AdminApp.prototype._pluginUploadStart = function () {
  * @param {Object} [res] the optional session data object
  */
 AdminApp.prototype._pluginUploadProgress = function (res) {
-    var selfCallback = MochiKit.Base.bind("_pluginUploadProgress", this);
+    var selfCallback = this._pluginUploadProgress.bind(this);
     function pluginLoadStatus() {
-        var d = RapidContext.App.callProc("System.Session.Current");
-        d.addBoth(selfCallback);
+        return RapidContext.App.callProc("System.Session.Current")
+            .then(selfCallback, selfCallback);
     }
     if (res && res.files && res.files.plugin) {
         this._pluginUploadInfo(res.files.plugin);
     } else {
-        MochiKit.Async.callLater(1, pluginLoadStatus);
+        RapidContext.Async.wait(0).then(pluginLoadStatus);
         if (res && res.files && res.files.progress) {
             this.ui.pluginProgress.setAttrs({ ratio: res.files.progress });
         }
@@ -707,36 +681,34 @@ AdminApp.prototype._pluginInstall = function () {
     var id;
     this.ui.overlay.setAttrs({ message: "Installing..." });
     this.ui.overlay.show();
-    var d = RapidContext.App.callProc("System.PlugIn.Install", ["plugin"]);
-    d.addCallback(function (res) {
-        id = res;
-    });
-    // TODO: This should be handled internally on the server...
-    d.addCallback(MochiKit.Base.bind("resetServer", this));
-    d.addCallback(MochiKit.Base.bind("loadPlugins", this));
-    d.addCallback(function () {
-        self.ui.pluginTable.setSelectedIds(id);
-        self._pluginUploadInit();
-        self._showPlugin();
-    });
-    d.addErrback(RapidContext.UI.showError);
-    d.addBoth(function () {
-        self.ui.overlay.hide();
-    });
+    RapidContext.App.callProc("System.PlugIn.Install", ["plugin"])
+        .then(function (res) {
+            id = res;
+        })
+        .then(this.resetServer.bind(this))
+        .then(this.loadPlugins.bind(this))
+        .then(function () {
+            self.ui.pluginTable.setSelectedIds(id);
+            self._pluginUploadInit();
+            self._showPlugin();
+        })
+        .catch(RapidContext.UI.showError)
+        .finally(this.ui.overlay.hide.bind(this.ui.overlay));
 };
 
 /**
  * Sends a server reset (restart) request.
  */
 AdminApp.prototype.resetServer = function (e) {
-    var d = RapidContext.App.callProc("System.Reset");
-    if (e instanceof MochiKit.Signal.Event) {
-        d.addCallback(function (data) {
-            alert("Server reset complete");
-        });
-        d.addErrback(RapidContext.UI.showError);
+    function showMessage() {
+        alert("Server reset complete");
     }
-    return d;
+    var promise = RapidContext.App.callProc("System.Reset");
+    if (e instanceof MochiKit.Signal.Event) {
+        return promise.then(showMessage).catch(RapidContext.UI.showError);
+    } else {
+        return promise;
+    }
 };
 
 /**
@@ -796,8 +768,8 @@ AdminApp.prototype._showProcedure = function () {
     RapidContext.Util.resizeElements(this.ui.procExecResult);
     if (node != null && node.data != null) {
         var args = [node.data];
-        var d = RapidContext.App.callProc("System.Procedure.Read", args);
-        d.addBoth(MochiKit.Base.bind("_callbackShowProcedure", this));
+        var cb = this._callbackShowProcedure.bind(this);
+        RapidContext.App.callProc("System.Procedure.Read", args).then(cb, cb);
         this.ui.procLoading.show();
     }
 };
@@ -932,8 +904,7 @@ AdminApp.prototype._addProcedure = function () {
         bindings: {},
         defaults: {}
     };
-    var d = this._initProcEdit(data);
-    d.addCallback(MochiKit.Base.bind("_updateProcEdit", this));
+    this._initProcEdit(data).then(this._updateProcEdit.bind(this));
 };
 
 /**
@@ -977,22 +948,19 @@ AdminApp.prototype._editProcedure = function () {
 AdminApp.prototype._initProcEdit = function (data) {
     this.ui.procEditDialog.data = data;
     var select = this.ui.procEditType;
-    var d = this.proc.procTypes();
-    d.addCallback(function (res) {
-        MochiKit.DOM.replaceChildNodes(select);
-        var types = MochiKit.Base.keys(res).sort();
-        for (var i = 0; i < types.length; i++) {
-            var k = types[i];
-            select.appendChild(MochiKit.DOM.OPTION({ value: k }, k));
-            var values = res[k].bindings;
-            var keys = MochiKit.Base.map(MochiKit.Base.itemgetter("name"), values);
-            data.defaults[k] = RapidContext.Util.dict(keys, values);
-        }
-    });
-    d.addCallback(MochiKit.Base.bind("_renderProcEdit", this));
-    d.addCallback(MochiKit.Base.bind("show", this.ui.procEditDialog));
-    d.addErrback(RapidContext.UI.showError);
-    return d;
+    return this.proc.procTypes()
+        .then(function (res) {
+            MochiKit.DOM.replaceChildNodes(select);
+            Object.keys(res).sort().forEach(function (k) {
+                select.appendChild(MochiKit.DOM.OPTION({ value: k }, k));
+                var values = res[k].bindings;
+                var keys = MochiKit.Base.map(MochiKit.Base.itemgetter("name"), values);
+                data.defaults[k] = RapidContext.Util.dict(keys, values);
+            });
+        })
+        .then(this._renderProcEdit.bind(this))
+        .then(this.ui.procEditDialog.show.bind(this.ui.procEditDialog))
+        .catch(RapidContext.UI.showError);
 };
 
 /**
@@ -1139,11 +1107,11 @@ AdminApp.prototype._saveProcedure = function () {
         bindings.push(res);
     }
     var args = [data.name, data.type, data.description, bindings];
-    var d = RapidContext.App.callProc("System.Procedure.Write", args);
-    d.addCallback(MochiKit.Base.bind("hide", this.ui.procEditDialog));
-    d.addCallback(MochiKit.Base.bind("recall", this.proc.procList));
-    d.addCallback(MochiKit.Base.bind("showProcedure", this, data.name));
-    d.addErrback(RapidContext.UI.showError);
+    RapidContext.App.callProc("System.Procedure.Write", args)
+        .then(this.ui.procEditDialog.hide.bind(this.ui.procEditDialog))
+        .then(this.proc.procList.recall.bind(this.proc.procList))
+        .then(this.showProcedure.bind(this, data.name))
+        .catch(RapidContext.UI.showError);
 };
 
 /**
@@ -1174,8 +1142,8 @@ AdminApp.prototype._executeProcedure = function () {
     this.ui.procExec.disable();
     this.ui.procBatch.disable();
     this.ui.procExecResult.removeAll();
-    var d = RapidContext.App.callProc(proc.name, args);
-    d.addBoth(MochiKit.Base.bind("_callbackExecute", this));
+    var cb = this._callbackExecute.bind(this);
+    RapidContext.App.callProc(proc.name, args).then(cb, cb);
 };
 
 /**
@@ -1419,8 +1387,8 @@ AdminApp.prototype._processBatch = function () {
         if (item == null) {
             this._stopBatch();
         } else {
-            var d = RapidContext.App.callProc(item.proc, item.args);
-            d.addBoth(MochiKit.Base.bind("_callbackBatch", this));
+            var cb = this._callbackBatch.bind(this);
+            RapidContext.App.callProc(item.proc, item.args).then(cb, cb);
         }
     }
 };
@@ -1546,75 +1514,6 @@ AdminApp.prototype._showLogDetails = function () {
         text = MochiKit.DOM.PRE(null, list.join("\n"));
     }
     MochiKit.DOM.replaceChildNodes(this.ui.logData, text);
-};
-
-/**
- * Stores an object to the RapidContext storage. Note that only
- * read-write storages can be used for storage (typically the local
- * plug-in). If the storage path does not point to a single mounted
- * storage, the first writable overlay storage will be used (always
- * the local plug-in).
- *
- * @param {String} path the storage path
- * @param {Object} data the data object to store (JSON data)
- *
- * @return {Deferred} a MochiKit.Async.Deferred object that will
- *         callback when the data has been stored
- */
-AdminApp.storageWrite = function (path, data) {
-    if (MochiKit.Text.startsWith("/", path)) {
-        path = path.substring(1);
-    }
-    var options = { method: "POST", timeout: 60, headers: {} };
-    options.headers["Content-Type"] = "application/json";
-    options.sendContent = MochiKit.Base.serializeJSON(data);
-    var d = RapidContext.App.loadXHR("rapidcontext/storage/" + path, null, options);
-    d.addCallback(function (xhr) {
-        if (xhr.status == 200 || xhr.status == 201) {
-            return path;
-        } else {
-            throw new MochiKit.Async.XMLHttpRequestError(xhr, "unrecognized response code");
-        }
-    });
-    d.addErrback(function (err) {
-        if (err instanceof MochiKit.Async.XMLHttpRequestError) {
-            var xhr = err.req;
-            var msg = xhr.responseText || xhr.statusText || err.message;
-            msg = msg.replace(/^HTTP \d+\s/i, "");
-            msg = msg.replace(/^.*:\s*([\s\S]+)/, "$1");
-            err.message = msg;
-            return err;
-        } else {
-            return err;
-        }
-    });
-    return d;
-};
-
-/**
- * Removes an object from the RapidContext storage. Note that only
- * objects in read-write storages can be removed (typically the local
- * plug-in).
- *
- * @param {String} path the storage path
- *
- * @return {Deferred} a MochiKit.Async.Deferred object that will
- *         callback when the data has been removed
- */
-AdminApp.storageDelete = function (path) {
-    if (MochiKit.Text.startsWith("/", path)) {
-        path = path.substring(1);
-    }
-    var options = { method: "DELETE", timeout: 60 };
-    var d = RapidContext.App.loadXHR("rapidcontext/storage/" + path, null, options);
-    d.addCallback(function (res) {
-        if (res.status == 204) {
-            return null;
-        } else {
-            throw new Error(res.statusText.substr(4));
-        }
-    });
-    return d;
 };
 
 /**
