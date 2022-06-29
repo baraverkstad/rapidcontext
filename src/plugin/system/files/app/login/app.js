@@ -34,8 +34,9 @@ LoginApp.prototype._loginAuth = function () {
     } else if (this.ui.loginForm.validate()) {
         this.ui.loginAuth.setAttrs({ disabled: true, icon: "LOADING" });
         var data = this.ui.loginForm.valueMap();
-        var d = RapidContext.App.login($.trim(data.user), data.password);
-        d.addBoth(MochiKit.Base.bind("_loginAuthCb", this));
+        RapidContext.App.login($.trim(data.user), data.password)
+            .then(window.location.reload.bind(window.location))
+            .catch(this._loginError.bind(this));
     } else {
         this.ui.loginUser.focus();
     }
@@ -43,17 +44,13 @@ LoginApp.prototype._loginAuth = function () {
 };
 
 /**
- * Handles the login authentication callback.
+ * Handles login errors.
  */
-LoginApp.prototype._loginAuthCb = function (res) {
+LoginApp.prototype._loginError = function (err) {
     this.ui.loginAuth.setAttrs({ disabled: false, icon: "OK" });
-    if (res instanceof Error) {
-        var msg = res.message;
-        msg = msg.charAt(0).toUpperCase() + msg.substr(1);
-        $(this.ui.loginError).removeClass("hidden").text(msg);
-        $(this.ui.loginWarning).addClass("hidden");
-        this.ui.loginDialog.resizeToContent();
-    } else {
-        window.location.reload();
-    }
+    var msg = (err && err.message) || String(err);
+    msg = msg.charAt(0).toUpperCase() + msg.substr(1);
+    $(this.ui.loginError).removeClass("hidden").text(msg);
+    $(this.ui.loginWarning).addClass("hidden");
+    this.ui.loginDialog.resizeToContent();
 };
