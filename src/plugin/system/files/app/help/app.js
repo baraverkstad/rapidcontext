@@ -262,8 +262,10 @@ HelpApp.prototype.loadContent = function (url) {
         this.ui.contentLoading.show();
         var source = (node && node.data) ? node.data.source || "" : "";
         MochiKit.DOM.replaceChildNodes(this.ui.contentInfo, source);
-        var d = RapidContext.App.loadText(fileUrl, null, { timeout: 60 });
-        d.addBoth(MochiKit.Base.method(this, "_callbackContent"));
+        RapidContext.App.loadText(fileUrl)
+            .then(this._callbackContent.bind(this))
+            .catch(RapidContext.UI.showError)
+            .finally(this.ui.contentLoading.hide.bind(this.ui.contentLoading));
     }
 };
 
@@ -271,10 +273,7 @@ HelpApp.prototype.loadContent = function (url) {
  * Callback function for content HTML document retrieval.
  */
 HelpApp.prototype._callbackContent = function (data) {
-    this.ui.contentLoading.hide();
-    if (data instanceof Error) {
-        RapidContext.UI.showError(data);
-    } else if (typeof(data) == "string") {
+    if (typeof(data) == "string") {
         MochiKit.DOM.setNodeAttribute(this.ui.contentLink, "href", this._currentUrl);
         this.ui.contentLink.className = "";
         this._showContentHtml(data);
