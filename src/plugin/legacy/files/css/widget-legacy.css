@@ -1,0 +1,16 @@
+/**
+ * File Streamer Style
+ */
+.widgetFileStreamer {
+    margin: 0;
+    border: none;
+    padding: 0;
+}
+.widgetFileStreamer form {
+    margin: 0;
+    border: none;
+    padding: 0;
+}
+.widgetFileStreamer input {
+    margin: 0;
+}
