@@ -14,12 +14,15 @@
 
 package org.rapidcontext.app.web;
 
+import java.util.stream.Stream;
+
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.storage.Index;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.RootStorage;
+import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.type.WebService;
 import org.rapidcontext.core.web.Request;
 
@@ -88,31 +91,57 @@ public class FileWebService extends WebService {
      * @param request        the request to process
      */
     protected void doGet(Request request) {
-        processFile(request, new Path(path(), request.getPath()));
+        processFile(request, new Path(path(), request.getPath()), false);
     }
 
     /**
      * Processes a storage file retrieval request (if possible).
      *
      * @param request        the request to process
-     * @param path           the storage path to the binary file
+     * @param filePath       the storage path to the binary file
+     * @param exact          the exact path match flag
      */
-    protected void processFile(Request request, Path path) {
-        ApplicationContext ctx = ApplicationContext.getInstance();
-        if (path.isIndex()) {
-            path = path.child("index.html", false);
-        }
-        Object obj = ctx.getStorage().load(path);
+    protected void processFile(Request request, Path filePath, boolean exact) {
+        Storage storage = ApplicationContext.getInstance().getStorage();
+        Object obj = lookupPaths(filePath, exact)
+            .map(path -> storage.load(path))
+            .filter(o -> o instanceof Binary || o instanceof Index)
+            .findFirst()
+            .orElse(null);
         if (obj instanceof Binary) {
             if (request.getParameter("download") != null) {
-                String str = "attachment; filename=" + path.name();
+                String str = "attachment; filename=" + filePath.name();
                 request.setResponseHeader("Content-Disposition", str);
             }
             request.sendBinary((Binary) obj);
         } else if (obj instanceof Index) {
             request.sendRedirect(request.getUrl() + "/");
-        } else if (obj != null) {
-            errorForbidden(request);
         }
+    }
+
+    /**
+     * Returns an ordered stream of file lookup paths. For non-exact matches
+     * this includes all parent "404.html" and "index.html" paths.
+     *
+     * @param filePath       the requested file path
+     * @param exact          the exact path match flag
+     *
+     * @return the stream of lookup paths
+     */
+    protected Stream<Path> lookupPaths(Path filePath, boolean exact) {
+        Stream.Builder<Path> builder = Stream.builder();
+        if (filePath.isIndex()) {
+            builder.add(filePath.child("index.html", false));
+        } else {
+            builder.add(filePath);
+            builder.add(filePath.parent().child(filePath.name(), true));
+        }
+        Path base = path();
+        while (!exact && !filePath.isRoot() && !filePath.equals(base)) {
+            filePath = filePath.parent();
+            builder.add(filePath.child("404.html", false));
+            builder.add(filePath.child("index.html", false));
+        }
+        return builder.build();
     }
 }

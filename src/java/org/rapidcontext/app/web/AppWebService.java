@@ -66,11 +66,6 @@ public class AppWebService extends FileWebService {
     public static final String KEY_LOGIN = "login";
 
     /**
-     * The dictionary key for the catch all flag.
-     */
-    public static final String KEY_CATCH_ALL = "catchAll";
-
-    /**
      * The dictionary key for the page title.
      */
     public static final String KEY_TITLE = "title";
@@ -197,16 +192,6 @@ public class AppWebService extends FileWebService {
     }
 
     /**
-     * Returns the catch all requests setting (defaults to false).
-     *
-     * @return true if all non-matched requests to launch the app, or
-     *         false otherwise
-     */
-    public boolean isCatchAll() {
-        return dict.getBoolean(KEY_CATCH_ALL, false);
-    }
-
-    /**
      * Returns the title for the HTML web page.
      *
      * @return the configured page title, or
@@ -309,19 +294,13 @@ public class AppWebService extends FileWebService {
         if (!request.hasResponse()) {
             String path = request.getPath();
             String baseUrl = StringUtils.removeEnd(request.getUrl(), path);
-            boolean isRoot = path.equals("") || path.startsWith("index.htm");
             if (request.matchPath("rapidcontext/files/")) {
-                processFile(request, new Path(RootStorage.PATH_FILES, request.getPath()));
+                processFile(request, new Path(RootStorage.PATH_FILES, request.getPath()), true);
             } else if (request.matchPath("rapidcontext/app/")) {
                 String appId = StringUtils.removeEnd(request.getPath(), "/");
                 processApp(request, appId, baseUrl);
-            } else if (isRoot || isCatchAll()) {
-                String appId = appId();
-                if (appId == null) {
-                    processFile(request, new Path(path(), "index.html"));
-                } else {
-                    processApp(request, appId, baseUrl);
-                }
+            } else if (appId() != null) {
+                processApp(request, appId(), baseUrl);
             }
         }
     }

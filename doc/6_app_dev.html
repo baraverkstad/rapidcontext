@@ -75,9 +75,7 @@ simplify the development:</p>
           user interface widget library.</li>
       <li><a href="external/mochikit/index.html">MochiKit</a> &mdash; A
           swiss-army knife with utilities and functions missing from the core
-          JavaScript language. The <var>JSON.parse</var> and
-          <var>JSON.serialize</var> functions are aliased to MochiKit if not
-          provided by default.</li>
+          JavaScript language.</li>
       <li><a href="http://media.liquidx.net/js/plotkit-doc/PlotKit.html">PlotKit</a>
           &mdash; Provides beautiful charts and diagram drawing functions.</li>
       <li><a href="http://api.jquery.com/">jQuery</a> &mdash; Provides simple
@@ -489,10 +487,6 @@ available and custom ones can also be implemented in Java.</p>
   <li><var>login</var> &mdash; The app identifier for the alternative launcher
       to use for non-authorized users (only for <var>webservice/app</var>
       type). Defaults to <q><var>login</var></q>.</li>
-  <li><var>catchAll</var> &mdash; The optional flag to match all requests
-      (excluding static files) for a <var>webservice/app</var> launcher.
-      This allows for the creation of a single-page application with URL-based
-      navigation.</li>
   <li><var>title</var> &mdash; The web page title (only for
       <var>webservice/app</var> type). Defaults to
       <q><var>RapidContext</var></q>.</li>
@@ -526,6 +520,11 @@ available and custom ones can also be implemented in Java.</p>
       Defaults to zero (0). Contributes its own value to the request match
       score.</li>
 </ul>
+
+<p>The web listener with the highest matching score will serve the request.
+For <var>webservice/file</var> listeners, missing files are served by any
+parent directory <q><var>404.html</var></q> or <q><var>index.html</var></q>
+file. This makes it possible to create single-page apps matching any URL.</p>
 
 <!--END-->
 
