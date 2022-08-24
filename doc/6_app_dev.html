@@ -462,42 +462,19 @@ available and custom ones can also be implemented in Java.</p>
     <var>type</var> &mdash; The web service type. This may have one of the
     following values:
     <ul>
-      <li><var>webservice/file</var> &mdash; Provides access to binary files
-          from the storage hierarchy. Indexes are automatially mapped to
-          <q><var>index.html</var></q> files (if such files exist).</li>
+      <li><var>webservice/file</var> &mdash; Provides storage file access,
+          similar to a normal web server.</li>
       <li><var>webservice/app</var> &mdash; Extends the
-          <var>webservice/file</var> service by also responding to requests for
-          the <var>/rapidcontext/*</var> API. Also provides a default app
-          launcher if no <q><var>index.html</var></q> file was found in
-          storage.</li>
-      <li><var>webservice/storage</var> &mdash; Provides HTTP access to the
-          storage hierarchy.</li>
-      <li><var>webservice</var> &mdash; Only used when implementing a web
-          service in Java.</li>
+          <var>webservice/file</var> service by providing a default app
+          launcher and APIs.</li>
+      <li><var>webservice/procedure</var> &mdash; Provides a procedure API web
+          service for executing procedures.</li>
+      <li><var>webservice/storage</var> &mdash; Provides a storage API web
+          service for reading and writing data.</li>
     </ul>
   </li>
   <li><var>description</var> &mdash; The optional description text for this
       resource.</li>
-  <li><var>path</var> &mdash; The base storage path for file lookups (only
-      for <var>webservice/file</var> and <var>webservice/app</var> types).
-      Defaults to <q><var>/files/</var></q>.</li>
-  <li><var>app</var> &mdash; The app identifier for the default launcher
-      (only for <var>webservice/app</var> type). Defaults to
-      <q><var>start</var></q>.</li>
-  <li><var>login</var> &mdash; The app identifier for the alternative launcher
-      to use for non-authorized users (only for <var>webservice/app</var>
-      type). Defaults to <q><var>login</var></q>.</li>
-  <li><var>title</var> &mdash; The web page title (only for
-      <var>webservice/app</var> type). Defaults to
-      <q><var>RapidContext</var></q>.</li>
-  <li><var>lang</var> &mdash; The web page ISO language code (only for
-      <var>webservice/app</var> type). Defaults to <q><var>en</var></q>.</li>
-  <li><var>viewport</var> &mdash; The web page meta viewport tag (only for
-      <var>webservice/app</var> type). Defaults to
-      <q><var>width=device-width, initial-scale=1</var></q>.</li>
-  <li><var>header.#</var> &mdash; The optional HTML headers to add to the page
-      (only for <var>webservice/app</var> type). Normally used for favicons
-      and similar metadata.</li>
   <li><var>match.#.method</var> &mdash; The optional HTTP request method to
       match. Defaults to blank, meaning that any request method will match.
       A non-blank value contributes 400 points to the reqest match score.</li>
@@ -518,13 +495,59 @@ available and custom ones can also be implemented in Java.</p>
       flag. Defaults to false, meaning that anonymous access is allowed.</li>
   <li><var>match.#.prio</var> &mdash; The optional matcher priority.
       Defaults to zero (0). Contributes its own value to the request match
-      score.</li>
+      score. The web listener with the highest match score serves the
+      request.</li>
 </ul>
 
-<p>The web listener with the highest matching score will serve the request.
-For <var>webservice/file</var> listeners, missing files are served by any
-parent directory <q><var>404.html</var></q> or <q><var>index.html</var></q>
-file. This makes it possible to create single-page apps matching any URL.</p>
+<p>The <var>webservice/file</var> listener automatically maps directories
+to <q><var>index.html</var></q> files. If a requested file is missing, the
+parent directories are searched for the nearest <q><var>404.html</var></q> or
+<q><var>index.html</var></q> file. This allows single-page apps to match any
+URL.</p>
+
+<p>The <var>webservice/file</var> and <var>webservice/app</var> listeners
+support the following additional parameters:</p>
+
+<ul class="box yellow">
+  <li><var>path</var> &mdash; The base storage path for file lookups. Defaults
+      to <q><var>/files/</var></q>.</li>
+</ul>
+
+<p>The <var>webservice/app</var> listeners support the following additional
+parameters:</p>
+
+<ul class="box yellow">
+  <li><var>app</var> &mdash; The app identifier for the default launcher
+      Defaults to <q><var>start</var></q>.</li>
+  <li><var>login</var> &mdash; The app identifier for the alternative launcher
+      to use for non-authorized users. Defaults to <q><var>login</var></q>.</li>
+  <li><var>title</var> &mdash; The web page title. Defaults to
+      <q><var>RapidContext</var></q>.</li>
+  <li><var>lang</var> &mdash; The web page ISO language code. Defaults to
+      <q><var>en</var></q>.</li>
+  <li><var>viewport</var> &mdash; The web page meta viewport tag. Defaults to
+      <q><var>width=device-width, initial-scale=1</var></q>.</li>
+  <li><var>header.#</var> &mdash; The optional HTML headers to add to the page.
+      Normally used for favicons and similar.</li>
+</ul>
+
+
+<p>The <var>webservice/procedure</var> listeners support the following
+additional parameters:</p>
+
+<ul class="box yellow">
+  <li><var>prefix</var> &mdash; The optional procedure name prefix, used for
+      locating the procedure to execute. Any additional request path will be
+      appended to this prefix to form the full procedure name.</li>
+  <li><var>inputType</var> &mdash; The input arguments data format. Available
+      options are <q><var>json</var></q> (for serialized JSON data, the default),
+      or <q><var>text</var></q> (for plain text).</li>
+  <li><var>outputType</var> &mdash; The output response data format. Available
+      options are <q><var>json+metadata</var></q> (for a serialized JSON object
+      with <q><var>data</var></q> or <q><var>error</var></q>  properties,
+      the default), <q><var>json</var></q> (for just the serialized JSON
+      response), or <q><var>text</var></q> (for plain text output).</li>
+</ul>
 
 <!--END-->
 
