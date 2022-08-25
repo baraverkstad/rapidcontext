@@ -63,7 +63,8 @@
     ] },
     { "topic": "Plug-In: HTTP", "url": "doc/plugin-http.html", "children": [
         { "topic": "1. Built-in Procedure & Procedure Type", "url": "doc/plugin-http.html#builtins" },
-        { "topic": "2. Parameter Substitution", "url": "doc/plugin-http.html#params" }
+        { "topic": "2. Result Mappings", "url": "doc/plugin-http.html#results" }
+        { "topic": "3. Parameter Substitution", "url": "doc/plugin-http.html#params" }
     ] },
     { "topic": "Plug-In: JDBC", "url": "doc/plugin-jdbc.html", "children": [
         { "topic": "1. Basic Configuration", "url": "doc/plugin-jdbc.html#basics" },
