@@ -415,6 +415,7 @@ public class StorageWebService extends WebService {
         try {
             Path path = new Path(request.getPath());
             Metadata meta = lookup(path);
+            // FIXME: write to existing path if metadata exists?
             Object data = JsonSerializer.unserialize(request.getInputString());
             if (StorageWriteProcedure.store(path, data)) {
                 if (meta == null) {
