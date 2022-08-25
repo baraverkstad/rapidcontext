@@ -1,10 +1,14 @@
-# Compile Target Files
+# General files
+/node_modules/
+/package-lock.json
+
+# Compile output files
 /classes/
 /lib/rapidcontext-*.jar
 /plugin/
 /test/classes/
 
-# Plug-In Compile Files
+# Plug-In compile output files
 /src/plugin/*/build.number
 /src/plugin/*/classes
 /src/plugin/*/*.plugin
@@ -12,7 +16,7 @@
 /src/plugin/http/lib/http-*.jar
 /src/plugin/jdbc/lib/jdbc-*.jar
 
-# Documentation Target Files
+# Documentation output files
 /doc.zip
 /doc/LICENSE.md
 /doc/README.md
@@ -25,7 +29,7 @@
 !/doc/java/topics.json
 /doc/js/
 
-# Package Target Files
+# Package output files
 /rapidcontext.war
 /RapidContext.app
 /rapidcontext-*.zip
