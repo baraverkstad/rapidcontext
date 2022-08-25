@@ -120,6 +120,35 @@ start the stand-alone server, follow the steps below:</p>
   </table>
 </div>
 
+<p>When run from the command-line, RapidContext supports different modes and
+provides a number of options:</p>
+
+<div class="box blue">
+  <i class="box-icon fa fa-code"></i>
+  <pre class="box-content code">
+<span class="comment">$&gt; bin/rapidcontext --help</span>
+Usage: [1] rapidcontext [--app] [&lt;options&gt;]
+       [2] rapidcontext --server [&lt;options&gt;]
+       [3] rapidcontext [--script] [&lt;options&gt;] [&lt;procedure&gt; [&lt;arg1&gt; ...]]
+
+Alternative [1] is assumed when no procedure is specified.
+Alternative [3] is assumed when a procedure is specified.
+
+Options:
+     --app             Launch in interactive application mode.
+     --server          Launch in server mode.
+     --script          Launch in script execution mode.
+  -h,--help            Displays this help message,
+  -l,--local &lt;dir&gt;     Use a specified local app directory.
+  -p,--port &lt;number&gt;   Use a specified port number (non-script mode).
+  -d,--delay &lt;secs&gt;    Add a delay after each command (script mode).
+  -t,--trace           Print detailed execution trace (script mode).
+  -u,--user &lt;name&gt;     Authenticate as a another user (script mode).
+     --stdin           Read commands from stdin (script mode).
+  -f,--file &lt;file&gt;     Read commands from a file (script mode).
+  </pre>
+</div>
+
 <p>To install RapidContext in a Java servlet container, use the file
 <var>rapidcontext.war</var> inside the ZIP distribution and follow the
 deployment instructions for your server.</p>
