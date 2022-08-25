@@ -16,11 +16,17 @@
 <project default="package">
 
 <!-- INITIALIZATION -->
+  <property environment="env"/>
   <property file="build.properties" />
   <tstamp>
-    <format property="build.date" pattern="yyyy-MM-dd" />
+    <format property="build.today" pattern="yyyy-MM-dd" />
   </tstamp>
-  <property name="build.version" value="${DSTAMP}" />
+  <condition property="build.date" value="${env.DATE}" else="${build.today}">
+    <isset property="env.DATE" />
+  </condition>
+  <condition property="build.version" value="${env.VERSION}" else="${DSTAMP}">
+    <isset property="env.VERSION" />
+  </condition>
   <property name="build.platform" value="${build.version}" />
   <path id="build.classpath">
     <fileset dir="lib" includes="**/*.jar" />
