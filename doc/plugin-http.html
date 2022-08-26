@@ -4,11 +4,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" href="css/style.css" type="text/css">
     <link rel="stylesheet" href="css/font-awesome-4.7.0.min.css" type="text/css">
-    <link rel="shortcut icon" type="image/x-icon" href="images/logotype-icon.ico">
-    <link rel="icon" type="image/png" sizes="16x16" href="images/logotype-icon-16x16.png">
+    <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="images/logotype-icon.ico">
     <link rel="icon" type="image/png" sizes="256x256" href="images/logotype-icon-256x256.png">
     <link rel="apple-touch-icon" sizes="256x256" href="images/logotype-icon-256x256.png">
     <title>RapidContext :: HTTP Plug-In</title>
@@ -17,12 +15,12 @@
     <section class="header">
       <div class="center">
         <a href="https://www.rapidcontext.com/" class="logotype">
-          <img src="images/logotype-icon-256x256.png" style="width: 128px; height: 128px;" />
+          <img src="images/logotype.png">
         </a>
         <div class="text">
           <a href="https://www.rapidcontext.com/">
             <span style="font-size: 3.6em;">RapidContext</span><br>
-            <span style="font-size: 1.7em; color: #caf3ff;">Access &gt; Discovery &gt; Insight</span><br>
+            <span style="font-size: 1.75em; color: #caf3ff;">Access &#183; Discovery &#183; Insight</span><br>
             <span style="font-size: 1.3em; letter-spacing: 0.34em; line-height: 1.8em;">www.rapidcontext.com</span>
           </a>
         </div>
@@ -56,44 +54,58 @@ way.</p>
 RapidContext server:</p>
 
 <ul class="box yellow">
-  <li><strong>The <var>PlugIn.Http.Post</var> procedure</strong> &ndash;
-      A built-in procedure for performing an HTTP POST operation. Only
+  <li><strong>The <var>PlugIn.Http.Request</var> procedure</strong> &ndash;
+      A built-in procedure for performing an HTTP request. By default only
       accessible to users with the <var>admin</var> role. This procedure
-      should normally only be used for testing and development.</li>
-  <li><strong>Procedures of the <var>http.post</var> type</strong> &ndash;
-      Supports inserting procedure arguments into the HTTP headers or posted
-      data. Useful to enable limited HTTP POST access for normal users and
-      for storing web service calls.</li>
+      should be used for testing and development.</li>
+  <li><strong>Procedures of the <var>http.request</var> type</strong> &ndash;
+      Supports parameter substitution with procedure arguments in either the
+      URL, HTTP headers, query string or payload.</li>
 </ul>
 
-<p>All the procedures return the HTTP response data content as a plain string.
-If the HTTP response code wasn't <var>200</var>, an error will instead be
-thrown by the procedures.</p>
-
-<div class="box green" style="margin-top: 0;">
-  <i class="box-icon fa fa-info-circle"></i>
-  <div class="box-content">
-    <h2 style="margin: 0;">Notice</h2>
-    <p>The HTTP plug-in does currently not provide access to the HTTP response
-    headers. Neither does it support other operations than <var>POST</var>.</p>
-  </div>
-</div>
+<p>An HTTP connection can also be created to share base <var>url</var> and
+<var>headers</var> parameters between procedures.</p>
 
 
-<h2 id="params">2. Parameter Substitution</h2>
+<h2 id="results">2. Result Mappings</h2>
 
-<p>HTTP POST headers and data may contain procedure call arguments (for
-<var>http.post</var> procedures). These are substituted with the procedure
-argument values at call time. Each procedure argument name must be prefixed
-with a <q><var>:</var></q> character in order to be replaced:</p>
+<p>HTTP responses can be processed differently depending on the procedure
+<var>flags</var> parameter:</p>
+
+<ul class="box yellow">
+  <li><strong><var>json</var></strong> &ndash; Successful responses (HTTP 2xx)
+      are parsed as JSON and returned in a data object.</li>
+  <li><strong><var>jsonerror</var></strong> &ndash; All responses are parsed
+      as JSON and returned in a data object.</li>
+  <li><strong><var>metadata</var></strong> &ndash; All responses are wrapped
+      in a metadata object with a <var>success</var> flag and other
+      parameters.</li>
+</ul>
+
+<p>The default processing returns successful (HTTP 2xx) responses as a text
+strings. Other HTTP response codes result in an error being thrown.</p>
+
+
+<h2 id="params">3. Parameter Substitution</h2>
+
+<p>The <var>url</var>, <var>headers</var> and <var>data</var> parameters may
+contain procedure call arguments. These are substituted with the procedure
+argument values at call time. The argument names are prefixed with either a
+<q><var>@</var></q> (unencoded) or <q><var>:</var></q> (encoded) character
+where they should be inserted:</p>
 
 <div class="box blue">
   <i class="box-icon fa fa-code"></i>
   <pre class="box-content code">
-<span class="comment"># Substituting a 'name' procedure argument</span>
-USERNAME=:name</pre>
+<span class="comment"># Substituting 'name' and 'raw' arguments</span>
+user=:name
+@raw</pre>
 </div>
 
+<p>Depending on parameter and the <var>Content-Type</var> header, the argument
+values may be encoded as a URL parameter, JSON text or XML text. Also note
+that the <var>data</var> parameter will automatically process newlines and
+join the text with <q><var>&amp;</var></q> characters.</p>
 
 <!--END-->
 

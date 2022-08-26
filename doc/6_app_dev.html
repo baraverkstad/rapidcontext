@@ -4,11 +4,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" href="css/style.css" type="text/css">
     <link rel="stylesheet" href="css/font-awesome-4.7.0.min.css" type="text/css">
-    <link rel="shortcut icon" type="image/x-icon" href="images/logotype-icon.ico">
-    <link rel="icon" type="image/png" sizes="16x16" href="images/logotype-icon-16x16.png">
+    <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="images/logotype-icon.ico">
     <link rel="icon" type="image/png" sizes="256x256" href="images/logotype-icon-256x256.png">
     <link rel="apple-touch-icon" sizes="256x256" href="images/logotype-icon-256x256.png">
     <title>RapidContext :: App Development</title>
@@ -17,12 +15,12 @@
     <section class="header">
       <div class="center">
         <a href="https://www.rapidcontext.com/" class="logotype">
-          <img src="images/logotype-icon-256x256.png" style="width: 128px; height: 128px;" />
+          <img src="images/logotype.png">
         </a>
         <div class="text">
           <a href="https://www.rapidcontext.com/">
             <span style="font-size: 3.6em;">RapidContext</span><br>
-            <span style="font-size: 1.7em; color: #caf3ff;">Access &gt; Discovery &gt; Insight</span><br>
+            <span style="font-size: 1.75em; color: #caf3ff;">Access &#183; Discovery &#183; Insight</span><br>
             <span style="font-size: 1.3em; letter-spacing: 0.34em; line-height: 1.8em;">www.rapidcontext.com</span>
           </a>
         </div>
@@ -77,15 +75,11 @@ simplify the development:</p>
           user interface widget library.</li>
       <li><a href="external/mochikit/index.html">MochiKit</a> &mdash; A
           swiss-army knife with utilities and functions missing from the core
-          JavaScript language. The <var>JSON.parse</var> and
-          <var>JSON.serialize</var> functions are aliased to MochiKit if not
-          provided by default.</li>
+          JavaScript language.</li>
       <li><a href="http://media.liquidx.net/js/plotkit-doc/PlotKit.html">PlotKit</a>
           &mdash; Provides beautiful charts and diagram drawing functions.</li>
       <li><a href="http://api.jquery.com/">jQuery</a> &mdash; Provides simple
           and efficient access to HTML and CSS (via DOM).</li>
-      <li><a href="https://olivernn.github.io/augment.js/">Augment.js</a> &mdash; Upgrades the
-          JavaScript environment in old browsers to version 1.8.5.</li>
       <li><a href="http://code.google.com/p/crypto-js/#MD5">Crypto-JS (MD5)</a> &mdash;
           Provides MD5 hash functions.</li>
 </ul>
@@ -100,7 +94,7 @@ some meta-data. These can be inspected in the <strong>Admin</strong> app, as
 shown in the screenshot below.</p>
 
 <p class="figure">
-  <img src="images/screenshot-app-details.png" alt="Screenshot" />
+  <img src="images/screenshot-app-details.png" alt="Screenshot">
 </p>
 
 <p>The app configuration is placed in the <var>plugin/local/app/</var> directory
@@ -172,6 +166,8 @@ reload.</p>
     <var>resources.#.type</var> &mdash; The resource type. This may have one
     of the following values:
     <ul>
+      <li>&lt;none&gt; &mdash; The resource type will be guessed based on
+          the file name (from the <var>url</var>) if omitted.</li>
       <li><var>code</var> &mdash; A JavaScript source code file that will be
           loaded before app launch.</li>
       <li><var>style</var> &mdash; A CSS stylesheet file that will be loaded
@@ -188,14 +184,15 @@ reload.</p>
           special handling.</li>
     </ul>
   </li>
-  <li><var>resource.#.id</var> &mdash; The optional resource identifier. All
+  <li><var>resources.#.id</var> &mdash; The optional resource identifier. All
       resources with an identifier can easily be accessed from the app
-      JavaScript code, using <q><var>this.resource.[id]</code></q>.</li>
-  <li><var>resources.#.url</var> &mdash; The optional resource URL. Should be
-      local and relative to the server base directory. The resource file must
-      be placed in the corresponding location in <var>plugin/local/files/</var>
-      to be visible from the server (or the <var>files/</var> directory in your
-      plug-in).</li>
+      JavaScript code, using <q><var>this.resource.[id]</var></q>.</li>
+  <li><var>resources.#.url</var> &mdash; The optional resource URL. If local,
+      it should relative to the root <var>files/</var> storage directory. The
+      files should thus be placed either in <var>plugin/local/files/</var> or
+      in <var>files/</var> inside your plug-in. Local resource URLs support
+      glob matching (e.g. <q><var>myapp/*.js</var></q> or
+      <q><var>dir/myapp/**</var></q>).</li>
   <li><var>resources.#.html</var> &mdash; The optional resource HTML. Used
       as an alternative to image app icons.</li>
   <li><var>resources.#.class</var> &mdash; The optional resource CSS class.
@@ -465,43 +462,19 @@ available and custom ones can also be implemented in Java.</p>
     <var>type</var> &mdash; The web service type. This may have one of the
     following values:
     <ul>
-      <li><var>webservice/file</var> &mdash; Provides access to binary files
-          from the storage hierarchy. Indexes are automatially mapped to
-          <q><var>index.html</var></q> files (if such files exist).</li>
+      <li><var>webservice/file</var> &mdash; Provides storage file access,
+          similar to a normal web server.</li>
       <li><var>webservice/app</var> &mdash; Extends the
-          <var>webservice/file</var> service by also responding to requests for
-          the <var>/rapidcontext/*</var> API. Also provides a default app
-          launcher if no <q><var>index.html</var></q> file was found in
-          storage.</li>
-      <li><var>webservice/storage</var> &mdash; Provides HTTP and WebDAV
-          access to the storage hierarchy.</li>
-      <li><var>webservice</var> &mdash; Only used when implementing a web
-          service in Java.</li>
+          <var>webservice/file</var> service by providing a default app
+          launcher and APIs.</li>
+      <li><var>webservice/procedure</var> &mdash; Provides a procedure API web
+          service for executing procedures.</li>
+      <li><var>webservice/storage</var> &mdash; Provides a storage API web
+          service for reading and writing data.</li>
     </ul>
   </li>
   <li><var>description</var> &mdash; The optional description text for this
       resource.</li>
-  <li><var>path</var> &mdash; The base storage path for file lookups (only
-      for <var>webservice/file</var> and <var>webservice/app</var> types).
-      Defaults to <q><var>/files/</var></q>.</li>
-  <li><var>app</var> &mdash; The app identifier for the default launcher
-      (only for <var>webservice/app</var> type). Defaults to
-      <q><var>start</var></q>.</li>
-  <li><var>login</var> &mdash; The app identifier for the alternative launcher
-      to use for non-authorized users (only for <var>webservice/app</var>
-      type). Defaults to <q><var>login</var></q>.</li>
-  <li><var>title</var> &mdash; The web page title (only for
-      <var>webservice/app</var> type). Defaults to
-      <q><var>RapidContext</var></q>.</li>
-  <li><var>lang</var> &mdash; The web page ISO language code (only for
-      <var>webservice/app</var> type). Defaults to <q><var>en</var></q>.</li>
-  <li><var>className</var> &mdash; The optional fully qualified name of a Java
-      class that handles all requests (only for base <var>webservice</var>
-      type). The class must be a subclass of
-      <var>org.rapidcontext.core.type.WebListener</var>.</li>
-  <li><var>header.#</var> &mdash; The optional HTML headers to add to the page
-      (only for <var>webservice/app</var> type). Normally used for favicons
-      and similar metadata.</li>
   <li><var>match.#.method</var> &mdash; The optional HTTP request method to
       match. Defaults to blank, meaning that any request method will match.
       A non-blank value contributes 400 points to the reqest match score.</li>
@@ -522,7 +495,58 @@ available and custom ones can also be implemented in Java.</p>
       flag. Defaults to false, meaning that anonymous access is allowed.</li>
   <li><var>match.#.prio</var> &mdash; The optional matcher priority.
       Defaults to zero (0). Contributes its own value to the request match
-      score.</li>
+      score. The web listener with the highest match score serves the
+      request.</li>
+</ul>
+
+<p>The <var>webservice/file</var> listener automatically maps directories
+to <q><var>index.html</var></q> files. If a requested file is missing, the
+parent directories are searched for the nearest <q><var>404.html</var></q> or
+<q><var>index.html</var></q> file. This allows single-page apps to match any
+URL.</p>
+
+<p>The <var>webservice/file</var> and <var>webservice/app</var> listeners
+support the following additional parameters:</p>
+
+<ul class="box yellow">
+  <li><var>path</var> &mdash; The base storage path for file lookups. Defaults
+      to <q><var>/files/</var></q>.</li>
+</ul>
+
+<p>The <var>webservice/app</var> listeners support the following additional
+parameters:</p>
+
+<ul class="box yellow">
+  <li><var>app</var> &mdash; The app identifier for the default launcher
+      Defaults to <q><var>start</var></q>.</li>
+  <li><var>login</var> &mdash; The app identifier for the alternative launcher
+      to use for non-authorized users. Defaults to <q><var>login</var></q>.</li>
+  <li><var>title</var> &mdash; The web page title. Defaults to
+      <q><var>RapidContext</var></q>.</li>
+  <li><var>lang</var> &mdash; The web page ISO language code. Defaults to
+      <q><var>en</var></q>.</li>
+  <li><var>viewport</var> &mdash; The web page meta viewport tag. Defaults to
+      <q><var>width=device-width, initial-scale=1</var></q>.</li>
+  <li><var>header.#</var> &mdash; The optional HTML headers to add to the page.
+      Normally used for favicons and similar.</li>
+</ul>
+
+
+<p>The <var>webservice/procedure</var> listeners support the following
+additional parameters:</p>
+
+<ul class="box yellow">
+  <li><var>prefix</var> &mdash; The optional procedure name prefix, used for
+      locating the procedure to execute. Any additional request path will be
+      appended to this prefix to form the full procedure name.</li>
+  <li><var>inputType</var> &mdash; The input arguments data format. Available
+      options are <q><var>json</var></q> (for serialized JSON data, the default),
+      or <q><var>text</var></q> (for plain text).</li>
+  <li><var>outputType</var> &mdash; The output response data format. Available
+      options are <q><var>json+metadata</var></q> (for a serialized JSON object
+      with <q><var>data</var></q> or <q><var>error</var></q>  properties,
+      the default), <q><var>json</var></q> (for just the serialized JSON
+      response), or <q><var>text</var></q> (for plain text output).</li>
 </ul>
 
 <!--END-->

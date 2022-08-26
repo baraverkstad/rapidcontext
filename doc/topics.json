@@ -54,7 +54,6 @@
         { "topic": "7.7. Dynamic over Strict Types", "url": "doc/7_guidelines.html#dynamic_types" },
         { "topic": "7.8. Exploratory over Automated Testing", "url": "doc/7_guidelines.html#testing" }
     ] },
-    { "topic": "8. Change History", "url": "doc/8_changes.html" },
     { "topic": "Plug-In: Command-line", "url": "doc/plugin-cmdline.html", "children": [
         { "topic": "1. Built-in Procedure & Procedure Type", "url": "doc/plugin-cmdline.html#builtins" },
         { "topic": "2. Return Values", "url": "doc/plugin-cmdline.html#returns" },
@@ -64,7 +63,8 @@
     ] },
     { "topic": "Plug-In: HTTP", "url": "doc/plugin-http.html", "children": [
         { "topic": "1. Built-in Procedure & Procedure Type", "url": "doc/plugin-http.html#builtins" },
-        { "topic": "2. Parameter Substitution", "url": "doc/plugin-http.html#params" }
+        { "topic": "2. Result Mappings", "url": "doc/plugin-http.html#results" },
+        { "topic": "3. Parameter Substitution", "url": "doc/plugin-http.html#params" }
     ] },
     { "topic": "Plug-In: JDBC", "url": "doc/plugin-jdbc.html", "children": [
         { "topic": "1. Basic Configuration", "url": "doc/plugin-jdbc.html#basics" },

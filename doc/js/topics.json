@@ -17,7 +17,32 @@
         { "topic": "startApp", "url": "doc/js/RapidContext.App.html#.startApp" },
         { "topic": "status", "url": "doc/js/RapidContext.App.html#.status" },
         { "topic": "stopApp", "url": "doc/js/RapidContext.App.html#.stopApp" },
+        { "topic": "uploadFile", "url": "doc/js/RapidContext.App.html#.uploadFile" },
         { "topic": "user", "url": "doc/js/RapidContext.App.html#.user" }
+    ] },
+    { "topic": "RapidContext.Async", "url": "doc/js/RapidContext.Async.html", "children": [
+        { "topic": "addBoth", "url": "doc/js/RapidContext.Async.html#addBoth" },
+        { "topic": "addCallback", "url": "doc/js/RapidContext.Async.html#addCallback" },
+        { "topic": "addCallbacks", "url": "doc/js/RapidContext.Async.html#addCallbacks" },
+        { "topic": "addErrback", "url": "doc/js/RapidContext.Async.html#addErrback" },
+        { "topic": "cancel", "url": "doc/js/RapidContext.Async.html#cancel" },
+        { "topic": "catch", "url": "doc/js/RapidContext.Async.html#catch" },
+        { "topic": "css", "url": "doc/js/RapidContext.Async.html#.css" },
+        { "topic": "finally", "url": "doc/js/RapidContext.Async.html#finally" },
+        { "topic": "img", "url": "doc/js/RapidContext.Async.html#.img" },
+        { "topic": "isPromise", "url": "doc/js/RapidContext.Async.html#.isPromise" },
+        { "topic": "script", "url": "doc/js/RapidContext.Async.html#.script" },
+        { "topic": "then", "url": "doc/js/RapidContext.Async.html#then" },
+        { "topic": "wait", "url": "doc/js/RapidContext.Async.html#.wait" },
+        { "topic": "xhr", "url": "doc/js/RapidContext.Async.html#.xhr" }
+    ] },
+    { "topic": "RapidContext.Browser", "url": "doc/js/RapidContext.Browser.html", "children": [
+        { "topic": "OPTIONAL", "url": "doc/js/RapidContext.Browser.html#.OPTIONAL" },
+        { "topic": "REQUIRED", "url": "doc/js/RapidContext.Browser.html#.REQUIRED" },
+        { "topic": "cookie", "url": "doc/js/RapidContext.Browser.html#.cookie" },
+        { "topic": "info", "url": "doc/js/RapidContext.Browser.html#.info" },
+        { "topic": "isSupported", "url": "doc/js/RapidContext.Browser.html#.isSupported" },
+        { "topic": "supports", "url": "doc/js/RapidContext.Browser.html#.supports" }
     ] },
     { "topic": "RapidContext.Log", "url": "doc/js/RapidContext.Log.html", "children": [
         { "topic": "clear", "url": "doc/js/RapidContext.Log.html#.clear" },
@@ -27,7 +52,6 @@
         { "topic": "history", "url": "doc/js/RapidContext.Log.html#.history" },
         { "topic": "info", "url": "doc/js/RapidContext.Log.html#.info" },
         { "topic": "level", "url": "doc/js/RapidContext.Log.html#.level" },
-        { "topic": "logBrowserInfo", "url": "doc/js/RapidContext.Log.html#.logBrowserInfo" },
         { "topic": "stringify", "url": "doc/js/RapidContext.Log.html#.stringify" },
         { "topic": "warn", "url": "doc/js/RapidContext.Log.html#.warn" }
     ] },
@@ -124,11 +148,6 @@
         { "topic": "redraw", "url": "doc/js/RapidContext.Widget.Field.html#redraw" },
         { "topic": "reset", "url": "doc/js/RapidContext.Widget.Field.html#reset" },
         { "topic": "setAttrs", "url": "doc/js/RapidContext.Widget.Field.html#setAttrs" }
-    ] },
-    { "topic": "RapidContext.Widget.FileStreamer", "url": "doc/js/RapidContext.Widget.FileStreamer.html", "children": [
-        { "topic": "onselect", "url": "doc/js/RapidContext.Widget.FileStreamer.html#event:onselect" },
-        { "topic": "onupload", "url": "doc/js/RapidContext.Widget.FileStreamer.html#event:onupload" },
-        { "topic": "setAttrs", "url": "doc/js/RapidContext.Widget.FileStreamer.html#setAttrs" }
     ] },
     { "topic": "RapidContext.Widget.Form", "url": "doc/js/RapidContext.Widget.Form.html", "children": [
         { "topic": "fieldMap", "url": "doc/js/RapidContext.Widget.Form.html#fieldMap" },
