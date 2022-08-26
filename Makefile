@@ -1,3 +1,7 @@
+DATE    := $(shell date '+%F')
+VERSION := $(shell date '+%Y%m%d')
+
+
 #
 # Helpful information
 #
@@ -9,7 +13,7 @@ all:
 	@echo ' · make test       — Tests & code style checks'
 	@echo
 	@echo '🚀 Release builds'
-	@echo ' · VERSION=2022.08 make build'
+	@echo ' · make VERSION=2022.08 build build-docker'
 	@echo
 	@echo '📍 Apache Ant (and Java) must be installed separately.'
 
@@ -32,7 +36,20 @@ setup: clean
 # Build release artefacts
 #
 build:
-	ant package
+	DATE=$(DATE) VERSION=$(VERSION) ant package
+
+build-docker:
+	cp rapidcontext-$(VERSION).zip share/docker/
+	( \
+		cd share/docker && \
+		docker buildx build . \
+			-t baraverkstad/rapidcontext:latest \
+			-t baraverkstad/rapidcontext:v$(VERSION) \
+			--build-arg VERSION=$(VERSION) \
+			--platform linux/amd64,linux/arm64 \
+			--push \
+	)
+	rm share/docker/rapidcontext-$(VERSION).zip
 
 
 #
