@@ -450,6 +450,17 @@ public interface HttpUtil {
         };
 
         /**
+         * Returns the default port for a protocol.
+         *
+         * @param protocol   the protocol name (HTTP/HTTPS)
+         *
+         * @return the default HTTP or HTTPS port number
+         */
+        public static int defaultPort(String protocol) {
+            return StringUtils.equalsIgnoreCase(protocol, "https") ? 443 : 80;
+        }
+
+        /**
          * Returns the browser best matching the user agent string.
          *
          * @param userAgent      the request User-Agent header

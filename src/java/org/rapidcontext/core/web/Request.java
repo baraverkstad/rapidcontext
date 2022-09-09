@@ -266,19 +266,12 @@ public class Request implements HttpUtil {
     public String getUrl() {
         if (requestUrl == null) {
             StringBuilder buffer = new StringBuilder();
-            String scheme = getProtocol();
-            String host = getHost();
-            int port = getPort();
-            buffer.append(scheme);
+            buffer.append(getProtocol());
             buffer.append("://");
-            if (scheme.equals("http") && port == 80) {
-                buffer.append(host);
-            } else if (scheme.equals("https") && port == 443) {
-                buffer.append(host);
-            } else {
-                buffer.append(host);
+            buffer.append(getHost());
+            if (Helper.defaultPort(getProtocol()) != getPort()) {
                 buffer.append(":");
-                buffer.append(port);
+                buffer.append(getPort());
             }
             buffer.append(getAbsolutePath());
             requestUrl = buffer.toString();
@@ -287,20 +280,15 @@ public class Request implements HttpUtil {
     }
 
     /**
-     * Returns the protocol name in the request, i.e. "http" or
-     * "https".
+     * Returns the protocol name in the request.
      *
-     * @return the protocol name
+     * @return the protocol name (i.e. "http" or "https")
      */
     public String getProtocol() {
         if (requestProtocol == null) {
-            String str1 = request.getHeader("X-Forwarded-Scheme");
-            String str2 = request.getHeader("X-Forwarded-Proto");
-            str1 = RegexUtil.firstMatch(RE_HEADER_VALUE, str1);
-            str2 = RegexUtil.firstMatch(RE_HEADER_VALUE, str2);
-            String str3 = StringUtils.defaultIfEmpty(str1, str2);
-            String str4 = request.getScheme();
-            requestProtocol = StringUtils.defaultIfEmpty(str3, str4);
+            String proto = request.getHeader("X-Forwarded-Proto");
+            proto = RegexUtil.firstMatch(RE_HEADER_VALUE, proto);
+            requestProtocol = StringUtils.defaultIfEmpty(proto, request.getScheme());
         }
         return requestProtocol;
     }
@@ -312,20 +300,17 @@ public class Request implements HttpUtil {
      */
     public String getHost() {
         if (requestHost == null) {
-            String str1 = request.getHeader("X-Forwarded-Server");
-            String str2 = request.getHeader("X-Forwarded-Host");
-            str1 = RegexUtil.firstMatch(RE_HEADER_VALUE, str1);
-            str2 = RegexUtil.firstMatch(RE_HEADER_VALUE, str2);
-            str2 = StringUtils.substringBefore(str2, ":");
-            String str3 = StringUtils.defaultIfEmpty(str1, str2);
-            String str4;
-            try {
-                str4 = request.getServerName();
-            } catch (NumberFormatException ignore) {
-                // Bugfix for IPv6 host names in Jetty 6.x
-                str4 = "127.0.0.1";
+            String host = request.getHeader("X-Forwarded-Host");
+            host = RegexUtil.firstMatch(RE_HEADER_VALUE, host);
+            requestHost = StringUtils.substringBefore(host, ":");
+            if (StringUtils.isEmpty(requestHost)) {
+                try {
+                    requestHost = request.getServerName();
+                } catch (NumberFormatException ignore) {
+                    // FIXME: Bugfix for IPv6 host names in Jetty 6.x
+                    requestHost = "127.0.0.1";
+                }
             }
-            requestHost = StringUtils.defaultIfEmpty(str3, str4);
         }
         return requestHost;
     }
@@ -337,16 +322,19 @@ public class Request implements HttpUtil {
      */
     public int getPort() {
         if (requestPort <= 0) {
-            String str1 = request.getHeader("X-Forwarded-Port");
-            String str2 = request.getHeader("X-Forwarded-Host");
-            str1 = RegexUtil.firstMatch(RE_HEADER_VALUE, str1);
-            str2 = RegexUtil.firstMatch(RE_HEADER_VALUE, str2);
-            if (str1 != null) {
-                requestPort = Integer.parseInt(str1);
-            } else if (str2 != null) {
-                str2 = StringUtils.substringAfter(str2, ":");
-                str2 = StringUtils.defaultIfEmpty(str2, "80");
-                requestPort = Integer.parseInt(str2);
+            String port = request.getHeader("X-Forwarded-Port");
+            String host = request.getHeader("X-Forwarded-Host");
+            port = RegexUtil.firstMatch(RE_HEADER_VALUE, port);
+            host = RegexUtil.firstMatch(RE_HEADER_VALUE, host);
+            if (StringUtils.isNumeric(port)) {
+                requestPort = Integer.parseInt(port);
+            } else if (!StringUtils.isEmpty(host)) {
+                port = StringUtils.substringAfter(host, ":");
+                if (StringUtils.isNumeric(port)) {
+                    requestPort = Integer.parseInt(port);
+                } else {
+                    requestPort = Helper.defaultPort(getProtocol());
+                }
             } else {
                 requestPort = request.getServerPort();
             }
@@ -452,13 +440,12 @@ public class Request implements HttpUtil {
      */
     public String getRemoteAddr() {
         if (requestIp == null) {
-            String str1 = request.getHeader("X-Forwarded-For");
-            String str2 = request.getHeader("X-Real-IP");
-            str1 = RegexUtil.firstMatch(RE_HEADER_VALUE, str1);
-            str2 = RegexUtil.firstMatch(RE_HEADER_VALUE, str2);
-            String str3 = StringUtils.defaultIfEmpty(str1, str2);
-            String str4 = request.getRemoteAddr();
-            requestIp = StringUtils.defaultIfEmpty(str3, str4);
+            String forwarded = request.getHeader("X-Forwarded-For");
+            String realIP = request.getHeader("X-Real-IP");
+            forwarded = RegexUtil.firstMatch(RE_HEADER_VALUE, forwarded);
+            realIP = RegexUtil.firstMatch(RE_HEADER_VALUE, realIP);
+            String ip = StringUtils.defaultIfEmpty(forwarded, realIP);
+            requestIp = StringUtils.defaultIfEmpty(ip, request.getRemoteAddr());
         }
         return requestIp;
     }
