@@ -1,5 +1,5 @@
 DATE    := $(shell date '+%F')
-VERSION := $(shell date '+%Y%m%d')
+VERSION := $(shell date '+%Y.%m.%d-beta')
 
 
 #
