@@ -36,6 +36,7 @@ setup: clean
 # Build release artefacts
 #
 build:
+	rm -f share/docker/rapidcontext-*.zip
 	DATE=$(DATE) VERSION=$(VERSION) ant package
 
 build-docker:

@@ -1,7 +1,7 @@
 FROM alpine:3.16
 ARG VERSION
 ADD rapidcontext-${VERSION}.zip /opt/
-RUN apk add openjdk17-jre-headless && \
+RUN apk add --no-cache openjdk17-jre-headless && \
     mkdir -p /opt/local/plugin && \
     cd /opt && \
     unzip rapidcontext-${VERSION}.zip && \
