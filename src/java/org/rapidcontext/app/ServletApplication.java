@@ -37,7 +37,6 @@ import org.rapidcontext.core.type.WebMatcher;
 import org.rapidcontext.core.web.Mime;
 import org.rapidcontext.core.web.Request;
 import org.rapidcontext.util.BinaryUtil;
-import org.rapidcontext.util.FileUtil;
 
 /**
  * The main application servlet. This servlet handles all incoming
@@ -76,20 +75,8 @@ public class ServletApplication extends HttpServlet {
      */
     public void init() throws ServletException {
         super.init();
-        File baseDir = new File(getServletContext().getRealPath("/"));
-        File tmpDir = (File) getServletContext().getAttribute("javax.servlet.context.tempdir");
-        if (tmpDir == null) {
-            try {
-                tmpDir = FileUtil.tempDir("rapidcontext", "");
-            } catch (IOException e) {
-                tmpDir = new File(baseDir, "temp");
-                tmpDir.mkdir();
-                tmpDir.deleteOnExit();
-            }
-        }
-        LOG.fine("using temporary directory: " + tmpDir);
-        FileUtil.setTempDir(tmpDir);
         Mime.context = getServletContext();
+        File baseDir = new File(getServletContext().getRealPath("/"));
         ctx = ApplicationContext.init(baseDir, baseDir, true);
         // TODO: move the doc directory into the system plug-in storage
         try {

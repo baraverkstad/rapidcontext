@@ -15,6 +15,7 @@
 package org.rapidcontext.app;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -228,6 +229,7 @@ public class ApplicationContext {
     private ApplicationContext(File baseDir, File localDir) {
         File builtinDir = FileUtil.canonical(new File(baseDir, "plugin"));
         File pluginDir = FileUtil.canonical(new File(localDir, "plugin"));
+        initTmpDir(FileUtil.canonical(new File(localDir, "tmp")));
         this.storage = new RootStorage(true);
         this.pluginManager = new PluginManager(builtinDir, pluginDir, storage);
         this.library = new Library(this.storage);
@@ -242,6 +244,24 @@ public class ApplicationContext {
                 LOG.severe("failed to update application config with GUID");
             }
         }
+    }
+
+    /**
+     * Initializes a temporary directory.
+     *
+     * @param tmpDir         the directory to create and use
+     */
+    private void initTmpDir(File tmpDir) {
+        LOG.fine("creating temporary directory: " + tmpDir);
+        tmpDir.mkdir();
+        tmpDir.deleteOnExit();
+        try {
+            FileUtil.deleteFiles(tmpDir);
+        } catch (IOException e) {
+            LOG.warning("failed to cleanup temporary directory: " + tmpDir +
+                        ": " + e.getMessage());
+        }
+        FileUtil.setTempDir(tmpDir);
     }
 
     /**
