@@ -1,5 +1,6 @@
-DATE    := $(shell date '+%F')
-VERSION := $(shell date '+%Y.%m.%d-beta')
+DATE    := $(or $(DATE),$(shell date '+%F'))
+SERIES  := $(if $(VERSION),'latest','beta')
+VERSION := $(or $(VERSION),$(shell date '+%Y.%m.%d-beta'))
 
 
 #
@@ -44,7 +45,7 @@ build-docker:
 	( \
 		cd share/docker && \
 		docker buildx build . \
-			-t baraverkstad/rapidcontext:latest \
+			-t baraverkstad/rapidcontext:$(SERIES) \
 			-t baraverkstad/rapidcontext:v$(VERSION) \
 			--build-arg VERSION=$(VERSION) \
 			--platform linux/amd64,linux/arm64 \
