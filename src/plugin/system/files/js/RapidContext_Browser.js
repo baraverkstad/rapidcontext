@@ -194,7 +194,7 @@
             return isValid;
         }
         var res = true;
-        var features = Array.isArray(feature) ? feature : Array.prototype.slice.apply(arguments);
+        var features = Array.isArray(feature) ? feature : Array.prototype.slice.call(arguments);
         for (var i = 0; i < features.length; i++) {
             var def = features[i].test ? features[i] : { test: features[i] };
             if (!check(def.test)) {

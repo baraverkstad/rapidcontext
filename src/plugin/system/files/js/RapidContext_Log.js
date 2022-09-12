@@ -174,7 +174,7 @@
      */
     function error(msg/**, ...*/) {
         if (state.level >= 1) {
-            var args = Array.prototype.slice.apply(arguments);
+            var args = Array.prototype.slice.call(arguments);
             _log("error", args);
             _store("error", args.map(stringify));
         }
@@ -194,7 +194,7 @@
      */
     function warn(msg/**, ...*/) {
         if (state.level >= 2) {
-            var args = Array.prototype.slice.apply(arguments);
+            var args = Array.prototype.slice.call(arguments);
             _log("warn", args);
             _store("warn", args.map(stringify));
         }
@@ -214,7 +214,7 @@
      */
     function info(msg/**, ...*/) {
         if (state.level >= 3) {
-            var args = Array.prototype.slice.apply(arguments);
+            var args = Array.prototype.slice.call(arguments);
             _log("info", args);
             _store("info", args.map(stringify));
         }
@@ -236,7 +236,7 @@
      */
     function debug(msg/**, ...*/) {
         if (state.level >= 4) {
-            var args = Array.prototype.slice.apply(arguments);
+            var args = Array.prototype.slice.call(arguments);
             _log("log", args);
             _store("log", args.map(stringify));
         }

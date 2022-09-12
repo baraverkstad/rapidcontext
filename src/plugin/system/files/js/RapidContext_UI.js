@@ -35,7 +35,7 @@ if (typeof(RapidContext.UI) == "undefined") {
  * @param {String/Error} [args] the messages or errors to display
  */
 RapidContext.UI.showError = function () {
-    var msg = Array.prototype.slice(arguments).map(function (arg) {
+    var msg = Array.prototype.slice.call(arguments).map(function (arg) {
         var isError = arg instanceof Error && arg.message;
         return isError ? arg.message : arg;
     }).join(", ");
