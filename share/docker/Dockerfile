@@ -14,4 +14,4 @@ WORKDIR /opt/rapidcontext/
 ENV JAVA_TOOL_OPTIONS="-Djava.util.logging.config.file=lib/logging.properties"
 ENTRYPOINT ["java", "-jar", "lib/rapidcontext.jar"]
 CMD ["--server", "--port", "80", "--local", "/opt/local"]
-HEALTHCHECK --timeout=5s CMD wget -q --spider http://localhost/rapidcontext/status
+# HEALTHCHECK --timeout=5s CMD wget -q --spider http://localhost/rapidcontext/status
