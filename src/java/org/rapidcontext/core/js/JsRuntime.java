@@ -50,6 +50,11 @@ public final class JsRuntime {
         Logger.getLogger(JsRuntime.class.getName());
 
     /**
+     * The shared global scope (with standard JS objects).
+     */
+    private static ScriptableObject globalScope = null;
+
+    /**
      * Compiles a JavaScript function for later use.
      *
      * @param name           the function name (must be valid JS)
@@ -67,9 +72,12 @@ public final class JsRuntime {
         try (Context cx = Context.enter()) {
             cx.setLanguageVersion(Context.VERSION_ES6);
             cx.setErrorReporter(errors);
-            ScriptableObject scope = cx.initSafeStandardObjects();
+            if (globalScope == null) {
+                globalScope = cx.initSafeStandardObjects(null, true);
+            }
+            Scriptable scope = cx.newObject(globalScope);
             Object console = Context.javaToJS(new ConsoleObject(name), scope);
-            scope.defineProperty("console", console, ScriptableObject.READONLY | ScriptableObject.PERMANENT);
+            ScriptableObject.defineProperty(scope, "console", console, ScriptableObject.READONLY | ScriptableObject.PERMANENT);
             StringBuilder code = new StringBuilder();
             code.append("function ");
             code.append(name);
@@ -111,7 +119,7 @@ public final class JsRuntime {
     public static Object call(Function f, Object[] args, CallContext procCx) throws JsException {
         try (Context cx = Context.enter()) {
             cx.setLanguageVersion(Context.VERSION_ES6);
-            ScriptableObject scope = cx.initSafeStandardObjects();
+            Scriptable scope = cx.newObject(globalScope);
             Object[] safeArgs = new Object[args.length];
             for (int i = 0; i < args.length; i++) {
                 if (args[i] instanceof Procedure) {
