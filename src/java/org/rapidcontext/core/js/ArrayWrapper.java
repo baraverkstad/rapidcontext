@@ -66,7 +66,7 @@ public class ArrayWrapper extends ScriptableObject implements Wrapper {
      * @return the class name
      */
     public String getClassName() {
-        return "ArrayWrapper";
+        return "Array";  // support Array.isArray()
     }
 
     /**
@@ -210,12 +210,12 @@ public class ArrayWrapper extends ScriptableObject implements Wrapper {
      * @return the unwrapped object
      */
     public Object unwrap() {
-        // FIXME: clear wrapped object cache
         if (!arr.isSealed()) {
             for (int i = 0; i < arr.size(); i++) {
                 arr.set(i, JsRuntime.unwrap(arr.get(i)));
             }
         }
+        cache.clear();
         return arr;
     }
 }
