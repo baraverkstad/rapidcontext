@@ -22,6 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.data.Dict;
@@ -63,16 +64,10 @@ public class CmdLineExecProcedure extends AddOnProcedure {
     public static final String BINDING_ENVIRONMENT = "environment";
 
     /**
-     * The progress information regular expression string.
-     */
-    private static final String PROGRESS_RE =
-        "progress: (\\d+(\\.\\d+)?)%";
-
-    /**
      * The progress information regular expression pattern.
      */
     private static final Pattern PROGRESS_PATTERN =
-        Pattern.compile(PROGRESS_RE, Pattern.CASE_INSENSITIVE);
+        Pattern.compile("^#\\s+progress: (\\d+(\\.\\d+)?)%", Pattern.CASE_INSENSITIVE);
 
     /**
      * Creates a new command-line execution procedure.
@@ -179,14 +174,13 @@ public class CmdLineExecProcedure extends AddOnProcedure {
     private static Dict waitFor(Process process, CallContext cx)
         throws IOException {
 
-        StringBuffer output = new StringBuffer();
-        StringBuffer error = new StringBuffer();
-        byte[] buffer = new byte[4096];
+        StringBuilder output = new StringBuilder();
+        StringBuilder error = new StringBuilder();
         int exitValue = 0;
         process.getOutputStream().close();
         try (
-            InputStream isOut = process.getInputStream();
-            InputStream isErr = process.getErrorStream()
+            InputStream stdout = process.getInputStream();
+            InputStream stderr = process.getErrorStream()
         ) {
             while (true) {
                 if (cx.isInterrupted()) {
@@ -194,9 +188,10 @@ public class CmdLineExecProcedure extends AddOnProcedure {
                     throw new IOException("procedure call interrupted");
                 }
                 try {
-                    readStream(isOut, buffer, output);
-                    readStream(isErr, buffer, error);
-                    log(cx, error);
+                    output.append(readAvail(stdout));
+                    String err = readAvail(stderr);
+                    error.append(err);
+                    log(cx, err);
                     exitValue = process.exitValue();
                     break;
                 } catch (IllegalThreadStateException e) {
@@ -210,8 +205,8 @@ public class CmdLineExecProcedure extends AddOnProcedure {
         }
         Dict res = new Dict();
         res.setInt("exitValue", exitValue);
-        res.set("output", output);
-        res.set("error", error);
+        res.set("output", output.toString());
+        res.set("error", error.toString());
         return res;
     }
 
@@ -219,49 +214,42 @@ public class CmdLineExecProcedure extends AddOnProcedure {
      * Reads all available bytes off an input stream.
      *
      * @param is             the input stream to read
-     * @param buffer         the temporary read buffer
-     * @param result         the result buffer to append to
+     *
+     * @return the string read
      *
      * @throws IOException if the reading failed
      */
-    private static void readStream(InputStream is, byte[] buffer, StringBuffer result)
+    private static String readAvail(InputStream is)
         throws IOException {
 
-        int avail = is.available();
-        while (avail > 0) {
-            if (avail > buffer.length) {
-                avail = buffer.length;
-            }
-            is.read(buffer, 0, avail);
-            result.append(new String(buffer, 0, avail));
-            avail = is.available();
+        StringBuilder res = new StringBuilder();
+        byte[] buf = new byte[4096];
+        int avail;
+        while ((avail = is.available()) > 0) {
+            avail = Math.min(avail, buf.length);
+            is.read(buf, 0, avail);
+            res.append(new String(buf, 0, avail, "UTF-8"));
         }
+        return res.toString();
     }
 
     /**
-     * Analyzes the error output buffer from a process and adds the
-     * relevant log messages
+     * Logs process error output while filtering progress status.
      *
      * @param cx             the procedure call context
-     * @param buffer         the process error output buffer
+     * @param msg            the process error messages
      */
-    private static void log(CallContext cx, StringBuffer buffer) {
-        int pos;
-        while ((pos = buffer.indexOf("\n")) >= 0) {
-            String text = buffer.substring(0, pos).trim();
-            if (text.length() > 0 && text.charAt(0) == '#') {
+    private static void log(CallContext cx, String msg) {
+        Stream.of(msg.split("\n")).forEach(line -> {
+            Matcher m = PROGRESS_PATTERN.matcher(line);
+            if (m.find()) {
+                double d = Double.parseDouble(m.group(1));
                 if (cx.getCallStack().height() <= 1) {
-                    Matcher m = PROGRESS_PATTERN.matcher(text);
-                    if (m.find()) {
-                        double progress = Double.parseDouble(m.group(1));
-                        cx.setAttribute(CallContext.ATTRIBUTE_PROGRESS,
-                                        Double.valueOf(progress));
-                    }
+                    cx.setAttribute(CallContext.ATTRIBUTE_PROGRESS, Double.valueOf(d));
                 }
             } else {
-                cx.log(buffer.substring(0, pos));
+                cx.log(line);
             }
-            buffer.delete(0, pos + 1);
-        }
+        });
     }
 }
