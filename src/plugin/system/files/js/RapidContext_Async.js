@@ -270,7 +270,7 @@
      * @return {Async} a promise that resolves with the DOM `<script>` element
      */
     function script(url) {
-        return create("script", { src: url, async: true }, document.head);
+        return create("script", { src: url, defer: true }, document.head);
     }
 
     function create(tag, attrs, parent) {
