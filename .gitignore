@@ -7,6 +7,7 @@
 /lib/rapidcontext-*.jar
 /plugin/
 /test/classes/
+/tmp/
 
 # Plug-In compile output files
 /src/plugin/*/build.number
