@@ -135,7 +135,7 @@ public class StorageWebService extends WebService {
             errorUnauthorized(request);
             return;
         }
-        Path path = new Path(request.getPath());
+        Path path = Path.from(request.getPath());
         Metadata meta = lookup(path);
         boolean isExact = meta != null && path.equals(meta.path());
         boolean isHtml = !isExact && StringUtils.endsWithIgnoreCase(path.name(), EXT_HTML);
@@ -368,7 +368,7 @@ public class StorageWebService extends WebService {
         }
         try {
             Object data = JsonSerializer.unserialize(request.getInputString());
-            Path path = new Path(request.getPath());
+            Path path = Path.from(request.getPath());
             Storage storage = ApplicationContext.getInstance().getStorage();
             Object prev = storage.load(path);
             Dict dict = (prev instanceof Dict) ? (Dict) prev : null;
@@ -413,7 +413,7 @@ public class StorageWebService extends WebService {
             return;
         }
         try {
-            Path path = new Path(request.getPath());
+            Path path = Path.from(request.getPath());
             Metadata meta = lookup(path);
             // FIXME: write to existing path if metadata exists?
             Object data = JsonSerializer.unserialize(request.getInputString());
@@ -452,7 +452,7 @@ public class StorageWebService extends WebService {
             errorBadRequest(request, "cannot store data in a directory");
             return;
         }
-        Path path = new Path(request.getPath());
+        Path path = Path.from(request.getPath());
         Metadata meta = lookup(path);
         try (InputStream is = request.getInputStream()) {
             Binary data = new Binary.BinaryStream(is, -1);
@@ -485,7 +485,7 @@ public class StorageWebService extends WebService {
             errorUnauthorized(request);
             return;
         }
-        Metadata meta = lookup(new Path(request.getPath()));
+        Metadata meta = lookup(Path.from(request.getPath()));
         if (meta == null) {
             errorNotFound(request);
             return;

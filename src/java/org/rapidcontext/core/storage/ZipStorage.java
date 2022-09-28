@@ -97,7 +97,7 @@ public class ZipStorage extends Storage {
             if (entry.isDirectory() && !name.endsWith("/")) {
                 name += "/";
             }
-            Path path = new Path(name);
+            Path path = Path.from(name);
             Index idx = (Index) entries.get(path.parent());
             if (path.isIndex()) {
                 idx.addIndex(path.name());

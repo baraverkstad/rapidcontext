@@ -63,12 +63,12 @@ public class PluginManager {
     /**
      * The storage path to the loaded plug-in objects.
      */
-    public static final Path PATH_PLUGIN = new Path("/plugin/");
+    public static final Path PATH_PLUGIN = Path.from("/plugin/");
 
     /**
      * The platform information path.
      */
-    public static final Path PATH_INFO = new Path("/platform");
+    public static final Path PATH_INFO = Path.from("/platform");
 
     /**
      * The identifier of the system plug-in.
@@ -255,7 +255,7 @@ public class PluginManager {
      *         false otherwise
      */
     private boolean isLegacyPlugin(String pluginId, Storage storage) {
-        Dict dict = (Dict) storage.load(new Path("/plugin"));
+        Dict dict = (Dict) storage.load(Path.from("/plugin"));
         String version = "";
         if (dict != null) {
             version = dict.getString(Plugin.KEY_PLATFORM, "");
@@ -400,7 +400,7 @@ public class PluginManager {
 
         try {
             storage = new ZipStorage(file);
-            dict = (Dict) storage.load(new Path("/plugin"));
+            dict = (Dict) storage.load(Path.from("/plugin"));
             if (dict == null) {
                 throw new PluginException("missing plugin.properties");
             }

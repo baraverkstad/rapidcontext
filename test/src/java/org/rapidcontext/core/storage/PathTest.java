@@ -25,19 +25,28 @@ import org.junit.Test;
 public class PathTest {
 
     @Test
+    public void testFrom() {
+        assertTrue(Path.from("").isRoot());
+        assertTrue(Path.from("/").isRoot());
+        assertTrue(Path.from("//").isRoot());
+        assertFalse(Path.from("/a").isIndex());
+        assertTrue(Path.from("/a/").isIndex());
+    }
+
+    @Test
     public void testEquals() {
-        assertNotEquals(null, new Path(""));
-        assertNotEquals("/", new Path(""));
-        assertEquals(Path.ROOT, new Path(""));
-        assertEquals(Path.ROOT, new Path("/"));
-        assertNotEquals(Path.ROOT, new Path("/a"));
-        assertEquals(new Path("/a"), new Path("/a"));
-        assertNotEquals(new Path("/a"), new Path("/a/"));
+        assertNotEquals(null, Path.from(""));
+        assertNotEquals("/", Path.from(""));
+        assertEquals(Path.ROOT, Path.from(""));
+        assertEquals(Path.ROOT, Path.from("/"));
+        assertNotEquals(Path.ROOT, Path.from("/a"));
+        assertEquals(Path.from("/a"), Path.from("/a"));
+        assertNotEquals(Path.from("/a"), Path.from("/a/"));
     }
 
     @Test
     public void testToIdent() {
-        Path p = new Path("/a/b/c/d");
+        Path p = Path.from("/a/b/c/d");
         assertEquals("", Path.ROOT.toIdent(0));
         assertEquals("", Path.ROOT.toIdent(1));
         assertEquals("a/b/c/d", p.toIdent(0));
@@ -48,43 +57,43 @@ public class PathTest {
 
     @Test
     public void testStartsWith() {
-        Path p = new Path("/a/b/c/d");
+        Path p = Path.from("/a/b/c/d");
         assertTrue(p.startsWith(Path.ROOT));
-        assertFalse(p.startsWith(new Path("/a/b/c")));
-        assertTrue(p.startsWith(new Path("/a/b/c/")));
-        assertTrue(p.startsWith(new Path("/a/b/c/d")));
-        assertFalse(p.startsWith(new Path("/a/b/c/d/")));
-        assertFalse(p.startsWith(new Path("/b/c/")));
-        p = new Path("/a/");
+        assertFalse(p.startsWith(Path.from("/a/b/c")));
+        assertTrue(p.startsWith(Path.from("/a/b/c/")));
+        assertTrue(p.startsWith(Path.from("/a/b/c/d")));
+        assertFalse(p.startsWith(Path.from("/a/b/c/d/")));
+        assertFalse(p.startsWith(Path.from("/b/c/")));
+        p = Path.from("/a/");
         assertTrue(p.startsWith(Path.ROOT));
-        assertFalse(p.startsWith(new Path("/a")));
-        assertTrue(p.startsWith(new Path("/a/")));
-        assertFalse(p.startsWith(new Path("/a/b/c/")));
-        assertFalse(p.startsWith(new Path("/b/c/")));
+        assertFalse(p.startsWith(Path.from("/a")));
+        assertTrue(p.startsWith(Path.from("/a/")));
+        assertFalse(p.startsWith(Path.from("/a/b/c/")));
+        assertFalse(p.startsWith(Path.from("/b/c/")));
     }
 
     @Test
     public void testDepth() {
         assertEquals(0, Path.ROOT.depth());
-        assertEquals(0, new Path("/a").depth());
-        assertEquals(1, new Path("/a/").depth());
-        assertEquals(3, new Path("/a/b/c/d").depth());
+        assertEquals(0, Path.from("/a").depth());
+        assertEquals(1, Path.from("/a/").depth());
+        assertEquals(3, Path.from("/a/b/c/d").depth());
     }
 
     @Test
     public void testParent() {
-        Path p = new Path("/a/b/c/d");
+        Path p = Path.from("/a/b/c/d");
         assertEquals(Path.ROOT, Path.ROOT.parent());
-        assertEquals(new Path("/a/b/c/"), p.parent());
-        assertEquals(new Path("/a/b/"), p.parent().parent());
+        assertEquals(Path.from("/a/b/c/"), p.parent());
+        assertEquals(Path.from("/a/b/"), p.parent().parent());
         assertEquals(Path.ROOT, p.parent().parent().parent().parent());
     }
 
     @Test
     public void testChild() {
-        assertEquals(new Path("/a"), Path.ROOT.child("a", false));
-        assertNotEquals(new Path("/a"), Path.ROOT.child("a", true));
-        assertEquals(new Path("/a/"), Path.ROOT.child("a", true));
+        assertEquals(Path.from("/a"), Path.ROOT.child("a", false));
+        assertNotEquals(Path.from("/a"), Path.ROOT.child("a", true));
+        assertEquals(Path.from("/a/"), Path.ROOT.child("a", true));
     }
 
     @Test
@@ -98,12 +107,12 @@ public class PathTest {
 
     @Test
     public void testRelativeTo() {
-        Path p = new Path("/a/b/c/d");
+        Path p = Path.from("/a/b/c/d");
         assertEquals(p, p.relativeTo(Path.ROOT));
-        assertEquals(new Path("/b/c/d"), p.relativeTo(new Path("/a/")));
-        assertEquals(new Path("/c/d"), p.relativeTo(new Path("/a/b/")));
-        assertEquals(new Path("../../a/b/c/d"), p.relativeTo(new Path("/a/b/c")));
-        assertEquals(new Path("../../a/b/c/d"), p.relativeTo(new Path("/g/h/")));
-        assertEquals(new Path("../../a/b/c/d"), p.relativeTo(new Path("/g/h/i")));
+        assertEquals(Path.from("/b/c/d"), p.relativeTo(Path.from("/a/")));
+        assertEquals(Path.from("/c/d"), p.relativeTo(Path.from("/a/b/")));
+        assertEquals(Path.from("../../a/b/c/d"), p.relativeTo(Path.from("/a/b/c")));
+        assertEquals(Path.from("../../a/b/c/d"), p.relativeTo(Path.from("/g/h/")));
+        assertEquals(Path.from("../../a/b/c/d"), p.relativeTo(Path.from("/g/h/i")));
     }
 }

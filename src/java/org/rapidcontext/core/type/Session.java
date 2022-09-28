@@ -48,7 +48,7 @@ public class Session extends StorableObject {
     /**
      * The session object storage path.
      */
-    public static final Path PATH = new Path("/session/");
+    public static final Path PATH = Path.from("/session/");
 
     /**
      * The dictionary key for the user id.

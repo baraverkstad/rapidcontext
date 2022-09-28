@@ -66,7 +66,7 @@ public class FileWebService extends WebService {
         } else if (obj instanceof Path) {
             return (Path) obj;
         } else {
-            return new Path(obj.toString());
+            return Path.from(obj.toString());
         }
     }
 

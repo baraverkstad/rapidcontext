@@ -72,7 +72,7 @@ public abstract class Connection extends StorableObject {
     /**
      * The connection object storage path.
      */
-    public static final Path PATH = new Path("/connection/");
+    public static final Path PATH = Path.from("/connection/");
 
     /**
      * The maximum time to wait for acquiring an object from the pool.

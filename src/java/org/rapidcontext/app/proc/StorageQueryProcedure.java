@@ -120,7 +120,7 @@ public class StorageQueryProcedure implements Procedure {
         }
         CallContext.checkSearchAccess(path);
         Storage storage = ApplicationContext.getInstance().getStorage();
-        Query query = storage.query(new Path(path)).filterReadAccess();
+        Query query = storage.query(Path.from(path)).filterReadAccess();
         if (dict.containsKey("depth")) {
             query.filterDepth(dict.getInt("depth", -1));
         }

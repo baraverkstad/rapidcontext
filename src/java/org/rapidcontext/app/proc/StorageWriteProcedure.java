@@ -163,7 +163,7 @@ public class StorageWriteProcedure implements Procedure {
             throw new ProcedureException("invalid data format: " + fmt);
         }
 
-        return Boolean.valueOf(store(new Path(path), data));
+        return Boolean.valueOf(store(Path.from(path), data));
     }
 
     /**

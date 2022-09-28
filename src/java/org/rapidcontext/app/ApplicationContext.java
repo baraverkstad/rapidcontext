@@ -106,7 +106,7 @@ public class ApplicationContext {
     /**
      * The path to the global configuration.
      */
-    public static final Path PATH_CONFIG = new Path("/config");
+    public static final Path PATH_CONFIG = Path.from("/config");
 
     /**
      * The class load time (system initialization time).

@@ -33,7 +33,7 @@ public class TypeListProcedure implements Procedure {
     /**
      * The app object storage path.
      */
-    public static final Path PATH_APP = new Path("/type/");
+    public static final Path PATH_APP = Path.from("/type/");
 
     /**
      * The procedure name constant.

@@ -46,7 +46,7 @@ public class Library {
     /**
      * The procedure object storage path.
      */
-    public static final Path PATH_PROC = new Path("/procedure/");
+    public static final Path PATH_PROC = Path.from("/procedure/");
 
     /**
      * The map of procedure type names and implementation classes.

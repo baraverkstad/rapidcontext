@@ -77,7 +77,7 @@ public abstract class WebService extends StorableObject implements HttpUtil {
     /**
      * The web service object storage path.
      */
-    public static final Path PATH = new Path("/webservice/");
+    public static final Path PATH = Path.from("/webservice/");
 
     /**
      * The array of matcher objects.

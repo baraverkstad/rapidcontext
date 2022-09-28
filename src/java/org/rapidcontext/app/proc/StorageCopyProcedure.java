@@ -137,7 +137,7 @@ public class StorageCopyProcedure implements Procedure {
         LOG.info("copying storage path " + src + " to " + dst);
         String flags = ((String) bindings.getValue("flags", "")).toLowerCase();
         boolean update = flags.contains("update");
-        return Boolean.valueOf(copy(new Path(src), new Path(dst), update));
+        return Boolean.valueOf(copy(Path.from(src), Path.from(dst), update));
     }
 
     /**

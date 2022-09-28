@@ -122,7 +122,7 @@ public class Role extends StorableObject {
     /**
      * The role object storage path.
      */
-    public static final Path PATH = new Path("/role/");
+    public static final Path PATH = Path.from("/role/");
 
     /**
      * Returns a stream of all roles found in the storage.

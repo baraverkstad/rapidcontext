@@ -122,7 +122,7 @@ public class StorageReadProcedure implements Procedure {
         }
         CallContext.checkAccess(path, cx.readPermission(1));
         Storage storage = ApplicationContext.getInstance().getStorage();
-        Path loadPath = new Path(path);
+        Path loadPath = Path.from(path);
         return serialize(loadPath, storage.load(loadPath));
     }
 

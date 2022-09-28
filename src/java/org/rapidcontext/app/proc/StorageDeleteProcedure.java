@@ -113,7 +113,7 @@ public class StorageDeleteProcedure implements Procedure {
             throw new ProcedureException("path cannot be empty");
         }
         CallContext.checkWriteAccess(path);
-        return Boolean.valueOf(delete(new Path(path)));
+        return Boolean.valueOf(delete(Path.from(path)));
     }
 
     /**

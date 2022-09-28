@@ -174,7 +174,7 @@ public class StorableObject {
      * @return the object storage path
      */
     public Path path() {
-        return new Path(type() + "/" + id());
+        return Path.from(type() + "/" + id());
     }
 
     /**

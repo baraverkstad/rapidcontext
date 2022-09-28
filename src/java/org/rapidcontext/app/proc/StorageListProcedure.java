@@ -110,7 +110,7 @@ public class StorageListProcedure implements Procedure {
         CallContext.checkSearchAccess(search);
         Storage storage = ApplicationContext.getInstance().getStorage();
         Array res = new Array();
-        storage.query(new Path(search))
+        storage.query(Path.from(search))
             .filterReadAccess()
             .paths()
             .forEach(path -> {

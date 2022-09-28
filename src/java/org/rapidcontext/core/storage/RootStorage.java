@@ -62,17 +62,17 @@ public class RootStorage extends Storage {
     /**
      * The storage path for public web files.
      */
-    public static final Path PATH_FILES = new Path("/files/");
+    public static final Path PATH_FILES = Path.from("/files/");
 
     /**
      * The storage path to the JAR library files.
      */
-    public static final Path PATH_LIB = new Path("/lib/");
+    public static final Path PATH_LIB = Path.from("/lib/");
 
     /**
      * The storage path for mounted storages.
      */
-    public static final Path PATH_STORAGE = new Path("/storage/");
+    public static final Path PATH_STORAGE = Path.from("/storage/");
 
     /**
      * The storage path for mounted storage caches.

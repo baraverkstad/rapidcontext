@@ -64,7 +64,7 @@ public class Type extends StorableObject {
     /**
      * The connection object storage path.
      */
-    public static final Path PATH = new Path("/type/");
+    public static final Path PATH = Path.from("/type/");
 
     /**
      * The storable object initializer constructor arguments.

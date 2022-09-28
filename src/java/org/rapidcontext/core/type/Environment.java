@@ -46,7 +46,7 @@ public class Environment extends StorableObject {
     /**
      * The environment object storage path.
      */
-    public static final Path PATH = new Path("/environment/");
+    public static final Path PATH = Path.from("/environment/");
 
     /**
      * Returns a stream of all environments found in the storage.

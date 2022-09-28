@@ -65,9 +65,11 @@ public class Path {
      * a file system path).
      *
      * @param path           the string path to parse
+     *
+     * @return the path created
      */
-    public Path(String path) {
-        this(ROOT, path);
+    public static Path from(String path) {
+        return new Path(ROOT, path);
     }
 
     /**

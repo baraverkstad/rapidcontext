@@ -41,7 +41,7 @@ public class AppListProcedure implements Procedure {
     /**
      * The app object storage path.
      */
-    public static final Path PATH_APP = new Path("/app/");
+    public static final Path PATH_APP = Path.from("/app/");
 
     /**
      * The procedure name constant.

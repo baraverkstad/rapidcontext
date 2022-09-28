@@ -332,14 +332,14 @@ public class AppWebService extends FileWebService {
     protected void processApp(Request request, String appId, String baseUrl) {
         session(request, true);
         Storage storage = ApplicationContext.getInstance().getStorage();
-        Metadata meta = storage.lookup(new Path("/app/" + appId));
+        Metadata meta = storage.lookup(Path.from("/app/" + appId));
         if (meta == null || !meta.isObject(Dict.class)) {
             LOG.warning(this + " misconfigured; app '" + appId + "' not found,");
             appId = null;
         } else if (!SecurityContext.hasReadAccess(meta.path().toString())) {
             LOG.fine("unauthorized access to app '" + appId + "', launching login");
             // FIXME: Remove the 'login' property on the app object
-            Dict app = (Dict) storage.load(new Path("/app/" + appId));
+            Dict app = (Dict) storage.load(Path.from("/app/" + appId));
             appId = app.getString("login", loginId());
         }
         Object tpl = storage.load(RootStorage.PATH_FILES.child("index.tmpl", false));

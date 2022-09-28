@@ -87,7 +87,7 @@ public class User extends StorableObject {
     /**
      * The user object storage path.
      */
-    public static final Path PATH = new Path("/user/");
+    public static final Path PATH = Path.from("/user/");
 
     /**
      * Searches for a specific user in the storage.

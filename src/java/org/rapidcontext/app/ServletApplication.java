@@ -56,7 +56,7 @@ public class ServletApplication extends HttpServlet {
     /**
      * The documentation storage path.
      */
-    public static final Path DOC_PATH = new Path("/files/doc/");
+    public static final Path DOC_PATH = Path.from("/files/doc/");
 
     /**
      * The context to use for process execution.

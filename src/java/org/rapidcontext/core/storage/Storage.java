@@ -39,7 +39,7 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
      * should provide introspection abilities by returning it's
      * own dictionary when queried for this path.
      */
-    public static final Path PATH_STORAGEINFO = new Path("/storageinfo");
+    public static final Path PATH_STORAGEINFO = Path.from("/storageinfo");
 
     /**
      * The dictionary key for the read-write flag.
