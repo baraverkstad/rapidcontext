@@ -140,7 +140,7 @@ public class Session extends StorableObject {
      *         null if not found
      */
     public static Session find(Storage storage, String id) {
-        return find(storage, new Path(PATH, id));
+        return find(storage, Path.resolve(PATH, id));
     }
 
     /**
@@ -179,7 +179,7 @@ public class Session extends StorableObject {
      */
     public static void remove(Storage storage, String id) {
         try {
-            storage.remove(new Path(PATH, id));
+            storage.remove(Path.resolve(PATH, id));
         } catch (StorageException e) {
             LOG.log(Level.WARNING, "failed to delete session " + id, e);
         }

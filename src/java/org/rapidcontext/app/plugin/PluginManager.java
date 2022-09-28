@@ -145,8 +145,8 @@ public class PluginManager {
      */
     public static Path pluginPath(String pluginId) {
         Path ident = storagePath(pluginId).relativeTo(RootStorage.PATH_STORAGE);
-        Path cachePath = RootStorage.PATH_STORAGE_CACHE.descendant(ident);
-        return cachePath.descendant(PATH_PLUGIN.child(pluginId, false));
+        Path cachePath = Path.resolve(RootStorage.PATH_STORAGE_CACHE, ident);
+        return Path.resolve(cachePath, PATH_PLUGIN.child(pluginId, false));
     }
 
     /**
@@ -615,7 +615,7 @@ public class PluginManager {
      * @param pluginId       the unique plug-in id
      */
     private void loadJarFiles(String pluginId) {
-        Path path = storagePath(pluginId).descendant(RootStorage.PATH_LIB);
+        Path path = Path.resolve(storagePath(pluginId), RootStorage.PATH_LIB);
         storage.query(path)
             .filterFileExtension(".jar")
             .metadatas()

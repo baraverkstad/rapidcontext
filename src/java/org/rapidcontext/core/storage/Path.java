@@ -69,32 +69,62 @@ public class Path {
      * @return the path created
      */
     public static Path from(String path) {
-        return new Path(ROOT, path);
+        return resolve(ROOT, path);
     }
 
     /**
-     * Creates a new path from a parent and a child string
-     * representation (similar to a file system path).
+     * Resolves a path starting at a parent path. Leading and duplicate
+     * separator ('/') characters are ignored. A trailing separator ('/')
+     * character indicates that the resulting path is an index. Any
+     * relative ('../') path components will be resolved to the extent
+     * possible.
      *
      * @param parent         the parent index path
-     * @param path           the string path to parse
+     * @param path           the descendant path
+     *
+     * @return the resolved path
      */
-    public Path(Path parent, String path) {
+    public static Path resolve(Path parent, String path) {
         String normalized = StringUtils.strip(path, "/");
-        if (normalized.equals("")) {
-            this.parent = null;
-            this.name = "";
-            this.index = true;
+        if (normalized == null || normalized.equals("")) {
+            return parent;
         } else {
-            String[] parts = normalized.split("/");
-            this.parent = parent;
+            parent = parent.isIndex() ? parent : parent.parent();
+            boolean rooted = false;
+            String[] parts = StringUtils.splitByWholeSeparator(normalized, "/");
             for (int i = 0; i < parts.length - 1; i++) {
-                this.parent = new Path(this.parent, parts[i], true);
+                rooted = rooted || parent.isRoot();
+                if (!rooted && parts[i].equals("..")) {
+                    parent = parent.parent();
+                } else {
+                    parent = new Path(parent, parts[i], true);
+                }
             }
-            this.name = parts[parts.length - 1];
-            this.index = path.endsWith("/");
+            return new Path(parent, parts[parts.length - 1], path.endsWith("/"));
         }
-        this.length = isRoot() ? 0 : this.parent.length + 1;
+    }
+
+    /**
+     * Resolves a path starting at a parent path. Any relative ('../')
+     * path components will be resolved to the extent possible.
+     *
+     * @param parent         the parent index path
+     * @param path           the descendant path
+     *
+     * @return the resolved path
+     */
+    public static Path resolve(Path parent, Path path) {
+        if (path == null || path.isRoot()) {
+            return parent;
+        } else {
+            parent = parent.isIndex() ? parent : parent.parent();
+            parent = resolve(parent, path.parent());
+            if (!parent.isRoot() && path.name().equals("..")) {
+                return parent.parent();
+            } else {
+                return new Path(parent, path.name, path.index);
+            }
+        }
     }
 
     /**
@@ -284,21 +314,6 @@ public class Path {
     }
 
     /**
-     * Creates a new path to a descendant index or object.
-     *
-     * @param path           the relative descendant path
-     *
-     * @return a new path to a descendant index or object
-     */
-    public Path descendant(Path path) {
-        if (path.isRoot()) {
-            return this;
-        } else {
-            return new Path(descendant(path.parent()), path.name, path.index);
-        }
-    }
-
-    /**
      * Creates a new path that is relative to another path.
      *
      * @param path           the path to relate to
@@ -309,7 +324,7 @@ public class Path {
         if (equals(path)) {
             return ROOT;
         } else if (isRoot()) {
-            return new Path(ROOT, StringUtils.repeat("../", path.depth()));
+            return Path.resolve(ROOT, StringUtils.repeat("../", path.depth()));
         } else {
             return new Path(this.parent.relativeTo(path), this.name, this.index);
         }

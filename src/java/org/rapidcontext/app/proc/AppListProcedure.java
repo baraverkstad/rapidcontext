@@ -145,7 +145,7 @@ public class AppListProcedure implements Procedure {
     }
 
     private String[] resolveFiles(Storage storage, String url) {
-        Path base = new Path(RootStorage.PATH_FILES, url);
+        Path base = Path.resolve(RootStorage.PATH_FILES, url);
         while (StringUtils.containsAny(base.toString(), "*?")) {
             base = base.parent();
         }

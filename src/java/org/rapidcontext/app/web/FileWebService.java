@@ -91,7 +91,7 @@ public class FileWebService extends WebService {
      * @param request        the request to process
      */
     protected void doGet(Request request) {
-        processFile(request, new Path(path(), request.getPath()), false);
+        processFile(request, Path.resolve(path(), request.getPath()), false);
     }
 
     /**

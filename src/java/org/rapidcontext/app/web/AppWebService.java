@@ -132,7 +132,7 @@ public class AppWebService extends FileWebService {
      */
     protected static String[] resources(String type, Path base) {
         Storage storage = ApplicationContext.getInstance().getStorage();
-        Path storagePath = new Path(RootStorage.PATH_FILES, type + "/");
+        Path storagePath = Path.resolve(RootStorage.PATH_FILES, type + "/");
         String rootPath = RootStorage.PATH_FILES.toString();
         String basePath = base.toString();
         String ver = version();
@@ -295,7 +295,7 @@ public class AppWebService extends FileWebService {
             String path = request.getPath();
             String baseUrl = StringUtils.removeEnd(request.getUrl(), path);
             if (request.matchPath("rapidcontext/files/")) {
-                processFile(request, new Path(RootStorage.PATH_FILES, request.getPath()), true);
+                processFile(request, Path.resolve(RootStorage.PATH_FILES, request.getPath()), true);
             } else if (request.matchPath("rapidcontext/app/")) {
                 String appId = StringUtils.removeEnd(request.getPath(), "/");
                 processApp(request, appId, baseUrl);

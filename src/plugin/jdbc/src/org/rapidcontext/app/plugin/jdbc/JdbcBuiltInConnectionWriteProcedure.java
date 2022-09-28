@@ -116,7 +116,7 @@ public class JdbcBuiltInConnectionWriteProcedure implements Procedure {
         Dict res = null;
         String id = (String) bindings.getValue("id");
         Dict data = (Dict) bindings.getValue("data", null);
-        Path path = JdbcConnection.PATH.descendant(new Path(id));
+        Path path = Path.resolve(JdbcConnection.PATH, id);
         CallContext.checkWriteAccess(path.toString());
         if (data == null) {
             try {

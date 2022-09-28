@@ -97,12 +97,28 @@ public class PathTest {
     }
 
     @Test
-    public void testDescendant() {
-        Path p = new Path("/a/b/c/");
-        assertEquals(Path.ROOT, Path.ROOT.descendant(Path.ROOT));
-        assertEquals(p, p.descendant(Path.ROOT));
-        assertEquals(new Path("/a/b/c/d"), p.descendant(new Path("/d")));
-        assertEquals(new Path("/a/b/c/e/"), p.descendant(new Path("/e/")));
+    public void testResolveStr() {
+        assertEquals(Path.from("/a"), Path.resolve(Path.ROOT, "/a"));
+        assertEquals(Path.from("/a/"), Path.resolve(Path.ROOT, "/a/"));
+        assertEquals(Path.from("/a/"), Path.resolve(Path.ROOT, "//a///"));
+        assertEquals(Path.from("/a/b"), Path.resolve(Path.ROOT, "//a///b"));
+        assertEquals(Path.from("/a/b/c/d"), Path.resolve(Path.from("/a/b/"), "/c/d"));
+        assertEquals(Path.from("/a/c/d"), Path.resolve(Path.from("/a/b"), "c/d"));
+        assertEquals(Path.from("/a/c/d"), Path.resolve(Path.from("/a/b/"), "../c/d"));
+        assertEquals(Path.from("/c/d"), Path.resolve(Path.from("/a/b/"), "../../c/d"));
+        assertEquals(Path.from("/../c/d"), Path.resolve(Path.from("/a/b/"), "../../../c/d"));
+        assertEquals(Path.from("/../../c/d"), Path.resolve(Path.from("/a/"), "../../../c/d"));
+    }
+
+    @Test
+    public void testResolvePath() {
+        assertEquals(Path.ROOT, Path.resolve(Path.ROOT, (Path) null));
+        assertEquals(Path.ROOT, Path.resolve(Path.ROOT, Path.ROOT));
+        assertEquals(Path.from("/a"), Path.resolve(Path.from("/a"), Path.ROOT));
+        assertEquals(Path.from("/b/c"), Path.resolve(Path.from("/a"), Path.from("/b/c")));
+        assertEquals(Path.from("/a/b/c/"), Path.resolve(Path.from("/a/"), Path.from("/b/c/")));
+        assertEquals(Path.from("/a/b/d"), Path.resolve(Path.from("/a/b/c/"), Path.from("../d")));
+        assertEquals(Path.from("/a/e/"), Path.resolve(Path.from("/a/b/c"), Path.from("../d/../e/")));
     }
 
     @Test

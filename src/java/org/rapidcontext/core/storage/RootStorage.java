@@ -77,7 +77,7 @@ public class RootStorage extends Storage {
     /**
      * The storage path for mounted storage caches.
      */
-    public static final Path PATH_STORAGE_CACHE = new Path(PATH_STORAGE, "cache/");
+    public static final Path PATH_STORAGE_CACHE = Path.resolve(PATH_STORAGE, "cache/");
 
     /**
      * The number of seconds between each run of the object cache
@@ -224,7 +224,7 @@ public class RootStorage extends Storage {
     throws StorageException {
 
         Path ident = mountPath.relativeTo(PATH_STORAGE);
-        Path cachePath = PATH_STORAGE_CACHE.descendant(ident);
+        Path cachePath = Path.resolve(PATH_STORAGE_CACHE, ident);
         MemoryStorage cache = cacheStorages.get(mountPath);
         if (overlay != null && cache == null) {
             cache = new MemoryStorage("cache", true, true);
@@ -552,7 +552,7 @@ public class RootStorage extends Storage {
         Storage storage = getMountedStorage(path, false);
         if (storage != null && path.startsWith(PATH_STORAGE_CACHE)) {
             Path storageId = storage.path().relativeTo(PATH_STORAGE_CACHE);
-            Path storagePath = PATH_STORAGE.descendant(storageId);
+            Path storagePath = Path.resolve(PATH_STORAGE, storageId);
             cacheAdd(storagePath, storage.localPath(path), data);
         } else {
             store(storage, path, data, true);
@@ -620,7 +620,7 @@ public class RootStorage extends Storage {
         Storage storage = getMountedStorage(path, false);
         if (storage != null && path.startsWith(PATH_STORAGE_CACHE)) {
             Path storageId = storage.path().relativeTo(PATH_STORAGE_CACHE);
-            Path storagePath = PATH_STORAGE.descendant(storageId);
+            Path storagePath = Path.resolve(PATH_STORAGE, storageId);
             cacheRemove(storagePath, storage.localPath(path));
         } else {
             remove(storage, path, true);

@@ -94,7 +94,7 @@ public class Type extends StorableObject {
      *         null if not found
      */
     public static Type find(Storage storage, String id) {
-        Object obj = storage.load(new Path(PATH, id));
+        Object obj = storage.load(Path.resolve(PATH, id));
         return (obj instanceof Type) ? (Type) obj : null;
     }
 
