@@ -314,19 +314,17 @@ public class Path {
     }
 
     /**
-     * Creates a new path that is relative to another path.
+     * Creates a new path with the specified prefix removed.
      *
-     * @param path           the path to relate to
+     * @param prefix         the prefix path to remove
      *
      * @return a new path with the common prefix removed
      */
-    public Path relativeTo(Path path) {
-        if (equals(path)) {
+    public Path removePrefix(Path prefix) {
+        if (isRoot() || equals(prefix)) {
             return ROOT;
-        } else if (isRoot()) {
-            return Path.resolve(ROOT, StringUtils.repeat("../", path.depth()));
         } else {
-            return new Path(this.parent.relativeTo(path), this.name, this.index);
+            return new Path(this.parent.removePrefix(prefix), this.name, this.index);
         }
     }
 }

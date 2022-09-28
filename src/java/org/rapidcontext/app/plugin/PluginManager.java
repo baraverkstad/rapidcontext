@@ -144,7 +144,7 @@ public class PluginManager {
      * @return the plug-in instance path
      */
     public static Path pluginPath(String pluginId) {
-        Path ident = storagePath(pluginId).relativeTo(RootStorage.PATH_STORAGE);
+        Path ident = storagePath(pluginId).removePrefix(RootStorage.PATH_STORAGE);
         Path cachePath = Path.resolve(RootStorage.PATH_STORAGE_CACHE, ident);
         return Path.resolve(cachePath, PATH_PLUGIN.child(pluginId, false));
     }

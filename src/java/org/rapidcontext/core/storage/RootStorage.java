@@ -223,7 +223,7 @@ public class RootStorage extends Storage {
     private void updateStorageCache(Path mountPath, Path overlay)
     throws StorageException {
 
-        Path ident = mountPath.relativeTo(PATH_STORAGE);
+        Path ident = mountPath.removePrefix(PATH_STORAGE);
         Path cachePath = Path.resolve(PATH_STORAGE_CACHE, ident);
         MemoryStorage cache = cacheStorages.get(mountPath);
         if (overlay != null && cache == null) {
@@ -396,7 +396,7 @@ public class RootStorage extends Storage {
             return null;
         } else {
             MemoryStorage cache = cacheStorages.get(storage.path());
-            Path queryPath = path.relativeTo(overlay);
+            Path queryPath = path.removePrefix(overlay);
             return Metadata.merge(
                 (cache == null) ? null : cache.lookup(queryPath),
                 storage.lookup(queryPath)
@@ -455,7 +455,7 @@ public class RootStorage extends Storage {
         if (overlay == null || !path.startsWith(overlay)) {
             return null;
         } else {
-            Path queryPath = path.relativeTo(overlay);
+            Path queryPath = path.removePrefix(overlay);
             return Index.merge(
                 (Index) cacheGet(storage.path(), queryPath),
                 (Index) storage.load(queryPath)
@@ -481,7 +481,7 @@ public class RootStorage extends Storage {
             return null;
         } else {
             Path mountPath = storage.path();
-            Path queryPath = path.relativeTo(overlay);
+            Path queryPath = path.removePrefix(overlay);
             Object res = cacheGet(mountPath, queryPath);
             if (res instanceof StorableObject) {
                 LOG.fine("loaded cached object " + queryPath + " from " + mountPath);
@@ -551,7 +551,7 @@ public class RootStorage extends Storage {
     public synchronized void store(Path path, Object data) throws StorageException {
         Storage storage = getMountedStorage(path, false);
         if (storage != null && path.startsWith(PATH_STORAGE_CACHE)) {
-            Path storageId = storage.path().relativeTo(PATH_STORAGE_CACHE);
+            Path storageId = storage.path().removePrefix(PATH_STORAGE_CACHE);
             Path storagePath = Path.resolve(PATH_STORAGE, storageId);
             cacheAdd(storagePath, storage.localPath(path), data);
         } else {
@@ -588,7 +588,7 @@ public class RootStorage extends Storage {
                 storage = (Storage) o;
                 Path overlay = storage.mountOverlayPath();
                 if (overlay != null && path.startsWith(overlay)) {
-                    Path localPath = path.relativeTo(overlay);
+                    Path localPath = path.removePrefix(overlay);
                     if (!stored && storage.isReadWrite()) {
                         if (caching) {
                             cacheAdd(storage.path(), localPath, data);
@@ -619,7 +619,7 @@ public class RootStorage extends Storage {
     public synchronized void remove(Path path) throws StorageException {
         Storage storage = getMountedStorage(path, false);
         if (storage != null && path.startsWith(PATH_STORAGE_CACHE)) {
-            Path storageId = storage.path().relativeTo(PATH_STORAGE_CACHE);
+            Path storageId = storage.path().removePrefix(PATH_STORAGE_CACHE);
             Path storagePath = Path.resolve(PATH_STORAGE, storageId);
             cacheRemove(storagePath, storage.localPath(path));
         } else {
@@ -657,7 +657,7 @@ public class RootStorage extends Storage {
                 Path overlay = storage.mountOverlayPath();
                 boolean isMatch = (overlay != null) && path.startsWith(overlay);
                 if (storage.isReadWrite() && isMatch && overlay != null) {
-                    Path subpath = path.relativeTo(overlay);
+                    Path subpath = path.removePrefix(overlay);
                     storage.remove(subpath);
                 }
             }

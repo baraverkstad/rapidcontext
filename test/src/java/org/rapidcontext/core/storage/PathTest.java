@@ -97,6 +97,16 @@ public class PathTest {
     }
 
     @Test
+    public void testRemovePrefix() {
+        assertEquals(Path.from("/a/b/c"), Path.from("/a/b/c").removePrefix(Path.ROOT));
+        assertEquals(Path.from("/b/c"), Path.from("/a/b/c").removePrefix(Path.from("/a/")));
+        assertEquals(Path.from("/c/"), Path.from("/a/b/c/").removePrefix(Path.from("/a/b/")));
+        assertEquals(Path.from("/"), Path.from("/a/b/c").removePrefix(Path.from("/a/b/c")));
+        assertEquals(Path.from("/a/b/c"), Path.from("/a/b/c").removePrefix(Path.from("/a/b/c/d")));
+        assertEquals(Path.from("/a/b/c"), Path.from("/a/b/c").removePrefix(Path.from("/g/h/")));
+    }
+
+    @Test
     public void testResolveStr() {
         assertEquals(Path.from("/a"), Path.resolve(Path.ROOT, "/a"));
         assertEquals(Path.from("/a/"), Path.resolve(Path.ROOT, "/a/"));
@@ -119,16 +129,5 @@ public class PathTest {
         assertEquals(Path.from("/a/b/c/"), Path.resolve(Path.from("/a/"), Path.from("/b/c/")));
         assertEquals(Path.from("/a/b/d"), Path.resolve(Path.from("/a/b/c/"), Path.from("../d")));
         assertEquals(Path.from("/a/e/"), Path.resolve(Path.from("/a/b/c"), Path.from("../d/../e/")));
-    }
-
-    @Test
-    public void testRelativeTo() {
-        Path p = Path.from("/a/b/c/d");
-        assertEquals(p, p.relativeTo(Path.ROOT));
-        assertEquals(Path.from("/b/c/d"), p.relativeTo(Path.from("/a/")));
-        assertEquals(Path.from("/c/d"), p.relativeTo(Path.from("/a/b/")));
-        assertEquals(Path.from("../../a/b/c/d"), p.relativeTo(Path.from("/a/b/c")));
-        assertEquals(Path.from("../../a/b/c/d"), p.relativeTo(Path.from("/g/h/")));
-        assertEquals(Path.from("../../a/b/c/d"), p.relativeTo(Path.from("/g/h/i")));
     }
 }
