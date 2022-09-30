@@ -290,18 +290,19 @@ public class AppWebService extends FileWebService {
      * @param request        the request to process
      */
     protected void doGet(Request request) {
-        super.doGet(request);
-        if (!request.hasResponse()) {
-            String path = request.getPath();
-            String baseUrl = StringUtils.removeEnd(request.getUrl(), path);
-            if (request.matchPath("rapidcontext/files/")) {
-                processFile(request, Path.resolve(RootStorage.PATH_FILES, request.getPath()), true);
-            } else if (request.matchPath("rapidcontext/app/")) {
-                String appId = StringUtils.removeEnd(request.getPath(), "/");
-                processApp(request, appId, baseUrl);
-            } else if (appId() != null) {
+        String baseUrl = StringUtils.removeEnd(request.getUrl(), request.getPath());
+        if (request.matchPath("rapidcontext/files/")) {
+            processFile(request, Path.resolve(RootStorage.PATH_FILES, request.getPath()), true);
+        } else if (request.matchPath("rapidcontext/app/")) {
+            String appId = StringUtils.removeEnd(request.getPath(), "/");
+            processApp(request, appId, baseUrl);
+        } else if (appId() != null) {
+            processFile(request, Path.resolve(path(), request.getPath()), true);
+            if (!request.hasResponse()) {
                 processApp(request, appId(), baseUrl);
             }
+        } else {
+            super.doGet(request);
         }
     }
 
