@@ -41,12 +41,29 @@
         }
     };
 
+    // The configuration settings
+    var config = {
+        interval: 10000,
+        url: "rapidcontext/log",
+        filter: null,
+        publisher: null
+    };
+
     /**
-     * Modifies the `console` object for logging. This replaces the default
-     * `console.error`, `console.warn`, `console.info`, `console.log` and
-     * `console.debug` functions.
+     * Initializes and configures the logging module. Will modify the `console`
+     * object for logging. This replaces the default `console.error`,
+     * `console.warn`, `console.info`, `console.log` and `console.debug`
+     * functions. Safe to call multiple times to change or update config.
+     *
+     * @param {Object} [opts] the log configuration options, or null
+     * @config {Number} [interval] the publish delay in millis, default is 10s
+     * @config {String} [url] the publish URL endpoint
+     * @config {Function} [filter] the event filter, returns a boolean
+     * @config {Function} [publisher] the event publisher, returns a Promise
+     *
+     * @memberof RapidContext.Log
      */
-    function _init() {
+    function init(opts) {
         function overwrite(obj, key, fn) {
             if (obj[key] !== fn) {
                 backup[key] = obj[key] || function () {};
@@ -62,6 +79,11 @@
         overwrite(window.console, "log", debug);
         overwrite(window.console, "debug", debug);
         overwrite(window, "onerror", _onerror);
+        opts = opts || {};
+        config.interval = opts.interval || config.interval;
+        config.url = opts.url || config.url;
+        config.filter = opts.filter || _isErrorOrWarning;
+        config.publisher = opts.publisher || _publish;
     }
 
     /**
@@ -310,42 +332,56 @@
         });
         state.history.splice(0, Math.max(0, state.history.length - 100));
         if (!state.publish.timer) {
-            state.publish.timer = setTimeout(_publish, 100);
+            state.publish.timer = setTimeout(_publishLoop, 100);
         }
     }
 
     /**
-     * Publishes stored events (above a threshold level) to the server.
+     * Handles stored events publishing in a timer loop.
      */
-    function _publish() {
-        var events = [];
-        var lastId = 0;
-        for (var i = 0; i < state.history.length; i++) {
-            var evt = state.history[i];
+    function _publishLoop() {
+        function isValid(evt) {
             lastId = evt.id;
-            if (evt.id > state.publish.last && /error|warn/.test(evt.level)) {
-                events.push(evt);
-            }
+            return evt.id > state.publish.last && config.filter(evt);
         }
+        function onSuccess() {
+            state.publish.last = lastId;
+            state.publish.timer = setTimeout(_publishLoop, config.interval);
+        }
+        function onError(err) {
+            info("error publishing log events", err);
+            state.publish.timer = setTimeout(_publishLoop, config.interval);
+        }
+        var lastId = 0;
+        var events = state.history.filter(isValid);
         if (events.length <= 0) {
             state.publish.last = lastId;
             state.publish.timer = null;
-            return;
+        } else {
+            try {
+                config.publisher(events).then(onSuccess, onError);
+            } catch (e) {
+                onError(e);
+            }
         }
-        var opts = {
+    }
+
+    /**
+     * Publishes events to the server.
+     */
+    function _publish(events) {
+        return $.ajax(config.url, {
             method: "POST",
             contentType: "application/json",
             data: JSON.stringify(events)
-        };
-        var d = $.ajax("rapidcontext/log", opts);
-        d.then(function (res) {
-            state.publish.last = lastId;
-            state.publish.timer = setTimeout(_publish, 10000);
         });
-        d.fail(function (err) {
-            info("failed to upload errorlog", err);
-            state.publish.timer = setTimeout(_publish, 10000);
-        });
+    }
+
+    /**
+     * Checks if an event is an error or a warning.
+     */
+    function _isErrorOrWarning(evt) {
+        return !!evt && /error|warn/.test(evt.level);
     }
 
     /**
@@ -396,6 +432,7 @@
     var module = RapidContext.Log || (RapidContext.Log = {});
 
     // Export namespace symbols
+    module.init = init;
     module.history = history;
     module.clear = clear;
     module.level = level;
@@ -407,6 +444,6 @@
     module.stringify = stringify;
 
     // Install console loggers and global error handler
-    _init();
+    init();
 
 })(this);
