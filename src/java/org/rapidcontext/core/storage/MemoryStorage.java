@@ -125,7 +125,7 @@ public class MemoryStorage extends Storage {
      * @return the metadata for the object, or
      *         null if not found
      */
-    public Metadata lookup(Path path) {
+    public synchronized Metadata lookup(Path path) {
         if (storageInfo && PATH_STORAGEINFO.equals(path)) {
             return new Metadata(Dict.class, path, path(), null, mountTime());
         }
@@ -149,13 +149,13 @@ public class MemoryStorage extends Storage {
      * @return the data read, or
      *         null if not found
      */
-    public Object load(Path path) {
+    public synchronized Object load(Path path) {
         if (storageInfo && PATH_STORAGEINFO.equals(path)) {
             return serialize();
         }
         if (path.isIndex()) {
             Object obj = meta.get(path);
-            return (obj instanceof Index) ? obj : null;
+            return (obj instanceof Index) ? new Index((Index) obj) : null;
         } else {
             return objects.get(path);
         }

@@ -79,6 +79,17 @@ public class Index {
     }
 
     /**
+     * Creates a new index that is a copy of another one.
+     *
+     * @param src            the source index to copy
+     */
+    public Index(Index src) {
+        this.modified = src.modified;
+        this.indices = new TreeSet<>(src.indices);
+        this.objects = new TreeSet<>(src.objects);
+    }
+
+    /**
      * Checks if this index is empty.
      *
      * @return true if the index is empty, or false otherwise
