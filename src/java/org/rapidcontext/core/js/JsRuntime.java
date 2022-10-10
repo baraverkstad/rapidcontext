@@ -205,7 +205,9 @@ public final class JsRuntime {
         } else if (obj instanceof Undefined || obj == UniqueTag.NOT_FOUND) {
             return null;
         } else if (obj instanceof Wrapper) {
-            return ((Wrapper) obj).unwrap();
+            // Note: Need double unwrap due to JavaScript objects sometimes
+            //       in turn wrapped inside e.g. NativeJavaObject...
+            return unwrap(((Wrapper) obj).unwrap());
         } else if (obj instanceof CharSequence) {
             return obj.toString();
         } else if (obj instanceof NativeArray) {
