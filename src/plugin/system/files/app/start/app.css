@@ -1,0 +1,56 @@
+.start-app .dash-item {
+    position: relative;
+    min-height: 200px;
+    margin: 0 5px 10px 5px;
+    padding: 6px 10px;
+}
+.start-app .about {
+    position: relative;
+}
+.start-app .about .header {
+    padding: 30px 0 40px 0;
+    font-family: "Trebuchet MS", Verdana, sans-serif;
+    background-color: #467b89;
+    background-image: linear-gradient(120deg, #06293a, #98f3ff);
+}
+.start-app .about .header a:link,
+.start-app .about .header a:visited,
+.start-app .about .header a:active,
+.start-app .about .header a:hover {
+    color: white;
+    text-decoration: none;
+}
+.start-app .about .header .center {
+    display: flex;
+}
+.start-app .about .header .logotype {
+    position: relative;
+    width: 128px;
+    height: 128px;
+    margin-left: 1em;
+    margin-right: 2em;
+    border: 1px solid #000b;
+    border-radius: 50% 50%;
+    background: radial-gradient(farthest-corner at 40% 30%, #fff, #eee, #888);
+    box-shadow: 1px 1px 5px #0008;
+    overflow: hidden;
+}
+.start-app .about .header .logotype::before {
+    position: absolute;
+    top: 0;
+    left: -10%;
+    width: 45%;
+    height: 100%;
+    content: "";
+    background: linear-gradient(to right, #fff2 0%, #fff2 77%, #fff7 92%, #fff0 100%);
+    transform: skewX(-35deg);
+}
+.start-app .about .header .logotype img {
+    height: 73%;
+    width: 73%;
+    padding: 12.5% 13.5%;
+}
+.start-app .about .header .text {
+    margin-top: 0.5em;
+    text-shadow: 2px 2px 2px #024a;
+}

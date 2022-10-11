@@ -277,30 +277,23 @@ body.doc .center {
 .doc img {
     max-width: 100%;
 }
-.doc .header,
-.about-header {
+.doc .header {
     padding: 30px 0 40px 0;
     font-family: "Trebuchet MS", Verdana, sans-serif;
     background-color: #467b89;
     background-image: linear-gradient(120deg, #06293a, #98f3ff);
 }
 .doc .header a:link,
-.about-header a:link,
 .doc .header a:visited,
-.about-header a:visited,
 .doc .header a:active,
-.about-header a:active,
-.doc .header a:hover,
-.about-header a:hover {
+.doc .header a:hover {
     color: white;
     text-decoration: none;
 }
-.doc .header .center,
-.about-header .center {
+.doc .header .center {
     display: flex;
 }
-.doc .header .logotype,
-.about-header .logotype {
+.doc .header .logotype {
     position: relative;
     width: 128px;
     height: 128px;
@@ -312,8 +305,7 @@ body.doc .center {
     box-shadow: 1px 1px 5px #0008;
     overflow: hidden;
 }
-.doc .header .logotype::before,
-.about-header .logotype::before {
+.doc .header .logotype::before {
     position: absolute;
     top: 0;
     left: -10%;
@@ -323,14 +315,12 @@ body.doc .center {
     background: linear-gradient(to right, #fff2 0%, #fff2 77%, #fff7 92%, #fff0 100%);
     transform: skewX(-35deg);
 }
-.doc .header .logotype img,
-.about-header .logotype img {
+.doc .header .logotype img {
     height: 73%;
     width: 73%;
     padding: 12.5% 13.5%;
 }
-.doc .header .text,
-.about-header .text {
+.doc .header .text {
     margin-top: 0.5em;
     text-shadow: 2px 2px 2px #024a;
 }

@@ -1,19 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<ui>
-  <style>
-.startApp-about {
-    position: relative;
-}
-.startApp-inline {
-    position: relative;
-    min-height: 200px;
-    margin: 0 5px 10px 5px;
-    border-radius: 6px;
-    padding: 6px 10px;
-    box-shadow: 0 1px 3px #CCCCCC;
-}
-  </style>
+<ui class="start-app">
   <TabContainer id="tabContainer" w="100%" h="100%">
     <Pane pageTitle="Start" style="position: relative;">
       <div style="float: left; width: 30%; height: 100%; border-right: solid 1px #DDDDDD; padding-right: 6px;">
@@ -30,7 +17,7 @@
         </div>
       </div>
       <Pane id="inlinePane" w="70%-14" h="100%" style="float: left; padding-left: 6px;">
-        <Pane w="50%-25" class="startApp-inline yellow" style="float: left; clear: left;">
+        <Pane w="50%-25" class="dash-item box yellow" style="float: left; clear: left;">
           <div style="padding: 0 10px;">
             <img src="images/logotype-icon-256x256.png" style="float: right; width: 128px; height: 128px;" />
             <h1 style="font-family: Trebuchet MS; margin: 6px 0;">Welcome to RapidContext!</h1>
@@ -126,8 +113,8 @@
       <p style="font-size: 15px;">Please close your web browser in order to complete the logout process.</p>
     </div>
   </Dialog>
-  <Dialog id="about" title="About RapidContext" w="544" h="500" modal="true" resizeable="false" class="startApp-about">
-    <div class="about-header" style="position: absolute; top: 0; left: 0; right: 0; padding: 20px 0; font-size: 1.3rem;">
+  <Dialog id="about" title="About RapidContext" w="544" h="500" modal="true" resizeable="false" class="about">
+    <div class="header" style="position: absolute; top: 0; left: 0; right: 0; padding: 20px 0; font-size: 1.3rem;">
       <div class="center">
         <a href="https://www.rapidcontext.com/" target="_blank" class="logotype" style="margin-left: 3em;">
           <img src="/images/logotype.png" />

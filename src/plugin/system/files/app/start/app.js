@@ -3,7 +3,7 @@
  */
 function StartApp() {
     this.appStatus = {};
-    this.gradients = ["red", "green", "blue"];
+    this.gradients = ["yellow", "red", "green", "blue"];
     this.focused = true;
     this.showingModifiers = false;
 }
@@ -176,7 +176,7 @@ StartApp.prototype._initApps = function () {
         } else if (app.instances && app.instances.length) {
             // Do nothing, app already running
         } else if (app.startPage) {
-            this._initStartupApp(app);
+            this._initDashboardApp(app);
         } else if (app.launch == "auto" || app.launch == "once") {
             RapidContext.App.startApp(app);
         }
@@ -185,9 +185,9 @@ StartApp.prototype._initApps = function () {
 };
 
 /**
- * Initializes an inline pane auto-start app.
+ * Initializes a dashboard app.
  */
-StartApp.prototype._initStartupApp = function (app) {
+StartApp.prototype._initDashboardApp = function (app) {
     // TODO: use proper widget and container instead
     var style = {};
     if (app.startPage == "left" || app.startPage == "right") {
@@ -199,7 +199,7 @@ StartApp.prototype._initStartupApp = function (app) {
     var attrs = {
         pageTitle: app.name,
         pageCloseable: true,
-        "class": "startApp-inline " + color,
+        "class": "dash-item box " + color,
         style: style
     };
     var pane = new RapidContext.Widget.Pane(attrs);
