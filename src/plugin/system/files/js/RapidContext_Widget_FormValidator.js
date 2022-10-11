@@ -185,7 +185,7 @@ RapidContext.Widget.FormValidator.prototype.verify = function (field, value) {
                 .catch(function (err) {
                     var msg = (err && err.message) || err || "validation failed";
                     addError(field, msg);
-                    Promise.reject(new RangeError([field, ": ", msg].join("")));
+                    return Promise.reject(new RangeError([field, ": ", msg].join("")));
                 });
         }
     }
