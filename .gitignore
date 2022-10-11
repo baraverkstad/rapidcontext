@@ -19,13 +19,6 @@
 
 # Documentation output files
 /doc.zip
-/doc/LICENSE.md
-/doc/README.md
-/doc/css/
-/doc/fonts/
-/doc/images/logotype*.ico
-/doc/images/logotype*.png
-/doc/images/backgrounds
 /doc/java/
 !/doc/java/topics.json
 /doc/js/

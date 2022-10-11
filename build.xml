@@ -188,7 +188,7 @@
 
 <!-- DOCUMENTATION TARGETS -->
   <target name="doc"
-          depends="doc-clean,doc-copy,doc-java,doc-js"
+          depends="doc-clean,doc-java,doc-js"
           description="Generates the application documentation">
     <zip destfile="doc.zip" basedir="doc" level="9">
     </zip>
@@ -201,21 +201,6 @@
     </delete>
     <delete dir="doc/js" quiet="true" includeemptydirs="true" />
     <mkdir dir="doc/js" />
-  </target>
-
-  <target name="doc-copy">
-    <copy todir="doc">
-      <fileset dir="${basedir}">
-        <include name="README.md" />
-        <include name="LICENSE.md" />
-      </fileset>
-      <fileset dir="src/plugin/system/files">
-        <include name="css/**" />
-        <include name="fonts/**" />
-        <include name="images/**" />
-        <exclude name="images/icons/**" />
-      </fileset>
-    </copy>
   </target>
 
   <target name="doc-java">
