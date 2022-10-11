@@ -221,6 +221,21 @@ RapidContext.App.startApp = function (app, container) {
             RapidContext.Util.registerFunctionNames(launcher.creator, launcher.className);
         });
     }
+    function buildUI(parent, ids, ui) {
+        var root = ui.documentElement;
+        for (var i = 0; i < root.attributes.length; i++) {
+            var attr = root.attributes[i];
+            if (attr.specified && typeof(parent.setAttrs) === "function") {
+                var o = {};
+                o[attr.name] = attr.value;
+                parent.setAttrs(o);
+            } else if (attr.specified) {
+                parent.setAttribute(attr.name, attr.value);
+            }
+        }
+        MochiKit.DOM.appendChildNodes(parent, RapidContext.UI.buildUI(ui, ids));
+        RapidContext.Util.resizeElements(parent);
+    }
     function launch(launcher, ui) {
         RapidContext.Log.context("RapidContext.App.startApp(" + launcher.id + ")");
         return RapidContext.Async.wait(0)
@@ -238,9 +253,7 @@ RapidContext.App.startApp = function (app, container) {
                 var halt = MochiKit.Base.partial(RapidContext.App.stopApp, instance);
                 MochiKit.Signal.connect(ui.root, "onclose", halt);
                 if (launcher.ui != null) {
-                    var widgets = RapidContext.UI.buildUI(launcher.ui, ui);
-                    MochiKit.DOM.appendChildNodes(ui.root, widgets);
-                    RapidContext.Util.resizeElements(ui.root);
+                    buildUI(ui.root, ui, launcher.ui);
                 }
                 ui.overlay.hide();
                 ui.overlay.setAttrs({ message: "Working..." });
