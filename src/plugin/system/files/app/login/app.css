@@ -1,0 +1,32 @@
+.login-app {
+    font-size: 12px;
+}
+.login-app .widgetDialog {
+    border-color: #FFFFFF;
+    background: #FFFFFF;
+}
+.login-app .widgetDialogTitle {
+    padding: 0.4em 0.6em;
+    background: linear-gradient(to bottom, #00AACC, #0077AA);
+    font-size: 1.7em;
+}
+.login-app .widgetDialogContent {
+    background: #FFFFFF;
+}
+.login-app .widgetTextField {
+    font-size: 14px;
+}
+.login-app .error {
+    margin-bottom: 10px;
+    border-radius: 6px;
+    padding: 8px 10px;
+    box-shadow: 0 1px 2px #660000 inset;
+    background: linear-gradient(to bottom, #FFF8F8, #FFDDDD);
+}
+.login-app .warning {
+    margin-bottom: 10px;
+    border-radius: 6px;
+    padding: 8px 10px;
+    box-shadow: 0 1px 2px #665500 inset;
+    background: linear-gradient(to bottom, #FFFFF8, #FFFFDD);
+}
