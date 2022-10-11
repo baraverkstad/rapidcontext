@@ -254,7 +254,7 @@ RapidContext.Widget.Form.prototype.validate = function () {
             if (validators[i].name == fields[j].name) {
                 var name = fields[j].name;
                 var res = validators[i].verify(fields[j], values[name] || "");
-                if (res instanceof Promise) {
+                if (RapidContext.Async.isPromise(res)) {
                     promises.push(res);
                 } else if (res === false) {
                     success = false;
@@ -266,14 +266,16 @@ RapidContext.Widget.Form.prototype.validate = function () {
     if (!success) {
         return false;
     } else if (promises.length > 0) {
-        return Promise.all(promises);
+        return Promise.all(promises).then(function () {
+            return true;
+        });
     } else {
         return true;
     }
 };
 
 /**
- * Resets all form validators. This metod is automatically called upon form
+ * Resets all form validators. This method is automatically called upon form
  * reset.
  *
  * @see #reset
