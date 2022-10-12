@@ -197,11 +197,16 @@ public class StorageWebService extends WebService {
     private void sendHtml(Request request, Path path, Metadata meta, Object res) {
         StringBuffer html = new StringBuffer();
 
-        html.append("<html>\n<head>\n<link rel='stylesheet' href='");
+        html.append("<!DOCTYPE html>\n");
+        html.append("<html>\n<head>\n");
+        html.append("<link rel='stylesheet' href='");
         html.append(relativeBackPath(request.getPath()));
-        html.append("files/css/style.css' type='text/css' />\n");
+        html.append("files/css/style.css'>\n");
+        html.append("<link rel='stylesheet' href='");
+        html.append(relativeBackPath(request.getPath()));
+        html.append("files/app/storage/app.css'>\n");
         html.append("<title>RapidContext Storage API</title>\n");
-        html.append("</head>\n<body>\n<div class='query'>\n");
+        html.append("</head>\n<body class='storage-app'>\n");
         html.append("<h1>RapidContext Storage API</h1>\n");
         html.append("<table class='navigation'>\n<tr>\n");
         if (path.isRoot()) {
@@ -243,7 +248,7 @@ public class StorageWebService extends WebService {
         if (meta.isBinary()) {
             html.append(" &nbsp;<a href='" + link + "'>RAW</a>");
         }
-        html.append("</p></div>\n</body>\n</html>\n");
+        html.append("</p>\n</body>\n</html>\n");
         request.sendText(Mime.HTML[0], html.toString());
     }
 
