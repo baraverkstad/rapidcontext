@@ -146,7 +146,7 @@ StartApp.prototype._initApps = function () {
     // Redraw the app launcher table
     var rows = launchers.map(function (app) {
         // TODO: Should use a template widget...
-        var tdIcon = MochiKit.DOM.TD({ style: { "padding": "4px 6px 6px 6px" } });
+        var tdIcon = MochiKit.DOM.TD({ style: { "padding": "0.25em 0.75em 0.5em 0.5em" } });
         if (app.icon) {
             MochiKit.DOM.replaceChildNodes(tdIcon, app.icon.cloneNode(true));
         }
@@ -159,10 +159,10 @@ StartApp.prototype._initApps = function () {
             expIcon.hide();
         }
         var style = { margin: "0", lineHeight: "18px", color: "#1E466E" };
-        var title = MochiKit.DOM.H3({ style: style }, app.name, expIcon);
+        var title = MochiKit.DOM.H4({ style: style }, app.name, expIcon);
         var desc = MochiKit.DOM.SPAN(null, app.description);
         desc.style.whiteSpace = "pre-line";
-        var tdName = MochiKit.DOM.TD(attrs, title, desc);
+        var tdName = MochiKit.DOM.TD({ style: { "padding-top": "0.5rem" } }, title, desc);
         var attrs = { "class": "clickable", "data-appid": app.id };
         return MochiKit.DOM.TR(attrs, tdIcon, tdName);
     });

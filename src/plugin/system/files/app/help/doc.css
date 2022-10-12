@@ -10,63 +10,28 @@ body.doc .center {
     max-width: calc(100% - 60px);
     margin: 0 auto;
 }
-.doc {
-    font-size: 14px;
-}
 .doc h1 {
-    font-size: 24px;
     font-family: "Trebuchet MS", Verdana, sans-serif;
-    margin-top: 1em;
 }
 .doc h2 {
-    font-size: 18px;
     font-family: "Trebuchet MS", Verdana, sans-serif;
 }
 .doc h2[id] {
-    margin-top: 40px;
+    margin-top: 2rem;
 }
 .doc h1 + h2[id] {
-    margin-top: 10px;
+    margin-top: 0.5rem;
 }
 .doc h2 .unimportant {
-    font-size: 14px;
-}
-@media screen and (max-width: 400px) {
-    body.doc h1 {
-        font-size: 20px;
-    }
-    body.doc h2 {
-        font-size: 16px;
-    }
-}
-@media screen and (min-width: 401px) and (max-width: 600px) {
-    body.doc h1 {
-        font-size: 24px;
-    }
-    body.doc h2 {
-        font-size: 16px;
-    }
-}
-.doc table {
-    font-size: inherit;
-    border-collapse: collapse;
-}
-.doc p {
-    margin: 20px 0;
-}
-.doc h1 + p,
-.doc h2 + p {
-    margin-top: 6px;
+    font-size: 0.8em;
 }
 .doc code,
 .doc pre {
-    font-size: 14px;
     color: #069;
 }
 .doc var {
     font-family: ui-monospace, "Courier New", monospace;
     font-style: normal;
-    font-size: 14px;
     color: #063;
 }
 .doc abbr {
@@ -181,7 +146,6 @@ body.doc .center {
 @media screen and (max-width: 400px) {
     body.doc .content {
         padding: 0 15px 0 15px;
-        font-size: 0.9em;
     }
     body.doc .content.center {
         max-width: calc(100% - 30px);
@@ -233,7 +197,7 @@ body.doc .center {
     text-align: center;
 }
 .doc .fineprint {
-    font-size: 10px;
+    font-size: 0.8em;
     color: #888;
 }
 
@@ -241,9 +205,6 @@ body.doc .center {
 /**
  * Documentation style for JSDoc 2.x
  */
-.doc h1.classTitle {
-    font-size: 30px;
-}
 .doc .summaryTable,
 .doc div.sectionTitle {
     width: 100%;
@@ -253,7 +214,8 @@ body.doc .center {
 .doc div.sectionTitle {
     background: #cef;
     color: #1e466e;
-    font-size: 24px;
+    font-size: 1.333em;
+    line-height: 1.5;
     font-weight: bold;
     text-align: left;
 }
@@ -276,8 +238,6 @@ body.doc .center {
 .doc .fixedFont {
     color: #1e466e;
     font-family: ui-monospace, "Courier New", monospace;
-    font-size: 15px;
-    line-height: 17px;
 }
 .doc .summaryTable td.nameDescription {
     text-align: left;

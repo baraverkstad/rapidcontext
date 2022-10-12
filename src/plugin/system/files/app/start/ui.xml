@@ -10,7 +10,7 @@
           <Icon id="appLoading" ref="LOADING" style="margin-left: 3px;" />
         </h3>
         <div w="100%" h="100%-50" style="overflow-y: auto;">
-          <table style="border-collapse: collapse;">
+          <table>
             <tbody id="appTable">
             </tbody>
           </table>
@@ -20,8 +20,8 @@
         <Pane w="50%-25" class="dash-item box yellow" style="float: left; clear: left;">
           <div style="padding: 0 10px;">
             <img src="images/logotype-icon-256x256.png" style="float: right; width: 128px; height: 128px;" />
-            <h1 style="font-family: Trebuchet MS; margin: 6px 0;">Welcome to RapidContext!</h1>
-            <div style="font-size: 13px;">
+            <h2 style="font-family: Trebuchet MS; margin: 6px 0;">Welcome to RapidContext!</h2>
+            <div>
               <p style="margin-top: 6px;">RapidContext is a platform for dynamic web applications and tools.</p>
               <p>If you haven't used it before, you can take the quick tour and
               learn the basics in an easy, interactive fashion.</p>
@@ -32,7 +32,7 @@
       </Pane>
     </Pane>
   </TabContainer>
-  <Pane id="infoBar" style="position: absolute; top: 10px; right: 12px; font-size: 1.2em;">
+  <Pane id="infoBar" style="position: absolute; top: 10px; right: 12px;">
     <i class="fa fa-user"></i>
     <span id="infoUser" style="padding-left: 0.5em;"/>
     <i class="fa fa-plug" style="padding-left: 1.5em"></i>
@@ -50,7 +50,7 @@
   </Popup>
   <Dialog id="passwordDialog" title="Change Password" system="true" resizeable="false" style="width: 400px; height: 160px;">
     <Form id="passwordForm">
-      <table w="100%" style="border-collapse: collapse; font-size: 11px;">
+      <table w="100%">
         <tbody w="100%">
           <tr>
             <th class="label" style="width: 140px; padding-top: 6px; padding-right: 10px; text-align: right;">Current Password:</th>
@@ -83,7 +83,7 @@
   </Dialog>
   <Dialog id="loginDialog" title="Login" system="true" resizeable="false" style="width: 350px; height: 100px;">
     <Form id="loginForm">
-      <table w="100%" style="border-collapse: collapse; font-size: 11px;">
+      <table w="100%">
         <tbody w="100%">
           <tr>
             <th class="label" style="width: 100px; padding-top: 6px; padding-right: 10px; text-align: right;">Login / Email:</th>
@@ -109,8 +109,8 @@
   </Dialog>
   <Dialog id="logoutDialog" title="Logout Completed" system="true" closeable="false" resizeable="false" style="width: 350px;">
     <div style="margin: 0 10px 5px 10px;">
-      <h1 style="margin-top: 5px; font-size: 18px;">You've been logged out.</h1>
-      <p style="font-size: 15px;">Please close your web browser in order to complete the logout process.</p>
+      <h2>You've been logged out.</h2>
+      <p>Please close your web browser in order to complete the logout process.</p>
     </div>
   </Dialog>
   <Dialog id="about" title="About RapidContext" w="544" h="630" modal="true" resizeable="false" class="about">
@@ -165,7 +165,7 @@
     </div>
   </Dialog>
   <Dialog id="tourDialog" title="RapidContext Quick Tour" center="false" resizeable="false" w="80%" h="190">
-    <Wizard id="tourWizard" style="width: 100%; height: 100%; font-size: larger;">
+    <Wizard id="tourWizard" style="width: 100%; height: 100%;">
       <Pane pageTitle="Welcome to the Quick Tour of RapidContext!">
         <ul>
           <li>This tour will show you some of the basic functions in RapidContext.</li>
@@ -192,7 +192,7 @@
       <Pane pageTitle="App Switching &amp; Tabs">
         <ul>
           <li>Many apps can run at the same time, each in a separate tab.</li>
-          <li>Switching between apps is easy by clicking the tabs. The <Icon ref="CLOSE_ACTIVE" /> button closes the app.</li>
+          <li>Switching between apps is easy by clicking the tabs. The <Icon ref="CLOSE" /> button closes the app.</li>
           <li>You can also run several copies of a single app, e.g. to compare results or data.</li>
         </ul>
         <Button id="tourTabsLocate" icon="HELP">Locate</Button>

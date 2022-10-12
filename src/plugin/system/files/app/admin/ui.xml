@@ -80,7 +80,7 @@
       <Dialog id="cxnEditDialog" title="Edit Connection" modal="true" w="600" h="80%">
         <h3>Edit Connection:</h3>
         <Form id="cxnEditForm" w="100%" h="100%-60" style="overflow-y: auto; overflow-x: hidden;">
-          <table w="100%" style="border-collapse: collapse;">
+          <table w="100%">
             <tbody>
               <tr>
                 <th class="label" style="width: 100px; padding-top: 6px; padding-right: 4px;">Identifier:</th>

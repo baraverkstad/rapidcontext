@@ -9,7 +9,7 @@
         You are currently logged in as <strong id="loginName">Name</strong>.
         Please login as a user with access to this application.
       </div>
-      <table w="100%" style="border-collapse: collapse;">
+      <table w="100%">
         <tbody w="100%">
           <tr>
             <th class="label" style="width: 130px; padding: 1em 0.5em; text-align: right;">Login / Email:</th>

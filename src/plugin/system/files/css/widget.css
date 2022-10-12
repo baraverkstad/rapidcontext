@@ -44,7 +44,8 @@
     background-image: linear-gradient(to bottom, #f8f8f8, #e0e0e0);
     box-shadow: 0 1px 2px #b4b4b47f;
     text-shadow: 0 1px #fff;
-    font-size: 1.2em;
+    font-size: 1.1em;
+    line-height: 1.5;
     cursor: pointer;
 }
 .widgetButton.widgetDisabled {
@@ -105,16 +106,15 @@
 }
 .widgetDialogClose {
     position: absolute;
-    top: 4px;
-    right: 4px;
+    top: 0.45em;
+    right: 0.45em;
     z-index: 1;
 }
 .widgetDialogClose.widgetIcon {
     min-width: 18px;
-    border-radius: 3px;
-    padding: 1px 0 0 0;
+    border-radius: 0.2em;
+    padding: 0.1em 0 0.2em 0;
     color: #fff;
-    font-size: 13px;
 }
 .widgetDialogClose.widgetIcon:hover {
     background: #e66;
@@ -133,7 +133,6 @@
     overflow: hidden;
     color: white;
     background-color: #468;
-    font-size: 12px;
     font-weight: bold;
     cursor: default;
     -moz-user-select: none; /* stylelint-disable-line property-no-vendor-prefix */
@@ -185,8 +184,6 @@
     margin: 0;
     padding: 0;
     cursor: pointer;
-    font-size: 1.2em;
-    line-height: 1.3em;
     text-align: center;
 }
 .widgetIconSprite {
@@ -207,8 +204,6 @@
  */
 .widgetNavigationBar {
     border: none;
-    font-size: 1.2em;
-    border-collapse: collapse;
 }
 .widgetNavigationBar td {
     height: 26px;
@@ -302,7 +297,7 @@
     background-image: linear-gradient(to bottom, #fff, #f8fbff);
     box-shadow: 0 1px 3px #ccc;
     color: #468;
-    font-size: 2em;
+    font-size: 1.5em;
     font-weight: bold;
 }
 
@@ -319,7 +314,6 @@
     background: #fff;
     color: #1e466e;
     cursor: default;
-    font-size: 1.2em;
     box-shadow: 0 10px 20px #00000026;
 }
 .widgetPopup h3 {
@@ -328,7 +322,6 @@
     box-shadow: 0 1px 1px #ddd;
     background: #f8f8f8;
     color: #777;
-    font-size: 1.2em;
     text-shadow: 1px 1px #fff;
 }
 .widgetPopup hr {
@@ -401,6 +394,8 @@
     left: 0;
     width: 100%;
     height: 14px;
+    font-size: 0.8em;
+    line-height: 1.5;
     font-weight: bold;
     text-align: center;
     text-shadow: 0 1px 3px #fff;
@@ -424,7 +419,6 @@
     border-radius: 4px 4px 0 0;
     cursor: pointer;
     white-space: nowrap;
-    font-size: 13px;
     color: #666;
     -moz-user-select: none; /* stylelint-disable-line property-no-vendor-prefix */
     -ms-user-select: none; /* stylelint-disable-line property-no-vendor-prefix */
@@ -464,8 +458,6 @@
     border-radius: 3px;
     padding: 1px 0;
     color: #ccc;
-    font-size: inherit;
-    line-height: inherit;
 }
 .widgetTabContainerLabel .widgetIcon:hover {
     background: #e66;
@@ -495,7 +487,6 @@ div.widgetTable.compact {
 }
 table.widgetTable {
     width: 100%;
-    border-collapse: collapse;
     cursor: default;
 }
 table.widgetTable td {
@@ -568,7 +559,6 @@ th.widgetTableColumn.sortNone::after {
     padding: 3px 5px;
     box-shadow: 0 0 2px #eee;
     font-family: ui-monospace, "Courier New", monospace;
-    font-size: 1.1em;
     resize: none;
 }
 .widgetTextArea.widgetInvalid {
@@ -603,7 +593,6 @@ th.widgetTableColumn.sortNone::after {
     padding: 3px 5px;
     box-shadow: 0 0 2px #eee;
     font-family: ui-monospace, "Courier New", monospace;
-    font-size: 1.1em;
 }
 .widgetTextField.widgetInvalid {
     border: 1px solid #ecc;
@@ -686,7 +675,7 @@ th.widgetTableColumn.sortNone::after {
 }
 .widgetWizardButtons {
     position: absolute;
-    bottom: 10px;
-    right: 10px;
+    bottom: 0;
+    right: 0;
     z-index: 1;
 }

@@ -1,6 +1,3 @@
-.login-app {
-    font-size: 12px;
-}
 .login-app .widgetDialog {
     border-color: #FFFFFF;
     background: #FFFFFF;
@@ -12,9 +9,6 @@
 }
 .login-app .widgetDialogContent {
     background: #FFFFFF;
-}
-.login-app .widgetTextField {
-    font-size: 14px;
 }
 .login-app .error {
     margin-bottom: 10px;
