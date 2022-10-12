@@ -40,6 +40,19 @@ p {
     margin: 10px 0;
     page-break-inside: avoid;
 }
+article,
+aside,
+dialog,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+nav,
+section {
+    display: block;
+}
 table {
     font-family: inherit;
     font-size: inherit;
@@ -111,6 +124,25 @@ dt {
 dd {
     margin: 3px 0 16px 0;
     padding: 0 0 0 20px;
+}
+nav ol,
+nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    list-style: none;
+    box-shadow: 0 0 0.4rem #0004 inset;
+    font-size: 1.4rem;
+    font-weight: bold;
+    background: #f1f6f9;
+    color: #7b8696;
+}
+nav li + li::before {
+    display: inline-block;
+    padding-right: 0.5rem;
+    padding-left: 0.5rem;
+    content: "/";
 }
 
 

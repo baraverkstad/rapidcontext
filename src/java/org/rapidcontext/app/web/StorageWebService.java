@@ -208,38 +208,37 @@ public class StorageWebService extends WebService {
         html.append("<title>RapidContext Storage API</title>\n");
         html.append("</head>\n<body class='storage-app'>\n");
         html.append("<h1>RapidContext Storage API</h1>\n");
-        html.append("<table class='navigation'>\n<tr>\n");
+        html.append("<nav>\n<ol>\n");
         if (path.isRoot()) {
-            html.append("<td class='active'>Start</td>\n");
+            html.append("<li class='active'>Start</li>\n");
         } else {
-            html.append("<td class='prev'><a href='");
+            html.append("<li><a href='");
             html.append(StringUtils.repeat("../", path.depth()));
-            html.append(".'>Start</a></td>\n");
+            html.append(".'>Start</a></li>\n");
         }
         for (int i = 0; i < path.length(); i++) {
             if (i + 1 < path.length()) {
-                html.append("<td class='prev-prev'>&nbsp;</td>\n");
-                html.append("<td class='prev'><a href='");
+                html.append("<li><a href='");
                 html.append(StringUtils.repeat("../", path.depth() - i - 1));
                 html.append(".'>");
                 html.append(path.name(i));
-                html.append("</a>");
+                html.append("</a></li>\n");
             } else {
-                html.append("<td class='prev-active'>&nbsp;</td>\n");
-                html.append("<td class='active'>");
+                html.append("<li class='active'>");
                 html.append(path.name(i));
+                html.append("</li>\n");
             }
-            html.append("</td>\n");
         }
-        html.append("<td class='active-end'>&nbsp;</td>\n");
-        html.append("</tr>\n</table>\n<hr/>\n");
+        html.append("</ol>\n</nav>\n<hr>\n");
         html.append("<div class='metadata'>\n");
         html.append("<h2>Query Metadata</h2>\n");
         html.append(HtmlSerializer.serialize(serializeMetadata(meta, request)));
         html.append("</div>\n");
+        html.append("<div class='data'>\n");
         html.append("<h2>Query Results</h2>");
         html.append(HtmlSerializer.serialize(res));
-        html.append("<hr/><p><strong>Data Formats:</strong>");
+        html.append("</div>\n<hr>\n");
+        html.append("<p><strong>Data Formats:</strong>");
         String link = meta.isIndex() ? "index" : path.name();
         html.append(" &nbsp;<a href='" + link + Storage.EXT_JSON + "'>JSON</a>");
         html.append(" &nbsp;<a href='" + link + Storage.EXT_PROPERTIES + "'>PROPERTIES</a>");
