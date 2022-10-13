@@ -90,12 +90,7 @@ RapidContext.Widget.Overlay.prototype.setAttrs = function (attrs) {
         }
     }
     if (this.showLoading) {
-        var icon = RapidContext.Widget.Icon({
-            url: "rapidcontext/files/images/icons/loading-overlay.gif",
-            width: 32,
-            height: 32
-        });
-        icon.setStyle({ "margin-right": "20px" });
+        var icon = RapidContext.Widget.Icon({ ref: "LOADING", "class": "m-1" });
     }
     MochiKit.DOM.replaceChildNodes(this.lastChild, icon, this.message);
     if (!this.showLoading && !this.message) {
