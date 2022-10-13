@@ -1,21 +1,17 @@
 <!DOCTYPE html>
-
 <html>
   <head>
     <meta charset="utf-8">
+    <link rel="stylesheet" href="../css/style.css">
     <style type="text/css">
-table {
-    border-collapse: collapse;
-}
 th, td {
     border: 1px solid #EEE;
     padding: 2px 10px 2px 3px;
     text-align: left;
 }
     </style>
-    <script type="text/javascript" src="js/RapidContext_Log.js"></script>
-    <script type="text/javascript">
-// <!--
+    <script src="../js/RapidContext_Log.js"></script>
+    <script>
 function update() {
     document.getElementById("level").innerHTML = RapidContext.Log.level();
     document.getElementById("context").value = RapidContext.Log.context() || "";
@@ -48,12 +44,9 @@ function update() {
         table.appendChild(tr);
     }
 }
-// -->
     </script>
   </head>
-
   <body style="padding: 10px;" onload="update(); console.log('body.onload', [1,2,3], null, document.body);" onclick="update();">
-
     <p>
       <button onclick="console.error('console.error', [1,2,3], null, document.body)">console.error</button>
       <button onclick="RapidContext.Log.error('RapidContext.Log.error', [1,2,3], null, document.body)">RapidContext.Log.error</button>
@@ -75,11 +68,8 @@ function update() {
       <button onclick="RapidContext.Log.debug('RapidContext.Log.debug', [1,2,3], null, document.body)">RapidContext.Log.debug</button>
       <button onclick="RapidContext.Log.trace('RapidContext.Log.trace', [1,2,3], null, document.body)">RapidContext.Log.trace</button>
     </p>
-
     <hr>
-
     <p>Log Level: <span id="level"></span></p>
-
     <p>
       <button onclick="RapidContext.Log.level('none');">level none</button>
       <button onclick="RapidContext.Log.level('error');">level error</button>
@@ -90,17 +80,13 @@ function update() {
       <button onclick="RapidContext.Log.level('trace');">level trace</button>
       <button onclick="RapidContext.Log.level('all');">level all</button>
     </p>
-
     <hr>
-
     <form onsubmit="return false;">
       Log Context:
       <input id="context" placeholder="Context name here" />
       <button type="button" onclick="RapidContext.Log.context(document.getElementById('context').value || null);">Change</button>
     </form>
-
     <hr>
-
     <p>Log History: <button onclick="RapidContext.Log.clear();">clear</button></p>
     <table>
       <thead>
@@ -116,7 +102,5 @@ function update() {
       <tbody id="history">
       </tbody>
     </table>
-
   </body>
-
 </html>
