@@ -229,6 +229,8 @@ RapidContext.App.startApp = function (app, container) {
                 var o = {};
                 o[attr.name] = attr.value;
                 parent.setAttrs(o);
+            } else if (attr.specified && attr.name === "class") {
+                MochiKit.DOM.addElementClass(parent, attr.value);
             } else if (attr.specified) {
                 parent.setAttribute(attr.name, attr.value);
             }
