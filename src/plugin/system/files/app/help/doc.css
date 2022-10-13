@@ -192,10 +192,6 @@ body.doc .center {
         display: none;
     }
 }
-.doc .figure {
-    margin: 10px;
-    text-align: center;
-}
 .doc .fineprint {
     font-size: 0.8em;
     color: #888;
