@@ -10,6 +10,7 @@
         "no-descending-specificity": null,
         "rule-empty-line-before": null,
         "selector-class-pattern": null,
+        "selector-not-notation": "simple",
         "shorthand-property-no-redundant-values": null
     }
 }
