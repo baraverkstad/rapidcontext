@@ -1,8 +1,7 @@
 /**
  * Default HTML Styles
  */
-html,
-body {
+html, body {
     width: 100%;
     height: 100%;
     margin: 0;
@@ -14,12 +13,7 @@ body {
     font-size: 13px;
     line-height: 1.5;
 }
-h1,
-h2,
-h3,
-h4
-h5,
-h6 {
+h1, h2, h3, h4, h5, h6 {
     font-family: inherit;
     font-weight: bold;
     margin-bottom: 0.25rem;
@@ -39,9 +33,7 @@ h3 {
     font-size: 1.167em;
     line-height: 1.5;
 }
-h4,
-h5,
-h6 {
+h4, h5, h6 {
     margin-top: 0;
     font-size: 1em;
     line-height: 1.5;
@@ -55,17 +47,7 @@ hr {
 p {
     margin: 0 0 1em 0;
 }
-article,
-aside,
-dialog,
-figcaption,
-figure,
-footer,
-header,
-hgroup,
-main,
-nav,
-section {
+article, dialog, figure, header, hgroup, main, nav, section, footer {
     display: block;
 }
 table {
@@ -73,18 +55,17 @@ table {
     font-family: inherit;
     font-size: inherit;
 }
-td,
-th {
+td, th {
     text-align: left;
     vertical-align: top;
 }
 fieldset {
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 0.25rem;
     vertical-align: top;
 }
 fieldset legend {
-    padding: 0 3px;
+    padding: 0 0.25em;
     color: #666;
 }
 a {
@@ -105,20 +86,16 @@ a img {
 button {
     font-size: inherit;
 }
-input,
-textarea {
-    /*font-size: 1.1em;*/
+input, textarea {
     font-family: ui-monospace, "Courier New", monospace;
     font-size: inherit;
 }
-pre,
-code {
+pre, code {
     margin-top: 0;
-    /*font-size: 1.1em;*/
     font-family: ui-monospace, "Courier New", monospace;
     color: #666;
 }
-ol, ul {
+ol, ul, dl {
     margin: 0.5rem 0;
     padding: 0 2em;
 }
@@ -126,38 +103,27 @@ li ol,
 li ul {
     margin-top: 0;
 }
-li {
-    /* margin-bottom: 3px; */
-}
-dl {
-    margin: 10px 0;
-    padding: 0 20px;
-}
 dt {
     margin: 0;
     padding: 0;
     font-weight: bold;
 }
 dd {
-    margin: 3px 0 16px 0;
-    padding: 0 0 0 20px;
+    margin: 0 0 1em 0;
 }
 nav ol,
 nav ul {
     display: flex;
     flex-wrap: wrap;
-    padding: 0.75rem 1rem;
-    border-radius: 0.5rem;
+    padding: 0;
     list-style: none;
-    box-shadow: 0 0 0.4rem #0004 inset;
     font-weight: bold;
-    background: #f1f6f9;
-    color: #7b8696;
+    color: #666;
 }
 nav li + li::before {
     display: inline-block;
-    padding-right: 0.5rem;
-    padding-left: 0.5rem;
+    padding-right: 0.5em;
+    padding-left: 0.5em;
     content: "/";
 }
 
@@ -171,21 +137,19 @@ nav li + li::before {
         line-height: 1.5;
     }
 }
-p,
-ol,
-ul,
-dl {
+p, ol, ul, dl {
     page-break-inside: avoid;
 }
+
 
 /**
  * Colored & Boxed styles
  */
 .box {
-    margin: 20px 40px;
+    margin: 1rem 2rem;
     border: 1px solid #ccc;
-    border-radius: 6px;
-    padding: 10px 20px;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
     overflow: hidden; /* Fix for float elements overflowing box */
     page-break-inside: avoid;
     background-color: #eee;
@@ -193,7 +157,7 @@ dl {
     box-shadow: 0 1px 3px #ccc;
 }
 ol.box, ul.box {
-    padding: 10px 35px;
+    padding: 0.5rem 2rem;
 }
 .box li + li {
     margin-top: 0.25rem;
@@ -219,9 +183,9 @@ ol.box, ul.box {
     overflow: auto;
 }
 pre.code.box {
-    margin: 20px 40px;
+    margin: 1rem 2rem;
     border-left-width: 1px;
-    padding: 10px 20px;
+    padding: 0.5rem 1rem;
     overflow: auto;
 }
 .grey,
@@ -291,7 +255,7 @@ pre.code.box {
 }
 @media screen and (min-width: 401px) and (max-width: 600px) {
     body .box {
-        margin: 10px 20px;
+        margin: 0.5rem 1rem;
     }
     body .box .box-icon {
         display: none;
@@ -307,16 +271,6 @@ pre.code.box {
  * Markup display styles
  */
 
-/* Compact list style */
-ul.compact {
-    margin: 0;
-    padding-left: 20px;
-}
-.compact li {
-    margin: 0;
-    padding: 0;
-}
-
 /* Field label style */
 .label {
     font-weight: bold;
@@ -325,24 +279,12 @@ ul.compact {
 
 /* Code style */
 pre.code {
-    margin-top: 10px;
+    margin-top: 0.5em;
     border-left: 3px solid #8ac;
-    padding: 6px 6px 6px 20px;
+    padding: 0.25em 0.25em 0.25em 1em;
     background: #f8fbff;
     color: #069;
     font-weight: normal;
-}
-pre.code .label {
-    position: relative;
-    top: -6px;
-    left: -20px;
-    display: inline-block;
-    width: 100%;
-    padding: 2px 16px 1px 10px;
-    background: #8ac;
-    color: #fff;
-    text-shadow: 0 1px 2px #069;
-    font-weight: bold;
 }
 pre.code .comment {
     color: #6ac;
@@ -351,19 +293,7 @@ pre.code .comment {
 /* Short horizontal line */
 hr.short {
     width: 50%;
-    margin: 12px 25%;
-}
-
-/* Float styles */
-.left {
-    float: left;
-    clear: left;
-    margin-right: 20px;
-}
-.right {
-    float: right;
-    clear: right;
-    margin-left: 20px;
+    margin: 1em 25%;
 }
 
 /* Preformatted with line-breaks */
@@ -373,7 +303,7 @@ hr.short {
 
 /* Help text style */
 .helptext {
-    padding: 4px 0 10px 0;
+    padding: 0.25rem 0 0.5rem 0;
     color: #888;
 }
 
