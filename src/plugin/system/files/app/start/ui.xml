@@ -41,7 +41,7 @@
     <span id="infoEnv" style="padding-left: 0.5em" />
     <i class="fa fa-caret-down" style="padding-left: 1em"></i>
   </Pane>
-  <Popup id="menu" style="top: 30px; right: 10px; display: none; min-width: 200px; z-index: 10000; overflow: hidden;">
+  <Popup id="menu" style="top: 29px; right: 10px; display: none; min-width: 200px; z-index: 10000; overflow: hidden;">
     <h3 id="menuTitle">Anonymous User</h3>
     <div id="menuAbout" class="widgetPopupItem">About RapidContext</div>
     <div id="menuHelp" class="widgetPopupItem">Help &amp; Documentation</div>
@@ -50,7 +50,7 @@
     <div id="menuPassword" class="widgetPopupItem widgetPopupDisabled">Change Password</div>
     <div id="menuLogInOut" class="widgetPopupItem">Login</div>
   </Popup>
-  <Dialog id="passwordDialog" title="Change Password" system="true" resizeable="false" style="width: 400px; height: 160px;">
+  <Dialog id="passwordDialog" title="Change Password" system="true" resizeable="false" style="width: 500px; height: 160px;">
     <Form id="passwordForm">
       <table w="100%">
         <tbody w="100%">
