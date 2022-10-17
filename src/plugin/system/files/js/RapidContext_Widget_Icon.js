@@ -22,23 +22,23 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * Creates a new icon widget.
  *
  * @constructor
- * @param {Object} attrs the widget and node attributes to set
- * @param {String} [attrs.ref] the predefined icon name (reference)
- * @param {String} [attrs.class] the icon CSS class names
- * @param {String} [attrs.url] the icon image URL
- * @param {String} [attrs.position] the icon image position
- * @param {Number} [attrs.width] the icon width (in pixels)
- * @param {Number} [attrs.height] the icon height (in pixels)
- * @param {String} [attrs.tooltip] the icon tooltip text
- * @param {Boolean} [attrs.disabled] the disabled widget flag, defaults to
+ * @param {String/Object/Node} def the icon ref, class, attributes or DOM node
+ * @param {String} [def.ref] the predefined icon name (reference)
+ * @param {String} [def.class] the icon CSS class names
+ * @param {String} [def.url] the icon image URL
+ * @param {String} [def.position] the icon image position
+ * @param {Number} [def.width] the icon width (in pixels)
+ * @param {Number} [def.height] the icon height (in pixels)
+ * @param {String} [def.tooltip] the icon tooltip text
+ * @param {Boolean} [def.disabled] the disabled widget flag, defaults to
  *            false
- * @param {Boolean} [attrs.hidden] the hidden widget flag, defaults to false
+ * @param {Boolean} [def.hidden] the hidden widget flag, defaults to false
  *
  * @return {Widget} the widget DOM node
  *
  * @class The icon widget class. Used to provide a small clickable image, using
  *     the `<i>` HTML element. The icons can be either image- or font-based,
- *     causing slightly different behaviors with respect to size. A number of
+ *     causing slightly different behaviours with respect to size. A number of
  *     predefined icons suitable for different actions are available (using the
  *     Font-Awesome icon font).
  * @extends RapidContext.Widget
@@ -56,11 +56,13 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  *   <Icon id="dataLoading" ref="LOADING" hidden="true" style="margin-left: 3px;" />
  * </h3>
  */
-RapidContext.Widget.Icon = function (attrs) {
-    var o = MochiKit.DOM.createDOM("i");
-    RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Icon);
-    o.setAttrs(attrs);
-    o.addClass("widgetIcon");
+RapidContext.Widget.Icon = function (def) {
+    var o = (def && def.nodeType === 1) ? def : MochiKit.DOM.createDOM("i");
+    if (!RapidContext.Widget.isWidget(o, "Icon")) {
+        RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Icon);
+        o.addClass("widgetIcon");
+    }
+    o.setAttrs((def && def.nodeType === 1) ? {} : def);
     return o;
 };
 
@@ -87,7 +89,7 @@ RapidContext.Widget.Icon.prototype._containerNode = function () {
 /**
  * Updates the icon or HTML DOM node attributes.
  *
- * @param {Object} attrs the widget and node attributes to set
+ * @param {String/Object} attrs the icon ref, class or attributes to set
  * @param {String} [attrs.ref] the predefined icon name (reference)
  * @param {String} [attrs.class] the icon CSS class names
  * @param {String} [attrs.url] the icon image URL
@@ -99,11 +101,17 @@ RapidContext.Widget.Icon.prototype._containerNode = function () {
  * @param {Boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.Icon.prototype.setAttrs = function (attrs) {
+    if (typeof(attrs) === "string") {
+        var key = RapidContext.Widget.Icon[attrs] ? "ref" : "class";
+        var val = attrs;
+        attrs = {};
+        attrs[key] = val;
+    }
     var locals = MochiKit.Base.update({}, attrs);
     while (locals.ref) {
-        var ref = RapidContext.Widget.Icon[locals.ref] || {};
+        var o = RapidContext.Widget.Icon[locals.ref] || {};
         delete locals.ref;
-        MochiKit.Base.setdefault(locals, ref);
+        MochiKit.Base.setdefault(locals, o);
     }
     var styles = {};
     if (locals.url) {
