@@ -32,64 +32,6 @@
 
 
 /**
- * Button Style
- */
-.widgetButton {
-    display: inline-block;
-    border: 1px solid #aaa;
-    border-radius: 4px;
-    padding: 0.25em 0.5em;
-    color: #333;
-    background-color: #e0e0e0;
-    background-image: linear-gradient(to bottom, #f8f8f8, #e0e0e0);
-    box-shadow: 0 1px 2px #b4b4b47f;
-    text-shadow: 0 1px #fff;
-    font-size: 1.1em;
-    line-height: 1.5;
-    cursor: pointer;
-}
-.widgetButton.widgetDisabled {
-    border-color: #ccc;
-    color: #888;
-    background-color: #f8f8f8;
-    background-image: linear-gradient(to bottom, #fff, #f8f8f8);
-    cursor: default;
-}
-.widgetButton:not(.widgetDisabled):focus {
-    outline: 0;
-    border-color: #adf;
-    box-shadow: 0 0 4px #32b4ffb2;
-}
-.widgetButton:not(.widgetDisabled):hover {
-    background-color: #e8e8e8;
-    background-image: linear-gradient(to bottom, #fff, #e8e8e8);
-    box-shadow: 0 1px 3px #b4b4b4b2;
-}
-.widgetButton:not(.widgetDisabled):active {
-    position: relative;
-    top: 1px;
-    box-shadow: 0 0 2px #aaa inset;
-}
-.widgetButtonHighlight {
-    font-weight: bold;
-    letter-spacing: 0.03em;
-}
-.widgetButtonHighlight:not(.widgetDisabled) {
-    border-color: #cba;
-    background-color: #ed9;
-    background-image: linear-gradient(to bottom, #fff8dd, #ed9);
-}
-.widgetButton.widgetButtonHighlight:not(.widgetDisabled):hover {
-    background-color: #f8e8a8;
-    background-image: linear-gradient(to bottom, #fffcee, #f8e8a8);
-}
-.widgetButton .widgetIcon {
-    margin: 0 3px 0 0;
-    color: #444;
-}
-
-
-/**
  * Dialog Style
  */
 .widgetDialog {
@@ -196,6 +138,10 @@
     background-color: transparent;
     opacity: 0.25;
     cursor: default;
+}
+button > .widgetIcon.fa,
+.btn > .widgetIcon.fa {
+    min-width: auto;
 }
 
 

@@ -122,8 +122,12 @@
             </tbody>
           </table>
           <div style="position: absolute; bottom: 10px; right: 12px;">
-            <Button id="cxnEditCancel" icon="CANCEL" style="margin-left: 10px;">Cancel</Button>
-            <Button id="cxnEditSave" icon="OK" highlight="true" style="margin-left: 10px;">Save</Button>
+            <Button id="cxnEditCancel" icon="fa fa-lg fa-times">
+              Cancel
+            </Button>
+            <Button id="cxnEditSave" highlight="true" icon="fa fa-lg fa-check" class="ml-2">
+              Save
+            </Button>
           </div>
         </Form>
       </Dialog>
@@ -194,11 +198,10 @@
             </tr>
             <tr>
               <td colspan="2" style="padding-top: 10px;">
-                <Button id="appLaunch" disabled="true" style="margin-right: 10px">
-                  <Icon class="fa fa-play"/>
+                <Button id="appLaunch" disabled="true" icon="fa fa-play">
                   Launch
                 </Button>
-                <Button id="appLaunchWindow" icon="EXPAND" disabled="true">
+                <Button id="appLaunchWindow" disabled="true" icon="fa fa-external-link" class="ml-2">
                   Launch in new window
                 </Button>
               </td>
@@ -210,12 +213,12 @@
     <Pane id="pluginTab" pageTitle="Plug-Ins">
       <Form id="pluginUploadForm" w="100%" style="margin-bottom: 10px; border-bottom: solid 1px #DDDDDD; padding-bottom: 10px;">
         <h3>Software Install &amp; Update:</h3>
-        <label id="pluginInstall" class="widgetButton">
-          <Icon class="fa fa-puzzle-piece"/>
-          Install Plug-in
+        <label id="pluginInstall" class="btn">
+          <i class="fa fa-puzzle-piece"></i>
+          <t>Install Plug-in</t>
           <input id="pluginFile" type="file" accept=".plugin,.zip" class="hidden"/>
         </label>
-        <Button id="pluginReset" icon="RELOAD" style="margin-left: 10px;">
+        <Button id="pluginReset" icon="fa fa-refresh" class="m-0 ml-2">
           Reset Server
         </Button>
         <ProgressBar id="pluginProgress" hidden="true" novalue="true"/>
@@ -292,12 +295,10 @@
             </tr>
             <tr>
               <td colspan="2" style="padding-top: 4px;">
-                <Button id="pluginLoad" style="margin-right: 10px">
-                  <Icon class="fa fa-puzzle-piece"/>
+                <Button id="pluginLoad" icon="fa fa-puzzle-piece">
                   Load
                 </Button>
-                <Button id="pluginUnload" style="margin-right: 10px">
-                  <Icon class="fa fa-sign-out"/>
+                <Button id="pluginUnload" icon="fa fa-sign-out">
                   Unload
                 </Button>
               </td>
@@ -363,12 +364,10 @@
             </tbody>
           </table>
           <div style="margin-top: 6px;">
-            <Button id="procExec" disabled="true" style="margin-right: 10px;">
-              <Icon class="fa fa-play"/>
+            <Button id="procExec" disabled="true" icon="fa fa-play">
               Execute
             </Button>
-            <Button id="procBatch" disabled="true">
-              <Icon class="fa fa-clock-o"/>
+            <Button id="procBatch" disabled="true" icon="fa fa-lg fa-clock-o" class="ml-2">
               Execute Batch
             </Button>
           </div>
@@ -391,10 +390,10 @@
           </div>
           <TextArea name="value" w="100%-13" h="100%-65" />
           <div style="position: absolute; bottom: 10px; right: 12px;">
-            <Button id="procArgCancel" icon="CANCEL" style="margin-left: 10px;">
+            <Button id="procArgCancel" icon="fa fa-lg fa-times">
               Cancel
             </Button>
-            <Button id="procArgSave" icon="OK" highlight="true" style="margin-left: 10px;">
+            <Button id="procArgSave" highlight="true" icon="fa fa-lg fa-check" class="ml-2">
               Save
             </Button>
           </div>
@@ -457,10 +456,10 @@
           </table>
         </Form>
         <div style="position: absolute; bottom: 10px; right: 12px;">
-          <Button id="procEditCancel" icon="CANCEL" style="margin-left: 10px;">
+          <Button id="procEditCancel" icon="fa fa-lg fa-times">
             Cancel
           </Button>
-          <Button id="procEditSave" icon="OK" highlight="true" style="margin-left: 10px;">
+          <Button id="procEditSave" highlight="true" icon="fa fa-lg fa-check" class="ml-2">
             Save
           </Button>
         </div>
@@ -496,12 +495,10 @@
             </tr>
             <tr>
               <td colspan="2" style="padding-top: 4px;">
-                <Button id="batchPlay" style="margin-top: 3px">
-                  <Icon class="fa fa-play"/>
+                <Button id="batchPlay" icon="fa fa-play">
                   Resume Execution
                 </Button>
-                <Button id="batchPause" style="margin-top: 3px">
-                  <Icon class="fa fa-pause"/>
+                <Button id="batchPause" icon="fa fa-pause">
                   Pause Execution
                 </Button>
               </td>
@@ -578,7 +575,7 @@
             </tr>
             <tr>
               <td colspan="2" style="padding-top: 4px;">
-                <Button id="userSave" icon="OK" highlight="true" style="margin-right: 10px">
+                <Button id="userSave" highlight="true" icon="fa fa-lg fa-check">
                   Save
                 </Button>
               </td>

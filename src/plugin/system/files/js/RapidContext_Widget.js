@@ -155,7 +155,8 @@ RapidContext.Widget.createWidget = function (name, attrs/*, ...*/) {
         throw new ReferenceError("failed to find widget '" + name +
                                  "' in RapidContext.Widget.Classes");
     }
-    return cls.apply(this, MochiKit.Base.extend([], arguments, 1));
+    var args = Array.prototype.slice.call(arguments, 1);
+    return cls.apply(this, MochiKit.Base.flattenArray(args));
 };
 
 /**

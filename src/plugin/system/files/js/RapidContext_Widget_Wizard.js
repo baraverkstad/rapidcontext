@@ -65,20 +65,20 @@ RapidContext.Widget.Wizard = function (attrs/*, ... */) {
     o._selectedIndex = -1;
     o.appendChild(MochiKit.DOM.H3({ "class": "widgetWizardTitle" }));
     var bCancel = RapidContext.Widget.Button(
-        { icon: "CANCEL", style: { "margin-right": "10px" } },
+        { icon: "fa fa-lg fa-times", "class": "mr-2" },
         "Cancel"
     );
     var bPrev = RapidContext.Widget.Button(
-        { icon: "PREVIOUS", style: { "margin-right": "10px" } },
+        { icon: "fa fa-lg fa-caret-left", "class": "mr-2" },
         "Previous"
     );
     var bNext = RapidContext.Widget.Button(
         {},
         "Next",
-        RapidContext.Widget.Icon({ ref: "NEXT", style: { margin: "0 0 0 6px" } })
+        RapidContext.Widget.Icon({ class: "fa fa-lg fa-caret-right" })
     );
     var bDone = RapidContext.Widget.Button(
-        { icon: "OK", highlight: true },
+        { icon: "fa fa-lg fa-check", highlight: true },
         "Finish"
     );
     bCancel.hide();

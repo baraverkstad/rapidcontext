@@ -27,7 +27,7 @@
         </tbody>
       </table>
       <div style="margin-top: 1em; text-align: right;">
-        <Button id="loginAuth" type="submit" icon="OK" highlight="true">Login</Button>
+        <Button id="loginAuth" type="submit" highlight="true" icon="fa fa-lg fa-check">Login</Button>
       </div>
     </Form>
   </Dialog>
