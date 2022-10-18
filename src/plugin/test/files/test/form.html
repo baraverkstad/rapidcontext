@@ -9,9 +9,9 @@
     <title>Form Styling</title>
   </head>
   <body class="flex flex-wrap px-4 py-2">
-    <fieldset>
+    <fieldset class="m-3">
       <legend>Buttons</legend>
-      <h4>Interactivity styles:</h4>
+      <label class="block mb-1">Statuses:</label>
       <p>
         <button>Plain</button>
         <button class="hover">Hover</button>
@@ -19,7 +19,7 @@
         <button class="active">Active</button>
         <button disabled>Disabled</button>
       </p>
-      <h4>Style variations:</h4>
+      <label class="block mb-1">Styles:</label>
       <p>
         <button class="primary"><i class="fa fa-lg fa-check"></i><t>Primary</t></button>
         <button class="info"><i class="fa fa-lg fa-info-circle"></i><t>Info</t></button>
@@ -30,6 +30,42 @@
           <button class="right"><t>Right</t><i class="fa fa-chevron-right"></i></button>
         </span>
       </p>
+    </fieldset>
+    <fieldset class="w-50 m-3">
+      <legend>Inputs</legend>
+      <label class="block mb-1">Statuses:</label>
+      <input type="text" placeholder="Enter text" class="w-100">
+      <input type="text" value="Invalid" class="invalid w-100 mt-2">
+      <input type="text" value="Disabled" disabled class="w-100 mt-2">
+      <input type="text" value="Readonly" readonly class="w-100 mt-2">
+      <label class="block mt-3 mb-1">Search:</label>
+      <input type="search" placeholder="Search" class="w-100">
+      <label class="block mt-3 mb-1">Number:</label>
+      <input type="number" placeholder="0-50" min="0" max="100" step="10" size="10">
+      <label class="block mt-3 mb-1">Date:</label>
+      <input type="date" placeholder="YYYY-MM-DD">
+      <label class="block mt-3 mb-1">Textarea:</label>
+      <textarea placeholder="Enter multiple lines" rows="5" class="w-100"></textarea>
+      <label class="block mt-3 mb-1">Select:</label>
+      <select class="w-100">
+        <option value="">&mdash; Please select an option &mdash;</option>
+        <option>Alternative 1</option>
+        <option>Alternative 2</option>
+        <optgroup label="Group 1">
+          <option>Alternative 3</option>
+          <option>Alternative 4</option>
+        </optgroup>
+        <optgroup label="Group 2">
+          <option>Alternative 5</option>
+          <option disabled>Alternative 6</option>
+        </optgroup>
+      </select>
+      <select class="invalid w-100 mt-2">
+        <option>Invalid</option>
+      </select>
+      <select class="w-100 mt-2" disabled>
+        <option>Disabled</option>
+      </select>
     </fieldset>
   </body>
 </html>

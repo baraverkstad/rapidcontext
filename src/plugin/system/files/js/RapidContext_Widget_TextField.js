@@ -25,8 +25,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * @param {Object} attrs the widget and node attributes
  * @param {String} [attrs.name] the form field name
  * @param {String} [attrs.value] the field value, defaults to ""
- * @param {String} [attrs.helpText] the help text shown on empty input,
- *            defaults to ""
+ * @param {String} [attrs.helpText] the help text when empty (deprecated)
  * @param {Boolean} [attrs.disabled] the disabled widget flag, defaults to
  *            false
  * @param {Boolean} [attrs.hidden] the hidden widget flag, defaults to false
@@ -38,34 +37,28 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  *     single line, using the `<input>` HTML element. The text field may also
  *     be connected to a popup (for auto-complete or similar).
  * @property {Boolean} disabled The read-only widget disabled flag.
- * @property {Boolean} focused The read-only widget focused flag.
  * @property {String} defaultValue The value to use on form reset.
  * @extends RapidContext.Widget
  *
  * @example {JavaScript}
- * var attrs = { name: "name", helpText: "Your Name Here" };
+ * var attrs = { name: "name", placeholder: "Your Name Here" };
  * var field = RapidContext.Widget.TextField(attrs);
  *
  * @example {User Interface XML}
- * <TextField name="name" helpText="Your Name Here" />
+ * <TextField name="name" placeholder="Your Name Here" />
  */
 RapidContext.Widget.TextField = function (attrs/*, ...*/) {
+    function scrape(val) {
+        return String(val && val.textContent || val || "");
+    }
     var type = (attrs && attrs.type) || "text";
     var text = (attrs && attrs.value) || "";
-    for (var i = 1; i < arguments.length; i++) {
-        var arg = arguments[i];
-        if (RapidContext.Util.isDOM(arg)) {
-            text += MochiKit.DOM.scrapeText(arg);
-        } else if (arg != null) {
-            text += String(arg);
-        }
-    }
+    text += Array.prototype.slice.call(arguments, 1).map(scrape).join("");
     var o = MochiKit.DOM.INPUT({ type: type, value: text });
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.TextField);
     o.addClass("widgetTextField");
-    o.focused = false;
     o._popupCreated = false;
-    o.setAttrs(MochiKit.Base.update({ helpText: "", value: text }, attrs));
+    o.setAttrs(MochiKit.Base.update({}, attrs, { value: text }));
     var changeHandler = RapidContext.Widget._eventHandler(null, "_handleChange");
     o.onkeyup = changeHandler;
     o.oncut = changeHandler;
@@ -105,27 +98,21 @@ RapidContext.Widget.Classes.TextField = RapidContext.Widget.TextField;
  * @param {Object} attrs the widget and node attributes to set
  * @param {String} [attrs.name] the form field name
  * @param {String} [attrs.value] the field value
- * @param {String} [attrs.helpText] the help text shown on empty input
+ * @param {String} [attrs.helpText] the help text when empty (deprecated)
  * @param {Boolean} [attrs.disabled] the disabled widget flag
  * @param {Boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.TextField.prototype.setAttrs = function (attrs) {
     attrs = MochiKit.Base.update({}, attrs);
     var locals = RapidContext.Util.mask(attrs, ["helpText", "value"]);
-    if (typeof(locals.helpText) != "undefined") {
-        var str = MochiKit.Format.strip(locals.helpText);
-        if ("placeholder" in this) {
-            attrs.placeholder = str;
-        } else {
-            this.helpText = str;
-        }
+    if ("helpText" in locals) {
+        attrs.placeholder = attrs.placeholder || locals.helpText;
     }
-    if (typeof(locals.value) != "undefined") {
-        this.value = locals.value;
+    if ("value" in locals) {
+        this.value = locals.value || "";
         this._handleChange(false, "set");
     }
     this.__setAttrs(attrs);
-    this._render();
 };
 
 /**
@@ -136,20 +123,12 @@ RapidContext.Widget.TextField.prototype.reset = function () {
 };
 
 /**
- * Returns the text field value. This function is slightly different
- * from using the `value` property directly, since it will always
- * return the actual value string instead of the temporary help text
- * displayed when the text field is empty and unfocused.
+ * Returns the text field value.
  *
  * @return {String} the field value
- *
- * @example
- * var value = field.getValue();
- * value = MochiKit.Format.strip(value);
- * field.setAttrs({ "value": value });
  */
 RapidContext.Widget.TextField.prototype.getValue = function () {
-    return (this.focused) ? this.value : this.storedValue;
+    return this.value;
 };
 
 /**
@@ -246,19 +225,16 @@ RapidContext.Widget.TextField.prototype._handleChange = function (evt, cause) {
 RapidContext.Widget.TextField.prototype._handleFocus = function (evt) {
     var value = this.getValue();
     if (evt.type() == "focus") {
-        this.focused = true;
         if (this.value != value) {
             this.value = value;
         }
     } else if (evt.type() == "blur") {
-        this.focused = false;
         this.storedValue = value;
         var popup = this.popup();
         if (popup && !popup.isHidden()) {
             popup.setAttrs({ delay: 250 });
         }
     }
-    this._render();
 };
 
 /**
@@ -315,21 +291,4 @@ RapidContext.Widget.TextField.prototype._handleClick = function (evt) {
     this.blur();
     this.focus();
     RapidContext.Widget._fireEvent(this, "dataavailable");
-};
-
-/**
- * Updates the display of the widget content.
- */
-RapidContext.Widget.TextField.prototype._render = function () {
-    var value = this.getValue();
-    var str = MochiKit.Format.strip(value);
-    if (!this.focused && str == "" && this.helpText) {
-        this.value = this.helpText;
-        this.addClass("widgetTextFieldHelp");
-    } else {
-        if (this.value != value) {
-            this.value = value;
-        }
-        this.removeClass("widgetTextFieldHelp");
-    }
 };

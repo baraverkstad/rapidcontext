@@ -330,14 +330,3 @@ hr.short {
     -webkit-user-select: none; /* stylelint-disable-line property-no-vendor-prefix */
     user-select: none;
 }
-
-/* Disabled element */
-.disabled {
-    background: #eee;
-    color: #444;
-}
-
-/* Hidden element */
-.hidden {
-    display: none;
-}

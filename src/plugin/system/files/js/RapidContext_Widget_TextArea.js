@@ -25,8 +25,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * @param {Object} attrs the widget and node attributes
  * @param {String} [attrs.name] the form field name
  * @param {String} [attrs.value] the field value, defaults to ""
- * @param {String} [attrs.helpText] the help text shown on empty input,
- *            defaults to ""
+ * @param {String} [attrs.helpText] the help text when empty (deprecated)
  * @param {Boolean} [attrs.disabled] the disabled widget flag, defaults to
  *            false
  * @param {Boolean} [attrs.hidden] the hidden widget flag, defaults to false
@@ -37,35 +36,26 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * @class The text area widget class. Used to provide a text input field
  *     spanning multiple rows, using the `<textarea>` HTML element.
  * @property {Boolean} disabled The read-only widget disabled flag.
- * @property {Boolean} focused The read-only widget focused flag.
  * @property {String} defaultValue The value to use on form reset.
  * @extends RapidContext.Widget
  *
  * @example {JavaScript}
- * var attrs = { name="description", helpText: "Description Text" };
+ * var attrs = { name="description", placeholder: "Description Text" };
  * var field = RapidContext.Widget.TextArea(attrs);
  *
  * @example {User Interface XML}
- * <TextArea name="description" helpText="Description Text" />
+ * <TextArea name="description" placeholder="Description Text" />
  */
 RapidContext.Widget.TextArea = function (attrs/*, ...*/) {
-    var text = "";
-    if (attrs != null && attrs.value != null) {
-        text = attrs.value;
+    function scrape(val) {
+        return String(val && val.textContent || val || "");
     }
-    for (var i = 1; i < arguments.length; i++) {
-        var arg = arguments[i];
-        if (RapidContext.Util.isDOM(arg)) {
-            text += MochiKit.DOM.scrapeText(arg);
-        } else if (arg != null) {
-            text += String(arg);
-        }
-    }
+    var text = (attrs && attrs.value) || "";
+    text += Array.prototype.slice.call(arguments, 1).map(scrape).join("");
     var o = MochiKit.DOM.TEXTAREA({ value: text });
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.TextArea);
     o.addClass("widgetTextArea");
-    o.focused = false;
-    o.setAttrs(MochiKit.Base.update({ helpText: "", value: text }, attrs));
+    o.setAttrs(MochiKit.Base.update({}, attrs, { value: text }));
     var changeHandler = RapidContext.Widget._eventHandler(null, "_handleChange");
     o.onkeyup = changeHandler;
     o.oncut = changeHandler;
@@ -94,23 +84,18 @@ RapidContext.Widget.Classes.TextArea = RapidContext.Widget.TextArea;
  * @param {Object} attrs the widget and node attributes to set
  * @param {String} [attrs.name] the form field name
  * @param {String} [attrs.value] the field value
- * @param {String} [attrs.helpText] the help text shown on empty input
+ * @param {String} [attrs.helpText] the help text when empty (deprecated)
  * @param {Boolean} [attrs.disabled] the disabled widget flag
  * @param {Boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.TextArea.prototype.setAttrs = function (attrs) {
     attrs = MochiKit.Base.update({}, attrs);
     var locals = RapidContext.Util.mask(attrs, ["helpText", "value"]);
-    if (typeof(locals.helpText) != "undefined") {
-        var str = MochiKit.Format.strip(locals.helpText);
-        if ("placeholder" in this) {
-            attrs.placeholder = str;
-        } else {
-            this.helpText = str;
-        }
+    if ("helpText" in locals) {
+        attrs.placeholder = attrs.placeholder || locals.helpText;
     }
-    if (typeof(locals.value) != "undefined") {
-        this.value = locals.value;
+    if ("value" in locals) {
+        this.value = locals.value || "";
         this._handleChange();
     }
     this.__setAttrs(attrs);
@@ -140,14 +125,12 @@ RapidContext.Widget.TextArea.prototype.reset = function () {
  * field.setAttrs({ "value": value });
  */
 RapidContext.Widget.TextArea.prototype.getValue = function () {
-    var str = (this.focused) ? this.value : this.storedValue;
+    var str = this.value;
     // This is a hack to remove multiple newlines caused by
     // platforms inserting or failing to normalize newlines
     // within the HTML textarea control.
-    if (/\r\n\n/.test(str)) {
-        str = str.replace(/\r\n\n/g, "\n");
-    }
-    if (this.focused && this.value != str) {
+    str = str.replace(/\r\n\n/g, "\n");
+    if (this.value != str) {
         this.value = str;
     }
     return str;
@@ -175,30 +158,10 @@ RapidContext.Widget.TextArea.prototype._handleChange = function (evt) {
 RapidContext.Widget.TextArea.prototype._handleFocus = function (evt) {
     var value = this.getValue();
     if (evt.type() == "focus") {
-        this.focused = true;
         if (this.value != value) {
             this.value = value;
         }
     } else if (evt.type() == "blur") {
-        this.focused = false;
         this.storedValue = value;
-    }
-    this._render();
-};
-
-/**
- * Updates the display of the widget content.
- */
-RapidContext.Widget.TextArea.prototype._render = function () {
-    var value = this.getValue();
-    var str = MochiKit.Format.strip(value);
-    if (!this.focused && str == "" && this.helpText) {
-        this.value = this.helpText;
-        this.addClass("widgetTextAreaHelp");
-    } else {
-        if (this.value != value) {
-            this.value = value;
-        }
-        this.removeClass("widgetTextAreaHelp");
     }
 };

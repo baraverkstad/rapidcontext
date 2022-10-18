@@ -132,6 +132,7 @@ RapidContext.Widget.FormValidator.prototype.setAttrs = function (attrs) {
  */
 RapidContext.Widget.FormValidator.prototype.reset = function () {
     for (var i = 0; i < this.fields.length; i++) {
+        MochiKit.DOM.removeElementClass(this.fields[i], "invalid");
         MochiKit.DOM.removeElementClass(this.fields[i], "widgetInvalid");
     }
     this.fields = [];
@@ -207,6 +208,7 @@ RapidContext.Widget.FormValidator.prototype.verify = function (field, value) {
 RapidContext.Widget.FormValidator.prototype.addError = function (field, message) {
     if (!MochiKit.DOM.hasElementClass(field, "widgetInvalid")) {
         this.fields.push(field);
+        MochiKit.DOM.addElementClass(field, "invalid");
         MochiKit.DOM.addElementClass(field, "widgetInvalid");
         if (this.display !== "none") {
             message = this.message || message;
