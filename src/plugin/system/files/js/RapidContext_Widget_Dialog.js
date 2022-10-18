@@ -55,8 +55,8 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  */
 RapidContext.Widget.Dialog = function (attrs/*, ... */) {
     var title = MochiKit.DOM.DIV({ "class": "widgetDialogTitle" }, "Dialog");
-    var close = RapidContext.Widget.Icon({ "class": "widgetDialogClose fa fa-close", tooltip: "Close" });
-    var resize = RapidContext.Widget.Icon({ ref: "RESIZE", "class": "widgetDialogResize" });
+    var close = RapidContext.Widget.Icon({ "class": "widgetDialogClose fa fa-times", title: "Close" });
+    var resize = MochiKit.DOM.DIV({ "class": "widgetDialogResize" });
     var content = MochiKit.DOM.DIV({ "class": "widgetDialogContent" });
     var o = MochiKit.DOM.DIV({}, title, close, resize, content);
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Dialog);
@@ -157,7 +157,7 @@ RapidContext.Widget.Dialog.prototype.setAttrs = function (attrs) {
     }
     if (typeof(locals.resizeable) != "undefined") {
         var resize = this.childNodes[2];
-        resize.setAttrs({ hidden: !MochiKit.Base.bool(locals.resizeable) });
+        $(resize).toggleClass("hidden", !MochiKit.Base.bool(locals.resizeable));
     }
     if (typeof(locals.closeable) != "undefined") {
         var close = this.childNodes[1];

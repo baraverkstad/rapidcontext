@@ -65,8 +65,24 @@
     position: absolute;
     bottom: 0;
     right: 0;
-    z-index: 1;
+    width: 1.6em;
+    height: 1.6em;
     cursor: nw-resize;
+    background:
+        linear-gradient(
+            135deg,
+            #0000,
+            #0000 50%,
+            #3332 55%,
+            #0000 60%,
+            #0000 65%,
+            #3332 70%,
+            #0000 75%,
+            #0000 80%,
+            #3332 85%,
+            #0000 90%,
+            #0000
+        );
 }
 .widgetDialogTitle {
     margin: 2px 2px 0 2px;
