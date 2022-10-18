@@ -514,22 +514,22 @@
 .border-t,
 .border-y,
 .border {
-    border-top: 1px solid #00000010 !important;
+    border-top: 1px solid #0002 !important;
 }
 .border-b,
 .border-y,
 .border {
-    border-bottom: 1px solid #00000010 !important;
+    border-bottom: 1px solid #0002 !important;
 }
 .border-l,
 .border-x,
 .border {
-    border-left: 1px solid #00000010 !important;
+    border-left: 1px solid #0002 !important;
 }
 .border-r,
 .border-x,
 .border {
-    border-right: 1px solid #00000010 !important;
+    border-right: 1px solid #0002 !important;
 }
 .border-t-0,
 .border-y-0,
@@ -591,6 +591,23 @@
     display: -webkit-box; /* stylelint-disable-line value-no-vendor-prefix */
     -webkit-line-clamp: 3; /* stylelint-disable-line property-no-vendor-prefix */
     -webkit-box-orient: vertical; /* stylelint-disable-line property-no-vendor-prefix */
+}
+
+
+/**
+ * Vertical align
+ */
+.vertical-baseline {
+    vertical-align: baseline !important;
+}
+.vertical-top {
+    vertical-align: top !important;
+}
+.vertical-middle {
+    vertical-align: middle !important;
+}
+.vertical-bottom {
+    vertical-align: bottom !important;
 }
 
 
