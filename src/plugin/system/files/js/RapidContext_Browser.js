@@ -60,7 +60,11 @@
         "console.warn",
         "document.querySelectorAll",
         { test: "'head' in document", name: "document.head shortcut" },
-        { test: "'onload' in HTMLLinkElement.prototype", name: "<link> element onload" }
+        { test: "'onload' in HTMLLinkElement.prototype", name: "<link> element onload" },
+        {
+            test: "var el = document.createElement('div');el.style.cssText='width:calc(10px);';!!el.style.length",
+            name: "CSS calc()"
+        }
     ];
 
     /**
