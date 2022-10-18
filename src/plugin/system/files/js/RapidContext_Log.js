@@ -322,13 +322,19 @@
      * @param {Array} args the log message arguments (as strings)
      */
     function _store(level, args) {
+        var m = 1;
+        for (; m < args.length; m++) {
+            if (args[m] && args[m].indexOf("\n") >= 0) {
+                break;
+            }
+        }
         state.history.push({
             id: ++state.count,
             time: new Date(),
             level: level,
             context: state.context,
-            message: args[0],
-            data: (args.length > 1) ? args.slice(1).join("\n") : null
+            message: args.slice(0, m).join(" "),
+            data: (m < args.length) ? args.slice(m).join("\n") : null
         });
         state.history.splice(0, Math.max(0, state.history.length - 100));
         if (!state.publish.timer) {
