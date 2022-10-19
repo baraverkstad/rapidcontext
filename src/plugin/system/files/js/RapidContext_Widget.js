@@ -108,7 +108,7 @@ RapidContext.Widget.isFormField = function (obj) {
  */
 RapidContext.Widget._widgetMixin = function (node/*, objOrClass, ...*/) {
     MochiKit.DOM.addElementClass(node, "widget");
-    var protos = MochiKit.Base.extend([], arguments, 1);
+    var protos = Array.prototype.slice.call(arguments, 1);
     protos.push(RapidContext.Widget);
     while (protos.length > 0) {
         var obj = protos.pop();
@@ -204,7 +204,7 @@ RapidContext.Widget.destroyWidget = function (node) {
  * @return {Function} a function that forwards calls as specified
  */
 RapidContext.Widget._eventHandler = function (className, methodName/*, ...*/) {
-    var baseArgs = MochiKit.Base.extend([], arguments, 2);
+    var baseArgs = Array.prototype.slice.call(arguments, 2);
     return function (evt) {
         var node = this;
         while (!RapidContext.Widget.isWidget(node, className)) {
@@ -625,7 +625,7 @@ RapidContext.Widget.prototype.blurAll = function () {
  */
 RapidContext.Widget.prototype.getChildNodes = function () {
     var elem = this._containerNode();
-    return elem ? MochiKit.Base.extend([], elem.childNodes) : [];
+    return elem ? Array.prototype.slice.call(elem.childNodes) : [];
 };
 
 /**

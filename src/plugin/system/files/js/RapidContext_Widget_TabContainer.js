@@ -65,7 +65,7 @@ RapidContext.Widget.TabContainer = function (attrs/*, ... */) {
     container.resizeContent = MochiKit.Base.noop;
     o._selectedIndex = -1;
     o.setAttrs(attrs);
-    o.addAll(MochiKit.Base.extend(null, arguments, 1));
+    o.addAll(Array.prototype.slice.call(arguments, 1));
     return o;
 };
 
@@ -79,7 +79,7 @@ RapidContext.Widget.Classes.TabContainer = RapidContext.Widget.TabContainer;
  * @return {Array} the array of child DOM nodes
  */
 RapidContext.Widget.TabContainer.prototype.getChildNodes = function () {
-    return MochiKit.Base.extend([], this.lastChild.childNodes);
+    return Array.prototype.slice.call(this.lastChild.childNodes);
 };
 
 /**

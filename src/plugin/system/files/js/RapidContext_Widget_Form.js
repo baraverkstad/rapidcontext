@@ -50,7 +50,7 @@ RapidContext.Widget.Form = function (attrs/*, ...*/) {
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Form);
     o.addClass("widgetForm");
     o.setAttrs(attrs);
-    o.addAll(MochiKit.Base.extend(null, arguments, 1));
+    o.addAll(Array.prototype.slice.call(arguments, 1));
     o.onsubmit = RapidContext.Widget._eventHandler(null, "_handleSubmit");
     return o;
 };

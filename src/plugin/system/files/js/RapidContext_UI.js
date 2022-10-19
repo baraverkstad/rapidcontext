@@ -61,7 +61,7 @@ RapidContext.UI.buildUI = function (node, ids) {
         return RapidContext.UI.buildUI(node.documentElement.childNodes, ids);
     } else if (typeof(node.item) != "undefined" && typeof(node.length) == "number") {
         var res = [];
-        var elems = MochiKit.Base.extend(null, node);
+        var elems = Array.prototype.slice.call(node);
         for (var i = 0; i < elems.length; i++) {
             var elem = RapidContext.UI.buildUI(elems[i], ids);
             if (elem) {

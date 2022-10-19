@@ -66,7 +66,7 @@ RapidContext.Widget.Popup = function (attrs/*, ...*/) {
     o.selectedIndex = -1;
     o._delayTimer = null;
     o.setAttrs(MochiKit.Base.update({ delay: 5000 }, attrs));
-    o.addAll(MochiKit.Base.extend(null, arguments, 1));
+    o.addAll(Array.prototype.slice.call(arguments, 1));
     MochiKit.Signal.connect(o, "onmousemove", o, "_handleMouseMove");
     MochiKit.Signal.connect(o, "onclick", o, "_handleMouseClick");
     return o;

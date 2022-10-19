@@ -90,7 +90,7 @@ RapidContext.Widget.Wizard = function (attrs/*, ... */) {
     MochiKit.Signal.connect(bDone, "onclick", o, "done");
     o._updateStatus();
     o.setAttrs(attrs);
-    o.addAll(MochiKit.Base.extend(null, arguments, 1));
+    o.addAll(Array.prototype.slice.call(arguments, 1));
     return o;
 };
 
@@ -128,7 +128,7 @@ RapidContext.Widget.Classes.Wizard = RapidContext.Widget.Wizard;
  * @return {Array} the array of child wizard page widgets
  */
 RapidContext.Widget.Wizard.prototype.getChildNodes = function () {
-    return MochiKit.Base.extend([], this.childNodes, 2);
+    return Array.prototype.slice.call(this.childNodes, 2);
 };
 
 /**

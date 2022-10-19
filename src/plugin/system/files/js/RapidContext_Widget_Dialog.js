@@ -64,7 +64,7 @@ RapidContext.Widget.Dialog = function (attrs/*, ... */) {
     o.resizeContent = o._resizeContent;
     o._setHidden(true);
     o.setAttrs(MochiKit.Base.update({ modal: false, system: false, center: true }, attrs));
-    o.addAll(MochiKit.Base.extend(null, arguments, 1));
+    o.addAll(Array.prototype.slice.call(arguments, 1));
     title.onmousedown = RapidContext.Widget._eventHandler("Dialog", "_handleMoveStart");
     close.onclick = RapidContext.Widget._eventHandler("Dialog", "hide");
     resize.onmousedown = RapidContext.Widget._eventHandler("Dialog", "_handleResizeStart");

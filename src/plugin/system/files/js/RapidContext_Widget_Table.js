@@ -71,7 +71,7 @@ RapidContext.Widget.Table = function (attrs/*, ...*/) {
     o._mouseX = 0;
     o._mouseY = 0;
     o.setAttrs(attrs);
-    o.addAll(MochiKit.Base.extend(null, arguments, 1));
+    o.addAll(Array.prototype.slice.call(arguments, 1));
     tbody.onmousedown = RapidContext.Widget._eventHandler("Table", "_handleMouseDown");
     tbody.onmouseup = RapidContext.Widget._eventHandler("Table", "_handleMouseUp");
     return o;

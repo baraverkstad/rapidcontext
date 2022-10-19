@@ -61,7 +61,7 @@ RapidContext.Widget.Pane = function (attrs/*, ... */) {
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Pane);
     o.addClass("widgetPane");
     o.setAttrs(MochiKit.Base.update({ pageTitle: "Page", pageStatus: "ANY", pageCloseable: false }, attrs));
-    o.addAll(MochiKit.Base.extend(null, arguments, 1));
+    o.addAll(Array.prototype.slice.call(arguments, 1));
     return o;
 };
 

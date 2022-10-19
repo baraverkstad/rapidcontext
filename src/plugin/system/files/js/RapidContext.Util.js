@@ -407,7 +407,7 @@ RapidContext.Util.createDOMExt = function (ns, tag, attrs/*, ...*/) {
     var doc = MochiKit.DOM.currentDocument();
     var node = (ns) ? doc.createElementNS(ns, tag) : doc.createElement(tag);
     MochiKit.DOM.updateNodeAttributes(node, attrs);
-    var children = MochiKit.Base.extend([], arguments, 3);
+    var children = Array.prototype.slice.call(arguments, 3);
     MochiKit.DOM.appendChildNodes(node, children);
     return node;
 };
@@ -444,18 +444,18 @@ RapidContext.Util.createTextNode = function (text) {
 RapidContext.Util.createDOMFuncExt = function (ns, tag, args, attrs/*, ...*/) {
     args = args || [];
     attrs = attrs || {};
-    var children = MochiKit.Base.extend([], arguments, 4);
+    var children = Array.prototype.slice.call(arguments, 4);
     return function (/*arg1, ..., argN, attrs, ...*/) {
+        var myArgs = Array.prototype.slice.call(arguments);
         var myAttrs = MochiKit.Base.update({}, attrs);
-        for (var pos = 0; pos < args.length; pos++) {
-            if (arguments[pos] == null) {
-                throw new Error("Argument '" + args[pos] + "' cannot be null");
+        args.forEach(function (key, idx) {
+            if (myArgs[idx] == null) {
+                throw new Error("Argument '" + key + "' cannot be null");
             }
-            myAttrs[args[pos]] = arguments[pos];
-        }
-        MochiKit.Base.update(myAttrs, arguments[args.length]);
-        var myChildren = MochiKit.Base.extend([], children);
-        MochiKit.Base.extend(myChildren, arguments, args.length + 1);
+            myAttrs[key] = myArgs[idx];
+        });
+        MochiKit.Base.update(myAttrs, myArgs[args.length]);
+        var myChildren = [].concat(children, myArgs.slice(args.length + 1));
         return RapidContext.Util.createDOMExt(ns, tag, myAttrs, myChildren);
     };
 };
