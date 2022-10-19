@@ -632,7 +632,7 @@
     font-family: ui-monospace, "Courier New", monospace;
 }
 .font-light {
-    font-weight: 300 !important;
+    font-weight: 200 !important;
 }
 .font-normal {
     font-weight: 400 !important;
