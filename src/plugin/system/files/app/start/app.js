@@ -144,29 +144,17 @@ StartApp.prototype._initApps = function () {
     }
 
     // Redraw the app launcher table
-    var rows = launchers.map(function (app) {
-        // TODO: Should use a template widget...
-        var tdIcon = MochiKit.DOM.TD({ style: { "padding": "0.25em 0.75em 0.5em 0.5em" } });
-        if (app.icon) {
-            MochiKit.DOM.replaceChildNodes(tdIcon, app.icon.cloneNode(true));
-        }
-        var iconStyle = { marginLeft: "6px" };
-        var iconAttrs = { ref: "EXPAND", tooltip: "Open in new window", style: iconStyle };
-        var expIcon = RapidContext.Widget.Icon(iconAttrs);
-        if (app.launch == "window") {
-            expIcon.addClass("launch-window");
-        } else {
-            expIcon.hide();
-        }
-        var style = { margin: "0", lineHeight: "18px", color: "#1E466E" };
-        var title = MochiKit.DOM.H4({ style: style }, app.name, expIcon);
-        var desc = MochiKit.DOM.SPAN(null, app.description);
-        desc.style.whiteSpace = "pre-line";
-        var tdName = MochiKit.DOM.TD({ style: { "padding-top": "0.5rem" } }, title, desc);
-        var attrs = { "class": "clickable", "data-appid": app.id };
-        return MochiKit.DOM.TR(attrs, tdIcon, tdName);
+    var $appTable = $(this.ui.appTable).empty();
+    launchers.forEach(function (app) {
+        var $tr = $("<tr>").addClass("clickable").attr("data-appid", app.id).appendTo($appTable);
+        var icon = app.icon && app.icon.cloneNode(true);
+        $("<td class='p-2'>").append(icon).appendTo($tr);
+        var ext = RapidContext.Widget.Icon("fa fa-external-link ml-1");
+        ext.addClass((app.launch == "window") ? "launch-window" : "hidden");
+        var $title = $("<a href='#' class='h4 m-0'>").text(app.name).append(ext);
+        var $desc = $("<span class='text-pre-line'>").text(app.description);
+        $("<td class='pl-1 pr-2 py-2'>").append($title, $desc).appendTo($tr);
     });
-    MochiKit.DOM.replaceChildNodes(this.ui.appTable, rows);
 
     // Start auto and inline apps
     for (var i = 0; i < apps.length; i++) {
@@ -249,14 +237,8 @@ StartApp.prototype._handleKeyEvent = function (evt) {
  * @param {Boolean} visible the visible flag
  */
 StartApp.prototype._showAppModifiers = function (visible) {
-    var icons = $(this.ui.appTable).find(".widgetIcon").not(".launch-window");
-    for (var i = 0; i < icons.length; i++) {
-        if (visible) {
-            icons[i].show();
-        } else {
-            icons[i].hide();
-        }
-    }
+    var icons = $(this.ui.appTable).find("a > i").not(".launch-window");
+    icons.toggleClass("hidden", !visible);
 };
 
 /**
@@ -265,18 +247,13 @@ StartApp.prototype._showAppModifiers = function (visible) {
  * @param {Event} evt the click event
  */
 StartApp.prototype._handleAppLaunch = function (evt) {
-    var tr = evt.target();
-    if (tr.tagName != "TR") {
-        tr = MochiKit.DOM.getFirstParentByTagAndClassName(tr, "TR");
-    }
-    if (tr != null) {
-        var appId = MochiKit.DOM.getNodeAttribute(tr, "data-appid");
-        if (appId) {
-            var app = RapidContext.App.findApp(appId);
-            var win = evt.modifier().any || (app && app.launch == "window");
-            this.startApp(appId, win ? window.open() : null);
-            this._showAppModifiers(false);
-        }
+    var $tr = $(evt.target()).closest("tr");
+    var appId = $tr.data("appid");
+    if (appId) {
+        var app = RapidContext.App.findApp(appId);
+        var win = evt.modifier().any || (app && app.launch == "window");
+        this.startApp(appId, win ? window.open() : null);
+        this._showAppModifiers(false);
     }
     evt.stop();
 };
@@ -294,8 +271,11 @@ StartApp.prototype._handleAppLaunch = function (evt) {
 StartApp.prototype.initAppPane = function (pane, opts) {
     opts = opts || {};
     if (pane == null) {
-        var style = { position: "relative" };
-        var attrs = { pageTitle: opts.title, pageCloseable: opts.closeable, style: style };
+        var attrs = {
+            pageTitle: opts.title,
+            pageCloseable: opts.closeable,
+            "class": "position-relative"
+        };
         pane = new RapidContext.Widget.Pane(attrs);
         RapidContext.Util.registerSizeConstraints(pane, "100%", "100%");
         this.ui.tabContainer.addAll(pane);
