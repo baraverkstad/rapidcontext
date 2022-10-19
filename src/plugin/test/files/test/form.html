@@ -67,5 +67,45 @@
         <option>Disabled</option>
       </select>
     </fieldset>
+    <fieldset class="m-3">
+      <legend>Toggle inputs</legend>
+      <label class="block mb-1">
+        <input type="checkbox" name="toggle-1" checked>
+        Checkbox 1
+      </label>
+      <label class="block mb-1">
+        <input type="checkbox" name="toggle-2">
+        Checkbox 2
+      </label>
+      <label class="block mb-1">
+        <input type="checkbox" name="toggle-3" disabled>
+        Checkbox 3
+      </label>
+      <label class="block mb-1">
+        <input type="checkbox" role="switch" name="switch-1">
+        Switch 1
+      </label>
+      <label class="block mb-1">
+        <input type="radio" name="radio" value="1">
+        Radio option 1
+      </label>
+      <label class="block mb-1">
+        <input type="radio" name="radio" value="2">
+        Radio option 2
+      </label>
+      <label class="block mb-1">
+        <input type="radio" name="radio" value="3" disabled>
+        Radio option 3
+      </label>
+    </fieldset>
+    <fieldset class="m-3">
+      <legend>Ranges</legend>
+      <label class="block mb-1">Range:</label>
+      <input type="range" min="0" max="100" step="10" value="50">
+      <label class="block mt-3 mb-1">Meter:</label>
+      <meter min="0" max="100" value="33">33%</meter>
+      <label class="block mt-3 mb-1">Progress:</label>
+      <progress max="100" value="66">66%</progress>
+    </fieldset>
   </body>
 </html>
