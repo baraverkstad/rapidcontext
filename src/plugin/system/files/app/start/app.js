@@ -176,19 +176,16 @@ StartApp.prototype._initApps = function () {
  * Initializes a dashboard app.
  */
 StartApp.prototype._initDashboardApp = function (app) {
-    // TODO: use proper widget and container instead
-    var style = {};
+    var cls = ["dash-item", "box", this.gradients.shift() || "grey"];
     if (app.startPage == "left" || app.startPage == "right") {
-        style = { float: app.startPage, clear: app.startPage };
+        cls.push("float-" + app.startPage, "clear-" + app.startPage);
     } else {
-        style = { clear: "both" };
+        cls.push("clear-both");
     }
-    var color = this.gradients.shift() || "grey";
     var attrs = {
         pageTitle: app.name,
         pageCloseable: true,
-        "class": "dash-item box " + color,
-        style: style
+        "class": cls.join(" ")
     };
     var pane = new RapidContext.Widget.Pane(attrs);
     this.ui.inlinePane.insertBefore(pane, this.ui.inlinePane.firstChild);
