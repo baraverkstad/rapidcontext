@@ -1,47 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <ui class="start-app">
-  <TabContainer id="tabContainer" w="100%" h="100%">
-    <Pane pageTitle="Start" style="position: relative;">
-      <div style="float: left; width: 30%; height: 100%; border-right: solid 1px #DDDDDD; padding-right: 6px;">
+  <TabContainer id="tabContainer" class="w-100 h-100">
+    <Pane pageTitle="Start" class="position-relative">
+      <div class="inline-block vertical-top h-100 border-r pr-2" style="width: 30%;">
         <h3>
           Apps:
-          <Icon id="appReload" ref="RELOAD" style="margin-left: 3px;" />
-          <Icon id="appLoading" ref="LOADING" style="margin-left: 3px;" />
+          <Icon id="appReload" class="fa fa-refresh ml-1" />
+          <Icon id="appLoading" class="fa fa-refresh fa-spin ml-1" />
         </h3>
-        <div w="100%" h="100%-50" style="overflow-y: auto;">
+        <div class="overflow-y-auto w-100" style="height: calc(100% - 2em);">
           <table>
             <tbody id="appTable">
             </tbody>
           </table>
         </div>
       </div>
-      <Pane id="inlinePane" w="70%-14" h="100%" style="float: left; padding-left: 6px;">
-        <Pane w="50%-25" class="dash-item box yellow" style="float: left; clear: left;">
-          <div style="padding: 0 10px;">
-            <img src="images/logotype-icon-256x256.png" style="float: right; width: 128px; height: 128px;" />
-            <h2 style="font-family: Trebuchet MS; margin: 6px 0;">Welcome to RapidContext!</h2>
-            <div>
-              <p style="margin-top: 6px;">RapidContext is a platform for dynamic web applications and tools.</p>
-              <p>If you haven't used it before, you can take the quick tour and
-              learn the basics in an easy, interactive fashion.</p>
-            </div>
-            <Button id="tourButton" icon="fa fa-lg fa-caret-right" class="m-0 mb-2">
-              Start Quick Tour
-            </Button>
-          </div>
+      <Pane id="inlinePane" class="inline-block vertical-top h-100 pl-2" style="width: calc(70% - 1rem - 1px)">
+        <Pane w="50%-25" class="dash-item box yellow float-left float-clear-left px-4">
+          <img src="images/logotype-icon-256x256.png" class="float-right" style="width: 128px; height: 128px;" />
+          <h2 style="font-family: Trebuchet MS;">Welcome to RapidContext!</h2>
+          <p>RapidContext is a platform for dynamic web applications and tools.</p>
+          <p>If you haven't used it before, you can take the quick tour and
+          learn the basics in an easy, interactive fashion.</p>
+          <Button id="tourButton" icon="fa fa-lg fa-caret-right" class="mx-0 mt-0 mb-2">
+            Start Quick Tour
+          </Button>
         </Pane>
       </Pane>
     </Pane>
   </TabContainer>
-  <Pane id="infoBar" style="position: absolute; top: 10px; right: 12px;">
+  <Pane id="infoBar" class="position-absolute top-0 right-0 p-2">
     <i class="fa fa-user"></i>
-    <span id="infoUser" style="padding-left: 0.5em;"/>
-    <i class="fa fa-plug" style="padding-left: 1.5em"></i>
-    <span id="infoEnv" style="padding-left: 0.5em" />
-    <i class="fa fa-caret-down" style="padding-left: 1em"></i>
+    <span id="infoUser" class="pl-2"></span>
+    <i class="fa fa-plug pl-3"></i>
+    <span id="infoEnv" class="pl-2"></span>
+    <i class="fa fa-lg fa-caret-down pl-3 pr-1"></i>
   </Pane>
-  <Popup id="menu" style="top: 29px; right: 10px; display: none; min-width: 200px; z-index: 10000; overflow: hidden;">
+  <Popup id="menu" class="z-max overflow-hidden" style="top: 29px; right: 10px; display: none; min-width: 200px;">
     <h3 id="menuTitle">Anonymous User</h3>
     <div id="menuAbout" class="widgetPopupItem">About RapidContext</div>
     <div id="menuHelp" class="widgetPopupItem">Help &amp; Documentation</div>
@@ -117,14 +113,14 @@
       </div>
     </Form>
   </Dialog>
-  <Dialog id="logoutDialog" title="Logout Completed" system="true" closeable="false" resizeable="false" style="width: 350px;">
-    <div style="margin: 0 10px 5px 10px;">
+  <Dialog id="logoutDialog" title="Logout Completed" system="true" closeable="false" resizeable="false" style="width: 20rem;">
+    <div class="mx-2 mb-2">
       <h2>You've been logged out.</h2>
       <p>Please close your web browser in order to complete the logout process.</p>
     </div>
   </Dialog>
-  <Dialog id="about" title="About RapidContext" w="544" h="630" modal="true" resizeable="false" class="about">
-    <div class="header" style="position: absolute; top: 0; left: 0; right: 0; padding: 20px 0;">
+  <Dialog id="about" title="About RapidContext" modal="true" resizeable="false" class="about" style="width: 35rem;">
+    <div class="header position-absolute top-0 left-0 right-0 py-3">
       <div class="center">
         <a href="https://www.rapidcontext.com/" target="_blank" class="logotype" style="margin-left: 3em;">
           <img src="/images/logotype.png" />
@@ -138,7 +134,7 @@
         </div>
       </div>
     </div>
-    <div style="padding: 170px 15px 25px 15px;">
+    <div style="padding: 170px 1em 3em 1em;">
       <p><strong>Version: </strong><span id="aboutVersion">1.0.0</span><br/>
       <strong>License: </strong><a href="doc/LICENSE.md" target="_blank">BSD License</a> (source code only)</p>
 
@@ -170,14 +166,14 @@
       &#187; <a href="http://www.famfamfam.com/lab/icons/silk/" target="_blank">Silk
       Icons by FamFamFam</a>, copyright &#169; Mark James (some small icon images).</p>
     </div>
-    <div style="position: absolute; bottom: 15px; right: 15px;">
+    <div class="position-absolute bottom-0 right-0 m-2">
       <Button id="aboutClose" highlight="true" icon="fa fa-lg fa-check">
         Close
       </Button>
     </div>
   </Dialog>
   <Dialog id="tourDialog" title="RapidContext Quick Tour" center="false" resizeable="false" w="80%" h="190">
-    <Wizard id="tourWizard" style="width: 100%; height: 100%;">
+    <Wizard id="tourWizard" class="w-100 h-100">
       <Pane pageTitle="Welcome to the Quick Tour of RapidContext!">
         <ul>
           <li>This tour will show you some of the basic functions in RapidContext.</li>
@@ -227,5 +223,5 @@
       </Pane>
     </Wizard>
   </Dialog>
-  <Pane id="tourLocator" style="position: absolute; z-index: 10000; border: 3px solid #88AACC; background: #DDEEFF; display: none;"></Pane>
+  <Pane id="tourLocator" class="position-absolute z-max" style="border: 3px solid #88AACC; background: #DDEEFF; display: none;"></Pane>
 </ui>
