@@ -90,7 +90,7 @@ RapidContext.Widget.Overlay.prototype.setAttrs = function (attrs) {
         }
     }
     if (this.showLoading) {
-        var icon = RapidContext.Widget.Icon({ ref: "LOADING", "class": "m-1" });
+        var icon = RapidContext.Widget.Icon("fa fa-refresh fa-spin m-1");
     }
     MochiKit.DOM.replaceChildNodes(this.lastChild, icon, this.message);
     if (!this.showLoading && !this.message) {

@@ -182,7 +182,7 @@
         <ul>
           <li>This tour will show you some of the basic functions in RapidContext.</li>
           <li>The tour can be cancelled at any time by pressing the
-              <Icon class="fa fa-close" /> icon on this dialog.</li>
+              <i class="fa fa-times"></i> icon on this dialog.</li>
         </ul>
       </Pane>
       <Pane pageTitle="The Start App">
@@ -208,7 +208,7 @@
       <Pane pageTitle="App Switching &amp; Tabs">
         <ul>
           <li>Many apps can run at the same time, each in a separate tab.</li>
-          <li>Switching between apps is easy by clicking the tabs. The <Icon ref="CLOSE" /> button closes the app.</li>
+          <li>Switching between apps is easy by clicking the tabs. The <i class="fa fa-times"></i> button closes the app.</li>
           <li>You can also run several copies of a single app, e.g. to compare results or data.</li>
         </ul>
         <Button id="tourTabsLocate" class="info" icon="fa fa-lg fa-info-circle">
