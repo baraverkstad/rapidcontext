@@ -116,6 +116,23 @@ nav li + li::before {
 
 
 /**
+ * Internal box sizing helpers
+ */
+.-box-border,
+.-box-border *,
+.-box-border *::after,
+.-box-border *::before {
+    box-sizing: border-box;
+}
+.-box-content,
+.-box-content *,
+.-box-content *::after,
+.-box-content *::before {
+    box-sizing: content-box;
+}
+
+
+/**
  * Adjustments for small screens, print, etc
  */
 @media screen and (max-width: 400px) {
