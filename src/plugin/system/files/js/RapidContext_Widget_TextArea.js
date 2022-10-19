@@ -99,7 +99,6 @@ RapidContext.Widget.TextArea.prototype.setAttrs = function (attrs) {
         this._handleChange();
     }
     this.__setAttrs(attrs);
-    this._render();
 };
 
 /**
