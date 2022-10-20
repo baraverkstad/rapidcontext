@@ -47,11 +47,12 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  */
 RapidContext.Widget.Form = function (attrs/*, ...*/) {
     var o = MochiKit.DOM.FORM(attrs);
+    o._originalReset = o.reset;
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Form);
     o.addClass("widgetForm");
     o.setAttrs(attrs);
     o.addAll(Array.prototype.slice.call(arguments, 1));
-    o.onsubmit = RapidContext.Widget._eventHandler(null, "_handleSubmit");
+    // FIXME: handle HTML validation events to also process custom validators
     return o;
 };
 
@@ -59,26 +60,27 @@ RapidContext.Widget.Form = function (attrs/*, ...*/) {
 RapidContext.Widget.Classes.Form = RapidContext.Widget.Form;
 
 /**
+ * Prevents the default onsubmit action.
+ *
+ * @param {Event} evt the DOM event object
+ */
+RapidContext.Widget.Form.prototype.onsubmit = function (evt) {
+    evt.preventDefault();
+};
+
+/**
  * Returns an array with all child DOM nodes containing form fields.
  * The child nodes will be returned based on the results of the
  * `RapidContext.Widget.isFormField()` function.
  *
  * @return {Array} the array of form field elements
+ *
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/HTMLFormElement/elements
  */
 RapidContext.Widget.Form.prototype.fields = function () {
-    var fields = [];
-    MochiKit.Base.nodeWalk(this, function (elem) {
-        if (elem.nodeType !== 1) { // !Node.ELEMENT_NODE
-            return null;
-        }
-        if (RapidContext.Widget.isFormField(elem)) {
-            fields.push(elem);
-            return null;
-        } else {
-            return elem.childNodes;
-        }
-    });
-    return fields;
+    var basics = Array.prototype.slice.call(this.elements);
+    var extras = Array.prototype.slice.call(this.querySelectorAll(".widgetField"));
+    return basics.concat(extras);
 };
 
 /**
@@ -89,92 +91,57 @@ RapidContext.Widget.Form.prototype.fields = function () {
  * @return {Object} the map of form field elements
  */
 RapidContext.Widget.Form.prototype.fieldMap = function () {
-    var fields = this.fields();
-    var map = {};
-    for (var i = 0; i < fields.length; i++) {
-        var name = fields[i].name;
-        if (typeof(name) == "string" && name != "*") {
-            if (map[name] instanceof Array) {
-                map[name].push(fields[i]);
-            } else if (map[name] != null) {
-                map[name] = [map[name], fields[i]];
-            } else {
-                map[name] = fields[i];
-            }
+    function update(o, field) {
+        var k = field.name;
+        if (k && k != "*") {
+            o[k] = (k in o) ? [].concat(o[k], field) : field;
         }
+        return o;
     }
-    return map;
+    return this.fields().reduce(update, {});
 };
 
 /**
- * Resets all fields in the form to their default values.
+ * Resets all fields and validations to their original state.
  */
-// TODO: Consider renaming this method, since it collides with the reset()
-//       method on the DOM element...
 RapidContext.Widget.Form.prototype.reset = function () {
+    this._originalReset();
+    var extras = Array.prototype.slice.call(this.querySelectorAll(".widgetField"));
+    extras.forEach(function (field) {
+        field.reset();
+    });
     this.validateReset();
-    var fields = this.fields();
-    for (var i = 0; i < fields.length; i++) {
-        var elem = fields[i];
-        // TODO: generic form field value setting
-        if (typeof(elem.reset) == "function") {
-            elem.reset();
-        } else if (elem.type == "radio" && typeof(elem.defaultChecked) == "boolean") {
-            elem.checked = elem.defaultChecked;
-        } else if (elem.type == "checkbox" && typeof(elem.defaultChecked) == "boolean") {
-            elem.checked = elem.defaultChecked;
-        } else if (typeof(elem.defaultValue) == "string") {
-            if (typeof(elem.setAttrs) == "function") {
-                elem.setAttrs({ value: elem.defaultValue });
-            } else {
-                elem.value = elem.defaultValue;
-            }
-        } else if (elem.options != null) {
-            for (var j = 0; j < elem.options.length; j++) {
-                var opt = elem.options[j];
-                opt.selected = opt.defaultSelected;
-            }
-        }
-    }
 };
 
 /**
  * Returns a map with all form field values. If multiple fields have
  * the same name, the value will be set to an array of all values.
- * Any unchecked checkbox or radiobutton will be also be ignored.
+ * Disabled fields and unchecked checkboxes or radiobuttons will be
+ * ignored.
  *
  * @return {Object} the map of form field values
  */
 RapidContext.Widget.Form.prototype.valueMap = function () {
-    var fields = this.fields();
-    var map = {};
-    for (var i = 0; i < fields.length; i++) {
-        var name = fields[i].name;
-        // TODO: use generic field value retrieval
-        var value = "";
-        if (typeof(fields[i].getValue) == "function") {
-            value = fields[i].getValue();
+    function getValue(field) {
+        if (field.disabled) {
+            return null;
+        } else if (field.type === "radio" || field.type === "checkbox") {
+            return field.checked ? (field.value || true) : null;
+        } else if (typeof(field.getValue) == "function") {
+            return field.getValue();
         } else {
-            value = fields[i].value;
-        }
-        if (fields[i].type === "radio" || fields[i].type === "checkbox") {
-            if (fields[i].checked) {
-                value = value || true;
-            } else {
-                value = null;
-            }
-        }
-        if (typeof(name) == "string" && name != "*" && value != null) {
-            if (map[name] instanceof Array) {
-                map[name].push(value);
-            } else if (map[name] != null) {
-                map[name] = [map[name], value];
-            } else {
-                map[name] = value;
-            }
+            return field.value;
         }
     }
-    return map;
+    function update(o, field) {
+        var k = field.name;
+        var v = getValue(field);
+        if (k && k != "*" && v != null) {
+            o[k] = (k in o) ? [].concat(o[k], v) : v;
+        }
+        return o;
+    }
+    return this.fields().reduce(update, {});
 };
 
 /**
@@ -185,36 +152,22 @@ RapidContext.Widget.Form.prototype.valueMap = function () {
  * @param {Object} values the map of form field values
  */
 RapidContext.Widget.Form.prototype.update = function (values) {
-    var fields = this.fields();
-    for (var i = 0; i < fields.length; i++) {
-        var elem = fields[i];
-        if (elem.name == "*") {
-            if (typeof(elem.setAttrs) == "function") {
-                elem.setAttrs({ value: values });
-            }
-        } else if (elem.name in values) {
-            var value = values[elem.name];
-            // TODO: generic form field value setting
-            if (elem.type === "radio" || elem.type === "checkbox") {
-                if (value == null) {
-                    elem.checked = false;
-                } else if (MochiKit.Base.isArrayLike(value)) {
-                    elem.checked = (MochiKit.Base.findValue(value, elem.value) >= 0);
-                } else {
-                    elem.checked = (elem.value === value || value === true);
-                }
-            } else {
-                if (typeof(elem.setAttrs) == "function") {
-                    elem.setAttrs({ value: value });
-                } else {
-                    if (MochiKit.Base.isArrayLike(value)) {
-                        value = value.join(", ");
-                    }
-                    elem.value = value;
-                }
-            }
+    function setValue(field) {
+        var v = values[field.name];
+        if (field.name == "*" && typeof(field.setAttrs) == "function") {
+            field.setAttrs({ value: values });
+        } else if (!(field.name in values)) {
+            // Don't change omitted fields
+        } else if (field.type === "radio" || field.type === "checkbox") {
+            var found = MochiKit.Base.isArrayLike(v) && MochiKit.Base.findValue(v, field.value) >= 0;
+            field.checked = found || v === field.value || v === true;
+        } else if (typeof(field.setAttrs) == "function") {
+            field.setAttrs({ value: v });
+        } else {
+            field.value = MochiKit.Base.isArrayLike(v) ? v.join(", ") : v;
         }
     }
+    this.fields().forEach(setValue);
 };
 
 /**
@@ -223,14 +176,8 @@ RapidContext.Widget.Form.prototype.update = function (values) {
  * @return {Array} the array of form validator widgets
  */
 RapidContext.Widget.Form.prototype.validators = function () {
-    var res = [];
-    var elems = this.getElementsByTagName("SPAN");
-    for (var i = 0; i < elems.length; i++) {
-        if (RapidContext.Widget.isWidget(elems[i], "FormValidator")) {
-            res.push(elems[i]);
-        }
-    }
-    return res;
+    var nodes = this.querySelectorAll(".widgetFormValidator");
+    return Array.prototype.slice.call(nodes);
 };
 
 /**
@@ -240,24 +187,19 @@ RapidContext.Widget.Form.prototype.validators = function () {
  *         `false` if the validation failed
  */
 RapidContext.Widget.Form.prototype.validate = function () {
-    var validators = this.validators();
-    var fields = this.fields();
+    // FIXME: Validate using standard HTML validation as well
+    var fields = this.fieldMap();
     var values = this.valueMap();
     var success = true;
-    validators.forEach(function (validator) {
-        validator.reset();
-    });
-    for (var i = 0; i < validators.length; i++) {
-        for (var j = 0; j < fields.length; j++) {
-            if (validators[i].name == fields[j].name) {
-                var name = fields[j].name;
-                var res = validators[i].verify(fields[j], values[name] || "");
-                if (res === false) {
-                    success = false;
-                }
+    this.validateReset();
+    this.validators().forEach(function (validator) {
+        [].concat(fields[validator.name]).filter(Boolean).forEach(function (f) {
+            var res = validator.verify(f, values[f.name] || "");
+            if (res === false) {
+                success = false;
             }
-        }
-    }
+        });
+    });
     return success;
 };
 
@@ -268,18 +210,7 @@ RapidContext.Widget.Form.prototype.validate = function () {
  * @see #reset
  */
 RapidContext.Widget.Form.prototype.validateReset = function () {
-    var validators = this.validators();
-    for (var i = 0; i < validators.length; i++) {
-        validators[i].reset();
-    }
-};
-
-/**
- * Handles the form submit signal.
- *
- * @param {Event} evt the MochiKit.Signal.Event object
- */
-RapidContext.Widget.Form.prototype._handleSubmit = function (evt) {
-    evt.stop();
-    return false;
+    this.validators().forEach(function (validator) {
+        validator.reset();
+    });
 };
