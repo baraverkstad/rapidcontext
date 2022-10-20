@@ -236,16 +236,14 @@ RapidContext.Widget.Form.prototype.validators = function () {
 /**
  * Validates this form using the form validators found.
  *
- * @return {Boolean/Promise} `true` if the form validated successfully,
- *         `false` if the validation failed, or a `Promise` instance that
- *         either resolves or rejects
+ * @return {Boolean} `true` if the form validated successfully, or
+ *         `false` if the validation failed
  */
 RapidContext.Widget.Form.prototype.validate = function () {
     var validators = this.validators();
     var fields = this.fields();
     var values = this.valueMap();
     var success = true;
-    var promises = [];
     validators.forEach(function (validator) {
         validator.reset();
     });
@@ -254,24 +252,13 @@ RapidContext.Widget.Form.prototype.validate = function () {
             if (validators[i].name == fields[j].name) {
                 var name = fields[j].name;
                 var res = validators[i].verify(fields[j], values[name] || "");
-                if (RapidContext.Async.isPromise(res)) {
-                    promises.push(res);
-                } else if (res === false) {
+                if (res === false) {
                     success = false;
                 }
             }
         }
     }
-    // FIXME: Add API that always returns promise?
-    if (!success) {
-        return false;
-    } else if (promises.length > 0) {
-        return Promise.all(promises).then(function () {
-            return true;
-        });
-    } else {
-        return true;
-    }
+    return success;
 };
 
 /**

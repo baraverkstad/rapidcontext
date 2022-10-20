@@ -151,9 +151,8 @@ RapidContext.Widget.FormValidator.prototype.reset = function () {
  * @param {Widget/Node} field the form field DOM node
  * @param {String} [value] the form field value to check
  *
- * @return {Boolean/Promise} `true` if the form validated successfully,
- *         `false` if the validation failed, or a
- *         `RapidContext.Async` instance that either resolves or rejects
+ * @return {Boolean} `true` if the form validated successfully, or
+ *         `false` if the validation failed
  *
  * @see RapidContext.Widget.Form#validate
  */
@@ -177,17 +176,11 @@ RapidContext.Widget.FormValidator.prototype.verify = function (field, value) {
             this.addError(field, msg);
             return false;
         } else if (typeof(this.validator) == "function") {
-            var addError = this.addError.bind(this);
-            return new RapidContext.Async(this.validator(value))
-                .then(function (res) {
-                    var failed = res === false || typeof(res) == "string";
-                    return failed ? Promise.reject(res) : res;
-                })
-                .catch(function (err) {
-                    var msg = (err && err.message) || err || "validation failed";
-                    addError(field, msg);
-                    return Promise.reject(new RangeError([field, ": ", msg].join("")));
-                });
+            var res = this.validator(value);
+            if (res !== true) {
+                this.addError(field, res || "Field validation failed");
+                return false;
+            }
         }
     }
     return true;
