@@ -308,7 +308,7 @@
      *     or an error if the request failed
      */
     function xhr(url, options) {
-        var opts = { method: "GET", headers: {}, timeout: 30000, log: "request" };
+        var opts = { method: "GET", headers: {}, timeout: 30000, log: "XHR request" };
         MochiKit.Base.update(opts, options);
         if (opts.responseType === "json" && !opts.headers["Accept"]) {
             opts.headers["Accept"] = "application/json";
@@ -330,15 +330,11 @@
                     if (xhr.status >= 200 && xhr.status <= 299 && xhr.response != null) {
                         resolve(xhr);
                     } else if (xhr.status === 0) {
-                        err = new Error(["communication error or timeout on", opts.method, url].join(" "));
-                        err.xhr = xhr;
-                        opts.log && console.warn([opts.log, err.message].join(": "));
-                        reject(err);
+                        err = "communication error or timeout";
+                        reject(new AsyncError(opts.method, url, xhr, err, opts.log));
                     } else {
-                        err = new Error(["unexpected HTTP", xhr.status, "on", opts.method, url].join(" "));
-                        err.xhr = xhr;
-                        opts.log && console.warn([opts.log, err.message].join(": "), xhr.response);
-                        reject(err);
+                        err = "unexpected response code";
+                        reject(new AsyncError(opts.method, url, xhr, err, opts.log));
                     }
                     xhr = null; // Stop duplicate events
                 }
@@ -352,6 +348,30 @@
         return new Async(promise, cancel);
     }
 
+    function AsyncError(method, url, xhr, detail, log) {
+        var parts = [].concat(detail, " [");
+        if (xhr && xhr.status > 0) {
+            parts.push("HTTP ", xhr.status, ": ");
+        }
+        parts.push(method, " ", url, "]");
+        this.message = parts.filter(Boolean).join("");
+        this.method = method;
+        this.url = url;
+        this.code = xhr && xhr.status;
+        this.stack = new Error().stack;
+        if (log) {
+            console.warn([log, this.message].join(": "), xhr && xhr.response);
+        }
+    }
+
+    // FIXME: Use Object.create(Error.prototype) here...
+    AsyncError.prototype = MochiKit.Base.clone(Error.prototype);
+    // FIXME: Use Object.assign() here...
+    MochiKit.Base.update(AsyncError.prototype, {
+        constructor: AsyncError,
+        name: "AsyncError"
+    });
+
     // Create namespace and export API
     var RapidContext = window.RapidContext || (window.RapidContext = {});
     RapidContext.Async = Async;
@@ -361,5 +381,6 @@
     Async.css = css;
     Async.script = script;
     Async.xhr = xhr;
+    Async.AsyncError = AsyncError;
 
 })(this);
