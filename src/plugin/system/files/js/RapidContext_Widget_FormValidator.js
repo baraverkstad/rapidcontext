@@ -131,10 +131,9 @@ RapidContext.Widget.FormValidator.prototype.setAttrs = function (attrs) {
  * @see RapidContext.Widget.Form#validateReset
  */
 RapidContext.Widget.FormValidator.prototype.reset = function () {
-    for (var i = 0; i < this.fields.length; i++) {
-        MochiKit.DOM.removeElementClass(this.fields[i], "invalid");
-        MochiKit.DOM.removeElementClass(this.fields[i], "widgetInvalid");
-    }
+    this.fields.forEach(function (field) {
+        MochiKit.DOM.removeElementClass(field, "invalid");
+    });
     this.fields = [];
     this.hide();
     this.removeAll();
@@ -157,23 +156,20 @@ RapidContext.Widget.FormValidator.prototype.reset = function () {
  * @see RapidContext.Widget.Form#validate
  */
 RapidContext.Widget.FormValidator.prototype.verify = function (field, value) {
-    var msg;
     if (!field.disabled) {
         if (arguments.length == 1 && typeof(field.getValue) == "function") {
             value = field.getValue();
         } else if (arguments.length == 1) {
             value = field.value;
         }
-        var stripped = MochiKit.Format.strip(value);
-        if (MochiKit.Format.strip(value) == "") {
-            if (this.mandatory) {
-                msg = "This field is required";
-                this.addError(field, msg);
-                return false;
-            }
-        } else if (this.regex != null && !this.regex.test(stripped)) {
-            msg = "The field format is incorrect";
-            this.addError(field, msg);
+        if (field.validationMessage) {
+            this.addError(field, field.validationMessage);
+            return false;
+        } else if (this.mandatory && value.trim() == "") {
+            this.addError(field, "This field is required");
+            return false;
+        } else if (this.regex && !this.regex.test(value.trim())) {
+            this.addError(field, "The field format is incorrect");
             return false;
         } else if (typeof(this.validator) == "function") {
             var res = this.validator(value);
@@ -199,10 +195,9 @@ RapidContext.Widget.FormValidator.prototype.verify = function (field, value) {
  * @see RapidContext.Widget.Form#validate
  */
 RapidContext.Widget.FormValidator.prototype.addError = function (field, message) {
-    if (!MochiKit.DOM.hasElementClass(field, "widgetInvalid")) {
+    if (!MochiKit.DOM.hasElementClass(field, "invalid")) {
         this.fields.push(field);
         MochiKit.DOM.addElementClass(field, "invalid");
-        MochiKit.DOM.addElementClass(field, "widgetInvalid");
         if (this.display !== "none") {
             message = this.message || message;
             var span = null;

@@ -12,11 +12,6 @@
     background-color: #eee;
     color: #888;
 }
-.widgetInvalid {
-    border: 1px solid #ecc;
-    background-color: #fffafa;
-    background-image: linear-gradient(to bottom, #fffdfd, #fffafa);
-}
 .widget-red {
     color: #933;
 }
