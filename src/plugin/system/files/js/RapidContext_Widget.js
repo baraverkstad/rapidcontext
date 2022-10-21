@@ -59,38 +59,9 @@ RapidContext.Widget._nextId = MochiKit.Base.counter();
  * @static
  */
 RapidContext.Widget.isWidget = function (obj, className) {
-    if (className != null) {
-        return RapidContext.Util.isHTML(obj) &&
-               MochiKit.DOM.hasElementClass(obj, "widget") &&
-               MochiKit.DOM.hasElementClass(obj, "widget" + className);
-    } else {
-        return RapidContext.Util.isHTML(obj) &&
-               MochiKit.DOM.hasElementClass(obj, "widget");
-    }
-};
-
-/**
- * Checks if the specified object is a form field. Any non-null object that
- * looks like a DOM node and is either an standard HTML form field (`<input>`,
- * `<textarea>` or `<select>`) or one with a "value" property will cause this
- * function to return `true`. Otherwise, `false` will be returned.
- *
- * @param {Object} obj the object to check
- *
- * @return {Boolean} `true` if the object looks like a form field, or
- *         `false` otherwise
- *
- * @static
- */
-RapidContext.Widget.isFormField = function (obj) {
-    if (!RapidContext.Util.isHTML(obj) || typeof(obj.tagName) !== "string") {
-        return false;
-    }
-    var tagName = obj.tagName.toUpperCase();
-    return tagName == "INPUT" ||
-           tagName == "TEXTAREA" ||
-           tagName == "SELECT" ||
-           RapidContext.Widget.isWidget(obj, "Field");
+    return RapidContext.Util.isHTML(obj) &&
+           MochiKit.DOM.hasElementClass(obj, "widget") &&
+           (!className || MochiKit.DOM.hasElementClass(obj, "widget" + className));
 };
 
 /**
@@ -172,7 +143,7 @@ RapidContext.Widget.createWidget = function (name, attrs/*, ...*/) {
  * @static
  */
 RapidContext.Widget.destroyWidget = function (node) {
-    if (node.nodeType != null) {
+    if (node.nodeType) {
         if (typeof(node.destroy) == "function") {
             node.destroy();
         }
