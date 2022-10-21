@@ -165,9 +165,10 @@ HelpApp.prototype._treeExpandUrl = function (url) {
 /**
  * Handles the tree expand and collapse events.
  *
- * @param {TreeNode} node the tree node expanded or collapsed
+ * @param {Event} evt the tree node expand event
  */
-HelpApp.prototype._treeOnExpand = function (node) {
+HelpApp.prototype._treeOnExpand = function (evt) {
+    var node = evt.event().detail.node;
     var topic = node.data;
     if (node.isExpanded && topic.children.length != node.getChildNodes().length) {
         this._treeInsertChildren(node, topic);

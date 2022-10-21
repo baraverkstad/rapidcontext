@@ -375,7 +375,8 @@ RapidContext.Widget.TreeNode.prototype.expand = function () {
         MochiKit.DOM.removeElementClass(container, "widgetHidden");
         var tree = this.tree();
         if (tree != null) {
-            tree._emitExpand(this);
+            var detail = { tree: tree, node: this };
+            tree._dispatch("expand", { detail: detail });
         }
     }
 };
@@ -408,7 +409,8 @@ RapidContext.Widget.TreeNode.prototype.collapse = function () {
         MochiKit.DOM.addElementClass(container, "widgetHidden");
         var tree = this.tree();
         if (tree != null) {
-            tree._emitCollapse(this);
+            var detail = { tree: tree, node: this };
+            tree._dispatch("collapse", { detail: detail });
         }
     }
 };

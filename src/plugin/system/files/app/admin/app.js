@@ -116,7 +116,7 @@ AdminApp.prototype.start = function () {
     MochiKit.Signal.connect(this.ui.procReload, "onclick", this, "_showProcedure");
     MochiKit.Signal.connect(this.ui.procExec, "onclick", this, "_executeProcedure");
     MochiKit.Signal.connect(this.ui.procBatch, "onclick", this, "_createBatch");
-    MochiKit.Signal.connect(this.ui.procExecResult, "onexpand", this, "_showExecData");
+    MochiKit.Signal.connect(this.ui.procExecResult, "onexpand", this, "_showExecDataExpand");
     MochiKit.Signal.connect(this.ui.procArgCancel, "onclick", this.ui.procArgDialog, "hide");
     MochiKit.Signal.connect(this.ui.procArgSave, "onclick", this, "_updateProcArg");
     this.ui.procExecLoading.hide();
@@ -1209,6 +1209,16 @@ AdminApp.prototype._showExecData = function (node, data) {
         };
         node.addAll(RapidContext.Widget.TreeNode(nodeAttrs));
     }
+};
+
+/**
+ * Expands a procedure result tree node by expanding a node.
+ *
+ * @param {Event} evt the tree node expand event
+ */
+AdminApp.prototype._showExecDataExpand = function (evt) {
+    var node = evt.event().detail.node;
+    this._showExecData(node, node.data);
 };
 
 /**

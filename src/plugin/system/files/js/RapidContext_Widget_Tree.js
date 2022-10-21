@@ -210,32 +210,14 @@ RapidContext.Widget.Tree.prototype._handleSelect = function (node) {
     var prev = this.selectedChild();
     if (node == null) {
         this.selectedPath = null;
-        RapidContext.Widget.emitSignal(this, "onunselect", prev);
+        this._dispatch("unselect");
     } else {
         if (prev != null && prev !== node) {
             prev.unselect();
         }
         this.selectedPath = node.path();
-        RapidContext.Widget.emitSignal(this, "onselect", node);
+        this._dispatch("select");
     }
-};
-
-/**
- * Emits a signal when a node has been expanded.
- *
- * @param {Widget} node the affected tree node
- */
-RapidContext.Widget.Tree.prototype._emitExpand = function (node) {
-    RapidContext.Widget.emitSignal(this, "onexpand", node);
-};
-
-/**
- * Emits a signal when a node has been collapsed.
- *
- * @param {Widget} node the affected tree node
- */
-RapidContext.Widget.Tree.prototype._emitCollapse = function (node) {
-    RapidContext.Widget.emitSignal(this, "oncollapse", node);
 };
 
 /**
