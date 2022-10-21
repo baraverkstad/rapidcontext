@@ -54,21 +54,21 @@
             <th class="label text-right px-2 py-1" style="width: 11em;">Current Password:</th>
             <td class="pb-2">
               <TextField id="passwordCurrent" name="current" type="password" class="w-100"/>
-              <FormValidator id="passwordError" name="current" mandatory="false" class="p-0" />
+              <FormValidator id="passwordError" name="current" mandatory="false" class="px-0 pt-1" />
             </td>
           </tr>
           <tr>
             <th class="label text-right px-2 py-1">New Password:</th>
             <td class="pb-2">
-              <TextField name="password" type="password" class="w-100"/>
-              <FormValidator name="password" regex=".{5,}" message="Minimum length is 5 characters." class="p-0" />
+              <TextField name="password" type="password" required="true" minlength="5" class="w-100"/>
+              <FormValidator name="password" regex=".{5,}" message="Minimum length is 5 characters." class="px-0 pt-1" />
             </td>
           </tr>
           <tr>
             <th class="label text-right px-2 py-1">Confirm Password:</th>
             <td class="pb-2">
-              <TextField name="passwordcheck" type="password" class="w-100"/>
-              <FormValidator name="passwordcheck" message="Not identical to password above." class="p-0" />
+              <TextField name="passwordcheck" type="password" required="true" minlength="5" class="w-100"/>
+              <FormValidator name="passwordcheck" message="Not identical to password above." class="px-0 pt-1" />
             </td>
           </tr>
         </tbody>
@@ -90,15 +90,15 @@
           <tr>
             <th class="label text-right px-2 py-1" style="width: 8em;">Login / Email:</th>
             <td class="pb-2">
-              <TextField id="loginUser" name="user" class="w-100" />
-              <FormValidator name="user" mandatory="true" message="A user name is required" class="p-0" />
+              <TextField id="loginUser" name="user" required="true" class="w-100" />
+              <FormValidator name="user" mandatory="true" message="A user name is required" class="px-0 pt-1" />
             </td>
           </tr>
           <tr>
             <th class="label text-right px-2 py-1">Password:</th>
             <td class="pb-2">
               <TextField id="loginPassword" name="password" type="password" class="w-100" />
-              <FormValidator id="loginPasswordError" name="password" mandatory="false" class="p-0" />
+              <FormValidator id="loginPasswordError" name="password" mandatory="false" class="px-0 pt-1" />
             </td>
           </tr>
         </tbody>

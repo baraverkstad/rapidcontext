@@ -55,12 +55,14 @@ StartApp.prototype.start = function () {
 
     // Password dialog
     MochiKit.Signal.connect(this.ui.passwordCancel, "onclick", this.ui.passwordDialog, "hide");
-    MochiKit.Signal.connect(this.ui.passwordSave, "onclick", this, "_changePassword");
+    MochiKit.Signal.connect(this.ui.passwordForm, "onvalidate", this.ui.passwordDialog, "resizeToContent");
+    MochiKit.Signal.connect(this.ui.passwordForm, "onsubmit", this, "_changePassword");
     MochiKit.Signal.connect(this.proc.changePassword, "onresponse", this, "_changePasswordCallback");
 
     // Login dialog
     MochiKit.Signal.connect(this.ui.loginCancel, "onclick", this.ui.loginDialog, "hide");
-    MochiKit.Signal.connect(this.ui.loginAuth, "onclick", this, "_loginAuth");
+    MochiKit.Signal.connect(this.ui.loginForm, "onvalidate", this.ui.loginDialog, "resizeToContent");
+    MochiKit.Signal.connect(this.ui.loginForm, "onsubmit", this, "_loginAuth");
 
     // Tour wizard
     MochiKit.Signal.connect(this.ui.tourButton, "onclick", this, "_tourStart");
@@ -321,9 +323,9 @@ StartApp.prototype._changePassword = function () {
     var data = this.ui.passwordForm.valueMap();
     if (data.password != data.passwordcheck) {
         data.passwordcheck = "";
-    }
-    this.ui.passwordForm.update(data);
-    if (this.ui.passwordForm.validate()) {
+        this.ui.passwordForm.update(data);
+        this.ui.passwordForm.validate();
+    } else {
         var user = RapidContext.App.user();
         var prefix = user.id + ":" + user.realm + ":";
         var oldHash = CryptoJS.MD5(prefix + data.current).toString();
@@ -331,7 +333,6 @@ StartApp.prototype._changePassword = function () {
         this.proc.changePassword(oldHash, newHash);
         this.ui.passwordSave.setAttrs({ disabled: true, icon: "LOADING" });
     }
-    this.ui.passwordDialog.resizeToContent();
 };
 
 /**
@@ -371,13 +372,10 @@ StartApp.prototype._loginOut = function () {
  * Shows the login authentication dialog.
  */
 StartApp.prototype._loginAuth = function () {
-    if (this.ui.loginForm.validate()) {
-        this.ui.loginAuth.setAttrs({ disabled: true, icon: "LOADING" });
-        var data = this.ui.loginForm.valueMap();
-        var cb = this._loginAuthCallback.bind(this);
-        RapidContext.App.login($.trim(data.user), data.password).then(cb, cb);
-    }
-    this.ui.loginDialog.resizeToContent();
+    this.ui.loginAuth.setAttrs({ disabled: true, icon: "LOADING" });
+    var data = this.ui.loginForm.valueMap();
+    var cb = this._loginAuthCallback.bind(this);
+    RapidContext.App.login($.trim(data.user), data.password).then(cb, cb);
 };
 
 /**
