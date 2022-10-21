@@ -52,7 +52,8 @@ RapidContext.Widget.Form = function (attrs/*, ...*/) {
     o.addClass("widgetForm");
     o.setAttrs(attrs);
     o.addAll(Array.prototype.slice.call(arguments, 1));
-    // FIXME: handle HTML validation events to also process custom validators
+    o.addEventListener("invalid", o._handleInvalid, { capture: true });
+    o.addEventListener("submit", o._handleSubmit);
     return o;
 };
 
@@ -60,18 +61,29 @@ RapidContext.Widget.Form = function (attrs/*, ...*/) {
 RapidContext.Widget.Classes.Form = RapidContext.Widget.Form;
 
 /**
- * Prevents the default onsubmit action.
+ * Debounces the input invalid events and validates the form.
+ */
+RapidContext.Widget.Form.prototype._handleInvalid = function () {
+    if (this._validationTimer !== false) {
+        this._validationTimer && clearTimeout(this._validationTimer);
+        this._validationTimer = setTimeout(this.validate.bind(this), 10);
+    }
+};
+
+/**
+ * Prevents the default submit action and validates the form.
  *
  * @param {Event} evt the DOM event object
  */
-RapidContext.Widget.Form.prototype.onsubmit = function (evt) {
+RapidContext.Widget.Form.prototype._handleSubmit = function (evt) {
     evt.preventDefault();
+    if (!this.validate()) {
+        evt.stopImmediatePropagation();
+    }
 };
 
 /**
  * Returns an array with all child DOM nodes containing form fields.
- * The child nodes will be returned based on the results of the
- * `RapidContext.Widget.isFormField()` function.
  *
  * @return {Array} the array of form field elements
  *
@@ -187,19 +199,21 @@ RapidContext.Widget.Form.prototype.validators = function () {
  *         `false` if the validation failed
  */
 RapidContext.Widget.Form.prototype.validate = function () {
-    // FIXME: Validate using standard HTML validation as well
+    this._validationTimer && clearTimeout(this._validationTimer);
+    this._validationTimer = false;
     var fields = this.fieldMap();
     var values = this.valueMap();
     var success = true;
     this.validateReset();
     this.validators().forEach(function (validator) {
         [].concat(fields[validator.name]).filter(Boolean).forEach(function (f) {
-            var res = validator.verify(f, values[f.name] || "");
-            if (res === false) {
-                success = false;
-            }
+            success = validator.verify(f, values[f.name] || "") && success;
         });
     });
+    success = this.checkValidity() && success;
+    success || this.addClass("invalid");
+    delete this._validationTimer;
+    this._dispatch("validate", { detail: success, bubbles: true });
     return success;
 };
 
@@ -210,6 +224,7 @@ RapidContext.Widget.Form.prototype.validate = function () {
  * @see #reset
  */
 RapidContext.Widget.Form.prototype.validateReset = function () {
+    $(this).find(".invalid").addBack().removeClass("invalid");
     this.validators().forEach(function (validator) {
         validator.reset();
     });
