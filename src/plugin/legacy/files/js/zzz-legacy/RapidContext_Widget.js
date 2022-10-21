@@ -41,3 +41,29 @@ RapidContext.Widget.isFormField = function (obj) {
            tagName == "SELECT" ||
            RapidContext.Widget.isWidget(obj, "Field");
 };
+
+/**
+ * Emits an asynchronous signal to any listeners connected with
+ * MochiKit.Signal.
+ *
+ * Note that this function is an internal helper function for the
+ * widgets and shouldn't be called by external code.
+ *
+ * @param {Widget} node the widget DOM node
+ * @param {String} sig the signal name ("onclick" or similar)
+ * @param {Object} [...] the optional signal arguments
+ *
+ * @deprecated Use _dispatch() instead to emit a proper Event object.
+ */
+RapidContext.Widget.emitSignal = function (node, sig/*, ...*/) {
+    var args = $.makeArray(arguments);
+    function later() {
+        try {
+            MochiKit.Signal.signal.apply(MochiKit.Signal, args);
+        } catch (e) {
+            var msg = "exception in signal '" + sig + "' handler";
+            RapidContext.Log.error(msg, node, e);
+        }
+    }
+    setTimeout(later);
+};
