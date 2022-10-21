@@ -65,14 +65,6 @@ RapidContext.Widget.Button = function (attrs/*, ...*/) {
 RapidContext.Widget.Classes.Button = RapidContext.Widget.Button;
 
 /**
- * Emitted when the button has been clicked. This is a standard DOM
- * event.
- *
- * @name RapidContext.Widget.Button#onclick
- * @event
- */
-
-/**
  * Updates the widget or HTML DOM node attributes.
  *
  * @param {Object} attrs the widget and node attributes to set

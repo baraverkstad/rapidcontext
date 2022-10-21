@@ -70,7 +70,6 @@ RapidContext.Widget.Classes.Pane = RapidContext.Widget.Pane;
 
 /**
  * Emitted when the pane is shown for viewing in a container widget.
- * This event signal carries no event information.
  *
  * @name RapidContext.Widget.Pane#onenter
  * @event
@@ -78,15 +77,13 @@ RapidContext.Widget.Classes.Pane = RapidContext.Widget.Pane;
 
 /**
  * Emitted when the pane is hidden from view in a container widget.
- * This event signal carries no event information.
  *
  * @name RapidContext.Widget.Pane#onexit
  * @event
  */
 
 /**
- * Emitted when the pane is closed (removed) in a `TabContainer`. This
- * event signal carries no event information.
+ * Emitted when the pane is closed (removed) in a `TabContainer`.
  *
  * @name RapidContext.Widget.Pane#onclose
  * @event
@@ -197,7 +194,7 @@ RapidContext.Widget.Pane.prototype._handleEnter = function (opts) {
         this.show();
         RapidContext.Util.resizeElements(this);
     }
-    RapidContext.Widget.emitSignal(this, "onenter");
+    this._dispatch("enter");
 };
 
 /**
@@ -233,6 +230,6 @@ RapidContext.Widget.Pane.prototype._handleExit = function (opts) {
     if (MochiKit.Base.bool(opts.hide)) {
         this.hide();
     }
-    RapidContext.Widget.emitSignal(this, "onexit");
+    this._dispatch("exit");
     return true;
 };

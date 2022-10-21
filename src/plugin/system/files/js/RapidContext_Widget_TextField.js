@@ -86,7 +86,6 @@ RapidContext.Widget.Classes.TextField = RapidContext.Widget.TextField;
 
 /**
  * Emitted when an item has been selected in the connected popup.
- * This event signal carries no 'event.detail' information.
  *
  * @name RapidContext.Widget.TextField#ondataavailable
  * @event
@@ -110,7 +109,7 @@ RapidContext.Widget.TextField.prototype.setAttrs = function (attrs) {
     }
     if ("value" in locals) {
         this.value = locals.value || "";
-        this._handleChange(false, "set");
+        this._handleChange(null, "set");
     }
     this.__setAttrs(attrs);
 };
@@ -204,16 +203,16 @@ RapidContext.Widget.TextField.prototype.showPopup = function (attrs, items) {
 /**
  * Handles keypress and paste events for this this widget.
  *
- * @param evt the MochiKit.Signal.Event object
+ * @param {Event} evt the MochiKit.Signal.Event object
+ * @param {String} [cause] the event name or similar
  */
 RapidContext.Widget.TextField.prototype._handleChange = function (evt, cause) {
     if (evt) {
-        cause = "on" + evt.type();
-        setTimeout(MochiKit.Base.bind("_handleChange", this, false, cause));
+        setTimeout(MochiKit.Base.bind("_handleChange", this, null, evt.type()));
     } else if (this.storedValue != this.value) {
         var detail = { before: this.storedValue, after: this.value, cause: cause };
         this.storedValue = this.value;
-        RapidContext.Widget._fireEvent(this, "change", detail);
+        this._dispatch("change", { detail: detail, bubbles: true });
     }
 };
 
@@ -265,7 +264,7 @@ RapidContext.Widget.TextField.prototype._handleKeyDown = function (evt) {
                 popup.hide();
                 evt.stop();
                 if (popup.selectedChild() != null) {
-                    RapidContext.Widget._fireEvent(this, "dataavailable");
+                    this._dispatch("dataavailable");
                 }
                 break;
             case "KEY_ESCAPE":
@@ -290,5 +289,5 @@ RapidContext.Widget.TextField.prototype._handleKeyDown = function (evt) {
 RapidContext.Widget.TextField.prototype._handleClick = function (evt) {
     this.blur();
     this.focus();
-    RapidContext.Widget._fireEvent(this, "dataavailable");
+    this._dispatch("dataavailable");
 };

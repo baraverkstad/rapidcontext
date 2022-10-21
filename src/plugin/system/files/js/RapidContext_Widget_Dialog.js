@@ -75,16 +75,14 @@ RapidContext.Widget.Dialog = function (attrs/*, ... */) {
 RapidContext.Widget.Classes.Dialog = RapidContext.Widget.Dialog;
 
 /**
- * Emitted when the dialog is shown. This event signal carries no
- * event information.
+ * Emitted when the dialog is shown.
  *
  * @name RapidContext.Widget.Dialog#onshow
  * @event
  */
 
 /**
- * Emitted when the dialog is hidden. This event signal carries no
- * event information.
+ * Emitted when the dialog is hidden.
  *
  * @name RapidContext.Widget.Dialog#onhide
  * @event
@@ -92,8 +90,7 @@ RapidContext.Widget.Classes.Dialog = RapidContext.Widget.Dialog;
 
 /**
  * Emitted when the dialog is moved. The event will be sent
- * repeatedly when moving with a mouse drag operation. This event
- * signal contains the new element position as payload.
+ * repeatedly when moving with a mouse drag operation.
  *
  * @name RapidContext.Widget.Dialog#onmove
  * @event
@@ -101,8 +98,7 @@ RapidContext.Widget.Classes.Dialog = RapidContext.Widget.Dialog;
 
 /**
  * Emitted when the dialog is resized. The event will be sent
- * repeatedly when resizing with a mouse drag operation. This event
- * signal contains the new element dimensions as payload.
+ * repeatedly when resizing with a mouse drag operation.
  *
  * @name RapidContext.Widget.Dialog#onresize
  * @event
@@ -183,7 +179,7 @@ RapidContext.Widget.Dialog.prototype._setHiddenDialog = function (value) {
         }
         this.blurAll();
         this._setHidden(true);
-        RapidContext.Widget.emitSignal(this, "onhide");
+        this._dispatch("hide");
     } else {
         if (this.parentNode == null) {
             throw new Error("Cannot show Dialog widget without setting a parent DOM node");
@@ -204,7 +200,7 @@ RapidContext.Widget.Dialog.prototype._setHiddenDialog = function (value) {
             this.moveToCenter();
         }
         this.resetScroll();
-        RapidContext.Widget.emitSignal(this, "onshow");
+        this._dispatch("show");
     }
 };
 
@@ -224,7 +220,7 @@ RapidContext.Widget.Dialog.prototype.moveTo = function (x, y) {
         y: Math.max(0, Math.min(y, parentDim.h - dim.h - 2))
     };
     MochiKit.Style.setElementPosition(this, pos);
-    RapidContext.Widget.emitSignal(this, "onmove", pos);
+    this._dispatch("move", { detail: pos });
 };
 
 /**
@@ -240,7 +236,7 @@ RapidContext.Widget.Dialog.prototype.moveToCenter = function () {
         y: Math.round(Math.max(0, (parentDim.h - dim.h) / 2.618))
     };
     MochiKit.Style.setElementPosition(this, pos);
-    RapidContext.Widget.emitSignal(this, "onmove", pos);
+    this._dispatch("move", { detail: pos });
 };
 
 /**
@@ -264,7 +260,7 @@ RapidContext.Widget.Dialog.prototype.resizeTo = function (width, height) {
     RapidContext.Util.registerSizeConstraints(this, null, null);
     MochiKit.Base.update(this, dim);
     this._resizeContent();
-    RapidContext.Widget.emitSignal(this, "onresize", dim);
+    this._dispatch("resize", { detail: dim });
     return dim;
 };
 

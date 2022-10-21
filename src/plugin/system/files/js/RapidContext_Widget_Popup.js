@@ -76,16 +76,14 @@ RapidContext.Widget.Popup = function (attrs/*, ...*/) {
 RapidContext.Widget.Classes.Popup = RapidContext.Widget.Popup;
 
 /**
- * Emitted when the popup is shown. This event signal carries no
- * event information.
+ * Emitted when the popup is shown.
  *
  * @name RapidContext.Widget.Popup#onshow
  * @event
  */
 
 /**
- * Emitted when the popup is hidden. This event signal carries no
- * event information.
+ * Emitted when the popup is hidden.
  *
  * @name RapidContext.Widget.Popup#onhide
  * @event
@@ -134,7 +132,7 @@ RapidContext.Widget.Popup.prototype._setHiddenPopup = function (value) {
         if (this.hideAnim) {
             this.animate(this.hideAnim);
         }
-        RapidContext.Widget.emitSignal(this, "onhide");
+        this._dispatch("hide");
     } else if (!value && this.isHidden()) {
         this.selectChild(-1);
         this._setHidden(false);
@@ -142,7 +140,7 @@ RapidContext.Widget.Popup.prototype._setHiddenPopup = function (value) {
             this.animate(this.showAnim);
         }
         this.scrollTop = 0;
-        RapidContext.Widget.emitSignal(this, "onshow");
+        this._dispatch("show");
     }
     this.resetDelay();
 };

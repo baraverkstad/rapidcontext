@@ -81,16 +81,14 @@ RapidContext.Widget.Table = function (attrs/*, ...*/) {
 RapidContext.Widget.Classes.Table = RapidContext.Widget.Table;
 
 /**
- * Emitted when the table data is cleared. This event signal carries
- * no event information.
+ * Emitted when the table data is cleared.
  *
  * @name RapidContext.Widget.Table#onclear
  * @event
  */
 
 /**
- * Emitted when the table selection changes. This event signal
- * carries no event information.
+ * Emitted when the table selection changes.
  *
  * @name RapidContext.Widget.Table#onselect
  * @event
@@ -284,7 +282,7 @@ RapidContext.Widget.Table.prototype.getData = function () {
 RapidContext.Widget.Table.prototype.setData = function (data) {
     var cols = this.getChildNodes();
     var selectedIds = this.getSelectedIds();
-    RapidContext.Widget.emitSignal(this, "onclear");
+    this._dispatch("clear");
     this._data = data;
     this._rows = [];
     this._selected = [];
@@ -478,7 +476,7 @@ RapidContext.Widget.Table.prototype.setSelectedIds = function () {
         }
     }
     if (res.length > 0) {
-        RapidContext.Widget.emitSignal(this, "onselect");
+        this._dispatch("select");
     }
     return res;
 };
@@ -494,7 +492,7 @@ RapidContext.Widget.Table.prototype.setSelectedIds = function () {
 RapidContext.Widget.Table.prototype.addSelectedIds = function () {
     var res = this._addSelectedIds(arguments);
     if (res.length > 0) {
-        RapidContext.Widget.emitSignal(this, "onselect");
+        this._dispatch("select");
     }
     return res;
 };
@@ -545,7 +543,7 @@ RapidContext.Widget.Table.prototype.removeSelectedIds = function () {
         }
     }
     if (res.length > 0) {
-        RapidContext.Widget.emitSignal(this, "onselect");
+        this._dispatch("select");
     }
     return res;
 };
@@ -619,7 +617,7 @@ RapidContext.Widget.Table.prototype._handleMouseUp = function (evt) {
         this._selected = [row];
         this._markSelection(row);
     }
-    RapidContext.Widget.emitSignal(this, "onselect");
+    this._dispatch("select");
     if (evt.modifier().ctrl || evt.modifier().meta || evt.modifier().shift) {
         evt.stop();
         return false;

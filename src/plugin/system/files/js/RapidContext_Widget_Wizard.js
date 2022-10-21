@@ -98,24 +98,21 @@ RapidContext.Widget.Wizard = function (attrs/*, ... */) {
 RapidContext.Widget.Classes.Wizard = RapidContext.Widget.Wizard;
 
 /**
- * Emitted when a page transition is performed. This event
- * signal contains the page index and widget as payload.
+ * Emitted when a page transition is performed.
  *
  * @name RapidContext.Widget.Wizard#onchange
  * @event
  */
 
 /**
- * Emitted when the user selects to cancel the page flow. This event
- * signal carries no event information.
+ * Emitted when the user selects to cancel the page flow.
  *
  * @name RapidContext.Widget.Wizard#oncancel
  * @event
  */
 
 /**
- * Emitted when the user has completed the page flow. This event
- * signal carries no event information.
+ * Emitted when the user has completed the page flow.
  *
  * @name RapidContext.Widget.Wizard#onclose
  * @event
@@ -272,7 +269,8 @@ RapidContext.Widget.Wizard.prototype.activatePage = function (indexOrPage) {
     } else {
         page._handleEnter({ validateReset: true });
     }
-    RapidContext.Widget.emitSignal(this, "onchange", index, page);
+    var detail = { index: index, page: page };
+    this._dispatch("change", { detail: detail });
 };
 
 /**
@@ -285,7 +283,7 @@ RapidContext.Widget.Wizard.prototype.activatePage = function (indexOrPage) {
 RapidContext.Widget.Wizard.prototype.cancel = function () {
     var page = this.activePage();
     page.setAttrs({ pageStatus: RapidContext.Widget.Pane.ANY });
-    RapidContext.Widget.emitSignal(this, "oncancel");
+    this._dispatch("cancel");
 };
 
 /**
@@ -322,7 +320,7 @@ RapidContext.Widget.Wizard.prototype.done = function () {
             return;
         }
     }
-    RapidContext.Widget.emitSignal(this, "onclose");
+    this._dispatch("close");
 };
 
 /**

@@ -70,9 +70,12 @@ RapidContext.Widget.TextArea = function (attrs/*, ...*/) {
 RapidContext.Widget.Classes.TextArea = RapidContext.Widget.TextArea;
 
 /**
- * Emitted when the text is modified. This event is triggered by both
- * keypress and paste events if the text content is modified. The DOM
- * standard onchange event may also be trigged (on blur).
+ * Emitted when the text is modified. This event is triggered by either
+ * user events (keypress, paste, cut, blur) or by setting the value via
+ * setAttrs(). The DOM standard onchange event has no 'event.detail'
+ * data and is triggered on blur. The synthetic onchange events all
+ * contain an 'event.detail' object with 'before', 'after' and 'cause'
+ * properties.
  *
  * @name RapidContext.Widget.TextArea#onchange
  * @event
@@ -96,7 +99,7 @@ RapidContext.Widget.TextArea.prototype.setAttrs = function (attrs) {
     }
     if ("value" in locals) {
         this.value = locals.value || "";
-        this._handleChange();
+        this._handleChange(null, "set");
     }
     this.__setAttrs(attrs);
 };
@@ -138,14 +141,16 @@ RapidContext.Widget.TextArea.prototype.getValue = function () {
 /**
  * Handles keypress and paste events for this this widget.
  *
- * @param evt the MochiKit.Signal.Event object
+ * @param {Event} evt the MochiKit.Signal.Event object
+ * @param {String} [cause] the event name or similar
  */
-RapidContext.Widget.TextArea.prototype._handleChange = function (evt) {
+RapidContext.Widget.TextArea.prototype._handleChange = function (evt, cause) {
     if (evt) {
-        setTimeout(MochiKit.Base.bind("_handleChange", this));
+        setTimeout(MochiKit.Base.bind("_handleChange", this, null, evt.type()));
     } else if (this.storedValue != this.value) {
+        var detail = { before: this.storedValue, after: this.value, cause: cause };
         this.storedValue = this.value;
-        RapidContext.Widget.emitSignal(this, "onchange", this.value);
+        this._dispatch("change", { detail: detail, bubbles: true });
     }
 };
 

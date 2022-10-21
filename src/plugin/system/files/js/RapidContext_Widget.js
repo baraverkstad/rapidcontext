@@ -226,7 +226,7 @@ RapidContext.Widget._eventHandler = function (className, methodName/*, ...*/) {
  * @param {String} sig the signal name ("onclick" or similar)
  * @param {Object} [...] the optional signal arguments
  *
- * @deprecated Use _fireEvent() instead to emit proper Event object.
+ * @deprecated Use _dispatch() instead to emit a proper Event object.
  */
 RapidContext.Widget.emitSignal = function (node, sig/*, ...*/) {
     var args = $.makeArray(arguments);
@@ -236,61 +236,6 @@ RapidContext.Widget.emitSignal = function (node, sig/*, ...*/) {
         } catch (e) {
             var msg = "exception in signal '" + sig + "' handler";
             RapidContext.Log.error(msg, node, e);
-        }
-    }
-    setTimeout(later);
-};
-
-/**
- * Creates a DOM event object.
- *
- * @param {String} evtType the event type name ("click" or similar)
- * @param {Object} [detail] the optional event "detail" value
- *
- * @return {Event} a new Event object of the specified type
- */
-RapidContext.Widget._createEvent = function (evtType, detail) {
-    var evt;
-    try {
-        evt = new Event(evtType);
-    } catch (msieFailsOfCourse) {
-        if (document.createEvent) {
-            evt = document.createEvent("Event");
-            evt.initEvent(evtType, true, true);
-        } else {
-            evt = document.createEventObject();
-            evt.type = evtType;
-        }
-    }
-    if (detail) {
-        evt.detail = detail;
-    }
-    return evt;
-};
-
-/**
- * Fires an event (asynchronously) to all listeners. This function uses
- * native DOM APIs, so all type of event listeners should be reached
- * by the event.
- *
- * @param {Widget/Node} node the (widget) DOM node emitting the event
- * @param {Event/String} evt the event object or type
- * @param {Object} [detail] the optional event "detail" value
- */
-RapidContext.Widget._fireEvent = function (node, evt, detail) {
-    if (typeof(evt) == "string") {
-        evt = RapidContext.Widget._createEvent(evt, detail);
-    }
-    function later() {
-        try {
-            if (node.dispatchEvent) {
-                node.dispatchEvent(evt);
-            } else {
-                var msg = "cannot fire event, no dispatchEvent method";
-                RapidContext.Log.warn(msg, evt, node);
-            }
-        } catch (e) {
-            RapidContext.Log.warn("exception when firing event", evt, node, e);
         }
     }
     setTimeout(later);
@@ -340,6 +285,21 @@ RapidContext.Widget.prototype._containerNode = function () {
  */
 RapidContext.Widget.prototype._styleNode = function () {
     return this;
+};
+
+/**
+ * Dispatches a custom event from this DOM node. The event will be
+ * created and emitted asynchronously (via setTimeout).
+ *
+ * @param {String} type the event type (e.g. "validate")
+ * @param {Object} [opts] the event options (e.g. "{ bubbles: true }")
+ */
+RapidContext.Widget.prototype._dispatch = function (type, opts) {
+    var self = this;
+    function later() {
+        self.dispatchEvent(new CustomEvent(type, opts));
+    }
+    setTimeout(later);
 };
 
 /**

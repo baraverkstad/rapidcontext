@@ -61,16 +61,14 @@ RapidContext.Widget.Tree = function (attrs/*, ...*/) {
 RapidContext.Widget.Classes.Tree = RapidContext.Widget.Tree;
 
 /**
- * Emitted when a tree node is expanded. This event signal contains
- * the tree node as payload.
+ * Emitted when a tree node is expanded.
  *
  * @name RapidContext.Widget.Tree#onexpand
  * @event
  */
 
 /**
- * Emitted when a tree node is collapsed. This event signal contains
- * the tree node as payload.
+ * Emitted when a tree node is collapsed.
  *
  * @name RapidContext.Widget.Tree#oncollapse
  * @event
@@ -78,8 +76,7 @@ RapidContext.Widget.Classes.Tree = RapidContext.Widget.Tree;
 
 /**
  * Emitted when a tree node is selected. It will be emitted after
- * "onunselect" if another node was previously selected. This event
- * signal contains the currently selected tree node as payload.
+ * "onunselect" if another node was previously selected.
  *
  * @name RapidContext.Widget.Tree#onselect
  * @event
@@ -87,8 +84,7 @@ RapidContext.Widget.Classes.Tree = RapidContext.Widget.Tree;
 
 /**
  * Emitted when a tree node selection is removed. It will be emitted
- * before "onselect" if another node was previously selected. This
- * event signal contains the previously selected tree node as payload.
+ * before "onselect" if another node was previously selected.
  *
  * @name RapidContext.Widget.Tree#onunselect
  * @event

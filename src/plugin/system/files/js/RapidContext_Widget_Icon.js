@@ -79,14 +79,6 @@ RapidContext.Widget.Icon.prototype._containerNode = function () {
 };
 
 /**
- * Emitted when the icon has been clicked. This is a standard DOM
- * event.
- *
- * @name RapidContext.Widget.Icon#onclick
- * @event
- */
-
-/**
  * Updates the icon or HTML DOM node attributes.
  *
  * @param {String/Object} attrs the icon ref, class or attributes to set
