@@ -59,13 +59,7 @@ RapidContext.Widget.TextField = function (attrs/*, ...*/) {
     o.addClass("widgetTextField");
     o._popupCreated = false;
     o.setAttrs(MochiKit.Base.update({}, attrs, { value: text }));
-    var changeHandler = RapidContext.Widget._eventHandler(null, "_handleChange");
-    o.onkeyup = changeHandler;
-    o.oncut = changeHandler;
-    o.onpaste = changeHandler;
-    var focusHandler = RapidContext.Widget._eventHandler(null, "_handleFocus");
-    o.onfocus = focusHandler;
-    o.onblur = focusHandler;
+    o.addEventListener("input", o._handleChange);
     return o;
 };
 
@@ -109,7 +103,7 @@ RapidContext.Widget.TextField.prototype.setAttrs = function (attrs) {
     }
     if ("value" in locals) {
         this.value = locals.value || "";
-        this._handleChange(null, "set");
+        this._handleChange(null);
     }
     this.__setAttrs(attrs);
 };
@@ -152,6 +146,7 @@ RapidContext.Widget.TextField.prototype.popup = function (create) {
         MochiKit.Style.makePositioned(this.parentNode);
         MochiKit.Signal.connect(this, "onkeydown", this, "_handleKeyDown");
         MochiKit.Signal.connect(popup, "onclick", this, "_handleClick");
+        this.addEventListener("blur", this._handleBlur);
     }
     return (this._popupCreated) ? this.nextSibling : null;
 };
@@ -201,39 +196,15 @@ RapidContext.Widget.TextField.prototype.showPopup = function (attrs, items) {
 };
 
 /**
- * Handles keypress and paste events for this this widget.
+ * Handles input events for this this widget.
  *
- * @param {Event} evt the MochiKit.Signal.Event object
- * @param {String} [cause] the event name or similar
+ * @param {Event} [evt] the DOM Event object or null for manual
  */
-RapidContext.Widget.TextField.prototype._handleChange = function (evt, cause) {
-    if (evt) {
-        setTimeout(MochiKit.Base.bind("_handleChange", this, null, evt.type()));
-    } else if (this.storedValue != this.value) {
-        var detail = { before: this.storedValue, after: this.value, cause: cause };
-        this.storedValue = this.value;
-        this._dispatch("change", { detail: detail, bubbles: true });
-    }
-};
-
-/**
- * Handles focus and blur events for this widget.
- *
- * @param evt the `MochiKit.Signal.Event` object
- */
-RapidContext.Widget.TextField.prototype._handleFocus = function (evt) {
-    var value = this.getValue();
-    if (evt.type() == "focus") {
-        if (this.value != value) {
-            this.value = value;
-        }
-    } else if (evt.type() == "blur") {
-        this.storedValue = value;
-        var popup = this.popup();
-        if (popup && !popup.isHidden()) {
-            popup.setAttrs({ delay: 250 });
-        }
-    }
+RapidContext.Widget.TextField.prototype._handleChange = function (evt) {
+    var cause = (evt && evt.inputType) || "set";
+    var detail = { before: this.storedValue || "", after: this.value, cause: cause };
+    this._dispatch("change", { detail: detail, bubbles: true });
+    this.storedValue = this.value;
 };
 
 /**
@@ -290,4 +261,16 @@ RapidContext.Widget.TextField.prototype._handleClick = function (evt) {
     this.blur();
     this.focus();
     this._dispatch("dataavailable");
+};
+
+/**
+ * Handles blur events for this widget (if popup attached).
+ *
+ * @param evt the DOM Event object
+ */
+RapidContext.Widget.TextField.prototype._handleBlur = function (evt) {
+    var popup = this.popup();
+    if (popup && !popup.isHidden()) {
+        popup.setAttrs({ delay: 250 });
+    }
 };
