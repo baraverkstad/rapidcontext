@@ -89,6 +89,8 @@
         "DOMTokenList.prototype.add",
         "DOMTokenList.prototype.remove",
         "DOMTokenList.prototype.toggle",
+        "Element.prototype.closest",
+        "Element.prototype.matches",
         "fetch",
         "Math.imul",
         "NodeList.prototype.forEach",
