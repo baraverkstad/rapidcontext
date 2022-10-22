@@ -66,11 +66,29 @@ RapidContext.Widget.TabContainer = function (attrs/*, ... */) {
     o._selectedIndex = -1;
     o.setAttrs(attrs);
     o.addAll(Array.prototype.slice.call(arguments, 1));
+    labels.addEventListener("click", o._handleLabelClick);
     return o;
 };
 
 // Register widget class
 RapidContext.Widget.Classes.TabContainer = RapidContext.Widget.TabContainer;
+
+/**
+ * Handles tab label click events.
+ *
+ * @param {Event} evt the DOM Event object
+ */
+RapidContext.Widget.TabContainer.prototype._handleLabelClick = function (evt) {
+    var label = MochiKit.DOM.getFirstParentByTagAndClassName(evt.target, "DIV", "widgetTabContainerLabel");
+    var pos = Array.prototype.slice.call(label.parentNode.childNodes).indexOf(label);
+    var parent = MochiKit.DOM.getFirstParentByTagAndClassName(this, "DIV", "widgetTabContainer");
+    var child = parent.getChildNodes()[pos];
+    if (RapidContext.Widget.isWidget(evt.target, "Icon")) {
+        parent.removeChildNode(child);
+    } else {
+        parent.selectChild(child);
+    }
+};
 
 /**
  * Returns an array with all child pane widgets. Note that the array
@@ -100,13 +118,9 @@ RapidContext.Widget.TabContainer.prototype.addChildNode = function (child) {
     var text = MochiKit.DOM.SPAN(null, child.pageTitle);
     if (child.pageCloseable) {
         var icon = RapidContext.Widget.Icon({ "class": "fa fa-close", tooltip: "Close" });
-        // TODO: potential memory leak with stale child object references
-        icon.onclick = RapidContext.Widget._eventHandler("TabContainer", "_handleClose", child);
     }
     var labelAttrs = { "class": "widgetTabContainerLabel" };
     var label = MochiKit.DOM.DIV(labelAttrs, MochiKit.DOM.DIV({}, text, icon));
-    // TODO: potential memory leak with stale child object references
-    label.onclick = RapidContext.Widget._eventHandler("TabContainer", "selectChild", child);
     this.firstChild.appendChild(label);
     this.lastChild.appendChild(child);
     if (this._selectedIndex < 0) {
@@ -212,15 +226,4 @@ RapidContext.Widget.TabContainer.prototype._resizeContent = function () {
     if (child != null) {
         RapidContext.Util.resizeElements(child);
     }
-};
-
-/**
- * Handles the tab close event.
- *
- * @param {Node} child the child DOM node
- * @param {Event} evt the MochiKit.Signal.Event object
- */
-RapidContext.Widget.TabContainer.prototype._handleClose = function (child, evt) {
-    evt.stop();
-    this.removeChildNode(child);
 };

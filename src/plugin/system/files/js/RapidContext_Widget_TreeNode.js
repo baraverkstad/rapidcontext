@@ -65,13 +65,27 @@ RapidContext.Widget.TreeNode = function (attrs/*, ...*/) {
     }
     o.setAttrs(attrs);
     o.addAll(args.slice(1));
-    icon.onclick = RapidContext.Widget._eventHandler("TreeNode", "toggle");
-    div.onclick = RapidContext.Widget._eventHandler("TreeNode", "select");
+    // FIXME: Consider using a single click handler in parent Tree instead...
+    div.addEventListener("click", o._handleLabelClick);
     return o;
 };
 
 // Register widget class
 RapidContext.Widget.Classes.TreeNode = RapidContext.Widget.TreeNode;
+
+/**
+ * Handles label click events.
+ *
+ * @param {Event} evt the DOM Event object
+ */
+RapidContext.Widget.TreeNode.prototype._handleLabelClick = function (evt) {
+    var node = MochiKit.DOM.getFirstParentByTagAndClassName(this, "DIV", "widgetTreeNode");
+    if (RapidContext.Widget.isWidget(evt.target, "Icon")) {
+        node.toggle();
+    } else {
+        node.select();
+    }
+};
 
 /**
  * Returns and optionally creates the widget container DOM node. If a
@@ -437,10 +451,7 @@ RapidContext.Widget.TreeNode.prototype.collapseAll = function (depth) {
 /**
  * Toggles expand and collapse for this node.
  */
-RapidContext.Widget.TreeNode.prototype.toggle = function (evt) {
-    if (evt) {
-        evt.stop();
-    }
+RapidContext.Widget.TreeNode.prototype.toggle = function () {
     if (this.isExpanded()) {
         this.collapse();
     } else {

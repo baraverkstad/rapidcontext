@@ -74,7 +74,7 @@ RapidContext.Widget.TableColumn = function (attrs) {
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.TableColumn);
     o.addClass("widgetTableColumn");
     o.setAttrs(MochiKit.Base.update({ title: attrs.field, type: "string", key: false }, attrs));
-    o.onclick = RapidContext.Widget._eventHandler(null, "_handleClick");
+    o.addEventListener("click", o._handleClick);
     return o;
 };
 

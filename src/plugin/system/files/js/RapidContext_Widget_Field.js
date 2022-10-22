@@ -57,7 +57,7 @@ RapidContext.Widget.Field = function (attrs) {
     o.setAttrs(MochiKit.Base.update({ name: "", value: "", maxLength: -1, mask: false }, attrs));
     o.defaultValue = o.value;
     o.defaultMask = o.mask;
-    o.onclick = RapidContext.Widget._eventHandler(null, "_handleClick");
+    o.addEventListener("click", o._handleClick);
     return o;
 };
 
