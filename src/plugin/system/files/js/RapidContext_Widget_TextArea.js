@@ -56,13 +56,7 @@ RapidContext.Widget.TextArea = function (attrs/*, ...*/) {
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.TextArea);
     o.addClass("widgetTextArea");
     o.setAttrs(MochiKit.Base.update({}, attrs, { value: text }));
-    var changeHandler = RapidContext.Widget._eventHandler(null, "_handleChange");
-    o.onkeyup = changeHandler;
-    o.oncut = changeHandler;
-    o.onpaste = changeHandler;
-    var focusHandler = RapidContext.Widget._eventHandler(null, "_handleFocus");
-    o.onfocus = focusHandler;
-    o.onblur = focusHandler;
+    o.addEventListener("input", o._handleChange);
     return o;
 };
 
@@ -99,7 +93,7 @@ RapidContext.Widget.TextArea.prototype.setAttrs = function (attrs) {
     }
     if ("value" in locals) {
         this.value = locals.value || "";
-        this._handleChange(null, "set");
+        this._handleChange(null);
     }
     this.__setAttrs(attrs);
 };
@@ -139,33 +133,13 @@ RapidContext.Widget.TextArea.prototype.getValue = function () {
 };
 
 /**
- * Handles keypress and paste events for this this widget.
+ * Handles input events for this this widget.
  *
- * @param {Event} evt the MochiKit.Signal.Event object
- * @param {String} [cause] the event name or similar
+ * @param {Event} [evt] the DOM Event object or null for manual
  */
-RapidContext.Widget.TextArea.prototype._handleChange = function (evt, cause) {
-    if (evt) {
-        setTimeout(MochiKit.Base.bind("_handleChange", this, null, evt.type()));
-    } else if (this.storedValue != this.value) {
-        var detail = { before: this.storedValue, after: this.value, cause: cause };
-        this.storedValue = this.value;
-        this._dispatch("change", { detail: detail, bubbles: true });
-    }
-};
-
-/**
- * Handles focus and blur events for this widget.
- *
- * @param evt the MochiKit.Signal.Event object
- */
-RapidContext.Widget.TextArea.prototype._handleFocus = function (evt) {
-    var value = this.getValue();
-    if (evt.type() == "focus") {
-        if (this.value != value) {
-            this.value = value;
-        }
-    } else if (evt.type() == "blur") {
-        this.storedValue = value;
-    }
+RapidContext.Widget.TextArea.prototype._handleChange = function (evt) {
+    var cause = (evt && evt.inputType) || "set";
+    var detail = { before: this.storedValue || "", after: this.value, cause: cause };
+    this._dispatch("change", { detail: detail, bubbles: true });
+    this.storedValue = this.value;
 };
