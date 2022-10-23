@@ -47,11 +47,13 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  */
 RapidContext.Widget.Form = function (attrs/*, ...*/) {
     var o = MochiKit.DOM.FORM(attrs);
+    o._validators = {};
     o._originalReset = o.reset;
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Form);
     o.addClass("widgetForm");
     o.setAttrs(attrs);
     o.addAll(Array.prototype.slice.call(arguments, 1));
+    o.addEventListener("input", o._handleInput);
     o.addEventListener("invalid", o._handleInvalid, { capture: true });
     o.addEventListener("submit", o._handleSubmit);
     return o;
@@ -59,6 +61,15 @@ RapidContext.Widget.Form = function (attrs/*, ...*/) {
 
 // Register widget class
 RapidContext.Widget.Classes.Form = RapidContext.Widget.Form;
+
+/**
+ * Applies custom validators on field input.
+ *
+ * @param {Event} evt the DOM event object
+ */
+RapidContext.Widget.Form.prototype._handleInput = function (evt) {
+    this._callValidators(evt.target);
+};
 
 /**
  * Debounces the input invalid events and validates the form.
@@ -79,6 +90,18 @@ RapidContext.Widget.Form.prototype._handleSubmit = function (evt) {
     evt.preventDefault();
     if (!this.validate()) {
         evt.stopImmediatePropagation();
+    }
+};
+
+RapidContext.Widget.Form.prototype._fieldValue = function (field) {
+    if (field.disabled) {
+        return null;
+    } else if (field.type === "radio" || field.type === "checkbox") {
+        return field.checked ? (field.value || true) : null;
+    } else if (typeof(field.getValue) == "function") {
+        return field.getValue();
+    } else {
+        return field.value;
     }
 };
 
@@ -134,17 +157,6 @@ RapidContext.Widget.Form.prototype.reset = function () {
  * @return {Object} the map of form field values
  */
 RapidContext.Widget.Form.prototype.valueMap = function () {
-    function getValue(field) {
-        if (field.disabled) {
-            return null;
-        } else if (field.type === "radio" || field.type === "checkbox") {
-            return field.checked ? (field.value || true) : null;
-        } else if (typeof(field.getValue) == "function") {
-            return field.getValue();
-        } else {
-            return field.value;
-        }
-    }
     function update(o, field) {
         var k = field.name;
         var v = getValue(field);
@@ -153,6 +165,7 @@ RapidContext.Widget.Form.prototype.valueMap = function () {
         }
         return o;
     }
+    var getValue = this._fieldValue;
     return this.fields().reduce(update, {});
 };
 
@@ -183,6 +196,59 @@ RapidContext.Widget.Form.prototype.update = function (values) {
 };
 
 /**
+ * Adds a custom form validator for a named form field. The function will be
+ * called as `[field].validator([value], [field], [form])` and should return
+ * `true`, `false` or a validation error message. The validator will be called
+ * on each `input` event and before form submission for enabled fields.
+ *
+ * Note: Checkbox validators will be called once for each `<input>` element,
+ * regardless of checked state. Radio validators will only be called with
+ * either the first or the checked `<input>` element.
+ *
+ * @param {String/Element} field the form field or name
+ * @param {Function} validator the validator function
+ */
+RapidContext.Widget.Form.prototype.addValidator = function (field, validator) {
+    var name = String(field.name || field);
+    var arr = [].concat(this._validators[name], validator).filter(Boolean);
+    this._validators[name] = arr;
+};
+
+/**
+ * Removes all custom form validators for a named form field.
+ *
+ * @param {String/Element} [field] the form field, name, or null for all
+ */
+RapidContext.Widget.Form.prototype.removeValidators = function (field) {
+    if (field) {
+        var name = String(field.name || field);
+        delete this._validators[name];
+    } else {
+        this._validators = {};
+    }
+};
+
+/**
+ * Calls all custom validators for a form field. The validation result will
+ * update the `setCustomValidity()` on the field.
+ *
+ * @param {Element} field the form field
+ */
+RapidContext.Widget.Form.prototype._callValidators = function (field) {
+    var validators = this._validators[field.name];
+    if (!field.disabled && validators) {
+        var self = this;
+        var res = true;
+        validators.forEach(function (validator) {
+            if (res === true) {
+                res = validator.call(field, self._fieldValue(field), field, self);
+            }
+        });
+        field.setCustomValidity((res === true) ? "" : (res || "Validation failed"));
+    }
+};
+
+/**
  * Returns an array with all child DOM nodes containing form validator widgets.
  *
  * @return {Array} the array of form validator widgets
@@ -201,10 +267,18 @@ RapidContext.Widget.Form.prototype.validators = function () {
 RapidContext.Widget.Form.prototype.validate = function () {
     this._validationTimer && clearTimeout(this._validationTimer);
     this._validationTimer = false;
+    var self = this;
     var fields = this.fieldMap();
     var values = this.valueMap();
     var success = true;
     this.validateReset();
+    Object.keys(this._validators).forEach(function (name) {
+        [].concat(fields[name]).filter(Boolean).forEach(function (f) {
+            if (f.type !== "radio" || f.checked) {
+                self._callValidators(f);
+            }
+        });
+    });
     this.validators().forEach(function (validator) {
         [].concat(fields[validator.name]).filter(Boolean).forEach(function (f) {
             success = validator.verify(f, values[f.name] || "") && success;
@@ -218,8 +292,8 @@ RapidContext.Widget.Form.prototype.validate = function () {
 };
 
 /**
- * Resets all form validators. This method is automatically called upon form
- * reset.
+ * Resets all form validations. This method is automatically called when form
+ * is reset.
  *
  * @see #reset
  */
