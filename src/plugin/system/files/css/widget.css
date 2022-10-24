@@ -477,6 +477,9 @@ th.widgetTableColumn.sortNone::after {
 .widgetTreeNodeLabel.selected:hover {
     background: #ff0;
 }
+.widgetTreeNodeLabel .widgetIcon {
+    color: #666;
+}
 .widgetTreeNodeText {
     padding-left: 3px;
 }

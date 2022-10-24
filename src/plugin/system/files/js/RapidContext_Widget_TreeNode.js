@@ -51,20 +51,18 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * </TreeNode>
  */
 RapidContext.Widget.TreeNode = function (attrs/*, ...*/) {
-    var icon = RapidContext.Widget.Icon({ "class": "fa" });
+    var toggle = RapidContext.Widget.Icon("fa fa-fw");
+    var icon = RapidContext.Widget.Icon("fa fa-fw fa-dot-circle-o");
     var label = MochiKit.DOM.SPAN({ "class": "widgetTreeNodeText" });
-    var div = MochiKit.DOM.DIV({ "class": "widgetTreeNodeLabel" }, icon, label);
+    var cls = "widgetTreeNodeLabel overflow-ellipsis text-nowrap";
+    var div = MochiKit.DOM.DIV({ "class": cls }, toggle, icon, label);
     var o = MochiKit.DOM.DIV({}, div);
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.TreeNode);
     MochiKit.DOM.addElementClass(o, "widgetTreeNode");
-    var args = MochiKit.Base.flattenArguments(arguments);
-    var folder = (args.length > 1);
-    attrs = MochiKit.Base.update({ name: "Tree Node", folder: folder }, attrs);
-    if (typeof(attrs.icon) == "undefined") {
-        attrs.icon = attrs.folder ? "FOLDER" : "DOCUMENT";
-    }
+    var isFolder = (arguments.length > 1);
+    attrs = MochiKit.Base.update({ name: "Tree Node", folder: isFolder }, attrs);
     o.setAttrs(attrs);
-    o.addAll(args.slice(1));
+    o.addAll(Array.prototype.slice.call(arguments, 1));
     // FIXME: Consider using a single click handler in parent Tree instead...
     div.addEventListener("click", o._handleLabelClick);
     return o;
@@ -103,11 +101,9 @@ RapidContext.Widget.TreeNode.prototype._containerNode = function (create) {
     } else if (create) {
         container = MochiKit.DOM.DIV({ "class": "widgetTreeNodeContainer widgetHidden" });
         this.appendChild(container);
-        var imgNode = this.firstChild.firstChild;
-        imgNode.setAttrs({ ref: "PLUS" });
-        var iconNode = imgNode.nextSibling;
-        if (!RapidContext.Widget.isWidget(iconNode, "Icon") && iconNode.ref == "DOCUMENT") {
-            iconNode.setAttrs({ ref: "FOLDER" });
+        this.firstChild.childNodes[0].setAttrs({ "class": "fa fa-fw fa-plus-square-o" });
+        if (!this.attributes.icon) {
+            this.firstChild.childNodes[1].setAttrs({ "class": "fa fa-fw fa-folder-o" });
         }
         return container;
     } else {
@@ -143,29 +139,9 @@ RapidContext.Widget.TreeNode.prototype.setAttrs = function (attrs) {
         this._containerNode(true);
     }
     if (typeof(locals.icon) != "undefined") {
-        var imgNode = this.firstChild.firstChild;
-        var iconNode = imgNode.nextSibling;
-        if (!RapidContext.Widget.isWidget(iconNode, "Icon")) {
-            iconNode = null;
-        }
-        if (iconNode == null && locals.icon != null) {
-            if (typeof(locals.icon) === "string") {
-                locals.icon = RapidContext.Widget.Icon({ ref: locals.icon });
-            } else if (!RapidContext.Widget.isWidget(locals.icon, "Icon")) {
-                locals.icon = RapidContext.Widget.Icon(locals.icon);
-            }
-            MochiKit.DOM.insertSiblingNodesAfter(imgNode, locals.icon);
-        } else if (iconNode != null && locals.icon != null) {
-            if (RapidContext.Widget.isWidget(locals.icon, "Icon")) {
-                MochiKit.DOM.swapDOM(iconNode, locals.icon);
-            } else if (typeof(locals.icon) === "string") {
-                iconNode.setAttrs({ ref: locals.icon });
-            } else {
-                iconNode.setAttrs(locals.icon);
-            }
-        } else if (iconNode != null && locals.icon == null) {
-            RapidContext.Widget.destroyWidget(iconNode);
-        }
+        this.setAttribute("icon", String(locals.icon));
+        var icon = RapidContext.Widget.Icon(locals.icon);
+        MochiKit.DOM.swapDOM(this.firstChild.childNodes[1], icon);
     }
     if (typeof(locals.tooltip) != "undefined") {
         this.firstChild.title = locals.tooltip;
@@ -341,7 +317,6 @@ RapidContext.Widget.TreeNode.prototype.findChild = function (name) {
  */
 RapidContext.Widget.TreeNode.prototype.findByPath = function (path) {
     var node = this;
-
     for (var i = 0; node != null && path != null && i < path.length; i++) {
         node = node.findChild(path[i]);
     }
@@ -384,8 +359,10 @@ RapidContext.Widget.TreeNode.prototype.expand = function () {
     }
     var container = this._containerNode();
     if (container != null && !this.isExpanded()) {
-        var imgNode = this.firstChild.firstChild;
-        imgNode.setAttrs({ ref: "MINUS" });
+        this.firstChild.childNodes[0].setAttrs({ "class": "fa fa-fw fa-minus-square-o" });
+        if (!this.attributes.icon) {
+            this.firstChild.childNodes[1].setAttrs({ "class": "fa fa-fw fa-folder-open-o" });
+        }
         MochiKit.DOM.removeElementClass(container, "widgetHidden");
         var tree = this.tree();
         if (tree != null) {
@@ -418,8 +395,10 @@ RapidContext.Widget.TreeNode.prototype.expandAll = function (depth) {
 RapidContext.Widget.TreeNode.prototype.collapse = function () {
     var container = this._containerNode();
     if (container != null && this.isExpanded()) {
-        var imgNode = this.firstChild.firstChild;
-        imgNode.setAttrs({ ref: "PLUS" });
+        this.firstChild.childNodes[0].setAttrs({ "class": "fa fa-fw fa-plus-square-o" });
+        if (!this.attributes.icon) {
+            this.firstChild.childNodes[1].setAttrs({ "class": "fa fa-fw fa-folder-o" });
+        }
         MochiKit.DOM.addElementClass(container, "widgetHidden");
         var tree = this.tree();
         if (tree != null) {
