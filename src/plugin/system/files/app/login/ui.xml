@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <ui class="login-app">
-  <Dialog id="loginDialog" title="Login" system="true" closeable="false" resizeable="false" style="width: 450px;">
-    <Form id="loginForm">
+  <Dialog id="loginDialog" title="Login" system="true" closeable="false" resizeable="false" style="width: 25rem;">
+    <Form id="loginForm" class="-box-border">
       <div id="loginError" class="error hidden">
       </div>
       <div id="loginWarning" class="warning hidden">
         You are currently logged in as <strong id="loginName">Name</strong>.
         Please login as a user with access to this application.
       </div>
-      <table w="100%">
-        <tbody w="100%">
+      <table class="w-100">
+        <tbody>
           <tr>
-            <th class="label" style="width: 130px; padding: 1em 0.5em; text-align: right;">Login / Email:</th>
-            <td style="padding-top: 0.5em;" w="100%-140">
-              <TextField id="loginUser" name="user" required="true" w="100%-10" />
-              <FormValidator name="user" mandatory="false" message="A user name or email is required" style="padding: 3px 0 6px 0;" />
+            <th class="label text-right px-2 py-1" style="width: 9em;">Login / Email:</th>
+            <td class="pb-2">
+              <TextField id="loginUser" name="user" required="true" class="w-100" />
+              <FormValidator name="user" mandatory="false" message="A user name or email is required" class="px-0 pt-1" />
             </td>
           </tr>
           <tr>
-            <th class="label" style="width: 130px; padding: 1em 0.5em; text-align: right;">Password:</th>
-            <td style="padding-top: 0.5em;" w="100%-140">
-              <TextField id="loginPassword" name="password" type="password" w="100%-10" />
+            <th class="label text-right px-2 py-1">Password:</th>
+            <td class="pb-2">
+              <TextField id="loginPassword" name="password" type="password" class="w-100" />
             </td>
           </tr>
         </tbody>
       </table>
-      <div style="margin-top: 1em; text-align: right;">
+      <div class="text-right mt-1">
         <Button id="loginAuth" type="submit" highlight="true" icon="fa fa-lg fa-check">Login</Button>
       </div>
     </Form>
