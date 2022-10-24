@@ -213,16 +213,21 @@ RapidContext.Widget.Pane.prototype._handleEnter = function (opts) {
  *         `false` if it was cancelled (due to validation errors)
  */
 RapidContext.Widget.Pane.prototype._handleExit = function (opts) {
+    function callFirst(obj, methods) {
+        for (var i = 0; i < methods.length; i++) {
+            var k = methods[i];
+            if (typeof(obj[k]) === "function") {
+                return obj[k]();
+            }
+        }
+        return undefined;
+    }
     opts = MochiKit.Base.update({ hide: true, validate: false }, opts);
     if (MochiKit.Base.bool(opts.validate)) {
         var forms = this.getElementsByTagName("FORM");
         for (var i = 0; i < forms.length; i++) {
-            if (typeof(forms[i].validate) == "function") {
-                var res = forms[i].validate();
-                // TODO: handle MochiKit.Async.Deferred?
-                if (!res) {
-                    return false;
-                }
+            if (callFirst(forms[i], ["validate", "checkValidity"]) === false) {
+                return false;
             }
         }
     }
