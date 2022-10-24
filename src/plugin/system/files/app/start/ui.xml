@@ -147,8 +147,6 @@
       <p>This software would not be possible without the following software libraries;<br/>
       &#187; <a href="https://mochi.github.io/mochikit/" target="_blank">MochiKit</a>,
       copyright &#169; Bob Ippolito,<br/>
-      &#187; <a href="http://www.liquidx.net/plotkit/" target="_blank">PlotKit</a>,
-      copyright &#169; Alastair Tse,<br/>
       &#187; <a href="http://jquery.com/" target="_blank">jQuery</a>,
       copyright &#169; jQuery Foundation, Inc,<br/>
       &#187; <a href="http://code.google.com/p/crypto-js" target="_blank">Crypto-JS</a>,

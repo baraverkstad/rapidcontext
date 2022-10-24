@@ -70,5 +70,4 @@ test-js:
 	npx eslint 'src/plugin/**/*.js' \
 		--ignore-pattern 'src/plugin/legacy/**/*.js' \
 		--ignore-pattern '**/*.min.js' \
-		--ignore-pattern '**/MochiKit.js' \
-		--ignore-pattern '**/PlotKit.js'
+		--ignore-pattern '**/MochiKit.js'
