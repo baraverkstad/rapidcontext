@@ -8,6 +8,7 @@ function LoginApp() {
  * Starts the app and initializes the UI.
  */
 LoginApp.prototype.start = function () {
+    MochiKit.Signal.connect(this.ui.loginForm, "onvalidate", this.ui.loginDialog, "resizeToContent");
     MochiKit.Signal.connect(this.ui.loginForm, "onsubmit", this, "_loginAuth");
     var user = RapidContext.App.user();
     if (user && user.id) {
@@ -29,18 +30,11 @@ LoginApp.prototype.stop = function () {
  * Shows the login authentication dialog.
  */
 LoginApp.prototype._loginAuth = function () {
-    if (this.ui.loginAuth.disabled) {
-        // Call already in progress
-    } else if (this.ui.loginForm.validate()) {
-        this.ui.loginAuth.setAttrs({ disabled: true, icon: "LOADING" });
-        var data = this.ui.loginForm.valueMap();
-        RapidContext.App.login($.trim(data.user), data.password)
-            .then(window.location.reload.bind(window.location))
-            .catch(this._loginError.bind(this));
-    } else {
-        this.ui.loginUser.focus();
-    }
-    this.ui.loginDialog.resizeToContent();
+    this.ui.loginAuth.setAttrs({ disabled: true, icon: "LOADING" });
+    var data = this.ui.loginForm.valueMap();
+    RapidContext.App.login($.trim(data.user), data.password)
+        .then(window.location.reload.bind(window.location))
+        .catch(this._loginError.bind(this));
 };
 
 /**

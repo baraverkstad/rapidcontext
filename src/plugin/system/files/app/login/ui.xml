@@ -14,8 +14,8 @@
           <tr>
             <th class="label" style="width: 130px; padding: 1em 0.5em; text-align: right;">Login / Email:</th>
             <td style="padding-top: 0.5em;" w="100%-140">
-              <TextField id="loginUser" name="user" w="100%-10" />
-              <FormValidator name="user" mandatory="true" message="A user name or email is required" style="padding: 3px 0 6px 0;" />
+              <TextField id="loginUser" name="user" required="true" w="100%-10" />
+              <FormValidator name="user" mandatory="false" message="A user name or email is required" style="padding: 3px 0 6px 0;" />
             </td>
           </tr>
           <tr>
