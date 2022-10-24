@@ -58,6 +58,9 @@ StartApp.prototype.start = function () {
     MochiKit.Signal.connect(this.ui.passwordForm, "onvalidate", this.ui.passwordDialog, "resizeToContent");
     MochiKit.Signal.connect(this.ui.passwordForm, "onsubmit", this, "_changePassword");
     MochiKit.Signal.connect(this.proc.changePassword, "onresponse", this, "_changePasswordCallback");
+    this.ui.passwordForm.addValidator("passwordcheck", function (value, field, form) {
+        return value === form.elements["password"].value;
+    });
 
     // Login dialog
     MochiKit.Signal.connect(this.ui.loginCancel, "onclick", this.ui.loginDialog, "hide");
@@ -321,18 +324,12 @@ StartApp.prototype._showPasswordDialog = function () {
  */
 StartApp.prototype._changePassword = function () {
     var data = this.ui.passwordForm.valueMap();
-    if (data.password != data.passwordcheck) {
-        data.passwordcheck = "";
-        this.ui.passwordForm.update(data);
-        this.ui.passwordForm.validate();
-    } else {
-        var user = RapidContext.App.user();
-        var prefix = user.id + ":" + user.realm + ":";
-        var oldHash = CryptoJS.MD5(prefix + data.current).toString();
-        var newHash = CryptoJS.MD5(prefix + data.password).toString();
-        this.proc.changePassword(oldHash, newHash);
-        this.ui.passwordSave.setAttrs({ disabled: true, icon: "LOADING" });
-    }
+    var user = RapidContext.App.user();
+    var prefix = user.id + ":" + user.realm + ":";
+    var oldHash = CryptoJS.MD5(prefix + data.current).toString();
+    var newHash = CryptoJS.MD5(prefix + data.password).toString();
+    this.proc.changePassword(oldHash, newHash);
+    this.ui.passwordSave.setAttrs({ disabled: true, icon: "LOADING" });
 };
 
 /**

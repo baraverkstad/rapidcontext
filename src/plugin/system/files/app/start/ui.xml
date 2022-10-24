@@ -67,8 +67,8 @@
           <tr>
             <th class="label text-right px-2 py-1">Confirm Password:</th>
             <td class="pb-2">
-              <TextField name="passwordcheck" type="password" required="true" minlength="5" class="w-100"/>
-              <FormValidator name="passwordcheck" message="Not identical to password above." class="px-0 pt-1" />
+              <TextField name="passwordcheck" type="password" class="w-100"/>
+              <FormValidator name="passwordcheck" mandatory="false"  message="Not identical to password above." class="px-0 pt-1" />
             </td>
           </tr>
         </tbody>
