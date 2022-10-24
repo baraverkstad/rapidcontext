@@ -5,8 +5,6 @@ function HelpApp() {
     this._topics = null;
     this._topicUrls = null;
     this._currentUrl = "";
-    this._historyHead = [];
-    this._historyTail = [];
 }
 
 /**
@@ -16,8 +14,6 @@ HelpApp.prototype.start = function () {
     MochiKit.Signal.connect(this.ui.topicReload, "onclick", this, "loadTopics");
     MochiKit.Signal.connect(this.ui.topicTree, "onexpand", this, "_treeOnExpand");
     MochiKit.Signal.connect(this.ui.topicTree, "onselect", this, "_treeOnSelect");
-    MochiKit.Signal.connect(this.ui.contentPrev, "onclick", this, "_historyBack");
-    MochiKit.Signal.connect(this.ui.contentNext, "onclick", this, "_historyForward");
     MochiKit.Signal.connect(this.ui.contentText, "onclick", this, "_handleClick");
     this.loadTopics();
 };
@@ -115,19 +111,17 @@ HelpApp.prototype.loadTopics = function () {
 HelpApp.prototype._treeInsertChildren = function (parentNode, topic) {
     for (var i = 0; i < topic.children.length; i++) {
         var child = topic.children[i];
-        var icon = { ref: "BOOK_OPEN", tooltip: "Documentation Topic" };
-        if (!child.url) {
-            icon = "FOLDER";
-        } else if (/^https?:/.test(child.url)) {
-            icon = { ref: "BOOK", tooltip: "External Documentation" };
-        } else if (/#/.test(child.url)) {
-            icon = { ref: "TAG_BLUE", tooltip: "Bookmark" };
-        }
         var attrs = {
             name: child.name,
-            folder: (child.children.length > 0),
-            icon: icon
+            folder: (child.children.length > 0)
         };
+        if (/^https?:/.test(child.url)) {
+            attrs.icon = "fa fa-fw fa-external-link-square";
+        } else if (/#/.test(child.url)) {
+            attrs.icon = "fa fa-fw fa-bookmark-o";
+        } else if (child.url) {
+            attrs.icon = "fa fa-fw fa-bookmark";
+        }
         var node = RapidContext.Widget.TreeNode(attrs);
         node.data = child;
         parentNode.addAll(node);
@@ -190,45 +184,6 @@ HelpApp.prototype._treeOnSelect = function () {
 };
 
 /**
- * Moves one step back in history (if possible).
- */
-HelpApp.prototype._historyBack = function () {
-    if (!this.ui.contentPrev.disabled) {
-        this._historyBlockUpdates = true;
-        this._historyHead.push(this._currentUrl);
-        this.loadContent(this._historyTail.pop());
-        this._historyBlockUpdates = false;
-    }
-};
-
-/**
- * Moves one step forward in history (if possible).
- */
-HelpApp.prototype._historyForward = function () {
-    if (!this.ui.contentNext.disabled) {
-        this._historyBlockUpdates = true;
-        this._historyTail.push(this._currentUrl);
-        this.loadContent(this._historyHead.pop());
-        this._historyBlockUpdates = false;
-    }
-};
-
-/**
- * Saves the current URL to the history. Also clears the forward
- * history if not already empty.
- */
-HelpApp.prototype._historySave = function (url) {
-    if (!this._historyBlockUpdates) {
-        this._historyHead = [];
-        if (this._currentUrl) {
-            this._historyTail.push(this._currentUrl);
-        }
-    }
-    this.ui.contentPrev.setAttrs({ disabled: (this._historyTail.length <= 0) });
-    this.ui.contentNext.setAttrs({ disabled: (this._historyHead.length <= 0) });
-};
-
-/**
  * Clears the content view from any loaded topic data.
  */
 HelpApp.prototype.clearContent = function () {
@@ -253,11 +208,9 @@ HelpApp.prototype.loadContent = function (url) {
     if (/https?:/.test(url)) {
         window.open(url);
     } else if (/#.+/.test(url) && this._currentUrl.indexOf(fileUrl) == 0) {
-        this._historySave();
         this._currentUrl = url;
         this._scrollLink(url.replace(/.*#/, ""));
     } else {
-        this._historySave();
         this.clearContent();
         this._currentUrl = url;
         this.ui.contentLoading.show();

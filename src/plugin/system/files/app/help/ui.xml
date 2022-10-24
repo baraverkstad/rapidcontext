@@ -1,24 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <ui>
-  <div w="30%" h="100%" style="float: left; padding-right: 20px;">
+  <div w="30%" h="100%" class="float-left" style="padding-right: 20px;">
     <h3>
       Topics:
-      <Icon id="topicReload" ref="RELOAD" style="margin-left: 3px;" />
+      <Icon id="topicReload" ref="RELOAD" class="ml-1" />
     </h3>
     <Tree id="topicTree" w="100%-2" h="100%-24">
     </Tree>
   </div>
-  <div w="70%-30" h="100%" style="float: left; position: relative;">
+  <div w="70%-30" h="100%" class="float-left position-relative">
     <h3>
       Content:
-      <Icon id="contentPrev" ref="PREVIOUS" disabled="true" tooltip="Back to previous page" style="margin-left: 3px;" />
-      <Icon id="contentNext" ref="NEXT" disabled="true" tooltip="Forward to next page" />
-      <a id="contentLink" href="#" target="doc" class="hidden" style="margin-left: 3px;"><Icon ref="EXPAND" /></a>
-      <Icon id="contentLoading" ref="LOADING" hidden="true" style="margin-left: 3px;" />
+      <a id="contentLink" href="#" target="doc" class="hidden"><Icon class="fa fa-fw fa-external-link-square" /></a>
+      <Icon id="contentLoading" ref="LOADING" hidden="true" class="ml-1" />
     </h3>
     <div id="contentInfo" class="unimportant" style="position: absolute; top: 2px; right: 20px;"></div>
-    <div id="contentScroll" w="100%" h="100%-22" class="doc" style="overflow: auto; position: relative;">
+    <div id="contentScroll" w="100%" h="100%-22" class="doc overflow-auto position-relative">
       <div id="contentText" style="margin-right: 20px;"></div>
       <Pane id="contentLocator" style="position: absolute; left: 0px; top: 0px; width: 8px; height: 150px; z-index: 10; background: #AAAAAA; border-radius: 3px; display: none;"></Pane>
     </div>
