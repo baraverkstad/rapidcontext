@@ -333,7 +333,7 @@
                         err = "communication error or timeout";
                         reject(new AsyncError(opts.method, url, xhr, err, opts.log));
                     } else {
-                        err = "unexpected response code";
+                        err = "unexpected response code/data";
                         reject(new AsyncError(opts.method, url, xhr, err, opts.log));
                     }
                     xhr = null; // Stop duplicate events
