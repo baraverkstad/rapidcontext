@@ -202,6 +202,9 @@ RapidContext.Widget.FormValidator.prototype.addError = function (field, message)
             message = this.message || message;
             var span = null;
             var icon = null;
+            if (!this.display || this.display === "both") {
+                this.addClass("block");
+            }
             if (this.display !== "icon") {
                 span = MochiKit.DOM.SPAN({}, message);
             }

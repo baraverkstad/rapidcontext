@@ -120,9 +120,14 @@
  */
 .widgetFormValidator {
     display: inline-block;
-    padding-left: 0.25rem;
     font-weight: bold;
     color: #c33;
+}
+.widgetFormValidator:not(.block) {
+    padding-left: 0.25rem;
+}
+.widgetFormValidator.block {
+    margin: 0.1rem 0;
 }
 .widgetFormValidator .widgetIcon {
     margin-right: 0.25rem;
