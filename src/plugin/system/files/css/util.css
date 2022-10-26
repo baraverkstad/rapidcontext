@@ -201,6 +201,11 @@
 .float-clear-right {
     clear: right !important;
 }
+.float-container::after {
+    display: block;
+    clear: both;
+    content: " ";
+}
 
 
 /**
