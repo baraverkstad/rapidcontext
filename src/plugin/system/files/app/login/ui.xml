@@ -2,25 +2,25 @@
 
 <ui class="login-app">
   <Dialog id="loginDialog" title="Login" system="true" closeable="false" resizeable="false" style="width: 25rem;">
-    <Form id="loginForm" class="-box-border">
+    <Form id="loginForm">
       <div id="loginError" class="error hidden">
       </div>
       <div id="loginWarning" class="warning hidden">
         You are currently logged in as <strong id="loginName">Name</strong>.
         Please login as a user with access to this application.
       </div>
-      <table class="w-100">
+      <table class="-form-layout-table -box-sizing-border">
         <tbody>
           <tr>
-            <th class="label text-right px-2 py-1" style="width: 9em;">Login / Email:</th>
-            <td class="pb-2">
+            <th class="-form-layout-label">Login / Email:</th>
+            <td class="w-100">
               <TextField id="loginUser" name="user" required="true" class="w-100" />
-              <FormValidator name="user" mandatory="false" message="A user name or email is required" class="px-0 pt-1" />
+              <FormValidator name="user" mandatory="false" message="A user name or email is required" />
             </td>
           </tr>
           <tr>
-            <th class="label text-right px-2 py-1">Password:</th>
-            <td class="pb-2">
+            <th class="-form-layout-label">Password:</th>
+            <td>
               <TextField id="loginPassword" name="password" type="password" class="w-100" />
             </td>
           </tr>

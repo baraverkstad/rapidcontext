@@ -47,28 +47,28 @@
     <div id="menuLogInOut" class="widgetPopupItem">Login</div>
   </Popup>
   <Dialog id="passwordDialog" title="Change Password" system="true" resizeable="false" style="width: 25rem;">
-    <Form id="passwordForm" class="-box-border">
-      <table class="w-100">
+    <Form id="passwordForm">
+      <table class="-form-layout-table -box-sizing-border">
         <tbody>
           <tr>
-            <th class="label text-right px-2 py-1" style="width: 11em;">Current Password:</th>
-            <td class="pb-2">
-              <TextField id="passwordCurrent" name="current" type="password" class="w-100"/>
-              <FormValidator id="passwordError" name="current" mandatory="false" class="px-0 pt-1" />
+            <th class="-form-layout-label">Current Password:</th>
+            <td class="w-100">
+              <TextField id="passwordCurrent" name="current" type="password" class="w-100" />
+              <FormValidator id="passwordError" name="current" mandatory="false" />
             </td>
           </tr>
           <tr>
-            <th class="label text-right px-2 py-1">New Password:</th>
-            <td class="pb-2">
-              <TextField name="password" type="password" required="true" minlength="5" class="w-100"/>
-              <FormValidator name="password" regex=".{5,}" message="Minimum length is 5 characters." class="px-0 pt-1" />
+            <th class="-form-layout-label">New Password:</th>
+            <td>
+              <TextField name="password" type="password" required="true" minlength="5" class="w-100" />
+              <FormValidator name="password" regex=".{5,}" message="Minimum length is 5 characters." />
             </td>
           </tr>
           <tr>
-            <th class="label text-right px-2 py-1">Confirm Password:</th>
-            <td class="pb-2">
-              <TextField name="passwordcheck" type="password" class="w-100"/>
-              <FormValidator name="passwordcheck" mandatory="false"  message="Not identical to password above." class="px-0 pt-1" />
+            <th class="-form-layout-label">Confirm Password:</th>
+            <td>
+              <TextField name="passwordcheck" type="password" class="w-100" />
+              <FormValidator name="passwordcheck" mandatory="false"  message="Not identical to password above." />
             </td>
           </tr>
         </tbody>
@@ -84,21 +84,21 @@
     </Form>
   </Dialog>
   <Dialog id="loginDialog" title="Login" system="true" resizeable="false" style="width: 22rem;">
-    <Form id="loginForm" class="-box-border">
-      <table class="w-100">
+    <Form id="loginForm">
+      <table class="-form-layout-table -box-sizing-border">
         <tbody>
           <tr>
-            <th class="label text-right px-2 py-1" style="width: 8em;">Login / Email:</th>
-            <td class="pb-2">
+            <th class="-form-layout-label">Login / Email:</th>
+            <td class="w-100">
               <TextField id="loginUser" name="user" required="true" class="w-100" />
-              <FormValidator name="user" mandatory="true" message="A user name is required" class="px-0 pt-1" />
+              <FormValidator name="user" mandatory="true" message="A user name is required" />
             </td>
           </tr>
           <tr>
-            <th class="label text-right px-2 py-1">Password:</th>
-            <td class="pb-2">
+            <th class="-form-layout-label">Password:</th>
+            <td>
               <TextField id="loginPassword" name="password" type="password" class="w-100" />
-              <FormValidator id="loginPasswordError" name="password" mandatory="false" class="px-0 pt-1" />
+              <FormValidator id="loginPasswordError" name="password" mandatory="false" />
             </td>
           </tr>
         </tbody>

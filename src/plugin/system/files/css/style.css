@@ -119,23 +119,6 @@ nav li + li::before {
 
 
 /**
- * Internal box sizing helpers
- */
-.-box-border,
-.-box-border *,
-.-box-border *::after,
-.-box-border *::before {
-    box-sizing: border-box;
-}
-.-box-content,
-.-box-content *,
-.-box-content *::after,
-.-box-content *::before {
-    box-sizing: content-box;
-}
-
-
-/**
  * Adjustments for small screens, print, etc
  */
 @media screen and (max-width: 400px) {
@@ -146,6 +129,50 @@ nav li + li::before {
 }
 p, ol, ul, dl {
     page-break-inside: avoid;
+}
+
+
+/**
+ * Internal box sizing helpers
+ */
+.-box-sizing-border,
+.-box-sizing-border *,
+.-box-sizing-border *::after,
+.-box-sizing-border *::before {
+    box-sizing: border-box;
+}
+.-box-sizing-content,
+.-box-sizing-content *,
+.-box-sizing-content *::after,
+.-box-sizing-content *::before {
+    box-sizing: content-box;
+}
+
+
+/***
+ **  Internal form layout styles
+ */
+table.-form-layout-table {
+    width: 100%;
+}
+table.-form-layout-table th {
+    padding: 0 0.5rem 0.5rem 0.5rem;
+    font-weight: 600;
+    white-space: nowrap;
+    color: #0008;
+    text-align: right;
+}
+table.-form-layout-table td {
+    padding: 0 0 0.5rem 0;
+}
+.-form-layout-label {
+    padding-top: calc(0.2em + 1px) !important;
+}
+.-form-layout-table button,
+.-form-layout-table input,
+.-form-layout-table textarea,
+.-form-layout-table select {
+    margin: 0;
 }
 
 
