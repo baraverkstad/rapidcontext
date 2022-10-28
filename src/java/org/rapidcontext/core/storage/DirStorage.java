@@ -211,6 +211,7 @@ public class DirStorage extends Storage {
                 LOG.warning(msg);
                 throw new StorageException(msg);
             }
+            remove(path.sibling(objectName));
         }
         dir.mkdirs();
         if (!tmp.renameTo(file)) {
