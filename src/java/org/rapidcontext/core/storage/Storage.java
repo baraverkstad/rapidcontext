@@ -103,37 +103,39 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
     private static long lastMountTime = 0L;
 
     /**
-     * Checks if the specified path may have been serialized into a
-     * filename. The check is performed by attempting to add the
-     * supported data file extensions to see if one of them matches.
+     * Checks if a path has been serialized into a filename. This checks
+     * that the filename has a supported data format extension and that
+     * the extension isn't used in the path (in which case data should
+     * be returned as binary).
      *
      * @param path           the storage path
      * @param filename       the filename or file path to check
      *
-     * @return true if the path may have been serialized, or
+     * @return true if the filename has a supported extension, or
      *         false otherwise
      */
     protected static boolean isSerialized(Path path, String filename) {
-        return !StringUtils.endsWith(filename, path.name()) &&
-               isSerializedFormat(filename);
+        String name = removeExt(filename);
+        return !name.equals(filename) &&
+               StringUtils.endsWithIgnoreCase(name, path.name());
     }
 
     /**
-     * Checks if the specified filename has a supported serialized
-     * data format.
+     * Removes a supported data format file extension (if found).
      *
      * @param filename       the filename or file path to check
      *
-     * @return true if file format is supported, or
-     *         false otherwise
+     * @return the filename without extension, or
+     *         the same filename if none was found
      */
-    protected static boolean isSerializedFormat(String filename) {
+    public static String removeExt(String filename) {
         for (String ext : EXT_ALL) {
-            if (StringUtils.endsWithIgnoreCase(filename, ext)) {
-                return true;
+            String str = StringUtils.removeEndIgnoreCase(filename, ext);
+            if (str != filename) {
+                return str;
             }
         }
-        return false;
+        return filename;
     }
 
     /**

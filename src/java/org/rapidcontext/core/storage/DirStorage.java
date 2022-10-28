@@ -83,12 +83,10 @@ public class DirStorage extends Storage {
      *         null if not found
      */
     public Metadata lookup(Path path) {
-        File  file;
-
         if (PATH_STORAGEINFO.equals(path)) {
             return new Metadata(Dict.class, path, path(), null, mountTime());
         }
-        file = locateFile(path);
+        File file = locateFile(path);
         if (file == null) {
             return null;
         }
@@ -115,13 +113,10 @@ public class DirStorage extends Storage {
      *         null if not found
      */
     public Object load(Path path) {
-        File    file;
-        String  msg;
-
         if (PATH_STORAGEINFO.equals(path)) {
             return dict;
         }
-        file = locateFile(path);
+        File file = locateFile(path);
         if (file == null) {
             return null;
         } else if (path.isIndex()) {
@@ -143,7 +138,7 @@ public class DirStorage extends Storage {
             try (InputStream is = new FileInputStream(file)) {
                 return unserialize(file.getName(), is);
             } catch (IOException e) {
-                msg = "failed to read file " + file.toString();
+                String msg = "failed to read file " + file.toString();
                 LOG.log(Level.SEVERE, msg, e);
                 return null;
             }
@@ -198,10 +193,11 @@ public class DirStorage extends Storage {
         } else if (data instanceof File) {
             tmp = (File) data;
         } else {
-            if (isSerializedFormat(path.name())) {
-                file = new File(dir, path.name());
-            } else {
+            String objectName = removeExt(path.name());
+            if (objectName.equals(path.name())) {
                 file = new File(dir, path.name() + EXT_PROPERTIES);
+            } else {
+                file = new File(dir, path.name());
             }
             try {
                 tmp = FileUtil.tempFile(file.getName());
@@ -234,19 +230,16 @@ public class DirStorage extends Storage {
      * @throws StorageException if the data couldn't be removed
      */
     public void remove(Path path) throws StorageException {
-        String  msg;
-        File    file;
-
         if (!isReadWrite()) {
-            msg = "cannot remove from read-only storage at " + path();
+            String msg = "cannot remove from read-only storage at " + path();
             LOG.warning(msg);
             throw new StorageException(msg);
         } else if (PATH_STORAGEINFO.equals(path)) {
-            msg = "storage info is read-only: " + path;
+            String msg = "storage info is read-only: " + path;
             LOG.warning(msg);
             throw new StorageException(msg);
         }
-        file = locateFile(path);
+        File file = locateFile(path);
         if (file != null) {
             try {
                 if (path.isRoot()) {
@@ -256,7 +249,7 @@ public class DirStorage extends Storage {
                     FileUtil.deleteEmptyDirs(dir());
                 }
             } catch (IOException e) {
-                msg = "failed to remove " + file + ": " + e.getMessage();
+                String msg = "failed to remove " + file + ": " + e.getMessage();
                 LOG.warning(msg);
                 throw new StorageException(msg);
             }
