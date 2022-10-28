@@ -519,7 +519,7 @@ public class StorageWebService extends WebService {
                 if (StringUtils.endsWithIgnoreCase(path.name(), ext)) {
                     String name = StringUtils.removeEndIgnoreCase(path.name(), ext);
                     boolean isIndex = StringUtils.equalsIgnoreCase(name, "index");
-                    path = isIndex ? path.parent() : path.parent().child(name, false);
+                    path = isIndex ? path.parent() : path.sibling(name);
                     meta = storage.lookup(path);
                     break;
                 }

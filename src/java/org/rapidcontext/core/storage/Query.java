@@ -134,7 +134,7 @@ public class Query {
                     for (String ext : Storage.EXT_ALL) {
                         if (StringUtils.endsWithIgnoreCase(name, ext)) {
                             name = StringUtils.removeEndIgnoreCase(name, ext);
-                            path = idx.hasObject(name) ? null : path.parent().child(name, false);
+                            path = idx.hasObject(name) ? null : path.sibling(name);
                             break;
                         }
                     }

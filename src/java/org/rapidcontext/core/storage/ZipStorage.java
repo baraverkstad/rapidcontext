@@ -250,7 +250,7 @@ public class ZipStorage extends Storage {
         Object obj = entries.get(path);
         if (obj == null && !path.isIndex()) {
             for (String ext : EXT_ALL) {
-                obj = entries.get(path.parent().child(path.name() + ext, false));
+                obj = entries.get(path.sibling(path.name() + ext));
                 if (obj != null) {
                     break;
                 }

@@ -298,7 +298,7 @@ public class Path {
      * @return a new path to the parent index
      */
     public Path parent() {
-        return isRoot() ? ROOT : parent;
+        return isRoot() ? ROOT : this.parent;
     }
 
     /**
@@ -311,6 +311,17 @@ public class Path {
      */
     public Path child(String name, boolean isIndex) {
         return new Path(this, name, isIndex);
+    }
+
+    /**
+     * Creates a new path to a sibling index or object.
+     *
+     * @param name           the sibling name
+     *
+     * @return a new path to a sibling index or object
+     */
+    public Path sibling(String name) {
+        return parent().child(name, this.index);
     }
 
     /**
