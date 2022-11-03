@@ -479,24 +479,18 @@ RapidContext.Util.blurAll = function (node) {
 };
 
 /**
- * Registers algebraic constraints for the element width, height and/or aspect
- * ratio. The constraints may either be fixed numeric values, functions or
- * algebraic formulas (in a string).
+ * Registers size constraints for the element width and/or height. The
+ * constraints may either be fixed numeric values or simple arithmetic (in a
+ * string). The formulas will be converted to CSS calc() expressions.
  *
- * The formulas will be converted to JavaScript functions, replacing any "%"
- * character with a reference to the corresponding parent dimension value (i.e.
- * the parent element width, height or aspect ratio as a percentage). It is
- * also possible to directly reference the parent values as `w` or `h`.
- *
- * Constraint functions must take two arguments (parent width and height) and
- * return a number. The returned number is set as the new element width or
- * height (in pixels). Any returned value will also be bounded by the parent
- * element size to avoid calculation errors.
+ * Legacy constraint functions are still supported and must take two arguments
+ * (parent width and height) and should return a number. The returned number is
+ * set as the new element width or height (in pixels). Any returned value will
+ * also be bounded by the parent element size to avoid calculation errors.
  *
  * @param {Object} node the HTML DOM node
- * @param {Number/Function/String} [width] the width constraint
- * @param {Number/Function/String} [height] the height constraint
- * @param {Number/Function/String} [aspect] the aspect ratio constraint
+ * @param {Number/String/Function} [width] the width constraint
+ * @param {Number/String/Function} [height] the height constraint
  *
  * @see RapidContext.Util.resizeElements
  *
@@ -505,47 +499,31 @@ RapidContext.Util.blurAll = function (node) {
  * ==> Sets width to 50%-20 px and height to 100% of parent dimension
  *
  * @example
- * RapidContext.Util.registerSizeConstraints(otherNode, null, null, 1.0);
- * ==> Ensures a square aspect ratio
- *
- * @example
  * RapidContext.Util.resizeElements(node, otherNode);
  * ==> Evaluates the size constraints for both nodes
  */
-RapidContext.Util.registerSizeConstraints = function (node, width, height, aspect) {
-    function buildFunction(formula, percentageFormula) {
-        /* eslint no-new-func: "off" */
-        var code = "return " + formula.replace(/%/g, percentageFormula) + ";";
-        return new Function("w", "h", code);
+RapidContext.Util.registerSizeConstraints = function (node, width, height) {
+    function toCSS(val) {
+        if (/[+-]/.test(val)) {
+            val = "calc( " + val.replace(/[+-]/g, " $& ") + " )";
+        }
+        val = val.replace(/(\d)( |$)/g, "$1px$2");
+        return val;
     }
     node = MochiKit.DOM.getElement(node);
-    var sc = node.sizeConstraints = { w: null, h: null, a: null };
-    if (typeof(width) == "number") {
-        sc.w = function (w, h) {
-            return width;
-        };
+    if (typeof(width) == "number" || typeof(width) == "string") {
+        node.style.width = toCSS(String(width));
     } else if (typeof(width) == "function") {
-        sc.w = width;
-    } else if (typeof(width) == "string") {
-        sc.w = buildFunction(width, "*0.01*w");
+        console.info("registerSizeConstraints: width function support will be removed", node);
+        node.sizeConstraints = node.sizeConstraints || { w: null, h: null };
+        node.sizeConstraints.w = width;
     }
-    if (typeof(height) == "number") {
-        sc.h = function (w, h) {
-            return height;
-        };
+    if (typeof(height) == "number" || typeof(height) == "string") {
+        node.style.height = toCSS(String(height));
     } else if (typeof(height) == "function") {
-        sc.h = height;
-    } else if (typeof(height) == "string") {
-        sc.h = buildFunction(height, "*0.01*h");
-    }
-    if (typeof(aspect) == "number") {
-        sc.a = function (w, h) {
-            return aspect;
-        };
-    } else if (typeof(aspect) == "function") {
-        sc.a = aspect;
-    } else if (typeof(aspect) == "string") {
-        sc.a = buildFunction(aspect, "*0.01*w/h");
+        console.info("registerSizeConstraints: height function support will be removed", node);
+        node.sizeConstraints = node.sizeConstraints || { w: null, h: null };
+        node.sizeConstraints.h = height;
     }
 };
 
@@ -578,12 +556,9 @@ RapidContext.Util.registerSizeConstraints = function (node, width, height, aspec
  * ==> Assigns a no-op child resize handler to elem
  */
 RapidContext.Util.resizeElements = function (/* ... */) {
-    var args = MochiKit.Base.flattenArray(arguments);
-    for (var i = 0; i < args.length; i++) {
-        var node = MochiKit.DOM.getElement(args[i]);
-        if (node != null && node.nodeType === 1 && // Node.ELEMENT_NODE
-            node.parentNode != null && node.sizeConstraints != null) {
-
+    Array.prototype.slice.call(arguments).forEach(function (arg) {
+        var node = MochiKit.DOM.getElement(arg);
+        if (node && node.nodeType === 1 && node.parentNode && node.sizeConstraints) {
             var ref = { w: node.parentNode.w, h: node.parentNode.h };
             if (ref.w == null && ref.h == null) {
                 ref = MochiKit.Style.getElementDimensions(node.parentNode, true);
@@ -593,22 +568,20 @@ RapidContext.Util.resizeElements = function (/* ... */) {
             node.w = dim.w;
             node.h = dim.h;
         }
-        if (node != null && typeof(node.resizeContent) == "function") {
+        if (node && typeof(node.resizeContent) == "function") {
             try {
                 node.resizeContent();
             } catch (e) {
-                RapidContext.Log.error("Error in resizeContent()", node, e);
+                console.error("Error in resizeContent()", node, e);
             }
-        } else {
-            node = node.firstChild;
-            while (node != null) {
-                if (node.nodeType === 1) { // Node.ELEMENT_NODE
-                    RapidContext.Util.resizeElements(node);
+        } else if (node && node.childNodes) {
+            Array.prototype.slice.call(node.childNodes).forEach(function (child) {
+                if (child.nodeType === 1) {
+                    RapidContext.Util.resizeElements(child);
                 }
-                node = node.nextSibling;
-            }
+            });
         }
-    }
+    });
 };
 
 /**
@@ -624,43 +597,21 @@ RapidContext.Util.resizeElements = function (/* ... */) {
  *         constraint values (some may be null)
  */
 RapidContext.Util._evalConstraints = function (sc, ref) {
-    var log = MochiKit.Logging.logError;
-    var w, h, a;
+    var w, h;
     if (typeof(sc.w) == "function") {
         try {
             w = Math.max(0, Math.min(ref.w, sc.w(ref.w, ref.h)));
         } catch (e) {
-            log("Error evaluating width size constraint; " +
-                "w: " + ref.w + ", h: " + ref.h, e);
+            console.error("Error evaluating width size constraint; " +
+                          "w: " + ref.w + ", h: " + ref.h, e);
         }
     }
     if (typeof(sc.h) == "function") {
         try {
             h = Math.max(0, Math.min(ref.h, sc.h(ref.w, ref.h)));
         } catch (e) {
-            log("Error evaluating height size constraint; " +
-                "w: " + ref.w + ", h: " + ref.h, e);
-        }
-    }
-    if (typeof(sc.a) == "function") {
-        try {
-            a = sc.a(ref.w, ref.h);
-            w = w || ref.w;
-            h = h || ref.h;
-            if (h * a > ref.w) {
-                h = ref.w / a;
-            }
-            if (w / a > ref.h) {
-                w = ref.h * a;
-            }
-            if (w > h * a) {
-                w = h * a;
-            } else {
-                h = w / a;
-            }
-        } catch (e) {
-            log("Error evaluating aspect size constraint; " +
-                "w: " + ref.w + ", h: " + ref.h, e);
+            console.error("Error evaluating height size constraint; " +
+                          "w: " + ref.w + ", h: " + ref.h, e);
         }
     }
     if (w != null) {

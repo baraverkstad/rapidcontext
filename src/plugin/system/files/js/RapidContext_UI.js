@@ -106,7 +106,7 @@ RapidContext.UI._buildUIElem = function (node, ids) {
         return null;
     }
     var attrs = RapidContext.Util.dict(RapidContext.Util.attributeArray(node));
-    var locals = RapidContext.Util.mask(attrs, ["id", "w", "h", "a"]);
+    var locals = RapidContext.Util.mask(attrs, ["id", "w", "h"]);
     var children = RapidContext.UI.buildUI(node.childNodes, ids);
     var widget;
     if (RapidContext.Widget.Classes[name]) {
@@ -127,8 +127,8 @@ RapidContext.UI._buildUIElem = function (node, ids) {
             widget.id = locals.id;
         }
     }
-    if (locals.w || locals.h || locals.a) {
-        RapidContext.Util.registerSizeConstraints(widget, locals.w, locals.h, locals.a);
+    if (locals.w || locals.h) {
+        RapidContext.Util.registerSizeConstraints(widget, locals.w, locals.h);
     }
     return widget;
 };

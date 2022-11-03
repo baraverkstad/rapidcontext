@@ -358,12 +358,12 @@ interpreted as follows:</p>
       (similar to HTML). Note that widgets have additional CSS classes,
       potentially causing conflicts with specific style settings (see
       below).</li>
-  <li><strong>The <q><var>w</var></q>, <q><var>h</var></q> &amp;
-      <q><var>a</var></q> Attributes</strong>&mdash; The attributes
-      <q><var>w</var></q>, <q><var>h</var></q> and <q><var>a</var></q> are used
-      in a call to <var>RapidContext.Util.registerSizeConstraints()</var>. This
-      sets up a JavaScript function for the node that will calculate the
-      appropriate size and/or aspect ratio whenever
+  <li><strong>The <q><var>w</var></q> &amp; <q><var>h</var></q>
+      Attributes</strong>&mdash; The attributes <q><var>w</var></q> and
+      <q><var>h</var></q> are used in a call to
+      <var>RapidContext.Util.registerSizeConstraints()</var>. This
+      sets up either a CSS <var>calc(...)</var> style or a JavaScript function
+      for the node that will calculate the appropriate size whenever
       <var>RapidContext.Util.resizeElements()</var> is called (handled
       automatically on window resize).</li>
   <li><strong>Other Attributes</strong> &mdash; Other XML attributes are
