@@ -515,14 +515,14 @@ RapidContext.Util.registerSizeConstraints = function (node, width, height) {
         node.style.width = toCSS(String(width));
     } else if (typeof(width) == "function") {
         console.info("registerSizeConstraints: width function support will be removed", node);
-        node.sizeConstraints = node.sizeConstraints || { w: null, h: null };
+        node.sizeConstraints = node.sizeConstraints || { w: null, h: null };
         node.sizeConstraints.w = width;
     }
     if (typeof(height) == "number" || typeof(height) == "string") {
         node.style.height = toCSS(String(height));
     } else if (typeof(height) == "function") {
         console.info("registerSizeConstraints: height function support will be removed", node);
-        node.sizeConstraints = node.sizeConstraints || { w: null, h: null };
+        node.sizeConstraints = node.sizeConstraints || { w: null, h: null };
         node.sizeConstraints.h = height;
     }
 };
