@@ -387,7 +387,7 @@ AdminApp.prototype._updateConnectionEdit = function () {
         MochiKit.DOM.replaceChildNodes(this.ui.cxnEditTypeDescr);
     }
     for (var name in data) {
-        var val = MochiKit.Format.strip(data[name]);
+        var val = data[name].trim();
         if (!/^_/.test(name) && !(name in props) && !(name in hiddenProps) && val) {
             props[name] = {
                 name: name,
@@ -477,7 +477,7 @@ AdminApp.prototype._storeConnection = function () {
         var prevData = this.ui.cxnEditDialog.data;
         var path = "connection/" + data.id;
         for (var name in data) {
-            var value = MochiKit.Format.strip(data[name]);
+            var value = data[name].trim();
             if (/^_/.test(name) || value == "") {
                 delete data[name];
             }
@@ -994,7 +994,7 @@ AdminApp.prototype._renderProcEdit = function () {
 AdminApp.prototype._addProcBinding = function () {
     var data = this.ui.procEditDialog.data;
     var type = this.ui.procEditAddType.value;
-    var name = MochiKit.Format.strip(this.ui.procEditAddName.getValue());
+    var name = this.ui.procEditAddName.getValue().trim();
     if (name == "") {
         RapidContext.UI.showError("Procedure binding name cannot be empty.");
         this.ui.procEditAddName.focus();
@@ -1041,7 +1041,7 @@ AdminApp.prototype._updateProcEdit = function () {
     }
     for (k in data.bindings) {
         b = data.bindings[k];
-        var v = MochiKit.Format.strip(b.value);
+        var v = b.value.trim();
         if (defaults[k] == null && v == "" && b.description != "") {
             delete data.bindings[k];
         }
@@ -1242,7 +1242,9 @@ AdminApp.prototype._createBatch = function () {
                     return;
                 }
             } else {
-                value = MochiKit.Base.map(MochiKit.Format.strip, value.split("\n"));
+                value = value.split("\n").map(function (s) {
+                    return s.trim();
+                });
                 if (value.length <= 1) {
                     value = value[0];
                 }

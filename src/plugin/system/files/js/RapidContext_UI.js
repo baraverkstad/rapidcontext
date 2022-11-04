@@ -78,7 +78,7 @@ RapidContext.UI.buildUI = function (node, ids) {
     } else if (node.nodeType === 3 || node.nodeType === 4) {
         // Node.TEXT_NODE or Node.CDATA_SECTION_NODE
         var str = node.nodeValue;
-        if (str && MochiKit.Format.strip(str) && node.nodeType === 3) {
+        if (str && str.trim() && node.nodeType === 3) {
             return RapidContext.Util.createTextNode(str.replace(/\s+/g, " "));
         } else if (str && node.nodeType === 4) {
             return RapidContext.Util.createTextNode(str);
@@ -150,7 +150,7 @@ RapidContext.UI._buildUIStylesheet = function (css) {
             var rules = parts[i].split(/\s*,\s*/);
             var styles = parts[i + 1];
             for (var j = 0; j < rules.length; j++) {
-                var rule = MochiKit.Format.strip(rules[j].replace(/\s+/, " "));
+                var rule = rules[j].replace(/\s+/, " ").trim();
                 style.styleSheet.addRule(rule, styles);
             }
         }

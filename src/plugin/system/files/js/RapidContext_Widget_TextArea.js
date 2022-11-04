@@ -107,18 +107,15 @@ RapidContext.Widget.TextArea.prototype.reset = function () {
 
 /**
  * Returns the text area value. This function is slightly different from using
- * the `value` property directly, since it will always return the actual value
- * instead of the temporary help text displayed when the text area is empty and
- * unfocused.
+ * the `value` property directly, since it will attempt to normalize newlines
+ * in the value.
  *
  * @return {String} the field value
  *
  * @example
- * var value = field.getValue();
- * var lines = value.split("\n");
- * lines = MochiKit.Base.map(MochiKit.Format.strip, lines);
- * value = lines.join("\n");
- * field.setAttrs({ "value": value });
+ * var str = field.getValue();
+ * var lines = str.split("\n").map((s) => s.trim());
+ * field.setAttrs({ "value": lines.join("\n") });
  */
 RapidContext.Widget.TextArea.prototype.getValue = function () {
     var str = this.value;

@@ -275,9 +275,9 @@ RapidContext.Widget.prototype.setAttrs = function (attrs) {
                 var parts = value.split(";");
                 for (var i = 0; i < parts.length; i++) {
                     var a = parts[i].split(":");
-                    var k = MochiKit.Format.strip(a[0]);
+                    var k = a[0].trim();
                     if (k != "" && a.length > 1) {
-                        styles[k] = MochiKit.Format.strip(a[1]);
+                        styles[k] = a[1].trim();
                     }
                 }
                 value = styles;
