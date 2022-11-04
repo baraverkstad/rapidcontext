@@ -48,14 +48,14 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * @extends RapidContext.Widget
  *
  * @example {JavaScript}
- * var field = RapidContext.Widget.TextField({ name: "name", helpText: "Your Name Here" });
+ * var field = RapidContext.Widget.TextField({ name: "name", placeholder: "Your Name Here" });
  * var attrs = { name: "name", message: "Please enter your name to proceed." };
  * var valid = RapidContext.Widget.FormValidator(attrs);
  * var exampleForm = RapidContext.Widget.Form({}, field, valid);
  *
  * @example {User Interface XML}
  * <Form id="exampleForm">
- *   <TextField name="name" helpText="Your Name Here" />
+ *   <TextField name="name" placeholder="Your Name Here" />
  *   <FormValidator name="name" message="Please enter your name to proceed." />
  * </Form>
  */

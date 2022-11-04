@@ -72,12 +72,12 @@
         <fieldset>
           <legend>Text Fields</legend>
           <TextField />
-          <TextField helpText="Enter a value" />
+          <TextField placeholder="Enter a value" />
         </fieldset>
         <fieldset>
           <legend>Text Areas</legend>
           <TextArea cols="30" rows="3" />
-          <TextArea cols="30" rows="3" helpText="Enter a value" />
+          <TextArea cols="30" rows="3" placeholder="Enter a value" />
         </fieldset>
         <h3 style="padding-top: 15px; border-top: 1px solid #ACF;">Progress Widgets:</h3>
         <fieldset w="100%-20">
@@ -146,7 +146,7 @@
             <hr/>
             <div class="widgetPopupItem widgetPopupDisabled">Disabled Item</div>
           </Popup>
-          <TextField id="popupField" helpText="Focus for popup" style="margin: 0 0 0 10px;"></TextField>
+          <TextField id="popupField" placeholder="Focus for popup" style="margin: 0 0 0 10px;"></TextField>
         </fieldset>
         <fieldset w="100%-20">
           <legend>Dialog</legend>
