@@ -3,6 +3,7 @@
  */
 button,
 .btn {
+    box-sizing: border-box;
     display: inline-block;
     min-width: 1.2em;
     min-height: 1.2em;
@@ -21,9 +22,11 @@ button,
     text-decoration: none !important;
     text-shadow: 0 1px #fff;
     color: #333 !important;
+    /* stylelint-disable property-no-vendor-prefix */
     -moz-user-select: none;
     -ms-user-select: none;
     -webkit-user-select: none;
+    /* stylelint-enable property-no-vendor-prefix */
     user-select: none;
 }
 button:disabled,
