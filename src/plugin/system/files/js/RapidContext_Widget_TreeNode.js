@@ -103,7 +103,7 @@ RapidContext.Widget.TreeNode.prototype._containerNode = function (create) {
         this.appendChild(container);
         this.firstChild.childNodes[0].setAttrs({ "class": "fa fa-fw fa-plus-square-o" });
         if (!this.attributes.icon) {
-            this.firstChild.childNodes[1].setAttrs({ "class": "fa fa-fw fa-folder-o" });
+            this.firstChild.childNodes[1].setAttrs({ "class": "fa fa-fw fa-folder" });
         }
         return container;
     } else {
@@ -361,7 +361,7 @@ RapidContext.Widget.TreeNode.prototype.expand = function () {
     if (container != null && !this.isExpanded()) {
         this.firstChild.childNodes[0].setAttrs({ "class": "fa fa-fw fa-minus-square-o" });
         if (!this.attributes.icon) {
-            this.firstChild.childNodes[1].setAttrs({ "class": "fa fa-fw fa-folder-open-o" });
+            this.firstChild.childNodes[1].setAttrs({ "class": "fa fa-fw fa-folder-open" });
         }
         MochiKit.DOM.removeElementClass(container, "widgetHidden");
         var tree = this.tree();
@@ -397,7 +397,7 @@ RapidContext.Widget.TreeNode.prototype.collapse = function () {
     if (container != null && this.isExpanded()) {
         this.firstChild.childNodes[0].setAttrs({ "class": "fa fa-fw fa-plus-square-o" });
         if (!this.attributes.icon) {
-            this.firstChild.childNodes[1].setAttrs({ "class": "fa fa-fw fa-folder-o" });
+            this.firstChild.childNodes[1].setAttrs({ "class": "fa fa-fw fa-folder" });
         }
         MochiKit.DOM.addElementClass(container, "widgetHidden");
         var tree = this.tree();

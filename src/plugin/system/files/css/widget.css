@@ -482,8 +482,16 @@ th.widgetTableColumn.sortNone::after {
 .widgetTreeNodeLabel.selected:hover {
     background: #ff0;
 }
-.widgetTreeNodeLabel .widgetIcon {
-    color: #666;
+.widgetTreeNodeLabel i.fa {
+    color: #468;
+}
+.widgetTreeNodeLabel i.fa.fa-minus-square-o,
+.widgetTreeNodeLabel i.fa.fa-plus-square-o {
+    color: #777;
+}
+.widgetTreeNodeLabel i.fa.fa-folder,
+.widgetTreeNodeLabel i.fa.fa-folder-open {
+    color: #db7;
 }
 .widgetTreeNodeText {
     padding-left: 3px;
