@@ -693,6 +693,9 @@
 .text-pre-line {
     white-space: pre-line !important;
 }
+.text-pre-wrap {
+    white-space: pre-wrap !important;
+}
 
 
 /**
