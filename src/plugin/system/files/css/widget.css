@@ -426,6 +426,7 @@ th.widgetTableColumn {
     -ms-user-select: none; /* stylelint-disable-line property-no-vendor-prefix */
     -webkit-user-select: none; /* stylelint-disable-line property-no-vendor-prefix */
     user-select: none;
+    white-space: nowrap;
 }
 th.widgetTableColumn::after {
     position: absolute;
