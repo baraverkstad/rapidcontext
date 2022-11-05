@@ -8,7 +8,6 @@ function LoginApp() {
  * Starts the app and initializes the UI.
  */
 LoginApp.prototype.start = function () {
-    MochiKit.Signal.connect(this.ui.loginForm, "onvalidate", this.ui.loginDialog, "resizeToContent");
     MochiKit.Signal.connect(this.ui.loginForm, "onsubmit", this, "_loginAuth");
     var user = RapidContext.App.user();
     if (user && user.id) {
@@ -46,5 +45,4 @@ LoginApp.prototype._loginError = function (err) {
     msg = msg.charAt(0).toUpperCase() + msg.substr(1);
     $(this.ui.loginError).removeClass("hidden").text(msg);
     $(this.ui.loginWarning).addClass("hidden");
-    this.ui.loginDialog.resizeToContent();
 };
