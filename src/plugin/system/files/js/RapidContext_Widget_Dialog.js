@@ -55,7 +55,11 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  */
 RapidContext.Widget.Dialog = function (attrs/*, ... */) {
     var title = MochiKit.DOM.DIV({ "class": "widgetDialogTitle" }, "Dialog");
-    var close = RapidContext.Widget.Icon({ "class": "widgetDialogClose fa fa-times", title: "Close" });
+    var close = RapidContext.Widget.Icon({
+        "class": "widgetDialogClose fa fa-times",
+        "title": "Close",
+        "data-dialog": "close"
+    });
     var resize = MochiKit.DOM.DIV({ "class": "widgetDialogResize" });
     var content = MochiKit.DOM.DIV({ "class": "widgetDialogContent" });
     var o = MochiKit.DOM.DIV({}, title, close, resize, content);
@@ -65,8 +69,8 @@ RapidContext.Widget.Dialog = function (attrs/*, ... */) {
     o._setHidden(true);
     o.setAttrs(MochiKit.Base.update({ modal: false, system: false, center: true }, attrs));
     o.addAll(Array.prototype.slice.call(arguments, 1));
+    o.addEventListener("click", o._handleClick);
     title.onmousedown = RapidContext.Widget._eventHandler("Dialog", "_handleMoveStart");
-    close.onclick = RapidContext.Widget._eventHandler("Dialog", "hide");
     resize.onmousedown = RapidContext.Widget._eventHandler("Dialog", "_handleResizeStart");
     return o;
 };
@@ -120,6 +124,19 @@ RapidContext.Widget.Dialog.prototype._containerNode = function () {
  */
 RapidContext.Widget.Dialog.prototype._styleNode = function () {
     return this.lastChild;
+};
+
+/**
+ * Handles click events inside the dialog. Will close the dialog if an element
+ * with `data-dialog="close"` attribute was clicked.
+ *
+ * @param {Event} evt the DOM Event object
+ */
+RapidContext.Widget.Dialog.prototype._handleClick = function (evt) {
+    var $el = $(evt.target).closest("[data-dialog]");
+    if ($el.data("dialog") == "close") {
+        this.hide();
+    }
 };
 
 /**
