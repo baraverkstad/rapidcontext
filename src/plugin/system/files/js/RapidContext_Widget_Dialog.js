@@ -193,13 +193,8 @@ RapidContext.Widget.Dialog.prototype._setHiddenDialog = function (value) {
             this.parentNode.appendChild(this._modalNode);
         }
         this._setHidden(false);
-        this.moveTo(0, 0);
-        var dim = MochiKit.Style.getElementDimensions(this);
-        this.resizeTo(dim.w, dim.h);
-        if (this.center) {
-            this.moveToCenter();
-        }
         this.resetScroll();
+        this._resizeContent();
         this._dispatch("show");
     }
 };
@@ -213,13 +208,20 @@ RapidContext.Widget.Dialog.prototype._setHiddenDialog = function (value) {
  * @param {Number} y the vertical position (in pixels)
  */
 RapidContext.Widget.Dialog.prototype.moveTo = function (x, y) {
-    var parentDim = MochiKit.Style.getElementDimensions(this.parentNode);
-    var dim = MochiKit.Style.getElementDimensions(this);
-    var pos = {
-        x: Math.max(0, Math.min(x, parentDim.w - dim.w - 2)),
-        y: Math.max(0, Math.min(y, parentDim.h - dim.h - 2))
+    var max = {
+        x: this.parentNode.offsetWidth - this.offsetWidth - 2,
+        y: this.parentNode.offsetHeight - this.offsetHeight - 2
     };
-    MochiKit.Style.setElementPosition(this, pos);
+    var pos = {
+        x: Math.round(Math.max(0, Math.min(x, max.x))),
+        y: Math.round(Math.max(0, Math.min(y, max.y)))
+    };
+    this.style.left = pos.x + "px";
+    this.style.top = pos.y + "px";
+    var el = this.lastChild;
+    el.style.maxWidth = (this.parentNode.offsetWidth - pos.x - el.offsetLeft - 2) + "px";
+    el.style.maxHeight = (this.parentNode.offsetHeight - pos.y - el.offsetTop - 2) + "px";
+    this.center = false;
     this._dispatch("move", { detail: pos });
 };
 
@@ -229,36 +231,39 @@ RapidContext.Widget.Dialog.prototype.moveTo = function (x, y) {
  * of the geometric center for improved visual alignment.
  */
 RapidContext.Widget.Dialog.prototype.moveToCenter = function () {
-    var parentDim = MochiKit.Style.getElementDimensions(this.parentNode);
-    var dim = MochiKit.Style.getElementDimensions(this);
-    var pos = {
-        x: Math.round(Math.max(0, (parentDim.w - dim.w) / 2)),
-        y: Math.round(Math.max(0, (parentDim.h - dim.h) / 2.618))
-    };
-    MochiKit.Style.setElementPosition(this, pos);
-    this._dispatch("move", { detail: pos });
+    this.style.left = "0px";
+    this.style.top = "0px";
+    this.lastChild.style.maxWidth = "";
+    this.lastChild.style.maxHeight = "";
+    var x = (this.parentNode.offsetWidth - this.offsetWidth) / 2;
+    var y = (this.parentNode.offsetHeight - this.offsetHeight) / 2.618;
+    this.moveTo(x, y);
+    this.center = true;
 };
 
 /**
  * Resizes the dialog to the specified size (in pixels). The size
  * will be restrained by the parent DOM node size.
  *
- * @param {Number} width the width (in pixels)
- * @param {Number} height the height (in pixels)
+ * @param {Number} w the width (in pixels)
+ * @param {Number} h the height (in pixels)
  *
  * @return {Dimensions} an object with "w" and "h" properties for the
  *         actual size used
  */
-RapidContext.Widget.Dialog.prototype.resizeTo = function (width, height) {
-    var parentDim = MochiKit.Style.getElementDimensions(this.parentNode);
-    var pos = MochiKit.Style.getElementPosition(this, this.parentNode);
-    var dim = {
-        w: Math.max(150, Math.min(width, parentDim.w - pos.x - 2)),
-        h: Math.max(100, Math.min(height, parentDim.h - pos.y - 2))
+RapidContext.Widget.Dialog.prototype.resizeTo = function (w, h) {
+    var max = {
+        w: this.parentNode.offsetWidth - this.offsetLeft - 2,
+        h: this.parentNode.offsetHeight - this.offsetTop - 2
     };
-    MochiKit.Style.setElementDimensions(this, dim);
-    RapidContext.Util.registerSizeConstraints(this, null, null);
-    MochiKit.Base.update(this, dim);
+    var dim = {
+        w: Math.round(Math.max(150, Math.min(w, max.w))),
+        h: Math.round(Math.max(100, Math.min(h, max.h)))
+    };
+    this.style.width = dim.w + "px";
+    this.style.height = dim.h + "px";
+    delete this.sizeConstraints; // FIXME: Remove with RapidContext.Util.registerSizeConstraints
+    this.center = false;
     this._resizeContent();
     this._dispatch("resize", { detail: dim });
     return dim;
@@ -274,43 +279,33 @@ RapidContext.Widget.Dialog.prototype.resizeTo = function (width, height) {
  *         actual size used
  */
 RapidContext.Widget.Dialog.prototype.resizeToContent = function () {
-    var content = this.lastChild;
-    MochiKit.Style.setStyle(content, { width: "auto", height: "auto", overflow: "hidden" });
-    var x = Math.max(content.scrollWidth, content.offsetWidth) + 4;
-    var y = Math.max(content.scrollHeight, content.offsetHeight) + content.offsetTop + 2;
-    MochiKit.Style.setStyle(content, { overflow: "auto" });
-    return this.resizeTo(Math.round(x), Math.round(y));
+    var el = this.lastChild;
+    var w = Math.max(el.scrollWidth, el.offsetWidth) + 2;
+    var h = Math.max(el.scrollHeight, el.offsetHeight) + el.offsetTop + 2;
+    return this.resizeTo(w, h);
 };
 
 /**
  * Called when dialog content should be resized.
  */
 RapidContext.Widget.Dialog.prototype._resizeContent = function () {
-    // TODO: Allow content node to have different padding
-    var content = this.lastChild;
-    var dim = {
-        w: Math.max(0, this.w - 20) || undefined,
-        h: Math.max(0, this.h - 18 - content.offsetTop) || undefined
-    };
-    MochiKit.Style.setElementDimensions(content, dim);
-    MochiKit.Base.update(content, dim);
-    RapidContext.Util.resizeElements(content);
+    if (!this.isHidden()) {
+        RapidContext.Util.resizeElements(this.lastChild);
+        if (this.center) {
+            this.moveToCenter();
+        }
+    }
 };
 
 /**
  * Resets the scroll offsets for all child elements in the dialog.
  */
 RapidContext.Widget.Dialog.prototype.resetScroll = function () {
-    function visitor(node) {
-        if (node.nodeType == 1) {
-            node.scrollTop = 0;
-            node.scrollLeft = 0;
-            return node.childNodes;
-        } else {
-            return undefined;
-        }
+    function scrollReset(el) {
+        el.scrollTop = 0;
+        el.scrollLeft = 0;
     }
-    MochiKit.Base.nodeWalk(this, visitor);
+    Array.prototype.slice.call(this.querySelectorAll("*")).forEach(scrollReset);
 };
 
 /**
@@ -320,9 +315,11 @@ RapidContext.Widget.Dialog.prototype.resetScroll = function () {
  * @param {Event} evt the MochiKit.Signal.Event object
  */
 RapidContext.Widget.Dialog.prototype._handleMoveStart = function (evt) {
-    var pos = MochiKit.Style.getElementPosition(this.parentNode);
-    this._offsetPos = MochiKit.Style.getElementPosition(this, pos);
-    this._startPos = evt.mouse().page;
+    var pos = evt.mouse().page;
+    this._offsetPos = {
+        x: this.offsetLeft - pos.x,
+        y: this.offsetTop - pos.y
+    };
     evt.stop();
     MochiKit.Signal.connect(document, "onmousemove", this, "_handleMove");
     MochiKit.Signal.connect(document, "onmouseup", this, "_stopDrag");
@@ -335,9 +332,7 @@ RapidContext.Widget.Dialog.prototype._handleMoveStart = function (evt) {
  */
 RapidContext.Widget.Dialog.prototype._handleMove = function (evt) {
     var pos = evt.mouse().page;
-    var x = this._offsetPos.x + pos.x - this._startPos.x;
-    var y = this._offsetPos.y + pos.y - this._startPos.y;
-    this.moveTo(x, y);
+    this.moveTo(this._offsetPos.x + pos.x, this._offsetPos.y + pos.y);
 };
 
 /**
@@ -347,13 +342,13 @@ RapidContext.Widget.Dialog.prototype._handleMove = function (evt) {
  * @param {Event} evt the MochiKit.Signal.Event object
  */
 RapidContext.Widget.Dialog.prototype._handleResizeStart = function (evt) {
-    this._offsetDim = MochiKit.Style.getElementDimensions(this);
-    this._startPos = evt.mouse().page;
+    var pos = evt.mouse().page;
+    this._offsetDim = {
+        w: this.offsetWidth - pos.x,
+        h: this.offsetHeight - pos.y
+    };
     evt.stop();
     MochiKit.Signal.connect(document, "onmousemove", this, "_handleResize");
-    MochiKit.Signal.connect(document, "onmousedown", function (evt) {
-        evt.stop();
-    });
     MochiKit.Signal.connect(document, "onmouseup", this, "_stopDrag");
 };
 
@@ -364,9 +359,7 @@ RapidContext.Widget.Dialog.prototype._handleResizeStart = function (evt) {
  */
 RapidContext.Widget.Dialog.prototype._handleResize = function (evt) {
     var pos = evt.mouse().page;
-    var w = this._offsetDim.w + pos.x - this._startPos.x;
-    var h = this._offsetDim.h + pos.y - this._startPos.y;
-    this.resizeTo(w, h);
+    this.resizeTo(this._offsetDim.w + pos.x, this._offsetDim.h + pos.y);
 };
 
 /**
