@@ -137,6 +137,7 @@
         { test: "var [a, ...b] = [1, 2, 3]; a == 1 && b.length == 2", name: "array destructuring assignment" },
         { test: "var {a, b} = { a: 1, b: 2, c: 3 }; a == 1 && b == 2", name: "object destructuring assignment" },
         { test: "'classList' in Element.prototype", name: "Element.prototype.classList" },
+        { test: "'dataset' in HTMLElement.prototype", name: "HTMLElement.prototype.dataset" },
         { test: "'noModule' in HTMLScriptElement.prototype", name: "ES6 modules (import/export)" },
         { test: "async () => await Promise.resolve(true)", name: "async/await functions" },
         "display: flex"
