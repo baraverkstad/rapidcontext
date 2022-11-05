@@ -49,13 +49,10 @@ StartApp.prototype.start = function () {
     MochiKit.Signal.connect(this.ui.appTable, "onclick", this, "_handleAppLaunch");
 
     // About dialog
-    MochiKit.Signal.connect(this.ui.aboutClose, "onclick", this.ui.about, "hide");
     var version = MochiKit.Text.format("{version} ({date})", status);
     MochiKit.DOM.replaceChildNodes(this.ui.aboutVersion, version);
 
     // Password dialog
-    MochiKit.Signal.connect(this.ui.passwordCancel, "onclick", this.ui.passwordDialog, "hide");
-    MochiKit.Signal.connect(this.ui.passwordForm, "onvalidate", this.ui.passwordDialog, "resizeToContent");
     MochiKit.Signal.connect(this.ui.passwordForm, "onsubmit", this, "_changePassword");
     MochiKit.Signal.connect(this.proc.changePassword, "onresponse", this, "_changePasswordCallback");
     this.ui.passwordForm.addValidator("passwordcheck", function (value, field, form) {
@@ -63,8 +60,6 @@ StartApp.prototype.start = function () {
     });
 
     // Login dialog
-    MochiKit.Signal.connect(this.ui.loginCancel, "onclick", this.ui.loginDialog, "hide");
-    MochiKit.Signal.connect(this.ui.loginForm, "onvalidate", this.ui.loginDialog, "resizeToContent");
     MochiKit.Signal.connect(this.ui.loginForm, "onsubmit", this, "_loginAuth");
 
     // Tour wizard
@@ -154,10 +149,10 @@ StartApp.prototype._initApps = function () {
         var $tr = $("<tr>").addClass("clickable").attr("data-appid", app.id).appendTo($appTable);
         var icon = app.icon && app.icon.cloneNode(true);
         $("<td class='p-2'>").append(icon).appendTo($tr);
-        var ext = RapidContext.Widget.Icon("fa fa-external-link ml-1");
+        var ext = RapidContext.Widget.Icon("fa fa-external-link-square ml-1");
         ext.addClass((app.launch == "window") ? "launch-window" : "hidden");
         var $title = $("<a href='#' class='h4 m-0'>").text(app.name).append(ext);
-        var $desc = $("<span class='text-pre-line'>").text(app.description);
+        var $desc = $("<span class='text-pre-wrap'>").text(app.description);
         $("<td class='pl-1 pr-2 py-2'>").append($title, $desc).appendTo($tr);
     });
 
@@ -315,7 +310,6 @@ StartApp.prototype._hideInfoPopup = function () {
 StartApp.prototype._showPasswordDialog = function () {
     this.ui.passwordForm.reset();
     this.ui.passwordDialog.show();
-    this.ui.passwordDialog.resizeToContent();
     this.ui.passwordCurrent.focus();
 };
 
@@ -329,17 +323,16 @@ StartApp.prototype._changePassword = function () {
     var oldHash = CryptoJS.MD5(prefix + data.current).toString();
     var newHash = CryptoJS.MD5(prefix + data.password).toString();
     this.proc.changePassword(oldHash, newHash);
-    this.ui.passwordSave.setAttrs({ disabled: true, icon: "LOADING" });
+    this.ui.passwordSave.setAttrs({ disabled: true, icon: "fa fa-spin fa-refresh" });
 };
 
 /**
  * Callback for the password change dialog.
  */
 StartApp.prototype._changePasswordCallback = function (res) {
-    this.ui.passwordSave.setAttrs({ disabled: false, icon: "OK" });
+    this.ui.passwordSave.setAttrs({ disabled: false, icon: "fa fa-lg fa-check" });
     if (res instanceof Error) {
         this.ui.passwordError.addError(this.ui.passwordCurrent, res.message);
-        this.ui.passwordDialog.resizeToContent();
     } else {
         this.ui.passwordDialog.hide();
         this.ui.passwordForm.reset();
@@ -355,11 +348,9 @@ StartApp.prototype._loginOut = function () {
     if (user && user.id) {
         RapidContext.App.logout(false);
         this.ui.logoutDialog.show();
-        this.ui.logoutDialog.resizeToContent();
     } else {
         this.ui.loginForm.reset();
         this.ui.loginDialog.show();
-        this.ui.loginDialog.resizeToContent();
         this.ui.loginUser.focus();
         this.proc.sessionInfo();
     }
@@ -369,7 +360,7 @@ StartApp.prototype._loginOut = function () {
  * Shows the login authentication dialog.
  */
 StartApp.prototype._loginAuth = function () {
-    this.ui.loginAuth.setAttrs({ disabled: true, icon: "LOADING" });
+    this.ui.loginAuth.setAttrs({ disabled: true, icon: "fa fa-spin fa-refresh" });
     var data = this.ui.loginForm.valueMap();
     var cb = this._loginAuthCallback.bind(this);
     RapidContext.App.login($.trim(data.user), data.password).then(cb, cb);
@@ -379,10 +370,9 @@ StartApp.prototype._loginAuth = function () {
  * Callback for the login authentication.
  */
 StartApp.prototype._loginAuthCallback = function (res) {
-    this.ui.loginAuth.setAttrs({ disabled: false, icon: "OK" });
+    this.ui.loginAuth.setAttrs({ disabled: false, icon: "fa fa-lg fa-check" });
     if (res instanceof Error) {
         this.ui.loginPasswordError.addError(this.ui.loginPassword, res.message);
-        this.ui.loginDialog.resizeToContent();
         return false;
     } else {
         this.ui.loginDialog.hide();

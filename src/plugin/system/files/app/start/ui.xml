@@ -32,10 +32,10 @@
   </TabContainer>
   <Pane id="infoBar" class="position-absolute top-0 right-0 p-2">
     <i class="fa fa-user"></i>
-    <span id="infoUser" class="pl-2"></span>
-    <i class="fa fa-plug pl-3"></i>
-    <span id="infoEnv" class="pl-2"></span>
-    <i class="fa fa-lg fa-caret-down pl-3 pr-1"></i>
+    <span id="infoUser" class="pl-1"></span>
+    <i class="fa fa-plug pl-2"></i>
+    <span id="infoEnv" class="pl-1"></span>
+    <i class="fa fa-lg fa-caret-down pl-2 pr-1"></i>
   </Pane>
   <Popup id="menu" class="z-max overflow-hidden" style="top: 29px; right: 10px; display: none; min-width: 200px;">
     <h3 id="menuTitle">Anonymous User</h3>
@@ -74,7 +74,7 @@
         </tbody>
       </table>
       <div class="text-right mt-1">
-        <Button id="passwordCancel" type="button" icon="fa fa-lg fa-times">
+        <Button type="button" icon="fa fa-lg fa-times" data-dialog="close">
           Cancel
         </Button>
         <Button id="passwordSave" type="submit" highlight="true" icon="fa fa-lg fa-check" class="ml-2">
@@ -104,7 +104,7 @@
         </tbody>
       </table>
       <div class="text-right mt-1">
-        <Button id="loginCancel" type="button" icon="fa fa-lg fa-times">
+        <Button type="button" icon="fa fa-lg fa-times" data-dialog="close">
           Cancel
         </Button>
         <Button id="loginAuth" type="submit" highlight="true" icon="fa fa-lg fa-check" class="ml-2">
@@ -165,7 +165,7 @@
       Icons by FamFamFam</a>, copyright &#169; Mark James (some small icon images).</p>
     </div>
     <div class="position-absolute bottom-0 right-0 m-2">
-      <Button id="aboutClose" highlight="true" icon="fa fa-lg fa-check">
+      <Button highlight="true" icon="fa fa-lg fa-check" data-dialog="close">
         Close
       </Button>
     </div>
