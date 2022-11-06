@@ -54,15 +54,16 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * </Dialog>
  */
 RapidContext.Widget.Dialog = function (attrs/*, ... */) {
-    var title = MochiKit.DOM.DIV({ "class": "widgetDialogTitle" }, "Dialog");
+    var DIV = MochiKit.DOM.DIV;
+    var title = DIV({ "class": "widgetDialogTitle", "data-dialog": "move" }, "Dialog");
     var close = RapidContext.Widget.Icon({
         "class": "widgetDialogClose fa fa-times",
         "title": "Close",
         "data-dialog": "close"
     });
-    var resize = MochiKit.DOM.DIV({ "class": "widgetDialogResize" });
-    var content = MochiKit.DOM.DIV({ "class": "widgetDialogContent" });
-    var o = MochiKit.DOM.DIV({}, title, close, resize, content);
+    var resize = DIV({ "class": "widgetDialogResize", "data-dialog": "resize" });
+    var content = DIV({ "class": "widgetDialogContent" });
+    var o = DIV({}, title, close, resize, content);
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Dialog);
     MochiKit.DOM.addElementClass(o, "widgetDialog");
     o.resizeContent = o._resizeContent;
@@ -70,8 +71,7 @@ RapidContext.Widget.Dialog = function (attrs/*, ... */) {
     o.setAttrs(MochiKit.Base.update({ modal: false, system: false, center: true }, attrs));
     o.addAll(Array.prototype.slice.call(arguments, 1));
     o.addEventListener("click", o._handleClick);
-    title.onmousedown = RapidContext.Widget._eventHandler("Dialog", "_handleMoveStart");
-    resize.onmousedown = RapidContext.Widget._eventHandler("Dialog", "_handleResizeStart");
+    o.addEventListener("mousedown", o._handleMouseDown);
     return o;
 };
 
@@ -127,15 +127,64 @@ RapidContext.Widget.Dialog.prototype._styleNode = function () {
 };
 
 /**
- * Handles click events inside the dialog. Will close the dialog if an element
+ * Handles click events in the dialog. Will close the dialog if an element
  * with `data-dialog="close"` attribute was clicked.
  *
  * @param {Event} evt the DOM Event object
  */
 RapidContext.Widget.Dialog.prototype._handleClick = function (evt) {
-    var $el = $(evt.target).closest("[data-dialog]");
-    if ($el.data("dialog") == "close") {
+    var action = $(evt.target).closest("[data-dialog]").data("dialog");
+    if (action == "close") {
         this.hide();
+    }
+};
+
+/**
+ * Handles mouse down events in the dialog. Will start move or resize actions
+ * if an element with a `data-dialog="move"` or `data-dialog="resize"`
+ * attribute was clicked.
+ *
+ * @param {Event} evt the DOM Event object
+ */
+RapidContext.Widget.Dialog.prototype._handleMouseDown = function (evt) {
+    var action = $(evt.target).closest("[data-dialog]").data("dialog");
+    if (action == "move" || action == "resize") {
+        var isDim = action == "resize";
+        var x = (isDim ? this.offsetWidth : this.offsetLeft) - evt.pageX;
+        var y = (isDim ? this.offsetHeight : this.offsetTop) - evt.pageY;
+        document._drag = { target: this, action: action, x: x, y: y };
+        evt.preventDefault();
+        document.addEventListener("mouseup", this._handleMouseUp);
+        document.addEventListener("mousemove", this._handleMouseMove);
+    }
+};
+
+/**
+ * Stops a dialog resize or move drag operation and removes event listeners.
+ * Note that this event handler is attached to the root `document`.
+ *
+ * @param {Event} evt the DOM Event object
+ */
+RapidContext.Widget.Dialog.prototype._handleMouseUp = function (evt) {
+    var o = document._drag;
+    if (o && o.target) {
+        document.removeEventListener("mouseup", o.target._handleMouseUp);
+        document.removeEventListener("mousemove", o.target._handleMouseMove);
+    }
+    delete document._drag;
+};
+
+/**
+ * Handles a dialog move drag operation.
+ *
+ * @param {Event} evt the DOM Event object
+ */
+RapidContext.Widget.Dialog.prototype._handleMouseMove = function (evt) {
+    var o = document._drag;
+    if (o && o.action == "move") {
+        o.target.moveTo(o.x + evt.pageX, o.y + evt.pageY);
+    } else if (o && o.action == "resize") {
+        o.target.resizeTo(o.x + evt.pageX, o.y + evt.pageY);
     }
 };
 
@@ -323,69 +372,4 @@ RapidContext.Widget.Dialog.prototype.resetScroll = function () {
         el.scrollLeft = 0;
     }
     Array.prototype.slice.call(this.querySelectorAll("*")).forEach(scrollReset);
-};
-
-/**
- * Initiates a dialog move drag operation. This will install a mouse
- * event handler on the parent document.
- *
- * @param {Event} evt the MochiKit.Signal.Event object
- */
-RapidContext.Widget.Dialog.prototype._handleMoveStart = function (evt) {
-    var pos = evt.mouse().page;
-    this._offsetPos = {
-        x: this.offsetLeft - pos.x,
-        y: this.offsetTop - pos.y
-    };
-    evt.stop();
-    MochiKit.Signal.connect(document, "onmousemove", this, "_handleMove");
-    MochiKit.Signal.connect(document, "onmouseup", this, "_stopDrag");
-};
-
-/**
- * Handles a dialog move drag operation.
- *
- * @param {Event} evt the MochiKit.Signal.Event object
- */
-RapidContext.Widget.Dialog.prototype._handleMove = function (evt) {
-    var pos = evt.mouse().page;
-    this.moveTo(this._offsetPos.x + pos.x, this._offsetPos.y + pos.y);
-};
-
-/**
- * Initiates a dialog resize drag operation. This will install a
- * mouse event handler on the parent document.
- *
- * @param {Event} evt the MochiKit.Signal.Event object
- */
-RapidContext.Widget.Dialog.prototype._handleResizeStart = function (evt) {
-    var pos = evt.mouse().page;
-    this._offsetDim = {
-        w: this.offsetWidth - pos.x,
-        h: this.offsetHeight - pos.y
-    };
-    evt.stop();
-    MochiKit.Signal.connect(document, "onmousemove", this, "_handleResize");
-    MochiKit.Signal.connect(document, "onmouseup", this, "_stopDrag");
-};
-
-/**
- * Handles a dialog resize drag operation.
- *
- * @param {Event} evt the MochiKit.Signal.Event object
- */
-RapidContext.Widget.Dialog.prototype._handleResize = function (evt) {
-    var pos = evt.mouse().page;
-    this.resizeTo(this._offsetDim.w + pos.x, this._offsetDim.h + pos.y);
-};
-
-/**
- * Stops a dialog resize or move drag operation.
- *
- * @param {Event} evt the MochiKit.Signal.Event object
- */
-RapidContext.Widget.Dialog.prototype._stopDrag = function (evt) {
-    MochiKit.Signal.disconnectAll(document, "onmousemove");
-    MochiKit.Signal.disconnectAll(document, "onmousedown");
-    MochiKit.Signal.disconnectAll(document, "onmouseup");
 };
