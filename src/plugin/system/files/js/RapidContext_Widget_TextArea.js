@@ -76,6 +76,14 @@ RapidContext.Widget.Classes.TextArea = RapidContext.Widget.TextArea;
  */
 
 /**
+ * Destroys this widget.
+ */
+RapidContext.Widget.TextArea.prototype.destroy = function () {
+    // FIXME: Use AbortSignal instead to disconnect
+    this.removeEventListener("input", this._handleChange);
+};
+
+/**
  * Updates the widget or HTML DOM node attributes.
  *
  * @param {Object} attrs the widget and node attributes to set

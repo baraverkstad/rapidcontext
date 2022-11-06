@@ -109,6 +109,15 @@ RapidContext.Widget.Classes.Dialog = RapidContext.Widget.Dialog;
  */
 
 /**
+ * Destroys this widget.
+ */
+RapidContext.Widget.Dialog.prototype.destroy = function () {
+    // FIXME: Use AbortSignal instead to disconnect
+    this.removeEventListener("click", this._handleClick);
+    this.removeEventListener("mousedown", this._handleMouseDown);
+};
+
+/**
  * Returns the widget container DOM node.
  *
  * @return {Node} the container DOM node
@@ -168,6 +177,7 @@ RapidContext.Widget.Dialog.prototype._handleMouseDown = function (evt) {
 RapidContext.Widget.Dialog.prototype._handleMouseUp = function (evt) {
     var o = document._drag;
     if (o && o.target) {
+        // FIXME: Use AbortSignal instead to disconnect
         document.removeEventListener("mouseup", o.target._handleMouseUp);
         document.removeEventListener("mousemove", o.target._handleMouseMove);
     }

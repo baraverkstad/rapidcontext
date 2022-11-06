@@ -74,6 +74,14 @@ RapidContext.Widget.TabContainer = function (attrs/*, ... */) {
 RapidContext.Widget.Classes.TabContainer = RapidContext.Widget.TabContainer;
 
 /**
+ * Destroys this widget.
+ */
+RapidContext.Widget.TabContainer.prototype.destroy = function () {
+    // FIXME: Use AbortSignal instead to disconnect
+    this.removeEventListener("click", this._handleLabelClick);
+};
+
+/**
  * Handles tab label click events.
  *
  * @param {Event} evt the DOM Event object

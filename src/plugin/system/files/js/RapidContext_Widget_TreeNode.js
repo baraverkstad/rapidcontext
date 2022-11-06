@@ -72,6 +72,14 @@ RapidContext.Widget.TreeNode = function (attrs/*, ...*/) {
 RapidContext.Widget.Classes.TreeNode = RapidContext.Widget.TreeNode;
 
 /**
+ * Destroys this widget.
+ */
+RapidContext.Widget.TreeNode.prototype.destroy = function () {
+    // FIXME: Use AbortSignal instead to disconnect
+    this.firstChild.removeEventListener("click", this._handleLabelClick);
+};
+
+/**
  * Handles label click events.
  *
  * @param {Event} evt the DOM Event object

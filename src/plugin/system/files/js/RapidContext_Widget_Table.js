@@ -95,6 +95,15 @@ RapidContext.Widget.Classes.Table = RapidContext.Widget.Table;
  */
 
 /**
+ * Destroys this widget.
+ */
+RapidContext.Widget.Table.prototype.destroy = function () {
+    // FIXME: Use AbortSignal instead to disconnect
+    this.addEventListener("mousedown", this._handleMouseDown);
+    this.addEventListener("click", this._handleClick);
+};
+
+/**
  * Returns the widget container DOM node.
  *
  * @return {Node} the container DOM node

@@ -82,6 +82,14 @@ RapidContext.Widget.TableColumn = function (attrs) {
 RapidContext.Widget.Classes.TableColumn = RapidContext.Widget.TableColumn;
 
 /**
+ * Destroys this widget.
+ */
+RapidContext.Widget.TableColumn.prototype.destroy = function () {
+    // FIXME: Use AbortSignal instead to disconnect
+    this.removeEventListener("click", this._handleClick);
+};
+
+/**
  * Returns the widget container DOM node.
  *
  * @return {Node} returns null, since child nodes are not supported

@@ -63,6 +63,16 @@ RapidContext.Widget.Form = function (attrs/*, ...*/) {
 RapidContext.Widget.Classes.Form = RapidContext.Widget.Form;
 
 /**
+ * Destroys this widget.
+ */
+RapidContext.Widget.Form.prototype.destroy = function () {
+    // FIXME: Use AbortSignal instead to disconnect
+    this.addEventListener("input", this._handleInput);
+    this.addEventListener("invalid", this._handleInvalid, { capture: true });
+    this.addEventListener("submit", this._handleSubmit);
+};
+
+/**
  * Applies custom validators on field input.
  *
  * @param {Event} evt the DOM event object

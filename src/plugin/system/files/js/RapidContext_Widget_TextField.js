@@ -86,6 +86,15 @@ RapidContext.Widget.Classes.TextField = RapidContext.Widget.TextField;
  */
 
 /**
+ * Destroys this widget.
+ */
+RapidContext.Widget.TextField.prototype.destroy = function () {
+    // FIXME: Use AbortSignal instead to disconnect
+    this.removeEventListener("input", this._handleChange);
+    this.removeEventListener("blur", this._handleBlur);
+};
+
+/**
  * Updates the widget or HTML DOM node attributes.
  *
  * @param {Object} attrs the widget and node attributes to set
