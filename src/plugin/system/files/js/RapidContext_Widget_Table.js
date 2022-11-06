@@ -72,8 +72,8 @@ RapidContext.Widget.Table = function (attrs/*, ...*/) {
     o._mouseY = 0;
     o.setAttrs(attrs);
     o.addAll(Array.prototype.slice.call(arguments, 1));
-    tbody.onmousedown = RapidContext.Widget._eventHandler("Table", "_handleMouseDown");
-    tbody.onmouseup = RapidContext.Widget._eventHandler("Table", "_handleMouseUp");
+    o.addEventListener("mousedown", o._handleMouseDown);
+    o.addEventListener("click", o._handleClick);
     return o;
 };
 
@@ -104,6 +104,58 @@ RapidContext.Widget.Table.prototype._containerNode = function () {
     var thead = table.firstChild;
     var tr = thead.firstChild;
     return tr;
+};
+
+/**
+ * Handles the mouse down event to stop text selection in some cases.
+ *
+ * @param {Event} evt the DOM Event object
+ */
+RapidContext.Widget.Table.prototype._handleMouseDown = function (evt) {
+    if (evt.ctrlKey || evt.metaKey || evt.shiftKey) {
+        evt.preventDefault();
+    }
+};
+
+/**
+ * Handles the click event to change selected rows.
+ *
+ * @param {Event} evt the DOM Event object
+ */
+RapidContext.Widget.Table.prototype._handleClick = function (evt) {
+    var tr = $(evt.target).closest("tbody > tr").get(0);
+    var row = tr && (tr.rowIndex - 1);
+    var isMulti = tr && this._selectMode === "multiple";
+    var isSingle = tr && this._selectMode !== "none";
+    if (isMulti && (evt.ctrlKey || evt.metaKey)) {
+        evt.preventDefault();
+        var pos = MochiKit.Base.findIdentical(this._selected, row);
+        if (pos >= 0) {
+            this._unmarkSelection(row);
+            this._selected.splice(pos, 1);
+        } else {
+            this._selected.push(row);
+            this._markSelection(row);
+        }
+        this._dispatch("select");
+    } else if (isMulti && evt.shiftKey) {
+        evt.preventDefault();
+        this._unmarkSelection();
+        this._selected.push(row);
+        var start = this._selected[0];
+        this._selected = [];
+        var step = (row >= start) ? 1 : -1;
+        for (var i = start; (step > 0) ? i <= row : i >= row; i += step) {
+            this._selected.push(i);
+        }
+        this._markSelection();
+        this._dispatch("select");
+    } else if (isSingle) {
+        this._unmarkSelection();
+        this._selected = [row];
+        this._markSelection();
+        this._dispatch("select");
+    }
 };
 
 /**
@@ -364,18 +416,11 @@ RapidContext.Widget.Table.prototype.redraw = function () {
 RapidContext.Widget.Table.prototype._renderRows = function () {
     var cols = this.getChildNodes();
     var tbody = this.firstChild.lastChild;
-    MochiKit.DOM.replaceChildNodes(tbody);
-    for (var i = 0; i < this._rows.length; i++) {
-        var tr = MochiKit.DOM.TR();
-        if (i % 2 == 1) {
-            MochiKit.DOM.addElementClass(tr, "widgetTableAlt");
-        }
-        for (var j = 0; j < cols.length; j++) {
-            tr.appendChild(cols[j]._render(this._rows[i]));
-        }
-        tr.rowNo = i;
-        tbody.appendChild(tr);
-    }
+    MochiKit.DOM.replaceChildNodes(tbody, this._rows.map(function (row) {
+        return MochiKit.DOM.TR({}, cols.map(function (col) {
+            return col._render(row);
+        }));
+    }));
     if (this._rows.length == 0) {
         // Add empty row to avoid browser bugs
         tbody.appendChild(MochiKit.DOM.TR());
@@ -404,11 +449,8 @@ RapidContext.Widget.Table.prototype.getRowCount = function () {
  * @return {String} the unique row id, or null if not found
  */
 RapidContext.Widget.Table.prototype.getRowId = function (index) {
-    if (index >= 0 && index < this._rows.length) {
-        return this._rows[index].$id;
-    } else {
-        return null;
-    }
+    var row = this._rows[index];
+    return row ? row.$id : null;
 };
 
 /**
@@ -420,11 +462,10 @@ RapidContext.Widget.Table.prototype.getRowId = function (index) {
  * @return {Array} an array with the selected row ids
  */
 RapidContext.Widget.Table.prototype.getSelectedIds = function () {
-    var res = [];
-    for (var i = 0; i < this._selected.length; i++) {
-        res.push(this._rows[this._selected[i]].$id);
-    }
-    return res;
+    var rows = this._rows;
+    return this._selected.map(function (idx) {
+        return rows[idx].$id;
+    });
 };
 
 /**
@@ -434,17 +475,11 @@ RapidContext.Widget.Table.prototype.getSelectedIds = function () {
  *         an array of selected data rows if multiple selection is enabled
  */
 RapidContext.Widget.Table.prototype.getSelectedData = function () {
-    if (this._selectMode === "multiple") {
-        var res = [];
-        for (var i = 0; i < this._selected.length; i++) {
-            res.push(this._rows[this._selected[i]].$data);
-        }
-        return res;
-    } else if (this._selected.length > 0) {
-        return this._rows[this._selected[0]].$data;
-    } else {
-        return null;
-    }
+    var rows = this._rows;
+    var data = this._selected.map(function (idx) {
+        return rows[idx].$data;
+    });
+    return (this._selectMode === "multiple") ? data : data[0];
 };
 
 /**
@@ -549,115 +584,29 @@ RapidContext.Widget.Table.prototype.removeSelectedIds = function () {
 };
 
 /**
- * Handles the mouse up event by stopping text selection in some cases.
- *
- * @param {Event} evt the MochiKit.Signal.Event object
- */
-RapidContext.Widget.Table.prototype._handleMouseDown = function (evt) {
-    this._mouseX = evt.mouse().page.x;
-    this._mouseY = evt.mouse().page.y;
-    if (evt.modifier().ctrl || evt.modifier().meta || evt.modifier().shift) {
-        evt.stop();
-        return false;
-    } else {
-        return true;
-    }
-};
-
-/**
- * Handles the mouse up event by changing the selection if appropriate.
- *
- * @param {Event} evt the MochiKit.Signal.Event object
- */
-RapidContext.Widget.Table.prototype._handleMouseUp = function (evt) {
-    var moveX = Math.abs(evt.mouse().page.x - this._mouseX);
-    var moveY = Math.abs(evt.mouse().page.y - this._mouseY);
-    var moveXY = Math.sqrt(moveX * moveX + moveY * moveY);
-    var tr = MochiKit.DOM.getFirstParentByTagAndClassName(evt.target(), "TR");
-    if (tr == null || tr.rowNo == null || !MochiKit.DOM.isChildNode(tr, this)) {
-        return true;
-    } else if (moveXY > 5.0) {
-        return true;
-    }
-    var row = tr.rowNo;
-    if (this._selectMode === "multiple") {
-        if (evt.modifier().ctrl || evt.modifier().meta) {
-            var pos = MochiKit.Base.findIdentical(this._selected, row);
-            if (pos >= 0) {
-                this._unmarkSelection(row);
-                this._selected.splice(pos, 1);
-            } else {
-                this._selected.push(row);
-                this._markSelection(row);
-            }
-        } else if (evt.modifier().shift) {
-            var start = row;
-            if (this._selected.length > 0) {
-                start = this._selected[0];
-            }
-            this._unmarkSelection();
-            this._selected = [];
-            if (row >= start) {
-                for (var i = start; i <= row; i++) {
-                    this._selected.push(i);
-                }
-            } else {
-                for (var j = start; j >= row; j--) {
-                    this._selected.push(j);
-                }
-            }
-            this._markSelection();
-        } else {
-            this._unmarkSelection();
-            this._selected = [row];
-            this._markSelection(row);
-        }
-    } else if (this._selectMode !== "none") {
-        this._unmarkSelection();
-        this._selected = [row];
-        this._markSelection(row);
-    }
-    this._dispatch("select");
-    if (evt.modifier().ctrl || evt.modifier().meta || evt.modifier().shift) {
-        evt.stop();
-        return false;
-    } else {
-        return true;
-    }
-};
-
-/**
  * Marks selected rows.
  *
- * @param {Number} indexOrNull the row index, or null for the array
+ * @param {Number} [index] the row index, or null to mark all
  */
-RapidContext.Widget.Table.prototype._markSelection = function (indexOrNull) {
-    if (indexOrNull == null) {
-        for (var i = 0; i < this._selected.length; i++) {
-            this._markSelection(this._selected[i]);
-        }
-    } else {
-        var tbody = this.firstChild.lastChild;
-        var tr = tbody.childNodes[indexOrNull];
-        MochiKit.DOM.addElementClass(tr, "selected");
-    }
+RapidContext.Widget.Table.prototype._markSelection = function (index) {
+    var tbody = this.firstChild.lastChild;
+    var indices = (index == null) ? this._selected : [index];
+    indices.forEach(function (idx) {
+        MochiKit.DOM.addElementClass(tbody.childNodes[idx], "selected");
+    });
 };
 
 /**
  * Unmarks selected rows.
  *
- * @param {Number} indexOrNull the row index, or null for the array
+ * @param {Number} [index] the row index, or null to unmark all
  */
-RapidContext.Widget.Table.prototype._unmarkSelection = function (indexOrNull) {
-    if (indexOrNull == null) {
-        for (var i = 0; i < this._selected.length; i++) {
-            this._unmarkSelection(this._selected[i]);
-        }
-    } else {
-        var tbody = this.firstChild.lastChild;
-        var tr = tbody.childNodes[indexOrNull];
-        MochiKit.DOM.removeElementClass(tr, "selected");
-    }
+RapidContext.Widget.Table.prototype._unmarkSelection = function (index) {
+    var tbody = this.firstChild.lastChild;
+    var indices = (index == null) ? this._selected : [index];
+    indices.forEach(function (idx) {
+        MochiKit.DOM.removeElementClass(tbody.childNodes[idx], "selected");
+    });
 };
 
 /**

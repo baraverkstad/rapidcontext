@@ -113,7 +113,7 @@
             <Icon id="appReload" ref="RELOAD" />
             <Icon id="appLoading" ref="LOADING" hidden="true" />
           </legend>
-          <Table id="appTable" style="width: 100%; height: 150px;">
+          <Table id="appTable" select="multiple" style="width: 100%; height: 150px;">
             <TableColumn title="Id" field="id" sort="asc" />
             <TableColumn title="Name" field="name" />
             <TableColumn title="Plugin" field="plugin" />

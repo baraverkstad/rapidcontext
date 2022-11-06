@@ -399,7 +399,7 @@ table.widgetTable td {
     padding: 0.2em 1em 0.2em 0.4em;
     background: white;
 }
-tr.widgetTableAlt td {
+table.widgetTable tbody tr:nth-child(even) td {
     background: #f8f8f8;
 }
 table.widgetTable tr:hover td {
