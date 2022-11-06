@@ -163,30 +163,6 @@ RapidContext.Widget.destroyWidget = function (node) {
 };
 
 /**
- * Creates an event handler function that will forward any calls to
- * another function. The other function must exist as a property in
- * a parent widget of the specified class.
- *
- * @param {String} className the parent widget class name, or null
- *                     to use the same node
- * @param {String} methodName the name of the method to call
- * @param {Object} [...] the additional method arguments
- *
- * @return {Function} a function that forwards calls as specified
- */
-RapidContext.Widget._eventHandler = function (className, methodName/*, ...*/) {
-    var baseArgs = Array.prototype.slice.call(arguments, 2);
-    return function (evt) {
-        var node = this;
-        while (!RapidContext.Widget.isWidget(node, className)) {
-            node = node.parentNode;
-        }
-        var e = new MochiKit.Signal.Event(this, evt);
-        return node[methodName].apply(node, baseArgs.concat([e]));
-    };
-};
-
-/**
  * Returns the unique identifier for this DOM node. If a node id has
  * already been set, that id will be returned. Otherwise a new id
  * will be generated and assigned to the widget DOM node.
