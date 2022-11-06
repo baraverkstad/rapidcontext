@@ -79,14 +79,15 @@ RapidContext.Widget.Classes.TabContainer = RapidContext.Widget.TabContainer;
  * @param {Event} evt the DOM Event object
  */
 RapidContext.Widget.TabContainer.prototype._handleLabelClick = function (evt) {
-    var label = MochiKit.DOM.getFirstParentByTagAndClassName(evt.target, "DIV", "widgetTabContainerLabel");
-    var pos = Array.prototype.slice.call(label.parentNode.childNodes).indexOf(label);
-    var parent = MochiKit.DOM.getFirstParentByTagAndClassName(this, "DIV", "widgetTabContainer");
+    var pos = $(evt.target).closest("div.widgetTabContainerLabel").index();
+    var parent = $(evt.target).closest("div.widgetTabContainer").get(0);
     var child = parent.getChildNodes()[pos];
-    if (RapidContext.Widget.isWidget(evt.target, "Icon")) {
-        parent.removeChildNode(child);
-    } else {
-        parent.selectChild(child);
+    if (parent && child) {
+        if (RapidContext.Widget.isWidget(evt.target, "Icon")) {
+            parent.removeChildNode(child);
+        } else {
+            parent.selectChild(child);
+        }
     }
 };
 
