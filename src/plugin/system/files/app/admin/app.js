@@ -49,16 +49,15 @@ AdminApp.prototype.start = function () {
     MochiKit.Signal.connect(this.ui.cxnEditType, "onchange", this, "_updateConnectionEdit");
     MochiKit.Signal.connect(this.ui.cxnEditShowAll, "onchange", this, "_updateConnectionEdit");
     MochiKit.Signal.connect(this.ui.cxnEditForm, "onclick", this, "_addRemoveConnectionProps");
-    MochiKit.Signal.connect(this.ui.cxnEditCancel, "onclick", this.ui.cxnEditDialog, "hide");
-    MochiKit.Signal.connect(this.ui.cxnEditSave, "onclick", this, "_storeConnection");
+    MochiKit.Signal.connect(this.ui.cxnEditForm, "onsubmit", this, "_storeConnection");
     var statusRenderer = function (td, value, data) {
+        var cls = "fa fa-check";
         if (data._error || data._lastError) {
-            td.appendChild(RapidContext.Widget.Icon({ ref: "ERROR" }));
+            cls = "fa fa-exclamation-circle widget-red";
         } else if (!data._openChannels) {
-            td.appendChild(RapidContext.Widget.Icon({ ref: "WARNING", tooltip: "Unknown" }));
-        } else {
-            td.appendChild(RapidContext.Widget.Icon({ ref: "OK" }));
+            cls = "fa fa-exclamation-triangle widget-yellow";
         }
+        td.appendChild(RapidContext.Widget.Icon({ "class": cls }));
     };
     var typeRenderer = function (td, value, data) {
         if (/^connection\//.test(value)) {
@@ -279,9 +278,8 @@ AdminApp.prototype._showConnection = function () {
         this.ui.cxnEdit.hide();
         MochiKit.DOM.addElementClass(this.ui.cxnLink, "hidden");
     }
-    while (this.ui.cxnTemplate.previousSibling.className == "template") {
-        RapidContext.Widget.destroyWidget(this.ui.cxnTemplate.previousSibling);
-    }
+    var clones = this.ui.cxnTemplate.parentNode.querySelectorAll(".clone");
+    RapidContext.Widget.destroyWidget(clones);
     var hidden = [
         "lastAccess", "id", "type", "plugin", "maxOpen", "_maxOpen",
         "_usedChannels", "_openChannels", "_lastUsedTime"
@@ -300,7 +298,7 @@ AdminApp.prototype._showConnection = function () {
                 value = RapidContext.Widget.Field({ name: k, value: value, mask: true });
             }
             var tr = this.ui.cxnTemplate.cloneNode(true);
-            tr.className = "template";
+            tr.className = "clone";
             MochiKit.DOM.appendChildNodes(tr.firstChild, title + ":");
             MochiKit.DOM.appendChildNodes(tr.lastChild, value);
             MochiKit.DOM.insertSiblingNodesBefore(this.ui.cxnTemplate, tr);
@@ -370,13 +368,56 @@ AdminApp.prototype._initConnectionEdit = function (data) {
  * Updates the connection editing dialog.
  */
 AdminApp.prototype._updateConnectionEdit = function () {
+    function buildRow(tr, p) {
+        var title = p.title || RapidContext.Util.toTitleCase(p.name);
+        var value = (data[p.name] != null) ? "" + data[p.name] : "";
+        var defaultValue = (data["_" + p.name] != null) ? "" + data["_" + p.name] : "";
+        var valueLines = AdminApp.splitLines(value, 58);
+        tr.className = "clone";
+        MochiKit.DOM.appendChildNodes(tr.firstChild, title + ":");
+        var attrs = { name: p.name, size: 60 };
+        if (p.required && p.format != "password") {
+            attrs.required = true;
+        }
+        if (defaultValue) {
+            attrs.placeholder = defaultValue;
+        }
+        var input = null;
+        if (p.format == "text" || valueLines.length > 1) {
+            attrs.cols = 58;
+            attrs.rows = Math.min(Math.max(2, valueLines.length), 20);
+            input = RapidContext.Widget.TextArea(attrs);
+        } else if (p.format == "password") {
+            attrs.type = "password";
+            input = RapidContext.Widget.TextField(attrs);
+        } else {
+            input = RapidContext.Widget.TextField(attrs);
+        }
+        MochiKit.DOM.appendChildNodes(tr.lastChild, input);
+        if (p.custom) {
+            input.size = 55;
+            var btn = { icon: "fa fa-lg fa-minus", "class": "font-smaller ml-1", "data-action": "remove" };
+            MochiKit.DOM.appendChildNodes(tr.lastChild, RapidContext.Widget.Button(btn));
+        }
+        if (p.required && p.format != "password") {
+            var validator = RapidContext.Widget.FormValidator({ name: p.name });
+            MochiKit.DOM.appendChildNodes(tr.lastChild, validator);
+        }
+        if (p.description) {
+            var help = MochiKit.DOM.DIV({ "class": "helptext text-pre-wrap" }, p.description);
+            MochiKit.DOM.appendChildNodes(tr.lastChild, help);
+        }
+        if (!showAll && !p.required && !p.custom && !value) {
+            tr.className += " hidden";
+        }
+        return tr;
+    }
     var data = this.ui.cxnEditForm.valueMap();
     var showAll = (data._showAll == "yes");
     this.ui.cxnEditForm.reset();
     MochiKit.Base.setdefault(data, this.ui.cxnEditDialog.data);
-    while (this.ui.cxnEditTemplate.previousSibling.className == "template") {
-        RapidContext.Widget.destroyWidget(this.ui.cxnEditTemplate.previousSibling);
-    }
+    var clones = this.ui.cxnEditTemplate.parentNode.querySelectorAll(".clone");
+    RapidContext.Widget.destroyWidget(clones);
     var hiddenProps = { id: true, type: true, plugin: true };
     var props = {};
     if (this._types[data.type]) {
@@ -387,7 +428,7 @@ AdminApp.prototype._updateConnectionEdit = function () {
         MochiKit.DOM.replaceChildNodes(this.ui.cxnEditTypeDescr);
     }
     for (var name in data) {
-        var val = data[name].trim();
+        var val = String(data[name]).trim();
         if (!/^_/.test(name) && !(name in props) && !(name in hiddenProps) && val) {
             props[name] = {
                 name: name,
@@ -401,59 +442,20 @@ AdminApp.prototype._updateConnectionEdit = function () {
         }
     }
     for (var k in props) {
-        var p = props[k];
-        var title = p.title || RapidContext.Util.toTitleCase(p.name);
-        var value = (data[p.name] != null) ? "" + data[p.name] : "";
-        var defaultValue = (data["_" + p.name] != null) ? "" + data["_" + p.name] : "";
-        var valueLines = AdminApp.splitLines(value, 58);
-        var tr = this.ui.cxnEditTemplate.cloneNode(true);
-        tr.className = "template";
-        MochiKit.DOM.appendChildNodes(tr.firstChild, title + ":");
-        var attrs = { name: p.name, cols: 58, size: 60 };
-        if (defaultValue) {
-            attrs.placeholder = defaultValue;
-        }
-        var input = null;
-        if (p.format == "text" || valueLines.length > 1) {
-            attrs.rows = Math.min(Math.max(2, valueLines.length), 20);
-            input = RapidContext.Widget.TextArea(attrs);
-        } else if (p.format == "password") {
-            attrs.type = "password";
-            input = RapidContext.Widget.TextField(attrs);
-        } else {
-            input = RapidContext.Widget.TextField(attrs);
-        }
-        MochiKit.DOM.appendChildNodes(tr.lastChild, input);
-        if (p.custom) {
-            var style = { "margin-left": "3px" };
-            var icon = RapidContext.Widget.Icon({ ref: "REMOVE", style: style });
-            icon["data-remove"] = true;
-            MochiKit.DOM.appendChildNodes(tr.lastChild, icon);
-        }
-        if (p.required && p.format != "password") {
-            var validatorAttrs = { name: p.name, display: "icon" };
-            var validator = RapidContext.Widget.FormValidator(validatorAttrs);
-            MochiKit.DOM.appendChildNodes(tr.lastChild, validator);
-        }
-        if (p.description) {
-            var help = MochiKit.DOM.DIV({ "class": "helptext preformatted" }, p.description);
-            MochiKit.DOM.appendChildNodes(tr.lastChild, help);
-        }
-        if (!showAll && !p.required && !p.custom && !value) {
-            tr.style.display = "none";
-        }
+        var tr = buildRow(this.ui.cxnEditTemplate.cloneNode(true), props[k]);
         MochiKit.DOM.insertSiblingNodesBefore(this.ui.cxnEditTemplate, tr);
     }
     this.ui.cxnEditForm.update(data);
+    this.ui.cxnEditDialog.moveToCenter();
 };
 
 /**
  * Handles addition and removal of custom connection parameters.
  */
 AdminApp.prototype._addRemoveConnectionProps = function (evt) {
-    var elem = evt.target();
-    if (elem === this.ui.cxnEditAdd) {
-        var name = MochiKit.Format.strip(this.ui.cxnEditAddParam.value);
+    var $el = $(evt.target()).closest("[data-action]");
+    if ($el.data("action") === "add") {
+        var name = this.ui.cxnEditAddParam.value.trim();
         if (/[a-z0-9_-]+/i.test(name)) {
             this.ui.cxnEditAddParam.setAttrs({ name: name, value: "value" });
             this._updateConnectionEdit();
@@ -461,9 +463,8 @@ AdminApp.prototype._addRemoveConnectionProps = function (evt) {
         } else {
             alert("Invalid parameter name.");
         }
-    } else if (elem["data-remove"] === true) {
-        var tr = MochiKit.DOM.getFirstParentByTagAndClassName(elem, "TR");
-        RapidContext.Widget.destroyWidget(tr);
+    } else if ($el.data("action") === "remove") {
+        RapidContext.Widget.destroyWidget($el.closest("tr").get());
     }
 };
 

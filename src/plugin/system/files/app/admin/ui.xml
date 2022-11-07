@@ -1,30 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <ui>
-  <TabContainer id="tabContainer" w="100%" h="100%">
-    <Pane id="cxnTab" pageTitle="Connections">
-      <div w="45%" h="100%" style="float: left; padding-right: 20px;">
+  <TabContainer id="tabContainer" class="w-100 h-100">
+    <Pane id="cxnTab" pageTitle="Connections" class="position-relative">
+      <div w="50%-2rem" h="100%" class="inline-block vertical-top mr-4">
         <h3>
           Connection List:
-          <Icon id="cxnValidate" ref="AUTOMATIC" tooltip="Check all connections" style="margin-left: 3px;" />
-          <Icon id="cxnReload" ref="RELOAD" style="margin-left: 3px;" />
-          <Icon id="cxnLoading" ref="LOADING" style="margin-left: 3px;" />
+          <Icon id="cxnValidate" class="fa fa-magic ml-1" title="Check all connections" />
+          <Icon id="cxnReload" class="fa fa-refresh ml-1" title="Reload" />
+          <Icon id="cxnLoading" class="fa fa-spin fa-refresh ml-1" />
         </h3>
-        <Table id="cxnTable" w="100%" h="100%-22">
+        <Table id="cxnTable" w="100%" h="100%-2em">
           <TableColumn title="Identifier" field="id" sort="asc" key="true" />
           <TableColumn title="Status" field="status" />
           <TableColumn title="Type" field="type" />
-          <TableColumn title="In Use" field="_usedChannels" type="number" />
           <TableColumn title="Open" field="_openChannels" type="number" />
           <TableColumn title="Last Access" field="_lastUsedTime" type="datetime" />
         </Table>
       </div>
-      <Form id="cxnForm" w="55%-30" h="100%" style="float: left; overflow-y: auto;">
+      <Form id="cxnForm" w="50%" h="100%" class="inline-block vertical-top">
         <h3>
           Connection Details:
-          <Icon id="cxnAdd" ref="ADD" style="margin-left: 3px;" />
-          <Icon id="cxnRemove" ref="REMOVE" hidden="true" style="margin-left: 3px;" />
-          <Icon id="cxnEdit" ref="EDIT" hidden="true" style="margin-left: 3px;" />
+          <Icon id="cxnAdd" class="fa fa-plus-square widget-green ml-1" title="Add connection" />
+          <Icon id="cxnRemove" class="fa fa-minus-square widget-red ml-1" title="Remove connection" hidden="true" />
+          <Icon id="cxnEdit" class="fa fa-pencil-square widget-yellow ml-1" title="Edit connection" hidden="true" />
         </h3>
         <table>
           <tbody>
@@ -34,7 +33,7 @@
                 <Field name="id" format="connection/" class="unimportant" />
                 <a id="cxnLink" href="#" target="_blank" class="hidden" title="View in storage browser">
                   <Field name="id" />
-                  <Icon ref="EXPAND" style="margin-left: 3px;" />
+                  <Icon class="fa fa-external-link-square ml-1" />
                 </a>
               </td>
             </tr>
@@ -53,12 +52,12 @@
             <tr>
               <th class="label" style="padding-right: 4px;">Description:</th>
               <td>
-                <Field name="description" style="white-space: pre-line;" />
+                <Field name="description" class="text-pre-wrap" />
               </td>
             </tr>
             <tr id="cxnTemplate" class="hidden">
               <th class="label" style="padding-right: 4px;"></th>
-              <td class="preformatted"></td>
+              <td></td>
             </tr>
             <tr>
               <th class="label" style="padding-right: 4px;">Last Access:</th>
@@ -77,57 +76,55 @@
           </tbody>
         </table>
       </Form>
-      <Dialog id="cxnEditDialog" title="Edit Connection" modal="true" w="600" h="80%">
+      <Dialog id="cxnEditDialog" title="Edit Connection" modal="true" w="40rem">
         <h3>Edit Connection:</h3>
-        <Form id="cxnEditForm" w="100%" h="100%-60" style="overflow-y: auto; overflow-x: hidden;">
-          <table w="100%">
-            <tbody>
-              <tr>
-                <th class="label" style="width: 100px; padding-top: 6px; padding-right: 4px;">Identifier:</th>
-                <td style="padding-top: 2px;">
-                  <span class="unimportant" style="padding-right: 3px;">/connection/</span>
-                  <TextField name="id" size="50" />
-                  <FormValidator name="id" regex="[a-zA-Z0-9._-]+(/[a-zA-Z0-9._-]+)*" display="icon" message="Only alphanumeric characters allowed in identifier." />
-                  <div class="helptext">
-                    The unique connection identifier. Optionally prefixed with
-                    an environment path.
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <th class="label" style="padding-top: 4px; padding-right: 2px;">Type:</th>
-                <td style="padding-top: 2px;">
-                  <select id="cxnEditType" name="type">
-                    <option value="">&lt; Select Type &gt;</option>
-                  </select>
-                  <FormValidator name="type" display="icon" message="A valid connection type must be selected." />
-                  <label class="unselectable" style="margin-left: 20px;">
-                    <input type="checkbox" id="cxnEditShowAll" name="_showAll" value="yes" />
-                    Show all parameters
-                  </label>
-                  <div id="cxnEditTypeDescr" class="helptext"></div>
-                </td>
-              </tr>
-              <tr id="cxnEditTemplate" class="hidden">
-                <th class="label" style="padding-top: 4px; padding-right: 4px;"></th>
-                <td></td>
-              </tr>
-              <tr>
-                <th class="label" style="padding-top: 4px; padding-right: 2px;">Add Parameter:</th>
-                <td style="padding-top: 2px;">
-                  <TextField id="cxnEditAddParam" name="_add" size="25" />
-                  <Icon id="cxnEditAdd" ref="ADD" style="margin-left: 6px; font-size: 1.4em; vertical-align: middle;" />
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <div style="position: absolute; bottom: 10px; right: 12px;">
-            <Button id="cxnEditCancel" icon="fa fa-lg fa-times">
-              Cancel
-            </Button>
-            <Button id="cxnEditSave" highlight="true" icon="fa fa-lg fa-check" class="ml-2">
-              Save
-            </Button>
+        <Form id="cxnEditForm">
+          <div class="w-100">
+            <table class="-form-layout-table -box-sizing-border my-1">
+              <tbody>
+                <tr>
+                  <th class="-form-layout-label">Identifier:</th>
+                  <td class="w-100">
+                    <span class="unimportant pr-1">/connection/</span>
+                    <TextField name="id" required="true" pattern="[a-zA-Z0-9._-]+(/[a-zA-Z0-9._-]+)*" size="50" />
+                    <FormValidator name="id" message="Only alphanumeric characters allowed in identifier." />
+                    <div class="helptext">
+                      The unique connection identifier. Optionally prefixed with
+                      an environment path.
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="-form-layout-label">Type:</th>
+                  <td>
+                    <select id="cxnEditType" name="type" required="true">
+                      <option value="">&lt; Select Type &gt;</option>
+                    </select>
+                    <label class="select-none ml-3">
+                      <input type="checkbox" id="cxnEditShowAll" name="_showAll" value="yes" />
+                      Show all parameters
+                    </label>
+                    <FormValidator name="type" message="A valid connection type must be selected." />
+                    <div id="cxnEditTypeDescr" class="helptext"></div>
+                  </td>
+                </tr>
+                <tr id="cxnEditTemplate" class="hidden">
+                  <th class="-form-layout-label"></th>
+                  <td></td>
+                </tr>
+                <tr>
+                  <th class="-form-layout-label">Add Parameter:</th>
+                  <td>
+                    <TextField id="cxnEditAddParam" name="_add" size="25" />
+                    <Button icon="fa fa-lg fa-plus" class="font-smaller ml-1" data-action="add" />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="text-right mt-1">
+            <Button icon="fa fa-lg fa-times" data-dialog="close">Cancel</Button>
+            <Button type="submit" highlight="true" icon="fa fa-lg fa-check">Save</Button>
           </div>
         </Form>
       </Dialog>
