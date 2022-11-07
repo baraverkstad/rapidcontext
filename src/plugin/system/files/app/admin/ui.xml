@@ -298,204 +298,189 @@
         </table>
       </Form>
     </Pane>
-    <Pane id="procTab" pageTitle="Procedures">
-      <div w="35%" h="100%" style="float: left; padding-right: 20px;">
+    <Pane id="procTab" pageTitle="Procedures" class="position-relative">
+      <div w="33.333%-2rem" h="100%" class="inline-block vertical-top mr-4">
         <h3>
           Procedure Names:
-          <Icon id="procTreeReload" ref="RELOAD" style="margin-left: 3px;" />
-          <Icon id="procTreeLoading" ref="LOADING" style="margin-left: 3px;" />
+          <Icon id="procTreeReload" class="fa fa-refresh ml-1" title="Reload" />
+          <Icon id="procTreeLoading" class="fa fa-spin fa-refresh ml-1" />
         </h3>
-        <Tree id="procTree" w="100%" h="100%-26" />
+        <Tree id="procTree" w="100%" h="100%-2em" />
       </div>
-      <div w="65%-30" h="100%" style="float: left;">
-        <Form id="procForm" style="width: 100%; height: 100%;">
+      <div w="66.666%" h="100%" class="inline-block vertical-top">
+        <Form id="procForm" class="w-100 h-100">
           <h3>
             Procedure Details:
-            <Icon id="procAdd" ref="ADD" style="margin-left: 3px;" />
-            <Icon id="procRemove" ref="REMOVE" style="margin-left: 3px;" />
-            <Icon id="procEdit" ref="EDIT" style="margin-left: 3px;" />
-            <Icon id="procReload" ref="RELOAD" style="margin-left: 3px;" />
-            <Icon id="procLoading" ref="LOADING" style="margin-left: 3px;" />
+            <Icon id="procAdd" class="fa fa-plus-square widget-green ml-1" title="Add procedure" />
+            <Icon id="procRemove" class="fa fa-minus-square widget-red ml-1" title="Remove procedure" />
+            <Icon id="procEdit" class="fa fa-pencil-square widget-yellow ml-1" title="Edit procedure" />
+            <Icon id="procReload" class="fa fa-refresh ml-1" title="Reload" />
+            <Icon id="procLoading" class="fa fa-spin fa-refresh ml-1" />
           </h3>
           <table>
             <tbody>
               <tr>
-                <th class="label" style="width: 15%; padding-right: 4px;">Name:</th>
-                <td>
+                <th class="label pr-2">Name:</th>
+                <td class="w-100">
                   <Field name="name" />
                 </td>
               </tr>
               <tr>
-                <th class="label" style="padding-right: 4px;">Type:</th>
+                <th class="label pr-2">Type:</th>
                 <td>
                   <Field name="type" />
                 </td>
               </tr>
               <tr>
-                <th class="label" style="padding-right: 4px;">Plug-In:</th>
+                <th class="label pr-2">Plug-In:</th>
                 <td>
                   <Field name="plugin" />
                 </td>
               </tr>
               <tr>
-                <th class="label" style="padding-right: 4px;">Description:</th>
+                <th class="label pr-2">Description:</th>
                 <td>
-                  <Field name="description" style="white-space: pre-line;"/>
+                  <Field name="description" class="text-pre-wrap"/>
                 </td>
               </tr>
             </tbody>
           </table>
-          <h3 style="margin-top: 6px;">
+          <h3 class="border-t mt-3 pt-3">
             Procedure Call:
-            <Icon id="procExecLoading" ref="LOADING" style="margin-left: 3px;" />
-            <Icon ref="BLANK" />
+            <Icon id="procExecLoading" class="fa fa-spin fa-refresh ml-1" />
           </h3>
-          <table>
+          <table class="-form-layout-table">
             <tbody id="procArgTable">
             </tbody>
           </table>
-          <div style="margin-top: 6px;">
-            <Button id="procExec" disabled="true" icon="fa fa-play">
-              Execute
-            </Button>
-            <Button id="procBatch" disabled="true" icon="fa fa-lg fa-clock-o" class="ml-2">
-              Execute Batch
-            </Button>
+          <div class="mt-1">
+            <Button id="procExec" disabled="true" icon="fa fa-play">Execute</Button>
+            <Button id="procBatch" disabled="true" icon="fa fa-lg fa-clock-o">Execute Batch</Button>
           </div>
           <Tree id="procExecResult" w="100%-2" h="10%" style="margin-top: 6px;">
           </Tree>
         </Form>
       </div>
-      <Dialog id="procArgDialog" title="Edit Argument" modal="true" w="50%" h="75%" style="overflow: hidden;">
-        <Form id="procArgForm" style="width: 100%; height: 100%;">
-          <div class="unselectable" style="padding-bottom: 6px;">
-            <span class="label" style="padding-right: 4px;">Data Type:</span>
-            <label style="margin-right: 4px; font-weight: bold;">
-              <input type="radio" name="type" value="string" checked="checked" style="vertical-align: -20%;" />
-              String
+      <Dialog id="procArgDialog" title="Edit Argument" modal="true" w="40rem">
+        <Form id="procArgForm" class="-box-sizing-border">
+          <div>
+            <span class="label">Data Type:</span>
+            <label class="select-none ml-2">
+              <input type="radio" name="type" value="string" checked="checked" /> Text
             </label>
-            <label style="margin-right: 4px; font-weight: bold;">
-              <input type="radio" name="type" value="json" style="vertical-align: -20%;" />
-              JSON
+            <label class="select-none ml-2">
+              <input type="radio" name="type" value="json" /> JSON
             </label>
           </div>
-          <TextArea name="value" w="100%-13" h="100%-65" />
-          <div style="position: absolute; bottom: 10px; right: 12px;">
-            <Button id="procArgCancel" icon="fa fa-lg fa-times">
-              Cancel
-            </Button>
-            <Button id="procArgSave" highlight="true" icon="fa fa-lg fa-check" class="ml-2">
-              Save
-            </Button>
+          <TextArea name="value" rows="10" class="w-100 mx-0" />
+          <div class="text-right mt-1">
+            <Button icon="fa fa-lg fa-times" data-dialog="close">Cancel</Button>
+            <Button type="submit" highlight="true" icon="fa fa-lg fa-check">Save</Button>
           </div>
         </Form>
       </Dialog>
-      <Dialog id="procEditDialog" title="Edit Procedure" modal="true" w="73%" h="90%">
+      <Dialog id="procEditDialog" title="Edit Procedure" modal="true" w="40rem">
         <h3>Edit Procedure:</h3>
-        <Form id="procEditForm" w="100%" h="100%-60" style="overflow-y: auto;">
-          <table w="100%-30">
-            <tbody>
-              <tr>
-                <th class="label" style="padding-top: 4px; padding-right: 4px;">Name:</th>
-                <td style="width: 100%;">
-                  <TextField name="name" style="width: 100%;" />
-                </td>
-              </tr>
-              <tr>
-                <th class="label" style="padding-top: 4px; padding-right: 2px;">Type:</th>
-                <td style="padding-top: 2px;">
-                  <select id="procEditType" name="type">
-                  </select>
-                </td>
-              </tr>
-              <tr>
-                <th class="label" style="padding-top: 4px; padding-right: 4px;">Description:</th>
-                <td style=" width: 100%; padding-bottom: 4px;">
-                  <TextArea name="description" style="width: 100%;" rows="3" />
-                </td>
-              </tr>
-              <tr>
-                <th class="label" style="padding-top: 4px; padding-right: 4px;">Connections:</th>
-                <td id="procEditConns" style="width: 100%; padding-bottom: 4px;"></td>
-              </tr>
-              <tr>
-                <th class="label" style="padding-top: 4px; padding-right: 4px;">Data:</th>
-                <td id="procEditData" style="width: 100%; padding-bottom: 4px;"></td>
-              </tr>
-              <tr>
-                <th class="label" style="padding-top: 4px; padding-right: 4px;">Procedures:</th>
-                <td id="procEditProcs" style="width: 100%; padding-bottom: 4px;"></td>
-              </tr>
-              <tr>
-                <th class="label" style="padding-top: 4px; padding-right: 4px;">Arguments:</th>
-                <td id="procEditArgs" style="width: 100%; padding-bottom: 4px;"></td>
-              </tr>
-              <tr>
-                <th class="label" style="padding-top: 4px; padding-right: 4px;">Add New:</th>
-                <td style="width: 100%; padding-bottom: 4px;">
-                  <select id="procEditAddType" style="margin-right: 6px;">
-                    <option value="connection">Connection</option>
-                    <option value="data">Data</option>
-                    <option value="procedure">Procedure</option>
-                    <option value="argument">Argument</option>
-                  </select>
-                  <TextField id="procEditAddName" helpText="&lt; Enter new name &gt;" />
-                  <Icon id="procEditAdd" ref="ADD" style="margin-left: 6px; font-size: 1.4em; vertical-align: middle;" />
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <Form id="procEditForm">
+          <div class="w-100">
+            <table class="-form-layout-table -box-sizing-border">
+              <tbody>
+                <tr>
+                  <th class="-form-layout-label">Name:</th>
+                  <td class="w-100">
+                    <TextField name="name" class="w-100" />
+                  </td>
+                </tr>
+                <tr>
+                  <th class="-form-layout-label">Type:</th>
+                  <td>
+                    <select id="procEditType" name="type">
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="-form-layout-label">Description:</th>
+                  <td>
+                    <TextArea name="description" rows="3" class="w-100" />
+                  </td>
+                </tr>
+                <tr>
+                  <th class="-form-layout-label">Connections:</th>
+                  <td id="procEditConns"></td>
+                </tr>
+                <tr>
+                  <th class="-form-layout-label">Data:</th>
+                  <td id="procEditData"></td>
+                </tr>
+                <tr>
+                  <th class="-form-layout-label">Procedures:</th>
+                  <td id="procEditProcs"></td>
+                </tr>
+                <tr>
+                  <th class="-form-layout-label">Arguments:</th>
+                  <td id="procEditArgs"></td>
+                </tr>
+                <tr>
+                  <th class="-form-layout-label">Add New:</th>
+                  <td>
+                    <select id="procEditAddType">
+                      <option value="connection">Connection</option>
+                      <option value="data">Data</option>
+                      <option value="procedure">Procedure</option>
+                      <option value="argument">Argument</option>
+                    </select>
+                    <TextField id="procEditAddName" placeholder="Enter variable name" class="ml-1" />
+                    <Button id="procEditAdd" icon="fa fa-lg fa-plus" class="font-smaller ml-1" data-action="add" />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="text-right mt-1">
+            <Button icon="fa fa-lg fa-times" data-dialog="close">Cancel</Button>
+            <Button type="submit" highlight="true" icon="fa fa-lg fa-check">Save</Button>
+          </div>
         </Form>
-        <div style="position: absolute; bottom: 10px; right: 12px;">
-          <Button id="procEditCancel" icon="fa fa-lg fa-times">
-            Cancel
-          </Button>
-          <Button id="procEditSave" highlight="true" icon="fa fa-lg fa-check" class="ml-2">
-            Save
-          </Button>
-        </div>
       </Dialog>
     </Pane>
     <Pane id="batchTab" pageTitle="Batch">
       <Form id="batchForm">
         <h3>
           Batch Control:
-          <Icon id="batchDelete" ref="REMOVE" style="margin-left: 3px;" />
-          <Icon id="batchDelay" class="fa fa-clock-o" style="margin-left: 3px;" />
-          <Icon id="batchLoading" ref="LOADING" style="margin-left: 3px;" />
+          <Icon id="batchDelete" class="fa fa-minus-square widget-red ml-1" />
+          <Icon id="batchDelay" class="fa fa-clock-o ml-1" />
+          <Icon id="batchLoading" class="fa fa-spin fa-refresh ml-1" />
         </h3>
         <table>
           <tbody>
             <tr>
-              <th class="label" style="padding-right: 4px;">Progress:</th>
-              <td style="width: 500px;">
+              <th class="label pr-2">Progress:</th>
+              <td class="w-100">
                 <ProgressBar id="batchProgress" noratio="true" />
               </td>
             </tr>
             <tr>
-              <th class="label" style="padding-right: 4px;">Success:</th>
+              <th class="label pr-2">Success:</th>
               <td>
                 <Field name="success" />
               </td>
             </tr>
             <tr>
-              <th class="label" style="padding-right: 4px;">Failed:</th>
+              <th class="label pr-2">Failed:</th>
               <td>
                 <Field name="failed" />
               </td>
             </tr>
-            <tr>
-              <td colspan="2" style="padding-top: 4px;">
-                <Button id="batchPlay" icon="fa fa-play">
-                  Resume Execution
-                </Button>
-                <Button id="batchPause" icon="fa fa-pause">
-                  Pause Execution
-                </Button>
-              </td>
-            </tr>
           </tbody>
         </table>
+        <div class="mt-1">
+          <Button id="batchPlay" icon="fa fa-play">
+            Resume Execution
+          </Button>
+          <Button id="batchPause" icon="fa fa-pause">
+            Pause Execution
+          </Button>
+        </div>
       </Form>
     </Pane>
     <Pane id="userTab" pageTitle="Users">

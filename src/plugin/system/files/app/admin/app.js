@@ -108,14 +108,12 @@ AdminApp.prototype.start = function () {
     MochiKit.Signal.connect(this.ui.procEdit, "onclick", this, "_editProcedure");
     MochiKit.Signal.connect(this.ui.procEditType, "onchange", this, "_updateProcEdit");
     MochiKit.Signal.connect(this.ui.procEditAdd, "onclick", this, "_addProcBinding");
-    MochiKit.Signal.connect(this.ui.procEditCancel, "onclick", this.ui.procEditDialog, "hide");
-    MochiKit.Signal.connect(this.ui.procEditSave, "onclick", this, "_saveProcedure");
+    MochiKit.Signal.connect(this.ui.procEditForm, "onsubmit", this, "_saveProcedure");
     MochiKit.Signal.connect(this.ui.procReload, "onclick", this, "_showProcedure");
     MochiKit.Signal.connect(this.ui.procExec, "onclick", this, "_executeProcedure");
     MochiKit.Signal.connect(this.ui.procBatch, "onclick", this, "_createBatch");
     MochiKit.Signal.connect(this.ui.procExecResult, "onexpand", this, "_showExecDataExpand");
-    MochiKit.Signal.connect(this.ui.procArgCancel, "onclick", this.ui.procArgDialog, "hide");
-    MochiKit.Signal.connect(this.ui.procArgSave, "onclick", this, "_updateProcArg");
+    MochiKit.Signal.connect(this.ui.procArgForm, "onsubmit", this, "_updateProcArg");
     this.ui.procExecLoading.hide();
     this.ui.procExecResult.resizeContent = function () {
         var pos = MochiKit.Style.getElementPosition(this, this.parentNode);
@@ -755,19 +753,19 @@ AdminApp.prototype._callbackShowProcedure = function (res) {
         for (var i = 0; i < res.bindings.length; i++) {
             var b = res.bindings[i];
             if (b.type == "argument") {
-                var attrs = { "class": "label", style: "padding-top: 4px; padding-right: 6px;" };
-                var text = RapidContext.Util.toTitleCase(b.name).replace(" ", "\u00A0") + ":";
-                var col1 = MochiKit.DOM.TD(attrs, text);
+                var attrs = { "class": "-form-layout-label" };
+                var text = RapidContext.Util.toTitleCase(b.name) + ":";
+                var col1 = MochiKit.DOM.TH(attrs, text);
+                var name = "arg" + count;
                 var value = this._defaults[b.name] || "";
-                var fieldAttrs = { name: "arg" + count, value: value, style: "margin-right: 6px;" };
-                var field = RapidContext.Widget.TextField(fieldAttrs);
-                var icon = RapidContext.Widget.Icon({
-                    ref: "EDIT",
-                    style: { "verticalAlign": "middle", "fontSize": "1.6em" }
+                var field = RapidContext.Widget.TextField({ name: name, value: value });
+                var btn = RapidContext.Widget.Button({
+                    "class": "font-smaller ml-1",
+                    "icon": "fa fa-lg fa-pencil"
                 });
-                icon.onclick = MochiKit.Base.bind("_editProcArg", this, count);
-                var col2 = MochiKit.DOM.TD({ style: "padding-right: 6px; white-space: nowrap;" }, field, icon);
-                var col3 = MochiKit.DOM.TD({ style: "padding-top: 4px; white-space: pre-line;" }, b.description);
+                btn.onclick = MochiKit.Base.bind("_editProcArg", this, count);
+                var col2 = MochiKit.DOM.TD({ "class": "text-nowrap pr-2" }, field, btn);
+                var col3 = MochiKit.DOM.TD({ "class": "text-pre-wrap w-100 pt-1" }, b.description);
                 var tr = MochiKit.DOM.TR({}, col1, col2, col3);
                 this.ui.procArgTable.appendChild(tr);
                 count++;
@@ -940,13 +938,12 @@ AdminApp.prototype._renderProcEdit = function () {
         var b = data.bindings[k];
         var defaults = data.defaults[data.type][b.name];
         var strong = MochiKit.DOM.STRONG({}, b.name + ": ");
-        var icon = (defaults == null) ? RapidContext.Widget.Icon({ ref: "REMOVE" }) : null;
-        var style = { "padding-top": icon ? "0px" : "3px", "padding-bottom": "4px", "white-space": "pre-line" };
-        var div = MochiKit.DOM.DIV({ style: style }, strong, icon, b.description);
+        var icon = defaults ? null : RapidContext.Widget.Icon({ "class": "fa fa-minus-square widget-red" });
+        var div = MochiKit.DOM.DIV({ "class": "text-pre-wrap py-1" }, strong, icon, b.description);
         var attrs = {
             name: "binding." + b.name,
             value: b.value,
-            style: { "width": "100%", "margin-bottom": "8px" }
+            "class": "w-100 mb-2"
         };
         var field;
         if (b.value.indexOf("\n") < 0) {
@@ -968,8 +965,7 @@ AdminApp.prototype._renderProcEdit = function () {
     }
     Object.values(parents).forEach(function (node) {
         if (node.childNodes.length == 0) {
-            var style = { "padding-top": "3px" };
-            var div = MochiKit.DOM.DIV({ style: style }, "< None >");
+            var div = MochiKit.DOM.DIV({ "class": "py-1" }, "< None >");
             node.appendChild(div);
         }
     });
@@ -983,6 +979,7 @@ AdminApp.prototype._renderProcEdit = function () {
         this.ui.procEditAddType.selectedIndex = 3;
     }
     this.ui.procEditForm.update(data);
+    this.ui.procEditDialog.moveToCenter();
 };
 
 /**
