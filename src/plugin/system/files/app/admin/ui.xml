@@ -206,33 +206,33 @@
       </Form>
     </Pane>
     <Pane id="pluginTab" pageTitle="Plug-Ins">
-      <Form id="pluginUploadForm" w="100%" style="margin-bottom: 10px; border-bottom: solid 1px #DDDDDD; padding-bottom: 10px;">
+      <Form id="pluginUploadForm" w="100%" class="border-b mb-3 pb-3">
         <h3>Software Install &amp; Update:</h3>
         <label id="pluginInstall" class="btn">
-          <i class="fa fa-puzzle-piece"></i>
+          <i class="fa fa-lg fa-puzzle-piece"></i>
           <t>Install Plug-in</t>
           <input id="pluginFile" type="file" accept=".plugin,.zip" class="hidden"/>
         </label>
-        <Button id="pluginReset" icon="fa fa-refresh" class="m-0 ml-2">
+        <Button id="pluginReset" icon="fa fa-refresh">
           Reset Server
         </Button>
         <ProgressBar id="pluginProgress" hidden="true" novalue="true"/>
       </Form>
-      <div w="45%" h="100%-100" style="float: left; padding-right: 20px;">
+      <div w="50%-2rem" h="100%-7em" class="inline-block vertical-top mr-4">
         <h3>
           Plug-In List:
-          <Icon id="pluginReload" ref="RELOAD" style="margin-left: 3px;" />
-          <Icon id="pluginLoading" ref="LOADING" style="margin-left: 3px;" />
+          <Icon id="pluginReload" class="fa fa-refresh ml-1" title="Reload" />
+          <Icon id="pluginLoading" class="fa fa-spin fa-refresh ml-1" />
         </h3>
-        <Table id="pluginTable" w="100%" h="100%-22">
+        <Table id="pluginTable" w="100%" h="100%-2em">
           <TableColumn title="Status" field="loaded" type="boolean" />
           <TableColumn title="Identifier" field="id" key="true" />
           <TableColumn title="Version" field="version" />
           <TableColumn title="Name" field="name" />
         </Table>
       </div>
-      <Form id="pluginForm" w="45%-30" h="100%-100" style="float: left;">
-        <h3>Plug-In Details: <Icon ref="BLANK" /></h3>
+      <Form id="pluginForm" w="50%" h="100%-7em" class="inline-block vertical-top">
+        <h3>Plug-In Details:</h3>
         <table>
           <tbody>
             <tr>
@@ -260,7 +260,7 @@
                 <Field name="id" format="storage/" class="unimportant" />
                 <a id="pluginLink" href="#" target="_blank" class="hidden" title="View in storage browser">
                   <Field name="id" format="plugin/{}/" />
-                  <Icon ref="EXPAND" style="margin-left: 3px;" />
+                  <Icon class="fa fa-external-link-square ml-1" />
                 </a>
               </td>
             </tr>
@@ -273,13 +273,13 @@
             <tr>
               <th class="label" style="padding-right: 4px;">Description:</th>
               <td>
-                <Field name="description" class="preformatted" />
+                <Field name="description" class="text-pre-wrap" />
               </td>
             </tr>
             <tr>
               <th class="label" style="padding-right: 4px;">Copyright:</th>
               <td>
-                <Field name="copyright" class="preformatted" />
+                <Field name="copyright" class="text-pre-wrap" />
               </td>
             </tr>
             <tr>
@@ -290,12 +290,8 @@
             </tr>
             <tr>
               <td colspan="2" style="padding-top: 4px;">
-                <Button id="pluginLoad" icon="fa fa-puzzle-piece">
-                  Load
-                </Button>
-                <Button id="pluginUnload" icon="fa fa-sign-out">
-                  Unload
-                </Button>
+                <Button id="pluginLoad" icon="fa fa-lg fa-puzzle-piece">Load</Button>
+                <Button id="pluginUnload" icon="fa fa-lg fa-ban">Unload</Button>
               </td>
             </tr>
           </tbody>
