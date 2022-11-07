@@ -132,18 +132,17 @@ RapidContext.Widget.createWidget = function (name, attrs/*, ...*/) {
 
 /**
  * Destroys a widget or a DOM node. This function will remove the DOM
- * node from the tree, disconnect all signals and call all widget
- * destructor functions. The same procedure will also be applied
- * recursively to all child nodes. Once destroyed, all references to
- * the widget object should be cleared in order for the browser to
- * be able to reclaim the memory used.
+ * node from its parent, disconnect any signals and call destructor
+ * functions. It is also applied recursively to to all child nodes.
+ * Once destroyed, all references to the widget object should be
+ * cleared to reclaim browser memory.
  *
- * @param {Widget/Node/Array} node the (widget) DOM node or list
+ * @param {Widget/Node/NodeList/Array} node the DOM node or list
  *
  * @static
  */
 RapidContext.Widget.destroyWidget = function (node) {
-    if (node.nodeType) {
+    if (node && node.nodeType === 1) {
         if (typeof(node.destroy) == "function") {
             node.destroy();
         }
@@ -152,13 +151,9 @@ RapidContext.Widget.destroyWidget = function (node) {
         }
         MochiKit.Signal.disconnectAll(node);
         MochiKit.Signal.disconnectAllTo(node);
-        while (node.firstChild != null) {
-            RapidContext.Widget.destroyWidget(node.firstChild);
-        }
-    } else if (MochiKit.Base.isArrayLike(node)) {
-        for (var i = node.length - 1; i >= 0; i--) {
-            RapidContext.Widget.destroyWidget(node[i]);
-        }
+        RapidContext.Widget.destroyWidget(node.childNodes);
+    } else if (node && typeof(node.length) === "number") {
+        Array.prototype.slice.call(node).forEach(RapidContext.Widget.destroyWidget);
     }
 };
 
