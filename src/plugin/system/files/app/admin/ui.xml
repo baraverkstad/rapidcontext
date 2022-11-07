@@ -388,13 +388,14 @@
                 <tr>
                   <th class="-form-layout-label">Name:</th>
                   <td class="w-100">
-                    <TextField name="name" class="w-100" />
+                    <TextField name="name" required="true" pattern="[a-zA-Z0-9._-]+" class="w-100" />
+                    <FormValidator name="name" message="Only alphanumeric characters allowed in name." />
                   </td>
                 </tr>
                 <tr>
                   <th class="-form-layout-label">Type:</th>
                   <td>
-                    <select id="procEditType" name="type">
+                    <select id="procEditType" required="true" name="type">
                     </select>
                   </td>
                 </tr>
@@ -507,7 +508,7 @@
             <tr>
               <th class="-form-layout-label text-left">Id:</th>
               <td class="w-100">
-                <TextField id="userId" name="id" class="w-100" />
+                <TextField id="userId" name="id" required="true" class="w-100" />
                 <FormValidator name="id" message="User id cannot be empty" />
               </td>
             </tr>
@@ -520,7 +521,7 @@
             <tr>
               <th class="-form-layout-label text-left">E-mail:</th>
               <td>
-                <TextField name="email" class="w-100" />
+                <TextField name="email" type="email" class="w-100" />
                 <FormValidator name="email" mandatory="false" regex=".+@.+\..+" message="Invalid e-mail address" />
               </td>
             </tr>
