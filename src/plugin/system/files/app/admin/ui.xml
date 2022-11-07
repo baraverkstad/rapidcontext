@@ -576,33 +576,47 @@
       </Form>
     </Pane>
     <Pane id="logTab" pageTitle="Logging">
-      <div w="100" h="100%" style="float: left; padding: 0 10px 0 0; border-right: 1px solid #DDDDDD;">
+      <div w="11em-2rem-1px" h="100%" class="inline-block vertical-top border-r mr-3 pr-3">
         <Form id="logForm">
-          <h3>Log Level: <Icon ref="BLANK" /></h3>
-          <span id="logError" class="label"><input type="radio" name="level" value="error" /> Error</span><br/>
-          <span id="logWarning" class="label"><input type="radio" name="level" value="warn" /> Warning</span><br/>
-          <span id="logInfo" class="label"><input type="radio" name="level" value="info" checked="true" /> Info</span><br/>
-          <span id="logTrace" class="label"><input type="radio" name="level" value="log" /> Trace</span>
-          <p style="padding-top: 20px;">Press refresh to update log entries table.</p>
+          <h3>Log Level:</h3>
+          <label class="block label">
+            <input type="radio" name="level" value="error" />
+            Error
+          </label>
+          <label class="block label">
+            <input type="radio" name="level" value="warn" />
+            Warning
+          </label>
+          <label class="block label">
+            <input type="radio" name="level" value="info" />
+            Info
+          </label>
+          <label class="block label">
+            <input type="radio" name="level" value="log" />
+            Trace
+          </label>
+          <p class="mt-2">Press refresh to update log entries table.</p>
         </Form>
       </div>
-      <div w="100%-125" h="50%" style="float: left; margin-left: 10px; padding-bottom: 6px;">
-        <h3>
-          Log Entries:
-          <Icon id="logClear" ref="REMOVE" style="margin-left: 3px;" />
-          <Icon id="logReload" ref="RELOAD" style="margin-left: 3px;" />
-        </h3>
-        <Table id="logTable" w="100%" h="100%-22">
-          <TableColumn title="Id" field="id" type="number" sort="desc" key="true" />
-          <TableColumn title="Time" field="time" type="time" />
-          <TableColumn title="Level" field="level" />
-          <TableColumn title="Context" field="context" />
-          <TableColumn title="Message" field="message" />
-        </Table>
-      </div>
-      <div w="100%-125" h="50%-20" style="float: left; margin-left: 10px; padding-top: 6px; border-top: solid 1px #DDDDDD;">
-        <h3>Log Data:</h3>
-        <p id="logData" w="100%" h="100%-25" style="overflow: auto; color: #666666;"></p>
+      <div w="100%-11em" h="100%" class="inline-block vertical-top">
+        <div h="33.333%-2rem-1px" class="border-b mb-3 pb-3">
+          <h3>
+            Log Entries:
+            <Icon id="logClear" class="fa fa-minus-square widget-red ml-1" title="Clear logs" />
+            <Icon id="logReload" class="fa fa-refresh ml-1" title="Reload" />
+          </h3>
+          <Table id="logTable" w="100%" h="100%-2em">
+            <TableColumn title="Id" field="id" type="number" sort="desc" key="true" />
+            <TableColumn title="Time" field="time" type="time" />
+            <TableColumn title="Level" field="level" />
+            <TableColumn title="Context" field="context" />
+            <TableColumn title="Message" field="message" />
+          </Table>
+        </div>
+        <div h="66.666%">
+          <h3>Log Data:</h3>
+          <p id="logData" w="100%" h="100%-2em" class="overflow-auto unimportant"></p>
+        </div>
       </div>
     </Pane>
   </TabContainer>

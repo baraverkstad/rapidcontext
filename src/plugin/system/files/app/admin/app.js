@@ -141,13 +141,11 @@ AdminApp.prototype.start = function () {
 
     // Log view
     MochiKit.Signal.connect(this.ui.logTab, "onenter", this, "_showLogs");
-    MochiKit.Signal.connect(this.ui.logError, "onclick", MochiKit.Base.bind("setLogLevel", this, "error"));
-    MochiKit.Signal.connect(this.ui.logWarning, "onclick", MochiKit.Base.bind("setLogLevel", this, "warn"));
-    MochiKit.Signal.connect(this.ui.logInfo, "onclick", MochiKit.Base.bind("setLogLevel", this, "info"));
-    MochiKit.Signal.connect(this.ui.logTrace, "onclick", MochiKit.Base.bind("setLogLevel", this, "log"));
+    MochiKit.Signal.connect(this.ui.logForm, "oninput", this, "_updateLogLevel");
     MochiKit.Signal.connect(this.ui.logClear, "onclick", this, "_clearLogs");
     MochiKit.Signal.connect(this.ui.logReload, "onclick", this, "_showLogs");
     MochiKit.Signal.connect(this.ui.logTable, "onselect", this, "_showLogDetails");
+    this._updateLogLevel(false);
 
     // TODO: Security test should be made on access, not role name
     var user = RapidContext.App.user();
@@ -1436,11 +1434,13 @@ AdminApp.prototype._saveUser = function () {
 };
 
 /**
- * Sets a new log level.
+ * Updates the log level.
  */
-AdminApp.prototype.setLogLevel = function (level) {
-    level = RapidContext.Log.level(level);
-    this.ui.logForm.update({ level: level });
+AdminApp.prototype._updateLogLevel = function (evt) {
+    if (evt) {
+        RapidContext.Log.level(this.ui.logForm.valueMap().level);
+    }
+    this.ui.logForm.update({ level: RapidContext.Log.level() });
 };
 
 /**
