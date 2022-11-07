@@ -484,80 +484,76 @@
       </Form>
     </Pane>
     <Pane id="userTab" pageTitle="Users">
-      <div w="50%" h="100%" style="float: left; padding-right: 20px;">
+      <div w="50%-2rem" h="100%" class="inline-block vertical-top mr-4">
         <h3>
           User List:
-          <Icon id="userReload" ref="RELOAD" style="margin-left: 3px;" />
-          <Icon id="userLoading" ref="LOADING" style="margin-left: 3px;" />
+          <Icon id="userReload" class="fa fa-refresh ml-1" title="Reload" />
+          <Icon id="userLoading" class="fa fa-spin fa-refresh ml-1" />
         </h3>
-        <Table id="userTable" w="100%" h="100%-22">
+        <Table id="userTable" w="100%" h="100%-2em">
           <TableColumn title="Id" field="id" sort="asc" key="true" maxLength="20" />
           <TableColumn title="Enabled" field="enabled" type="boolean" />
           <TableColumn title="Name" field="name" maxLength="40" />
           <TableColumn title="E-mail" field="email" maxLength="40" />
         </Table>
       </div>
-      <Form id="userForm" w="50%-30" h="100%" style="float: left;">
+      <Form id="userForm" w="50%" h="100%" class="inline-block vertical-top">
         <h3>
           Edit User:
-          <Icon id="userAdd" ref="ADD" style="margin-left: 3px;" />
+          <Icon id="userAdd" class="fa fa-plus-square widget-green ml-1" />
         </h3>
-        <table style="width: 100%;">
-          <tbody style="width: 100%;">
+        <table class="-form-layout-table -box-sizing-border">
+          <tbody>
             <tr>
-              <th class="label" style="padding-top: 4px; padding-right: 4px;" w="65">Id:</th>
-              <td w="100%-70">
-                <TextField id="userId" name="id" w="100%-20" />
+              <th class="-form-layout-label text-left">Id:</th>
+              <td class="w-100">
+                <TextField id="userId" name="id" class="w-100" />
                 <FormValidator name="id" message="User id cannot be empty" />
               </td>
             </tr>
             <tr>
-              <th class="label" style="padding-top: 4px; padding-right: 4px;">Name:</th>
+              <th class="-form-layout-label text-left">Name:</th>
               <td>
-                <TextField name="name" w="100%-20" />
+                <TextField name="name" class="w-100" />
               </td>
             </tr>
             <tr>
-              <th class="label" style="padding-top: 4px; padding-right: 4px;">E-mail:</th>
+              <th class="-form-layout-label text-left">E-mail:</th>
               <td>
-                <TextField name="email" w="100%-20" />
+                <TextField name="email" class="w-100" />
                 <FormValidator name="email" mandatory="false" regex=".+@.+\..+" message="Invalid e-mail address" />
               </td>
             </tr>
             <tr>
-              <th class="label" style="padding-top: 4px; padding-right: 4px;">Description:</th>
+              <th class="-form-layout-label text-left">Description:</th>
               <td>
-                <TextArea name="description" rows="3" w="100%-20" />
+                <TextArea name="description" rows="3" class="w-100" />
               </td>
             </tr>
             <tr>
-              <th class="label" style="padding-top: 2px; padding-right: 4px;">Enabled:</th>
+              <th class="-form-layout-label text-left pt-0">Enabled:</th>
               <td>
                 <input type="checkbox" name="enabled" />
               </td>
             </tr>
             <tr>
-              <th class="label" style="padding-top: 4px; padding-right: 4px;">Password:</th>
+              <th class="-form-layout-label text-left">Password:</th>
               <td>
                 <TextField type="password" name="password" size="30" />
                 <Field name="passwordHint" style="padding-left: 10px;" />
               </td>
             </tr>
             <tr>
-              <th class="label" style="padding-top: 4px; padding-right: 4px;">Roles:</th>
+              <th class="-form-layout-label text-left">Roles:</th>
               <td>
-                <TextField name="roles" w="100%-20" />
-              </td>
-            </tr>
-            <tr>
-              <td colspan="2" style="padding-top: 4px;">
-                <Button id="userSave" highlight="true" icon="fa fa-lg fa-check">
-                  Save
-                </Button>
+                <TextField name="roles" class="w-100" />
               </td>
             </tr>
           </tbody>
         </table>
+        <div class="mt-1">
+          <Button type="submit" highlight="true" icon="fa fa-lg fa-check">Save</Button>
+        </div>
       </Form>
     </Pane>
     <Pane id="logTab" pageTitle="Logging">

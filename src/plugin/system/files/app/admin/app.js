@@ -133,7 +133,7 @@ AdminApp.prototype.start = function () {
     MochiKit.Signal.connect(this.proc.userList, "onsuccess", this.ui.userTable, "setData");
     MochiKit.Signal.connect(this.ui.userTable, "onselect", this, "_editUser");
     MochiKit.Signal.connect(this.ui.userAdd, "onclick", this, "_addUser");
-    MochiKit.Signal.connect(this.ui.userSave, "onclick", this, "_saveUser");
+    MochiKit.Signal.connect(this.ui.userForm, "onsubmit", this, "_saveUser");
     RapidContext.UI.connectProc(this.proc.userChange);
     MochiKit.Signal.connect(this.proc.userChange, "onsuccess", this.proc.userList, "recall");
 
