@@ -136,6 +136,8 @@
         { test: "[...[1, 2, 3]].length === 3", name: "spread array literals" },
         { test: "var [a, ...b] = [1, 2, 3]; a == 1 && b.length == 2", name: "array destructuring assignment" },
         { test: "var {a, b} = { a: 1, b: 2, c: 3 }; a == 1 && b == 2", name: "object destructuring assignment" },
+        { test: "var a = null; a?.dummy; true", name: "optional chaining operator (?.)" },
+        { test: "null ?? true", name: "nullish coalescing operator (??)" },
         { test: "'classList' in Element.prototype", name: "Element.prototype.classList" },
         { test: "'dataset' in HTMLElement.prototype", name: "HTMLElement.prototype.dataset" },
         { test: "'noModule' in HTMLScriptElement.prototype", name: "ES6 modules (import/export)" },
