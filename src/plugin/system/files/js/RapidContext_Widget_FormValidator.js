@@ -162,13 +162,14 @@ RapidContext.Widget.FormValidator.prototype.verify = function (field, value) {
         } else if (arguments.length == 1) {
             value = field.value;
         }
+        var str = String(value).trim();
         if (field.validationMessage) {
             this.addError(field, field.validationMessage);
             return false;
-        } else if (this.mandatory && value.trim() == "") {
+        } else if (this.mandatory && str == "") {
             this.addError(field, "This field is required");
             return false;
-        } else if (this.regex && !this.regex.test(value.trim())) {
+        } else if (this.regex && str && !this.regex.test(str)) {
             this.addError(field, "The field format is incorrect");
             return false;
         } else if (typeof(this.validator) == "function") {
