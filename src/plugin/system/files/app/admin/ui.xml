@@ -130,29 +130,27 @@
       </Dialog>
     </Pane>
     <Pane id="appTab" pageTitle="Apps">
-      <div w="35%" h="100%" style="float: left; padding-right: 20px;">
+      <div w="50%-2rem" h="100%" class="inline-block vertical-top mr-4">
         <h3>
           App List:
-          <Icon id="appReload" ref="RELOAD" style="margin-left: 3px;" />
-          <Icon id="appLoading" ref="LOADING" style="margin-left: 3px;" />
+          <Icon id="appReload" class="fa fa-refresh ml-1" title="Reload" />
+          <Icon id="appLoading" class="fa fa-spin fa-refresh ml-1" />
         </h3>
-        <Table id="appTable" w="100%" h="100%-22">
+        <Table id="appTable" w="100%" h="100%-2em">
           <TableColumn title="Identifier" field="id" sort="asc" key="true" />
           <TableColumn title="Name" field="name" />
           <TableColumn title="Plug-in" field="plugin" />
         </Table>
       </div>
-      <Form id="appForm" w="65%-30" h="100%" style="float: left;">
-        <h3>App Details: <Icon ref="BLANK" /></h3>
+      <Form id="appForm" w="50%" h="100%" class="inline-block vertical-top">
+        <h3>App Details:</h3>
         <table>
           <tbody>
             <tr>
               <td id="appIcon" style="padding-bottom: 6px;"></td>
               <td>
                 <h2 style="margin: 0;"><Field name="name" /></h2>
-                <span style="white-space: pre-line;">
-                  <Field name="description" style="white-space: pre-line;" />
-                </span>
+                <Field name="description" class="text-pre-wrap" />
               </td>
             </tr>
             <tr>
@@ -161,7 +159,7 @@
                 <Field name="id" format="app/" class="unimportant" />
                 <a id="appLink" href="#" target="_blank" class="hidden" title="View in storage browser">
                   <Field name="id" />
-                  <Icon ref="EXPAND" style="margin-left: 3px;" />
+                  <Icon class="fa fa-external-link-square ml-1" />
                 </a>
               </td>
             </tr>
@@ -198,7 +196,7 @@
                 <Button id="appLaunch" disabled="true" icon="fa fa-play">
                   Launch
                 </Button>
-                <Button id="appLaunchWindow" disabled="true" icon="fa fa-external-link" class="ml-2">
+                <Button id="appLaunchWindow" disabled="true" icon="fa fa-external-link-square">
                   Launch in new window
                 </Button>
               </td>

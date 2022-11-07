@@ -76,9 +76,7 @@ AdminApp.prototype.start = function () {
     MochiKit.Signal.connect(this.ui.appLaunchWindow, "onclick", this, "_launchAppWindow");
     var urlRenderer = function (td, value, data) {
         if (value) {
-            var styles = { marginLeft: "3px" };
-            var attrs = { ref: "EXPAND", tooltip: "Open in new window", style: styles };
-            var ico = RapidContext.Widget.Icon(attrs);
+            var ico = RapidContext.Widget.Icon({ "class": "fa fa-external-link-square ml-1" });
             var link = MochiKit.DOM.A({ href: value, target: "_blank" }, value, ico);
             td.appendChild(link);
         }
