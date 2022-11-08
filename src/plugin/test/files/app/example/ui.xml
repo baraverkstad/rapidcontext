@@ -1,58 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- User Interface XML File -->
-
-<ui>
-  <style><![CDATA[
-.zoo h3 {
-    clear: both;
-}
-.zoo fieldset {
-    float: left;
-    clear: left;
-    margin: 0 0 20px 0;
-}
-.zoo button,
-.zoo input,
-.zoo textarea {
-    margin: 0 5px;
-}
-.expose td {
-    padding: 6px 10px;
-    border: 1px solid #CCC;
-    vertical-align: middle;
-}
-.expose td.label {
-    padding-right: 20px;
-}
-.expose td.white,
-.expose td.grey,
-.expose td.black {
-    text-align: center;
-    border-left: none;
-    border-right: none;
-}
-.expose td.grey {
-    background: #888888;
-    border-top: 1px solid #666;
-    border-bottom: 1px solid #666;
-}
-.expose td.black {
-    background: #000000;
-    border-top: 1px solid #444;
-    border-bottom: 1px solid #444;
-}
-.expose td.space {
-    border-top: none;
-    border-bottom: none;
-    width: 50px;
-}
-.expose td.end {
-    border-top: none;
-    border-bottom: none;
-    border-right: none;
-    width: 5px;
-}
-  ]]></style>
+<ui class="example-app">
   <TabContainer w="100%" h="100%">
     <Pane pageTitle="Widget Zoo" pageCloseable="false">
       <div class="zoo" w="550" h="100%" style="float: left; padding: 0 10px 0 0;">
