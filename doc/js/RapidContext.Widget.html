@@ -7,6 +7,7 @@
     <meta name="generator" content="JsDoc Toolkit" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" href="../css/style.css" type="text/css">
+    <link rel="stylesheet" href="../css/doc.css" type="text/css">
     <link rel="stylesheet" href="../css/font-awesome-4.7.0.min.css" type="text/css">
     <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="../images/logotype-icon.ico">
     <link rel="icon" type="image/png" sizes="256x256" href="../images/logotype-icon-256x256.png">
@@ -202,16 +203,6 @@ child widgets or DOM nodes.</div>
                         </tr>
 
                         <tr>
-                            <td class="attributes">&lt;static&gt; &nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" style="text-decoration: line-through;">RapidContext.Widget.<b><a href="RapidContext.Widget.html#.emitSignal">emitSignal</a></b>(node, sig)
-                                </div>
-                                <div class="description">Emits an asynchronous signal to any listeners connected with
-MochiKit.Signal.</div>
-                            </td>
-                        </tr>
-
-                        <tr>
                             <td class="attributes">&nbsp;</td>
                             <td class="nameDescription">
                                 <div class="fixedFont" ><b><a href="RapidContext.Widget.html#enable">enable</a></b>()
@@ -253,15 +244,6 @@ MochiKit.Signal.</div>
                                 <div class="fixedFont" ><b><a href="RapidContext.Widget.html#isDisabled">isDisabled</a></b>()
                                 </div>
                                 <div class="description">Checks if this widget is disabled.</div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="attributes">&lt;static&gt; &nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" >RapidContext.Widget.<b><a href="RapidContext.Widget.html#.isFormField">isFormField</a></b>(obj)
-                                </div>
-                                <div class="description">Checks if the specified object is a form field.</div>
                             </td>
                         </tr>
 
@@ -488,52 +470,6 @@ widgets).
 
                     <hr />
 
-                    <div id=".isFormField" class="fixedFont">&lt;static&gt;
-
-                    <span class="light">{Boolean}</span>
-                    <span class="light">RapidContext.Widget.</span><b>isFormField</b>(obj)
-
-                    </div>
-                    <div class="description">
-                        Checks if the specified object is a form field. Any non-null object that
-looks like a DOM node and is either an standard HTML form field (<var>&lt;input&gt;</var>,
-<var>&lt;textarea&gt;</var> or <var>&lt;select&gt;</var>) or one with a <q>value</q> property will cause this
-function to return <var>true</var>. Otherwise, <var>false</var> will be returned.
-
-
-                    </div>
-
-
-
-
-                            <dl class="detailList">
-                            <dt class="heading">Parameters:</dt>
-
-                                <dt>
-                                    <span class="light fixedFont">{Object}</span> <b>obj</b>
-
-                                </dt>
-                                <dd>the object to check</dd>
-
-                            </dl>
-
-
-
-
-
-                            <dl class="detailList">
-                            <dt class="heading">Returns:</dt>
-
-                                <dd><span class="light fixedFont">{Boolean}</span> <var>true</var> if the object looks like a form field, or
-        <var>false</var> otherwise</dd>
-
-                            </dl>
-
-
-
-
-                    <hr />
-
                     <div id=".createWidget" class="fixedFont">&lt;static&gt;
 
                     <span class="light">{Widget}</span>
@@ -611,11 +547,10 @@ the constructor function directly.
                     </div>
                     <div class="description">
                         Destroys a widget or a DOM node. This function will remove the DOM
-node from the tree, disconnect all signals and call all widget
-destructor functions. The same procedure will also be applied
-recursively to all child nodes. Once destroyed, all references to
-the widget object should be cleared in order for the browser to
-be able to reclaim the memory used.
+node from its parent, disconnect any signals and call destructor
+functions. It is also applied recursively to to all child nodes.
+Once destroyed, all references to the widget object should be
+cleared to reclaim browser memory.
 
 
                     </div>
@@ -627,69 +562,13 @@ be able to reclaim the memory used.
                             <dt class="heading">Parameters:</dt>
 
                                 <dt>
-                                    <span class="light fixedFont">{Widget/Node/Array}</span> <b>node</b>
+                                    <span class="light fixedFont">{Widget/Node/NodeList/Array}</span> <b>node</b>
 
                                 </dt>
-                                <dd>the (widget) DOM node or list</dd>
+                                <dd>the DOM node or list</dd>
 
                             </dl>
 
-
-
-
-
-
-
-
-                    <hr />
-
-                    <div id=".emitSignal" class="fixedFont">&lt;static&gt;
-
-
-                    <span class="light">RapidContext.Widget.</span><b>emitSignal</b>(node, sig)
-
-                    </div>
-                    <div class="description">
-                        Emits an asynchronous signal to any listeners connected with
-MochiKit.Signal.<br/><br/>Note that this function is an internal helper function for the
-widgets and shouldn't be called by external code.
-
-
-                    </div>
-
-
-
-
-                            <dl class="detailList">
-                            <dt class="heading">Parameters:</dt>
-
-                                <dt>
-                                    <span class="light fixedFont">{Widget}</span> <b>node</b>
-
-                                </dt>
-                                <dd>the widget DOM node</dd>
-
-                                <dt>
-                                    <span class="light fixedFont">{String}</span> <b>sig</b>
-
-                                </dt>
-                                <dd>the signal name (<q>onclick</q> or similar)</dd>
-
-                                <dt>
-                                    <span class="light fixedFont">{Object}</span> <b>...</b>
-                                    <i>Optional</i>
-                                </dt>
-                                <dd>the optional signal arguments</dd>
-
-                            </dl>
-
-
-                            <dl class="detailList">
-                            <dt class="heading">Deprecated:</dt>
-                            <dt>
-                                Use _fireEvent() instead to emit proper Event object.
-                            </dt>
-                            </dl>
 
 
 

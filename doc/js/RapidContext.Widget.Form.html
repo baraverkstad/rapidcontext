@@ -7,6 +7,7 @@
     <meta name="generator" content="JsDoc Toolkit" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" href="../css/style.css" type="text/css">
+    <link rel="stylesheet" href="../css/doc.css" type="text/css">
     <link rel="stylesheet" href="../css/font-awesome-4.7.0.min.css" type="text/css">
     <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="../images/logotype-icon.ico">
     <link rel="icon" type="image/png" sizes="256x256" href="../images/logotype-icon-256x256.png">
@@ -102,6 +103,24 @@
                         <tr>
                             <td class="attributes">&nbsp;</td>
                             <td class="nameDescription">
+                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Form.html#addValidator">addValidator</a></b>(field, validator)
+                                </div>
+                                <div class="description">Adds a custom form validator for a named form field.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Form.html#destroy">destroy</a></b>()
+                                </div>
+                                <div class="description">Destroys this widget.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
                                 <div class="fixedFont" ><b><a href="RapidContext.Widget.Form.html#fieldMap">fieldMap</a></b>()
                                 </div>
                                 <div class="description">Returns a map with all child DOM nodes containing form fields with
@@ -121,9 +140,18 @@ a name attribute.</div>
                         <tr>
                             <td class="attributes">&nbsp;</td>
                             <td class="nameDescription">
+                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Form.html#removeValidators">removeValidators</a></b>(field)
+                                </div>
+                                <div class="description">Removes all custom form validators for a named form field.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
                                 <div class="fixedFont" ><b><a href="RapidContext.Widget.Form.html#reset">reset</a></b>()
                                 </div>
-                                <div class="description">Resets all fields in the form to their default values.</div>
+                                <div class="description">Resets all fields and validations to their original state.</div>
                             </td>
                         </tr>
 
@@ -150,7 +178,7 @@ a name attribute.</div>
                             <td class="nameDescription">
                                 <div class="fixedFont" ><b><a href="RapidContext.Widget.Form.html#validateReset">validateReset</a></b>()
                                 </div>
-                                <div class="description">Resets all form validators.</div>
+                                <div class="description">Resets all form validations.</div>
                             </td>
                         </tr>
 
@@ -178,7 +206,7 @@ a name attribute.</div>
 
 
                 <dl class="inheritsList">
-                <dt>Methods borrowed from class <a href="RapidContext.Widget.html">RapidContext.Widget</a>: </dt><dd><a href="RapidContext.Widget.html#addAll">addAll</a>, <a href="RapidContext.Widget.html#addChildNode">addChildNode</a>, <a href="RapidContext.Widget.html#addClass">addClass</a>, <a href="RapidContext.Widget.html#animate">animate</a>, <a href="RapidContext.Widget.html#blurAll">blurAll</a>, <a href="RapidContext.Widget.html#destroy">destroy</a>, <a href="RapidContext.Widget.html#disable">disable</a>, <a href="RapidContext.Widget.html#enable">enable</a>, <a href="RapidContext.Widget.html#getChildNodes">getChildNodes</a>, <a href="RapidContext.Widget.html#hasClass">hasClass</a>, <a href="RapidContext.Widget.html#hide">hide</a>, <a href="RapidContext.Widget.html#isDisabled">isDisabled</a>, <a href="RapidContext.Widget.html#isHidden">isHidden</a>, <a href="RapidContext.Widget.html#removeAll">removeAll</a>, <a href="RapidContext.Widget.html#removeChildNode">removeChildNode</a>, <a href="RapidContext.Widget.html#removeClass">removeClass</a>, <a href="RapidContext.Widget.html#setAttrs">setAttrs</a>, <a href="RapidContext.Widget.html#setStyle">setStyle</a>, <a href="RapidContext.Widget.html#show">show</a>, <a href="RapidContext.Widget.html#toggleClass">toggleClass</a>, <a href="RapidContext.Widget.html#uid">uid</a></dd>
+                <dt>Methods borrowed from class <a href="RapidContext.Widget.html">RapidContext.Widget</a>: </dt><dd><a href="RapidContext.Widget.html#addAll">addAll</a>, <a href="RapidContext.Widget.html#addChildNode">addChildNode</a>, <a href="RapidContext.Widget.html#addClass">addClass</a>, <a href="RapidContext.Widget.html#animate">animate</a>, <a href="RapidContext.Widget.html#blurAll">blurAll</a>, <a href="RapidContext.Widget.html#disable">disable</a>, <a href="RapidContext.Widget.html#enable">enable</a>, <a href="RapidContext.Widget.html#getChildNodes">getChildNodes</a>, <a href="RapidContext.Widget.html#hasClass">hasClass</a>, <a href="RapidContext.Widget.html#hide">hide</a>, <a href="RapidContext.Widget.html#isDisabled">isDisabled</a>, <a href="RapidContext.Widget.html#isHidden">isHidden</a>, <a href="RapidContext.Widget.html#removeAll">removeAll</a>, <a href="RapidContext.Widget.html#removeChildNode">removeChildNode</a>, <a href="RapidContext.Widget.html#removeClass">removeClass</a>, <a href="RapidContext.Widget.html#setAttrs">setAttrs</a>, <a href="RapidContext.Widget.html#setStyle">setStyle</a>, <a href="RapidContext.Widget.html#show">show</a>, <a href="RapidContext.Widget.html#toggleClass">toggleClass</a>, <a href="RapidContext.Widget.html#uid">uid</a></dd>
                 </dl>
 
 
@@ -204,14 +232,14 @@ a name attribute.</div>
 
 
                 <pre class="code"><span class="label">JavaScript:</span>
-var field = RapidContext.Widget.TextField({ name: "name", helpText: "Your Name Here" });
+var field = RapidContext.Widget.TextField({ name: "name", placeholder: "Your Name Here" });
 var attrs = { name: "name", message: "Please enter your name to proceed." };
 var valid = RapidContext.Widget.FormValidator(attrs);
 var exampleForm = RapidContext.Widget.Form({}, field, valid);</pre>
 
                 <pre class="code"><span class="label">User Interface XML:</span>
 &lt;Form id="exampleForm"&gt;
-  &lt;TextField name="name" helpText="Your Name Here" /&gt;
+  &lt;TextField name="name" placeholder="Your Name Here" /&gt;
   &lt;FormValidator name="name" message="Please enter your name to proceed." /&gt;
 &lt;/Form&gt;</pre>
 
@@ -268,6 +296,30 @@ var exampleForm = RapidContext.Widget.Form({}, field, valid);</pre>
                     Method Detail
                 </div>
 
+                    <div id="destroy" class="fixedFont">
+
+
+                    <b>destroy</b>()
+
+                    </div>
+                    <div class="description">
+                        Destroys this widget.
+
+
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+                    <hr />
+
                     <div id="fields" class="fixedFont">
 
                     <span class="light">{Array}</span>
@@ -276,8 +328,6 @@ var exampleForm = RapidContext.Widget.Form({}, field, valid);</pre>
                     </div>
                     <div class="description">
                         Returns an array with all child DOM nodes containing form fields.
-The child nodes will be returned based on the results of the
-<var>RapidContext.Widget.isFormField()</var> function.
 
 
                     </div>
@@ -297,6 +347,13 @@ The child nodes will be returned based on the results of the
                             </dl>
 
 
+
+                            <dl class="detailList linkList">
+                            <dt class="heading">See:</dt>
+
+                                <dd>https://developer.mozilla.org/en-US/docs/Web/API/HTMLFormElement/elements</dd>
+
+                            </dl>
 
 
                     <hr />
@@ -341,7 +398,7 @@ returned map will contain an array with all matching fields.
 
                     </div>
                     <div class="description">
-                        Resets all fields in the form to their default values.
+                        Resets all fields and validations to their original state.
 
 
                     </div>
@@ -367,7 +424,8 @@ returned map will contain an array with all matching fields.
                     <div class="description">
                         Returns a map with all form field values. If multiple fields have
 the same name, the value will be set to an array of all values.
-Any unchecked checkbox or radiobutton will be also be ignored.
+Disabled fields and unchecked checkboxes or radiobuttons will be
+ignored.
 
 
                     </div>
@@ -428,6 +486,87 @@ all of them.
 
                     <hr />
 
+                    <div id="addValidator" class="fixedFont">
+
+
+                    <b>addValidator</b>(field, validator)
+
+                    </div>
+                    <div class="description">
+                        Adds a custom form validator for a named form field. The function will be
+called as <var>[field].validator([value], [field], [form])</var> and should return
+<var>true</var>, <var>false</var> or a validation error message. The validator will be called
+on each <var>input</var> event and before form submission for enabled fields.<br/><br/>Note: Checkbox validators will be called once for each <var>&lt;input&gt;</var> element,
+regardless of checked state. Radio validators will only be called with
+either the first or the checked <var>&lt;input&gt;</var> element.
+
+
+                    </div>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{String/Element}</span> <b>field</b>
+
+                                </dt>
+                                <dd>the form field or name</dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{Function}</span> <b>validator</b>
+
+                                </dt>
+                                <dd>the validator function</dd>
+
+                            </dl>
+
+
+
+
+
+
+
+
+                    <hr />
+
+                    <div id="removeValidators" class="fixedFont">
+
+
+                    <b>removeValidators</b>(field)
+
+                    </div>
+                    <div class="description">
+                        Removes all custom form validators for a named form field.
+
+
+                    </div>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{String/Element}</span> <b>field</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the form field, name, or null for all</dd>
+
+                            </dl>
+
+
+
+
+
+
+
+
+                    <hr />
+
                     <div id="validators" class="fixedFont">
 
                     <span class="light">{Array}</span>
@@ -461,7 +600,7 @@ all of them.
 
                     <div id="validate" class="fixedFont">
 
-                    <span class="light">{Boolean/Promise}</span>
+                    <span class="light">{Boolean}</span>
                     <b>validate</b>()
 
                     </div>
@@ -481,9 +620,8 @@ all of them.
                             <dl class="detailList">
                             <dt class="heading">Returns:</dt>
 
-                                <dd><span class="light fixedFont">{Boolean/Promise}</span> <var>true</var> if the form validated successfully,
-        <var>false</var> if the validation failed, or a <var>Promise</var> instance that
-        either resolves or rejects</dd>
+                                <dd><span class="light fixedFont">{Boolean}</span> <var>true</var> if the form validated successfully, or
+        <var>false</var> if the validation failed</dd>
 
                             </dl>
 
@@ -499,8 +637,8 @@ all of them.
 
                     </div>
                     <div class="description">
-                        Resets all form validators. This metod is automatically called upon form
-reset.
+                        Resets all form validations. This method is automatically called when form
+is reset.
 
 
                     </div>

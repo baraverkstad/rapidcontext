@@ -4,8 +4,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="css/style.css" type="text/css">
-    <link rel="stylesheet" href="css/font-awesome-4.7.0.min.css" type="text/css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/doc.css">
+    <link rel="stylesheet" href="css/font-awesome-4.7.0.min.css">
+    <link rel="stylesheet" href="css/util.css">
     <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="images/logotype-icon.ico">
     <link rel="icon" type="image/png" sizes="256x256" href="images/logotype-icon-256x256.png">
     <link rel="apple-touch-icon" sizes="256x256" href="images/logotype-icon-256x256.png">
@@ -71,14 +73,14 @@ screenshot below shows how to create a simple <var>test</var> connection to a
 local MySQL database. Please consult your database vendor documentation for
 information about the correct connection URL (and possibly class name).</p>
 
-<p class="figure">
+<p class="text-center m-2">
   <img src="images/screenshot-cxn-edit.png" alt="Screenshot">
 </p>
 
-<div class="box green" style="margin-top: 0;">
-  <i class="box-icon fa fa-info-circle"></i>
+<div class="box green">
+  <i class="box-icon fa fa-fw fa-info-circle"></i>
   <div class="box-content">
-    <h2 style="margin: 0;">Notice</h2>
+    <h2 class="m-0">Notice</h2>
     <p>Only the drivers URL formats listed in the connection help are
     recognized by the JDBC plug-in. Press the <q>Show all parameters</q>
     checkbox to be able to set the custom JDBC driver Java class needed for
@@ -124,7 +126,7 @@ each row is mapped to an object with properties corresponding to the column
 names:</p>
 
 <div class="box blue">
-  <i class="box-icon fa fa-code"></i>
+  <i class="box-icon fa fa-fw fa-code"></i>
   <pre class="box-content code">
 PlugIn.Jdbc.Query('test','SELECT * FROM fruits')
 <span class="comment">  --&gt; [{'id': 1, 'value': 'apple'},
@@ -169,10 +171,10 @@ follows:</p>
       it).</li>
 </ul>
 
-<div class="box green" style="margin-top: 0;">
-  <i class="box-icon fa fa-info-circle"></i>
+<div class="box green">
+  <i class="box-icon fa fa-fw fa-info-circle"></i>
   <div class="box-content">
-    <h2 style="margin: 0;">Notice</h2>
+    <h2 class="m-0">Notice</h2>
     <p>Date and timestamp values are currently always converted into ISO
     datetime strings without timezone (e.g. <q>2009-01-31 23:59:59</q>). This
     mapping will likely change in future versions, so use string conversion in
@@ -191,7 +193,7 @@ happens, the first generated key will be returned as the procedure result
 (depends on JDBC driver).</p>
 
 <div class="box blue">
-  <i class="box-icon fa fa-code"></i>
+  <i class="box-icon fa fa-fw fa-code"></i>
   <pre class="box-content code">
 PlugIn.Jdbc.Statement('jdbc.example','INSERT INTO test VALUES (1,2,3)')
   <span class="comment">--&gt; '4711'</span>
@@ -208,7 +210,7 @@ argument name must be prefixed with a <q><var>:</var></q> character in the
 SQL text in order to be replaced:</p>
 
 <div class="box blue">
-  <i class="box-icon fa fa-code"></i>
+  <i class="box-icon fa fa-fw fa-code"></i>
   <pre class="box-content code">
 <span class="comment">-- Substituting a 'name' procedure argument</span>
 SELECT *

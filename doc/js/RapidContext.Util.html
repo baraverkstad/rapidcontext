@@ -7,6 +7,7 @@
     <meta name="generator" content="JsDoc Toolkit" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" href="../css/style.css" type="text/css">
+    <link rel="stylesheet" href="../css/doc.css" type="text/css">
     <link rel="stylesheet" href="../css/font-awesome-4.7.0.min.css" type="text/css">
     <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="../images/logotype-icon.ico">
     <link rel="icon" type="image/png" sizes="256x256" href="../images/logotype-icon-256x256.png">
@@ -207,10 +208,9 @@ jQuery.
                         <tr>
                             <td class="attributes">&lt;static&gt; &nbsp;</td>
                             <td class="nameDescription">
-                                <div class="fixedFont" >RapidContext.Util.<b><a href="RapidContext.Util.html#.registerSizeConstraints">registerSizeConstraints</a></b>(node, width, height, aspect)
+                                <div class="fixedFont" >RapidContext.Util.<b><a href="RapidContext.Util.html#.registerSizeConstraints">registerSizeConstraints</a></b>(node, width, height)
                                 </div>
-                                <div class="description">Registers algebraic constraints for the element width, height and/or aspect
-ratio.</div>
+                                <div class="description">Registers size constraints for the element width and/or height.</div>
                             </td>
                         </tr>
 
@@ -1077,19 +1077,16 @@ function will recursively blur all <var>&lt;a&gt;</var>, <var>&lt;button&gt;</va
                     <div id=".registerSizeConstraints" class="fixedFont">&lt;static&gt;
 
 
-                    <span class="light">RapidContext.Util.</span><b>registerSizeConstraints</b>(node, width, height, aspect)
+                    <span class="light">RapidContext.Util.</span><b>registerSizeConstraints</b>(node, width, height)
 
                     </div>
                     <div class="description">
-                        Registers algebraic constraints for the element width, height and/or aspect
-ratio. The constraints may either be fixed numeric values, functions or
-algebraic formulas (in a string).<br/><br/>The formulas will be converted to JavaScript functions, replacing any <q>%</q>
-character with a reference to the corresponding parent dimension value (i.e.
-the parent element width, height or aspect ratio as a percentage). It is
-also possible to directly reference the parent values as <var>w</var> or <var>h</var>.<br/><br/>Constraint functions must take two arguments (parent width and height) and
-return a number. The returned number is set as the new element width or
-height (in pixels). Any returned value will also be bounded by the parent
-element size to avoid calculation errors.
+                        Registers size constraints for the element width and/or height. The
+constraints may either be fixed numeric values or simple arithmetic (in a
+string). The formulas will be converted to CSS calc() expressions.<br/><br/>Legacy constraint functions are still supported and must take two arguments
+(parent width and height) and should return a number. The returned number is
+set as the new element width or height (in pixels). Any returned value will
+also be bounded by the parent element size to avoid calculation errors.
 
 
                     </div>
@@ -1098,9 +1095,6 @@ element size to avoid calculation errors.
 
                     <pre class="code">RapidContext.Util.registerSizeConstraints(node, "50%-20", "100%");
 &rArr; Sets width to 50%-20 px and height to 100% of parent dimension</pre>
-
-                    <pre class="code">RapidContext.Util.registerSizeConstraints(otherNode, null, null, 1.0);
-&rArr; Ensures a square aspect ratio</pre>
 
                     <pre class="code">RapidContext.Util.resizeElements(node, otherNode);
 &rArr; Evaluates the size constraints for both nodes</pre>
@@ -1118,22 +1112,16 @@ element size to avoid calculation errors.
                                 <dd>the HTML DOM node</dd>
 
                                 <dt>
-                                    <span class="light fixedFont">{Number/Function/String}</span> <b>width</b>
+                                    <span class="light fixedFont">{Number/String/Function}</span> <b>width</b>
                                     <i>Optional</i>
                                 </dt>
                                 <dd>the width constraint</dd>
 
                                 <dt>
-                                    <span class="light fixedFont">{Number/Function/String}</span> <b>height</b>
+                                    <span class="light fixedFont">{Number/String/Function}</span> <b>height</b>
                                     <i>Optional</i>
                                 </dt>
                                 <dd>the height constraint</dd>
-
-                                <dt>
-                                    <span class="light fixedFont">{Number/Function/String}</span> <b>aspect</b>
-                                    <i>Optional</i>
-                                </dt>
-                                <dd>the aspect ratio constraint</dd>
 
                             </dl>
 

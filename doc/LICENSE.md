@@ -56,8 +56,6 @@ This software would not be possible without the following software libraries:
 
   - MochiKit, https://mochi.github.io/mochikit/,
     copyright (c) Bob Ippolito
-  - PlotKit, http://www.liquidx.net/plotkit/,
-    copyright (c) Alastair Tse
   - jQuery, http://jquery.com/,
     copyright (c) jQuery Foundation, Inc.
   - Crypto-JS, http://code.google.com/p/crypto-js,

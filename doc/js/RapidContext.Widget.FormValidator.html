@@ -7,6 +7,7 @@
     <meta name="generator" content="JsDoc Toolkit" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" href="../css/style.css" type="text/css">
+    <link rel="stylesheet" href="../css/doc.css" type="text/css">
     <link rel="stylesheet" href="../css/font-awesome-4.7.0.min.css" type="text/css">
     <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="../images/logotype-icon.ico">
     <link rel="icon" type="image/png" sizes="256x256" href="../images/logotype-icon-256x256.png">
@@ -215,14 +216,14 @@
 
 
                 <pre class="code"><span class="label">JavaScript:</span>
-var field = RapidContext.Widget.TextField({ name: "name", helpText: "Your Name Here" });
+var field = RapidContext.Widget.TextField({ name: "name", placeholder: "Your Name Here" });
 var attrs = { name: "name", message: "Please enter your name to proceed." };
 var valid = RapidContext.Widget.FormValidator(attrs);
 var exampleForm = RapidContext.Widget.Form({}, field, valid);</pre>
 
                 <pre class="code"><span class="label">User Interface XML:</span>
 &lt;Form id="exampleForm"&gt;
-  &lt;TextField name="name" helpText="Your Name Here" /&gt;
+  &lt;TextField name="name" placeholder="Your Name Here" /&gt;
   &lt;FormValidator name="name" message="Please enter your name to proceed." /&gt;
 &lt;/Form&gt;</pre>
 
@@ -496,7 +497,7 @@ validation is reset by the <var>RapidContext.Widget.Form</var> widget.
 
                     <div id="verify" class="fixedFont">
 
-                    <span class="light">{Boolean/Promise}</span>
+                    <span class="light">{Boolean}</span>
                     <b>verify</b>(field, value)
 
                     </div>
@@ -536,9 +537,8 @@ validation is performed by the <var>RapidContext.Widget.Form</var> widget.
                             <dl class="detailList">
                             <dt class="heading">Returns:</dt>
 
-                                <dd><span class="light fixedFont">{Boolean/Promise}</span> <var>true</var> if the form validated successfully,
-        <var>false</var> if the validation failed, or a
-        <var>RapidContext.Async</var> instance that either resolves or rejects</dd>
+                                <dd><span class="light fixedFont">{Boolean}</span> <var>true</var> if the form validated successfully, or
+        <var>false</var> if the validation failed</dd>
 
                             </dl>
 

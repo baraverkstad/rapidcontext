@@ -7,6 +7,7 @@
     <meta name="generator" content="JsDoc Toolkit" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" href="../css/style.css" type="text/css">
+    <link rel="stylesheet" href="../css/doc.css" type="text/css">
     <link rel="stylesheet" href="../css/font-awesome-4.7.0.min.css" type="text/css">
     <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="../images/logotype-icon.ico">
     <link rel="icon" type="image/png" sizes="256x256" href="../images/logotype-icon-256x256.png">
@@ -59,7 +60,7 @@
 
                 The icon widget class. Used to provide a small clickable image, using
     the <var>&lt;i&gt;</var> HTML element. The icons can be either image- or font-based,
-    causing slightly different behaviors with respect to size. A number of
+    causing slightly different behaviours with respect to size. A number of
     predefined icons suitable for different actions are available (using the
     Font-Awesome icon font).
 
@@ -80,7 +81,7 @@
                         <td class="attributes">&nbsp;</td>
                         <td class="nameDescription" >
                             <div class="fixedFont">
-                                <b><a href="RapidContext.Widget.Icon.html#constructor">RapidContext.Widget.Icon</a></b>(attrs)
+                                <b><a href="RapidContext.Widget.Icon.html#constructor">RapidContext.Widget.Icon</a></b>(def)
                             </div>
                             <div class="description">Creates a new icon widget.</div>
                         </td>
@@ -1400,32 +1401,6 @@
 <!-- ============================== events summary ======================== -->
 
 
-
-
-                <table class="summaryTable">
-                    <caption>Event Summary</caption>
-                    <tbody>
-
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont"><b><a href="RapidContext.Widget.Icon.html#event:onclick">onclick</a></b>()
-                                </div>
-                                <div class="description">Emitted when the icon has been clicked.</div>
-                            </td>
-                        </tr>
-
-                    </tbody>
-                </table>
-
-
-
-                <dl class="inheritsList">
-
-                </dl>
-
-
-
 <!-- ============================== constructor details ==================== -->
 
             <div id="constructor" class="details">
@@ -1434,7 +1409,7 @@
                 </div>
 
                 <div class="fixedFont">
-                        <b>RapidContext.Widget.Icon</b>(attrs)
+                        <b>RapidContext.Widget.Icon</b>(def)
                 </div>
 
                 <div class="description">
@@ -1465,62 +1440,62 @@ var h3 = MochiKit.DOM.H3({}, "Data List:", dataReload, dataLoading);</pre>
                         <dt class="heading">Parameters:</dt>
 
                             <dt>
-                                <span class="light fixedFont">{Object}</span>  <b>attrs</b>
+                                <span class="light fixedFont">{String/Object/Node}</span>  <b>def</b>
 
                             </dt>
-                                <dd>the widget and node attributes to set</dd>
+                                <dd>the icon ref, class, attributes or DOM node</dd>
 
                             <dt>
-                                <span class="light fixedFont">{String}</span>  <b>attrs.ref</b>
+                                <span class="light fixedFont">{String}</span>  <b>def.ref</b>
                                 <i>Optional</i>
                             </dt>
                                 <dd>the predefined icon name (reference)</dd>
 
                             <dt>
-                                <span class="light fixedFont">{String}</span>  <b>attrs.class</b>
+                                <span class="light fixedFont">{String}</span>  <b>def.class</b>
                                 <i>Optional</i>
                             </dt>
                                 <dd>the icon CSS class names</dd>
 
                             <dt>
-                                <span class="light fixedFont">{String}</span>  <b>attrs.url</b>
+                                <span class="light fixedFont">{String}</span>  <b>def.url</b>
                                 <i>Optional</i>
                             </dt>
                                 <dd>the icon image URL</dd>
 
                             <dt>
-                                <span class="light fixedFont">{String}</span>  <b>attrs.position</b>
+                                <span class="light fixedFont">{String}</span>  <b>def.position</b>
                                 <i>Optional</i>
                             </dt>
                                 <dd>the icon image position</dd>
 
                             <dt>
-                                <span class="light fixedFont">{Number}</span>  <b>attrs.width</b>
+                                <span class="light fixedFont">{Number}</span>  <b>def.width</b>
                                 <i>Optional</i>
                             </dt>
                                 <dd>the icon width (in pixels)</dd>
 
                             <dt>
-                                <span class="light fixedFont">{Number}</span>  <b>attrs.height</b>
+                                <span class="light fixedFont">{Number}</span>  <b>def.height</b>
                                 <i>Optional</i>
                             </dt>
                                 <dd>the icon height (in pixels)</dd>
 
                             <dt>
-                                <span class="light fixedFont">{String}</span>  <b>attrs.tooltip</b>
+                                <span class="light fixedFont">{String}</span>  <b>def.tooltip</b>
                                 <i>Optional</i>
                             </dt>
                                 <dd>the icon tooltip text</dd>
 
                             <dt>
-                                <span class="light fixedFont">{Boolean}</span>  <b>attrs.disabled</b>
+                                <span class="light fixedFont">{Boolean}</span>  <b>def.disabled</b>
                                 <i>Optional</i>
                             </dt>
                                 <dd>the disabled widget flag, defaults to
            false</dd>
 
                             <dt>
-                                <span class="light fixedFont">{Boolean}</span>  <b>attrs.hidden</b>
+                                <span class="light fixedFont">{Boolean}</span>  <b>def.hidden</b>
                                 <i>Optional</i>
                             </dt>
                                 <dd>the hidden widget flag, defaults to false</dd>
@@ -4223,10 +4198,10 @@ var h3 = MochiKit.DOM.H3({}, "Data List:", dataReload, dataLoading);</pre>
                             <dt class="heading">Parameters:</dt>
 
                                 <dt>
-                                    <span class="light fixedFont">{Object}</span> <b>attrs</b>
+                                    <span class="light fixedFont">{String/Object}</span> <b>attrs</b>
 
                                 </dt>
-                                <dd>the widget and node attributes to set</dd>
+                                <dd>the icon ref, class or attributes to set</dd>
 
                                 <dt>
                                     <span class="light fixedFont">{String}</span> <b>attrs.ref</b>
@@ -4296,36 +4271,6 @@ var h3 = MochiKit.DOM.H3({}, "Data List:", dataReload, dataLoading);</pre>
 
 
 <!-- ============================== event details ========================= -->
-
-                <div class="sectionTitle">
-                    Event Detail
-                </div>
-
-                    <div id="event:onclick" class="fixedFont">
-
-
-                    <b>onclick</b>()
-
-                    </div>
-                    <div class="description">
-                        Emitted when the icon has been clicked. This is a standard DOM
-event.
-
-
-                    </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     <!--END-->

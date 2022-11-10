@@ -7,6 +7,7 @@
     <meta name="generator" content="JsDoc Toolkit" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" href="../css/style.css" type="text/css">
+    <link rel="stylesheet" href="../css/doc.css" type="text/css">
     <link rel="stylesheet" href="../css/font-awesome-4.7.0.min.css" type="text/css">
     <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="../images/logotype-icon.ico">
     <link rel="icon" type="image/png" sizes="256x256" href="../images/logotype-icon-256x256.png">
@@ -155,6 +156,15 @@ own versions, passing through the log messages if not filtered.
                         <tr>
                             <td class="attributes">&lt;static&gt; &nbsp;</td>
                             <td class="nameDescription">
+                                <div class="fixedFont" >RapidContext.Log.<b><a href="RapidContext.Log.html#.init">init</a></b>(opts)
+                                </div>
+                                <div class="description">Initializes and configures the logging module.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&lt;static&gt; &nbsp;</td>
+                            <td class="nameDescription">
                                 <div class="fixedFont" >RapidContext.Log.<b><a href="RapidContext.Log.html#.level">level</a></b>(value)
                                 </div>
                                 <div class="description">Returns and optionally sets the current log level.</div>
@@ -227,6 +237,68 @@ object.</div>
                 <div class="sectionTitle">
                     Method Detail
                 </div>
+
+                    <div id=".init" class="fixedFont">&lt;static&gt;
+
+
+                    <span class="light">RapidContext.Log.</span><b>init</b>(opts)
+
+                    </div>
+                    <div class="description">
+                        Initializes and configures the logging module. Will modify the <var>console</var>
+object for logging. This replaces the default <var>console.error</var>,
+<var>console.warn</var>, <var>console.info</var>, <var>console.log</var> and <var>console.debug</var>
+functions. Safe to call multiple times to change or update config.
+
+
+                    </div>
+
+
+
+
+                            <dl class="detailList">
+                            <dt class="heading">Parameters:</dt>
+
+                                <dt>
+                                    <span class="light fixedFont">{Object}</span> <b>opts</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the log configuration options, or null</dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{Number}</span> <b>opts.interval</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the publish delay in millis, default is 10s</dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{String}</span> <b>opts.url</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the publish URL endpoint</dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{Function}</span> <b>opts.filter</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the event filter, returns a boolean</dd>
+
+                                <dt>
+                                    <span class="light fixedFont">{Function}</span> <b>opts.publisher</b>
+                                    <i>Optional</i>
+                                </dt>
+                                <dd>the event publisher, returns a Promise</dd>
+
+                            </dl>
+
+
+
+
+
+
+
+
+                    <hr />
 
                     <div id=".clear" class="fixedFont">&lt;static&gt;
 

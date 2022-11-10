@@ -7,6 +7,7 @@
     <meta name="generator" content="JsDoc Toolkit" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" href="../css/style.css" type="text/css">
+    <link rel="stylesheet" href="../css/doc.css" type="text/css">
     <link rel="stylesheet" href="../css/font-awesome-4.7.0.min.css" type="text/css">
     <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="../images/logotype-icon.ico">
     <link rel="icon" type="image/png" sizes="256x256" href="../images/logotype-icon-256x256.png">
@@ -116,16 +117,6 @@
                             </td>
                         </tr>
 
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont">
-                                <b><a href="RapidContext.Widget.TextField.html#focused">focused</a></b>
-                                </div>
-                                <div class="description">The read-only widget focused flag.</div>
-                            </td>
-                        </tr>
-
                     </tbody>
                 </table>
 
@@ -145,6 +136,15 @@
                 <table class="summaryTable">
                     <caption>Method Summary</caption>
                     <tbody>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont" ><b><a href="RapidContext.Widget.TextField.html#destroy">destroy</a></b>()
+                                </div>
+                                <div class="description">Destroys this widget.</div>
+                            </td>
+                        </tr>
 
                         <tr>
                             <td class="attributes">&nbsp;</td>
@@ -197,7 +197,7 @@
 
 
                 <dl class="inheritsList">
-                <dt>Methods borrowed from class <a href="RapidContext.Widget.html">RapidContext.Widget</a>: </dt><dd><a href="RapidContext.Widget.html#addAll">addAll</a>, <a href="RapidContext.Widget.html#addChildNode">addChildNode</a>, <a href="RapidContext.Widget.html#addClass">addClass</a>, <a href="RapidContext.Widget.html#animate">animate</a>, <a href="RapidContext.Widget.html#blurAll">blurAll</a>, <a href="RapidContext.Widget.html#destroy">destroy</a>, <a href="RapidContext.Widget.html#disable">disable</a>, <a href="RapidContext.Widget.html#enable">enable</a>, <a href="RapidContext.Widget.html#getChildNodes">getChildNodes</a>, <a href="RapidContext.Widget.html#hasClass">hasClass</a>, <a href="RapidContext.Widget.html#hide">hide</a>, <a href="RapidContext.Widget.html#isDisabled">isDisabled</a>, <a href="RapidContext.Widget.html#isHidden">isHidden</a>, <a href="RapidContext.Widget.html#removeAll">removeAll</a>, <a href="RapidContext.Widget.html#removeChildNode">removeChildNode</a>, <a href="RapidContext.Widget.html#removeClass">removeClass</a>, <a href="RapidContext.Widget.html#setStyle">setStyle</a>, <a href="RapidContext.Widget.html#show">show</a>, <a href="RapidContext.Widget.html#toggleClass">toggleClass</a>, <a href="RapidContext.Widget.html#uid">uid</a></dd>
+                <dt>Methods borrowed from class <a href="RapidContext.Widget.html">RapidContext.Widget</a>: </dt><dd><a href="RapidContext.Widget.html#addAll">addAll</a>, <a href="RapidContext.Widget.html#addChildNode">addChildNode</a>, <a href="RapidContext.Widget.html#addClass">addClass</a>, <a href="RapidContext.Widget.html#animate">animate</a>, <a href="RapidContext.Widget.html#blurAll">blurAll</a>, <a href="RapidContext.Widget.html#disable">disable</a>, <a href="RapidContext.Widget.html#enable">enable</a>, <a href="RapidContext.Widget.html#getChildNodes">getChildNodes</a>, <a href="RapidContext.Widget.html#hasClass">hasClass</a>, <a href="RapidContext.Widget.html#hide">hide</a>, <a href="RapidContext.Widget.html#isDisabled">isDisabled</a>, <a href="RapidContext.Widget.html#isHidden">isHidden</a>, <a href="RapidContext.Widget.html#removeAll">removeAll</a>, <a href="RapidContext.Widget.html#removeChildNode">removeChildNode</a>, <a href="RapidContext.Widget.html#removeClass">removeClass</a>, <a href="RapidContext.Widget.html#setStyle">setStyle</a>, <a href="RapidContext.Widget.html#show">show</a>, <a href="RapidContext.Widget.html#toggleClass">toggleClass</a>, <a href="RapidContext.Widget.html#uid">uid</a></dd>
                 </dl>
 
 
@@ -258,11 +258,11 @@
 
 
                 <pre class="code"><span class="label">JavaScript:</span>
-var attrs = { name: "name", helpText: "Your Name Here" };
+var attrs = { name: "name", placeholder: "Your Name Here" };
 var field = RapidContext.Widget.TextField(attrs);</pre>
 
                 <pre class="code"><span class="label">User Interface XML:</span>
-&lt;TextField name="name" helpText="Your Name Here" /&gt;</pre>
+&lt;TextField name="name" placeholder="Your Name Here" /&gt;</pre>
 
 
 
@@ -293,8 +293,7 @@ var field = RapidContext.Widget.TextField(attrs);</pre>
                                 <span class="light fixedFont">{String}</span>  <b>attrs.helpText</b>
                                 <i>Optional</i>
                             </dt>
-                                <dd>the help text shown on empty input,
-           defaults to ""</dd>
+                                <dd>the help text when empty (deprecated)</dd>
 
                             <dt>
                                 <span class="light fixedFont">{Boolean}</span>  <b>attrs.disabled</b>
@@ -361,27 +360,6 @@ var field = RapidContext.Widget.TextField(attrs);</pre>
 
                     <hr />
 
-                    <div id="focused" class="fixedFont">
-
-                    <span class="light">{Boolean}</span>
-                    <b>focused</b>
-
-                    </div>
-                    <div class="description">
-                        The read-only widget focused flag.
-
-
-                    </div>
-
-
-
-
-
-
-
-
-                    <hr />
-
                     <div id="defaultValue" class="fixedFont">
 
                     <span class="light">{String}</span>
@@ -410,6 +388,30 @@ var field = RapidContext.Widget.TextField(attrs);</pre>
                 <div class="sectionTitle">
                     Method Detail
                 </div>
+
+                    <div id="destroy" class="fixedFont">
+
+
+                    <b>destroy</b>()
+
+                    </div>
+                    <div class="description">
+                        Destroys this widget.
+
+
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+                    <hr />
 
                     <div id="setAttrs" class="fixedFont">
 
@@ -451,7 +453,7 @@ var field = RapidContext.Widget.TextField(attrs);</pre>
                                     <span class="light fixedFont">{String}</span> <b>attrs.helpText</b>
                                     <i>Optional</i>
                                 </dt>
-                                <dd>the help text shown on empty input</dd>
+                                <dd>the help text when empty (deprecated)</dd>
 
                                 <dt>
                                     <span class="light fixedFont">{Boolean}</span> <b>attrs.disabled</b>
@@ -507,19 +509,10 @@ var field = RapidContext.Widget.TextField(attrs);</pre>
 
                     </div>
                     <div class="description">
-                        Returns the text field value. This function is slightly different
-from using the <var>value</var> property directly, since it will always
-return the actual value string instead of the temporary help text
-displayed when the text field is empty and unfocused.
+                        Returns the text field value.
 
 
                     </div>
-
-
-
-                    <pre class="code">var value = field.getValue();
-value = MochiKit.Format.strip(value);
-field.setAttrs({ "value": value });</pre>
 
 
 
@@ -687,7 +680,6 @@ properties.
                     </div>
                     <div class="description">
                         Emitted when an item has been selected in the connected popup.
-This event signal carries no <q>event.detail</q> information.
 
 
                     </div>

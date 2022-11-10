@@ -7,6 +7,7 @@
     <meta name="generator" content="JsDoc Toolkit" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" href="../css/style.css" type="text/css">
+    <link rel="stylesheet" href="../css/doc.css" type="text/css">
     <link rel="stylesheet" href="../css/font-awesome-4.7.0.min.css" type="text/css">
     <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="../images/logotype-icon.ico">
     <link rel="icon" type="image/png" sizes="256x256" href="../images/logotype-icon-256x256.png">
@@ -102,6 +103,15 @@
                         <tr>
                             <td class="attributes">&nbsp;</td>
                             <td class="nameDescription">
+                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Dialog.html#destroy">destroy</a></b>()
+                                </div>
+                                <div class="description">Destroys this widget.</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
                                 <div class="fixedFont" ><b><a href="RapidContext.Widget.Dialog.html#moveTo">moveTo</a></b>(x, y)
                                 </div>
                                 <div class="description">Moves the dialog to the specified position (relative to the
@@ -131,7 +141,7 @@ node).</div>
                         <tr>
                             <td class="attributes">&nbsp;</td>
                             <td class="nameDescription">
-                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Dialog.html#resizeTo">resizeTo</a></b>(width, height)
+                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Dialog.html#resizeTo">resizeTo</a></b>(w, h)
                                 </div>
                                 <div class="description">Resizes the dialog to the specified size (in pixels).</div>
                             </td>
@@ -161,7 +171,7 @@ node).</div>
 
 
                 <dl class="inheritsList">
-                <dt>Methods borrowed from class <a href="RapidContext.Widget.html">RapidContext.Widget</a>: </dt><dd><a href="RapidContext.Widget.html#addAll">addAll</a>, <a href="RapidContext.Widget.html#addChildNode">addChildNode</a>, <a href="RapidContext.Widget.html#addClass">addClass</a>, <a href="RapidContext.Widget.html#animate">animate</a>, <a href="RapidContext.Widget.html#blurAll">blurAll</a>, <a href="RapidContext.Widget.html#destroy">destroy</a>, <a href="RapidContext.Widget.html#disable">disable</a>, <a href="RapidContext.Widget.html#enable">enable</a>, <a href="RapidContext.Widget.html#getChildNodes">getChildNodes</a>, <a href="RapidContext.Widget.html#hasClass">hasClass</a>, <a href="RapidContext.Widget.html#hide">hide</a>, <a href="RapidContext.Widget.html#isDisabled">isDisabled</a>, <a href="RapidContext.Widget.html#isHidden">isHidden</a>, <a href="RapidContext.Widget.html#removeAll">removeAll</a>, <a href="RapidContext.Widget.html#removeChildNode">removeChildNode</a>, <a href="RapidContext.Widget.html#removeClass">removeClass</a>, <a href="RapidContext.Widget.html#setStyle">setStyle</a>, <a href="RapidContext.Widget.html#show">show</a>, <a href="RapidContext.Widget.html#toggleClass">toggleClass</a>, <a href="RapidContext.Widget.html#uid">uid</a></dd>
+                <dt>Methods borrowed from class <a href="RapidContext.Widget.html">RapidContext.Widget</a>: </dt><dd><a href="RapidContext.Widget.html#addAll">addAll</a>, <a href="RapidContext.Widget.html#addChildNode">addChildNode</a>, <a href="RapidContext.Widget.html#addClass">addClass</a>, <a href="RapidContext.Widget.html#animate">animate</a>, <a href="RapidContext.Widget.html#blurAll">blurAll</a>, <a href="RapidContext.Widget.html#disable">disable</a>, <a href="RapidContext.Widget.html#enable">enable</a>, <a href="RapidContext.Widget.html#getChildNodes">getChildNodes</a>, <a href="RapidContext.Widget.html#hasClass">hasClass</a>, <a href="RapidContext.Widget.html#hide">hide</a>, <a href="RapidContext.Widget.html#isDisabled">isDisabled</a>, <a href="RapidContext.Widget.html#isHidden">isHidden</a>, <a href="RapidContext.Widget.html#removeAll">removeAll</a>, <a href="RapidContext.Widget.html#removeChildNode">removeChildNode</a>, <a href="RapidContext.Widget.html#removeClass">removeClass</a>, <a href="RapidContext.Widget.html#setStyle">setStyle</a>, <a href="RapidContext.Widget.html#show">show</a>, <a href="RapidContext.Widget.html#toggleClass">toggleClass</a>, <a href="RapidContext.Widget.html#uid">uid</a></dd>
                 </dl>
 
 
@@ -342,6 +352,30 @@ RapidContext.Util.registerSizeConstraints(helloDialog, "200", "75");</pre>
                     Method Detail
                 </div>
 
+                    <div id="destroy" class="fixedFont">
+
+
+                    <b>destroy</b>()
+
+                    </div>
+                    <div class="description">
+                        Destroys this widget.
+
+
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+                    <hr />
+
                     <div id="setAttrs" class="fixedFont">
 
 
@@ -491,7 +525,7 @@ of the geometric center for improved visual alignment.
                     <div id="resizeTo" class="fixedFont">
 
                     <span class="light">{Dimensions}</span>
-                    <b>resizeTo</b>(width, height)
+                    <b>resizeTo</b>(w, h)
 
                     </div>
                     <div class="description">
@@ -508,13 +542,13 @@ will be restrained by the parent DOM node size.
                             <dt class="heading">Parameters:</dt>
 
                                 <dt>
-                                    <span class="light fixedFont">{Number}</span> <b>width</b>
+                                    <span class="light fixedFont">{Number}</span> <b>w</b>
 
                                 </dt>
                                 <dd>the width (in pixels)</dd>
 
                                 <dt>
-                                    <span class="light fixedFont">{Number}</span> <b>height</b>
+                                    <span class="light fixedFont">{Number}</span> <b>h</b>
 
                                 </dt>
                                 <dd>the height (in pixels)</dd>
@@ -612,8 +646,7 @@ The size will be restrained by the parent DOM node size.
 
                     </div>
                     <div class="description">
-                        Emitted when the dialog is shown. This event signal carries no
-event information.
+                        Emitted when the dialog is shown.
 
 
                     </div>
@@ -637,8 +670,7 @@ event information.
 
                     </div>
                     <div class="description">
-                        Emitted when the dialog is hidden. This event signal carries no
-event information.
+                        Emitted when the dialog is hidden.
 
 
                     </div>
@@ -663,8 +695,7 @@ event information.
                     </div>
                     <div class="description">
                         Emitted when the dialog is moved. The event will be sent
-repeatedly when moving with a mouse drag operation. This event
-signal contains the new element position as payload.
+repeatedly when moving with a mouse drag operation.
 
 
                     </div>
@@ -689,8 +720,7 @@ signal contains the new element position as payload.
                     </div>
                     <div class="description">
                         Emitted when the dialog is resized. The event will be sent
-repeatedly when resizing with a mouse drag operation. This event
-signal contains the new element dimensions as payload.
+repeatedly when resizing with a mouse drag operation.
 
 
                     </div>

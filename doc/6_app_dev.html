@@ -4,8 +4,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="css/style.css" type="text/css">
-    <link rel="stylesheet" href="css/font-awesome-4.7.0.min.css" type="text/css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/doc.css">
+    <link rel="stylesheet" href="css/font-awesome-4.7.0.min.css">
+    <link rel="stylesheet" href="css/util.css">
     <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="images/logotype-icon.ico">
     <link rel="icon" type="image/png" sizes="256x256" href="images/logotype-icon-256x256.png">
     <link rel="apple-touch-icon" sizes="256x256" href="images/logotype-icon-256x256.png">
@@ -76,8 +78,6 @@ simplify the development:</p>
       <li><a href="external/mochikit/index.html">MochiKit</a> &mdash; A
           swiss-army knife with utilities and functions missing from the core
           JavaScript language.</li>
-      <li><a href="http://media.liquidx.net/js/plotkit-doc/PlotKit.html">PlotKit</a>
-          &mdash; Provides beautiful charts and diagram drawing functions.</li>
       <li><a href="http://api.jquery.com/">jQuery</a> &mdash; Provides simple
           and efficient access to HTML and CSS (via DOM).</li>
       <li><a href="http://code.google.com/p/crypto-js/#MD5">Crypto-JS (MD5)</a> &mdash;
@@ -93,7 +93,7 @@ transferred to the web browser upon launch. Each app has an app configuration
 some meta-data. These can be inspected in the <strong>Admin</strong> app, as
 shown in the screenshot below.</p>
 
-<p class="figure">
+<p class="text-center m-2">
   <img src="images/screenshot-app-details.png" alt="Screenshot">
 </p>
 
@@ -105,7 +105,7 @@ app. If an app is not properly declared in the configuration file, it will not
 be visible to the web browser. Below follows a simple example:</p>
 
 <div class="box blue">
-  <i class="box-icon fa fa-code"></i>
+  <i class="box-icon fa fa-fw fa-code"></i>
   <pre class="box-content code">
 <span class="comment"># General properties</span>
 name = Example App
@@ -213,10 +213,10 @@ resource contains the source code for the app. By declaring multiple
 specified order). Upon launch, the app constructor function is called and a
 new app instance object should be created.</p>
 
-<div class="box green" style="margin-top: 0;">
-  <i class="box-icon fa fa-info-circle"></i>
+<div class="box green">
+  <i class="box-icon fa fa-fw fa-info-circle"></i>
   <div class="box-content">
-    <h2 style="margin: 0;">Notice</h2>
+    <h2 class="m-0">Notice</h2>
     <p>Apps should take their execution environment into consideration:</p>
     <ul>
       <li><strong>Function Names:</strong> Multiple apps run in the same web
@@ -238,7 +238,7 @@ handle the app lifecycle. Below is an example JavaScript file that implements
 a minimal example app:</p>
 
 <div class="box blue">
-  <i class="box-icon fa fa-code"></i>
+  <i class="box-icon fa fa-fw fa-code"></i>
   <pre class="box-content code">
 <span class="comment">/**
  * Creates a new ExampleApp instance. This function is called
@@ -311,7 +311,7 @@ JavaScript source code and other resources. To use the automatic user interface
 creation, an app resource is specified as follows:</p>
 
 <div class="box blue">
-  <i class="box-icon fa fa-code"></i>
+  <i class="box-icon fa fa-fw fa-code"></i>
   <pre class="box-content code">
 resources.#.type = ui
 resources.#.url = example/ui.xml
@@ -324,7 +324,7 @@ references to user interface widgets defined in the
 <var>RapidContext.UI.buildUI</var> function. Here is a simple example:</p>
 
 <div class="box blue">
-  <i class="box-icon fa fa-code"></i>
+  <i class="box-icon fa fa-fw fa-code"></i>
   <pre class="box-content code">
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
 
@@ -358,12 +358,12 @@ interpreted as follows:</p>
       (similar to HTML). Note that widgets have additional CSS classes,
       potentially causing conflicts with specific style settings (see
       below).</li>
-  <li><strong>The <q><var>w</var></q>, <q><var>h</var></q> &amp;
-      <q><var>a</var></q> Attributes</strong>&mdash; The attributes
-      <q><var>w</var></q>, <q><var>h</var></q> and <q><var>a</var></q> are used
-      in a call to <var>RapidContext.Util.registerSizeConstraints()</var>. This
-      sets up a JavaScript function for the node that will calculate the
-      appropriate size and/or aspect ratio whenever
+  <li><strong>The <q><var>w</var></q> &amp; <q><var>h</var></q>
+      Attributes</strong>&mdash; The attributes <q><var>w</var></q> and
+      <q><var>h</var></q> are used in a call to
+      <var>RapidContext.Util.registerSizeConstraints()</var>. This
+      sets up either a CSS <var>calc(...)</var> style or a JavaScript function
+      for the node that will calculate the appropriate size whenever
       <var>RapidContext.Util.resizeElements()</var> is called (handled
       automatically on window resize).</li>
   <li><strong>Other Attributes</strong> &mdash; Other XML attributes are
@@ -412,7 +412,7 @@ web requests. It is configured in the <var>webservice/root.properties</var>
 file:</p>
 
 <div class="box blue">
-  <i class="box-icon fa fa-code"></i>
+  <i class="box-icon fa fa-fw fa-code"></i>
   <pre class="box-content code">
 <span class="comment"># General properties</span>
 id = root
@@ -432,7 +432,7 @@ add a custom listener to handle requests for a specific host, path, etc. The
 example below shows a simple file web server:</p>
 
 <div class="box blue">
-  <i class="box-icon fa fa-code"></i>
+  <i class="box-icon fa fa-fw fa-code"></i>
   <pre class="box-content code">
 <span class="comment"># General properties</span>
 id = www.test.com

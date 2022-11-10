@@ -4,8 +4,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="css/style.css" type="text/css">
-    <link rel="stylesheet" href="css/font-awesome-4.7.0.min.css" type="text/css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/doc.css">
+    <link rel="stylesheet" href="css/font-awesome-4.7.0.min.css">
+    <link rel="stylesheet" href="css/util.css">
     <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="images/logotype-icon.ico">
     <link rel="icon" type="image/png" sizes="256x256" href="images/logotype-icon-256x256.png">
     <link rel="apple-touch-icon" sizes="256x256" href="images/logotype-icon-256x256.png">
@@ -49,23 +51,21 @@ RapidContext. It is an attempt to explain some of the trade-offs, omissions and
 choices made for the platform.</p>
 
 <div class="box yellow">
-  <table style="width: 100%;">
+  <table class="w-100">
     <thead>
       <tr>
-        <th scope="col" style="width: 48%;">Pattern</th>
-        <th scope="col"></th>
-        <th scope="col" style="width: 48%;">Anti-Pattern</th>
+        <th scope="col" class="w-50 pr-3">Pattern</th>
+        <th scope="col" class="w-50 pl-3">Anti-Pattern</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td>
+        <td class="pr-3">
           Read this document as the RapidContext declaration of <q>good
           taste</q>, whatever that means. Consider the <q>pattern</q> examples as
           templates.
         </td>
-        <td></td>
-        <td>
+        <td class="pl-3">
           Do not read this as a set of absolute principles that can never be
           broken. The <q>anti-pattern</q> examples show that they already have
           been.
@@ -90,24 +90,21 @@ understanding, more realistic use cases and/or a better design proposal.</p>
 <a href="http://en.wikipedia.org/wiki/Worse_is_better">worse is better</a>.</p>
 
 <div class="box yellow">
-  <table style="width: 100%;">
+  <table class="w-100">
     <thead>
       <tr>
-        <th scope="col" style="width: 48%;">Pattern</th>
-        <th scope="col"></th>
-        <th scope="col" style="width: 48%;">Anti-Pattern</th>
+        <th scope="col" class="w-50 pr-3">Pattern</th>
+        <th scope="col" class="w-50 pl-3">Anti-Pattern</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td>
+        <td class="pr-3">
           The built-in transaction support is limited to the most commonly used
           scenario. Code and work-arounds are required for other behaviours.
         </td>
-        <td></td>
-        <td>
-          Built-in support for PlotKit diagrams, procedure call interceptors
-          and more...
+        <td class="pl-3">
+          Built-in support for procedure call interceptors and more...
         </td>
       </tr>
     </tbody>
@@ -130,22 +127,20 @@ advantages:</p>
 transformations or similar.</p>
 
 <div class="box yellow">
-  <table style="width: 100%;">
+  <table class="w-100">
     <thead>
       <tr>
-        <th scope="col" style="width: 48%;">Pattern</th>
-        <th scope="col"></th>
-        <th scope="col" style="width: 48%;">Anti-Pattern</th>
+        <th scope="col" class="w-50 pr-3">Pattern</th>
+        <th scope="col" class="w-50 pl-3">Anti-Pattern</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td>
+        <td class="pr-3">
           The user interface XML (<var>ui.xml</var>) format is less verbose and
           easier to read than JavaScript code (imperative) for the same thing.
         </td>
-        <td></td>
-        <td>
+        <td class="pl-3">
           Custom widgets are still not possible to create using XML, but require
           everything to be done in JavaScript code.
         </td>
@@ -168,22 +163,20 @@ smart tricks in the interface. Generally, only the <strong>illusion of
 simplicity</strong> is desired.</p>
 
 <div class="box yellow">
-  <table style="width: 100%;">
+  <table class="w-100">
     <thead>
       <tr>
-        <th scope="col" style="width: 48%;">Pattern</th>
-        <th scope="col"></th>
-        <th scope="col" style="width: 48%;">Anti-Pattern</th>
+        <th scope="col" class="w-50 pr-3">Pattern</th>
+        <th scope="col" class="w-50 pl-3">Anti-Pattern</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td>
+        <td class="pr-3">
           The automatic detection of <var>java</var> location and available port
           number when launching the RapidContext server.
         </td>
-        <td></td>
-        <td>
+        <td class="pl-3">
           Creating new apps and plug-ins still can't be done without access to
           the manual or by copying from other apps or plug-ins.
         </td>
@@ -204,22 +197,20 @@ cases should be made as simple as possible. This is sometimes referred to as
 <strong>optimizing for the common case</strong>.</p>
 
 <div class="box yellow">
-  <table style="width: 100%;">
+  <table class="w-100">
     <thead>
       <tr>
-        <th scope="col" style="width: 48%;">Pattern</th>
-        <th scope="col"></th>
-        <th scope="col" style="width: 48%;">Anti-Pattern</th>
+        <th scope="col" class="w-50 pr-3">Pattern</th>
+        <th scope="col" class="w-50 pl-3">Anti-Pattern</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td>
+        <td class="pr-3">
           The default <var>admin</var> user is created with a blank password when
           no other users are configured.
         </td>
-        <td></td>
-        <td>
+        <td class="pl-3">
           The app and plug-in configurations are mostly identical and should be
           possible to omit, using heuristics to set the defaults.
         </td>
@@ -239,22 +230,20 @@ implementation with real-world data, rather than by writing a specification.
 and interactions (use cases) before starting the implementation.</p>
 
 <div class="box yellow">
-  <table style="width: 100%;">
+  <table class="w-100">
     <thead>
       <tr>
-        <th scope="col" style="width: 48%;">Pattern</th>
-        <th scope="col"></th>
-        <th scope="col" style="width: 48%;">Anti-Pattern</th>
+        <th scope="col" class="w-50 pr-3">Pattern</th>
+        <th scope="col" class="w-50 pl-3">Anti-Pattern</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td>
+        <td class="pr-3">
           Implement new ideas or behaviors as plug-ins. If they prove useful, the
           core extensions may be suitable for inclusion in the platform.
         </td>
-        <td></td>
-        <td class="unimportant">
+        <td class="unimportant pl-3">
           No current example found
         </td>
       </tr>
@@ -271,23 +260,21 @@ productivity-improving languages), so it makes sense to try to take this into
 account when building Java code for RapidContext.</p>
 
 <div class="box yellow">
-  <table style="width: 100%;">
+  <table class="w-100">
     <thead>
       <tr>
-        <th scope="col" style="width: 48%;">Pattern</th>
-        <th scope="col"></th>
-        <th scope="col" style="width: 48%;">Anti-Pattern</th>
+        <th scope="col" class="w-50 pr-3">Pattern</th>
+        <th scope="col" class="w-50 pl-3">Anti-Pattern</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td>
+        <td class="pr-3">
           The generic <var>Dict</var> and <var>Array</var> classes add some
           generic duck-typing to Java. They also simplify serializing to JSON,
           HTML or <var>.properties</var> files.
         </td>
-        <td></td>
-        <td>
+        <td class="pl-3">
           The Java implementation of built-in procedures or procedure types still
           require a number of specific interfaces and classes that are rather
           strict.
@@ -307,22 +294,20 @@ testing of apps and procedures. This is especially true for the type of
 fast-moving software that RapidContext encourages.</p>
 
 <div class="box yellow">
-  <table style="width: 100%;">
+  <table class="w-100">
     <thead>
       <tr>
-        <th scope="col" style="width: 48%;">Pattern</th>
-        <th scope="col"></th>
-        <th scope="col" style="width: 48%;">Anti-Pattern</th>
+        <th scope="col" class="w-50 pr-3">Pattern</th>
+        <th scope="col" class="w-50 pl-3">Anti-Pattern</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td>
+        <td class="pr-3">
           The <strong>Admin</strong> app makes ad-hoc testing (calls) of
           procedures easy and straight-forward.
         </td>
-        <td></td>
-        <td class="unimportant">
+        <td class="unimportant pl-3">
           No current example found
         </td>
       </tr>

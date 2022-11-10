@@ -61,6 +61,7 @@ code,
 tt {
     font-family: ui-monospace, "Courier New", monospace;
 }
+/* stylelint-disable selector-not-notation */
 :not(h1, h2, h3, h4, h5, h6) > code,
 :not(h1, h2, h3, h4, h5, h6) > tt {
     font-size: 14px;
@@ -68,6 +69,7 @@ tt {
     margin-top: 8px;
     line-height: 1.4em;
 }
+/* stylelint-enable selector-not-notation */
 dt code {
     font-family: ui-monospace, "Courier New", monospace;
     font-size: 14px;

@@ -29,23 +29,23 @@
 <span class='line'> 22</span>  * Creates a new icon widget.
 <span class='line'> 23</span>  *
 <span class='line'> 24</span>  * @constructor
-<span class='line'> 25</span>  * @param {Object} attrs the widget and node attributes to set
-<span class='line'> 26</span>  * @param {String} [attrs.ref] the predefined icon name (reference)
-<span class='line'> 27</span>  * @param {String} [attrs.class] the icon CSS class names
-<span class='line'> 28</span>  * @param {String} [attrs.url] the icon image URL
-<span class='line'> 29</span>  * @param {String} [attrs.position] the icon image position
-<span class='line'> 30</span>  * @param {Number} [attrs.width] the icon width (in pixels)
-<span class='line'> 31</span>  * @param {Number} [attrs.height] the icon height (in pixels)
-<span class='line'> 32</span>  * @param {String} [attrs.tooltip] the icon tooltip text
-<span class='line'> 33</span>  * @param {Boolean} [attrs.disabled] the disabled widget flag, defaults to
+<span class='line'> 25</span>  * @param {String/Object/Node} def the icon ref, class, attributes or DOM node
+<span class='line'> 26</span>  * @param {String} [def.ref] the predefined icon name (reference)
+<span class='line'> 27</span>  * @param {String} [def.class] the icon CSS class names
+<span class='line'> 28</span>  * @param {String} [def.url] the icon image URL
+<span class='line'> 29</span>  * @param {String} [def.position] the icon image position
+<span class='line'> 30</span>  * @param {Number} [def.width] the icon width (in pixels)
+<span class='line'> 31</span>  * @param {Number} [def.height] the icon height (in pixels)
+<span class='line'> 32</span>  * @param {String} [def.tooltip] the icon tooltip text
+<span class='line'> 33</span>  * @param {Boolean} [def.disabled] the disabled widget flag, defaults to
 <span class='line'> 34</span>  *            false
-<span class='line'> 35</span>  * @param {Boolean} [attrs.hidden] the hidden widget flag, defaults to false
+<span class='line'> 35</span>  * @param {Boolean} [def.hidden] the hidden widget flag, defaults to false
 <span class='line'> 36</span>  *
 <span class='line'> 37</span>  * @return {Widget} the widget DOM node
 <span class='line'> 38</span>  *
 <span class='line'> 39</span>  * @class The icon widget class. Used to provide a small clickable image, using
 <span class='line'> 40</span>  *     the `&lt;i>` HTML element. The icons can be either image- or font-based,
-<span class='line'> 41</span>  *     causing slightly different behaviors with respect to size. A number of
+<span class='line'> 41</span>  *     causing slightly different behaviours with respect to size. A number of
 <span class='line'> 42</span>  *     predefined icons suitable for different actions are available (using the
 <span class='line'> 43</span>  *     Font-Awesome icon font).
 <span class='line'> 44</span>  * @extends RapidContext.Widget
@@ -63,54 +63,54 @@
 <span class='line'> 56</span>  *   &lt;Icon id="dataLoading" ref="LOADING" hidden="true" style="margin-left: 3px;" />
 <span class='line'> 57</span>  * &lt;/h3>
 <span class='line'> 58</span>  */</span><span class="WHIT">
-<span class='line'> 59</span> </span><span class="NAME">RapidContext.Widget.Icon</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">attrs</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 60</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">o</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">MochiKit.DOM.createDOM</span><span class="PUNC">(</span><span class="STRN">"i"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 61</span> </span><span class="WHIT">    </span><span class="NAME">RapidContext.Widget._widgetMixin</span><span class="PUNC">(</span><span class="NAME">o</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">RapidContext.Widget.Icon</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 62</span> </span><span class="WHIT">    </span><span class="NAME">o.setAttrs</span><span class="PUNC">(</span><span class="NAME">attrs</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 63</span> </span><span class="WHIT">    </span><span class="NAME">o.addClass</span><span class="PUNC">(</span><span class="STRN">"widgetIcon"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 64</span> </span><span class="WHIT">    </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">o</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 65</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 66</span>
-<span class='line'> 67</span> </span><span class="COMM">// Register widget class</span><span class="WHIT">
-<span class='line'> 68</span> </span><span class="NAME">RapidContext.Widget.Classes.Icon</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">RapidContext.Widget.Icon</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 69</span>
-<span class='line'> 70</span> </span><span class="COMM">/**
-<span class='line'> 71</span>  * Returns the widget container DOM node.
-<span class='line'> 72</span>  *
-<span class='line'> 73</span>  * @return {Node} returns null, since child nodes are not supported
-<span class='line'> 74</span>  */</span><span class="WHIT">
-<span class='line'> 75</span> </span><span class="NAME">RapidContext.Widget.Icon.prototype._containerNode</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 76</span> </span><span class="WHIT">    </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 77</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 78</span>
-<span class='line'> 79</span> </span><span class="COMM">/**
-<span class='line'> 80</span>  * Emitted when the icon has been clicked. This is a standard DOM
-<span class='line'> 81</span>  * event.
-<span class='line'> 82</span>  *
-<span class='line'> 83</span>  * @name RapidContext.Widget.Icon#onclick
-<span class='line'> 84</span>  * @event
-<span class='line'> 85</span>  */</span><span class="WHIT">
-<span class='line'> 86</span>
-<span class='line'> 87</span> </span><span class="COMM">/**
-<span class='line'> 88</span>  * Updates the icon or HTML DOM node attributes.
-<span class='line'> 89</span>  *
-<span class='line'> 90</span>  * @param {Object} attrs the widget and node attributes to set
-<span class='line'> 91</span>  * @param {String} [attrs.ref] the predefined icon name (reference)
-<span class='line'> 92</span>  * @param {String} [attrs.class] the icon CSS class names
-<span class='line'> 93</span>  * @param {String} [attrs.url] the icon image URL
-<span class='line'> 94</span>  * @param {String} [attrs.position] the icon image position
-<span class='line'> 95</span>  * @param {Number} [attrs.width] the icon width (in pixels)
-<span class='line'> 96</span>  * @param {Number} [attrs.height] the icon height (in pixels)
-<span class='line'> 97</span>  * @param {String} [attrs.tooltip] the icon tooltip text
-<span class='line'> 98</span>  * @param {Boolean} [attrs.disabled] the disabled widget flag
-<span class='line'> 99</span>  * @param {Boolean} [attrs.hidden] the hidden widget flag
-<span class='line'>100</span>  */</span><span class="WHIT">
-<span class='line'>101</span> </span><span class="NAME">RapidContext.Widget.Icon.prototype.setAttrs</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">attrs</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 59</span> </span><span class="NAME">RapidContext.Widget.Icon</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">def</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 60</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">o</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">def</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">def.nodeType</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="NUMB">1</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="NAME">def</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">MochiKit.DOM.createDOM</span><span class="PUNC">(</span><span class="STRN">"i"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 61</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">!</span><span class="NAME">RapidContext.Widget.isWidget</span><span class="PUNC">(</span><span class="NAME">o</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">"Icon"</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 62</span> </span><span class="WHIT">        </span><span class="NAME">RapidContext.Widget._widgetMixin</span><span class="PUNC">(</span><span class="NAME">o</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">RapidContext.Widget.Icon</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 63</span> </span><span class="WHIT">        </span><span class="NAME">o.addClass</span><span class="PUNC">(</span><span class="STRN">"widgetIcon"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 64</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 65</span> </span><span class="WHIT">    </span><span class="NAME">o.setAttrs</span><span class="PUNC">(</span><span class="PUNC">(</span><span class="NAME">def</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">def.nodeType</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="NUMB">1</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">def</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 66</span> </span><span class="WHIT">    </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">o</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 67</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 68</span>
+<span class='line'> 69</span> </span><span class="COMM">// Register widget class</span><span class="WHIT">
+<span class='line'> 70</span> </span><span class="NAME">RapidContext.Widget.Classes.Icon</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">RapidContext.Widget.Icon</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 71</span>
+<span class='line'> 72</span> </span><span class="COMM">/**
+<span class='line'> 73</span>  * Returns the widget container DOM node.
+<span class='line'> 74</span>  *
+<span class='line'> 75</span>  * @return {Node} returns null, since child nodes are not supported
+<span class='line'> 76</span>  */</span><span class="WHIT">
+<span class='line'> 77</span> </span><span class="NAME">RapidContext.Widget.Icon.prototype._containerNode</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 78</span> </span><span class="WHIT">    </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 79</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 80</span>
+<span class='line'> 81</span> </span><span class="COMM">/**
+<span class='line'> 82</span>  * Updates the icon or HTML DOM node attributes.
+<span class='line'> 83</span>  *
+<span class='line'> 84</span>  * @param {String/Object} attrs the icon ref, class or attributes to set
+<span class='line'> 85</span>  * @param {String} [attrs.ref] the predefined icon name (reference)
+<span class='line'> 86</span>  * @param {String} [attrs.class] the icon CSS class names
+<span class='line'> 87</span>  * @param {String} [attrs.url] the icon image URL
+<span class='line'> 88</span>  * @param {String} [attrs.position] the icon image position
+<span class='line'> 89</span>  * @param {Number} [attrs.width] the icon width (in pixels)
+<span class='line'> 90</span>  * @param {Number} [attrs.height] the icon height (in pixels)
+<span class='line'> 91</span>  * @param {String} [attrs.tooltip] the icon tooltip text
+<span class='line'> 92</span>  * @param {Boolean} [attrs.disabled] the disabled widget flag
+<span class='line'> 93</span>  * @param {Boolean} [attrs.hidden] the hidden widget flag
+<span class='line'> 94</span>  */</span><span class="WHIT">
+<span class='line'> 95</span> </span><span class="NAME">RapidContext.Widget.Icon.prototype.setAttrs</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">attrs</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 96</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">typeof</span><span class="PUNC">(</span><span class="NAME">attrs</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="STRN">"string"</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 97</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">key</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">RapidContext.Widget.Icon</span><span class="PUNC">[</span><span class="NAME">attrs</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="STRN">"ref"</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"class"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 98</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">val</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">attrs</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 99</span> </span><span class="WHIT">        </span><span class="NAME">attrs</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>100</span> </span><span class="WHIT">        </span><span class="NAME">attrs</span><span class="PUNC">[</span><span class="NAME">key</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">val</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>101</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
 <span class='line'>102</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">locals</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">MochiKit.Base.update</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">attrs</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>103</span> </span><span class="WHIT">    </span><span class="KEYW">while</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">locals.ref</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>104</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">ref</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">RapidContext.Widget.Icon</span><span class="PUNC">[</span><span class="NAME">locals.ref</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>104</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">o</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">RapidContext.Widget.Icon</span><span class="PUNC">[</span><span class="NAME">locals.ref</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>105</span> </span><span class="WHIT">        </span><span class="KEYW">delete</span><span class="WHIT"> </span><span class="NAME">locals.ref</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>106</span> </span><span class="WHIT">        </span><span class="NAME">MochiKit.Base.setdefault</span><span class="PUNC">(</span><span class="NAME">locals</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">ref</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>106</span> </span><span class="WHIT">        </span><span class="NAME">MochiKit.Base.setdefault</span><span class="PUNC">(</span><span class="NAME">locals</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">o</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>107</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
 <span class='line'>108</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">styles</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>109</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">locals.url</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">

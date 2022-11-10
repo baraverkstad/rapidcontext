@@ -7,6 +7,7 @@
     <meta name="generator" content="JsDoc Toolkit" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" href="../css/style.css" type="text/css">
+    <link rel="stylesheet" href="../css/doc.css" type="text/css">
     <link rel="stylesheet" href="../css/font-awesome-4.7.0.min.css" type="text/css">
     <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="../images/logotype-icon.ico">
     <link rel="icon" type="image/png" sizes="256x256" href="../images/logotype-icon-256x256.png">
@@ -115,16 +116,6 @@
                             </td>
                         </tr>
 
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont">
-                                <b><a href="RapidContext.Widget.TextArea.html#focused">focused</a></b>
-                                </div>
-                                <div class="description">The read-only widget focused flag.</div>
-                            </td>
-                        </tr>
-
                     </tbody>
                 </table>
 
@@ -144,6 +135,15 @@
                 <table class="summaryTable">
                     <caption>Method Summary</caption>
                     <tbody>
+
+                        <tr>
+                            <td class="attributes">&nbsp;</td>
+                            <td class="nameDescription">
+                                <div class="fixedFont" ><b><a href="RapidContext.Widget.TextArea.html#destroy">destroy</a></b>()
+                                </div>
+                                <div class="description">Destroys this widget.</div>
+                            </td>
+                        </tr>
 
                         <tr>
                             <td class="attributes">&nbsp;</td>
@@ -178,7 +178,7 @@
 
 
                 <dl class="inheritsList">
-                <dt>Methods borrowed from class <a href="RapidContext.Widget.html">RapidContext.Widget</a>: </dt><dd><a href="RapidContext.Widget.html#addAll">addAll</a>, <a href="RapidContext.Widget.html#addChildNode">addChildNode</a>, <a href="RapidContext.Widget.html#addClass">addClass</a>, <a href="RapidContext.Widget.html#animate">animate</a>, <a href="RapidContext.Widget.html#blurAll">blurAll</a>, <a href="RapidContext.Widget.html#destroy">destroy</a>, <a href="RapidContext.Widget.html#disable">disable</a>, <a href="RapidContext.Widget.html#enable">enable</a>, <a href="RapidContext.Widget.html#getChildNodes">getChildNodes</a>, <a href="RapidContext.Widget.html#hasClass">hasClass</a>, <a href="RapidContext.Widget.html#hide">hide</a>, <a href="RapidContext.Widget.html#isDisabled">isDisabled</a>, <a href="RapidContext.Widget.html#isHidden">isHidden</a>, <a href="RapidContext.Widget.html#removeAll">removeAll</a>, <a href="RapidContext.Widget.html#removeChildNode">removeChildNode</a>, <a href="RapidContext.Widget.html#removeClass">removeClass</a>, <a href="RapidContext.Widget.html#setStyle">setStyle</a>, <a href="RapidContext.Widget.html#show">show</a>, <a href="RapidContext.Widget.html#toggleClass">toggleClass</a>, <a href="RapidContext.Widget.html#uid">uid</a></dd>
+                <dt>Methods borrowed from class <a href="RapidContext.Widget.html">RapidContext.Widget</a>: </dt><dd><a href="RapidContext.Widget.html#addAll">addAll</a>, <a href="RapidContext.Widget.html#addChildNode">addChildNode</a>, <a href="RapidContext.Widget.html#addClass">addClass</a>, <a href="RapidContext.Widget.html#animate">animate</a>, <a href="RapidContext.Widget.html#blurAll">blurAll</a>, <a href="RapidContext.Widget.html#disable">disable</a>, <a href="RapidContext.Widget.html#enable">enable</a>, <a href="RapidContext.Widget.html#getChildNodes">getChildNodes</a>, <a href="RapidContext.Widget.html#hasClass">hasClass</a>, <a href="RapidContext.Widget.html#hide">hide</a>, <a href="RapidContext.Widget.html#isDisabled">isDisabled</a>, <a href="RapidContext.Widget.html#isHidden">isHidden</a>, <a href="RapidContext.Widget.html#removeAll">removeAll</a>, <a href="RapidContext.Widget.html#removeChildNode">removeChildNode</a>, <a href="RapidContext.Widget.html#removeClass">removeClass</a>, <a href="RapidContext.Widget.html#setStyle">setStyle</a>, <a href="RapidContext.Widget.html#show">show</a>, <a href="RapidContext.Widget.html#toggleClass">toggleClass</a>, <a href="RapidContext.Widget.html#uid">uid</a></dd>
                 </dl>
 
 
@@ -230,11 +230,11 @@
 
 
                 <pre class="code"><span class="label">JavaScript:</span>
-var attrs = { name="description", helpText: "Description Text" };
+var attrs = { name="description", placeholder: "Description Text" };
 var field = RapidContext.Widget.TextArea(attrs);</pre>
 
                 <pre class="code"><span class="label">User Interface XML:</span>
-&lt;TextArea name="description" helpText="Description Text" /&gt;</pre>
+&lt;TextArea name="description" placeholder="Description Text" /&gt;</pre>
 
 
 
@@ -265,8 +265,7 @@ var field = RapidContext.Widget.TextArea(attrs);</pre>
                                 <span class="light fixedFont">{String}</span>  <b>attrs.helpText</b>
                                 <i>Optional</i>
                             </dt>
-                                <dd>the help text shown on empty input,
-           defaults to ""</dd>
+                                <dd>the help text when empty (deprecated)</dd>
 
                             <dt>
                                 <span class="light fixedFont">{Boolean}</span>  <b>attrs.disabled</b>
@@ -333,27 +332,6 @@ var field = RapidContext.Widget.TextArea(attrs);</pre>
 
                     <hr />
 
-                    <div id="focused" class="fixedFont">
-
-                    <span class="light">{Boolean}</span>
-                    <b>focused</b>
-
-                    </div>
-                    <div class="description">
-                        The read-only widget focused flag.
-
-
-                    </div>
-
-
-
-
-
-
-
-
-                    <hr />
-
                     <div id="defaultValue" class="fixedFont">
 
                     <span class="light">{String}</span>
@@ -382,6 +360,30 @@ var field = RapidContext.Widget.TextArea(attrs);</pre>
                 <div class="sectionTitle">
                     Method Detail
                 </div>
+
+                    <div id="destroy" class="fixedFont">
+
+
+                    <b>destroy</b>()
+
+                    </div>
+                    <div class="description">
+                        Destroys this widget.
+
+
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+                    <hr />
 
                     <div id="setAttrs" class="fixedFont">
 
@@ -423,7 +425,7 @@ var field = RapidContext.Widget.TextArea(attrs);</pre>
                                     <span class="light fixedFont">{String}</span> <b>attrs.helpText</b>
                                     <i>Optional</i>
                                 </dt>
-                                <dd>the help text shown on empty input</dd>
+                                <dd>the help text when empty (deprecated)</dd>
 
                                 <dt>
                                     <span class="light fixedFont">{Boolean}</span> <b>attrs.disabled</b>
@@ -480,20 +482,17 @@ var field = RapidContext.Widget.TextArea(attrs);</pre>
                     </div>
                     <div class="description">
                         Returns the text area value. This function is slightly different from using
-the <var>value</var> property directly, since it will always return the actual value
-instead of the temporary help text displayed when the text area is empty and
-unfocused.
+the <var>value</var> property directly, since it will attempt to normalize newlines
+in the value.
 
 
                     </div>
 
 
 
-                    <pre class="code">var value = field.getValue();
-var lines = value.split("\n");
-lines = MochiKit.Base.map(MochiKit.Format.strip, lines);
-value = lines.join("\n");
-field.setAttrs({ "value": value });</pre>
+                    <pre class="code">var str = field.getValue();
+var lines = str.split("\n").map((s) =&gt; s.trim());
+field.setAttrs({ "value": lines.join("\n") });</pre>
 
 
 
@@ -529,9 +528,12 @@ field.setAttrs({ "value": value });</pre>
 
                     </div>
                     <div class="description">
-                        Emitted when the text is modified. This event is triggered by both
-keypress and paste events if the text content is modified. The DOM
-standard onchange event may also be trigged (on blur).
+                        Emitted when the text is modified. This event is triggered by either
+user events (keypress, paste, cut, blur) or by setting the value via
+setAttrs(). The DOM standard onchange event has no <q>event.detail</q>
+data and is triggered on blur. The synthetic onchange events all
+contain an <q>event.detail</q> object with <q>before</q>, <q>after</q> and <q>cause</q>
+properties.
 
 
                     </div>
