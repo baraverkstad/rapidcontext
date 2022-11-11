@@ -7,6 +7,10 @@
     "type": "git",
     "url": "https://github.com/cederberg/rapidcontext.git"
   },
+  "dependencies": {
+    "crypto-js": "3.1.2",
+    "jquery": "3.6.1"
+  },
   "devDependencies": {
     "eslint": "^8.22.0",
     "html-validate": "^7.3.2",
