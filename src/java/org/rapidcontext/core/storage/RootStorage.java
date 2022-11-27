@@ -775,6 +775,9 @@ public class RootStorage extends Storage {
                 }
                 if (force || !storable.isActive()) {
                     cacheRemoveDestroy(cache, path, obj);
+                } else {
+                    LOG.fine(debugPrefix + "passivating cached object " + path);
+                    storable.passivate();
                 }
             } else {
                 cacheRemoveDestroy(cache, path, obj);
