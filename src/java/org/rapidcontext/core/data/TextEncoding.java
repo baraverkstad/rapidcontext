@@ -34,36 +34,34 @@ public enum TextEncoding {
     NONE,
 
     /**
-     * ASCII printable encoding. Replaces any non-ASCII (7-bit)
-     * or control characters with space chars.
+     * ASCII printable encoding. Replaces any non-printable ASCII
+     * (i.e not 7-bit ASCII) or control characters with spaces.
      */
     ASCII,
 
     /**
-     * Java properties encoding. Similar to Java strings but
-     * without quote chars.
+     * Java properties encoding. Replaces any non-printable ASCII
+     * (i.e not 7-bit ASCII) characters with Unicode escape sequences.
      */
     PROPERTIES,
 
     /**
-     * Java string encoding with quote chars around the result.
-     */
-    JAVA,
-
-    /**
-     * JSON string encoding with quote chars around the result.
+     * JSON string encoding. Escapes newlines, tabs, backslashes and
+     * double quotes. Also, any character outside the range 0x20-0x7f
+     * will be replaced with a Unicode escape sequence.
      */
     JSON,
 
     /**
-     * XML string encoding. This encoding escapes all non-ASCII
-     * characters to XML entities.
+     * XML string encoding. This encoding escapes all non-printable
+     * ASCII (i.e not 7-bit ASCII) characters with numeric XML entities.
      */
     XML,
 
     /**
      * The "application/x-www-form-urlencoded" encoding, i.e. for
-     * URLs and form data. Always encodes chars using UTF-8.
+     * URLs and form data. Replaces any non-printable ASCII (i.e not
+     * 7-bit ASCII) characters with numeric UTF-8 %-sequences.
      */
     URL;
 
@@ -82,7 +80,6 @@ public enum TextEncoding {
             return encodeAscii(str, false);
         case PROPERTIES:
             return encodeProperty(str, false);
-        case JAVA:
         case JSON:
             return encodeJson(str);
         case XML:
@@ -177,46 +174,57 @@ public enum TextEncoding {
      * only contain printable ASCII, with other characters converted
      * to Unicode escape sequences.
      *
-     * @param str            the text to encode, or null
+     * @param str            the text to encode
      *
-     * @return the encoded JSON string, or
-     *         "null" if the input was null
+     * @return the encoded JSON string
      */
     public static String encodeJson(String str) {
         StringBuilder buffer = new StringBuilder();
-        if (str == null) {
-            buffer.append("null");
-        } else {
-            buffer.append('"');
-            for (int i = 0; i < str.length(); i++) {
-                char c = str.charAt(i);
-                switch (c) {
-                case '\\':
-                    buffer.append("\\\\");
-                    break;
-                case '\"':
-                    buffer.append("\\\"");
-                    break;
-                case '\t':
-                    buffer.append("\\t");
-                    break;
-                case '\n':
-                    buffer.append("\\n");
-                    break;
-                case '\r':
-                    buffer.append("\\r");
-                    break;
-                default:
-                    if (32 <= c && c < 127) {
-                        buffer.append(c);
-                    } else {
-                        buffer.append(String.format("\\u%04x", Integer.valueOf(c)));
-                    }
+        for (int i = 0; str != null && i < str.length(); i++) {
+            char c = str.charAt(i);
+            switch (c) {
+            case '\\':
+                buffer.append("\\\\");
+                break;
+            case '\"':
+                buffer.append("\\\"");
+                break;
+            case '\t':
+                buffer.append("\\t");
+                break;
+            case '\n':
+                buffer.append("\\n");
+                break;
+            case '\r':
+                buffer.append("\\r");
+                break;
+            default:
+                if (32 <= c && c < 127) {
+                    buffer.append(c);
+                } else {
+                    buffer.append(String.format("\\u%04x", Integer.valueOf(c)));
                 }
             }
-            buffer.append('"');
         }
         return buffer.toString();
+    }
+
+    /**
+     * Encodes a string into a JSON string literal. The output will
+     * only contain printable ASCII, with other characters converted
+     * to Unicode escape sequences.
+     *
+     * @param str            the text to encode, or null
+     *
+     * @return the encoded JSON string, or
+     *         "null" if null
+     */
+    public static String encodeJsonString(String str) {
+        if (str == null) {
+            return "null";
+        } else {
+            return '"' + encodeJson(str) + '"';
+        }
     }
 
     /**
