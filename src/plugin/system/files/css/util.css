@@ -673,7 +673,7 @@
 .font-upper {
     text-transform: uppercase;
 }
-.font-upper-first:first-letter {
+.font-upper-first::first-letter {
     text-transform: uppercase;
 }
 
