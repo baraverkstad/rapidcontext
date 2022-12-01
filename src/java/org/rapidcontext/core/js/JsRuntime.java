@@ -209,7 +209,8 @@ public final class JsRuntime {
             //       in turn wrapped inside e.g. NativeJavaObject...
             return unwrap(((Wrapper) obj).unwrap());
         } else if (obj instanceof CharSequence) {
-            return obj.toString();
+            String s = obj.toString();
+            return DateUtil.isEpochFormat(s) ? new Date(Long.parseLong(s.substring(1))) : s;
         } else if (obj instanceof NativeArray) {
             NativeArray nativeArr = (NativeArray) obj;
             int length = (int) nativeArr.getLength();

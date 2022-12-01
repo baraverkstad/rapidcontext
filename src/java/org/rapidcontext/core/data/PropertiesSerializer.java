@@ -275,7 +275,7 @@ public final class PropertiesSerializer {
             return Boolean.valueOf(value);
         } else if (value.length() > 0 && value.length() <= 9 && StringUtils.isNumeric(value)) {
             return Integer.valueOf(value);
-        } else if (value.startsWith("@") && StringUtils.isNumeric(value.substring(1))) {
+        } else if (DateUtil.isEpochFormat(value)) {
             return new Date(Long.parseLong(value.substring(1)));
         } else {
             return value;

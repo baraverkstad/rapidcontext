@@ -230,7 +230,7 @@ public class YamlSerializer {
             return Boolean.valueOf(str);
         } else if (str.length() > 0 && str.length() <= 9 && StringUtils.isNumeric(str)) {
             return Integer.valueOf(str);
-        } else if (str.startsWith("@") && StringUtils.isNumeric(str.substring(1))) {
+        } else if (DateUtil.isEpochFormat(str)) {
             return new Date(Long.parseLong(str.substring(1)));
         } else {
             return str;

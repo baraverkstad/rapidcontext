@@ -17,6 +17,7 @@ package org.rapidcontext.util;
 import java.util.Date;
 import java.util.TimeZone;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
 
 /**
@@ -41,6 +42,20 @@ public final class DateUtil {
     // The ISO time format.
     private static final FastDateFormat ISO_TIME_FORMAT =
         FastDateFormat.getInstance("HH:mm:ss");
+
+    /**
+     * Checks if a string is in Unix epoch format. Note that there is
+     * no safe way to distinguish between epoch values in second vs.
+     * millisecond resolution for all cases.
+     *
+     * @param str            the string to test
+     *
+     * @return true if the string is in epoch format, or
+     *         false otherwise
+     */
+    public static boolean isEpochFormat(String str) {
+        return str.startsWith("@") && StringUtils.isNumeric(str.substring(1));
+    }
 
     /**
      * Formats a date and time in Unix (millisecond) epoch format
