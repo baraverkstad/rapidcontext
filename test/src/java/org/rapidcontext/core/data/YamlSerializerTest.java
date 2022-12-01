@@ -54,7 +54,7 @@ public class YamlSerializerTest {
 
     private Dict buildDict() {
         Dict root = new Dict();
-        root.add("a", "one");
+        root.add("a", "abc\\u00E5\\u00E4\\u00F6");
         root.addInt("b", 2);
         root.addBoolean("c", false);
         root.add("d", new Date(0));

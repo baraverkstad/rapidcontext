@@ -1,4 +1,4 @@
-a: one
+a: abc\u00E5\u00E4\u00F6
 b: 2
 c: false
 d: '@0'

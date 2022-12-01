@@ -81,10 +81,28 @@ public final class JsonSerializer {
                 serializeFunction = JsRuntime.compile("serialize", args, body);
             }
             Object[] args = new Object[] { obj, Integer.valueOf(indent ? 2 : 0) };
-            return JsRuntime.call(serializeFunction, args, null).toString();
+            String str = JsRuntime.call(serializeFunction, args, null).toString();
+            return toPrintableAscii(str);
         } catch (JsException ignore) {
             return "null";
         }
+    }
+
+
+    /**
+     * Encodes all non-printable ASCII characters in a JSON string.
+     *
+     * @param str            the text to encode
+     *
+     * @return the encoded JSON string
+     */
+    private static String toPrintableAscii(String str) {
+        StringBuilder buffer = new StringBuilder();
+        for (int i = 0; str != null && i < str.length(); i++) {
+            char c = str.charAt(i);
+            buffer.append((c < 127) ? c : String.format("\\u%04x", Integer.valueOf(c)));
+        }
+        return buffer.toString();
     }
 
     /**
