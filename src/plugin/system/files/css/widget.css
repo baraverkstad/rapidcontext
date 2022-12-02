@@ -494,9 +494,11 @@ th.widgetTableColumn.sortNone::after {
 .widgetTreeNodeLabel i.fa.fa-plus-square-o {
     color: #777;
 }
-.widgetTreeNodeLabel i.fa.fa-folder,
+.widgetTreeNodeLabel i.fa.fa-folder {
+    color: #dcb;
+}
 .widgetTreeNodeLabel i.fa.fa-folder-open {
-    color: #db7;
+    color: #fa1;
 }
 .widgetTreeNodeText {
     padding-left: 3px;
