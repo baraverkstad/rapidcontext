@@ -10,7 +10,7 @@
           <Icon id="cxnReload" class="fa fa-refresh ml-1" title="Reload" />
           <Icon id="cxnLoading" class="fa fa-spin fa-refresh ml-1" />
         </h3>
-        <Table id="cxnTable" w="100%" h="100%-2em">
+        <Table id="cxnTable" w="100%" h="100%-2.2em">
           <TableColumn title="Identifier" field="id" sort="asc" key="true" />
           <TableColumn title="Status" field="status" />
           <TableColumn title="Type" field="type" />
@@ -136,7 +136,7 @@
           <Icon id="appReload" class="fa fa-refresh ml-1" title="Reload" />
           <Icon id="appLoading" class="fa fa-spin fa-refresh ml-1" />
         </h3>
-        <Table id="appTable" w="100%" h="100%-2em">
+        <Table id="appTable" w="100%" h="100%-2.2em">
           <TableColumn title="Identifier" field="id" sort="asc" key="true" />
           <TableColumn title="Name" field="name" />
           <TableColumn title="Plug-in" field="plugin" />
@@ -224,7 +224,7 @@
           <Icon id="pluginReload" class="fa fa-refresh ml-1" title="Reload" />
           <Icon id="pluginLoading" class="fa fa-spin fa-refresh ml-1" />
         </h3>
-        <Table id="pluginTable" w="100%" h="100%-2em">
+        <Table id="pluginTable" w="100%" h="100%-2.2em">
           <TableColumn title="Status" field="loaded" type="boolean" />
           <TableColumn title="Identifier" field="id" key="true" />
           <TableColumn title="Version" field="version" />
@@ -305,7 +305,7 @@
           <Icon id="procTreeReload" class="fa fa-refresh ml-1" title="Reload" />
           <Icon id="procTreeLoading" class="fa fa-spin fa-refresh ml-1" />
         </h3>
-        <Tree id="procTree" w="100%" h="100%-2em" />
+        <Tree id="procTree" w="100%" h="100%-2.2em" />
       </div>
       <div w="66.666%" h="100%" class="inline-block vertical-top">
         <Form id="procForm" class="w-100 h-100">
@@ -491,7 +491,7 @@
           <Icon id="userReload" class="fa fa-refresh ml-1" title="Reload" />
           <Icon id="userLoading" class="fa fa-spin fa-refresh ml-1" />
         </h3>
-        <Table id="userTable" w="100%" h="100%-2em">
+        <Table id="userTable" w="100%" h="100%-2.2em">
           <TableColumn title="Id" field="id" sort="asc" key="true" maxLength="20" />
           <TableColumn title="Enabled" field="enabled" type="boolean" />
           <TableColumn title="Name" field="name" maxLength="40" />
@@ -587,7 +587,7 @@
             <Icon id="logClear" class="fa fa-minus-square widget-red ml-1" title="Clear logs" />
             <Icon id="logReload" class="fa fa-refresh ml-1" title="Reload" />
           </h3>
-          <Table id="logTable" w="100%" h="100%-2em">
+          <Table id="logTable" w="100%" h="100%-2.2em">
             <TableColumn title="Id" field="id" type="number" sort="desc" key="true" />
             <TableColumn title="Time" field="time" type="time" />
             <TableColumn title="Level" field="level" />
@@ -597,7 +597,7 @@
         </div>
         <div h="66.666%">
           <h3>Log Data:</h3>
-          <p id="logData" w="100%" h="100%-2em" class="overflow-auto unimportant"></p>
+          <p id="logData" w="100%" h="100%-2.2em" class="overflow-auto unimportant"></p>
         </div>
       </div>
     </Pane>
