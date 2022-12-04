@@ -311,7 +311,7 @@ RapidContext.Widget.Form.prototype.validateReset = function () {
     var fields = this.fieldMap();
     Object.keys(fields).forEach(function (name) {
         [].concat(fields[name]).filter(Boolean).forEach(function (f) {
-            f.setCustomValidity("");
+            f.setCustomValidity && f.setCustomValidity("");
         });
     });
     $(this).find(".invalid").addBack().removeClass("invalid");
