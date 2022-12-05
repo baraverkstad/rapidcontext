@@ -430,7 +430,7 @@ RapidContext.App.callProc = function (name, args) {
         if (args[i] == null) {
             params["arg" + i] = "null";
         } else {
-            params["arg" + i] = JSON.stringify(args[i]);
+            params["arg" + i] = RapidContext.Encode.toJSON(args[i]);
         }
     }
     var logLevel = RapidContext.Log.level();
@@ -628,7 +628,7 @@ RapidContext.App.loadXHR = function (url, params, options) {
     var hasBody = params && ["PATCH", "POST", "PUT"].indexOf(opts.method) >= 0;
     url += (params && !hasBody) ? "?" + MochiKit.Base.queryString(params) : "";
     if (params && hasBody && opts.headers["Content-Type"] === "application/json") {
-        opts.body = JSON.stringify(params);
+        opts.body = RapidContext.Encode.toJSON(params);
     } else if (params && hasBody) {
         opts.headers["Content-Type"] = "application/x-www-form-urlencoded";
         opts.body = MochiKit.Base.queryString(params);

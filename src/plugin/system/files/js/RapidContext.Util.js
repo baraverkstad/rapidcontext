@@ -29,19 +29,6 @@ if (typeof(RapidContext.Util) == "undefined") {
 }
 
 
-// JSON object for browsers missing it
-
-if (typeof(JSON) == "undefined") {
-    var JSON = {};
-}
-if (!JSON.parse) {
-    JSON.parse = MochiKit.Base.evalJSON;
-}
-if (!JSON.stringify) {
-    JSON.stringify = MochiKit.Base.serializeJSON;
-}
-
-
 // General utility functions
 
 /**
