@@ -30,7 +30,7 @@ clean:
 # Setup development environment
 #
 setup: clean
-	npm install --no-optional
+	npm install --omit=optional
 
 
 #
