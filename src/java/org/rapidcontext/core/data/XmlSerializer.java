@@ -42,6 +42,11 @@ import org.rapidcontext.util.DateUtil;
 public final class XmlSerializer {
 
     /**
+     * The XML file prolog (XML declaration).
+     */
+    protected static final String PROLOG = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+
+    /**
      * Serializes an object into an XML representation. The string
      * returned is a stand-alone XML document marked as being in the
      * UTF-8 charset.
@@ -53,7 +58,7 @@ public final class XmlSerializer {
      */
     public static String serialize(String id, Object obj) {
         StringBuilder buffer = new StringBuilder();
-        buffer.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+        buffer.append(PROLOG);
         serialize(id, obj, 0, buffer);
         buffer.append("\n");
         return buffer.toString();
@@ -76,6 +81,10 @@ public final class XmlSerializer {
             serialize(id, (Dict) obj, indent, buffer);
         } else if (obj instanceof Array) {
             serialize(id, (Array) obj, indent, buffer);
+        } else if (obj instanceof Boolean) {
+            tagStart(id, "boolean", buffer);
+            buffer.append(TextEncoding.encodeXml(obj.toString(), false));
+            tagEnd(id, buffer);
         } else if (obj instanceof Date) {
             tagStart(id, "date", buffer);
             buffer.append(DateUtil.asEpochMillis((Date) obj));

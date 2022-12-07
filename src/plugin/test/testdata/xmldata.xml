@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data type="object">
+  <id>xmldata</id>
+  <a>abc&#229;&#228;&#246;</a>
+  <b type="number">2</b>
+  <c type="boolean">false</c>
+  <d type="date">@0</d>
+  <object type="object">
+    <key>value</key>
+  </object>
+  <array type="array">
+    <item>item 1</item>
+    <item>item 2</item>
+  </array>
+</data>
