@@ -1,6 +1,14 @@
 {
-    "test": true,
-    "a": "one",
-    "b": { "two": 2 },
-    "c": [1, 2, 3]
+  "id": "jsondata",
+  "a": "abc\u00e5\u00e4\u00f6",
+  "b": 2,
+  "c": false,
+  "d": "@0",
+  "object": {
+    "key": "value"
+  },
+  "array": [
+    "item 1",
+    "item 2"
+  ]
 }

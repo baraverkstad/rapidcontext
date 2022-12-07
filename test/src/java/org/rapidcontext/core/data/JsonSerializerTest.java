@@ -22,6 +22,7 @@ import java.util.Date;
 
 import org.junit.Test;
 import org.rapidcontext.util.FileUtil;
+import static org.rapidcontext.core.data.JsonSerializer.*;
 
 /**
  * Unit tests for the JSON serializer.
@@ -31,29 +32,30 @@ public class JsonSerializerTest {
 
     @Test
     public void testTypeSupport() {
-        assertEquals("\"test\"", JsonSerializer.serialize("test", false));
-        assertEquals("123", JsonSerializer.serialize(Integer.valueOf(123), false));
-        assertEquals("true", JsonSerializer.serialize(Boolean.TRUE, false));
-        assertEquals("\"@0\"", JsonSerializer.serialize(new Date(0), false));
+        assertEquals("\"test\"", serialize("test", false));
+        assertEquals("123", serialize(Integer.valueOf(123), false));
+        assertEquals("true", serialize(Boolean.TRUE, false));
+        assertEquals("\"@0\"", serialize(new Date(0), false));
     }
 
     @Test
     public void testSerialize() throws IOException {
-        try (InputStream is = getClass().getResourceAsStream("testdata.json")) {
+        try (InputStream is = getClass().getResourceAsStream("jsondata.json")) {
             String text = FileUtil.readText(is, "UTF-8").trim();
-            assertEquals(text, JsonSerializer.serialize(buildDict(), true));
+            assertEquals(text, serialize(buildDict(), true));
         }
     }
 
     @Test
     public void testUnserialize() throws IOException {
-        try (InputStream is = getClass().getResourceAsStream("testdata.json")) {
-            assertEquals(buildDict(), JsonSerializer.unserialize(is));
+        try (InputStream is = getClass().getResourceAsStream("jsondata.json")) {
+            assertEquals(buildDict(), unserialize(is));
         }
     }
 
     private Dict buildDict() {
         Dict root = new Dict();
+        root.add("id", "jsondata");
         root.add("a", "abc\u00E5\u00E4\u00F6");
         root.addInt("b", 2);
         root.addBoolean("c", false);
