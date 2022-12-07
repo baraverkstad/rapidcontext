@@ -23,7 +23,6 @@ import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.data.XmlSerializer;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
@@ -151,9 +150,8 @@ public class StorageWriteProcedure implements Procedure {
                 path += Storage.EXT_JSON;
             }
         } else if (fmt.equalsIgnoreCase("xml")) {
-            if (isStruct) {
-                String str = XmlSerializer.serialize("data", data);
-                data = new Binary.BinaryString(str);
+            if (!StringUtils.endsWithIgnoreCase(path, Storage.EXT_XML)) {
+                path += Storage.EXT_XML;
             }
         } else if (fmt.equalsIgnoreCase("yaml")) {
             if (!StringUtils.endsWithIgnoreCase(path, Storage.EXT_YAML)) {

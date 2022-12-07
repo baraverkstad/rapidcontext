@@ -42,7 +42,14 @@ public class XmlSerializerTest {
     public void testSerialize() throws IOException {
         try (InputStream is = getClass().getResourceAsStream("xmldata.xml")) {
             String text = FileUtil.readText(is, "UTF-8");
-            assertEquals(text, serialize("data", buildDict()));
+            assertEquals(text, serialize("root", buildDict()));
+        }
+    }
+
+    @Test
+    public void testUnserialize() throws IOException {
+        try (InputStream is = getClass().getResourceAsStream("xmldata.xml")) {
+            assertEquals(buildDict(), XmlSerializer.unserialize(is));
         }
     }
 

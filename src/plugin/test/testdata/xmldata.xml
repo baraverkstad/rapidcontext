@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<data type="object">
+<root type="object">
   <id>xmldata</id>
   <a>abc&#229;&#228;&#246;</a>
   <b type="number">2</b>
@@ -12,4 +12,4 @@
     <item>item 1</item>
     <item>item 2</item>
   </array>
-</data>
+</root>

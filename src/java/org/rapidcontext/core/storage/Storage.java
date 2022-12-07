@@ -22,6 +22,7 @@ import java.util.Date;
 import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.core.data.JsonSerializer;
 import org.rapidcontext.core.data.PropertiesSerializer;
+import org.rapidcontext.core.data.XmlSerializer;
 import org.rapidcontext.core.data.YamlSerializer;
 
 /**
@@ -86,6 +87,11 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
     public static final String EXT_JSON = ".json";
 
     /**
+     * The file extension for XML data.
+     */
+    public static final String EXT_XML = ".xml";
+
+    /**
      * The file extension for YAML data.
      */
     public static final String EXT_YAML = ".yaml";
@@ -93,7 +99,7 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
     /**
      * The list of file extensions supported for data.
      */
-    public static final String[] EXT_ALL = { EXT_PROPERTIES, EXT_JSON, EXT_YAML };
+    public static final String[] EXT_ALL = { EXT_PROPERTIES, EXT_JSON, EXT_XML, EXT_YAML };
 
     /**
      * The system time of the last mount info update. This value is
@@ -154,6 +160,8 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
             PropertiesSerializer.serialize(obj, os);
         } else if (StringUtils.endsWithIgnoreCase(filename, EXT_JSON)) {
             JsonSerializer.serialize(obj, os);
+        } else if (StringUtils.endsWithIgnoreCase(filename, EXT_XML)) {
+            XmlSerializer.serialize(obj, os);
         } else if (StringUtils.endsWithIgnoreCase(filename, EXT_YAML)) {
             YamlSerializer.serialize(obj, os);
         } else {
@@ -178,6 +186,8 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
             return PropertiesSerializer.unserialize(is);
         } else if (StringUtils.endsWithIgnoreCase(filename, EXT_JSON)) {
             return JsonSerializer.unserialize(is);
+        } else if (StringUtils.endsWithIgnoreCase(filename, EXT_XML)) {
+            return XmlSerializer.unserialize(is);
         } else if (StringUtils.endsWithIgnoreCase(filename, EXT_YAML)) {
             return YamlSerializer.unserialize(is);
         } else {
