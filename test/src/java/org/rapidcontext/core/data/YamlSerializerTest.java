@@ -22,6 +22,7 @@ import java.util.Date;
 
 import org.junit.Test;
 import org.rapidcontext.util.FileUtil;
+import static org.rapidcontext.core.data.YamlSerializer.*;
 
 /**
  * Unit tests for the YAML serializer.
@@ -31,30 +32,31 @@ public class YamlSerializerTest {
 
     @Test
     public void testTypeSupport() {
-        assertEquals("test\n", YamlSerializer.serialize("test"));
-        assertEquals("123\n", YamlSerializer.serialize(Integer.valueOf(123)));
-        assertEquals("true\n", YamlSerializer.serialize(Boolean.TRUE));
-        assertEquals("'@0'\n", YamlSerializer.serialize(new Date(0)));
+        assertEquals("test\n", serialize("test"));
+        assertEquals("123\n", serialize(Integer.valueOf(123)));
+        assertEquals("true\n", serialize(Boolean.TRUE));
+        assertEquals("'@0'\n", serialize(new Date(0)));
     }
 
     @Test
     public void testSerialize() throws IOException {
-        try (InputStream is = getClass().getResourceAsStream("testdata.yaml")) {
+        try (InputStream is = getClass().getResourceAsStream("yamldata.yaml")) {
             String text = FileUtil.readText(is, "UTF-8");
-            assertEquals(text, YamlSerializer.serialize(buildDict()));
+            assertEquals(text, serialize(buildDict()));
         }
     }
 
     @Test
     public void testUnserialize() throws IOException {
-        try (InputStream is = getClass().getResourceAsStream("testdata.yaml")) {
-            assertEquals(buildDict(), YamlSerializer.unserialize(is));
+        try (InputStream is = getClass().getResourceAsStream("yamldata.yaml")) {
+            assertEquals(buildDict(), unserialize(is));
         }
     }
 
     private Dict buildDict() {
         Dict root = new Dict();
-        root.add("a", "abc\\u00E5\\u00E4\\u00F6");
+        root.add("id", "yamldata");
+        root.add("a", "abc\u00E5\u00E4\u00F6");
         root.addInt("b", 2);
         root.addBoolean("c", false);
         root.add("d", new Date(0));

@@ -33,6 +33,7 @@ import org.snakeyaml.engine.v2.api.DumpSettings;
 import org.snakeyaml.engine.v2.api.Load;
 import org.snakeyaml.engine.v2.api.LoadSettings;
 import org.snakeyaml.engine.v2.common.FlowStyle;
+import org.snakeyaml.engine.v2.common.NonPrintableStyle;
 
 /**
  * A data serializer and unserializer for the YAML format. The object
@@ -58,6 +59,8 @@ public class YamlSerializer {
         .setDefaultFlowStyle(FlowStyle.BLOCK)
         .setIndent(4)
         .setIndicatorIndent(2)
+        .setUseUnicodeEncoding(false)
+        .setNonPrintableStyle(NonPrintableStyle.ESCAPE)
         .build();
 
     /**
