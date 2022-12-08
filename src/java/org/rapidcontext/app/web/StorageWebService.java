@@ -16,17 +16,19 @@ package org.rapidcontext.app.web;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.app.proc.StorageDeleteProcedure;
 import org.rapidcontext.app.proc.StorageWriteProcedure;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.data.HtmlSerializer;
 import org.rapidcontext.core.data.JsonSerializer;
 import org.rapidcontext.core.data.PropertiesSerializer;
 import org.rapidcontext.core.data.XmlSerializer;
@@ -41,7 +43,7 @@ import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.type.WebService;
 import org.rapidcontext.core.web.Mime;
 import org.rapidcontext.core.web.Request;
-import org.rapidcontext.util.FileUtil;
+import org.rapidcontext.util.DateUtil;
 
 /**
  * A storage API web service. This service is used for accessing the
@@ -130,217 +132,52 @@ public class StorageWebService extends WebService {
             errorUnauthorized(request);
             return;
         }
+        Storage storage = ApplicationContext.getInstance().getStorage();
         Path path = Path.from(request.getPath());
         Metadata meta = lookup(path);
-        boolean isExact = meta != null && path.equals(meta.path());
-        boolean isHtml = !isExact && StringUtils.endsWithIgnoreCase(path.name(), EXT_HTML);
-        boolean isJson = !isExact && StringUtils.endsWithIgnoreCase(path.name(), Storage.EXT_JSON);
-        boolean isProps = !isExact && StringUtils.endsWithIgnoreCase(path.name(), Storage.EXT_PROPERTIES);
-        boolean isXml = !isExact && StringUtils.endsWithIgnoreCase(path.name(), Storage.EXT_XML);
-        boolean isYaml = !isExact && StringUtils.endsWithIgnoreCase(path.name(), Storage.EXT_YAML);
-        try {
-            Storage storage = ApplicationContext.getInstance().getStorage();
-            Object res = (meta == null) ? null : storage.load(meta.path());
-            if (res instanceof Index && meta != null) {
-                res = serializeIndex(meta.path(), (Index) res, isExact || isHtml);
-            } else if (res instanceof Binary && !isExact) {
-                res = serializeBinary((Binary) res, request, path);
-            }
-            // Render result as raw data, Properties, HTML, JSON or XML
-            if (meta == null || res == null) {
-                errorNotFound(request);
-            } else if (res instanceof Binary) {
-                request.sendBinary((Binary) res);
-            } else if (isExact || isHtml) {
-                sendHtml(request, meta.path(), meta, res);
-            } else if (isJson) {
-                request.sendText(Mime.JSON[0], JsonSerializer.serialize(res, true));
-            } else if (isProps) {
-                request.sendText(Mime.TEXT[0], PropertiesSerializer.serialize(res));
-            } else if (isXml) {
-                request.sendText(Mime.XML[0], XmlSerializer.serialize("results", res));
-            } else if (isYaml) {
-                request.sendText(Mime.YAML[0], YamlSerializer.serialize(res));
-            } else {
-                request.sendError(STATUS.NOT_ACCEPTABLE);
-            }
-        } catch (Exception e) {
-            LOG.log(Level.WARNING, "failed to process storage request", e);
-            // TODO: How do users want their error messages?
-            Dict dict = new Dict();
-            dict.set("error", e.toString());
-            if (isJson) {
-                request.sendText(Mime.JSON[0], JsonSerializer.serialize(dict, true));
-            } else if (isXml) {
-                request.sendText(Mime.XML[0], XmlSerializer.serialize("error", dict));
-            } else if (isYaml) {
-                request.sendText(Mime.YAML[0], YamlSerializer.serialize(dict));
-            } else {
-                errorInternal(request, e.getMessage());
-            }
-        }
-    }
-
-    /**
-     * Creates and sends the HTML response for a storage request.
-     *
-     * @param request        the request to modify
-     * @param path           the storage path requested
-     * @param meta           the meta-data to render
-     * @param res            the actual data to render
-     */
-    private void sendHtml(Request request, Path path, Metadata meta, Object res) {
-        StringBuffer html = new StringBuffer();
-
-        html.append("<!DOCTYPE html>\n");
-        html.append("<html>\n<head>\n");
-        html.append("<link rel='stylesheet' href='");
-        html.append(relativeBackPath(request.getPath()));
-        html.append("files/css/style.css'>\n");
-        html.append("<link rel='stylesheet' href='");
-        html.append(relativeBackPath(request.getPath()));
-        html.append("files/app/storage/app.css'>\n");
-        html.append("<title>RapidContext Storage API</title>\n");
-        html.append("</head>\n<body class='storage-app'>\n");
-        html.append("<h1>RapidContext Storage API</h1>\n");
-        html.append("<nav>\n<ol>\n");
-        if (path.isRoot()) {
-            html.append("<li class='active'>Start</li>\n");
+        Object data = (meta == null) ? null : storage.load(meta.path());
+        if (meta == null || data == null) {
+            errorNotFound(request);
+        } else if (data instanceof Binary && path.equals(meta.path())) {
+            request.sendBinary((Binary) data);
         } else {
-            html.append("<li><a href='");
-            html.append(StringUtils.repeat("../", path.depth()));
-            html.append(".'>Start</a></li>\n");
-        }
-        for (int i = 0; i < path.length(); i++) {
-            if (i + 1 < path.length()) {
-                html.append("<li><a href='");
-                html.append(StringUtils.repeat("../", path.depth() - i - 1));
-                html.append(".'>");
-                html.append(path.name(i));
-                html.append("</a></li>\n");
-            } else {
-                html.append("<li class='active'>");
-                html.append(path.name(i));
-                html.append("</li>\n");
+            boolean isHtml = path.isIndex() ||
+                    StringUtils.endsWithIgnoreCase(path.name(), EXT_HTML);
+            if (data instanceof Index) {
+                data = prepareIndex(meta.path(), (Index) data, isHtml);
+            } else if (data instanceof Binary) {
+                data = prepareBinary(meta.path(), (Binary) data, isHtml);
             }
+            sendResult(request, meta.path(), prepareMetadata(meta, isHtml), data);
         }
-        html.append("</ol>\n</nav>\n<hr>\n");
-        html.append("<div class='metadata'>\n");
-        html.append("<h2>Query Metadata</h2>\n");
-        html.append(HtmlSerializer.serialize(serializeMetadata(meta, request)));
-        html.append("</div>\n");
-        html.append("<div class='data'>\n");
-        html.append("<h2>Query Results</h2>");
-        html.append(HtmlSerializer.serialize(res));
-        html.append("</div>\n<hr>\n");
-        html.append("<p><strong>Data Formats:</strong>");
-        String link = meta.isIndex() ? "index" : path.name();
-        html.append(" &nbsp;<a href='" + link + Storage.EXT_JSON + "'>JSON</a>");
-        html.append(" &nbsp;<a href='" + link + Storage.EXT_PROPERTIES + "'>PROPERTIES</a>");
-        html.append(" &nbsp;<a href='" + link + Storage.EXT_XML + "'>XML</a>");
-        html.append(" &nbsp;<a href='" + link + Storage.EXT_YAML + "'>YAML</a>");
-        if (meta.isBinary()) {
-            html.append(" &nbsp;<a href='" + link + "'>RAW</a>");
-        }
-        html.append("</p>\n</body>\n</html>\n");
-        request.sendText(Mime.HTML[0], html.toString());
     }
 
-    /**
-     * Serializes an index to a suitable external representation. If
-     * the HTML link flag is set, all the references in the index
-     * will be prefixed by "$href$" (being serialized into HTML links).
-     *
-     * @param path           the index base path
-     * @param idx            the index to serialize
-     * @param linkify        the HTML link flag
-     *
-     * @return the serialized representation of the index
-     */
-    private Dict serializeIndex(Path path, Index idx, boolean linkify) {
-        boolean isDataPath = !RootStorage.isBinaryPath(path);
-        Array indices = new Array();
-        idx.indices().filter((item) -> !item.startsWith(".")).forEach((item) -> {
-            indices.add((linkify ? "$href$" : "") + item + "/");
-        });
-        Array objects = new Array();
-        idx.objects().filter((item) -> !item.startsWith(".")).forEach((item) -> {
-            if (isDataPath) {
-                item = Storage.removeExt(item);
-                if (idx.hasObject(item)) {
-                    item = null;
-                }
-            }
-            if (linkify && item != null) {
-                objects.add("$href$" + item + ".html$" + item);
-            } else if (item != null) {
-                objects.add(item);
-            }
-        });
-        Dict dict = new Dict();
-        dict.set("type", "index");
-        dict.set("directories", indices);
-        dict.set("objects", objects);
-        return dict;
-    }
-
-    /**
-     * Serializes a binary data object to an external representation.
-     *
-     * @param data           the binary data object
-     * @param request        the web request
-     * @param path           the storage path
-     *
-     * @return serialized representation of the file
-     */
-    private Dict serializeBinary(Binary data, Request request, Path path) {
-        Dict dict = new Dict();
-        dict.set("type", "file");
-        dict.set("name", path.name());
-        dict.set("mimeType", data.mimeType());
-        dict.set("size", Long.valueOf(data.size()));
-        if (Mime.isText(data.mimeType())) {
-            try (InputStream is = data.openStream()) {
-                dict.set("text", FileUtil.readText(is, "UTF-8"));
-            } catch (Exception e) {
-                String msg = "invalid data read: " + e.getMessage();
-                LOG.log(Level.WARNING, msg, e);
-            }
+    private void sendResult(Request request, Path path, Dict meta, Object data) {
+        boolean includeMeta = BooleanUtils.toBoolean(request.getParameter("metadata", "0"));
+        if (includeMeta) {
+            Dict res = new Dict();
+            res.add("data", data);
+            res.add("metadata", meta);
+            data = res;
         }
-        return dict;
-    }
-
-    /**
-     * Serializes a metadata object to an external representation.
-     *
-     * @param meta           the metadata object
-     * @param request        the web request
-     *
-     * @return serialized representation of the metadata
-     */
-    private Dict serializeMetadata(Metadata meta, Request request) {
-        Dict  dict = new Dict();
-
-        dict = meta.serialize();
-        dict.remove(Metadata.KEY_ID);
-        dict.remove(Metadata.KEY_TYPE);
-        dict.set("processTime", Long.valueOf(request.getProcessTime()));
-        return dict;
-    }
-
-    /**
-     * Returns the relative path to reverse the specified path. This
-     * method will add an "../" part for each directory in the
-     * current path so that site-relative links can be created
-     * easily.
-     *
-     * @param path           the path to reverse
-     *
-     * @return the relative reversed path
-     */
-    private String relativeBackPath(String path) {
-        int count = StringUtils.countMatches(path, "/");
-        return StringUtils.repeat("../", count);
+        meta.set("processTime", Long.valueOf(request.getProcessTime()));
+        if (StringUtils.endsWithIgnoreCase(request.getPath(), Storage.EXT_JSON)) {
+            request.sendText(Mime.JSON[0], JsonSerializer.serialize(data, true));
+        } else if (StringUtils.endsWithIgnoreCase(request.getPath(), Storage.EXT_PROPERTIES)) {
+            try {
+                request.sendText(Mime.TEXT[0], PropertiesSerializer.serialize(data));
+            } catch (IOException e) {
+                LOG.log(Level.WARNING, "error serializing properties", e);
+                request.sendText(Mime.TEXT[0], e.toString());
+            }
+        } else if (StringUtils.endsWithIgnoreCase(request.getPath(), Storage.EXT_XML)) {
+            String root = includeMeta ? "result" : "data";
+            request.sendText(Mime.XML[0], XmlSerializer.serialize(root, data));
+        } else if (StringUtils.endsWithIgnoreCase(request.getPath(), Storage.EXT_YAML)) {
+            request.sendText(Mime.YAML[0], YamlSerializer.serialize(data));
+        } else {
+            request.sendText(Mime.HTML[0], HtmlRenderer.render(path, meta, data));
+        }
     }
 
     /**
@@ -516,5 +353,247 @@ public class StorageWebService extends WebService {
             }
         }
         return meta;
+    }
+
+    /**
+     * Creates an external representation of a metadata object.
+     *
+     * @param meta           the metadata object
+     *
+     * @return the external representation of the metadata
+     */
+    private Dict prepareMetadata(Metadata meta, boolean linkify) {
+        Dict dict = meta.serialize();
+        dict.remove(Metadata.KEY_ID);
+        dict.remove(Metadata.KEY_TYPE);
+        if (linkify) {
+            String root = StringUtils.repeat("../", meta.path().depth());
+            Array arr = new Array();
+            for (Object path : meta.storagePaths()) {
+                String rel = StringUtils.removeStart(path.toString(), "/");
+                arr.add("$href$" + root + rel + "$" + path);
+            }
+            dict.set("storagePaths", arr);
+        }
+        return dict;
+    }
+
+    /**
+     * Creates an external representation of an index. If the HTML
+     * link flag is set, all the references in the index will be
+     * prefixed by "$href$" (being serialized into HTML links).
+     *
+     * @param path           the index base path
+     * @param idx            the index to serialize
+     * @param linkify        the HTML link flag
+     *
+     * @return the external representation of the index
+     */
+    private Dict prepareIndex(Path path, Index idx, boolean linkify) {
+        boolean binary = RootStorage.isBinaryPath(path);
+        Array indices = new Array();
+        idx.indices().filter((item) -> !item.startsWith(".")).forEach((item) -> {
+            indices.add((linkify ? "$href$" : "") + item + "/");
+        });
+        Array objects = new Array();
+        idx.objects().filter((item) -> !item.startsWith(".")).forEach((item) -> {
+            item = binary ? item : Storage.removeExt(item);
+            item = !linkify ? item : "$href$" + item + ".html$" + item;
+            if (!objects.containsValue(item)) {
+                objects.add(item);
+            }
+        });
+        Dict dict = new Dict();
+        dict.set("type", "index");
+        dict.set("directories", indices);
+        dict.set("objects", objects);
+        return dict;
+    }
+
+    /**
+     * Creates an external representation of a binary data object.
+     *
+     * @param path           the storage path
+     * @param data           the binary data object
+     * @param linkify        the HTML link flag
+     *
+     * @return the external representation of the binary data object
+     */
+    private Dict prepareBinary(Path path, Binary data, boolean linkify) {
+        Dict dict = new Dict();
+        dict.set("type", "file");
+        dict.set("name", (linkify ? "$href$" : "") + path.name());
+        dict.set("mimeType", data.mimeType());
+        dict.set("size", Long.valueOf(data.size()));
+        return dict;
+    }
+
+    /**
+     * An HTML renderer for storage lookup results.
+     */
+    private static class HtmlRenderer {
+
+        /**
+         * Renders an HTML page for a storage lookup result.
+         *
+         * @param path           the storage path
+         * @param meta           the meta-data to render
+         * @param res            the data to render
+         *
+         * @return the rendered HTML text
+         */
+        public static String render(Path path, Object meta, Object res) {
+            StringBuilder html = new StringBuilder();
+            html.append("<!DOCTYPE html>\n");
+            html.append("<html lang='en'>\n");
+            html.append("  <head>\n");
+            html.append("    <meta charset='utf-8'>");
+            html.append("      <link rel='stylesheet' href='");
+            html.append(StringUtils.repeat("../", path.depth()));
+            html.append("files/css/style.css'>\n");
+            html.append("      <link rel='stylesheet' href='");
+            html.append(StringUtils.repeat("../", path.depth()));
+            html.append("files/app/storage/app.css'>\n");
+            html.append("      <title>RapidContext Storage API</title>\n");
+            html.append("</head>\n<body class='storage-app'>\n");
+            html.append("<h1>RapidContext Storage API</h1>\n");
+            html.append("<nav>\n<ol>\n");
+            if (path.isRoot()) {
+                html.append("<li class='active'>Start</li>\n");
+            } else {
+                html.append("<li><a href='");
+                html.append(StringUtils.repeat("../", path.depth()));
+                html.append("index.html'>Start</a></li>\n");
+            }
+            for (int i = 0; i < path.length(); i++) {
+                if (i + 1 < path.length()) {
+                    html.append("<li><a href='");
+                    html.append(StringUtils.repeat("../", path.depth() - i - 1));
+                    html.append("index.html'>");
+                    html.append(path.name(i));
+                    html.append("</a></li>\n");
+                } else {
+                    html.append("<li class='active'>");
+                    html.append(path.name(i));
+                    html.append("</li>\n");
+                }
+            }
+            html.append("</ol>\n</nav>\n<hr>\n");
+            html.append("<div class='metadata'>\n");
+            html.append("<h2>Query Metadata</h2>\n");
+            renderObject(meta, html);
+            html.append("</div>\n");
+            html.append("<div class='data'>\n");
+            html.append("<h2>Query Results</h2>");
+            renderObject(res, html);
+            html.append("</div>\n<hr>\n");
+            html.append("<p><strong>Data Formats:</strong>");
+            String link = path.isIndex() ? "index" : path.name();
+            html.append(" &nbsp;<a href='" + link + Storage.EXT_JSON + "'>JSON</a>");
+            html.append(" &nbsp;<a href='" + link + Storage.EXT_PROPERTIES + "'>PROPERTIES</a>");
+            html.append(" &nbsp;<a href='" + link + Storage.EXT_XML + "'>XML</a>");
+            html.append(" &nbsp;<a href='" + link + Storage.EXT_YAML + "'>YAML</a>");
+            html.append("</p>\n</body>\n</html>\n");
+            return html.toString();
+        }
+
+        /**
+         * Renders an object into an HTML representation.
+         *
+         * @param obj            the object to convert
+         * @param buffer         the string buffer to append into
+         */
+        private static void renderObject(Object obj, StringBuilder buffer) {
+            if (obj == null) {
+                buffer.append("<code>N/A</code>");
+            } else if (obj instanceof Dict) {
+                renderDict((Dict) obj, buffer);
+            } else if (obj instanceof Array) {
+                renderArray((Array) obj, buffer);
+            } else if (obj instanceof Date) {
+                buffer.append("<time datetime='");
+                buffer.append(DateUtil.asDateTimeUTC((Date) obj));
+                buffer.append("'>");
+                buffer.append(DateUtil.asDateTimeUTC((Date) obj));
+                buffer.append(" <code>");
+                buffer.append(DateUtil.asEpochMillis((Date) obj));
+                buffer.append("</code></time>");
+            } else if (obj instanceof Class) {
+                renderText(((Class<?>) obj).getName(), buffer);
+            } else if (obj instanceof StorableObject) {
+                renderDict(((StorableObject) obj).serialize(), buffer);
+            } else {
+                renderText(obj.toString(), buffer);
+            }
+        }
+
+        /**
+         * Renders a dictionary into an HTML representation.
+         *
+         * @param dict           the dictionary to convert
+         * @param buffer         the string buffer to append into
+         */
+        private static void renderDict(Dict dict, StringBuilder buffer) {
+            buffer.append("<table>\n<tbody>\n");
+            for (String key : dict.keys()) {
+                buffer.append("<tr>\n<th>");
+                renderText(key, buffer);
+                buffer.append("</th>\n<td>");
+                renderObject(dict.get(key), buffer);
+                buffer.append("</td>\n</tr>\n");
+            }
+            buffer.append("</tbody>\n</table>\n");
+        }
+
+        /**
+         * Renders an array into an HTML representation.
+         *
+         * @param arr            the array to convert
+         * @param buffer         the string buffer to append into
+         */
+        private static void renderArray(Array arr, StringBuilder buffer) {
+            buffer.append("<ol>\n");
+            for (Object o : arr) {
+                buffer.append("<li>");
+                renderObject(o, buffer);
+                buffer.append("</li>\n");
+            }
+            buffer.append("</ol>\n");
+        }
+
+        /**
+         * Renders a text string into an HTML representation. If the
+         * string contains a newline character, it will be wrapped in a
+         * pre-tag. Otherwise it will only be properly HTML escaped. This
+         * method also makes some rudimentary efforts to detect HTTP
+         * links.
+         *
+         * @param str            the text string to convert
+         * @param buffer         the string buffer to append into
+         */
+        private static void renderText(String str, StringBuilder buffer) {
+            if (str == null) {
+                buffer.append("<code>N/A</code>");
+            } else if (str.startsWith("$href$")) {
+                str = StringUtils.substringAfter(str, "$href$");
+                String url = StringUtils.substringBefore(str, "$");
+                String text = StringUtils.substringAfter(str, "$");
+                text = StringUtils.defaultIfEmpty(text, url);
+                buffer.append("<a href='");
+                buffer.append(StringEscapeUtils.escapeHtml4(url));
+                buffer.append("'>");
+                buffer.append(StringEscapeUtils.escapeHtml4(text));
+                buffer.append("</a>");
+            } else if (str.indexOf("\n") >= 0) {
+                buffer.append("<pre>");
+                buffer.append(StringEscapeUtils.escapeHtml4(str));
+                buffer.append("</pre>");
+            } else {
+                buffer.append(StringEscapeUtils.escapeHtml4(str));
+            }
+        }
+
+        // No instances
+        private HtmlRenderer() {}
     }
 }
