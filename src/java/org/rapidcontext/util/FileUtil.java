@@ -55,6 +55,20 @@ public final class FileUtil {
     }
 
     /**
+     * Finds a child file in a directory by case-insensitive search.
+     * If no file is found, a new file object is created.
+     *
+     * @param dir            the parent directory
+     * @param child          the child file name
+     *
+     * @return the corresponding file object
+     */
+    public static File resolve(File dir, String child) {
+        File[] f = dir.listFiles((d, n) -> n.equalsIgnoreCase(child));
+        return (f != null && f.length > 0) ? f[0] : new File(dir, child);
+    }
+
+    /**
      * Reads a file containing text content in the specified
      * character set.
      *

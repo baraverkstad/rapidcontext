@@ -84,7 +84,7 @@ public class DirStorage extends Storage {
      */
     public Metadata lookup(Path path) {
         if (PATH_STORAGEINFO.equals(path)) {
-            return new Metadata(Dict.class, path, path(), null, mountTime());
+            return new Metadata(Dict.class, PATH_STORAGEINFO, path(), null, mountTime());
         }
         File file = locateFile(path);
         if (file == null) {
@@ -93,11 +93,12 @@ public class DirStorage extends Storage {
         String mime = Mime.type(file.getName());
         Date modified = new Date(file.lastModified());
         if (file.isDirectory()) {
-            return new Metadata(Index.class, path, path(), null, modified);
+            return new Metadata(Index.class, toPath(file, true), path(), null, modified);
         } else if (isSerialized(path, file.getName())) {
-            return new Metadata(Dict.class, path, path(), mime, modified);
+            file = new File(file.getParentFile(), removeExt(file.getName()));
+            return new Metadata(Dict.class, toPath(file, false), path(), mime, modified);
         } else {
-            return new Metadata(Binary.class, path, path(), mime, modified);
+            return new Metadata(Binary.class, toPath(file, false), path(), mime, modified);
         }
     }
 
@@ -178,7 +179,7 @@ public class DirStorage extends Storage {
             throw new StorageException(msg);
         }
         File dir = locateDir(path);
-        File file = new File(dir, path.name());
+        File file = FileUtil.resolve(dir, path.name());
         File tmp = null;
         if (data instanceof Binary) {
             try (InputStream is = ((Binary) data).openStream()) {
@@ -195,9 +196,9 @@ public class DirStorage extends Storage {
         } else {
             String objectName = removeExt(path.name());
             if (objectName.equals(path.name())) {
-                file = new File(dir, path.name() + EXT_PROPERTIES);
+                file = FileUtil.resolve(dir, path.name() + EXT_PROPERTIES);
             } else {
-                file = new File(dir, path.name());
+                file = FileUtil.resolve(dir, path.name());
             }
             try {
                 tmp = FileUtil.tempFile(file.getName());
@@ -258,6 +259,23 @@ public class DirStorage extends Storage {
     }
 
     /**
+     * Converts a file path to the corresponding storage path.
+     *
+     * @param file           the file to convert
+     * @param index          the index path flag
+     *
+     * @return the corresponding storage path
+     */
+    private Path toPath(File file, boolean index) {
+        if (file == null || file.equals(dir())) {
+            return Path.ROOT;
+        } else {
+            Path parent = toPath(file.getParentFile(), true);
+            return parent.child(file.getName(), index);
+        }
+    }
+
+    /**
      * Locates the directory referenced by a path. If the path is an
      * index, the directory returned will be the index directory.
      * Otherwise the parent directory will be returned.
@@ -267,8 +285,14 @@ public class DirStorage extends Storage {
      * @return the directory referenced by the path
      */
     private File locateDir(Path path) {
-        Path p = (path.isIndex() ? path : path.parent());
-        return new File(dir(), p.toIdent(0));
+        File file = dir();
+        path = path.isIndex() ? path : path.parent();
+        if (!path.isRoot()) {
+            for (String part : path.toIdent(0).split("/")) {
+                file = FileUtil.resolve(file, part);
+            }
+        }
+        return file;
     }
 
     /**
@@ -286,12 +310,12 @@ public class DirStorage extends Storage {
         if (path.isIndex()) {
             return dir.isDirectory() && dir.canRead() ? dir : null;
         } else {
-            File file = new File(dir, path.name());
+            File file = FileUtil.resolve(dir, path.name());
             if (!file.isDirectory() && file.canRead()) {
                 return file;
             }
             for (String ext : EXT_ALL) {
-                file = new File(dir, path.name() + ext);
+                file = FileUtil.resolve(dir, path.name() + ext);
                 if (!file.isDirectory() && file.canRead()) {
                     return file;
                 }
