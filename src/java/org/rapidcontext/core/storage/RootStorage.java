@@ -401,10 +401,15 @@ public class RootStorage extends Storage {
         } else {
             MemoryStorage cache = cacheStorages.get(storage.path());
             Path queryPath = path.removePrefix(overlay);
-            return Metadata.merge(
+            Metadata meta = Metadata.merge(
                 (cache == null) ? null : cache.lookup(queryPath),
                 storage.lookup(queryPath)
             );
+            if (meta == null || overlay.isRoot()) {
+                return meta;
+            } else {
+                return new Metadata(Path.resolve(overlay, meta.path()), meta);
+            }
         }
     }
 
