@@ -15,7 +15,7 @@
 package org.rapidcontext.core.storage;
 
 import java.util.LinkedHashMap;
-import java.util.logging.Level;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -42,17 +42,16 @@ public class MemoryStorage extends Storage {
         Logger.getLogger(MemoryStorage.class.getName());
 
     /**
-     * The data storage map. Indexed by the storage path.
+     * The data storage map. Indexed by the storage path. It also contains all
+     * parent indices, all the way back to the root index.
      */
     private LinkedHashMap<Path,Object> objects = new LinkedHashMap<>();
 
     /**
-     * The metadata storage map. Indexed by the storage path. This
-     * map contains metadata objects corresponding to each data
-     * object. It will also contain all the parent indices, all the
-     * way back to the root index.
+     * The metadata storage map. Indexed by the storage path. This map contains
+     * metadata objects corresponding to each data or index object.
      */
-    private LinkedHashMap<Path,Object> meta = new LinkedHashMap<>();
+    private LinkedHashMap<Path,Metadata> meta = new LinkedHashMap<>();
 
     /**
      * The show storage info flag. When set to true, the
@@ -71,11 +70,9 @@ public class MemoryStorage extends Storage {
         super(id, "memory", readWrite);
         this.storageInfo = storageInfo;
         if (storageInfo) {
-            try {
-                store(PATH_STORAGEINFO, dict);
-            } catch (StorageException e) {
-                LOG.log(Level.WARNING, "internal error in memory storage", e);
-            }
+            objects.put(PATH_STORAGEINFO, dict);
+            meta.put(PATH_STORAGEINFO, new Metadata(Dict.class, PATH_STORAGEINFO, path(), null, null));
+            indexInsert(PATH_STORAGEINFO);
         }
     }
 
@@ -105,17 +102,6 @@ public class MemoryStorage extends Storage {
     }
 
     /**
-     * Returns the number of objects currently in this storage. This
-     * number does not include indexes or metadata objects, since
-     * those are dynamically inserted and removed.
-     *
-     * @return the number of objects in the storage
-     */
-    public int count() {
-        return objects.size();
-    }
-
-    /**
      * Searches for an object at the specified location and returns
      * metadata about the object if found. The path may locate either
      * an index or a specific object.
@@ -127,15 +113,9 @@ public class MemoryStorage extends Storage {
      */
     public synchronized Metadata lookup(Path path) {
         if (storageInfo && PATH_STORAGEINFO.equals(path)) {
-            return new Metadata(Dict.class, path, path(), null, mountTime());
+            return new Metadata(Dict.class, PATH_STORAGEINFO, path(), null, mountTime());
         }
-        Object obj = meta.get(path);
-        if (obj instanceof Index) {
-            Index idx = (Index) obj;
-            return new Metadata(Index.class, path, path(), null, idx.lastModified());
-        } else {
-            return (Metadata) obj;
-        }
+        return meta.get(path);
     }
 
     /**
@@ -153,12 +133,8 @@ public class MemoryStorage extends Storage {
         if (storageInfo && PATH_STORAGEINFO.equals(path)) {
             return serialize();
         }
-        if (path.isIndex()) {
-            Object obj = meta.get(path);
-            return (obj instanceof Index) ? new Index((Index) obj) : null;
-        } else {
-            return objects.get(path);
-        }
+        Object obj = objects.get(path);
+        return (obj instanceof Index) ? new Index((Index) obj) : obj;
     }
 
     /**
@@ -173,23 +149,25 @@ public class MemoryStorage extends Storage {
      * @throws StorageException if the data couldn't be written
      */
     public synchronized void store(Path path, Object data) throws StorageException {
-        String  msg;
-
         if (path.isIndex()) {
-            msg = "cannot write to index " + path;
+            String msg = "cannot write to index " + path;
             LOG.warning(msg);
             throw new StorageException(msg);
         } else if (data == null) {
-            msg = "cannot store null data, use remove() instead: " + path;
+            String msg = "cannot store null data, use remove() instead: " + path;
             LOG.warning(msg);
             throw new StorageException(msg);
         } else if (!isReadWrite()) {
-            msg = "cannot store to read-only storage at " + path();
+            String msg = "cannot store to read-only storage at " + path();
             LOG.warning(msg);
             throw new StorageException(msg);
         } else if (!isStorable(data)) {
-            msg = "cannot store unsupported data type at " + path() + ": " +
-                  data.getClass().getName();
+            String msg = "cannot store unsupported data type at " + path() + ": " +
+                         data.getClass().getName();
+            LOG.warning(msg);
+            throw new StorageException(msg);
+        } else if (storageInfo && PATH_STORAGEINFO.equals(path)) {
+            String msg = "storage info is read-only: " + path;
             LOG.warning(msg);
             throw new StorageException(msg);
         }
@@ -230,80 +208,71 @@ public class MemoryStorage extends Storage {
      * @param updateParent   the parent index update flag
      */
     private void remove(Path path, boolean updateParent) {
-        Object obj = meta.get(path);
-        if (path.isIndex() && obj instanceof Index) {
+        Object obj = objects.get(path);
+        if (obj instanceof Index) {
             Index idx = (Index) obj;
             idx.paths(path).forEach((item) -> remove(item, false));
         }
-        objects.remove(path);
-        meta.remove(path);
-        if (updateParent) {
-            indexRemove(path);
+        if (obj != null) {
+            objects.remove(path);
+            meta.remove(path);
+            if (updateParent) {
+                indexRemove(path);
+            }
         }
     }
 
     /**
-     * Inserts a path into the meta-data index structure. Each of the
-     * parent indices in the path will be updated until either the
-     * root index is reached or no changes are required to the index.
-     * The meta-data for the specified path itself is not modified,
-     * only the parent indices are changed.
+     * Inserts a path into its parent index. If the index doesn't exist, it
+     * will be created recursively. This method also updates the index last
+     * modified timestamp.
      *
      * @param path           the path previously added
      */
     private void indexInsert(Path path) {
-        Path     parent = path.parent();
-        Index    idx = (Index) meta.get(parent);
-        boolean  modified = false;
-
-        if (idx == null) {
-            idx = new Index();
-        }
+        Path parent = path.parent();
+        Index idx = Objects.requireNonNullElse((Index) objects.get(parent), new Index());
         if (path.isIndex()) {
-            modified = idx.addIndex(path.name());
+            idx.addIndex(path.name());
         } else {
-            modified = idx.addObject(path.name());
+            idx.addObject(path.name());
         }
-        if (modified) {
+        if (objects.containsKey(parent)) {
             idx.updateLastModified(null);
-            if (!meta.containsKey(parent)) {
-                meta.put(parent, idx);
-                if (!parent.isRoot()) {
-                    indexInsert(parent);
-                }
+            meta.get(parent).updateLastModified(null);
+        } else {
+            objects.put(parent, idx);
+            meta.put(parent, new Metadata(Index.class, parent, path(), null, null));
+            if (!parent.isRoot()) {
+                indexInsert(parent);
             }
         }
     }
 
     /**
-     * Removes a path from the meta-data index structure. Each of the
-     * parent indices in the path will be updated until either the
-     * root index is reached or no changes are required to the index.
-     * The meta-data for the specified path itself is not modified,
-     * only the parent indices are changed.
+     * Removes a path from its parent index. If the index becomes empty, it
+     * will be removed recursively. This method also updates the index last
+     * modified timestamp.
      *
      * @param path           the path previously removed
      */
     private void indexRemove(Path path) {
-        Path     parent = path.parent();
-        Index    idx = (Index) meta.get(parent);
-        boolean  modified = false;
-
-        if (idx != null) {
-            if (path.isIndex()) {
-                modified = idx.removeIndex(path.name());
-            } else {
-                modified = idx.removeObject(path.name());
+        Path parent = path.parent();
+        Index idx = (Index) objects.get(parent);
+        if (path.isIndex()) {
+            idx.removeIndex(path.name());
+        } else {
+            idx.removeObject(path.name());
+        }
+        if (idx.isEmpty()) {
+            objects.remove(parent);
+            meta.remove(parent);
+            if (!parent.isRoot()) {
+                indexRemove(parent);
             }
-            if (modified) {
-                idx.updateLastModified(null);
-                if (idx.isEmpty()) {
-                    meta.remove(parent);
-                    if (!parent.isRoot()) {
-                        indexRemove(parent);
-                    }
-                }
-            }
+        } else {
+            idx.updateLastModified(null);
+            meta.get(parent).updateLastModified(null);
         }
     }
 
@@ -318,7 +287,6 @@ public class MemoryStorage extends Storage {
     public Dict serialize() {
         Dict copy = super.serialize();
         copy.setInt("_objectCount", objects.size());
-        copy.setInt("_metadataCount", meta.size());
         return copy;
     }
 }

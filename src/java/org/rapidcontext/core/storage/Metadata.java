@@ -301,4 +301,13 @@ public class Metadata extends StorableObject {
     public Date lastModified() {
         return (Date) dict.get(KEY_MODIFIED);
     }
+
+    /**
+     * Updates the last modified date for the object.
+     *
+     * @param date           the date to set, or null for now
+     */
+    protected void updateLastModified(Date date) {
+        dict.set(KEY_MODIFIED, (date == null) ? new Date() : date);
+    }
 }
