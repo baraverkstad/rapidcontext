@@ -367,14 +367,18 @@ public class RootStorage extends Storage {
         Storage storage = getMountedStorage(path, false);
         if (storage != null) {
             Metadata meta = storage.lookup(storage.localPath(path));
-            return (meta == null) ? null : new Metadata(path, meta);
+            if (meta == null) {
+                return null;
+            } else {
+                return new Metadata(Path.resolve(storage.path(), meta.path()), meta);
+            }
         } else {
             Metadata meta = metadata.lookup(path);
             for (Object o : mountedStorages) {
                 meta = Metadata.merge(meta, lookupOverlay((Storage) o, path));
             }
             LOG.fine("metadata lookup on " + path + ": " + meta);
-            return (meta == null) ? null : new Metadata(path, meta);
+            return meta;
         }
     }
 

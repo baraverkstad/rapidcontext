@@ -184,8 +184,9 @@ public class Path {
     public boolean equals(Object obj) {
         Path path = (obj instanceof Path) ? (Path) obj : null;
         return path != null &&
+               this.length == path.length &&
                this.index == path.index &&
-               Objects.equals(this.name, path.name) &&
+               this.name.equalsIgnoreCase(path.name) &&
                Objects.equals(this.parent, path.parent);
     }
 
@@ -195,7 +196,8 @@ public class Path {
      * @return a hash code for this object
      */
     public int hashCode() {
-        return isRoot() ? 0 : this.parent.hashCode() * 31 + this.name.hashCode();
+        int code = (this.parent == null) ? 0 : this.parent.hashCode();
+        return code + this.name.toLowerCase().hashCode();
     }
 
     /**
