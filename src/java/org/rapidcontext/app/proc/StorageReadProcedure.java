@@ -15,6 +15,7 @@
 package org.rapidcontext.app.proc;
 
 import java.io.InputStream;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -143,6 +144,7 @@ public class StorageReadProcedure implements Procedure {
             dict.set("type", "file");
             dict.set("name", path.name());
             dict.set("mimeType", data.mimeType());
+            dict.set("lastModified", new Date(data.lastModified()));
             dict.set("size", Long.valueOf(data.size()));
             if (Mime.isText(data.mimeType())) {
                 try (InputStream is = data.openStream()) {
