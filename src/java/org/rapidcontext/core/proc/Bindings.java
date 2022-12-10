@@ -283,20 +283,15 @@ public class Bindings {
     public void set(String name, int type, Object value, String description)
         throws ProcedureException {
 
-        int index = findLocal(name);
         try {
-            if (index <= 0) {
-                Dict bind = new Dict();
-                bind.set("name", name);
-                bind.set("type", toTypeName(type));
-                bind.set("value", value);
-                bind.set("description", description);
+            int index = findLocal(name);
+            Dict bind = (index < 0) ? new Dict() : data.getDict(index);
+            bind.set("name", name);
+            bind.set("type", toTypeName(type));
+            bind.set("value", value);
+            bind.set("description", description);
+            if (index < 0) {
                 data.add(bind);
-            } else {
-                Dict bind = data.getDict(index);
-                bind.set("type", toTypeName(type));
-                bind.set("value", value);
-                bind.set("description", description);
             }
         } catch (UnsupportedOperationException e) {
             throw new ProcedureException("cannot modify binding in sealed object");
