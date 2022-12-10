@@ -405,6 +405,7 @@ public class StorageWebService extends WebService {
         });
         Dict dict = new Dict();
         dict.set("type", "index");
+        dict.set("lastModified", idx.lastModified());
         dict.set("directories", indices);
         dict.set("objects", objects);
         return dict;
@@ -424,6 +425,7 @@ public class StorageWebService extends WebService {
         dict.set("type", "file");
         dict.set("name", (linkify ? "$href$" : "") + path.name());
         dict.set("mimeType", data.mimeType());
+        dict.set("lastModified", new Date(data.lastModified()));
         dict.set("size", Long.valueOf(data.size()));
         return dict;
     }
