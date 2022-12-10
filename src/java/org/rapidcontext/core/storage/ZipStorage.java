@@ -20,8 +20,10 @@ import java.io.InputStream;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -62,6 +64,13 @@ public class ZipStorage extends Storage {
     protected ZipFile zip;
 
     /**
+     * The ZIP storage paths (identity) map. This is used to normalize paths
+     * for case-insensitive matching. HashMap objects don't allow fast access
+     * to hash keys or entries (only values), so a separate map is required.
+     */
+    protected HashMap<Path,Path> paths = new HashMap<>();
+
+    /**
      * The ZIP entries and index map. Indexed by the storage path and
      * linked to either the Index or the ZipEntry objects.
      */
@@ -89,6 +98,7 @@ public class ZipStorage extends Storage {
         Index root = new Index();
         root.addObject(PATH_STORAGEINFO.name());
         root.updateLastModified(new Date(file().lastModified()));
+        paths.put(Path.ROOT, Path.ROOT);
         entries.put(Path.ROOT, root);
         Enumeration<? extends ZipEntry> e = zip.entries();
         while (e.hasMoreElements()) {
@@ -103,9 +113,11 @@ public class ZipStorage extends Storage {
                 idx.addIndex(path.name());
                 idx = new Index();
                 idx.updateLastModified(new Date(entry.getTime()));
+                paths.put(path, path);
                 entries.put(path, idx);
             } else {
                 idx.addObject(path.name());
+                paths.put(path, path);
                 entries.put(path, entry);
             }
         }
@@ -119,6 +131,7 @@ public class ZipStorage extends Storage {
      */
     public void destroy() throws StorageException {
         try {
+            paths.clear();
             entries.clear();
             zip.close();
         } catch (Exception e) {
@@ -147,20 +160,22 @@ public class ZipStorage extends Storage {
      */
     public Metadata lookup(Path path) {
         if (PATH_STORAGEINFO.equals(path)) {
-            return new Metadata(Dict.class, path, path(), null, mountTime());
+            return new Metadata(Dict.class, PATH_STORAGEINFO, path(), null, mountTime());
         }
-        Object obj = locateEntry(path);
+        Path match = locatePath(path);
+        Object obj = (match == null) ? null : entries.get(match);
         if (obj instanceof Index) {
             Index idx = (Index) obj;
-            return new Metadata(Index.class, path, path(), null, idx.lastModified());
+            return new Metadata(Index.class, match, path(), null, idx.lastModified());
         } else if (obj instanceof ZipEntry) {
             ZipEntry entry = (ZipEntry) obj;
             String mime = Mime.type(entry.getName());
             Date modified = new Date(entry.getTime());
             if (isSerialized(path, entry.getName())) {
-                return new Metadata(Dict.class, path, path(), mime, modified);
+                match = match.sibling(removeExt(match.name()));
+                return new Metadata(Dict.class, match, path(), mime, modified);
             } else {
-                return new Metadata(Binary.class, path, path(), mime, modified);
+                return new Metadata(Binary.class, match, path(), mime, modified);
             }
         } else {
             return null;
@@ -182,7 +197,8 @@ public class ZipStorage extends Storage {
         if (PATH_STORAGEINFO.equals(path)) {
             return dict;
         }
-        Object obj = locateEntry(path);
+        Path match = locatePath(path);
+        Object obj = (match == null) ? null : entries.get(match);
         if (obj instanceof Index) {
             return obj;
         } else if (obj instanceof ZipEntry) {
@@ -237,26 +253,19 @@ public class ZipStorage extends Storage {
     }
 
     /**
-     * Locates an existing ZIP file entry or index referenced by a path.
-     * If no exact match is found, the storage data file extensions are
-     * tried for a match.
+     * Searches for an existing path in the ZIP file. If no exact match is
+     * found, the storage data file extensions are tried for a match.
      *
      * @param path           the storage location
      *
-     * @return the ZIP file entry or index referenced by the path, or
-     *         null if no match found
+     * @return an existing path in the ZIP file, or
+     *         null if no match was found
      */
-    private Object locateEntry(Path path) {
-        Object obj = entries.get(path);
-        if (obj == null && !path.isIndex()) {
-            for (String ext : EXT_ALL) {
-                obj = entries.get(path.sibling(path.name() + ext));
-                if (obj != null) {
-                    break;
-                }
-            }
-        }
-        return obj;
+    private Path locatePath(Path path) {
+        return Stream.concat(
+            Stream.of(paths.get(path)),
+            Stream.of(EXT_ALL).map(ext -> paths.get(path.sibling(path.name() + ext)))
+        ).filter(Objects::nonNull).findFirst().orElse(null);
     }
 
 
