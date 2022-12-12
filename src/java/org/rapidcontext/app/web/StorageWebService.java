@@ -17,8 +17,10 @@ package org.rapidcontext.app.web;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -76,13 +78,6 @@ public class StorageWebService extends WebService {
      * The HTML file extension.
      */
     public static final String EXT_HTML = ".html";
-
-    /**
-     * The list of supported file extensions.
-     */
-    public static final String[] EXT_ALL = {
-        EXT_HTML, Storage.EXT_JSON, Storage.EXT_PROPERTIES, Storage.EXT_XML, Storage.EXT_YAML
-    };
 
     /**
      * Creates a new storage web service from a serialized representation.
@@ -340,19 +335,16 @@ public class StorageWebService extends WebService {
      */
     private Metadata lookup(Path path) {
         Storage storage = ApplicationContext.getInstance().getStorage();
-        Metadata meta = storage.lookup(path);
-        if (meta == null) {
-            for (String ext : EXT_ALL) {
-                if (StringUtils.endsWithIgnoreCase(path.name(), ext)) {
-                    String name = StringUtils.removeEndIgnoreCase(path.name(), ext);
-                    boolean isIndex = StringUtils.equalsIgnoreCase(name, "index");
-                    path = isIndex ? path.parent() : path.sibling(name);
-                    meta = storage.lookup(path);
-                    break;
-                }
-            }
-        }
-        return meta;
+        String name = Storage.objectName(path.name());
+        name = name.equals(path.name()) ? StringUtils.removeEndIgnoreCase(name, EXT_HTML) : name;
+        boolean idx = StringUtils.equalsAnyIgnoreCase(name, ".", "index");
+        return Stream.of(path, path.sibling(name), idx ? path.parent() : null)
+            .filter(Objects::nonNull)
+            .distinct()
+            .map(p -> storage.lookup(p))
+            .filter(Objects::nonNull)
+            .findFirst()
+            .orElse(null);
     }
 
     /**
@@ -465,13 +457,13 @@ public class StorageWebService extends WebService {
             } else {
                 html.append("<li><a href='");
                 html.append(StringUtils.repeat("../", path.depth()));
-                html.append("index.html'>Start</a></li>\n");
+                html.append(".'>Start</a></li>\n");
             }
             for (int i = 0; i < path.length(); i++) {
                 if (i + 1 < path.length()) {
                     html.append("<li><a href='");
                     html.append(StringUtils.repeat("../", path.depth() - i - 1));
-                    html.append("index.html'>");
+                    html.append(".'>");
                     html.append(path.name(i));
                     html.append("</a></li>\n");
                 } else {
