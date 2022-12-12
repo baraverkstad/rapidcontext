@@ -51,7 +51,7 @@ import org.rapidcontext.core.type.Type;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class RootStorage extends Storage {
+public class RootStorage extends MemoryStorage {
 
     /**
      * The class logger.
@@ -84,14 +84,6 @@ public class RootStorage extends Storage {
      * cleaner job.
      */
     private static final int PASSIVATE_INTERVAL_SECS = 30;
-
-    /**
-     * The meta-data storage for mount points and parent indices.
-     * The mounted storages will be added to this storage under
-     * their corresponding mount path (appended to form an object
-     * path instead of an index path).
-     */
-    private MemoryStorage metadata = new MemoryStorage("metadata", true, false);
 
     /**
      * The sorted array of mounted storages. This array is sorted
@@ -129,14 +121,8 @@ public class RootStorage extends Storage {
      * @param readWrite      the read write flag
      */
     public RootStorage(boolean readWrite) {
-        super("/", "root", readWrite);
+        super("/", readWrite, true);
         dict.set("storages", mountedStorages);
-        try {
-            metadata.store(PATH_STORAGEINFO, dict);
-        } catch (StorageException e) {
-            LOG.severe("error while initializing virtual storage: " +
-                       e.getMessage());
-        }
         Task cacheCleaner = new Task("storage cache cleaner") {
             public void execute() {
                 cacheClean(false);
@@ -203,7 +189,7 @@ public class RootStorage extends Storage {
             msg = "cannot mount storage to a non-storage path: " + path;
             LOG.warning(msg);
             throw new StorageException(msg);
-        } else if (metadata.lookup(path) != null) {
+        } else if (super.lookup(path) != null) {
             msg = "storage mount path conflicts with another mount: " + path;
             LOG.warning(msg);
             throw new StorageException(msg);
@@ -296,7 +282,7 @@ public class RootStorage extends Storage {
      */
     private void metadataMount(Path path) throws StorageException {
         if (path != null && !path.isRoot()) {
-            metadata.store(Path.resolve(path, PATH_STORAGEINFO), ObjectUtils.NULL);
+            super.store(Path.resolve(path, PATH_STORAGEINFO), ObjectUtils.NULL);
         }
     }
 
@@ -309,7 +295,7 @@ public class RootStorage extends Storage {
      */
     private void metadataUnmount(Path path) throws StorageException {
         if (path != null && !path.isRoot()) {
-            metadata.remove(Path.resolve(path, PATH_STORAGEINFO));
+            super.remove(Path.resolve(path, PATH_STORAGEINFO));
         }
     }
 
@@ -344,8 +330,7 @@ public class RootStorage extends Storage {
      *
      * @param path           the storage location
      *
-     * @return the metadata for the object, or
-     *         null if not found
+     * @return the metadata for the object, or null if not found
      */
     public Metadata lookup(Path path) {
         Storage storage = getMountedStorage(path);
@@ -357,7 +342,8 @@ public class RootStorage extends Storage {
                 return new Metadata(Path.resolve(storage.path(), meta.path()), meta);
             }
         } else {
-            Metadata meta = path.isIndex() ? metadata.lookup(path) : null;
+            boolean managed = path.isIndex() || path.equals(PATH_STORAGEINFO);
+            Metadata meta = managed ? super.lookup(path) : null;
             for (Object o : mountedStorages) {
                 meta = Metadata.merge(meta, lookupOverlay((Storage) o, path));
             }
@@ -412,23 +398,22 @@ public class RootStorage extends Storage {
         Storage storage = getMountedStorage(path);
         if (storage != null) {
             return storage.load(storage.localPath(path));
+        } else if (path.equals(PATH_STORAGEINFO)) {
+            return super.load(path);
         } else if (path.isIndex()) {
-            Index idx = (Index) metadata.load(path);
+            Index idx = (Index) super.load(path);
             for (Object o : mountedStorages) {
                 idx = Index.merge(idx, loadOverlayIndex((Storage) o, path));
             }
             return idx;
         } else {
-            Object res = metadata.load(path);
-            if (res == null || res == ObjectUtils.NULL) {
-                for (Object o : mountedStorages) {
-                    res = loadOverlayObject((Storage) o, path);
-                    if (res != null) {
-                        break;
-                    }
+            for (Object o : mountedStorages) {
+                Object res = loadOverlayObject((Storage) o, path);
+                if (res != null) {
+                    return res;
                 }
             }
-            return res;
+            return null;
         }
     }
 
