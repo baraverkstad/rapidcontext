@@ -31,6 +31,8 @@ import org.rapidcontext.util.DateUtil;
  * <ul>
  *   <li><strong>Access Methods</strong> -- Methods to provide easy
  *       access to integer, boolean and string values without casting.
+ *   <li><strong>Negative indices</strong> -- Using a negative index
+ *       will access elements from the end of the array.
  *   <li><strong>Sealing</strong> -- Simple creation of read-only
  *       objects.
  *   <li><strong>Deep Copies</strong> -- Provides a meaningful way to
@@ -322,6 +324,7 @@ public class Array implements Iterable<Object> {
      *         null if the index or value is not defined
      */
     public Object get(int index) {
+        index = (list != null && index < 0) ? list.size() + index : index;
         return containsIndex(index) ? list.get(index) : null;
     }
 
@@ -643,6 +646,7 @@ public class Array implements Iterable<Object> {
             String msg = "cannot modify sealed array";
             throw new UnsupportedOperationException(msg);
         }
+        index = (list != null && index < 0) ? list.size() + index : index;
         if (containsIndex(index)) {
             list.remove(index);
         }

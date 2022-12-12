@@ -343,7 +343,7 @@ public class RootStorage extends Storage {
      */
     public synchronized void unmountAll() {
         while (mountedStorages.size() > 0) {
-            Storage storage = (Storage) mountedStorages.get(mountedStorages.size() - 1);
+            Storage storage = (Storage) mountedStorages.get(-1);
             try {
                 unmount(storage.path());
             } catch (Exception e) {
