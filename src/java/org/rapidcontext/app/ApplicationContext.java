@@ -533,7 +533,7 @@ public class ApplicationContext {
         pluginManager.unload(pluginId);
         library.clearCache();
         Array pluginList = config.getArray("plugins");
-        pluginList.remove(pluginList.indexOf(pluginId));
+        pluginList.remove(pluginId);
         try {
             storage.store(PATH_CONFIG, config);
         } catch (StorageException e) {

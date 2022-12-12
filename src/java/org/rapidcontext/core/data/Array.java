@@ -653,6 +653,22 @@ public class Array implements Iterable<Object> {
     }
 
     /**
+     * Deletes the first array index having the specified value. All
+     * subsequent array values will be shifted forward by one step.
+     *
+     * @param value          the array value
+     *
+     * @throws UnsupportedOperationException if this object has been
+     *             sealed
+     */
+    public void remove(Object value) {
+        int index = indexOf(value);
+        if (index >= 0) {
+            remove(index);
+        }
+    }
+
+    /**
      * Returns the relative complement of this array and another
      * array. The resulting array will contain all elements from the
      * other array that weren't found in this one. None of the two

@@ -333,7 +333,7 @@ public class RootStorage extends Storage {
         }
         LOG.fine("unmounting " + storage);
         updateStorageCache(path, null);
-        mountedStorages.remove(mountedStorages.indexOf(storage));
+        mountedStorages.remove(storage);
         updateStorageMetadata(storage, false);
         storage.destroy();
     }
