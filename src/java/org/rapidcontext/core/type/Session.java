@@ -260,7 +260,7 @@ public class Session extends StorableObject {
     protected boolean isActive() {
         long now = System.currentTimeMillis();
         long lastActive = accessTime().getTime() + ACTIVE_MILLIS;
-        return now <= lastActive;
+        return now <= lastActive || isModified();
     }
 
     /**
