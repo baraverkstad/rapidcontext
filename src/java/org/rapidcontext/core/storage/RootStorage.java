@@ -147,96 +147,26 @@ public class RootStorage extends Storage {
     }
 
     /**
-     * Returns the storage at a specific storage location. If the
-     * exact match flag is set, the path must exactly match the mount
-     * point of a storage. If exact matching is not required, the
-     * parent storage for the path will be returned. This method will
-     * also search for matching cache storages.
+     * Returns the mounted parent storage for a specific path. This
+     * method also searches for matching cache storages.
      *
      * @param path           the storage location
-     * @param exact          the exact match flag
      *
-     * @return the storage found, or
-     *         null if not found
+     * @return the storage found, or null if not found
      */
-    private Storage getMountedStorage(Path path, boolean exact) {
-        if (path == null) {
-            return null;
-        } else if (exact) {
-            return (Storage) metadata.load(path.child("storage", false));
-        } else {
-            for (Object o : mountedStorages) {
-                Storage storage = (Storage) o;
-                if (path.startsWith(storage.path())) {
-                    return storage;
-                }
-            }
-            for (MemoryStorage storage : cacheStorages.values()) {
-                if (path.startsWith(storage.path())) {
-                    return storage;
-                }
-            }
-            return null;
-        }
-    }
-
-    /**
-     * Creates or removes the storage metadata. The metadata needs to
-     * be updated with the mount points and mount overlay points in
-     * order to create all the intermediate indices.
-     *
-     * @param storage        the storage to update for
-     * @param update         the boolean update or remove flag
-     *
-     * @throws StorageException if the data couldn't be written
-     */
-    private void updateStorageMetadata(Storage storage, boolean update)
-    throws StorageException {
-
-        Path path = storage.path().child("storage", false);
-        if (update) {
-            metadata.store(path, storage);
-        } else {
-            metadata.remove(path);
-        }
-        Path overlay = storage.mountOverlayPath();
-        if (overlay != null && !overlay.isRoot()) {
-            overlay = overlay.child(".", false);
-            if (update) {
-                metadata.store(overlay, ObjectUtils.NULL);
-            } else {
-                metadata.remove(overlay);
+    private Storage getMountedStorage(Path path) {
+        for (Object o : mountedStorages) {
+            Storage storage = (Storage) o;
+            if (path != null && path.startsWith(storage.path())) {
+                return storage;
             }
         }
-    }
-
-    /**
-     * Creates or removes a cache memory storage for the specified
-     * path.
-     *
-     * @param mountPath      the storage mount path
-     * @param overlay        the root overlay path
-     *
-     * @throws StorageException if the cache couldn't be created or
-     *             removed
-     */
-    private void updateStorageCache(Path mountPath, Path overlay)
-    throws StorageException {
-
-        Path ident = mountPath.removePrefix(PATH_STORAGE);
-        Path cachePath = Path.resolve(PATH_STORAGE_CACHE, ident);
-        MemoryStorage cache = cacheStorages.get(mountPath);
-        if (overlay != null && cache == null) {
-            cache = new MemoryStorage("cache", true, true);
-            cache.setMountInfo(cachePath, true, overlay, 0);
-            updateStorageMetadata(cache, true);
-            cacheStorages.put(mountPath, cache);
-        } else if (overlay == null && cache != null) {
-            updateStorageMetadata(cache, false);
-            cacheStorages.remove(mountPath);
-            cacheRemove(cache, Path.ROOT, false, true);
-            cache.destroy();
+        for (MemoryStorage storage : cacheStorages.values()) {
+            if (path != null && path.startsWith(storage.path())) {
+                return storage;
+            }
         }
+        return null;
     }
 
     /**
@@ -280,10 +210,11 @@ public class RootStorage extends Storage {
         }
         LOG.fine("mounting " + storage);
         storage.setMountInfo(path, readWrite, overlay, prio);
-        updateStorageMetadata(storage, true);
         mountedStorages.add(storage);
         mountedStorages.sort();
-        updateStorageCache(path, overlay);
+        metadataMount(storage.path());
+        metadataMount(storage.mountOverlayPath());
+        cacheRemount(storage);
     }
 
     /**
@@ -301,18 +232,18 @@ public class RootStorage extends Storage {
     public synchronized void remount(Path path, boolean readWrite, Path overlay, int prio)
     throws StorageException {
 
-        Storage storage = getMountedStorage(path, true);
-        if (storage == null) {
+        Storage storage = getMountedStorage(path);
+        if (storage == null || !storage.path().equals(path)) {
             String msg = "no mounted storage found matching path: " + path;
             LOG.warning(msg);
             throw new StorageException(msg);
         }
         LOG.fine("remounting " + storage);
-        updateStorageMetadata(storage, false);
+        metadataUnmount(storage.mountOverlayPath());
         storage.setMountInfo(storage.path(), readWrite, overlay, prio);
-        updateStorageMetadata(storage, true);
         mountedStorages.sort();
-        updateStorageCache(path, overlay);
+        metadataMount(storage.mountOverlayPath());
+        cacheRemount(storage);
     }
 
     /**
@@ -325,16 +256,18 @@ public class RootStorage extends Storage {
      * @throws StorageException if the storage couldn't be unmounted
      */
     public synchronized void unmount(Path path) throws StorageException {
-        Storage storage = getMountedStorage(path, true);
-        if (storage == null) {
+        Storage storage = getMountedStorage(path);
+        if (storage == null || !storage.path().equals(path)) {
             String msg = "no mounted storage found matching path: " + path;
             LOG.warning(msg);
             throw new StorageException(msg);
         }
         LOG.fine("unmounting " + storage);
-        updateStorageCache(path, null);
+        storage.setMountInfo(storage.path(), storage.isReadWrite(), null, storage.mountOverlayPrio());
         mountedStorages.remove(storage);
-        updateStorageMetadata(storage, false);
+        metadataUnmount(storage.path());
+        metadataUnmount(storage.mountOverlayPath());
+        cacheRemount(storage);
         storage.destroy();
     }
 
@@ -354,6 +287,57 @@ public class RootStorage extends Storage {
     }
 
     /**
+     * Creates an empty storage info object at the specified path. This is
+     * needed to ensure that intermediate paths are available in indices.
+     *
+     * @param path           the storage (mount point or overlay) path
+     *
+     * @throws StorageException if the metadata couldn't be updated
+     */
+    private void metadataMount(Path path) throws StorageException {
+        if (path != null && !path.isRoot()) {
+            metadata.store(Path.resolve(path, PATH_STORAGEINFO), ObjectUtils.NULL);
+        }
+    }
+
+    /**
+     * Removes a previously created storage info object at a path.
+     *
+     * @param path           the storage (mount point or overlay) path
+     *
+     * @throws StorageException if the metadata couldn't be updated
+     */
+    private void metadataUnmount(Path path) throws StorageException {
+        if (path != null && !path.isRoot()) {
+            metadata.remove(Path.resolve(path, PATH_STORAGEINFO));
+        }
+    }
+
+    /**
+     * Creates or removes a cache memory storage for a storage.
+     *
+     * @param storage        the storage to cache
+     *
+     * @throws StorageException if the cache couldn't be updated
+     */
+    private void cacheRemount(Storage storage) throws StorageException {
+        Path ident = storage.path().removePrefix(PATH_STORAGE);
+        Path cachePath = Path.resolve(PATH_STORAGE_CACHE, ident);
+        MemoryStorage cache = cacheStorages.get(storage.path());
+        if (storage.mountOverlayPath() != null && cache == null) {
+            cache = new MemoryStorage(cachePath.toIdent(0), true, true);
+            cache.setMountInfo(cachePath, true, storage.mountOverlayPath(), 0);
+            metadataMount(cachePath);
+            cacheStorages.put(storage.path(), cache);
+        } else if (storage.mountOverlayPath() == null && cache != null) {
+            metadataUnmount(cachePath);
+            cacheStorages.remove(storage.path());
+            cacheRemove(cache, Path.ROOT, false, true);
+            cache.destroy();
+        }
+    }
+
+    /**
      * Searches for an object at the specified location and returns
      * metadata about the object if found. The path may locate either
      * an index or a specific object.
@@ -364,7 +348,7 @@ public class RootStorage extends Storage {
      *         null if not found
      */
     public Metadata lookup(Path path) {
-        Storage storage = getMountedStorage(path, false);
+        Storage storage = getMountedStorage(path);
         if (storage != null) {
             Metadata meta = storage.lookup(storage.localPath(path));
             if (meta == null) {
@@ -373,7 +357,7 @@ public class RootStorage extends Storage {
                 return new Metadata(Path.resolve(storage.path(), meta.path()), meta);
             }
         } else {
-            Metadata meta = metadata.lookup(path);
+            Metadata meta = path.isIndex() ? metadata.lookup(path) : null;
             for (Object o : mountedStorages) {
                 meta = Metadata.merge(meta, lookupOverlay((Storage) o, path));
             }
@@ -425,7 +409,7 @@ public class RootStorage extends Storage {
      *         null if not found
      */
     public Object load(Path path) {
-        Storage storage = getMountedStorage(path, false);
+        Storage storage = getMountedStorage(path);
         if (storage != null) {
             return storage.load(storage.localPath(path));
         } else if (path.isIndex()) {
@@ -558,7 +542,7 @@ public class RootStorage extends Storage {
      * @throws StorageException if the data couldn't be written
      */
     public synchronized void store(Path path, Object data) throws StorageException {
-        Storage storage = getMountedStorage(path, false);
+        Storage storage = getMountedStorage(path);
         if (storage != null && path.startsWith(PATH_STORAGE_CACHE)) {
             Path storageId = storage.path().removePrefix(PATH_STORAGE_CACHE);
             Path storagePath = Path.resolve(PATH_STORAGE, storageId);
@@ -627,7 +611,7 @@ public class RootStorage extends Storage {
      * @throws StorageException if the data couldn't be removed
      */
     public synchronized void remove(Path path) throws StorageException {
-        Storage storage = getMountedStorage(path, false);
+        Storage storage = getMountedStorage(path);
         if (storage != null && path.startsWith(PATH_STORAGE_CACHE)) {
             Path storageId = storage.path().removePrefix(PATH_STORAGE_CACHE);
             Path storagePath = Path.resolve(PATH_STORAGE, storageId);
