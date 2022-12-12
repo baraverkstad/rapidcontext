@@ -713,25 +713,25 @@ public class RootStorage extends Storage {
         MemoryStorage cache = cacheStorages.get(storagePath);
         if (cache != null) {
             String debugPrefix = "cache " + cache.path() + ": ";
-            Path objectPath = path.sibling(removeExt(path.name()));
-            Object old = cache.load(objectPath);
+            path = objectPath(path);
+            Object old = cache.load(path);
             if (data instanceof StorableObject) {
                 StorableObject storable = (StorableObject) data;
-                LOG.fine(debugPrefix + "passivating object " + objectPath);
+                LOG.fine(debugPrefix + "passivating object " + path);
                 storable.passivate();
                 if (data != old) {
                     try {
-                        LOG.fine(debugPrefix + "storing object " + objectPath);
-                        cache.store(objectPath, data);
+                        LOG.fine(debugPrefix + "storing object " + path);
+                        cache.store(path, data);
                     } catch (StorageException e) {
                         LOG.log(Level.WARNING, "failed to cache object", e);
                     }
-                    cacheDestroyObject(cache, objectPath, old);
+                    cacheDestroyObject(cache, path, old);
                 }
             } else if (old != null) {
-                cacheRemoveDestroy(cache, objectPath, old);
+                cacheRemoveDestroy(cache, path, old);
             } else {
-                LOG.fine(debugPrefix + "object " + objectPath + " not cacheable");
+                LOG.fine(debugPrefix + "object " + path + " not cacheable");
             }
         }
     }
@@ -747,9 +747,9 @@ public class RootStorage extends Storage {
     private void cacheRemove(Path storagePath, Path path) {
         MemoryStorage cache = cacheStorages.get(storagePath);
         if (cache != null) {
-            Path objectPath = path.sibling(removeExt(path.name()));
-            LOG.fine("removing " + objectPath + " from cache " + cache.path());
-            cacheRemove(cache, objectPath, false, true);
+            path = objectPath(path);
+            LOG.fine("removing " + path + " from cache " + cache.path());
+            cacheRemove(cache, path, false, true);
         }
     }
 

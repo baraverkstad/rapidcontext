@@ -92,7 +92,7 @@ public class ZipStorage extends Storage {
 
     /**
      * Initializes this object. This method locates all the ZIP file
-     * entries and creates all the indexes.
+     * entries and creates all the index objects.
      */
     public void init() {
         Index root = new Index();
@@ -172,8 +172,7 @@ public class ZipStorage extends Storage {
             String mime = Mime.type(entry.getName());
             Date modified = new Date(entry.getTime());
             if (isSerialized(path, entry.getName())) {
-                match = match.sibling(removeExt(match.name()));
-                return new Metadata(Dict.class, match, path(), mime, modified);
+                return new Metadata(Dict.class, objectPath(match), path(), mime, modified);
             } else {
                 return new Metadata(Binary.class, match, path(), mime, modified);
             }

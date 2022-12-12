@@ -95,7 +95,7 @@ public class DirStorage extends Storage {
         if (file.isDirectory()) {
             return new Metadata(Index.class, toPath(file, true), path(), null, modified);
         } else if (isSerialized(path, file.getName())) {
-            file = new File(file.getParentFile(), removeExt(file.getName()));
+            file = new File(file.getParentFile(), objectName(file.getName()));
             return new Metadata(Dict.class, toPath(file, false), path(), mime, modified);
         } else {
             return new Metadata(Binary.class, toPath(file, false), path(), mime, modified);
@@ -194,8 +194,8 @@ public class DirStorage extends Storage {
         } else if (data instanceof File) {
             tmp = (File) data;
         } else {
-            String objectName = removeExt(path.name());
-            if (objectName.equals(path.name())) {
+            String name = objectName(path.name());
+            if (name.equals(path.name())) {
                 file = FileUtil.resolve(dir, path.name() + EXT_PROPERTIES);
             } else {
                 file = FileUtil.resolve(dir, path.name());
@@ -212,7 +212,7 @@ public class DirStorage extends Storage {
                 LOG.warning(msg);
                 throw new StorageException(msg);
             }
-            remove(path.sibling(objectName));
+            remove(path.sibling(name));
         }
         dir.mkdirs();
         if (!tmp.renameTo(file)) {

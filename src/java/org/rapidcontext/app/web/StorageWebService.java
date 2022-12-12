@@ -397,7 +397,7 @@ public class StorageWebService extends WebService {
         });
         Array objects = new Array();
         idx.objects().filter((item) -> !item.startsWith(".")).forEach((item) -> {
-            item = binary ? item : Storage.removeExt(item);
+            item = binary ? item : Storage.objectName(item);
             item = !linkify ? item : "$href$" + item + ".html$" + item;
             if (!objects.containsValue(item)) {
                 objects.add(item);

@@ -121,27 +121,42 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
      *         false otherwise
      */
     protected static boolean isSerialized(Path path, String filename) {
-        String name = removeExt(filename);
+        String name = objectName(filename);
         return !name.equals(filename) &&
                StringUtils.endsWithIgnoreCase(name, path.name());
     }
 
     /**
-     * Removes a supported data format file extension (if found).
+     * Returns a normalized object name by removing any supported data format
+     * file extension (if found).
      *
-     * @param filename       the filename or file path to check
+     * @param name           the filename or file path to check
      *
      * @return the filename without extension, or
-     *         the same filename if none was found
+     *         the input filename if not recognized
      */
-    public static String removeExt(String filename) {
+    public static String objectName(String name) {
         for (String ext : EXT_ALL) {
-            String str = StringUtils.removeEndIgnoreCase(filename, ext);
-            if (str != filename) {
+            String str = StringUtils.removeEndIgnoreCase(name, ext);
+            if (str != name) {
                 return str;
             }
         }
-        return filename;
+        return name;
+    }
+
+    /**
+     * Returns a normalized path by removing any supported data format file
+     * extension (if found).
+     *
+     * @param path           the path to check
+     *
+     * @return the path without trailing extension, or
+     *         the input path if not recognized
+     */
+    public static Path objectPath(Path path) {
+        String name = objectName(path.name());
+        return name.equals(path.name()) ? path : path.sibling(name);
     }
 
     /**

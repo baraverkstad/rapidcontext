@@ -129,9 +129,9 @@ public class Query {
                 } else if (isBinaryPath) {
                     return Stream.of(path);
                 } else {
-                    String objectName = Storage.removeExt(path.name());
-                    if (!objectName.equals(path.name())) {
-                        path = idx.hasObject(objectName) ? null : path.sibling(objectName);
+                    String name = Storage.objectName(path.name());
+                    if (!name.equals(path.name())) {
+                        path = idx.hasObject(name) ? null : path.sibling(name);
                     }
                     return Stream.ofNullable(path);
                 }
