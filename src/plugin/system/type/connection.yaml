@@ -1,0 +1,23 @@
+id: connection
+type: type
+description: >-
+    A connection to an external system. This is a generic type, providing
+    support for the actual connection types (JDBC, HTTP, etc).
+property:
+  - name: description
+    description: The description of the connection. Optional, defaults to blank.
+    required: false
+    format: text
+  - name: maxOpen
+    description: >-
+        The maximum number of open connection channels (at the same time).
+        Optional, defaults to 4.
+    required: false
+    format: number
+  - name: maxIdleSecs
+    description: >-
+        The maximum number of seconds a connection channel may sit idle in
+        the pool. Optional, defaults to 600 seconds (10 minutes). Note that
+        some connection types cannot be reused and thus ignores this setting.
+    required: false
+    format: number

@@ -1,0 +1,33 @@
+id: app
+type: type
+description: >-
+    A client-side JavaScript app manifest (configuration). The app lists
+    the resources required for launch along with some meta-data.
+property:
+  - name: name
+    description: >-
+        The app name presented to the user. This name is shown in various
+        places in the default user interface.
+    required: true
+  - name: description
+    description: >-
+        The app description presented to the user. Optional, defaults to blank.
+    required: false
+  - name: className
+    description: >-
+        The app JavaScript class name. This name refers to a constructor
+        function for the app instance. The class name must be unique to avoid
+        collisions with other apps loaded at the same time (in the web page).
+        The source code for the class should be placed in one of the code
+        resources specified.
+    required: true
+  - name: launch
+    description: >-
+        The app launch setting. Should be either 'manual' (default), 'auto',
+        'once', 'window' or 'limited'.
+    required: false
+  - name: resources
+    description: >-
+        The array of app resources. Each resource is a dictionary with 'type',
+        'url' and several other available keys.
+    required: true

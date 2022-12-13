@@ -1,0 +1,24 @@
+id: type
+type: type
+description: >-
+    The object type information. An object type may provide automated
+    initialization to an internal Java object (server-side). The type also
+    provides meta-information about the available properties in the objects
+    belonging to that type.
+initializer: org.rapidcontext.core.type.Type
+property:
+  - name: description
+    description: The description for the type. Optional, defaults to blank.
+    required: false
+  - name: initializer
+    description: >-
+        The fully qualified Java class name used for creating an object instance
+        (from the serialized data). Optional, defaults to a dictionary instance.
+    required: false
+  - name: property
+    description: >-
+        The array of object properties. Each property is a dictionary with keys
+        'name', 'description' and 'required' that specify some property
+        meta-data. Parent type properties are not repeated, unless they've
+        changed semantical meaning. Optional, defaults to an empty array.
+    required: false

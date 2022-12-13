@@ -1,0 +1,17 @@
+id: webservice
+type: type
+description: >-
+    An HTTP web service (aka request handler). This is a generic type,
+    providing basic support for matching HTTP requests to the actual handlers
+    (file, app, storage, etc). A custom web service can also be build directly
+    on this type or one of the subtypes.
+initializer: org.rapidcontext.core.type.WebService
+property:
+  - name: description
+    description: The description of the web service. Optional, defaults to blank.
+    required: false
+    format: text
+  - name: match
+    description: >-
+        The web request match array. Contains a list of match criteria objects.
+    required: false

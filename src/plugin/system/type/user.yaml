@@ -1,0 +1,34 @@
+id: user
+type: type
+description: >-
+    A system user. The user is normally associated with a physical person
+    having access to the system. The user object links the user with
+    authentication (password) and resource authorization mechanisms (role
+    access) mechanisms.
+initializer: org.rapidcontext.core.type.User
+property:
+  - name: name
+    description: The descriptive name of the user. Optional, defaults to blank.
+    required: false
+  - name: description
+    description: >-
+        The additional description or notes for the user. Optional, defaults to
+        blank.
+    required: false
+  - name: enabled
+    description: >-
+        The boolean enabled flag. If set to false, the user cannot login.
+        Optional, defaults to true.
+    required: false
+  - name: realm
+    description: The user realm name. Optional, defaults to "RapidContext".
+    required: false
+  - name: password
+    description: >-
+        The MD5 hash of the user password. Created as "<id>:<realm>:<password>"
+        to match HTTP digest authentication. A blank password will match any
+        input (can be used to reset passwords).
+    required: false
+  - name: role
+    description: The user role array. Contains a list of role identifiers.
+    required: false

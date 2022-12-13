@@ -1,0 +1,49 @@
+id: connection/jdbc
+type: type
+description: >-
+    The JDBC connection type. JDBC connections allows execution of SQL queries
+    and statements to any JDBC data source. Connections may be pooled for
+    maximum resource utilization.
+initializer: org.rapidcontext.app.plugin.jdbc.JdbcConnection
+property:
+  - name: url
+    description: |-
+        The JDBC connection URL. Examples for recognized drivers:
+            DB2 (*): jdbc:db2://<host>:<port>/<database>
+            MariaDB: jdbc:mariadb://<host>:<port>/<database>
+            MySQL: jdbc:mysql://<host>:<port>/<database>
+            ODBC: jdbc:odbc:<datasource>
+            Oracle (*): jdbc:oracle:thin:@//<host>:<port>/<service>
+            PostgreSQL: jdbc:postgresql://<host>:<port>/<database>
+            SQL Server (*): jdbc:sqlserver://<host>[\<instanceName>]:<port>
+        (*) Requires separate JDBC driver from database vendor.
+    required: true
+  - name: driver
+    description: >-
+        The fully qualified JDBC driver class name. Optional, will use built-in
+        URL mapping if omitted.
+    required: false
+  - name: user
+    description: The database user name.
+    required: true
+  - name: password
+    description: The database user password.
+    required: true
+    format: password
+  - name: sqlping
+    description: >-
+        The SQL ping query for checking the connection. Optional, will default
+        to "SELECT 1" if omitted.
+    required: false
+  - name: autocommit
+    description: >-
+        The auto-commit each SQL statement flag. Optional, will default to
+        false.
+    required: false
+    format: boolean
+  - name: timeout
+    description: >-
+        The connection and query timeout (in seconds). Optional, will default
+        to 30 seconds.
+    required: false
+    format: number

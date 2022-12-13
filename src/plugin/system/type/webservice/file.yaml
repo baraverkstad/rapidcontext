@@ -1,0 +1,14 @@
+id: webservice/file
+type: type
+description: >-
+    A file web service. This service is used for retrieving binary (or text)
+    files from the storage, usually the standard web site files (HTML, CSS,
+    JavaScript, etc). This web service only support HTTP GET requests.
+initializer: org.rapidcontext.app.web.FileWebService
+property:
+  - name: path
+    description: >-
+        The storage path to service. Should be prefixed with '/files/', since
+        it may be a security risk to expose other objects.
+    required: true
+    format: text

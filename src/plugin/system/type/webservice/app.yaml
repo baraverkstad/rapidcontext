@@ -1,0 +1,50 @@
+id: webservice/app
+type: type
+description: >-
+    An app web service. This service extends the file web service with a
+    default app launcher at "/" and a number of RapidContext APIs available
+    under the "/rapidcontext/" path. Note that both HTTP GET and POST support
+    is required (at a minimum).
+initializer: org.rapidcontext.app.web.AppWebService
+property:
+  - name: path
+    description: >-
+        The storage path to service. Should be prefixed with '/files/', since
+        it may be a security risk to expose other objects.
+    required: true
+    format: text
+  - name: app
+    description: >-
+        The app identifier for the default launcher. If an "index.html" file
+        exists in the storage root, it will be returned instead of the default
+        app launcher.
+    required: false
+    format: text
+  - name: login
+    description: >-
+        The app identifier to launch for non-authorized users. Defaults to
+        'login' (i.e. the built-in login app).
+    required: false
+    format: text
+  - name: title
+    description: Optional web page title. Defaults to "RapidContext".
+    required: false
+    format: text
+  - name: lang
+    description: Optional web page ISO language code. Defaults to "en".
+    required: false
+    format: text
+  - name: viewport
+    description: >-
+        Optional web page meta viewport tag. Defaults to "width=device-width,
+        initial-scale=1".
+    required: false
+    format: text
+  - name: header
+    description: >-
+        Optional HTML header lines to include in the default app launcher
+        template. This can be used for specifying favicon images and similar.
+        Note that JavaScript and CSS resources are loaded automatically, so
+        they needn't be specified here.
+    required: false
+    format: array
