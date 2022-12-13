@@ -115,7 +115,7 @@ public class Query {
      */
     private Stream<Path> allPaths(Path parent) {
         if (parent == null || !parent.isIndex()) {
-            return Stream.empty();
+            return Stream.ofNullable(parent);
         }
         Index idx = (Index) this.storage.load(parent);
         if (idx == null) {
