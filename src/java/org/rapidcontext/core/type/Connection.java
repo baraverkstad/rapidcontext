@@ -14,12 +14,15 @@
 
 package org.rapidcontext.core.type;
 
+import java.time.Duration;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.pool.PoolableObjectFactory;
-import org.apache.commons.pool.impl.GenericObjectPool;
+import org.apache.commons.pool2.PooledObject;
+import org.apache.commons.pool2.PooledObjectFactory;
+import org.apache.commons.pool2.impl.DefaultPooledObject;
+import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.StorableObject;
@@ -77,14 +80,14 @@ public abstract class Connection extends StorableObject {
     /**
      * The maximum time to wait for acquiring an object from the pool.
      */
-    private static int MAX_ACQUIRE_WAIT = 500;
+    private static long MAX_WAIT_MILLIS = 500L;
 
     /**
      * The connection channel pool used for managing objects. The
      * pool will be used to create all objects, but only ones
      * supporting it will be returned (others immediately destroyed).
      */
-    private GenericObjectPool channelPool = null;
+    private GenericObjectPool<Channel> channelPool = null;
 
     /**
      * The timestamp (in milliseconds) of the last usage time. This
@@ -154,17 +157,17 @@ public abstract class Connection extends StorableObject {
 
         dict.setInt("_" + KEY_MAX_OPEN, open);
         dict.setInt("_" + KEY_MAX_IDLE_SECS, idle);
-        channelPool = new GenericObjectPool(new ChannelFactory());
-        channelPool.setMaxActive(open);
+        channelPool = new GenericObjectPool<>(new ChannelFactory());
+        channelPool.setMaxTotal(open);
         channelPool.setMaxIdle(open);
         channelPool.setMinIdle(0);
-        channelPool.setMaxWait(MAX_ACQUIRE_WAIT);
-        channelPool.setMinEvictableIdleTimeMillis(idle * 1000L);
+        channelPool.setMaxWait(Duration.ofMillis(MAX_WAIT_MILLIS));
+        channelPool.setMinEvictableIdle(Duration.ofSeconds(idle));
         channelPool.setLifo(false);
         channelPool.setTestOnBorrow(true);
         channelPool.setTestOnReturn(true);
         channelPool.setTestWhileIdle(true);
-        channelPool.setWhenExhaustedAction(GenericObjectPool.WHEN_EXHAUSTED_BLOCK);
+        channelPool.setBlockWhenExhausted(true);
     }
 
     /**
@@ -409,7 +412,7 @@ public abstract class Connection extends StorableObject {
      * @author   Per Cederberg
      * @version  1.0
      */
-    private class ChannelFactory implements PoolableObjectFactory {
+    private class ChannelFactory implements PooledObjectFactory<Channel> {
 
         /**
          * Creates a new connection channel factory.
@@ -419,36 +422,35 @@ public abstract class Connection extends StorableObject {
         }
 
         /**
-         * Creates a new channel.
+         * Creates a new pooled channel.
          *
-         * @return a new channel
+         * @return a new pooled channel
          *
          * @throws Exception if the channel couldn't be created
          */
-        public Object makeObject() throws Exception {
-            return createChannel();
+        public PooledObject<Channel> makeObject() throws Exception {
+            return new DefaultPooledObject<>(createChannel());
         }
 
         /**
          * Destroys a channel.
          *
-         * @param obj            the channel to destroy
+         * @param obj            the pooled channel to destroy
          */
-        public void destroyObject(Object obj) {
-            destroyChannel((Channel) obj);
+        public void destroyObject(PooledObject<Channel> obj) {
+            destroyChannel(obj.getObject());
         }
 
         /**
          * Validates a channel.
          *
-         * @param obj            the channel to validate
+         * @param obj            the pooled channel to validate
          *
          * @return true if the channel was valid, or
          *         false otherwise
          */
-        public boolean validateObject(Object obj) {
-            Channel  channel = (Channel) obj;
-
+        public boolean validateObject(PooledObject<Channel> obj) {
+            Channel channel = obj.getObject();
             channel.validate();
             return channel.isValid();
         }
@@ -456,23 +458,23 @@ public abstract class Connection extends StorableObject {
         /**
          * Activates a channel.
          *
-         * @param obj            the channel to activate
+         * @param obj            the pooled channel to activate
          *
          * @throws Exception if the channel couldn't be activated
          */
-        public void activateObject(Object obj) throws Exception {
-            ((Channel) obj).reserve();
+        public void activateObject(PooledObject<Channel> obj) throws Exception {
+            obj.getObject().reserve();
         }
 
         /**
          * Passivates a channel.
          *
-         * @param obj            the channel to passivate
+         * @param obj            the pooled channel to passivate
          *
          * @throws Exception if the channel couldn't be passivated
          */
-        public void passivateObject(Object obj) throws Exception {
-            ((Channel) obj).release();
+        public void passivateObject(PooledObject<Channel> obj) throws Exception {
+            obj.getObject().release();
         }
     }
 }
