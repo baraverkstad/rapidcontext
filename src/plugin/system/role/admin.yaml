@@ -1,0 +1,7 @@
+id: admin
+type: role
+name: Administrators
+description: Provides read, write and admin access to all storage objects.
+access:
+  - path: '**'
+    permission: all

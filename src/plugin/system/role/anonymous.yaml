@@ -1,0 +1,18 @@
+id: anonymous
+type: role
+name: Anonymous Users
+description: Provides read access to files and a few apps for anonymous users.
+auto: all
+access:
+  - path: app/start
+    permission: read
+  - path: app/login
+    permission: read
+  - path: app/help
+    permission: read
+  - path: app/**
+    permission: search
+  - path: files/**
+    permission: read
+  - path: procedure/System.*
+    permission: read
