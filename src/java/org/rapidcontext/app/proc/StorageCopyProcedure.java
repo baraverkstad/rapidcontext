@@ -23,7 +23,6 @@ import java.util.logging.Logger;
 import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.data.Binary;
-import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Procedure;
@@ -67,7 +66,8 @@ public class StorageCopyProcedure implements Procedure {
         defaults.set("dst", Bindings.ARGUMENT, "", "The destination object path");
         defaults.set("flags", Bindings.ARGUMENT, "",
             "The optional flags, available values are:\n" +
-            "  update -- copy only if the source is newer");
+            "\u2022 recursive \u2014 copy indexes recursively\n" +
+            "\u2022 update \u2014 copy only if the source is newer");
         defaults.seal();
     }
 
@@ -123,25 +123,54 @@ public class StorageCopyProcedure implements Procedure {
         String src = ((String) bindings.getValue("src", "")).trim();
         if (src.length() <= 0) {
             throw new ProcedureException("source path cannot be empty");
-        } else if (src.endsWith("/")) {
-            throw new ProcedureException("source path cannot be an index");
         }
         CallContext.checkAccess(src, cx.readPermission(1));
         String dst = ((String) bindings.getValue("dst", "")).trim();
         if (dst.length() <= 0) {
             throw new ProcedureException("destination path cannot be empty");
-        } else if (dst.endsWith("/")) {
-            dst += StringUtils.substringAfterLast("/" + src, "/");
         }
         CallContext.checkWriteAccess(dst);
-        LOG.info("copying storage path " + src + " to " + dst);
         String flags = ((String) bindings.getValue("flags", "")).toLowerCase();
         boolean update = flags.contains("update");
+        boolean recursive = flags.contains("recursive");
+        if (src.endsWith("/") && !recursive) {
+            throw new ProcedureException("source path cannot be an index (unless recursive)");
+        } else if (src.endsWith("/") && !dst.endsWith("/")) {
+            throw new ProcedureException("destination path must also be an index");
+        } else if (StringUtils.startsWithIgnoreCase(src, dst)) {
+            throw new ProcedureException("source and destination paths cannot overlap");
+        } else if (StringUtils.startsWithIgnoreCase(dst, src)) {
+            throw new ProcedureException("source and destination paths cannot overlap");
+        } else if (!src.endsWith("/") && dst.endsWith("/")) {
+            dst += StringUtils.substringAfterLast("/" + src, "/");
+        }
+        LOG.info("copying storage path " + src + " to " + dst);
         return Boolean.valueOf(copy(Path.from(src), Path.from(dst), update));
     }
 
     /**
-     * Copies a storage object to a new destination.
+     * Copies a storage path (index or object) to a new destination.
+     *
+     * @param src            the source path
+     * @param dst            the destination path
+     * @param updateOnly     the copy-only-on-newer flag
+     *
+     * @return true if all objects were successfully copied, or
+     *         false otherwise
+     */
+    public static boolean copy(Path src, Path dst, boolean updateOnly) {
+        if (src.isIndex()) {
+            Storage storage = ApplicationContext.getInstance().getStorage();
+            return storage.query(src).paths().map(p -> {
+                return copyObject(p, Path.resolve(dst, p.removePrefix(src)), updateOnly);
+            }).allMatch(res -> res);
+        } else {
+            return copyObject(src, dst, updateOnly);
+        }
+    }
+
+    /**
+     * Copies a single storage object to a new destination.
      *
      * @param src            the source object path
      * @param dst            the destination object path
@@ -150,7 +179,7 @@ public class StorageCopyProcedure implements Procedure {
      * @return true if the data was successfully copied, or
      *         false otherwise
      */
-    public static boolean copy(Path src, Path dst, boolean updateOnly) {
+    public static boolean copyObject(Path src, Path dst, boolean updateOnly) {
         Storage storage = ApplicationContext.getInstance().getStorage();
         if (updateOnly) {
             Metadata srcMeta = storage.lookup(src);
@@ -162,15 +191,7 @@ public class StorageCopyProcedure implements Procedure {
             }
         }
         Object data = storage.load(src);
-        if (data instanceof Dict) {
-            try {
-                storage.store(dst, data);
-                return true;
-            } catch (Exception e) {
-                LOG.log(Level.WARNING, "failed to copy " + src + " to " + dst, e);
-                return false;
-            }
-        } else if (data instanceof Binary) {
+        if (data instanceof Binary) {
             try (InputStream is = ((Binary) data).openStream()) {
                 File file = FileUtil.tempFile(src.name());
                 FileUtil.copy(is, file);
@@ -181,7 +202,13 @@ public class StorageCopyProcedure implements Procedure {
                 return false;
             }
         } else {
-            return false;
+            try {
+                storage.store(dst, data);
+                return true;
+            } catch (Exception e) {
+                LOG.log(Level.WARNING, "failed to copy " + src + " to " + dst, e);
+                return false;
+            }
         }
     }
 }
