@@ -67,7 +67,11 @@ public class StorageCopyProcedure implements Procedure {
         defaults.set("flags", Bindings.ARGUMENT, "",
             "The optional flags, available values are:\n" +
             "\u2022 recursive \u2014 copy indexes recursively\n" +
-            "\u2022 update \u2014 copy only if the source is newer");
+            "\u2022 update \u2014 copy only if the source is newer\n" +
+            "\u2022 properties \u2014 serialize to properties format\n" +
+            "\u2022 json \u2014 serialize to JSON format\n" +
+            "\u2022 xml \u2014 serialize to XML format\n" +
+            "\u2022 yaml \u2014 serialize to YAML format");
         defaults.seal();
     }
 
@@ -133,6 +137,16 @@ public class StorageCopyProcedure implements Procedure {
         String flags = ((String) bindings.getValue("flags", "")).toLowerCase();
         boolean update = flags.contains("update");
         boolean recursive = flags.contains("recursive");
+        String ext = null;
+        if (flags.contains("properties")) {
+            ext = Storage.EXT_PROPERTIES;
+        } else if (flags.contains("json")) {
+            ext = Storage.EXT_JSON;
+        } else if (flags.contains("xml")) {
+            ext = Storage.EXT_XML;
+        } else if (flags.contains("yaml")) {
+            ext = Storage.EXT_YAML;
+        }
         if (src.endsWith("/") && !recursive) {
             throw new ProcedureException("source path cannot be an index (unless recursive)");
         } else if (src.endsWith("/") && !dst.endsWith("/")) {
@@ -145,7 +159,7 @@ public class StorageCopyProcedure implements Procedure {
             dst += StringUtils.substringAfterLast("/" + src, "/");
         }
         LOG.info("copying storage path " + src + " to " + dst);
-        return Boolean.valueOf(copy(Path.from(src), Path.from(dst), update));
+        return Boolean.valueOf(copy(Path.from(src), Path.from(dst), update, ext));
     }
 
     /**
@@ -153,19 +167,20 @@ public class StorageCopyProcedure implements Procedure {
      *
      * @param src            the source path
      * @param dst            the destination path
-     * @param updateOnly     the copy-only-on-newer flag
+     * @param update         the copy-only-on-newer flag
+     * @param ext            the optional file extension (data format)
      *
      * @return true if all objects were successfully copied, or
      *         false otherwise
      */
-    public static boolean copy(Path src, Path dst, boolean updateOnly) {
+    public static boolean copy(Path src, Path dst, boolean update, String ext) {
         if (src.isIndex()) {
             Storage storage = ApplicationContext.getInstance().getStorage();
             return storage.query(src).paths().map(p -> {
-                return copyObject(p, Path.resolve(dst, p.removePrefix(src)), updateOnly);
+                return copyObject(p, Path.resolve(dst, p.removePrefix(src)), update, ext);
             }).allMatch(res -> res);
         } else {
-            return copyObject(src, dst, updateOnly);
+            return copyObject(src, dst, update, ext);
         }
     }
 
@@ -174,14 +189,15 @@ public class StorageCopyProcedure implements Procedure {
      *
      * @param src            the source object path
      * @param dst            the destination object path
-     * @param updateOnly     the copy-only-on-newer flag
+     * @param update         the copy-only-on-newer flag
+     * @param ext            the optional file extension (data format)
      *
      * @return true if the data was successfully copied, or
      *         false otherwise
      */
-    public static boolean copyObject(Path src, Path dst, boolean updateOnly) {
+    public static boolean copyObject(Path src, Path dst, boolean update, String ext) {
         Storage storage = ApplicationContext.getInstance().getStorage();
-        if (updateOnly) {
+        if (update) {
             Metadata srcMeta = storage.lookup(src);
             Metadata dstMeta = storage.lookup(dst);
             Date srcTime = (srcMeta == null) ? new Date(0) : srcMeta.lastModified();
@@ -203,6 +219,9 @@ public class StorageCopyProcedure implements Procedure {
             }
         } else {
             try {
+                if (ext != null) {
+                    dst = dst.sibling(Storage.objectName(dst.name()) + ext);
+                }
                 storage.store(dst, data);
                 return true;
             } catch (Exception e) {
