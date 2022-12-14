@@ -14,6 +14,8 @@
 
 package org.rapidcontext.app.proc;
 
+import org.rapidcontext.app.ApplicationContext;
+import org.rapidcontext.app.plugin.PluginManager;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.AddOnProcedure;
@@ -22,6 +24,10 @@ import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Library;
 import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
+import org.rapidcontext.core.storage.Metadata;
+import org.rapidcontext.core.storage.Path;
+import org.rapidcontext.core.storage.StorableObject;
+import org.rapidcontext.core.storage.Storage;
 
 /**
  * The built-in procedure read procedure.
@@ -119,14 +125,23 @@ public class ProcedureReadProcedure implements Procedure {
      */
     static Dict getProcedureData(Library library, Procedure proc)
     throws ProcedureException {
+        Storage storage = ApplicationContext.getInstance().getStorage();
+        Path storagePath = PluginManager.storagePath(PluginManager.LOCAL_PLUGIN);
+        Path path = Path.resolve(Library.PATH_PROC, proc.getName());
+        Metadata meta = storage.lookup(Path.resolve(storagePath, path));
         Dict res = new Dict();
         res.set("name", proc.getName());
-        if (proc instanceof AddOnProcedure) {
+        if (proc instanceof StorableObject) {
+            StorableObject storable = (StorableObject) proc;
+            res.set("id", storable.id());
+            res.set("type", storable.type());
+        } else if (proc instanceof AddOnProcedure) {
             res.set("type", ((AddOnProcedure) proc).getType());
         } else {
             res.set("type", "built-in");
         }
         res.set("description", proc.getDescription());
+        res.set("local", meta != null);
         res.set("bindings", getBindingsData(proc.getBindings()));
         return res;
     }
