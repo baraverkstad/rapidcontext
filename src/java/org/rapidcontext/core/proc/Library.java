@@ -189,7 +189,7 @@ public class Library {
      */
     public String[] getProcedureNames() throws ProcedureException {
         TreeSet<String> set = new TreeSet<>(builtIns.keySet());
-        storage.query(PATH_PROC).paths().forEach(path -> set.add(path.name()));
+        storage.query(PATH_PROC).paths().forEach(path -> set.add(path.toIdent(1)));
         return set.toArray(new String[set.size()]);
     }
 
@@ -212,7 +212,7 @@ public class Library {
             return builtIns.get(name);
         }
         AddOnProcedure proc = cache.get(name);
-        Metadata meta = storage.lookup(PATH_PROC.child(name, false));
+        Metadata meta = storage.lookup(Path.resolve(PATH_PROC, name));
         if (meta == null) {
             throw new ProcedureException("no procedure '" + name + "' found");
         }
@@ -268,7 +268,7 @@ public class Library {
      * @throws ProcedureException if the procedure couldn't be loaded
      */
     public Procedure loadProcedure(String name) throws ProcedureException {
-        Dict data = (Dict) storage.load(PATH_PROC.child(name, false));
+        Dict data = (Dict) storage.load(Path.resolve(PATH_PROC, name));
         if (data == null) {
             String msg = "no procedure '" + name + "' found";
             throw new ProcedureException(msg);
@@ -294,7 +294,7 @@ public class Library {
         AddOnProcedure proc = createProcedure(data);
         try {
             cache.remove(proc.getName());
-            storage.store(PATH_PROC.child(proc.getName(), false), proc.getData());
+            storage.store(Path.resolve(PATH_PROC, proc.getName()), proc.getData());
         } catch (StorageException e) {
             String msg = "failed to write procedure data: " + e.getMessage();
             throw new ProcedureException(msg);
@@ -315,7 +315,7 @@ public class Library {
     public void deleteProcedure(String name) throws ProcedureException {
         try {
             cache.remove(name);
-            storage.remove(PATH_PROC.child(name, false));
+            storage.remove(Path.resolve(PATH_PROC, name));
         } catch (StorageException e) {
             String msg = "failed to remove procedure: " + e.getMessage();
             throw new ProcedureException(msg);
