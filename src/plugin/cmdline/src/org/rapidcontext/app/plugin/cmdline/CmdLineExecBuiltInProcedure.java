@@ -14,77 +14,31 @@
 
 package org.rapidcontext.app.plugin.cmdline;
 
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
-import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
+import org.rapidcontext.core.type.Procedure;
 
 /**
  * The built-in command-line execution procedure. This procedure
- * provides the functionality of executing local command-line
- * programs and capturing their output. It is restricted to
- * admin-only access for security reasons. Create a more specified
- * add-on procedure of the "cmdline.exec" type to allow other users
- * access to this functionality.
+ * executes local command-line programs and captures their output. It
+ * should be restricted to admin-only access for security reasons.
  *
  * @author   Per Cederberg
  * @version  1.0
  */
-public class CmdLineExecBuiltInProcedure implements Procedure {
+public class CmdLineExecBuiltInProcedure extends Procedure {
 
     /**
-     * The procedure name constant.
-     */
-    public static final String NAME = "PlugIn.CmdLine.Exec";
-
-    /**
-     * The default bindings.
-     */
-    private Bindings defaults = new Bindings();
-
-    /**
-     * Creates a new command-line execution procedure.
+     * Creates a new procedure from a serialized representation.
      *
-     * @throws ProcedureException if the initialization failed
+     * @param id             the object identifier
+     * @param type           the object type name
+     * @param dict           the serialized representation
      */
-    public CmdLineExecBuiltInProcedure() throws ProcedureException {
-        defaults.set(CmdLineExecProcedure.BINDING_COMMAND, Bindings.ARGUMENT, "",
-                     "The command-line to execute.");
-        defaults.set(CmdLineExecProcedure.BINDING_DIRECTORY, Bindings.ARGUMENT, "",
-                     "The working directory or blank for current.");
-        defaults.set(CmdLineExecProcedure.BINDING_ENVIRONMENT, Bindings.ARGUMENT, "",
-                     "The environment variable bindings or blank for current.");
-        this.defaults.seal();
-    }
-
-    /**
-     * Returns the procedure name.
-     *
-     * @return the procedure name
-     */
-    public String getName() {
-        return NAME;
-    }
-
-    /**
-     * Returns the procedure description.
-     *
-     * @return the procedure description
-     */
-    public String getDescription() {
-        return "Executes a local command-line program and captures the output.";
-    }
-
-    /**
-     * Returns the bindings for this procedure. If this procedure
-     * requires any special data, adapter connection or input
-     * argument binding, those bindings should be set (but possibly
-     * to null or blank values).
-     *
-     * @return the bindings for this procedure
-     */
-    public Bindings getBindings() {
-        return defaults;
+    public CmdLineExecBuiltInProcedure(String id, String type, Dict dict) {
+        super(id, type, dict);
     }
 
     /**

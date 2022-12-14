@@ -14,7 +14,6 @@
 
 package org.rapidcontext.app.plugin.cmdline;
 
-import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.app.plugin.Plugin;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Library;
@@ -50,8 +49,6 @@ public class CmdLinePlugin extends Plugin {
     public void init() throws StorageException {
         try {
             Library.registerType("cmdline.exec", CmdLineExecProcedure.class);
-            Library lib = ApplicationContext.getInstance().getLibrary();
-            lib.addBuiltIn(new CmdLineExecBuiltInProcedure());
         } catch (ProcedureException e) {
             throw new StorageException(e.getMessage());
         }
@@ -64,8 +61,6 @@ public class CmdLinePlugin extends Plugin {
      * @throws StorageException if the destruction failed
      */
     public void destroy() throws StorageException {
-        Library lib = ApplicationContext.getInstance().getLibrary();
-        lib.removeBuiltIn(CmdLineExecBuiltInProcedure.NAME);
         Library.unregisterType("cmdline.exec");
     }
 }

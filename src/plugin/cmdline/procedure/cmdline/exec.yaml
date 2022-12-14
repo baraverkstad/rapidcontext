@@ -1,0 +1,17 @@
+id: cmdline/exec
+type: procedure
+alias: PlugIn.CmdLine.Exec
+className: org.rapidcontext.app.plugin.cmdline.CmdLineExecBuiltInProcedure
+description: >-
+  Executes a local command-line program and captures the output. It should be
+  restricted to admin-only access for security reasons.
+binding:
+  - name: command
+    type: argument
+    description: The command-line to execute.
+  - name: directory
+    type: argument
+    description: The working directory or blank for current.
+  - name: environment
+    type: argument
+    description: The environment variable bindings or blank for current.

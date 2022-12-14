@@ -56,7 +56,7 @@ execution.</p>
 server:</p>
 
 <ul class="box yellow">
-  <li><strong>The <var>PlugIn.CmdLine.Exec</var> procedure</strong> &ndash;
+  <li><strong>The <var>cmdline/exec</var> procedure</strong> &ndash;
       A built-in procedure for running any program. Only accessible to users
       with the <var>admin</var> role. This procedure should normally only be
       used for testing and development.</li>
@@ -69,20 +69,20 @@ server:</p>
 
 <h2 id="returns">2. Return Values</h2>
 
-<p>Using the <var>PlugIn.CmdLine.Exec</var> procedure, the command-line
-execution can easily be tested. Below follows some simple command examples
-(using a Unix or Cygwin environment):</p>
+<p>Using the <var>cmdline/exec</var> procedure, the command-line execution can
+easily be tested. Below follows some simple command examples (using a Unix or
+Cygwin environment):</p>
 
 <div class="box blue">
   <i class="box-icon fa fa-fw fa-code"></i>
   <pre class="box-content code">
-PlugIn.CmdLine.Exec('dir', '', '')
+cmdline/exec('dir', '', '')
   <span class="comment">--&gt; { exitValue: 0, output: 'cmdline http jdbc ...' }</span>
 
-PlugIn.CmdLine.Exec('test 0 -eq 1', '', '')
+cmdline/exec('test 0 -eq 1', '', '')
   <span class="comment">--&gt; { exitValue: 1, output: '' }</span>
 
-PlugIn.CmdLine.Exec('bash -c set', '', '')
+cmdline/exec('bash -c set', '', '')
   <span class="comment">--&gt; { exitValue: 0, output: 'BASH=/bin/bash BASH_ARGC=() BASH_ARGV=...' }</span></pre>
 </div>
 
