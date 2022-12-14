@@ -15,7 +15,6 @@
 package org.rapidcontext.app.proc;
 
 import java.util.Objects;
-import java.util.Optional;
 
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
@@ -108,7 +107,7 @@ public class UserSearchProcedure implements Procedure {
 
         Storage storage = cx.getStorage();
         String match = bindings.getValue("email", "").toString().trim();
-        Optional<Dict> first = storage.query(User.PATH).paths().map(path -> {
+        return storage.query(User.PATH).paths().map(path -> {
             Object o = storage.load(path);
             if (o instanceof User) {
                 User user = (User) o;
@@ -128,7 +127,6 @@ public class UserSearchProcedure implements Procedure {
                 }
             }
             return null;
-        }).filter(Objects::nonNull).findFirst();
-        return first.isPresent() ? first.get() : null;
+        }).filter(Objects::nonNull).findFirst().orElse(null);
     }
 }

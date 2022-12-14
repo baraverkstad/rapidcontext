@@ -20,7 +20,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -273,8 +272,7 @@ public class ApplicationContext {
         initLibrary();
         initPlugins();
         // TODO: Remove singleton environment reference
-        Optional<Environment> first = Environment.all(storage).findFirst();
-        env = first.isPresent() ? first.get() : null;
+        env = Environment.all(storage).findFirst().orElse(null);
         try {
             SecurityContext.init(storage);
         } catch (StorageException e) {
