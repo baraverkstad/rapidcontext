@@ -382,7 +382,7 @@
                 <tr>
                   <th class="-form-layout-label">Name:</th>
                   <td class="w-100">
-                    <TextField name="name" required="true" pattern="[a-zA-Z0-9._-]+" class="w-100" />
+                    <TextField name="name" required="true" pattern="[a-zA-Z0-9/._-]+" class="w-100" />
                     <FormValidator name="name" message="Only alphanumeric characters allowed in name." />
                   </td>
                 </tr>

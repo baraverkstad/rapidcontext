@@ -696,7 +696,7 @@ AdminApp.prototype._callbackProcedures = function (res) {
  * @param {String} name the procedure name
  */
 AdminApp.prototype.showProcedure = function (name) {
-    var node = this.ui.procTree.findByPath(name.split("."));
+    var node = this.ui.procTree.findByPath(name.split(/[./]/g));
     if (node == null) {
         throw new Error("failed to find procedure '" + name + "'");
     } else if (node.isSelected()) {
@@ -723,7 +723,7 @@ AdminApp.prototype._showProcedure = function () {
     RapidContext.Util.resizeElements(this.ui.procExecResult);
     if (node != null && node.data != null) {
         var args = [node.data];
-        var cb = this._callbackShowProcedure.bind(this);
+        var cb = this._callbackShowProcedure.bind(this, node.data);
         RapidContext.App.callProc("System.Procedure.Read", args).then(cb, cb);
         this.ui.procLoading.show();
     }
@@ -732,19 +732,25 @@ AdminApp.prototype._showProcedure = function () {
 /**
  * Callback function for showing detailed procedure information.
  *
+ * @param {String} procName the procedure name
  * @param {Object} res the result object or error
  */
-AdminApp.prototype._callbackShowProcedure = function (res) {
+AdminApp.prototype._callbackShowProcedure = function (procName, res) {
     this.ui.procReload.show();
     this.ui.procLoading.hide();
     if (res instanceof Error) {
         RapidContext.UI.showError(res);
     } else {
         this._currentProc = res;
-        if (res.plugin == "local") {
+        if (res.local) {
             this.ui.procRemove.show();
         }
-        if (res.type != "built-in") {
+        if (procName != res.name) {
+            res.name = procName + " (legacy alias of " + res.name + ")";
+        }
+        if (res.type == "built-in" || res.type == "procedure") {
+            res.type = "Java built-in";
+        } else {
             this.ui.procEdit.show();
         }
         this.ui.procForm.update(res);
