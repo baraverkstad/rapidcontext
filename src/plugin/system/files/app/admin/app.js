@@ -681,7 +681,7 @@ AdminApp.prototype.loadProcedures = function () {
 AdminApp.prototype._callbackProcedures = function (res) {
     this.ui.procTree.markAll();
     for (var i = 0; i < res.length; i++) {
-        var path = res[i].split(".");
+        var path = res[i].split(/[./]/g);
         var node = this.ui.procTree.addPath(path);
         node.data = res[i];
     }
