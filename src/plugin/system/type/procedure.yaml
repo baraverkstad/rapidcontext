@@ -1,0 +1,30 @@
+id: procedure
+type: type
+description: >-
+    A server-side function or operation. Procedures may take arguments, modify
+    data and/or return values. They can be invoked either server-side or
+    client-side (via API) if permissions allow.\n
+    \n
+    This generic type is used only for direct Java implementations. A number
+    of subtypes allows creating procedures from configurable parameters (e.g.
+    SQL text, HTTP requests, etc) instead, sharing a common reusable Java
+    implementation. When implementing procedures in Java, care must be taken so
+    that all operations are properly checked for security.
+property:
+  - name: description
+    description: >-
+        The description of the procedure. Optional, defaults to blank.
+    required: false
+  - name: alias
+    description: >-
+        The procedure alias, used for migration from legacy procedure names.
+        Optional, defaults to blank.
+    required: false
+  - name: binding
+    description: >-
+        The array of bindings, listing all resources required during execution.
+        Each binding is an object with 'name', 'type', 'description' and
+        'value' properties, some being optional depending on the bining type.
+        The four available binding types are \u2014 'data', 'procedure',
+        'connection' and 'argument'.
+    required: false

@@ -45,7 +45,7 @@ public class Library {
     /**
      * The procedure object storage path.
      */
-    public static final Path PATH_PROC = Path.from("/procedure/");
+    public static final Path PATH_PROC = org.rapidcontext.core.type.Procedure.PATH;
 
     /**
      * The map of procedure type names and implementation classes.
@@ -224,18 +224,40 @@ public class Library {
     }
 
     /**
+     * Loads built-in procedures via storage types. This method is safe to call
+     * repeatedly (after each plug-in load).
+     */
+    public void reloadBuiltIns() {
+        builtIns.values().removeIf(p -> p instanceof org.rapidcontext.core.type.Procedure);
+        // TODO: Remove preloading of built-in procedures when migration complete
+        org.rapidcontext.core.type.Procedure.all(storage).forEach(p -> {
+            if (p.type().equals("procedure") && !hasBuiltIn(p.id())) {
+                builtIns.put(p.id(), p);
+                // TODO: Remove support for procedure aliases when migration complete
+                String alias = p.alias();
+                if (alias != null && !alias.isEmpty()) {
+                    builtIns.put(alias, p);
+                }
+            }
+        });
+    }
+
+    /**
      * Adds a new built-in procedure to the library.
      *
      * @param proc           the procedure definition
      *
      * @throws ProcedureException if an identically named procedure
      *             already exists
+     *
+     * @deprecated Built-in procedures should be initialized via the 'className'
+     *     property on a proper stored (serialized) object.
      */
+    @Deprecated
     public void addBuiltIn(Procedure proc) throws ProcedureException {
         if (builtIns.containsKey(proc.getName())) {
-            throw new ProcedureException("a procedure with name '" +
-                                         proc.getName() +
-                                         "' already exists");
+            String msg = "a procedure '" + proc.getName() + "' already exists";
+            throw new ProcedureException(msg);
         }
         builtIns.put(proc.getName(), proc);
     }
@@ -244,7 +266,11 @@ public class Library {
      * Removes a built-in procedure from the library.
      *
      * @param name           the procedure name
+     *
+     * @deprecated Built-in procedures should be managed as proper stored
+     *     (serialized) objects.
      */
+    @Deprecated
     public void removeBuiltIn(String name) {
         builtIns.remove(name);
     }

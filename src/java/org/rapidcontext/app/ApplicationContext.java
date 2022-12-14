@@ -298,6 +298,8 @@ public class ApplicationContext {
         library.setInterceptor(new JsCompileInterceptor(i));
 
         // Add default built-in procedures
+        // TODO: built-in procedures should be initialized on first call
+        library.reloadBuiltIns();
         try {
             library.addBuiltIn(new AppListProcedure());
             library.addBuiltIn(new ConnectionListProcedure());
@@ -505,6 +507,8 @@ public class ApplicationContext {
      */
     public void loadPlugin(String pluginId) throws PluginException {
         pluginManager.load(pluginId);
+        // TODO: built-in procedures should be initialized on first call
+        library.reloadBuiltIns();
         Array pluginList = config.getArray("plugins");
         if (!pluginList.containsValue(pluginId)) {
             pluginList.add(pluginId);
@@ -528,6 +532,8 @@ public class ApplicationContext {
      */
     public void unloadPlugin(String pluginId) throws PluginException {
         pluginManager.unload(pluginId);
+        // TODO: built-in procedures should be initialized on first call
+        library.reloadBuiltIns();
         library.clearCache();
         Array pluginList = config.getArray("plugins");
         pluginList.remove(pluginId);
