@@ -55,7 +55,6 @@ public class HttpPlugin extends Plugin {
             Library.registerType("http.post", HttpPostProcedure.class);
             Library.registerType("http.request", HttpRequestProcedure.class);
             lib.addBuiltIn(new HttpPostBuiltInProcedure());
-            lib.addBuiltIn(new HttpRequestBuiltInProcedure());
         } catch (ProcedureException e) {
             throw new StorageException(e.getMessage());
         }
@@ -72,7 +71,6 @@ public class HttpPlugin extends Plugin {
         Library  lib = ApplicationContext.getInstance().getLibrary();
 
         lib.removeBuiltIn(HttpPostBuiltInProcedure.NAME);
-        lib.removeBuiltIn(HttpRequestBuiltInProcedure.NAME);
         Library.unregisterType("http.post");
         Library.unregisterType("http.request");
     }
