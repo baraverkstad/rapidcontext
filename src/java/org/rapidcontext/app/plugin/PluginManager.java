@@ -28,7 +28,6 @@ import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.proc.Library;
 import org.rapidcontext.core.storage.DirStorage;
 import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
@@ -469,7 +468,6 @@ public class PluginManager {
 
         // Create plug-in instance
         Plugin plugin;
-        Library.builtInPlugin = pluginId;
         String className = dict.getString(Plugin.KEY_CLASSNAME, null);
         if (className == null || className.trim().length() <= 0) {
             plugin = new Plugin(dict);
@@ -519,7 +517,6 @@ public class PluginManager {
             LOG.log(Level.WARNING, msg, e);
             throw new PluginException(msg + ": " + e.getMessage());
         }
-        Library.builtInPlugin = SYSTEM_PLUGIN;
     }
 
     /**

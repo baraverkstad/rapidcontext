@@ -126,7 +126,6 @@ public class ProcedureReadProcedure implements Procedure {
         } else {
             res.set("type", "built-in");
         }
-        res.set("plugin", library.getProcedurePluginId(proc.getName()));
         res.set("description", proc.getDescription());
         res.set("bindings", getBindingsData(proc.getBindings()));
         return res;

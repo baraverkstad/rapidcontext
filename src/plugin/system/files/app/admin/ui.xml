@@ -332,12 +332,6 @@
                 </td>
               </tr>
               <tr>
-                <th class="label pr-2">Plug-In:</th>
-                <td>
-                  <Field name="plugin" />
-                </td>
-              </tr>
-              <tr>
                 <th class="label pr-2">Description:</th>
                 <td>
                   <Field name="description" class="text-pre-wrap"/>
