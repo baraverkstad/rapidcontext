@@ -15,10 +15,11 @@
 package org.rapidcontext.app.proc;
 
 import org.rapidcontext.core.data.Array;
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
-import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
+import org.rapidcontext.core.type.Procedure;
 
 /**
  * The built-in procedure call procedure.
@@ -26,57 +27,17 @@ import org.rapidcontext.core.proc.ProcedureException;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class ProcedureCallProcedure implements Procedure {
+public class ProcedureCallProcedure extends Procedure {
 
     /**
-     * The procedure name constant.
-     */
-    public static final String NAME = "System.Procedure.Call";
-
-    /**
-     * The default bindings.
-     */
-    private Bindings defaults = new Bindings();
-
-    /**
-     * Creates a new procedures read procedure.
+     * Creates a new procedure from a serialized representation.
      *
-     * @throws ProcedureException if the initialization failed
+     * @param id             the object identifier
+     * @param type           the object type name
+     * @param dict           the serialized representation
      */
-    public ProcedureCallProcedure() throws ProcedureException {
-        defaults.set("name", Bindings.ARGUMENT, "", "The procedure name");
-        defaults.set("arguments", Bindings.ARGUMENT, "", "The array of arguments");
-        defaults.seal();
-    }
-
-    /**
-     * Returns the procedure name.
-     *
-     * @return the procedure name
-     */
-    public String getName() {
-        return NAME;
-    }
-
-    /**
-     * Returns the procedure description.
-     *
-     * @return the procedure description
-     */
-    public String getDescription() {
-        return "Calls a named procedure with a list of arguments.";
-    }
-
-    /**
-     * Returns the bindings for this procedure. If this procedure
-     * requires any special data, adapter connection or input
-     * argument binding, those bindings should be set (but possibly
-     * to null or blank values).
-     *
-     * @return the bindings for this procedure
-     */
-    public Bindings getBindings() {
-        return defaults;
+    public ProcedureCallProcedure(String id, String type, Dict dict) {
+        super(id, type, dict);
     }
 
     /**

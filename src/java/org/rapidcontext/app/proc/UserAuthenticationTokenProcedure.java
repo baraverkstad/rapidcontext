@@ -15,10 +15,11 @@
 package org.rapidcontext.app.proc;
 
 import org.apache.commons.lang3.time.DateUtils;
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
-import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
+import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.core.type.User;
 
 /**
@@ -27,12 +28,7 @@ import org.rapidcontext.core.type.User;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class UserAuthenticationTokenProcedure implements Procedure {
-
-    /**
-     * The procedure name constant.
-     */
-    public static final String NAME = "System.User.AuthenticationToken";
+public class UserAuthenticationTokenProcedure extends Procedure {
 
     /**
      * The default authentication token duration.
@@ -40,51 +36,14 @@ public class UserAuthenticationTokenProcedure implements Procedure {
     public static final long DEFAULT_DURATION = 15 * DateUtils.MILLIS_PER_DAY;
 
     /**
-     * The default bindings.
-     */
-    private Bindings defaults = new Bindings();
-
-    /**
-     * Creates a new user authentication token creation procedure.
+     * Creates a new procedure from a serialized representation.
      *
-     * @throws ProcedureException if the initialization failed
+     * @param id             the object identifier
+     * @param type           the object type name
+     * @param dict           the serialized representation
      */
-    public UserAuthenticationTokenProcedure() throws ProcedureException {
-        defaults.set("user", Bindings.ARGUMENT, "",
-                     "The user id to create a token for");
-        defaults.set("duration", Bindings.ARGUMENT, "",
-                     "The token duration in milliseconds");
-        defaults.seal();
-    }
-
-    /**
-     * Returns the procedure name.
-     *
-     * @return the procedure name
-     */
-    public String getName() {
-        return NAME;
-    }
-
-    /**
-     * Returns the procedure description.
-     *
-     * @return the procedure description
-     */
-    public String getDescription() {
-        return "Creates a login authentication token for a user.";
-    }
-
-    /**
-     * Returns the bindings for this procedure. If this procedure
-     * requires any special data, adapter connection or input
-     * argument binding, those bindings should be set (but possibly
-     * to null or blank values).
-     *
-     * @return the bindings for this procedure
-     */
-    public Bindings getBindings() {
-        return defaults;
+    public UserAuthenticationTokenProcedure(String id, String type, Dict dict) {
+        super(id, type, dict);
     }
 
     /**

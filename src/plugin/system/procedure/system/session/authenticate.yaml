@@ -1,0 +1,19 @@
+id: system/session/authenticate
+type: procedure
+alias: System.Session.Authenticate
+className: org.rapidcontext.app.proc.SessionAuthenticateProcedure
+description: Authenticates a user with the current session.
+binding:
+  - name: user
+    type: argument
+    description: The unique user id
+  - name: nonce
+    type: argument
+    description: The challenge nonce used for the hash.
+  - name: hash
+    type: argument
+    description: >-
+        The hexadecimal MD5 hash that validates the password. First calculate
+        an MD5 hash from a string on the form '<userId>:<realm>:<password>'.
+        The final hash is then calculated as an MD5 hash of
+        '<first hash>:nonce'.

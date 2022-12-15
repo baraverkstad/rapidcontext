@@ -14,10 +14,11 @@
 
 package org.rapidcontext.app.proc;
 
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
-import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
+import org.rapidcontext.core.type.Procedure;
 
 /**
  * The built-in connection validate procedure.
@@ -25,57 +26,17 @@ import org.rapidcontext.core.proc.ProcedureException;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class ConnectionValidateProcedure implements Procedure {
+public class ConnectionValidateProcedure extends Procedure {
 
     /**
-     * The procedure name constant.
-     */
-    public static final String NAME = "System.Connection.Validate";
-
-    /**
-     * The default bindings.
-     */
-    private Bindings defaults = new Bindings();
-
-    /**
-     * Creates a new connection validate procedure.
+     * Creates a new procedure from a serialized representation.
      *
-     * @throws ProcedureException if the initialization failed
+     * @param id             the object identifier
+     * @param type           the object type name
+     * @param dict           the serialized representation
      */
-    public ConnectionValidateProcedure() throws ProcedureException {
-        defaults.set("connection", Bindings.ARGUMENT, "",
-                     "The connection identifier.");
-        defaults.seal();
-    }
-
-    /**
-     * Returns the procedure name.
-     *
-     * @return the procedure name
-     */
-    public String getName() {
-        return NAME;
-    }
-
-    /**
-     * Returns the procedure description.
-     *
-     * @return the procedure description
-     */
-    public String getDescription() {
-        return "Validates a connection by reserving a connection channel.";
-    }
-
-    /**
-     * Returns the bindings for this procedure. If this procedure
-     * requires any special data, adapter connection or input
-     * argument binding, those bindings should be set (but possibly
-     * to null or blank values).
-     *
-     * @return the bindings for this procedure
-     */
-    public Bindings getBindings() {
-        return defaults;
+    public ConnectionValidateProcedure(String id, String type, Dict dict) {
+        super(id, type, dict);
     }
 
     /**

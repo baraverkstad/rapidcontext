@@ -1,0 +1,20 @@
+id: system/storage/write
+type: procedure
+alias: System.Storage.Write
+className: org.rapidcontext.app.proc.StorageWriteProcedure
+description: Writes an object to storage.
+binding:
+  - name: path
+    type: argument
+    description: The object path
+  - name: data
+    type: argument
+    description: The data to write
+  - name: format
+    type: argument
+    description: "The data format, available values are:\n\
+        \u2022 binary \u2014 save as binary data (default)\n\
+        \u2022 properties \u2014 serialize to properties format\n\
+        \u2022 json \u2014 serialize to JSON format\n\
+        \u2022 xml \u2014 serialize to XML format\n\
+        \u2022 yaml \u2014 serialize to YAML format"

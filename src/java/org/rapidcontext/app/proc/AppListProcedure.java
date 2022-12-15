@@ -22,12 +22,12 @@ import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
-import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.RootStorage;
 import org.rapidcontext.core.storage.Storage;
+import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.util.RegexUtil;
 
 /**
@@ -36,7 +36,7 @@ import org.rapidcontext.util.RegexUtil;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class AppListProcedure implements Procedure {
+public class AppListProcedure extends Procedure {
 
     /**
      * The app object storage path.
@@ -44,50 +44,14 @@ public class AppListProcedure implements Procedure {
     public static final Path PATH_APP = Path.from("/app/");
 
     /**
-     * The procedure name constant.
-     */
-    public static final String NAME = "System.App.List";
-
-    /**
-     * The default bindings.
-     */
-    private Bindings defaults = new Bindings();
-
-    /**
-     * Creates a new app list procedure.
-     */
-    public AppListProcedure() {
-        this.defaults.seal();
-    }
-
-    /**
-     * Returns the procedure name.
+     * Creates a new procedure from a serialized representation.
      *
-     * @return the procedure name
+     * @param id             the object identifier
+     * @param type           the object type name
+     * @param dict           the serialized representation
      */
-    public String getName() {
-        return NAME;
-    }
-
-    /**
-     * Returns the procedure description.
-     *
-     * @return the procedure description
-     */
-    public String getDescription() {
-        return "List all available apps.";
-    }
-
-    /**
-     * Returns the bindings for this procedure. If this procedure
-     * requires any special data, adapter connection or input
-     * argument binding, those bindings should be set (but possibly
-     * to null or blank values).
-     *
-     * @return the bindings for this procedure
-     */
-    public Bindings getBindings() {
-        return defaults;
+    public AppListProcedure(String id, String type, Dict dict) {
+        super(id, type, dict);
     }
 
     /**

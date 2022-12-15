@@ -16,3 +16,5 @@ access:
     permission: read
   - path: procedure/System.*
     permission: read
+  - path: procedure/system/**
+    permission: read

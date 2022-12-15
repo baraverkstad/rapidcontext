@@ -23,13 +23,14 @@ import java.util.logging.Logger;
 import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.data.Binary;
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
-import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.Storage;
+import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.util.FileUtil;
 
 /**
@@ -38,7 +39,7 @@ import org.rapidcontext.util.FileUtil;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class StorageCopyProcedure implements Procedure {
+public class StorageCopyProcedure extends Procedure {
 
     /**
      * The class logger.
@@ -47,62 +48,14 @@ public class StorageCopyProcedure implements Procedure {
         Logger.getLogger(StorageCopyProcedure.class.getName());
 
     /**
-     * The procedure name constant.
-     */
-    public static final String NAME = "System.Storage.Copy";
-
-    /**
-     * The default bindings.
-     */
-    private Bindings defaults = new Bindings();
-
-    /**
-     * Creates a new storage copy procedure.
+     * Creates a new procedure from a serialized representation.
      *
-     * @throws ProcedureException if the initialization failed
+     * @param id             the object identifier
+     * @param type           the object type name
+     * @param dict           the serialized representation
      */
-    public StorageCopyProcedure() throws ProcedureException {
-        defaults.set("src", Bindings.ARGUMENT, "", "The source object path");
-        defaults.set("dst", Bindings.ARGUMENT, "", "The destination object path");
-        defaults.set("flags", Bindings.ARGUMENT, "",
-            "The optional flags, available values are:\n" +
-            "\u2022 recursive \u2014 copy indexes recursively\n" +
-            "\u2022 update \u2014 copy only if the source is newer\n" +
-            "\u2022 properties \u2014 serialize to properties format\n" +
-            "\u2022 json \u2014 serialize to JSON format\n" +
-            "\u2022 xml \u2014 serialize to XML format\n" +
-            "\u2022 yaml \u2014 serialize to YAML format");
-        defaults.seal();
-    }
-
-    /**
-     * Returns the procedure name.
-     *
-     * @return the procedure name
-     */
-    public String getName() {
-        return NAME;
-    }
-
-    /**
-     * Returns the procedure description.
-     *
-     * @return the procedure description
-     */
-    public String getDescription() {
-        return "Copies an object from one storage path to another.";
-    }
-
-    /**
-     * Returns the bindings for this procedure. If this procedure
-     * requires any special data, adapter connection or input
-     * argument binding, those bindings should be set (but possibly
-     * to null or blank values).
-     *
-     * @return the bindings for this procedure
-     */
-    public Bindings getBindings() {
-        return defaults;
+    public StorageCopyProcedure(String id, String type, Dict dict) {
+        super(id, type, dict);
     }
 
     /**

@@ -16,10 +16,11 @@ package org.rapidcontext.app.proc;
 
 import java.util.logging.Logger;
 
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
-import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
+import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.core.type.Session;
 
 /**
@@ -30,7 +31,7 @@ import org.rapidcontext.core.type.Session;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class SessionTerminateProcedure implements Procedure {
+public class SessionTerminateProcedure extends Procedure {
 
     /**
      * The class logger.
@@ -39,54 +40,14 @@ public class SessionTerminateProcedure implements Procedure {
         Logger.getLogger(SessionTerminateProcedure.class.getName());
 
     /**
-     * The procedure name constant.
-     */
-    public static final String NAME = "System.Session.Terminate";
-
-    /**
-     * The default bindings.
-     */
-    private Bindings defaults = new Bindings();
-
-    /**
-     * Creates a new session termination procedure.
+     * Creates a new procedure from a serialized representation.
      *
-     * @throws ProcedureException if the initialization failed
+     * @param id             the object identifier
+     * @param type           the object type name
+     * @param dict           the serialized representation
      */
-    public SessionTerminateProcedure() throws ProcedureException {
-        defaults.set("sessionId", Bindings.ARGUMENT, "",
-                     "The unique session id, use null or blank for current session");
-        defaults.seal();
-    }
-
-    /**
-     * Returns the procedure name.
-     *
-     * @return the procedure name
-     */
-    public String getName() {
-        return NAME;
-    }
-
-    /**
-     * Returns the procedure description.
-     *
-     * @return the procedure description
-     */
-    public String getDescription() {
-        return "Terminates the user session specified.";
-    }
-
-    /**
-     * Returns the bindings for this procedure. If this procedure
-     * requires any special data, adapter connection or input
-     * argument binding, those bindings should be set (but possibly
-     * to null or blank values).
-     *
-     * @return the bindings for this procedure
-     */
-    public Bindings getBindings() {
-        return defaults;
+    public SessionTerminateProcedure(String id, String type, Dict dict) {
+        super(id, type, dict);
     }
 
     /**

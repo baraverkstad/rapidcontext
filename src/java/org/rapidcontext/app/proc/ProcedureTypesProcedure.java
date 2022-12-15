@@ -18,8 +18,8 @@ import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Library;
-import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
+import org.rapidcontext.core.type.Procedure;
 
 /**
  * The built-in procedure type list procedure.
@@ -27,54 +27,18 @@ import org.rapidcontext.core.proc.ProcedureException;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class ProcedureTypesProcedure implements Procedure {
+public class ProcedureTypesProcedure extends Procedure {
     // TODO: Remove this procedure when procedures are proper types
 
     /**
-     * The procedure name constant.
-     */
-    public static final String NAME = "System.Procedure.Types";
-
-    /**
-     * The default bindings.
-     */
-    private Bindings defaults = new Bindings();
-
-    /**
-     * Creates a new procedure type list procedure.
-     */
-    public ProcedureTypesProcedure() {
-        defaults.seal();
-    }
-
-    /**
-     * Returns the procedure name.
+     * Creates a new procedure from a serialized representation.
      *
-     * @return the procedure name
+     * @param id             the object identifier
+     * @param type           the object type name
+     * @param dict           the serialized representation
      */
-    public String getName() {
-        return NAME;
-    }
-
-    /**
-     * Returns the procedure description.
-     *
-     * @return the procedure description
-     */
-    public String getDescription() {
-        return "Lists all available procedure types.";
-    }
-
-    /**
-     * Returns the bindings for this procedure. If this procedure
-     * requires any special data, adapter connection or input
-     * argument binding, those bindings should be set (but possibly
-     * to null or blank values).
-     *
-     * @return the bindings for this procedure
-     */
-    public Bindings getBindings() {
-        return defaults;
+    public ProcedureTypesProcedure(String id, String type, Dict dict) {
+        super(id, type, dict);
     }
 
     /**

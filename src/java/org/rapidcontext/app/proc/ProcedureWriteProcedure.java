@@ -19,8 +19,8 @@ import java.util.logging.Logger;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
-import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
+import org.rapidcontext.core.type.Procedure;
 
 /**
  * The built-in procedure write procedure.
@@ -28,7 +28,7 @@ import org.rapidcontext.core.proc.ProcedureException;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class ProcedureWriteProcedure implements Procedure {
+public class ProcedureWriteProcedure extends Procedure {
 
     /**
      * The class logger.
@@ -37,58 +37,14 @@ public class ProcedureWriteProcedure implements Procedure {
         Logger.getLogger(ProcedureWriteProcedure.class.getName());
 
     /**
-     * The procedure name constant.
-     */
-    public static final String NAME = "System.Procedure.Write";
-
-    /**
-     * The default bindings.
-     */
-    private Bindings defaults = new Bindings();
-
-    /**
-     * Creates a new procedure write procedure.
+     * Creates a new procedure from a serialized representation.
      *
-     * @throws ProcedureException if the initialization failed
+     * @param id             the object identifier
+     * @param type           the object type name
+     * @param dict           the serialized representation
      */
-    public ProcedureWriteProcedure() throws ProcedureException {
-        defaults.set("name", Bindings.ARGUMENT, "", "The procedure name");
-        defaults.set("type", Bindings.ARGUMENT, "", "The procedure type name");
-        defaults.set("description", Bindings.ARGUMENT, "", "The procedure description");
-        defaults.set("bindings", Bindings.ARGUMENT, "", "The array of procedure bindings");
-        defaults.seal();
-    }
-
-    /**
-     * Returns the procedure name.
-     *
-     * @return the procedure name
-     */
-    public String getName() {
-        return NAME;
-    }
-
-    /**
-     * Returns the procedure description.
-     *
-     * @return the procedure description
-     */
-    public String getDescription() {
-        return "Creates or overwrites a procedure by creating a new one in " +
-               "the local plug-in. Other versions of the procedure may " +
-               "still exist in other plug-ins, but will be hidden.";
-    }
-
-    /**
-     * Returns the bindings for this procedure. If this procedure
-     * requires any special data, adapter connection or input
-     * argument binding, those bindings should be set (but possibly
-     * to null or blank values).
-     *
-     * @return the bindings for this procedure
-     */
-    public Bindings getBindings() {
-        return defaults;
+    public ProcedureWriteProcedure(String id, String type, Dict dict) {
+        super(id, type, dict);
     }
 
     /**
@@ -121,7 +77,7 @@ public class ProcedureWriteProcedure implements Procedure {
         dict.set("type", bindings.getValue("type"));
         dict.set("description", bindings.getValue("description", ""));
         dict.set("binding", bindings.getValue("bindings"));
-        Procedure proc = cx.getLibrary().storeProcedure(dict);
+        org.rapidcontext.core.proc.Procedure proc = cx.getLibrary().storeProcedure(dict);
         return ProcedureReadProcedure.getProcedureData(cx.getLibrary(), proc);
     }
 }

@@ -15,10 +15,11 @@
 package org.rapidcontext.app.proc;
 
 import org.apache.commons.lang3.StringUtils;
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
-import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
+import org.rapidcontext.core.type.Procedure;
 
 /**
  * The built-in procedure trace procedure.
@@ -26,59 +27,17 @@ import org.rapidcontext.core.proc.ProcedureException;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class ProcedureTraceProcedure implements Procedure {
+public class ProcedureTraceProcedure extends Procedure {
 
     /**
-     * The procedure name constant.
-     */
-    public static final String NAME = "System.Procedure.Trace";
-
-    /**
-     * The default bindings.
-     */
-    private Bindings defaults = new Bindings();
-
-    /**
-     * Creates a new procedure write procedure.
+     * Creates a new procedure from a serialized representation.
      *
-     * @throws ProcedureException if the initialization failed
+     * @param id             the object identifier
+     * @param type           the object type name
+     * @param dict           the serialized representation
      */
-    public ProcedureTraceProcedure() throws ProcedureException {
-        defaults.set("name", Bindings.ARGUMENT, "", "The procedure name");
-        defaults.set("tracing", Bindings.ARGUMENT, "", "The enable/disable tracing flag");
-        defaults.seal();
-    }
-
-    /**
-     * Returns the procedure name.
-     *
-     * @return the procedure name
-     */
-    public String getName() {
-        return NAME;
-    }
-
-    /**
-     * Returns the procedure description.
-     *
-     * @return the procedure description
-     */
-    public String getDescription() {
-        return "Sets the procedure call tracing flag for subsequent calls. " +
-               "This is an in-memory flag only and will be reset on restarts " +
-               "or similar. Requires write access to the procedure.";
-    }
-
-    /**
-     * Returns the bindings for this procedure. If this procedure
-     * requires any special data, adapter connection or input
-     * argument binding, those bindings should be set (but possibly
-     * to null or blank values).
-     *
-     * @return the bindings for this procedure
-     */
-    public Bindings getBindings() {
-        return defaults;
+    public ProcedureTraceProcedure(String id, String type, Dict dict) {
+        super(id, type, dict);
     }
 
     /**

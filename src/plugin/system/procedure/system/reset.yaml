@@ -1,0 +1,5 @@
+id: system/reset
+type: procedure
+alias: System.Reset
+className: org.rapidcontext.app.proc.ResetProcedure
+description: Resets all connections and reloads the configuration.

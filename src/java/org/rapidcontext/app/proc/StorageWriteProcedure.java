@@ -25,10 +25,10 @@ import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
-import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.Storage;
+import org.rapidcontext.core.type.Procedure;
 
 /**
  * The built-in storage write procedure.
@@ -36,7 +36,7 @@ import org.rapidcontext.core.storage.Storage;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class StorageWriteProcedure implements Procedure {
+public class StorageWriteProcedure extends Procedure {
 
     /**
      * The class logger.
@@ -45,61 +45,14 @@ public class StorageWriteProcedure implements Procedure {
         Logger.getLogger(StorageWriteProcedure.class.getName());
 
     /**
-     * The procedure name constant.
-     */
-    public static final String NAME = "System.Storage.Write";
-
-    /**
-     * The default bindings.
-     */
-    private Bindings defaults = new Bindings();
-
-    /**
-     * Creates a new storage write procedure.
+     * Creates a new procedure from a serialized representation.
      *
-     * @throws ProcedureException if the initialization failed
+     * @param id             the object identifier
+     * @param type           the object type name
+     * @param dict           the serialized representation
      */
-    public StorageWriteProcedure() throws ProcedureException {
-        defaults.set("path", Bindings.ARGUMENT, "", "The object path");
-        defaults.set("data", Bindings.ARGUMENT, "", "The data to write");
-        defaults.set("format", Bindings.ARGUMENT, "",
-            "The data format, available values are:\n" +
-            "  binary -- save as binary data (default)\n" +
-            "  properties -- serialize to properties format\n" +
-            "  json -- serialize to JSON format\n" +
-            "  xml -- serialize to XML format\n" +
-            "  yaml -- serialize to YAML format");
-        defaults.seal();
-    }
-
-    /**
-     * Returns the procedure name.
-     *
-     * @return the procedure name
-     */
-    public String getName() {
-        return NAME;
-    }
-
-    /**
-     * Returns the procedure description.
-     *
-     * @return the procedure description
-     */
-    public String getDescription() {
-        return "Writes an object to storage.";
-    }
-
-    /**
-     * Returns the bindings for this procedure. If this procedure
-     * requires any special data, adapter connection or input
-     * argument binding, those bindings should be set (but possibly
-     * to null or blank values).
-     *
-     * @return the bindings for this procedure
-     */
-    public Bindings getBindings() {
-        return defaults;
+    public StorageWriteProcedure(String id, String type, Dict dict) {
+        super(id, type, dict);
     }
 
     /**

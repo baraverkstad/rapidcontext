@@ -22,12 +22,12 @@ import org.rapidcontext.core.proc.AddOnProcedure;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Library;
-import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.core.storage.Storage;
+import org.rapidcontext.core.type.Procedure;
 
 /**
  * The built-in procedure read procedure.
@@ -35,56 +35,17 @@ import org.rapidcontext.core.storage.Storage;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class ProcedureReadProcedure implements Procedure {
+public class ProcedureReadProcedure extends Procedure {
 
     /**
-     * The procedure name constant.
-     */
-    public static final String NAME = "System.Procedure.Read";
-
-    /**
-     * The default bindings.
-     */
-    private Bindings defaults = new Bindings();
-
-    /**
-     * Creates a new procedures read procedure.
+     * Creates a new procedure from a serialized representation.
      *
-     * @throws ProcedureException if the initialization failed
+     * @param id             the object identifier
+     * @param type           the object type name
+     * @param dict           the serialized representation
      */
-    public ProcedureReadProcedure() throws ProcedureException {
-        defaults.set("name", Bindings.ARGUMENT, "", "The procedure name");
-        defaults.seal();
-    }
-
-    /**
-     * Returns the procedure name.
-     *
-     * @return the procedure name
-     */
-    public String getName() {
-        return NAME;
-    }
-
-    /**
-     * Returns the procedure description.
-     *
-     * @return the procedure description
-     */
-    public String getDescription() {
-        return "Returns detailed information about a procedure.";
-    }
-
-    /**
-     * Returns the bindings for this procedure. If this procedure
-     * requires any special data, adapter connection or input
-     * argument binding, those bindings should be set (but possibly
-     * to null or blank values).
-     *
-     * @return the bindings for this procedure
-     */
-    public Bindings getBindings() {
-        return defaults;
+    public ProcedureReadProcedure(String id, String type, Dict dict) {
+        super(id, type, dict);
     }
 
     /**
@@ -108,7 +69,7 @@ public class ProcedureReadProcedure implements Procedure {
 
         String name = (String) bindings.getValue("name");
         CallContext.checkAccess("procedure/" + name, cx.readPermission(1));
-        Procedure proc = cx.getLibrary().getProcedure(name);
+        org.rapidcontext.core.proc.Procedure proc = cx.getLibrary().getProcedure(name);
         return getProcedureData(cx.getLibrary(), proc);
     }
 
@@ -123,7 +84,7 @@ public class ProcedureReadProcedure implements Procedure {
      * @throws ProcedureException if the bindings data access
      *             failed
      */
-    static Dict getProcedureData(Library library, Procedure proc)
+    static Dict getProcedureData(Library library, org.rapidcontext.core.proc.Procedure proc)
     throws ProcedureException {
         Storage storage = ApplicationContext.getInstance().getStorage();
         Path storagePath = PluginManager.storagePath(PluginManager.LOCAL_PLUGIN);

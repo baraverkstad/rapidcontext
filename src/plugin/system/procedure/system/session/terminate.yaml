@@ -1,0 +1,9 @@
+id: system/session/terminate
+type: procedure
+alias: System.Session.Terminate
+className: org.rapidcontext.app.proc.SessionTerminateProcedure
+description: Terminates the user session specified.
+binding:
+  - name: sessionId
+    type: argument
+    description: The unique session id, use null or blank for current session

@@ -1,0 +1,11 @@
+id: system/procedure/delete
+type: procedure
+alias: System.Procedure.Delete
+className: org.rapidcontext.app.proc.ProcedureDeleteProcedure
+description: >-
+    Deletes a procedure from the local plug-in. If the procedure exists in
+    another plug-in, that version will be kept intact.
+binding:
+  - name: name
+    type: argument
+    description: The procedure name

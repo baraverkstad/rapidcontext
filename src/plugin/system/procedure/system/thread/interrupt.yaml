@@ -1,0 +1,9 @@
+id: system/thread/interrupt
+type: procedure
+alias: System.Thread.Interrupt
+className: org.rapidcontext.app.proc.ThreadInterruptProcedure
+description: Interrupts the specified (running) thread.
+binding:
+  - name: threadId
+    type: argument
+    description: The thread id

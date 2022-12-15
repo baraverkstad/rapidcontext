@@ -16,11 +16,12 @@ package org.rapidcontext.app.proc;
 
 import java.util.logging.Logger;
 
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
-import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.SecurityContext;
+import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.core.type.User;
 
 /**
@@ -29,7 +30,7 @@ import org.rapidcontext.core.type.User;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class UserPasswordChangeProcedure implements Procedure {
+public class UserPasswordChangeProcedure extends Procedure {
 
     /**
      * The class logger.
@@ -38,60 +39,14 @@ public class UserPasswordChangeProcedure implements Procedure {
         Logger.getLogger(UserPasswordChangeProcedure.class.getName());
 
     /**
-     * The procedure name constant.
-     */
-    public static final String NAME = "System.User.ChangePassword";
-
-    /**
-     * The default bindings.
-     */
-    private Bindings defaults = new Bindings();
-
-    /**
-     * Creates a new user password modification procedure.
+     * Creates a new procedure from a serialized representation.
      *
-     * @throws ProcedureException if the initialization failed
+     * @param id             the object identifier
+     * @param type           the object type name
+     * @param dict           the serialized representation
      */
-    public UserPasswordChangeProcedure() throws ProcedureException {
-        defaults.set("oldHash", Bindings.ARGUMENT, "",
-                     "The hexadecimal MD5 hash of the current password. The " +
-                     "MD5 hash is calculated from a string on the form " +
-                     "'<userId>:<realm>:<password>'. A login token may be used.");
-        defaults.set("newHash", Bindings.ARGUMENT, "",
-                     "The hexadecimal MD5 hash of the new password. The MD5 " +
-                     "hash is calculated from a string on the form " +
-                     "'<userId>:<realm>:<password>'.");
-        defaults.seal();
-    }
-
-    /**
-     * Returns the procedure name.
-     *
-     * @return the procedure name
-     */
-    public String getName() {
-        return NAME;
-    }
-
-    /**
-     * Returns the procedure description.
-     *
-     * @return the procedure description
-     */
-    public String getDescription() {
-        return "Changes the password for the current user.";
-    }
-
-    /**
-     * Returns the bindings for this procedure. If this procedure
-     * requires any special data, adapter connection or input
-     * argument binding, those bindings should be set (but possibly
-     * to null or blank values).
-     *
-     * @return the bindings for this procedure
-     */
-    public Bindings getBindings() {
-        return defaults;
+    public UserPasswordChangeProcedure(String id, String type, Dict dict) {
+        super(id, type, dict);
     }
 
     /**

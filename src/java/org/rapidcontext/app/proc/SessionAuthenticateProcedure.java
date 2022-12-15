@@ -17,9 +17,9 @@ package org.rapidcontext.app.proc;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.SecurityContext;
+import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.core.type.Session;
 
 /**
@@ -28,64 +28,17 @@ import org.rapidcontext.core.type.Session;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class SessionAuthenticateProcedure implements Procedure {
+public class SessionAuthenticateProcedure extends Procedure {
 
     /**
-     * The procedure name constant.
-     */
-    public static final String NAME = "System.Session.Authenticate";
-
-    /**
-     * The default bindings.
-     */
-    private Bindings defaults = new Bindings();
-
-    /**
-     * Creates a new session authentication procedure.
+     * Creates a new procedure from a serialized representation.
      *
-     * @throws ProcedureException if the initialization failed
+     * @param id             the object identifier
+     * @param type           the object type name
+     * @param dict           the serialized representation
      */
-    public SessionAuthenticateProcedure() throws ProcedureException {
-        defaults.set("user", Bindings.ARGUMENT, "",
-                     "The unique user id");
-        defaults.set("nonce", Bindings.ARGUMENT, "",
-                     "The challenge nonce used for the hash.");
-        defaults.set("hash", Bindings.ARGUMENT, "",
-                     "The hexadecimal MD5 hash that validates the password. " +
-                     "First calculate an MD5 hash from a string on the form " +
-                     "'<userId>:<realm>:<password>'. The final hash is then " +
-                     "calculated as an MD5 hash of '<first hash>:nonce'.");
-        defaults.seal();
-    }
-
-    /**
-     * Returns the procedure name.
-     *
-     * @return the procedure name
-     */
-    public String getName() {
-        return NAME;
-    }
-
-    /**
-     * Returns the procedure description.
-     *
-     * @return the procedure description
-     */
-    public String getDescription() {
-        return "Authenticates a user with the current session.";
-    }
-
-    /**
-     * Returns the bindings for this procedure. If this procedure
-     * requires any special data, adapter connection or input
-     * argument binding, those bindings should be set (but possibly
-     * to null or blank values).
-     *
-     * @return the bindings for this procedure
-     */
-    public Bindings getBindings() {
-        return defaults;
+    public SessionAuthenticateProcedure(String id, String type, Dict dict) {
+        super(id, type, dict);
     }
 
     /**

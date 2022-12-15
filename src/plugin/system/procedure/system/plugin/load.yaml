@@ -1,0 +1,9 @@
+id: system/plugin/load
+type: procedure
+alias: System.PlugIn.Load
+className: org.rapidcontext.app.proc.PluginLoadProcedure
+description: Loads a plug-in and adds it to the local startup config.
+binding:
+  - name: pluginId
+    type: argument
+    description: The plug-in identifier

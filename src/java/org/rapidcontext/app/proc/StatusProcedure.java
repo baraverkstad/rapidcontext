@@ -21,9 +21,9 @@ import org.rapidcontext.app.plugin.PluginManager;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
-import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.type.Environment;
+import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.core.type.User;
 
 /**
@@ -32,53 +32,17 @@ import org.rapidcontext.core.type.User;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class StatusProcedure implements Procedure {
+public class StatusProcedure extends Procedure {
 
     /**
-     * The procedure name constant.
-     */
-    public static final String NAME = "System.Status";
-
-    /**
-     * The default bindings.
-     */
-    private Bindings defaults = new Bindings();
-
-    /**
-     * Creates a new status information procedure.
-     */
-    public StatusProcedure() {
-        this.defaults.seal();
-    }
-
-    /**
-     * Returns the procedure name.
+     * Creates a new procedure from a serialized representation.
      *
-     * @return the procedure name
+     * @param id             the object identifier
+     * @param type           the object type name
+     * @param dict           the serialized representation
      */
-    public String getName() {
-        return NAME;
-    }
-
-    /**
-     * Returns the procedure description.
-     *
-     * @return the procedure description
-     */
-    public String getDescription() {
-        return "Returns information about the current status.";
-    }
-
-    /**
-     * Returns the bindings for this procedure. If this procedure
-     * requires any special data, adapter connection or input
-     * argument binding, those bindings should be set (but possibly
-     * to null or blank values).
-     *
-     * @return the bindings for this procedure
-     */
-    public Bindings getBindings() {
-        return defaults;
+    public StatusProcedure(String id, String type, Dict dict) {
+        super(id, type, dict);
     }
 
     /**
@@ -100,19 +64,29 @@ public class StatusProcedure implements Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
+        return getStatusData();
+    }
+
+    /**
+     * Returns a data object for the current server status.
+     *
+     * @return the status data object
+     */
+    public static Dict getStatusData() {
         ApplicationContext ctx = ApplicationContext.getInstance();
-        Dict res = (Dict) cx.getStorage().load(PluginManager.PATH_INFO);
+        Dict res = (Dict) ctx.getStorage().load(PluginManager.PATH_INFO);
         if (res == null) {
             return null;
         }
         res.set("guid", ctx.getConfig().get("guid"));
-        res.set("environment", getEnvironmentData(cx.getEnvironment()));
+        res.set("environment", getEnvironmentData(ctx.getEnvironment()));
         // TODO: Allow multiple security realms (depending on web site)
         res.set("realm", User.DEFAULT_REALM);
         res.set("initTime", ApplicationContext.INIT_TIME);
         res.set("startTime", ApplicationContext.START_TIME);
         res.set("currentTime", new Date());
         return res;
+
     }
 
     /**
@@ -122,7 +96,7 @@ public class StatusProcedure implements Procedure {
      *
      * @return the corresponding data object
      */
-    private Dict getEnvironmentData(Environment env) {
+    private static Dict getEnvironmentData(Environment env) {
         if (env != null) {
             Dict res = new Dict();
             res.set("name", env.id());

@@ -1,0 +1,5 @@
+id: system/app/list
+type: procedure
+alias: System.App.List
+className: org.rapidcontext.app.proc.AppListProcedure
+description: List all available apps.

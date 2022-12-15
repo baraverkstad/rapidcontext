@@ -1,0 +1,9 @@
+id: system/session/authenticatetoken
+type: procedure
+alias: System.Session.AuthenticateToken
+className: org.rapidcontext.app.proc.SessionAuthenticateTokenProcedure
+description: Authenticates a user (via a token) with the current session.
+binding:
+  - name: token
+    type: argument
+    description: The authentication token

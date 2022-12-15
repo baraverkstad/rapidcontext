@@ -1,0 +1,9 @@
+id: system/storage/read
+type: procedure
+alias: System.Storage.Read
+className: org.rapidcontext.app.proc.StorageReadProcedure
+description: Reads an object from storage.
+binding:
+  - name: path
+    type: argument
+    description: The object path to read

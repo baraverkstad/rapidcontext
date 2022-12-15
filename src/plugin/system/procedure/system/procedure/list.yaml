@@ -1,0 +1,5 @@
+id: system/procedure/list
+type: procedure
+alias: System.Procedure.List
+className: org.rapidcontext.app.proc.ProcedureListProcedure
+description: List all available procedures.

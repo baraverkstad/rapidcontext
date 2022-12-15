@@ -1,0 +1,5 @@
+id: system/connection/list
+type: procedure
+alias: System.Connection.List
+className: org.rapidcontext.app.proc.ConnectionListProcedure
+description: Returns all available connections and their parameters

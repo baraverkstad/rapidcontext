@@ -1,0 +1,5 @@
+id: system/thread/list
+type: procedure
+alias: System.Thread.List
+className: org.rapidcontext.app.proc.ThreadListProcedure
+description: Returns a list of all currently running threads.

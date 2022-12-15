@@ -1,0 +1,5 @@
+id: system/status
+type: procedure
+alias: System.Status
+className: org.rapidcontext.app.proc.StatusProcedure
+description: Returns information about the current status.

@@ -1,0 +1,9 @@
+id: system/connection/validate
+type: procedure
+alias: System.Connection.Validate
+className: org.rapidcontext.app.proc.ConnectionValidateProcedure
+description: Validates a connection by reserving a connection channel.
+binding:
+  - name: connection
+    type: argument
+    description: The connection identifier.

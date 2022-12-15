@@ -26,44 +26,6 @@ import java.util.logging.Logger;
 import org.apache.commons.lang3.time.DateUtils;
 import org.rapidcontext.app.plugin.PluginException;
 import org.rapidcontext.app.plugin.PluginManager;
-import org.rapidcontext.app.proc.AppListProcedure;
-import org.rapidcontext.app.proc.ConnectionListProcedure;
-import org.rapidcontext.app.proc.ConnectionValidateProcedure;
-import org.rapidcontext.app.proc.PluginInstallProcedure;
-import org.rapidcontext.app.proc.PluginListProcedure;
-import org.rapidcontext.app.proc.PluginLoadProcedure;
-import org.rapidcontext.app.proc.PluginUnloadProcedure;
-import org.rapidcontext.app.proc.ProcedureCallProcedure;
-import org.rapidcontext.app.proc.ProcedureDeleteProcedure;
-import org.rapidcontext.app.proc.ProcedureListProcedure;
-import org.rapidcontext.app.proc.ProcedureReadProcedure;
-import org.rapidcontext.app.proc.ProcedureTraceProcedure;
-import org.rapidcontext.app.proc.ProcedureTypesProcedure;
-import org.rapidcontext.app.proc.ProcedureWriteProcedure;
-import org.rapidcontext.app.proc.ResetProcedure;
-import org.rapidcontext.app.proc.SessionAuthenticateProcedure;
-import org.rapidcontext.app.proc.SessionAuthenticateTokenProcedure;
-import org.rapidcontext.app.proc.SessionCurrentProcedure;
-import org.rapidcontext.app.proc.SessionTerminateProcedure;
-import org.rapidcontext.app.proc.StatusProcedure;
-import org.rapidcontext.app.proc.StorageCopyProcedure;
-import org.rapidcontext.app.proc.StorageDeleteProcedure;
-import org.rapidcontext.app.proc.StorageListProcedure;
-import org.rapidcontext.app.proc.StorageQueryProcedure;
-import org.rapidcontext.app.proc.StorageReadProcedure;
-import org.rapidcontext.app.proc.StorageWriteProcedure;
-import org.rapidcontext.app.proc.ThreadContextProcedure;
-import org.rapidcontext.app.proc.ThreadCreateProcedure;
-import org.rapidcontext.app.proc.ThreadInterruptProcedure;
-import org.rapidcontext.app.proc.ThreadListProcedure;
-import org.rapidcontext.app.proc.TypeListProcedure;
-import org.rapidcontext.app.proc.UserAuthenticationTokenProcedure;
-import org.rapidcontext.app.proc.UserChangeProcedure;
-import org.rapidcontext.app.proc.UserAccessProcedure;
-import org.rapidcontext.app.proc.UserListProcedure;
-import org.rapidcontext.app.proc.UserPasswordChangeProcedure;
-import org.rapidcontext.app.proc.UserSearchProcedure;
-import org.rapidcontext.app.proc.UserSettingsProcedure;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.js.JsCompileInterceptor;
@@ -298,51 +260,8 @@ public class ApplicationContext {
         library.setInterceptor(new JsCompileInterceptor(i));
 
         // Add default built-in procedures
-        // TODO: built-in procedures should be initialized on first call
+        // TODO: should be initialized on first call instead
         library.reloadBuiltIns();
-        try {
-            library.addBuiltIn(new AppListProcedure());
-            library.addBuiltIn(new ConnectionListProcedure());
-            library.addBuiltIn(new ConnectionValidateProcedure());
-            library.addBuiltIn(new PluginInstallProcedure());
-            library.addBuiltIn(new PluginListProcedure());
-            library.addBuiltIn(new PluginLoadProcedure());
-            library.addBuiltIn(new PluginUnloadProcedure());
-            library.addBuiltIn(new ProcedureCallProcedure());
-            library.addBuiltIn(new ProcedureListProcedure());
-            library.addBuiltIn(new ProcedureReadProcedure());
-            library.addBuiltIn(new ProcedureTraceProcedure());
-            library.addBuiltIn(new ProcedureTypesProcedure());
-            library.addBuiltIn(new ProcedureWriteProcedure());
-            library.addBuiltIn(new ProcedureDeleteProcedure());
-            library.addBuiltIn(new ResetProcedure());
-            library.addBuiltIn(new SessionAuthenticateProcedure());
-            library.addBuiltIn(new SessionAuthenticateTokenProcedure());
-            library.addBuiltIn(new SessionCurrentProcedure());
-            library.addBuiltIn(new SessionTerminateProcedure());
-            library.addBuiltIn(new StatusProcedure());
-            library.addBuiltIn(new StorageCopyProcedure());
-            library.addBuiltIn(new StorageDeleteProcedure());
-            library.addBuiltIn(new StorageListProcedure());
-            library.addBuiltIn(new StorageReadProcedure());
-            library.addBuiltIn(new StorageQueryProcedure());
-            library.addBuiltIn(new StorageWriteProcedure());
-            library.addBuiltIn(new ThreadContextProcedure());
-            library.addBuiltIn(new ThreadCreateProcedure());
-            library.addBuiltIn(new ThreadInterruptProcedure());
-            library.addBuiltIn(new ThreadListProcedure());
-            library.addBuiltIn(new TypeListProcedure());
-            library.addBuiltIn(new UserAccessProcedure());
-            library.addBuiltIn(new UserAuthenticationTokenProcedure());
-            library.addBuiltIn(new UserChangeProcedure());
-            library.addBuiltIn(new UserListProcedure());
-            library.addBuiltIn(new UserPasswordChangeProcedure());
-            library.addBuiltIn(new UserSearchProcedure());
-            library.addBuiltIn(new UserSettingsProcedure());
-        } catch (ProcedureException e) {
-            LOG.severe("failed to create built-in procedures: " +
-                       e.getMessage());
-        }
     }
 
     /**

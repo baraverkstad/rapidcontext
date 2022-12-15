@@ -1,0 +1,9 @@
+id: system/procedure/read
+type: procedure
+alias: System.Procedure.Read
+className: org.rapidcontext.app.proc.ProcedureReadProcedure
+description: Returns detailed information about a procedure.
+binding:
+  - name: name
+    type: argument
+    description: The procedure name

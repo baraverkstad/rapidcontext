@@ -1,0 +1,27 @@
+id: system/user/change
+type: procedure
+alias: System.User.Change
+className: org.rapidcontext.app.proc.UserChangeProcedure
+description: Creates or updates a user.
+binding:
+  - name: id
+    type: argument
+    description: The unique user id
+  - name: name
+    type: argument
+    description: The user real name
+  - name: email
+    type: argument
+    description: The user email address
+  - name: description
+    type: argument
+    description: The user description
+  - name: enabled
+    type: argument
+    description: The enabled flag (0 or 1)
+  - name: password
+    type: argument
+    description: The new password, or blank for unchanged
+  - name: roles
+    type: argument
+    description: The list of roles (separated by spaces)

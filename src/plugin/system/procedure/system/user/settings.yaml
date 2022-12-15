@@ -1,0 +1,14 @@
+id: system/user/settings
+type: procedure
+alias: System.User.Settings
+className: org.rapidcontext.app.proc.UserSettingsProcedure
+description: Updates settings data for a user.
+binding:
+  - name: userId
+    type: argument
+    description: The unique user id, or null for current user
+  - name: settings
+    type: argument
+    description: >-
+        The dictionary of settings keys to modify, use null values to remove
+        existing keys

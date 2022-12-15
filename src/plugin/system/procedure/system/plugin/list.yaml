@@ -1,0 +1,5 @@
+id: system/plugin/list
+type: procedure
+alias: System.PlugIn.List
+className: org.rapidcontext.app.proc.PluginListProcedure
+description: Lists all available plug-ins.

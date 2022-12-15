@@ -1,0 +1,12 @@
+id: system/procedure/call
+type: procedure
+alias: System.Procedure.Call
+className: org.rapidcontext.app.proc.ProcedureCallProcedure
+description: Calls a named procedure with a list of arguments.
+binding:
+  - name: name
+    type: argument
+    description: The procedure name
+  - name: arguments
+    type: argument
+    description: The array of arguments

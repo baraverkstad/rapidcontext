@@ -15,11 +15,11 @@
 package org.rapidcontext.app.proc;
 
 import org.rapidcontext.core.data.Array;
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
-import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.storage.Path;
+import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.core.type.Type;
 
 /**
@@ -28,58 +28,17 @@ import org.rapidcontext.core.type.Type;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class TypeListProcedure implements Procedure {
+public class TypeListProcedure extends Procedure {
 
     /**
-     * The app object storage path.
-     */
-    public static final Path PATH_APP = Path.from("/type/");
-
-    /**
-     * The procedure name constant.
-     */
-    public static final String NAME = "System.Type.List";
-
-    /**
-     * The default bindings.
-     */
-    private Bindings defaults = new Bindings();
-
-    /**
-     * Creates a new app list procedure.
-     */
-    public TypeListProcedure() {
-        this.defaults.seal();
-    }
-
-    /**
-     * Returns the procedure name.
+     * Creates a new procedure from a serialized representation.
      *
-     * @return the procedure name
+     * @param id             the object identifier
+     * @param type           the object type name
+     * @param dict           the serialized representation
      */
-    public String getName() {
-        return NAME;
-    }
-
-    /**
-     * Returns the procedure description.
-     *
-     * @return the procedure description
-     */
-    public String getDescription() {
-        return "List all registered storage data types.";
-    }
-
-    /**
-     * Returns the bindings for this procedure. If this procedure
-     * requires any special data, adapter connection or input
-     * argument binding, those bindings should be set (but possibly
-     * to null or blank values).
-     *
-     * @return the bindings for this procedure
-     */
-    public Bindings getBindings() {
-        return defaults;
+    public TypeListProcedure(String id, String type, Dict dict) {
+        super(id, type, dict);
     }
 
     /**

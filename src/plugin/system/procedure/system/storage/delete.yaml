@@ -1,0 +1,9 @@
+id: system/storage/delete
+type: procedure
+alias: System.Storage.Delete
+className: org.rapidcontext.app.proc.StorageDeleteProcedure
+description: Deletes an object or a whole path from storage.
+binding:
+  - name: path
+    type: argument
+    description: The object path to remove

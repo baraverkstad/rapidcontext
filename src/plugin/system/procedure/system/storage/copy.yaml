@@ -1,0 +1,21 @@
+id: system/storage/copy
+type: procedure
+alias: System.Storage.Copy
+className: org.rapidcontext.app.proc.StorageCopyProcedure
+description: Copies an object from one storage path to another.
+binding:
+  - name: src
+    type: argument
+    description: The source object path
+  - name: dst
+    type: argument
+    description: The destination object path
+  - name: flags
+    type: argument
+    description: "The optional flags, available values are:\n\
+        \u2022 recursive \u2014 copy indexes recursively\n\
+        \u2022 update \u2014 copy only if the source is newer\n\
+        \u2022 properties \u2014 serialize to properties format\n\
+        \u2022 json \u2014 serialize to JSON format\n\
+        \u2022 xml \u2014 serialize to XML format\n\
+        \u2022 yaml \u2014 serialize to YAML format"

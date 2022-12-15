@@ -1,0 +1,9 @@
+id: system/storage/list
+type: procedure
+alias: System.Storage.List
+className: org.rapidcontext.app.proc.StorageListProcedure
+description: Reads all objects on a storage path.
+binding:
+  - name: path
+    type: argument
+    description: The object path to search

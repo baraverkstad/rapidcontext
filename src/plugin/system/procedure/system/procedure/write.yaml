@@ -1,0 +1,21 @@
+id: system/procedure/write
+type: procedure
+alias: System.Procedure.Write
+className: org.rapidcontext.app.proc.ProcedureWriteProcedure
+description: >-
+    Creates or overwrites a procedure by creating a new one in the local
+    plug-in. Other versions of the procedure may still exist in other plug-ins,
+    but will be hidden.
+binding:
+  - name: name
+    type: argument
+    description: The procedure name
+  - name: type
+    type: argument
+    description: The procedure type name
+  - name: description
+    type: argument
+    description: The procedure description
+  - name: bindings
+    type: argument
+    description: The array of procedure bindings

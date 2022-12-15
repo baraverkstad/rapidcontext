@@ -14,11 +14,12 @@
 
 package org.rapidcontext.app.proc;
 
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
-import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.SecurityContext;
+import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.core.type.User;
 
 /**
@@ -27,61 +28,17 @@ import org.rapidcontext.core.type.User;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class UserAccessProcedure implements Procedure {
+public class UserAccessProcedure extends Procedure {
 
     /**
-     * The procedure name constant.
-     */
-    public static final String NAME = "System.User.Access";
-
-    /**
-     * The default bindings.
-     */
-    private Bindings defaults = new Bindings();
-
-    /**
-     * Creates a new user access control procedure.
+     * Creates a new procedure from a serialized representation.
      *
-     * @throws ProcedureException if the initialization failed
+     * @param id             the object identifier
+     * @param type           the object type name
+     * @param dict           the serialized representation
      */
-    public UserAccessProcedure() throws ProcedureException {
-        defaults.set("path", Bindings.ARGUMENT, "",
-                     "The storage path to check");
-        defaults.set("permission", Bindings.ARGUMENT, "",
-                     "The permission type to check, or null for 'read'");
-        defaults.set("user", Bindings.ARGUMENT, "",
-                     "The user id to check, or null for current user");
-        defaults.seal();
-    }
-
-    /**
-     * Returns the procedure name.
-     *
-     * @return the procedure name
-     */
-    public String getName() {
-        return NAME;
-    }
-
-    /**
-     * Returns the procedure description.
-     *
-     * @return the procedure description
-     */
-    public String getDescription() {
-        return "Checks access to a storage object for a user.";
-    }
-
-    /**
-     * Returns the bindings for this procedure. If this procedure
-     * requires any special data, adapter connection or input
-     * argument binding, those bindings should be set (but possibly
-     * to null or blank values).
-     *
-     * @return the bindings for this procedure
-     */
-    public Bindings getBindings() {
-        return defaults;
+    public UserAccessProcedure(String id, String type, Dict dict) {
+        super(id, type, dict);
     }
 
     /**

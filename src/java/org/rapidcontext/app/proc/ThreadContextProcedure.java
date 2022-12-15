@@ -21,9 +21,9 @@ import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
-import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.SecurityContext;
+import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.core.type.User;
 import org.rapidcontext.util.DateUtil;
 
@@ -33,56 +33,17 @@ import org.rapidcontext.util.DateUtil;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class ThreadContextProcedure implements Procedure {
+public class ThreadContextProcedure extends Procedure {
 
     /**
-     * The procedure name constant.
-     */
-    public static final String NAME = "System.Thread.Context";
-
-    /**
-     * The default bindings.
-     */
-    private Bindings defaults = new Bindings();
-
-    /**
-     * Creates a new thread context retrieval procedure.
+     * Creates a new procedure from a serialized representation.
      *
-     * @throws ProcedureException if the initialization failed
+     * @param id             the object identifier
+     * @param type           the object type name
+     * @param dict           the serialized representation
      */
-    public ThreadContextProcedure() throws ProcedureException {
-        defaults.set("threadId", Bindings.ARGUMENT, "", "The thread id");
-        defaults.seal();
-    }
-
-    /**
-     * Returns the procedure name.
-     *
-     * @return the procedure name
-     */
-    public String getName() {
-        return NAME;
-    }
-
-    /**
-     * Returns the procedure description.
-     *
-     * @return the procedure description
-     */
-    public String getDescription() {
-        return "Returns the call context for a specified (running) thread.";
-    }
-
-    /**
-     * Returns the bindings for this procedure. If this procedure
-     * requires any special data, adapter connection or input
-     * argument binding, those bindings should be set (but possibly
-     * to null or blank values).
-     *
-     * @return the bindings for this procedure
-     */
-    public Bindings getBindings() {
-        return defaults;
+    public ThreadContextProcedure(String id, String type, Dict dict) {
+        super(id, type, dict);
     }
 
     /**
@@ -134,7 +95,8 @@ public class ThreadContextProcedure implements Procedure {
      */
     static Dict getContextData(CallContext cx) {
         Dict res = new Dict();
-        Procedure proc = (Procedure) cx.getAttribute(CallContext.ATTRIBUTE_PROCEDURE);
+        org.rapidcontext.core.proc.Procedure proc =
+            (Procedure) cx.getAttribute(CallContext.ATTRIBUTE_PROCEDURE);
         if (proc == null) {
             res.set("procedure", null);
         } else {
@@ -179,9 +141,9 @@ public class ThreadContextProcedure implements Procedure {
         res.set("error", cx.getAttribute(CallContext.ATTRIBUTE_ERROR));
         StringBuffer log = (StringBuffer) cx.getAttribute(CallContext.ATTRIBUTE_LOG_BUFFER);
         res.set("log", (log == null) ? "" : log.toString());
-        Procedure[] procs = cx.getCallStack().toArray();
+        org.rapidcontext.core.proc.Procedure[] procs = cx.getCallStack().toArray();
         Array list = new Array(procs.length);
-        for (Procedure p : procs) {
+        for (org.rapidcontext.core.proc.Procedure p : procs) {
             list.add(p.getName());
         }
         res.set("stack", list);

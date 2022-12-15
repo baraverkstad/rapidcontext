@@ -18,9 +18,9 @@ import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
-import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.storage.Storage;
+import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.core.type.User;
 
 /**
@@ -29,55 +29,19 @@ import org.rapidcontext.core.type.User;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class UserListProcedure implements Procedure {
+public class UserListProcedure extends Procedure {
 
     // TODO: Replace this procedure with Query API?
 
     /**
-     * The procedure name constant.
-     */
-    public static final String NAME = "System.User.List";
-
-    /**
-     * The default bindings.
-     */
-    private Bindings defaults = new Bindings();
-
-    /**
-     * Creates a new user list procedure.
-     */
-    public UserListProcedure() {
-        defaults.seal();
-    }
-
-    /**
-     * Returns the procedure name.
+     * Creates a new procedure from a serialized representation.
      *
-     * @return the procedure name
+     * @param id             the object identifier
+     * @param type           the object type name
+     * @param dict           the serialized representation
      */
-    public String getName() {
-        return NAME;
-    }
-
-    /**
-     * Returns the procedure description.
-     *
-     * @return the procedure description
-     */
-    public String getDescription() {
-        return "Returns a list of all users.";
-    }
-
-    /**
-     * Returns the bindings for this procedure. If this procedure
-     * requires any special data, adapter connection or input
-     * argument binding, those bindings should be set (but possibly
-     * to null or blank values).
-     *
-     * @return the bindings for this procedure
-     */
-    public Bindings getBindings() {
-        return defaults;
+    public UserListProcedure(String id, String type, Dict dict) {
+        super(id, type, dict);
     }
 
     /**

@@ -1,0 +1,5 @@
+id: system/type/list
+type: procedure
+alias: System.Type.List
+className: org.rapidcontext.app.proc.TypeListProcedure
+description: List all registered storage data types.

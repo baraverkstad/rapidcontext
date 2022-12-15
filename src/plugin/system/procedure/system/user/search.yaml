@@ -1,0 +1,9 @@
+id: system/user/search
+type: procedure
+alias: System.User.Search
+className: org.rapidcontext.app.proc.UserSearchProcedure
+description: Searches for a user by email address.
+binding:
+  - name: email
+    type: argument
+    description: The user email address to search for

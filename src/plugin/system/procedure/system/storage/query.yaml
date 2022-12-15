@@ -1,0 +1,11 @@
+id: system/storage/query
+type: procedure
+alias: System.Storage.Query
+className: org.rapidcontext.app.proc.StorageQueryProcedure
+description: Searches for matching files and objects from storage.
+binding:
+  - name: query
+    type: argument
+    description: >-
+        The query path or an object with a 'path' property. Also supports
+        'limit', 'depth', 'fileType', 'mimeType' and 'category' properties.

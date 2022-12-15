@@ -1,0 +1,12 @@
+id: system/user/authenticationtoken
+type: procedure
+alias: System.User.AuthenticationToken
+className: org.rapidcontext.app.proc.UserAuthenticationTokenProcedure
+description: Creates a login authentication token for a user.
+binding:
+  - name: user
+    type: argument
+    description: The user id to create a token for
+  - name: duration
+    type: argument
+    description: The token duration in milliseconds

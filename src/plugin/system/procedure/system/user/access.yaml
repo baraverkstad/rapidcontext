@@ -1,0 +1,15 @@
+id: system/user/access
+type: procedure
+alias: System.User.Access
+className: org.rapidcontext.app.proc.UserAccessProcedure
+description: Checks access to a storage object for a user.
+binding:
+  - name: path
+    type: argument
+    description: The storage path to check
+  - name: permission
+    type: argument
+    description: The permission type to check, or null for 'read'
+  - name: user
+    type: argument
+    description: The user id to check, or null for current user

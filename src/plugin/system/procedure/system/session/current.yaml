@@ -1,0 +1,5 @@
+id: system/session/current
+type: procedure
+alias: System.Session.Current
+className: org.rapidcontext.app.proc.SessionCurrentProcedure
+description: Returns information about the originating user session.

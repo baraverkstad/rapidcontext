@@ -1,0 +1,12 @@
+id: system/thread/create
+type: procedure
+alias: System.Thread.Create
+className: org.rapidcontext.app.proc.ThreadCreateProcedure
+description: Creates a new server thread for executing the specified procedure.
+binding:
+  - name: procedure
+    type: argument
+    description: The name of the procedure to execute.
+  - name: arguments
+    type: argument
+    description: The array with procedure arguments.

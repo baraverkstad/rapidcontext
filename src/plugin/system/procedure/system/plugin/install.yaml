@@ -1,0 +1,9 @@
+id: system/plugin/install
+type: procedure
+alias: System.PlugIn.Install
+className: org.rapidcontext.app.proc.PluginInstallProcedure
+description: Installs and loads a plug-in located in an uploaded zip file.
+binding:
+  - name: sessionFileId
+    type: argument
+    description: The session file identifier (containing the plug-in zip file).

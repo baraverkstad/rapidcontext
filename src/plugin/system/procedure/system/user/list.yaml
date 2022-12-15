@@ -1,0 +1,5 @@
+id: system/user/list
+type: procedure
+alias: System.User.List
+className: org.rapidcontext.app.proc.UserListProcedure
+description: Returns a list of all users.

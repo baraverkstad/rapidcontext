@@ -1,0 +1,5 @@
+id: system/procedure/types
+type: procedure
+alias: System.Procedure.Types
+className: org.rapidcontext.app.proc.ProcedureTypesProcedure
+description: Lists all available procedure types.

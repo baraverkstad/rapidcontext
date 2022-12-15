@@ -1,0 +1,9 @@
+id: system/plugin/unload
+type: procedure
+alias: System.PlugIn.Unload
+className: org.rapidcontext.app.proc.PluginUnloadProcedure
+description: Unloads a plug-in and removes it from the local startup config.
+binding:
+  - name: pluginId
+    type: argument
+    description: The plug-in identifier
