@@ -1,0 +1,21 @@
+id: jdbc/query
+type: procedure
+alias: PlugIn.Jdbc.Query
+className: org.rapidcontext.app.plugin.jdbc.JdbcBuiltInQueryProcedure
+description: Executes an SQL query on a JDBC connection and returns the result.
+binding:
+  - name: db
+    type: argument
+    description: The JDBC connection identifier.
+  - name: sql
+    type: argument
+    description: The SQL query string.
+  - name: flags
+    type: argument
+    description: "Optional execution flags (space separated):\n\
+      \u2022 [no-]metadata \u2014 toggle metadata in result\n\
+      \u2022 [no-]column-names \u2014 toggle rows as objects/arrays\n\
+      \u2022 [no-]native-types \u2014 toggle Java types in result\n\
+      \u2022 [no-]binary-data \u2014 toggle binary data in result\n\
+      \u2022 single-column \u2014 query only returns single column\n\
+      \u2022 single-row \u2014 query only returns at most one row (or error)"

@@ -14,7 +14,6 @@
 
 package org.rapidcontext.app.plugin.jdbc;
 
-import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.app.plugin.Plugin;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Library;
@@ -48,18 +47,11 @@ public class JdbcPlugin extends Plugin {
      * @throws StorageException if the initialization failed
      */
     public void init() throws StorageException {
-        Library  lib = ApplicationContext.getInstance().getLibrary();
-
         try {
             Library.registerType("jdbc.query",
                                  JdbcQueryProcedure.class);
             Library.registerType("jdbc.statement",
                                  JdbcStatementProcedure.class);
-            lib.addBuiltIn(new JdbcBuiltInConnectionInfoProcedure());
-            lib.addBuiltIn(new JdbcBuiltInConnectionListProcedure());
-            lib.addBuiltIn(new JdbcBuiltInConnectionWriteProcedure());
-            lib.addBuiltIn(new JdbcBuiltInQueryProcedure());
-            lib.addBuiltIn(new JdbcBuiltInStatementProcedure());
         } catch (ProcedureException e) {
             throw new StorageException(e.getMessage());
         }
@@ -72,12 +64,6 @@ public class JdbcPlugin extends Plugin {
      * @throws StorageException if the destruction failed
      */
     public void destroy() throws StorageException {
-        Library  lib = ApplicationContext.getInstance().getLibrary();
-
-        lib.removeBuiltIn(JdbcBuiltInConnectionInfoProcedure.NAME);
-        lib.removeBuiltIn(JdbcBuiltInConnectionListProcedure.NAME);
-        lib.removeBuiltIn(JdbcBuiltInQueryProcedure.NAME);
-        lib.removeBuiltIn(JdbcBuiltInStatementProcedure.NAME);
         Library.unregisterType("jdbc.query");
         Library.unregisterType("jdbc.statement");
     }

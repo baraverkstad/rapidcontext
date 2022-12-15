@@ -1,0 +1,18 @@
+id: jdbc/connection/write
+type: procedure
+alias: PlugIn.Jdbc.Connection.Write
+className: org.rapidcontext.app.plugin.jdbc.JdbcBuiltInConnectionWriteProcedure
+description: >-
+    Creates or overwrites a connection by creating a new one in the local
+    plug-in. Other versions of the connection may still exist in other
+    plug-ins, but will be hidden. Only connections in the local plug-in can
+    be removed.
+binding:
+  - name: id
+    type: argument
+    description: The connection storage identifier.
+  - name: data
+    type: argument
+    description: >-
+        An object with at least the required keys from the connection/jdbc
+        type set.

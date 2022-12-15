@@ -1,0 +1,5 @@
+id: jdbc/connection/list
+type: procedure
+alias: PlugIn.Jdbc.Connection.List
+className: org.rapidcontext.app.plugin.jdbc.JdbcBuiltInConnectionListProcedure
+description: Lists all available JDBC connections and their current status.

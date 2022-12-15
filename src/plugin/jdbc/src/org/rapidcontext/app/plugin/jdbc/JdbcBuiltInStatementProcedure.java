@@ -14,11 +14,12 @@
 
 package org.rapidcontext.app.plugin.jdbc;
 
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
-import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.type.ConnectionException;
+import org.rapidcontext.core.type.Procedure;
 
 /**
  * The built-in JDBC SQL statement procedure. This procedure supports
@@ -27,59 +28,17 @@ import org.rapidcontext.core.type.ConnectionException;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class JdbcBuiltInStatementProcedure implements Procedure {
+public class JdbcBuiltInStatementProcedure extends Procedure {
 
     /**
-     * The procedure name constant.
-     */
-    public static final String NAME = "PlugIn.Jdbc.Statement";
-
-    /**
-     * The default bindings.
-     */
-    private Bindings defaults = new Bindings();
-
-    /**
-     * Creates a new JDBC SQL statement procedure.
+     * Creates a new procedure from a serialized representation.
      *
-     * @throws ProcedureException if the initialization failed
+     * @param id             the object identifier
+     * @param type           the object type name
+     * @param dict           the serialized representation
      */
-    public JdbcBuiltInStatementProcedure() throws ProcedureException {
-        defaults.set(JdbcProcedure.BINDING_DB, Bindings.ARGUMENT, "",
-                     "The JDBC connection identifier.");
-        defaults.set(JdbcProcedure.BINDING_SQL, Bindings.ARGUMENT, "",
-                     "The SQL statement string.");
-        this.defaults.seal();
-    }
-
-    /**
-     * Returns the procedure name.
-     *
-     * @return the procedure name
-     */
-    public String getName() {
-        return NAME;
-    }
-
-    /**
-     * Returns the procedure description.
-     *
-     * @return the procedure description
-     */
-    public String getDescription() {
-        return "Executes an SQL statement on a JDBC connection.";
-    }
-
-    /**
-     * Returns the bindings for this procedure. If this procedure
-     * requires any special data, adapter connection or input
-     * argument binding, those bindings should be set (but possibly
-     * to null or blank values).
-     *
-     * @return the bindings for this procedure
-     */
-    public Bindings getBindings() {
-        return defaults;
+    public JdbcBuiltInStatementProcedure(String id, String type, Dict dict) {
+        super(id, type, dict);
     }
 
     /**

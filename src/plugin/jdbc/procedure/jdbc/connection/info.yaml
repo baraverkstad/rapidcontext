@@ -1,0 +1,9 @@
+id: jdbc/connection/info
+type: procedure
+alias: PlugIn.Jdbc.Connection.Info
+className: org.rapidcontext.app.plugin.jdbc.JdbcBuiltInConnectionInfoProcedure
+description: Shows detailed information for a JDBC connection.
+binding:
+  - name: db
+    type: argument
+    description: The JDBC connection identifier.

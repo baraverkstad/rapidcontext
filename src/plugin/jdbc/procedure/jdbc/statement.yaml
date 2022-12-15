@@ -1,0 +1,12 @@
+id: jdbc/statement
+type: procedure
+alias: PlugIn.Jdbc.Statement
+className: org.rapidcontext.app.plugin.jdbc.JdbcBuiltInStatementProcedure
+description: Executes an SQL statement on a JDBC connection.
+binding:
+  - name: db
+    type: argument
+    description: The JDBC connection identifier.
+  - name: sql
+    type: argument
+    description: The SQL statement string.
