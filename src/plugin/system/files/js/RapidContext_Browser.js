@@ -100,8 +100,8 @@
         "fetch",
         "localStorage.getItem",
         "Math.imul",
-        "navigator.credentials.create",
-        "navigator.credentials.get",
+        // "navigator.credentials.create",
+        // "navigator.credentials.get",
         "NodeList.prototype.forEach",
         "Object.assign",
         "Object.create",
@@ -123,7 +123,7 @@
         "String.prototype.padStart",
         "String.prototype.startsWith",
         "String.raw", // proxy for template literals
-        "SubtleCrypto.prototype.digest",
+        // "SubtleCrypto.prototype.digest",
         // "Temporal",
         // "ResizeObserver",
         "URLSearchParams",
@@ -221,7 +221,7 @@
             var def = features[i].test ? features[i] : { test: features[i] };
             if (!check(def.test)) {
                 var explain = [def.name, def.test].filter(Boolean).join(": ");
-                console.info("browser: missing support for " + explain);
+                console.warn("browser: missing support for " + explain);
                 res = false;
             }
         }
