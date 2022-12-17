@@ -60,9 +60,9 @@ RapidContext.App.init = function (app) {
 
     // Load platform data (into cache)
     var cachedData = [
-        RapidContext.App.callProc("System.Status"),
-        RapidContext.App.callProc("System.Session.Current"),
-        RapidContext.App.callProc("System.App.List")
+        RapidContext.App.callProc("system/status"),
+        RapidContext.App.callProc("system/session/current"),
+        RapidContext.App.callProc("system/app/list")
     ];
 
     // Launch app
@@ -449,7 +449,7 @@ RapidContext.App.callProc = function (name, args) {
         } else {
             RapidContext.Log.log("Call response " + name, res.data);
         }
-        if (name.indexOf("System.") == 0 && !res.error && res.data) {
+        if (name.indexOf("system/") == 0 && !res.error && res.data) {
             RapidContext.App._Cache.update(name, res.data);
         }
         return res.data;
@@ -471,7 +471,7 @@ RapidContext.App.callProc = function (name, args) {
  */
 RapidContext.App.login = function (login, password, token) {
     function searchLogin() {
-        var proc = "System.User.Search";
+        var proc = "system/user/search";
         return RapidContext.App.callProc(proc, [login]).then(function (user) {
             if (user && user.id) {
                 return login = user.id;
@@ -481,7 +481,7 @@ RapidContext.App.login = function (login, password, token) {
         });
     }
     function getNonce() {
-        var proc = "System.Session.Current";
+        var proc = "system/session/current";
         return RapidContext.App.callProc(proc).then(function (session) {
             return session.nonce;
         });
@@ -491,10 +491,10 @@ RapidContext.App.login = function (login, password, token) {
         var hash = CryptoJS.MD5(login + ":" + realm + ":" + password);
         hash = CryptoJS.MD5(hash.toString() + ":" + nonce).toString();
         var args = [login, nonce, hash];
-        return RapidContext.App.callProc("System.Session.Authenticate", args);
+        return RapidContext.App.callProc("system/session/authenticate", args);
     }
     function tokenAuth() {
-        return RapidContext.App.callProc("System.Session.AuthenticateToken", [token]);
+        return RapidContext.App.callProc("system/session/authenticateToken", [token]);
     }
     function verifyAuth(res) {
         if (!res.success || res.error) {
@@ -528,7 +528,7 @@ RapidContext.App.login = function (login, password, token) {
  *         resolve when user is logged out
  */
 RapidContext.App.logout = function (reload) {
-    var promise = RapidContext.App.callProc("System.Session.Terminate", [null]);
+    var promise = RapidContext.App.callProc("system/session/terminate", [null]);
     if (reload !== false) {
         promise.then(function () {
             window.location.reload();
@@ -864,13 +864,13 @@ RapidContext.App._Cache = {
     // Updates the cache data with the results from a procedure.
     update: function (proc, data) {
         switch (proc) {
-        case "System.Status":
+        case "system/status":
             // TODO: use deep clone
             data = MochiKit.Base.update(null, data);
             this.status = data;
             RapidContext.Log.log("Updated cached status", this.status);
             break;
-        case "System.Session.Current":
+        case "system/session/current":
             if (this.compareId(this.user, data.user) != 0) {
                 // TODO: use deep clone
                 data = MochiKit.Base.update(null, data.user);
@@ -883,7 +883,7 @@ RapidContext.App._Cache = {
                 RapidContext.Log.log("Updated cached user", this.user);
             }
             break;
-        case "System.App.List":
+        case "system/app/list":
             for (var i = 0; i < data.length; i++) {
                 var launcher = this._normalizeApp(data[i]);
                 if (launcher.className == null) {
