@@ -320,7 +320,8 @@ public class Library {
         AddOnProcedure proc = createProcedure(data);
         try {
             cache.remove(proc.getName());
-            storage.store(Path.resolve(PATH_PROC, proc.getName()), proc.getData());
+            String objectName = proc.getName() + Storage.EXT_YAML;
+            storage.store(Path.resolve(PATH_PROC, objectName), proc.getData());
         } catch (StorageException e) {
             String msg = "failed to write procedure data: " + e.getMessage();
             throw new ProcedureException(msg);
