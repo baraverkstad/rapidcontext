@@ -14,7 +14,7 @@ ExampleApp.prototype.start = function () {
 
     // Create procedure callers
     this.proc = RapidContext.Procedure.mapAll({
-        appList: "System.App.List"
+        appList: "system/app/list"
     });
 
     // Attach signal handlers
