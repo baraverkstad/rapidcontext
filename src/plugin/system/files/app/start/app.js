@@ -13,9 +13,9 @@ function StartApp() {
  */
 StartApp.prototype.start = function () {
     this.proc = RapidContext.Procedure.mapAll({
-        appList: "System.App.List",
-        changePassword: "System.User.ChangePassword",
-        sessionInfo: "System.Session.Current"
+        appList: "system/app/list",
+        changePassword: "system/user/changepassword",
+        sessionInfo: "system/session/current"
     });
     var status = RapidContext.App.status();
 
