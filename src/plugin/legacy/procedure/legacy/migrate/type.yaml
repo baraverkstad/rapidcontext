@@ -1,0 +1,39 @@
+name: legacy/migrate/type
+type: javascript
+description: Stores draft migrated versions of legacy procedure types.
+binding:
+  - name: code
+    type: data
+    value: |
+        function isMatch(src) {
+            return src.type.startsWith(prefix);
+        }
+
+        function convert(src) {
+            return {
+                id: 'procedure/' + src.type.replace(/\./g, '/'),
+                type: 'type',
+                alias: src.type,
+                description: '',
+                initializer: '',
+                binding: src.bindings
+            };
+            return Object.assign({}, data, src);
+        }
+
+        function store(data) {
+            let path = '/type/' + data.id;
+            storageWrite(path, data, 'yaml');
+            return path;
+        }
+
+        return Object.values(listProc()).filter(isMatch).map(convert).map(store);
+  - name: listProc
+    type: procedure
+    value: system/procedure/types
+  - name: storageWrite
+    type: procedure
+    value: system/storage/write
+  - name: prefix
+    type: argument
+    description: The procedure type name prefix

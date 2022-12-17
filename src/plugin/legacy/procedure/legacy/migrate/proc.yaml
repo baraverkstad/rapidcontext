@@ -1,0 +1,52 @@
+name: legacy/migrate/proc
+type: javascript
+description: Stores draft migrated versions of legacy built-in procedures.
+binding:
+  - name: code
+    type: data
+    value: |
+        function isMatch(name) {
+            return name.startsWith(prefix);
+        }
+
+        function convert(name) {
+            let data = {
+                id: name.replace(/\./g, '/').toLowerCase(),
+                type: 'procedure',
+                alias: name,
+                className: [
+                    'org.rapidcontext.app.proc.',
+                    name.replace(/\./g, '').replace('System', ''),
+                    'Procedure'
+                ].join('')
+            };
+            let proc = Object.assign({}, data, readProc(name), data);
+            proc.binding = proc.bindings;
+            delete proc.name;
+            delete proc.local;
+            delete proc.bindings;
+            (proc.binding || []).forEach(function (b) {
+                delete b.value;
+            });
+            return proc;
+        }
+
+        function store(data) {
+            let path = '/procedure/' + data.id;
+            storageWrite(path, data, 'yaml');
+            return path;
+        }
+
+        return listProc().filter(isMatch).map(convert).map(store);
+  - name: listProc
+    type: procedure
+    value: system/procedure/list
+  - name: readProc
+    type: procedure
+    value: system/procedure/read
+  - name: storageWrite
+    type: procedure
+    value: system/storage/write
+  - name: prefix
+    type: argument
+    description: The procedure name prefix
