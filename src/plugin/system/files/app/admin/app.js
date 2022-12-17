@@ -22,15 +22,17 @@ function AdminApp() {
 AdminApp.prototype.start = function () {
     // Create procedure callers
     this.proc = RapidContext.Procedure.mapAll({
-        typeList: "System.Type.List",
-        cxnList: "System.Connection.List",
-        appList: "System.App.List",
-        plugInList: "System.PlugIn.List",
-        procList: "System.Procedure.List",
-        procDelete: "System.Procedure.Delete",
-        procTypes: "System.Procedure.Types",
-        userList: "System.User.List",
-        userChange: "System.User.Change"
+        typeList: "system/type/list",
+        cxnList: "system/connection/list",
+        appList: "system/app/list",
+        plugInList: "system/plugin/list",
+        procList: "system/procedure/list",
+        procRead: "system/procedure/read",
+        procWrite: "system/procedure/write",
+        procDelete: "system/procedure/delete",
+        procTypes: "system/procedure/types",
+        userList: "system/user/list",
+        userChange: "system/user/change"
     });
 
     // All views
@@ -217,7 +219,7 @@ AdminApp.prototype._updateTypeCache = function (res) {
  */
 AdminApp.prototype._validateConnections = function () {
     function validate(con) {
-        return RapidContext.App.callProc("System.Connection.Validate", [con.id]);
+        return RapidContext.App.callProc("system/connection/validate", [con.id]);
     }
     this.ui.overlay.setAttrs({ message: "Validating..." });
     this.ui.overlay.show();
@@ -240,7 +242,7 @@ AdminApp.prototype._validateConnections = function () {
  */
 AdminApp.prototype.showConnection = function (id) {
     this.ui.tabContainer.selectChild(this.ui.cxnTab);
-    RapidContext.App.callProc("System.Connection.Validate", [id])
+    RapidContext.App.callProc("system/connection/validate", [id])
         .catch(function () {})
         .then(this.proc.cxnList.recall.bind(this.proc.cxnList))
         .then(this.ui.cxnTable.setSelectedIds.bind(this.ui.cxnTable, id));
@@ -595,7 +597,7 @@ AdminApp.prototype._togglePlugin = function () {
     this.ui.pluginReload.hide();
     this.ui.pluginLoading.show();
     var data = this.ui.pluginTable.getSelectedData();
-    var proc = data.loaded ? "System.PlugIn.Unload" : "System.PlugIn.Load";
+    var proc = data.loaded ? "system/plugin/unload" : "system/plugin/load";
     RapidContext.App.callProc(proc, [data.id])
         .catch(RapidContext.UI.showError)
         .then((data.loaded && data.className) ? showRestartMesssage : function () {})
@@ -622,7 +624,7 @@ AdminApp.prototype._pluginUpload = function () {
         this.ui.pluginProgress.setAttrs({ value: evt.loaded });
     }
     function install() {
-        return RapidContext.App.callProc("System.PlugIn.Install", ["plugin"]);
+        return RapidContext.App.callProc("system/plugin/install", ["plugin"]);
     }
     function select() {
         this.ui.pluginTable.setSelectedIds(pluginId);
@@ -658,7 +660,7 @@ AdminApp.prototype.resetServer = function (e) {
     function showMessage() {
         alert("Server reset complete");
     }
-    var promise = RapidContext.App.callProc("System.Reset");
+    var promise = RapidContext.App.callProc("system/reset");
     if (e instanceof MochiKit.Signal.Event) {
         return promise.then(showMessage).catch(RapidContext.UI.showError);
     } else {
@@ -722,9 +724,8 @@ AdminApp.prototype._showProcedure = function () {
     this.ui.procExecResult.removeAll();
     RapidContext.Util.resizeElements(this.ui.procExecResult);
     if (node != null && node.data != null) {
-        var args = [node.data];
         var cb = this._callbackShowProcedure.bind(this, node.data);
-        RapidContext.App.callProc("System.Procedure.Read", args).then(cb, cb);
+        this.proc.procRead(node.data).then(cb, cb);
         this.ui.procLoading.show();
     }
 };
@@ -1066,8 +1067,7 @@ AdminApp.prototype._saveProcedure = function () {
         }
         bindings.push(res);
     }
-    var args = [data.name, data.type, data.description, bindings];
-    RapidContext.App.callProc("System.Procedure.Write", args)
+    this.proc.procWrite(data.name, data.type, data.description, bindings)
         .then(this.ui.procEditDialog.hide.bind(this.ui.procEditDialog))
         .then(this.proc.procList.recall.bind(this.proc.procList))
         .then(this.showProcedure.bind(this, data.name))
