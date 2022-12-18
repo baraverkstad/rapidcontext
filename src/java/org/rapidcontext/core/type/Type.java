@@ -47,6 +47,11 @@ public class Type extends StorableObject {
         Logger.getLogger(Type.class.getName());
 
     /**
+     * The dictionary key for the optional legacy type id.
+     */
+    public static final String KEY_ALIAS = "alias";
+
+    /**
      * The dictionary key for the description text.
      */
     public static final String KEY_DESCRIPTION = "description";
@@ -95,7 +100,14 @@ public class Type extends StorableObject {
      */
     public static Type find(Storage storage, String id) {
         Object obj = storage.load(Path.resolve(PATH, id));
-        return (obj instanceof Type) ? (Type) obj : null;
+        if (obj instanceof Type) {
+            return (Type) obj;
+        } else {
+            return all(storage)
+                .filter(t -> t.alias().equals(id))
+                .findFirst()
+                .orElse(null);
+        }
     }
 
     /**
@@ -198,6 +210,15 @@ public class Type extends StorableObject {
                 throw new StorageException(msg);
             }
         }
+    }
+
+    /**
+     * Returns the optional legacy type id (or alias).
+     *
+     * @return the type alias, or an empty string
+     */
+    public String alias() {
+        return dict.getString(KEY_ALIAS, "");
     }
 
     /**

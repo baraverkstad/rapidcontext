@@ -7,6 +7,10 @@ description: >-
     belonging to that type.
 initializer: org.rapidcontext.core.type.Type
 property:
+  - name: alias
+    description: >-
+        The optional legacy type id (or alias). Optional, defaults to blank.
+    required: false
   - name: description
     description: The description for the type. Optional, defaults to blank.
     required: false
