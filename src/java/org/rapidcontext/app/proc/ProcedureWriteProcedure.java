@@ -67,17 +67,18 @@ public class ProcedureWriteProcedure extends Procedure {
         throws ProcedureException {
 
         String name = ((String) bindings.getValue("name")).trim();
-        if (name.length() == 0) {
-            throw new ProcedureException("invalid procedure name");
+        String type = ((String) bindings.getValue("type")).trim();
+        if (name.isEmpty()) {
+            throw new ProcedureException("missing procedure name");
+        } else if (type.isEmpty()) {
+            throw new ProcedureException("missing procedure type");
         }
         CallContext.checkWriteAccess("procedure/" + name);
         LOG.info("writing procedure " + name);
         Dict dict = new Dict();
-        dict.set("name", name);
-        dict.set("type", bindings.getValue("type"));
         dict.set("description", bindings.getValue("description", ""));
         dict.set("binding", bindings.getValue("bindings"));
-        org.rapidcontext.core.proc.Procedure proc = cx.getLibrary().storeProcedure(dict);
+        org.rapidcontext.core.proc.Procedure proc = cx.getLibrary().storeProcedure(name, type, dict);
         return ProcedureReadProcedure.getProcedureData(cx.getLibrary(), proc);
     }
 }

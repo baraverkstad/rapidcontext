@@ -23,6 +23,7 @@ import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.storage.StorageException;
+import org.rapidcontext.core.type.Type;
 
 /**
  * A procedure library. This class contains the set of loaded and
@@ -107,8 +108,11 @@ public class Library {
      * @throws ProcedureException if the procedure type was already
      *             registered
      *
-     * @see #unregisterType(String)
+     * @deprecated Use a storage subtype to 'type/procedure' instead
+     *     of manually registering here. Storage types are
+     *     automatically managed.
      */
+    @Deprecated
     public static void registerType(String type, Class<?> cls)
     throws ProcedureException {
 
@@ -129,8 +133,11 @@ public class Library {
      *
      * @param type           the unique procedure type name
      *
-     * @see #registerType(String, Class)
+     * @deprecated Use a storage subtype to 'type/procedure' instead
+     *     of manually registering here. Storage types are
+     *     automatically managed.
      */
+    @Deprecated
     public static void unregisterType(String type) {
         types.remove(type);
         LOG.fine("unregistered procedure type " + type);
@@ -140,7 +147,11 @@ public class Library {
      * Returns an array with all the registered procedure type names.
      *
      * @return an array with all procedure type names
+     *
+     * @deprecated Check the storage subtypes to 'type/procedure'
+     *     instead of this.
      */
+    @Deprecated
     public static String[] getTypes() {
         String[] res = new String[types.size()];
         types.keySet().toArray(res);
@@ -156,7 +167,11 @@ public class Library {
      *
      * @return the default bindings for the procedure type, or
      *         null if the procedure creation failed
+     *
+     * @deprecated Check the storage subtypes to 'type/procedure'
+     *     instead of this.
      */
+    @Deprecated
     public static Bindings getDefaultBindings(String type) {
         try {
             AddOnProcedure proc = (AddOnProcedure) types.get(type).getDeclaredConstructor().newInstance();
@@ -183,7 +198,11 @@ public class Library {
      *
      * @return true if the procedure is a built-in procedure, or
      *         false otherwise
+     *
+     * @deprecated Built-in procedures are managed as storable
+     *     objects, so this method is no longer reliable.
      */
+    @Deprecated
     public boolean hasBuiltIn(String name) {
         return builtIns.containsKey(name);
     }
@@ -298,14 +317,17 @@ public class Library {
      * @throws ProcedureException if the procedure couldn't be loaded
      */
     public Procedure loadProcedure(String name) throws ProcedureException {
-        Dict data = (Dict) storage.load(Path.resolve(PATH_PROC, name));
-        if (data == null) {
+        Object obj = storage.load(Path.resolve(PATH_PROC, name));
+        if (obj instanceof Procedure) {
+            return (Procedure) obj;
+        } else if (obj instanceof Dict) {
+            AddOnProcedure proc = createProcedure((Dict) obj);
+            cache.put(proc.getName(), proc);
+            return proc;
+        } else {
             String msg = "no procedure '" + name + "' found";
             throw new ProcedureException(msg);
         }
-        AddOnProcedure proc = createProcedure(data);
-        cache.put(proc.getName(), proc);
-        return proc;
     }
 
     /**
@@ -313,6 +335,8 @@ public class Library {
      * from the specified data object, stored to the data store and
      * also placed in the library cache.
      *
+     * @param id             the procedure name (object id)
+     * @param type           the procedure type
      * @param data           the procedure data object
      *
      * @return the procedure stored
@@ -320,17 +344,32 @@ public class Library {
      * @throws ProcedureException if the procedure couldn't be
      *             created or written to the data store
      */
-    public Procedure storeProcedure(Dict data) throws ProcedureException {
-        AddOnProcedure proc = createProcedure(data);
+    public Procedure storeProcedure(String id, String type, Dict data)
+    throws ProcedureException {
+
         try {
-            cache.remove(proc.getName());
-            String objectName = proc.getName() + Storage.EXT_YAML;
-            storage.store(Path.resolve(PATH_PROC, objectName), proc.getData());
+            if (Type.find(storage, type) != null) {
+                Dict dict = new Dict();
+                dict.add(Type.KEY_ID, id);
+                dict.add(Type.KEY_TYPE, type);
+                dict.addAll(data);
+                storage.store(Path.resolve(PATH_PROC, id + Storage.EXT_YAML), dict);
+                return loadProcedure(id);
+            } else {
+                Dict dict = new Dict();
+                dict.add("name", id);
+                dict.add("type", type);
+                dict.addAll(data);
+                AddOnProcedure proc = createProcedure(dict);
+                cache.remove(proc.getName());
+                String objectName = proc.getName() + Storage.EXT_YAML;
+                storage.store(Path.resolve(PATH_PROC, objectName), proc.getData());
+                return proc;
+            }
         } catch (StorageException e) {
             String msg = "failed to write procedure data: " + e.getMessage();
             throw new ProcedureException(msg);
         }
-        return proc;
     }
 
     /**

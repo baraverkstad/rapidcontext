@@ -14,12 +14,15 @@
 
 package org.rapidcontext.app.proc;
 
+import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Library;
 import org.rapidcontext.core.proc.ProcedureException;
+import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.type.Procedure;
+import org.rapidcontext.core.type.Type;
 
 /**
  * The built-in procedure type list procedure.
@@ -60,7 +63,16 @@ public class ProcedureTypesProcedure extends Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
+        Storage storage = ApplicationContext.getInstance().getStorage();
         Dict res = new Dict();
+        Type.all(storage).forEach(t -> {
+            if (t.id().startsWith("procedure/")) {
+                Dict dict = new Dict();
+                dict.set("type", t.id());
+                dict.set("bindings", t.serialize().getArray("binding"));
+                res.set(t.id(), dict);
+            }
+        });
         for (String name : Library.getTypes()) {
             Bindings defs = Library.getDefaultBindings(name);
             if (defs != null) {

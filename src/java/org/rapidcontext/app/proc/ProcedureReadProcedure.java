@@ -91,7 +91,6 @@ public class ProcedureReadProcedure extends Procedure {
         Path path = Path.resolve(Library.PATH_PROC, proc.getName());
         Metadata meta = storage.lookup(Path.resolve(storagePath, path));
         Dict res = new Dict();
-        res.set("name", proc.getName());
         if (proc instanceof StorableObject) {
             StorableObject storable = (StorableObject) proc;
             res.set("id", storable.id());
@@ -101,6 +100,7 @@ public class ProcedureReadProcedure extends Procedure {
         } else {
             res.set("type", "built-in");
         }
+        res.set("name", proc.getName());
         res.set("description", proc.getDescription());
         res.set("local", meta != null);
         res.set("bindings", getBindingsData(proc.getBindings()));
