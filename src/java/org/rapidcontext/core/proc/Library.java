@@ -58,6 +58,14 @@ public class Library {
     private Storage storage = null;
 
     /**
+     * The map of procedure name aliases. The map is indexed by the
+     * old procedure name and points to the new one.
+     *
+     * @see #refreshAliases()
+     */
+    private HashMap<String,String> aliases = new HashMap<>();
+
+    /**
      * The map of built-in procedures. The map is indexed by the
      * procedure name and is populated manually by the
      * addBuiltIn() and removeBuiltIn() methods.
@@ -213,7 +221,9 @@ public class Library {
         }
         AddOnProcedure proc = cache.get(name);
         Metadata meta = storage.lookup(Path.resolve(PATH_PROC, name));
-        if (meta == null) {
+        if (meta == null && aliases.containsKey(name)) {
+            return getProcedure(aliases.get(name));
+        } else if (meta == null) {
             throw new ProcedureException("no procedure '" + name + "' found");
         }
         if (proc == null || meta.lastModified().after(proc.getLastModified())) {
@@ -227,17 +237,11 @@ public class Library {
      * Loads built-in procedures via storage types. This method is safe to call
      * repeatedly (after each plug-in load).
      */
-    public void reloadBuiltIns() {
-        builtIns.values().removeIf(p -> p instanceof org.rapidcontext.core.type.Procedure);
-        // TODO: Remove preloading of built-in procedures when migration complete
+    public void refreshAliases() {
+        aliases.clear();
         org.rapidcontext.core.type.Procedure.all(storage).forEach(p -> {
-            if (p.type().equals("procedure") && !hasBuiltIn(p.id())) {
-                builtIns.put(p.id(), p);
-                // TODO: Remove support for procedure aliases when migration complete
-                String alias = p.alias();
-                if (alias != null && !alias.isEmpty()) {
-                    builtIns.put(alias, p);
-                }
+            if (p.alias() != null && !p.alias().isEmpty()) {
+                aliases.put(p.alias(), p.id());
             }
         });
     }

@@ -259,9 +259,8 @@ public class ApplicationContext {
         Interceptor i = library.getInterceptor();
         library.setInterceptor(new JsCompileInterceptor(i));
 
-        // Add default built-in procedures
-        // TODO: should be initialized on first call instead
-        library.reloadBuiltIns();
+        // Refresh procedure aliases
+        library.refreshAliases();
     }
 
     /**
@@ -426,8 +425,7 @@ public class ApplicationContext {
      */
     public void loadPlugin(String pluginId) throws PluginException {
         pluginManager.load(pluginId);
-        // TODO: built-in procedures should be initialized on first call
-        library.reloadBuiltIns();
+        library.refreshAliases();
         Array pluginList = config.getArray("plugins");
         if (!pluginList.containsValue(pluginId)) {
             pluginList.add(pluginId);
@@ -451,8 +449,7 @@ public class ApplicationContext {
      */
     public void unloadPlugin(String pluginId) throws PluginException {
         pluginManager.unload(pluginId);
-        // TODO: built-in procedures should be initialized on first call
-        library.reloadBuiltIns();
+        library.refreshAliases();
         library.clearCache();
         Array pluginList = config.getArray("plugins");
         pluginList.remove(pluginId);
