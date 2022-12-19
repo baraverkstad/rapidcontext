@@ -1,5 +1,5 @@
-name: legacy/migrate/type
-type: javascript
+id: legacy/migrate/type
+type: procedure/javascript
 description: Stores draft migrated versions of legacy procedure types.
 binding:
   - name: code

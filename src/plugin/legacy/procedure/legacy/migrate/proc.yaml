@@ -1,32 +1,44 @@
-name: legacy/migrate/proc
-type: javascript
+id: legacy/migrate/proc
+type: procedure/javascript
 description: Stores draft migrated versions of legacy built-in procedures.
 binding:
   - name: code
     type: data
     value: |
+        var TYPES = {
+            'built-in': 'procedure',
+            'javascript': 'procedure/javascript'
+        };
+
         function isMatch(name) {
             return name.startsWith(prefix);
         }
 
         function convert(name) {
+            let src = readProc(name);
             let data = {
                 id: name.replace(/\./g, '/').toLowerCase(),
-                type: 'procedure',
-                alias: name,
-                className: [
+                type: TYPES[src.type] || src.type,
+                alias: name
+            };
+            if (data.type === 'procedure') {
+                data.className = [
                     'org.rapidcontext.app.proc.',
                     name.replace(/\./g, '').replace('System', ''),
                     'Procedure'
-                ].join('')
+                ].join('');
             };
-            let proc = Object.assign({}, data, readProc(name), data);
+            let proc = Object.assign({}, data, src, data);
             proc.binding = proc.bindings;
             delete proc.name;
             delete proc.local;
             delete proc.bindings;
             (proc.binding || []).forEach(function (b) {
-                delete b.value;
+                if (b.type === 'argument') {
+                    delete b.value;
+                } else {
+                    delete b.description;
+                }
             });
             return proc;
         }
