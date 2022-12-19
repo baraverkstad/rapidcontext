@@ -1,0 +1,13 @@
+id: procedure/javascript
+type: type
+alias: javascript
+description: >-
+    A JavaScript procedure. This procedure will execute generic JavaScript code
+    allowing other procedures to be called.
+initializer: org.rapidcontext.core.js.JsProcedure
+binding:
+  - name: code
+    type: data
+    description: >-
+        The JavaScript source code to execute on procedure calls. Use a
+        'return' statement for the procedure result.

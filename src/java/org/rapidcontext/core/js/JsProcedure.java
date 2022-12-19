@@ -18,10 +18,11 @@ import java.util.ArrayList;
 
 import org.apache.commons.lang3.RegExUtils;
 import org.mozilla.javascript.Function;
-import org.rapidcontext.core.proc.AddOnProcedure;
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
+import org.rapidcontext.core.type.Procedure;
 
 /**
  * A JavaScript procedure. This procedure will execute generic
@@ -30,7 +31,7 @@ import org.rapidcontext.core.proc.ProcedureException;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class JsProcedure extends AddOnProcedure {
+public class JsProcedure extends Procedure {
 
     /**
      * The binding name for the JavaScript code.
@@ -43,15 +44,16 @@ public class JsProcedure extends AddOnProcedure {
     private Function func = null;
 
     /**
-     * Creates a new JavaScript procedure.
+     * Creates a new procedure from a serialized representation.
      *
-     * @throws ProcedureException if the initialization failed
+     * @param id             the object identifier
+     * @param type           the object type name
+     * @param dict           the serialized representation
      */
-    public JsProcedure() throws ProcedureException {
-        defaults.set(BINDING_CODE, Bindings.DATA, "",
-                     "The JavaScript source code to execute on procedure " +
-                     "calls. Use a 'return' statement for the procedure result.");
-        defaults.seal();
+    public JsProcedure(String id, String type, Dict dict) {
+        super(id, type, dict);
+        // TODO: remove when all procedures have migrated
+        this.dict.set(KEY_TYPE, "procedure/javascript");
     }
 
     /**
@@ -99,7 +101,7 @@ public class JsProcedure extends AddOnProcedure {
             boolean unwrapResult = (cx.getCallStack().height() <= 1);
             return unwrapResult ? JsRuntime.unwrap(res) : res;
         } catch (JsException e) {
-            throw new ProcedureException( "In " + getName(), e);
+            throw new ProcedureException( "In " + id(), e);
         }
     }
 
@@ -112,7 +114,7 @@ public class JsProcedure extends AddOnProcedure {
      *             correctly
      */
     public void compile() throws ProcedureException {
-        String name = RegExUtils.replaceAll(getName(), "[^a-zA-Z0-9_$]", "_");
+        String name = RegExUtils.replaceAll(id(), "[^a-zA-Z0-9_$]", "_");
         String code = (String) getBindings().getValue(BINDING_CODE);
         ArrayList<String> args = new ArrayList<>();
         for (String arg : getBindings().getNames()) {
@@ -127,7 +129,7 @@ public class JsProcedure extends AddOnProcedure {
             String[] argNames = args.toArray(new String[args.size()]);
             this.func = JsRuntime.compile(name, argNames, code);
         } catch (Exception e) {
-            throw new ProcedureException("In " + getName(), e);
+            throw new ProcedureException("In " + id(), e);
         }
     }
 }

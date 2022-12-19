@@ -29,7 +29,6 @@ import org.rapidcontext.app.plugin.PluginManager;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.js.JsCompileInterceptor;
-import org.rapidcontext.core.js.JsProcedure;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Interceptor;
 import org.rapidcontext.core.proc.Library;
@@ -246,15 +245,6 @@ public class ApplicationContext {
      * Initializes the library in this context.
      */
     private void initLibrary() {
-
-        // Register default procedure types
-        try {
-            Library.registerType("javascript", JsProcedure.class);
-        } catch (ProcedureException e) {
-            LOG.severe("failed to register javascript procedure type: " +
-                       e.getMessage());
-        }
-
         // Add default interceptors
         Interceptor i = library.getInterceptor();
         library.setInterceptor(new JsCompileInterceptor(i));
@@ -285,7 +275,6 @@ public class ApplicationContext {
      */
     private void destroyAll() {
         pluginManager.unloadAll();
-        Library.unregisterType("javascript");
         library = new Library(this.storage);
         matchers = null;
     }

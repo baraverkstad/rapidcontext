@@ -861,7 +861,7 @@ AdminApp.prototype._updateProcArg = function () {
 AdminApp.prototype._addProcedure = function () {
     var data = {
         name: "",
-        type: "javascript",
+        type: "procedure/javascript",
         description: "",
         bindings: {},
         defaults: {}
@@ -976,13 +976,13 @@ AdminApp.prototype._renderProcEdit = function () {
             node.appendChild(div);
         }
     });
-    var className = (data.type == "javascript") ? "" : "hidden";
-    this.ui.procEditProcs.parentNode.className = className;
+    var isTypeJs = data.type == "procedure/javascript";
+    this.ui.procEditProcs.parentNode.className = isTypeJs ? "" : "hidden";
     var opts = this.ui.procEditAddType.getElementsByTagName("option");
-    opts[0].disabled = (data.type != "javascript");
-    opts[1].disabled = (data.type != "javascript");
-    opts[2].disabled = (data.type != "javascript");
-    if (data.type != "javascript") {
+    opts[0].disabled = !isTypeJs;
+    opts[1].disabled = !isTypeJs;
+    opts[2].disabled = !isTypeJs;
+    if (!isTypeJs) {
         this.ui.procEditAddType.selectedIndex = 3;
     }
     this.ui.procEditForm.update(data);
