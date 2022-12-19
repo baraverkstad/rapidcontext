@@ -27,10 +27,10 @@ import java.util.stream.Stream;
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.TextEncoding;
-import org.rapidcontext.core.proc.AddOnProcedure;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
+import org.rapidcontext.core.type.Procedure;
 
 /**
  * A command-line execution procedure. This procedure provides the
@@ -40,7 +40,7 @@ import org.rapidcontext.core.proc.ProcedureException;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class CmdLineExecProcedure extends AddOnProcedure {
+public class CmdLineExecProcedure extends Procedure {
 
     /**
      * The class logger.
@@ -70,18 +70,16 @@ public class CmdLineExecProcedure extends AddOnProcedure {
         Pattern.compile("^#\\s+progress: (\\d+(\\.\\d+)?)%", Pattern.CASE_INSENSITIVE);
 
     /**
-     * Creates a new command-line execution procedure.
+     * Creates a new procedure from a serialized representation.
      *
-     * @throws ProcedureException if the initialization failed
+     * @param id             the object identifier
+     * @param type           the object type name
+     * @param dict           the serialized representation
      */
-    public CmdLineExecProcedure() throws ProcedureException {
-        defaults.set(BINDING_COMMAND, Bindings.DATA, "",
-                     "The command-line to execute.");
-        defaults.set(BINDING_DIRECTORY, Bindings.DATA, "",
-                     "The working directory or blank for current.");
-        defaults.set(BINDING_ENVIRONMENT, Bindings.DATA, "",
-                     "The environment variable bindings or blank for current.");
-        defaults.seal();
+    public CmdLineExecProcedure(String id, String type, Dict dict) {
+        super(id, type, dict);
+        // TODO: remove when all procedures have migrated
+        this.dict.set(KEY_TYPE, "procedure/cmdline/exec");
     }
 
     /**

@@ -1,0 +1,18 @@
+id: procedure/cmdline/exec
+type: type
+alias: cmdline.exec
+description: >-
+    A command-line execution procedure. This procedure provides the
+    functionality of executing local command-line programs and
+    capturing their output.
+initializer: org.rapidcontext.app.plugin.cmdline.CmdLineExecProcedure
+binding:
+  - name: command
+    type: data
+    description: The command-line to execute.
+  - name: directory
+    type: data
+    description: The working directory or blank for current.
+  - name: environment
+    type: data
+    description: The environment variable bindings or blank for current.
