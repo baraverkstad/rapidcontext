@@ -16,6 +16,7 @@ package org.rapidcontext.core.type;
 
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.storage.Path;
@@ -59,6 +60,11 @@ public abstract class Procedure extends StorableObject implements org.rapidconte
     public static final Path PATH = Path.from("/procedure/");
 
     /**
+     * The default active procedure time (5 minutes).
+     */
+    public static final long ACTIVE_MILLIS = 5L * DateUtils.MILLIS_PER_MINUTE;
+
+    /**
      * Returns a stream of all environments found in the storage.
      *
      * @param storage        the storage to search
@@ -80,6 +86,17 @@ public abstract class Procedure extends StorableObject implements org.rapidconte
      */
     protected Procedure(String id, String type, Dict dict) {
         super(id, type, dict);
+    }
+
+    /**
+     * Checks if this object is in active use. This method will return
+     * true if the object was activated during the last 5 minutes.
+     *
+     * @return true if the object is considered active, or
+     *         false otherwise
+     */
+    protected boolean isActive() {
+        return System.currentTimeMillis() - lastActiveTime <= ACTIVE_MILLIS;
     }
 
     /**
