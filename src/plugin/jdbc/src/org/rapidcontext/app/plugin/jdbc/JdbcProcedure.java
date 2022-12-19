@@ -23,11 +23,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.rapidcontext.core.data.Array;
-import org.rapidcontext.core.proc.AddOnProcedure;
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.type.ConnectionException;
+import org.rapidcontext.core.type.Procedure;
 
 /**
  * A base JDBC procedure. This procedure provides common methods for
@@ -36,7 +37,7 @@ import org.rapidcontext.core.type.ConnectionException;
  * @author   Per Cederberg
  * @version  1.0
  */
-public abstract class JdbcProcedure extends AddOnProcedure {
+public abstract class JdbcProcedure extends Procedure {
 
     /**
      * The binding name for the adapter connection pool.
@@ -78,22 +79,14 @@ public abstract class JdbcProcedure extends AddOnProcedure {
     }
 
     /**
-     * Creates a new JDBC procedure.
+     * Creates a new procedure from a serialized representation.
      *
-     * @throws ProcedureException if the initialization failed
+     * @param id             the object identifier
+     * @param type           the object type name
+     * @param dict           the serialized representation
      */
-    protected JdbcProcedure() throws ProcedureException {
-        defaults.set(BINDING_DB, Bindings.CONNECTION, "",
-                     "The JDBC connection identifier.");
-        defaults.set(BINDING_SQL, Bindings.DATA, "",
-                     "The SQL text, optionally containing arguments with " +
-                     "a ':' prefix.");
-        defaults.set(BINDING_FLAGS, Bindings.DATA, "",
-                     "Optional execution flags, currently '[no-]metadata', " +
-                     "'[no-]column-names', '[no-]native-types', " +
-                     "'[no-]binary-data', 'single-column' and 'single-row' " +
-                     "are supported.");
-        defaults.seal();
+    public JdbcProcedure(String id, String type, Dict dict) {
+        super(id, type, dict);
     }
 
     /**

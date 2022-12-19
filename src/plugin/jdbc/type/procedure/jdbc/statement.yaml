@@ -1,0 +1,17 @@
+id: procedure/jdbc/statement
+type: type
+alias: jdbc.statement
+description: >-
+    A SQL statement procedure for a JDBC connection. This procedure will
+    execute a parameterized SQL statement.
+initializer: org.rapidcontext.app.plugin.jdbc.JdbcStatementProcedure
+binding:
+  - name: db
+    type: connection
+    description: The JDBC connection identifier.
+  - name: sql
+    type: data
+    description: The SQL text, optionally with ':argument' parameters.
+  - name: flags
+    type: data
+    description: Optional execution flags, currently none supported.

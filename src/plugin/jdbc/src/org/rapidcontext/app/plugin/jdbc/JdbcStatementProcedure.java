@@ -16,6 +16,7 @@ package org.rapidcontext.app.plugin.jdbc;
 
 import java.sql.PreparedStatement;
 
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.type.ConnectionException;
 
@@ -29,12 +30,16 @@ import org.rapidcontext.core.type.ConnectionException;
 public class JdbcStatementProcedure extends JdbcProcedure {
 
     /**
-     * Creates a new JDBC statement procedure.
+     * Creates a new procedure from a serialized representation.
      *
-     * @throws ProcedureException if the initialization failed
+     * @param id             the object identifier
+     * @param type           the object type name
+     * @param dict           the serialized representation
      */
-    public JdbcStatementProcedure() throws ProcedureException {
-        super();
+    public JdbcStatementProcedure(String id, String type, Dict dict) {
+        super(id, type, dict);
+        // TODO: remove when all procedures have migrated
+        this.dict.set(KEY_TYPE, "procedure/jdbc/statement");
     }
 
     /**
