@@ -30,9 +30,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.JsonSerializer;
-import org.rapidcontext.core.proc.AddOnProcedure;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
+import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.core.web.Mime;
 import org.rapidcontext.util.FileUtil;
 
@@ -43,7 +43,7 @@ import org.rapidcontext.util.FileUtil;
  * @author   Per Cederberg
  * @version  1.0
  */
-public abstract class HttpProcedure extends AddOnProcedure {
+public abstract class HttpProcedure extends Procedure {
 
     /**
      * The class logger.
@@ -52,12 +52,14 @@ public abstract class HttpProcedure extends AddOnProcedure {
         Logger.getLogger(HttpProcedure.class.getName());
 
     /**
-     * Creates a new HTTP procedure.
+     * Creates a new procedure from a serialized representation.
      *
-     * @throws ProcedureException if the initialization failed
+     * @param id             the object identifier
+     * @param type           the object type name
+     * @param dict           the serialized representation
      */
-    protected HttpProcedure() throws ProcedureException {
-        super();
+    public HttpProcedure(String id, String type, Dict dict) {
+        super(id, type, dict);
     }
 
     /**

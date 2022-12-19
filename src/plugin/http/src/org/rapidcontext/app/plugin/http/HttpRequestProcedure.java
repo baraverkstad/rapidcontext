@@ -20,6 +20,7 @@ import java.net.URL;
 import java.util.LinkedHashMap;
 
 import org.apache.commons.lang3.StringUtils;
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.TextEncoding;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
@@ -66,38 +67,16 @@ public class HttpRequestProcedure extends HttpProcedure {
     public static final String BINDING_FLAGS = "flags";
 
     /**
-     * Creates a new HTTP procedure.
+     * Creates a new procedure from a serialized representation.
      *
-     * @throws ProcedureException if the initialization failed
+     * @param id             the object identifier
+     * @param type           the object type name
+     * @param dict           the serialized representation
      */
-    public HttpRequestProcedure() throws ProcedureException {
-        super();
-        defaults.set(BINDING_CONNECTION, Bindings.DATA, null,
-                     "The HTTP connection pool name, set to blank for none.");
-        defaults.set(BINDING_URL, Bindings.DATA, "",
-                     "The HTTP URL, optionally containing argument template " +
-                     "variables (e.g. ':arg' or '@arg'). May be blank or " +
-                     "relative to the connection pool URL.");
-        defaults.set(BINDING_METHOD, Bindings.DATA, "",
-                     "The HTTP method to use (e.g. 'GET' or 'POST').");
-        defaults.set(BINDING_HEADERS, Bindings.DATA, "",
-                     "Any additional HTTP headers, optionally containing " +
-                     "argument template variables (e.g. ':arg' or '@arg'). " +
-                     "Headers are listed in 'Name: Value' pairs, separated " +
-                     "by line breaks. Leave blank for default headers.");
-        defaults.set(BINDING_DATA, Bindings.DATA, "",
-                     "The HTTP payload data to send, optionally containing " +
-                     "argument template variables (e.g. ':arg' or '@arg'). " +
-                     "Data should be URL-encoded, unless a 'Content-Type' " +
-                     "header is specified. URL-encoded data may be split " +
-                     "into lines, which are automatically joined by '&' " +
-                     "characters).");
-        defaults.set(BINDING_FLAGS, Bindings.DATA, "",
-                     "Optional execution flags (space separated):\n" +
-                     "json -- parse response text as JSON data\n" +
-                     "jsonerror -- parse response errors as JSON\n" +
-                     "metadata -- wrap all responses in meta object");
-        defaults.seal();
+    public HttpRequestProcedure(String id, String type, Dict dict) {
+        super(id, type, dict);
+        // TODO: remove when all procedures have migrated
+        this.dict.set(KEY_TYPE, "procedure/http/request");
     }
 
     /**

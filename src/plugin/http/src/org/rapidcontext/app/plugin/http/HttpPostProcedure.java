@@ -14,6 +14,7 @@
 
 package org.rapidcontext.app.plugin.http;
 
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
@@ -31,12 +32,16 @@ import org.rapidcontext.core.proc.ProcedureException;
 public class HttpPostProcedure extends HttpRequestProcedure {
 
     /**
-     * Creates a new HTTP POST procedure.
+     * Creates a new procedure from a serialized representation.
      *
-     * @throws ProcedureException if the initialization failed
+     * @param id             the object identifier
+     * @param type           the object type name
+     * @param dict           the serialized representation
      */
-    public HttpPostProcedure() throws ProcedureException {
-        super();
+    public HttpPostProcedure(String id, String type, Dict dict) {
+        super(id, type, dict);
+        // TODO: remove when all procedures have migrated
+        this.dict.set(KEY_TYPE, "procedure/http/post");
     }
 
     /**
