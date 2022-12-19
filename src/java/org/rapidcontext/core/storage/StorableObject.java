@@ -14,6 +14,8 @@
 
 package org.rapidcontext.core.storage;
 
+import java.util.Date;
+
 import org.rapidcontext.core.data.Dict;
 
 /**
@@ -74,6 +76,12 @@ public class StorableObject {
      * object.
      */
     protected Dict dict = null;
+
+    /**
+     * The timestamp (in milliseconds) of the last object activation.
+     * This is updated each time the object is returned from storage.
+     */
+    protected long lastActiveTime = System.currentTimeMillis();
 
     /**
      * Creates a new object. This is the default constructor for
@@ -178,6 +186,16 @@ public class StorableObject {
     }
 
     /**
+     * Returns the timestamp of the latest object activation. This is
+     * updated each time the object is fetched from storage.
+     *
+     * @return the timestamp of the latest object activation
+     */
+    protected Date lastActive() {
+        return new Date(lastActiveTime);
+    }
+
+    /**
      * Initializes this object after loading it from a storage. Any
      * object initialization that may fail or that causes the object
      * to interact with any other part of the system (or external
@@ -216,7 +234,7 @@ public class StorableObject {
      * nothing.
      */
     protected void activate() {
-        // Default implementation does nothing
+        lastActiveTime = System.currentTimeMillis();
     }
 
     /**
@@ -239,6 +257,8 @@ public class StorableObject {
      * @return the serialized representation of this object
      */
     public Dict serialize() {
-        return dict.copy();
+        Dict copy = dict.copy();
+        copy.set("_lastActiveTime", lastActive());
+        return copy;
     }
 }
