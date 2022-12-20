@@ -109,7 +109,10 @@ public abstract class JdbcProcedure extends Procedure {
     throws ProcedureException {
 
         JdbcChannel con = connectionReserve(cx, bindings);
-        String flags = (String) bindings.getValue(BINDING_FLAGS, "");
+        String flags = "";
+        if (bindings.hasName(BINDING_FLAGS)) {
+            flags = (String) bindings.getValue(BINDING_FLAGS, "");
+        }
         Object res = null;
         try (PreparedStatement stmt = prepare(con, cx, bindings)) {
             res = execute(con, stmt, flags.toLowerCase());

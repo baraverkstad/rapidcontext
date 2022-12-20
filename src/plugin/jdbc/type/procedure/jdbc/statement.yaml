@@ -12,6 +12,3 @@ binding:
   - name: sql
     type: data
     description: The SQL text, optionally with ':argument' parameters.
-  - name: flags
-    type: data
-    description: Optional execution flags, currently none supported.
