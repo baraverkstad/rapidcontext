@@ -77,7 +77,6 @@
         </table>
       </Form>
       <Dialog id="cxnEditDialog" title="Edit Connection" modal="true" w="40rem">
-        <h3>Edit Connection:</h3>
         <Form id="cxnEditForm">
           <div class="w-100">
             <table class="-form-layout-table -box-sizing-border my-1">
@@ -374,16 +373,16 @@
         </Form>
       </Dialog>
       <Dialog id="procEditDialog" title="Edit Procedure" modal="true" w="40rem">
-        <h3>Edit Procedure:</h3>
         <Form id="procEditForm">
           <div class="w-100">
             <table class="-form-layout-table -box-sizing-border">
               <tbody>
                 <tr>
-                  <th class="-form-layout-label">Name:</th>
+                  <th class="-form-layout-label">Identifier:</th>
                   <td class="w-100">
-                    <TextField name="name" required="true" pattern="[a-zA-Z0-9/._-]+" class="w-100" />
-                    <FormValidator name="name" message="Only alphanumeric characters allowed in name." />
+                    <span class="unimportant pr-1">/procedure/</span>
+                    <TextField name="name" required="true" pattern="[a-zA-Z0-9._-]+(/[a-zA-Z0-9._-]+)*" style="width: calc(100% - 6em);" />
+                    <FormValidator name="name" message="Only alphanumeric characters allowed in identifier." />
                   </td>
                 </tr>
                 <tr>

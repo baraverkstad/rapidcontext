@@ -109,7 +109,7 @@ AdminApp.prototype.start = function () {
     MochiKit.Signal.connect(this.ui.procRemove, "onclick", this, "_removeProcedure");
     MochiKit.Signal.connect(this.ui.procEdit, "onclick", this, "_editProcedure");
     MochiKit.Signal.connect(this.ui.procEditType, "onchange", this, "_updateProcEdit");
-    MochiKit.Signal.connect(this.ui.procEditAdd, "onclick", this, "_addProcBinding");
+    MochiKit.Signal.connect(this.ui.procEditForm, "onclick", this, "_addRemoveProcBinding");
     MochiKit.Signal.connect(this.ui.procEditForm, "onsubmit", this, "_saveProcedure");
     MochiKit.Signal.connect(this.ui.procReload, "onclick", this, "_showProcedure");
     MochiKit.Signal.connect(this.ui.procExec, "onclick", this, "_executeProcedure");
@@ -460,7 +460,7 @@ AdminApp.prototype._addRemoveConnectionProps = function (evt) {
             alert("Invalid parameter name.");
         }
     } else if ($el.data("action") === "remove") {
-        RapidContext.Widget.destroyWidget($el.closest("tr").get());
+        RapidContext.Widget.destroyWidget($el.closest("tr").get(0));
     }
 };
 
@@ -931,24 +931,15 @@ AdminApp.prototype._initProcEdit = function (data) {
  * the dialog.
  */
 AdminApp.prototype._renderProcEdit = function () {
-    var data = this.ui.procEditDialog.data;
-    RapidContext.Widget.destroyWidget(this.ui.procEditConns.childNodes);
-    RapidContext.Widget.destroyWidget(this.ui.procEditData.childNodes);
-    RapidContext.Widget.destroyWidget(this.ui.procEditProcs.childNodes);
-    RapidContext.Widget.destroyWidget(this.ui.procEditArgs.childNodes);
-    var parents = {
-        connection: this.ui.procEditConns,
-        data: this.ui.procEditData,
-        procedure: this.ui.procEditProcs,
-        argument: this.ui.procEditArgs
-    };
-    for (var k in data.bindings) {
-        var b = data.bindings[k];
-        var defaults = data.defaults[data.type][b.name];
-        var strong = MochiKit.DOM.STRONG({}, b.name + ": ");
-        var icon = defaults ? null : RapidContext.Widget.Icon({ "class": "fa fa-minus-square widget-red" });
-        var desc = defaults ? defaults.description : b.description || "";
-        var div = MochiKit.DOM.DIV({ "class": "text-pre-wrap py-1" }, strong, icon, desc);
+    function buildIcon(cls, action) {
+        return RapidContext.Widget.Icon({ "class": cls, "data-action": action });
+    }
+    function buildBinding(b, def) {
+        var name = MochiKit.DOM.STRONG({}, b.name + ": ");
+        var icon = def ? null : buildIcon("fa fa-minus-square widget-red", "remove");
+        var up = def ? null : buildIcon("fa fa-arrow-circle-up widget-grey", "up");
+        var desc = def ? def.description : b.description || "";
+        var div = MochiKit.DOM.DIV({ "class": "text-pre-wrap py-1" }, name, icon, up, desc);
         var attrs = {
             name: "binding." + b.name,
             value: b.value,
@@ -962,19 +953,25 @@ AdminApp.prototype._renderProcEdit = function () {
             attrs.wrap = "off";
             field = RapidContext.Widget.TextArea(attrs);
         }
-        var container = MochiKit.DOM.DIV({}, div, field);
-        if (icon) {
-            var func = function (name) {
-                delete data.bindings[name];
-                this._updateProcEdit();
-            };
-            MochiKit.Signal.connect(icon, "onclick", MochiKit.Base.bind(func, this, b.name));
-        }
-        parents[b.type].appendChild(container);
+        return MochiKit.DOM.DIV({ "class": "binding" }, div, field);
+    }
+    var data = this.ui.procEditDialog.data;
+    var elems = this.ui.procEditForm.querySelectorAll(".binding");
+    RapidContext.Widget.destroyWidget(elems);
+    var parents = {
+        connection: this.ui.procEditConns,
+        data: this.ui.procEditData,
+        procedure: this.ui.procEditProcs,
+        argument: this.ui.procEditArgs
+    };
+    for (var k in data.bindings) {
+        var b = data.bindings[k];
+        var def = data.defaults[data.type][b.name];
+        parents[b.type].appendChild(buildBinding(b, def));
     }
     Object.values(parents).forEach(function (node) {
         if (node.childNodes.length == 0) {
-            var div = MochiKit.DOM.DIV({ "class": "py-1" }, "< None >");
+            var div = MochiKit.DOM.DIV({ "class": "py-1 widget-grey binding" }, "\u2014");
             node.appendChild(div);
         }
     });
@@ -992,24 +989,30 @@ AdminApp.prototype._renderProcEdit = function () {
 };
 
 /**
- * Adds a procedure binding from the input control.
+ * Handles addition and removal of procedure bindings.
  */
-AdminApp.prototype._addProcBinding = function () {
-    var data = this.ui.procEditDialog.data;
-    var type = this.ui.procEditAddType.value;
-    var name = this.ui.procEditAddName.getValue().trim();
-    if (name == "") {
-        RapidContext.UI.showError("Procedure binding name cannot be empty.");
-        this.ui.procEditAddName.focus();
-    } else if (data.bindings[name] != null) {
-        RapidContext.UI.showError("Procedure binding name already exists.");
-        this.ui.procEditAddName.focus();
-    } else {
-        var b = { name: name, type: type, description: "" };
-        b.value = (type == "data") ? "\n" : "";
-        data.bindings[name] = b;
-        this.ui.procEditAddName.setAttrs({ value: "" });
+AdminApp.prototype._addRemoveProcBinding = function (evt) {
+    var $el = $(evt.target()).closest("[data-action]");
+    if ($el.data("action") === "add") {
+        var data = this.ui.procEditDialog.data;
+        var type = this.ui.procEditAddType.value;
+        var name = this.ui.procEditAddName.value.trim();
+        var value = (type == "data") ? "\n" : "";
+        if (/[a-z0-9_-]+/i.test(name) && !data.bindings[name]) {
+            data.bindings[name] = { name: name, type: type, value: value };
+            this.ui.procEditAddName.setAttrs({ name: "binding." + name, value: value });
+            this._updateProcEdit();
+            this.ui.procEditAddName.setAttrs({ name: null, value: "" });
+        } else {
+            RapidContext.UI.showError("Name is invalid or already in use.");
+            this.ui.procEditAddName.focus();
+        }
+    } else if ($el.data("action") === "remove") {
+        RapidContext.Widget.destroyWidget($el.closest(".binding").get(0));
         this._updateProcEdit();
+    } else if ($el.data("action") === "up") {
+        var prev = $el.closest(".binding").get(0).previousSibling;
+        prev && prev.parentNode.insertBefore(prev.nextSibling, prev);
     }
 };
 
@@ -1022,33 +1025,34 @@ AdminApp.prototype._addProcBinding = function () {
 AdminApp.prototype._updateProcEdit = function () {
     var data = this.ui.procEditDialog.data;
     var values = this.ui.procEditForm.valueMap();
+    var bindings = {};
+    var k, b;
+    for (k in values) {
+        var name = /^binding\./.test(k) && k.replace(/^binding\./, "");
+        b = name && data.bindings[name];
+        if (b) {
+            b.value = values[k];
+            bindings[name] = b;
+        }
+    }
+    var defaults = data.defaults[values.type];
+    for (k in defaults) {
+        if (!bindings[k]) {
+            b = MochiKit.Base.clone(defaults[k]);
+            b.value = (b.type == "data") ? "\n" : "";
+            bindings[k] = b;
+        }
+    }
+    for (k in bindings) {
+        b = bindings[k];
+        if (!defaults[k] && !b.value.trim() && b.description) {
+            delete bindings[k]; // Remove previous type defaults
+        }
+    }
     data.name = values.name;
     data.type = values.type;
     data.description = values.description;
-    var k, b;
-    for (k in values) {
-        if (k.indexOf("binding.") == 0) {
-            var name = k.substring(8);
-            if (data.bindings[name]) {
-                data.bindings[name].value = values[k];
-            }
-        }
-    }
-    var defaults = data.defaults[data.type];
-    for (k in defaults) {
-        if (data.bindings[k] == null) {
-            b = MochiKit.Base.clone(defaults[k]);
-            b.value = (b.type == "data") ? "\n" : "";
-            data.bindings[k] = b;
-        }
-    }
-    for (k in data.bindings) {
-        b = data.bindings[k];
-        var v = b.value.trim();
-        if (defaults[k] == null && v == "" && b.description != "") {
-            delete data.bindings[k];
-        }
-    }
+    data.bindings = bindings;
     this._renderProcEdit();
 };
 
@@ -1056,8 +1060,8 @@ AdminApp.prototype._updateProcEdit = function () {
  * Saves the procedure from the procedure edit dialog.
  */
 AdminApp.prototype._saveProcedure = function () {
-    var data = this.ui.procEditDialog.data;
     this._updateProcEdit();
+    var data = this.ui.procEditDialog.data;
     var bindings = [];
     for (var k in data.bindings) {
         var b = data.bindings[k];
