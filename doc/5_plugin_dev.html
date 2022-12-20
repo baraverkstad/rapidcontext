@@ -150,33 +150,31 @@ in <var>plugin-build.xml</var> can be used for packaging the plug-in.</p>
 Procedures can be invoked from the client or from other procedures and may take
 arguments, modify data and/or return values.</p>
 
-<p>Each procedure has a specific type (or kind). The procedure type defines
-which Java code is used to execute the procedure, similar to a templating
-engine. Since most server-side operations are very similar, only a few
-different procedure types are needed. The built-in and standard plug-in
+<p>Each procedure has a specific type (its storage type). The procedure type
+defines which Java code is used to execute the procedure, similar to a
+templating engine. Since most server-side operations are very similar, only a
+few different procedure types are needed. The built-in and standard plug-in
 procedure types are listed below, but more can be added by installing
 additional plug-ins.</p>
 
 <ul class="box yellow">
-  <li><var>built-in</var> &mdash; The built-in procedure type, used for one-off
-      procedures implemented directly in Java code. This type is normally only
-      used for platform operations.</li>
-  <li><var>cmdline.exec</var> &mdash; The command-line execution procedure
-      type, used for running shell commands on the server. Procedure arguments
-      can used as arguments on the command-line.</li>
-  <li><var>http.post</var> &mdash; The HTTP POST request procedure type, used
-      for sending data to a receiving URL. Procedure arguments can be inserted
-      into either the request headers and/or data payload.</li>
-  <li><var>javascript</var> &mdash; The JavaScript procedure type, used for
-      building a procedure in JavaScript (usually to provide business logic and
-      smarts to more basic procedures). Procedure arguments are available as
-      global variables during execution.</li>
-  <li><var>jdbc.query</var> &mdash; The JDBC query procedure type, used for
-      SQL SELECT queries returning results. Procedure arguments may be inserted
-      as literals into the SQL text.</li>
-  <li><var>jdbc.statement</var> &mdash; The JDBC statement procedure type, used
-      for SQL INSERT, UPDATE and DELETE statements (among others). Procedure
-      arguments may be inserted as literals into the SQL text.</li>
+  <li><var>procedure</var> &mdash; The base procedure type, only used by
+      procedures implemented directly in Java code.</li>
+  <li><var>procedure/javascript</var> &mdash; The JavaScript procedure type,
+      used for creating a procedure in JavaScript (usually to provide business
+      logic and smarts for more basic procedures).</li>
+  <li><var>procedure/cmdline/exec</var> &mdash; The command-line execution
+      procedure type, used for running shell commands on the server. Procedure
+      arguments can used as arguments on the command-line.</li>
+  <li><var>procedure/http/request</var> &mdash; The HTTP request procedure type,
+      used for fetching from or posting to a URL. Procedure arguments can be
+      inserted into either the request headers and/or data payload.</li>
+  <li><var>procedure/jdbc/query</var> &mdash; The JDBC query procedure type,
+      used for SQL SELECT queries returning results. Procedure arguments may be
+      inserted as literals into the SQL text.</li>
+  <li><var>procedure/jdbc/statement</var> &mdash; The JDBC statement procedure
+      type, used for SQL INSERT, UPDATE and DELETE statements (among others).
+      Procedure arguments may be inserted as literals into the SQL text.</li>
 </ul>
 
 
