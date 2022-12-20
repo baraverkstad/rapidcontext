@@ -14,10 +14,14 @@ binding:
             return name.startsWith(prefix);
         }
 
+        function kebabCase(name) {
+            return name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+        }
+
         function convert(name) {
             let src = readProc(name);
             let data = {
-                id: name.replace(/\./g, '/').toLowerCase(),
+                id: kebabCase(name.replace(/\./g, '/')),
                 type: TYPES[src.type] || src.type,
                 alias: name
             };
