@@ -1,0 +1,13 @@
+id: test/exec-cmd
+type: procedure/cmdline/exec
+description: Runs a simple command-line execution test.
+binding:
+  - name: command
+    type: data
+    value: ls -l
+  - name: directory
+    type: data
+    value: ''
+  - name: environment
+    type: data
+    value: ''

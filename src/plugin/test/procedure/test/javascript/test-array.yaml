@@ -1,0 +1,40 @@
+id: test/javascript/test-array
+type: procedure/javascript
+description: Checks the Java Array object wrapping vs. a standard JavaScript Array.
+binding:
+  - name: code
+    type: data
+    value: |-
+        // Create ArrayWrapper object
+        let jsObj = [];
+        let javaObj = listApps();
+        let addOn = { test: 123 };
+        javaObj.length = "7";
+        javaObj.push(123);
+        javaObj.splice(8, 0, { a: 1, b: 2 });
+        javaObj[9] = [1, 2, 3];
+        Object.assign(javaObj, addOn);
+        let copy = Object.assign(JSON.parse(JSON.stringify(javaObj)), addOn);
+
+        // Return meta information
+        var res = {
+            type: metaType(javaObj),
+            data: javaObj,
+            json: JSON.stringify(javaObj),
+            keys: compareValues(Object.keys(javaObj), Object.keys(copy)),
+            ownProperties: compareTypes(javaObj, copy),
+            prototypeProperties: compareTypes(Object.getPrototypeOf(javaObj), Object.getPrototypeOf(jsObj))
+        };
+        return res;
+  - name: listApps
+    type: procedure
+    value: system/app/list
+  - name: metaType
+    type: procedure
+    value: test/javascript/lib/meta-type
+  - name: compareTypes
+    type: procedure
+    value: test/javascript/lib/compare-types
+  - name: compareValues
+    type: procedure
+    value: test/javascript/lib/compare-values

@@ -1,0 +1,38 @@
+id: test/javascript/lib/compare-types
+type: procedure/javascript
+description: Compares types of two JavaScript values.
+binding:
+  - name: code
+    type: data
+    value: |-
+        function compareTypes(actual, expect, recursive) {
+            let isNull = actual == null || expect == null;
+            let isObject = typeof(actual) === 'object' || typeof(actual) === 'function';
+            if (!isNull && isObject && recursive !== false) {
+                let o = {};
+                Object.getOwnPropertyNames(actual).forEach((k) => {
+                    o[k] = compareTypes(actual[k], expect[k], false);
+                });
+                Object.getOwnPropertyNames(expect).forEach((k) => {
+                    if (!(k in o)) {
+                        o[k] = ['\uD83D\uDFE1', compareTypes(actual[k], expect[k], false)].join(' ');
+                    }
+                });
+                return o;
+            } else if ((isNull && actual !== expect) || typeof(actual) !== typeof(expect)) {
+                return ['\uD83D\uDD34', typeName(actual), '!=', typeName(expect)].join(' ');
+            } else {
+                return typeName(actual);
+            }
+        }
+
+        return compareTypes(actual, expect, true);
+  - name: typeName
+    type: procedure
+    value: test/javascript/lib/type-name
+  - name: actual
+    type: argument
+    description: The actual value
+  - name: expect
+    type: argument
+    description: The expected value

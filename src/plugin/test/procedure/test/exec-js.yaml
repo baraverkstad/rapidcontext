@@ -1,0 +1,14 @@
+id: test/exec-js
+type: procedure/javascript
+description: Executes a piece of JavaScript code and returns the results.
+binding:
+  - name: code
+    type: data
+    value: |
+        return eval(js);
+  - name: js
+    type: argument
+    description: The JavaScript source code to execute.
+  - name: data
+    type: argument
+    description: The optional data variable to process.

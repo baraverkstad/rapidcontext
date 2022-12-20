@@ -1,0 +1,44 @@
+id: test/http/test-patch
+type: procedure/http/request
+description: |-
+    * Connection: none
+    * URL: absolute + template args + raw args
+    * Method: PATCH
+    * Headers: template args
+    * Data: template args + raw args
+    * Response: metadata + json
+binding:
+  - name: connection
+    type: data
+    value: ''
+  - name: url
+    type: data
+    value: https://eu.httpbin.org/patch?arg1=:arg1&arg2=:arg2&@arg3
+  - name: method
+    type: data
+    value: PATCH
+  - name: headers
+    type: data
+    value: |-
+        X-Test-Header-1: @arg1
+        X-Test-Header-2: Test value
+  - name: data
+    type: data
+    value: |-
+        one=first
+        two=:arg1
+        three=3
+        four=:arg2
+        @arg3
+  - name: flags
+    type: data
+    value: metadata json
+  - name: arg1
+    type: argument
+    description: Ascii argument
+  - name: arg2
+    type: argument
+    description: Non-ascii argument
+  - name: arg3
+    type: argument
+    description: URL-encoded name=value params (or empty)

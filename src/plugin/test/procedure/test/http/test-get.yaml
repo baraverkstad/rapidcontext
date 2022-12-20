@@ -1,0 +1,36 @@
+id: test/http/test-get
+type: procedure/http/request
+description: |-
+    * Connection: test/httpbin
+    * URL: relative + template args
+    * Method: GET
+    * Headers: connection header + template args
+    * Data: none
+    * Response: json
+binding:
+  - name: connection
+    type: data
+    value: test/httpbin
+  - name: url
+    type: data
+    value: /get?arg1=@arg1&arg2=:arg2
+  - name: method
+    type: data
+    value: GET
+  - name: headers
+    type: data
+    value: |
+        X-Test-Header-1: @arg1
+        X-Test-Header-2: Test value
+  - name: data
+    type: data
+    value: ''
+  - name: flags
+    type: data
+    value: json
+  - name: arg1
+    type: argument
+    description: A URL-encoded argument (ASCII)
+  - name: arg2
+    type: argument
+    description: A raw argument (e.g. "@&%/#?")

@@ -1,0 +1,35 @@
+id: test/javascript/lib/meta-type
+type: procedure/javascript
+description: Returns type metadata for an object.
+binding:
+  - name: code
+    type: data
+    value: |-
+        function types(o) {
+            let s = typeName(o);
+            if (o === Object.prototype) {
+                s = 'Object.prototype';
+            } else if (o === Array.prototype) {
+                s = 'Array.prototype';
+            } else if (o === Function.prototype) {
+                s = 'Function.prototype';
+            } else if (o === String.prototype) {
+                s = 'String.prototype';
+            }
+            let proto = o && Object.getPrototypeOf(o);
+            return proto ? [s].concat(types(proto)) : [s];
+        }
+
+        var res = {
+            chain: types(obj).join(' \u25BA '),
+            'instanceOf Object': obj instanceof Object,
+            'instanceOf Array': obj instanceof Array,
+            'Array.isArray': Array.isArray(obj)
+        };
+        return res;
+  - name: typeName
+    type: procedure
+    value: test/javascript/lib/type-name
+  - name: obj
+    type: argument
+    description: The object to check

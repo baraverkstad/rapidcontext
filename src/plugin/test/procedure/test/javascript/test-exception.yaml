@@ -1,0 +1,10 @@
+id: test/javascript/test-exception
+type: procedure/javascript
+description: Tests the JavaScript exception throwing.
+binding:
+  - name: code
+    type: data
+    value: |-
+        // Throw error instead of returning result
+        throw new Error("javascript error");
+        return null;

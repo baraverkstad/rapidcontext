@@ -1,0 +1,40 @@
+id: test/http/test-json
+type: procedure/http/request
+description: |-
+    * Connection: test/httpbin
+    * URL: absolute, override connection
+    * Method: PUT
+    * Headers: override connection
+    * Data: JSON + template args
+    * Response: json
+binding:
+  - name: connection
+    type: data
+    value: test/httpbin
+  - name: url
+    type: data
+    value: https://httpbin.org/put
+  - name: method
+    type: data
+    value: PUT
+  - name: headers
+    type: data
+    value: |-
+        Content-Type: application/json
+        X-Test-Connection: override
+  - name: data
+    type: data
+    value: |-
+        {
+          "arg1": "@arg1",
+          "arg2": :arg2
+        }
+  - name: flags
+    type: data
+    value: json
+  - name: arg1
+    type: argument
+    description: A pure-ASCII argument
+  - name: arg2
+    type: argument
+    description: A raw argument (e.g. "@&%/#?\")

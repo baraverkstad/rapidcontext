@@ -1,0 +1,45 @@
+id: test/javascript/test-connection
+type: procedure/javascript
+description: >-
+    Checks the Java Connection object wrapping vs. a standard JavaScript Object.
+binding:
+  - name: code
+    type: data
+    value: |-
+        // Create ProcedureWrapper object
+        function noop() {};
+        let jsObj = {
+            getHeaders: noop,
+            getUrl: noop,
+            commit: noop,
+            rollback: noop,
+            isValid: noop,
+            toString: function toString() {}
+        };
+        let javaObj = httpBin;
+        let addOn = { test: 123 };
+        Object.assign(jsObj, addOn);
+        Object.assign(javaObj, addOn);
+
+        // Return meta information
+        var res = {
+            type: metaType(javaObj),
+            data: javaObj,
+            method: compareValues(javaObj.toString, jsObj.toString),
+            keys: compareValues(Object.keys(javaObj).sort(), Object.keys(jsObj).sort()),
+            ownProperties: compareTypes(javaObj, jsObj),
+            prototypeProperties: compareTypes(Object.getPrototypeOf(javaObj), Object.getPrototypeOf(jsObj))
+        };
+        return res;
+  - name: httpBin
+    type: connection
+    value: test/httpbin
+  - name: metaType
+    type: procedure
+    value: test/javascript/lib/meta-type
+  - name: compareTypes
+    type: procedure
+    value: test/javascript/lib/compare-types
+  - name: compareValues
+    type: procedure
+    value: test/javascript/lib/compare-values
