@@ -914,7 +914,8 @@ AdminApp.prototype._initProcEdit = function (data) {
         .then(function (res) {
             MochiKit.DOM.replaceChildNodes(select);
             Object.keys(res).sort().forEach(function (k) {
-                select.appendChild(MochiKit.DOM.OPTION({ value: k }, k));
+                var name = k.replace("procedure/", "");
+                select.appendChild(MochiKit.DOM.OPTION({ value: k }, name));
                 var values = res[k].bindings;
                 var keys = MochiKit.Base.map(MochiKit.Base.itemgetter("name"), values);
                 data.defaults[k] = RapidContext.Util.dict(keys, values);
@@ -946,7 +947,8 @@ AdminApp.prototype._renderProcEdit = function () {
         var defaults = data.defaults[data.type][b.name];
         var strong = MochiKit.DOM.STRONG({}, b.name + ": ");
         var icon = defaults ? null : RapidContext.Widget.Icon({ "class": "fa fa-minus-square widget-red" });
-        var div = MochiKit.DOM.DIV({ "class": "text-pre-wrap py-1" }, strong, icon, b.description);
+        var desc = defaults ? defaults.description : b.description || "";
+        var div = MochiKit.DOM.DIV({ "class": "text-pre-wrap py-1" }, strong, icon, desc);
         var attrs = {
             name: "binding." + b.name,
             value: b.value,
