@@ -17,14 +17,12 @@ package org.rapidcontext.app.plugin;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
@@ -118,19 +116,6 @@ public class PluginManager {
     }
 
     /**
-     * Returns the plug-in instance path for a specified plug-in id.
-     *
-     * @param pluginId       the unique plug-in id
-     *
-     * @return the plug-in instance path
-     */
-    public static Path pluginPath(String pluginId) {
-        Path ident = storagePath(pluginId).removePrefix(RootStorage.PATH_STORAGE);
-        Path cachePath = Path.resolve(RootStorage.PATH_STORAGE_CACHE, ident);
-        return Path.resolve(cachePath, Plugin.PATH.child(pluginId, false));
-    }
-
-    /**
      * Returns the plug-in identifier for a storage object. The
      * object storage paths will be used to return the first matching
      * plug-in.
@@ -220,7 +205,7 @@ public class PluginManager {
      *         false otherwise
      */
     public boolean isLoaded(String pluginId) {
-        return storage.lookup(pluginPath(pluginId)) != null ||
+        return storage.lookup(Path.resolve(Plugin.PATH, pluginId)) != null ||
                SYSTEM_PLUGIN.equals(pluginId) ||
                LOCAL_PLUGIN.equals(pluginId);
     }
@@ -359,6 +344,7 @@ public class PluginManager {
         String      msg;
 
         try {
+            // TODO: Support /plugin/<id>.yaml location too
             storage = new ZipStorage(file);
             dict = (Dict) storage.load(Path.from("/plugin"));
             if (dict == null) {
@@ -409,74 +395,18 @@ public class PluginManager {
      * @throws PluginException if the plug-in loading failed
      */
     public void load(String pluginId) throws PluginException {
-        String  msg;
-
-        // Load plug-in configuration
         if (SYSTEM_PLUGIN.equals(pluginId) || LOCAL_PLUGIN.equals(pluginId)) {
-            msg = "cannot force loading of system or local plug-ins";
+            String msg = "cannot force loading of system or local plug-ins";
             throw new PluginException(msg);
         }
-        Dict dict = config(pluginId);
-        if (dict == null) {
-            msg = "couldn't load " + pluginId + " plugin config file";
-            LOG.warning(msg);
-            throw new PluginException(msg);
-        }
-
-        // Create overlay & load JAR files
         loadOverlay(pluginId);
         loadJarFiles(pluginId);
-
-        // Create plug-in instance
-        Plugin plugin;
-        String className = dict.getString(Plugin.KEY_CLASSNAME, null);
-        if (className == null || className.trim().length() <= 0) {
-            plugin = new Plugin(dict);
-        } else {
-            Class<?> cls;
-            try {
-                cls = classLoader.loadClass(className);
-            } catch (Throwable e) {
-                msg = "couldn't load " + pluginId + " plugin class " +
-                      className;
-                LOG.log(Level.WARNING, msg, e);
-                throw new PluginException(msg + ": " + e.getMessage());
-            }
-            if (!ClassUtils.getAllSuperclasses(cls).contains(Plugin.class)) {
-                msg = pluginId + " plugin class " + className +
-                      " isn't a subclass of the Plugin class";
-                LOG.warning(msg);
-                throw new PluginException(msg);
-            }
-            Constructor<?> ctor;
-            try {
-                ctor = cls.getConstructor(new Class[] { Dict.class});
-            } catch (Throwable e) {
-                msg = pluginId + " plugin class " + className +
-                      " missing constructor with valid signature";
-                LOG.log(Level.WARNING, msg, e);
-                throw new PluginException(msg + ": " + e.getMessage());
-            }
-            try {
-                plugin = (Plugin) ctor.newInstance(new Object[] { dict });
-            } catch (Throwable e) {
-                msg = "couldn't create " + pluginId + " plugin instance for " +
-                      className;
-                LOG.log(Level.WARNING, msg, e);
-                throw new PluginException(msg + ": " + e.getMessage());
-            }
-        }
-
-        // Initialize plug-in instance
-        try {
-            Type.all(storage).forEach(o -> { /* Force refresh cached types */ });
-            // TODO: plug-in initialization should be handled by storage
-            plugin.init();
-            storage.store(pluginPath(pluginId), plugin);
-        } catch (Throwable e) {
-            msg = "plugin class " + className + " threw exception on init";
-            LOG.log(Level.WARNING, msg, e);
-            throw new PluginException(msg + ": " + e.getMessage());
+        Type.all(storage).forEach(o -> { /* Force refresh cached types */ });
+        Object obj = storage.load(Path.resolve(Plugin.PATH, pluginId));
+        if (!(obj instanceof Plugin)) {
+            String msg = pluginId + " plug-in failed to initialize properly";
+            LOG.warning(msg);
+            throw new PluginException(msg);
         }
     }
 
@@ -490,14 +420,12 @@ public class PluginManager {
      *             overlaid on the root
      */
     private void loadOverlay(String pluginId) throws PluginException {
-        boolean  readWrite = LOCAL_PLUGIN.equals(pluginId);
-        int      prio = SYSTEM_PLUGIN.equals(pluginId) ? 0 : 100;
-        String   msg;
-
         try {
+            boolean readWrite = LOCAL_PLUGIN.equals(pluginId);
+            int prio = SYSTEM_PLUGIN.equals(pluginId) ? 0 : 100;
             storage.remount(storagePath(pluginId), readWrite, Path.ROOT, prio);
         } catch (StorageException e) {
-            msg = "failed to overlay " + pluginId + " plug-in storage";
+            String msg = "failed to overlay " + pluginId + " plug-in storage";
             LOG.log(Level.SEVERE, msg, e);
             throw new PluginException(msg + ": " + e.getMessage());
         }
@@ -512,23 +440,14 @@ public class PluginManager {
      * @throws PluginException if the plug-in unloading failed
      */
     public void unload(String pluginId) throws PluginException {
-        Path    path = pluginPath(pluginId);
-        String  msg;
-
         if (SYSTEM_PLUGIN.equals(pluginId) || LOCAL_PLUGIN.equals(pluginId)) {
-            msg = "cannot unload system or local plug-ins";
+            String msg = "cannot unload system or local plug-ins";
             throw new PluginException(msg);
-        }
-        try {
-            storage.remove(path);
-        } catch (StorageException e) {
-            msg = "failed destroy call on " + pluginId + " plugin";
-            LOG.log(Level.SEVERE, msg, e);
         }
         try {
             storage.remount(storagePath(pluginId), false, null, 0);
         } catch (StorageException e) {
-            msg = "plugin " + pluginId + " storage remount failed";
+            String msg = "plugin " + pluginId + " storage remount failed";
             LOG.log(Level.WARNING, msg, e);
             throw new PluginException(msg + ": " + e.getMessage());
         }
@@ -541,15 +460,12 @@ public class PluginManager {
      * this.
      */
     public void unloadAll() {
-        String[] ids = storage.query(Plugin.PATH)
-            .objects(Plugin.class)
-            .map(p -> p.id())
-            .toArray(String[]::new);
-        for (String pluginId : ids) {
+        Path[] paths = storage.query(Plugin.PATH).paths().toArray(Path[]::new);
+        for (Path p : paths) {
             try {
-                unload(pluginId);
+                unload(p.toIdent(1));
             } catch (PluginException e) {
-                LOG.warning("failed to unload " + pluginId + " plugin");
+                LOG.warning("failed to unload " + p.toIdent(1) + " plugin");
             }
         }
         storage.cacheClean(true);
