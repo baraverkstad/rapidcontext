@@ -260,7 +260,7 @@ public class ZipStorage extends Storage {
      * @return an existing path in the ZIP file, or
      *         null if no match was found
      */
-    private Path locatePath(Path path) {
+    protected Path locatePath(Path path) {
         return Stream.concat(
             Stream.of(paths.get(path)),
             Stream.of(EXT_ALL).map(ext -> paths.get(path.sibling(path.name() + ext)))

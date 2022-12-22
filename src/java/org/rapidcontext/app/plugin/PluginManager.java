@@ -59,11 +59,6 @@ public class PluginManager {
         RootStorage.PATH_STORAGE.child("plugin", true);
 
     /**
-     * The storage path to the loaded plug-in objects.
-     */
-    public static final Path PATH_PLUGIN = Path.from("/plugin/");
-
-    /**
      * The platform information path.
      */
     public static final Path PATH_INFO = Path.from("/platform");
@@ -123,18 +118,6 @@ public class PluginManager {
     }
 
     /**
-     * Returns the plug-in configuration object path for a specified
-     * plug-in id.
-     *
-     * @param pluginId       the unique plug-in id
-     *
-     * @return the plug-in configuration storage path
-     */
-    public static Path configPath(String pluginId) {
-        return storagePath(pluginId).child("plugin", false);
-    }
-
-    /**
      * Returns the plug-in instance path for a specified plug-in id.
      *
      * @param pluginId       the unique plug-in id
@@ -144,7 +127,7 @@ public class PluginManager {
     public static Path pluginPath(String pluginId) {
         Path ident = storagePath(pluginId).removePrefix(RootStorage.PATH_STORAGE);
         Path cachePath = Path.resolve(RootStorage.PATH_STORAGE_CACHE, ident);
-        return Path.resolve(cachePath, PATH_PLUGIN.child(pluginId, false));
+        return Path.resolve(cachePath, Plugin.PATH.child(pluginId, false));
     }
 
     /**
@@ -243,7 +226,8 @@ public class PluginManager {
     }
 
     /**
-     * Returns the specified plug-in configuration dictionary.
+     * Returns the plug-in configuration data. This will return a
+     * dictionary whether a plug-in is loaded or not.
      *
      * @param pluginId       the unique plug-in id
      *
@@ -251,7 +235,8 @@ public class PluginManager {
      *         null if not found
      */
     public Dict config(String pluginId) {
-        return (Dict) storage.load(configPath(pluginId));
+        Path pluginPath = Path.resolve(Plugin.PATH, pluginId);
+        return (Dict) storage.load(Path.resolve(storagePath(pluginId), pluginPath));
     }
 
     /**
@@ -556,7 +541,7 @@ public class PluginManager {
      * this.
      */
     public void unloadAll() {
-        String[] ids = storage.query(PATH_PLUGIN)
+        String[] ids = storage.query(Plugin.PATH)
             .objects(Plugin.class)
             .map(p -> p.id())
             .toArray(String[]::new);

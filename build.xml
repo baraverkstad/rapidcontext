@@ -118,6 +118,7 @@
       </path>
       <ant dir="src/plugin/@{id}" antfile="../plugin-build.xml">
         <property name="java.class.path" value="${toString:plugin.classpath}" />
+        <property name="plugin.id" value="@{id}" />
       </ant>
       <delete quiet="true" includeemptydirs="true">
         <fileset dir="plugin/@{id}" defaultexcludes="false" />
@@ -126,7 +127,9 @@
       <copy tofile="plugin/@{id}.zip">
         <fileset dir="src/plugin/@{id}" includes="@{id}*.plugin" />
       </copy>
-      <ant dir="src/plugin/@{id}" antfile="../plugin-build.xml" target="clean" />
+      <ant dir="src/plugin/@{id}" antfile="../plugin-build.xml" target="clean">
+        <property name="plugin.id" value="@{id}" />
+      </ant>
     </sequential>
   </macrodef>
 

@@ -8,6 +8,7 @@
     <format property="build.date" pattern="yyyy-MM-dd" />
   </tstamp>
   <property prefix="plugin" file="plugin.properties" />
+  <property prefix="plugin" file="plugin/${plugin.id}.properties" />
   <condition property="build.version" value="${plugin.version}.${build.number}">
     <and>
       <isset property="plugin.version" />

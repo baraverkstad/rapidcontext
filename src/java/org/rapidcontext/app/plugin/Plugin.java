@@ -15,6 +15,7 @@
 package org.rapidcontext.app.plugin;
 
 import org.rapidcontext.core.data.Dict;
+import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.core.storage.StorageException;
 
@@ -30,9 +31,14 @@ import org.rapidcontext.core.storage.StorageException;
 public class Plugin extends StorableObject {
 
     /**
-     * The dictionary key for the optimal platform version.
+     * The dictionary key for the minimum platform version.
      */
     public static final String KEY_PLATFORM = "platform";
+
+    /**
+     * The plug-in object storage path.
+     */
+    public static final Path PATH = Path.from("/plugin/");
 
     /**
      * Creates a new plug-in instance with the specified plug-in

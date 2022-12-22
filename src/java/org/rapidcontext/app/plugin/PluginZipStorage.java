@@ -17,7 +17,9 @@ package org.rapidcontext.app.plugin;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.core.data.Dict;
+import org.rapidcontext.core.storage.Index;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.ZipStorage;
 import org.rapidcontext.core.type.Role;
@@ -43,6 +45,24 @@ public class PluginZipStorage extends ZipStorage {
     public PluginZipStorage(String pluginId, File zipFile) throws IOException {
         super(zipFile);
         dict.set(KEY_TYPE, "storage/zip/plugin");
+        Path legacyPath = locatePath(Path.from("/plugin"));
+        if (legacyPath != null) {
+            // Relocate to /plugin/<id>.properties location
+            String ext = StringUtils.removeStart(legacyPath.name(), "plugin");
+            Path fixedPath = Path.resolve(Plugin.PATH, pluginId + ext);
+            Index root = (Index) entries.get(Path.ROOT);
+            Object data = entries.get(legacyPath);
+            root.removeObject(legacyPath.name());
+            paths.remove(legacyPath);
+            entries.remove(legacyPath);
+            Index idx = new Index();
+            root.addIndex(Plugin.PATH.name());
+            paths.put(Plugin.PATH, Plugin.PATH);
+            entries.put(Plugin.PATH, idx);
+            idx.addObject(fixedPath.name());
+            paths.put(fixedPath, fixedPath);
+            entries.put(fixedPath, data);
+        }
     }
 
     /**
