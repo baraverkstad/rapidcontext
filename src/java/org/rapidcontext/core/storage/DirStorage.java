@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
@@ -94,7 +95,7 @@ public class DirStorage extends Storage {
         Date modified = new Date(file.lastModified());
         if (file.isDirectory()) {
             return new Metadata(Index.class, toPath(file, true), path(), null, modified);
-        } else if (isSerialized(path, file.getName())) {
+        } else if (!path.name().equalsIgnoreCase(file.getName())) {
             file = new File(file.getParentFile(), objectName(file.getName()));
             return new Metadata(Dict.class, toPath(file, false), path(), mime, modified);
         } else {
@@ -135,7 +136,7 @@ public class DirStorage extends Storage {
             }
             idx.updateLastModified(new Date(file.lastModified()));
             return idx;
-        } else if (isSerialized(path, file.getName())) {
+        } else if (!path.name().equalsIgnoreCase(file.getName())) {
             try (InputStream is = new FileInputStream(file)) {
                 return unserialize(file.getName(), is);
             } catch (IOException e) {
@@ -310,17 +311,10 @@ public class DirStorage extends Storage {
         if (path.isIndex()) {
             return dir.isDirectory() && dir.canRead() ? dir : null;
         } else {
-            File file = FileUtil.resolve(dir, path.name());
-            if (!file.isDirectory() && file.canRead()) {
-                return file;
-            }
-            for (String ext : EXT_ALL) {
-                file = FileUtil.resolve(dir, path.name() + ext);
-                if (!file.isDirectory() && file.canRead()) {
-                    return file;
-                }
-            }
-            return null;
+            return Stream.concat(
+                Stream.of(FileUtil.resolve(dir, path.name())),
+                Stream.of(EXT_ALL).map(ext -> FileUtil.resolve(dir, path.name() + ext))
+            ).filter(f -> !f.isDirectory() && f.canRead()).findFirst().orElse(null);
         }
     }
 

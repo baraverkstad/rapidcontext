@@ -109,24 +109,6 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
     private static long lastMountTime = 0L;
 
     /**
-     * Checks if a path has been serialized into a filename. This checks
-     * that the filename has a supported data format extension and that
-     * the extension isn't used in the path (in which case data should
-     * be returned as binary).
-     *
-     * @param path           the storage path
-     * @param filename       the filename or file path to check
-     *
-     * @return true if the filename has a supported extension, or
-     *         false otherwise
-     */
-    protected static boolean isSerialized(Path path, String filename) {
-        String name = objectName(filename);
-        return !name.equals(filename) &&
-               StringUtils.endsWithIgnoreCase(name, path.name());
-    }
-
-    /**
      * Returns a normalized object name by removing any supported data format
      * file extension (if found).
      *

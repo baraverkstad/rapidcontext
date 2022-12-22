@@ -171,7 +171,7 @@ public class ZipStorage extends Storage {
             ZipEntry entry = (ZipEntry) obj;
             String mime = Mime.type(entry.getName());
             Date modified = new Date(entry.getTime());
-            if (isSerialized(path, entry.getName())) {
+            if (!path.equals(match)) {
                 return new Metadata(Dict.class, objectPath(match), path(), mime, modified);
             } else {
                 return new Metadata(Binary.class, match, path(), mime, modified);
@@ -202,7 +202,7 @@ public class ZipStorage extends Storage {
             return obj;
         } else if (obj instanceof ZipEntry) {
             ZipEntry entry = (ZipEntry) obj;
-            if (isSerialized(path, entry.getName())) {
+            if (!path.equals(match)) {
                 try (InputStream is = zip.getInputStream(entry)) {
                     return unserialize(entry.getName(), is);
                 } catch (IOException e) {
