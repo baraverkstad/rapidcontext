@@ -136,6 +136,53 @@ public class Role extends StorableObject {
     }
 
     /**
+     * Normalizes a role data object if needed. This method will
+     * modify legacy data into the proper keys and values.
+     *
+     * @param path           the storage location
+     * @param dict           the storage data
+     *
+     * @return the storage data (possibly modified)
+     */
+    public static Dict normalize(Path path, Dict dict) {
+        if (!dict.containsKey(KEY_TYPE)) {
+            dict.set(KEY_TYPE, "role");
+            dict.set(KEY_ID, path.toIdent(1));
+        }
+        for (Object o : dict.getArray(KEY_ACCESS)) {
+            normalizeAccess((Dict) o);
+        }
+        return dict;
+    }
+
+    /**
+     * Normalizes a role access object. This method will change
+     * legacy data into the proper keys and values as needed.
+     *
+     * @param dict           the access data
+     */
+    private static void normalizeAccess(Dict dict) {
+        String type = dict.getString("type", null);
+        String name = dict.getString("name", null);
+        String regex = dict.getString("regexp", null);
+        if (type != null && name != null) {
+            dict.remove("type");
+            dict.remove("name");
+            dict.set(ACCESS_PATH, type + "/" + name);
+            dict.set(ACCESS_PERMISSION, PERM_READ);
+        } else if (type != null && regex != null) {
+            dict.remove("type");
+            dict.remove("regexp");
+            dict.set(ACCESS_REGEX, type + "/" + regex);
+            dict.set(ACCESS_PERMISSION, PERM_READ);
+        }
+        if (dict.containsKey("caller")) {
+            dict.remove("caller");
+            dict.set(ACCESS_PERMISSION, PERM_INTERNAL);
+        }
+    }
+
+    /**
      * Creates a new role from a serialized representation.
      *
      * @param id             the object identifier

@@ -122,6 +122,7 @@ public class RootStorage extends MemoryStorage {
      */
     public RootStorage(boolean readWrite) {
         super("/", readWrite, true);
+        dict.set(KEY_TYPE, "storage/root");
         dict.set("storages", mountedStorages);
         Task cacheCleaner = new Task("storage cache cleaner") {
             public void execute() {

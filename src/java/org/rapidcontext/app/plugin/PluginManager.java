@@ -28,7 +28,6 @@ import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.storage.DirStorage;
 import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.Storage;
@@ -244,26 +243,6 @@ public class PluginManager {
     }
 
     /**
-     * Checks if the specified plug-in storage may contain legacy
-     * data.
-     *
-     * @param pluginId       the unique plug-in id
-     * @param storage        the storage to check
-     *
-     * @return true if the storage is considered legacy, or
-     *         false otherwise
-     */
-    private boolean isLegacyPlugin(String pluginId, Storage storage) {
-        Dict dict = (Dict) storage.load(Path.from("/plugin"));
-        String version = "";
-        if (dict != null) {
-            version = dict.getString(Plugin.KEY_PLATFORM, "");
-        }
-        return !SYSTEM_PLUGIN.equals(pluginId) &&
-               !version.equals(this.platformInfo.getString("version", ""));
-    }
-
-    /**
      * Returns the specified plug-in configuration dictionary.
      *
      * @param pluginId       the unique plug-in id
@@ -343,12 +322,9 @@ public class PluginManager {
         }
         try {
             if (file.isDirectory()) {
-                ps = new DirStorage(file, false);
+                ps = new PluginDirStorage(pluginId, file);
             } else {
-                ps = new ZipStorage(file);
-            }
-            if (isLegacyPlugin(pluginId, ps)) {
-                ps = new PluginUpgradeStorage(ps);
+                ps = new PluginZipStorage(pluginId, file);
             }
             storage.mount(ps, storagePath(pluginId), false, null, 0);
         } catch (Exception e) {

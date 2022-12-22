@@ -118,6 +118,30 @@ public class User extends StorableObject {
     }
 
     /**
+     * Normalizes a user data object if needed. This method will
+     * modify legacy data into the proper keys and values.
+     *
+     * @param path           the storage location
+     * @param dict           the storage data
+     *
+     * @return the storage data (possibly modified)
+     */
+    public static Dict normalize(Path path, Dict dict) {
+        if (!dict.containsKey(KEY_TYPE)) {
+            dict.set(KEY_TYPE, "user");
+            dict.set(KEY_ID, path.toIdent(1));
+            dict.set(KEY_NAME, dict.getString(KEY_DESCRIPTION, ""));
+            dict.set(KEY_DESCRIPTION, "");
+            Array list = new Array();
+            for (Object o : dict.getArray(User.KEY_ROLE)) {
+                list.add(o.toString().toLowerCase());
+            }
+            dict.set(User.KEY_ROLE, list);
+        }
+        return dict;
+    }
+
+    /**
      * Decodes a user authentication token. If the token isn't valid, the
      * missing parts will be filled with empty values.
      *
