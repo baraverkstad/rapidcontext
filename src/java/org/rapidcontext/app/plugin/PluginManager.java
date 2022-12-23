@@ -481,10 +481,13 @@ public class PluginManager {
     public void unloadAll() {
         Path[] paths = storage.query(Plugin.PATH).paths().toArray(Path[]::new);
         for (Path p : paths) {
-            try {
-                unload(p.toIdent(1));
-            } catch (PluginException e) {
-                LOG.warning("failed to unload " + p.toIdent(1) + " plugin");
+            String pluginId = p.toIdent(1);
+            if (!SYSTEM_PLUGIN.equals(pluginId) && !LOCAL_PLUGIN.equals(pluginId)) {
+                try {
+                    unload(pluginId);
+                } catch (PluginException e) {
+                    LOG.warning("failed to unload " + pluginId + " plugin");
+                }
             }
         }
         storage.cacheClean(true);
