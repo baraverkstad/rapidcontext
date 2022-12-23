@@ -84,7 +84,8 @@ public class ServletApplication extends HttpServlet {
             ZipStorage docStore = new ZipStorage(docZip);
             RootStorage root = (RootStorage) ctx.getStorage();
             Path storagePath = RootStorage.PATH_STORAGE.child("doc", true);
-            root.mount(docStore, storagePath, false, DOC_PATH, 0);
+            root.mount(docStore, storagePath);
+            root.remount(storagePath, false, null, DOC_PATH, 0);
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "failed to mount doc storage", e);
         }

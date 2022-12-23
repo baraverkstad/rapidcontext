@@ -57,6 +57,12 @@ public class PluginManager {
         RootStorage.PATH_STORAGE.child("plugin", true);
 
     /**
+     * The storage path to the plug-in cache storages.
+     */
+    public static final Path PATH_STORAGE_CACHE =
+        RootStorage.PATH_STORAGE.child("cache", true);
+
+    /**
      * The platform information path.
      */
     public static final Path PATH_INFO = Path.from("/platform");
@@ -113,6 +119,17 @@ public class PluginManager {
      */
     public static Path storagePath(String pluginId) {
         return PATH_STORAGE_PLUGIN.child(pluginId, true);
+    }
+
+    /**
+     * Returns the plug-in cache path for a specified plug-in id.
+     *
+     * @param pluginId       the unique plug-in id
+     *
+     * @return the plug-in cache path
+     */
+    public static Path cachePath(String pluginId) {
+        return PATH_STORAGE_CACHE.child(pluginId, true);
     }
 
     /**
@@ -296,7 +313,7 @@ public class PluginManager {
             } else {
                 ps = new PluginZipStorage(pluginId, file);
             }
-            storage.mount(ps, storagePath(pluginId), false, null, 0);
+            storage.mount(ps, storagePath(pluginId));
         } catch (Exception e) {
             msg = "failed to create " + pluginId + " plug-in storage";
             LOG.log(Level.SEVERE, msg, e);
@@ -421,9 +438,11 @@ public class PluginManager {
      */
     private void loadOverlay(String pluginId) throws PluginException {
         try {
+            Path path = storagePath(pluginId);
+            Path cache = cachePath(pluginId);
             boolean readWrite = LOCAL_PLUGIN.equals(pluginId);
             int prio = SYSTEM_PLUGIN.equals(pluginId) ? 0 : 100;
-            storage.remount(storagePath(pluginId), readWrite, Path.ROOT, prio);
+            storage.remount(path, readWrite, cache, Path.ROOT, prio);
         } catch (StorageException e) {
             String msg = "failed to overlay " + pluginId + " plug-in storage";
             LOG.log(Level.SEVERE, msg, e);
@@ -445,7 +464,7 @@ public class PluginManager {
             throw new PluginException(msg);
         }
         try {
-            storage.remount(storagePath(pluginId), false, null, 0);
+            storage.remount(storagePath(pluginId), false, null, null, 0);
         } catch (StorageException e) {
             String msg = "plugin " + pluginId + " storage remount failed";
             LOG.log(Level.WARNING, msg, e);
