@@ -303,6 +303,16 @@ public class Session extends StorableObject {
     }
 
     /**
+     * Checks if this session is authenticated (by a user).
+     *
+     * @return true if the session is authenticated, or
+     *         false otherwise
+     */
+    public boolean isAuthenticated() {
+        return userId().length() > 0;
+    }
+
+    /**
      * Checks if this session is valid (hasn't expired).
      *
      * @return true if the session is valid, or
@@ -379,12 +389,9 @@ public class Session extends StorableObject {
      */
     public void updateAccessTime() {
         long now = System.currentTimeMillis();
+        long exp = isAuthenticated() ? EXPIRY_AUTH_MILLIS : EXPIRY_ANON_MILLIS;
         dict.set(KEY_ACCESS_TIME, new Date(now));
-        if (userId().length() > 0) {
-            dict.set(KEY_DESTROY_TIME, new Date(now + EXPIRY_AUTH_MILLIS));
-        } else {
-            dict.set(KEY_DESTROY_TIME, new Date(now + EXPIRY_ANON_MILLIS));
-        }
+        dict.set(KEY_DESTROY_TIME, new Date(now + exp));
         modified = true;
     }
 
