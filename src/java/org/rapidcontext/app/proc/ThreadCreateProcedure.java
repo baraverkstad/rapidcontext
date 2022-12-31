@@ -148,7 +148,7 @@ public class ThreadCreateProcedure extends Procedure {
                 ApplicationContext ctx = ApplicationContext.getInstance();
                 ctx.executeAsync(proc, args, source);
             } finally {
-                SecurityContext.authClear();
+                SecurityContext.deauth();
             }
         }
     }

@@ -14,6 +14,9 @@
 
 package org.rapidcontext.core.security;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
@@ -234,22 +237,23 @@ public final class SecurityContext {
      *
      * @param id             the unique user id
      *
+     * @return the authenticated user, same as currentUser()
+     *
      * @throws SecurityException if the user failed authentication
      */
-    public static void auth(String id) throws SecurityException {
-        User    user = User.find(dataStorage, id);
-        String  msg;
-
+    public static User auth(String id) throws SecurityException {
+        User user = User.find(dataStorage, id);
         if (user == null) {
-            msg = "user " + id + " does not exist";
+            String msg = "user " + id + " does not exist";
             LOG.info("failed authentication: " + msg);
             throw new SecurityException(msg);
         } else if (!user.isEnabled()) {
-            msg = "user " + id + " is disabled";
+            String msg = "user " + id + " is disabled";
             LOG.info("failed authentication: " + msg);
             throw new SecurityException(msg);
         }
         authUser.set(user);
+        return user;
     }
 
     /**
@@ -263,32 +267,38 @@ public final class SecurityContext {
      * @param suffix         the user password hash suffix to append
      * @param hash           the expected hashed result
      *
-     * @throws Exception if the authentication failed
+     * @return the authenticated user
+     *
+     * @throws SecurityException if the authentication failed
      */
-    public static void authHash(String id, String suffix, String hash)
-    throws Exception {
+    public static User authHash(String id, String suffix, String hash)
+    throws SecurityException {
 
-        User    user = User.find(dataStorage, id);
-        String  test;
-        String  msg;
-
+        User user = User.find(dataStorage, id);
         if (user == null) {
-            msg = "user " + id + " does not exist";
+            String msg = "user " + id + " does not exist";
             LOG.info("failed authentication: " + msg);
             throw new SecurityException(msg);
         } else if (!user.isEnabled()) {
-            msg = "user " + id + " is disabled";
+            String msg = "user " + id + " is disabled";
             LOG.info("failed authentication: " + msg);
             throw new SecurityException(msg);
         }
-        test = BinaryUtil.hashMD5(user.passwordHash() + suffix);
-        if (user.passwordHash().length() > 0 && !test.equals(hash)) {
-            msg = "invalid password for user " + id;
-            LOG.info("failed authentication: " + msg +
-                     ", expected: " + test + ", received: " + hash);
-            throw new SecurityException(msg);
+        try {
+            String test = BinaryUtil.hashMD5(user.passwordHash() + suffix);
+            if (user.passwordHash().length() > 0 && !test.equals(hash)) {
+                String msg = "invalid password for user " + id;
+                LOG.info("failed authentication: " + msg +
+                         ", expected: " + test + ", received: " + hash);
+                throw new SecurityException(msg);
+            }
+        } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+            String msg = "invalid environment, MD5 not supported";
+            LOG.log(Level.SEVERE, msg, e);
+            throw new SecurityException(msg, e);
         }
         authUser.set(user);
+        return user;
     }
 
     /**
@@ -300,42 +310,42 @@ public final class SecurityContext {
      *
      * @param token          the authentication token
      *
+     * @return the authenticated user
+     *
      * @throws Exception if the authentication failed
      */
-    public static void authToken(String token) throws Exception {
-        String[]  parts = User.decodeAuthToken(token);
-        String    id = parts[0];
-        User      user = User.find(dataStorage, id);
-        long      expiry = Long.parseLong(parts[1]);
-        String    msg;
-
+    public static User authToken(String token) throws Exception {
+        String[] parts = User.decodeAuthToken(token);
+        User user = User.find(dataStorage, parts[0]);
+        long expiry = Long.parseLong(parts[1]);
         if (user == null) {
-            msg = "user " + id + " does not exist";
+            String msg = "user " + parts[0] + " does not exist";
             LOG.info("failed authentication: " + msg);
             throw new SecurityException(msg);
         } else if (!user.isEnabled()) {
-            msg = "user " + id + " is disabled";
+            String msg = "user " + user.id() + " is disabled";
             LOG.info("failed authentication: " + msg);
             throw new SecurityException(msg);
         } else if (expiry < System.currentTimeMillis()) {
-            msg = "token has expired";
+            String msg = "token has expired";
             LOG.info("failed authentication: " + msg);
             throw new SecurityException(msg);
         } else if (!user.verifyAuthToken(token)) {
-            msg = "invalid auth token for user " + id;
+            String msg = "invalid auth token for user " + user.id();
             LOG.info("failed token authentication: " + msg +
                      ", expected: " + user.createAuthToken(expiry) +
                      ", received: " + token);
             throw new SecurityException(msg);
         }
         authUser.set(user);
+        return user;
     }
 
     /**
-     * Removes any previous authentication. I.e. the current user
-     * will be reset to the anonymous user.
+     * Deauthenticates this context, i.e. the current user will be
+     * reset to the anonymous user.
      */
-    public static void authClear() {
+    public static void deauth() {
         authUser.set(null);
     }
 
