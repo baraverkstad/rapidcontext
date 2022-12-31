@@ -325,7 +325,7 @@ public class Role extends StorableObject {
             glob = glob.replace(".+", ".*");
             glob = glob.replace("?", ".");
             try {
-                m = Pattern.compile("^" + glob + "$");
+                m = Pattern.compile("^" + glob + "$", Pattern.CASE_INSENSITIVE);
             } catch (Exception e) {
                 LOG.log(Level.WARNING, "invalid pattern in role " + id(), e);
                 m = Pattern.compile("^invalid-glob-pattern$");
@@ -336,7 +336,7 @@ public class Role extends StorableObject {
             regex = StringUtils.removeStart(regex, "/");
             regex = StringUtils.removeEnd(regex, "$");
             try {
-                m = Pattern.compile("^" + regex + "$");
+                m = Pattern.compile("^" + regex + "$", Pattern.CASE_INSENSITIVE);
             } catch (Exception e) {
                 LOG.log(Level.WARNING, "invalid pattern in role " + id(), e);
                 m = Pattern.compile("^invalid-regex-pattern$");
