@@ -58,8 +58,8 @@
           from an external network (Internet).</li>
       <li><strong>Follow Advice &amp; Precautions</strong> &mdash; Take care
           to follow the advice or best practices outlined in this chapter.
-          Please revisit this chapter after installation in order to
-          double-check on the issues outlined here.</li>
+          Please revisit this chapter to double-check that proper security
+          practices remain in use.</li>
     </ul>
   </div>
 </div>
@@ -240,9 +240,9 @@ permissions. The permission names and their meanings are the following:</p>
   <li><var>none</var> &mdash; Provides no access at all. This is used to block
       access to a subpath, as this permission also stops further searching down
       the access control list when matched.</li>
-  <li><var>internal</var> &mdash; Provides indirect read access to an object.
-      This is used to allow access to connections, procedures and similar when
-      used by another object (i.e. a procedure).</li>
+  <li><var>internal</var> &mdash; Provides indirect read (i.e. use) access to
+      an object. This allows using connections, procedures and similar when
+      referenced by another procedure.</li>
   <li><var>read</var> &mdash; Provides read (and execute) access to an object.
       This also allows introspection into the object properties, source code
       and similar. Implies <var>internal</var> access as well.</li>
@@ -318,14 +318,14 @@ supports the following properties:</p>
       contain wildcard <var>?</var>, <var>*</var> or <var>**</var> characters
       to match multiple objects. Only <var>**</var> will match <q>/</q>
       characters (i.e. storage path separators). All path names are
-      case-sensitive.</li>
+      case-insensitive.</li>
   <li><var>access.#.regexp</var> &mdash; The storage path for the object, as
       defined by a regular expression. This is used as an alternative to
       <var>path</var> when more complex matching is necessary. Note that
       regular expression syntax is tricky and requires proper escaping of
       literal <q>.</q> characters (among others).</li>
-  <li><var>access.#.permission</var> &mdash; The access permissions to match
-      (see list above). May contain several permissions, separated by
+  <li><var>access.#.permission</var> &mdash; The access permissions provided
+      (see above). May contain several permissions, separated by
       <q>,</q> or <q> </q>.</li>
 </ul>
 
@@ -361,8 +361,8 @@ following:</p>
       to use strong passwords in order to avoid risks with brute-force attacks
       or password guessing.</li>
   <li><strong>Encrypt Connections</strong> &ndash; All external communications
-      be encrypted, since information can otherwise be eavesdropped. Use an
-      HTTPS reverse proxy, an HTTPS servlet container, a VPN tunnel or
+      should be encrypted, since information can otherwise be eavesdropped. Use
+      an HTTPS reverse proxy, an HTTPS servlet container, a VPN tunnel or
       similar.</li>
   <li><strong>Verify Access Controls</strong> &ndash; Test the access controls
       for each role with a test user (having only that role). Verify that all
