@@ -18,3 +18,5 @@ access:
     permission: read
   - path: procedure/system/**
     permission: read
+  - path: session/@self
+    permission: read

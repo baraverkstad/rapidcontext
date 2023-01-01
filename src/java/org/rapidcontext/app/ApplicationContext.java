@@ -37,7 +37,6 @@ import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.storage.StorageException;
-import org.rapidcontext.core.storage.RootStorage;
 import org.rapidcontext.core.task.Scheduler;
 import org.rapidcontext.core.task.Task;
 import org.rapidcontext.core.type.Environment;
@@ -92,7 +91,7 @@ public class ApplicationContext {
     /**
      * The application root storage.
      */
-    private RootStorage storage;
+    private ApplicationStorage storage;
 
     /**
      * The plug-in manager.
@@ -164,7 +163,6 @@ public class ApplicationContext {
         if (instance != null) {
             Scheduler.unscheduleAll();
             instance.destroyAll();
-            instance.storage.unmountAll();
             instance = null;
         }
     }
@@ -190,16 +188,16 @@ public class ApplicationContext {
         File builtinDir = FileUtil.canonical(new File(baseDir, "plugin"));
         File pluginDir = FileUtil.canonical(new File(localDir, "plugin"));
         initTmpDir(FileUtil.canonical(new File(localDir, "tmp")));
-        this.storage = new RootStorage(true);
-        this.pluginManager = new PluginManager(builtinDir, pluginDir, storage);
+        this.storage = new ApplicationStorage();
+        this.pluginManager = new PluginManager(builtinDir, pluginDir, this.storage);
         this.library = new Library(this.storage);
-        this.config = (Dict) storage.load(PATH_CONFIG);
+        this.config = (Dict) this.storage.load(PATH_CONFIG);
         if (this.config == null) {
             LOG.severe("failed to load application config");
         } else if (!this.config.containsKey("guid")) {
             this.config.set("guid", UUID.randomUUID().toString());
             try {
-                storage.store(PATH_CONFIG, this.config);
+                this.storage.store(PATH_CONFIG, this.config);
             } catch (Exception e) {
                 LOG.severe("failed to update application config with GUID");
             }
