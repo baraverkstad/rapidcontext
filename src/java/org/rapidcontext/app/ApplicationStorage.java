@@ -14,11 +14,13 @@
 
 package org.rapidcontext.app;
 
+import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Index;
 import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.RootStorage;
 import org.rapidcontext.core.type.Session;
+import org.rapidcontext.core.type.User;
 
 /**
  * The application root storage. This overlays a number of storage aliases to
@@ -35,12 +37,23 @@ public class ApplicationStorage extends RootStorage {
     public static final Path SESSION_CURRENT = Path.resolve(Session.PATH, "@self");
 
     /**
+     * The current user path.
+     */
+    public static final Path USER_CURRENT = Path.resolve(User.PATH, "@self");
+
+    /**
      * The additional /session/ index.
      */
     private static final Index SESSION_INDEX = new Index();
 
+    /**
+     * The additional /user/ index.
+     */
+    private static final Index USER_INDEX = new Index();
+
     static {
         SESSION_INDEX.addObject(SESSION_CURRENT.name());
+        USER_INDEX.addObject(USER_CURRENT.name());
     }
 
     /**
@@ -78,6 +91,8 @@ public class ApplicationStorage extends RootStorage {
         Object res = super.load(redirect(path));
         if (res instanceof Index && path.equals(SESSION_CURRENT.parent())) {
             res = Index.merge(SESSION_INDEX, (Index) res);
+        } else if (res instanceof Index && path.equals(USER_CURRENT.parent())) {
+            res = Index.merge(USER_INDEX, (Index) res);
         }
         return res;
     }
@@ -94,6 +109,11 @@ public class ApplicationStorage extends RootStorage {
             Session session = Session.activeSession.get();
             if (session != null) {
                 return Path.resolve(Session.PATH, session.id());
+            }
+        } else if (USER_CURRENT.equals(path)) {
+            User user = SecurityContext.currentUser();
+            if (user != null) {
+                return Path.resolve(User.PATH, user.id());
             }
         }
         return path;

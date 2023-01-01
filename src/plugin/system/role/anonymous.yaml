@@ -20,3 +20,5 @@ access:
     permission: read
   - path: session/@self
     permission: read
+  - path: user/@self
+    permission: internal
