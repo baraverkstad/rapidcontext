@@ -268,18 +268,7 @@ public class Role extends StorableObject {
                     String[] list = perms.split("[,;\\s]+");
                     set = new HashSet<>(list.length + 1);
                     for (String s : list) {
-                        if (s.equalsIgnoreCase(PERM_NONE)) {
-                            set.add(PERM_NONE);
-                        } else if (s.equalsIgnoreCase(PERM_ALL)) {
-                            set.add(PERM_ALL);
-                        } else if (s.equalsIgnoreCase(PERM_WRITE)) {
-                            set.add(PERM_WRITE);
-                        } else if (s.equalsIgnoreCase(PERM_SEARCH)) {
-                            set.add(PERM_SEARCH);
-                        } else if (s.equalsIgnoreCase(PERM_READ)) {
-                            set.add(PERM_INTERNAL);
-                            set.add(PERM_READ);
-                        } else if (s.length() <= 0) {
+                        if (s.isEmpty() || s.equalsIgnoreCase(PERM_READ)) {
                             set.add(PERM_INTERNAL);
                             set.add(PERM_READ);
                         } else {
