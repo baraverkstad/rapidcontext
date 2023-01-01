@@ -23,6 +23,7 @@ import java.util.stream.Stream;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.rapidcontext.core.data.Dict;
+import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.core.storage.Storage;
@@ -345,7 +346,7 @@ public class Session extends StorableObject {
             throw new SecurityException(msg);
         }
         userId = userId.trim();
-        if (this.userId().length() > 0 && !this.userId().equals(userId)) {
+        if (!this.userId().isEmpty() && !this.userId().equals(userId)) {
             String msg = "Attempt to re-bind HTTP session from user '" +
                          this.userId() + "' to '" + userId + "'";
             throw new SecurityException(msg);
@@ -494,15 +495,32 @@ public class Session extends StorableObject {
     }
 
     /**
-     * Validates this session. If the session isn't valid any more (expired),
-     * a security exception is thrown.
+     * Validates this session and authenticates the user. If the session
+     * has expired or is no longer valid, a security exception is thrown.
+     * Note that this method may succeed also if no user is linked to the
+     * session.
      *
-     * @throws SecurityException if the session didn't match the
-     *     the provided values
+     * @return the authenticated user, i.e. SecurityContext.currentUser()
+     *
+     * @throws SecurityException if the session wasn't valid
      */
-    public void validate() throws SecurityException {
+    public User authenticate() throws SecurityException {
+        String uid = userId();
         if (isExpired()) {
             throw new SecurityException("Session has expired");
+        } else if (uid.isEmpty()) {
+            return null;
+        }
+        try {
+            User user = SecurityContext.auth(uid);
+            if (user.accreditedTime().after(accessTime())) {
+                throw new SecurityException("Session no longer valid for user");
+            }
+            return user;
+        } catch (SecurityException e) {
+            SecurityContext.deauth();
+            invalidate();
+            throw e;
         }
     }
 

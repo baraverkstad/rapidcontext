@@ -197,14 +197,11 @@ public class ServletApplication extends HttpServlet {
                 session = Session.find(ctx.getStorage(), sessionId);
             }
             if (session != null) {
-                session.validate();
+                session.authenticate();
                 Session.activeSession.set(session);
                 session.updateAccessTime();
                 session.setIp(request.getRemoteAddr());
                 session.setClient(request.getHeader("User-Agent"));
-                if (!StringUtils.isEmpty(session.userId())) {
-                    SecurityContext.auth(session.userId());
-                }
             }
         } catch (Exception e) {
             LOG.info(ip(request) + e.getMessage());

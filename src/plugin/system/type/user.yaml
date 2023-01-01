@@ -38,6 +38,11 @@ property:
         The list of role identifiers for the user. Defaults to an empty list.
         The user may still be associated to automatic roles.
     required: false
+  - name: accreditedTime
+    description: >-
+        The time when user password (or other means of authentication) was last
+        modified. Sessions created before this are automatically invalidated.
+    required: false
   - name: settings
     description: >-
         The user settings dictionary. Can be used to store user preferences or

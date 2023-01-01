@@ -14,6 +14,7 @@
 
 package org.rapidcontext.core.type;
 
+import java.util.Date;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -78,6 +79,11 @@ public class User extends StorableObject {
      * The dictionary key for the user role array.
      */
     public static final String KEY_ROLE = "role";
+
+    /**
+     * The dictionary key for the authentication last modified timestamp.
+     */
+    public static final String KEY_ACCREDITED_TIME = "accreditedTime";
 
     /**
      * The dictionary key for the user settings dictionary.
@@ -331,6 +337,7 @@ public class User extends StorableObject {
      */
     public void setPasswordHash(String passwordHash) {
         dict.set(KEY_PASSWORD, passwordHash.toLowerCase());
+        dict.set(KEY_ACCREDITED_TIME, new Date());
     }
 
     /**
@@ -458,6 +465,15 @@ public class User extends StorableObject {
             }
         }
         dict.set(KEY_ROLE, list);
+    }
+
+    /**
+     * Returns the authentication last modified timestamp.
+     *
+     * @return the authentication last modified timestamp
+     */
+    public Date accreditedTime() {
+        return dict.getDate(KEY_ACCREDITED_TIME, new Date(0));
     }
 
     /**
