@@ -136,7 +136,8 @@ public class ServletApplication extends HttpServlet {
                 }
             }
             Session session = Session.activeSession.get();
-            if (session != null && session.isValid()) {
+            if (session != null && !session.isExpired()) {
+                session.updateAccessTime();
                 request.setSessionId(session.id());
             } else if (request.getSessionId() != null) {
                 request.setSessionId(null);
@@ -164,18 +165,14 @@ public class ServletApplication extends HttpServlet {
      */
     private void processAuthReset() {
         Session session = Session.activeSession.get();
-        Session.activeSession.set(null);
-        if (session != null && !session.isValid()) {
-            LOG.fine("session " + session.id() + " invalid (expired on " +
-                     session.destroyTime() + "), removing from storage");
-            Session.remove(ctx.getStorage(), session.id());
-        } else if (session != null && session.isNew()) {
+        if (session != null && session.isNew()) {
             try {
                 Session.store(ctx.getStorage(), session);
             } catch (StorageException e) {
                 LOG.log(Level.WARNING, "failed to store session " + session.id(), e);
             }
         }
+        Session.activeSession.set(null);
         SecurityContext.deauth();
     }
 

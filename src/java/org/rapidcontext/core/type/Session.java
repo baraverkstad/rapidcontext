@@ -95,6 +95,11 @@ public class Session extends StorableObject {
     public static final long EXPIRY_AUTH_MILLIS = 30L * DateUtils.MILLIS_PER_DAY;
 
     /**
+     * The maximum session age (90 days).
+     */
+    public static final long MAX_AGE_MILLIS = 90L * DateUtils.MILLIS_PER_DAY;
+
+    /**
      * The default active session time (5 minutes).
      */
     public static final long ACTIVE_MILLIS = 5L * DateUtils.MILLIS_PER_MINUTE;
@@ -192,8 +197,9 @@ public class Session extends StorableObject {
     public static void removeExpired(Storage storage) {
         all(storage).forEach(session -> {
             String userId = session.userId();
-            if (!session.isValid()) {
-                LOG.fine("deleting " + session + ", invalid or expired");
+            if (session.isExpired()) {
+                LOG.fine("deleting session " + session.id() +
+                         ", expired on " + session.destroyTime());
                 remove(storage, session.id());
             } else if (userId.length() > 0) {
                 User user = User.find(storage, userId);
@@ -231,11 +237,6 @@ public class Session extends StorableObject {
         userId = (userId == null) ? null : userId.trim();
         dict.set(KEY_USER, userId);
         dict.set(KEY_CREATE_TIME, new Date(now));
-        if (userId != null && userId.length() > 0) {
-            dict.set(KEY_DESTROY_TIME, new Date(now + EXPIRY_AUTH_MILLIS));
-        } else {
-            dict.set(KEY_DESTROY_TIME, new Date(now + EXPIRY_ANON_MILLIS));
-        }
         dict.set(KEY_ACCESS_TIME, new Date(now));
         dict.set(KEY_IP, ip);
         dict.set(KEY_CLIENT, client);
@@ -310,14 +311,13 @@ public class Session extends StorableObject {
     }
 
     /**
-     * Checks if this session is valid (hasn't expired).
+     * Checks if this session has expired.
      *
-     * @return true if the session is valid, or
+     * @return true if the session has expired, or
      *         false otherwise
      */
-    public boolean isValid() {
-        long now = System.currentTimeMillis();
-        return now < destroyTime().getTime();
+    public boolean isExpired() {
+        return destroyTime().getTime() < System.currentTimeMillis();
     }
 
     /**
@@ -369,7 +369,10 @@ public class Session extends StorableObject {
      * @return the session destruction timestamp.
      */
     public Date destroyTime() {
-        return dict.getDate(KEY_DESTROY_TIME, new Date(0));
+        long exp = isAuthenticated() ? EXPIRY_AUTH_MILLIS : EXPIRY_ANON_MILLIS;
+        long access = accessTime().getTime() + exp;
+        long create = createTime().getTime() + MAX_AGE_MILLIS;
+        return dict.getDate(KEY_DESTROY_TIME, new Date(Math.min(access, create)));
     }
 
     /**
@@ -385,10 +388,7 @@ public class Session extends StorableObject {
      * Updates the session last access timestamp to the current system time.
      */
     public void updateAccessTime() {
-        long now = System.currentTimeMillis();
-        long exp = isAuthenticated() ? EXPIRY_AUTH_MILLIS : EXPIRY_ANON_MILLIS;
-        dict.set(KEY_ACCESS_TIME, new Date(now));
-        dict.set(KEY_DESTROY_TIME, new Date(now + exp));
+        dict.set(KEY_ACCESS_TIME, new Date(System.currentTimeMillis()));
         modified = true;
     }
 
@@ -410,6 +410,7 @@ public class Session extends StorableObject {
      */
     public void setIp(String ip) {
         dict.set(KEY_IP, ip);
+        modified = true;
     }
 
     /**
@@ -428,6 +429,7 @@ public class Session extends StorableObject {
      */
     public void setClient(String client) {
         dict.set(KEY_CLIENT, client);
+        modified = true;
     }
 
     /**
@@ -499,7 +501,7 @@ public class Session extends StorableObject {
      *     the provided values
      */
     public void validate() throws SecurityException {
-        if (!isValid()) {
+        if (isExpired()) {
             throw new SecurityException("Session has expired");
         }
     }
@@ -510,7 +512,8 @@ public class Session extends StorableObject {
      * removal of the session in the storage.
      */
     public void invalidate() {
-        dict.set(KEY_DESTROY_TIME, new Date(0));
+        dict.set(KEY_DESTROY_TIME, new Date());
+        modified = true;
     }
 
     /**
@@ -523,7 +526,10 @@ public class Session extends StorableObject {
      */
     public Dict serialize() {
         Dict copy = super.serialize();
-        copy.setBoolean("_valid", isValid());
+        copy.setBoolean("_expired", isExpired());
+        if (!copy.containsKey(KEY_DESTROY_TIME)) {
+            copy.set("_" + KEY_DESTROY_TIME, destroyTime());
+        }
         return copy;
     }
 }

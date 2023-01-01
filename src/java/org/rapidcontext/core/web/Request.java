@@ -36,6 +36,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
+import org.rapidcontext.core.type.Session;
 import org.rapidcontext.util.FileUtil;
 import org.rapidcontext.util.HttpUtil;
 import org.rapidcontext.util.RegexUtil;
@@ -60,11 +61,6 @@ public class Request implements HttpUtil {
      * The session cookie name.
      */
     public static final String SESSION_COOKIE = "sessionid";
-
-    /**
-     * The session expiry time in seconds (defaults to one year).
-     */
-    public static final int SESSION_EXPIRY = 365 * 24 * 60 * 60;
 
     /**
      * The no response type. This type is used when no request
@@ -837,7 +833,7 @@ public class Request implements HttpUtil {
         Cookie cookie = new Cookie(SESSION_COOKIE, value);
         cookie.setPath(request.getContextPath() + "/");
         cookie.setSecure(request.isSecure());
-        cookie.setMaxAge((sessionId == null) ? 0 : SESSION_EXPIRY);
+        cookie.setMaxAge((sessionId == null) ? 0 : (int) Session.MAX_AGE_MILLIS / 1000);
         response.addCookie(cookie);
     }
 
