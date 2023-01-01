@@ -29,10 +29,7 @@ import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.storage.StorageException;
 
 /**
- * A logged-in user session. The session allows the user client to
- * avoid re-sending authentication data on each request. The browser
- * instead sends a persistent HTTP cookie, allowing the session to be
- * loaded from disk or other storages.
+ * An active client session.
  *
  * @author   Per Cederberg
  * @version  1.0
@@ -457,8 +454,8 @@ public class Session extends StorableObject {
 
     /**
      * Adds a file to the session. The file will be automatically
-     * deleted when the session expires or is moved from memory to
-     * persistent storage.
+     * deleted when the session expires or is removed from in-memory
+     * cache.
      *
      * @param id             the file id
      * @param file           the file to add

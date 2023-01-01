@@ -408,12 +408,15 @@ public class User extends StorableObject {
     }
 
     /**
-     * Checks if the user has the specified role.
+     * Checks if the user has the specified role. Note that this method
+     * doesn't check for automatic roles.
      *
      * @param name           the role name
      *
      * @return true if the user has the role, or
      *         false otherwise
+     *
+     * @see Role#hasUser(User)
      */
     public boolean hasRole(String name) {
         for (Object o : dict.getArray(KEY_ROLE)) {

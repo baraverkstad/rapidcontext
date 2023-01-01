@@ -1,27 +1,31 @@
 id: user
 type: type
 description: >-
-    A system user. The user is normally associated with a physical person
-    having access to the system. The user object links the user with
-    authentication (password) and resource authorization mechanisms (role
-    access) mechanisms.
+    A system user. The user is normally associated with a physical person, but
+    can also represent programmatic access to the system. The user object
+    provides password and token authentication, but alternative methods can be
+    provided via plug-ins. User resource (storage) authorization is provided
+    via associated roles.
 initializer: org.rapidcontext.core.type.User
 property:
   - name: name
-    description: The descriptive name of the user. Optional, defaults to blank.
+    description: The descriptive name of the user. Defaults to blank.
+    required: false
+  - name: email
+    description: The email address for the user. Defaults to blank.
     required: false
   - name: description
-    description: >-
-        The additional description or notes for the user. Optional, defaults to
-        blank.
+    description: The user description or notes. Defaults to blank.
     required: false
   - name: enabled
     description: >-
         The boolean enabled flag. If set to false, the user cannot login.
-        Optional, defaults to true.
+        Defaults to true.
     required: false
   - name: realm
-    description: The user realm name. Optional, defaults to "RapidContext".
+    description: >-
+        The user realm (or site) name. Included in the password hash and also
+        required for HTTP Digest authentication. Defaults to "RapidContext".
     required: false
   - name: password
     description: >-
@@ -30,5 +34,13 @@ property:
         input (can be used to reset passwords).
     required: false
   - name: role
-    description: The user role array. Contains a list of role identifiers.
+    description: >-
+        The list of role identifiers for the user. Defaults to an empty list.
+        The user may still be associated to automatic roles.
+    required: false
+  - name: settings
+    description: >-
+        The user settings dictionary. Can be used to store user preferences or
+        other application-specific settings persistently. Defaults to an empty
+        dictionary.
     required: false

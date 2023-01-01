@@ -2,18 +2,38 @@ id: role
 type: type
 description: >-
     A user access role. Roles are used to assign permissions to users in an
-    indirect way, making it easier to manage multiple users with similar access
-    levels.
+    indirect way, making it easier to manage multiple users with the same
+    access permissions.
 initializer: org.rapidcontext.core.type.Role
 property:
   - name: name
-    description: The descriptive name of the role. Optional, defaults to blank.
+    description: The descriptive name of the role. Defaults to blank.
     required: false
   - name: description
+    description: The role description or notes. Defaults to blank.
+    required: false
+  - name: auto
     description: >-
-        The additional description or notes for the role. Optional, defaults
-        to blank.
+        The automatic user attachment type. Supports 'all' for all users, or
+        'auth' for only authenticated users. Defaults to blank.
     required: false
   - name: access
     description: The access control array. Contains a list of access rules.
+    required: false
+  - name: access.*.path
+    description: >-
+        The storage path glob pattern. Supports the '?', '*' and '**' glob
+        symbols. Requires a match to the complete storage path (not just a
+        prefix). Either 'path' or 'regex' is required.
+    required: false
+  - name: access.*.regex
+    description: >-
+        The storage path regular expression pattern. Requires a match to the
+        complete storage path (not just a prefix). Either 'path' or 'regex' is
+        required.
+    required: false
+  - name: access.*.permission
+    description: >-
+        The access rule permissions. A space-separated sequence of permission
+        identifiers, either standard ones ('read', 'write', etc) or custom.
     required: false

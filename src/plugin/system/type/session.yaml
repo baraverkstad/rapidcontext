@@ -1,15 +1,17 @@
 id: session
 type: type
 description: >-
-    A logged-in user session. The session allows the user client to avoid
-    re-sending authentication data on each request. The browser instead sends a
-    persistent HTTP cookie, allowing the session to be loaded from disk or
-    other storages.
+    An active client session. The session can be either authenticated (for a
+    single user) or anonymous. It allows a client to store uploaded files and
+    avoid re-authenticating on each request. The browser instead sends a
+    persistent HTTP cookie identifying the session. Sessions are created when
+    applications are launched and a user may have multiple active sessions in
+    different web browsers.
 initializer: org.rapidcontext.core.type.Session
 property:
   - name: user
-    description: The authenticated session user.
-    required: true
+    description: The authenticated session user. Defaults to blank.
+    required: false
   - name: createTime
     description: The session creation timestamp.
     required: true

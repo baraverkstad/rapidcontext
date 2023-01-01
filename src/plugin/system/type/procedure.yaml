@@ -3,8 +3,8 @@ type: type
 description: >-
     A server-side function or operation. Procedures may take arguments, modify
     data and/or return values. They can be invoked either server-side or
-    client-side (via API) if permissions allow.\n
-    \n
+    client-side (via API) if permissions allow.
+
     This generic type is used only for direct Java implementations. A number
     of subtypes allows creating procedures from configurable parameters (e.g.
     SQL text, HTTP requests, etc) instead, sharing a common reusable Java

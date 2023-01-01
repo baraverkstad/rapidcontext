@@ -27,7 +27,7 @@ import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.core.storage.Storage;
 
 /**
- * A user access role. Each role may contain an access rule list for
+ * A user access role. Each role contains an access rule list for
  * declaring which objects that the role provides access to.
  *
  * @author   Per Cederberg
