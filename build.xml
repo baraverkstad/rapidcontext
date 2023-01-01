@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   RapidContext <https://www.rapidcontext.com/>
-  Copyright (c) 2007-2022 Per Cederberg. All rights reserved.
+  Copyright (c) 2007-2023 Per Cederberg. All rights reserved.
 
   This program is free software: you can redistribute it and/or
   modify it under the terms of the BSD license.
@@ -372,12 +372,14 @@
 <!-- TOOLING & HELPER TARGETS -->
 
   <target name="util-copyright" description="Updates copyright years in sources">
-    <replaceregexp match="(20\d\d)-20\d\d" replace="\1-2022" flags="g" byline="true">
+    <replaceregexp match="(20\d\d)-20\d\d" replace="\1-2023" flags="g" byline="true">
       <fileset dir=".">
         <patternset refid="pattern.srcfiles" />
         <exclude name="doc/external/**"/>
         <exclude name="src/plugin/legacy/**"/>
         <exclude name="src/plugin/system/files/js/crypto-*.js"/>
+      </fileset>
+      <fileset dir=".">
         <include name="tools/jsdoc-toolkit/templates/rapidcontext/static/*.html"/>
       </fileset>
     </replaceregexp>
