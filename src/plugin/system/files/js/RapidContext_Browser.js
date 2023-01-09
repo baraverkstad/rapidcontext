@@ -46,6 +46,9 @@
         "Date.now",
         "Date.prototype.toISOString",
         "Date.prototype.toLocaleString",
+        "DOMTokenList.prototype.add",
+        "DOMTokenList.prototype.remove",
+        "DOMTokenList.prototype.toggle",
         "FileReader",
         "FormData",
         "Function.prototype.bind",
@@ -84,6 +87,7 @@
         "localStorage.getItem",
         "sessionStorage.setItem",
         { test: "'head' in document", name: "document.head shortcut" },
+        { test: "'classList' in Element.prototype", name: "Element.prototype.classList" },
         { test: "'dataset' in HTMLElement.prototype", name: "HTMLElement.prototype.dataset" },
         { test: "'onload' in HTMLLinkElement.prototype", name: "<link> element onload" },
         {
@@ -110,9 +114,6 @@
         "AbortController",
         "AbortSignal",
         "CSS.supports",
-        "DOMTokenList.prototype.add",
-        "DOMTokenList.prototype.remove",
-        "DOMTokenList.prototype.toggle",
         "Element.prototype.after",
         "Element.prototype.append",
         "Element.prototype.before",
@@ -145,7 +146,6 @@
         { test: "var {a, b} = { a: 1, b: 2, c: 3 }; a == 1 && b == 2", name: "object destructuring assignment" },
         // { test: "var a = null; a?.dummy; true", name: "optional chaining operator (?.)" },
         // { test: "null ?? true", name: "nullish coalescing operator (??)" },
-        { test: "'classList' in Element.prototype", name: "Element.prototype.classList" },
         { test: "'noModule' in HTMLScriptElement.prototype", name: "ES6 modules (import/export)" },
         { test: "async () => await Promise.resolve(true)", name: "async/await functions" }
     ];

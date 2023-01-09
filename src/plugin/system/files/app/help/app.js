@@ -189,7 +189,7 @@ HelpApp.prototype._treeOnSelect = function () {
 HelpApp.prototype.clearContent = function () {
     this._currentUrl = "";
     this.ui.contentLoading.hide();
-    this.ui.contentLink.className = "hidden";
+    this.ui.contentLink.classList.add("hidden");
     MochiKit.DOM.replaceChildNodes(this.ui.contentInfo);
     MochiKit.DOM.replaceChildNodes(this.ui.contentText);
 };
@@ -229,7 +229,7 @@ HelpApp.prototype.loadContent = function (url) {
 HelpApp.prototype._callbackContent = function (data) {
     if (typeof(data) == "string") {
         MochiKit.DOM.setNodeAttribute(this.ui.contentLink, "href", this._currentUrl);
-        this.ui.contentLink.className = "";
+        this.ui.contentLink.classList.remove("hidden");
         this._showContentHtml(data);
         if (/#.+/.test(this._currentUrl)) {
             this._scrollLink(this._currentUrl.replace(/.*#/, ""));

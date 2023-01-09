@@ -60,8 +60,26 @@ RapidContext.Widget._nextId = MochiKit.Base.counter();
  */
 RapidContext.Widget.isWidget = function (obj, className) {
     return RapidContext.Util.isHTML(obj) &&
-           MochiKit.DOM.hasElementClass(obj, "widget") &&
-           (!className || MochiKit.DOM.hasElementClass(obj, "widget" + className));
+           obj.classList.contains("widget") &&
+           (!className || obj.classList.contains("widget" + className));
+};
+
+/**
+ * Splits a string of CSS class names into an array.
+ *
+ * @param {Array/String/Object} val the CSS class names
+ *
+ * @return {Array} nested arrays with single CSS class names
+ */
+RapidContext.Widget._toCssClass = function (val) {
+    if (Array.isArray(val)) {
+        // FIXME: Use Array.prototype.flatMap(...) here
+        return val.map(RapidContext.Widget._toCssClass);
+    } else if (val) {
+        return String(val).split(/\s+/g).filter(Boolean);
+    } else {
+        return [];
+    }
 };
 
 /**
@@ -78,7 +96,7 @@ RapidContext.Widget.isWidget = function (obj, className) {
  * @return {Widget} the widget DOM node
  */
 RapidContext.Widget._widgetMixin = function (node/*, objOrClass, ...*/) {
-    MochiKit.DOM.addElementClass(node, "widget");
+    node.classList.add("widget");
     var protos = Array.from(arguments).slice(1);
     protos.push(RapidContext.Widget);
     while (protos.length > 0) {
@@ -298,10 +316,16 @@ RapidContext.Widget.prototype.setStyle = function (styles) {
  *         `false` otherwise
  */
 RapidContext.Widget.prototype.hasClass = function (/* ... */) {
+    function isMatch(val) {
+        if (Array.isArray(val)) {
+            return val.every(isMatch);
+        } else {
+            return elem.classList.contains(val);
+        }
+    }
     var elem = this._styleNode();
-    return Array.from(arguments).every(function (cls) {
-        return MochiKit.DOM.hasElementClass(elem, cls);
-    });
+    // FIXME: Use Array.prototype.flatMap(...) here
+    return Array.from(arguments).map(RapidContext.Widget._toCssClass).every(isMatch);
 };
 
 /**
@@ -310,10 +334,16 @@ RapidContext.Widget.prototype.hasClass = function (/* ... */) {
  * @param {String} [...] the CSS class names to add
  */
 RapidContext.Widget.prototype.addClass = function (/* ... */) {
-    var elem = this._styleNode();
-    for (var i = 0; i < arguments.length; i++) {
-        MochiKit.DOM.addElementClass(elem, arguments[i]);
+    function add(val) {
+        if (Array.isArray(val)) {
+            val.forEach(add);
+        } else {
+            elem.classList.add(val);
+        }
     }
+    var elem = this._styleNode();
+    // FIXME: Use Array.prototype.flatMap(...) here
+    Array.from(arguments).map(RapidContext.Widget._toCssClass).forEach(add);
 };
 
 /**
@@ -324,13 +354,16 @@ RapidContext.Widget.prototype.addClass = function (/* ... */) {
  * @param {String} [...] the CSS class names to remove
  */
 RapidContext.Widget.prototype.removeClass = function (/* ... */) {
-    var elem = this._styleNode();
-    for (var i = 0; i < arguments.length; i++) {
-        var name = "" + arguments[i];
-        if (!name.startsWith("widget")) {
-            MochiKit.DOM.removeElementClass(elem, name);
+    function remove(val) {
+        if (Array.isArray(val)) {
+            val.filter(Boolean).forEach(remove);
+        } else if (!val.startsWith("widget")) {
+            elem.classList.remove(val);
         }
     }
+    var elem = this._styleNode();
+    // FIXME: Use Array.prototype.flatMap(...) here
+    Array.from(arguments).map(RapidContext.Widget._toCssClass).forEach(remove);
 };
 
 /**
@@ -363,8 +396,7 @@ RapidContext.Widget.prototype.toggleClass = function (/* ... */) {
  *         `false` otherwise
  */
 RapidContext.Widget.prototype.isDisabled = function () {
-    return this.disabled === true &&
-           MochiKit.DOM.hasElementClass(this, "widgetDisabled");
+    return this.disabled === true && this.classList.contains("widgetDisabled");
 };
 
 /**
@@ -375,11 +407,7 @@ RapidContext.Widget.prototype.isDisabled = function () {
  */
 RapidContext.Widget.prototype._setDisabled = function (value) {
     value = MochiKit.Base.bool(value);
-    if (value) {
-        MochiKit.DOM.addElementClass(this, "widgetDisabled");
-    } else {
-        MochiKit.DOM.removeElementClass(this, "widgetDisabled");
-    }
+    this.classList.toggle("widgetDisabled", value);
     MochiKit.DOM.setNodeAttribute(this, "disabled", value);
     this.disabled = value;
 };
@@ -410,7 +438,7 @@ RapidContext.Widget.prototype.disable = function () {
  *         `false` otherwise
  */
 RapidContext.Widget.prototype.isHidden = function () {
-    return MochiKit.DOM.hasElementClass(this, "widgetHidden");
+    return this.classList.contains("widgetHidden");
 };
 
 /**
@@ -421,11 +449,7 @@ RapidContext.Widget.prototype.isHidden = function () {
  */
 RapidContext.Widget.prototype._setHidden = function (value) {
     value = MochiKit.Base.bool(value);
-    if (value) {
-        MochiKit.DOM.addElementClass(this, "widgetHidden");
-    } else {
-        MochiKit.DOM.removeElementClass(this, "widgetHidden");
-    }
+    this.classList.toggle("widgetHidden", value);
     MochiKit.DOM.setNodeAttribute(this, "hidden", value);
     this.hidden = value;
 };

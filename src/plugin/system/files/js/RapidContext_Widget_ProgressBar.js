@@ -186,11 +186,7 @@ RapidContext.Widget.ProgressBar.prototype._remainingTime = function () {
 RapidContext.Widget.ProgressBar.prototype._render = function () {
     var percent = Math.round(this.ratio * 1000) / 10;
     MochiKit.Style.setElementDimensions(this.firstChild, { w: percent }, "%");
-    if (percent < 100) {
-        this.firstChild.className = "widgetProgressBarMeter animated";
-    } else {
-        this.firstChild.className = "widgetProgressBarMeter";
-    }
+    this.firstChild.classList.toggle("animated", percent < 100);
     var info = [];
     if (!this.noratio) {
         info.push(Math.round(percent) + "%");

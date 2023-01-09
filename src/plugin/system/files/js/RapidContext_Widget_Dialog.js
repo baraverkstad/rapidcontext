@@ -65,7 +65,7 @@ RapidContext.Widget.Dialog = function (attrs/*, ... */) {
     var content = DIV({ "class": "widgetDialogContent" });
     var o = DIV({}, title, close, resize, content);
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Dialog);
-    MochiKit.DOM.addElementClass(o, "widgetDialog");
+    o.classList.add("widgetDialog");
     o.resizeContent = o._resizeContent;
     o._setHidden(true);
     o.setAttrs(Object.assign({ modal: false, system: false, center: true }, attrs));

@@ -46,7 +46,8 @@ RapidContext.App.init = function (app) {
     RapidContext.Log.info("Initializing RapidContext");
     RapidContext.Util.registerFunctionNames(RapidContext, "RapidContext");
     if (!RapidContext.Browser.isSupported()) {
-        MochiKit.DOM.removeElementClass("unsupported-browser", "hidden");
+        var el = document.getElementById("unsupported-browser");
+        el.className = el.className.replace("hidden", "");
         return Promise.reject(new Error("Unsupported browser"));
     }
 
@@ -224,11 +225,11 @@ RapidContext.App.startApp = function (app, container) {
         for (var i = 0; i < root.attributes.length; i++) {
             var attr = root.attributes[i];
             if (attr.specified && typeof(parent.setAttrs) === "function") {
-                var o = {};
-                o[attr.name] = attr.value;
-                parent.setAttrs(o);
+                parent.setAttrs({ [attr.name]: attr.value });
             } else if (attr.specified && attr.name === "class") {
-                MochiKit.DOM.addElementClass(parent, attr.value);
+                attr.value.split(/\s+/g).forEach(function (cls) {
+                    parent.classList.add(cls);
+                });
             } else if (attr.specified) {
                 parent.setAttribute(attr.name, attr.value);
             }

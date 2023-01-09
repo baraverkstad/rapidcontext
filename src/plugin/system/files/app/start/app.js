@@ -95,8 +95,8 @@ StartApp.prototype._initInfoMenu = function () {
         MochiKit.DOM.replaceChildNodes(this.ui.infoUser, user.name || user.id);
         MochiKit.DOM.replaceChildNodes(this.ui.menuTitle, user.longName);
         MochiKit.DOM.replaceChildNodes(this.ui.menuLogInOut, "Logout");
-        MochiKit.DOM.removeElementClass(this.ui.menuAdmin, "widgetPopupDisabled");
-        MochiKit.DOM.removeElementClass(this.ui.menuPassword, "widgetPopupDisabled");
+        this.ui.menuAdmin.classList.remove("widgetPopupDisabled");
+        this.ui.menuPassword.classList.remove("widgetPopupDisabled");
         var func = MochiKit.Base.partial(RapidContext.App.startApp, "admin", null);
         MochiKit.Signal.connect(this.ui.menuAdmin, "onclick", func);
         MochiKit.Signal.connect(this.ui.menuPassword, "onclick", this, "_showPasswordDialog");
@@ -104,8 +104,8 @@ StartApp.prototype._initInfoMenu = function () {
         MochiKit.DOM.replaceChildNodes(this.ui.infoUser, "anonymous");
         MochiKit.DOM.replaceChildNodes(this.ui.menuTitle, "Anonymous User");
         MochiKit.DOM.replaceChildNodes(this.ui.menuLogInOut, "Login");
-        MochiKit.DOM.addElementClass(this.ui.menuAdmin, "widgetPopupDisabled");
-        MochiKit.DOM.addElementClass(this.ui.menuPassword, "widgetPopupDisabled");
+        this.ui.menuAdmin.classList.add("widgetPopupDisabled");
+        this.ui.menuPassword.classList.add("widgetPopupDisabled");
     }
 };
 

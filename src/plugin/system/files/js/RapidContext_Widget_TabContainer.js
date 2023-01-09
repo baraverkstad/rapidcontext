@@ -59,7 +59,7 @@ RapidContext.Widget.TabContainer = function (attrs/*, ... */) {
     var container = MochiKit.DOM.DIV({ "class": "widgetTabContainerContent" });
     var o = MochiKit.DOM.DIV(attrs, labels, container);
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.TabContainer);
-    MochiKit.DOM.addElementClass(o, "widgetTabContainer");
+    o.classList.add("widgetTabContainer");
     RapidContext.Util.registerSizeConstraints(container, "100% - 20", "100% - 40");
     o.resizeContent = o._resizeContent;
     container.resizeContent = MochiKit.Base.noop;
@@ -203,7 +203,7 @@ RapidContext.Widget.TabContainer.prototype.selectChild = function (indexOrChild)
     var label;
     if (this._selectedIndex >= 0) {
         label = this.firstChild.childNodes[this._selectedIndex];
-        MochiKit.DOM.removeElementClass(label, "selected");
+        label.classList.remove("selected");
         children[this._selectedIndex]._handleExit();
     }
     var index = -1;
@@ -217,7 +217,7 @@ RapidContext.Widget.TabContainer.prototype.selectChild = function (indexOrChild)
     this._selectedIndex = (index < 0 || index >= children.length) ? -1 : index;
     if (this._selectedIndex >= 0) {
         label = this.firstChild.childNodes[this._selectedIndex];
-        MochiKit.DOM.addElementClass(label, "selected");
+        label.classList.add("selected");
         children[this._selectedIndex]._handleEnter();
     }
 };

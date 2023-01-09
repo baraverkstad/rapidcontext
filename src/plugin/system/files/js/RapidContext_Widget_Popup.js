@@ -183,7 +183,7 @@ RapidContext.Widget.Popup.prototype.selectChild = function (indexOrNode) {
     var index;
     var node = this.selectedChild();
     if (node != null) {
-        MochiKit.DOM.removeElementClass(node, "widgetPopupSelected");
+        node.classList.remove("widgetPopupSelected");
     }
     node = RapidContext.Util.childNode(this, indexOrNode);
     if (typeof(indexOrNode) == "number") {
@@ -193,7 +193,7 @@ RapidContext.Widget.Popup.prototype.selectChild = function (indexOrNode) {
     }
     if (index >= 0 && node != null) {
         this.selectedIndex = index;
-        MochiKit.DOM.addElementClass(node, "widgetPopupSelected");
+        node.classList.add("widgetPopupSelected");
         var top = node.offsetTop;
         var bottom = top + node.offsetHeight + 5;
         if (this.scrollTop + this.clientHeight < bottom) {
@@ -236,7 +236,7 @@ RapidContext.Widget.Popup.prototype.selectMove = function (offset) {
 RapidContext.Widget.Popup.prototype._handleMouseMove = function (evt) {
     this.show();
     var node = RapidContext.Util.childNode(this, evt.target());
-    if (node != null && MochiKit.DOM.hasElementClass(node, "widgetPopupItem")) {
+    if (node && node.classList.contains("widgetPopupItem")) {
         this.selectChild(node);
     } else {
         this.selectChild(-1);
@@ -250,7 +250,7 @@ RapidContext.Widget.Popup.prototype._handleMouseMove = function (evt) {
  */
 RapidContext.Widget.Popup.prototype._handleMouseClick = function (evt) {
     var node = RapidContext.Util.childNode(this, evt.target());
-    if (node != null && MochiKit.DOM.hasElementClass(node, "widgetPopupItem")) {
+    if (node && node.classList.contains("widgetPopupItem")) {
         this.selectChild(node);
     } else {
         this.selectChild(-1);

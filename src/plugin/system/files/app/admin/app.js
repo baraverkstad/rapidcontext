@@ -269,10 +269,10 @@ AdminApp.prototype._showConnection = function () {
         this.ui.cxnEdit.show();
         var url = "rapidcontext/storage/connection/" + data.id;
         MochiKit.DOM.setNodeAttribute(this.ui.cxnLink, "href", url);
-        MochiKit.DOM.removeElementClass(this.ui.cxnLink, "hidden");
+        this.ui.cxnLink.classList.remove("hidden");
     } else {
         this.ui.cxnEdit.hide();
-        MochiKit.DOM.addElementClass(this.ui.cxnLink, "hidden");
+        this.ui.cxnLink.classList.add("hidden");
     }
     var clones = this.ui.cxnTemplate.parentNode.querySelectorAll(".clone");
     RapidContext.Widget.destroyWidget(clones);
@@ -404,7 +404,7 @@ AdminApp.prototype._updateConnectionEdit = function () {
             MochiKit.DOM.appendChildNodes(tr.lastChild, help);
         }
         if (!showAll && !p.required && !p.custom && !value) {
-            tr.className += " hidden";
+            tr.classList.add("hidden");
         }
         return tr;
     }
@@ -523,12 +523,12 @@ AdminApp.prototype._showApp = function () {
         MochiKit.DOM.replaceChildNodes(this.ui.appIcon, iconNode);
         var url = "rapidcontext/storage/app/" + data.id;
         MochiKit.DOM.setNodeAttribute(this.ui.appLink, "href", url);
-        MochiKit.DOM.removeElementClass(this.ui.appLink, "hidden");
+        this.ui.appLink.classList.remove("hidden");
         this.ui.appResourceTable.show();
         this.ui.appResourceTable.setData(data.resources);
     } else {
         MochiKit.DOM.replaceChildNodes(this.ui.appIcon);
-        MochiKit.DOM.addElementClass(this.ui.appLink, "hidden");
+        this.ui.appLink.classList.add("hidden");
         this.ui.appResourceTable.hide();
     }
     this.ui.appLaunch.setAttrs({ disabled: !data });
@@ -566,7 +566,7 @@ AdminApp.prototype._showPlugin = function () {
     this.ui.pluginForm.reset();
     if (data) {
         this.ui.pluginForm.update(data);
-        MochiKit.DOM.removeElementClass(this.ui.pluginLink, "hidden");
+        this.ui.pluginLink.classList.remove("hidden");
         var path = "/storage/plugin/" + data.id + "/";
         var url = "rapidcontext/storage" + path;
         MochiKit.DOM.setNodeAttribute(this.ui.pluginLink, "href", url);
@@ -581,7 +581,7 @@ AdminApp.prototype._showPlugin = function () {
             this.ui.pluginUnload.hide();
         }
     } else {
-        MochiKit.DOM.addElementClass(this.ui.pluginLink, "hidden");
+        this.ui.pluginLink.classList.add("hidden");
         this.ui.pluginLoad.hide();
         this.ui.pluginUnload.hide();
     }

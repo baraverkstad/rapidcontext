@@ -61,7 +61,7 @@ RapidContext.Widget.Table = function (attrs/*, ...*/) {
     var table = MochiKit.DOM.TABLE({ "class": "widgetTable" }, thead, tbody);
     var o = MochiKit.DOM.DIV({}, table);
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Table);
-    MochiKit.DOM.addElementClass(o, "widgetTable");
+    o.classList.add("widgetTable");
     o.resizeContent = o._resizeContent;
     o._rows = [];
     o._data = null;
@@ -601,7 +601,7 @@ RapidContext.Widget.Table.prototype._markSelection = function (index) {
     var tbody = this.firstChild.lastChild;
     var indices = (index == null) ? this._selected : [index];
     indices.forEach(function (idx) {
-        MochiKit.DOM.addElementClass(tbody.childNodes[idx], "selected");
+        tbody.childNodes[idx].classList.add("selected");
     });
 };
 
@@ -614,7 +614,7 @@ RapidContext.Widget.Table.prototype._unmarkSelection = function (index) {
     var tbody = this.firstChild.lastChild;
     var indices = (index == null) ? this._selected : [index];
     indices.forEach(function (idx) {
-        MochiKit.DOM.removeElementClass(tbody.childNodes[idx], "selected");
+        tbody.childNodes[idx].classList.remove("selected");
     });
 };
 

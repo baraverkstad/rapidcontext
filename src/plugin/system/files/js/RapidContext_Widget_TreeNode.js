@@ -58,7 +58,7 @@ RapidContext.Widget.TreeNode = function (attrs/*, ...*/) {
     var div = MochiKit.DOM.DIV({ "class": cls }, toggle, icon, label);
     var o = MochiKit.DOM.DIV({}, div);
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.TreeNode);
-    MochiKit.DOM.addElementClass(o, "widgetTreeNode");
+    o.classList.add("widgetTreeNode");
     var isFolder = (arguments.length > 1);
     attrs = Object.assign({ name: "Tree Node", folder: isFolder }, attrs);
     o.setAttrs(attrs);
@@ -104,7 +104,7 @@ RapidContext.Widget.TreeNode.prototype._handleLabelClick = function (evt) {
  */
 RapidContext.Widget.TreeNode.prototype._containerNode = function (create) {
     var container = this.lastChild;
-    if (MochiKit.DOM.hasElementClass(container, "widgetTreeNodeContainer")) {
+    if (container.classList.contains("widgetTreeNodeContainer")) {
         return container;
     } else if (create) {
         container = MochiKit.DOM.DIV({ "class": "widgetTreeNodeContainer widgetHidden" });
@@ -138,7 +138,7 @@ RapidContext.Widget.TreeNode.prototype.setAttrs = function (attrs) {
     if (typeof(locals.name) != "undefined") {
         this.name = locals.name;
         var node = this.firstChild.firstChild;
-        while (!MochiKit.DOM.hasElementClass(node, "widgetTreeNodeText")) {
+        while (!node.classList.contains("widgetTreeNodeText")) {
             node = node.nextSibling;
         }
         MochiKit.DOM.replaceChildNodes(node, locals.name);
@@ -234,8 +234,7 @@ RapidContext.Widget.TreeNode.prototype.isFolder = function () {
  */
 RapidContext.Widget.TreeNode.prototype.isExpanded = function () {
     var container = this._containerNode();
-    return container != null &&
-           !MochiKit.DOM.hasElementClass(container, "widgetHidden");
+    return !!container && !container.classList.contains("widgetHidden");
 };
 
 /**
@@ -245,7 +244,7 @@ RapidContext.Widget.TreeNode.prototype.isExpanded = function () {
  *         `false` otherwise
  */
 RapidContext.Widget.TreeNode.prototype.isSelected = function () {
-    return MochiKit.DOM.hasElementClass(this.firstChild, "selected");
+    return this.firstChild.classList.contains("selected");
 };
 
 /**
@@ -274,7 +273,7 @@ RapidContext.Widget.TreeNode.prototype.tree = function () {
  */
 RapidContext.Widget.TreeNode.prototype.parent = function () {
     var node = this.parentNode;
-    if (MochiKit.DOM.hasElementClass(node, "widgetTreeNodeContainer")) {
+    if (node && node.classList.contains("widgetTreeNodeContainer")) {
         return node.parentNode;
     } else {
         return null;
@@ -335,7 +334,7 @@ RapidContext.Widget.TreeNode.prototype.findByPath = function (path) {
  * Selects this tree node.
  */
 RapidContext.Widget.TreeNode.prototype.select = function () {
-    MochiKit.DOM.addElementClass(this.firstChild, "selected");
+    this.firstChild.classList.add("selected");
     var tree = this.tree();
     if (tree != null) {
         tree._handleSelect(this);
@@ -348,7 +347,7 @@ RapidContext.Widget.TreeNode.prototype.select = function () {
  */
 RapidContext.Widget.TreeNode.prototype.unselect = function () {
     if (this.isSelected()) {
-        MochiKit.DOM.removeElementClass(this.firstChild, "selected");
+        this.firstChild.classList.remove("selected");
         var tree = this.tree();
         if (tree != null) {
             tree._handleSelect(null);
@@ -371,7 +370,7 @@ RapidContext.Widget.TreeNode.prototype.expand = function () {
         if (!this.attributes.icon) {
             this.firstChild.childNodes[1].setAttrs({ "class": "fa fa-fw fa-folder-open" });
         }
-        MochiKit.DOM.removeElementClass(container, "widgetHidden");
+        container.classList.remove("widgetHidden");
         var tree = this.tree();
         if (tree != null) {
             var detail = { tree: tree, node: this };
@@ -407,7 +406,7 @@ RapidContext.Widget.TreeNode.prototype.collapse = function () {
         if (!this.attributes.icon) {
             this.firstChild.childNodes[1].setAttrs({ "class": "fa fa-fw fa-folder" });
         }
-        MochiKit.DOM.addElementClass(container, "widgetHidden");
+        container.classList.add("widgetHidden");
         var tree = this.tree();
         if (tree != null) {
             var detail = { tree: tree, node: this };
