@@ -76,9 +76,8 @@
     }
 
     // Setup prototype chain (for instanceof)
-    // FIXME: Use Object.create() here...
     // FIXME: Change to Promise.prototype once MochiKit is removed
-    Async.prototype = MochiKit.Base.clone(MochiKit.Async.Deferred.prototype);
+    Async.prototype = Object.create(MochiKit.Async.Deferred.prototype);
 
     /**#@+ @methodOf RapidContext.Async.prototype */
     Object.assign(Async.prototype, {
@@ -362,8 +361,7 @@
         }
     }
 
-    // FIXME: Use Object.create(Error.prototype) here...
-    AsyncError.prototype = MochiKit.Base.clone(Error.prototype);
+    AsyncError.prototype = Object.create(Error.prototype);
     Object.assign(AsyncError.prototype, {
         constructor: AsyncError,
         name: "AsyncError"
