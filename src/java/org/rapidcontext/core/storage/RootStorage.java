@@ -472,7 +472,7 @@ public class RootStorage extends MemoryStorage {
      *         the input dictionary if no type matched
      */
     private Object initObject(String id, Dict dict) {
-        if (!dict.containsKey(KEY_ID)) {
+        if (!dict.containsKey(KEY_ID) && !id.isEmpty()) {
             Dict copy = new Dict();
             copy.set(KEY_ID, id);
             copy.setAll(dict);

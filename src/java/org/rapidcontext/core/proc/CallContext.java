@@ -417,17 +417,14 @@ public class CallContext {
             Object res = call(proc, args);
             commit = true;
             return res;
+        } catch (ProcedureException e) {
+            String msg = "Execution error in procedure '" + name + "'";
+            LOG.log(Level.FINE, msg, e);
+            throw (ProcedureException) e;
         } catch (Exception e) {
-            if (e instanceof ProcedureException) {
-                String msg = "Execution error in procedure '" + name + "'";
-                LOG.log(Level.FINE, msg, e);
-                throw (ProcedureException) e;
-            } else {
-                String msg = "Caught unhandled exception in procedure '" +
-                             name + "'";
-                LOG.log(Level.WARNING, msg, e);
-                throw new ProcedureException(msg, e);
-            }
+            String msg = "Unhandled exception in procedure '" + name + "'";
+            LOG.log(Level.WARNING, msg, e);
+            throw new ProcedureException(msg, e);
         } finally {
             if (stack.height() == 0) {
                 releaseAll(commit);
