@@ -216,7 +216,7 @@ RapidContext.Util.registerFunctionNames = function (obj, name) {
         var isAnon = isFunc && (o.name == null || o.name == "");
         var isProto = (o === Object.prototype || o === Function.prototype);
         var isNode = isObj && (typeof(o.nodeType) === "number");
-        var isVisited = (MochiKit.Base.findIdentical(stack, o) >= 0);
+        var isVisited = stack.includes(o);
         if (isFunc && isAnon && !o.displayName) {
             o.displayName = name;
         }
@@ -252,7 +252,7 @@ RapidContext.Util.registerFunctionNames = function (obj, name) {
 RapidContext.Util.resolveURI = function (uri, base) {
     var pos;
     base = base || document.baseURI || document.getElementsByTagName("base")[0].href;
-    if (uri.indexOf(":") > 0) {
+    if (uri.includes(":")) {
         return uri;
     } else if (uri.indexOf("#") == 0) {
         pos = base.lastIndexOf("#");
@@ -315,9 +315,8 @@ RapidContext.Util.isDOM = function (obj) {
  *         or `false` otherwise
  */
 RapidContext.Util.isHTML = function (obj) {
-    var ns = RapidContext.Util.NS.HTML;
     return RapidContext.Util.isDOM(obj) &&
-           MochiKit.Base.findIdentical(ns, obj.namespaceURI) >= 0;
+           RapidContext.Util.NS.HTML.includes(obj.namespaceURI);
 };
 
 /**

@@ -267,7 +267,7 @@ HelpApp.prototype._showContentHtml = function (html) {
             if (links[i].hasAttribute("target")) {
                 links[i].setAttribute("target", "doc");
             }
-            if (href.indexOf("://") > 0) {
+            if (href.includes("://")) {
                 links[i].setAttribute("target", "doc");
             } else {
                 links[i].setAttribute("href", href);
@@ -282,7 +282,7 @@ HelpApp.prototype._showContentHtml = function (html) {
             if (src.indexOf(baseUrl) == 0) {
                 src = src.substring(baseUrl.length);
             }
-            if (src.indexOf("://") < 0) {
+            if (!src.includes("://")) {
                 images[j].setAttribute("src", src);
             }
         }

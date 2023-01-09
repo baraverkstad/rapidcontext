@@ -92,14 +92,12 @@ ExampleApp.prototype.autochange = function (evt) {
  * Handle autocomplete events.
  */
 ExampleApp.prototype.autocomplete = function () {
+    function isMatch(item) {
+        return item.toLowerCase().includes(value);
+    }
     var items = ["Apple", "Banana", "Blueberry", "Mango", "Kiwi", "Orange", "Strawberry"];
     var value = this.ui.popupField.getValue().toLowerCase();
-    for (var i = 0; i < items.length; i++) {
-        if (items[i].toLowerCase().indexOf(value) < 0) {
-            items.splice(i--, 1);
-        }
-    }
-    this.ui.popupField.showPopup({}, items);
+    this.ui.popupField.showPopup({}, items.filter(isMatch));
 };
 
 /**

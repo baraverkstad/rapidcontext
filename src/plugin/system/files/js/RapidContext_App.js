@@ -623,7 +623,7 @@ RapidContext.App.loadXML = function (url, params, options) {
 RapidContext.App.loadXHR = function (url, params, options) {
     var opts = Object.assign({ method: "GET", headers: {}, timeout: 30000 }, options);
     opts.timeout = (opts.timeout < 1000) ? opts.timeout * 1000 : opts.timeout;
-    var hasBody = params && ["PATCH", "POST", "PUT"].indexOf(opts.method) >= 0;
+    var hasBody = params && ["PATCH", "POST", "PUT"].includes(opts.method);
     url += (params && !hasBody) ? "?" + MochiKit.Base.queryString(params) : "";
     if (params && hasBody && opts.headers["Content-Type"] === "application/json") {
         opts.body = RapidContext.Encode.toJSON(params);
@@ -705,7 +705,7 @@ RapidContext.App.loadStyles = function (url) {
  */
 RapidContext.App.downloadFile = function (url, data) {
     if (data == null) {
-        url = url + ((url.indexOf("?") < 0) ? "?" : "&") + "download";
+        url = url + (url.includes("?") ? "&" : "?") + "download";
         var attrs = {
             src: url,
             border: "0",
@@ -764,7 +764,7 @@ RapidContext.App._rebaseUrl = function (url) {
     if (RapidContext._basePath) {
         if (url.indexOf(RapidContext._basePath) == 0) {
             url = url.substring(RapidContext._basePath.length);
-        } else if (url.indexOf(":") < 0) {
+        } else if (!url.includes(":")) {
             url = "rapidcontext/files/" + url;
         }
     }
@@ -784,7 +784,7 @@ RapidContext.App._rebaseUrl = function (url) {
  */
 RapidContext.App._nonCachedUrl = function (url) {
     var timestamp = new Date().getTime() % 100000;
-    return url + ((url.indexOf("?") < 0) ? "?" : "&") + timestamp;
+    return url + (url.includes("?") ? "&" : "?") + timestamp;
 };
 
 /**

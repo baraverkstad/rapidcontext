@@ -193,7 +193,7 @@ RapidContext.Widget.Form.prototype.update = function (values) {
         } else if (!(field.name in values)) {
             // Don't change omitted fields
         } else if (field.type === "radio" || field.type === "checkbox") {
-            var found = MochiKit.Base.isArrayLike(v) && MochiKit.Base.findValue(v, field.value) >= 0;
+            var found = Array.isArray(v) && v.includes(field.value);
             field.checked = found || v === field.value || v === true;
         } else if (typeof(field.setAttrs) == "function") {
             field.setAttrs({ value: v });

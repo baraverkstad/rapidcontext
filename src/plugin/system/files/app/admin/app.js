@@ -946,7 +946,7 @@ AdminApp.prototype._renderProcEdit = function () {
             "class": "w-100 mb-2"
         };
         var field;
-        if (b.value.indexOf("\n") < 0) {
+        if (!b.value.includes("\n")) {
             field = RapidContext.Widget.TextField(attrs);
         } else {
             attrs.rows = Math.min(20, b.value.match(/\n/g).length + 2);
