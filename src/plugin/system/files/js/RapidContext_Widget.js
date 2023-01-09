@@ -299,12 +299,9 @@ RapidContext.Widget.prototype.setStyle = function (styles) {
  */
 RapidContext.Widget.prototype.hasClass = function (/* ... */) {
     var elem = this._styleNode();
-    for (var i = 0; i < arguments.length; i++) {
-        if (!MochiKit.DOM.hasElementClass(elem, arguments[i])) {
-            return false;
-        }
-    }
-    return true;
+    return Array.from(arguments).every(function (cls) {
+        return MochiKit.DOM.hasElementClass(elem, cls);
+    });
 };
 
 /**
