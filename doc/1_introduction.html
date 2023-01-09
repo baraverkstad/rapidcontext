@@ -172,12 +172,11 @@ elsewhere. Their definitions are as follows:</p>
       providing the user with the sum of the role permissions. The default
       built-in role <q><var>admin</var></q> provides full access to everything,
       and should be used with care.</li>
-  <li><strong>Session</strong> &mdash; An active user connection to the
-      RapidContext server. The session is initiated upon successful login, and
-      remains active for up to 30 days (by default). Sessions are locked to the
-      browser IP address and user agent string and identifier by the HTTP
-      cookie <q><var>sessionid</var></q>. A user may have multiple sessions
-      open in different web browsers.</li>
+  <li><strong>Session</strong> &mdash; An active client (browser) session to
+      the RapidContext server. The session can be either authenticated (for a
+      single user) or anonymous. Sessions are created when applications are
+      launched and a user may have multiple active sessions in different web
+      browsers.</li>
   <li><strong>Storage</strong> &mdash; A server-side virtual file system for
       storing data and objects. The storage handles both persistent (file) and
       temporary (in-memory) objects, allowing some objects to
