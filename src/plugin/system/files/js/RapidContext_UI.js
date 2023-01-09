@@ -36,7 +36,7 @@ if (typeof(RapidContext.UI) == "undefined") {
  */
 RapidContext.UI.showError = function () {
     console.warn.apply(console, arguments);
-    var msg = Array.prototype.slice.call(arguments).map(function (arg) {
+    var msg = Array.from(arguments).map(function (arg) {
         var isError = arg instanceof Error && arg.message;
         return isError ? arg.message : arg;
     }).join(", ");
@@ -62,7 +62,7 @@ RapidContext.UI.buildUI = function (node, ids) {
         return RapidContext.UI.buildUI(node.documentElement.childNodes, ids);
     } else if (typeof(node.item) != "undefined" && typeof(node.length) == "number") {
         var res = [];
-        var elems = Array.prototype.slice.call(node);
+        var elems = Array.from(node);
         for (var i = 0; i < elems.length; i++) {
             var elem = RapidContext.UI.buildUI(elems[i], ids);
             if (elem) {

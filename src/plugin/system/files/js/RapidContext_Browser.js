@@ -31,6 +31,7 @@
      */
     var REQUIRED = [
         "Array.isArray",
+        "Array.from",
         "Array.prototype.filter",
         "Array.prototype.forEach",
         "Array.prototype.map",
@@ -100,7 +101,6 @@
     var OPTIONAL = [
         "AbortController",
         "AbortSignal",
-        "Array.from",
         "Array.prototype.every",
         "Array.prototype.includes",
         "Array.prototype.find",
@@ -215,8 +215,9 @@
             );
             return isValid;
         }
+        // NOTE: Code below uses old school JavaScript for compatibility
         var res = true;
-        var features = Array.isArray(feature) ? feature : Array.prototype.slice.call(arguments);
+        var features = (feature instanceof Array) ? feature : Array.prototype.slice.call(arguments);
         for (var i = 0; i < features.length; i++) {
             var def = features[i].test ? features[i] : { test: features[i] };
             if (!check(def.test)) {

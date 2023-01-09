@@ -69,7 +69,7 @@ RapidContext.Widget.Dialog = function (attrs/*, ... */) {
     o.resizeContent = o._resizeContent;
     o._setHidden(true);
     o.setAttrs(Object.assign({ modal: false, system: false, center: true }, attrs));
-    o.addAll(Array.prototype.slice.call(arguments, 1));
+    o.addAll(Array.from(arguments).slice(1));
     o.addEventListener("click", o._handleClick);
     o.addEventListener("mousedown", o._handleMouseDown);
     return o;
@@ -381,5 +381,5 @@ RapidContext.Widget.Dialog.prototype.resetScroll = function () {
         el.scrollTop = 0;
         el.scrollLeft = 0;
     }
-    Array.prototype.slice.call(this.querySelectorAll("*")).forEach(scrollReset);
+    Array.from(this.querySelectorAll("*")).forEach(scrollReset);
 };

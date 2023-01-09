@@ -53,7 +53,7 @@ RapidContext.Widget.TextField = function (attrs/*, ...*/) {
     }
     var type = (attrs && attrs.type) || "text";
     var text = (attrs && attrs.value) || "";
-    text += Array.prototype.slice.call(arguments, 1).map(scrape).join("");
+    text += Array.from(arguments).slice(1).map(scrape).join("");
     var o = MochiKit.DOM.INPUT({ type: type, value: text });
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.TextField);
     o.addClass("widgetTextField");

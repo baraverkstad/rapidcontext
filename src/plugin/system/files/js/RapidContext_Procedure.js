@@ -42,7 +42,7 @@ if (typeof(RapidContext) == "undefined") {
  */
 RapidContext.Procedure = function (procedure) {
     function self() {
-        self.args = Array.prototype.slice.call(arguments);
+        self.args = Array.from(arguments);
         return self.recall();
     }
     self.procedure = procedure;

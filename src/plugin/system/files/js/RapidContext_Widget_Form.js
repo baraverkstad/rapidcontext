@@ -52,7 +52,7 @@ RapidContext.Widget.Form = function (attrs/*, ...*/) {
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Form);
     o.addClass("widgetForm");
     o.setAttrs(attrs);
-    o.addAll(Array.prototype.slice.call(arguments, 1));
+    o.addAll(Array.from(arguments).slice(1));
     o.addEventListener("input", o._handleInput);
     o.addEventListener("invalid", o._handleInvalid, { capture: true });
     o.addEventListener("submit", o._handleSubmit);
@@ -123,8 +123,8 @@ RapidContext.Widget.Form.prototype._fieldValue = function (field) {
  * @see https://developer.mozilla.org/en-US/docs/Web/API/HTMLFormElement/elements
  */
 RapidContext.Widget.Form.prototype.fields = function () {
-    var basics = Array.prototype.slice.call(this.elements);
-    var extras = Array.prototype.slice.call(this.querySelectorAll(".widgetField"));
+    var basics = Array.from(this.elements);
+    var extras = Array.from(this.querySelectorAll(".widgetField"));
     return basics.concat(extras);
 };
 
@@ -151,8 +151,7 @@ RapidContext.Widget.Form.prototype.fieldMap = function () {
  */
 RapidContext.Widget.Form.prototype.reset = function () {
     this._originalReset();
-    var extras = Array.prototype.slice.call(this.querySelectorAll(".widgetField"));
-    extras.forEach(function (field) {
+    Array.from(this.querySelectorAll(".widgetField")).forEach(function (field) {
         field.reset();
     });
     this.validateReset();
@@ -264,8 +263,7 @@ RapidContext.Widget.Form.prototype._callValidators = function (field) {
  * @return {Array} the array of form validator widgets
  */
 RapidContext.Widget.Form.prototype.validators = function () {
-    var nodes = this.querySelectorAll(".widgetFormValidator");
-    return Array.prototype.slice.call(nodes);
+    return Array.from(this.querySelectorAll(".widgetFormValidator"));
 };
 
 /**

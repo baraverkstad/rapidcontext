@@ -51,7 +51,7 @@ RapidContext.Widget.TextArea = function (attrs/*, ...*/) {
         return String(val && val.textContent || val || "");
     }
     var text = (attrs && attrs.value) || "";
-    text += Array.prototype.slice.call(arguments, 1).map(scrape).join("");
+    text += Array.from(arguments).slice(1).map(scrape).join("");
     var o = MochiKit.DOM.TEXTAREA({ value: text });
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.TextArea);
     o.addClass("widgetTextArea");

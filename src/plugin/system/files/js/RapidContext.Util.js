@@ -394,7 +394,7 @@ RapidContext.Util.createDOMExt = function (ns, tag, attrs/*, ...*/) {
     var doc = MochiKit.DOM.currentDocument();
     var node = (ns) ? doc.createElementNS(ns, tag) : doc.createElement(tag);
     MochiKit.DOM.updateNodeAttributes(node, attrs);
-    var children = Array.prototype.slice.call(arguments, 3);
+    var children = Array.from(arguments).slice(3);
     MochiKit.DOM.appendChildNodes(node, children);
     return node;
 };
@@ -431,9 +431,9 @@ RapidContext.Util.createTextNode = function (text) {
 RapidContext.Util.createDOMFuncExt = function (ns, tag, args, attrs/*, ...*/) {
     args = args || [];
     attrs = attrs || {};
-    var children = Array.prototype.slice.call(arguments, 4);
+    var children = Array.from(arguments).slice(4);
     return function (/*arg1, ..., argN, attrs, ...*/) {
-        var myArgs = Array.prototype.slice.call(arguments);
+        var myArgs = Array.from(arguments);
         var myAttrs = Object.assign({}, attrs);
         args.forEach(function (key, idx) {
             if (myArgs[idx] == null) {
@@ -543,7 +543,7 @@ RapidContext.Util.registerSizeConstraints = function (node, width, height) {
  * ==> Assigns a no-op child resize handler to elem
  */
 RapidContext.Util.resizeElements = function (/* ... */) {
-    Array.prototype.slice.call(arguments).forEach(function (arg) {
+    Array.from(arguments).forEach(function (arg) {
         var node = MochiKit.DOM.getElement(arg);
         if (node && node.nodeType === 1 && node.parentNode && node.sizeConstraints) {
             var ref = { w: node.parentNode.w, h: node.parentNode.h };
@@ -562,7 +562,7 @@ RapidContext.Util.resizeElements = function (/* ... */) {
                 console.error("Error in resizeContent()", node, e);
             }
         } else if (node && node.childNodes) {
-            Array.prototype.slice.call(node.childNodes).forEach(function (child) {
+            Array.from(node.childNodes).forEach(function (child) {
                 if (child.nodeType === 1) {
                     RapidContext.Util.resizeElements(child);
                 }

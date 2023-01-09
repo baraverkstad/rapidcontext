@@ -79,7 +79,7 @@ RapidContext.Widget.isWidget = function (obj, className) {
  */
 RapidContext.Widget._widgetMixin = function (node/*, objOrClass, ...*/) {
     MochiKit.DOM.addElementClass(node, "widget");
-    var protos = Array.prototype.slice.call(arguments, 1);
+    var protos = Array.from(arguments).slice(1);
     protos.push(RapidContext.Widget);
     while (protos.length > 0) {
         var obj = protos.pop();
@@ -126,7 +126,7 @@ RapidContext.Widget.createWidget = function (name, attrs/*, ...*/) {
         throw new ReferenceError("failed to find widget '" + name +
                                  "' in RapidContext.Widget.Classes");
     }
-    var args = Array.prototype.slice.call(arguments, 1);
+    var args = Array.from(arguments).slice(1);
     return cls.apply(this, MochiKit.Base.flattenArray(args));
 };
 
@@ -153,7 +153,7 @@ RapidContext.Widget.destroyWidget = function (node) {
         MochiKit.Signal.disconnectAllTo(node);
         RapidContext.Widget.destroyWidget(node.childNodes);
     } else if (node && typeof(node.length) === "number") {
-        Array.prototype.slice.call(node).forEach(RapidContext.Widget.destroyWidget);
+        Array.from(node).forEach(RapidContext.Widget.destroyWidget);
     }
 };
 
@@ -501,7 +501,7 @@ RapidContext.Widget.prototype.blurAll = function () {
  */
 RapidContext.Widget.prototype.getChildNodes = function () {
     var elem = this._containerNode();
-    return elem ? Array.prototype.slice.call(elem.childNodes) : [];
+    return elem ? Array.from(elem.childNodes) : [];
 };
 
 /**

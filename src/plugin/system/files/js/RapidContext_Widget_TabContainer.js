@@ -65,7 +65,7 @@ RapidContext.Widget.TabContainer = function (attrs/*, ... */) {
     container.resizeContent = MochiKit.Base.noop;
     o._selectedIndex = -1;
     o.setAttrs(attrs);
-    o.addAll(Array.prototype.slice.call(arguments, 1));
+    o.addAll(Array.from(arguments).slice(1));
     labels.addEventListener("click", o._handleLabelClick);
     return o;
 };
@@ -106,7 +106,7 @@ RapidContext.Widget.TabContainer.prototype._handleLabelClick = function (evt) {
  * @return {Array} the array of child DOM nodes
  */
 RapidContext.Widget.TabContainer.prototype.getChildNodes = function () {
-    return Array.prototype.slice.call(this.lastChild.childNodes);
+    return Array.from(this.lastChild.childNodes);
 };
 
 /**

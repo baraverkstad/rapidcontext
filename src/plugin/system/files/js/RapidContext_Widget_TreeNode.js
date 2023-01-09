@@ -62,7 +62,7 @@ RapidContext.Widget.TreeNode = function (attrs/*, ...*/) {
     var isFolder = (arguments.length > 1);
     attrs = Object.assign({ name: "Tree Node", folder: isFolder }, attrs);
     o.setAttrs(attrs);
-    o.addAll(Array.prototype.slice.call(arguments, 1));
+    o.addAll(Array.from(arguments).slice(1));
     // FIXME: Consider using a single click handler in parent Tree instead...
     div.addEventListener("click", o._handleLabelClick);
     return o;

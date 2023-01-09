@@ -161,7 +161,7 @@
          */
         addCallback: function (callback) {
             if (arguments.length > 1) {
-                var args = Array.prototype.slice.call(arguments);
+                var args = Array.from(arguments);
                 args.splice(1, 0, undefined);
                 callback = callback.bind.apply(callback, args);
             }
@@ -179,7 +179,7 @@
          */
         addErrback: function (errback) {
             if (arguments.length > 1) {
-                var args = Array.prototype.slice.call(arguments);
+                var args = Array.from(arguments);
                 args.splice(1, 0, undefined);
                 errback = errback.bind.apply(errback, args);
             }
@@ -198,7 +198,7 @@
          */
         addBoth: function (callback) {
             if (arguments.length > 1) {
-                var args = Array.prototype.slice.call(arguments);
+                var args = Array.from(arguments);
                 args.splice(1, 0, undefined);
                 callback = callback.bind.apply(callback, args);
             }

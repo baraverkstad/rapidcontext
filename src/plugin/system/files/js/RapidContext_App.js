@@ -300,7 +300,7 @@ RapidContext.App.startApp = function (app, container) {
             resolve(launch(launcher, paneUi));
         } else if (instances.length > 0) {
             // Switch from single-app to multi-app mode
-            var elems = Array.prototype.slice.call(document.body.childNodes);
+            var elems = Array.from(document.body.childNodes);
             var moveApp = moveAppToStart.bind(null, instances[0], elems);
             var overlay = new RapidContext.Widget.Overlay({ message: "Loading..." });
             document.body.insertBefore(overlay, document.body.childNodes[0]);
@@ -370,7 +370,7 @@ RapidContext.App.stopApp = function (app) {
  */
 RapidContext.App.callApp = function (app, method) {
     return new RapidContext.Async(function (resolve, reject) {
-        var args = Array.prototype.slice.call(arguments, 2);
+        var args = Array.from(arguments).slice(2);
         var launcher = RapidContext.App.findApp(app);
         if (launcher == null) {
             var msg = "No matching app launcher found";

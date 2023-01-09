@@ -53,7 +53,7 @@ RapidContext.Widget.Tree = function (attrs/*, ...*/) {
     o.resizeContent = o._resizeContent;
     o.selectedPath = null;
     o.setAttrs(attrs);
-    o.addAll(Array.prototype.slice.call(arguments, 1));
+    o.addAll(Array.from(arguments).slice(1));
     return o;
 };
 

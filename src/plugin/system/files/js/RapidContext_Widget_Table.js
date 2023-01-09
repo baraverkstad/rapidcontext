@@ -71,7 +71,7 @@ RapidContext.Widget.Table = function (attrs/*, ...*/) {
     o._mouseX = 0;
     o._mouseY = 0;
     o.setAttrs(attrs);
-    o.addAll(Array.prototype.slice.call(arguments, 1));
+    o.addAll(Array.from(arguments).slice(1));
     o.addEventListener("mousedown", o._handleMouseDown);
     o.addEventListener("click", o._handleClick);
     return o;

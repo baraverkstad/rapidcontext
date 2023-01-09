@@ -54,7 +54,7 @@ RapidContext.Widget.Button = function (attrs/*, ...*/) {
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Button);
     o.addClass("widgetButton");
     o.setAttrs(attrs);
-    var children = Array.prototype.slice.call(arguments, 1).filter(Boolean);
+    var children = Array.from(arguments).slice(1).filter(Boolean);
     children.forEach(function (item) {
         o.addChildNode((item.nodeType === 1) ? item : textNode(item));
     });
