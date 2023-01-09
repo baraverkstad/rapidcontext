@@ -58,7 +58,7 @@ RapidContext.Widget.TextField = function (attrs/*, ...*/) {
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.TextField);
     o.addClass("widgetTextField");
     o._popupCreated = false;
-    o.setAttrs(MochiKit.Base.update({}, attrs, { value: text }));
+    o.setAttrs(Object.assign({}, attrs, { value: text }));
     o.addEventListener("input", o._handleChange);
     return o;
 };
@@ -105,7 +105,7 @@ RapidContext.Widget.TextField.prototype.destroy = function () {
  * @param {Boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.TextField.prototype.setAttrs = function (attrs) {
-    attrs = MochiKit.Base.update({}, attrs);
+    attrs = Object.assign({}, attrs);
     var locals = RapidContext.Util.mask(attrs, ["helpText", "value"]);
     if ("helpText" in locals) {
         attrs.placeholder = attrs.placeholder || locals.helpText;
@@ -196,7 +196,7 @@ RapidContext.Widget.TextField.prototype.showPopup = function (attrs, items) {
             y: this.offsetTop + this.offsetHeight + 1
         };
         MochiKit.Style.setElementPosition(popup, pos);
-        popup.setAttrs(MochiKit.Base.update({ delay: 30000 }, attrs));
+        popup.setAttrs(Object.assign({ delay: 30000 }, attrs));
         popup.show();
         if (items && items.length == 1) {
             popup.selectChild(0);

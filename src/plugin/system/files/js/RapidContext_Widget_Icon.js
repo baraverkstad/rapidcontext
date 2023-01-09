@@ -99,7 +99,7 @@ RapidContext.Widget.Icon.prototype.setAttrs = function (attrs) {
         attrs = {};
         attrs[key] = val;
     }
-    var locals = MochiKit.Base.update({}, attrs);
+    var locals = Object.assign({}, attrs);
     while (locals.ref) {
         var o = RapidContext.Widget.Icon[locals.ref] || {};
         delete locals.ref;
@@ -134,7 +134,7 @@ RapidContext.Widget.Icon.prototype.setAttrs = function (attrs) {
 /**
  * @scope RapidContext.Widget.Icon.prototype
  */
-MochiKit.Base.update(RapidContext.Widget.Icon, {
+Object.assign(RapidContext.Widget.Icon, {
     /** The default icon definition, inherited by all others. */
     DEFAULT: { url: "rapidcontext/files/images/icons/icons_16x16.png", width: 16, height: 16 },
     /** The blank icon definition. */

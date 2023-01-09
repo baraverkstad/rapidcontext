@@ -95,8 +95,7 @@ RapidContext.App.init = function (app) {
  * @return {Object} the status data object
  */
 RapidContext.App.status = function () {
-    // TODO: use deep clone
-    return MochiKit.Base.clone(RapidContext.App._Cache.status);
+    return Object.assign({}, RapidContext.App._Cache.status);
 };
 
 /**
@@ -107,8 +106,7 @@ RapidContext.App.status = function () {
  * @return {Object} the user data object
  */
 RapidContext.App.user = function () {
-    // TODO: use deep clone
-    return MochiKit.Base.clone(RapidContext.App._Cache.user);
+    return Object.assign({}, RapidContext.App._Cache.user);
 };
 
 /**
@@ -554,7 +552,7 @@ RapidContext.App.logout = function (reload) {
  *         resolve with the parsed response JSON on success
  */
 RapidContext.App.loadJSON = function (url, params, options) {
-    var opts = MochiKit.Base.update({ responseType: "json" }, options);
+    var opts = Object.assign({ responseType: "json" }, options);
     return RapidContext.App.loadXHR(url, params, opts).then(function (xhr) {
         return xhr.response;
     });
@@ -577,7 +575,7 @@ RapidContext.App.loadJSON = function (url, params, options) {
  *         resolve with the response text on success
  */
 RapidContext.App.loadText = function (url, params, options) {
-    var opts = MochiKit.Base.update({ responseType: "text" }, options);
+    var opts = Object.assign({ responseType: "text" }, options);
     return RapidContext.App.loadXHR(url, params, opts).then(function (xhr) {
         return xhr.responseText;
     });
@@ -600,7 +598,7 @@ RapidContext.App.loadText = function (url, params, options) {
  *         resolve with the parsed response XML document on success
  */
 RapidContext.App.loadXML = function (url, params, options) {
-    var opts = MochiKit.Base.update({ responseType: "document" }, options);
+    var opts = Object.assign({ responseType: "document" }, options);
     return RapidContext.App.loadXHR(url, params, opts).then(function (xhr) {
         return xhr.responseXML;
     });
@@ -623,7 +621,7 @@ RapidContext.App.loadXML = function (url, params, options) {
  *         resolve with the XMLHttpRequest instance on success
  */
 RapidContext.App.loadXHR = function (url, params, options) {
-    var opts = MochiKit.Base.update({ method: "GET", headers: {}, timeout: 30000 }, options);
+    var opts = Object.assign({ method: "GET", headers: {}, timeout: 30000 }, options);
     opts.timeout = (opts.timeout < 1000) ? opts.timeout * 1000 : opts.timeout;
     var hasBody = params && ["PATCH", "POST", "PUT"].indexOf(opts.method) >= 0;
     url += (params && !hasBody) ? "?" + MochiKit.Base.queryString(params) : "";
@@ -851,12 +849,11 @@ RapidContext.App._Cache = {
             }
             return res;
         }
-        app = MochiKit.Base.update(null, app);
+        app = Object.assign({}, app);
         app.launch = app.launch || "manual";
         app.resources = [].concat(app.resources).filter(Boolean).map(toResource);
         if (!app.icon) {
-            var cssClass = "fa fa-4x fa-question-circle unimportant";
-            app.icon = toIcon({ "class": cssClass });
+            app.icon = toIcon({ "class": "fa fa-4x fa-question-circle unimportant" });
         }
         return app;
     },
@@ -865,15 +862,13 @@ RapidContext.App._Cache = {
     update: function (proc, data) {
         switch (proc) {
         case "system/status":
-            // TODO: use deep clone
-            data = MochiKit.Base.update(null, data);
-            this.status = data;
+            this.status = Object.assign({}, data);
             RapidContext.Log.log("Updated cached status", this.status);
             break;
         case "system/session/current":
             if (this.compareId(this.user, data.user) != 0) {
                 // TODO: use deep clone
-                data = MochiKit.Base.update(null, data.user);
+                data = Object.assign({}, data.user);
                 if (data.name != "") {
                     data.longName = data.name + " (" + data.id + ")";
                 } else {
@@ -890,7 +885,7 @@ RapidContext.App._Cache = {
                     RapidContext.Log.error("App missing 'className' property", launcher);
                 }
                 launcher.instances = (this.apps[launcher.id] || {}).instances || [];
-                this.apps[launcher.id] = MochiKit.Base.update(this.apps[launcher.id], launcher);
+                this.apps[launcher.id] = Object.assign(this.apps[launcher.id], launcher);
             }
             RapidContext.Log.log("Updated cached apps", this.apps);
             break;

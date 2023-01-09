@@ -60,7 +60,7 @@ RapidContext.Widget.TreeNode = function (attrs/*, ...*/) {
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.TreeNode);
     MochiKit.DOM.addElementClass(o, "widgetTreeNode");
     var isFolder = (arguments.length > 1);
-    attrs = MochiKit.Base.update({ name: "Tree Node", folder: isFolder }, attrs);
+    attrs = Object.assign({ name: "Tree Node", folder: isFolder }, attrs);
     o.setAttrs(attrs);
     o.addAll(Array.prototype.slice.call(arguments, 1));
     // FIXME: Consider using a single click handler in parent Tree instead...
@@ -132,7 +132,7 @@ RapidContext.Widget.TreeNode.prototype._containerNode = function (create) {
  * @param {Boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.TreeNode.prototype.setAttrs = function (attrs) {
-    attrs = MochiKit.Base.update({}, attrs);
+    attrs = Object.assign({}, attrs);
     this.marked = false;
     var locals = RapidContext.Util.mask(attrs, ["name", "folder", "icon", "tooltip"]);
     if (typeof(locals.name) != "undefined") {

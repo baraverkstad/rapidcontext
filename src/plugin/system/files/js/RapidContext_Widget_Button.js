@@ -74,7 +74,7 @@ RapidContext.Widget.Classes.Button = RapidContext.Widget.Button;
  * @param {Icon/Object/String} [attrs.icon] the icon reference to use
  */
 RapidContext.Widget.Button.prototype.setAttrs = function (attrs) {
-    attrs = MochiKit.Base.update({}, attrs);
+    attrs = Object.assign({}, attrs);
     var locals = RapidContext.Util.mask(attrs, ["highlight", "icon"]);
     this.__setAttrs(attrs);
     if ("highlight" in locals) {

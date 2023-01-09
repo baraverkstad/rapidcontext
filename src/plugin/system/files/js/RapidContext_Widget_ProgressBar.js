@@ -60,7 +60,7 @@ RapidContext.Widget.ProgressBar = function (attrs) {
     var o = MochiKit.DOM.DIV({}, meter, text);
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.ProgressBar);
     o.addClass("widgetProgressBar");
-    o.setAttrs(MochiKit.Base.update({ min: 0, max: 100, value: 0 }, attrs));
+    o.setAttrs(Object.assign({ min: 0, max: 100, value: 0 }, attrs));
     return o;
 };
 
@@ -97,7 +97,7 @@ RapidContext.Widget.ProgressBar.prototype._containerNode = function () {
  * @param {Boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.ProgressBar.prototype.setAttrs = function (attrs) {
-    attrs = MochiKit.Base.update({}, attrs);
+    attrs = Object.assign({}, attrs);
     var nowTime = new Date().getTime();
     if (typeof(attrs.min) != "undefined" || typeof(attrs.max) != "undefined") {
         this.min = attrs.min = Math.max(parseInt(attrs.min) || this.min || 0, 0);

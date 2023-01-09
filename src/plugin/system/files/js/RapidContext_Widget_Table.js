@@ -177,7 +177,7 @@ RapidContext.Widget.Table.prototype._handleClick = function (evt) {
  * @param {Boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.Table.prototype.setAttrs = function (attrs) {
-    attrs = MochiKit.Base.update({}, attrs);
+    attrs = Object.assign({}, attrs);
     var locals = RapidContext.Util.mask(attrs, ["select", "key"]);
     if (typeof(locals.select) != "undefined") {
         this._selectMode = locals.select;
@@ -553,7 +553,7 @@ RapidContext.Widget.Table.prototype._addSelectedIds = function () {
     var args = MochiKit.Base.flattenArguments(arguments);
     var ids = RapidContext.Util.dict(args, true);
     var res = [];
-    MochiKit.Base.update(ids, RapidContext.Util.dict(this.getSelectedIds(), false));
+    Object.assign(ids, RapidContext.Util.dict(this.getSelectedIds(), false));
     for (var i = 0; i < this._rows.length; i++) {
         if (ids[this._rows[i].$id]) {
             this._selected.push(i);

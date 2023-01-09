@@ -55,7 +55,7 @@ RapidContext.Widget.TextArea = function (attrs/*, ...*/) {
     var o = MochiKit.DOM.TEXTAREA({ value: text });
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.TextArea);
     o.addClass("widgetTextArea");
-    o.setAttrs(MochiKit.Base.update({}, attrs, { value: text }));
+    o.setAttrs(Object.assign({}, attrs, { value: text }));
     o.addEventListener("input", o._handleChange);
     return o;
 };
@@ -94,7 +94,7 @@ RapidContext.Widget.TextArea.prototype.destroy = function () {
  * @param {Boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.TextArea.prototype.setAttrs = function (attrs) {
-    attrs = MochiKit.Base.update({}, attrs);
+    attrs = Object.assign({}, attrs);
     var locals = RapidContext.Util.mask(attrs, ["helpText", "value"]);
     if ("helpText" in locals) {
         attrs.placeholder = attrs.placeholder || locals.helpText;

@@ -73,7 +73,7 @@ RapidContext.Widget.TableColumn = function (attrs) {
     var o = MochiKit.DOM.TH();
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.TableColumn);
     o.addClass("widgetTableColumn");
-    o.setAttrs(MochiKit.Base.update({ title: attrs.field, type: "string", key: false }, attrs));
+    o.setAttrs(Object.assign({ title: attrs.field, type: "string", key: false }, attrs));
     o.addEventListener("click", o._handleClick);
     return o;
 };
@@ -124,7 +124,7 @@ RapidContext.Widget.TableColumn.prototype._containerNode = function () {
  *            data object as arguments
  */
 RapidContext.Widget.TableColumn.prototype.setAttrs = function (attrs) {
-    attrs = MochiKit.Base.update({}, attrs);
+    attrs = Object.assign({}, attrs);
     var locals = RapidContext.Util.mask(attrs, [
         "title", "field", "type", "sort", "maxLength", "key", "tooltip", "renderer"
     ]);

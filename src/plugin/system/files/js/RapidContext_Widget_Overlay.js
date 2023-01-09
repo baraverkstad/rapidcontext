@@ -49,7 +49,7 @@ RapidContext.Widget.Overlay = function (attrs) {
     var o = MochiKit.DOM.DIV({}, cover, msg);
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Overlay);
     o.addClass("widgetOverlay");
-    o.setAttrs(MochiKit.Base.update({ loading: true, message: "Working..." }, attrs));
+    o.setAttrs(Object.assign({ loading: true, message: "Working..." }, attrs));
     return o;
 };
 
@@ -74,7 +74,7 @@ RapidContext.Widget.Overlay.prototype._containerNode = function () {
  * @param {Boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.Overlay.prototype.setAttrs = function (attrs) {
-    attrs = MochiKit.Base.update({}, attrs);
+    attrs = Object.assign({}, attrs);
     var locals = RapidContext.Util.mask(attrs, ["loading", "message", "dark"]);
     if (typeof(locals.loading) != "undefined") {
         this.showLoading = MochiKit.Base.bool(locals.loading);

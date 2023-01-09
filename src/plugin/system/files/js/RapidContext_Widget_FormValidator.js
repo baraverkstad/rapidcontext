@@ -64,7 +64,7 @@ RapidContext.Widget.FormValidator = function (attrs) {
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.FormValidator);
     o.addClass("widgetFormValidator");
     var defaults = { name: "", mandatory: true, display: "both", message: null, validator: null };
-    o.setAttrs(MochiKit.Base.update(defaults, attrs));
+    o.setAttrs(Object.assign(defaults, attrs));
     o.fields = [];
     o.hide();
     return o;
@@ -88,7 +88,7 @@ RapidContext.Widget.Classes.FormValidator = RapidContext.Widget.FormValidator;
  * @param {Boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.FormValidator.prototype.setAttrs = function (attrs) {
-    attrs = MochiKit.Base.update({}, attrs);
+    attrs = Object.assign({}, attrs);
     var locals = RapidContext.Util.mask(attrs, ["name", "mandatory", "regex", "display", "message", "validator"]);
     if (typeof(locals.name) != "undefined") {
         this.name = locals.name;

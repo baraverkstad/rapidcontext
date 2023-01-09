@@ -65,7 +65,7 @@ RapidContext.Widget.Popup = function (attrs/*, ...*/) {
     o._setHidden(true);
     o.selectedIndex = -1;
     o._delayTimer = null;
-    o.setAttrs(MochiKit.Base.update({ delay: 5000 }, attrs));
+    o.setAttrs(Object.assign({ delay: 5000 }, attrs));
     o.addAll(Array.prototype.slice.call(arguments, 1));
     MochiKit.Signal.connect(o, "onmousemove", o, "_handleMouseMove");
     MochiKit.Signal.connect(o, "onclick", o, "_handleMouseClick");
@@ -102,7 +102,7 @@ RapidContext.Widget.Classes.Popup = RapidContext.Widget.Popup;
  * @param {Boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.Popup.prototype.setAttrs = function (attrs) {
-    attrs = MochiKit.Base.update({}, attrs);
+    attrs = Object.assign({}, attrs);
     var locals = RapidContext.Util.mask(attrs, ["delay", "showAnim", "hideAnim", "hidden"]);
     if (typeof(locals.delay) != "undefined") {
         this.delay = parseInt(locals.delay);

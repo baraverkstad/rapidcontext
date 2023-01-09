@@ -277,7 +277,7 @@ RapidContext.Widget.prototype.setAttrs = function (attrs) {
  * widget.setStyle({ "font-size": "bold", "color": "red" });
  */
 RapidContext.Widget.prototype.setStyle = function (styles) {
-    styles = MochiKit.Base.update({}, styles);
+    styles = Object.assign({}, styles);
     var posDimNames = [
         "width", "height", "zIndex", "z-index",
         "position", "top", "bottom", "left", "right"

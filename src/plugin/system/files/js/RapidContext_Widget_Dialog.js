@@ -68,7 +68,7 @@ RapidContext.Widget.Dialog = function (attrs/*, ... */) {
     MochiKit.DOM.addElementClass(o, "widgetDialog");
     o.resizeContent = o._resizeContent;
     o._setHidden(true);
-    o.setAttrs(MochiKit.Base.update({ modal: false, system: false, center: true }, attrs));
+    o.setAttrs(Object.assign({ modal: false, system: false, center: true }, attrs));
     o.addAll(Array.prototype.slice.call(arguments, 1));
     o.addEventListener("click", o._handleClick);
     o.addEventListener("mousedown", o._handleMouseDown);
@@ -211,7 +211,7 @@ RapidContext.Widget.Dialog.prototype._handleMouseMove = function (evt) {
  * @param {Boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.Dialog.prototype.setAttrs = function (attrs) {
-    attrs = MochiKit.Base.update({}, attrs);
+    attrs = Object.assign({}, attrs);
     var locals = RapidContext.Util.mask(attrs, [
         "title", "modal", "system", "center", "resizeable", "closeable", "hidden"
     ]);

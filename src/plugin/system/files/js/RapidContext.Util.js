@@ -434,14 +434,14 @@ RapidContext.Util.createDOMFuncExt = function (ns, tag, args, attrs/*, ...*/) {
     var children = Array.prototype.slice.call(arguments, 4);
     return function (/*arg1, ..., argN, attrs, ...*/) {
         var myArgs = Array.prototype.slice.call(arguments);
-        var myAttrs = MochiKit.Base.update({}, attrs);
+        var myAttrs = Object.assign({}, attrs);
         args.forEach(function (key, idx) {
             if (myArgs[idx] == null) {
                 throw new Error("Argument '" + key + "' cannot be null");
             }
             myAttrs[key] = myArgs[idx];
         });
-        MochiKit.Base.update(myAttrs, myArgs[args.length]);
+        Object.assign(myAttrs, myArgs[args.length]);
         var myChildren = [].concat(children, myArgs.slice(args.length + 1));
         return RapidContext.Util.createDOMExt(ns, tag, myAttrs, myChildren);
     };

@@ -60,7 +60,7 @@ RapidContext.Widget.Pane = function (attrs/*, ... */) {
     var o = MochiKit.DOM.DIV();
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Pane);
     o.addClass("widgetPane");
-    o.setAttrs(MochiKit.Base.update({ pageTitle: "Page", pageStatus: "ANY", pageCloseable: false }, attrs));
+    o.setAttrs(Object.assign({ pageTitle: "Page", pageStatus: "ANY", pageCloseable: false }, attrs));
     o.addAll(Array.prototype.slice.call(arguments, 1));
     return o;
 };
@@ -144,7 +144,7 @@ RapidContext.Widget.Pane.WORKING = { previous: false, next: false };
  * @param {Boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.Pane.prototype.setAttrs = function (attrs) {
-    attrs = MochiKit.Base.update({}, attrs);
+    attrs = Object.assign({}, attrs);
     var locals = RapidContext.Util.mask(attrs, ["pageTitle", "pageStatus", "pageCloseable"]);
     var modified = false;
     if (typeof(locals.pageTitle) != "undefined") {
@@ -181,7 +181,7 @@ RapidContext.Widget.Pane.prototype.setAttrs = function (attrs) {
  *            flag, used to clear all form validations in the pane
  */
 RapidContext.Widget.Pane.prototype._handleEnter = function (opts) {
-    opts = MochiKit.Base.update({ show: true, validateReset: false }, opts);
+    opts = Object.assign({ show: true, validateReset: false }, opts);
     if (MochiKit.Base.bool(opts.validateReset)) {
         var forms = this.getElementsByTagName("FORM");
         for (var i = 0; i < forms.length; i++) {
@@ -222,7 +222,7 @@ RapidContext.Widget.Pane.prototype._handleExit = function (opts) {
         }
         return undefined;
     }
-    opts = MochiKit.Base.update({ hide: true, validate: false }, opts);
+    opts = Object.assign({ hide: true, validate: false }, opts);
     if (MochiKit.Base.bool(opts.validate)) {
         var forms = this.getElementsByTagName("FORM");
         for (var i = 0; i < forms.length; i++) {

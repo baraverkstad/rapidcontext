@@ -54,7 +54,7 @@ RapidContext.Widget.Field = function (attrs) {
     var o = MochiKit.DOM.SPAN();
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Field);
     o.addClass("widgetField");
-    o.setAttrs(MochiKit.Base.update({ name: "", value: "", maxLength: -1, mask: false }, attrs));
+    o.setAttrs(Object.assign({ name: "", value: "", maxLength: -1, mask: false }, attrs));
     o.defaultValue = o.value;
     o.defaultMask = o.mask;
     o.addEventListener("click", o._handleClick);
@@ -100,7 +100,7 @@ RapidContext.Widget.Field.prototype._containerNode = function () {
  * field.setAttrs({ value: 0.23 });
  */
 RapidContext.Widget.Field.prototype.setAttrs = function (attrs) {
-    attrs = MochiKit.Base.update({}, attrs);
+    attrs = Object.assign({}, attrs);
     var locals = RapidContext.Util.mask(attrs, ["name", "value", "format", "formatter", "maxLength", "mask"]);
     if (typeof(locals.name) != "undefined") {
         this.name = locals.name;

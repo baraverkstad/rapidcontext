@@ -81,8 +81,7 @@
     Async.prototype = MochiKit.Base.clone(MochiKit.Async.Deferred.prototype);
 
     /**#@+ @methodOf RapidContext.Async.prototype */
-    // FIXME: Use Object.assign() here...
-    MochiKit.Base.update(Async.prototype, {
+    Object.assign(Async.prototype, {
         constructor: Async,
 
         /**
@@ -285,8 +284,7 @@
                 el = el.onload = el.onerror = null;
                 reject(new URIError("failed to load: " + url, url));
             };
-            // FIXME: Use Object.assign() here...
-            MochiKit.Base.update(el, attrs);
+            Object.assign(el, attrs);
             parent && parent.appendChild(el);
         });
     }
@@ -309,7 +307,7 @@
      */
     function xhr(url, options) {
         var opts = { method: "GET", headers: {}, timeout: 30000, log: "XHR request" };
-        MochiKit.Base.update(opts, options);
+        Object.assign(opts, options);
         if (opts.responseType === "json" && !opts.headers["Accept"]) {
             opts.headers["Accept"] = "application/json";
         }
@@ -366,8 +364,7 @@
 
     // FIXME: Use Object.create(Error.prototype) here...
     AsyncError.prototype = MochiKit.Base.clone(Error.prototype);
-    // FIXME: Use Object.assign() here...
-    MochiKit.Base.update(AsyncError.prototype, {
+    Object.assign(AsyncError.prototype, {
         constructor: AsyncError,
         name: "AsyncError"
     });

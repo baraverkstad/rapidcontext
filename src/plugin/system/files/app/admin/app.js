@@ -253,7 +253,7 @@ AdminApp.prototype.showConnection = function (id) {
  */
 AdminApp.prototype._showConnection = function () {
     var data = this.ui.cxnTable.getSelectedData();
-    data = MochiKit.Base.update({}, data);
+    data = Object.assign({}, data);
     if (/^@\d+$/.test(data._lastUsedTime)) {
         var dttm = new Date(+data._lastUsedTime.substr(1));
         data.lastAccess = MochiKit.DateTime.toISOTimestamp(dttm);
@@ -418,7 +418,7 @@ AdminApp.prototype._updateConnectionEdit = function () {
     var props = {};
     if (this._types[data.type]) {
         var type = this._types[data.type];
-        MochiKit.Base.update(props, type.properties);
+        Object.assign(props, type.properties);
         MochiKit.DOM.replaceChildNodes(this.ui.cxnEditTypeDescr, type.description);
     } else {
         MochiKit.DOM.replaceChildNodes(this.ui.cxnEditTypeDescr);
@@ -894,7 +894,7 @@ AdminApp.prototype._editProcedure = function () {
         defaults: {}
     };
     for (var i = 0; i < p.bindings.length; i++) {
-        var b = MochiKit.Base.clone(p.bindings[i]);
+        var b = Object.assign({}, p.bindings[i]);
         if (b.type === "argument") {
             b.value = b.description;
             b.description = "";
@@ -1038,7 +1038,7 @@ AdminApp.prototype._updateProcEdit = function () {
     var defaults = data.defaults[values.type];
     for (k in defaults) {
         if (!bindings[k]) {
-            b = MochiKit.Base.clone(defaults[k]);
+            b = Object.assign({}, defaults[k]);
             b.value = (b.type == "data") ? "\n" : "";
             bindings[k] = b;
         }
@@ -1425,7 +1425,7 @@ AdminApp.prototype._editUser = function () {
         roles: (data.role) ? data.role.join(" ") : "",
         passwordHint: "Leave blank for unmodified"
     };
-    this.ui.userForm.update(MochiKit.Base.update(extra, data));
+    this.ui.userForm.update(Object.assign(extra, data));
     this.ui.userId.disable();
 };
 
