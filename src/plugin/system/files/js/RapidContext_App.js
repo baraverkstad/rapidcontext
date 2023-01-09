@@ -886,7 +886,7 @@ RapidContext.App._Cache = {
                     RapidContext.Log.error("App missing 'className' property", launcher);
                 }
                 launcher.instances = (this.apps[launcher.id] || {}).instances || [];
-                this.apps[launcher.id] = Object.assign(this.apps[launcher.id], launcher);
+                this.apps[launcher.id] = Object.assign(this.apps[launcher.id] || {}, launcher);
             }
             RapidContext.Log.log("Updated cached apps", this.apps);
             break;
