@@ -100,10 +100,10 @@ RapidContext.Widget.FormValidator.prototype.setAttrs = function (attrs) {
         if (locals.regex instanceof RegExp) {
             this.regex = locals.regex;
         } else {
-            if (locals.regex.indexOf("^") != 0) {
+            if (!locals.regex.startsWith("^")) {
                 locals.regex = "^" + locals.regex;
             }
-            if (locals.regex.indexOf("$") != locals.regex.length - 1) {
+            if (!locals.regex.endsWith("$")) {
                 locals.regex += "$";
             }
             this.regex = new RegExp(locals.regex);

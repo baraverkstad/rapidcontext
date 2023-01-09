@@ -419,7 +419,7 @@ RapidContext.App.callApp = function (app, method) {
  */
 RapidContext.App.callProc = function (name, args) {
     // TODO: remove this legacy name conversion
-    if (name.indexOf("RapidContext.") == 0) {
+    if (name.startsWith("RapidContext.")) {
         name = "System" + name.substring(8);
     }
     RapidContext.Log.log("Call request " + name, args);
@@ -447,7 +447,7 @@ RapidContext.App.callProc = function (name, args) {
         } else {
             RapidContext.Log.log("Call response " + name, res.data);
         }
-        if (name.indexOf("system/") == 0 && !res.error && res.data) {
+        if (name.startsWith("system/") && !res.error && res.data) {
             RapidContext.App._Cache.update(name, res.data);
         }
         return res.data;
@@ -762,7 +762,7 @@ RapidContext.App.uploadFile = function (id, file, onProgress) {
 RapidContext.App._rebaseUrl = function (url) {
     url = url || "";
     if (RapidContext._basePath) {
-        if (url.indexOf(RapidContext._basePath) == 0) {
+        if (url.startsWith(RapidContext._basePath)) {
             url = url.substring(RapidContext._basePath.length);
         } else if (!url.includes(":")) {
             url = "rapidcontext/files/" + url;

@@ -205,9 +205,9 @@ HelpApp.prototype.clearContent = function () {
 HelpApp.prototype.loadContent = function (url) {
     var node = this._treeExpandUrl(url);
     var fileUrl = url.replace(/#.*/, "");
-    if (/https?:/.test(url)) {
+    if (/^https?:/.test(url)) {
         window.open(url);
-    } else if (/#.+/.test(url) && this._currentUrl.indexOf(fileUrl) == 0) {
+    } else if (url.includes("#") && this._currentUrl.startsWith(fileUrl)) {
         this._currentUrl = url;
         this._scrollLink(url.replace(/.*#/, ""));
     } else {
@@ -261,7 +261,7 @@ HelpApp.prototype._showContentHtml = function (html) {
         var href = links[i].getAttribute("href");
         if (href && href != "") {
             href = RapidContext.Util.resolveURI(href, this._currentUrl);
-            if (href.indexOf(baseUrl) == 0) {
+            if (href.startsWith(baseUrl)) {
                 href = href.substring(baseUrl.length);
             }
             if (links[i].hasAttribute("target")) {
@@ -279,7 +279,7 @@ HelpApp.prototype._showContentHtml = function (html) {
         var src = images[j].getAttribute("src");
         if (src) {
             src = RapidContext.Util.resolveURI(src, this._currentUrl);
-            if (src.indexOf(baseUrl) == 0) {
+            if (src.startsWith(baseUrl)) {
                 src = src.substring(baseUrl.length);
             }
             if (!src.includes("://")) {
@@ -301,7 +301,7 @@ HelpApp.prototype._handleClick = function (evt) {
         evt.stop();
         var href = elem.getAttribute("href");
         var baseUrl = RapidContext.Util.resolveURI("");
-        if (href.indexOf(baseUrl) == 0) {
+        if (href.startsWith(baseUrl)) {
             href = href.substring(baseUrl.length);
         }
         this.loadContent(href);

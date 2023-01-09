@@ -254,17 +254,17 @@ RapidContext.Util.resolveURI = function (uri, base) {
     base = base || document.baseURI || document.getElementsByTagName("base")[0].href;
     if (uri.includes(":")) {
         return uri;
-    } else if (uri.indexOf("#") == 0) {
+    } else if (uri.startsWith("#")) {
         pos = base.lastIndexOf("#");
         if (pos >= 0) {
             base = base.substring(0, pos);
         }
         return base + uri;
-    } else if (uri.indexOf("/") == 0) {
+    } else if (uri.startsWith("/")) {
         pos = base.indexOf("/", base.indexOf("://") + 3);
         base = base.substring(0, pos);
         return base + uri;
-    } else if (uri.indexOf("../") == 0) {
+    } else if (uri.startsWith("../")) {
         pos = base.lastIndexOf("/");
         base = base.substring(0, pos);
         uri = uri.substring(3);

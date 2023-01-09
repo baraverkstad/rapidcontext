@@ -327,7 +327,7 @@ RapidContext.Widget.prototype.removeClass = function (/* ... */) {
     var elem = this._styleNode();
     for (var i = 0; i < arguments.length; i++) {
         var name = "" + arguments[i];
-        if (name.indexOf("widget") != 0) {
+        if (!name.startsWith("widget")) {
             MochiKit.DOM.removeElementClass(elem, name);
         }
     }
