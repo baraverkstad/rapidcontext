@@ -42,6 +42,7 @@
         "Array.prototype.reduce",
         "Array.prototype.some",
         "Blob",
+        "CSS.supports",
         "CustomEvent",
         "Date.now",
         "Date.prototype.toISOString",
@@ -115,7 +116,6 @@
         "AbortSignal",
         "Array.prototype.flat",
         "Array.prototype.flatMap",
-        "CSS.supports",
         "Element.prototype.after",
         "Element.prototype.append",
         "Element.prototype.before",
@@ -188,7 +188,7 @@
     function supports(feature/*, ...*/) {
         function checkCSS(code) {
             try {
-                return CSS.supports(code);
+                return CSS.supports("(" + code + ")");
             } catch (ignore) {
                 return false;
             }
