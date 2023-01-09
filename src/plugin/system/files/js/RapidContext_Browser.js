@@ -308,7 +308,9 @@
         pairs.forEach(function (pair) {
             var name = pair.split("=")[0];
             var value = pair.substr(name.length + 1);
-            cookies[decodeURIComponent(name)] = decodeURIComponent(value);
+            if (name && value) {
+                cookies[decodeURIComponent(name)] = decodeURIComponent(value);
+            }
         });
         return cookies;
     }
