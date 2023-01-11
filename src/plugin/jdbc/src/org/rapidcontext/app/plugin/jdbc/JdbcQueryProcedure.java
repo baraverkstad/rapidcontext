@@ -64,7 +64,7 @@ public class JdbcQueryProcedure extends JdbcProcedure {
         try {
             return con.executeQuery(stmt, flags);
         } catch (ConnectionException e) {
-            throw new ProcedureException(e.getMessage());
+            throw new ProcedureException(this, e);
         }
     }
 }

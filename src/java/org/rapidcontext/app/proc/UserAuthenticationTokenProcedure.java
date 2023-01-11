@@ -72,7 +72,7 @@ public class UserAuthenticationTokenProcedure extends Procedure {
         CallContext.checkAccess("user/" + userId, cx.readPermission(1));
         User user = User.find(cx.getStorage(), userId);
         if (user == null) {
-            throw new ProcedureException("user not found");
+            throw new ProcedureException(this, "user not found");
         }
         if (duration.trim().length() > 0) {
             expiryTime = System.currentTimeMillis() + Long.parseLong(duration);

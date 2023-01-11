@@ -140,20 +140,19 @@ public final class JsRuntime {
     /**
      * Creates a procedure exception from any exception type.
      *
-     * @param prefix         the message prefix text
+     * @param log            the log message prefix
      * @param e              the exception to convert
      *
      * @return the procedure exception
      */
-    private static JsException createException(String prefix, Throwable e) {
+    private static JsException createException(String log, Throwable e) {
         if (e instanceof JsException) {
             return (JsException) e;
         } else if (e instanceof WrappedException) {
-            return createException(prefix, ((WrappedException) e).getWrappedException());
+            return createException(log, ((WrappedException) e).getWrappedException());
         } else {
-            String msg = prefix + ": " + e.getMessage();
-            LOG.log(Level.WARNING, msg, e);
-            return new JsException(msg, e);
+            LOG.log(Level.WARNING, log + ": " + e.getMessage(), e);
+            return new JsException(e.getMessage(), e);
         }
     }
 

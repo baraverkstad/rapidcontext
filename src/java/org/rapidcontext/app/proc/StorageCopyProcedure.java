@@ -79,12 +79,12 @@ public class StorageCopyProcedure extends Procedure {
 
         String src = ((String) bindings.getValue("src", "")).trim();
         if (src.length() <= 0) {
-            throw new ProcedureException("source path cannot be empty");
+            throw new ProcedureException(this, "source path cannot be empty");
         }
         CallContext.checkAccess(src, cx.readPermission(1));
         String dst = ((String) bindings.getValue("dst", "")).trim();
         if (dst.length() <= 0) {
-            throw new ProcedureException("destination path cannot be empty");
+            throw new ProcedureException(this, "destination path cannot be empty");
         }
         CallContext.checkWriteAccess(dst);
         String flags = ((String) bindings.getValue("flags", "")).toLowerCase();
@@ -101,13 +101,13 @@ public class StorageCopyProcedure extends Procedure {
             ext = Storage.EXT_YAML;
         }
         if (src.endsWith("/") && !recursive) {
-            throw new ProcedureException("source path cannot be an index (unless recursive)");
+            throw new ProcedureException(this, "source path cannot be an index (unless recursive)");
         } else if (src.endsWith("/") && !dst.endsWith("/")) {
-            throw new ProcedureException("destination path must also be an index");
+            throw new ProcedureException(this, "destination path must also be an index");
         } else if (StringUtils.startsWithIgnoreCase(src, dst)) {
-            throw new ProcedureException("source and destination paths cannot overlap");
+            throw new ProcedureException(this, "source and destination paths cannot overlap");
         } else if (StringUtils.startsWithIgnoreCase(dst, src)) {
-            throw new ProcedureException("source and destination paths cannot overlap");
+            throw new ProcedureException(this, "source and destination paths cannot overlap");
         } else if (!src.endsWith("/") && dst.endsWith("/")) {
             dst += StringUtils.substringAfterLast("/" + src, "/");
         }

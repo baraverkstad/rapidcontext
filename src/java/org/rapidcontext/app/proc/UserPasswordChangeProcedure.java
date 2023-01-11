@@ -70,22 +70,22 @@ public class UserPasswordChangeProcedure extends Procedure {
 
         User user = SecurityContext.currentUser();
         if (user == null) {
-            throw new ProcedureException("user must be logged in");
+            throw new ProcedureException(this, "user must be logged in");
         }
         String oldHash = bindings.getValue("oldHash").toString();
         if (!user.verifyPasswordHash(oldHash) && !user.verifyAuthToken(oldHash)) {
-            throw new ProcedureException("invalid current password");
+            throw new ProcedureException(this, "invalid current password");
         }
         String newHash = bindings.getValue("newHash").toString();
         if (newHash.length() != 32) {
-            throw new ProcedureException("new password hash is malformed");
+            throw new ProcedureException(this, "new password hash is malformed");
         }
         try {
             LOG.info("updating " + user + " password");
             user.setPasswordHash(newHash);
             User.store(cx.getStorage(), user);
         } catch (Exception e) {
-            throw new ProcedureException(e.getMessage());
+            throw new ProcedureException(this, e);
         }
         return user.id() + " password changed";
     }

@@ -79,7 +79,7 @@ public class SessionTerminateProcedure extends Procedure {
         }
         if (session == null) {
             String msg = "cannot find session with id " + id;
-            throw new ProcedureException(msg);
+            throw new ProcedureException(this, msg);
         }
         LOG.info("terminating " + session);
         session.invalidate();

@@ -81,7 +81,7 @@ public class PluginInstallProcedure extends Procedure {
         file = (session == null) ? null : session.file(fileId);
         if (session == null || file == null || !file.canRead()) {
             msg = "failed to read session file with id '" + fileId + "'";
-            throw new ProcedureException(msg);
+            throw new ProcedureException(this, msg);
         }
         CallContext.checkWriteAccess("plugin/" + fileId);
         try {
@@ -92,7 +92,7 @@ public class PluginInstallProcedure extends Procedure {
         } catch (PluginException e) {
             msg = "failed to install plug-in file '" + file.getName() + "': " +
                   e.getMessage();
-            throw new ProcedureException(msg);
+            throw new ProcedureException(this, msg);
         }
     }
 }

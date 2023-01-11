@@ -79,7 +79,7 @@ public class UserSettingsProcedure extends Procedure {
             user = User.find(cx.getStorage(), id);
         }
         if (user == null) {
-            throw new ProcedureException("cannot find user with id " + id);
+            throw new ProcedureException(this, "cannot find user with id " + id);
         }
         if (data instanceof Dict) {
             user.updateSettings((Dict) data);
@@ -87,7 +87,7 @@ public class UserSettingsProcedure extends Procedure {
                 LOG.info("updating " + user + " settings");
                 User.store(cx.getStorage(), user);
             } catch (StorageException e) {
-                throw new ProcedureException(e.getMessage());
+                throw new ProcedureException(this, e);
             }
         }
         return user.settings();

@@ -424,7 +424,7 @@ public class CallContext {
         } catch (Exception e) {
             String msg = "Unhandled exception in procedure '" + name + "'";
             LOG.log(Level.WARNING, msg, e);
-            throw new ProcedureException(msg, e);
+            throw new ProcedureException(proc, e);
         } finally {
             if (stack.height() == 0) {
                 releaseAll(commit);
@@ -494,8 +494,8 @@ public class CallContext {
                 if (value != null) {
                     value = connections.get(value);
                     if (value == null) {
-                        String msg = "no connection defined for '" + name +
-                                     "'";
+                        String msg = "no connection '" + name +
+                                     "' reserved for " + proc.getName();
                         throw new ProcedureException(msg);
                     }
                 }
@@ -512,7 +512,7 @@ public class CallContext {
             }
         }
         if (pos != args.length) {
-            String msg = "too many arguments in call to '" + proc.getName() +
+            String msg = "too many arguments for '" + proc.getName() +
                          "'; expected " + pos + ", found " + args.length;
             throw new ProcedureException(msg);
         }
@@ -541,7 +541,7 @@ public class CallContext {
         throws ProcedureException {
 
         if (isInterrupted()) {
-            throw new ProcedureException("procedure call interrupted");
+            throw new ProcedureException(proc, "call interrupted");
         }
         stack.push(proc, bindings);
         try {

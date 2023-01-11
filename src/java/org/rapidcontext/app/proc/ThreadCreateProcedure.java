@@ -76,7 +76,7 @@ public class ThreadCreateProcedure extends Procedure {
         throws ProcedureException {
 
         if (SecurityContext.currentUser() == null) {
-            throw new ProcedureException("permission denied");
+            throw new ProcedureException(this, "permission denied");
         }
         String proc = bindings.getValue("procedure").toString();
         CallContext.checkAccess("procedure/" + proc, cx.readPermission(1));

@@ -70,7 +70,7 @@ public class ThreadContextProcedure extends Procedure {
         try {
             threadId = Integer.parseInt(str);
         } catch (NumberFormatException e) {
-            throw new ProcedureException("invalid thread id: " + str);
+            throw new ProcedureException(this, "invalid thread id: " + str);
         }
         cx = ApplicationContext.getInstance().findContext(threadId);
         if (cx == null) {

@@ -71,9 +71,9 @@ public class StorageQueryProcedure extends Procedure {
         Dict dict = (obj instanceof Dict) ? (Dict) obj : new Dict();
         String path = dict.getString("path", obj.toString());
         if (!path.startsWith("/")) {
-            throw new ProcedureException("invalid query path, must start with /");
+            throw new ProcedureException(this, "invalid query path, must start with /");
         } else if (!path.endsWith("/")) {
-            throw new ProcedureException("invalid query path, must be an index");
+            throw new ProcedureException(this, "invalid query path, must be an index");
         }
         CallContext.checkSearchAccess(path);
         Storage storage = ApplicationContext.getInstance().getStorage();

@@ -77,7 +77,7 @@ public class PluginUnloadProcedure extends Procedure {
         } catch (PluginException e) {
             String msg = "failed to unload plug-in '" + id + "': " +
                          e.getMessage();
-            throw new ProcedureException(msg);
+            throw new ProcedureException(this, msg);
         }
         return null;
     }

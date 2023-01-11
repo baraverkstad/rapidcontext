@@ -64,9 +64,9 @@ public class StorageListProcedure extends Procedure {
 
         String search = ((String) bindings.getValue("path", "")).trim();
         if (search.length() <= 0) {
-            throw new ProcedureException("path cannot be empty");
+            throw new ProcedureException(this, "path cannot be empty");
         } else if (!search.endsWith("/")) {
-            throw new ProcedureException("path must be an index");
+            throw new ProcedureException(this, "path must be an index");
         }
         CallContext.checkSearchAccess(search);
         Storage storage = ApplicationContext.getInstance().getStorage();

@@ -24,7 +24,7 @@ package org.rapidcontext.core.proc;
 public class ProcedureException extends Exception {
 
     /**
-     * Creates a new procedure exception.
+     * Creates a new generic procedure exception.
      *
      * @param message        the detailed error message
      */
@@ -33,12 +33,22 @@ public class ProcedureException extends Exception {
     }
 
     /**
-     * Creates a new procedure exception.
+     * Creates a new in-call procedure exception.
      *
+     * @param proc           the procedure called
      * @param message        the detailed error message
-     * @param e              the base exception
      */
-    public ProcedureException(String message, Throwable e) {
-        super(message + ": " + e.getMessage(), e);
+    public ProcedureException(Procedure proc, String message) {
+        super("in '" + proc.getName() + "': " + message);
+    }
+
+    /**
+     * Creates a new new in-call procedure exception.
+     *
+     * @param proc           the procedure called
+     * @param e              the root cause
+     */
+    public ProcedureException(Procedure proc, Throwable e) {
+        super("in '" + proc.getName() + "': " + e.getMessage(), e);
     }
 }

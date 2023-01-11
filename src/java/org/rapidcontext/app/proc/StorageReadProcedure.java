@@ -78,9 +78,9 @@ public class StorageReadProcedure extends Procedure {
 
         String path = ((String) bindings.getValue("path", "")).trim();
         if (path.length() <= 0) {
-            throw new ProcedureException("path cannot be empty");
+            throw new ProcedureException(this, "path cannot be empty");
         } else if (path.endsWith("/")) {
-            throw new ProcedureException("path cannot be an index");
+            throw new ProcedureException(this, "path cannot be an index");
         }
         CallContext.checkAccess(path, cx.readPermission(1));
         Storage storage = ApplicationContext.getInstance().getStorage();

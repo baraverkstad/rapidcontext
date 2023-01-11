@@ -73,9 +73,9 @@ public class UserChangeProcedure extends Procedure {
         // Validate arguments
         String id = bindings.getValue("id", "").toString().trim();
         if (id.length() <= 0) {
-            throw new ProcedureException("user id cannot be blank");
+            throw new ProcedureException(this, "user id cannot be blank");
         } else if (!id.matches("^[a-zA-Z0-9_/]*$")) {
-            throw new ProcedureException("user id contains invalid character");
+            throw new ProcedureException(this, "user id contains invalid character");
         }
         CallContext.checkWriteAccess("user/" + id);
         User user = User.find(cx.getStorage(), id);
@@ -86,7 +86,7 @@ public class UserChangeProcedure extends Procedure {
         boolean enabled = (!str.equals("") && !str.equals("false") && !str.equals("0"));
         String pwd = bindings.getValue("password").toString();
         if ((user == null || pwd.length() > 0) && pwd.length() < 5) {
-            throw new ProcedureException("password must be at least 5 characters");
+            throw new ProcedureException(this, "password must be at least 5 characters");
         }
         String[] roles = null;
         Object obj = bindings.getValue("roles");
@@ -116,7 +116,7 @@ public class UserChangeProcedure extends Procedure {
             LOG.info("updating " + user);
             User.store(cx.getStorage(), user);
         } catch (StorageException e) {
-            throw new ProcedureException(e.getMessage());
+            throw new ProcedureException(this, e);
         }
         return res;
     }

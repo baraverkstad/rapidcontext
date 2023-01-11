@@ -69,9 +69,9 @@ public class ProcedureWriteProcedure extends Procedure {
         String name = ((String) bindings.getValue("name")).trim();
         String type = ((String) bindings.getValue("type")).trim();
         if (name.isEmpty()) {
-            throw new ProcedureException("missing procedure name");
+            throw new ProcedureException(this, "missing procedure name");
         } else if (type.isEmpty()) {
-            throw new ProcedureException("missing procedure type");
+            throw new ProcedureException(this, "missing procedure type");
         }
         CallContext.checkWriteAccess("procedure/" + name);
         LOG.info("writing procedure " + name);

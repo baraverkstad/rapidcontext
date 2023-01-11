@@ -74,11 +74,11 @@ public class ThreadInterruptProcedure extends Procedure {
         try {
             threadId = Integer.parseInt(str);
         } catch (NumberFormatException e) {
-            throw new ProcedureException("invalid thread id: " + str);
+            throw new ProcedureException(this, "invalid thread id: " + str);
         }
         cx = ApplicationContext.getInstance().findContext(threadId);
         if (cx == null) {
-            throw new ProcedureException("cannot interrupt thread without context");
+            throw new ProcedureException(this, "cannot interrupt thread without context");
         }
         User user = (User) cx.getAttribute(CallContext.ATTRIBUTE_USER);
         boolean isOwner = user != null && user == SecurityContext.currentUser();

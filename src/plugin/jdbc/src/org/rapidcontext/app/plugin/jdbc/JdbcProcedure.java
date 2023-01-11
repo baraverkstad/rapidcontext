@@ -188,7 +188,7 @@ public abstract class JdbcProcedure extends Procedure {
             }
             return con.prepare(buffer.toString(), params);
         } catch (ConnectionException e) {
-            throw new ProcedureException(e.getMessage());
+            throw new ProcedureException(this, e);
         }
     }
 

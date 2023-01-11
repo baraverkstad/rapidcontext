@@ -67,7 +67,7 @@ public class ProcedureDeleteProcedure extends Procedure {
     throws ProcedureException {
         String name = ((String) bindings.getValue("name")).trim();
         if (name.length() == 0) {
-            throw new ProcedureException("invalid procedure name");
+            throw new ProcedureException(this, "invalid procedure name");
         }
         CallContext.checkWriteAccess("procedure/" + name);
         LOG.info("deleting procedure " + name);

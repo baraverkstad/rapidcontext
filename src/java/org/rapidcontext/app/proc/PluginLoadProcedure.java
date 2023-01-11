@@ -74,7 +74,7 @@ public class PluginLoadProcedure extends Procedure {
         if (ctx.isPluginLoaded(id)) {
             String msg = "failed to load plug-in '" + id + "': " +
                          "plug-in is already loaded";
-            throw new ProcedureException(msg);
+            throw new ProcedureException(this, msg);
         }
         try {
             LOG.info("loading plugin " + id);
@@ -82,7 +82,7 @@ public class PluginLoadProcedure extends Procedure {
         } catch (PluginException e) {
             String msg = "failed to load plug-in '" + id + "': " +
                          e.getMessage();
-            throw new ProcedureException(msg);
+            throw new ProcedureException(this, msg);
         }
         return null;
     }

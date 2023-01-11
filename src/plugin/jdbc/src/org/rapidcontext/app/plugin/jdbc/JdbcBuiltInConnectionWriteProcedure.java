@@ -77,7 +77,7 @@ public class JdbcBuiltInConnectionWriteProcedure extends Procedure {
             try {
                 storage.remove(path);
             } catch (StorageException e) {
-                throw new ProcedureException(e.getMessage());
+                throw new ProcedureException(this, e);
             }
         } else {
             Type type = Type.find(storage, "connection/jdbc");
@@ -92,8 +92,8 @@ public class JdbcBuiltInConnectionWriteProcedure extends Procedure {
                 if (data.containsKey(name)) {
                     res.set(name, data.get(name));
                 } else if (dict.getBoolean("required", false)) {
-                    throw new ProcedureException("missing required '" + name +
-                                                 "' property");
+                    String msg = "missing required '" + name + "' property";
+                    throw new ProcedureException(this, msg);
                 }
                 data.remove(name);
             }
@@ -101,7 +101,7 @@ public class JdbcBuiltInConnectionWriteProcedure extends Procedure {
             try {
                 storage.store(path, createConnection(id, type.id(), res));
             } catch (StorageException e) {
-                throw new ProcedureException(e.getMessage());
+                throw new ProcedureException(this, e);
             }
         }
         return res;

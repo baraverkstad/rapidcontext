@@ -76,7 +76,7 @@ public class StorageWriteProcedure extends Procedure {
 
         String path = ((String) bindings.getValue("path", "")).trim();
         if (path.length() <= 0) {
-            throw new ProcedureException("path cannot be empty");
+            throw new ProcedureException(this, "path cannot be empty");
         }
         CallContext.checkWriteAccess(path);
         LOG.fine("writing to storage path " + path);
@@ -87,12 +87,12 @@ public class StorageWriteProcedure extends Procedure {
         if (isString) {
             data = new Binary.BinaryString((String) data);
         } else if (!isString && !isStruct && !isBinary) {
-            throw new ProcedureException("input data type not supported");
+            throw new ProcedureException(this, "input data type not supported");
         }
         String fmt = ((String) bindings.getValue("format", "")).trim();
         if (fmt.equals("") || fmt.equalsIgnoreCase("binary")) {
             if (!isString && !isBinary) {
-                throw new ProcedureException("binary format requires binary data");
+                throw new ProcedureException(this, "binary format requires binary data");
             }
         } else if (fmt.equalsIgnoreCase("properties")) {
             if (!StringUtils.endsWithIgnoreCase(path, Storage.EXT_PROPERTIES)) {
@@ -111,7 +111,7 @@ public class StorageWriteProcedure extends Procedure {
                 path += Storage.EXT_YAML;
             }
         } else {
-            throw new ProcedureException("invalid data format: " + fmt);
+            throw new ProcedureException(this, "invalid data format: " + fmt);
         }
 
         return Boolean.valueOf(store(Path.from(path), data));

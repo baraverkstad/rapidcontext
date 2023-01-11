@@ -61,7 +61,7 @@ public class ProcedureTraceProcedure extends Procedure {
 
         String name = ((String) bindings.getValue("name")).trim();
         if (name.length() == 0) {
-            throw new ProcedureException("invalid procedure name");
+            throw new ProcedureException(this, "invalid procedure name");
         }
         String flag = bindings.getValue("tracing").toString().trim();
         boolean tracing = StringUtils.equalsIgnoreCase(flag, "true") ||

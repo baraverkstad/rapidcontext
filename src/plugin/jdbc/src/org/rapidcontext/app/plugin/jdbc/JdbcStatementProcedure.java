@@ -62,7 +62,7 @@ public class JdbcStatementProcedure extends JdbcProcedure {
         try {
             return con.executeStatement(stmt);
         } catch (ConnectionException e) {
-            throw new ProcedureException(e.getMessage());
+            throw new ProcedureException(this, e);
         }
     }
 }

@@ -63,7 +63,7 @@ public class JdbcBuiltInConnectionInfoProcedure extends Procedure {
         try {
             res.set("_metadata", channel.metadata());
         } catch (ConnectionException e) {
-            throw new ProcedureException(e.getMessage());
+            throw new ProcedureException(this, e);
         }
         return res;
     }

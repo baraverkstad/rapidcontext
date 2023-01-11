@@ -101,7 +101,7 @@ public class JsProcedure extends Procedure {
             boolean unwrapResult = (cx.getCallStack().height() <= 1);
             return unwrapResult ? JsRuntime.unwrap(res) : res;
         } catch (JsException e) {
-            throw new ProcedureException( "In " + id(), e);
+            throw new ProcedureException(this, e);
         }
     }
 
@@ -129,7 +129,7 @@ public class JsProcedure extends Procedure {
             String[] argNames = args.toArray(new String[args.size()]);
             this.func = JsRuntime.compile(name, argNames, code);
         } catch (Exception e) {
-            throw new ProcedureException("In " + id(), e);
+            throw new ProcedureException(this, e);
         }
     }
 }

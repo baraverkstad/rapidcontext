@@ -67,7 +67,7 @@ public class JdbcBuiltInQueryProcedure extends Procedure {
         try {
             return channel.executeQuery(sql, flags);
         } catch (ConnectionException e) {
-            throw new ProcedureException(e.getMessage());
+            throw new ProcedureException(this, e);
         }
     }
 }
