@@ -243,18 +243,23 @@ public class ProcedureWebService extends WebService {
         }
         for (String name : bindings.getNames()) {
             if (bindings.getType(name) == Bindings.ARGUMENT) {
-                if (jsonArgs != null && name.equals("json")) {
-                    args.add(jsonArgs);
-                } else if (jsonArgs != null) {
-                    args.add(jsonArgs.get(name, null));
+                Object defval = bindings.getValue(name, null);
+                Object val = null;
+                if (jsonArgs != null) {
+                    boolean isNamed = jsonArgs.containsKey(name);
+                    boolean isRaw = !isNamed && args.size() == 0 && name.equals("json");
+                    val = isNamed ? jsonArgs.get(name) : (isRaw ? jsonArgs : defval);
                 } else {
-                    String str = request.getParameter("arg" + args.size(), null);
+                    String param = "arg" + args.size();
+                    String str = request.getParameter(param, request.getParameter(name));
                     if (str == null) {
-                        str = request.getParameter(name, null);
+                        val = defval;
+                    } else {
+                        val = isTextFormat ? str : JsonSerializer.unserialize(str);
                     }
-                    LOG.fine(logPrefix + "argument '" + name + "': " + str);
-                    args.add(isTextFormat ? str : JsonSerializer.unserialize(str));
                 }
+                LOG.fine(logPrefix + "argument '" + name + "': " + val);
+                args.add(val);
             }
         }
         return args.toArray();

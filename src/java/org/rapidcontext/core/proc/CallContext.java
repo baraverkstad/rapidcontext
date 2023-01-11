@@ -501,17 +501,19 @@ public class CallContext {
                 }
                 callBindings.set(name, Bindings.CONNECTION, value, null);
             } else if (bindings.getType(name) == Bindings.ARGUMENT) {
-                if (pos >= args.length) {
-                    String msg = "missing argument " + (pos + 1) + " '" +
-                                 name + "' in call to '" + proc.getName() +
-                                 "'";
+                try {
+                    boolean isOmitted = pos >= args.length;
+                    Object val = isOmitted ? bindings.getValue(name) : args[pos];
+                    callBindings.set(name, Bindings.ARGUMENT, val, null);
+                    pos++;
+                } catch (ProcedureException ignore) {
+                    String msg = "missing '" + name + "' (" + (pos + 1) +
+                                 ") argument for " + proc.getName();
                     throw new ProcedureException(msg);
                 }
-                callBindings.set(name, Bindings.ARGUMENT, args[pos], null);
-                pos++;
             }
         }
-        if (pos != args.length) {
+        if (pos < args.length) {
             String msg = "too many arguments for '" + proc.getName() +
                          "'; expected " + pos + ", found " + args.length;
             throw new ProcedureException(msg);
