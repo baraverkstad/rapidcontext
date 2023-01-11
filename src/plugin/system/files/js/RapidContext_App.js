@@ -440,13 +440,13 @@ RapidContext.App.callProc = function (name, args) {
     var options = { method: "POST", timeout: 60000 };
     return RapidContext.App.loadJSON(url, params, options).then(function (res) {
         if (res.trace != null) {
-            RapidContext.Log.log("Server trace " + name, res.trace);
+            RapidContext.Log.log(name + " trace:", res.trace);
         }
         if (res.error != null) {
-            RapidContext.Log.warn("Call error " + name, res.error);
+            RapidContext.Log.info(name + " error:", res.error);
             throw new Error(res.error);
         } else {
-            RapidContext.Log.log("Call response " + name, res.data);
+            RapidContext.Log.log(name + " response:", res.data);
         }
         if (name.startsWith("system/") && !res.error && res.data) {
             RapidContext.App._Cache.update(name, res.data);
