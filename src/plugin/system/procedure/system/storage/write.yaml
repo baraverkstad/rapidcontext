@@ -12,8 +12,11 @@ binding:
     description: The data to write
   - name: format
     type: argument
-    description: "The data format, available values are:\n\
-        \u2022 binary \u2014 save as binary data (default)\n\
+    value: ""
+    description: "The optional data format. If the path ends with a format extension,
+        this value must be omitted or blank. Available values are:\n\
+        \u2022 <blank> \u2014 automatically select data format (default)\n\
+        \u2022 binary \u2014 save as binary data\n\
         \u2022 properties \u2014 serialize to properties format\n\
         \u2022 json \u2014 serialize to JSON format\n\
         \u2022 xml \u2014 serialize to XML format\n\

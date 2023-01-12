@@ -79,7 +79,6 @@ public class StorageWriteProcedure extends Procedure {
             throw new ProcedureException(this, "path cannot be empty");
         }
         CallContext.checkWriteAccess(path);
-        LOG.fine("writing to storage path " + path);
         Object data = bindings.getValue("data", "");
         boolean isString = data instanceof String;
         boolean isStruct = data instanceof Dict || data instanceof Array;
@@ -89,31 +88,29 @@ public class StorageWriteProcedure extends Procedure {
         } else if (!isString && !isStruct && !isBinary) {
             throw new ProcedureException(this, "input data type not supported");
         }
+        boolean isObjectPath = !path.equals(Storage.objectName(path));
         String fmt = ((String) bindings.getValue("format", "")).trim();
-        if (fmt.equals("") || fmt.equalsIgnoreCase("binary")) {
-            if (!isString && !isBinary) {
+        if (fmt.equals("")) {
+            // Format is selected in storage layer
+        } else if (fmt.equalsIgnoreCase("binary")) {
+            if (isStruct) {
                 throw new ProcedureException(this, "binary format requires binary data");
             }
-        } else if (fmt.equalsIgnoreCase("properties")) {
-            if (!StringUtils.endsWithIgnoreCase(path, Storage.EXT_PROPERTIES)) {
-                path += Storage.EXT_PROPERTIES;
-            }
-        } else if (fmt.equalsIgnoreCase("json")) {
-            if (!StringUtils.endsWithIgnoreCase(path, Storage.EXT_JSON)) {
-                path += Storage.EXT_JSON;
-            }
-        } else if (fmt.equalsIgnoreCase("xml")) {
-            if (!StringUtils.endsWithIgnoreCase(path, Storage.EXT_XML)) {
-                path += Storage.EXT_XML;
-            }
-        } else if (fmt.equalsIgnoreCase("yaml")) {
-            if (!StringUtils.endsWithIgnoreCase(path, Storage.EXT_YAML)) {
-                path += Storage.EXT_YAML;
-            }
+        } else if (fmt.equalsIgnoreCase("properties") && !isObjectPath) {
+            path += Storage.EXT_PROPERTIES;
+        } else if (fmt.equalsIgnoreCase("json") && !isObjectPath) {
+            path += Storage.EXT_JSON;
+        } else if (fmt.equalsIgnoreCase("xml") && !isObjectPath) {
+            path += Storage.EXT_XML;
+        } else if (fmt.equalsIgnoreCase("yaml") && !isObjectPath) {
+            path += Storage.EXT_YAML;
+        } else if (isObjectPath && StringUtils.endsWithIgnoreCase(path, "." + fmt)) {
+            // Path and specified format match
         } else {
-            throw new ProcedureException(this, "invalid data format: " + fmt);
+            String msg = "invalid data format '" + fmt + "' for path " + path;
+            throw new ProcedureException(this, msg);
         }
-
+        LOG.fine("writing to storage path " + path);
         return Boolean.valueOf(store(Path.from(path), data));
     }
 
