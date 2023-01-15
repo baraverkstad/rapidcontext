@@ -184,7 +184,7 @@ public final class PropertiesSerializer {
      * @param value          the property value
      */
     private static void add(Dict dict, String name, String value) {
-        String[] path = name.split("\\.");
+        String[] path = name.split("\\b\\.\\b");
         Object parent = dict;
         for (int i = 0; i < path.length - 1; i++) {
             Object child = getKey(parent, path[i]);
