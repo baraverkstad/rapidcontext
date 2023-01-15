@@ -356,8 +356,6 @@ public class StorageWebService extends WebService {
      */
     private Dict prepareMetadata(Metadata meta, boolean linkify) {
         Dict dict = meta.serialize();
-        dict.remove(Metadata.KEY_ID);
-        dict.remove(Metadata.KEY_TYPE);
         if (linkify) {
             String root = StringUtils.repeat("../", meta.path().depth());
             Array arr = new Array();

@@ -18,6 +18,7 @@ import java.util.Date;
 
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Binary;
+import org.rapidcontext.core.data.Dict;
 
 /**
  * An object metadata container. Used for basic introspection of
@@ -308,5 +309,20 @@ public class Metadata extends StorableObject {
      */
     protected void updateLastModified(Date date) {
         dict.set(KEY_MODIFIED, (date == null) ? new Date() : date);
+    }
+
+    /**
+     * Returns a serialized representation of this object. Used when
+     * persisting to permanent storage or when accessing the object
+     * from outside pure Java. Returns a shallow copy of the contained
+     * dictionary.
+     *
+     * @return the serialized representation of this object
+     */
+    public Dict serialize() {
+        Dict copy = super.serialize();
+        copy.remove(KEY_ID);
+        copy.remove(KEY_TYPE);
+        return copy;
     }
 }
