@@ -15,7 +15,6 @@
 package org.rapidcontext.app;
 
 import org.rapidcontext.core.security.SecurityContext;
-import org.rapidcontext.core.storage.Index;
 import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.RootStorage;
@@ -40,21 +39,6 @@ public class ApplicationStorage extends RootStorage {
      * The current user path.
      */
     public static final Path USER_CURRENT = Path.resolve(User.PATH, "@self");
-
-    /**
-     * The additional /session/ index.
-     */
-    private static final Index SESSION_INDEX = new Index();
-
-    /**
-     * The additional /user/ index.
-     */
-    private static final Index USER_INDEX = new Index();
-
-    static {
-        SESSION_INDEX.addObject(SESSION_CURRENT.name());
-        USER_INDEX.addObject(USER_CURRENT.name());
-    }
 
     /**
      * Creates a new application storage.
@@ -88,13 +72,7 @@ public class ApplicationStorage extends RootStorage {
      *         null if not found
      */
     public Object load(Path path) {
-        Object res = super.load(redirect(path));
-        if (res instanceof Index && path.equals(SESSION_CURRENT.parent())) {
-            res = Index.merge(SESSION_INDEX, (Index) res);
-        } else if (res instanceof Index && path.equals(USER_CURRENT.parent())) {
-            res = Index.merge(USER_INDEX, (Index) res);
-        }
-        return res;
+        return super.load(redirect(path));
     }
 
     /**
