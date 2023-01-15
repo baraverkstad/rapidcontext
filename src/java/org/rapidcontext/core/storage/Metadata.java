@@ -46,17 +46,16 @@ public class Metadata extends StorableObject {
     public static final String KEY_CLASS = "class";
 
     /**
-     * The dictionary key for the absolute object path. The value
-     * stored is the path object.
+     * The dictionary key for the object path. The value stored is a
+     * path object.
      */
     public static final String KEY_PATH = "path";
 
     /**
-     * The dictionary key for the absolute storage paths. This is an
-     * array with the root paths to all storages containing the
-     * object.
+     * The dictionary key for the storage paths. The value is an
+     * array with path objects for all storages containing the path.
      */
-    public static final String KEY_STORAGEPATHS = "storagePaths";
+    public static final String KEY_STORAGES = "storages";
 
     /**
      * The dictionary key for the object MIME type. The value stored
@@ -151,7 +150,7 @@ public class Metadata extends StorableObject {
     private Metadata(Metadata meta1, Metadata meta2) {
         super(meta1.id(), "metadata");
         dict.setAll(meta1.dict);
-        dict.set(KEY_STORAGEPATHS, meta1.storagePaths().union(meta2.storagePaths()));
+        dict.set(KEY_STORAGES, meta1.storages().union(meta2.storages()));
         if (isIndex() && meta2.lastModified().after(meta1.lastModified())) {
             dict.set(KEY_MODIFIED, meta2.lastModified());
         }
@@ -185,8 +184,8 @@ public class Metadata extends StorableObject {
         dict.set(KEY_CATEGORY, category);
         dict.set(KEY_CLASS, clazz);
         dict.set(KEY_PATH, path);
-        dict.set(KEY_STORAGEPATHS, new Array());
-        dict.getArray(KEY_STORAGEPATHS).add(storagePath);
+        dict.set(KEY_STORAGES, new Array());
+        dict.getArray(KEY_STORAGES).add(storagePath);
         dict.set(KEY_MIMETYPE, mime);
         dict.set(KEY_MODIFIED, (modified == null) ? new Date() : modified);
     }
@@ -278,10 +277,10 @@ public class Metadata extends StorableObject {
      * Returns an array with the root paths to all storages
      * containing this object.
      *
-     * @return an array with storage paths (as Path objects)
+     * @return an array with path objects for storage roots
      */
-    public Array storagePaths() {
-        return (Array) dict.get(KEY_STORAGEPATHS);
+    public Array storages() {
+        return (Array) dict.get(KEY_STORAGES);
     }
 
     /**

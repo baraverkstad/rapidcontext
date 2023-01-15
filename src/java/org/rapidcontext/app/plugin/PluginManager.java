@@ -143,7 +143,7 @@ public class PluginManager {
      *         null if not found
      */
     public static String pluginId(Metadata meta) {
-        for (Object o : meta.storagePaths()) {
+        for (Object o : meta.storages()) {
             Path path = (Path) o;
             if (path.startsWith(PATH_STORAGE_PLUGIN)) {
                 return path.name();

@@ -361,11 +361,11 @@ public class StorageWebService extends WebService {
         if (linkify) {
             String root = StringUtils.repeat("../", meta.path().depth());
             Array arr = new Array();
-            for (Object path : meta.storagePaths()) {
+            for (Object path : meta.storages()) {
                 String rel = StringUtils.removeStart(path.toString(), "/");
                 arr.add("$href$" + root + rel + "$" + path);
             }
-            dict.set("storagePaths", arr);
+            dict.set(Metadata.KEY_STORAGES, arr);
         }
         return dict;
     }
