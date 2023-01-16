@@ -14,6 +14,8 @@
 
 package org.rapidcontext.app.plugin;
 
+import java.util.logging.Logger;
+
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.StorableObject;
@@ -28,6 +30,11 @@ import org.rapidcontext.core.storage.StorableObject;
  * @version  1.0
  */
 public class Plugin extends StorableObject {
+
+    /**
+     * The class logger.
+     */
+    private static final Logger LOG = Logger.getLogger(Plugin.class.getName());
 
     /**
      * The dictionary key for the plug-in build version.
@@ -70,6 +77,7 @@ public class Plugin extends StorableObject {
      */
     public static Dict normalize(Path path, Dict dict) {
         if (!dict.containsKey(KEY_TYPE)) {
+            LOG.warning("normalizing " + path + " data: missing object type");
             dict.set(KEY_TYPE, "plugin");
         }
         return dict;

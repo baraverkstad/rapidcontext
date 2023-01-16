@@ -134,6 +134,7 @@ public class User extends StorableObject {
      */
     public static Dict normalize(Path path, Dict dict) {
         if (!dict.containsKey(KEY_TYPE)) {
+            LOG.warning("normalizing " + path + " data: missing object type");
             dict.set(KEY_TYPE, "user");
             dict.set(KEY_ID, path.toIdent(1));
             dict.set(KEY_NAME, dict.getString(KEY_DESCRIPTION, ""));

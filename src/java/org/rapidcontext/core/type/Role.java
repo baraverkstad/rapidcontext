@@ -146,11 +146,12 @@ public class Role extends StorableObject {
      */
     public static Dict normalize(Path path, Dict dict) {
         if (!dict.containsKey(KEY_TYPE)) {
+            LOG.warning("normalizing " + path + " data: missing object type");
             dict.set(KEY_TYPE, "role");
             dict.set(KEY_ID, path.toIdent(1));
         }
         for (Object o : dict.getArray(KEY_ACCESS)) {
-            normalizeAccess((Dict) o);
+            normalizeAccess(path, (Dict) o);
         }
         return dict;
     }
@@ -159,24 +160,28 @@ public class Role extends StorableObject {
      * Normalizes a role access object. This method will change
      * legacy data into the proper keys and values as needed.
      *
+     * @param path           the storage location
      * @param dict           the access data
      */
-    private static void normalizeAccess(Dict dict) {
+    private static void normalizeAccess(Path path, Dict dict) {
         String type = dict.getString("type", null);
         String name = dict.getString("name", null);
         String regex = dict.getString("regexp", null);
         if (type != null && name != null) {
+            LOG.warning("normalizing " + path + " data: legacy access path permission");
             dict.remove("type");
             dict.remove("name");
             dict.set(ACCESS_PATH, type + "/" + name);
             dict.set(ACCESS_PERMISSION, PERM_READ);
         } else if (type != null && regex != null) {
+            LOG.warning("normalizing " + path + " data: legacy access regex permission");
             dict.remove("type");
             dict.remove("regexp");
             dict.set(ACCESS_REGEX, type + "/" + regex);
             dict.set(ACCESS_PERMISSION, PERM_READ);
         }
         if (dict.containsKey("caller")) {
+            LOG.warning("normalizing " + path + " data: legacy internal permission");
             dict.remove("caller");
             dict.set(ACCESS_PERMISSION, PERM_INTERNAL);
         }
