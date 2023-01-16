@@ -155,7 +155,6 @@ public class StorageWebService extends WebService {
             res.add("metadata", meta);
             data = res;
         }
-        meta.set("processTime", Long.valueOf(request.getProcessTime()));
         if (StringUtils.endsWithIgnoreCase(request.getPath(), Storage.EXT_JSON)) {
             request.sendText(Mime.JSON[0], JsonSerializer.serialize(data, true));
         } else if (StringUtils.endsWithIgnoreCase(request.getPath(), Storage.EXT_PROPERTIES)) {
@@ -355,7 +354,7 @@ public class StorageWebService extends WebService {
      * @return the external representation of the metadata
      */
     private Dict prepareMetadata(Metadata meta, boolean linkify) {
-        Dict dict = meta.serialize();
+        Dict dict = (Dict) StorableObject.sterilize(meta, false, true);
         if (linkify) {
             String root = StringUtils.repeat("../", meta.path().depth());
             Array arr = new Array();
@@ -513,7 +512,7 @@ public class StorageWebService extends WebService {
             } else if (obj instanceof Class) {
                 renderText(((Class<?>) obj).getName(), buffer);
             } else if (obj instanceof StorableObject) {
-                renderDict(((StorableObject) obj).serialize(), buffer);
+                renderObject(StorableObject.sterilize(obj, false, true), buffer);
             } else {
                 renderText(obj.toString(), buffer);
             }

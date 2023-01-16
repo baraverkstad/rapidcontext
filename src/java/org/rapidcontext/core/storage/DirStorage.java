@@ -203,7 +203,9 @@ public class DirStorage extends Storage {
             }
             try {
                 tmp = FileUtil.tempFile(file.getName());
-                data = sterilize(data);
+                if (data instanceof StorableObject) {
+                    data = StorableObject.sterilize(data, true, false);
+                }
                 try (FileOutputStream os = new FileOutputStream(tmp)) {
                     serialize(file.getName(), data, os);
                 }
@@ -315,31 +317,6 @@ public class DirStorage extends Storage {
                 Stream.of(FileUtil.resolve(dir, path.name())),
                 Stream.of(EXT_ALL).map(ext -> FileUtil.resolve(dir, path.name() + ext))
             ).filter(f -> !f.isDirectory() && f.canRead()).findFirst().orElse(null);
-        }
-    }
-
-    /**
-     * Prepares a object for serialization. This will remove any
-     * transient keys and convert a StorableObject to a Dict. Other
-     * values will be returned unmodified.
-     *
-     * @param obj            the object to sterilize
-     *
-     * @return the object value for serialization
-     */
-    private static Object sterilize(Object obj) {
-        if (obj instanceof StorableObject) {
-            Dict copy = ((StorableObject) obj).serialize();
-            for (String key : copy.keys()) {
-                if (key.startsWith("_")) {
-                    copy.remove(key);
-                } else {
-                    copy.set(key, sterilize(copy.get(key)));
-                }
-            }
-            return copy;
-        } else {
-            return obj;
         }
     }
 }

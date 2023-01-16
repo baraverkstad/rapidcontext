@@ -103,37 +103,37 @@ public class JdbcConnection extends Connection {
             // Adjust older MySQL connection URLs (for default driver)
             if (url.startsWith("jdbc:mysql:thin:")) {
                 url = StringUtils.replaceOnce(url, "jdbc:mysql:thin:", "jdbc:mariadb:");
-                dict.set("_" + JDBC_URL, url);
+                dict.set(PREFIX_COMPUTED + JDBC_URL, url);
             } else if (url.startsWith("jdbc:mysql:")) {
                 url = StringUtils.replaceOnce(url, "jdbc:mysql:", "jdbc:mariadb:");
-                dict.set("_" + JDBC_URL, url);
+                dict.set(PREFIX_COMPUTED + JDBC_URL, url);
             }
             // Set default driver
             if (url.startsWith("jdbc:odbc")) {
-                dict.set("_" + JDBC_DRIVER, "sun.jdbc.odbc.JdbcOdbcDriver");
+                dict.set(PREFIX_COMPUTED + JDBC_DRIVER, "sun.jdbc.odbc.JdbcOdbcDriver");
             } else if (url.startsWith("jdbc:mariadb:") || url.startsWith("jdbc:mysql:")) {
-                dict.set("_" + JDBC_DRIVER, "org.mariadb.jdbc.Driver");
+                dict.set(PREFIX_COMPUTED + JDBC_DRIVER, "org.mariadb.jdbc.Driver");
             } else if (url.startsWith("jdbc:postgresql:")) {
-                dict.set("_" + JDBC_DRIVER, "org.postgresql.Driver");
+                dict.set(PREFIX_COMPUTED + JDBC_DRIVER, "org.postgresql.Driver");
             } else if (url.startsWith("jdbc:oracle:")) {
-                dict.set("_" + JDBC_DRIVER, "oracle.jdbc.driver.OracleDriver");
+                dict.set(PREFIX_COMPUTED + JDBC_DRIVER, "oracle.jdbc.driver.OracleDriver");
             } else if (url.startsWith("jdbc:db2:")) {
-                dict.set("_" + JDBC_DRIVER, "com.ibm.db2.jcc.DB2Driver");
+                dict.set(PREFIX_COMPUTED + JDBC_DRIVER, "com.ibm.db2.jcc.DB2Driver");
             } else if (url.startsWith("jdbc:microsoft:")) {
-                dict.set("_" + JDBC_DRIVER, "com.microsoft.sqlserver.jdbc.SQLServerDriver");
+                dict.set(PREFIX_COMPUTED + JDBC_DRIVER, "com.microsoft.sqlserver.jdbc.SQLServerDriver");
             }
         } else {
-            dict.set("_" + JDBC_DRIVER, driver);
+            dict.set(PREFIX_COMPUTED + JDBC_DRIVER, driver);
         }
         if (ping.length() == 0 && url.startsWith("jdbc:oracle:")) {
-            dict.set("_" + JDBC_PING, "SELECT 1 FROM dual");
+            dict.set(PREFIX_COMPUTED + JDBC_PING, "SELECT 1 FROM dual");
         } else if (ping.length() == 0) {
-            dict.set("_" + JDBC_PING, "SELECT 1");
+            dict.set(PREFIX_COMPUTED + JDBC_PING, "SELECT 1");
         } else {
-            dict.set("_" + JDBC_PING, ping);
+            dict.set(PREFIX_COMPUTED + JDBC_PING, ping);
         }
-        dict.setBoolean("_" + JDBC_AUTOCOMMIT, autoCommit());
-        dict.setInt("_" + JDBC_TIMEOUT, timeout());
+        dict.setBoolean(PREFIX_COMPUTED + JDBC_AUTOCOMMIT, autoCommit());
+        dict.setInt(PREFIX_COMPUTED + JDBC_TIMEOUT, timeout());
         super.init();
     }
 
@@ -156,8 +156,8 @@ public class JdbcConnection extends Connection {
      */
     public Driver driver() throws ConnectionException {
         String driverClass;
-        if (dict.containsKey("_" + JDBC_DRIVER)) {
-            driverClass = dict.getString("_" + JDBC_DRIVER, "");
+        if (dict.containsKey(PREFIX_COMPUTED + JDBC_DRIVER)) {
+            driverClass = dict.getString(PREFIX_COMPUTED + JDBC_DRIVER, "");
         } else {
             driverClass = dict.getString(JDBC_DRIVER, "");
         }
@@ -186,8 +186,8 @@ public class JdbcConnection extends Connection {
      * @return the JDBC connection URL
      */
     public String url() {
-        if (dict.containsKey("_" + JDBC_URL)) {
-            return dict.getString("_" + JDBC_URL, "");
+        if (dict.containsKey(PREFIX_COMPUTED + JDBC_URL)) {
+            return dict.getString(PREFIX_COMPUTED + JDBC_URL, "");
         } else {
             return dict.getString(JDBC_URL, "");
         }
@@ -200,8 +200,8 @@ public class JdbcConnection extends Connection {
      *         null if not configured
      */
     public String ping() {
-        if (dict.containsKey("_" + JDBC_PING)) {
-            return dict.getString("_" + JDBC_PING, null);
+        if (dict.containsKey(PREFIX_COMPUTED + JDBC_PING)) {
+            return dict.getString(PREFIX_COMPUTED + JDBC_PING, null);
         } else {
             return dict.getString(JDBC_PING, null);
         }
@@ -213,8 +213,8 @@ public class JdbcConnection extends Connection {
      * @return the auto-commit flag
      */
     public boolean autoCommit() {
-        if (dict.containsKey("_" + JDBC_AUTOCOMMIT)) {
-            return dict.getBoolean("_" + JDBC_AUTOCOMMIT, false);
+        if (dict.containsKey(PREFIX_COMPUTED + JDBC_AUTOCOMMIT)) {
+            return dict.getBoolean(PREFIX_COMPUTED + JDBC_AUTOCOMMIT, false);
         } else {
             return dict.getBoolean(JDBC_AUTOCOMMIT, false);
         }
@@ -227,15 +227,15 @@ public class JdbcConnection extends Connection {
      */
     public int timeout() {
         try {
-            if (dict.containsKey("_" + JDBC_TIMEOUT)) {
-                return dict.getInt("_" + JDBC_TIMEOUT, 30);
+            if (dict.containsKey(PREFIX_COMPUTED + JDBC_TIMEOUT)) {
+                return dict.getInt(PREFIX_COMPUTED + JDBC_TIMEOUT, 30);
             } else {
                 return dict.getInt(JDBC_TIMEOUT, 30);
             }
         } catch (Exception e) {
             LOG.warning(this + ": failed to parse timeout value: " +
                         dict.get(JDBC_TIMEOUT));
-            dict.setInt("_" + JDBC_TIMEOUT, 30);
+            dict.setInt(PREFIX_COMPUTED + JDBC_TIMEOUT, 30);
             return 30;
         }
     }
@@ -251,7 +251,7 @@ public class JdbcConnection extends Connection {
     protected Channel createChannel() throws ConnectionException {
         Properties props = new Properties();
         for (String key : dict.keys()) {
-            if (!key.startsWith("_")) {
+            if (!key.startsWith(PREFIX_COMPUTED)) {
                 props.setProperty(key, dict.getString(key, ""));
             }
         }

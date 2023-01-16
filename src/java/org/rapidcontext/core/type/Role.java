@@ -263,7 +263,7 @@ public class Role extends StorableObject {
             if (matchPath(dict, path)) {
                 String perms = dict.getString(ACCESS_PERMISSION, "").trim();
                 @SuppressWarnings("unchecked")
-                HashSet<String> set = (HashSet<String>) dict.get("_" + ACCESS_PERMISSION);
+                HashSet<String> set = (HashSet<String>) dict.get(PREFIX_COMPUTED + ACCESS_PERMISSION);
                 if (set == null) {
                     String[] list = perms.split("[,;\\s]+");
                     set = new HashSet<>(list.length + 1);
@@ -275,7 +275,7 @@ public class Role extends StorableObject {
                             set.add(s.toLowerCase());
                         }
                     }
-                    dict.set("_" + ACCESS_PERMISSION, set);
+                    dict.set(PREFIX_COMPUTED + ACCESS_PERMISSION, set);
                 }
                 if (set.contains(PERM_NONE)) {
                     return false;
@@ -301,7 +301,7 @@ public class Role extends StorableObject {
     private boolean matchPath(Dict dict, String path) {
         String glob = dict.getString(ACCESS_PATH, null);
         String regex = dict.getString(ACCESS_REGEX, null);
-        Pattern m = (Pattern) dict.get("_" + ACCESS_REGEX);
+        Pattern m = (Pattern) dict.get(PREFIX_COMPUTED + ACCESS_REGEX);
         if (m == null && glob != null) {
             glob = glob.replace("\\", "\\\\").replace(".", "\\.");
             glob = glob.replace("+", "\\+").replace("|", "\\|");
@@ -319,7 +319,7 @@ public class Role extends StorableObject {
                 LOG.log(Level.WARNING, "invalid pattern in role " + id(), e);
                 m = Pattern.compile("^invalid-glob-pattern$");
             }
-            dict.set("_" + ACCESS_REGEX, m);
+            dict.set(PREFIX_COMPUTED + ACCESS_REGEX, m);
         } else if (m == null && regex != null) {
             regex = StringUtils.removeStart(regex, "^");
             regex = StringUtils.removeStart(regex, "/");
@@ -330,7 +330,7 @@ public class Role extends StorableObject {
                 LOG.log(Level.WARNING, "invalid pattern in role " + id(), e);
                 m = Pattern.compile("^invalid-regex-pattern$");
             }
-            dict.set("_" + ACCESS_REGEX, m);
+            dict.set(PREFIX_COMPUTED + ACCESS_REGEX, m);
         }
         return (m != null) ? m.matcher(path).matches() : false;
     }

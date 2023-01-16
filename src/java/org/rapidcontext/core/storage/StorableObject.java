@@ -16,6 +16,7 @@ package org.rapidcontext.core.storage;
 
 import java.util.Date;
 
+import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 
 /**
@@ -72,6 +73,18 @@ public class StorableObject {
     public static final String KEY_CLASSNAME = "className";
 
     /**
+     * The prefix for hidden dictionary keys. These will not be returned
+     * by API calls, but will be written to storage.
+     */
+    public static final String PREFIX_HIDDEN = ".";
+
+    /**
+     * The prefix for computed dictionary keys. These will not be written
+     * to persistent storage, but may be returned from API calls.
+     */
+    public static final String PREFIX_COMPUTED = "_";
+
+    /**
      * The dictionary containing the serializable data for this
      * object.
      */
@@ -82,6 +95,44 @@ public class StorableObject {
      * This is updated each time the object is returned from storage.
      */
     protected long lastActiveTime = System.currentTimeMillis();
+
+    /**
+     * Serializes an object and recursively removes hidden and computed
+     * keys. This is typically performed before returning a storable
+     * object via API or when writing to storage.
+     *
+     * @param obj            the object to sterilize
+     * @param hidden         the flag for hidden key inclusion
+     * @param computed       the flag for computed key inclusion
+     *
+     * @return the sterilized object
+     */
+    public static Object sterilize(Object obj, boolean hidden, boolean computed) {
+        boolean unfiltered = hidden && computed;
+        if (obj instanceof StorableObject) {
+            StorableObject storable = (StorableObject) obj;
+            return sterilize(storable.serialize(), hidden, computed);
+        } else if (obj instanceof Dict && !unfiltered) {
+            Dict dict = (Dict) obj;
+            Dict copy = new Dict();
+            for (String k : dict.keys()) {
+                boolean visible = hidden || !k.startsWith(PREFIX_HIDDEN);
+                boolean usable = computed || !k.startsWith(PREFIX_COMPUTED);
+                if (visible && usable) {
+                    copy.add(k, sterilize(dict.get(k), hidden, computed));
+                };
+            }
+            return copy;
+        } else if (obj instanceof Array && !unfiltered) {
+            Array arr = new Array();
+            for (Object o : (Array) obj) {
+                arr.add(sterilize(o, hidden, computed));
+            }
+            return arr;
+        } else {
+            return obj;
+        }
+    }
 
     /**
      * Creates a new object. This is the default constructor for

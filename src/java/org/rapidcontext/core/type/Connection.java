@@ -155,8 +155,8 @@ public abstract class Connection extends StorableObject {
         int open = maxOpen();
         int idle = maxIdleSeconds();
 
-        dict.setInt("_" + KEY_MAX_OPEN, open);
-        dict.setInt("_" + KEY_MAX_IDLE_SECS, idle);
+        dict.setInt(PREFIX_COMPUTED + KEY_MAX_OPEN, open);
+        dict.setInt(PREFIX_COMPUTED + KEY_MAX_IDLE_SECS, idle);
         channelPool = new GenericObjectPool<>(new ChannelFactory());
         channelPool.setMaxTotal(open);
         channelPool.setMaxIdle(open);
