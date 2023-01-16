@@ -362,7 +362,7 @@ public class StorageWebService extends WebService {
                 String rel = StringUtils.removeStart(path.toString(), "/");
                 arr.add("$href$" + root + rel + "$" + path);
             }
-            dict.set(Metadata.KEY_STORAGES, arr);
+            dict.set(Metadata.PREFIX_COMPUTED + Metadata.KEY_STORAGES, arr);
         }
         return dict;
     }

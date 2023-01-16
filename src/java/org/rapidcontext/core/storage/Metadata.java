@@ -151,7 +151,7 @@ public class Metadata extends StorableObject {
     private Metadata(Metadata meta1, Metadata meta2) {
         super(meta1.id(), "metadata");
         dict.setAll(meta1.dict);
-        dict.set(KEY_STORAGES, meta1.storages().union(meta2.storages()));
+        dict.set(PREFIX_COMPUTED + KEY_STORAGES, meta1.storages().union(meta2.storages()));
         if (isIndex() && meta2.lastModified().after(meta1.lastModified())) {
             dict.set(KEY_MODIFIED, meta2.lastModified());
         }
@@ -185,8 +185,8 @@ public class Metadata extends StorableObject {
         dict.set(KEY_CATEGORY, category);
         dict.set(KEY_CLASS, clazz);
         dict.set(KEY_PATH, path);
-        dict.set(KEY_STORAGES, new Array());
-        dict.getArray(KEY_STORAGES).add(storagePath);
+        dict.set(PREFIX_COMPUTED + KEY_STORAGES, new Array());
+        dict.getArray(PREFIX_COMPUTED + KEY_STORAGES).add(storagePath);
         dict.set(KEY_MIMETYPE, mime);
         dict.set(KEY_MODIFIED, (modified == null) ? new Date() : modified);
     }
@@ -281,7 +281,7 @@ public class Metadata extends StorableObject {
      * @return an array with path objects for storage roots
      */
     public Array storages() {
-        return (Array) dict.get(KEY_STORAGES);
+        return dict.getArray(PREFIX_COMPUTED + KEY_STORAGES);
     }
 
     /**
