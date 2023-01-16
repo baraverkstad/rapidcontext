@@ -16,8 +16,6 @@ package org.rapidcontext.app.proc;
 
 import java.util.stream.Stream;
 
-import org.apache.commons.lang3.StringUtils;
-import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
@@ -25,9 +23,6 @@ import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
-import org.rapidcontext.core.storage.Query;
-import org.rapidcontext.core.storage.Storage;
-import org.rapidcontext.core.type.Procedure;
 
 /**
  * The built-in storage query procedure.
@@ -35,7 +30,7 @@ import org.rapidcontext.core.type.Procedure;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class StorageQueryProcedure extends Procedure {
+public class StorageQueryProcedure extends StorageProcedure {
 
     /**
      * Creates a new procedure from a serialized representation.
@@ -67,59 +62,12 @@ public class StorageQueryProcedure extends Procedure {
     public Object call(CallContext cx, Bindings bindings)
     throws ProcedureException {
 
-        Object obj = bindings.getValue("query");
-        Dict dict = (obj instanceof Dict) ? (Dict) obj : new Dict();
-        String path = dict.getString("path", obj.toString());
-        if (!path.startsWith("/")) {
-            throw new ProcedureException(this, "invalid query path, must start with /");
-        } else if (!path.endsWith("/")) {
-            throw new ProcedureException(this, "invalid query path, must be an index");
-        }
-        CallContext.checkSearchAccess(path);
-        Storage storage = ApplicationContext.getInstance().getStorage();
-        Query query = storage.query(Path.from(path)).filterReadAccess();
-        if (dict.containsKey("depth")) {
-            query.filterDepth(dict.getInt("depth", -1));
-        }
-        if (dict.containsKey("fileType")) {
-            query.filterFileExtension("." + dict.getString("fileType", ""));
-        }
-        int limit = dict.getInt("limit", 1000);
-        Stream<Metadata> stream = query.metadatas().limit(limit);
-        if (dict.containsKey("mimeType")) {
-            String mimeType = dict.getString("mimeType", "");
-            stream = stream.filter(meta -> {
-                return StringUtils.startsWithIgnoreCase(meta.mimeType(), mimeType);
-            });
-        }
-        if (dict.containsKey("category")) {
-            String category = dict.getString("category", "");
-            stream = stream.filter(meta -> {
-                return StringUtils.equalsIgnoreCase(meta.category(), category);
-            });
-        }
-        Dict[] objs = stream.map(this::serialize).toArray(Dict[]::new);
-        Array res = new Array(objs.length);
-        for (Dict item : objs) {
-            res.add(item);
-        }
-        return res;
-    }
-
-    /**
-     * Returns a serialized representation of a metadata object.
-     *
-     * @param meta           the storage metadata
-     *
-     * @return the serialized representation of the object, or
-     *         null if no suitable serialization existed
-     */
-    private Dict serialize(Metadata meta) {
-        Dict res = new Dict();
-        res.set(Metadata.KEY_PATH, meta.path().toString());
-        res.set(Metadata.KEY_CATEGORY, meta.category());
-        res.set(Metadata.KEY_MIMETYPE, meta.mimeType());
-        res.set(Metadata.KEY_MODIFIED, meta.lastModified());
+        Dict opts = options("path", bindings.getValue("path"));
+        Path path = Path.from(opts.getString("path", "/"));
+        boolean computed = opts.getBoolean("computed", false);
+        Stream<Metadata> stream = lookup(cx.getStorage(), path, opts);
+        Array res = new Array();
+        stream.forEach(m -> res.add(serialize(m, computed)));
         return res;
     }
 }
