@@ -96,7 +96,7 @@ public abstract class Procedure extends StorableObject implements org.rapidconte
      *         false otherwise
      */
     protected boolean isActive() {
-        return System.currentTimeMillis() - lastActiveTime <= ACTIVE_MILLIS;
+        return System.currentTimeMillis() - activatedTime().getTime() <= ACTIVE_MILLIS;
     }
 
     /**

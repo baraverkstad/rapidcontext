@@ -323,6 +323,7 @@ public class Metadata extends StorableObject {
         Dict copy = super.serialize();
         copy.remove(KEY_ID);
         copy.remove(KEY_TYPE);
+        copy.remove(PREFIX_COMPUTED + KEY_ACTIVATED_TIME);
         return copy;
     }
 }

@@ -73,6 +73,14 @@ public class StorableObject {
     public static final String KEY_CLASSNAME = "className";
 
     /**
+     * The dictionary key for the most recent object activation time.
+     * The value is stored as a date object. Note that this is always
+     * stored as a computed property, so it will not be written to
+     * storage.
+     */
+    public static final String KEY_ACTIVATED_TIME = "activatedTime";
+
+    /**
      * The prefix for hidden dictionary keys. These will not be returned
      * by API calls, but will be written to storage.
      */
@@ -89,12 +97,6 @@ public class StorableObject {
      * object.
      */
     protected Dict dict = null;
-
-    /**
-     * The timestamp (in milliseconds) of the last object activation.
-     * This is updated each time the object is returned from storage.
-     */
-    protected long lastActiveTime = System.currentTimeMillis();
 
     /**
      * Serializes an object and recursively removes hidden and computed
@@ -242,8 +244,8 @@ public class StorableObject {
      *
      * @return the timestamp of the latest object activation
      */
-    protected Date lastActive() {
-        return new Date(lastActiveTime);
+    protected Date activatedTime() {
+        return dict.getDate(PREFIX_COMPUTED + KEY_ACTIVATED_TIME, null);
     }
 
     /**
@@ -285,7 +287,7 @@ public class StorableObject {
      * nothing.
      */
     protected void activate() {
-        lastActiveTime = System.currentTimeMillis();
+        dict.set(PREFIX_COMPUTED + KEY_ACTIVATED_TIME, new Date());
     }
 
     /**
@@ -308,8 +310,6 @@ public class StorableObject {
      * @return the serialized representation of this object
      */
     public Dict serialize() {
-        Dict copy = dict.copy();
-        copy.set("_lastActiveTime", lastActive());
-        return copy;
+        return dict.copy();
     }
 }
