@@ -134,7 +134,7 @@ public class MemoryStorage extends Storage {
             return serialize();
         }
         Object obj = objects.get(path);
-        return (obj instanceof Index) ? new Index((Index) obj) : obj;
+        return (obj instanceof Index) ? new Index((Index) obj, false) : obj;
     }
 
     /**

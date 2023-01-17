@@ -418,10 +418,12 @@ public class RootStorage extends MemoryStorage {
             return null;
         } else {
             Path queryPath = path.removePrefix(overlay);
-            return Index.merge(
-                (Index) caches.load(storage.path(), queryPath),
-                (Index) storage.load(queryPath)
-            );
+            Index cached = (Index) caches.load(storage.path(), queryPath);
+            Index stored = (Index) storage.load(queryPath);
+            if (!isBinaryPath(path) && stored != null) {
+                stored = new Index(stored, true);
+            }
+            return Index.merge(cached, stored);
         }
     }
 

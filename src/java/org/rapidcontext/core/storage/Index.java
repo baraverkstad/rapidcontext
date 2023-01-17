@@ -90,14 +90,23 @@ public class Index {
     }
 
     /**
-     * Creates a new index that is a copy of another one.
+     * Creates a new index that is a copy of another one. Optionally,
+     * all object names can be normalized with Storage.objectName().
      *
      * @param src            the source index to copy
+     * @param normalize      the normalize object names flag
      */
-    public Index(Index src) {
+    public Index(Index src, boolean normalize) {
         this.modified = src.modified;
         this.indices = new TreeSet<>(src.indices);
-        this.objects = new TreeSet<>(src.objects);
+        if (normalize) {
+            this.objects = new TreeSet<>();
+            for (String str : src.objects) {
+                addObject(Storage.objectName(str));
+            }
+        } else {
+            this.objects = new TreeSet<>(src.objects);
+        }
     }
 
     /**

@@ -384,18 +384,14 @@ public class StorageWebService extends WebService {
      * @return the external representation of the index
      */
     private Dict prepareIndex(Path path, Index idx, boolean linkify) {
-        boolean binary = RootStorage.isBinaryPath(path);
         Array indices = new Array();
         idx.indices().forEach((item) -> {
             indices.add((linkify ? "$href$" : "") + item + "/");
         });
         Array objects = new Array();
         idx.objects().forEach((item) -> {
-            item = binary ? item : Storage.objectName(item);
             item = !linkify ? item : "$href$" + item + ".html$" + item;
-            if (!objects.containsValue(item)) {
-                objects.add(item);
-            }
+            objects.add(item);
         });
         Dict dict = new Dict();
         dict.set("type", "index");

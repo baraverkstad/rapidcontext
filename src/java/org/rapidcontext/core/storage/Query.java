@@ -122,18 +122,11 @@ public class Query {
             return Stream.empty();
         } else {
             boolean isMaxDepth = parent.depth() >= this.maxDepth;
-            boolean isBinaryPath = RootStorage.isBinaryPath(parent);
             return idx.paths(parent).flatMap(path -> {
                 if (path.isIndex()) {
                     return isMaxDepth ? Stream.empty() : allPaths(path);
-                } else if (isBinaryPath) {
-                    return Stream.of(path);
                 } else {
-                    String name = Storage.objectName(path.name());
-                    if (!name.equals(path.name())) {
-                        path = idx.hasObject(name) ? null : path.sibling(name);
-                    }
-                    return Stream.ofNullable(path);
+                    return Stream.of(path);
                 }
             });
         }
