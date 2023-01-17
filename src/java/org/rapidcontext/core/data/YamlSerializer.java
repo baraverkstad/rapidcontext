@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
-import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.util.DateUtil;
 import org.snakeyaml.engine.v2.api.Dump;
 import org.snakeyaml.engine.v2.api.DumpSettings;
@@ -43,8 +42,8 @@ import org.snakeyaml.engine.v2.common.NonPrintableStyle;
  *
  * <ul>
  *   <li>No circular references are permitted.
- *   <li>String, Integer, Boolean, Array, Dict and StorableObject
- *       values are supported.
+ *   <li>String, Integer, Boolean, Date, Array and Dict values are
+ *       supported.
  * </ul>
  *
  * @author   Per Cederberg
@@ -119,8 +118,6 @@ public class YamlSerializer {
             return toYaml((Dict) obj);
         } else if (obj instanceof Array) {
             return toYaml((Array) obj);
-        } else if (obj instanceof StorableObject) {
-            return toYaml(((StorableObject) obj).serialize());
         } else if (obj instanceof Date) {
             return DateUtil.asEpochMillis((Date) obj);
         } else if (obj == null || obj instanceof Boolean || obj instanceof Number) {

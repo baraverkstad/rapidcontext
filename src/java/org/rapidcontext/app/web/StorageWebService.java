@@ -142,6 +142,8 @@ public class StorageWebService extends WebService {
                 data = prepareIndex(meta.path(), (Index) data, isHtml);
             } else if (data instanceof Binary) {
                 data = prepareBinary(meta.path(), (Binary) data, isHtml);
+            } else if (data instanceof StorableObject) {
+                data = StorableObject.sterilize(data, true, false, false);
             }
             sendResult(request, meta.path(), prepareMetadata(meta, isHtml), data);
         }
@@ -196,10 +198,10 @@ public class StorageWebService extends WebService {
             Path path = Path.from(request.getPath());
             Storage storage = ApplicationContext.getInstance().getStorage();
             Object prev = storage.load(path);
-            Dict dict = (prev instanceof Dict) ? (Dict) prev : null;
             if (prev instanceof StorableObject) {
-                dict = ((StorableObject) prev).serialize();
+                prev = StorableObject.sterilize(prev, false, true, false);
             }
+            Dict dict = (prev instanceof Dict) ? (Dict) prev : null;
             if (prev == null) {
                 errorNotFound(request);
             } else if (dict == null){
@@ -354,7 +356,7 @@ public class StorageWebService extends WebService {
      * @return the external representation of the metadata
      */
     private Dict prepareMetadata(Metadata meta, boolean linkify) {
-        Dict dict = (Dict) StorableObject.sterilize(meta, false, true);
+        Dict dict = (Dict) StorableObject.sterilize(meta, true, false, false);
         if (linkify) {
             String root = StringUtils.repeat("../", meta.path().depth());
             Array arr = new Array();
@@ -511,8 +513,6 @@ public class StorageWebService extends WebService {
                 buffer.append("</code></time>");
             } else if (obj instanceof Class) {
                 renderText(((Class<?>) obj).getName(), buffer);
-            } else if (obj instanceof StorableObject) {
-                renderObject(StorableObject.sterilize(obj, false, true), buffer);
             } else {
                 renderText(obj.toString(), buffer);
             }

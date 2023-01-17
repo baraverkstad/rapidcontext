@@ -174,7 +174,7 @@ public final class JsRuntime {
         } else if (obj instanceof Array && scope != null) {
             return new ArrayWrapper((Array) obj, scope);
         } else if (obj instanceof StorableObject) {
-            return wrap(((StorableObject) obj).serialize(), scope);
+            return wrap(StorableObject.sterilize(obj, true, true, true), scope);
         } else if (obj instanceof Date) {
             return DateUtil.asEpochMillis((Date) obj);
         } else {

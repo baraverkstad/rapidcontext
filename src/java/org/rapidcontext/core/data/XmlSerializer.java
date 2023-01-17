@@ -30,7 +30,6 @@ import javax.xml.stream.events.XMLEvent;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.CharUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.util.DateUtil;
 
 /**
@@ -40,8 +39,8 @@ import org.rapidcontext.util.DateUtil;
  *
  * <ul>
  *   <li>No circular references are permitted.
- *   <li>String, Integer, Boolean, Array, Dict and StorableObject
- *       values are supported.
+ *   <li>String, Integer, Boolean, Date, Array and Dict values are
+ *       supported.
  *   <li>Other value types are converted to strings.
  *   <li>Key names should consist of valid XML tag characters (or
  *       will be transformed).
@@ -150,8 +149,6 @@ public final class XmlSerializer {
             tagStart(id, "class", buffer);
             buffer.append(TextEncoding.encodeXml(((Class<?>) obj).getName(), false));
             tagEnd(id, buffer);
-        } else if (obj instanceof StorableObject) {
-            toXml(id, ((StorableObject) obj).serialize(), indent, buffer);
         } else {
             tagStart(id, null, buffer);
             buffer.append(TextEncoding.encodeXml(obj.toString(), false));

@@ -140,10 +140,10 @@ public abstract class StorageProcedure extends Procedure {
             } catch (Exception e) {
                 String msg = "invalid data read: " + e.getMessage();
                 LOG.log(Level.WARNING, msg, e);
+                return null;
             }
-            return dict;
         } else if (obj instanceof StorableObject) {
-            return StorableObject.sterilize(obj, false, computed);
+            return StorableObject.sterilize(obj, true, !computed, true);
         } else if (obj instanceof Dict) {
             return (Dict) obj;
         } else {

@@ -42,8 +42,8 @@ import org.rapidcontext.util.DateUtil;
  *
  * <ul>
  *   <li>No circular references are permitted.
- *   <li>String, Integer, Boolean, Array, Dict and StorableObject
- *       values are supported.
+ *   <li>String, Integer, Boolean, Date, Array and Dict values are
+ *       supported.
  *   <li>Other value types are converted to strings.
  *   <li>Property key names should consist of printable ISO-8859-1
  *       characters, without spaces or dots.
@@ -356,8 +356,6 @@ public final class PropertiesSerializer {
             write(os, prefix, (Dict) obj);
         } else if (obj instanceof Array) {
             write(os, prefix, (Array) obj);
-        } else if (obj instanceof StorableObject) {
-            write(os, prefix, ((StorableObject) obj).serialize());
         } else if (obj instanceof Date) {
             write(os, prefix, DateUtil.asEpochMillis((Date) obj));
         } else {

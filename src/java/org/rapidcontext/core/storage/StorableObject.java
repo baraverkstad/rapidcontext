@@ -104,35 +104,46 @@ public class StorableObject {
      * object via API or when writing to storage.
      *
      * @param obj            the object to sterilize
-     * @param hidden         the flag for hidden key inclusion
-     * @param computed       the flag for computed key inclusion
+     * @param skipHidden     filter out hidden key-value pairs
+     * @param skipComputed   filter out computed key-value pairs
+     * @param limitedTypes   limit allowed object value types
      *
      * @return the sterilized object
      */
-    public static Object sterilize(Object obj, boolean hidden, boolean computed) {
-        boolean unfiltered = hidden && computed;
-        if (obj instanceof StorableObject) {
-            StorableObject storable = (StorableObject) obj;
-            return sterilize(storable.serialize(), hidden, computed);
-        } else if (obj instanceof Dict && !unfiltered) {
-            Dict dict = (Dict) obj;
-            Dict copy = new Dict();
-            for (String k : dict.keys()) {
-                boolean visible = hidden || !k.startsWith(PREFIX_HIDDEN);
-                boolean usable = computed || !k.startsWith(PREFIX_COMPUTED);
-                if (visible && usable) {
-                    copy.add(k, sterilize(dict.get(k), hidden, computed));
+    public static Object sterilize(Object obj,
+                                   boolean skipHidden,
+                                   boolean skipComputed,
+                                   boolean limitedTypes) {
+        if (obj == null ||
+            obj instanceof Boolean ||
+            obj instanceof Number ||
+            obj instanceof String ||
+            obj instanceof Date) {
+            return obj;
+        } else if (obj instanceof Dict) {
+            Dict src = (Dict) obj;
+            Dict dst = new Dict();
+            for (String k : src.keys()) {
+                boolean skip = (
+                    (skipHidden && k.startsWith(PREFIX_HIDDEN)) ||
+                    (skipComputed && k.startsWith(PREFIX_COMPUTED))
+                );
+                if (!skip) {
+                    dst.add(k, sterilize(src.get(k), skipHidden, skipComputed, limitedTypes));
                 };
             }
-            return copy;
-        } else if (obj instanceof Array && !unfiltered) {
+            return dst;
+        } else if (obj instanceof Array) {
             Array arr = new Array();
             for (Object o : (Array) obj) {
-                arr.add(sterilize(o, hidden, computed));
+                arr.add(sterilize(o, skipHidden, skipComputed, limitedTypes));
             }
             return arr;
+        } else if (obj instanceof StorableObject) {
+            StorableObject o = (StorableObject) obj;
+            return sterilize(o.serialize(), skipHidden, skipComputed, limitedTypes);
         } else {
-            return obj;
+            return limitedTypes ? obj.toString() : obj;
         }
     }
 

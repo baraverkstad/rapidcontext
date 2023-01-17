@@ -204,7 +204,7 @@ public class DirStorage extends Storage {
             try {
                 tmp = FileUtil.tempFile(file.getName());
                 if (data instanceof StorableObject) {
-                    data = StorableObject.sterilize(data, true, false);
+                    data = StorableObject.sterilize(data, false, true, false);
                 }
                 try (FileOutputStream os = new FileOutputStream(tmp)) {
                     serialize(file.getName(), data, os);
