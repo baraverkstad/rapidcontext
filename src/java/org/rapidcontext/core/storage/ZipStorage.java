@@ -95,9 +95,8 @@ public class ZipStorage extends Storage {
      * entries and creates all the index objects.
      */
     public void init() {
-        Index root = new Index();
+        Index root = new Index(new Date(file().lastModified()));
         root.addObject(PATH_STORAGEINFO.name());
-        root.updateLastModified(new Date(file().lastModified()));
         paths.put(Path.ROOT, Path.ROOT);
         entries.put(Path.ROOT, root);
         Enumeration<? extends ZipEntry> e = zip.entries();
@@ -111,8 +110,7 @@ public class ZipStorage extends Storage {
             Index idx = (Index) entries.get(path.parent());
             if (path.isIndex()) {
                 idx.addIndex(path.name());
-                idx = new Index();
-                idx.updateLastModified(new Date(entry.getTime()));
+                idx = new Index(new Date(entry.getTime()));
                 paths.put(path, path);
                 entries.put(path, idx);
             } else {
@@ -166,7 +164,7 @@ public class ZipStorage extends Storage {
         Object obj = (match == null) ? null : entries.get(match);
         if (obj instanceof Index) {
             Index idx = (Index) obj;
-            return new Metadata(Index.class, match, path(), null, idx.lastModified());
+            return new Metadata(Index.class, match, path(), null, idx.modified());
         } else if (obj instanceof ZipEntry) {
             ZipEntry entry = (ZipEntry) obj;
             String mime = Mime.type(entry.getName());

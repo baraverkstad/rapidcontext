@@ -122,7 +122,7 @@ public class DirStorage extends Storage {
         if (file == null) {
             return null;
         } else if (path.isIndex()) {
-            Index idx = new Index();
+            Index idx = new Index(new Date(file.lastModified()));
             if (path.isRoot()) {
                 idx.addObject(PATH_STORAGEINFO.name());
             }
@@ -134,7 +134,6 @@ public class DirStorage extends Storage {
                     idx.addObject(name);
                 }
             }
-            idx.updateLastModified(new Date(file.lastModified()));
             return idx;
         } else if (!path.name().equalsIgnoreCase(file.getName())) {
             try (InputStream is = new FileInputStream(file)) {

@@ -237,8 +237,8 @@ public class MemoryStorage extends Storage {
         } else {
             idx.addObject(path.name());
         }
+        idx.setModified(null);
         if (objects.containsKey(parent)) {
-            idx.updateLastModified(null);
             meta.get(parent).updateLastModified(null);
         } else {
             objects.put(parent, idx);
@@ -264,6 +264,7 @@ public class MemoryStorage extends Storage {
         } else {
             idx.removeObject(path.name());
         }
+        idx.setModified(null);
         if (idx.isEmpty()) {
             objects.remove(parent);
             meta.remove(parent);
@@ -271,7 +272,6 @@ public class MemoryStorage extends Storage {
                 indexRemove(parent);
             }
         } else {
-            idx.updateLastModified(null);
             meta.get(parent).updateLastModified(null);
         }
     }

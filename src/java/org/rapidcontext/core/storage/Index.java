@@ -18,6 +18,8 @@ import java.util.Date;
 import java.util.TreeSet;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.ObjectUtils;
+
 /**
  * An index dictionary. An index is an object containing the names
  * of objects and sub-indices.<p>
@@ -60,7 +62,7 @@ public class Index {
         } else if (two == null) {
             return one;
         } else {
-            Index res = new Index();
+            Index res = new Index(ObjectUtils.max(one.modified, two.modified));
             res.indices.addAll(one.indices);
             res.indices.addAll(two.indices);
             res.objects.addAll(one.objects);
@@ -70,10 +72,19 @@ public class Index {
     }
 
     /**
-     * Creates a new empty index.
+     * Creates a new empty index modified right now.
      */
     public Index() {
-        this.modified = new Date();
+        this(new Date());
+    }
+
+    /**
+     * Creates a new empty index.
+     *
+     * @param modified       the last modified date
+     */
+    public Index(Date modified) {
+        this.modified = modified;
         this.indices = new TreeSet<>();
         this.objects = new TreeSet<>();
     }
@@ -103,7 +114,7 @@ public class Index {
      *
      * @return the last modified date
      */
-    public Date lastModified() {
+    public Date modified() {
         return this.modified;
     }
 
@@ -112,7 +123,7 @@ public class Index {
      *
      * @param date           the date to set, or null for now
      */
-    public void updateLastModified(Date date) {
+    public void setModified(Date date) {
         this.modified = (date == null) ? new Date() : date;
     }
 

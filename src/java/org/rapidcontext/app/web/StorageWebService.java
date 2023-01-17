@@ -399,7 +399,7 @@ public class StorageWebService extends WebService {
         });
         Dict dict = new Dict();
         dict.set("type", "index");
-        dict.set("lastModified", idx.lastModified());
+        dict.set("modified", idx.modified());
         dict.set("directories", indices);
         dict.set("objects", objects);
         return dict;
