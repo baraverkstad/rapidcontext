@@ -326,8 +326,8 @@ public class StorageWebService extends WebService {
     }
 
     /**
-     * Searches for metadata about a specified path. If no object is
-     * found, a second attempt is made without any supported data
+     * Searches for metadata for a specified path. The path will be
+     * normalized to locate files and objects without any specified
      * format extension.
      *
      * @param path           the storage location
@@ -339,13 +339,16 @@ public class StorageWebService extends WebService {
         String name = Storage.objectName(path.name());
         name = name.equals(path.name()) ? StringUtils.removeEndIgnoreCase(name, EXT_HTML) : name;
         boolean idx = StringUtils.equalsAnyIgnoreCase(name, ".", "index");
-        return Stream.of(path, path.sibling(name), idx ? path.parent() : null)
-            .filter(Objects::nonNull)
-            .distinct()
-            .map(p -> storage.lookup(p))
-            .filter(Objects::nonNull)
-            .findFirst()
-            .orElse(null);
+        Stream<Path> stream;
+        if (path.isIndex()) {
+            stream = Stream.of(path);
+        } else if (RootStorage.isBinaryPath(path)) {
+            stream = Stream.of(path, idx ? path.parent() : path.sibling(name));
+        } else {
+            stream = Stream.of(idx ? path.parent() : path.sibling(name));
+        }
+        Stream<Metadata> metas = stream.map(p -> storage.lookup(p));
+        return metas.filter(Objects::nonNull).findFirst().orElse(null);
     }
 
     /**

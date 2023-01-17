@@ -18,6 +18,7 @@ import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.RootStorage;
+import org.rapidcontext.core.storage.StorageException;
 import org.rapidcontext.core.type.Session;
 import org.rapidcontext.core.type.User;
 
@@ -48,6 +49,20 @@ public class ApplicationStorage extends RootStorage {
     }
 
     /**
+     * Checks if a storage path is valid. Only binary paths may contain
+     * file extensions.
+     *
+     * @param path           the path to check
+     *
+     * @return true if the path is valid, or false otherwise
+     */
+    public boolean isValidPath(Path path) {
+        return isBinaryPath(path) ||
+               PATH_STORAGEINFO.equals(path) ||
+               !path.toString().contains(".");
+    }
+
+    /**
      * Searches for an object at the specified location and returns
      * metadata about the object if found. The path may locate either
      * an index or a specific object.
@@ -57,7 +72,7 @@ public class ApplicationStorage extends RootStorage {
      * @return the metadata for the object, or null if not found
      */
     public Metadata lookup(Path path) {
-        return super.lookup(redirect(path));
+        return isValidPath(path) ? super.lookup(redirect(path)) : null;
     }
 
     /**
@@ -72,7 +87,39 @@ public class ApplicationStorage extends RootStorage {
      *         null if not found
      */
     public Object load(Path path) {
-        return super.load(redirect(path));
+        return isValidPath(path) ? super.load(redirect(path)) : null;
+    }
+
+    /**
+     * Stores an object at the specified location. The path must
+     * locate a particular object or file, since direct manipulation
+     * of indices is not supported. Any previous data at the
+     * specified path will be overwritten or removed.
+     *
+     * @param path           the storage location
+     * @param data           the data to store
+     *
+     * @throws StorageException if the data couldn't be written
+     */
+    public void store(Path path, Object data) throws StorageException {
+        if (isValidPath(path)) {
+            super.store(path, data);
+        }
+    }
+
+    /**
+     * Removes an object or an index at the specified location. If
+     * the path refers to an index, all contained objects and indices
+     * will be removed recursively.
+     *
+     * @param path           the storage location
+     *
+     * @throws StorageException if the data couldn't be removed
+     */
+    public void remove(Path path) throws StorageException {
+        if (isValidPath(path)) {
+            super.remove(path);
+        }
     }
 
     /**
