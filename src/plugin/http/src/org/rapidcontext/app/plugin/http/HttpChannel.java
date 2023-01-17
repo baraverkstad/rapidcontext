@@ -17,7 +17,6 @@ package org.rapidcontext.app.plugin.http;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.type.Channel;
 
@@ -32,20 +31,12 @@ import org.rapidcontext.core.type.Channel;
 public class HttpChannel extends Channel {
 
     /**
-     * The HTTP connection parameters. Indexed with the configuration
-     * keys specified in the HTTP adapter.
-     */
-    private Dict params = null;
-
-    /**
      * Creates a new HTTP connection channel.
      *
      * @param con            the parent connection
-     * @param params            the HTTP connection parameters
      */
-    HttpChannel(HttpConnection con, Dict params) {
+    HttpChannel(HttpConnection con) {
         super(con);
-        this.params = params;
     }
 
     /**
@@ -125,11 +116,11 @@ public class HttpChannel extends Channel {
      * @throws ProcedureException if the base URL was malformed
      */
     public URL getUrl() throws ProcedureException {
-        String  str = this.params.getString(HttpConnection.HTTP_URL, "");
+        String url = ((HttpConnection) connection).url();
         try {
-            return new URL(str);
+            return new URL(url);
         } catch (MalformedURLException e) {
-            throw new ProcedureException("malformed URL: " + str);
+            throw new ProcedureException("malformed URL: " + url);
         }
     }
 
@@ -140,11 +131,6 @@ public class HttpChannel extends Channel {
      *         an empty string if not set
      */
     public String getHeaders() {
-        if (this.params.containsKey("header")) {
-            // TODO: Remove this legacy parameter name (2017-02-01)
-            return this.params.getString("header", "");
-        } else {
-            return this.params.getString(HttpConnection.HTTP_HEADERS, "");
-        }
+        return ((HttpConnection) connection).headers();
     }
 }
