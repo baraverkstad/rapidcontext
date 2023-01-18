@@ -168,20 +168,20 @@ public class Role extends StorableObject {
         String name = dict.getString("name", null);
         String regex = dict.getString("regexp", null);
         if (type != null && name != null) {
-            LOG.warning("normalizing " + path + " data: legacy access path permission");
+            LOG.warning("deprecated: " + path + " data: legacy access path permission");
             dict.remove("type");
             dict.remove("name");
             dict.set(ACCESS_PATH, type + "/" + name);
             dict.set(ACCESS_PERMISSION, PERM_READ);
         } else if (type != null && regex != null) {
-            LOG.warning("normalizing " + path + " data: legacy access regex permission");
+            LOG.warning("deprecated: " + path + " data: legacy access regex permission");
             dict.remove("type");
             dict.remove("regexp");
             dict.set(ACCESS_REGEX, type + "/" + regex);
             dict.set(ACCESS_PERMISSION, PERM_READ);
         }
         if (dict.containsKey("caller")) {
-            LOG.warning("normalizing " + path + " data: legacy internal permission");
+            LOG.warning("deprecated: " + path + " data: legacy internal permission");
             dict.remove("caller");
             dict.set(ACCESS_PERMISSION, PERM_INTERNAL);
         }

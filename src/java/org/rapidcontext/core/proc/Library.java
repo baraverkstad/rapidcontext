@@ -121,6 +121,7 @@ public class Library {
             LOG.warning(msg);
             throw new ProcedureException(msg);
         }
+        LOG.warning("deprecated: procedure type " + type + " not declared via storage");
         types.put(type, cls);
         LOG.fine("registered procedure type " + type +
                  " with class " + cls.getName());
@@ -233,6 +234,7 @@ public class Library {
     public Procedure getProcedure(String name) throws ProcedureException {
         // TODO: remove this legacy conversion before 1.0
         if (name.startsWith("ReTracer.")) {
+            LOG.warning("deprecated: legacy procedure name: " + name);
             name = "System" + name.substring(8);
         }
         if (builtIns.containsKey(name)) {
@@ -282,6 +284,7 @@ public class Library {
             String msg = "a procedure '" + proc.getName() + "' already exists";
             throw new ProcedureException(msg);
         }
+        LOG.warning("deprecated: procedure " + proc.getName() + " not declared via storage");
         builtIns.put(proc.getName(), proc);
     }
 

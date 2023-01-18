@@ -61,7 +61,7 @@ public class HttpConnection extends Connection {
     public static Dict normalize(Path path, Dict dict) {
         // TODO: Remove this legacy conversion (added 2017-02-01)
         if (dict.containsKey("header")) {
-            LOG.warning("normalizing " + path + " data: legacy header");
+            LOG.warning("deprecated: " + path + " data: legacy header");
             String headers = dict.getString("header", "");
             dict.remove("header");
             dict.set(HTTP_HEADERS, headers);
