@@ -383,7 +383,7 @@ public class RootStorage extends MemoryStorage {
             }
             return super.load(path);
         } else if (path.equals(PATH_STORAGEINFO)) {
-            return super.load(path);
+            return StorableObject.sterilize(super.load(path), true, true, true);
         } else if (path.isIndex()) {
             Index idx = (Index) super.load(path);
             for (Object o : mountedStorages) {

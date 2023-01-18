@@ -68,23 +68,23 @@ public class PluginListProcedure extends Procedure {
 
         CallContext.checkSearchAccess("plugin/");
         ApplicationContext ctx = ApplicationContext.getInstance();
-        Dict dict = (Dict) ctx.getStorage().load(Storage.PATH_STORAGEINFO);
-        Array arr = dict.getArray("storages");
-        Array res = new Array(arr.size());
-        for (Object o : arr) {
-            Path path = ((Storage) o).path();
-            if (SecurityContext.hasReadAccess(path.toString())) {
-                if (path.startsWith(PluginManager.PATH_STORAGE_PLUGIN)) {
-                    String pluginId = path.name();
-                    dict = ctx.pluginConfig(pluginId);
-                    if (dict == null) {
-                        dict = new Dict();
-                        dict.set(Plugin.KEY_ID, pluginId);
+        Dict info = (Dict) ctx.getStorage().load(Storage.PATH_STORAGEINFO);
+        Array storages = info.getArray("storages");
+        Array res = new Array(storages.size());
+        for (Object o : storages) {
+            String path = ((Dict) o).getString(Storage.KEY_MOUNT_PATH, "/");
+            if (SecurityContext.hasReadAccess(path)) {
+                if (path.startsWith(PluginManager.PATH_STORAGE_PLUGIN.toString())) {
+                    String pluginId = Path.from(path).name();
+                    Dict conf = ctx.pluginConfig(pluginId);
+                    if (conf == null) {
+                        conf = new Dict();
+                        conf.set(Plugin.KEY_ID, pluginId);
                     } else {
-                        dict = dict.copy();
+                        conf = conf.copy();
                     }
-                    dict.setBoolean("loaded", ctx.isPluginLoaded(pluginId));
-                    res.add(dict);
+                    conf.setBoolean("loaded", ctx.isPluginLoaded(pluginId));
+                    res.add(conf);
                 }
             }
         }
