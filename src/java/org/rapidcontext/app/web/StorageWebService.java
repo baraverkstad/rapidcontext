@@ -136,20 +136,19 @@ public class StorageWebService extends WebService {
         } else if (data instanceof Binary && path.equals(meta.path())) {
             request.sendBinary((Binary) data);
         } else {
-            boolean isHtml = path.isIndex() ||
-                    StringUtils.endsWithIgnoreCase(path.name(), EXT_HTML);
             if (data instanceof Index) {
-                data = prepareIndex(meta.path(), (Index) data, isHtml);
+                data = prepareIndex(meta.path(), (Index) data);
             } else if (data instanceof Binary) {
-                data = prepareBinary(meta.path(), (Binary) data, isHtml);
+                data = prepareBinary(meta.path(), (Binary) data);
             } else if (data instanceof StorableObject) {
                 data = StorableObject.sterilize(data, true, false, false);
             }
-            sendResult(request, meta.path(), prepareMetadata(meta, isHtml), data);
+            Object metaObj = StorableObject.sterilize(meta, true, false, false);
+            sendResult(request, meta.path(), metaObj, data);
         }
     }
 
-    private void sendResult(Request request, Path path, Dict meta, Object data) {
+    private void sendResult(Request request, Path path, Object meta, Object data) {
         boolean includeMeta = BooleanUtils.toBoolean(request.getParameter("metadata", "0"));
         if (includeMeta) {
             Dict res = new Dict();
@@ -352,52 +351,20 @@ public class StorageWebService extends WebService {
     }
 
     /**
-     * Creates an external representation of a metadata object.
-     *
-     * @param meta           the metadata object
-     *
-     * @return the external representation of the metadata
-     */
-    private Dict prepareMetadata(Metadata meta, boolean linkify) {
-        Dict dict = (Dict) StorableObject.sterilize(meta, true, false, false);
-        if (linkify) {
-            String root = StringUtils.repeat("../", meta.path().depth());
-            Array arr = new Array();
-            for (Object path : meta.storages()) {
-                String rel = StringUtils.removeStart(path.toString(), "/");
-                arr.add("$href$" + root + rel + "$" + path);
-            }
-            dict.set(Metadata.PREFIX_COMPUTED + Metadata.KEY_STORAGES, arr);
-        }
-        return dict;
-    }
-
-    /**
-     * Creates an external representation of an index. If the HTML
-     * link flag is set, all the references in the index will be
-     * prefixed by "$href$" (being serialized into HTML links).
+     * Creates an external representation of an index.
      *
      * @param path           the index base path
      * @param idx            the index to serialize
-     * @param linkify        the HTML link flag
      *
      * @return the external representation of the index
      */
-    private Dict prepareIndex(Path path, Index idx, boolean linkify) {
-        Array indices = new Array();
-        idx.indices().forEach((item) -> {
-            indices.add((linkify ? "$href$" : "") + item + "/");
-        });
-        Array objects = new Array();
-        idx.objects().forEach((item) -> {
-            item = !linkify ? item : "$href$" + item + ".html$" + item;
-            objects.add(item);
-        });
+    private Dict prepareIndex(Path path, Index idx) {
+        Array paths = new Array();
+        idx.paths(path).forEach(p -> paths.add(p));
         Dict dict = new Dict();
         dict.set("type", "index");
         dict.set("modified", idx.modified());
-        dict.set("directories", indices);
-        dict.set("objects", objects);
+        dict.set("paths", paths);
         return dict;
     }
 
@@ -406,14 +373,13 @@ public class StorageWebService extends WebService {
      *
      * @param path           the storage path
      * @param data           the binary data object
-     * @param linkify        the HTML link flag
      *
      * @return the external representation of the binary data object
      */
-    private Dict prepareBinary(Path path, Binary data, boolean linkify) {
+    private Dict prepareBinary(Path path, Binary data) {
         Dict dict = new Dict();
         dict.set("type", "file");
-        dict.set("name", (linkify ? "$href$" : "") + path.name());
+        dict.set("path", path);
         dict.set("mimeType", data.mimeType());
         dict.set("lastModified", new Date(data.lastModified()));
         dict.set("size", Long.valueOf(data.size()));
@@ -428,7 +394,7 @@ public class StorageWebService extends WebService {
         /**
          * Renders an HTML page for a storage lookup result.
          *
-         * @param path           the storage path
+         * @param path           the object storage path
          * @param meta           the meta-data to render
          * @param res            the data to render
          *
@@ -473,11 +439,11 @@ public class StorageWebService extends WebService {
             html.append("</ol>\n</nav>\n<hr>\n");
             html.append("<div class='metadata'>\n");
             html.append("<h2>Query Metadata</h2>\n");
-            renderObject(meta, html);
+            renderObject(path, meta, html);
             html.append("</div>\n");
             html.append("<div class='data'>\n");
             html.append("<h2>Query Results</h2>");
-            renderObject(res, html);
+            renderObject(path, res, html);
             html.append("</div>\n<hr>\n");
             html.append("<p><strong>Data Formats:</strong>");
             String link = path.isIndex() ? "index" : path.name();
@@ -492,16 +458,17 @@ public class StorageWebService extends WebService {
         /**
          * Renders an object into an HTML representation.
          *
+         * @param path           the object storage path
          * @param obj            the object to convert
          * @param buffer         the string buffer to append into
          */
-        private static void renderObject(Object obj, StringBuilder buffer) {
+        private static void renderObject(Path path, Object obj, StringBuilder buffer) {
             if (obj == null) {
                 buffer.append("<code>N/A</code>");
             } else if (obj instanceof Dict) {
-                renderDict((Dict) obj, buffer);
+                renderDict(path, (Dict) obj, buffer);
             } else if (obj instanceof Array) {
-                renderArray((Array) obj, buffer);
+                renderArray(path, (Array) obj, buffer);
             } else if (obj instanceof Date) {
                 buffer.append("<time datetime='");
                 buffer.append(DateUtil.asDateTimeUTC((Date) obj));
@@ -512,6 +479,18 @@ public class StorageWebService extends WebService {
                 buffer.append("</code></time>");
             } else if (obj instanceof Class) {
                 renderText(((Class<?>) obj).getName(), buffer);
+            } else if (obj instanceof Path) {
+                Path p = (Path) obj;
+                String suffix = p.isIndex() ? "" : ".html";
+                if (p.equals(path)) {
+                    renderLink(p.isIndex() ? "." : p.name(), p.toString(), buffer);
+                } else if (p.startsWith(path)) {
+                    String rel = p.toIdent(path.depth());
+                    renderLink(rel + suffix, rel, buffer);
+                } else {
+                    String rel = StringUtils.repeat("../", path.depth()) + p.toIdent(0);
+                    renderLink(rel + suffix, p.toString(), buffer);
+                }
             } else {
                 renderText(obj.toString(), buffer);
             }
@@ -520,16 +499,17 @@ public class StorageWebService extends WebService {
         /**
          * Renders a dictionary into an HTML representation.
          *
+         * @param path           the object storage path
          * @param dict           the dictionary to convert
          * @param buffer         the string buffer to append into
          */
-        private static void renderDict(Dict dict, StringBuilder buffer) {
+        private static void renderDict(Path path, Dict dict, StringBuilder buffer) {
             buffer.append("<table>\n<tbody>\n");
             for (String key : dict.keys()) {
                 buffer.append("<tr>\n<th>");
                 renderText(key, buffer);
                 buffer.append("</th>\n<td>");
-                renderObject(dict.get(key), buffer);
+                renderObject(path, dict.get(key), buffer);
                 buffer.append("</td>\n</tr>\n");
             }
             buffer.append("</tbody>\n</table>\n");
@@ -538,14 +518,15 @@ public class StorageWebService extends WebService {
         /**
          * Renders an array into an HTML representation.
          *
+         * @param path           the object storage path
          * @param arr            the array to convert
          * @param buffer         the string buffer to append into
          */
-        private static void renderArray(Array arr, StringBuilder buffer) {
+        private static void renderArray(Path path, Array arr, StringBuilder buffer) {
             buffer.append("<ol>\n");
             for (Object o : arr) {
                 buffer.append("<li>");
-                renderObject(o, buffer);
+                renderObject(path, o, buffer);
                 buffer.append("</li>\n");
             }
             buffer.append("</ol>\n");
@@ -554,9 +535,7 @@ public class StorageWebService extends WebService {
         /**
          * Renders a text string into an HTML representation. If the
          * string contains a newline character, it will be wrapped in a
-         * pre-tag. Otherwise it will only be properly HTML escaped. This
-         * method also makes some rudimentary efforts to detect HTTP
-         * links.
+         * pre-tag. Otherwise it will only be properly HTML escaped.
          *
          * @param str            the text string to convert
          * @param buffer         the string buffer to append into
@@ -564,16 +543,6 @@ public class StorageWebService extends WebService {
         private static void renderText(String str, StringBuilder buffer) {
             if (str == null) {
                 buffer.append("<code>N/A</code>");
-            } else if (str.startsWith("$href$")) {
-                str = StringUtils.substringAfter(str, "$href$");
-                String url = StringUtils.substringBefore(str, "$");
-                String text = StringUtils.substringAfter(str, "$");
-                text = StringUtils.defaultIfEmpty(text, url);
-                buffer.append("<a href='");
-                buffer.append(StringEscapeUtils.escapeHtml4(url));
-                buffer.append("'>");
-                buffer.append(StringEscapeUtils.escapeHtml4(text));
-                buffer.append("</a>");
             } else if (str.indexOf("\n") >= 0) {
                 buffer.append("<pre>");
                 buffer.append(StringEscapeUtils.escapeHtml4(str));
@@ -581,6 +550,22 @@ public class StorageWebService extends WebService {
             } else {
                 buffer.append(StringEscapeUtils.escapeHtml4(str));
             }
+        }
+
+        /**
+         * Renders a link into an HTML representation.
+         *
+         * @param url            the URL to render
+         * @param text           the link text
+         * @param buffer         the string buffer to append into
+         */
+        private static void renderLink(String url, String text, StringBuilder buffer) {
+            text = StringUtils.defaultIfEmpty(text, url);
+            buffer.append("<a href='");
+            buffer.append(StringEscapeUtils.escapeHtml4(url));
+            buffer.append("'>");
+            buffer.append(StringEscapeUtils.escapeHtml4(text));
+            buffer.append("</a>");
         }
 
         // No instances
