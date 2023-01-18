@@ -57,9 +57,7 @@ public class ApplicationStorage extends RootStorage {
      * @return true if the path is valid, or false otherwise
      */
     public boolean isValidPath(Path path) {
-        return isBinaryPath(path) ||
-               PATH_STORAGEINFO.equals(path) ||
-               !path.toString().contains(".");
+        return !isObjectPath(path) || !path.toString().contains(".");
     }
 
     /**

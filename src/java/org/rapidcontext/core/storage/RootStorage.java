@@ -107,6 +107,20 @@ public class RootStorage extends MemoryStorage {
     }
 
     /**
+     * Checks if a path corresponds to a non-root and non-binary path.
+     * Note that index paths are still considered object paths by this
+     * method.
+     *
+     * @param path           the path to check
+     *
+     * @return true if the path is known to contain objects, or
+     *         false otherwise
+     */
+    public static boolean isObjectPath(Path path) {
+        return path.depth() > 0 && !isBinaryPath(path);
+    }
+
+    /**
      * Creates a new root storage.
      *
      * @param readWrite      the read write flag
@@ -122,6 +136,18 @@ public class RootStorage extends MemoryStorage {
         };
         long delay = PASSIVATE_INTERVAL_SECS * 1000L;
         Scheduler.schedule(cacheCleaner, delay, delay);
+    }
+
+    /**
+     * Checks if a mounted storage is cached.
+     *
+     * @param storagePath    the storage path
+     *
+     * @return true if the storage is cached, or
+     *         false otherwise
+     */
+    private boolean isCached(Path storagePath) {
+        return caches.origins().contains(storagePath);
     }
 
     /**
@@ -289,10 +315,10 @@ public class RootStorage extends MemoryStorage {
      */
     private void cacheRemount(Path storagePath, Path cachePath)
     throws StorageException {
-        if (cachePath != null && !caches.origins().contains(storagePath)) {
+        if (cachePath != null && !isCached(storagePath)) {
             caches.mount(storagePath, cachePath);
             metadataMount(cachePath);
-        } else if (cachePath == null && caches.origins().contains(storagePath)) {
+        } else if (cachePath == null && isCached(storagePath)) {
             metadataUnmount(cachePath);
             caches.unmount(storagePath);
         }
@@ -420,7 +446,7 @@ public class RootStorage extends MemoryStorage {
             Path queryPath = path.removePrefix(overlay);
             Index cached = (Index) caches.load(storage.path(), queryPath);
             Index stored = (Index) storage.load(queryPath);
-            if (!isBinaryPath(path) && stored != null) {
+            if (stored != null && !isBinaryPath(path)) {
                 stored = new Index(stored, true);
             }
             return Index.merge(cached, stored);
@@ -452,7 +478,7 @@ public class RootStorage extends MemoryStorage {
                 return res;
             }
             res = storage.load(queryPath);
-            if (res instanceof Dict && caches.origins().contains(storagePath)) {
+            if (res instanceof Dict && isObjectPath(queryPath) && isCached(storagePath)) {
                 res = initObject(queryPath.toIdent(1), (Dict) res);
                 caches.store(storagePath, queryPath, res);
             }
@@ -474,12 +500,6 @@ public class RootStorage extends MemoryStorage {
      *         the input dictionary if no type matched
      */
     private Object initObject(String id, Dict dict) {
-        if (!dict.containsKey(KEY_ID) && !id.isEmpty()) {
-            Dict copy = new Dict();
-            copy.set(KEY_ID, id);
-            copy.setAll(dict);
-            dict = copy;
-        }
         Constructor<?> ctor = Type.constructor(this, dict);
         if (ctor != null) {
             String typeId = dict.getString(KEY_TYPE, null);

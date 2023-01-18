@@ -78,6 +78,7 @@ public class PluginZipStorage extends ZipStorage {
      */
     public Object load(Path path) {
         Object obj = super.load(path);
+        // TODO: Remove object type normalization when legacy data migrated
         if (path.startsWith(Plugin.PATH) && obj instanceof Dict) {
             return Plugin.normalize(path, (Dict) obj);
         } else if (path.startsWith(Role.PATH) && obj instanceof Dict) {
