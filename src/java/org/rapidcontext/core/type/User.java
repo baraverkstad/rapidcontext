@@ -127,16 +127,16 @@ public class User extends StorableObject {
      * Normalizes a user data object if needed. This method will
      * modify legacy data into the proper keys and values.
      *
-     * @param path           the storage location
+     * @param id             the object identifier
      * @param dict           the storage data
      *
      * @return the storage data (possibly modified)
      */
-    public static Dict normalize(Path path, Dict dict) {
+    public static Dict normalize(String id, Dict dict) {
         if (!dict.containsKey(KEY_TYPE)) {
-            LOG.warning("deprecated: " + path + " data: missing object type");
+            LOG.warning("deprecated: user " + id + " data: missing object type");
             dict.set(KEY_TYPE, "user");
-            dict.set(KEY_ID, path.toIdent(1));
+            dict.set(KEY_ID, id);
             dict.set(KEY_NAME, dict.getString(KEY_DESCRIPTION, ""));
             dict.set(KEY_DESCRIPTION, "");
             Array list = new Array();
@@ -194,7 +194,7 @@ public class User extends StorableObject {
      * @param dict           the serialized representation
      */
     public User(String id, String type, Dict dict) {
-        super(id, type, dict);
+        super(id, type, normalize(id, dict));
         dict.set(KEY_NAME, name());
         dict.set(KEY_EMAIL, email());
         dict.set(KEY_DESCRIPTION, description());

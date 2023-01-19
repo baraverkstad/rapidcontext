@@ -70,14 +70,14 @@ public class Plugin extends StorableObject {
      * Normalizes a plug-in data object if needed. This method will
      * modify legacy data into the proper keys and values.
      *
-     * @param path           the storage location
+     * @param id             the object identifier
      * @param dict           the storage data
      *
      * @return the storage data (possibly modified)
      */
-    public static Dict normalize(Path path, Dict dict) {
+    public static Dict normalize(String id, Dict dict) {
         if (!dict.containsKey(KEY_TYPE)) {
-            LOG.warning("deprecated: " + path + " data: missing object type");
+            LOG.warning("deprecated: plugin " + id + " data: missing object type");
             dict.set(KEY_TYPE, "plugin");
         }
         return dict;
@@ -91,7 +91,7 @@ public class Plugin extends StorableObject {
      * @param dict           the serialized representation
      */
     public Plugin(String id, String type, Dict dict) {
-        super(id, type, dict);
+        super(id, type, normalize(id, dict));
     }
 
     /**

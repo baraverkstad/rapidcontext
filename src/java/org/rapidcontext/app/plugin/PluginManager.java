@@ -26,6 +26,7 @@ import java.util.logging.Logger;
 import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
+import org.rapidcontext.core.storage.DirStorage;
 import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.Storage;
@@ -309,7 +310,7 @@ public class PluginManager {
         }
         try {
             if (file.isDirectory()) {
-                ps = new PluginDirStorage(pluginId, file);
+                ps = new DirStorage(file, false);
             } else {
                 ps = new PluginZipStorage(pluginId, file);
             }

@@ -17,7 +17,6 @@ package org.rapidcontext.app.plugin.http;
 import java.util.logging.Logger;
 
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.type.Channel;
 import org.rapidcontext.core.type.Connection;
 import org.rapidcontext.core.type.ConnectionException;
@@ -53,15 +52,15 @@ public class HttpConnection extends Connection {
      * Normalizes an HTTP connection data object if needed. This method
      * will modify legacy data into the proper keys and values.
      *
-     * @param path           the storage location
+     * @param id             the object identifier
      * @param dict           the storage data
      *
      * @return the storage data (possibly modified)
      */
-    public static Dict normalize(Path path, Dict dict) {
+    public static Dict normalize(String id, Dict dict) {
         // TODO: Remove this legacy conversion (added 2017-02-01)
         if (dict.containsKey("header")) {
-            LOG.warning("deprecated: " + path + " data: legacy header");
+            LOG.warning("deprecated: connection " + id + " data: legacy header");
             String headers = dict.getString("header", "");
             dict.remove("header");
             dict.set(HTTP_HEADERS, headers);
@@ -77,8 +76,7 @@ public class HttpConnection extends Connection {
      * @param dict           the serialized representation
      */
     public HttpConnection(String id, String type, Dict dict) {
-        super(id, type, dict);
-        normalize(path(), this.dict);
+        super(id, type, normalize(id, dict));
     }
 
     /**

@@ -18,12 +18,9 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.lang3.StringUtils;
-import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.storage.Index;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.ZipStorage;
-import org.rapidcontext.core.type.Role;
-import org.rapidcontext.core.type.User;
 
 /**
  * A ZIP file storage for plug-ins. This class normalizes some legacy
@@ -62,31 +59,6 @@ public class PluginZipStorage extends ZipStorage {
             idx.addObject(fixedPath.name());
             paths.put(fixedPath, fixedPath);
             entries.put(fixedPath, data);
-        }
-    }
-
-    /**
-     * Loads an object from the specified location. The path may
-     * locate either an index or a specific object. In case of an
-     * index, the data returned is an index dictionary listing of
-     * all objects in it.
-     *
-     * @param path           the storage location
-     *
-     * @return the data read, or
-     *         null if not found
-     */
-    public Object load(Path path) {
-        Object obj = super.load(path);
-        // TODO: Remove object type normalization when legacy data migrated
-        if (path.startsWith(Plugin.PATH) && obj instanceof Dict) {
-            return Plugin.normalize(path, (Dict) obj);
-        } else if (path.startsWith(Role.PATH) && obj instanceof Dict) {
-            return Role.normalize(path, (Dict) obj);
-        } else if (path.startsWith(User.PATH) && obj instanceof Dict) {
-            return User.normalize(path, (Dict) obj);
-        } else {
-            return obj;
         }
     }
 }

@@ -479,7 +479,7 @@ public class RootStorage extends MemoryStorage {
             }
             res = storage.load(queryPath);
             if (res instanceof Dict && isObjectPath(queryPath) && isCached(storagePath)) {
-                res = initObject(queryPath.toIdent(1), (Dict) res);
+                res = initObject(queryPath.toIdent(1), queryPath.name(0), (Dict) res);
                 caches.store(storagePath, queryPath, res);
             }
             if (res != null) {
@@ -499,11 +499,16 @@ public class RootStorage extends MemoryStorage {
      * @return the StorableObject instance created, or
      *         the input dictionary if no type matched
      */
-    private Object initObject(String id, Dict dict) {
-        Constructor<?> ctor = Type.constructor(this, dict);
+    private Object initObject(String id, String type, Dict dict) {
+        // TODO: Remove type normalization when legacy data migrated
+        Dict copy = new Dict();
+        copy.set(KEY_ID, id);
+        copy.set(KEY_TYPE, type);
+        copy.setAll(dict);
+        Constructor<?> ctor = Type.constructor(this, copy);
         if (ctor != null) {
-            String typeId = dict.getString(KEY_TYPE, null);
-            Object[] args = new Object[] { id, typeId, dict };
+            type = dict.getString(KEY_TYPE, type);
+            Object[] args = new Object[] { id, type, dict };
             try {
                 StorableObject obj = (StorableObject) ctor.newInstance(args);
                 obj.init();
@@ -511,8 +516,8 @@ public class RootStorage extends MemoryStorage {
                 return obj;
             } catch (Exception e) {
                 String msg = "failed to create instance of " +
-                    ctor.getClass().getName() + " for object " + id +
-                    " of type " + typeId;
+                    ctor.getDeclaringClass().getName() + " for object " + id +
+                    " of type " + type;
                 LOG.log(Level.WARNING, msg, e);
                 dict.add("_error", msg);
                 return dict;

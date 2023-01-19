@@ -139,19 +139,19 @@ public class Role extends StorableObject {
      * Normalizes a role data object if needed. This method will
      * modify legacy data into the proper keys and values.
      *
-     * @param path           the storage location
+     * @param id             the object identifier
      * @param dict           the storage data
      *
      * @return the storage data (possibly modified)
      */
-    public static Dict normalize(Path path, Dict dict) {
+    public static Dict normalize(String id, Dict dict) {
         if (!dict.containsKey(KEY_TYPE)) {
-            LOG.warning("normalizing " + path + " data: missing object type");
+            LOG.warning("deprecated: role " + id + " data: missing object type");
             dict.set(KEY_TYPE, "role");
-            dict.set(KEY_ID, path.toIdent(1));
+            dict.set(KEY_ID, id);
         }
         for (Object o : dict.getArray(KEY_ACCESS)) {
-            normalizeAccess(path, (Dict) o);
+            normalizeAccess(id, (Dict) o);
         }
         return dict;
     }
@@ -160,28 +160,28 @@ public class Role extends StorableObject {
      * Normalizes a role access object. This method will change
      * legacy data into the proper keys and values as needed.
      *
-     * @param path           the storage location
+     * @param id             the object identifier
      * @param dict           the access data
      */
-    private static void normalizeAccess(Path path, Dict dict) {
+    private static void normalizeAccess(String id, Dict dict) {
         String type = dict.getString("type", null);
         String name = dict.getString("name", null);
         String regex = dict.getString("regexp", null);
         if (type != null && name != null) {
-            LOG.warning("deprecated: " + path + " data: legacy access path permission");
+            LOG.warning("deprecated: role " + id + " data: legacy access path permission");
             dict.remove("type");
             dict.remove("name");
             dict.set(ACCESS_PATH, type + "/" + name);
             dict.set(ACCESS_PERMISSION, PERM_READ);
         } else if (type != null && regex != null) {
-            LOG.warning("deprecated: " + path + " data: legacy access regex permission");
+            LOG.warning("deprecated: role " + id + " data: legacy access regex permission");
             dict.remove("type");
             dict.remove("regexp");
             dict.set(ACCESS_REGEX, type + "/" + regex);
             dict.set(ACCESS_PERMISSION, PERM_READ);
         }
         if (dict.containsKey("caller")) {
-            LOG.warning("deprecated: " + path + " data: legacy internal permission");
+            LOG.warning("deprecated: role " + id + " data: legacy internal permission");
             dict.remove("caller");
             dict.set(ACCESS_PERMISSION, PERM_INTERNAL);
         }
@@ -195,7 +195,7 @@ public class Role extends StorableObject {
      * @param dict           the serialized representation
      */
     public Role(String id, String type, Dict dict) {
-        super(id, type, dict);
+        super(id, type, normalize(id, dict));
         dict.set(KEY_NAME, name());
         dict.set(KEY_DESCRIPTION, description());
     }
