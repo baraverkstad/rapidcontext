@@ -102,8 +102,7 @@ public abstract class StorageProcedure extends Procedure {
         if (opts.containsKey("fileType")) {
             query.filterFileExtension("." + opts.getString("fileType", ""));
         }
-        int limit = opts.getInt("limit", 1000);
-        Stream<Metadata> stream = query.metadatas().limit(limit);
+        Stream<Metadata> stream = query.metadatas();
         if (opts.containsKey("mimeType")) {
             String mimeType = opts.getString("mimeType", "");
             stream = stream.filter(meta -> {
@@ -116,7 +115,8 @@ public abstract class StorageProcedure extends Procedure {
                 return StringUtils.equalsIgnoreCase(meta.category(), category);
             });
         }
-        return stream;
+        int limit = opts.getInt("limit", 1000);
+        return stream.limit(limit);
     }
 
     /**
