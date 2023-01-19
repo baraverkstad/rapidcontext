@@ -19,6 +19,7 @@ import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
+import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.core.type.Type;
 
@@ -60,7 +61,8 @@ public class TypeListProcedure extends Procedure {
     public Object call(CallContext cx, Bindings bindings)
     throws ProcedureException {
         Array res = new Array();
-        Type.all(cx.getStorage()).forEach(t -> res.add(t.serialize()));
+        Type.all(cx.getStorage())
+            .forEach(t -> res.add(StorableObject.sterilize(t, true, true, true)));
         return res;
     }
 }
