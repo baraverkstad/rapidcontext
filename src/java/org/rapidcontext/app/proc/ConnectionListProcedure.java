@@ -20,6 +20,7 @@ import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
+import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.type.Connection;
 import org.rapidcontext.core.type.Procedure;
@@ -72,7 +73,7 @@ public class ConnectionListProcedure extends Procedure {
                 Object o = storage.load(meta.path());
                 Dict dict = null;
                 if (o instanceof Connection) {
-                    dict = ((Connection) o).serialize();
+                    dict = (Dict) StorableObject.sterilize(o, true, false, true);
                 } else if (o instanceof Dict) {
                     dict = (Dict) o;
                     if (!dict.containsKey("_error")) {
