@@ -516,7 +516,7 @@ public class PluginManager {
         storage.query(path)
             .filterFileExtension(".jar")
             .metadatas()
-            .filter(meta -> meta != null && meta.isBinary())
+            .filter(meta -> meta.isBinary())
             .forEach(meta -> loadJarFile(meta.path()));
     }
 

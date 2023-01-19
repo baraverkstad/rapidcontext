@@ -15,6 +15,7 @@
 package org.rapidcontext.core.storage;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -151,7 +152,7 @@ public class Query {
      * @return the stream of metadata found
      */
     public Stream<Metadata> metadatas() {
-        return paths().map(path -> this.storage.lookup(path));
+        return paths().map(path -> this.storage.lookup(path)).filter(Objects::nonNull);
     }
 
     /**
@@ -172,7 +173,7 @@ public class Query {
      * @return the stream of objects found
      */
     public Stream<Object> objects() {
-        return paths().map(path -> this.storage.load(path));
+        return paths().map(path -> this.storage.load(path)).filter(Objects::nonNull);
     }
 
     /**
