@@ -156,8 +156,8 @@ public class StorableObject {
      */
     protected StorableObject(String id, String type) {
         this.dict = new Dict();
-        this.dict.add(KEY_ID, id);
-        this.dict.add(KEY_TYPE, type);
+        this.dict.set(KEY_ID, id);
+        this.dict.set(KEY_TYPE, type);
     }
 
     /**
@@ -178,10 +178,11 @@ public class StorableObject {
      * @see #init()
      */
     protected StorableObject(String id, String type, Dict dict) {
-        this.dict = new Dict(dict.size() + 2);
-        this.dict.add(KEY_ID, id);
-        this.dict.add(KEY_TYPE, type);
+        this.dict = new Dict();
+        this.dict.set(KEY_ID, id);
+        this.dict.set(KEY_TYPE, type);
         this.dict.setAll(dict);
+        this.dict.set(KEY_ID, id);  // Overwrite dict value (if set)
     }
 
     /**
