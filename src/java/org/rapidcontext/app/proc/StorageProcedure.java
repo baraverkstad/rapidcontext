@@ -16,6 +16,7 @@ package org.rapidcontext.app.proc;
 
 import java.io.InputStream;
 import java.util.Base64;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -23,8 +24,6 @@ import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.proc.CallContext;
-import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.Query;
@@ -87,14 +86,8 @@ public abstract class StorageProcedure extends Procedure {
      * @param opts           the query options
      *
      * @return a stream of metadata for matching objects
-     *
-     * @throws ProcedureException if the user didn't have search permission
-     *     for the base query path
      */
-    protected Stream<Metadata> lookup(Storage storage, Path path, Dict opts)
-    throws ProcedureException {
-
-        CallContext.checkSearchAccess(path.toString());
+    protected Stream<Metadata> lookup(Storage storage, Path path, Dict opts) {
         Query query = storage.query(path).filterReadAccess();
         if (opts.containsKey("depth")) {
             query.filterDepth(opts.getInt("depth", -1));

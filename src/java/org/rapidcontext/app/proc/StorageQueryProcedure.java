@@ -64,10 +64,19 @@ public class StorageQueryProcedure extends StorageProcedure {
 
         Dict opts = options("path", bindings.getValue("path"));
         Path path = Path.from(opts.getString("path", "/"));
+        if (path.isIndex()) {
+            CallContext.checkSearchAccess(path.toString());
+        } else {
+            CallContext.checkAccess(path.toString(), cx.readPermission(1));
+        }
         boolean computed = opts.getBoolean("computed", false);
         Stream<Metadata> stream = lookup(cx.getStorage(), path, opts);
-        Array res = new Array();
-        stream.forEach(m -> res.add(serialize(m, computed)));
-        return res;
+        if (path.isIndex()) {
+            Array res = new Array();
+            stream.forEach(m -> res.add(serialize(m, computed)));
+            return res;
+        } else {
+            return serialize(stream.findFirst().orElse(null), computed);
+        }
     }
 }
