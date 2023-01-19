@@ -3,6 +3,7 @@ type: type
 description: >-
     A client-side JavaScript app manifest (configuration). The app lists
     the resources required for launch along with some meta-data.
+remote: true
 property:
   - name: name
     description: >-

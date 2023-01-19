@@ -57,6 +57,11 @@ public class Type extends StorableObject {
     public static final String KEY_DESCRIPTION = "description";
 
     /**
+     * The dictionary key for the remote-only flag.
+     */
+    public static final String KEY_REMOTE = "remote";
+
+    /**
      * The dictionary key for the initializer class name.
      */
     public static final String KEY_INITIALIZER = "initializer";
@@ -126,15 +131,14 @@ public class Type extends StorableObject {
         String typeId = dict.getString(KEY_TYPE, null);
         String className = dict.getString(KEY_CLASSNAME, null);
         Class<?> cls = null;
-        if (typeId == null) {
-            return null;
-        } else if (className != null) {
-            cls = loadClass(className, typeId + " " + dict.get(KEY_ID));
-        } else if (typeId.equals("type")) {
+        if (typeId != null && typeId.equals("type")) {
             cls = Type.class;
-        } else {
+        } else if (typeId != null) {
             Type type = find(storage, typeId);
-            if (type != null) {
+            boolean instantiable = type != null && !type.remote();
+            if (instantiable && className != null) {
+                cls = loadClass(className, typeId + " " + dict.get(KEY_ID));
+            } else if (instantiable) {
                 cls = type.initializer();
             }
         }
@@ -228,6 +232,17 @@ public class Type extends StorableObject {
      */
     public String description() {
         return dict.getString(KEY_DESCRIPTION, "");
+    }
+
+    /**
+     * Returns the remote-only flag. Remote objects are only initialized
+     * client-side, so no corresponding Java class exist.
+     *
+     * @return true if objects are remote-only, or
+     *         false otherwise (default)
+     */
+    public boolean remote() {
+        return dict.getBoolean(KEY_REMOTE, false);
     }
 
     /**
