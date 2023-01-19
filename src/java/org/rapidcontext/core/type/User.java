@@ -96,6 +96,23 @@ public class User extends StorableObject {
     public static final Path PATH = Path.from("/user/");
 
     /**
+     * The default user data (copied for new users).
+     */
+    private static final Dict DEFAULTS = new Dict();
+
+    static {
+        DEFAULTS.set(KEY_ID, "");
+        DEFAULTS.set(KEY_TYPE, "user");
+        DEFAULTS.set(KEY_NAME, "");
+        DEFAULTS.set(KEY_EMAIL, "");
+        DEFAULTS.set(KEY_DESCRIPTION, "");
+        DEFAULTS.setBoolean(KEY_ENABLED, true);
+        DEFAULTS.set(KEY_REALM, DEFAULT_REALM);
+        DEFAULTS.set(PREFIX_HIDDEN + KEY_PASSWORD, "");
+        DEFAULTS.set(KEY_ROLE, new Array());
+    }
+
+    /**
      * Searches for a specific user in the storage.
      *
      * @param storage        the storage to search in
@@ -140,10 +157,21 @@ public class User extends StorableObject {
             dict.set(KEY_NAME, dict.getString(KEY_DESCRIPTION, ""));
             dict.set(KEY_DESCRIPTION, "");
             Array list = new Array();
-            for (Object o : dict.getArray(User.KEY_ROLE)) {
+            for (Object o : dict.getArray(KEY_ROLE)) {
                 list.add(o.toString().toLowerCase());
             }
-            dict.set(User.KEY_ROLE, list);
+            dict.set(KEY_ROLE, list);
+        }
+        if (dict.containsKey(KEY_PASSWORD)) {
+            LOG.warning("deprecated: user " + id + " data: password not hidden");
+            String pwd = dict.getString(KEY_PASSWORD, "");
+            dict.remove(KEY_PASSWORD);
+            dict.set(PREFIX_HIDDEN + KEY_PASSWORD, pwd);
+        }
+        if (!dict.containsKey(KEY_EMAIL) || !dict.containsKey(KEY_ROLE)) {
+            Dict copy = DEFAULTS.copy();
+            copy.setAll(dict);
+            dict = copy;
         }
         return dict;
     }
@@ -195,12 +223,6 @@ public class User extends StorableObject {
      */
     public User(String id, String type, Dict dict) {
         super(id, type, normalize(id, dict));
-        dict.set(KEY_NAME, name());
-        dict.set(KEY_EMAIL, email());
-        dict.set(KEY_DESCRIPTION, description());
-        dict.setBoolean(KEY_ENABLED, isEnabled());
-        dict.set(KEY_REALM, realm());
-        dict.set(KEY_PASSWORD, passwordHash());
     }
 
     /**
@@ -210,13 +232,7 @@ public class User extends StorableObject {
      * @param id             the user identifier
      */
     public User(String id) {
-        super(id, "user");
-        dict.set(KEY_NAME, name());
-        dict.set(KEY_EMAIL, email());
-        dict.set(KEY_DESCRIPTION, description());
-        dict.setBoolean(KEY_ENABLED, isEnabled());
-        dict.set(KEY_REALM, realm());
-        dict.set(KEY_PASSWORD, passwordHash());
+        this(id, "user", DEFAULTS.copy());
     }
 
     /**
@@ -289,7 +305,10 @@ public class User extends StorableObject {
      * @param enabled        the enabled flag
      */
     public void setEnabled(boolean enabled) {
-        dict.setBoolean(KEY_ENABLED, enabled);
+        if (isEnabled() != enabled) {
+            dict.setBoolean(KEY_ENABLED, enabled);
+            dict.set(KEY_ACCREDITED_TIME, new Date());
+        }
     }
 
     /**
@@ -323,7 +342,7 @@ public class User extends StorableObject {
      * @see #verifyPasswordHash(String)
      */
     public String passwordHash() {
-        return dict.getString(KEY_PASSWORD, "");
+        return dict.getString(PREFIX_HIDDEN + KEY_PASSWORD, "");
     }
 
     /**
@@ -337,7 +356,7 @@ public class User extends StorableObject {
      * @see #setPassword(String)
      */
     public void setPasswordHash(String passwordHash) {
-        dict.set(KEY_PASSWORD, passwordHash.toLowerCase());
+        dict.set(PREFIX_HIDDEN + KEY_PASSWORD, passwordHash.toLowerCase());
         dict.set(KEY_ACCREDITED_TIME, new Date());
     }
 

@@ -21,6 +21,7 @@ import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.SecurityContext;
+import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.core.type.User;
@@ -74,7 +75,7 @@ public class UserSearchProcedure extends Procedure {
                 // TODO: Should really also compare with realm
                 if (user.email().equalsIgnoreCase(match)) {
                     if (SecurityContext.hasReadAccess(path.toString())) {
-                        return UserListProcedure.serialize(user);
+                        return StorableObject.sterilize(user, true, true, true);
                     } else {
                         Dict dict = new Dict();
                         dict.set(User.KEY_ID, user.id());

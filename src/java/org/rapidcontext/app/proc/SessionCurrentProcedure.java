@@ -22,6 +22,7 @@ import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.SecurityContext;
+import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.core.type.Session;
@@ -85,11 +86,7 @@ public class SessionCurrentProcedure extends Procedure {
         res.set("lastAccessDate", DateUtil.asDateTimeUTC(session.accessTime()));
         String userId = session.userId();
         User user = (userId == null) ? null : User.find(storage, userId);
-        if (user == null) {
-            res.set("user", null);
-        } else {
-            res.set("user", UserListProcedure.serialize(user));
-        }
+        res.set("user", StorableObject.sterilize(user, true, true, true));
         res.set("nonce", SecurityContext.nonce());
         Dict dict = new Dict();
         for (String id : session.files().keys()) {

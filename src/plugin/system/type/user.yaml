@@ -27,7 +27,7 @@ property:
         The user realm (or site) name. Included in the password hash and also
         required for HTTP Digest authentication. Defaults to "RapidContext".
     required: false
-  - name: password
+  - name: .password
     description: >-
         The MD5 hash of the user password. Created as "<id>:<realm>:<password>"
         to match HTTP digest authentication. A blank password will match any

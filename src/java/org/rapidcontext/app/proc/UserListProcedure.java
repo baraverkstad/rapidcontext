@@ -19,6 +19,7 @@ import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
+import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.core.type.User;
@@ -69,24 +70,8 @@ public class UserListProcedure extends Procedure {
         storage.query(User.PATH)
             .filterReadAccess()
             .objects(User.class)
-            .forEach(user -> res.add(serialize(user)));
+            .forEach(user -> res.add(StorableObject.sterilize(user, true, true, true)));
         res.sort("id");
         return res;
-    }
-
-    /**
-     * Serializes a user object to a dictionary.
-     *
-     * @param user           the user to serialize
-     *
-     * @return the serialized dictionary for the user
-     */
-    public static Dict serialize(User user) {
-        Dict dict = user.serialize();
-        dict.remove("password");
-        if (!dict.containsKey("role")) {
-            dict.set("role", new Array(0));
-        }
-        return dict;
     }
 }
