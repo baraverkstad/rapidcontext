@@ -14,23 +14,14 @@
 
 package org.rapidcontext.app.proc;
 
-import java.io.InputStream;
-import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.stream.Stream;
 
-import org.rapidcontext.app.ApplicationContext;
-import org.rapidcontext.core.data.Binary;
+import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.storage.Path;
-import org.rapidcontext.core.storage.StorableObject;
-import org.rapidcontext.core.storage.Storage;
-import org.rapidcontext.core.type.Procedure;
-import org.rapidcontext.core.web.Mime;
-import org.rapidcontext.util.FileUtil;
 
 /**
  * The built-in storage read procedure.
@@ -38,13 +29,7 @@ import org.rapidcontext.util.FileUtil;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class StorageReadProcedure extends Procedure {
-
-    /**
-     * The class logger.
-     */
-    private static final Logger LOG =
-        Logger.getLogger(StorageReadProcedure.class.getName());
+public class StorageReadProcedure extends StorageProcedure {
 
     /**
      * Creates a new procedure from a serialized representation.
@@ -76,53 +61,20 @@ public class StorageReadProcedure extends Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        String path = ((String) bindings.getValue("path", "")).trim();
-        if (path.length() <= 0) {
-            throw new ProcedureException(this, "path cannot be empty");
-        } else if (path.endsWith("/")) {
-            throw new ProcedureException(this, "path cannot be an index");
-        }
-        CallContext.checkAccess(path, cx.readPermission(1));
-        Storage storage = ApplicationContext.getInstance().getStorage();
-        Path loadPath = Path.from(path);
-        return serialize(loadPath, storage.load(loadPath));
-    }
-
-    /**
-     * Returns a serialized representation of a storage object.
-     *
-     * @param path           the storage object path
-     * @param obj            the storage object
-     *
-     * @return the serialized representation of the object, or
-     *         null if no suitable serialization existed
-     */
-    public static Dict serialize(Path path, Object obj) {
-        if (obj instanceof Binary) {
-
-            Binary data = (Binary) obj;
-            Dict dict = new Dict();
-            dict.set("type", "file");
-            dict.set("name", path.name());
-            dict.set("mimeType", data.mimeType());
-            dict.set("lastModified", new Date(data.lastModified()));
-            dict.set("size", Long.valueOf(data.size()));
-            if (Mime.isText(data.mimeType())) {
-                try (InputStream is = data.openStream()) {
-                    dict.set("text", FileUtil.readText(is, "UTF-8"));
-                } catch (Exception e) {
-                    String msg = "invalid data read: " + e.getMessage();
-                    LOG.log(Level.WARNING, msg, e);
-                }
-            }
-            return dict;
-        } else if (obj instanceof StorableObject) {
-            // TODO: remove or obfuscate passwords?
-            return ((StorableObject) obj).serialize();
-        } else if (obj instanceof Dict) {
-            return (Dict) obj;
+        Dict opts = options("path", bindings.getValue("path"));
+        Path path = Path.from(opts.getString("path", "/"));
+        if (path.isIndex()) {
+            CallContext.checkSearchAccess(path.toString());
         } else {
-            return null;
+            CallContext.checkAccess(path.toString(), cx.readPermission(1));
+        }
+        Stream<Object> stream = load(cx.getStorage(), path, opts);
+        if (path.isIndex()) {
+            Array res = new Array();
+            stream.forEach(o -> res.add(o));
+            return res;
+        } else {
+            return stream.findFirst().orElse(null);
         }
     }
 }

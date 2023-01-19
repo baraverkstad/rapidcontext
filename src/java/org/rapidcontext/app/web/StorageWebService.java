@@ -380,8 +380,9 @@ public class StorageWebService extends WebService {
         Dict dict = new Dict();
         dict.set("type", "file");
         dict.set("path", path);
+        dict.set("name", path.name());
         dict.set("mimeType", data.mimeType());
-        dict.set("lastModified", new Date(data.lastModified()));
+        dict.set("modified", new Date(data.lastModified()));
         dict.set("size", Long.valueOf(data.size()));
         return dict;
     }

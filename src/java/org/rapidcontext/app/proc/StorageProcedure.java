@@ -16,6 +16,7 @@ package org.rapidcontext.app.proc;
 
 import java.io.InputStream;
 import java.util.Base64;
+import java.util.Date;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -109,32 +110,73 @@ public abstract class StorageProcedure extends Procedure {
             });
         }
         int limit = opts.getInt("limit", 1000);
-        return stream.limit(limit);
+        if (limit > 0) {
+            stream = stream.limit(limit);
+        }
+        return stream;
+    }
+
+    /**
+     * Load objects from storage and serializes the results.
+     *
+     * @param storage        the storage to search
+     * @param path           the base path to query
+     * @param opts           the query options
+     *
+     * @return a stream of serialized matching objects
+     */
+    protected Stream<Object> load(Storage storage, Path path, Dict opts) {
+        boolean computed = opts.getBoolean("computed", false);
+        boolean metadata = opts.getBoolean("metadata", false);
+        return lookup(storage, path, opts)
+            .map(m -> {
+                Object o = serialize(m.path(), storage.load(m.path()), computed);
+                if (metadata) {
+                    Dict res = new Dict();
+                    res.add("data", o);
+                    res.add("metadata", serialize(m.path(), m, computed));
+                    return res;
+                } else {
+                    return o;
+                }
+            })
+            .filter(Objects::nonNull);
     }
 
     /**
      * Returns a serialized representation of a storage object.
      *
+     * @param path           the storage path
      * @param obj            the storage object
      * @param computed       the flag for computed key inclusion
      *
      * @return the serialized representation of the object, or
      *         null if no suitable serialization existed
      */
-    protected Object serialize(Object obj, boolean computed) {
+    protected Object serialize(Path path, Object obj, boolean computed) {
         if (obj instanceof Binary) {
             Binary data = (Binary) obj;
-            try (InputStream is = data.openStream()) {
-                if (Mime.isText(data.mimeType())) {
-                    return FileUtil.readText(is, "UTF-8");
-                } else {
-                    return Base64.getEncoder().encodeToString(is.readAllBytes());
+            Dict dict = new Dict();
+            dict.set("type", "file");
+            dict.set("path", path);
+            dict.set("name", path.name());
+            dict.set("mimeType", data.mimeType());
+            dict.set("modified", new Date(data.lastModified()));
+            dict.set("size", Long.valueOf(data.size()));
+            if (computed) {
+                try (InputStream is = data.openStream()) {
+                    if (Mime.isText(data.mimeType())) {
+                        dict.set("_text", FileUtil.readText(is, "UTF-8"));
+                    } else {
+                        dict.set("_data", Base64.getEncoder().encodeToString(is.readAllBytes()));
+                    }
+                } catch (Exception e) {
+                    String msg = "invalid data read: " + e.getMessage();
+                    LOG.log(Level.WARNING, msg, e);
+                    dict.set("_error", msg);
                 }
-            } catch (Exception e) {
-                String msg = "invalid data read: " + e.getMessage();
-                LOG.log(Level.WARNING, msg, e);
-                return null;
             }
+            return dict;
         } else if (obj instanceof StorableObject) {
             return StorableObject.sterilize(obj, true, !computed, true);
         } else if (obj instanceof Dict) {

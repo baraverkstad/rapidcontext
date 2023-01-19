@@ -2,8 +2,16 @@ id: system/storage/read
 type: procedure
 alias: System.Storage.Read
 className: org.rapidcontext.app.proc.StorageReadProcedure
-description: Reads an object from storage.
+description: Reads one or more objects from storage.
 binding:
   - name: path
     type: argument
-    description: The object path to read
+    description: "The object path or a query options object. Available options:\n\
+        \u2022 path \u2014 base search path (default is /)\n\
+        \u2022 limit \u2014 maximum number of results (default is 1000)\n\
+        \u2022 depth \u2014 maximum folder depth (default is unlimited)\n\
+        \u2022 fileType \u2014 file type to match (i.e. extension)\n\
+        \u2022 mimeType \u2014 MIME type to match\n\
+        \u2022 category \u2014 object category to match\n\
+        \u2022 computed \u2014 include computed properties in result\n\
+        \u2022 metadata \u2014 include metadata in result"

@@ -14,15 +14,12 @@
 
 package org.rapidcontext.app.proc;
 
-import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.storage.Path;
-import org.rapidcontext.core.storage.Storage;
-import org.rapidcontext.core.type.Procedure;
 
 /**
  * The built-in storage list procedure.
@@ -30,7 +27,7 @@ import org.rapidcontext.core.type.Procedure;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class StorageListProcedure extends Procedure {
+public class StorageListProcedure extends StorageProcedure {
 
     /**
      * Creates a new procedure from a serialized representation.
@@ -62,25 +59,18 @@ public class StorageListProcedure extends Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        String search = ((String) bindings.getValue("path", "")).trim();
-        if (search.length() <= 0) {
+        String str = ((String) bindings.getValue("path", "")).trim();
+        Path path = Path.from(str);
+        if (str.isEmpty()) {
             throw new ProcedureException(this, "path cannot be empty");
-        } else if (!search.endsWith("/")) {
+        } else if (!path.isIndex()) {
             throw new ProcedureException(this, "path must be an index");
         }
-        CallContext.checkSearchAccess(search);
-        Storage storage = ApplicationContext.getInstance().getStorage();
+        CallContext.checkSearchAccess(path.toString());
+        Dict opts = new Dict();
+        opts.setInt("limit", -1);
         Array res = new Array();
-        storage.query(Path.from(search))
-            .filterReadAccess()
-            .paths()
-            .forEach(path -> {
-                Object o = storage.load(path);
-                Dict dict = StorageReadProcedure.serialize(path, o);
-                if (dict != null) {
-                    res.add(dict);
-                }
-            });
+        load(cx.getStorage(), path, opts).forEach(o -> res.add(o));
         return res;
     }
 }

@@ -21,7 +21,6 @@ import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 
 /**
@@ -70,13 +69,14 @@ public class StorageQueryProcedure extends StorageProcedure {
             CallContext.checkAccess(path.toString(), cx.readPermission(1));
         }
         boolean computed = opts.getBoolean("computed", false);
-        Stream<Metadata> stream = lookup(cx.getStorage(), path, opts);
+        Stream<Object> stream = lookup(cx.getStorage(), path, opts)
+            .map(m -> serialize(m.path(), m, computed));
         if (path.isIndex()) {
             Array res = new Array();
-            stream.forEach(m -> res.add(serialize(m, computed)));
+            stream.forEach(o -> res.add(o));
             return res;
         } else {
-            return serialize(stream.findFirst().orElse(null), computed);
+            return stream.findFirst().orElse(null);
         }
     }
 }
