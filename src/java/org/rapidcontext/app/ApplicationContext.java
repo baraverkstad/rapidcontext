@@ -24,6 +24,7 @@ import java.util.UUID;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.time.DateUtils;
+import org.rapidcontext.app.model.AppStorage;
 import org.rapidcontext.app.plugin.PluginException;
 import org.rapidcontext.app.plugin.PluginManager;
 import org.rapidcontext.core.data.Array;
@@ -91,7 +92,7 @@ public class ApplicationContext {
     /**
      * The application root storage.
      */
-    private ApplicationStorage storage;
+    private AppStorage storage;
 
     /**
      * The plug-in manager.
@@ -188,7 +189,7 @@ public class ApplicationContext {
         File builtinDir = FileUtil.canonical(new File(baseDir, "plugin"));
         File pluginDir = FileUtil.canonical(new File(localDir, "plugin"));
         initTmpDir(FileUtil.canonical(new File(localDir, "tmp")));
-        this.storage = new ApplicationStorage();
+        this.storage = new AppStorage();
         this.pluginManager = new PluginManager(builtinDir, pluginDir, this.storage);
         this.library = new Library(this.storage);
         this.config = (Dict) this.storage.load(PATH_CONFIG);

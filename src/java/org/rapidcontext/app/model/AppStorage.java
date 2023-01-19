@@ -12,7 +12,7 @@
  * See the RapidContext LICENSE for more details.
  */
 
-package org.rapidcontext.app;
+package org.rapidcontext.app.model;
 
 import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Metadata;
@@ -23,13 +23,13 @@ import org.rapidcontext.core.type.Session;
 import org.rapidcontext.core.type.User;
 
 /**
- * The application root storage. This overlays a number of storage aliases to
- * fetch current session and user.
+ * The application root storage. This overlays some storage aliases
+ * and performs additional path validation.
  *
  * @author   Per Cederberg
  * @version  1.0
  */
-public class ApplicationStorage extends RootStorage {
+public class AppStorage extends RootStorage {
 
     /**
      * The current session path.
@@ -44,7 +44,7 @@ public class ApplicationStorage extends RootStorage {
     /**
      * Creates a new application storage.
      */
-    public ApplicationStorage() {
+    public AppStorage() {
         super(true);
     }
 
