@@ -62,9 +62,7 @@ public class ApiUtil {
         if (value instanceof Dict) {
             return (Dict) value;
         } else {
-            Dict dict = new Dict();
-            dict.add(defaultKey, value);
-            return dict;
+            return new Dict().set(defaultKey, value);
         }
     }
 
@@ -151,6 +149,37 @@ public class ApiUtil {
     }
 
     /**
+     * Updates an existing data object in the storage. The object must
+     * be serializable to a dictionary, which will be merged by the
+     * provided changes. Omitted keys will be left unmodified, and keys
+     * with a null value will be removed. Other keys will be replaced.
+     *
+     * @param storage        the storage to modify
+     * @param path           the storage path
+     * @param data           the data object updates
+     *
+     * @return true if the data was successfully written, or
+     *         false otherwise
+     */
+    public static boolean update(Storage storage, Path path, Dict data) {
+        try {
+            LOG.fine("updating storage path " + path);
+            Object prev = StorableObject.sterilize(storage.load(path), false, true, false);
+            Dict dict = (prev instanceof Dict) ? (Dict) prev : null;
+            if (dict == null) {
+                LOG.log(Level.WARNING, "failed to update " + path + ": not a dictionary");
+                return false;
+            } else {
+                storage.store(path, dict.merge(data));
+                return true;
+            }
+        } catch (Exception e) {
+            LOG.log(Level.WARNING, "failed to update " + path, e);
+            return false;
+        }
+    }
+
+    /**
      * Deletes a storage object or path.
      *
      * @param storage        the storage to modify
@@ -186,8 +215,8 @@ public class ApiUtil {
                                    boolean skipComputed,
                                    boolean limitedTypes) {
         Dict res = new Dict();
-        res.add("data", serialize(meta.path(), obj, skipComputed, limitedTypes));
-        res.add("metadata", serialize(meta.path(), meta, skipComputed, limitedTypes));
+        res.set("data", serialize(meta.path(), obj, skipComputed, limitedTypes));
+        res.set("metadata", serialize(meta.path(), meta, skipComputed, limitedTypes));
         return res;
     }
 

@@ -38,7 +38,6 @@ import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.RootStorage;
-import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.type.WebService;
 import org.rapidcontext.core.web.Mime;
@@ -170,43 +169,32 @@ public class StorageWebService extends WebService {
      * @param request        the request to process
      */
     protected void doPatch(Request request) {
-        if (!SecurityContext.hasWriteAccess(request.getPath())) {
+        Path path = Path.from(request.getPath());
+        if (!SecurityContext.hasWriteAccess(path.toString())) {
             errorUnauthorized(request);
-            return;
-        } else if (request.getPath().endsWith("/")) {
-            errorBadRequest(request, "cannot write data to folder");
-            return;
+        } else if (path.isIndex()) {
+            errorBadRequest(request, "cannot write data to a directory");
         } else if (!Mime.isInputMatch(request, Mime.JSON)) {
             String msg = "application/json content type required";
             request.sendError(STATUS.UNSUPPORTED_MEDIA_TYPE, null, msg);
-            return;
-        }
-        try {
-            Object data = JsonSerializer.unserialize(request.getInputString());
-            Path path = Path.from(request.getPath());
-            Storage storage = ApplicationContext.getInstance().getStorage();
-            Object prev = storage.load(path);
-            if (prev instanceof StorableObject) {
-                prev = StorableObject.sterilize(prev, false, true, false);
+        } else {
+            try {
+                Storage storage = ApplicationContext.getInstance().getStorage();
+                Object data = JsonSerializer.unserialize(request.getInputString());
+                if (!(data instanceof Dict)) {
+                    String msg = "patch data should be JSON object";
+                    request.sendError(STATUS.NOT_ACCEPTABLE, null, msg);
+                } else if (ApiUtil.update(storage, path, (Dict) data)) {
+                    Object o = ApiUtil.load(storage, path, new Dict()).findFirst().orElse(null);
+                    request.sendText(Mime.JSON[0], JsonSerializer.serialize(o, true));
+                } else {
+                    errorBadRequest(request, "failed to patch " + path);
+                }
+            } catch (Exception e) {
+                String msg = "failed to patch " + path + ": " + e.getMessage();
+                LOG.log(Level.WARNING, msg, e);
+                errorBadRequest(request, msg);
             }
-            Dict dict = (prev instanceof Dict) ? (Dict) prev : null;
-            if (prev == null) {
-                errorNotFound(request);
-            } else if (dict == null){
-                String msg = "resource is not object";
-                request.sendError(STATUS.BAD_REQUEST, null, msg);
-            } else if (!(data instanceof Dict)) {
-                String msg = "patch data should be JSON object";
-                request.sendError(STATUS.NOT_ACCEPTABLE, null, msg);
-            } else {
-                dict.setAll((Dict) data);
-                storage.store(path, dict);
-                request.sendText(Mime.JSON[0], JsonSerializer.serialize(dict, true));
-            }
-        } catch (Exception e) {
-            String msg = "failed to write " + request.getPath() + ": " + e.getMessage();
-            LOG.log(Level.WARNING, msg, e);
-            errorBadRequest(request, msg);
         }
     }
 
@@ -231,7 +219,7 @@ public class StorageWebService extends WebService {
                 if (ApiUtil.store(storage, path, data)) {
                     request.sendText(STATUS.NO_CONTENT, null, null);
                 } else {
-                    errorInternal(request, "failed to write " + path);
+                    errorBadRequest(request, "failed to write " + path);
                 }
             } catch (Exception e) {
                 String msg = "failed to write " + path + ": " + e.getMessage();
@@ -253,7 +241,7 @@ public class StorageWebService extends WebService {
         } else if (request.getHeader(HEADER.CONTENT_RANGE) != null) {
             request.sendError(STATUS.NOT_IMPLEMENTED);
         } else if (path.isIndex()) {
-            errorBadRequest(request, "cannot store data in a directory");
+            errorBadRequest(request, "cannot write data to a directory");
         } else {
             try (InputStream is = request.getInputStream()) {
                 Storage storage = ApplicationContext.getInstance().getStorage();
@@ -261,12 +249,12 @@ public class StorageWebService extends WebService {
                 if (ApiUtil.store(storage, path, data)) {
                     request.sendText(STATUS.NO_CONTENT, null, null);
                 } else {
-                    errorInternal(request, "failed to write " + path);
+                    errorBadRequest(request, "failed to write " + path);
                 }
-            } catch (IOException e) {
+            } catch (Exception e) {
                 String msg = "failed to write " + path + ": " + e.getMessage();
                 LOG.log(Level.WARNING, msg, e);
-                errorInternal(request, msg);
+                errorBadRequest(request, msg);
             }
         }
     }
@@ -284,7 +272,7 @@ public class StorageWebService extends WebService {
         } else if (ApiUtil.delete(storage, path)) {
             request.sendText(STATUS.NO_CONTENT, null, null);
         } else {
-            errorInternal(request, "failed to delete " + path);
+            errorBadRequest(request, "failed to delete " + path);
         }
     }
 
