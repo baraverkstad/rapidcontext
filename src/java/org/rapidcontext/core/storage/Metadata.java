@@ -68,7 +68,7 @@ public class Metadata extends StorableObject {
      * The dictionary key for the last modified date. The value stored
      * is a Date object.
      */
-    public static final String KEY_MODIFIED = "lastModified";
+    public static final String KEY_MODIFIED = "modified";
 
     /**
      * The index category value.
@@ -152,8 +152,8 @@ public class Metadata extends StorableObject {
         super(meta1.id(), "metadata");
         dict.setAll(meta1.dict);
         dict.set(PREFIX_COMPUTED + KEY_STORAGES, meta1.storages().union(meta2.storages()));
-        if (isIndex() && meta2.lastModified().after(meta1.lastModified())) {
-            dict.set(KEY_MODIFIED, meta2.lastModified());
+        if (isIndex() && meta2.modified().after(meta1.modified())) {
+            dict.set(KEY_MODIFIED, meta2.modified());
         }
     }
 
@@ -298,7 +298,7 @@ public class Metadata extends StorableObject {
      *
      * @return the last modified date for the object
      */
-    public Date lastModified() {
+    public Date modified() {
         return (Date) dict.get(KEY_MODIFIED);
     }
 

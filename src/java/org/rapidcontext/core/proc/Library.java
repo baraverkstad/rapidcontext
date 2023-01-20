@@ -247,7 +247,7 @@ public class Library {
         } else if (meta == null) {
             throw new ProcedureException("no procedure '" + name + "' found");
         }
-        if (proc == null || meta.lastModified().after(proc.getLastModified())) {
+        if (proc == null || meta.modified().after(proc.getLastModified())) {
             return loadProcedure(name);
         } else {
             return proc;

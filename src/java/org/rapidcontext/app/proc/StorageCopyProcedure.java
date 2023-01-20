@@ -153,8 +153,8 @@ public class StorageCopyProcedure extends Procedure {
         if (update) {
             Metadata srcMeta = storage.lookup(src);
             Metadata dstMeta = storage.lookup(dst);
-            Date srcTime = (srcMeta == null) ? new Date(0) : srcMeta.lastModified();
-            Date dstTime = (dstMeta == null) ? new Date(0) : dstMeta.lastModified();
+            Date srcTime = (srcMeta == null) ? new Date(0) : srcMeta.modified();
+            Date dstTime = (dstMeta == null) ? new Date(0) : dstMeta.modified();
             if (!dstTime.before(srcTime)) {
                 return false;
             }
