@@ -24,6 +24,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
+import org.rapidcontext.app.model.AppStorage;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.storage.DirStorage;
@@ -31,7 +32,6 @@ import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.storage.StorageException;
-import org.rapidcontext.core.storage.RootStorage;
 import org.rapidcontext.core.storage.ZipStorage;
 import org.rapidcontext.core.type.Type;
 import org.rapidcontext.util.FileUtil;
@@ -55,13 +55,13 @@ public class PluginManager {
      * The storage path to the mounted plug-in file storages.
      */
     public static final Path PATH_STORAGE_PLUGIN =
-        RootStorage.PATH_STORAGE.child("plugin", true);
+        AppStorage.PATH_STORAGE.child("plugin", true);
 
     /**
      * The storage path to the plug-in cache storages.
      */
     public static final Path PATH_STORAGE_CACHE =
-        RootStorage.PATH_STORAGE.child("cache", true);
+        AppStorage.PATH_STORAGE.child("cache", true);
 
     /**
      * The platform information path.
@@ -93,7 +93,7 @@ public class PluginManager {
     /**
      * The storage to use when loading and unloading plug-ins.
      */
-    public RootStorage storage;
+    public AppStorage storage;
 
     /**
      * The platform information dictionary.
@@ -160,10 +160,19 @@ public class PluginManager {
      * @param pluginDir      the base plug-in directory
      * @param storage        the storage to use for plug-ins
      */
-    public PluginManager(File builtinDir, File pluginDir, RootStorage storage) {
+    public PluginManager(File builtinDir, File pluginDir, AppStorage storage) {
         this.builtinDir = builtinDir;
         this.pluginDir = pluginDir;
         this.storage = storage;
+        if (!builtinDir.equals(pluginDir)) {
+            File builtinLocal = new File(builtinDir, LOCAL_PLUGIN);
+            File pluginLocal = new File(pluginDir, LOCAL_PLUGIN);
+            try {
+                FileUtil.copy(builtinLocal, pluginLocal);
+            } catch (IOException e) {
+                LOG.log(Level.WARNING, "failed to copy " + builtinLocal + " files", e);
+            }
+        }
         try {
             createStorage(SYSTEM_PLUGIN);
             loadOverlay(SYSTEM_PLUGIN);
@@ -512,7 +521,7 @@ public class PluginManager {
      * @param pluginId       the unique plug-in id
      */
     private void loadJarFiles(String pluginId) {
-        Path path = Path.resolve(storagePath(pluginId), RootStorage.PATH_LIB);
+        Path path = Path.resolve(storagePath(pluginId), AppStorage.PATH_LIB);
         storage.query(path)
             .filterFileExtension(".jar")
             .metadatas()
