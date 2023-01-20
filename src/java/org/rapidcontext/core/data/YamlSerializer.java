@@ -197,7 +197,7 @@ public class YamlSerializer {
     private static Dict fromYaml(Map<Object, Object> map) {
         Dict dict = new Dict(map.size());
         for (var entry : map.entrySet()) {
-            dict.add(Objects.toString(entry.getKey()), fromYaml(entry.getValue()));
+            dict.set(Objects.toString(entry.getKey()), fromYaml(entry.getValue()));
         }
         return dict;
     }

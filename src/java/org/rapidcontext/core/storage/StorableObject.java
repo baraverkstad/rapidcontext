@@ -129,7 +129,7 @@ public class StorableObject {
                     (skipComputed && k.startsWith(PREFIX_COMPUTED))
                 );
                 if (!skip) {
-                    dst.add(k, sterilize(src.get(k), skipHidden, skipComputed, limitedTypes));
+                    dst.set(k, sterilize(src.get(k), skipHidden, skipComputed, limitedTypes));
                 };
             }
             return dst;

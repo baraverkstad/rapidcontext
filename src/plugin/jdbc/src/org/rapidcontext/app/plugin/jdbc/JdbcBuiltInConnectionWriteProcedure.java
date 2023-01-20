@@ -97,7 +97,7 @@ public class JdbcBuiltInConnectionWriteProcedure extends Procedure {
                 }
                 data.remove(name);
             }
-            res.addAll(data);
+            res.setAll(data);
             try {
                 storage.store(path, createConnection(id, type.id(), res));
             } catch (StorageException e) {

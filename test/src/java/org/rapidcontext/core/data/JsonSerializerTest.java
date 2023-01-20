@@ -55,18 +55,16 @@ public class JsonSerializerTest {
 
     private Dict buildDict() {
         Dict root = new Dict();
-        root.add("id", "jsondata");
-        root.add("a", "abc\u00E5\u00E4\u00F6");
-        root.addInt("b", 2);
-        root.addBoolean("c", false);
-        root.add("d", new Date(0));
-        Dict dict = new Dict();
-        dict.add("key", "value");
-        root.add("object", dict);
+        root.set("id", "jsondata");
+        root.set("a", "abc\u00E5\u00E4\u00F6");
+        root.setInt("b", 2);
+        root.setBoolean("c", false);
+        root.set("d", new Date(0));
+        root.set("object", new Dict().set("key", "value"));
         Array arr = new Array();
         arr.add("item 1");
         arr.add("item 2");
-        root.add("array", arr);
+        root.set("array", arr);
         return root;
     }
 }

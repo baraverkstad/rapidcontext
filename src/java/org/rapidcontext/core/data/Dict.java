@@ -445,12 +445,14 @@ public class Dict {
      * @param key            the dictionary key name
      * @param value          the value to set
      *
+     * @return this dictionary for chained operations
+     *
      * @throws NullPointerException if the key is null or an empty
      *             string
      * @throws UnsupportedOperationException if this object has been
      *             sealed
      */
-    public void set(String key, Object value)
+    public Dict set(String key, Object value)
         throws NullPointerException, UnsupportedOperationException {
 
         if (sealed) {
@@ -465,6 +467,7 @@ public class Dict {
             map = new LinkedHashMap<>();
         }
         map.put(key, value);
+        return this;
     }
 
     /**
@@ -474,15 +477,17 @@ public class Dict {
      * @param key            the dictionary key name
      * @param value          the value to set
      *
+     * @return this dictionary for chained operations
+     *
      * @throws NullPointerException if the key is null or an empty
      *             string
      * @throws UnsupportedOperationException if this object has been
      *             sealed
      */
-    public void setBoolean(String key, boolean value)
+    public Dict setBoolean(String key, boolean value)
         throws NullPointerException, UnsupportedOperationException {
 
-        set(key, Boolean.valueOf(value));
+        return set(key, Boolean.valueOf(value));
     }
 
     /**
@@ -492,15 +497,17 @@ public class Dict {
      * @param key            the dictionary key name
      * @param value          the value to set
      *
+     * @return this dictionary for chained operations
+     *
      * @throws NullPointerException if the key is null or an empty
      *             string
      * @throws UnsupportedOperationException if this object has been
      *             sealed
      */
-    public void setInt(String key, int value)
+    public Dict setInt(String key, int value)
         throws NullPointerException, UnsupportedOperationException {
 
-        set(key, Integer.valueOf(value));
+        return set(key, Integer.valueOf(value));
     }
 
     /**
@@ -510,15 +517,18 @@ public class Dict {
      *
      * @param dict           the dictionary to copy from
      *
+     * @return this dictionary for chained operations
+     *
      * @throws UnsupportedOperationException if this object has been
      *             sealed
      */
-    public void setAll(Dict dict) {
+    public Dict setAll(Dict dict) {
         if (dict != null && dict.size() > 0) {
             for (String key : dict.map.keySet()) {
                 set(key, dict.map.get(key));
             }
         }
+        return this;
     }
 
     /**
@@ -530,12 +540,12 @@ public class Dict {
      * @param key            the suggested dictionary key name
      * @param value          the value to set
      *
-     * @return the dictionary key name used
+     * @return this dictionary for chained operations
      *
      * @throws UnsupportedOperationException if this object has been
      *             sealed
      */
-    public String add(String key, Object value)
+    public Dict add(String key, Object value)
         throws UnsupportedOperationException {
 
         String keyName = key;
@@ -545,66 +555,7 @@ public class Dict {
             keyName = key + "_" + attempt;
         }
         set(keyName, value);
-        return keyName;
-    }
-
-    /**
-     * Adds a boolean property value using the specified key if
-     * possible. If the key is already in use, a new unique key will
-     * be generated instead. This will ensure that an existing value
-     * will not be overwritten.
-     *
-     * @param key            the suggested dictionary key name
-     * @param value          the value to set
-     *
-     * @return the dictionary key name used
-     *
-     * @throws UnsupportedOperationException if this object has been
-     *             sealed
-     */
-    public String addBoolean(String key, boolean value)
-        throws UnsupportedOperationException {
-
-        return add(key, Boolean.valueOf(value));
-    }
-
-    /**
-     * Adds an integer property value using the specified key if
-     * possible. If the key is already in use, a new unique key will
-     * be generated instead. This will ensure that an existing value
-     * will not be overwritten.
-     *
-     * @param key            the suggested dictionary key name
-     * @param value          the value to set
-     *
-     * @return the dictionary key name used
-     *
-     * @throws UnsupportedOperationException if this object has been
-     *             sealed
-     */
-    public String addInt(String key, int value)
-        throws UnsupportedOperationException {
-
-        return add(key, Integer.valueOf(value));
-    }
-
-    /**
-     * Adds all key-value pairs from another dictionary to this one.
-     * If one of the keys are already in use, a new unique key will
-     * be generated instead. This will ensure that existing values
-     * will not be overwritten.
-     *
-     * @param dict           the dictionary to add from
-     *
-     * @throws UnsupportedOperationException if this object has been
-     *             sealed
-     */
-    public void addAll(Dict dict) {
-        if (dict != null && dict.size() > 0) {
-            for (String key : dict.map.keySet()) {
-                add(key, dict.map.get(key));
-            }
-        }
+        return this;
     }
 
     /**
@@ -612,10 +563,12 @@ public class Dict {
      *
      * @param key            the dictionary key name
      *
+     * @return this dictionary for chained operations
+     *
      * @throws UnsupportedOperationException if this object has been
      *             sealed
      */
-    public void remove(String key) throws UnsupportedOperationException {
+    public Dict remove(String key) throws UnsupportedOperationException {
         if (sealed) {
             String msg = "cannot modify sealed dictionary";
             throw new UnsupportedOperationException(msg);
@@ -623,5 +576,6 @@ public class Dict {
         if (map != null) {
             map.remove(key);
         }
+        return this;
     }
 }

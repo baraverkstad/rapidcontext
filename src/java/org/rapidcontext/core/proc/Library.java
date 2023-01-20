@@ -353,16 +353,16 @@ public class Library {
         try {
             if (Type.find(storage, type) != null) {
                 Dict dict = new Dict();
-                dict.add(Type.KEY_ID, id);
-                dict.add(Type.KEY_TYPE, type);
-                dict.addAll(data);
+                dict.set(Type.KEY_ID, id);
+                dict.set(Type.KEY_TYPE, type);
+                dict.setAll(data);
                 storage.store(Path.resolve(PATH_PROC, id + Storage.EXT_YAML), dict);
                 return loadProcedure(id);
             } else {
                 Dict dict = new Dict();
-                dict.add("name", id);
-                dict.add("type", type);
-                dict.addAll(data);
+                dict.set("name", id);
+                dict.set("type", type);
+                dict.setAll(data);
                 AddOnProcedure proc = createProcedure(dict);
                 cache.remove(proc.getName());
                 String objectName = proc.getName() + Storage.EXT_YAML;
