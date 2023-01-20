@@ -61,10 +61,7 @@ public class JsonSerializerTest {
         root.setBoolean("c", false);
         root.set("d", new Date(0));
         root.set("object", new Dict().set("key", "value"));
-        Array arr = new Array();
-        arr.add("item 1");
-        arr.add("item 2");
-        root.set("array", arr);
+        root.set("array", new Array().add("item 1").add("item 2"));
         return root;
     }
 }

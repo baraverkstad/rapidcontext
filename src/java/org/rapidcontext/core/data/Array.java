@@ -498,11 +498,13 @@ public class Array implements Iterable<Object> {
      * @param index          the array index
      * @param value          the array value
      *
+     * @return this array for chained operations
+     *
      * @throws IndexOutOfBoundsException if index is negative
      * @throws UnsupportedOperationException if this object has been
      *             sealed
      */
-    public void set(int index, Object value)
+    public Array set(int index, Object value)
         throws IndexOutOfBoundsException, UnsupportedOperationException {
 
         if (sealed) {
@@ -516,6 +518,7 @@ public class Array implements Iterable<Object> {
             list.add(null);
         }
         list.set(index, value);
+        return this;
     }
 
     /**
@@ -526,14 +529,16 @@ public class Array implements Iterable<Object> {
      * @param index          the array index
      * @param value          the array value
      *
+     * @return this array for chained operations
+     *
      * @throws IndexOutOfBoundsException if index is negative
      * @throws UnsupportedOperationException if this object has been
      *             sealed
      */
-    public void setBoolean(int index, boolean value)
+    public Array setBoolean(int index, boolean value)
         throws IndexOutOfBoundsException, UnsupportedOperationException {
 
-        set(index, Boolean.valueOf(value));
+        return set(index, Boolean.valueOf(value));
     }
 
     /**
@@ -544,14 +549,16 @@ public class Array implements Iterable<Object> {
      * @param index          the array index
      * @param value          the array value
      *
+     * @return this array for chained operations
+     *
      * @throws IndexOutOfBoundsException if index is negative
      * @throws UnsupportedOperationException if this object has been
      *             sealed
      */
-    public void setInt(int index, int value)
+    public Array setInt(int index, int value)
         throws IndexOutOfBoundsException, UnsupportedOperationException {
 
-        set(index, Integer.valueOf(value));
+        return set(index, Integer.valueOf(value));
     }
 
     /**
@@ -560,19 +567,19 @@ public class Array implements Iterable<Object> {
      *
      * @param value          the array value
      *
-     * @return the array index used (== the previous array size)
+     * @return this array for chained operations
      *
      * @throws UnsupportedOperationException if this object has been
      *             sealed
      */
-    public int add(Object value) throws UnsupportedOperationException {
+    public Array add(Object value) throws UnsupportedOperationException {
         int index = size();
         if (sealed) {
             String msg = "cannot modify sealed array";
             throw new UnsupportedOperationException(msg);
         }
         set(index, value);
-        return index;
+        return this;
     }
 
     /**
@@ -581,12 +588,12 @@ public class Array implements Iterable<Object> {
      *
      * @param value          the array value
      *
-     * @return the array index used (== the previous array size)
+     * @return this array for chained operations
      *
      * @throws UnsupportedOperationException if this object has been
      *             sealed
      */
-    public int addBoolean(boolean value)
+    public Array addBoolean(boolean value)
         throws UnsupportedOperationException {
 
         return add(Boolean.valueOf(value));
@@ -598,12 +605,12 @@ public class Array implements Iterable<Object> {
      *
      * @param value          the array value
      *
-     * @return the array index used (== the previous array size)
+     * @return this array for chained operations
      *
      * @throws UnsupportedOperationException if this object has been
      *             sealed
      */
-    public int addInt(int value) throws UnsupportedOperationException {
+    public Array addInt(int value) throws UnsupportedOperationException {
         return add(Integer.valueOf(value));
     }
 
@@ -612,10 +619,12 @@ public class Array implements Iterable<Object> {
      *
      * @param arr            the array to add elements from
      *
+     * @return this array for chained operations
+     *
      * @throws UnsupportedOperationException if this object has been
      *             sealed
      */
-    public void addAll(Array arr) {
+    public Array addAll(Array arr) {
         if (sealed) {
             String msg = "cannot modify sealed array";
             throw new UnsupportedOperationException(msg);
@@ -630,6 +639,7 @@ public class Array implements Iterable<Object> {
                 add(o);
             }
         }
+        return this;
     }
 
     /**
@@ -638,10 +648,12 @@ public class Array implements Iterable<Object> {
      *
      * @param index          the array index
      *
+     * @return this array for chained operations
+     *
      * @throws UnsupportedOperationException if this object has been
      *             sealed
      */
-    public void remove(int index) throws UnsupportedOperationException {
+    public Array remove(int index) throws UnsupportedOperationException {
         if (sealed) {
             String msg = "cannot modify sealed array";
             throw new UnsupportedOperationException(msg);
@@ -650,6 +662,7 @@ public class Array implements Iterable<Object> {
         if (containsIndex(index)) {
             list.remove(index);
         }
+        return this;
     }
 
     /**
@@ -658,14 +671,17 @@ public class Array implements Iterable<Object> {
      *
      * @param value          the array value
      *
+     * @return this array for chained operations
+     *
      * @throws UnsupportedOperationException if this object has been
      *             sealed
      */
-    public void remove(Object value) {
+    public Array remove(Object value) {
         int index = indexOf(value);
         if (index >= 0) {
             remove(index);
         }
+        return this;
     }
 
     /**
@@ -754,6 +770,8 @@ public class Array implements Iterable<Object> {
      * with each other, as the natural order of different data types
      * is undefined.
      *
+     * @return this array for chained operations
+     *
      * @throws UnsupportedOperationException if this object has been
      *             sealed
      * @throws ClassCastException if the array values are not
@@ -761,10 +779,10 @@ public class Array implements Iterable<Object> {
      *
      * @see #sort(String)
      */
-    public void sort()
+    public Array sort()
         throws UnsupportedOperationException, ClassCastException {
 
-        sort((Comparator<Object>) null);
+        return sort((Comparator<Object>) null);
     }
 
     /**
@@ -775,6 +793,8 @@ public class Array implements Iterable<Object> {
      *
      * @param key            the dictionary key name
      *
+     * @return this array for chained operations
+     *
      * @throws UnsupportedOperationException if this object has been
      *             sealed
      * @throws ClassCastException if the array values are not
@@ -782,10 +802,10 @@ public class Array implements Iterable<Object> {
      *
      * @see #sort()
      */
-    public void sort(String key)
+    public Array sort(String key)
         throws UnsupportedOperationException, ClassCastException {
 
-        sort(new DictComparator(key));
+        return sort(new DictComparator(key));
     }
 
     /**
@@ -794,12 +814,14 @@ public class Array implements Iterable<Object> {
      *
      * @param c              the object comparator to use
      *
+     * @return this array for chained operations
+     *
      * @throws UnsupportedOperationException if this object has been
      *             sealed
      * @throws ClassCastException if the array values were not
      *             comparable
      */
-    public void sort(Comparator<Object> c)
+    public Array sort(Comparator<Object> c)
         throws UnsupportedOperationException, ClassCastException {
 
         if (sealed) {
@@ -813,5 +835,6 @@ public class Array implements Iterable<Object> {
                 Collections.sort(list, c);
             }
         }
+        return this;
     }
 }
