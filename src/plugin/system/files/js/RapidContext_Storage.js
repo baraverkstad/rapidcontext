@@ -51,7 +51,8 @@
      * @memberof RapidContext.Storage
      */
     function path(obj) {
-        return (obj && obj.type && obj.id) ? obj.type + "/" + obj.id : null;
+        var type = obj && obj.type && obj.type.split("/")[0];
+        return (type && obj.id) ? type + "/" + obj.id : null;
     }
 
     /**
