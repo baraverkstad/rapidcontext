@@ -14,16 +14,12 @@
 
 package org.rapidcontext.app.proc;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.rapidcontext.app.ApplicationContext;
+import org.rapidcontext.app.model.ApiUtil;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.storage.Path;
-import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.type.Procedure;
 
 /**
@@ -33,12 +29,6 @@ import org.rapidcontext.core.type.Procedure;
  * @version  1.0
  */
 public class StorageDeleteProcedure extends Procedure {
-
-    /**
-     * The class logger.
-     */
-    private static final Logger LOG =
-        Logger.getLogger(StorageDeleteProcedure.class.getName());
 
     /**
      * Creates a new procedure from a serialized representation.
@@ -70,31 +60,12 @@ public class StorageDeleteProcedure extends Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        String path = ((String) bindings.getValue("path", "")).trim();
-        if (path.length() <= 0) {
+        String str = ((String) bindings.getValue("path", "")).trim();
+        Path path = Path.from(str);
+        if (str.isEmpty()) {
             throw new ProcedureException(this, "path cannot be empty");
         }
-        CallContext.checkWriteAccess(path);
-        return Boolean.valueOf(delete(Path.from(path)));
-    }
-
-    /**
-     * Deletes a storage object or path.
-     *
-     * @param path           the storage path to remove
-     *
-     * @return true if the data was successfully removed, or
-     *         false otherwise
-     */
-    public static boolean delete(Path path) {
-        Storage storage = ApplicationContext.getInstance().getStorage();
-        try {
-            LOG.fine("deleting storage path " + path);
-            storage.remove(path);
-            return true;
-        } catch (Exception e) {
-            LOG.log(Level.WARNING, "failed to delete " + path, e);
-            return false;
-        }
+        CallContext.checkWriteAccess(path.toString());
+        return ApiUtil.delete(cx.getStorage(), path);
     }
 }

@@ -27,7 +27,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.app.model.ApiUtil;
-import org.rapidcontext.app.proc.StorageDeleteProcedure;
 import org.rapidcontext.app.proc.StorageWriteProcedure;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Binary;
@@ -298,20 +297,16 @@ public class StorageWebService extends WebService {
      * @param request        the request to process
      */
     protected void doDelete(Request request) {
-        if (!SecurityContext.hasWriteAccess(request.getPath())) {
-            errorUnauthorized(request);
-            return;
-        }
+        Storage storage = ApplicationContext.getInstance().getStorage();
         Metadata meta = lookup(Path.from(request.getPath()));
         if (meta == null) {
             errorNotFound(request);
-            return;
-        }
-        if (StorageDeleteProcedure.delete(meta.path())) {
-            request.sendText(STATUS.NO_CONTENT, null, null);
+        } else  if (!SecurityContext.hasWriteAccess(meta.path().toString())) {
+            errorUnauthorized(request);
+        } else if (!ApiUtil.delete(storage, meta.path())) {
+            errorInternal(request, "failed to delete " + meta.path());
         } else {
-            String msg = "failed to delete " + request.getPath();
-            errorInternal(request, msg);
+            request.sendText(STATUS.NO_CONTENT, null, null);
         }
     }
 

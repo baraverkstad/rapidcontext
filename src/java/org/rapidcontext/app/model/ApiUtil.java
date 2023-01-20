@@ -130,6 +130,26 @@ public class ApiUtil {
     }
 
     /**
+     * Deletes a storage object or path.
+     *
+     * @param storage        the storage to modify
+     * @param path           the storage path to remove
+     *
+     * @return true if the data was successfully removed, or
+     *         false otherwise
+     */
+    public static boolean delete(Storage storage, Path path) {
+        try {
+            LOG.fine("deleting storage path " + path);
+            storage.remove(path);
+            return true;
+        } catch (Exception e) {
+            LOG.log(Level.WARNING, "failed to delete " + path, e);
+            return false;
+        }
+    }
+
+    /**
      * Returns a serialized representation of an object and its metadata.
      *
      * @param meta           the object metadata
