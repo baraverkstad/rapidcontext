@@ -66,19 +66,23 @@ public class StorageWriteProcedure extends Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        String str = ((String) bindings.getValue("path", "")).trim();
-        Path path = Path.from(str);
-        if (str.isEmpty()) {
-            throw new ProcedureException(this, "path cannot be empty");
+        Dict opts = ApiUtil.options("path", bindings.getValue("path"));
+        Path path = Path.from(opts.getString("path", "/"));
+        if (path.isIndex()) {
+            throw new ProcedureException(this, "cannot write to index: " + path);
         }
         CallContext.checkWriteAccess(path.toString());
+        boolean update = opts.getBoolean("update", false);
         Object data = bindings.getValue("data", "");
         boolean isString = data instanceof String;
-        boolean isStruct = data instanceof Dict || data instanceof Array;
+        boolean isDict = data instanceof Dict;
+        boolean isArray = data instanceof Array;
         boolean isBinary = data instanceof Binary || data instanceof File;
-        if (isString) {
+        if (update && !isDict) {
+            throw new ProcedureException(this, "update only supported for dictionary data");
+        } else if (isString) {
             data = new Binary.BinaryString((String) data);
-        } else if (!isString && !isStruct && !isBinary) {
+        } else if (!isString && !isDict && !isArray && !isBinary) {
             throw new ProcedureException(this, "input data type not supported");
         }
         boolean isObjectPath = !path.equals(Storage.objectPath(path));
@@ -86,7 +90,7 @@ public class StorageWriteProcedure extends Procedure {
         if (fmt.equals("")) {
             // Format is selected in storage layer
         } else if (fmt.equalsIgnoreCase("binary")) {
-            if (isStruct) {
+            if (!isString && !isBinary) {
                 throw new ProcedureException(this, "binary format requires binary data");
             }
         } else if (fmt.equalsIgnoreCase("properties") && !isObjectPath) {
@@ -103,6 +107,10 @@ public class StorageWriteProcedure extends Procedure {
             String msg = "invalid data format '" + fmt + "' for path " + path;
             throw new ProcedureException(this, msg);
         }
-        return ApiUtil.store(cx.getStorage(), path, data);
+        if (opts.getBoolean("update", false)) {
+            return ApiUtil.update(cx.getStorage(), path, (Dict) data);
+        } else {
+            return ApiUtil.store(cx.getStorage(), path, data);
+        }
     }
 }

@@ -2,14 +2,16 @@ id: system/storage/write
 type: procedure
 alias: System.Storage.Write
 className: org.rapidcontext.app.proc.StorageWriteProcedure
-description: Writes an object to storage.
+description: Writes or updates an object in storage.
 binding:
   - name: path
     type: argument
-    description: The object path
+    description: "The object path or options object. Available options:\n\
+        \u2022 path \u2014 object path (optionally with extension)\n\
+        \u2022 update \u2014 merge data with existing object"
   - name: data
     type: argument
-    description: The data to write
+    description: The data to write or update
   - name: format
     type: argument
     value: ""
