@@ -559,6 +559,32 @@ public class Dict {
     }
 
     /**
+     * Modifies all keys provided in another dictionary. If the value
+     * for a key is null, the key will be removed. Otherwise the key
+     * will be added or overwritten.
+     *
+     * @param dict           the dictionary to copy from
+     *
+     * @return this dictionary for chained operations
+     *
+     * @throws UnsupportedOperationException if this object has been
+     *             sealed
+     */
+    public Dict merge(Dict dict) {
+        if (dict != null && dict.size() > 0) {
+            for (String key : dict.map.keySet()) {
+                Object val = dict.map.get(key);
+                if (val == null) {
+                    remove(key);
+                } else {
+                    set(key, val);
+                }
+            }
+        }
+        return this;
+    }
+
+    /**
      * Deletes the specified dictionary key and its value.
      *
      * @param key            the dictionary key name
