@@ -15,11 +15,9 @@
 package org.rapidcontext.app.proc;
 
 import java.io.File;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
-import org.rapidcontext.app.ApplicationContext;
+import org.rapidcontext.app.model.ApiUtil;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
@@ -37,12 +35,6 @@ import org.rapidcontext.core.type.Procedure;
  * @version  1.0
  */
 public class StorageWriteProcedure extends Procedure {
-
-    /**
-     * The class logger.
-     */
-    private static final Logger LOG =
-        Logger.getLogger(StorageWriteProcedure.class.getName());
 
     /**
      * Creates a new procedure from a serialized representation.
@@ -74,11 +66,12 @@ public class StorageWriteProcedure extends Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        String path = ((String) bindings.getValue("path", "")).trim();
-        if (path.length() <= 0) {
+        String str = ((String) bindings.getValue("path", "")).trim();
+        Path path = Path.from(str);
+        if (str.isEmpty()) {
             throw new ProcedureException(this, "path cannot be empty");
         }
-        CallContext.checkWriteAccess(path);
+        CallContext.checkWriteAccess(path.toString());
         Object data = bindings.getValue("data", "");
         boolean isString = data instanceof String;
         boolean isStruct = data instanceof Dict || data instanceof Array;
@@ -88,7 +81,7 @@ public class StorageWriteProcedure extends Procedure {
         } else if (!isString && !isStruct && !isBinary) {
             throw new ProcedureException(this, "input data type not supported");
         }
-        boolean isObjectPath = !path.equals(Storage.objectName(path));
+        boolean isObjectPath = !path.equals(Storage.objectPath(path));
         String fmt = ((String) bindings.getValue("format", "")).trim();
         if (fmt.equals("")) {
             // Format is selected in storage layer
@@ -97,40 +90,19 @@ public class StorageWriteProcedure extends Procedure {
                 throw new ProcedureException(this, "binary format requires binary data");
             }
         } else if (fmt.equalsIgnoreCase("properties") && !isObjectPath) {
-            path += Storage.EXT_PROPERTIES;
+            path = path.sibling(path.name() + Storage.EXT_PROPERTIES);
         } else if (fmt.equalsIgnoreCase("json") && !isObjectPath) {
-            path += Storage.EXT_JSON;
+            path = path.sibling(path.name() + Storage.EXT_JSON);
         } else if (fmt.equalsIgnoreCase("xml") && !isObjectPath) {
-            path += Storage.EXT_XML;
+            path = path.sibling(path.name() + Storage.EXT_XML);
         } else if (fmt.equalsIgnoreCase("yaml") && !isObjectPath) {
-            path += Storage.EXT_YAML;
-        } else if (isObjectPath && StringUtils.endsWithIgnoreCase(path, "." + fmt)) {
+            path = path.sibling(path.name() + Storage.EXT_YAML);
+        } else if (isObjectPath && StringUtils.endsWithIgnoreCase(path.name(), "." + fmt)) {
             // Path and specified format match
         } else {
             String msg = "invalid data format '" + fmt + "' for path " + path;
             throw new ProcedureException(this, msg);
         }
-        LOG.fine("writing to storage path " + path);
-        return Boolean.valueOf(store(Path.from(path), data));
-    }
-
-    /**
-     * Writes a data object to the storage.
-     *
-     * @param path           the storage path
-     * @param data           the data object
-     *
-     * @return true if the data was successfully written, or
-     *         false otherwise
-     */
-    public static boolean store(Path path, Object data) {
-        Storage storage = ApplicationContext.getInstance().getStorage();
-        try {
-            storage.store(path, data);
-            return true;
-        } catch (Exception e) {
-            LOG.log(Level.WARNING, "failed to store " + path, e);
-            return false;
-        }
+        return ApiUtil.store(cx.getStorage(), path, data);
     }
 }

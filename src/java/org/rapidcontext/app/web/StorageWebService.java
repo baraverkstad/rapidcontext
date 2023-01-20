@@ -27,7 +27,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.app.model.ApiUtil;
-import org.rapidcontext.app.proc.StorageWriteProcedure;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
@@ -217,37 +216,28 @@ public class StorageWebService extends WebService {
      * @param request        the request to process
      */
     protected void doPost(Request request) {
-        if (!SecurityContext.hasWriteAccess(request.getPath())) {
+        Path path = Path.from(request.getPath());
+        if (!SecurityContext.hasWriteAccess(path.toString())) {
             errorUnauthorized(request);
-            return;
-        } else if (request.getPath().endsWith("/")) {
-            errorBadRequest(request, "cannot write data to folder");
-            return;
+        } else if (path.isIndex()) {
+            errorBadRequest(request, "cannot write data to directory");
         } else if (!Mime.isInputMatch(request, Mime.JSON)) {
             String msg = "application/json content type required";
             request.sendError(STATUS.UNSUPPORTED_MEDIA_TYPE, null, msg);
-            return;
-        }
-        try {
-            Path path = Path.from(request.getPath());
-            Metadata meta = lookup(path);
-            // FIXME: write to existing path if metadata exists?
-            Object data = JsonSerializer.unserialize(request.getInputString());
-            if (StorageWriteProcedure.store(path, data)) {
-                if (meta == null) {
-                    request.sendText(STATUS.CREATED, null, null);
+        } else {
+            try {
+                Storage storage = ApplicationContext.getInstance().getStorage();
+                Object data = JsonSerializer.unserialize(request.getInputString());
+                if (ApiUtil.store(storage, path, data)) {
+                    request.sendText(STATUS.NO_CONTENT, null, null);
                 } else {
-                    request.sendText(STATUS.OK, null, null);
+                    errorInternal(request, "failed to write " + path);
                 }
-            } else {
-                String msg = "failed to write " + request.getPath();
-                LOG.warning(msg);
-                errorInternal(request, msg);
+            } catch (Exception e) {
+                String msg = "failed to write " + path + ": " + e.getMessage();
+                LOG.log(Level.WARNING, msg, e);
+                errorBadRequest(request, msg);
             }
-        } catch (Exception e) {
-            String msg = "failed to write " + request.getPath() + ": " + e.getMessage();
-            LOG.log(Level.WARNING, msg, e);
-            errorBadRequest(request, msg);
         }
     }
 
@@ -257,37 +247,27 @@ public class StorageWebService extends WebService {
      * @param request        the request to process
      */
     protected void doPut(Request request) {
-        if (!SecurityContext.hasWriteAccess(request.getPath())) {
+        Path path = Path.from(request.getPath());
+        if (!SecurityContext.hasWriteAccess(path.toString())) {
             errorUnauthorized(request);
-            return;
         } else if (request.getHeader(HEADER.CONTENT_RANGE) != null) {
             request.sendError(STATUS.NOT_IMPLEMENTED);
-            return;
-        }
-        if (request.getPath().endsWith("/")) {
+        } else if (path.isIndex()) {
             errorBadRequest(request, "cannot store data in a directory");
-            return;
-        }
-        Path path = Path.from(request.getPath());
-        Metadata meta = lookup(path);
-        try (InputStream is = request.getInputStream()) {
-            Binary data = new Binary.BinaryStream(is, -1);
-            if (StorageWriteProcedure.store(path, data)) {
-                if (meta == null) {
-                    request.sendText(STATUS.CREATED, null, null);
+        } else {
+            try (InputStream is = request.getInputStream()) {
+                Storage storage = ApplicationContext.getInstance().getStorage();
+                Binary data = new Binary.BinaryStream(is, -1);
+                if (ApiUtil.store(storage, path, data)) {
+                    request.sendText(STATUS.NO_CONTENT, null, null);
                 } else {
-                    request.sendText(STATUS.OK, null, null);
+                    errorInternal(request, "failed to write " + path);
                 }
-            } else {
-                String msg = "failed to write " + request.getPath();
-                LOG.warning(msg);
+            } catch (IOException e) {
+                String msg = "failed to write " + path + ": " + e.getMessage();
+                LOG.log(Level.WARNING, msg, e);
                 errorInternal(request, msg);
             }
-        } catch (IOException e) {
-            String msg = "failed to write " + request.getPath() + ": " +
-                         e.getMessage();
-            LOG.log(Level.WARNING, msg, e);
-            errorInternal(request, msg);
         }
     }
 
@@ -298,15 +278,13 @@ public class StorageWebService extends WebService {
      */
     protected void doDelete(Request request) {
         Storage storage = ApplicationContext.getInstance().getStorage();
-        Metadata meta = lookup(Path.from(request.getPath()));
-        if (meta == null) {
-            errorNotFound(request);
-        } else  if (!SecurityContext.hasWriteAccess(meta.path().toString())) {
+        Path path = Path.from(request.getPath());
+        if (!SecurityContext.hasWriteAccess(path.toString())) {
             errorUnauthorized(request);
-        } else if (!ApiUtil.delete(storage, meta.path())) {
-            errorInternal(request, "failed to delete " + meta.path());
-        } else {
+        } else if (ApiUtil.delete(storage, path)) {
             request.sendText(STATUS.NO_CONTENT, null, null);
+        } else {
+            errorInternal(request, "failed to delete " + path);
         }
     }
 

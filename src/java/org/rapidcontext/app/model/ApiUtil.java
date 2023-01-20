@@ -130,10 +130,31 @@ public class ApiUtil {
     }
 
     /**
+     * Writes a data object to the storage.
+     *
+     * @param storage        the storage to modify
+     * @param path           the storage path
+     * @param data           the data object
+     *
+     * @return true if the data was successfully written, or
+     *         false otherwise
+     */
+    public static boolean store(Storage storage, Path path, Object data) {
+        try {
+            LOG.fine("writing to storage path " + path);
+            storage.store(path, data);
+            return true;
+        } catch (Exception e) {
+            LOG.log(Level.WARNING, "failed to store " + path, e);
+            return false;
+        }
+    }
+
+    /**
      * Deletes a storage object or path.
      *
      * @param storage        the storage to modify
-     * @param path           the storage path to remove
+     * @param path           the storage path
      *
      * @return true if the data was successfully removed, or
      *         false otherwise
