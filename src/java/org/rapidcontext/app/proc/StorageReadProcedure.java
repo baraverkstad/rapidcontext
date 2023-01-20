@@ -16,12 +16,14 @@ package org.rapidcontext.app.proc;
 
 import java.util.stream.Stream;
 
+import org.rapidcontext.app.model.ApiUtil;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.storage.Path;
+import org.rapidcontext.core.type.Procedure;
 
 /**
  * The built-in storage read procedure.
@@ -29,7 +31,7 @@ import org.rapidcontext.core.storage.Path;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class StorageReadProcedure extends StorageProcedure {
+public class StorageReadProcedure extends Procedure {
 
     /**
      * Creates a new procedure from a serialized representation.
@@ -61,14 +63,14 @@ public class StorageReadProcedure extends StorageProcedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        Dict opts = options("path", bindings.getValue("path"));
+        Dict opts = ApiUtil.options("path", bindings.getValue("path"));
         Path path = Path.from(opts.getString("path", "/"));
         if (path.isIndex()) {
             CallContext.checkSearchAccess(path.toString());
         } else {
             CallContext.checkAccess(path.toString(), cx.readPermission(1));
         }
-        Stream<Object> stream = load(cx.getStorage(), path, opts);
+        Stream<Object> stream = ApiUtil.load(cx.getStorage(), path, opts);
         if (path.isIndex()) {
             Array res = new Array();
             stream.forEach(o -> res.add(o));

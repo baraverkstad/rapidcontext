@@ -26,6 +26,7 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.rapidcontext.app.ApplicationContext;
+import org.rapidcontext.app.model.ApiUtil;
 import org.rapidcontext.app.proc.StorageDeleteProcedure;
 import org.rapidcontext.app.proc.StorageWriteProcedure;
 import org.rapidcontext.core.data.Array;
@@ -36,7 +37,6 @@ import org.rapidcontext.core.data.PropertiesSerializer;
 import org.rapidcontext.core.data.XmlSerializer;
 import org.rapidcontext.core.data.YamlSerializer;
 import org.rapidcontext.core.security.SecurityContext;
-import org.rapidcontext.core.storage.Index;
 import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.RootStorage;
@@ -131,31 +131,22 @@ public class StorageWebService extends WebService {
         Path path = Path.from(request.getPath());
         Metadata meta = lookup(path);
         Object data = (meta == null) ? null : storage.load(meta.path());
+        boolean includeMeta = BooleanUtils.toBoolean(request.getParameter("metadata", "0"));
         if (meta == null || data == null) {
             errorNotFound(request);
         } else if (data instanceof Binary && path.equals(meta.path())) {
             request.sendBinary((Binary) data);
+        } else if (includeMeta) {
+            Object o = ApiUtil.serialize(meta, data, false, false);
+            sendResult(request, meta.path(), null, o);
         } else {
-            if (data instanceof Index) {
-                data = prepareIndex(meta.path(), (Index) data);
-            } else if (data instanceof Binary) {
-                data = prepareBinary(meta.path(), (Binary) data);
-            } else if (data instanceof StorableObject) {
-                data = StorableObject.sterilize(data, true, false, false);
-            }
-            Object metaObj = StorableObject.sterilize(meta, true, false, false);
-            sendResult(request, meta.path(), metaObj, data);
+            Object m = ApiUtil.serialize(meta.path(), meta, false, false);
+            Object o = ApiUtil.serialize(meta.path(), data, false, false);
+            sendResult(request, meta.path(), m, o);
         }
     }
 
     private void sendResult(Request request, Path path, Object meta, Object data) {
-        boolean includeMeta = BooleanUtils.toBoolean(request.getParameter("metadata", "0"));
-        if (includeMeta) {
-            Dict res = new Dict();
-            res.add("data", data);
-            res.add("metadata", meta);
-            data = res;
-        }
         if (StringUtils.endsWithIgnoreCase(request.getPath(), Storage.EXT_JSON)) {
             request.sendText(Mime.JSON[0], JsonSerializer.serialize(data, true));
         } else if (StringUtils.endsWithIgnoreCase(request.getPath(), Storage.EXT_PROPERTIES)) {
@@ -166,7 +157,7 @@ public class StorageWebService extends WebService {
                 request.sendText(Mime.TEXT[0], e.toString());
             }
         } else if (StringUtils.endsWithIgnoreCase(request.getPath(), Storage.EXT_XML)) {
-            String root = includeMeta ? "result" : "data";
+            String root = (meta == null) ? "result" : "data";
             request.sendText(Mime.XML[0], XmlSerializer.serialize(root, data));
         } else if (StringUtils.endsWithIgnoreCase(request.getPath(), Storage.EXT_YAML)) {
             request.sendText(Mime.YAML[0], YamlSerializer.serialize(data));
@@ -351,43 +342,6 @@ public class StorageWebService extends WebService {
     }
 
     /**
-     * Creates an external representation of an index.
-     *
-     * @param path           the index base path
-     * @param idx            the index to serialize
-     *
-     * @return the external representation of the index
-     */
-    private Dict prepareIndex(Path path, Index idx) {
-        Array paths = new Array();
-        idx.paths(path).forEach(p -> paths.add(p));
-        Dict dict = new Dict();
-        dict.set("type", "index");
-        dict.set("modified", idx.modified());
-        dict.set("paths", paths);
-        return dict;
-    }
-
-    /**
-     * Creates an external representation of a binary data object.
-     *
-     * @param path           the storage path
-     * @param data           the binary data object
-     *
-     * @return the external representation of the binary data object
-     */
-    private Dict prepareBinary(Path path, Binary data) {
-        Dict dict = new Dict();
-        dict.set("type", "file");
-        dict.set("path", path);
-        dict.set("name", path.name());
-        dict.set("mimeType", data.mimeType());
-        dict.set("modified", new Date(data.lastModified()));
-        dict.set("size", Long.valueOf(data.size()));
-        return dict;
-    }
-
-    /**
      * An HTML renderer for storage lookup results.
      */
     private static class HtmlRenderer {
@@ -438,10 +392,12 @@ public class StorageWebService extends WebService {
                 }
             }
             html.append("</ol>\n</nav>\n<hr>\n");
-            html.append("<div class='metadata'>\n");
-            html.append("<h2>Query Metadata</h2>\n");
-            renderObject(path, meta, html);
-            html.append("</div>\n");
+            if (meta != null) {
+                html.append("<div class='metadata'>\n");
+                html.append("<h2>Query Metadata</h2>\n");
+                renderObject(path, meta, html);
+                html.append("</div>\n");
+            }
             html.append("<div class='data'>\n");
             html.append("<h2>Query Results</h2>");
             renderObject(path, res, html);

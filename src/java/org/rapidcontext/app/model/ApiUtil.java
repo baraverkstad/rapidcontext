@@ -12,7 +12,7 @@
  * See the RapidContext LICENSE for more details.
  */
 
-package org.rapidcontext.app.proc;
+package org.rapidcontext.app.model;
 
 import java.io.InputStream;
 import java.util.Base64;
@@ -23,41 +23,30 @@ import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
+import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
+import org.rapidcontext.core.storage.Index;
 import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.Query;
 import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.core.storage.Storage;
-import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.core.web.Mime;
 import org.rapidcontext.util.FileUtil;
 
 /**
- * The base class for built-in storage procedures.
+ * A set of utility methods for API responses, etc.
  *
  * @author   Per Cederberg
  * @version  1.0
  */
-public abstract class StorageProcedure extends Procedure {
+public class ApiUtil {
 
     /**
      * The class logger.
      */
-    private static final Logger LOG =
-        Logger.getLogger(StorageProcedure.class.getName());
-
-    /**
-     * Creates a new procedure from a serialized representation.
-     *
-     * @param id             the object identifier
-     * @param type           the object type name
-     * @param dict           the serialized representation
-     */
-    protected StorageProcedure(String id, String type, Dict dict) {
-        super(id, type, dict);
-    }
+    private static final Logger LOG = Logger.getLogger(ApiUtil.class.getName());
 
     /**
      * Creates or extracts an options object from a value. If the value isn't
@@ -69,7 +58,7 @@ public abstract class StorageProcedure extends Procedure {
      *
      * @return an options dictionary
      */
-    protected Dict options(String defaultKey, Object value) {
+    public static Dict options(String defaultKey, Object value) {
         if (value instanceof Dict) {
             return (Dict) value;
         } else {
@@ -88,7 +77,7 @@ public abstract class StorageProcedure extends Procedure {
      *
      * @return a stream of metadata for matching objects
      */
-    protected Stream<Metadata> lookup(Storage storage, Path path, Dict opts) {
+    public static Stream<Metadata> lookup(Storage storage, Path path, Dict opts) {
         Query query = storage.query(path).filterReadAccess();
         if (opts.containsKey("depth")) {
             query.filterDepth(opts.getInt("depth", -1));
@@ -125,36 +114,67 @@ public abstract class StorageProcedure extends Procedure {
      *
      * @return a stream of serialized matching objects
      */
-    protected Stream<Object> load(Storage storage, Path path, Dict opts) {
+    public static Stream<Object> load(Storage storage, Path path, Dict opts) {
         boolean computed = opts.getBoolean("computed", false);
         boolean metadata = opts.getBoolean("metadata", false);
         return lookup(storage, path, opts)
             .map(m -> {
-                Object o = serialize(m.path(), storage.load(m.path()), computed);
+                Object o = storage.load(m.path());
                 if (metadata) {
-                    Dict res = new Dict();
-                    res.add("data", o);
-                    res.add("metadata", serialize(m.path(), m, computed));
-                    return res;
+                    return serialize(m, o, !computed, true);
                 } else {
-                    return o;
+                    return serialize(m.path(), o, !computed, true);
                 }
             })
             .filter(Objects::nonNull);
     }
 
     /**
-     * Returns a serialized representation of a storage object.
+     * Returns a serialized representation of an object and its metadata.
      *
-     * @param path           the storage path
-     * @param obj            the storage object
-     * @param computed       the flag for computed key inclusion
+     * @param meta           the object metadata
+     * @param obj            the object to serialize
+     * @param skipComputed   filter out computed key-value pairs
+     * @param limitedTypes   limit allowed object value types
      *
      * @return the serialized representation of the object, or
      *         null if no suitable serialization existed
      */
-    protected Object serialize(Path path, Object obj, boolean computed) {
-        if (obj instanceof Binary) {
+    public static Object serialize(Metadata meta,
+                                   Object obj,
+                                   boolean skipComputed,
+                                   boolean limitedTypes) {
+        Dict res = new Dict();
+        res.add("data", serialize(meta.path(), obj, skipComputed, limitedTypes));
+        res.add("metadata", serialize(meta.path(), meta, skipComputed, limitedTypes));
+        return res;
+    }
+
+    /**
+     * Returns a serialized representation of an object.
+     *
+     * @param path           the storage path
+     * @param obj            the object to serialize
+     * @param skipComputed   filter out computed key-value pairs
+     * @param limitedTypes   limit allowed object value types
+     *
+     * @return the serialized representation of the object, or
+     *         null if no suitable serialization existed
+     */
+    public static Object serialize(Path path,
+                                   Object obj,
+                                   boolean skipComputed,
+                                   boolean limitedTypes) {
+        if (obj instanceof Index) {
+            Index idx = (Index) obj;
+            Array paths = new Array();
+            idx.paths(path).forEach(p -> paths.add(p));
+            Dict dict = new Dict();
+            dict.set("type", "index");
+            dict.set("modified", idx.modified());
+            dict.set("paths", paths);
+            return dict;
+        } else if (obj instanceof Binary) {
             Binary data = (Binary) obj;
             Dict dict = new Dict();
             dict.set("type", "file");
@@ -163,7 +183,7 @@ public abstract class StorageProcedure extends Procedure {
             dict.set("mimeType", data.mimeType());
             dict.set("modified", new Date(data.lastModified()));
             dict.set("size", Long.valueOf(data.size()));
-            if (computed) {
+            if (!skipComputed) {
                 try (InputStream is = data.openStream()) {
                     if (Mime.isText(data.mimeType())) {
                         dict.set("_text", FileUtil.readText(is, "UTF-8"));
@@ -177,12 +197,8 @@ public abstract class StorageProcedure extends Procedure {
                 }
             }
             return dict;
-        } else if (obj instanceof StorableObject) {
-            return StorableObject.sterilize(obj, true, !computed, true);
-        } else if (obj instanceof Dict) {
-            return (Dict) obj;
         } else {
-            return (obj == null) ? obj : obj.toString();
+            return StorableObject.sterilize(obj, true, skipComputed, limitedTypes);
         }
     }
 }

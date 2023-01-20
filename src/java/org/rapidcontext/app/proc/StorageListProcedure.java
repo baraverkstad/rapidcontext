@@ -14,12 +14,14 @@
 
 package org.rapidcontext.app.proc;
 
+import org.rapidcontext.app.model.ApiUtil;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.storage.Path;
+import org.rapidcontext.core.type.Procedure;
 
 /**
  * The built-in storage list procedure.
@@ -27,7 +29,7 @@ import org.rapidcontext.core.storage.Path;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class StorageListProcedure extends StorageProcedure {
+public class StorageListProcedure extends Procedure {
 
     /**
      * Creates a new procedure from a serialized representation.
@@ -70,7 +72,7 @@ public class StorageListProcedure extends StorageProcedure {
         Dict opts = new Dict();
         opts.setInt("limit", -1);
         Array res = new Array();
-        load(cx.getStorage(), path, opts).forEach(o -> res.add(o));
+        ApiUtil.load(cx.getStorage(), path, opts).forEach(o -> res.add(o));
         return res;
     }
 }
