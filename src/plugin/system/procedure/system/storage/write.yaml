@@ -8,7 +8,8 @@ binding:
     type: argument
     description: "The object path or options object. Available options:\n\
         \u2022 path \u2014 object path (optionally with extension)\n\
-        \u2022 update \u2014 merge data with existing object"
+        \u2022 update \u2014 flag to merge data with existing object\n\
+        \u2022 updateTo \u2014 new path to merged data (old will be removed)"
   - name: data
     type: argument
     description: The data to write or update

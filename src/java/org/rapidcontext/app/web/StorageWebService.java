@@ -181,10 +181,11 @@ public class StorageWebService extends WebService {
             try {
                 Storage storage = ApplicationContext.getInstance().getStorage();
                 Object data = JsonSerializer.unserialize(request.getInputString());
+                // FIXME: optional rename?
                 if (!(data instanceof Dict)) {
                     String msg = "patch data should be JSON object";
                     request.sendError(STATUS.NOT_ACCEPTABLE, null, msg);
-                } else if (ApiUtil.update(storage, path, (Dict) data)) {
+                } else if (ApiUtil.update(storage, path, path, (Dict) data)) {
                     Object o = ApiUtil.load(storage, path, new Dict()).findFirst().orElse(null);
                     request.sendText(Mime.JSON[0], JsonSerializer.serialize(o, true));
                 } else {

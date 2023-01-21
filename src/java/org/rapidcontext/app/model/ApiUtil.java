@@ -140,6 +140,7 @@ public class ApiUtil {
     public static boolean store(Storage storage, Path path, Object data) {
         try {
             LOG.fine("writing to storage path " + path);
+            data = StorableObject.sterilize(data, false, true, true);
             storage.store(path, data);
             return true;
         } catch (Exception e) {
@@ -149,32 +150,39 @@ public class ApiUtil {
     }
 
     /**
-     * Updates an existing data object in the storage. The object must
-     * be serializable to a dictionary, which will be merged by the
-     * provided changes. Omitted keys will be left unmodified, and keys
-     * with a null value will be removed. Other keys will be replaced.
+     * Updates and/or moves an existing data object in the storage.
+     * The object must be serializable to a dictionary, which may
+     * be merged with a dictionary of changes. Keys with a value will
+     * be overwritten, and keys with a null value will be removed.
+     * Omitted keys will be will be left unmodified in the source
+     * object.
      *
      * @param storage        the storage to modify
-     * @param path           the storage path
-     * @param data           the data object updates
+     * @param src            the source storage path
+     * @param dst            the destination storage path
+     * @param patch          the data object changes, or null
      *
      * @return true if the data was successfully written, or
      *         false otherwise
      */
-    public static boolean update(Storage storage, Path path, Dict data) {
+    public static boolean update(Storage storage, Path src, Path dst, Dict patch) {
         try {
-            LOG.fine("updating storage path " + path);
-            Object prev = StorableObject.sterilize(storage.load(path), false, true, false);
-            Dict dict = (prev instanceof Dict) ? (Dict) prev : null;
-            if (dict == null) {
-                LOG.log(Level.WARNING, "failed to update " + path + ": not a dictionary");
-                return false;
-            } else {
-                storage.store(path, dict.merge(data));
+            boolean rename = !src.equals(dst);
+            LOG.fine("updating storage path " + src + (rename ? " -> " + dst : ""));
+            Object prev = StorableObject.sterilize(storage.load(src), false, true, false);
+            patch = (Dict) StorableObject.sterilize(patch, false, true, true);
+            if (prev instanceof Dict) {
+                storage.store(dst, ((Dict) prev).merge(patch));
+                if (rename && !Storage.objectPath(src).equals(Storage.objectPath(dst))) {
+                    storage.remove(src);
+                }
                 return true;
+            } else {
+                LOG.log(Level.WARNING, "failed to update " + src + ": not a dictionary");
+                return false;
             }
         } catch (Exception e) {
-            LOG.log(Level.WARNING, "failed to update " + path, e);
+            LOG.log(Level.WARNING, "failed to update " + src, e);
             return false;
         }
     }

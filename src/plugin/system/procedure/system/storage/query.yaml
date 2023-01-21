@@ -13,4 +13,4 @@ binding:
         \u2022 fileType \u2014 file type to match (i.e. extension)\n\
         \u2022 mimeType \u2014 MIME type to match\n\
         \u2022 category \u2014 object category to match\n\
-        \u2022 computed \u2014 include computed properties in result"
+        \u2022 computed \u2014 flag to include computed properties in result"

@@ -72,7 +72,9 @@ public class StorageWriteProcedure extends Procedure {
             throw new ProcedureException(this, "cannot write to index: " + path);
         }
         CallContext.checkWriteAccess(path.toString());
-        boolean update = opts.getBoolean("update", false);
+        String updateTo = opts.getString("updateTo", null);
+        boolean update = opts.getBoolean("update", false) || updateTo != null;
+        Path dst = (updateTo == null) ? path : Path.from(updateTo);
         Object data = bindings.getValue("data", "");
         boolean isString = data instanceof String;
         boolean isDict = data instanceof Dict;
@@ -107,8 +109,8 @@ public class StorageWriteProcedure extends Procedure {
             String msg = "invalid data format '" + fmt + "' for path " + path;
             throw new ProcedureException(this, msg);
         }
-        if (opts.getBoolean("update", false)) {
-            return ApiUtil.update(cx.getStorage(), path, (Dict) data);
+        if (update) {
+            return ApiUtil.update(cx.getStorage(), path, dst, (Dict) data);
         } else {
             return ApiUtil.store(cx.getStorage(), path, data);
         }
