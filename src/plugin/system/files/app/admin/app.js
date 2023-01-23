@@ -470,24 +470,21 @@ AdminApp.prototype._addRemoveConnectionProps = function (evt) {
 AdminApp.prototype._storeConnection = function () {
     this.ui.cxnEditForm.validateReset();
     if (this.ui.cxnEditForm.validate()) {
+        var prev = this.ui.cxnEditDialog.data;
         var data = this.ui.cxnEditForm.valueMap();
-        var prevData = this.ui.cxnEditDialog.data;
-        var path = "connection/" + data.id;
-        for (var name in data) {
-            var value = data[name].trim();
-            if (/^_/.test(name) || value == "") {
-                delete data[name];
+        for (var k in data) {
+            var v = data[k].trim();
+            if (v && !k.startsWith("_")) {
+                // Store updated value
+            } else if (prev.id && !k.startsWith("_") && !k.startsWith(".")) {
+                data[k] = null; // Remove old value
+            } else {
+                delete data[k]; // Omit or keep unmodified
             }
         }
-        RapidContext.Storage.write(path, data)
-            .then(function () {
-                if (prevData.id && prevData.id != data.id) {
-                    var oldPath = "connection/" + prevData.id;
-                    return RapidContext.Storage.write(oldPath, null);
-                } else {
-                    return true;
-                }
-            })
+        var update = RapidContext.Storage.update;
+        var write = RapidContext.Storage.write;
+        (prev.id ? update(prev, data) : write(data))
             .then(this.ui.cxnEditDialog.hide.bind(this.ui.cxnEditDialog))
             .then(this.showConnection.bind(this, data.id))
             .catch(RapidContext.UI.showError);
