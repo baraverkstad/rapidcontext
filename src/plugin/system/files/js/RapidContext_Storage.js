@@ -69,7 +69,7 @@
      */
     function read(pathOrObj) {
         var url = storageUrl(pathOrObj);
-        url += MochiKit.Text.endsWith("/", url) ? "index.json" : ".json";
+        url += url.endsWith("/") ? "index.json" : ".json";
         return RapidContext.App.loadJSON(url, null, null);
     }
 
@@ -104,7 +104,7 @@
      * merging of property values will be performed.
      *
      * @param {String/Object} pathOrObj the path or object to write
-     * @param {Object} data the partial object properties
+     * @param {Object} [data] the partial object (changes) to write
      *
      * @return {Promise} a `RapidContext.Async` promise that will
      *         resolve with the updated data object on success
@@ -113,19 +113,18 @@
      */
     function update(pathOrObj, data) {
         var url = storageUrl(pathOrObj);
+        var newPath = path(data);
         var headers = { "Content-Type": "application/json" };
+        if (newPath && newPath != path(pathOrObj)) {
+            headers["X-Move-To"] = newPath;
+        }
         var opts = { method: "PATCH", headers: headers };
-        return RapidContext.App.loadJSON(url, data, opts);
+        return RapidContext.App.loadJSON(url, data || pathOrObj, opts);
     }
 
-    // Create namespaces
+    // Create namespaces & export symbols
     var RapidContext = window.RapidContext || (window.RapidContext = {});
     var Storage = RapidContext.Storage || (RapidContext.Storage = {});
-
-    // Export symbols
-    Storage.path = path;
-    Storage.read = read;
-    Storage.write = write;
-    Storage.update = update;
+    Object.assign(Storage, { path, read, write, update });
 
 })(this);
