@@ -170,7 +170,11 @@ public class StorageWebService extends WebService {
      */
     protected void doPatch(Request request) {
         Path path = Path.from(request.getPath());
-        if (!SecurityContext.hasWriteAccess(path.toString())) {
+        String str = request.getHeader("X-Move-To");
+        Path dst = (str == null) ? path : Path.from(str);
+        if (!SecurityContext.hasReadAccess(path.toString())) {
+            errorUnauthorized(request);
+        } else if (!SecurityContext.hasWriteAccess(dst.toString())) {
             errorUnauthorized(request);
         } else if (path.isIndex()) {
             errorBadRequest(request, "cannot write data to a directory");
@@ -180,13 +184,12 @@ public class StorageWebService extends WebService {
         } else {
             try {
                 Storage storage = ApplicationContext.getInstance().getStorage();
-                Object data = JsonSerializer.unserialize(request.getInputString());
-                // FIXME: optional rename?
-                if (!(data instanceof Dict)) {
+                Object patch = JsonSerializer.unserialize(request.getInputString());
+                if (!(patch instanceof Dict)) {
                     String msg = "patch data should be JSON object";
                     request.sendError(STATUS.NOT_ACCEPTABLE, null, msg);
-                } else if (ApiUtil.update(storage, path, path, (Dict) data)) {
-                    Object o = ApiUtil.load(storage, path, new Dict()).findFirst().orElse(null);
+                } else if (ApiUtil.update(storage, path, dst, (Dict) patch)) {
+                    Object o = ApiUtil.serialize(dst, storage.load(dst), false, false);
                     request.sendText(Mime.JSON[0], JsonSerializer.serialize(o, true));
                 } else {
                     errorBadRequest(request, "failed to patch " + path);
