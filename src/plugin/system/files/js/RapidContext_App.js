@@ -625,22 +625,24 @@ RapidContext.App.loadXHR = function (url, params, options) {
     var opts = Object.assign({ method: "GET", headers: {}, timeout: 30000 }, options);
     opts.timeout = (opts.timeout < 1000) ? opts.timeout * 1000 : opts.timeout;
     var hasBody = params && ["PATCH", "POST", "PUT"].includes(opts.method);
-    url += (params && !hasBody) ? "?" + MochiKit.Base.queryString(params) : "";
-    if (params && hasBody && opts.headers["Content-Type"] === "application/json") {
+    var hasJsonBody = opts.headers["Content-Type"] === "application/json";
+    if (!hasBody) {
+        url += params ? "?" + RapidContext.Encode.toUrlQuery(params) : "";
+        url = RapidContext.App._nonCachedUrl(url);
+    } else if (params && hasBody && hasJsonBody) {
         opts.body = RapidContext.Encode.toJSON(params);
     } else if (params && hasBody) {
         opts.headers["Content-Type"] = "application/x-www-form-urlencoded";
-        opts.body = MochiKit.Base.queryString(params);
+        opts.body = RapidContext.Encode.toUrlQuery(params);
     }
-    var nonCachedUrl = RapidContext.App._nonCachedUrl(url);
-    RapidContext.Log.log("Starting XHR loading", nonCachedUrl, opts);
-    return RapidContext.Async.xhr(nonCachedUrl, opts).then(
+    RapidContext.Log.log("Starting XHR loading", url, opts);
+    return RapidContext.Async.xhr(url, opts).then(
         function (res) {
-            RapidContext.Log.log("Completed XHR loading", nonCachedUrl);
+            RapidContext.Log.log("Completed XHR loading", url);
             return res;
         },
         function (err) {
-            RapidContext.Log.warn("Failed XHR loading", nonCachedUrl, err);
+            RapidContext.Log.warn("Failed XHR loading", url, err);
             return Promise.reject(err);
         }
     );
@@ -785,7 +787,7 @@ RapidContext.App._rebaseUrl = function (url) {
  */
 RapidContext.App._nonCachedUrl = function (url) {
     var timestamp = new Date().getTime() % 100000;
-    return url + (url.includes("?") ? "&" : "?") + timestamp;
+    return url + (url.includes("?") ? "&_=" : "?_=") + timestamp;
 };
 
 /**

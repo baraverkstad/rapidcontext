@@ -35,18 +35,56 @@
      * for any non-printable ASCII characters.
      *
      * @param {Object} val the value to serialize
-     * @return {String} the serialized JSON string
+     * @return {String} the JSON string
      * @memberof RapidContext.Encode
      */
     function toJSON(val) {
         return JSON.stringify(val).replace(/[\u007F-\uFFFF]/g, toCharEscape);
     }
 
-    // Create namespaces
+    /**
+     * Serializes a value to a URL component. The value is serialized
+     * by `encodeURIComponent`, but any non-String values are first
+     * converted to strings.
+     *
+     * @param {Object} val the value to serialize
+     * @param {Object} isForm the flag for using `+` instead of `%20`
+     * @return {String} the URL-encoded string
+     * @memberof RapidContext.Encode
+     */
+    function toUrlPart(val, isForm) {
+        val = (val == null) ? "" : val;
+        var isObject = typeof(val) === "object";
+        var res = encodeURIComponent(isObject ? toJSON(val) : String(val));
+        return isForm ? res.replace(/%20/g, "+") : res;
+    }
+
+    /**
+     * Serializes an object to a URL query string. If an object value
+     * is an array, each entry will be added to the query separately.
+     *
+     * @param {Object} val the key-value pairs to serialize
+     * @param {Object} isForm the flag for using `+` instead of `%20`
+     * @return {String} the URL-encoded query string
+     * @memberof RapidContext.Encode
+     */
+    function toUrlQuery(data, isForm) {
+        data = data || {};
+        var parts = [];
+        for (var key in data) {
+            var val = data[key];
+            var arr = Array.isArray(val) ? val : [val];
+            arr.length || arr.push("");
+            arr.forEach(function (v) {
+                parts.push(toUrlPart(key, isForm) + "=" + toUrlPart(v, isForm));
+            });
+        }
+        return parts.join("&");
+    }
+
+    // Create namespaces & export symbols
     var RapidContext = window.RapidContext || (window.RapidContext = {});
     var Encode = RapidContext.Encode || (RapidContext.Encode = {});
-
-    // Export symbols
-    Encode.toJSON = toJSON;
+    Object.assign(Encode, { toJSON, toUrlPart, toUrlQuery });
 
 })(this);
