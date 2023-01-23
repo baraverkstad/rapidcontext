@@ -137,6 +137,7 @@
         // "Temporal",
         // "ResizeObserver",
         "URLSearchParams",
+        // "globalThis",
         { test: "let a = 2; a === 2", name: "Let statements" },
         { test: "const a = 3; a === 3", name: "Const statements" },
         { test: "(() => true)()", name: "Arrow functions" },
