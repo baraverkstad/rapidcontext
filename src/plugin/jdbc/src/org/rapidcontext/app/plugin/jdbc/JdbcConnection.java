@@ -80,6 +80,25 @@ public class JdbcConnection extends Connection {
     protected static final String JDBC_TIMEOUT = "timeout";
 
     /**
+     * Normalizes a JDBC connection data object if needed. This method
+     * will modify legacy data into the proper keys and values.
+     *
+     * @param id             the object identifier
+     * @param dict           the storage data
+     *
+     * @return the storage data (possibly modified)
+     */
+    public static Dict normalize(String id, Dict dict) {
+        if (dict.containsKey(JDBC_PASSWORD)) {
+            LOG.warning("deprecated: connection " + id + " data: password not hidden");
+            String pwd = dict.getString(JDBC_PASSWORD, "");
+            dict.remove(JDBC_PASSWORD);
+            dict.set(PREFIX_HIDDEN + JDBC_PASSWORD, pwd);
+        }
+        return dict;
+    }
+
+    /**
      * Creates a new JDBC connection from a serialized representation.
      *
      * @param id             the object identifier
@@ -87,7 +106,7 @@ public class JdbcConnection extends Connection {
      * @param dict           the serialized representation
      */
     public JdbcConnection(String id, String type, Dict dict) {
-        super(id, type, dict);
+        super(id, type, normalize(id, dict));
     }
 
     /**
@@ -251,7 +270,10 @@ public class JdbcConnection extends Connection {
     protected Channel createChannel() throws ConnectionException {
         Properties props = new Properties();
         for (String key : dict.keys()) {
-            if (!key.startsWith(PREFIX_COMPUTED)) {
+            if (key.startsWith(PREFIX_HIDDEN)) {
+                String name = key.substring(PREFIX_HIDDEN.length());
+                props.setProperty(name, dict.getString(key, ""));
+            } else if (!key.startsWith(PREFIX_COMPUTED)) {
                 props.setProperty(key, dict.getString(key, ""));
             }
         }

@@ -26,8 +26,8 @@ property:
   - name: user
     description: The database user name.
     required: true
-  - name: password
-    description: The database user password.
+  - name: .password
+    description: The database user password (leave blank to keep existing).
     required: true
     format: password
   - name: sqlping
