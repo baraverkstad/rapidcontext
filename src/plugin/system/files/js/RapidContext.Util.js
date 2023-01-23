@@ -151,7 +151,7 @@ RapidContext.Util.mask = function (src, keys) {
  * ==> "UPPER CASE VALUE"
  */
 RapidContext.Util.toTitleCase = function (str) {
-    str = str.replace(/[_-]+/g, " ").trim();
+    str = str.replace(/[._-]+/g, " ").trim();
     str = str.replace(/[a-z][A-Z]/g, function (match) {
         return match.charAt(0) + " " + match.charAt(1);
     });

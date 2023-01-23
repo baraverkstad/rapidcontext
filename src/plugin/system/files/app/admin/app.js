@@ -276,13 +276,10 @@ AdminApp.prototype._showConnection = function () {
     }
     var clones = this.ui.cxnTemplate.parentNode.querySelectorAll(".clone");
     RapidContext.Widget.destroyWidget(clones);
-    var hidden = [
-        "lastAccess", "id", "type", "plugin", "maxOpen", "_maxOpen",
-        "_usedChannels", "_openChannels", "_lastUsedTime"
-    ];
+    var hidden = ["id", "type", "plugin", "description", "lastAccess", "maxOpen"];
     RapidContext.Util.mask(data, hidden);
     for (var k in data) {
-        if (!/^_/.test(k) || !(k.substr(1) in data)) {
+        if (!k.startsWith("_")) {
             var title = RapidContext.Util.toTitleCase(k);
             var value = data[k];
             if (value == null) {
@@ -425,7 +422,7 @@ AdminApp.prototype._updateConnectionEdit = function () {
     }
     for (var name in data) {
         var val = String(data[name]).trim();
-        if (!/^_/.test(name) && !(name in props) && !(name in hiddenProps) && val) {
+        if (!name.startsWith("_") && !(name in props) && !(name in hiddenProps) && val) {
             props[name] = {
                 name: name,
                 title: name,
