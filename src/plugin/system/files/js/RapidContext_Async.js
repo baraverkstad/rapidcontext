@@ -324,7 +324,7 @@
             xhr.onreadystatechange = function () {
                 var err;
                 if (xhr && xhr.readyState === 4) {
-                    if (xhr.status >= 200 && xhr.status <= 299 && xhr.response != null) {
+                    if (xhr.status >= 200 && xhr.status <= 299) {
                         resolve(xhr);
                     } else if (xhr.status === 0) {
                         err = "communication error or timeout";
@@ -370,12 +370,6 @@
     // Create namespace and export API
     var RapidContext = window.RapidContext || (window.RapidContext = {});
     RapidContext.Async = Async;
-    Async.isPromise = isPromise;
-    Async.wait = wait;
-    Async.img = img;
-    Async.css = css;
-    Async.script = script;
-    Async.xhr = xhr;
-    Async.AsyncError = AsyncError;
+    Object.assign(Async, { isPromise, wait, img, css, script, xhr, AsyncError });
 
 })(this);
