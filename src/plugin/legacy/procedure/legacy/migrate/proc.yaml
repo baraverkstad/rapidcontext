@@ -1,34 +1,48 @@
 id: legacy/migrate/proc
 type: procedure/javascript
-description: Stores draft migrated versions of legacy built-in procedures.
+description: Stores draft migrated versions of legacy procedures.
 binding:
   - name: code
     type: data
     value: |
         var TYPES = {
             'built-in': 'procedure',
-            'javascript': 'procedure/javascript'
+            'javascript': 'procedure/javascript',
+            'cmdline.exec': 'procedure/cmdline/exec',
+            'http.request': 'procedure/http/request',
+            'jdbc.query': 'procedure/jdbc/query',
+            'jdbc.statement': 'procedure/jdbc/statement'
         };
 
-        function isMatch(name) {
-            return name.startsWith(prefix);
-        }
+        var NAMES = {};
 
         function kebabCase(name) {
             return name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
         }
 
-        function convert(name) {
+        function read(name) {
             let src = readProc(name);
+            if (name.startsWith(prefix)) {
+                NAMES[name] = kebabCase(name.replace(/\./g, '/'));
+                return src;
+            } else if (src.alias) {
+                NAMES[src.alias] = src.id;
+                return null;
+            } else {
+                return null;
+            }
+        }
+
+        function convert(src) {
             let data = {
-                id: kebabCase(name.replace(/\./g, '/')),
+                id: NAMES[src.name] || src.name,
                 type: TYPES[src.type] || src.type,
-                alias: name
+                alias: src.name
             };
             if (data.type === 'procedure') {
                 data.className = [
                     'org.rapidcontext.app.proc.',
-                    name.replace(/\./g, '').replace('System', ''),
+                    src.name.replace(/\./g, '').replace('System', ''),
                     'Procedure'
                 ].join('');
             };
@@ -40,6 +54,9 @@ binding:
             (proc.binding || []).forEach(function (b) {
                 if (b.type === 'argument') {
                     delete b.value;
+                } else if (b.type === 'procedure') {
+                    b.value = NAMES[b.value] || b.value;
+                    delete b.description;
                 } else {
                     delete b.description;
                 }
@@ -53,7 +70,8 @@ binding:
             return path;
         }
 
-        return listProc().filter(isMatch).map(convert).map(store);
+        let procs = listProc().map(read).filter(Boolean);
+        return procs.map(convert).map(store);
   - name: listProc
     type: procedure
     value: system/procedure/list

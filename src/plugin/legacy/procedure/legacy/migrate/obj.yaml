@@ -1,0 +1,36 @@
+id: legacy/migrate/obj
+type: procedure/javascript
+description: Migrates objects to a YAML version.
+binding:
+  - name: code
+    type: data
+    value: |-
+        function kebabCase(id) {
+            return id.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+        }
+
+        function migrate(o) {
+            let opts = { path: o.metadata.path };
+            let path = o.metadata.path.split('/').slice(1);
+            let type = path[0];
+            let id = path.slice(1).map(kebabCase).join('/');
+            if (o.data.id && o.data.id !== id) {
+                Object.assign(o.data, { id: id, alias: o.data.id });
+                opts.updateTo = ['', type, id].join('/') + '.yaml';
+            } else {
+                opts.updateTo = opts.path + '.yaml';
+            }
+            storageWrite(opts, o.data);
+            return opts.updateTo;
+        }
+
+        return listObjs({ path: path, metadata: true }).map(migrate);
+  - name: listObjs
+    type: procedure
+    value: system/storage/read
+  - name: storageWrite
+    type: procedure
+    value: system/storage/write
+  - name: path
+    type: argument
+    description: The base storage path

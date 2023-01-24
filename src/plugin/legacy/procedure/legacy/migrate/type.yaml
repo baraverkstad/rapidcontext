@@ -27,8 +27,8 @@ binding:
             return path;
         }
 
-        return Object.values(listProc()).filter(isMatch).map(convert).map(store);
-  - name: listProc
+        return Object.values(listTypes()).filter(isMatch).map(convert).map(store);
+  - name: listTypes
     type: procedure
     value: system/procedure/types
   - name: storageWrite
@@ -36,4 +36,4 @@ binding:
     value: system/storage/write
   - name: prefix
     type: argument
-    description: The procedure type name prefix
+    description: The procedure type prefix
