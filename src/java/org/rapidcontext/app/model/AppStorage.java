@@ -56,7 +56,7 @@ public class AppStorage extends RootStorage {
      * @return true if the path is valid, or false otherwise
      */
     public boolean isAccessible(Path path) {
-        return !isObjectPath(path) || !path.toString().contains(".");
+        return !isObjectPath(path) || objectPath(path).equals(path);
     }
 
     /**
