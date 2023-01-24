@@ -95,6 +95,7 @@ public class ProcedureReadProcedure extends Procedure {
             StorableObject storable = (StorableObject) proc;
             res.set("id", storable.id());
             res.set("type", storable.type());
+            res.set("alias", storable.serialize().getString("alias", null));
         } else if (proc instanceof AddOnProcedure) {
             res.set("type", ((AddOnProcedure) proc).getType());
         } else {
