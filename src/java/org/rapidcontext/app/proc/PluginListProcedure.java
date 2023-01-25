@@ -15,7 +15,6 @@
 package org.rapidcontext.app.proc;
 
 import org.rapidcontext.app.ApplicationContext;
-import org.rapidcontext.app.plugin.PluginManager;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
@@ -74,7 +73,7 @@ public class PluginListProcedure extends Procedure {
         for (Object o : storages) {
             String path = ((Dict) o).getString(Storage.KEY_MOUNT_PATH, "/");
             if (SecurityContext.hasReadAccess(path)) {
-                if (path.startsWith(PluginManager.PATH_STORAGE_PLUGIN.toString())) {
+                if (path.startsWith(Plugin.PATH_STORAGE.toString())) {
                     String pluginId = Path.from(path).name();
                     Dict conf = ctx.pluginConfig(pluginId);
                     if (conf == null) {

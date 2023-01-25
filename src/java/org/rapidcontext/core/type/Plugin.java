@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.storage.Path;
+import org.rapidcontext.core.storage.RootStorage;
 import org.rapidcontext.core.storage.StorableObject;
 
 /**
@@ -66,6 +67,63 @@ public class Plugin extends StorableObject {
      * The plug-in object storage path.
      */
     public static final Path PATH = Path.from("/plugin/");
+
+    /**
+     * The storage path to mounted plug-in storages.
+     */
+    public static final Path PATH_STORAGE =
+        RootStorage.PATH_STORAGE.child("plugin", true);
+
+    /**
+     * The storage path to mounted plug-in caches.
+     */
+    public static final Path PATH_CACHE =
+        RootStorage.PATH_STORAGE.child("cache", true);
+
+    /**
+     * Returns the plug-in storage path for a specified plug-in id.
+     *
+     * @param pluginId       the unique plug-in id
+     *
+     * @return the plug-in storage path
+     */
+    public static Path storagePath(String pluginId) {
+        return PATH_STORAGE.child(pluginId, true);
+    }
+
+    /**
+     * Returns the plug-in cache path for a specified plug-in id.
+     *
+     * @param pluginId       the unique plug-in id
+     *
+     * @return the plug-in cache path
+     */
+    public static Path cachePath(String pluginId) {
+        return PATH_CACHE.child(pluginId, true);
+    }
+
+    /**
+     * Returns the object path for a loaded and initialized plug-in.
+     *
+     * @param pluginId       the unique plug-in id
+     *
+     * @return the plug-in storage path
+     */
+    public static Path instancePath(String pluginId) {
+        return PATH.child(pluginId, false);
+    }
+
+    /**
+     * Returns the object path for a plug-in configuration object.
+     * This path with point directly to the mounted plug-in storage.
+     *
+     * @param pluginId       the unique plug-in id
+     *
+     * @return the plug-in storage path
+     */
+    public static Path configPath(String pluginId) {
+        return Path.resolve(storagePath(pluginId), instancePath(pluginId));
+    }
 
     /**
      * Normalizes a plug-in data object if needed. This method will

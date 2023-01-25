@@ -27,6 +27,7 @@ import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.core.storage.Storage;
+import org.rapidcontext.core.type.Plugin;
 import org.rapidcontext.core.type.Procedure;
 
 /**
@@ -87,7 +88,7 @@ public class ProcedureReadProcedure extends Procedure {
     static Dict getProcedureData(Library library, org.rapidcontext.core.proc.Procedure proc)
     throws ProcedureException {
         Storage storage = ApplicationContext.getInstance().getStorage();
-        Path storagePath = PluginManager.storagePath(PluginManager.LOCAL_PLUGIN);
+        Path storagePath = Plugin.storagePath(PluginManager.LOCAL_PLUGIN);
         Path path = Path.resolve(Library.PATH_PROC, proc.getName());
         Metadata meta = storage.lookup(Path.resolve(storagePath, path));
         Dict res = new Dict();

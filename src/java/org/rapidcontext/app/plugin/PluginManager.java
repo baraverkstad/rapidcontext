@@ -53,18 +53,6 @@ public class PluginManager {
         Logger.getLogger(PluginManager.class.getName());
 
     /**
-     * The storage path to the mounted plug-in file storages.
-     */
-    public static final Path PATH_STORAGE_PLUGIN =
-        AppStorage.PATH_STORAGE.child("plugin", true);
-
-    /**
-     * The storage path to the plug-in cache storages.
-     */
-    public static final Path PATH_STORAGE_CACHE =
-        AppStorage.PATH_STORAGE.child("cache", true);
-
-    /**
      * The platform information path.
      */
     public static final Path PATH_INFO = Path.from("/platform");
@@ -113,28 +101,6 @@ public class PluginManager {
     private ArrayList<File> tempFiles = new ArrayList<>();
 
     /**
-     * Returns the plug-in storage path for a specified plug-in id.
-     *
-     * @param pluginId       the unique plug-in id
-     *
-     * @return the plug-in storage path
-     */
-    public static Path storagePath(String pluginId) {
-        return PATH_STORAGE_PLUGIN.child(pluginId, true);
-    }
-
-    /**
-     * Returns the plug-in cache path for a specified plug-in id.
-     *
-     * @param pluginId       the unique plug-in id
-     *
-     * @return the plug-in cache path
-     */
-    public static Path cachePath(String pluginId) {
-        return PATH_STORAGE_CACHE.child(pluginId, true);
-    }
-
-    /**
      * Returns the plug-in identifier for a storage object. The
      * object storage paths will be used to return the first matching
      * plug-in.
@@ -147,7 +113,7 @@ public class PluginManager {
     public static String pluginId(Metadata meta) {
         for (Object o : meta.storages()) {
             Path path = (Path) o;
-            if (path.startsWith(PATH_STORAGE_PLUGIN)) {
+            if (path.startsWith(Plugin.PATH_STORAGE)) {
                 return path.name();
             }
         }
@@ -221,7 +187,7 @@ public class PluginManager {
      *         false otherwise
      */
     public boolean isAvailable(String pluginId) {
-        return storage.lookup(storagePath(pluginId)) != null;
+        return storage.lookup(Plugin.storagePath(pluginId)) != null;
     }
 
     /**
@@ -233,7 +199,7 @@ public class PluginManager {
      *         false otherwise
      */
     public boolean isLoaded(String pluginId) {
-        return storage.lookup(Path.resolve(Plugin.PATH, pluginId)) != null ||
+        return storage.lookup(Plugin.instancePath(pluginId)) != null ||
                SYSTEM_PLUGIN.equals(pluginId) ||
                LOCAL_PLUGIN.equals(pluginId);
     }
@@ -249,7 +215,7 @@ public class PluginManager {
      */
     public Dict config(String pluginId) {
         Path pluginPath = Path.resolve(Plugin.PATH, pluginId);
-        return (Dict) storage.load(Path.resolve(storagePath(pluginId), pluginPath));
+        return (Dict) storage.load(Path.resolve(Plugin.storagePath(pluginId), pluginPath));
     }
 
     /**
@@ -324,7 +290,7 @@ public class PluginManager {
             } else {
                 ps = new PluginZipStorage(pluginId, file);
             }
-            storage.mount(ps, storagePath(pluginId));
+            storage.mount(ps, Plugin.storagePath(pluginId));
         } catch (Exception e) {
             msg = "failed to create " + pluginId + " plug-in storage";
             LOG.log(Level.SEVERE, msg, e);
@@ -344,7 +310,7 @@ public class PluginManager {
      */
     private void destroyStorage(String pluginId) throws PluginException {
         try {
-            storage.unmount(storagePath(pluginId));
+            storage.unmount(Plugin.storagePath(pluginId));
         } catch (StorageException e) {
             String msg = "failed to remove " + pluginId + " plug-in storage";
             LOG.log(Level.SEVERE, msg, e);
@@ -449,8 +415,8 @@ public class PluginManager {
      */
     private void loadOverlay(String pluginId) throws PluginException {
         try {
-            Path path = storagePath(pluginId);
-            Path cache = cachePath(pluginId);
+            Path path = Plugin.storagePath(pluginId);
+            Path cache = Plugin.cachePath(pluginId);
             boolean readWrite = LOCAL_PLUGIN.equals(pluginId);
             int prio = SYSTEM_PLUGIN.equals(pluginId) ? 0 : 100;
             storage.remount(path, readWrite, cache, Path.ROOT, prio);
@@ -475,7 +441,7 @@ public class PluginManager {
             throw new PluginException(msg);
         }
         try {
-            storage.remount(storagePath(pluginId), false, null, null, 0);
+            storage.remount(Plugin.storagePath(pluginId), false, null, null, 0);
         } catch (StorageException e) {
             String msg = "plugin " + pluginId + " storage remount failed";
             LOG.log(Level.WARNING, msg, e);
@@ -522,7 +488,7 @@ public class PluginManager {
      * @param pluginId       the unique plug-in id
      */
     private void loadJarFiles(String pluginId) {
-        Path path = Path.resolve(storagePath(pluginId), AppStorage.PATH_LIB);
+        Path path = Path.resolve(Plugin.storagePath(pluginId), AppStorage.PATH_LIB);
         storage.query(path)
             .filterFileExtension(".jar")
             .metadatas()
