@@ -71,7 +71,7 @@ public class MemoryStorage extends Storage {
         this.storageInfo = storageInfo;
         if (storageInfo) {
             objects.put(PATH_STORAGEINFO, dict);
-            meta.put(PATH_STORAGEINFO, new Metadata(Dict.class, PATH_STORAGEINFO, path(), null, null));
+            meta.put(PATH_STORAGEINFO, new Metadata(Dict.class, PATH_STORAGEINFO, path()));
             indexInsert(PATH_STORAGEINFO);
         }
     }
@@ -113,7 +113,8 @@ public class MemoryStorage extends Storage {
      */
     public synchronized Metadata lookup(Path path) {
         if (storageInfo && PATH_STORAGEINFO.equals(path)) {
-            return new Metadata(Dict.class, PATH_STORAGEINFO, path(), null, mountTime());
+            Metadata m = new Metadata(Dict.class, PATH_STORAGEINFO, path());
+            return m.modified(mountTime());
         }
         return meta.get(path);
     }
@@ -175,7 +176,7 @@ public class MemoryStorage extends Storage {
             remove(path);
         }
         objects.put(path, data);
-        meta.put(path, new Metadata(data.getClass(), path, path(), null, null));
+        meta.put(path, new Metadata(data.getClass(), path, path()));
         indexInsert(path);
     }
 
@@ -239,10 +240,10 @@ public class MemoryStorage extends Storage {
         }
         idx.setModified(null);
         if (objects.containsKey(parent)) {
-            meta.get(parent).updateLastModified(null);
+            meta.get(parent).modified(null);
         } else {
             objects.put(parent, idx);
-            meta.put(parent, new Metadata(Index.class, parent, path(), null, null));
+            meta.put(parent, new Metadata(Index.class, parent, path()));
             if (!parent.isRoot()) {
                 indexInsert(parent);
             }
@@ -272,7 +273,7 @@ public class MemoryStorage extends Storage {
                 indexRemove(parent);
             }
         } else {
-            meta.get(parent).updateLastModified(null);
+            meta.get(parent).modified(null);
         }
     }
 

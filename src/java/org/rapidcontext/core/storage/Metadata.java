@@ -71,6 +71,12 @@ public class Metadata extends StorableObject {
     public static final String KEY_MODIFIED = "modified";
 
     /**
+     * The dictionary key for the size (in bytes) of the stored data.
+     * The value stored is a Long value.
+     */
+    public static final String KEY_SIZE = "size";
+
+    /**
      * The index category value.
      */
     public static final String CATEGORY_INDEX = "index";
@@ -152,9 +158,13 @@ public class Metadata extends StorableObject {
         super(meta1.id(), "metadata");
         dict.setAll(meta1.dict);
         dict.set(PREFIX_COMPUTED + KEY_STORAGES, meta1.storages().union(meta2.storages()));
-        if (isIndex() && meta2.modified().after(meta1.modified())) {
-            dict.set(KEY_MODIFIED, meta2.modified());
+        if (mimeType() == null) {
+            mimeType(meta2.mimeType());
         }
+        if (isIndex() && meta2.modified().after(meta1.modified())) {
+            modified(meta2.modified());
+        }
+        size(Math.max(meta1.size(), meta2.size()));
     }
 
     /**
@@ -163,32 +173,16 @@ public class Metadata extends StorableObject {
      * @param clazz          the object class
      * @param path           the absolute object path
      * @param storagePath    the absolute storage path
-     * @param mime           the MIME type, or null for unknown
-     * @param modified       the last modified date, or null for now
      */
-    public Metadata(Class<?> clazz, Path path, Path storagePath, String mime, Date modified) {
-        this(category(clazz), clazz, path, storagePath, mime, modified);
-    }
-
-    /**
-     * Creates a new metadata container.
-     *
-     * @param category       the object category
-     * @param clazz          the object class
-     * @param path           the absolute object path
-     * @param storagePath    the absolute storage path
-     * @param mime           the MIME type, or null for unknown
-     * @param modified       the last modified date, or null for now
-     */
-    public Metadata(String category, Class<?> clazz, Path path, Path storagePath, String mime, Date modified) {
+    public Metadata(Class<?> clazz, Path path, Path storagePath) {
         super(path.toString(), "metadata");
-        dict.set(KEY_CATEGORY, category);
+        dict.set(KEY_CATEGORY, category(clazz));
         dict.set(KEY_CLASS, clazz);
         dict.set(KEY_PATH, path);
-        dict.set(PREFIX_COMPUTED + KEY_STORAGES, new Array());
-        dict.getArray(PREFIX_COMPUTED + KEY_STORAGES).add(storagePath);
-        dict.set(KEY_MIMETYPE, mime);
-        dict.set(KEY_MODIFIED, (modified == null) ? new Date() : modified);
+        dict.set(PREFIX_COMPUTED + KEY_STORAGES, new Array().add(storagePath));
+        dict.set(KEY_MIMETYPE, null);
+        dict.set(KEY_MODIFIED, new Date());
+        dict.set(KEY_SIZE, 0L);
     }
 
     /**
@@ -294,6 +288,18 @@ public class Metadata extends StorableObject {
     }
 
     /**
+     * Sets the MIME type for the object.
+     *
+     * @param mime           the MIME type, or null for unknown
+     *
+     * @return this metadata object (for chaining)
+     */
+    protected Metadata mimeType(String mime) {
+        dict.set(KEY_MIMETYPE, mime);
+        return this;
+    }
+
+    /**
      * Returns the last modified date for the object.
      *
      * @return the last modified date for the object
@@ -303,12 +309,37 @@ public class Metadata extends StorableObject {
     }
 
     /**
-     * Updates the last modified date for the object.
+     * Sets the last modified date for the object.
      *
      * @param date           the date to set, or null for now
+     *
+     * @return this metadata object (for chaining)
      */
-    protected void updateLastModified(Date date) {
+    protected Metadata modified(Date date) {
         dict.set(KEY_MODIFIED, (date == null) ? new Date() : date);
+        return this;
+    }
+
+    /**
+     * Returns the size (in bytes) of the object.
+     *
+     * @return the size (in bytes) of the object, or
+     *         zero (0) if unknown
+     */
+    public long size() {
+        return (Long) dict.get(KEY_SIZE);
+    }
+
+    /**
+     * Sets the size (in bytes) of the object.
+     *
+     * @param size           the size to set
+     *
+     * @return this metadata object (for chaining)
+     */
+    protected Metadata size(long size) {
+        dict.set(KEY_SIZE, size);
+        return this;
     }
 
     /**
