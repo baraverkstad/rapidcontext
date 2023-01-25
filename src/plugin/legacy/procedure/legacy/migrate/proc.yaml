@@ -16,14 +16,20 @@ binding:
 
         var NAMES = {};
 
-        function kebabCase(name) {
-            return name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+        function rename(name) {
+            function toLower(s) {
+                return (s == s.toUpperCase()) ? s : s.toLowerCase();
+            }
+            name = name.replace(/\./g, '/');
+            name = name.replace(/([a-z0-9])([A-Z])/g, '$1-$2');
+            return name.split('/').map(toLower).join('/');
+            return name.toLowerCase();
         }
 
         function read(name) {
             let src = readProc(name);
             if (name.startsWith(prefix)) {
-                NAMES[name] = kebabCase(name.replace(/\./g, '/'));
+                NAMES[name] = rename(name);
                 return src;
             } else if (src.alias) {
                 NAMES[src.alias] = src.id;
@@ -56,6 +62,9 @@ binding:
                     delete b.value;
                 } else if (b.type === 'procedure') {
                     b.value = NAMES[b.value] || b.value;
+                    delete b.description;
+                } else if (b.type === 'data' && b.name === 'code') {
+                    b.value = b.value.trim() + '\n';
                     delete b.description;
                 } else {
                     delete b.description;
