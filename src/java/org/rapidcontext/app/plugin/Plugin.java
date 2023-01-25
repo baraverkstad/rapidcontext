@@ -17,8 +17,6 @@ package org.rapidcontext.app.plugin;
 import java.util.logging.Logger;
 
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.storage.Path;
-import org.rapidcontext.core.storage.StorableObject;
 
 /**
  * The base plug-in class. A plug-in may extend this class in order
@@ -28,60 +26,15 @@ import org.rapidcontext.core.storage.StorableObject;
  *
  * @author   Per Cederberg
  * @version  1.0
+ * @deprecated Use org.rapidcontext.core.type.Plugin instead.
  */
-public class Plugin extends StorableObject {
+@Deprecated
+public class Plugin extends org.rapidcontext.core.type.Plugin {
 
     /**
      * The class logger.
      */
     private static final Logger LOG = Logger.getLogger(Plugin.class.getName());
-
-    /**
-     * The dictionary key for the plug-in build version.
-     */
-    public static final String KEY_VERSION = "version";
-
-    /**
-     * The dictionary key for the minimum platform version needed.
-     */
-    public static final String KEY_PLATFORM = "platform";
-
-    /**
-     * The dictionary key for the plug-in build date.
-     */
-    public static final String KEY_DATE = "date";
-
-    /**
-     * The dictionary key for the plug-in copyright notice.
-     */
-    public static final String KEY_COPYRIGHT = "copyright";
-
-    /**
-     * The dictionary key for the plug-in description text.
-     */
-    public static final String KEY_DESCRIPTION = "description";
-
-    /**
-     * The plug-in object storage path.
-     */
-    public static final Path PATH = Path.from("/plugin/");
-
-    /**
-     * Normalizes a plug-in data object if needed. This method will
-     * modify legacy data into the proper keys and values.
-     *
-     * @param id             the object identifier
-     * @param dict           the storage data
-     *
-     * @return the storage data (possibly modified)
-     */
-    public static Dict normalize(String id, Dict dict) {
-        if (!dict.containsKey(KEY_TYPE)) {
-            LOG.warning("deprecated: plugin " + id + " data: missing object type");
-            dict.set(KEY_TYPE, "plugin");
-        }
-        return dict;
-    }
 
     /**
      * Creates a new plug-in from a serialized representation.
@@ -91,7 +44,8 @@ public class Plugin extends StorableObject {
      * @param dict           the serialized representation
      */
     public Plugin(String id, String type, Dict dict) {
-        super(id, type, normalize(id, dict));
+        super(id, type, dict);
+        LOG.warning("deprecated: legacy plug-in class referenced for " + this);
     }
 
     /**
@@ -106,6 +60,7 @@ public class Plugin extends StorableObject {
      */
     @Deprecated
     public Plugin(Dict dict) {
-        this(dict.getString(KEY_ID, ""), "plugin", dict);
+        super(dict.getString(KEY_ID, ""), "plugin", dict);
+        LOG.warning("deprecated: legacy plug-in constructor called for " + this);
     }
 }

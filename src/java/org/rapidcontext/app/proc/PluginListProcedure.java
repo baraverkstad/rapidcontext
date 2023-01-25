@@ -15,7 +15,6 @@
 package org.rapidcontext.app.proc;
 
 import org.rapidcontext.app.ApplicationContext;
-import org.rapidcontext.app.plugin.Plugin;
 import org.rapidcontext.app.plugin.PluginManager;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
@@ -25,6 +24,7 @@ import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.Storage;
+import org.rapidcontext.core.type.Plugin;
 import org.rapidcontext.core.type.Procedure;
 
 /**

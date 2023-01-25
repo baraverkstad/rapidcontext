@@ -1,10 +1,11 @@
 id: plugin
 type: type
 description: >-
-    A system extension plug-in. The plug-in bundles types, code, JAR files, and
-    data objects into a storage bundle that can be loaded and unloaded by an
-    administrator.
-initializer: org.rapidcontext.app.plugin.Plugin
+    A bundle of add-on functionality to the system. The plug-in bundles types,
+    code, JAR files, web files and data objects into a storage bundle that can
+    be loaded and unloaded dynamically. A plug-in is usually distributed as a
+    ZIP file with the '.plugin' file extension.
+initializer: org.rapidcontext.core.type.Plugin
 property:
   - name: version
     description: The plug-in build/release version.

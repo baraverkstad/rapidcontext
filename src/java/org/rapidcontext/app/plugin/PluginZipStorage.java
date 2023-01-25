@@ -21,6 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.core.storage.Index;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.ZipStorage;
+import org.rapidcontext.core.type.Plugin;
 
 /**
  * A ZIP file storage for plug-ins. This class normalizes some legacy

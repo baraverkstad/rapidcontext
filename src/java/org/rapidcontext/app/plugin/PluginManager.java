@@ -33,6 +33,7 @@ import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.storage.StorageException;
 import org.rapidcontext.core.storage.ZipStorage;
+import org.rapidcontext.core.type.Plugin;
 import org.rapidcontext.core.type.Type;
 import org.rapidcontext.util.FileUtil;
 
