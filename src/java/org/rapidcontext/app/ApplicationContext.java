@@ -370,18 +370,6 @@ public class ApplicationContext {
     }
 
     /**
-     * Returns the specified plug-in configuration dictionary.
-     *
-     * @param pluginId       the unique plug-in id
-     *
-     * @return the plug-in configuration dictionary, or
-     *         null if not found
-     */
-    public Dict pluginConfig(String pluginId) {
-        return pluginManager.config(pluginId);
-    }
-
-    /**
      * Installs a plug-in from the specified file. If an existing
      * plug-in with the same id already exists, it will be
      * replaced without warning. After installation, the new plug-in

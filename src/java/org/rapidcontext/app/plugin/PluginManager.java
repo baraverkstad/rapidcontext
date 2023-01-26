@@ -205,20 +205,6 @@ public class PluginManager {
     }
 
     /**
-     * Returns the plug-in configuration data. This will return a
-     * dictionary whether a plug-in is loaded or not.
-     *
-     * @param pluginId       the unique plug-in id
-     *
-     * @return the plug-in configuration dictionary, or
-     *         null if not found
-     */
-    public Dict config(String pluginId) {
-        Path pluginPath = Path.resolve(Plugin.PATH, pluginId);
-        return (Dict) storage.load(Path.resolve(Plugin.storagePath(pluginId), pluginPath));
-    }
-
-    /**
      * Returns the plug-in identifier corresponding to a storage file
      * or directory.
      *

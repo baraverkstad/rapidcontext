@@ -17,6 +17,7 @@ package org.rapidcontext.core.storage;
 import java.lang.reflect.Constructor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.rapidcontext.core.data.Array;
@@ -148,6 +149,19 @@ public class RootStorage extends MemoryStorage {
      */
     private boolean isCached(Path storagePath) {
         return caches.origins().contains(storagePath);
+    }
+
+    /**
+     * Returns a stream of all mounted storages found under a path.
+     *
+     * @param path           the base path to check
+     *
+     * @return the stream of mounted storages
+     */
+    public Stream<Storage> mounts(Path path) {
+        return mountedStorages.stream()
+            .map(Storage.class::cast)
+            .filter(storage -> storage.path().startsWith(path));
     }
 
     /**

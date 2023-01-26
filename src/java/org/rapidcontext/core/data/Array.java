@@ -20,6 +20,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.rapidcontext.util.DateUtil;
@@ -142,6 +143,15 @@ public class Array implements Iterable<Object> {
     @Override
     public Iterator<Object> iterator() {
         return (list == null) ? Collections.emptyIterator() : list.iterator();
+    }
+
+    /**
+     * Returns a stream of all elements in the array.
+     *
+     * @return the object stream
+     */
+    public Stream<Object> stream() {
+        return (list == null) ? Stream.empty() : list.stream();
     }
 
     /**

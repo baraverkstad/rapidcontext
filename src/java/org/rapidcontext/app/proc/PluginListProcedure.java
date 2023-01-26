@@ -14,7 +14,7 @@
 
 package org.rapidcontext.app.proc;
 
-import org.rapidcontext.app.ApplicationContext;
+import org.rapidcontext.app.model.AppStorage;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
@@ -22,7 +22,6 @@ import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Path;
-import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.type.Plugin;
 import org.rapidcontext.core.type.Procedure;
 
@@ -65,28 +64,33 @@ public class PluginListProcedure extends Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        CallContext.checkSearchAccess("plugin/");
-        ApplicationContext ctx = ApplicationContext.getInstance();
-        Dict info = (Dict) ctx.getStorage().load(Storage.PATH_STORAGEINFO);
-        Array storages = info.getArray("storages");
-        Array res = new Array(storages.size());
-        for (Object o : storages) {
-            String path = ((Dict) o).getString(Storage.KEY_MOUNT_PATH, "/");
-            if (SecurityContext.hasReadAccess(path)) {
-                if (path.startsWith(Plugin.PATH_STORAGE.toString())) {
-                    String pluginId = Path.from(path).name();
-                    Dict conf = ctx.pluginConfig(pluginId);
-                    if (conf == null) {
-                        conf = new Dict();
-                        conf.set(Plugin.KEY_ID, pluginId);
+        CallContext.checkSearchAccess(Plugin.PATH_STORAGE.toString());
+        AppStorage storage = (AppStorage) cx.getStorage();
+        Array res = new Array();
+        storage.mounts(Plugin.PATH_STORAGE)
+            .map(s -> s.path().name())
+            .forEach(pluginId -> {
+                Path instancePath = Plugin.instancePath(pluginId);
+                Path configPath = Plugin.configPath(pluginId);
+                boolean hasAccess =
+                    SecurityContext.hasReadAccess(instancePath.toString()) &&
+                    SecurityContext.hasReadAccess(configPath.toString());
+                if (hasAccess) {
+                    Plugin instance = (Plugin) storage.load(instancePath);
+                    Dict config = (Dict) storage.load(configPath);
+                    if (instance != null) {
+                        config = instance.serialize();
+                        config.setBoolean("loaded", true);
+                    } else if (config != null) {
+                        config.setBoolean("loaded", false);
                     } else {
-                        conf = conf.copy();
+                        config = new Dict();
+                        config.set(Plugin.KEY_ID, pluginId);
+                        config.setBoolean("loaded", false);
                     }
-                    conf.setBoolean("loaded", ctx.isPluginLoaded(pluginId));
-                    res.add(conf);
+                    res.add(config);
                 }
-            }
-        }
+            });
         return res;
     }
 }
