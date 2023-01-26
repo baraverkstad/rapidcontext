@@ -396,10 +396,10 @@ public abstract class Connection extends StorableObject {
      */
     public Dict serialize() {
         Dict copy = super.serialize();
-        copy.setInt("_openChannels", openChannels());
-        copy.setInt("_usedChannels", usedChannels());
-        copy.set("_lastUsedTime", lastUsed());
-        copy.set("_lastError", lastError());
+        copy.setInt(PREFIX_COMPUTED + "openChannels", openChannels());
+        copy.setInt(PREFIX_COMPUTED + "usedChannels", usedChannels());
+        copy.set(PREFIX_COMPUTED + "lastUsedTime", lastUsed());
+        copy.set(PREFIX_COMPUTED + "lastError", lastError());
         return copy;
     }
 

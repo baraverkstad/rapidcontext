@@ -287,7 +287,7 @@ public class MemoryStorage extends Storage {
      */
     public Dict serialize() {
         Dict copy = super.serialize();
-        copy.setInt("_objectCount", objects.size());
+        copy.setInt(PREFIX_COMPUTED + "objectCount", objects.size());
         return copy;
     }
 }
