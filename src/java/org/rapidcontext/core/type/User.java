@@ -81,9 +81,9 @@ public class User extends StorableObject {
     public static final String KEY_ROLE = "role";
 
     /**
-     * The dictionary key for the authentication last modified timestamp.
+     * The dictionary key for the first valid authentication timestamp.
      */
-    public static final String KEY_ACCREDITED_TIME = "accreditedTime";
+    public static final String KEY_AUTHORIZED_TIME = "authorizedTime" ;
 
     /**
      * The dictionary key for the user settings dictionary.
@@ -172,6 +172,9 @@ public class User extends StorableObject {
             Dict copy = DEFAULTS.copy();
             copy.setAll(dict);
             dict = copy;
+        }
+        if (!dict.containsKey(KEY_AUTHORIZED_TIME)) {
+            dict.set(KEY_AUTHORIZED_TIME, new Date(0));
         }
         return dict;
     }
@@ -307,7 +310,7 @@ public class User extends StorableObject {
     public void setEnabled(boolean enabled) {
         if (isEnabled() != enabled) {
             dict.setBoolean(KEY_ENABLED, enabled);
-            dict.set(KEY_ACCREDITED_TIME, new Date());
+            dict.set(KEY_AUTHORIZED_TIME, new Date());
         }
     }
 
@@ -357,7 +360,7 @@ public class User extends StorableObject {
      */
     public void setPasswordHash(String passwordHash) {
         dict.set(PREFIX_HIDDEN + KEY_PASSWORD, passwordHash.toLowerCase());
-        dict.set(KEY_ACCREDITED_TIME, new Date());
+        dict.set(KEY_AUTHORIZED_TIME, new Date());
     }
 
     /**
@@ -488,12 +491,13 @@ public class User extends StorableObject {
     }
 
     /**
-     * Returns the authentication last modified timestamp.
+     * Returns the first valid authentication timestamp. Any session,
+     * auth token or similar created prior is considered invalid.
      *
-     * @return the authentication last modified timestamp
+     * @return the first valid authentication timestamp
      */
-    public Date accreditedTime() {
-        return dict.getDate(KEY_ACCREDITED_TIME, new Date(0));
+    public Date authorizedTime() {
+        return dict.getDate(KEY_AUTHORIZED_TIME, new Date(0));
     }
 
     /**

@@ -513,7 +513,7 @@ public class Session extends StorableObject {
         }
         try {
             User user = SecurityContext.auth(uid);
-            if (user.accreditedTime().after(accessTime())) {
+            if (user.authorizedTime().after(accessTime())) {
                 throw new SecurityException("Session no longer valid for user");
             }
             return user;

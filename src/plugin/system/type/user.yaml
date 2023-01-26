@@ -38,10 +38,11 @@ property:
         The list of role identifiers for the user. Defaults to an empty list.
         The user may still be associated to automatic roles.
     required: false
-  - name: accreditedTime
+  - name: authorizedTime
     description: >-
-        The time when user password (or other means of authentication) was last
-        modified. Sessions created before this are automatically invalidated.
+        The first valid authentication timestamp. Any session, auth token or
+        similar created prior is considered invalid. This timestamp should be
+        reset when a password (or other means of authentication) is modified.
     required: false
   - name: settings
     description: >-
