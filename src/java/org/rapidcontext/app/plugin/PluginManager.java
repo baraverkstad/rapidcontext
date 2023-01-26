@@ -191,20 +191,6 @@ public class PluginManager {
     }
 
     /**
-     * Checks if the specified plug-in is currently loaded.
-     *
-     * @param pluginId       the unique plug-in id
-     *
-     * @return true if the plug-in was loaded, or
-     *         false otherwise
-     */
-    public boolean isLoaded(String pluginId) {
-        return storage.lookup(Plugin.instancePath(pluginId)) != null ||
-               SYSTEM_PLUGIN.equals(pluginId) ||
-               LOCAL_PLUGIN.equals(pluginId);
-    }
-
-    /**
      * Returns the plug-in identifier corresponding to a storage file
      * or directory.
      *

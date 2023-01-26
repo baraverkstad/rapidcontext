@@ -358,18 +358,6 @@ public class ApplicationContext {
     }
 
     /**
-     * Checks if the specified plug-in is currently loaded.
-     *
-     * @param pluginId       the unique plug-in id
-     *
-     * @return true if the plug-in was loaded, or
-     *         false otherwise
-     */
-    public boolean isPluginLoaded(String pluginId) {
-        return pluginManager.isLoaded(pluginId);
-    }
-
-    /**
      * Installs a plug-in from the specified file. If an existing
      * plug-in with the same id already exists, it will be
      * replaced without warning. After installation, the new plug-in

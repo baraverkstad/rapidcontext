@@ -22,6 +22,8 @@ import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
+import org.rapidcontext.core.storage.Path;
+import org.rapidcontext.core.type.Plugin;
 import org.rapidcontext.core.type.Procedure;
 
 /**
@@ -69,13 +71,19 @@ public class PluginUnloadProcedure extends Procedure {
         throws ProcedureException {
 
         ApplicationContext ctx = ApplicationContext.getInstance();
-        String id = (String) bindings.getValue("pluginId");
-        CallContext.checkWriteAccess("plugin/" + id);
+        String pluginId = (String) bindings.getValue("pluginId");
+        Path path = Plugin.instancePath(pluginId);
+        CallContext.checkReadAccess(path.toString());
+        CallContext.checkWriteAccess(path.toString());
+        if (cx.getStorage().lookup(path) == null) {
+            String msg = "plug-in '" + pluginId + "' is not loaded";
+            throw new ProcedureException(this, msg);
+        }
         try {
-            LOG.info("unloading plugin " + id);
-            ctx.unloadPlugin(id);
+            LOG.info("unloading plugin " + pluginId);
+            ctx.unloadPlugin(pluginId);
         } catch (PluginException e) {
-            String msg = "failed to unload plug-in '" + id + "': " +
+            String msg = "failed to unload plug-in '" + pluginId + "': " +
                          e.getMessage();
             throw new ProcedureException(this, msg);
         }

@@ -22,6 +22,8 @@ import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
+import org.rapidcontext.core.storage.Path;
+import org.rapidcontext.core.type.Plugin;
 import org.rapidcontext.core.type.Procedure;
 
 /**
@@ -69,18 +71,19 @@ public class PluginLoadProcedure extends Procedure {
         throws ProcedureException {
 
         ApplicationContext ctx = ApplicationContext.getInstance();
-        String id = (String) bindings.getValue("pluginId");
-        CallContext.checkWriteAccess("plugin/" + id);
-        if (ctx.isPluginLoaded(id)) {
-            String msg = "failed to load plug-in '" + id + "': " +
-                         "plug-in is already loaded";
+        String pluginId = (String) bindings.getValue("pluginId");
+        Path path = Plugin.instancePath(pluginId);
+        CallContext.checkReadAccess(path.toString());
+        CallContext.checkWriteAccess(path.toString());
+        if (cx.getStorage().lookup(path) != null) {
+            String msg = "plug-in '" + pluginId + "' is already loaded";
             throw new ProcedureException(this, msg);
         }
         try {
-            LOG.info("loading plugin " + id);
-            ctx.loadPlugin(id);
+            LOG.info("loading plugin " + pluginId);
+            ctx.loadPlugin(pluginId);
         } catch (PluginException e) {
-            String msg = "failed to load plug-in '" + id + "': " +
+            String msg = "failed to load plug-in '" + pluginId + "': " +
                          e.getMessage();
             throw new ProcedureException(this, msg);
         }
