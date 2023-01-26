@@ -28,7 +28,6 @@ import org.rapidcontext.app.model.AppStorage;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.storage.DirStorage;
-import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.storage.StorageException;
@@ -99,26 +98,6 @@ public class PluginManager {
      * plug-ins, all these files are deleted.
      */
     private ArrayList<File> tempFiles = new ArrayList<>();
-
-    /**
-     * Returns the plug-in identifier for a storage object. The
-     * object storage paths will be used to return the first matching
-     * plug-in.
-     *
-     * @param meta           the metadata object
-     *
-     * @return the plug-in identifier, or
-     *         null if not found
-     */
-    public static String pluginId(Metadata meta) {
-        for (Object o : meta.storages()) {
-            Path path = (Path) o;
-            if (path.startsWith(Plugin.PATH_STORAGE)) {
-                return path.name();
-            }
-        }
-        return null;
-    }
 
     /**
      * Creates a new plug-in storage.

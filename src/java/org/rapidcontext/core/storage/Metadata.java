@@ -19,6 +19,7 @@ import java.util.Date;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
+import org.rapidcontext.core.type.Plugin;
 
 /**
  * An object metadata container. Used for basic introspection of
@@ -179,10 +180,10 @@ public class Metadata extends StorableObject {
         dict.set(KEY_CATEGORY, category(clazz));
         dict.set(KEY_CLASS, clazz);
         dict.set(KEY_PATH, path);
-        dict.set(PREFIX_COMPUTED + KEY_STORAGES, new Array().add(storagePath));
         dict.set(KEY_MIMETYPE, null);
         dict.set(KEY_MODIFIED, new Date());
         dict.set(KEY_SIZE, 0L);
+        dict.set(PREFIX_COMPUTED + KEY_STORAGES, new Array().add(storagePath));
     }
 
     /**
@@ -355,6 +356,7 @@ public class Metadata extends StorableObject {
         copy.remove(KEY_ID);
         copy.remove(KEY_TYPE);
         copy.remove(PREFIX_COMPUTED + KEY_ACTIVATED_TIME);
+        copy.add(PREFIX_COMPUTED + "plugin", Plugin.source(this));
         return copy;
     }
 }

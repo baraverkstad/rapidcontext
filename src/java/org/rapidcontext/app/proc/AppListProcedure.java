@@ -17,7 +17,6 @@ package org.rapidcontext.app.proc;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
-import org.rapidcontext.app.plugin.PluginManager;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
@@ -27,6 +26,7 @@ import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.RootStorage;
 import org.rapidcontext.core.storage.Storage;
+import org.rapidcontext.core.type.Plugin;
 import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.util.RegexUtil;
 
@@ -90,7 +90,7 @@ public class AppListProcedure extends Procedure {
 
     private Dict loadApp(Storage storage, Metadata meta) {
         Dict dict = ((Dict) storage.load(meta.path())).copy();
-        dict.set("plugin", PluginManager.pluginId(meta));
+        dict.set("plugin", Plugin.source(meta));
         Array arr = dict.getArray("resources");
         for (int i = 0; i < arr.size(); i++) {
             Object obj = arr.get(i);

@@ -14,7 +14,6 @@
 
 package org.rapidcontext.app.proc;
 
-import org.rapidcontext.app.plugin.PluginManager;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
@@ -23,6 +22,7 @@ import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.type.Connection;
+import org.rapidcontext.core.type.Plugin;
 import org.rapidcontext.core.type.Procedure;
 
 /**
@@ -83,7 +83,7 @@ public class ConnectionListProcedure extends Procedure {
                     }
                 }
                 if (dict != null) {
-                    dict.add("plugin", PluginManager.pluginId(meta));
+                    dict.add("plugin", Plugin.source(meta));
                     res.add(dict);
                 }
             });

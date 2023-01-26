@@ -17,6 +17,7 @@ package org.rapidcontext.core.type;
 import java.util.logging.Logger;
 
 import org.rapidcontext.core.data.Dict;
+import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.RootStorage;
 import org.rapidcontext.core.storage.StorableObject;
@@ -123,6 +124,26 @@ public class Plugin extends StorableObject {
      */
     public static Path configPath(String pluginId) {
         return Path.resolve(storagePath(pluginId), instancePath(pluginId));
+    }
+
+    /**
+     * Returns the plug-in identifier for a storage object. The
+     * metadata storage paths will be used to return the first
+     * matching plug-in.
+     *
+     * @param meta           the metadata object
+     *
+     * @return the plug-in identifier, or
+     *         null if not found
+     */
+    public static String source(Metadata meta) {
+        for (Object o : meta.storages()) {
+            Path path = (Path) o;
+            if (path.startsWith(PATH_STORAGE) && path.isIndex()) {
+                return path.name();
+            }
+        }
+        return null;
     }
 
     /**
