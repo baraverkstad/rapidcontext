@@ -1,4 +1,4 @@
-FROM alpine:3.16
+FROM alpine:3.17
 ARG VERSION
 ADD rapidcontext-${VERSION}.zip /opt/
 RUN apk add --no-cache openjdk17-jre && \
