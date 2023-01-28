@@ -68,7 +68,7 @@ public class UserListProcedure extends Procedure {
         Storage storage = cx.getStorage();
         Array res = new Array();
         storage.query(User.PATH)
-            .filterReadAccess()
+            .filterAccess(cx.readPermission(1))
             .objects(User.class)
             .forEach(user -> res.add(StorableObject.sterilize(user, true, true, true)));
         res.sort("id");

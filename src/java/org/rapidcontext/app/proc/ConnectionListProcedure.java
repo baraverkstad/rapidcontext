@@ -67,7 +67,7 @@ public class ConnectionListProcedure extends Procedure {
         Array res = new Array();
         Storage storage = cx.getStorage();
         storage.query(Connection.PATH)
-            .filterReadAccess()
+            .filterAccess(cx.readPermission(1))
             .metadatas()
             .forEach(meta -> {
                 Object o = storage.load(meta.path());

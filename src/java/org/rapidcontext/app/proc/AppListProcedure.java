@@ -76,9 +76,9 @@ public class AppListProcedure extends Procedure {
         CallContext.checkSearchAccess(PATH_APP.toString());
         Storage storage = cx.getStorage();
         Dict[] apps = storage.query(PATH_APP)
-            .filterReadAccess()
+            .filterAccess(cx.readPermission(1))
             .metadatas(Dict.class)
-            .map(meta -> loadApp(storage, meta))
+            .map(meta -> loadApp(storage, meta, cx.readPermission(1)))
             .toArray(Dict[]::new);
         Array res = new Array(apps.length);
         for (Dict app : apps) {
@@ -88,7 +88,7 @@ public class AppListProcedure extends Procedure {
         return res;
     }
 
-    private Dict loadApp(Storage storage, Metadata meta) {
+    private Dict loadApp(Storage storage, Metadata meta, String permission) {
         Dict dict = ((Dict) storage.load(meta.path())).copy();
         dict.set("plugin", Plugin.source(meta));
         Array arr = dict.getArray("resources");
@@ -98,7 +98,7 @@ public class AppListProcedure extends Procedure {
             String url = resource.getString("url", obj.toString());
             if (!url.contains("//:") && StringUtils.containsAny(url, "*?")) {
                 arr.remove(i--);
-                for (String str : resolveFiles(storage, url)) {
+                for (String str : resolveFiles(storage, url, permission)) {
                     Dict copy = resource.copy();
                     copy.set("url", str);
                     arr.add(copy);
@@ -108,14 +108,14 @@ public class AppListProcedure extends Procedure {
         return dict;
     }
 
-    private String[] resolveFiles(Storage storage, String url) {
+    private String[] resolveFiles(Storage storage, String url, String permission) {
         Path base = Path.resolve(RootStorage.PATH_FILES, url);
         while (StringUtils.containsAny(base.toString(), "*?")) {
             base = base.parent();
         }
         Pattern re = Pattern.compile(RegexUtil.fromGlob(url) + "$");
         return storage.query(base)
-            .filterReadAccess()
+            .filterAccess(permission)
             .paths()
             .filter(path -> re.matcher(path.toString()).find())
             .map(path -> path.toIdent(1))

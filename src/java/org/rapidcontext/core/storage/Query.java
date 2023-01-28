@@ -99,12 +99,14 @@ public class Query {
     }
 
     /**
-     * Adds a user read access filter to all results.
+     * Adds an access filter (for current user) to all results.
+     *
+     * @param permission     the permission to require
      *
      * @return this query instance
      */
-    public Query filterReadAccess() {
-        return filter(path -> SecurityContext.hasReadAccess(path.toString()));
+    public Query filterAccess(String permission) {
+        return filter(path -> SecurityContext.hasAccess(path.toString(), permission));
     }
 
     /**

@@ -70,7 +70,7 @@ public class StorageReadProcedure extends Procedure {
         } else {
             CallContext.checkAccess(path.toString(), cx.readPermission(1));
         }
-        Stream<Object> stream = ApiUtil.load(cx.getStorage(), path, opts);
+        Stream<Object> stream = ApiUtil.load(cx.getStorage(), path, cx.readPermission(1), opts);
         if (path.isIndex()) {
             Array res = new Array();
             stream.forEach(o -> res.add(o));

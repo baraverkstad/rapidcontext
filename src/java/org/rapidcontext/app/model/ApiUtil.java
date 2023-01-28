@@ -71,12 +71,13 @@ public class ApiUtil {
      *
      * @param storage        the storage to search
      * @param path           the base path to query
+     * @param perm           the access permission required
      * @param opts           the query options
      *
      * @return a stream of metadata for matching objects
      */
-    public static Stream<Metadata> lookup(Storage storage, Path path, Dict opts) {
-        Query query = storage.query(path).filterReadAccess();
+    public static Stream<Metadata> lookup(Storage storage, Path path, String perm, Dict opts) {
+        Query query = storage.query(path).filterAccess(perm);
         if (opts.containsKey("depth")) {
             query.filterDepth(opts.getInt("depth", -1));
         }
@@ -108,14 +109,15 @@ public class ApiUtil {
      *
      * @param storage        the storage to search
      * @param path           the base path to query
+     * @param perm           the access permission required
      * @param opts           the query options
      *
      * @return a stream of serialized matching objects
      */
-    public static Stream<Object> load(Storage storage, Path path, Dict opts) {
+    public static Stream<Object> load(Storage storage, Path path, String perm, Dict opts) {
         boolean computed = opts.getBoolean("computed", false);
         boolean metadata = opts.getBoolean("metadata", false);
-        return lookup(storage, path, opts)
+        return lookup(storage, path, perm, opts)
             .map(m -> {
                 Object o = storage.load(m.path());
                 if (metadata) {
