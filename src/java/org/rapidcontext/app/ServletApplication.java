@@ -235,25 +235,32 @@ public class ServletApplication extends HttpServlet {
      */
     private void processAuthResponse(Request request, Dict auth)
     throws Exception {
-        String  uri = auth.getString("uri", request.getAbsolutePath());
-        String  user = auth.getString("username", "");
-        String  realm = auth.getString("realm", "");
-        String  nonce = auth.getString("nonce", "");
-        String  nc = auth.getString("nc", "");
-        String  cnonce = auth.getString("cnonce", "");
-        String  response = auth.getString("response", "");
-        String  suffix;
-
-        // Verify authentication response
-        if (!User.DEFAULT_REALM.equals(realm)) {
-            LOG.info(ip(request) + "Invalid authentication realm: " + realm);
-            throw new SecurityException("Invalid authentication realm");
+        String type = auth.getString("type", "");
+        if (type.equalsIgnoreCase("Digest")) {
+            if (!User.DEFAULT_REALM.equals(auth.get("realm"))) {
+                String msg = "Unsupported authentication realm: " + auth.get("realm");
+                throw new SecurityException(msg);
+            } else if (!"MD5".equalsIgnoreCase(auth.getString("algorithm", "MD5"))) {
+                String msg = "Unsupported authentication algorithm: " + auth.get("algorithm");
+                throw new SecurityException(msg);
+            }
+            String user = auth.getString("username", "");
+            String uri = auth.getString("uri", request.getAbsolutePath());
+            String nonce = auth.getString("nonce", "");
+            String nc = auth.getString("nc", "");
+            String cnonce = auth.getString("cnonce", "");
+            String response = auth.getString("response", "");
+            SecurityContext.verifyNonce(nonce);
+            String suffix = ":" + nonce + ":" + nc + ":" + cnonce + ":auth:" +
+                            BinaryUtil.hashMD5(request.getMethod() + ":" + uri);
+            SecurityContext.authHash(user, suffix, response);
+        } else if (type.equalsIgnoreCase("Token")) {
+            SecurityContext.authToken(auth.getString("data", type));
+        } else {
+            throw new SecurityException("Unsupported authentication type: " + type);
         }
-        SecurityContext.verifyNonce(nonce);
-        suffix = ":" + nonce + ":" + nc + ":" + cnonce + ":auth:" +
-                 BinaryUtil.hashMD5(request.getMethod() + ":" + uri);
-        SecurityContext.authHash(user, suffix, response);
-        LOG.fine(ip(request) + "Valid authentication for " + user);
+        LOG.fine(ip(request) + "Valid '" + type + "' auth for " +
+                 SecurityContext.currentUser());
     }
 
     /**

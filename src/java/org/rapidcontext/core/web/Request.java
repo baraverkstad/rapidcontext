@@ -690,7 +690,7 @@ public class Request implements HttpUtil {
         sendClear();
         responseType = AUTH_RESPONSE;
         responseData = "Digest realm=\"" + realm + "\", qop=\"auth\", " +
-                       "nonce=\"" + nonce+ "\"";
+                       "algorithm=\"MD5\", nonce=\"" + nonce+ "\"";
     }
 
     /**

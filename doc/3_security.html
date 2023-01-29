@@ -112,6 +112,10 @@ protocols for user authentication are built-in and supported by default:</p>
   <li><strong>HTTP Digest Auth</strong> &mdash; Uses a browser built-in login
       dialog for user authentication. This method uses a challenge-response
       protocol that avoids sending the password over the wire.</li>
+  <li><strong>HTTP Token Auth</strong> &mdash; Using an authentication token
+      (containing user id and a password equivalent), any HTTP call may be
+      authenticated. This method is normally only used for automated API
+      access.</li>
   <li><strong><var>system/session/authenticate</var> Procedure</strong> &mdash;
       Uses HTTP POST to call a procedure with an MD5 hash similar to HTTP
       digest auth. This method uses a challenge-response scheme that avoids
@@ -119,7 +123,7 @@ protocols for user authentication are built-in and supported by default:</p>
   <li><strong><var>system/session/authenticatetoken</var> Procedure</strong>
       &mdash; Uses HTTP POST to call a procedure with an authentication token
       that contains both user id and a password equivalent. This method is
-      used for "password recovery" via email or similar.</li>
+      normally used for "password recovery" via email or similar.</li>
 </ul>
 
 <div class="box red">
