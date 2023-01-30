@@ -2,16 +2,9 @@ DATE    := $(or $(DATE),$(shell date '+%F'))
 SERIES  := $(if $(VERSION),'latest','beta')
 VERSION := $(or $(VERSION),$(shell date '+%Y.%m.%d-beta'))
 
-
-#
-# Helpful information
-#
 all:
-	@echo '🌈 Makefile targets'
-	@echo ' · make clean      — Cleanup intermediary files'
-	@echo ' · make setup      — Setup development environment'
-	@echo ' · make build      — Build release artefacts'
-	@echo ' · make test       — Tests & code style checks'
+	@echo '🌈 Makefile commands'
+	@grep -E -A 1 '^#' Makefile | awk 'BEGIN { RS = "--\n"; FS = "\n" }; { sub("#+ +", "", $$1); sub(":.*", "", $$2); printf " · make %-18s- %s\n", $$2, $$1}'
 	@echo
 	@echo '🚀 Release builds'
 	@echo ' · make VERSION=2022.08 build build-docker'
@@ -19,23 +12,17 @@ all:
 	@echo '📍 Apache Ant (and Java) must be installed separately.'
 
 
-#
 # Cleanup intermediary files
-#
 clean:
 	rm -rf package-lock.json node_modules/
 
 
-#
 # Setup development environment
-#
 setup: clean
 	npm install --omit=optional
 
 
-#
 # Build release artefacts
-#
 build:
 	rm -f share/docker/rapidcontext-*.zip
 	DATE=$(DATE) VERSION=$(VERSION) ant package
@@ -54,9 +41,7 @@ build-docker:
 	rm share/docker/rapidcontext-$(VERSION).zip
 
 
-#
 # Tests & code style checks
-#
 test: test-css test-html test-js
 	ant test
 
