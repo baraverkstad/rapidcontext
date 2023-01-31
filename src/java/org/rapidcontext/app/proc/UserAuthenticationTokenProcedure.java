@@ -14,6 +14,10 @@
 
 package org.rapidcontext.app.proc;
 
+import java.time.Duration;
+import java.time.Instant;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
@@ -66,17 +70,18 @@ public class UserAuthenticationTokenProcedure extends Procedure {
         throws ProcedureException {
 
         String userId = bindings.getValue("user").toString();
-        String duration = bindings.getValue("duration", "").toString();
-        long   expiryTime = System.currentTimeMillis() + DEFAULT_DURATION;
-
+        String duration = bindings.getValue("duration", "").toString().trim();
         CallContext.checkAccess("user/" + userId, cx.readPermission(1));
         User user = User.find(cx.getStorage(), userId);
         if (user == null) {
             throw new ProcedureException(this, "user not found");
         }
-        if (duration.trim().length() > 0) {
-            expiryTime = System.currentTimeMillis() + Long.parseLong(duration);
+        long expires = System.currentTimeMillis() + DEFAULT_DURATION;
+        if (StringUtils.isNumeric(duration)) {
+            expires = System.currentTimeMillis() + Long.parseLong(duration);
+        } else if (!duration.isEmpty()) {
+            expires = Instant.now().plus(Duration.parse(duration)).toEpochMilli();
         }
-        return user.createAuthToken(expiryTime);
+        return user.createAuthToken(expires);
     }
 }

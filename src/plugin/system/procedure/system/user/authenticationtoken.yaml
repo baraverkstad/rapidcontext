@@ -9,4 +9,6 @@ binding:
     description: The user id to create a token for
   - name: duration
     type: argument
-    description: The token duration in milliseconds
+    description: >-
+        The token duration in milliseconds, or an ISO-8601 duration period
+        (e.g. "P14dT12h15m")
