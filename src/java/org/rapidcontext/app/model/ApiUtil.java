@@ -142,7 +142,9 @@ public class ApiUtil {
     public static boolean store(Storage storage, Path path, Object data) {
         try {
             LOG.fine("writing to storage path " + path);
-            data = StorableObject.sterilize(data, false, true, true);
+            if (!(data instanceof Binary)) {
+                data = StorableObject.sterilize(data, false, true, true);
+            }
             storage.store(path, data);
             return true;
         } catch (Exception e) {
