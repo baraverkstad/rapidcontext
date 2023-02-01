@@ -1406,7 +1406,7 @@ AdminApp.prototype._addUser = function () {
         enabled: true,
         passwordHint: "Minimum 5 characters"
     });
-    this.ui.userId.enable();
+    this.ui.userId.setAttrs({ readonly: false });
 };
 
 /**
@@ -1420,7 +1420,7 @@ AdminApp.prototype._editUser = function () {
         passwordHint: "Leave blank for unmodified"
     };
     this.ui.userForm.update(Object.assign(extra, data));
-    this.ui.userId.disable();
+    this.ui.userId.setAttrs({ readonly: true });
 };
 
 /**
