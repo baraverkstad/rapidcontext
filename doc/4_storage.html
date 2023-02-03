@@ -277,6 +277,36 @@ indefinitely, but roughly every 30 seconds a cache cleanup job will destroy any
 objects reporting an inactive status.</p>
 
 
+<h2 id="hidden_props">4.5. Hidden &amp; Computed Properties</h2>
+
+<p>Sensitive data such as passwords or access tokens can be stored in a
+<strong>hidden property</strong> which is prefixed by a <q><var>.</var></q>
+character. Such properties are filtered out whenever an object is returned via
+a procedure or similar. They remain available for Java implementations of
+connections, procedures, etc.</p>
+
+<p>The example below shows how the <var>password</var> property is hidden for
+<var>user</var> objects by default:</p>
+
+<div class="box blue">
+  <i class="box-icon fa fa-fw fa-code"></i>
+  <pre class="box-content code">
+id: johndoe
+type: user
+name: John Doe
+description: A simple example user
+enabled: true
+realm: RapidContext
+.password: secret
+  </pre>
+</div>
+
+<p>Some properties are calculated or transient and should not be written to
+storage. These <strong>computed properties</strong> are prefixed by a
+<q><var>_</var></q> character. Any operation that writes to storage will
+filter these out.</p>
+
+
 <!--END-->
 
     </section>
