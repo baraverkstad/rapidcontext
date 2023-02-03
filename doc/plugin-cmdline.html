@@ -70,13 +70,13 @@ server:</p>
 <h2 id="returns">2. Return Values</h2>
 
 <p>Using the <var>cmdline/exec</var> procedure, the command-line execution can
-easily be tested. Below follows some simple command examples (using a Unix or
-Cygwin environment):</p>
+easily be tested. Below follows some simple command examples (using a Unix
+environment):</p>
 
 <div class="box blue">
   <i class="box-icon fa fa-fw fa-code"></i>
   <pre class="box-content code">
-cmdline/exec('dir', '', '')
+cmdline/exec('ls', '', '')
   <span class="comment">--&gt; { exitValue: 0, output: 'cmdline http jdbc ...' }</span>
 
 cmdline/exec('test 0 -eq 1', '', '')

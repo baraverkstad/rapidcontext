@@ -96,8 +96,8 @@ directory structure like this (mirroring the overall storage structure):</p>
 
 <p>The directories are names according to the type of objects contained. The
 exceptions being <var>files/</var> and <var>lib/</var> that are handled in a
-special way. The <var>files/</var> directory contains all the JavaScript code
-and images available for web browsers.</p>
+special way. The <var>files/</var> directory contains public files (images,
+CSS, JavaScript and HTML) available to web browsers.</p>
 
 
 <h2 id="plugin_config">5.2. Plug-in Configuration</h2>
@@ -121,7 +121,7 @@ fields:</p>
   <li><var>copyright</var> &mdash; The optional copyright statement text.</li>
   <li><var>className</var> &mdash; The optional fully qualified name of
       a Java class that handles the plug-in life-cycle. The class must be a
-      subclass of <var>org.rapidcontext.app.plugin.Plugin</var>.</li>
+      subclass of <var>org.rapidcontext.core.type.Plugin</var>.</li>
 </ul>
 
 <p>The plug-in configuration is the first file to write when developing a
@@ -195,27 +195,29 @@ to it is the edit icon.</p>
   <img src="images/screenshot-procedure-edit.png">
 </p>
 
-<p>Each procedure can have a number of custom configuration properties that
-control their execution. A property has one of four types, each with different
-semantics and expected values:</p>
+<p>Each procedure is configured with a number of bindings (properties) that
+control the execution. Each binding has a <var>type</var> that controls how
+the binding is used during execution:</p>
 
 <ol class="box yellow">
-  <li><strong>Argument</strong> &mdash; The value should contain the procedure
-      argument description (as later shown in the <strong>Admin</strong> app).
-      Note that both the number and order of arguments are important. During
-      procedure execution, the property identifier is bound to the value
-      provided in the call.</li>
-  <li><strong>Connection</strong> &mdash; The value should contain a connection
-      identifier (connection reference). The connection will be reserved before
-      calling the procedure. For JavaScript procedures, the connection object
-      allows direct calls to methods such as <var>commit()</var> or
-      similar.</li>
-  <li><strong>Data</strong> &mdash; The value is a data string constant that
-      may or may not span multiple lines. Mostly useful for JavaScript
-      procedures.</li>
-  <li><strong>Procedure</strong> &mdash; The value contains a procedure
-      identifier (procedure reference). Only used for JavaScript procedures,
-      where it enables calling other procedures as functions.</li>
+  <li><var>data</var> &mdash; The binding <var>value</var> is a string constant
+      that may or may not span multiple lines. Typically contains SQL text or
+      JavaScript code.</li>
+  <li><var>connection</var> &mdash; The binding <var>value</var> is a connection
+      identifier (i.e. a storage path without the <var>connection/</var>
+      prefix). The connection will automatically be reserved before calling the
+      procedure. For JavaScript procedures, a connection object exposes an API
+      for direct calls to <var>commit()</var> or other methods.</li>
+  <li><var>procedure</var> &mdash; The binding <var>value</var> is a procedure
+      identifier (i.e. a storage path without the <var>procedure/</var>
+      prefix). Only used for JavaScript procedures, where it exposes these as
+      callable functions.</li>
+  <li><var>argument</var> &mdash; The binding <var>value</var> is normally not
+      set, but must be provided when the procedure is called. A binding
+      <var>description</var> contains the argument description (as shown in the
+      <strong>Admin</strong> app). Note that both the number and order of
+      arguments are important. During execution the binding <var>name</var>
+      variable is set to the value provided in the call.</li>
 </ol>
 
 <p>Procedures created or edited are stored to the <var>procedure/</var>
@@ -225,7 +227,7 @@ the corresponding plug-in development directory for packaging.</p>
 
 <h2 id="javascript">5.5. JavaScript Procedures</h2>
 
-<p>The <var>javascript</var> procedure type allows creating generic server-side
+<p>The <var>procedure/javascript</var> type allows creating generic server-side
 logic with minimum effort. The procedure consists of JavaScript code, which is
 compiled upon the first call. Additional procedure properties are exposed as
 variables in the global scope and can be accessed or called directly.</p>
@@ -292,9 +294,9 @@ required. Here are a number of recommended uses for JavaScript procedures:</p>
       <q>Logging</q> tab in the <strong>Admin</strong> app for controlling
       this.</li>
   <li><strong>Connection Reservation</strong> &mdash;  All connections required
-      by a procedure and <em>all its referenced sub-procedures</em> are
-      reserved before the execution starts. This guarantees that all resources
-      are available, but might be wasteful in some circumstances.</li>
+      by a procedure (and its referenced sub-procedures) are reserved before
+      execution starts. This guarantees that resources are available, but might
+      be wasteful in some circumstances.</li>
 </ul>
 
 

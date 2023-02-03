@@ -72,9 +72,9 @@ The most important of these are listed below:</p>
 simplify the development:</p>
 
 <ul class="box yellow">
-      <li><a href="js/index.html">RapidContext App API</a> &mdash; Provides
-          communication with the server-side and other apps. Also contains a
-          user interface widget library.</li>
+      <li><a href="js/index.html">RapidContext JavaScript API</a> &mdash;
+          Provides server-side communication, app launching and utilities. Also
+          contains a user interface widget library.</li>
       <li><a href="external/mochikit/index.html">MochiKit</a> &mdash; A
           swiss-army knife with utilities and functions missing from the core
           JavaScript language.</li>
@@ -89,9 +89,9 @@ simplify the development:</p>
 
 <p>The app source code and resources are stored on the server, but will be
 transferred to the web browser upon launch. Each app has an app configuration
-(or manifest file) that lists the resources required for launch along with
-some meta-data. These can be inspected in the <strong>Admin</strong> app, as
-shown in the screenshot below.</p>
+(i.e. a manifest) that lists resources required for launch along with some
+meta-data. These can be inspected in the <strong>Admin</strong> app, as shown
+in the screenshot below.</p>
 
 <p class="text-center m-2">
   <img src="images/screenshot-app-details.png" alt="Screenshot">
@@ -99,7 +99,7 @@ shown in the screenshot below.</p>
 
 <p>The app configuration is placed in the <var>plugin/local/app/</var> directory
 (or the <var>app/</var> directory in your plug-in). The file name should follow
-normal storage rules, i.e. <var>[app identifier].properties</var>. In the file,
+normal storage rules (e.g. <var>[app identifier].properties</var>). In the file,
 app meta-data is specified with a list of URL resources required to launch the
 app. If an app is not properly declared in the configuration file, it will not
 be visible to the web browser. Below follows a simple example:</p>
@@ -124,10 +124,10 @@ resources.2.url = app/example/icon.png
 
 <p>In the example above, the three files <var>app.js</var>, <var>ui.xml</var>
 and <var>icon.png</var> are referenced and must be located at the specified
-URL. Any app resource of type <q><var>code</var></q> is dynamically loaded as a
+URL. Any app resource of type <var>code</var> is dynamically loaded as a
 JavaScript file on the first app launch. Subsequent launches will reuse the
-previously loaded file, so <var>Ctrl-R</var> must be used to force an app
-reload.</p>
+previously loaded file, so web page must be reloaded to force an app to be
+updated.</p>
 
 <p>The available app configuration parameters are as follows:</p>
 
@@ -167,7 +167,7 @@ reload.</p>
     of the following values:
     <ul>
       <li>&lt;none&gt; &mdash; The resource type will be guessed based on
-          the file name (from the <var>url</var>) if omitted.</li>
+          the <var>url</var> if omitted.</li>
       <li><var>code</var> &mdash; A JavaScript source code file that will be
           loaded before app launch.</li>
       <li><var>style</var> &mdash; A CSS stylesheet file that will be loaded
@@ -188,7 +188,7 @@ reload.</p>
       resources with an identifier can easily be accessed from the app
       JavaScript code, using <q><var>this.resource.[id]</var></q>.</li>
   <li><var>resources.#.url</var> &mdash; The optional resource URL. If local,
-      it should relative to the root <var>files/</var> storage directory. The
+      it should be relative to the root <var>files/</var> storage directory. The
       files should thus be placed either in <var>plugin/local/files/</var> or
       in <var>files/</var> inside your plug-in. Local resource URLs support
       glob matching (e.g. <q><var>myapp/*.js</var></q> or
@@ -408,22 +408,22 @@ styles are not sufficient, a number of options are available:</p>
 
 <p>RapidContext provides a default web listener for HTTP requests. This is the
 web listener that launches the <var>start</var> app and handles the platform
-web requests. It is configured in the <var>webservice/root.properties</var>
-file:</p>
+web requests. It is configured in the <var>webservice/root.yaml</var> file:</p>
 
 <div class="box blue">
   <i class="box-icon fa fa-fw fa-code"></i>
   <pre class="box-content code">
-<span class="comment"># General properties</span>
-id = root
-type = webservice/app
-description = The root (default) web service. This launches the start app \
-    and provides access to the storage files.
-path = /files/
-app = start
-
-<span class="comment"># Match array</span>
-match.1.path = /
+id: root
+type: webservice/app
+description: &gt;-
+    The root (default) web service. This launches the start app and provides
+    access to the storage files.
+path: /files/
+app: start
+header:
+  ...
+match:
+  - path: /
   </pre>
 </div>
 
@@ -434,23 +434,21 @@ example below shows a simple file web server:</p>
 <div class="box blue">
   <i class="box-icon fa fa-fw fa-code"></i>
   <pre class="box-content code">
-<span class="comment"># General properties</span>
-id = www.test.com
-type = webservice/file
-description = A simple static web site service.
-path = files/www.test.com/
-
-<span class="comment"># Match array</span>
-match.1.host = www.test.com
-match.2.host = www.test.net
-match.3.host = www.test.org
+id: www.test.com
+type: webservice/file
+description: A simple static web site service.
+path: files/www.test.com/
+match:
+  - host: www.test.com
+  - host: www.test.net
+  - host: www.test.org
   </pre>
 </div>
 
 <p>Web listeners configurations are placed in the
 <var>plugin/local/webservice/</var> directory (or the <var>webservice/</var>
-directory in your plug-in). The file name should follow normal storage rules,
-i.e. <var>[identifier].properties</var>. A number of web service types are
+directory in your plug-in). The file name should follow normal storage rules
+(e.g. <var>[identifier].properties</var>). A number of web service types are
 available and custom ones can also be implemented in Java.</p>
 
 <p>The available web service configuration parameters are as follows:</p>
@@ -538,7 +536,7 @@ additional parameters:</p>
 <ul class="box yellow">
   <li><var>prefix</var> &mdash; The optional procedure name prefix, used for
       locating the procedure to execute. Any additional request path will be
-      appended to this prefix to form the full procedure name.</li>
+      appended to this prefix to form the full procedure identifier.</li>
   <li><var>inputType</var> &mdash; The input arguments data format. Available
       options are <q><var>json</var></q> (for serialized JSON data, the default),
       or <q><var>text</var></q> (for plain text).</li>
@@ -548,6 +546,7 @@ additional parameters:</p>
       the default), <q><var>json</var></q> (for just the serialized JSON
       response), or <q><var>text</var></q> (for plain text output).</li>
 </ul>
+
 
 <!--END-->
 

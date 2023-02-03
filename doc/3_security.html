@@ -58,20 +58,20 @@
           from an external network (Internet).</li>
       <li><strong>Follow Advice &amp; Precautions</strong> &mdash; Take care
           to follow the advice or best practices outlined in this chapter.
-          Please revisit this chapter to double-check that proper security
-          practices remain in use.</li>
+          Please revisit this chapter from time to time to validate that good
+          security practices remain enforced.</li>
     </ul>
   </div>
 </div>
 
 <h2 id="default_users">3.1. Default Users &amp; Roles</h2>
 
-<p>The default installation of RapidContext contains the following users and
+<p>The default installation of RapidContext contain the following users and
 roles:</p>
 
 <ul class="box yellow">
-  <li><strong><var>admin</var> (user)</strong> &mdash; Created if no other
-      users are detected on server startup. The password is initially set to
+  <li><strong><var>admin</var> (user)</strong> &mdash; Created on server
+      startup if no other users are found. The password is initially set to
       accept any value (an empty string). The user is also assigned the
       <var>admin</var> role. It is good practice to either disable this user
       or assign it a proper password.</li>
@@ -96,8 +96,8 @@ roles:</p>
           disable the <var>admin</var> user or assign a strong password.</li>
       <li><strong>Limit <var>admin</var> Role Usage</strong> &mdash; The
           <var>admin</var> role should only be assigned to a few system owners,
-          if possible. Create other roles instead, that provides the proper
-          (more limited) access privileges needed for daily usage.</li>
+          if possible. Create other roles instead, that provide more limited
+          privileges needed for daily access.</li>
     </ul>
   </div>
 </div>
@@ -112,10 +112,9 @@ protocols for user authentication are built-in and supported by default:</p>
   <li><strong>HTTP Digest Auth</strong> &mdash; Uses a browser built-in login
       dialog for user authentication. This method uses a challenge-response
       protocol that avoids sending the password over the wire.</li>
-  <li><strong>HTTP Token Auth</strong> &mdash; Using an authentication token
-      (containing user id and a password equivalent), any HTTP call may be
-      authenticated. This method is normally only used for automated API
-      access.</li>
+  <li><strong>HTTP Token Auth</strong> &mdash; Using an authentication token,
+      any HTTP call may be authenticated. This method is normally only used for
+      automated API access.</li>
   <li><strong><var>system/session/authenticate</var> Procedure</strong> &mdash;
       Uses HTTP POST to call a procedure with an MD5 hash similar to HTTP
       digest auth. This method uses a challenge-response scheme that avoids
@@ -175,9 +174,14 @@ requests.</p>
   <i class="box-icon fa fa-fw fa-minus-circle"></i>
   <div class="box-content">
     <h2 class="m-0">Security Notice</h2>
-    <p>Due to persistent cookie authentication, it is <strong>strongly
-    recommended</strong> to always logout when using shared computers or
-    highly privileged user accounts.</p>
+    <ul>
+      <li><strong>Logout</strong> &mdash; Due to persistent cookie
+          authentication, it is strongly recommended to always logout when
+          using shared computers or privileged user accounts.</li>
+      <li><strong>Disable Session Storage Access</strong> &mdash; Session
+          identifiers must be protected in storage, as there is otherwise a
+          risk for session hijacking.</li>
+    </ul>
   </div>
 </div>
 
@@ -206,17 +210,17 @@ the steps below in order to edit or create a user:</p>
     <p>A few notes regarding user data storage:</p>
     <ul>
       <li><strong>Passwords</strong> &mdash; Passwords are stored with a
-          one-way MD5 hash (without salt). This makes them almost impossible
-          to decrypt, but a user with write permission can of course reset
-          any user password as needed.</li>
+          one-way MD5 hash (without salt). This makes them impossible to
+          decrypt, but still vulnerable to dictionary attacks or password
+          guessing.</li>
       <li><strong>User Removal</strong> &ndash; Users can be removed by
           deleting the corresponding file from storage, but this is
-          <strong>strongly discouraged</strong>. Use the
-          <q>Enabled</q> checkbox in the dialog above instead.</li>
-      <li><strong>Storage Location</strong> &ndash; The user objects can be
-          found in the <var>local</var> plug-in, with each user stored as
-          <var>user/[identifier]</var>. See the security notice below regarding
-          the correct permissions for this path.</li>
+          <strong>discouraged</strong>. Instead, use the <q>Enabled</q>
+          checkbox instead.</li>
+      <li><strong>Storage Location</strong> &ndash; The user objects are
+          normally found in the <var>local</var> plug-in, with each user stored
+          as <var>user/[identifier]</var>. The proper security precautions for
+          this path are outlined in the security notice below.</li>
     </ul>
   </div>
 </div>
@@ -228,12 +232,17 @@ the steps below in order to edit or create a user:</p>
     <ul>
       <li><strong>Protect Password Hashes</strong> &mdash; Although the
           actual password cannot be retrieved from a password hash, it is still
-          possible to login using only a user name and a password hash. This is
-          due to the workings of the HTTP Digest mechanism.</li>
+          possible to login (or change password) using only a user name and a
+          password hash. This is due to the workings of the HTTP Digest
+          mechanism.</li>
       <li><strong>Disable User <var>read</var> Access</strong> &mdash; Due to
           the unsafe nature of the password hashes, all <var>read</var> access
-          to the <var>/user/**</var> storage path should be limited. Naturally,
-          <var>write</var> access must also be limited.</li>
+          to the <var>/user/**</var> storage path or the corresponding
+          <var>/storage/plugin/*/user/**</var> must be limited.</li>
+      <li><strong>Disable User <var>write</var> Access</strong> &mdash; Anyone
+          with write permissions to <var>/user/**</var> (or the file system)
+          can reset any user password or assign users to the <var>admin</var>
+          role.</li>
     </ul>
   </div>
 </div>
@@ -249,15 +258,15 @@ permissions. The permission names and their meanings are the following:</p>
   <li><var>none</var> &mdash; Provides no access at all. This is used to block
       access to a subpath, as this permission also stops further searching down
       the access control list when matched.</li>
-  <li><var>internal</var> &mdash; Provides indirect read (i.e. use) access to
-      an object. This allows using connections, procedures and similar when
-      referenced by another procedure.</li>
-  <li><var>read</var> &mdash; Provides read (and execute) access to an object.
-      This also allows introspection into the object properties, source code
-      and similar. Implies <var>internal</var> access as well.</li>
+  <li><var>internal</var> &mdash; Provides indirect read (and execute/use)
+      access to an object. This allows using connections, procedures and
+      similar when referenced by another procedure.</li>
+  <li><var>read</var> &mdash; Provides direct read (and execute/use) access to
+      an object. This also allows introspection into the object properties,
+      source code and similar.</li>
   <li><var>search</var> &mdash; Provides object listing and search permission.
-      Note that only objects with <var>read</var> permission are returned in
-      search results, regardless of this permission.</li>
+      Note that only objects with <var>read</var> (or <var>internal</var>)
+      permission are returned in search results.</li>
   <li><var>write</var> &mdash; Provides write (and delete) access to an object.
       This is used when modifications to data or similar must be allowed. Note
       that this <strong>does not</strong> imply either <var>read</var> or
@@ -281,17 +290,20 @@ users via the <var>auto</var> property:</p>
       for anonymous access.</li>
   <li><var>auto = auth</var> &mdash; Assigns the role to all authenticated
       users, regardless of their other roles. This is used to add permissions
-      to logged in users.</li>
+      to logged-in users.</li>
 </ul>
 
 <div class="box red">
   <i class="box-icon fa fa-fw fa-minus-circle"></i>
   <div class="box-content">
     <h2 class="m-0">Security Notice</h2>
-    <p>The <var>read</var> permission <strong>should not be provided for user
-    objects</strong>. Doing so allows other users to read the password hash
-    or to create new authentication tokens. Both would allow login access for
-    the user in question.</p>
+    <ul>
+      <li><strong>Disable Role <var>write</var> Access</strong> &mdash; Since
+          the role objects contain the access control lists, any user with
+          write access to a role object can provide full system access to
+          users with that role. Even <var>read</var> access to
+          <var>role/**</var> should be limited.</li>
+    </ul>
   </div>
 </div>
 
@@ -341,19 +353,6 @@ supports the following properties:</p>
 <p>Permissions can be checked on all object access via the built-in procedures
 or web services. Additional permissions can be checked programmatically via the
 <var>system/user/access</var> procedure.</p>
-
-<div class="box red">
-  <i class="box-icon fa fa-fw fa-minus-circle"></i>
-  <div class="box-content">
-    <h2 class="m-0">Security Notice</h2>
-    <ul>
-      <li><strong>Disable Role <var>write</var> Access</strong> &mdash; Since
-          the role objects contain the access control lists, any user with
-          write access to any role object can open the system for full
-          access. Access to <var>role/**</var> should be very limited.</li>
-    </ul>
-  </div>
-</div>
 
 
 <h2 id="security_checklist">3.7. Security Checklist</h2>
