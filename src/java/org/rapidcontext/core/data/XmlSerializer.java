@@ -66,7 +66,7 @@ public final class XmlSerializer {
      */
     public static void serialize(Object obj, OutputStream os) throws IOException {
         try (OutputStreamWriter ow = new OutputStreamWriter(os, "UTF-8")) {
-            ow.write(serialize("root", obj));
+            ow.write(serialize("data", obj));
             ow.flush();
         }
     }
