@@ -44,6 +44,11 @@
         { "topic": "isSupported", "url": "doc/js/RapidContext.Browser.html#.isSupported" },
         { "topic": "supports", "url": "doc/js/RapidContext.Browser.html#.supports" }
     ] },
+    { "topic": "RapidContext.Encode", "url": "doc/js/RapidContext.Encode.html", "children": [
+        { "topic": "toJSON", "url": "doc/js/RapidContext.Encode.html#.toJSON" },
+        { "topic": "toUrlPart", "url": "doc/js/RapidContext.Encode.html#.toUrlPart" },
+        { "topic": "toUrlQuery", "url": "doc/js/RapidContext.Encode.html#.toUrlQuery" }
+    ] },
     { "topic": "RapidContext.Log", "url": "doc/js/RapidContext.Log.html", "children": [
         { "topic": "clear", "url": "doc/js/RapidContext.Log.html#.clear" },
         { "topic": "context", "url": "doc/js/RapidContext.Log.html#.context" },

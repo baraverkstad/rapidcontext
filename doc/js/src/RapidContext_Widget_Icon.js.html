@@ -7,7 +7,7 @@
 	.line {border-right: 1px dotted #666; color: #666; font-style: normal;}
 	</style></head><body><pre><span class='line'>  1</span> <span class="COMM">/*
 <span class='line'>  2</span>  * RapidContext &lt;https://www.rapidcontext.com/>
-<span class='line'>  3</span>  * Copyright (c) 2007-2022 Per Cederberg. All rights reserved.
+<span class='line'>  3</span>  * Copyright (c) 2007-2023 Per Cederberg. All rights reserved.
 <span class='line'>  4</span>  *
 <span class='line'>  5</span>  * This program is free software: you can redistribute it and/or
 <span class='line'>  6</span>  * modify it under the terms of the BSD license.
@@ -106,7 +106,7 @@
 <span class='line'> 99</span> </span><span class="WHIT">        </span><span class="NAME">attrs</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>100</span> </span><span class="WHIT">        </span><span class="NAME">attrs</span><span class="PUNC">[</span><span class="NAME">key</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">val</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>101</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>102</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">locals</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">MochiKit.Base.update</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">attrs</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>102</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">locals</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Object.assign</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">attrs</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>103</span> </span><span class="WHIT">    </span><span class="KEYW">while</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">locals.ref</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
 <span class='line'>104</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">o</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">RapidContext.Widget.Icon</span><span class="PUNC">[</span><span class="NAME">locals.ref</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>105</span> </span><span class="WHIT">        </span><span class="KEYW">delete</span><span class="WHIT"> </span><span class="NAME">locals.ref</span><span class="PUNC">;</span><span class="WHIT">
@@ -141,7 +141,7 @@
 <span class='line'>134</span> </span><span class="COMM">/**
 <span class='line'>135</span>  * @scope RapidContext.Widget.Icon.prototype
 <span class='line'>136</span>  */</span><span class="WHIT">
-<span class='line'>137</span> </span><span class="NAME">MochiKit.Base.update</span><span class="PUNC">(</span><span class="NAME">RapidContext.Widget.Icon</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>137</span> </span><span class="NAME">Object.assign</span><span class="PUNC">(</span><span class="NAME">RapidContext.Widget.Icon</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
 <span class='line'>138</span> </span><span class="WHIT">    </span><span class="COMM">/** The default icon definition, inherited by all others. */</span><span class="WHIT">
 <span class='line'>139</span> </span><span class="WHIT">    </span><span class="NAME">DEFAULT</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> </span><span class="NAME">url</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"rapidcontext/files/images/icons/icons_16x16.png"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">width</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">16</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">height</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">16</span><span class="WHIT"> </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
 <span class='line'>140</span> </span><span class="WHIT">    </span><span class="COMM">/** The blank icon definition. */</span><span class="WHIT">

@@ -139,18 +139,18 @@ elsewhere. Their definitions are as follows:</p>
 
 <ul class="box yellow">
   <li><strong>App</strong> &mdash; A client-side application that runs in the
-      web browser, normally as a &ldquo;tab&rdquo; in the standard user
-      interface. Apps are installed on the server, but execute solely on the
-      client. Multiple apps can be executing at the same time, allowing the
-      user to switch between different tasks and transferring data between the
-      apps.</li>
+      web browser, normally in a tab in the standard user interface or as a
+      stand-alone browser tab or window. Apps are installed on the server, but
+      execute solely on the client. Multiple apps can be executing at the same
+      time, allowing the user to switch between different tasks and
+      transferring data between apps.</li>
   <li><strong>Connection</strong> &mdash; A named link to a database or
       another system. Each connection is managed on the server, normally by
       a handler for that specific connection type. Most connections are kept
-      in a pool of established connnections where they are continually
-      monitored and eventually replaced.</li>
-  <li><strong>Environment</strong> &mdash; A group of connections sharing the
-      same identifier prefix. Using different environments, it is possible to
+      in a pool of established connections where they are continually
+      monitored and closed if no longer needed.</li>
+  <li><strong>Environment</strong> &mdash; A group of connections sharing an
+      identifier prefix. Using different environments, it is possible to
       switch between servers easily. The environment name is also given
       prominent display in the standard user interface.</li>
   <li><strong>Identifier</strong> &mdash; A unique identity for an object
@@ -172,12 +172,11 @@ elsewhere. Their definitions are as follows:</p>
       providing the user with the sum of the role permissions. The default
       built-in role <q><var>admin</var></q> provides full access to everything,
       and should be used with care.</li>
-  <li><strong>Session</strong> &mdash; An active user connection to the
-      RapidContext server. The session is initiated upon successful login, and
-      remains active for up to 30 days (by default). Sessions are locked to the
-      browser IP address and user agent string and identifier by the HTTP
-      cookie <q><var>sessionid</var></q>. A user may have multiple sessions
-      open in different web browsers.</li>
+  <li><strong>Session</strong> &mdash; An active client (browser) session to
+      the RapidContext server. The session can be either authenticated (for a
+      single user) or anonymous. Sessions are created when applications are
+      launched and a user may have multiple active sessions in different web
+      browsers.</li>
   <li><strong>Storage</strong> &mdash; A server-side virtual file system for
       storing data and objects. The storage handles both persistent (file) and
       temporary (in-memory) objects, allowing some objects to
@@ -196,8 +195,8 @@ elsewhere. Their definitions are as follows:</p>
       properties of the type, similar to a Java class or an XML schema.</li>
   <li><strong>User</strong> &mdash; A login identity, usually assigned to a
       physical person. Each user has an identifier, a name, a description and
-      a password. The user may also have one or many roles, which in turn
-      control the access permissions for the user.</li>
+      a password. The user may also have one or more roles, which in turn
+      control the user access permissions.</li>
 </ul>
 
 
@@ -206,7 +205,7 @@ elsewhere. Their definitions are as follows:</p>
     </section>
     <section class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2022 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2023 Per Cederberg. All rights reserved.
     </section>
   </body>
 </html>

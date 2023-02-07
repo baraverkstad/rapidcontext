@@ -7,7 +7,7 @@
 	.line {border-right: 1px dotted #666; color: #666; font-style: normal;}
 	</style></head><body><pre><span class='line'>  1</span> <span class="COMM">/*
 <span class='line'>  2</span>  * RapidContext &lt;https://www.rapidcontext.com/>
-<span class='line'>  3</span>  * Copyright (c) 2007-2022 Per Cederberg. All rights reserved.
+<span class='line'>  3</span>  * Copyright (c) 2007-2023 Per Cederberg. All rights reserved.
 <span class='line'>  4</span>  *
 <span class='line'>  5</span>  * This program is free software: you can redistribute it and/or
 <span class='line'>  6</span>  * modify it under the terms of the BSD license.
@@ -97,7 +97,7 @@
 <span class='line'> 90</span> </span><span class="WHIT">    </span><span class="NAME">MochiKit.Signal.connect</span><span class="PUNC">(</span><span class="NAME">bDone</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">"onclick"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">o</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">"done"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'> 91</span> </span><span class="WHIT">    </span><span class="NAME">o._updateStatus</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'> 92</span> </span><span class="WHIT">    </span><span class="NAME">o.setAttrs</span><span class="PUNC">(</span><span class="NAME">attrs</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 93</span> </span><span class="WHIT">    </span><span class="NAME">o.addAll</span><span class="PUNC">(</span><span class="NAME">Array.prototype.slice.call</span><span class="PUNC">(</span><span class="NAME">arguments</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NUMB">1</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 93</span> </span><span class="WHIT">    </span><span class="NAME">o.addAll</span><span class="PUNC">(</span><span class="NAME">Array.from</span><span class="PUNC">(</span><span class="NAME">arguments</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">slice</span><span class="PUNC">(</span><span class="NUMB">1</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'> 94</span> </span><span class="WHIT">    </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">o</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'> 95</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'> 96</span>
@@ -132,7 +132,7 @@
 <span class='line'>125</span>  * @return {Array} the array of child wizard page widgets
 <span class='line'>126</span>  */</span><span class="WHIT">
 <span class='line'>127</span> </span><span class="NAME">RapidContext.Widget.Wizard.prototype.getChildNodes</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>128</span> </span><span class="WHIT">    </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">Array.prototype.slice.call</span><span class="PUNC">(</span><span class="NAME">this.childNodes</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NUMB">2</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>128</span> </span><span class="WHIT">    </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">Array.from</span><span class="PUNC">(</span><span class="NAME">this.childNodes</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">slice</span><span class="PUNC">(</span><span class="NUMB">2</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>129</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>130</span>
 <span class='line'>131</span> </span><span class="COMM">/**

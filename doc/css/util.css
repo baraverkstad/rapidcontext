@@ -654,11 +654,6 @@
 .font-noitalic {
     font-style: normal !important;
 }
-.font-small-caps {
-    font-variant: small-caps;
-    text-transform: lowercase;
-    letter-spacing: 0.2em;
-}
 .font-larger {
     font-size: 125%;
     line-height: 1.5;
@@ -666,6 +661,20 @@
 .font-smaller {
     font-size: 80%;
     line-height: 1.5;
+}
+.font-small-caps {
+    font-variant: small-caps;
+    text-transform: lowercase;
+    letter-spacing: 0.2em;
+}
+.font-lower {
+    text-transform: lowercase;
+}
+.font-upper {
+    text-transform: uppercase;
+}
+.font-upper-first::first-letter {
+    text-transform: uppercase;
 }
 
 

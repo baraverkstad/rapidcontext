@@ -1,4 +1,5 @@
 org.rapidcontext.app
+org.rapidcontext.app.model
 org.rapidcontext.app.plugin
 org.rapidcontext.app.proc
 org.rapidcontext.app.ui

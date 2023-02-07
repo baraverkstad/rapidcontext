@@ -54,8 +54,8 @@ access speed for each database used.</p>
 
 <p>In order for the JDBC plug-in to access a database, the corresponding JDBC
 driver (JAR file) must be installed on the RapidContext server. The plug-in
-comes bundled with drivers for <strong>MariaDB</strong>, <strong>MySQL</strong>
-and <strong>PostgreSQL</strong>. Other database vendors impose restrictions on
+comes bundled with drivers for <strong>MariaDB/MySQL</strong> and
+<strong>PostgreSQL</strong>. Other database vendors impose restrictions on
 driver distribution, so the JDBC driver must be installed locally. Follow the
 following steps to install a custom JDBC driver:</p>
 
@@ -104,17 +104,15 @@ procedure types:</p>
       <q><var>INSERT</var></q>, <q><var>UPDATE</var></q> or
       <q><var>DELETE</var></q> (among others). Supports inserting procedure
       arguments into the SQL text.</li>
-  <li><strong>The <var>PlugIn.Jdbc.Query</var> procedure</strong> &mdash;
+  <li><strong>The <var>jdbc/query</var> procedure</strong> &mdash;
       A built-in procedure for executing an SQL query, i.e.
-      <q><var>SELECT</var></q>. Only accessible to users with the
-      <var>admin</var> role. This procedure should normally only be used for
+      <q><var>SELECT</var></q>. This procedure should normally only be used for
       testing and development.</li>
-  <li><strong>The <var>PlugIn.Jdbc.Statement</var> procedure</strong> &mdash;
+  <li><strong>The <var>jdbc/statement</var> procedure</strong> &mdash;
       A built-in procedure for executing an SQL statement, i.e.
       <q><var>INSERT</var></q>, <q><var>UPDATE</var></q> or
-      <q><var>DELETE</var></q> (among others). Only accessible to users with
-      the <var>admin</var> role. This procedure should normally only be used
-      for testing and development.</li>
+      <q><var>DELETE</var></q> (among others). This procedure should normally
+      only be used for testing and development.</li>
 </ul>
 
 
@@ -128,7 +126,7 @@ names:</p>
 <div class="box blue">
   <i class="box-icon fa fa-fw fa-code"></i>
   <pre class="box-content code">
-PlugIn.Jdbc.Query('test','SELECT * FROM fruits')
+jdbc/query('test','SELECT * FROM fruits')
 <span class="comment">  --&gt; [{'id': 1, 'value': 'apple'},
        {'id': 2, 'value': 'banana'},
        {'id': 3, 'value': 'clementine'}]</span>
@@ -195,7 +193,7 @@ happens, the first generated key will be returned as the procedure result
 <div class="box blue">
   <i class="box-icon fa fa-fw fa-code"></i>
   <pre class="box-content code">
-PlugIn.Jdbc.Statement('jdbc.example','INSERT INTO test VALUES (1,2,3)')
+jdbc/statement('jdbc.example','INSERT INTO test VALUES (1,2,3)')
   <span class="comment">--&gt; '4711'</span>
   </pre>
 </div>
@@ -288,7 +286,7 @@ directly on the JDBC connection object.</p>
     </section>
     <section class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2022 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2023 Per Cederberg. All rights reserved.
     </section>
   </body>
 </html>
