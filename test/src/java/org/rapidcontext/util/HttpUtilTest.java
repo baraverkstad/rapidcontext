@@ -15,8 +15,8 @@
 package org.rapidcontext.util;
 
 import static org.junit.Assert.assertNull;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.startsWith;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import org.junit.Test;
