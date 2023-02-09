@@ -76,7 +76,7 @@ public final class RegexUtil {
         String re = "\\Q" + glob.replace("\\E", "\\E\\\\E\\Q") + "\\E";
         re = re.replace("?", "\\E[^/]\\Q");
         re = re.replace("*", "\\E[^/]*\\Q");
-        re = re.replace("**", "\\E.*\\Q");
+        re = re.replace("\\E[^/]*\\Q\\E[^/]*\\Q", "\\E.*\\Q"); // "**"
         return re;
     }
 
