@@ -1,13 +1,13 @@
 DATE    := $(or $(DATE),$(shell date '+%F'))
-SERIES  := $(if $(VERSION),'latest','beta')
-VERSION := $(or $(VERSION),$(shell date '+%Y.%m.%d-beta'))
+TAG     := $(or $(VERSION),'latest')
+VER     := $(if $(VERSION),$(patsubst v%,%,$(VERSION)),$(shell date '+%Y.%m.%d-beta'))
 
 all:
 	@echo '🌈 Makefile commands'
 	@grep -E -A 1 '^#' Makefile | awk 'BEGIN { RS = "--\n"; FS = "\n" }; { sub("#+ +", "", $$1); sub(":.*", "", $$2); printf " · make %-18s- %s\n", $$2, $$1}'
 	@echo
 	@echo '🚀 Release builds'
-	@echo ' · make VERSION=2022.08 build build-docker'
+	@echo ' · make VERSION=v2022.08 build build-docker'
 	@echo
 	@echo '📍 Apache Ant (and Java) must be installed separately.'
 
@@ -25,20 +25,19 @@ setup: clean
 # Build release artefacts
 build:
 	rm -f share/docker/rapidcontext-*.zip
-	DATE=$(DATE) VERSION=$(VERSION) ant package
+	DATE=$(DATE) VERSION=$(VER) ant package
 
 build-docker:
-	cp rapidcontext-$(VERSION).zip share/docker/
+	cp rapidcontext-$(VER).zip share/docker/
 	( \
 		cd share/docker && \
 		docker buildx build . \
-			-t ghcr.io/baraverkstad/rapidcontext:$(SERIES) \
-			-t ghcr.io/baraverkstad/rapidcontext:v$(VERSION) \
-			--build-arg VERSION=$(VERSION) \
+			-t ghcr.io/baraverkstad/rapidcontext:$(TAG) \
+			--build-arg VERSION=$(VER) \
 			--platform linux/amd64,linux/arm64 \
 			--push \
 	)
-	rm share/docker/rapidcontext-$(VERSION).zip
+	rm share/docker/rapidcontext-$(VER).zip
 
 
 # Tests & code style checks
