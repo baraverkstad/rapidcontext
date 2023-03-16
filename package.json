@@ -5,7 +5,7 @@
   "license": "BSD",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cederberg/rapidcontext.git"
+    "url": "https://github.com/baraverkstad/rapidcontext.git"
   },
   "dependencies": {
     "crypto-js": "3.1.2",
