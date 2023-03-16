@@ -1,0 +1,57 @@
+name: Build & Publish
+
+on:
+  push:
+    branches:
+      - 'main'
+    tags:
+      - 'v*'
+
+env:
+  BUILDX_NO_DEFAULT_ATTESTATIONS: 1
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    permissions:
+      packages: write
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Install Java & Ant
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: Install Node.js
+      uses: actions/setup-node@v3
+
+    - name: Setup
+      run: make clean setup
+
+    - name: Set Version Tag
+      if: ${{ github.ref_name != 'main' }}
+      run: echo "VERSION=${{ github.ref_name }}" >> $GITHUB_ENV  
+
+    - name: Build & Test
+      run: make VERSION=${{ env.VERSION }} build test
+
+    - name: Install QEMU
+      uses: docker/setup-qemu-action@v2
+
+    - name: Install Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Login to Docker Registry (ghcr.io)
+      uses: docker/login-action@v2
+      with:
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+        registry: ghcr.io
+
+    - name: Build Docker & Publish
+      run: make VERSION=${{ env.VERSION }} build-docker
