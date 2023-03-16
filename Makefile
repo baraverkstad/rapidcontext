@@ -32,8 +32,8 @@ build-docker:
 	( \
 		cd share/docker && \
 		docker buildx build . \
-			-t baraverkstad/rapidcontext:$(SERIES) \
-			-t baraverkstad/rapidcontext:v$(VERSION) \
+			-t ghcr.io/baraverkstad/rapidcontext:$(SERIES) \
+			-t ghcr.io/baraverkstad/rapidcontext:v$(VERSION) \
 			--build-arg VERSION=$(VERSION) \
 			--platform linux/amd64,linux/arm64 \
 			--push \

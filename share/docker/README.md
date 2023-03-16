@@ -11,7 +11,7 @@ Container Usage
 Launch the container by exporting port 80/tcp to the host. Also mount
 the local `/opt/local/` directory as a persistent volume:
 
-    docker run -p 8080:80 -v /data/rapidcontext:/opt/local baraverkstad/rapidcontext
+    docker run -p 8080:80 -v /data/rapidcontext:/opt/local ghcr.io/baraverkstad/rapidcontext
 
 If this is a blank installation, login with the following user
 credentials:
