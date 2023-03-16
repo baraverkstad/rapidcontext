@@ -114,6 +114,7 @@
     var OPTIONAL = [
         "AbortController",
         "AbortSignal",
+        // "Array.prototype.at",
         "Array.prototype.flat",
         "Array.prototype.flatMap",
         "Element.prototype.after",
