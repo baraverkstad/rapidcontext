@@ -28,7 +28,7 @@
         { "topic": "4.2. Storage Overview", "url": "doc/4_storage.html#storage" },
         { "topic": "4.3. Storage Tree", "url": "doc/4_storage.html#storage_tree" },
         { "topic": "4.4. Storage Data Types", "url": "doc/4_storage.html#storage_type" },
-        { "topic": "4.5. Hidden & Computed Properties", "url": "doc/4_storage.html#hidden_props" },
+        { "topic": "4.5. Hidden & Computed Properties", "url": "doc/4_storage.html#hidden_props" }
     ] },
     { "topic": "5. Server-side & Plug-In Development", "url": "doc/5_plugin_dev.html", "children": [
         { "topic": "5.1. Plug-in Structure", "url": "doc/5_plugin_dev.html#plugin_struct" },
