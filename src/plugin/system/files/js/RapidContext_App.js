@@ -578,7 +578,7 @@ RapidContext.App.loadJSON = function (url, params, options) {
 RapidContext.App.loadText = function (url, params, options) {
     var opts = Object.assign({ responseType: "text" }, options);
     return RapidContext.App.loadXHR(url, params, opts).then(function (xhr) {
-        return xhr.responseText;
+        return xhr.response;
     });
 };
 
@@ -601,7 +601,7 @@ RapidContext.App.loadText = function (url, params, options) {
 RapidContext.App.loadXML = function (url, params, options) {
     var opts = Object.assign({ responseType: "document" }, options);
     return RapidContext.App.loadXHR(url, params, opts).then(function (xhr) {
-        return xhr.responseXML;
+        return xhr.response;
     });
 };
 

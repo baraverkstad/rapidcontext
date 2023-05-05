@@ -324,7 +324,7 @@
             xhr.onreadystatechange = function () {
                 var err;
                 if (xhr && xhr.readyState === 4) {
-                    if (xhr.status >= 200 && xhr.status <= 299) {
+                    if (xhr.status >= 200 && xhr.status <= 299 && xhr.response != null) {
                         resolve(xhr);
                     } else if (xhr.status === 0) {
                         err = "communication error or timeout";
