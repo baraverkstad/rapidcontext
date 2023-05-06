@@ -14,6 +14,7 @@
 
 package org.rapidcontext.app.proc;
 
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
@@ -37,6 +38,11 @@ import org.rapidcontext.util.RegexUtil;
  * @version  1.0
  */
 public class AppListProcedure extends Procedure {
+
+    /**
+     * The class logger.
+     */
+    private static final Logger LOG = Logger.getLogger(AppListProcedure.class.getName());
 
     /**
      * The app object storage path.
@@ -90,6 +96,10 @@ public class AppListProcedure extends Procedure {
 
     private Dict loadApp(Storage storage, Metadata meta, String permission) {
         Dict dict = storage.load(meta.path(), Dict.class).copy();
+        if (!dict.containsKey(KEY_ID)) {
+            dict.set(KEY_ID, meta.id());
+            LOG.warning("deprecated: app " + meta.id() + ": missing 'id' property");
+        }
         dict.set("plugin", Plugin.source(meta));
         Array arr = dict.getArray("resources");
         for (int i = 0; i < arr.size(); i++) {
