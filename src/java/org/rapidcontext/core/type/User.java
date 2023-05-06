@@ -122,8 +122,7 @@ public class User extends StorableObject {
      *         null if not found
      */
     public static User find(Storage storage, String id) {
-        Object obj = storage.load(Path.resolve(PATH, id));
-        return (obj instanceof User) ? (User) obj : null;
+        return storage.load(Path.resolve(PATH, id), User.class);
     }
 
     /**

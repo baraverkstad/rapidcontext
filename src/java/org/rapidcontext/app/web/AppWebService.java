@@ -112,7 +112,7 @@ public class AppWebService extends FileWebService {
      */
     protected static String version() {
         ApplicationContext ctx = ApplicationContext.getInstance();
-        Dict dict = (Dict) ctx.getStorage().load(PluginManager.PATH_INFO);
+        Dict dict = ctx.getStorage().load(PluginManager.PATH_INFO, Dict.class);
         return dict.getString("version", "1");
     }
 
@@ -340,7 +340,7 @@ public class AppWebService extends FileWebService {
         } else if (!SecurityContext.hasReadAccess(meta.path().toString())) {
             LOG.fine("unauthorized access to app '" + appId + "', launching login");
             // FIXME: Remove the 'login' property on the app object
-            Dict app = (Dict) storage.load(Path.from("/app/" + appId));
+            Dict app = storage.load(Path.from("/app/" + appId), Dict.class);
             appId = app.getString("login", loginId());
         }
         Object tpl = storage.load(RootStorage.PATH_FILES.child("index.tmpl", false));

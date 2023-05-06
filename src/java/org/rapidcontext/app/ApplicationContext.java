@@ -192,7 +192,7 @@ public class ApplicationContext {
         this.storage = new AppStorage();
         this.pluginManager = new PluginManager(builtinDir, pluginDir, this.storage);
         this.library = new Library(this.storage);
-        this.config = (Dict) this.storage.load(PATH_CONFIG);
+        this.config = this.storage.load(PATH_CONFIG, Dict.class);
         if (this.config == null) {
             LOG.severe("failed to load application config");
         } else if (!this.config.containsKey("guid")) {

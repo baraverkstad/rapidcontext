@@ -76,8 +76,8 @@ public class PluginListProcedure extends Procedure {
                     SecurityContext.hasReadAccess(instancePath.toString()) &&
                     SecurityContext.hasReadAccess(configPath.toString());
                 if (hasAccess) {
-                    Plugin instance = (Plugin) storage.load(instancePath);
-                    Dict config = (Dict) storage.load(configPath);
+                    Plugin instance = storage.load(instancePath, Plugin.class);
+                    Dict config = storage.load(configPath, Dict.class);
                     if (instance != null) {
                         config = instance.serialize();
                         config.setBoolean("loaded", true);

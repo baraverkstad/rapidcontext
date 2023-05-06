@@ -69,22 +69,19 @@ public class UserSearchProcedure extends Procedure {
         Storage storage = cx.getStorage();
         String match = bindings.getValue("email", "").toString().trim();
         return storage.query(User.PATH).paths().map(path -> {
-            Object o = storage.load(path);
-            if (o instanceof User) {
-                User user = (User) o;
-                // TODO: Should really also compare with realm
-                if (user.email().equalsIgnoreCase(match)) {
-                    if (SecurityContext.hasReadAccess(path.toString())) {
-                        return StorableObject.sterilize(user, true, true, true);
-                    } else {
-                        Dict dict = new Dict();
-                        dict.set(User.KEY_ID, user.id());
-                        dict.set(User.KEY_TYPE, user.type());
-                        dict.set(User.KEY_REALM, user.realm());
-                        dict.set(User.KEY_EMAIL, user.email());
-                        dict.set(User.KEY_ENABLED, Boolean.valueOf(user.isEnabled()));
-                        return dict;
-                    }
+            User user = storage.load(path, User.class);
+            // TODO: Should really also compare with realm
+            if (user != null && user.email().equalsIgnoreCase(match)) {
+                if (SecurityContext.hasReadAccess(path.toString())) {
+                    return StorableObject.sterilize(user, true, true, true);
+                } else {
+                    Dict dict = new Dict();
+                    dict.set(User.KEY_ID, user.id());
+                    dict.set(User.KEY_TYPE, user.type());
+                    dict.set(User.KEY_REALM, user.realm());
+                    dict.set(User.KEY_EMAIL, user.email());
+                    dict.set(User.KEY_ENABLED, Boolean.valueOf(user.isEnabled()));
+                    return dict;
                 }
             }
             return null;

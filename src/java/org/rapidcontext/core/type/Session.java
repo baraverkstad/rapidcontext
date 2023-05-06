@@ -156,8 +156,7 @@ public class Session extends StorableObject {
      *         null if not found
      */
     private static Session find(Storage storage, Path path) {
-        Object obj = storage.load(path);
-        return (obj instanceof Session) ? (Session) obj : null;
+        return storage.load(path, Session.class);
     }
 
     /**

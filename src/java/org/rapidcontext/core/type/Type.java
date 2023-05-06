@@ -104,14 +104,11 @@ public class Type extends StorableObject {
      *         null if not found
      */
     public static Type find(Storage storage, String id) {
-        Object obj = storage.load(Path.resolve(PATH, id));
-        if (obj instanceof Type) {
-            return (Type) obj;
+        Type res = storage.load(Path.resolve(PATH, id), Type.class);
+        if (res != null) {
+            return res;
         } else {
-            return all(storage)
-                .filter(t -> t.alias().equals(id))
-                .findFirst()
-                .orElse(null);
+            return all(storage).filter(t -> t.alias().equals(id)).findFirst().orElse(null);
         }
     }
 

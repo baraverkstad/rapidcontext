@@ -74,7 +74,7 @@ public class StatusProcedure extends Procedure {
      */
     public static Dict getStatusData() {
         ApplicationContext ctx = ApplicationContext.getInstance();
-        Dict res = (Dict) ctx.getStorage().load(PluginManager.PATH_INFO);
+        Dict res = ctx.getStorage().load(PluginManager.PATH_INFO, Dict.class);
         if (res == null) {
             return null;
         }

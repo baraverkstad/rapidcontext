@@ -89,7 +89,7 @@ public class AppListProcedure extends Procedure {
     }
 
     private Dict loadApp(Storage storage, Metadata meta, String permission) {
-        Dict dict = ((Dict) storage.load(meta.path())).copy();
+        Dict dict = storage.load(meta.path(), Dict.class).copy();
         dict.set("plugin", Plugin.source(meta));
         Array arr = dict.getArray("resources");
         for (int i = 0; i < arr.size(); i++) {

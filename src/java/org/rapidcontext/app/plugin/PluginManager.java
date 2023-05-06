@@ -125,7 +125,7 @@ public class PluginManager {
         } catch (PluginException ignore) {
             // Error already logged, ignored here
         }
-        this.platformInfo = (Dict) storage.load(PATH_INFO);
+        this.platformInfo = storage.load(PATH_INFO, Dict.class);
         initStorages(pluginDir);
         initStorages(builtinDir);
         try {
@@ -291,7 +291,7 @@ public class PluginManager {
         try {
             // TODO: Support /plugin/<id>.yaml location too
             storage = new ZipStorage(file);
-            dict = (Dict) storage.load(Path.from("/plugin"));
+            dict = storage.load(Path.from("/plugin"), Dict.class);
             if (dict == null) {
                 throw new PluginException("missing plugin.properties");
             }
@@ -458,7 +458,7 @@ public class PluginManager {
     private void loadJarFile(Path path) {
         try {
             LOG.fine("adding JAR to class loader: " + path);
-            Binary data = (Binary) storage.load(path);
+            Binary data = storage.load(path, Binary.class);
             File tmpFile = FileUtil.tempFile(path.name());
             tempFiles.add(tmpFile);
             try (InputStream is = data.openStream()) {

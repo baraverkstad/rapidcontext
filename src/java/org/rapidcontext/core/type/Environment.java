@@ -69,8 +69,7 @@ public class Environment extends StorableObject {
      *         null if not found
      */
     public static Environment find(Storage storage, String id) {
-        Object obj = storage.load(Path.resolve(PATH, id));
-        return (obj instanceof Environment) ? (Environment) obj : null;
+        return storage.load(Path.resolve(PATH, id), Environment.class);
     }
 
     /**

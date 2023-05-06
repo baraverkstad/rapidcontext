@@ -361,6 +361,22 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
     public abstract Object load(Path path);
 
     /**
+     * Loads an object from the specified location. The result must
+     * be an instance of a specific class (or subclass).
+     *
+     * @param path           the storage location
+     * @param clazz          the class required
+     *
+     * @return the data read, or
+     *         null if not found or unmatched type
+     */
+    @SuppressWarnings("unchecked")
+    public <T> T load(Path path, Class<T> clazz) {
+        Object obj = load(path);
+        return clazz.isInstance(obj) ? (T) obj : null;
+    }
+
+    /**
      * Stores an object at the specified location. The path must
      * locate a particular object or file, since direct manipulation
      * of indices is not supported. Any previous data at the
