@@ -15,7 +15,6 @@
 package org.rapidcontext.core.type;
 
 import java.lang.reflect.Constructor;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
@@ -143,10 +142,15 @@ public class Type extends StorableObject {
             try {
                 return cls.getConstructor(CONSTRUCTOR_ARGS);
             } catch (Exception e) {
-                String msg = "invalid initializer class for type " + typeId +
-                             ": no constructor " + cls.getName() +
-                             "(String, String, Dict) found";
-                LOG.log(Level.WARNING, msg, e);
+                try {
+                    Constructor<?> ctor = cls.getConstructor(new Class[] { Dict.class });
+                    LOG.warning("deprecated: " + typeId + " initializer missing " +
+                                cls.getName() + "(String, String, Dict) constructor");
+                    return ctor;
+                } catch (Exception ex) {
+                    LOG.warning("invalid " + typeId + "initializer: missing " +
+                                cls.getName() + "(String, String, Dict) constructor");
+                }
             }
         }
         return null;
