@@ -150,7 +150,7 @@ public class User extends StorableObject {
      */
     public static Dict normalize(String id, Dict dict) {
         if (!dict.containsKey(KEY_TYPE)) {
-            LOG.warning("deprecated: user " + id + " data: missing object type");
+            LOG.warning("deprecated: user " + id + " data: missing 'type' property");
             dict.set(KEY_TYPE, "user");
             dict.set(KEY_ID, id);
             dict.set(KEY_NAME, dict.getString(KEY_DESCRIPTION, ""));

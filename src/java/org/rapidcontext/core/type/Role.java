@@ -146,7 +146,7 @@ public class Role extends StorableObject {
      */
     public static Dict normalize(String id, Dict dict) {
         if (!dict.containsKey(KEY_TYPE)) {
-            LOG.warning("deprecated: role " + id + " data: missing object type");
+            LOG.warning("deprecated: role " + id + " data: missing 'type' property");
             dict.set(KEY_TYPE, "role");
             dict.set(KEY_ID, id);
         }

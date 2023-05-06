@@ -157,7 +157,7 @@ public class Plugin extends StorableObject {
      */
     public static Dict normalize(String id, Dict dict) {
         if (!dict.containsKey(KEY_TYPE)) {
-            LOG.warning("deprecated: plugin " + id + " data: missing object type");
+            LOG.warning("deprecated: plugin " + id + ": missing 'type' property");
             dict.set(KEY_TYPE, "plugin");
         }
         return dict;
