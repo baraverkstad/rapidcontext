@@ -6,6 +6,7 @@ function StartApp() {
     this.gradients = ["yellow", "red", "green", "blue"];
     this.focused = true;
     this.showingModifiers = false;
+    this.showingInlinePanes = false;
 }
 
 /**
@@ -176,6 +177,10 @@ StartApp.prototype._initApps = function () {
  * Initializes a dashboard app.
  */
 StartApp.prototype._initDashboardApp = function (app) {
+    if (!this.showingInlinePanes) {
+        this.showingInlinePanes = true;
+        this.ui.inlinePane.removeAll();
+    }
     var cls = ["dash-item", "box", this.gradients.shift() || "grey"];
     if (app.startPage == "left" || app.startPage == "right") {
         cls.push("float-" + app.startPage, "clear-" + app.startPage);
