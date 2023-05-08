@@ -1,0 +1,22 @@
+id: http/post
+type: procedure
+alias: PlugIn.Http.Post
+className: org.rapidcontext.app.plugin.http.HttpPostBuiltInProcedure
+description: >-
+    Sends an HTTP POST request and returns the result.
+    This procedure is deprecated, call 'http/request' instead.
+binding:
+  - name: url
+    type: argument
+    description: The HTTP URL.
+  - name: headers
+    type: argument
+    description: >-
+        Any additional HTTP headers. Headers are listed in 'Name: Value' pairs,
+        separated by line breaks. Leave blank for default headers.
+  - name: data
+    type: argument
+    description: >-
+        The HTTP payload data to send. Data should be URL-encoded, unless a
+        'Content-Type' header is specified. URL-encoded data may be split into
+        lines, which are automatically joined by '&' characters).
