@@ -447,28 +447,27 @@ public class Request implements HttpUtil {
     }
 
     /**
-     * Returns the parsed "Authorization" request header data. The
-     * authentication type will be stored with the "type" key. Other
-     * fields will be stored with their corresponding keys. Any
-     * unidentified data will be stored with the "data" key.
+     * Returns parsed "Authorization" request header data. The authentication
+     * scheme is returned in the "scheme" key and the raw authentication data
+     * is provided in the "data" key. Additionally, if the data can be parsed,
+     * their corresponding key value pairs are also provided.
      *
      * @return the parsed authentication data, or
      *         null if not present
      */
-    public Dict getAuthentication() {
+    public Dict getAuth() {
         String auth = request.getHeader("Authorization");
         if (auth == null || !auth.contains(" ")) {
             return null;
         } else {
             Dict dict = new Dict();
             String[] pairs = auth.split("[ \t\n\r,]");
-            dict.set("type", pairs[0]);
+            dict.set("scheme", pairs[0]);
+            dict.set("data", auth.substring(pairs[0].length()).trim());
             for (int i = 1; i < pairs.length; i++) {
                 String[] pair = pairs[i].split("=");
                 if (pair.length == 2) {
                     dict.set(pair[0], StringUtils.strip(pair[1], "\""));
-                } else {
-                    dict.set("data", pairs[i]);
                 }
             }
             return dict;

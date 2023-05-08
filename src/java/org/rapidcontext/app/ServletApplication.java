@@ -215,7 +215,7 @@ public class ServletApplication extends HttpServlet {
         // Check for authentication response
         try {
             if (SecurityContext.currentUser() == null) {
-                Dict authData = request.getAuthentication();
+                Dict authData = request.getAuth();
                 if (authData != null) {
                     processAuthResponse(request, authData);
                 }
@@ -235,8 +235,8 @@ public class ServletApplication extends HttpServlet {
      */
     private void processAuthResponse(Request request, Dict auth)
     throws Exception {
-        String type = auth.getString("type", "");
-        if (type.equalsIgnoreCase("Digest")) {
+        String scheme = auth.getString("scheme", "");
+        if (scheme.equalsIgnoreCase("Digest")) {
             if (!User.DEFAULT_REALM.equals(auth.get("realm"))) {
                 String msg = "Unsupported authentication realm: " + auth.get("realm");
                 throw new SecurityException(msg);
@@ -254,12 +254,12 @@ public class ServletApplication extends HttpServlet {
             String suffix = ":" + nonce + ":" + nc + ":" + cnonce + ":auth:" +
                             BinaryUtil.hashMD5(request.getMethod() + ":" + uri);
             SecurityContext.authHash(user, suffix, response);
-        } else if (type.equalsIgnoreCase("Token")) {
-            SecurityContext.authToken(auth.getString("data", type));
+        } else if (scheme.equalsIgnoreCase("Token")) {
+            SecurityContext.authToken(auth.getString("data", ""));
         } else {
-            throw new SecurityException("Unsupported authentication type: " + type);
+            throw new SecurityException("Unsupported authentication scheme: " + scheme);
         }
-        LOG.fine(ip(request) + "Valid '" + type + "' auth for " +
+        LOG.fine(ip(request) + "Valid '" + scheme + "' auth for " +
                  SecurityContext.currentUser());
     }
 
