@@ -15,6 +15,7 @@
 package org.rapidcontext.core.js;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import org.apache.commons.lang3.RegExUtils;
 import org.mozilla.javascript.Function;
@@ -32,6 +33,11 @@ import org.rapidcontext.core.type.Procedure;
  * @version  1.0
  */
 public class JsProcedure extends Procedure {
+
+    /**
+     * The class logger.
+     */
+    private static final Logger LOG = Logger.getLogger(JsProcedure.class.getName());
 
     /**
      * The binding name for the JavaScript code.
@@ -52,8 +58,10 @@ public class JsProcedure extends Procedure {
      */
     public JsProcedure(String id, String type, Dict dict) {
         super(id, type, dict);
-        // TODO: remove when all procedures have migrated
-        this.dict.set(KEY_TYPE, "procedure/javascript");
+        if (!type.equals("procedure/javascript")) {
+            this.dict.set(KEY_TYPE, "procedure/javascript");
+            LOG.warning("deprecated: procedure " + id + " references legacy type: " + type);
+        }
     }
 
     /**

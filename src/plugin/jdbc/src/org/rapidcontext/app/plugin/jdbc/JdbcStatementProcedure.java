@@ -15,6 +15,7 @@
 package org.rapidcontext.app.plugin.jdbc;
 
 import java.sql.PreparedStatement;
+import java.util.logging.Logger;
 
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.ProcedureException;
@@ -30,6 +31,11 @@ import org.rapidcontext.core.type.ConnectionException;
 public class JdbcStatementProcedure extends JdbcProcedure {
 
     /**
+     * The class logger.
+     */
+    private static final Logger LOG = Logger.getLogger(JdbcStatementProcedure.class.getName());
+
+    /**
      * Creates a new procedure from a serialized representation.
      *
      * @param id             the object identifier
@@ -38,8 +44,10 @@ public class JdbcStatementProcedure extends JdbcProcedure {
      */
     public JdbcStatementProcedure(String id, String type, Dict dict) {
         super(id, type, dict);
-        // TODO: remove when all procedures have migrated
-        this.dict.set(KEY_TYPE, "procedure/jdbc/statement");
+        if (!type.equals("procedure/jdbc/statement")) {
+            this.dict.set(KEY_TYPE, "procedure/jdbc/statement");
+            LOG.warning("deprecated: procedure " + id + " references legacy type: " + type);
+        }
     }
 
     /**

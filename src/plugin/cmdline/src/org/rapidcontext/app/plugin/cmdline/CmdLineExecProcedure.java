@@ -78,8 +78,10 @@ public class CmdLineExecProcedure extends Procedure {
      */
     public CmdLineExecProcedure(String id, String type, Dict dict) {
         super(id, type, dict);
-        // TODO: remove when all procedures have migrated
-        this.dict.set(KEY_TYPE, "procedure/cmdline/exec");
+        if (!type.equals("procedure/cmdline/exec")) {
+            this.dict.set(KEY_TYPE, "procedure/cmdline/exec");
+            LOG.warning("deprecated: procedure " + id + " references legacy type: " + type);
+        }
     }
 
     /**

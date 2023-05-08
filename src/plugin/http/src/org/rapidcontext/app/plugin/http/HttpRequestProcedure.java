@@ -18,6 +18,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.LinkedHashMap;
+import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.core.data.Dict;
@@ -35,6 +36,11 @@ import org.rapidcontext.core.web.Mime;
  * @version  1.0
  */
 public class HttpRequestProcedure extends HttpProcedure {
+
+    /**
+     * The class logger.
+     */
+    private static final Logger LOG = Logger.getLogger(HttpRequestProcedure.class.getName());
 
     /**
      * The binding name for the HTTP connection.
@@ -75,8 +81,10 @@ public class HttpRequestProcedure extends HttpProcedure {
      */
     public HttpRequestProcedure(String id, String type, Dict dict) {
         super(id, type, dict);
-        // TODO: remove when all procedures have migrated
-        this.dict.set(KEY_TYPE, "procedure/http/request");
+        if (!type.equals("procedure/http/request")) {
+            this.dict.set(KEY_TYPE, "procedure/http/request");
+            LOG.warning("deprecated: procedure " + id + " references legacy type: " + type);
+        }
     }
 
     /**
