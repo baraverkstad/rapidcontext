@@ -14,7 +14,10 @@
 
 package org.rapidcontext.app.plugin.http;
 
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.rapidcontext.core.proc.ProcedureException;
@@ -118,9 +121,9 @@ public class HttpChannel extends Channel {
     public URL getUrl() throws ProcedureException {
         String url = ((HttpConnection) connection).url();
         try {
-            return new URL(url);
-        } catch (MalformedURLException e) {
-            throw new ProcedureException("malformed URL: " + url);
+            return new URI(url).toURL();
+        } catch (MalformedURLException | URISyntaxException e) {
+            throw new ProcedureException("invalid URL: " + url);
         }
     }
 

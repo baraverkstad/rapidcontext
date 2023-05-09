@@ -16,6 +16,8 @@ package org.rapidcontext.app.plugin.http;
 
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.logging.Logger;
@@ -207,14 +209,14 @@ public class HttpRequestProcedure extends HttpProcedure {
         str = bindings.processTemplate(str, TextEncoding.URL);
         try {
             if (con != null && !str.isEmpty()) {
-                return new URL(con.getUrl(), str);
+                return con.getUrl().toURI().resolve(str).toURL();
             } else if (con != null) {
                 return con.getUrl();
             } else {
-                return new URL(str);
+                return new URI(str).toURL();
             }
-        } catch (MalformedURLException e) {
-            throw new ProcedureException("malformed URL: " + str);
+        } catch (MalformedURLException | URISyntaxException e) {
+            throw new ProcedureException("invalid URL: " + str);
         }
     }
 
