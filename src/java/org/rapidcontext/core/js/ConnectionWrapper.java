@@ -53,6 +53,9 @@ public class ConnectionWrapper extends ScriptableObject implements Wrapper {
      */
     private Channel channel;
 
+    /**
+     * The visible connection methods.
+     */
     private HashSet<String> methods = new HashSet<>();
 
     /**
