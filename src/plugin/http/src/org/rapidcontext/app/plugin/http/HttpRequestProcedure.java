@@ -240,8 +240,8 @@ public class HttpRequestProcedure extends HttpProcedure {
         }
         String str = "";
         if (bindings.hasName("header")) {
-            // TODO: Remove this legacy binding name (2017-02-01)
             str = bindings.getValue("header", "").toString();
+            LOG.warning("deprecated: legacy 'header' binding used, renamed to 'headers'");
         } else if (bindings.hasName(BINDING_HEADERS)) {
             str = bindings.getValue(BINDING_HEADERS, "").toString();
         }
