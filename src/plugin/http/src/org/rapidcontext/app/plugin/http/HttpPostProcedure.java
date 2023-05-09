@@ -72,6 +72,7 @@ public class HttpPostProcedure extends HttpRequestProcedure {
         throws ProcedureException {
 
         bindings.set(BINDING_METHOD, Bindings.ARGUMENT, "POST", null);
+        bindings.set(BINDING_FLAGS, Bindings.ARGUMENT, "", null);
         return execCall(cx, bindings);
     }
 }
