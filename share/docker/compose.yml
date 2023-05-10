@@ -1,0 +1,9 @@
+version: "3.8"
+services:
+  rapidcontext:
+    build: .
+    ports:
+      - 8080:80/tcp
+    volumes:
+      - ../../tmp:/opt/local
+    restart: unless-stopped

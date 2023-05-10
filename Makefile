@@ -14,7 +14,7 @@ all:
 
 # Cleanup intermediary files
 clean:
-	rm -rf package-lock.json node_modules/
+	rm -rf package-lock.json node_modules/ tmp/
 
 
 # Setup development environment
@@ -22,7 +22,7 @@ setup: clean
 	npm install --omit=optional
 
 
-# Build release artefacts
+# Build release artifacts
 build:
 	rm -f share/docker/rapidcontext-*.zip
 	DATE=$(DATE) VERSION=$(VER) ant package
@@ -55,3 +55,11 @@ test-js:
 		--ignore-pattern 'src/plugin/legacy/**/*.js' \
 		--ignore-pattern '**/*.min.js' \
 		--ignore-pattern '**/MochiKit.js'
+
+
+# Run local development server
+run:
+	cp rapidcontext-$(VER).zip share/docker/
+	cd share/docker && docker compose build --build-arg VERSION=$(VER) --pull
+	rm share/docker/rapidcontext-$(VER).zip
+	cd share/docker && docker compose run --rm --service-ports rapidcontext
