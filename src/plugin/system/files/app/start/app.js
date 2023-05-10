@@ -195,9 +195,9 @@ StartApp.prototype._initDashboardApp = function (app) {
     var pane = new RapidContext.Widget.Pane(attrs);
     this.ui.inlinePane.insertBefore(pane, this.ui.inlinePane.firstChild);
     if (app.startPage == "left" || app.startPage == "right") {
-        RapidContext.Util.registerSizeConstraints(pane, "50%-25");
+        RapidContext.Util.registerSizeConstraints(pane, "50%-3rem-2px");
     } else {
-        RapidContext.Util.registerSizeConstraints(pane, "100%");
+        RapidContext.Util.registerSizeConstraints(pane, "100%-3rem-2px");
     }
     RapidContext.Util.resizeElements(pane);
     this.startApp(app.className, pane);

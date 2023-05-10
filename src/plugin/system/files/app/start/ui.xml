@@ -3,21 +3,21 @@
 <ui class="start-app">
   <TabContainer id="tabContainer" class="w-100 h-100">
     <Pane pageTitle="Start" class="position-relative">
-      <div class="inline-block vertical-top h-100 border-r pr-2" style="width: 30%;">
+      <div class="inline-block vertical-top h-100 border-r pr-2" w="30%">
         <h3>
           Apps:
           <Icon id="appReload" class="fa fa-refresh ml-1" />
           <Icon id="appLoading" class="fa fa-refresh fa-spin ml-1" />
         </h3>
-        <div class="overflow-y-auto w-100" style="height: calc(100% - 2em);">
+        <div class="overflow-y-auto w-100" h="100%-2em">
           <table>
             <tbody id="appTable">
             </tbody>
           </table>
         </div>
       </div>
-      <Pane id="inlinePane" class="inline-block vertical-top h-100 pl-2" style="width: calc(70% - 1rem - 1px)">
-        <Pane w="50%-25" class="dash-item box yellow float-left float-clear-left px-4">
+      <Pane id="inlinePane" class="inline-block vertical-top h-100 overflow-auto pl-2" w="70%-1rem-1px">
+        <Pane class="dash-item box yellow float-left float-clear-left px-4" w="50%-3rem">
           <img src="images/logotype-icon-256x256.png" class="float-right" style="width: 128px; height: 128px;" />
           <h2 style="font-family: Trebuchet MS;">Welcome to RapidContext!</h2>
           <p>RapidContext is a platform for dynamic web applications and tools.</p>
