@@ -19,7 +19,6 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.LinkedHashMap;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
@@ -134,27 +133,27 @@ public class HttpRequestProcedure extends HttpProcedure {
         boolean metadata = hasFlag(flags, "metadata", false);
         HttpChannel channel = getChannel(cx, bindings);
         URL url = getUrl(bindings, channel);
-        LinkedHashMap<String,String> headers = getHeaders(bindings, channel);
-        String contentType = headers.get("Content-Type");
-        boolean isFormData = contentType == null ||
-                             Mime.isMatch(contentType, Mime.WWW_FORM);
+        String headers = getHeaders(bindings);
         String data = bindings.getValue(BINDING_DATA).toString();
-        if (isFormData) {
-            data = bindings.processTemplate(data, TextEncoding.URL);
-            data = data.replace("\n", "&");
-            data = data.replace("&&", "&");
-            data = StringUtils.removeStart(data, "&");
-            data = StringUtils.removeEnd(data, "&");
-        } else if (Mime.isMatch(contentType, Mime.JSON)) {
-            data = bindings.processTemplate(data, TextEncoding.JSON);
-        } else if (Mime.isMatch(contentType, Mime.XML)) {
-            data = bindings.processTemplate(data, TextEncoding.XML);
-        } else {
-            data = bindings.processTemplate(data, TextEncoding.NONE);
-        }
-        HttpURLConnection con = setup(url, headers, data.length() > 0);
+        HttpURLConnection con = setup(url, data.length() > 0);
         try {
+            setRequestHeaders(con, channel.getHeaders());
+            setRequestHeaders(con, headers);
             setRequestMethod(con, method);
+            String contentType = con.getRequestProperty("Content-Type");
+            if (contentType == null || Mime.isMatch(contentType, Mime.WWW_FORM)) {
+                data = bindings.processTemplate(data, TextEncoding.URL);
+                data = data.replace("\n", "&");
+                data = data.replace("&&", "&");
+                data = StringUtils.removeStart(data, "&");
+                data = StringUtils.removeEnd(data, "&");
+            } else if (Mime.isMatch(contentType, Mime.JSON)) {
+                data = bindings.processTemplate(data, TextEncoding.JSON);
+            } else if (Mime.isMatch(contentType, Mime.XML)) {
+                data = bindings.processTemplate(data, TextEncoding.XML);
+            } else {
+                data = bindings.processTemplate(data, TextEncoding.NONE);
+            }
             send(cx, con, data);
             return receive(cx, con, metadata, jsonData, jsonError);
         } finally {
@@ -221,23 +220,17 @@ public class HttpRequestProcedure extends HttpProcedure {
     }
 
     /**
-     * Returns the additional HTTP headers from the bindings and/or
-     * connection.
+     * Returns the additional HTTP headers from the bindings.
      *
      * @param bindings       the call bindings to use
-     * @param con            the optional connection
      *
      * @return the parsed and prepared HTTP headers
      *
      * @throws ProcedureException if the bindings couldn't be read
      */
-    private static LinkedHashMap<String,String> getHeaders(Bindings bindings, HttpChannel con)
+    private static String getHeaders(Bindings bindings)
     throws ProcedureException {
 
-        LinkedHashMap<String,String> headers = new LinkedHashMap<>();
-        if (con != null) {
-            addHeaders(headers, con.getHeaders());
-        }
         String str = "";
         if (bindings.hasName("header")) {
             str = bindings.getValue("header", "").toString();
@@ -245,23 +238,7 @@ public class HttpRequestProcedure extends HttpProcedure {
         } else if (bindings.hasName(BINDING_HEADERS)) {
             str = bindings.getValue(BINDING_HEADERS, "").toString();
         }
-        addHeaders(headers, bindings.processTemplate(str, TextEncoding.NONE));
-        return headers;
-    }
-
-    /**
-     * Parses a string with HTTP headers and adds them into a map.
-     *
-     * @param map            the result name and value map
-     * @param data           the unparsed header strings
-     */
-    private static void addHeaders(LinkedHashMap<String,String> map, String data) {
-        for (String line : data.split("[\\n\\r]+")) {
-            String[] parts = line.split("\\s*:\\s*", 2);
-            if (parts.length == 2) {
-                map.put(parts[0].trim(), parts[1].trim());
-            }
-        }
+        return bindings.processTemplate(str, TextEncoding.NONE);
     }
 
     /**

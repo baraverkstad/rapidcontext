@@ -21,7 +21,6 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
-import java.util.Map;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -66,16 +65,13 @@ public abstract class HttpProcedure extends Procedure {
      * Creates a new HTTP connection for the specified URL.
      *
      * @param url            the URL to use
-     * @param headers        the additional HTTP headers
      * @param data           the send data (payload) flag
      *
      * @return the HTTP connection created
      *
      * @throws ProcedureException if the connection couldn't be created
      */
-    protected static HttpURLConnection setup(URL url,
-                                             Map<String,String> headers,
-                                             boolean data)
+    protected static HttpURLConnection setup(URL url, boolean data)
     throws ProcedureException {
 
         HttpURLConnection con;
@@ -99,13 +95,25 @@ public abstract class HttpProcedure extends Procedure {
         con.setRequestProperty("Accept-Encoding", "identity");
         // TODO: Extract correct version number from JAR file
         con.setRequestProperty("User-Agent", "RapidContext/1.0");
-        for (String key : headers.keySet()) {
-            con.setRequestProperty(key, headers.get(key));
-        }
-        if (data && con.getRequestProperty("Content-Type") == null) {
+        if (data) {
             con.setRequestProperty("Content-Type", Mime.WWW_FORM[0]);
         }
         return con;
+    }
+
+    /**
+     * Sets HTTP connection headers from a string of unparsed headers.
+     *
+     * @param con            the HTTP connection
+     * @param headers        the headers to set
+     */
+    protected static void setRequestHeaders(HttpURLConnection con, String headers) {
+        for (String line : headers.split("[\\n\\r]+")) {
+            String[] parts = line.split("\\s*:\\s*", 2);
+            if (parts.length == 2) {
+                con.setRequestProperty(parts[0].trim(), parts[1].trim());
+            }
+        }
     }
 
     /**

@@ -19,6 +19,8 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.type.Channel;
@@ -34,12 +36,18 @@ import org.rapidcontext.core.type.Channel;
 public class HttpChannel extends Channel {
 
     /**
+     * The class logger.
+     */
+    private static final Logger LOG =
+        Logger.getLogger(HttpProcedure.class.getName());
+
+    /**
      * Creates a new HTTP connection channel.
      *
-     * @param con            the parent connection
+     * @param parent         the parent HTTP connection
      */
-    HttpChannel(HttpConnection con) {
-        super(con);
+    HttpChannel(HttpConnection parent) {
+        super(parent);
     }
 
     /**
@@ -82,7 +90,27 @@ public class HttpChannel extends Channel {
      * the other way around.
      */
     public void validate() {
-        // Nothing to do here
+        String method = ((HttpConnection) connection).validateMethod();
+        if (method != null && method.trim().length() > 0) {
+            try {
+                HttpURLConnection con = HttpProcedure.setup(getUrl(), false);
+                try {
+                    HttpProcedure.setRequestHeaders(con, getHeaders());
+                    HttpProcedure.setRequestMethod(con, method);
+                    con.connect();
+                    int code = con.getResponseCode();
+                    if (code / 100 != 2) {
+                        LOG.warning("validation failure, invalid response: HTTP " + code);
+                        invalidate();
+                    }
+                } finally {
+                    con.disconnect();
+                }
+            } catch (Exception e) {
+                LOG.log(Level.WARNING, "validation failure", e);
+                invalidate();
+            }
+        }
     }
 
     /**

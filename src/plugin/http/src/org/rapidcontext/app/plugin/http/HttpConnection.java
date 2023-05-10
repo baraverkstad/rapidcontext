@@ -49,6 +49,11 @@ public class HttpConnection extends Connection {
     public static final String HTTP_HEADERS = "headers";
 
     /**
+     * The HTTP validation method configuration parameter name.
+     */
+    public static final String HTTP_VALIDATE = "validate";
+
+    /**
      * Normalizes an HTTP connection data object if needed. This method
      * will modify legacy data into the proper keys and values.
      *
@@ -96,6 +101,16 @@ public class HttpConnection extends Connection {
      */
     public String headers() {
         return dict.getString(HttpConnection.HTTP_HEADERS, "");
+    }
+
+    /**
+     * Returns the default HTTP headers.
+     *
+     * @return the default HTTP headers, or
+     *         an empty string if not set
+     */
+    public String validateMethod() {
+        return dict.getString(HttpConnection.HTTP_VALIDATE, "");
     }
 
     /**
