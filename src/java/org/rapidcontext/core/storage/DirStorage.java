@@ -24,6 +24,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
+import org.apache.commons.io.FileUtils;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.web.Mime;
@@ -222,9 +223,12 @@ public class DirStorage extends Storage {
             remove(path.sibling(name));
         }
         dir.mkdirs();
-        if (!tmp.renameTo(file)) {
+        try {
+            // Helper handles copy+delete for move across file systems
+            FileUtils.moveFile(tmp, file);
+        } catch (IOException e) {
             String msg = "failed to move " + tmp + " to file " + file;
-            LOG.warning(msg);
+            LOG.log(Level.WARNING, msg, e);
             throw new StorageException(msg);
         }
     }
