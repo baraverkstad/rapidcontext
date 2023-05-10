@@ -370,8 +370,8 @@ RapidContext.App.stopApp = function (app) {
  *         resolve with the result of the call on success
  */
 RapidContext.App.callApp = function (app, method) {
+    var args = Array.from(arguments).slice(2);
     return new RapidContext.Async(function (resolve, reject) {
-        var args = Array.from(arguments).slice(2);
         var launcher = RapidContext.App.findApp(app);
         if (launcher == null) {
             var msg = "No matching app launcher found";
