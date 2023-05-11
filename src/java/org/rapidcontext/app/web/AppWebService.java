@@ -339,9 +339,7 @@ public class AppWebService extends FileWebService {
             appId = null;
         } else if (!SecurityContext.hasReadAccess(meta.path().toString())) {
             LOG.fine("unauthorized access to app '" + appId + "', launching login");
-            // FIXME: Remove the 'login' property on the app object
-            Dict app = storage.load(Path.from("/app/" + appId), Dict.class);
-            appId = app.getString("login", loginId());
+            appId = loginId();
         }
         Object tpl = storage.load(RootStorage.PATH_FILES.child("index.tmpl", false));
         if (appId != null && tpl instanceof Binary) {
