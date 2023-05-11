@@ -4,11 +4,7 @@ name: Anonymous Users
 description: Provides read access to files and a few apps for anonymous users.
 auto: all
 access:
-  - path: app/start
-    permission: read
   - path: app/login
-    permission: read
-  - path: app/help
     permission: read
   - path: app/**
     permission: search
