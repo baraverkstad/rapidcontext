@@ -40,7 +40,7 @@ property:
     required: false
   - name: authorizedTime
     description: >-
-        The first valid authentication timestamp. Any session, auth token or
+        The oldest valid authentication timestamp. Any session, auth token or
         similar created prior is considered invalid. This timestamp should be
         reset when a password (or other means of authentication) is modified.
     required: false

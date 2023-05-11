@@ -81,7 +81,7 @@ public class User extends StorableObject {
     public static final String KEY_ROLE = "role";
 
     /**
-     * The dictionary key for the first valid authentication timestamp.
+     * The dictionary key for the oldest valid authentication timestamp.
      */
     public static final String KEY_AUTHORIZED_TIME = "authorizedTime" ;
 
@@ -490,10 +490,10 @@ public class User extends StorableObject {
     }
 
     /**
-     * Returns the first valid authentication timestamp. Any session,
+     * Returns the oldest valid authentication timestamp. Any session,
      * auth token or similar created prior is considered invalid.
      *
-     * @return the first valid authentication timestamp
+     * @return the oldest valid authentication timestamp
      */
     public Date authorizedTime() {
         return dict.getDate(KEY_AUTHORIZED_TIME, new Date(0));
