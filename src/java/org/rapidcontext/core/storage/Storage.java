@@ -364,6 +364,7 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
      * Loads an object from the specified location. The result must
      * be an instance of a specific class (or subclass).
      *
+     * @param <T>            the type to cast objects to
      * @param path           the storage location
      * @param clazz          the class required
      *

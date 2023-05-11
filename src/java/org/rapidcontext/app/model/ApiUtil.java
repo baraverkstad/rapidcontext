@@ -283,4 +283,7 @@ public class ApiUtil {
             return StorableObject.sterilize(obj, true, skipComputed, limitedTypes);
         }
     }
+
+    // No instances
+    private ApiUtil() {}
 }
