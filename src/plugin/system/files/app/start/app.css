@@ -1,7 +1,7 @@
 .start-app .dash-item {
     position: relative;
     min-height: 200px;
-    margin: 0 0.5rem 1rem 0.5rem;
+    margin: 0.25rem 0.5rem 1rem 0.5rem;
     padding: 0.75rem 1rem;
 }
 .start-app .about {

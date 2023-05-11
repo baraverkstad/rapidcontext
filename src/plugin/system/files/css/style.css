@@ -188,7 +188,7 @@ table.-form-layout-table td {
     page-break-inside: avoid;
     background-color: #eee;
     background-image: linear-gradient(to bottom, #fdfdfd, #eee);
-    box-shadow: 0 1px 3px #ccc;
+    box-shadow: 0 0 0.25rem #0004;
 }
 ol.box, ul.box {
     padding: 0.5rem 2rem;
