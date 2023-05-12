@@ -380,7 +380,7 @@ RapidContext.App.callApp = function (app, method) {
         }
         var exists = launcher.instances.length > 0;
         var promise = exists ? RapidContext.Async.wait(0) : RapidContext.App.startApp(app);
-        return promise.then(function () {
+        promise = promise.then(function () {
             RapidContext.Log.context("RapidContext.App.callApp(" + launcher.id + "," + method + ")");
             var pos = MochiKit.Base.findIdentical(launcher.instances, app);
             var instance = (pos >= 0) ? app : launcher.instances[launcher.instances.length - 1];
@@ -406,6 +406,7 @@ RapidContext.App.callApp = function (app, method) {
         }).finally(function () {
             RapidContext.Log.context(null);
         });
+        resolve(promise);
     });
 };
 
