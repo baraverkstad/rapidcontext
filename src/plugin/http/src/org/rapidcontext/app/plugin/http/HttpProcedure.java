@@ -292,7 +292,9 @@ public abstract class HttpProcedure extends Procedure {
         boolean success = (con.getResponseCode() / 100 == 2);
         InputStream is = success ? con.getInputStream() : con.getErrorStream();
         ByteArrayOutputStream os = new ByteArrayOutputStream();
-        FileUtil.copy(is, os);
+        if (is != null) {
+            FileUtil.copy(is, os);
+        }
         return os.toString(responseCharset(con));
     }
 
