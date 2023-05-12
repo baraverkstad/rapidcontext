@@ -87,7 +87,7 @@ public class StorageWriteProcedure extends Procedure {
         } else if (!isString && !isDict && !isArray && !isBinary) {
             throw new ProcedureException(this, "input data type not supported");
         }
-        boolean isObjectPath = !path.equals(Storage.objectPath(path));
+        boolean isObjectPath = path.equals(Storage.objectPath(path));
         String fmt = ((String) bindings.getValue("format", "")).trim();
         if (fmt.equals("")) {
             // Format is selected in storage layer
@@ -95,15 +95,15 @@ public class StorageWriteProcedure extends Procedure {
             if (!isString && !isBinary) {
                 throw new ProcedureException(this, "binary format requires binary data");
             }
-        } else if (fmt.equalsIgnoreCase("properties") && !isObjectPath) {
+        } else if (fmt.equalsIgnoreCase("properties") && isObjectPath) {
             path = path.sibling(path.name() + Storage.EXT_PROPERTIES);
-        } else if (fmt.equalsIgnoreCase("json") && !isObjectPath) {
+        } else if (fmt.equalsIgnoreCase("json") && isObjectPath) {
             path = path.sibling(path.name() + Storage.EXT_JSON);
-        } else if (fmt.equalsIgnoreCase("xml") && !isObjectPath) {
+        } else if (fmt.equalsIgnoreCase("xml") && isObjectPath) {
             path = path.sibling(path.name() + Storage.EXT_XML);
-        } else if (fmt.equalsIgnoreCase("yaml") && !isObjectPath) {
+        } else if (fmt.equalsIgnoreCase("yaml") && isObjectPath) {
             path = path.sibling(path.name() + Storage.EXT_YAML);
-        } else if (isObjectPath && StringUtils.endsWithIgnoreCase(path.name(), "." + fmt)) {
+        } else if (!isObjectPath && StringUtils.endsWithIgnoreCase(path.name(), "." + fmt)) {
             // Path and specified format match
         } else {
             String msg = "invalid data format '" + fmt + "' for path " + path;
