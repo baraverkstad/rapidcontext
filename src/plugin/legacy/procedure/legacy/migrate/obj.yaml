@@ -5,6 +5,10 @@ binding:
   - name: code
     type: data
     value: |-
+        function toArray(o) {
+            return Array.isArray(o) ? o : [o].filter(Boolean);
+        }
+
         function kebabCase(id) {
             return id.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
         }
@@ -24,7 +28,7 @@ binding:
             return opts.updateTo;
         }
 
-        return listObjs({ path: path, metadata: true }).map(migrate);
+        return toArray(listObjs({ path: path, metadata: true })).map(migrate);
   - name: listObjs
     type: procedure
     value: system/storage/read
