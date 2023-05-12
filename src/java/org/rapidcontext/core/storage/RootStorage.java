@@ -14,6 +14,7 @@
 
 package org.rapidcontext.core.storage;
 
+import java.io.File;
 import java.lang.reflect.Constructor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,6 +22,7 @@ import java.util.stream.Stream;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.rapidcontext.core.data.Array;
+import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.task.Scheduler;
 import org.rapidcontext.core.task.Task;
@@ -554,6 +556,11 @@ public class RootStorage extends MemoryStorage {
      * @throws StorageException if the data couldn't be written
      */
     public synchronized void store(Path path, Object data) throws StorageException {
+        boolean isBinary = data instanceof Binary || data instanceof File;
+        if (!isBinary && !path.name().contains(".")) {
+            Metadata meta = lookup(path);
+            path = serializedPath(path, (meta == null) ? null : meta.mimeType());
+        }
         if (path.startsWith(PATH_STORAGE)) {
             if (caches.store(null, path, data)) {
                 return;

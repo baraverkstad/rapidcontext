@@ -24,6 +24,7 @@ import org.rapidcontext.core.data.JsonSerializer;
 import org.rapidcontext.core.data.PropertiesSerializer;
 import org.rapidcontext.core.data.XmlSerializer;
 import org.rapidcontext.core.data.YamlSerializer;
+import org.rapidcontext.core.web.Mime;
 
 /**
  * The persistent data storage and retrieval class. This base class
@@ -131,7 +132,7 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
      * Returns a normalized path by removing any supported data format file
      * extension (if found).
      *
-     * @param path           the path to check
+     * @param path           the original path
      *
      * @return the path without trailing extension, or
      *         the input path if not recognized
@@ -139,6 +140,30 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
     public static Path objectPath(Path path) {
         String name = objectName(path.name());
         return name.equals(path.name()) ? path : path.sibling(name);
+    }
+
+    /**
+     * Returns a serialized path by adding a supported data format file
+     * extension.
+     *
+     * @param path           the original path
+     * @param mimeType       the optional desired MIME type
+     *
+     * @return the path with a supported file extension, or
+     *         the input path if an extension was already set
+     */
+    public static Path serializedPath(Path path, String mimeType) {
+        if (path.name().contains(".")) {
+            return path;
+        } else if (mimeType != null && Mime.isMatch(mimeType, Mime.JSON)) {
+            return path.sibling(path.name() + EXT_JSON);
+        } else if (mimeType != null && Mime.isMatch(mimeType, Mime.XML)) {
+            return path.sibling(path.name() + EXT_XML);
+        } else if (mimeType != null && Mime.isMatch(mimeType, Mime.YAML)) {
+            return path.sibling(path.name() + EXT_YAML);
+        } else {
+            return path.sibling(path.name() + EXT_PROPERTIES);
+        }
     }
 
     /**
