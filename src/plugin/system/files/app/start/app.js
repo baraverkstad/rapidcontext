@@ -96,7 +96,6 @@ StartApp.prototype._initInfoMenu = function () {
         MochiKit.DOM.replaceChildNodes(this.ui.infoUser, user.name || user.id);
         MochiKit.DOM.replaceChildNodes(this.ui.menuTitle, user.longName);
         MochiKit.DOM.replaceChildNodes(this.ui.menuLogInOut, "Logout");
-        this.ui.menuAdmin.classList.remove("widgetPopupDisabled");
         this.ui.menuPassword.classList.remove("widgetPopupDisabled");
         var func = MochiKit.Base.partial(RapidContext.App.startApp, "admin", null);
         MochiKit.Signal.connect(this.ui.menuAdmin, "onclick", func);
@@ -105,7 +104,6 @@ StartApp.prototype._initInfoMenu = function () {
         MochiKit.DOM.replaceChildNodes(this.ui.infoUser, "anonymous");
         MochiKit.DOM.replaceChildNodes(this.ui.menuTitle, "Anonymous User");
         MochiKit.DOM.replaceChildNodes(this.ui.menuLogInOut, "Login");
-        this.ui.menuAdmin.classList.add("widgetPopupDisabled");
         this.ui.menuPassword.classList.add("widgetPopupDisabled");
     }
 };
@@ -137,9 +135,11 @@ StartApp.prototype._initApps = function () {
     });
 
     // Add helps and admin apps to the bottom
+    this.ui.menuHelp.classList.toggle("widgetPopupDisabled", help == null);
     if (help) {
         launchers.push(help);
     }
+    this.ui.menuAdmin.classList.toggle("widgetPopupDisabled", admin == null);
     if (admin) {
         launchers.push(admin);
     }
