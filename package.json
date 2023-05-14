@@ -12,9 +12,9 @@
     "jquery": "3.6.1"
   },
   "devDependencies": {
-    "eslint": "8.28.0",
-    "html-validate": "7.10.0",
-    "stylelint": "14.15.0",
-    "stylelint-config-standard": "^29.0.0"
+    "eslint": "8.40.0",
+    "html-validate": "7.17.0",
+    "stylelint": "15.6.1",
+    "stylelint-config-standard": "33.0.0"
   }
 }
