@@ -170,6 +170,9 @@ updated.</p>
           the <var>url</var> if omitted.</li>
       <li><var>code</var> &mdash; A JavaScript source code file that will be
           loaded before app launch.</li>
+      <li><var>module</var> &mdash; A JavaScript ESM source code file that will
+          be loaded with <code>import()</code>. It must <em>default export</em>
+          a constructor function or class for creating app instances.</li>
       <li><var>style</var> &mdash; A CSS stylesheet file that will be loaded
           before app launch.</li>
       <li><var>ui</var> &mdash; A user interface XML definition file (see
@@ -207,9 +210,10 @@ updated.</p>
 <h2 id="app_impl">6.3. App Implementation</h2>
 
 <p>All apps are implemented as JavaScript objects with constructor function
-(i.e. as JavaScript "classes"). Normally a single <q><var>code</var></q>
-resource contains the source code for the app. By declaring multiple
-<q><var>code</var></q> resources, several files can be loaded (in the
+or a <code>class</code>. Normally a single <q><var>code</var></q> resource
+contains the source code for the app, but a <q><var>module</var></q> resource
+can be used as an alternative to import a Javascript module (ESM). By declaring
+multiple <q><var>code</var></q> resources, several files can be loaded (in the
 specified order). Upon launch, the app constructor function is called and a
 new app instance object should be created.</p>
 
@@ -232,43 +236,43 @@ new app instance object should be created.</p>
 
 <p>The JavaScript constructor function for an app must be named
 <strong>exactly</strong> as specified by the <q><var>className</var></q>
-property in the app configuration. The app instance objects must also contain
-two methods &mdash; <var>start()</var> and <var>stop()</var> &mdash; that
-handle the app lifecycle. Below is an example JavaScript file that implements
-a minimal example app:</p>
+property in the app configuration (if not using ESM). The app instance objects
+must also contain two methods &mdash; <var>start()</var> and <var>stop()</var>
+&mdash; that handle the app lifecycle. Below is an example JavaScript file that
+implements a minimal example app:</p>
 
 <div class="box blue">
   <i class="box-icon fa fa-fw fa-code"></i>
   <pre class="box-content code">
-<span class="comment">/**
- * Creates a new ExampleApp instance. This function is called
- * once all app resources have been loaded. It is called as a
- * constructor function, so it will create a new object with
- * the prototype inherited from this function.
- */</span>
-function ExampleApp() {
-<span class="comment">    // Constructor code. No UI or external calls here.</span>
-}
+var ExampleApp = class {
+    <span class="comment">/**
+     * Creates a new ExampleApp instance. Called once all app resources have
+     * been loaded.
+     */</span>
+    constructor() {
+        <span class="comment">// Constructor code. No UI or external calls here.</span>
+    }
 
-<span class="comment">/**
- * Starts the app execution. This function is called when the
- * user interface has been successfully created.
- */</span>
-ExampleApp.prototype.start = function() {
-<span class="comment">    // this.ui -- a map of identifiers from the UI XML
-    // this.ui.root -- the user interface parent widget
-    // this.ui.overlay -- the overlay widget for the app
-    // this.resource -- a map of resource URL:s</span>
-}
+    <span class="comment">/**
+     * Starts the app execution. This function is called when the
+     * user interface has been successfully created.
+     */</span>
+    start() {
+    <span class="comment">    // this.ui -- a map of identifiers from the UI XML
+        // this.ui.root -- the user interface parent widget
+        // this.ui.overlay -- the overlay widget for the app
+        // this.resource -- a map of resource URL:s</span>
+    }
 
-<span class="comment">/**
- * Stops the app execution. This function is called when the
- * app should terminate, but before the user interface has
- * been destroyed. The app should kill running requests and
- * similar when this method is called.
- */</span>
-ExampleApp.prototype.stop = function() {
-<span class="comment">    // stop async requests and other pending actions</span>
+    <span class="comment">/**
+     * Stops the app execution. This function is called when the
+     * app should terminate, but before the user interface has
+     * been destroyed. The app should kill running requests and
+     * similar when this method is called.
+     */</span>
+    stop() {
+    <span class="comment">    // stop async requests and other pending actions</span>
+    }
 }
   </pre>
 </div>

@@ -151,9 +151,7 @@ RapidContext.App.findApp = function (app) {
     var apps = RapidContext.App.apps();
     for (var i = 0; i < apps.length; i++) {
         var l = apps[i];
-        if (l.className == null) {
-            RapidContext.Log.error("Launcher does not have 'className' property", l);
-        } else if (l.id == app || l.className == app || l.id == app.id) {
+        if (l.id == app || l.className == app || l.id == app.id) {
             return l;
         }
     }
@@ -189,6 +187,10 @@ RapidContext.App.startApp = function (app, container) {
     function loadResource(launcher, res) {
         if (res.type == "code") {
             return RapidContext.App.loadScript(res.url);
+        } else if (res.type == "module") {
+            return import(RapidContext.Util.resolveURI(res.url)).then(function (mod) {
+                launcher.creator = mod["default"] || mod["create"];
+            });
         } else if (res.type == "style") {
             return RapidContext.App.loadStyles(res.url);
         } else if (res.type == "ui") {
@@ -211,7 +213,7 @@ RapidContext.App.startApp = function (app, container) {
         launcher.resource = {};
         var promises = launcher.resources.map(loadResource.bind(null, launcher));
         return Promise.all(promises).then(function () {
-            launcher.creator = window[launcher.className];
+            launcher.creator = launcher.creator || window[launcher.className];
             if (launcher.creator == null) {
                 RapidContext.Log.error("App constructor " + launcher.className + " not defined", launcher);
                 throw new Error("App constructor " + launcher.className + " not defined");
@@ -815,9 +817,12 @@ RapidContext.App._Cache = {
     _normalizeApp: function (app) {
         function toType(type, url) {
             var isJs = !type && /\.js$/i.test(url);
+            var isModule = !type && /\.mjs$/i.test(url);
             var isCss = !type && /\.css$/i.test(url);
             if (type == "code" || type == "js" || type == "javascript" || isJs) {
                 return "code";
+            } else if (type == "module" || isModule) {
+                return "module";
             } else if (type == "style" || type == "css" || isCss) {
                 return "style";
             } else if (type == "json" || (!type && /\.json$/i.test(url))) {
@@ -883,9 +888,6 @@ RapidContext.App._Cache = {
         case "system/app/list":
             for (var i = 0; i < data.length; i++) {
                 var launcher = this._normalizeApp(data[i]);
-                if (launcher.className == null) {
-                    RapidContext.Log.error("App missing 'className' property", launcher);
-                }
                 launcher.instances = (this.apps[launcher.id] || {}).instances || [];
                 this.apps[launcher.id] = Object.assign(this.apps[launcher.id] || {}, launcher);
             }

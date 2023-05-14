@@ -16,12 +16,12 @@ property:
     required: false
   - name: className
     description: >-
-        The app JavaScript class name. This name refers to a constructor
-        function for the app instance. The class name must be unique to avoid
-        collisions with other apps loaded at the same time (in the web page).
-        The source code for the class should be placed in one of the code
-        resources specified.
-    required: true
+        The app JavaScript class name (for non-ESM code). This name refers to
+        a global constructor function for creating an app instance. The class
+        name must be unique to avoid collisions with other apps loaded at the
+        same time (in the web page). The source code for the class should be
+        placed in one of the code resources specified.
+    required: false
   - name: launch
     description: >-
         The app launch setting. Should be either 'manual' (default), 'auto',
