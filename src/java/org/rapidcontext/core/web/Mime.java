@@ -197,7 +197,7 @@ public final class Mime {
             return HTML[0];
         } else if (fileName.endsWith(".css")) {
             return CSS[0];
-        } else if (fileName.endsWith(".js")) {
+        } else if (fileName.endsWith(".js") || fileName.endsWith(".cjs") || fileName.endsWith(".mjs")) {
             return JS[0];
         } else if (fileName.endsWith(".json")) {
             return JSON[0];
