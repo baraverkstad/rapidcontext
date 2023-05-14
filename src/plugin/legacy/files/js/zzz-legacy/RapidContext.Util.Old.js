@@ -31,6 +31,79 @@ RapidContext.Util._logOnce = function(level, message) {
 };
 
 /**
+ * Returns the name of a function. If the function is anonymous (i.e. the
+ * `name` property is `undefined` or an empty string), the value of the
+ * `displayName` property is returned instead.
+ *
+ * @param {Function} func the function to check
+ *
+ * @return {String} the function name, or `undefined` if not available
+ *
+ * @example
+ * var o = { test: function () {} };
+ * RapidContext.Util.registerFunctionNames(o, "o");
+ * RapidContext.Util.functionName(o.test)
+ * ==> "o.test"
+ *
+ * @see RapidContext.Util.registerFunctionNames
+ */
+RapidContext.Util.functionName = function (func) {
+    if (func == null) {
+        return null;
+    } else if (func.name != null && func.name != "") {
+        return func.name;
+    } else {
+        return func.displayName;
+    }
+};
+
+/**
+ * Registers function names for anonymous functions. This is useful when
+ * debugging code in Firebug or similar tools, as readable stack traces can be
+ * provided.
+ *
+ * This function will add a `displayName` property to all functions without a
+ * `name` property. Both the `obj` properties and `obj.prototype` properties
+ * are processed recursively, using the base name as a namespace (i.e.
+ * `[name].[property]` or `[name].prototype.[property]`).
+ *
+ * @param {Object} obj the function or object to process
+ * @param {String} [name] the function or object (class) name
+ *
+ * @example
+ * var o = { name: "MyObject", test: function () {} };
+ * RapidContext.Util.registerFunctionNames(o);
+ * o.test.displayName
+ * ==> "MyObject.test"
+ *
+ * @see RapidContext.Util.functionName
+ */
+RapidContext.Util.registerFunctionNames = function (obj, name) {
+    function worker(o, name, stack) {
+        var isObj = (o != null && typeof(o) === "object");
+        var isFunc = (typeof(o) === "function");
+        var isAnon = isFunc && (o.name == null || o.name == "");
+        var isProto = (o === Object.prototype || o === Function.prototype);
+        var isNode = isObj && (typeof(o.nodeType) === "number");
+        var isVisited = stack.includes(o);
+        if (isFunc && isAnon && !o.displayName) {
+            o.displayName = name;
+        }
+        if ((isObj || isFunc) && !isProto && !isNode && !isVisited) {
+            stack.push(o);
+            for (var prop in o) {
+                if (Object.prototype.hasOwnProperty.call(o, prop)) {
+                    worker(o[prop], name + "." + prop, stack);
+                }
+            }
+            worker(o.prototype, name + ".prototype", stack);
+            stack.pop();
+        }
+    }
+    worker(obj, name || obj.name || obj.displayName || obj.NAME || "", []);
+};
+
+/**
  * Returns the current execution stack trace. The stack trace is an array of
  * function names with the innermost function at the lowest index (0). Due to
  * limitations in the JavaScript API:s, the stack trace will be cut if

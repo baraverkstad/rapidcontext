@@ -44,7 +44,6 @@ RapidContext.App.init = function (app) {
     // Setup libraries
     RapidContext.Log.context("RapidContext.App.init()");
     RapidContext.Log.info("Initializing RapidContext");
-    RapidContext.Util.registerFunctionNames(RapidContext, "RapidContext");
     if (!RapidContext.Browser.isSupported()) {
         var el = document.getElementById("unsupported-browser");
         el.className = el.className.replace("hidden", "");
@@ -217,7 +216,6 @@ RapidContext.App.startApp = function (app, container) {
                 RapidContext.Log.error("App constructor " + launcher.className + " not defined", launcher);
                 throw new Error("App constructor " + launcher.className + " not defined");
             }
-            RapidContext.Util.registerFunctionNames(launcher.creator, launcher.className);
         });
     }
     function buildUI(parent, ids, ui) {
