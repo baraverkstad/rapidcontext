@@ -1406,7 +1406,7 @@ AdminApp.prototype._addUser = function () {
         enabled: true,
         passwordHint: "Minimum 5 characters"
     });
-    this.ui.userId.setAttrs({ readonly: false });
+    this.ui.userId.setAttrs({ readonly: null });
 };
 
 /**
