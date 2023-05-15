@@ -385,6 +385,3 @@ TextField.prototype._handleAutoClear = function() {
         this.clearAutoComplete();
     }
 }
-
-// Register function names
-ReTracer.Util.registerFunctionNames(TextField.prototype, "TextField");

@@ -58,6 +58,3 @@ PasswordField.prototype.setDisabled = function(disabled) {
 PasswordField.prototype.setStyle = function(style) {
     CssUtil.setStyles(this.domNode, style);
 }
-
-// Register function names
-ReTracer.Util.registerFunctionNames(PasswordField.prototype, "PasswordField");

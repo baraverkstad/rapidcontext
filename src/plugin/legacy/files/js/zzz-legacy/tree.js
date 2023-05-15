@@ -572,7 +572,3 @@ TreeNode.prototype.removeAllChildren = function() {
         this.childNode.innerHTML = "";
     }
 }
-
-// Register function names
-ReTracer.Util.registerFunctionNames(Tree.prototype, "Tree");
-ReTracer.Util.registerFunctionNames(TreeNode.prototype, "TreeNode");

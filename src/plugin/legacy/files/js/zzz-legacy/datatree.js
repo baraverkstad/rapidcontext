@@ -113,6 +113,3 @@ DataTree.prototype._createLabel = function(name, value) {
     }
     return str;
 }
-
-// Register function names
-ReTracer.Util.registerFunctionNames(DataTree.prototype, "DataTree");

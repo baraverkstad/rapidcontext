@@ -122,6 +122,3 @@ CompactTextBox.prototype._hideDialog = function() {
     this.setText(text);
     this._inputNode.focus();
 }
-
-// Register function names
-ReTracer.Util.registerFunctionNames(CompactTextBox.prototype, "CompactTextBox");

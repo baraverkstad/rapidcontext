@@ -56,6 +56,3 @@ Button.prototype.setStyle = function(style) {
 Button.prototype.onClick = function() {
     return false;
 }
-
-// Register function names
-ReTracer.Util.registerFunctionNames(Button.prototype, "Button");

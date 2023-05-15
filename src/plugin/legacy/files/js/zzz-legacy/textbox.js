@@ -115,6 +115,3 @@ TextBox.prototype.resizeFromText = function(minRows, minCols) {
     }
     this.resizeTo(rows, cols);
 }
-
-// Register function names
-ReTracer.Util.registerFunctionNames(TextBox.prototype, "TextBox");

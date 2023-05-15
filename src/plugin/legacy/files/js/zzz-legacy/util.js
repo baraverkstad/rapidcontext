@@ -264,7 +264,6 @@ FunctionUtil.bind = function(func, obj) {
     resFunc.bindFunc = func;
     resFunc.bindObj = obj;
     resFunc.bindArgs = Array.prototype.slice.call(arguments, 2);
-    ReTracer.Util.registerFunctionNames(resFunc, null);
     return resFunc;
 }
 

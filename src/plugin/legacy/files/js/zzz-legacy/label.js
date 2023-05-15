@@ -111,6 +111,3 @@ Label.prototype.addTaggedText = function(tagName, text, style, tooltip) {
 Label.prototype.setStyle = function(style) {
     CssUtil.setStyles(this.domNode, style);
 }
-
-// Register function names
-ReTracer.Util.registerFunctionNames(Label.prototype, "Label");

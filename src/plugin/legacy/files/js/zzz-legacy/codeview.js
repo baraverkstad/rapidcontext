@@ -61,6 +61,3 @@ CodeView.prototype.addText = function(text, style) {
 CodeView.prototype.setStyle = function(style) {
     CssUtil.setStyles(this.domNode, style);
 }
-
-// Register function names
-ReTracer.Util.registerFunctionNames(CodeView.prototype, "CodeView");

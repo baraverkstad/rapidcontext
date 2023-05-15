@@ -90,6 +90,3 @@ CheckBox.prototype.toggleChecked = function() {
  */
 CheckBox.prototype.onChange = function() {
 }
-
-// Register function names
-ReTracer.Util.registerFunctionNames(CheckBox.prototype, "CheckBox");

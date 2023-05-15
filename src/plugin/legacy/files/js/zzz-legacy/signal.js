@@ -133,7 +133,6 @@ Signal._connectDispatcher = function(src, signal) {
     src[signal].postFuncs = [];
     src[signal].dispatchName = ReTracer.Util.functionName(value) || signal;
     src[signal].dispatchName += ".dispatch";
-    ReTracer.Util.registerFunctionNames(src[signal], null);
 }
 
 /**

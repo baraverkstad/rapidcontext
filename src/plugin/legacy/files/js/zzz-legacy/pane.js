@@ -55,6 +55,3 @@ Pane.prototype.addChild = function(child) {
 Pane.prototype.removeAllChildren = function() {
     this.domNode.innerHTML = "";
 }
-
-// Register function names
-ReTracer.Util.registerFunctionNames(Pane.prototype, "Pane");

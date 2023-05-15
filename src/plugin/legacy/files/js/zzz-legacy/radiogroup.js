@@ -142,6 +142,3 @@ RadioGroup.prototype.registerOnChange = function(method, obj) {
  * @private
  */
 RadioGroup._COUNTER = 0;
-
-// Register function names
-ReTracer.Util.registerFunctionNames(RadioGroup.prototype, "RadioGroup");

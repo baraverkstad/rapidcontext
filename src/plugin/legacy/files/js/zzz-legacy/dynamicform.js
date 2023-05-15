@@ -431,6 +431,3 @@ DynamicForm.prototype._validateField = function(widget) {
     }
     return true;
 }
-
-// Register function names
-ReTracer.Util.registerFunctionNames(DynamicForm.prototype, "DynamicForm");

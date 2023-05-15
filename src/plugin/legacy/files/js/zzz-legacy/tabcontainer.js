@@ -265,7 +265,3 @@ TabPane.prototype._handleClose = function(evt) {
         this.parent.removeChild(this);
     }
 }
-
-// Register function names
-ReTracer.Util.registerFunctionNames(TabContainer.prototype, "TabContainer");
-ReTracer.Util.registerFunctionNames(TabPane.prototype, "TabPane");

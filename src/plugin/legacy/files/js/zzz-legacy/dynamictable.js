@@ -320,6 +320,3 @@ DynamicTable.prototype.onClear = function() {
  */
 DynamicTable.prototype.onSelect = function() {
 }
-
-// Register function names
-ReTracer.Util.registerFunctionNames(DynamicTable.prototype, "DynamicTable");

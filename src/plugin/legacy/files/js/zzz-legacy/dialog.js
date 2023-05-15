@@ -225,6 +225,3 @@ Dialog.prototype._stopDrag = function() {
     MochiKit.Signal.disconnectAll(document, "onmousedown");
     MochiKit.Signal.disconnectAll(document, "onmouseup");
 }
-
-// Register function names
-ReTracer.Util.registerFunctionNames(Dialog.prototype, "Dialog");

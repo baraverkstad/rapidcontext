@@ -269,6 +269,3 @@ DynamicTree.prototype.onClear = function() {
  */
 DynamicTree.prototype.onSelect = function() {
 }
-
-// Register function names
-ReTracer.Util.registerFunctionNames(DynamicTree.prototype, "DynamicTree");

@@ -153,6 +153,3 @@ TitlePane.prototype.registerOnClick = function(icon, method, obj) {
     this.loadIcon(icon);
     Icon.registerOnClick(this._iconImages[icon.src], method, obj);
 }
-
-// Register function names
-ReTracer.Util.registerFunctionNames(TitlePane.prototype, "TitlePane");

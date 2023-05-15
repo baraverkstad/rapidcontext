@@ -180,7 +180,3 @@ GridCell.prototype.setText = function(text) {
 GridCell.prototype.setHtml = function(html) {
     this.domNode.innerHTML = html;
 }
-
-// Register function names
-ReTracer.Util.registerFunctionNames(GridPane.prototype, "GridPane");
-ReTracer.Util.registerFunctionNames(GridCell.prototype, "GridCell");

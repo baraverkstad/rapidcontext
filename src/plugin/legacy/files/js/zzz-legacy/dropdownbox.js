@@ -91,6 +91,3 @@ DropDownBox.prototype.onChange = function() {
 DropDownBox.prototype.registerOnChange = function(method, obj) {
     Signal.connect(this, "onChange", FunctionUtil.bind(method, obj, this));
 }
-
-// Register function names
-ReTracer.Util.registerFunctionNames(DropDownBox.prototype, "DropDownBox");

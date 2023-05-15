@@ -164,6 +164,3 @@ Link.prototype.setStyle = function(style) {
 Link.prototype.onClick = function() {
     return this._validUrl;
 }
-
-// Register function names
-ReTracer.Util.registerFunctionNames(Link.prototype, "Link");

@@ -684,7 +684,3 @@ TableColumn.prototype._handleClick = function() {
         this.parent.sortData(this.field, dir);
     }
 }
-
-// Register function names
-ReTracer.Util.registerFunctionNames(Table.prototype, "Table");
-ReTracer.Util.registerFunctionNames(TableColumn.prototype, "TableColumn");

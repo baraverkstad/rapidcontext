@@ -493,6 +493,3 @@ DynamicGrid.prototype.registerOnLoad = function(method, obj) {
         this._onLoad = { method: method, object: obj };
     }
 }
-
-// Register function names
-ReTracer.Util.registerFunctionNames(DynamicGrid.prototype, "DynamicGrid");
