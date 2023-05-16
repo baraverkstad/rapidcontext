@@ -60,5 +60,19 @@
         "space-before-function-paren": ["error", { "named": "never" }],
         "space-infix-ops": "error",
         "wrap-iife": ["error", "inside"]
-    }
+    },
+    "overrides": [
+        {
+            "files": [
+                "src/plugin/**/*.mjs"
+            ],
+            "parserOptions": {
+                "ecmaVersion": 2020,
+                "sourceType": "module"
+            },
+            "rules": {
+                "quotes": ["error", "single"]
+            }
+        }
+    ]
 }
