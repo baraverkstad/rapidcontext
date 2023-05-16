@@ -267,8 +267,8 @@ public abstract class HttpProcedure extends Procedure {
      *         UTF-8 if not specified
      */
     private static String responseCharset(HttpURLConnection con) {
-        String contentType = con.getContentType().replace(" ", "");
-        for (String param : contentType.split(";")) {
+        String contentType = StringUtils.defaultString(con.getContentType());
+        for (String param : contentType.replace(" ", "").split(";")) {
             if (param.startsWith("charset=")) {
                 return param.split("=", 2)[1];
             }
