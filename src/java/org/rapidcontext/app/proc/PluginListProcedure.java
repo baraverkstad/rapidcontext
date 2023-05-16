@@ -14,6 +14,9 @@
 
 package org.rapidcontext.app.proc;
 
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.rapidcontext.app.model.AppStorage;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
@@ -21,6 +24,7 @@ import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.SecurityContext;
+import org.rapidcontext.core.storage.Index;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.type.Plugin;
 import org.rapidcontext.core.type.Procedure;
@@ -70,12 +74,15 @@ public class PluginListProcedure extends Procedure {
         storage.mounts(Plugin.PATH_STORAGE)
             .map(s -> s.path().name())
             .forEach(pluginId -> {
+                Path storagePath = Plugin.storagePath(pluginId);
                 Path instancePath = Plugin.instancePath(pluginId);
                 Path configPath = Plugin.configPath(pluginId);
                 boolean hasAccess =
+                    SecurityContext.hasReadAccess(storagePath.toString()) &&
                     SecurityContext.hasReadAccess(instancePath.toString()) &&
                     SecurityContext.hasReadAccess(configPath.toString());
                 if (hasAccess) {
+                    Index idx = storage.load(storagePath, Index.class);
                     Plugin instance = storage.load(instancePath, Plugin.class);
                     Dict config = storage.load(configPath, Dict.class);
                     if (instance != null) {
@@ -88,6 +95,8 @@ public class PluginListProcedure extends Procedure {
                         config.set(Plugin.KEY_ID, pluginId);
                         config.setBoolean("loaded", false);
                     }
+                    Stream<String> types = idx.indices().filter(s -> !s.equals("plugin"));
+                    config.set("content", types.collect(Collectors.joining(" \u2022 ")));
                     res.add(config);
                 }
             });
