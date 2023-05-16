@@ -37,6 +37,8 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  *            set for a single column per table
  * @param {String} [attrs.tooltip] the tooltip text to display on the
  *            column header
+ * @param {String} [attrs.cellStyle] the CSS styles or class names to set on
+ *            the rendered cells
  * @param {Function} [attrs.renderer] the function that renders the converted
  *            data value into a table cell, called as
  *            `renderer(<td>, value, data)` with the DOM node, field value and
@@ -118,6 +120,8 @@ RapidContext.Widget.TableColumn.prototype._containerNode = function () {
  *            set for a single column per table
  * @param {String} [attrs.tooltip] the tooltip text to display on the
  *            column header
+ * @param {String} [attrs.cellStyle] the CSS styles or class names to set on
+ *            the rendered cells
  * @param {Function} [attrs.renderer] the function that renders the converted
  *            data value into a table cell, called as
  *            `renderer(<td>, value, data)` with the DOM node, field value and
@@ -126,7 +130,8 @@ RapidContext.Widget.TableColumn.prototype._containerNode = function () {
 RapidContext.Widget.TableColumn.prototype.setAttrs = function (attrs) {
     attrs = Object.assign({}, attrs);
     var locals = RapidContext.Util.mask(attrs, [
-        "title", "field", "type", "sort", "maxLength", "key", "tooltip", "renderer"
+        "title", "field", "type", "sort", "maxLength", "key", "tooltip",
+        "cellStyle", "renderer"
     ]);
     if (typeof(locals.title) !== "undefined") {
         MochiKit.DOM.replaceChildNodes(this, locals.title);
@@ -151,6 +156,9 @@ RapidContext.Widget.TableColumn.prototype.setAttrs = function (attrs) {
     }
     if (typeof(locals.tooltip) !== "undefined") {
         this.title = locals.tooltip;
+    }
+    if (typeof(locals.cellStyle) !== "undefined") {
+        this.cellStyle = locals.cellStyle;
     }
     if (typeof(locals.renderer) === "function") {
         this.renderer = locals.renderer;
@@ -239,6 +247,11 @@ RapidContext.Widget.TableColumn.prototype._map = function (src, dst) {
 RapidContext.Widget.TableColumn.prototype._render = function (obj) {
     var td = MochiKit.DOM.TD();
     var value = obj[this.field];
+    if (typeof(this.cellStyle) === "string" && this.cellStyle.includes(":")) {
+        td.style = this.cellStyle;
+    } else if (typeof(this.cellStyle) === "string") {
+        td.className = this.cellStyle;
+    }
     if (typeof(this.renderer) === "function") {
         try {
             this.renderer(td, value, obj.$data);
