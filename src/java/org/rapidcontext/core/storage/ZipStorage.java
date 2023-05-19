@@ -17,6 +17,7 @@ package org.rapidcontext.core.storage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -31,6 +32,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.web.Mime;
+import org.rapidcontext.util.BinaryUtil;
 
 /**
  * A persistent data storage and retrieval handler based on a ZIP
@@ -315,6 +317,20 @@ public class ZipStorage extends Storage {
          */
         public String mimeType() {
             return Mime.type(entry.getName());
+        }
+
+        /**
+         * The SHA-256 of the binary data, if known.
+         *
+         * @return the hexadecimal string with the SHA-256 hash, or
+         *         null if not available
+         */
+        public String sha256() {
+            try (InputStream input = openStream()) {
+                return BinaryUtil.hashSHA256(input);
+            } catch (NoSuchAlgorithmException | IOException e) {
+                return null;
+            }
         }
 
         /**

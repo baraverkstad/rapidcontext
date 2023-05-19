@@ -874,7 +874,7 @@ public class Request implements HttpUtil {
             commitBinary();
             break;
         case REDIRECT_RESPONSE:
-            commitHeaders(false, 0);
+            commitHeaders(false, 0, null);
             response.sendRedirect((String) responseData);
             logResponse();
             break;
@@ -898,18 +898,21 @@ public class Request implements HttpUtil {
      * time will be used instead.
      *
      * @param cache          the cache permission flag
-     * @param lastModified   the last modification time, or
-     *                       zero (0) for the current system time
+     * @param modified       the last modification time, or -1 for now
+     * @param etag           the content hash, or null for none
      */
-    private void commitHeaders(boolean cache, long lastModified) {
+    private void commitHeaders(boolean cache, long modified, String etag) {
         if (!response.containsHeader(HEADER.CACHE_CONTROL)) {
             String cacheControl = cache ? "public, max-age=86400" : "no-store, max-age=0";
             response.setHeader(HEADER.CACHE_CONTROL, cacheControl);
         }
-        if (lastModified <= 0) {
-            lastModified = System.currentTimeMillis();
+        if (modified <= 0) {
+            modified = System.currentTimeMillis();
         }
-        response.setDateHeader(HEADER.LAST_MODIFIED, lastModified);
+        response.setDateHeader(HEADER.LAST_MODIFIED, modified);
+        if (etag != null) {
+            response.setHeader(HEADER.ETAG, StringUtils.wrap(etag, '"'));
+        }
     }
 
     /**
@@ -918,7 +921,7 @@ public class Request implements HttpUtil {
      */
     private void commitText() {
         response.setStatus(responseCode);
-        commitHeaders(false, 0);
+        commitHeaders(false, 0, null);
         response.setContentType(responseMimeType);
         byte[] data = ArrayUtils.EMPTY_BYTE_ARRAY;
         if (responseData instanceof String) {
@@ -946,14 +949,19 @@ public class Request implements HttpUtil {
      */
     private void commitBinary() {
         Binary data = (Binary) responseData;
-        long modified = request.getDateHeader(HEADER.IF_MODIFIED_SINCE);
-        if (modified != -1 && data.lastModified() < modified + 1000) {
+        long modified = data.lastModified();
+        String etag = data.sha256();
+        if (etag != null && etag.equals(StringUtils.strip(getHeader(HEADER.IF_NONE_MATCH), "\""))) {
+            response.setStatus(STATUS.NOT_MODIFIED);
+            logResponse();
+            return;
+        } else if (modified > 0 && modified <= request.getDateHeader(HEADER.IF_MODIFIED_SINCE)) {
             response.setStatus(STATUS.NOT_MODIFIED);
             logResponse();
             return;
         }
         response.setStatus(responseCode);
-        commitHeaders(true, data.lastModified());
+        commitHeaders(true, modified, etag);
         response.setContentType(data.mimeType());
         if (data.size() >= 0) {
             response.setContentLength((int) data.size());

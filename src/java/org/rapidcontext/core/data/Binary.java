@@ -19,8 +19,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 
 import org.rapidcontext.core.web.Mime;
+import org.rapidcontext.util.BinaryUtil;
 
 /**
  * A binary data object, similar to a file on a file system. This
@@ -56,6 +59,14 @@ public interface Binary {
      * @return the MIME type of the binary data
      */
     public String mimeType();
+
+    /**
+     * The SHA-256 of the binary data, if known.
+     *
+     * @return the hexadecimal string with the SHA-256 hash, or
+     *         null if not available
+     */
+    public String sha256();
 
     /**
      * Opens a new input stream for reading the data. Note that this
@@ -122,6 +133,20 @@ public interface Binary {
         }
 
         /**
+         * The SHA-256 of the binary data, if known.
+         *
+         * @return the hexadecimal string with the SHA-256 hash, or
+         *         null if not available
+         */
+        public String sha256() {
+            try (FileInputStream input = new FileInputStream(file)) {
+                return BinaryUtil.hashSHA256(input);
+            } catch (NoSuchAlgorithmException | IOException e) {
+                return null;
+            }
+        }
+
+        /**
          * Opens a new input stream for reading the data. Note that this
          * method SHOULD be possible to call several times.
          *
@@ -185,6 +210,20 @@ public interface Binary {
          */
         public String mimeType() {
             return Mime.TEXT[0];
+        }
+
+        /**
+         * The SHA-256 of the binary data, if known.
+         *
+         * @return the hexadecimal string with the SHA-256 hash, or
+         *         null if not available
+         */
+        public String sha256() {
+            try {
+                return BinaryUtil.hashSHA256(data);
+            } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+                return null;
+            }
         }
 
         /**
@@ -261,6 +300,16 @@ public interface Binary {
          */
         public String mimeType() {
             return Mime.BIN[0];
+        }
+
+        /**
+         * The SHA-256 of the binary data, if known.
+         *
+         * @return the hexadecimal string with the SHA-256 hash, or
+         *         null if not available
+         */
+        public String sha256() {
+            return null;
         }
 
         /**

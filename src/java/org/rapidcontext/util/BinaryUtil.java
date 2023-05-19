@@ -14,6 +14,8 @@
 
 package org.rapidcontext.util;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -65,6 +67,23 @@ public final class BinaryUtil {
     }
 
     /**
+     * Calculates the SHA-256 digest hash on the UTF-8 encoding of an input
+     * file. The result will be returned as an hexadecimal string.
+     *
+     * @param input          the input stream to read
+     *
+     * @return the hexadecimal string with the SHA-256 hash
+     *
+     * @throws NoSuchAlgorithmException if the SHA-256 algorithm isn't
+     *             available (should be RuntimeException)
+     * @throws IOException if the file couldn't be found or read
+     */
+    public static String hashSHA256(InputStream input)
+    throws NoSuchAlgorithmException, IOException {
+        return encodeHexString(hashBytes("SHA-256", input));
+    }
+
+    /**
      * Performs a digest hash on the specified byte array.
      *
      * @param alg            the hash algorithm (e.g. "MD5" or "SHA-256")
@@ -79,6 +98,34 @@ public final class BinaryUtil {
         MessageDigest digest = MessageDigest.getInstance(alg);
         digest.reset();
         digest.update(data);
+        return digest.digest();
+    }
+
+    /**
+     * Performs a digest hash on the data from an input stream.
+     *
+     * @param alg            the hash algorithm (e.g. "MD5" or "SHA-256")
+     * @param input          the input stream to read
+     *
+     * @return the digest hash of the data
+     *
+     * @throws NoSuchAlgorithmException if the hash algorithm isn't available
+     * @throws IOException if the input stream couldn't be read
+     */
+    public static byte[] hashBytes(String alg, InputStream input)
+    throws NoSuchAlgorithmException, IOException {
+        MessageDigest digest = MessageDigest.getInstance(alg);
+        digest.reset();
+        try (InputStream is = input) {
+            byte[] buffer = new byte[16384];
+            int size;
+            do {
+                size = is.read(buffer);
+                if (size > 0) {
+                    digest.update(buffer, 0, size);
+                }
+            } while (size > 0);
+        }
         return digest.digest();
     }
 
