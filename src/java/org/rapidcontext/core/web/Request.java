@@ -903,8 +903,12 @@ public class Request implements HttpUtil {
      */
     private void commitHeaders(boolean cache, long modified, String etag) {
         if (!response.containsHeader(HEADER.CACHE_CONTROL)) {
-            String cacheControl = cache ? "public, max-age=86400" : "no-store, max-age=0";
-            response.setHeader(HEADER.CACHE_CONTROL, cacheControl);
+            if (cache) {
+                // FIXME: allow caching for more than 24h without revalidation?
+                response.setHeader(HEADER.CACHE_CONTROL, "private, max-age=86400, must-revalidate");
+            } else {
+                response.setHeader(HEADER.CACHE_CONTROL, "no-store, max-age=0");
+            }
         }
         if (modified <= 0) {
             modified = System.currentTimeMillis();
