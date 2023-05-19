@@ -137,7 +137,9 @@ public class HttpRequestProcedure extends HttpProcedure {
         String data = bindings.getValue(BINDING_DATA).toString();
         HttpURLConnection con = setup(url, data.length() > 0);
         try {
-            setRequestHeaders(con, channel.getHeaders());
+            if (channel != null) {
+                setRequestHeaders(con, channel.getHeaders());
+            }
             setRequestHeaders(con, headers);
             setRequestMethod(con, method);
             String contentType = con.getRequestProperty("Content-Type");
