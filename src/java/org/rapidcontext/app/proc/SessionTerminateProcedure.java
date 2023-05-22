@@ -83,6 +83,7 @@ public class SessionTerminateProcedure extends Procedure {
         }
         LOG.info("terminating " + session);
         session.invalidate();
+        Session.activeSession.set(null);
         return "session terminated";
     }
 }

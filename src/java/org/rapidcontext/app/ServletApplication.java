@@ -136,11 +136,15 @@ public class ServletApplication extends HttpServlet {
                 }
             }
             Session session = Session.activeSession.get();
-            if (session != null && !session.isExpired()) {
+            if (session != null) {
                 session.updateAccessTime();
-                request.setSessionId(session.id());
-            } else if (request.getSessionId() != null) {
-                request.setSessionId(null);
+            }
+            String cookieSession = request.getSessionId();
+            String cookiePath = (bestMatcher == null) ? null : bestMatcher.path();
+            if (session != null && !session.id().equals(cookieSession)) {
+                request.setSessionId(session.id(), cookiePath);
+            } else if (session == null && cookieSession != null) {
+                request.setSessionId(null, cookiePath);
             }
             LOG.fine(ip(request) + "Sending response data");
             if (!request.hasResponse()) {
