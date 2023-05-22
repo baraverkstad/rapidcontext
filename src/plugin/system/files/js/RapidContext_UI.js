@@ -18,6 +18,9 @@
  */
 (function (window) {
 
+    // The global error dialog
+    var errorDialog = null;
+
     /**
      * Displays an error message for the user. This operation may or may
      * not block the user interface, while the message is being
@@ -34,7 +37,26 @@
             var isError = arg instanceof Error && arg.message;
             return isError ? arg.message : arg;
         }).join(", ");
-        alert("Error: " + msg);
+        if (!errorDialog) {
+            var xml = [
+                "<Dialog title='Error' system='true' style='width: 25rem;'>",
+                "  <div class='float-container'>",
+                "    <i class='fa fa-exclamation-circle fa-3x float-left widget-red mr-3'></i>",
+                "    <b>Error: </b>",
+                "    <span data-message='error'></span>",
+                "  </div>",
+                "  <div class='text-right mt-1'>",
+                "    <Button icon='fa fa-lg fa-times' data-dialog='close'>",
+                "      Close",
+                "    </Button>",
+                "  </div>",
+                "</Dialog>"
+            ].join("");
+            errorDialog = buildUI(xml);
+            window.document.body.appendChild(errorDialog);
+        }
+        errorDialog.querySelector("[data-message]").innerText = msg;
+        errorDialog.show();
     }
 
     /**
@@ -54,7 +76,10 @@
      * @memberof RapidContext.UI
      */
     function buildUI(node, ids) {
-        if (node.documentElement) {
+        if (typeof(node) === "string") {
+            node = new DOMParser().parseFromString(node, "text/xml");
+            return buildUI(node.documentElement, ids);
+        } else if (node.documentElement) {
             return buildUI(node.documentElement.childNodes, ids);
         } else if (typeof(node.item) != "undefined" && typeof(node.length) == "number") {
             var res = [];
