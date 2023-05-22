@@ -15,10 +15,6 @@
 /**
  * @name RapidContext.Browser
  * @namespace Provides a browser compatibility and diagnostics information.
- *
- * All log messages are filtered by log level and either discarded or
- * stored to an internal array. Log messages on the error or warning levels
- * are also sent to the server for remote logging.
  */
 (function (window) {
 
