@@ -40,10 +40,10 @@
         if (!errorDialog) {
             var xml = [
                 "<Dialog title='Error' system='true' style='width: 25rem;'>",
-                "  <div class='float-container'>",
-                "    <i class='fa fa-exclamation-circle fa-3x float-left widget-red mr-3'></i>",
-                "    <b>Error: </b>",
-                "    <span data-message='error'></span>",
+                "  <i class='fa fa-exclamation-circle fa-3x widget-red mr-3'></i>",
+                "  <div class='inline-block vertical-top'>",
+                "    <h4>Error message:</h4>",
+                "    <div class='text-pre-wrap' data-message='error'></div>",
                 "  </div>",
                 "  <div class='text-right mt-1'>",
                 "    <Button icon='fa fa-lg fa-times' data-dialog='close'>",
@@ -55,8 +55,16 @@
             errorDialog = buildUI(xml);
             window.document.body.appendChild(errorDialog);
         }
-        errorDialog.querySelector("[data-message]").innerText = msg;
-        errorDialog.show();
+        if (errorDialog.isHidden()) {
+            errorDialog.querySelector("[data-message]").innerText = msg;
+            errorDialog.show();
+        } else {
+            var txt = errorDialog.querySelector("[data-message]").innerText;
+            if (!txt.includes(msg)) {
+                txt += "\n\n" + msg;
+            }
+            errorDialog.querySelector("[data-message]").innerText = txt;
+        }
     }
 
     /**
