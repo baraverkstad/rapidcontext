@@ -24,16 +24,16 @@
 /**
  * Flex
  */
-.flex-dir-left {
+.flex-dir-row {
     flex-direction: row !important;
 }
-.flex-dir-right {
+.flex-dir-row-reverse {
     flex-direction: row-reverse !important;
 }
-.flex-dir-down {
+.flex-dir-column {
     flex-direction: column !important;
 }
-.flex-dir-up {
+.flex-dir-column-reverse {
     flex-direction: column-reverse !important;
 }
 .flex-justify-start {
