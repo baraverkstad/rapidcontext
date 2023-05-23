@@ -829,9 +829,9 @@ public class Request implements HttpUtil {
      * @param path           the cookie path, or null for default
      */
     public void setSessionId(String sessionId, String path) {
-        String value = (sessionId == null) ? "deleted" : sessionId;
-        Cookie cookie = new Cookie(SESSION_COOKIE, value);
-        cookie.setPath(StringUtils.defaultString(path, request.getContextPath() + "/"));
+        path = StringUtils.defaultString(path, request.getContextPath() + "/");
+        Cookie cookie = new Cookie(SESSION_COOKIE, StringUtils.defaultString(sessionId, "deleted"));
+        cookie.setPath(StringUtils.prependIfMissing(path, "/"));
         cookie.setSecure(request.isSecure());
         cookie.setMaxAge((sessionId == null) ? 0 : (int) Session.MAX_AGE_MILLIS / 1000);
         response.addCookie(cookie);
