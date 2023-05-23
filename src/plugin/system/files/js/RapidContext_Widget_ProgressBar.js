@@ -55,9 +55,9 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * <ProgressBar text="Working" noratio="true" notime="true" />
  */
 RapidContext.Widget.ProgressBar = function (attrs) {
-    var meter = MochiKit.DOM.DIV({ "class": "widgetProgressBarMeter" });
     var text = MochiKit.DOM.DIV({ "class": "widgetProgressBarText" });
-    var o = MochiKit.DOM.DIV({}, meter, text);
+    var meter = document.createElement("progress");
+    var o = MochiKit.DOM.DIV({}, text, meter);
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.ProgressBar);
     o.addClass("widgetProgressBar");
     o.setAttrs(Object.assign({ min: 0, max: 100, value: 0 }, attrs));
@@ -184,11 +184,12 @@ RapidContext.Widget.ProgressBar.prototype._remainingTime = function () {
  * Redraws the progress bar meter and text.
  */
 RapidContext.Widget.ProgressBar.prototype._render = function () {
-    var percent = Math.round(this.ratio * 1000) / 10;
-    MochiKit.Style.setElementDimensions(this.firstChild, { w: percent }, "%");
-    this.firstChild.classList.toggle("animated", percent < 100);
+    this.lastChild.min = this.min;
+    this.lastChild.max = this.max;
+    this.lastChild.value = this.value || (this.max - this.max) * this.ratio;
     var info = [];
     if (!this.noratio) {
+        var percent = Math.round(this.ratio * 1000) / 10;
         info.push(Math.round(percent) + "%");
     }
     if (!this.novalue && typeof(this.value) == "number") {
@@ -202,5 +203,5 @@ RapidContext.Widget.ProgressBar.prototype._render = function () {
     if (this.timeRemaining && percent < 100) {
         info.push(this.timeRemaining + " remaining");
     }
-    MochiKit.DOM.replaceChildNodes(this.lastChild, info.join(" \u2022 "));
+    MochiKit.DOM.replaceChildNodes(this.firstChild, info.join(" \u2022 "));
 };
