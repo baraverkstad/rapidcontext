@@ -248,7 +248,9 @@ RapidContext.Widget.Dialog.prototype.setAttrs = function (attrs) {
  * @param {Boolean} value the new attribute value
  */
 RapidContext.Widget.Dialog.prototype._setHiddenDialog = function (value) {
-    if (value) {
+    if (!!value === this.isHidden()) {
+        // Avoid repetitive show/hide calls
+    } else if (value) {
         if (this._modalNode != null) {
             RapidContext.Widget.destroyWidget(this._modalNode);
             this._modalNode = null;
