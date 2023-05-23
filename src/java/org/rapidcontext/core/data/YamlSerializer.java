@@ -123,7 +123,7 @@ public class YamlSerializer {
         } else if (obj == null || obj instanceof Boolean || obj instanceof Number) {
             return obj;
         } else {
-            return obj.toString();
+            return toYaml(obj.toString());
         }
     }
 
@@ -165,6 +165,28 @@ public class YamlSerializer {
             }
         }
         return list;
+    }
+
+    /**
+     * Converts a string to a YAML-serializable representation.
+     *
+     * @param str            the string to convert
+     *
+     * @return the YAML-serializable representation
+     */
+    private static Object toYaml(String str) {
+        if (str.contains("\n")) {
+            StringBuilder buf = new StringBuilder();
+            for (String line : StringUtils.split(str, '\n')) {
+                if (buf.length() > 0) {
+                    buf.append("\n");
+                }
+                buf.append(line.stripTrailing());
+            }
+            return buf.toString();
+        } else {
+            return str.strip();
+        }
     }
 
     /**
