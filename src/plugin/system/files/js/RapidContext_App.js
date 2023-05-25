@@ -817,18 +817,19 @@ RapidContext.App._Cache = {
     _normalizeApp: function (app) {
         function toType(type, url) {
             var isJs = !type && /\.js$/i.test(url);
-            var isModule = !type && /\.mjs$/i.test(url);
             var isCss = !type && /\.css$/i.test(url);
-            if (type == "code" || type == "js" || type == "javascript" || isJs) {
+            if (["code", "js", "javascript"].includes(type) || isJs) {
                 return "code";
-            } else if (type == "module" || isModule) {
+            } else if (!type && /\.mjs$/i.test(url)) {
                 return "module";
-            } else if (type == "style" || type == "css" || isCss) {
+            } else if (["style", "css"].includes(type) || isCss) {
                 return "style";
-            } else if (type == "json" || (!type && /\.json$/i.test(url))) {
+            } else if (!type && /\.json$/i.test(url)) {
                 return "json";
-            } else if (type == "ui" || (!type && /ui\.xml$/i.test(url))) {
+            } else if (!type && /ui\.xml$/i.test(url)) {
                 return "ui";
+            } else if (!type && !app.icon && /\.(gif|jpg|jpeg|png)$/i.test(url)) {
+                return "icon";
             } else {
                 return type;
             }
