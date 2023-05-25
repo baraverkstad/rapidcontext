@@ -131,7 +131,7 @@
             throw new Error("No arguments supplied for procedure call to " + this.procedure);
         }
         this.cancel();
-        MochiKit.Signal.signal(this, "oncall");
+        signal(this, "oncall");
         var cb = callback.bind(this);
         this._promise = RapidContext.App.callProc(this.procedure, this.args).then(cb, cb);
         return this._promise;
@@ -141,12 +141,12 @@
     // signals depending on the result.
     function callback(res) {
         this._promise = null;
-        MochiKit.Signal.signal(this, "onresponse", res);
+        signal(this, "onresponse", res);
         if (res instanceof Error) {
-            MochiKit.Signal.signal(this, "onerror", res);
+            signal(this, "onerror", res);
             return Promise.reject(res);
         } else {
-            MochiKit.Signal.signal(this, "onsuccess", res);
+            signal(this, "onsuccess", res);
             return res;
         }
     }
@@ -183,9 +183,9 @@
     function nextCall(res) {
         this._promise = null;
         if (typeof res != "undefined") {
-            MochiKit.Signal.signal(this, "onresponse", res);
+            signal(this, "onresponse", res);
             if (res instanceof Error) {
-                MochiKit.Signal.signal(this, "onerror", res);
+                signal(this, "onerror", res);
                 return Promise.reject(res);
             } else {
                 if (this._mapTransform == null) {
@@ -198,17 +198,17 @@
                         // Skip results with mapping errors
                     }
                 }
-                MochiKit.Signal.signal(this, "onupdate", this._mapRes);
+                signal(this, "onupdate", this._mapRes);
             }
         }
         if (this._mapPos < this._mapArgs.length) {
             this.args = this._mapArgs[this._mapPos++];
-            MochiKit.Signal.signal(this, "oncall");
+            signal(this, "oncall");
             var cb = nextCall.bind(this);
             this._promise = RapidContext.App.callProc(this.procedure, this.args).then(cb, cb);
             return this._promise;
         } else {
-            MochiKit.Signal.signal(this, "onsuccess", this._mapRes);
+            signal(this, "onsuccess", this._mapRes);
             return this._mapRes;
         }
     }
@@ -254,6 +254,22 @@
             res[k] = Procedure(obj[k]);
         }
         return res;
+    }
+
+    // Emits a signal via MochiKit.Signal
+    function signal(src, sig, value) {
+        try {
+            if (value === undefined) {
+                MochiKit.Signal.signal(src, sig);
+            } else {
+                MochiKit.Signal.signal(src, sig, value);
+            }
+        } catch (e) {
+            var msg = ["exception in", src.procedure, sig, "handler:"].join(" ");
+            (e.errors || [e]).forEach(function (err) {
+                console.error(msg, err);
+            });
+        }
     }
 
     // Create namespace and export API
