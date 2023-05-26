@@ -39,12 +39,12 @@
   </Pane>
   <Popup id="menu" class="z-max overflow-hidden" style="top: 29px; right: 10px; display: none; min-width: 200px;">
     <h3 id="menuTitle">Anonymous User</h3>
-    <div id="menuAbout" class="widgetPopupItem">About RapidContext</div>
-    <div id="menuHelp" class="widgetPopupItem">Help &amp; Documentation</div>
-    <div id="menuAdmin" class="widgetPopupItem widgetPopupDisabled">Administration</div>
+    <li id="menuAbout">About RapidContext</li>
+    <li id="menuHelp">Help &amp; Documentation</li>
+    <li id="menuAdmin">Administration</li>
     <hr/>
-    <div id="menuPassword" class="widgetPopupItem widgetPopupDisabled">Change Password</div>
-    <div id="menuLogInOut" class="widgetPopupItem">Login</div>
+    <li id="menuPassword">Change Password</li>
+    <li id="menuLogInOut">Login</li>
   </Popup>
   <Dialog id="passwordDialog" title="Change Password" system="true" resizeable="false" style="width: 25rem;">
     <Form id="passwordForm">

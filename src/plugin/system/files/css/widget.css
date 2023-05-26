@@ -218,14 +218,17 @@ button > .widgetIcon.fa,
     position: absolute;
     overflow: auto;
     z-index: 20;
+    margin: 0;
     border: 1px solid #ccc;
     border-radius: 0.25rem;
+    padding: 0;
+    list-style-type: none;
     background: #fff;
     color: #1e466e;
     cursor: default;
     box-shadow: 0 0.5rem 1rem #00000026;
 }
-.widgetPopup h3 {
+.widgetPopup > h3 {
     margin: 0 0 0.2em 0;
     padding: 0.2em 0.6em;
     box-shadow: 0 1px 1px #ddd;
@@ -233,18 +236,20 @@ button > .widgetIcon.fa,
     color: #777;
     text-shadow: 1px 1px #fff;
 }
-.widgetPopup hr {
+.widgetPopup > hr {
     margin: 0.2em 0 0.25em 0;
     border-top: 0;
     border-bottom: 1px solid #eee;
     border-left: 0;
     border-right: 0;
 }
+.widgetPopup > li,
 .widgetPopupItem {
     padding: 0.25em 0.5em 0.25em 0.5em;
     font-weight: bold;
     cursor: pointer;
 }
+.widgetPopup > li::before,
 .widgetPopupItem::before {
     visibility: hidden;
     padding-right: 0.25em;
@@ -252,26 +257,24 @@ button > .widgetIcon.fa,
     content: "\f105";
     color: #68a;
 }
-.widgetPopupItem.widgetPopupSelected {
-    background: #eefcff;
-    background: linear-gradient(to bottom, #f8feff, #eefcff);
-    box-shadow: 0 0 1px #99b7d2;
-    text-shadow: 0 1px #fff;
-}
-.widgetPopupItem.widgetPopupSelected::before {
-    visibility: visible;
-}
-.widgetPopupDisabled,
-.widgetPopupDisabled.widgetPopupItem.widgetPopupSelected {
+.widgetPopup > li.disabled,
+.widgetPopupItem.disabled {
     background: transparent;
     box-shadow: none;
     text-shadow: none;
     color: #abc;
     cursor: default;
 }
-.widgetPopupDisabled::before,
-.widgetPopupDisabled.widgetPopupItem.widgetPopupSelected::before {
-    visibility: hidden;
+.widgetPopup > li.selected:not(.disabled),
+.widgetPopupItem.selected:not(.disabled) {
+    background: #eefcff;
+    background: linear-gradient(to bottom, #f8feff, #eefcff);
+    box-shadow: 0 0 1px #99b7d2;
+    text-shadow: 0 1px #fff;
+}
+.widgetPopup > li.selected:not(.disabled)::before,
+.widgetPopupItem.selected:not(.disabled)::before {
+    visibility: visible;
 }
 
 

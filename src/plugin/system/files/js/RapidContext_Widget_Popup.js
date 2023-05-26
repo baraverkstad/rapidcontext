@@ -41,25 +41,20 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * @extends RapidContext.Widget
  *
  * @example {JavaScript}
- * var attrs1 = { value: 1, "class": "widgetPopupItem" };
- * var attrs2 = { value: 2, "class": "widgetPopupItem" };
- * var attrs3 = { value: 3, "class": "widgetPopupItem widgetPopupDisabled" };
- * var item1 = MochiKit.DOM.DIV(attrs1, "First Item");
- * var item2 = MochiKit.DOM.DIV(attrs2, "Second Item");
- * var item3 = MochiKit.DOM.DIV(attrs3, "Third Item");
  * var hr = MochiKit.DOM.HR();
- * var examplePopup = RapidContext.Widget.Popup({}, item1, item2, hr, item3);
+ * var third = MochiKit.DOM.LI({ "class": "disabled" }, "Third");
+ * var popup = RapidContext.Widget.Popup({}, "First",  "Second", hr, third);
  *
  * @example {User Interface XML}
  * <Popup id="examplePopup">
- *   <div value="1" class="widgetPopupItem">&#187; First Item</div>
- *   <div value="2" class="widgetPopupItem">&#187; Second Item</div>
+ *   <li>&#187; First Item</div>
+ *   <li>&#187; Second Item</div>
  *   <hr />
- *   <div value="3" class="widgetPopupItem widgetPopupDisabled">&#187; Third Item</div>
+ *   <li class="disabled">&#187; Third Item</div>
  * </Popup>
  */
 RapidContext.Widget.Popup = function (attrs/*, ...*/) {
-    var o = MochiKit.DOM.DIV();
+    var o = document.createElement("menu");
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Popup);
     o.addClass("widgetPopup");
     o._setHidden(true);
@@ -121,12 +116,25 @@ RapidContext.Widget.Popup.prototype.setAttrs = function (attrs) {
 };
 
 /**
+ * Adds a single child node to this widget.
+ *
+ * @param {String/Node/Widget} child the item to add
+ */
+RapidContext.Widget.Popup.prototype.addChildNode = function (child) {
+    if (!child.nodeType) {
+        child = MochiKit.DOM.LI(null, child);
+    }
+    this._containerNode(true).appendChild(child);
+};
+
+/**
  * Performs the changes corresponding to setting the `hidden`
  * widget attribute for the `Popup` widget.
  *
  * @param {Boolean} value the new attribute value
  */
 RapidContext.Widget.Popup.prototype._setHiddenPopup = function (value) {
+    // FIXME: Add/remove keyboard navigation when showing menu
     if (value && !this.isHidden()) {
         this._setHidden(true);
         if (this.hideAnim) {
@@ -183,7 +191,7 @@ RapidContext.Widget.Popup.prototype.selectChild = function (indexOrNode) {
     var index;
     var node = this.selectedChild();
     if (node != null) {
-        node.classList.remove("widgetPopupSelected");
+        node.classList.remove("selected");
     }
     node = RapidContext.Util.childNode(this, indexOrNode);
     if (typeof(indexOrNode) == "number") {
@@ -191,9 +199,11 @@ RapidContext.Widget.Popup.prototype.selectChild = function (indexOrNode) {
     } else {
         index = MochiKit.Base.findIdentical(this.childNodes, node);
     }
-    if (index >= 0 && node != null) {
+    var isItem = node && node.matches("li, .widgetPopupItem");
+    var isDisabled = node && node.matches(".disabled");
+    if (index >= 0 && isItem && !isDisabled) {
         this.selectedIndex = index;
-        node.classList.add("widgetPopupSelected");
+        node.classList.add("selected");
         var top = node.offsetTop;
         var bottom = top + node.offsetHeight + 5;
         if (this.scrollTop + this.clientHeight < bottom) {
@@ -236,11 +246,7 @@ RapidContext.Widget.Popup.prototype.selectMove = function (offset) {
 RapidContext.Widget.Popup.prototype._handleMouseMove = function (evt) {
     this.show();
     var node = RapidContext.Util.childNode(this, evt.target());
-    if (node && node.classList.contains("widgetPopupItem")) {
-        this.selectChild(node);
-    } else {
-        this.selectChild(-1);
-    }
+    this.selectChild(node || -1);
 };
 
 /**
@@ -250,9 +256,5 @@ RapidContext.Widget.Popup.prototype._handleMouseMove = function (evt) {
  */
 RapidContext.Widget.Popup.prototype._handleMouseClick = function (evt) {
     var node = RapidContext.Util.childNode(this, evt.target());
-    if (node && node.classList.contains("widgetPopupItem")) {
-        this.selectChild(node);
-    } else {
-        this.selectChild(-1);
-    }
+    this.selectChild(node || -1);
 };

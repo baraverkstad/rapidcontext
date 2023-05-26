@@ -104,7 +104,7 @@ StartApp.prototype._initInfoMenu = function () {
         MochiKit.DOM.replaceChildNodes(this.ui.menuTitle, "Anonymous User");
         MochiKit.DOM.replaceChildNodes(this.ui.menuLogInOut, "Login");
     }
-    this.ui.menuPassword.classList.toggle("widgetPopupDisabled", !user || user.type != "user");
+    this.ui.menuPassword.classList.toggle("disabled", !user || user.type != "user");
 };
 
 /**
@@ -134,11 +134,11 @@ StartApp.prototype._initApps = function () {
     });
 
     // Add helps and admin apps to the bottom
-    this.ui.menuHelp.classList.toggle("widgetPopupDisabled", help == null);
+    this.ui.menuHelp.classList.toggle("disabled", help == null);
     if (help) {
         launchers.push(help);
     }
-    this.ui.menuAdmin.classList.toggle("widgetPopupDisabled", admin == null);
+    this.ui.menuAdmin.classList.toggle("disabled", admin == null);
     if (admin) {
         launchers.push(admin);
     }
