@@ -34,8 +34,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * @return {Widget} the widget DOM node
  *
  * @class The text field widget class. Used to provide a text input field for a
- *     single line, using the `<input>` HTML element. The text field may also
- *     be connected to a popup (for auto-complete or similar).
+ *     single line, using the `<input>` HTML element.
  * @property {Boolean} disabled The read-only widget disabled flag.
  * @property {String} defaultValue The value to use on form reset.
  * @extends RapidContext.Widget
@@ -57,7 +56,6 @@ RapidContext.Widget.TextField = function (attrs/*, ...*/) {
     var o = MochiKit.DOM.INPUT({ type: type, value: text });
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.TextField);
     o.addClass("widgetTextField");
-    o._popupCreated = false;
     o.setAttrs(Object.assign({}, attrs, { value: text }));
     o.addEventListener("input", o._handleChange);
     return o;
@@ -79,19 +77,11 @@ RapidContext.Widget.Classes.TextField = RapidContext.Widget.TextField;
  */
 
 /**
- * Emitted when an item has been selected in the connected popup.
- *
- * @name RapidContext.Widget.TextField#ondataavailable
- * @event
- */
-
-/**
  * Destroys this widget.
  */
 RapidContext.Widget.TextField.prototype.destroy = function () {
     // FIXME: Use AbortSignal instead to disconnect
     this.removeEventListener("input", this._handleChange);
-    this.removeEventListener("blur", this._handleBlur);
 };
 
 /**
@@ -134,77 +124,6 @@ RapidContext.Widget.TextField.prototype.getValue = function () {
 };
 
 /**
- * Returns (or creates) a popup for this text field. The popup will
- * not be shown by this method, only returned as-is. If the create
- * flag is specified, a new popup will be created if none has been
- * created previously.
- *
- * @param {Boolean} create the create popup flag
- *
- * @return {Widget} the popup widget, or
- *         null if none existed or was created
- */
-RapidContext.Widget.TextField.prototype.popup = function (create) {
-    if (!this._popupCreated && create) {
-        this.autocomplete = "off";
-        this._popupCreated = true;
-        var dim = MochiKit.Style.getElementDimensions(this);
-        var style = { "max-height": "300px", "width": Math.max(dim.w - 5, 300) + "px" };
-        var popup = RapidContext.Widget.Popup({ style: style });
-        MochiKit.DOM.insertSiblingNodesAfter(this, popup);
-        MochiKit.Style.makePositioned(this.parentNode);
-        MochiKit.Signal.connect(this, "onkeydown", this, "_handleKeyDown");
-        MochiKit.Signal.connect(popup, "onclick", this, "_handleClick");
-        this.addEventListener("blur", this._handleBlur);
-    }
-    return (this._popupCreated) ? this.nextSibling : null;
-};
-
-/**
- * Shows a popup for the text field containing the specified items.
- * The items specified may be either a list of HTML DOM nodes or
- * text strings.
- *
- * @param {Object} [attrs] the popup attributes to set
- * @param {Number} [attrs.delay] the popup auto-hide delay, defaults
- *            to 30 seconds
- * @param {Array} [items] the items to show, or null to keep the
- *            previous popup content
- *
- * @example
- * var items = ["Cat", "Dog", "Elephant", "Zebra"];
- * field.showPopup({}, items);
- */
-RapidContext.Widget.TextField.prototype.showPopup = function (attrs, items) {
-    var popup = this.popup(true);
-    if (items) {
-        popup.hide();
-        MochiKit.DOM.replaceChildNodes(popup);
-        for (var i = 0; i < items.length; i++) {
-            if (typeof(items[i]) == "string") {
-                var node = MochiKit.DOM.LI(null, items[i]);
-                node.value = items[i];
-                popup.appendChild(node);
-            } else {
-                MochiKit.DOM.appendChildNodes(popup, items[i]);
-            }
-        }
-    }
-    if (popup.childNodes.length > 0) {
-        var pos = {
-            x: this.offsetLeft + 1,
-            y: this.offsetTop + this.offsetHeight + 1
-        };
-        MochiKit.Style.setElementPosition(popup, pos);
-        popup.setAttrs(Object.assign({ delay: 30000 }, attrs));
-        popup.show();
-        if (items && items.length == 1) {
-            popup.selectChild(0);
-        }
-    }
-};
-
-/**
  * Handles input events for this this widget.
  *
  * @param {Event} [evt] the DOM Event object or null for manual
@@ -214,72 +133,4 @@ RapidContext.Widget.TextField.prototype._handleChange = function (evt) {
     var detail = { before: this.storedValue || "", after: this.value, cause: cause };
     this._dispatch("change", { detail: detail, bubbles: true });
     this.storedValue = this.value;
-};
-
-/**
- * Handles the key down event for the text field.
- *
- * @param {Event} evt the `MochiKit.Signal.Event` object
- */
-RapidContext.Widget.TextField.prototype._handleKeyDown = function (evt) {
-    var popup = this.popup(false);
-    if (popup != null) {
-        popup.resetDelay();
-        if (popup.isHidden()) {
-            switch (evt.key().string) {
-            case "KEY_ESCAPE":
-                evt.stop();
-                break;
-            case "KEY_ARROW_UP":
-            case "KEY_ARROW_DOWN":
-                this.showPopup();
-                popup.selectChild(0);
-                evt.stop();
-                break;
-            }
-        } else {
-            switch (evt.key().string) {
-            case "KEY_TAB":
-            case "KEY_ENTER":
-                popup.hide();
-                evt.stop();
-                if (popup.selectedChild() != null) {
-                    this._dispatch("dataavailable");
-                }
-                break;
-            case "KEY_ESCAPE":
-                popup.hide();
-                evt.stop();
-                break;
-            case "KEY_ARROW_UP":
-            case "KEY_ARROW_DOWN":
-                popup.selectMove(evt.key().string == "KEY_ARROW_UP" ? -1 : 1);
-                evt.stop();
-                break;
-            }
-        }
-    }
-};
-
-/**
- * Handles the mouse click event on the popup.
- *
- * @param evt the `MochiKit.Signal.Event` object
- */
-RapidContext.Widget.TextField.prototype._handleClick = function (evt) {
-    this.blur();
-    this.focus();
-    this._dispatch("dataavailable");
-};
-
-/**
- * Handles blur events for this widget (if popup attached).
- *
- * @param evt the DOM Event object
- */
-RapidContext.Widget.TextField.prototype._handleBlur = function (evt) {
-    var popup = this.popup();
-    if (popup && !popup.isHidden()) {
-        popup.setAttrs({ delay: 250 });
-    }
 };

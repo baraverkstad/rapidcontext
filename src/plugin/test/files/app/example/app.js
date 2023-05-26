@@ -22,10 +22,6 @@ ExampleApp.prototype.start = function () {
     RapidContext.UI.connectProc(this.proc.appList, this.ui.appLoading, this.ui.appReload);
     MochiKit.Signal.connect(this.proc.appList, "oncall", this.ui.appTable, "clear");
     MochiKit.Signal.connect(this.proc.appList, "onsuccess", this.ui.appTable, "setData");
-    MochiKit.Signal.connect(this.ui.popupTrigger, "onmouseover", this.ui.popupMenu, "show");
-    MochiKit.Signal.connect(this.ui.popupField, "onchange", this, "autochange");
-    MochiKit.Signal.connect(this.ui.popupField, "onfocus", this, "autofocus");
-    MochiKit.Signal.connect(this.ui.popupField, "ondataavailable", this, "autoselect");
     MochiKit.Signal.connect(this.ui.dialogButton, "onclick", this.ui.dialog, "show");
     MochiKit.Signal.connect(this.ui.dialogClose, "onclick", this.ui.dialog, "hide");
     MochiKit.Signal.connect(this.ui.iconShowAll, "onchange", this, "toggleIcons");
@@ -67,47 +63,6 @@ ExampleApp.prototype.progressUpdate = function () {
         this.ui.progressBar.setAttrs({ min: 0, max: 100 });
     }
     this.ui.progressBar.setAttrs({ value: Math.floor(this.progress) });
-};
-
-/**
- * Handle autocomplete focus.
- */
-ExampleApp.prototype.autofocus = function (evt) {
-    var popup = this.ui.popupField.popup();
-    if (!popup || popup.isHidden()) {
-        this.autocomplete();
-    }
-};
-
-/**
- * Handle autocomplete change.
- */
-ExampleApp.prototype.autochange = function (evt) {
-    if (evt.event().detail && evt.event().detail.cause != "set") {
-        this.autocomplete();
-    }
-};
-
-/**
- * Handle autocomplete events.
- */
-ExampleApp.prototype.autocomplete = function () {
-    function isMatch(item) {
-        return item.toLowerCase().includes(value);
-    }
-    var items = ["Apple", "Banana", "Blueberry", "Mango", "Kiwi", "Orange", "Strawberry"];
-    var value = this.ui.popupField.getValue().toLowerCase();
-    this.ui.popupField.showPopup({}, items.filter(isMatch));
-};
-
-/**
- * Handle autocomplete selections.
- */
-ExampleApp.prototype.autoselect = function (evt) {
-    var popup = this.ui.popupField.popup();
-    var value = popup.selectedChild().value;
-    popup.hide();
-    this.ui.popupField.setAttrs({ value: value });
 };
 
 /**

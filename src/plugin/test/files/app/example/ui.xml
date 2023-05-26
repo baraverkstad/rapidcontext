@@ -80,21 +80,7 @@
             <TreeNode name="Three" />
           </Tree>
         </fieldset>
-        <h3 style="padding-top: 15px; border-top: 1px solid #ACF;">Dialog &amp; Popup Widgets:</h3>
-        <fieldset w="100%-20">
-          <legend>Popup</legend>
-          <span id="popupTrigger" style="display: inline-block; width: 150px; padding: 2px 6px; border: 2px dashed #ACF; background: #F0F8FF;">
-            Mouseover for popup
-          </span>
-          <Popup id="popupMenu" delay="1500" style="width: 150px; overflow: hidden;">
-            <li>The First Item</li>
-            <li>The Second Item</li>
-            <li>The Third Item</li>
-            <hr/>
-            <li class="disabled">Disabled Item</li>
-          </Popup>
-          <TextField id="popupField" placeholder="Focus for popup" style="margin: 0 0 0 10px;"></TextField>
-        </fieldset>
+        <h3 style="padding-top: 15px; border-top: 1px solid #ACF;">Dialog Widget:</h3>
         <fieldset w="100%-20">
           <legend>Dialog</legend>
           <Button id="dialogButton" icon="DIALOG">Open Dialog</Button>
