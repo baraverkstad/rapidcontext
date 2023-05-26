@@ -222,6 +222,7 @@ button > .widgetIcon.fa,
     border: 1px solid #ccc;
     border-radius: 0.25rem;
     padding: 0;
+    outline: none;
     list-style-type: none;
     background: #fff;
     color: #1e466e;

@@ -58,12 +58,14 @@ RapidContext.Widget.Popup = function (attrs/*, ...*/) {
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Popup);
     o.addClass("widgetPopup");
     o._setHidden(true);
+    o.tabIndex = -1;
     o.selectedIndex = -1;
     o._delayTimer = null;
     o.setAttrs(Object.assign({ delay: 5000 }, attrs));
     o.addAll(Array.from(arguments).slice(1));
     MochiKit.Signal.connect(o, "onmousemove", o, "_handleMouseMove");
     MochiKit.Signal.connect(o, "onclick", o, "_handleMouseClick");
+    MochiKit.Signal.connect(o, "onkeydown", o, "_handleKeyDown");
     return o;
 };
 
@@ -141,13 +143,13 @@ RapidContext.Widget.Popup.prototype.addChildNode = function (child) {
  * @param {Boolean} value the new attribute value
  */
 RapidContext.Widget.Popup.prototype._setHiddenPopup = function (value) {
-    // FIXME: Add/remove keyboard navigation when showing menu
     if (value && !this.isHidden()) {
         this._setHidden(true);
         if (this.hideAnim) {
             this.animate(this.hideAnim);
         }
         this._dispatch("hide");
+        setTimeout(this.blur.bind(this), 100);
     } else if (!value && this.isHidden()) {
         this.selectChild(-1);
         this._setHidden(false);
@@ -156,6 +158,7 @@ RapidContext.Widget.Popup.prototype._setHiddenPopup = function (value) {
         }
         this.scrollTop = 0;
         this._dispatch("show");
+        setTimeout(this.focus.bind(this), 100);
     }
     this.resetDelay();
 };
@@ -206,9 +209,8 @@ RapidContext.Widget.Popup.prototype.selectChild = function (indexOrNode) {
     } else {
         index = MochiKit.Base.findIdentical(this.childNodes, node);
     }
-    var isItem = node && node.matches("li, .widgetPopupItem");
-    var isDisabled = node && node.matches(".disabled");
-    if (index >= 0 && isItem && !isDisabled) {
+    var selector = "li:not(.disabled), .widgetPopupItem:not(.disabled)";
+    if (index >= 0 && node && node.matches(selector)) {
         this.selectedIndex = index;
         node.classList.add("selected");
         var top = node.offsetTop;
@@ -235,14 +237,15 @@ RapidContext.Widget.Popup.prototype.selectChild = function (indexOrNode) {
  *         -1 if none was selected
  */
 RapidContext.Widget.Popup.prototype.selectMove = function (offset) {
-    var index = this.selectedIndex + offset;
-    if (index >= this.childNodes.length) {
-        index = 0;
+    var active = this.selectedChild();
+    var items = this.querySelectorAll("li:not(.disabled), .widgetPopupItem:not(.disabled)");
+    var index = (offset < 0) ? offset : Math.max(0, offset - 1);
+    if (active) {
+        index = MochiKit.Base.findIdentical(items, active) + offset;
     }
-    if (index < 0) {
-        index = this.childNodes.length - 1;
-    }
-    return this.selectChild(index);
+    index += (index < 0) ? items.length : 0;
+    index -= (index >= items.length) ? items.length : 0;
+    return this.selectChild(items[index]);
 };
 
 /**
@@ -262,9 +265,39 @@ RapidContext.Widget.Popup.prototype._handleMouseMove = function (evt) {
  * @param {Event} evt the `MochiKit.Signal.Event` object
  */
 RapidContext.Widget.Popup.prototype._handleMouseClick = function (evt) {
+    this.show();
     var node = RapidContext.Util.childNode(this, evt.target());
     if (this.selectChild(node || -1) >= 0) {
         var detail = { menu: this, item: node };
         this._dispatch("menuselect", { detail });
+    }
+};
+
+/**
+ * Handles the key down event on the popup.
+ *
+ * @param {Event} evt the `MochiKit.Signal.Event` object
+ */
+RapidContext.Widget.Popup.prototype._handleKeyDown = function (evt) {
+    this.show();
+    switch (evt.key().string) {
+    case "KEY_ARROW_UP":
+    case "KEY_ARROW_DOWN":
+        evt.stop();
+        this.selectMove(evt.key().string == "KEY_ARROW_UP" ? -1 : 1);
+        break;
+    case "KEY_ESCAPE":
+        evt.stop();
+        this.hide();
+        break;
+    case "KEY_TAB":
+    case "KEY_ENTER":
+        evt.stop();
+        var node = this.selectedChild();
+        if (node != null) {
+            var detail = { menu: this, item: node };
+            this._dispatch("menuselect", { detail });
+        }
+        break;
     }
 };
