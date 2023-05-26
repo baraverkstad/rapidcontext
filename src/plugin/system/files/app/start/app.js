@@ -38,11 +38,7 @@ StartApp.prototype.start = function () {
     MochiKit.Signal.connect(this.ui.infoBar, "onmousemove", this.ui.menu, "show");
     MochiKit.Signal.connect(this.ui.infoBar, "onmouseleave", this.ui.menu, "hide");
     MochiKit.Signal.connect(this.ui.menu, "onmouseleave", this.ui.menu, "hide");
-    MochiKit.Signal.connect(this.ui.menu, "onclick", this, "_hideInfoPopup");
-    MochiKit.Signal.connect(this.ui.menuAbout, "onclick", this.ui.about, "show");
-    var func = MochiKit.Base.partial(RapidContext.App.startApp, "help", null);
-    MochiKit.Signal.connect(this.ui.menuHelp, "onclick", func);
-    MochiKit.Signal.connect(this.ui.menuLogInOut, "onclick", this, "_loginOut");
+    MochiKit.Signal.connect(this.ui.menu, "onmenuselect", this, "_popupSelect");
 
     // App pane
     RapidContext.UI.connectProc(this.proc.appList, this.ui.appLoading, this.ui.appReload);
@@ -90,15 +86,10 @@ StartApp.prototype.stop = function () {
  */
 StartApp.prototype._initInfoMenu = function () {
     var user = RapidContext.App.user();
-    MochiKit.Signal.disconnect(this.ui.menuAdmin, "onclick");
-    MochiKit.Signal.disconnect(this.ui.menuPassword, "onclick");
     if (user && user.id) {
         MochiKit.DOM.replaceChildNodes(this.ui.infoUser, user.name || user.id);
         MochiKit.DOM.replaceChildNodes(this.ui.menuTitle, user.longName);
         MochiKit.DOM.replaceChildNodes(this.ui.menuLogInOut, "Logout");
-        var func = MochiKit.Base.partial(RapidContext.App.startApp, "admin", null);
-        MochiKit.Signal.connect(this.ui.menuAdmin, "onclick", func);
-        MochiKit.Signal.connect(this.ui.menuPassword, "onclick", this, "_showPasswordDialog");
     } else {
         MochiKit.DOM.replaceChildNodes(this.ui.infoUser, "anonymous");
         MochiKit.DOM.replaceChildNodes(this.ui.menuTitle, "Anonymous User");
@@ -300,21 +291,31 @@ StartApp.prototype.startApp = function (app, container) {
 };
 
 /**
- * Hides the info popup menu instantly.
+ * Handles a popup menu item selection.
  */
-StartApp.prototype._hideInfoPopup = function () {
+StartApp.prototype._popupSelect = function (evt) {
     this.ui.menu.setAttrs({ hideAnim: { effect: "fade", duration: 0 } });
     this.ui.menu.hide();
     this.ui.menu.setAttrs({ hideAnim: { effect: "fade", duration: 0.2, delay: 0.2 } });
-};
-
-/**
- * Shows the password change dialog.
- */
-StartApp.prototype._showPasswordDialog = function () {
-    this.ui.passwordForm.reset();
-    this.ui.passwordDialog.show();
-    this.ui.passwordCurrent.focus();
+    switch (evt.event().detail.item.dataset.action) {
+    case "about":
+        this.ui.about.show();
+        break;
+    case "help":
+        RapidContext.App.startApp("help");
+        break;
+    case "admin":
+        RapidContext.App.startApp("admin");
+        break;
+    case "password":
+        this.ui.passwordForm.reset();
+        this.ui.passwordDialog.show();
+        this.ui.passwordCurrent.focus();
+        break;
+    case "login":
+        this._loginOut();
+        break;
+    }
 };
 
 /**

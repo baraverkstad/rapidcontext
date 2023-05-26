@@ -85,6 +85,13 @@ RapidContext.Widget.Classes.Popup = RapidContext.Widget.Popup;
  */
 
 /**
+ * Emitted when a menu item is selected.
+ *
+ * @name RapidContext.Widget.Popup#menuselect
+ * @event
+ */
+
+/**
  * Updates the widget or HTML DOM node attributes.
  *
  * @param {Object} attrs the widget and node attributes to set
@@ -256,5 +263,8 @@ RapidContext.Widget.Popup.prototype._handleMouseMove = function (evt) {
  */
 RapidContext.Widget.Popup.prototype._handleMouseClick = function (evt) {
     var node = RapidContext.Util.childNode(this, evt.target());
-    this.selectChild(node || -1);
+    if (this.selectChild(node || -1) >= 0) {
+        var detail = { menu: this, item: node };
+        this._dispatch("menuselect", { detail });
+    }
 };
