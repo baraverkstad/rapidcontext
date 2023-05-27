@@ -21,6 +21,7 @@ import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.RootStorage;
 import org.rapidcontext.core.storage.StorableObject;
+import org.rapidcontext.core.storage.Storage;
 
 /**
  * A bundle of add-on functionality to the system. The plug-in
@@ -147,6 +148,22 @@ public class Plugin extends StorableObject {
     }
 
     /**
+     * Returns the current version for a loaded plug-in. The plug-in
+     * instance will be loaded from storage (cache) and its version
+     * number will be returned.
+     *
+     * @param storage        the storage to use
+     * @param pluginId       the unique plug-in id
+     *
+     * @return the loaded plug-in version number, or
+     *         null if not loaded or available
+     */
+    public static String version(Storage storage, String pluginId) {
+        Plugin plugin = storage.load(instancePath(pluginId), Plugin.class);
+        return (plugin == null) ? null : plugin.version();
+    }
+
+    /**
      * Normalizes a plug-in data object if needed. This method will
      * modify legacy data into the proper keys and values.
      *
@@ -172,5 +189,15 @@ public class Plugin extends StorableObject {
      */
     public Plugin(String id, String type, Dict dict) {
         super(id, type, normalize(id, dict));
+    }
+
+    /**
+     * Returns the plug-in version number (if available).
+     *
+     * @return the plug-in version number, or
+     *         null if not available
+     */
+    public String version() {
+        return dict.getString(KEY_VERSION, null);
     }
 }

@@ -100,7 +100,9 @@ public class AppListProcedure extends Procedure {
             dict.set(KEY_ID, meta.id());
             LOG.warning("deprecated: app " + meta.id() + ": missing 'id' property");
         }
-        dict.set("plugin", Plugin.source(meta));
+        String pluginId = Plugin.source(meta);
+        dict.set("plugin", pluginId);
+        dict.set("version", (pluginId == null) ? null : Plugin.version(storage, pluginId));
         Array arr = dict.getArray("resources");
         for (int i = 0; i < arr.size(); i++) {
             Object obj = arr.get(i);
