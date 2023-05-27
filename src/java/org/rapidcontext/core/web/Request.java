@@ -412,7 +412,7 @@ public class Request implements HttpUtil {
                 setPath(path.substring(prefix.length()));
             }
             return true;
-        } else if (path.startsWith(StringUtils.removeEnd(prefix, "/"))) {
+        } else if (path.equals(StringUtils.removeEnd(prefix, "/"))) {
             sendRedirect(getUrl() + "/");
         }
         return false;
