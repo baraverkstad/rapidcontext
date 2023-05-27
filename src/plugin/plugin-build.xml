@@ -31,7 +31,9 @@
     <include name="**/*.css" />
     <include name="**/*.java" />
     <include name="**/*.js" />
+    <include name="**/*.json" />
     <include name="**/*.properties" />
+    <include name="**/*.yaml" />
     <include name="**/*.xml" />
   </patternset>
 
