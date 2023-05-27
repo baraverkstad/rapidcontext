@@ -629,7 +629,6 @@ RapidContext.App.loadXHR = function (url, params, options) {
     var hasJsonBody = opts.headers["Content-Type"] === "application/json";
     if (!hasBody) {
         url += params ? "?" + RapidContext.Encode.toUrlQuery(params) : "";
-        url = RapidContext.App._nonCachedUrl(url);
     } else if (params && hasBody && hasJsonBody) {
         opts.body = RapidContext.Encode.toJSON(params);
     } else if (params && hasBody) {
@@ -670,7 +669,7 @@ RapidContext.App.loadScript = function (url) {
         return RapidContext.Async.wait(0);
     } else {
         RapidContext.Log.log("loading script", url);
-        return RapidContext.Async.script(RapidContext.App._nonCachedUrl(url));
+        return RapidContext.Async.script(url);
     }
 };
 
@@ -691,7 +690,7 @@ RapidContext.App.loadStyles = function (url) {
         return RapidContext.Async.wait(0);
     } else {
         RapidContext.Log.log("loading stylesheet", url);
-        return RapidContext.Async.css(RapidContext.App._nonCachedUrl(url));
+        return RapidContext.Async.css(url);
     }
 };
 
@@ -757,45 +756,11 @@ RapidContext.App.uploadFile = function (id, file, onProgress) {
 };
 
 /**
- * Returns a new relative URL adapted for a non-standard base path.
- *
- * @param {String} url the URL to modify
- *
- * @return {String} the rebased URL
- */
-RapidContext.App._rebaseUrl = function (url) {
-    url = url || "";
-    if (RapidContext._basePath) {
-        if (url.startsWith(RapidContext._basePath)) {
-            url = url.substring(RapidContext._basePath.length);
-        } else if (!url.includes(":")) {
-            url = "rapidcontext/files/" + url;
-        }
-    }
-    return url;
-};
-
-/**
- * Returns a non-cacheable version of the specified URL. This
- * function will add a request query parameter consisting of the
- * current time in milliseconds. Most web servers will ignore this
- * additional parameter, but due to the URL containing a unique
- * value, the web browser will not use its cache for the content.
- *
- * @param {String} url the URL to modify
- *
- * @return {String} the URL including the current timestamp
- */
-RapidContext.App._nonCachedUrl = function (url) {
-    var timestamp = new Date().getTime() % 100000;
-    return url + (url.includes("?") ? "&_=" : "?_=") + timestamp;
-};
-
-/**
  * The application data cache. Contains the most recently retrieved
  * data for some commonly used objects in the execution environment.
  */
 RapidContext.App._Cache = {
+    version: new Date().getTime().toString(16).slice(-8),
     status: null,
     user: null,
     apps: {},
@@ -849,8 +814,9 @@ RapidContext.App._Cache = {
         function toResource(res) {
             res = (typeof(res) === "string") ? { url: res } : res;
             res.type = toType(res.type, res.url);
-            if (res.url) {
-                res.url = RapidContext.App._rebaseUrl(res.url);
+            if (res.url && !res.url.includes(":") && !res.url.startsWith("/")) {
+                var ver = app.version || RapidContext.App._Cache.version;
+                res.url = "rapidcontext/files@" + ver + "/" + res.url;
             }
             if (!app.icon && res.type === "icon") {
                 app.icon = toIcon(res);
