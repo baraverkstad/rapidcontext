@@ -9,7 +9,8 @@ all:
 	@echo '🚀 Release builds'
 	@echo ' · make VERSION=v2022.08 build build-docker'
 	@echo
-	@echo '📍 Apache Ant (and Java) must be installed separately.'
+	@echo '💡 Related commands'
+	@echo ' · npm outdated           - Show outdated libraries and tools'
 
 
 # Cleanup intermediary files
