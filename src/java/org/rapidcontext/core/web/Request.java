@@ -908,7 +908,7 @@ public class Request implements HttpUtil {
                 // FIXME: allow caching for more than 24h without revalidation?
                 response.setHeader(HEADER.CACHE_CONTROL, "private, max-age=86400, must-revalidate");
             } else {
-                response.setHeader(HEADER.CACHE_CONTROL, "no-store, max-age=0");
+                response.setHeader(HEADER.CACHE_CONTROL, "no-cache, no-store");
             }
         }
         if (modified <= 0) {
