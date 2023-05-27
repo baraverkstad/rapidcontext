@@ -22,6 +22,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.lang3.StringUtils;
@@ -86,6 +87,11 @@ public class AppWebService extends FileWebService {
     public static final String KEY_HEADER = "header";
 
     /**
+     * The regular expression for checking for a file version number.
+     */
+    private static final Pattern RE_VERSION = Pattern.compile("\\d\\.\\d");
+
+    /**
      * The log web service used for the "rapidcontext/log" URL.
      */
     protected LogWebService logger;
@@ -140,14 +146,14 @@ public class AppWebService extends FileWebService {
             .filterFileExtension("." + type)
             .paths()
             .map(path -> {
+                boolean isVersioned = RE_VERSION.matcher(path.name()).find();
                 String file = path.toString();
-                if (file.startsWith(basePath)) {
-                    file = StringUtils.removeStart(file, basePath);
+                if (isVersioned && file.startsWith(basePath)) {
+                    return StringUtils.removeStart(file, basePath);
                 } else {
                     file = StringUtils.removeStart(file, rootPath);
-                    file = "rapidcontext/files/" + file;
+                    return "rapidcontext/files@" + ver + "/" + file;
                 }
-                return file + "?" + ver;
             })
             .sorted(String.CASE_INSENSITIVE_ORDER)
             .toArray(String[]::new);
@@ -291,7 +297,10 @@ public class AppWebService extends FileWebService {
      */
     protected void doGet(Request request) {
         String baseUrl = StringUtils.removeEnd(request.getUrl(), request.getPath());
-        if (request.matchPath("rapidcontext/files/")) {
+        if (request.getPath().startsWith("rapidcontext/files@")) {
+            String path = Path.from(request.getPath()).toIdent(2);
+            processFile(request, Path.resolve(RootStorage.PATH_FILES, path), true);
+        } else if (request.matchPath("rapidcontext/files/")) {
             processFile(request, Path.resolve(RootStorage.PATH_FILES, request.getPath()), true);
         } else if (request.matchPath("rapidcontext/app/")) {
             String appId = StringUtils.removeEnd(request.getPath(), "/");
