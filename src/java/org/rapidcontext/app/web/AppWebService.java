@@ -298,7 +298,7 @@ public class AppWebService extends FileWebService {
             processApp(request, appId, baseUrl);
         } else if (appId() != null) {
             processFile(request, Path.resolve(path(), request.getPath()), true);
-            if (!request.hasResponse()) {
+            if (!request.hasResponse() && !request.getPath().contains(".")) {
                 processApp(request, appId(), baseUrl);
             }
         } else {
