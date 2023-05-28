@@ -1,7 +1,8 @@
 id: anonymous
 type: role
-name: Anonymous Users
-description: Provides read access to files and a few apps for anonymous users.
+name: Anonymous User
+description: >-
+    Provides read access to public system resouces (login app, system procedures, etc).
 auto: all
 access:
   - path: app/login
