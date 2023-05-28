@@ -297,8 +297,8 @@ RapidContext.Widget.Dialog.prototype.moveTo = function (x, y) {
     this.style.left = pos.x + "px";
     this.style.top = pos.y + "px";
     var el = this.lastChild;
-    el.style.maxWidth = (this.parentNode.offsetWidth - pos.x - el.offsetLeft - 2) + "px";
-    el.style.maxHeight = (this.parentNode.offsetHeight - pos.y - el.offsetTop - 2) + "px";
+    el.style.maxWidth = (this.parentNode.offsetWidth - pos.x - el.offsetLeft - 5) + "px";
+    el.style.maxHeight = (this.parentNode.offsetHeight - pos.y - el.offsetTop - 5) + "px";
     this.center = false;
     this._dispatch("move", { detail: pos });
 };
