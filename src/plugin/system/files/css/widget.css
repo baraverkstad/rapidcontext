@@ -381,10 +381,7 @@ table.widgetTable td {
     padding: 0.2em 1em 0.2em 0.4em;
     background: white;
 }
-table.widgetTable tbody tr:nth-child(even) td {
-    background: #f8f8f8;
-}
-table.widgetTable tr:hover td {
+table.widgetTable tbody tr:hover td {
     background: #d8eaff;
 }
 table.widgetTable tbody tr.selected td {
@@ -392,6 +389,9 @@ table.widgetTable tbody tr.selected td {
 }
 table.widgetTable tbody tr.selected:hover td {
     background: #ff0;
+}
+table.widgetTable tbody tr:nth-child(even):not(.selected):not(:hover) td {
+    background: #f8f8f8;
 }
 
 
