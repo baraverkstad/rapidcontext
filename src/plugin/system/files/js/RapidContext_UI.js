@@ -41,7 +41,7 @@
             var xml = [
                 "<Dialog title='Error' system='true' style='width: 25rem;'>",
                 "  <i class='fa fa-exclamation-circle fa-3x widget-red mr-3'></i>",
-                "  <div class='inline-block vertical-top'>",
+                "  <div class='inline-block vertical-top' style='width: calc(100% - 4em);'>",
                 "    <h4>Error message:</h4>",
                 "    <div class='text-pre-wrap' data-message='error'></div>",
                 "  </div>",
