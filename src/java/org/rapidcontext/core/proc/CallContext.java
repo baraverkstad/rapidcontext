@@ -490,16 +490,16 @@ public class CallContext {
                 value = library.getProcedure((String) value);
                 callBindings.set(name, Bindings.PROCEDURE, value, null);
             } else if (bindings.getType(name) == Bindings.CONNECTION) {
-                Object value = bindings.getValue(name, null);
-                if (value != null) {
-                    value = connections.get(value);
-                    if (value == null) {
-                        String msg = "no connection '" + name +
-                                     "' reserved for " + proc.getName();
-                        throw new ProcedureException(msg);
-                    }
+                String id = (String) bindings.getValue(name, null);
+                if (id == null || id.isBlank()) {
+                    callBindings.set(name, Bindings.CONNECTION, null, null);
+                } else if (connections.containsKey(id)) {
+                    callBindings.set(name, Bindings.CONNECTION, connections.get(id), null);
+                } else {
+                    String msg = "no connection '" + name +
+                                 "' reserved for " + proc.getName();
+                    throw new ProcedureException(msg);
                 }
-                callBindings.set(name, Bindings.CONNECTION, value, null);
             } else if (bindings.getType(name) == Bindings.ARGUMENT) {
                 try {
                     boolean isOmitted = pos >= args.length;
@@ -569,7 +569,7 @@ public class CallContext {
     public Channel connectionReserve(String id)
         throws ProcedureException {
 
-        if (id != null && !connections.containsKey(id)) {
+        if (id != null && !id.isBlank() && !connections.containsKey(id)) {
             checkInternalAccess("connection/" + id);
             if (isTracing()) {
                 logInternal(0, "... Reserving connection channel on '" + id + "'");
