@@ -7,7 +7,7 @@ description: >-
 initializer: org.rapidcontext.app.plugin.http.HttpPostProcedure
 binding:
   - name: connection
-    type: data
+    type: connection
     description: The HTTP connection pool name, set to blank for none.
   - name: url
     type: data
