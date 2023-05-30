@@ -324,6 +324,12 @@
                   <Field name="name" />
                 </td>
               </tr>
+              <tr id="procAlias">
+                <th class="label pr-2">Alias:</th>
+                <td class="w-100">
+                  <i><Field name="alias" /> (deprecated)</i>
+                </td>
+              </tr>
               <tr>
                 <th class="label pr-2">Type:</th>
                 <td>

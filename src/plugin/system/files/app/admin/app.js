@@ -740,14 +740,12 @@ AdminApp.prototype._callbackShowProcedure = function (procName, res) {
         if (res.local) {
             this.ui.procRemove.show();
         }
-        if (procName != res.name) {
-            res.name = procName + " (legacy alias of " + res.name + ")";
-        }
         if (res.type == "built-in" || res.type == "procedure") {
             res.type = "Java built-in";
         } else {
             this.ui.procEdit.show();
         }
+        this.ui.procAlias.classList.toggle("hidden", !res.alias);
         this.ui.procForm.update(res);
         MochiKit.DOM.replaceChildNodes(this.ui.procArgTable);
         var count = 0;
