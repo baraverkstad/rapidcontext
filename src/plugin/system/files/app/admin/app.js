@@ -879,8 +879,10 @@ AdminApp.prototype._removeProcedure = function () {
 AdminApp.prototype._editProcedure = function () {
     var p = this._currentProc;
     var data = {
+        id: p.id,
         name: p.name,
         type: p.type,
+        alias: p.alias,
         description: p.description,
         bindings: {},
         defaults: {}
@@ -1053,22 +1055,33 @@ AdminApp.prototype._updateProcEdit = function () {
  */
 AdminApp.prototype._saveProcedure = function () {
     this._updateProcEdit();
-    var data = this.ui.procEditDialog.data;
-    var bindings = [];
-    for (var k in data.bindings) {
-        var b = data.bindings[k];
+    var prev = this.ui.procEditDialog.data;
+    var data = {
+        id: prev.name,
+        type: prev.type,
+        alias: prev.alias,
+        description: prev.description,
+        binding: []
+    };
+    if (!data.alias && data.id === data.alias) {
+        delete data.alias;
+    }
+    for (var k in prev.bindings) {
+        var b = prev.bindings[k];
         var res = { name: b.name, type: b.type };
         if (b.type == "argument") {
             res.description = b.value;
         } else {
             res.value = b.value;
         }
-        bindings.push(res);
+        data.binding.push(res);
     }
-    this.proc.procWrite(data.name, data.type, data.description, bindings)
+    var update = RapidContext.Storage.update;
+    var write = RapidContext.Storage.write;
+    (prev.id ? update(prev, data) : write(data))
         .then(this.ui.procEditDialog.hide.bind(this.ui.procEditDialog))
         .then(this.proc.procList.recall.bind(this.proc.procList))
-        .then(this.showProcedure.bind(this, data.name))
+        .then(this.showProcedure.bind(this, data.id))
         .catch(RapidContext.UI.showError);
 };
 
