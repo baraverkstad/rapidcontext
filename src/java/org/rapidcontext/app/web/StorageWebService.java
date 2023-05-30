@@ -189,7 +189,8 @@ public class StorageWebService extends WebService {
                     String msg = "patch data should be JSON object";
                     request.sendError(STATUS.NOT_ACCEPTABLE, null, msg);
                 } else if (ApiUtil.update(storage, path, dst, (Dict) patch)) {
-                    Object o = ApiUtil.serialize(dst, storage.load(dst), false, false);
+                    path = Storage.objectPath(dst);
+                    Object o = ApiUtil.serialize(dst, storage.load(path), false, false);
                     request.sendText(Mime.JSON[0], JsonSerializer.serialize(o, true));
                 } else {
                     errorBadRequest(request, "failed to patch " + path);
