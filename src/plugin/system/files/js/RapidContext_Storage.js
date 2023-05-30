@@ -93,7 +93,7 @@
         } else {
             var headers = { "Content-Type": "application/json" };
             var opts = { method: "POST", headers: headers };
-            return RapidContext.App.loadXHR(url, data || pathOrObj, opts);
+            return RapidContext.App.loadXHR(url + ".yaml", data || pathOrObj, opts);
         }
     }
 
@@ -116,7 +116,7 @@
         var newPath = path(data);
         var headers = { "Content-Type": "application/json" };
         if (newPath && newPath != path(pathOrObj)) {
-            headers["X-Move-To"] = newPath;
+            headers["X-Move-To"] = newPath + ".yaml";
         }
         var opts = { method: "PATCH", headers: headers };
         return RapidContext.App.loadJSON(url, data || pathOrObj, opts);
