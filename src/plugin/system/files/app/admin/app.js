@@ -312,8 +312,8 @@ AdminApp.prototype._removeConnection = function () {
     var data = this.ui.cxnTable.getSelectedData();
     var msg = "Delete the connection '" + data.id + "'?";
     if (confirm(msg)) {
-        var path = "connection/" + data.id;
-        RapidContext.Storage.write(path, null)
+        var path = RapidContext.Storage.path(data);
+        RapidContext.App.callProc("system/storage/write", [path, null])
             .then(this.proc.cxnList.recall.bind(this.proc.cxnList))
             .catch(RapidContext.UI.showError);
     }
@@ -478,9 +478,13 @@ AdminApp.prototype._storeConnection = function () {
                 delete data[k]; // Omit or keep unmodified
             }
         }
-        var update = RapidContext.Storage.update;
-        var write = RapidContext.Storage.write;
-        (prev.id ? update(prev, data) : write(data))
+        var oldPath = prev.id ? RapidContext.Storage.path(prev) : null;
+        var newPath = RapidContext.Storage.path(data);
+        var path = newPath + ".yaml";
+        if (oldPath && oldPath !== newPath) {
+            path = { path: oldPath, updateTo: path };
+        }
+        RapidContext.App.callProc("system/storage/write", [path, data])
             .then(this.ui.cxnEditDialog.hide.bind(this.ui.cxnEditDialog))
             .then(this.showConnection.bind(this, data.id))
             .catch(RapidContext.UI.showError);
