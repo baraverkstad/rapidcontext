@@ -28,7 +28,6 @@ AdminApp.prototype.start = function () {
         plugInList: "system/plugin/list",
         procList: "system/procedure/list",
         procRead: "system/procedure/read",
-        procWrite: "system/procedure/write",
         procDelete: "system/procedure/delete",
         procTypes: "system/procedure/types",
         userList: "system/user/list",
@@ -1076,9 +1075,13 @@ AdminApp.prototype._saveProcedure = function () {
         }
         data.binding.push(res);
     }
-    var update = RapidContext.Storage.update;
-    var write = RapidContext.Storage.write;
-    (prev.id ? update(prev, data) : write(data))
+    var oldPath = prev.id ? RapidContext.Storage.path(prev) : null;
+    var newPath = RapidContext.Storage.path(data);
+    var path = newPath + ".yaml";
+    if (oldPath && oldPath !== newPath) {
+        path = { path: oldPath, updateTo: path };
+    }
+    RapidContext.App.callProc("system/storage/write", [path, data])
         .then(this.ui.procEditDialog.hide.bind(this.ui.procEditDialog))
         .then(this.proc.procList.recall.bind(this.proc.procList))
         .then(this.showProcedure.bind(this, data.id))
