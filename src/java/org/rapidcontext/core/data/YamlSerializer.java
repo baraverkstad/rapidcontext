@@ -177,11 +177,11 @@ public class YamlSerializer {
     private static Object toYaml(String str) {
         if (str.contains("\n")) {
             StringBuilder buf = new StringBuilder();
-            for (String line : StringUtils.split(str, '\n')) {
+            for (String line : str.split("\\n")) {
                 if (buf.length() > 0) {
                     buf.append("\n");
                 }
-                buf.append(line.stripTrailing());
+                buf.append(line.replace("\t", "    ").stripTrailing());
             }
             return buf.toString();
         } else {
