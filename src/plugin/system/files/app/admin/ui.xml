@@ -324,7 +324,7 @@
                   <Field name="name" />
                 </td>
               </tr>
-              <tr id="procAlias">
+              <tr id="procAlias" class="hidden">
                 <th class="label pr-2">Alias:</th>
                 <td class="w-100">
                   <i><Field name="alias" /> (deprecated)</i>

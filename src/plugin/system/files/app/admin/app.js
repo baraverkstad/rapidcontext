@@ -715,6 +715,7 @@ AdminApp.prototype._showProcedure = function () {
     this.ui.procEdit.hide();
     this.ui.procReload.hide();
     this.ui.procLoading.hide();
+    this.ui.procAlias.classList.add("hidden");
     MochiKit.DOM.replaceChildNodes(this.ui.procArgTable);
     this.ui.procExec.disable();
     this.ui.procBatch.disable();
