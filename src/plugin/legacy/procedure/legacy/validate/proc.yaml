@@ -1,0 +1,72 @@
+id: legacy/validate/proc
+type: procedure/javascript
+description: ''
+binding:
+  - name: code
+    type: data
+    value: |-
+        var CONNECTIONS = {};
+        var NAMES = {};
+        var MSGS = {};
+
+        function read(name) {
+            let src = readProc(name);
+            NAMES[src.id] = src.id;
+            if (src.alias && !NAMES[src.alias]) {
+                NAMES[src.alias] = src.id;
+            }
+            return (!prefix || src.id.startsWith(prefix)) ? src : null;
+        }
+
+        function check(src) {
+            src.bindings.forEach(function (b) {
+                if (b.type === 'connection') {
+                    if (!CONNECTIONS[b.value]) {
+                        error(src.id, 'not found: connection ' + b.value);
+                    }
+                } else if (b.type === 'procedure') {
+                    if (!NAMES[b.value]) {
+                        error(src.id, 'not found: procedure ' + b.value);
+                    } else if (NAMES[b.value] !== NAMES[b.value]) {
+                        warning(src.id, 'renamed: procedure ' + b.value + ' --> ' + NAMES[b.value]);
+                    }
+                }
+            });
+        }
+
+        function error(id, msg) {
+            MSGS[id] = MSGS[id] || [];
+            MSGS[id].push('\ud83d\uded1 ' + msg);
+        }
+
+        function warning(id, msg) {
+            MSGS[id] = MSGS[id] || [];
+            MSGS[id].push('\u26a0\ufe0f ' + msg);
+        }
+
+        let env = systemStatus().environment;
+        let prefix = '';
+        if (env) {
+            prefix = storageRead('/environment/' + env.name).connections;
+        }
+        storageRead('/connection/').forEach(function (cxn) {
+            let id = cxn.id.startsWith(prefix) ? cxn.id.substring(prefix.length) : cxn.id;
+            CONNECTIONS[id] = cxn.id;
+        });
+        listProc().map(read).filter(Boolean).forEach(check);
+        return MSGS;
+  - name: systemStatus
+    type: procedure
+    value: system/status
+  - name: storageRead
+    type: procedure
+    value: system/storage/read
+  - name: listProc
+    type: procedure
+    value: system/procedure/list
+  - name: readProc
+    type: procedure
+    value: system/procedure/read
+  - name: prefix
+    type: argument
+    description: The procedure name prefix (or blank)

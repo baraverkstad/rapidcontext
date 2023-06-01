@@ -4,7 +4,7 @@ description: Stores draft migrated versions of legacy procedures.
 binding:
   - name: code
     type: data
-    value: |
+    value: |-
         var TYPES = {
             'built-in': 'procedure',
             'javascript': 'procedure/javascript',
@@ -16,9 +16,16 @@ binding:
 
         var NAMES = {};
 
+        var ORDER = {
+            connection: 1,
+            data: 2,
+            procedure: 3,
+            argument: 4
+        };
+
         function rename(name) {
             function toLower(s) {
-                return (s == s.toUpperCase()) ? s : s.toLowerCase();
+                return s.toLowerCase();
             }
             name = name.replace(/\./g, '/');
             name = name.replace(/([a-z0-9])([A-Z])/g, '$1-$2');
@@ -28,42 +35,46 @@ binding:
 
         function read(name) {
             let src = readProc(name);
-            if (name.startsWith(prefix)) {
-                NAMES[name] = rename(name);
-                return src;
-            } else if (src.alias) {
+            NAMES[src.id] = src.id;
+            if (src.alias && !NAMES[src.alias]) {
                 NAMES[src.alias] = src.id;
-                return null;
+            }
+            if (!prefix || src.id.startsWith(prefix)) {
+                NAMES[src.id] = rename(src.id);
+                return src;
             } else {
                 return null;
             }
         }
 
+        function compare(b1, b2) {
+            var n1 = ORDER[b1.type] || 99;
+            var n2 = ORDER[b2.type] || 99;
+            return n1 - n2;
+        }
+
         function convert(src) {
-            let data = {
+            let proc = {
                 id: NAMES[src.name] || src.name,
                 type: TYPES[src.type] || src.type,
-                alias: src.name
+                alias: src.name,
+                description: src.description
             };
-            if (data.type === 'procedure') {
-                data.className = [
-                    'org.rapidcontext.app.proc.',
+            if (proc.type === 'procedure') {
+                proc.className = [
+                    'org.company.proc.',
                     src.name.replace(/\./g, '').replace('System', ''),
                     'Procedure'
                 ].join('');
             };
-            let proc = Object.assign({}, data, src, data);
-            proc.binding = proc.bindings;
-            delete proc.name;
-            delete proc.local;
-            delete proc.bindings;
-            (proc.binding || []).forEach(function (b) {
+            proc.binding = (src.bindings || []).sort(compare);
+            proc.binding.forEach(function (b) {
                 if (b.type === 'argument') {
                     delete b.value;
                 } else if (b.type === 'procedure') {
                     b.value = NAMES[b.value] || b.value;
                     delete b.description;
-                } else if (b.type === 'data' && b.name === 'code') {
+                } else if (b.type === 'data') {
                     b.value = b.value.trim() + '\n';
                     delete b.description;
                 } else {
@@ -79,8 +90,8 @@ binding:
             return path;
         }
 
-        let procs = listProc().map(read).filter(Boolean);
-        return procs.map(convert).map(store);
+        let procs = listProc().map(read).filter(Boolean).map(convert);
+        return procs.map(store);
   - name: listProc
     type: procedure
     value: system/procedure/list
