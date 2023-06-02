@@ -21,14 +21,15 @@ binding:
         function check(src) {
             src.bindings.forEach(function (b) {
                 if (b.type === 'connection') {
-                    if (!CONNECTIONS[b.value]) {
-                        error(src.id, 'not found: connection ' + b.value);
+                    if (b.value && !CONNECTIONS[b.value]) {
+                        error(src.id, 'not found: connection/' + b.value);
                     }
                 } else if (b.type === 'procedure') {
                     if (!NAMES[b.value]) {
-                        error(src.id, 'not found: procedure ' + b.value);
+                        error(src.id, 'not found: procedure/' + b.value);
                     } else if (NAMES[b.value] !== NAMES[b.value]) {
-                        warning(src.id, 'renamed: procedure ' + b.value + ' --> ' + NAMES[b.value]);
+                        warning(src.id, 'renamed: procedure/' + b.value +
+                                ' --> procedure/' + NAMES[b.value]);
                     }
                 }
             });
@@ -45,12 +46,9 @@ binding:
         }
 
         let env = systemStatus().environment;
-        let prefix = '';
-        if (env) {
-            prefix = storageRead('/environment/' + env.name).connections;
-        }
+        env = env && storageRead('/environment/' + env.name).connections;
         storageRead('/connection/').forEach(function (cxn) {
-            let id = cxn.id.startsWith(prefix) ? cxn.id.substring(prefix.length) : cxn.id;
+            let id = cxn.id.substring((env || '').length);
             CONNECTIONS[id] = cxn.id;
         });
         listProc().map(read).filter(Boolean).forEach(check);
