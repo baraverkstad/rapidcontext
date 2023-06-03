@@ -181,7 +181,12 @@ public class YamlSerializer {
                 if (buf.length() > 0) {
                     buf.append("\n");
                 }
-                buf.append(line.replace("\t", "    ").stripTrailing());
+                line = line.replace("\t", "    ");
+                line = line.replace("\f", "");
+                line = line.replace("\r", "");
+                line = line.replace("\u00A0", " ");
+                line = line.stripTrailing();
+                buf.append(line);
             }
             return buf.toString();
         } else {
