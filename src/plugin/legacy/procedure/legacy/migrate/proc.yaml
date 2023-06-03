@@ -24,12 +24,9 @@ binding:
         };
 
         function rename(name) {
-            function toLower(s) {
-                return s.toLowerCase();
-            }
             name = name.replace(/\./g, '/');
+            name = name.replace(/[_-]+/g, '-');
             name = name.replace(/([a-z0-9])([A-Z])/g, '$1-$2');
-            return name.split('/').map(toLower).join('/');
             return name.toLowerCase();
         }
 
