@@ -12,9 +12,14 @@
     "jquery": "3.6.1"
   },
   "devDependencies": {
-    "eslint": "8.40.0",
-    "html-validate": "7.17.0",
-    "stylelint": "15.6.1",
+    "eslint": "8.42.0",
+    "html-validate": "8.0.0",
+    "stylelint": "15.6.3",
     "stylelint-config-standard": "33.0.0"
+  },
+  "overrides": {
+    "stylelint": {
+      "cosmiconfig": "8.1.3"
+    }
   }
 }
