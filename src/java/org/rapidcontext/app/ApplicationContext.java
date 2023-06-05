@@ -230,6 +230,8 @@ public class ApplicationContext {
     private void initAll() {
         initLibrary();
         initPlugins();
+        // TODO: Move aliases into storage catalog
+        library.refreshAliases();
         // TODO: Remove singleton environment reference
         env = Environment.all(storage).findFirst().orElse(null);
         try {
@@ -247,9 +249,6 @@ public class ApplicationContext {
         // Add default interceptors
         Interceptor i = library.getInterceptor();
         library.setInterceptor(new JsCompileInterceptor(i));
-
-        // Refresh procedure aliases
-        library.refreshAliases();
     }
 
     /**
@@ -389,7 +388,6 @@ public class ApplicationContext {
      */
     public void loadPlugin(String pluginId) throws PluginException {
         pluginManager.load(pluginId);
-        library.refreshAliases();
         Array pluginList = config.getArray("plugins");
         if (!pluginList.containsValue(pluginId)) {
             pluginList.add(pluginId);
@@ -400,6 +398,7 @@ public class ApplicationContext {
                              e.getMessage();
                 throw new PluginException(msg);
             }
+            library.refreshAliases();
         }
     }
 
@@ -413,8 +412,8 @@ public class ApplicationContext {
      */
     public void unloadPlugin(String pluginId) throws PluginException {
         pluginManager.unload(pluginId);
-        library.refreshAliases();
         library.clearCache();
+        library.refreshAliases();
         Array pluginList = config.getArray("plugins");
         pluginList.remove(pluginId);
         try {

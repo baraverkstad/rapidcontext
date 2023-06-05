@@ -259,6 +259,7 @@ public class Library {
      * repeatedly (after each plug-in load).
      */
     public void refreshAliases() {
+        // FIXME: This is very slow when a large number of procedures are available...
         aliases.clear();
         org.rapidcontext.core.type.Procedure.all(storage).forEach(p -> {
             if (p.alias() != null && !p.alias().isEmpty()) {
