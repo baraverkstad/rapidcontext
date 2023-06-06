@@ -1,6 +1,6 @@
 id: legacy/validate/proc
 type: procedure/javascript
-description: >-
+description: |-
     Performs a basic validation for all procedures:
 
     - Checks for references to missing connections
