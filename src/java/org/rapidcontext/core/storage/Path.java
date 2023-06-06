@@ -136,7 +136,7 @@ public class Path {
      */
     private Path(Path parent, String name, boolean index) {
         this.parent = parent;
-        this.name = name;
+        this.name = index ? name.intern() : name;
         this.index = index;
         this.length = isRoot() ? 0 : this.parent.length + 1;
     }
