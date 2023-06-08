@@ -87,7 +87,7 @@ RapidContext.Widget.Form.prototype._handleInput = function (evt) {
 RapidContext.Widget.Form.prototype._handleInvalid = function () {
     if (this._validationTimer !== false) {
         this._validationTimer && clearTimeout(this._validationTimer);
-        this._validationTimer = setTimeout(this.validate.bind(this), 10);
+        this._validationTimer = setTimeout(() => this.validate(), 10);
     }
 };
 

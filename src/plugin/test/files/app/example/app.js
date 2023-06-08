@@ -29,7 +29,7 @@ ExampleApp.prototype.start = function () {
     // Initialize data
     this.proc.appList();
     this.initIcons();
-    this.interval = setInterval(MochiKit.Base.method(this, "progressUpdate"), 500);
+    this.interval = setInterval(() => this.progressUpdate(), 500);
 };
 
 /**
@@ -102,7 +102,7 @@ ExampleApp.prototype.initIcons = function () {
         MochiKit.DOM.appendChildNodes(tr, TD({ "class": "end" }));
         this.ui.iconTable.appendChild(tr);
     }
-    this.ui.iconTable.resizeContent = MochiKit.Base.noop;
+    this.ui.iconTable.resizeContent = () => {};
 };
 
 /**

@@ -367,7 +367,7 @@ StartApp.prototype._loginOut = function () {
 StartApp.prototype._loginAuth = function () {
     this.ui.loginAuth.setAttrs({ disabled: true, icon: "fa fa-spin fa-refresh" });
     var data = this.ui.loginForm.valueMap();
-    var cb = this._loginAuthCallback.bind(this);
+    var cb = (res) => this._loginAuthCallback(res);
     RapidContext.App.login($.trim(data.user), data.password).then(cb, cb);
 };
 
@@ -424,18 +424,18 @@ StartApp.prototype._tourChange = function () {
     var promise = RapidContext.Async.wait(0);
     switch (this.ui.tourWizard.activePageIndex()) {
     case 1:
-        promise = promise.then(this._tourLocateStart.bind(this));
+        promise = promise.then(() => this._tourLocateStart());
         break;
     case 2:
         promise = RapidContext.App.callApp("help", "loadTopics")
-            .then(RapidContext.Async.wait.bind(null, 1))
-            .then(this._tourLocateHelp.bind(this));
+            .then(() => RapidContext.Async.wait(1))
+            .then(() => this._tourLocateHelp());
         break;
     case 3:
-        promise = promise.then(this._tourLocateTabs.bind(this));
+        promise = promise.then(() => this._tourLocateTabs());
         break;
     case 4:
-        promise = promise.then(this._tourLocateUser.bind(this));
+        promise = promise.then(() => this._tourLocateUser());
         break;
     }
     return promise.catch(RapidContext.UI.showError);
@@ -474,8 +474,7 @@ StartApp.prototype._tourLocateTabs = function () {
 StartApp.prototype._tourLocateUser = function () {
     if (this.ui.menu.isHidden()) {
         this.ui.menu.show();
-        var func = MochiKit.Base.bind("_tourLocateUser", this);
-        setTimeout(func, 500);
+        setTimeout(() => this._tourLocateUser(), 500);
     } else {
         this.ui.menu.show();
         this._tourLocate(this.ui.menu);

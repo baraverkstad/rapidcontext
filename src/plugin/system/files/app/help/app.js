@@ -217,9 +217,9 @@ HelpApp.prototype.loadContent = function (url) {
         var source = (node && node.data) ? node.data.source || "" : "";
         MochiKit.DOM.replaceChildNodes(this.ui.contentInfo, source);
         RapidContext.App.loadText(fileUrl)
-            .then(this._callbackContent.bind(this))
+            .then((data) => this._callbackContent(data))
             .catch(RapidContext.UI.showError)
-            .finally(this.ui.contentLoading.hide.bind(this.ui.contentLoading));
+            .finally(() => this.ui.contentLoading.hide());
     }
 };
 

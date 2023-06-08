@@ -94,8 +94,7 @@
          */
         then: function (onFulfilled, onRejected) {
             var promise = wrapPromise(this, onFulfilled, onRejected);
-            var onCancel = this.cancel.bind(this);
-            return new Async(promise, onCancel);
+            return new Async(promise, () => this.cancel());
         },
 
         /**
@@ -120,8 +119,7 @@
          */
         finally: function (onFinally) {
             var promise = this._promise.finally(onFinally);
-            var onCancel = this.cancel.bind(this);
-            return new Async(promise, onCancel);
+            return new Async(promise, () => this.cancel());
         },
 
         /**
@@ -232,9 +230,9 @@
     function wait(millis, value) {
         var timer = null;
         function callLater(resolve) {
-            timer = setTimeout(resolve.bind(null, value), millis);
+            timer = setTimeout(() => resolve(value), millis);
         }
-        return new Async(callLater, clearTimeout.bind(null, timer));
+        return new Async(callLater, () => clearTimeout(timer));
     }
 
     /**
@@ -339,7 +337,7 @@
             xhr.send(opts.body);
         });
         var cancel = function () {
-            xhr && setTimeout(xhr.abort.bind(xhr));
+            xhr && setTimeout(() => xhr.abort());
             xhr = null;
         };
         return new Async(promise, cancel);

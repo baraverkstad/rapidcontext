@@ -465,7 +465,7 @@ RapidContext.Util.registerSizeConstraints = function (node, width, height) {
  * ==> Evaluates the size constraints for a node and all child nodes
  *
  * @example
- * elem.resizeContent = MochiKit.Base.noop;
+ * elem.resizeContent = () => {};
  * ==> Assigns a no-op child resize handler to elem
  */
 RapidContext.Util.resizeElements = function (/* ... */) {

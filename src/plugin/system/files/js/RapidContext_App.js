@@ -52,7 +52,7 @@ RapidContext.App.init = function (app) {
 
     // Setup UI
     RapidContext.Util.registerSizeConstraints(document.body, "100%-20", "100%-20");
-    var resizer = MochiKit.Base.partial(RapidContext.Util.resizeElements, document.body);
+    var resizer = () => RapidContext.Util.resizeElements(document.body);
     MochiKit.Signal.connect(window, "onresize", resizer);
     RapidContext.Util.resizeElements(document.body);
     var overlay = new RapidContext.Widget.Overlay({ message: "Loading..." });
@@ -211,7 +211,7 @@ RapidContext.App.startApp = function (app, container) {
     function load(launcher) {
         RapidContext.Log.info("Loading app/" + launcher.id + " resources", launcher);
         launcher.resource = {};
-        var promises = launcher.resources.map(loadResource.bind(null, launcher));
+        var promises = launcher.resources.map((res) => loadResource(launcher, res));
         return Promise.all(promises).then(function () {
             launcher.creator = launcher.creator || window[launcher.className];
             if (launcher.creator == null) {
@@ -240,7 +240,7 @@ RapidContext.App.startApp = function (app, container) {
     function launch(launcher, ui) {
         RapidContext.Log.context("RapidContext.App.startApp(" + launcher.id + ")");
         return RapidContext.Async.wait(0)
-            .then((launcher.creator == null) ? load.bind(null, launcher) : function () {})
+            .then(() => launcher.creator ? true : load(launcher))
             .then(function () {
                 RapidContext.Log.info("Starting app/" + launcher.id, launcher);
                 /* eslint new-cap: "off" */
@@ -251,7 +251,7 @@ RapidContext.App.startApp = function (app, container) {
                 delete props.instances;
                 MochiKit.Base.setdefault(instance, props);
                 MochiKit.Signal.disconnectAll(ui.root, "onclose");
-                var halt = MochiKit.Base.partial(RapidContext.App.stopApp, instance);
+                var halt = () => RapidContext.App.stopApp(instance);
                 MochiKit.Signal.connect(ui.root, "onclose", halt);
                 if (launcher.ui != null) {
                     buildUI(ui.root, ui, launcher.ui);
@@ -302,13 +302,12 @@ RapidContext.App.startApp = function (app, container) {
         } else if (instances.length > 0) {
             // Switch from single-app to multi-app mode
             var elems = Array.from(document.body.childNodes);
-            var moveApp = moveAppToStart.bind(null, instances[0], elems);
             var overlay = new RapidContext.Widget.Overlay({ message: "Loading..." });
             document.body.insertBefore(overlay, document.body.childNodes[0]);
-            var promise = launch(start, { root: document.body, overlay: overlay }).then(moveApp);
-            // FIXME: double calls to this ?
-            var recall = RapidContext.App.startApp.bind(null, launcher.id, container);
-            resolve((launcher.id === "start") ? promise : promise.then(recall));
+            let ui = { root: document.body, overlay: overlay };
+            var move = () => moveAppToStart(instances[0], elems);
+            var recall = () => (launcher.id === "start") ? true : RapidContext.App.startApp(launcher.id);
+            resolve(launch(start, ui).then(move).then(recall));
         } else {
             // Launch single-app mode
             var ui = { root: document.body, overlay: document.body.childNodes[0] };

@@ -12,7 +12,7 @@ function AdminApp() {
         delay: 5,
         queue: [],
         stat: { success: 0, failed: 0 },
-        func: MochiKit.Base.bind("_processBatch", this)
+        func: () => this._processBatch()
     };
 }
 
@@ -35,7 +35,7 @@ AdminApp.prototype.start = function () {
     });
 
     // All views
-    MochiKit.Signal.connect(this.ui.root, "onenter", MochiKit.Base.bind("selectChild", this.ui.tabContainer, null));
+    MochiKit.Signal.connect(this.ui.root, "onenter", () => this.ui.tabContainer.selectChild(null));
     MochiKit.Signal.connect(this.proc.typeList, "onsuccess", this, "_updateTypeCache");
 
     // Connection view
@@ -227,8 +227,8 @@ AdminApp.prototype._validateConnections = function () {
             return Promise.allSettled(data.map(validate));
         })
         .catch(function () {})
-        .then(this.proc.cxnList.recall.bind(this.proc.cxnList))
-        .finally(this.ui.overlay.hide.bind(this.ui.overlay));
+        .then(() => this.proc.cxnList.recall())
+        .finally(() => this.ui.overlay.hide());
 };
 
 /**
@@ -243,8 +243,8 @@ AdminApp.prototype.showConnection = function (id) {
     this.ui.tabContainer.selectChild(this.ui.cxnTab);
     RapidContext.App.callProc("system/connection/validate", [id])
         .catch(function () {})
-        .then(this.proc.cxnList.recall.bind(this.proc.cxnList))
-        .then(this.ui.cxnTable.setSelectedIds.bind(this.ui.cxnTable, id));
+        .then(() => this.proc.cxnList.recall())
+        .then(() => this.ui.cxnTable.setSelectedIds(id));
 };
 
 /**
@@ -314,7 +314,7 @@ AdminApp.prototype._removeConnection = function () {
     if (confirm(msg)) {
         var path = RapidContext.Storage.path(data);
         RapidContext.App.callProc("system/storage/write", [path, null])
-            .then(this.proc.cxnList.recall.bind(this.proc.cxnList))
+            .then(() => this.proc.cxnList.recall())
             .catch(RapidContext.UI.showError);
     }
 };
@@ -351,8 +351,8 @@ AdminApp.prototype._initConnectionEdit = function (data) {
                 }
             }
         })
-        .then(this._updateConnectionEdit.bind(this))
-        .then(this.ui.cxnEditDialog.show.bind(this.ui.cxnEditDialog))
+        .then(() => this._updateConnectionEdit())
+        .then(() => this.ui.cxnEditDialog.show())
         .catch(RapidContext.UI.showError);
 };
 
@@ -485,8 +485,8 @@ AdminApp.prototype._storeConnection = function () {
             path = { path: oldPath, updateTo: path };
         }
         RapidContext.App.callProc("system/storage/write", [path, data])
-            .then(this.ui.cxnEditDialog.hide.bind(this.ui.cxnEditDialog))
-            .then(this.showConnection.bind(this, data.id))
+            .then(() => this.ui.cxnEditDialog.hide())
+            .then(() => this.showConnection(data.id))
             .catch(RapidContext.UI.showError);
     }
 };
@@ -598,8 +598,8 @@ AdminApp.prototype._togglePlugin = function () {
     RapidContext.App.callProc(proc, [data.id])
         .catch(RapidContext.UI.showError)
         .then((data.loaded && data.className) ? showRestartMesssage : function () {})
-        .then(this.resetServer.bind(this))
-        .then(this.loadPlugins.bind(this));
+        .then(() => this.resetServer())
+        .then(() => this.loadPlugins());
 };
 
 /**
@@ -643,8 +643,8 @@ AdminApp.prototype._pluginUpload = function () {
         .then(function (res) {
             pluginId = res;
         })
-        .then(this.resetServer.bind(this))
-        .then(this.loadPlugins.bind(this))
+        .then(() => this.resetServer())
+        .then(() => this.loadPlugins())
         .then(select.bind(this))
         .catch(RapidContext.UI.showError)
         .finally(done.bind(this));
@@ -722,7 +722,7 @@ AdminApp.prototype._showProcedure = function () {
     this.ui.procExecResult.removeAll();
     RapidContext.Util.resizeElements(this.ui.procExecResult);
     if (node != null && node.data != null) {
-        var cb = this._callbackShowProcedure.bind(this, node.data);
+        var cb = (res) => this._callbackShowProcedure(node.data, res);
         this.proc.procRead(node.data).then(cb, cb);
         this.ui.procLoading.show();
     }
@@ -766,7 +766,7 @@ AdminApp.prototype._callbackShowProcedure = function (procName, res) {
                     "class": "font-smaller ml-1",
                     "icon": "fa fa-lg fa-pencil"
                 });
-                btn.onclick = MochiKit.Base.bind("_editProcArg", this, count);
+                btn.onclick = () => this._editProcArg(count);
                 var col2 = MochiKit.DOM.TD({ "class": "text-nowrap pr-2" }, field, btn);
                 var col3 = MochiKit.DOM.TD({ "class": "text-pre-wrap w-100 pt-1" }, b.description);
                 var tr = MochiKit.DOM.TR({}, col1, col2, col3);
@@ -862,7 +862,7 @@ AdminApp.prototype._addProcedure = function () {
         bindings: {},
         defaults: {}
     };
-    this._initProcEdit(data).then(this._updateProcEdit.bind(this));
+    this._initProcEdit(data).then(() => this._updateProcEdit());
 };
 
 /**
@@ -919,8 +919,8 @@ AdminApp.prototype._initProcEdit = function (data) {
                 data.defaults[k] = RapidContext.Util.dict(keys, values);
             });
         })
-        .then(this._renderProcEdit.bind(this))
-        .then(this.ui.procEditDialog.show.bind(this.ui.procEditDialog))
+        .then(() => this._renderProcEdit())
+        .then(() => this.ui.procEditDialog.show())
         .catch(RapidContext.UI.showError);
 };
 
@@ -1087,9 +1087,9 @@ AdminApp.prototype._saveProcedure = function () {
         path = { path: oldPath, updateTo: path };
     }
     RapidContext.App.callProc("system/storage/write", [path, data])
-        .then(this.ui.procEditDialog.hide.bind(this.ui.procEditDialog))
-        .then(this.proc.procList.recall.bind(this.proc.procList))
-        .then(this.showProcedure.bind(this, data.id))
+        .then(() => this.ui.procEditDialog.hide())
+        .then(() => this.proc.procList.recall())
+        .then(() => this.showProcedure(data.id))
         .catch(RapidContext.UI.showError);
 };
 
@@ -1121,7 +1121,7 @@ AdminApp.prototype._executeProcedure = function () {
     this.ui.procExec.disable();
     this.ui.procBatch.disable();
     this.ui.procExecResult.removeAll();
-    var cb = this._callbackExecute.bind(this);
+    var cb = (res) => this._callbackExecute(res);
     RapidContext.App.callProc(proc.name, args).then(cb, cb);
 };
 
@@ -1378,7 +1378,7 @@ AdminApp.prototype._processBatch = function () {
         if (item == null) {
             this._stopBatch();
         } else {
-            var cb = this._callbackBatch.bind(this);
+            var cb = (res) => this._callbackBatch(res);
             RapidContext.App.callProc(item.proc, item.args).then(cb, cb);
         }
     }

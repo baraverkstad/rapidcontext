@@ -149,7 +149,7 @@ RapidContext.Widget.Popup.prototype._setHiddenPopup = function (value) {
             this.animate(this.hideAnim);
         }
         this._dispatch("hide");
-        setTimeout(this.blur.bind(this), 100);
+        setTimeout(() => this.blur(), 100);
     } else if (!value && this.isHidden()) {
         this.selectChild(-1);
         this._setHidden(false);
@@ -158,7 +158,7 @@ RapidContext.Widget.Popup.prototype._setHiddenPopup = function (value) {
         }
         this.scrollTop = 0;
         this._dispatch("show");
-        setTimeout(this.focus.bind(this), 100);
+        setTimeout(() => this.focus(), 100);
     }
     this.resetDelay();
 };
@@ -173,7 +173,7 @@ RapidContext.Widget.Popup.prototype.resetDelay = function () {
         this._delayTimer = null;
     }
     if (!this.isHidden() && this.delay > 0) {
-        this._delayTimer = setTimeout(MochiKit.Base.bind("hide", this), this.delay);
+        this._delayTimer = setTimeout(() => this.hide(), this.delay);
     }
 };
 
