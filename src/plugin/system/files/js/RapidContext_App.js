@@ -116,7 +116,7 @@ RapidContext.App.user = function () {
  * @return {Array} the loaded app launchers (read-only)
  */
 RapidContext.App.apps = function () {
-    return MochiKit.Base.values(RapidContext.App._Cache.apps);
+    return Object.values(RapidContext.App._Cache.apps);
 };
 
 /**
