@@ -321,7 +321,7 @@ RapidContext.Util.createDOMExt = function (ns, tag, attrs/*, ...*/) {
     var node = (ns) ? doc.createElementNS(ns, tag) : doc.createElement(tag);
     MochiKit.DOM.updateNodeAttributes(node, attrs);
     var children = Array.from(arguments).slice(3);
-    MochiKit.DOM.appendChildNodes(node, children);
+    node.append(...children);
     return node;
 };
 

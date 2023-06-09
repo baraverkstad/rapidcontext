@@ -92,15 +92,15 @@ ExampleApp.prototype.initIcons = function () {
     var col2 = rows.slice(len, len + len);
     var col3 = rows.slice(len + len);
     for (var i = 0; i < len; i++) {
-        var tr = TR({}, col1[i]);
+        var tr = TR({}, ...col1[i]);
         if (col2[i]) {
-            MochiKit.DOM.appendChildNodes(tr, TD({ "class": "space" }), col2[i]);
+            tr.append(TD({ "class": "space" }), ...col2[i]);
         }
         if (col3[i]) {
-            MochiKit.DOM.appendChildNodes(tr, TD({ "class": "space" }), col3[i]);
+            tr.append(TD({ "class": "space" }), ...col3[i]);
         }
-        MochiKit.DOM.appendChildNodes(tr, TD({ "class": "end" }));
-        this.ui.iconTable.appendChild(tr);
+        tr.append(TD({ "class": "end" }));
+        this.ui.iconTable.append(tr);
     }
     this.ui.iconTable.resizeContent = () => {};
 };

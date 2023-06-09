@@ -291,8 +291,8 @@ AdminApp.prototype._showConnection = function () {
             }
             var tr = this.ui.cxnTemplate.cloneNode(true);
             tr.className = "clone";
-            MochiKit.DOM.appendChildNodes(tr.firstChild, title + ":");
-            MochiKit.DOM.appendChildNodes(tr.lastChild, value);
+            tr.firstChild.append(title + ":");
+            tr.lastChild.append(value);
             MochiKit.DOM.insertSiblingNodesBefore(this.ui.cxnTemplate, tr);
         }
     }
@@ -366,7 +366,7 @@ AdminApp.prototype._updateConnectionEdit = function () {
         var defaultValue = (data["_" + p.name] != null) ? "" + data["_" + p.name] : "";
         var valueLines = AdminApp.splitLines(value, 58);
         tr.className = "clone";
-        MochiKit.DOM.appendChildNodes(tr.firstChild, title + ":");
+        tr.firstChild.append(title + ":");
         var attrs = { name: p.name, size: 60 };
         if (p.required && p.format != "password") {
             attrs.required = true;
@@ -385,19 +385,19 @@ AdminApp.prototype._updateConnectionEdit = function () {
         } else {
             input = RapidContext.Widget.TextField(attrs);
         }
-        MochiKit.DOM.appendChildNodes(tr.lastChild, input);
+        tr.lastChild.append(input);
         if (p.custom) {
             input.size = 55;
             var btn = { icon: "fa fa-lg fa-minus", "class": "font-smaller ml-1", "data-action": "remove" };
-            MochiKit.DOM.appendChildNodes(tr.lastChild, RapidContext.Widget.Button(btn));
+            tr.lastChild.append(RapidContext.Widget.Button(btn));
         }
         if (p.required && p.format != "password") {
             var validator = RapidContext.Widget.FormValidator({ name: p.name });
-            MochiKit.DOM.appendChildNodes(tr.lastChild, validator);
+            tr.lastChild.append(validator);
         }
         if (p.description) {
             var help = MochiKit.DOM.DIV({ "class": "helptext text-pre-wrap" }, p.description);
-            MochiKit.DOM.appendChildNodes(tr.lastChild, help);
+            tr.lastChild.append(help);
         }
         if (!showAll && !p.required && !p.custom && !value) {
             tr.classList.add("hidden");

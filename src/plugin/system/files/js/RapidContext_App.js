@@ -234,7 +234,7 @@ RapidContext.App.startApp = function (app, container) {
                 parent.setAttribute(attr.name, attr.value);
             }
         }
-        MochiKit.DOM.appendChildNodes(parent, RapidContext.UI.buildUI(ui, ids));
+        parent.append(...RapidContext.UI.buildUI(ui, ids));
         RapidContext.Util.resizeElements(parent);
     }
     function launch(launcher, ui) {
@@ -264,7 +264,7 @@ RapidContext.App.startApp = function (app, container) {
                 RapidContext.Log.error("Failed to start app", err);
                 MochiKit.Signal.disconnectAll(ui.root, "onclose");
                 var label = MochiKit.DOM.STRONG(null, "Error: ");
-                MochiKit.DOM.appendChildNodes(ui.root, label, err.message);
+                ui.root.append(label, err.message);
                 ui.overlay.hide();
                 return Promise.reject(err);
             })
