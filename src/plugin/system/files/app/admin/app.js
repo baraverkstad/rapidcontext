@@ -293,7 +293,7 @@ AdminApp.prototype._showConnection = function () {
             tr.className = "clone";
             tr.firstChild.append(title + ":");
             tr.lastChild.append(value);
-            MochiKit.DOM.insertSiblingNodesBefore(this.ui.cxnTemplate, tr);
+            this.ui.cxnTemplate.before(tr);
         }
     }
 };
@@ -435,7 +435,7 @@ AdminApp.prototype._updateConnectionEdit = function () {
     }
     for (var k in props) {
         var tr = buildRow(this.ui.cxnEditTemplate.cloneNode(true), props[k]);
-        MochiKit.DOM.insertSiblingNodesBefore(this.ui.cxnEditTemplate, tr);
+        this.ui.cxnEditTemplate.before(tr);
     }
     this.ui.cxnEditForm.update(data);
     this.ui.cxnEditDialog.moveToCenter();
