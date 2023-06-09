@@ -384,7 +384,7 @@ RapidContext.App.callApp = function (app, method) {
             var pos = MochiKit.Base.findIdentical(launcher.instances, app);
             var instance = (pos >= 0) ? app : launcher.instances[launcher.instances.length - 1];
             var child = instance.ui.root;
-            var parent = MochiKit.DOM.getFirstParentByTagAndClassName(child, null, "widget");
+            var parent = child.parentNode.closest(".widget");
             if (parent != null && typeof(parent.selectChild) == "function") {
                 parent.selectChild(child);
             }

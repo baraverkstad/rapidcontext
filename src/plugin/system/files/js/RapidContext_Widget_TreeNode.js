@@ -85,7 +85,7 @@ RapidContext.Widget.TreeNode.prototype.destroy = function () {
  * @param {Event} evt the DOM Event object
  */
 RapidContext.Widget.TreeNode.prototype._handleLabelClick = function (evt) {
-    var node = MochiKit.DOM.getFirstParentByTagAndClassName(this, "DIV", "widgetTreeNode");
+    var node = evt.target.closest("div.widgetTreeNode");
     if (RapidContext.Widget.isWidget(evt.target, "Icon")) {
         node.toggle();
     } else {

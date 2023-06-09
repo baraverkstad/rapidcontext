@@ -293,10 +293,7 @@ HelpApp.prototype._showContentHtml = function (html) {
  * Handles click events in the content text.
  */
 HelpApp.prototype._handleClick = function (evt) {
-    var elem = evt.target();
-    if (elem.tagName != "A") {
-        elem = MochiKit.DOM.getFirstParentByTagAndClassName(elem, "A");
-    }
+    var elem = evt.target().closest("a");
     if (elem && elem.hasAttribute("href") && !elem.hasAttribute("target")) {
         evt.stop();
         var href = elem.getAttribute("href");
