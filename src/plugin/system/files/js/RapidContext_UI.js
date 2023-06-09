@@ -135,7 +135,9 @@
             node.parentNode.removeChild(node);
             return null;
         }
-        var attrs = RapidContext.Util.dict(RapidContext.Util.attributeArray(node));
+        var attrs = Array.from(node.attributes)
+            .filter((a) => a.specified)
+            .reduce((o, a) => Object.assign(o, { [a.name]: a.value }), {});
         var locals = RapidContext.Util.mask(attrs, ["id", "w", "h"]);
         var children = buildUI(node.childNodes, ids);
         var widget;
