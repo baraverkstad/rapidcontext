@@ -518,10 +518,10 @@ StartApp.prototype._getBoundingBox = function () {
     for (var i = 0; i < arguments.length; i++) {
         var elem = arguments[i];
         var elemBox = null;
-        if (RapidContext.Util.isDOM(elem)) {
+        if (elem && elem.nodeType > 0) {
             elemBox = MochiKit.Style.getElementPosition(elem);
             Object.assign(elemBox, MochiKit.Style.getElementDimensions(elem));
-        } else if (elem != null && typeof(elem.x) == "number") {
+        } else if (elem && typeof(elem.x) == "number") {
             elemBox = Object.assign({ x: 0, y: 0, w: 0, h: 0 }, elem);
         }
         if (elemBox != null && box == null) {
