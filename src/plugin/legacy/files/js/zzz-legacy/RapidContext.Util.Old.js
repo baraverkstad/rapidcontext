@@ -643,6 +643,25 @@ RapidContext.Util.NS = {
 RapidContext.Util.NS.HTML = [undefined, null, "", RapidContext.Util.NS.XHTML];
 
 /**
+ * Returns `true` if the specified object looks like a DOM node. Otherwise,
+ * `false` will be returned. Any non-null object with a `nodeType` > 0 will be
+ * considered a DOM node by this function.
+ *
+ * @param {Object} obj the object to check
+ *
+ * @return {Boolean} `true` if the object looks like a DOM node, or
+ *         `false` otherwise
+ */
+RapidContext.Util.isDOM = RapidContext.deprecatedFunction(
+    function (obj) {
+        return obj != null &&
+               typeof(obj.nodeType) === "number" &&
+               obj.nodeType > 0;
+    },
+    "RapidContext.Util.isDOM is deprecated."
+);
+
+/**
  * Returns `true` if the specified object looks like an HTML or XHTML DOM node.
  * Otherwise, `false` will be returned. Any non-null object with a
  * `nodeType` > 0 will be considered a DOM node, but only those with a matching
@@ -739,4 +758,66 @@ RapidContext.Util.createTextNode = RapidContext.deprecatedFunction(
         return MochiKit.DOM.currentDocument().createTextNode(text);
     },
     "RapidContext.Util.createTextNode is deprecated."
+);
+
+/**
+ * Returns an array with DOM node attribute name and value pairs. The name and
+ * value pairs are also stored in arrays with two elements.
+ *
+ * @param {Object} node the HTML DOM node
+ *
+ * @return {Array} an array containing attribute name and value
+ *             pairs (as arrays)
+ */
+RapidContext.Util.attributeArray = RapidContext.deprecatedFunction(
+    function (node) {
+        var res = [];
+        node = MochiKit.DOM.getElement(node);
+        for (var i = 0; node != null && i < node.attributes.length; i++) {
+            var a = node.attributes[i];
+            res.push([a.name, a.value]);
+        }
+        return res;
+    },
+    "RapidContext.Util.attributeArray is deprecated."
+);
+
+/**
+ * Returns an immediate child node from a parent DOM node. If a numeric index
+ * is provided, the index will be range checked and any matching child DOM
+ * node will be returned. Otherwise, the DOM tree is traversed to find the
+ * immediate child that corresponds to the specified node.
+ *
+ * @param {Node} parent the parent HTML DOM node
+ * @param {Number/Node} indexOrNode the child index or a descendant node
+ *
+ * @return {Node} the child HTML DOM node, or
+ *         `null` if no matching node was found
+ *
+ * @example
+ * var child = RapidContext.Util.childNode(parent, 2);
+ * ==> parent.childNodes[2] or null
+ *
+ * @example
+ * var child = RapidContext.Util.childNode(node, evt.target());
+ * ==> child DOM node if descendant or null otherwise
+ */
+RapidContext.Util.childNode = RapidContext.deprecatedFunction(
+    function (parent, indexOrNode) {
+        parent = MochiKit.DOM.getElement(parent);
+        if (typeof(indexOrNode) == "number") {
+            if (indexOrNode < 0 || indexOrNode >= parent.childNodes.length) {
+                return null;
+            } else {
+                return parent.childNodes[indexOrNode];
+            }
+        } else {
+            var node = MochiKit.DOM.getElement(indexOrNode);
+            while (node != null && node !== parent && node.parentNode !== parent) {
+                node = node.parentNode;
+            }
+            return (node == null || node === parent) ? null : node;
+        }
+    },
+    "RapidContext.Util.childNode is deprecated."
 );
