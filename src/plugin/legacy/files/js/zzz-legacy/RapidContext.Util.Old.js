@@ -19,14 +19,35 @@ if (typeof(RapidContext.Util) == "undefined") {
     RapidContext.Util = {};
 }
 
-RapidContext.Util._logOnce = function(level, message) {
-    var func = arguments.callee.caller;
-    if (func.loggedMsg == null) {
-        func.loggedMsg = {};
-    }
-    if (func.loggedMsg[message] !== true) {
-        func.loggedMsg[message] = true
-        MochiKit.Logging.logger.baseLog(level, message);
+// Logs a deprecation warning on first call
+RapidContext.deprecated = function (message) {
+    var self = arguments.callee || {};
+    var msgs = (self.msgs = self.msgs || {});
+    msgs[message] || console.warn(message);
+    msgs[message] = true;
+};
+
+// Creates a wrapped function that logs a deprecation warning
+RapidContext.deprecatedFunction = function (func, message) {
+    return Object.assign(
+        function () {
+            var self = arguments.callee || {};
+            if (!self.caller || !self.caller.deprecated) {
+                RapidContext.deprecated(message);
+            }
+            return func.apply(this, arguments);
+        },
+        { deprecated: true }
+    );
+}
+
+// Changes all module functions to log deprecation warnings
+RapidContext.deprecatedModule = function (module, message) {
+    for (var k in module) {
+        var v = module[k];
+        if (typeof(v) === "function" && !v.deprecated) {
+            module[k] = RapidContext.deprecatedFunction(v, message);
+        }
     }
 };
 
@@ -47,15 +68,18 @@ RapidContext.Util._logOnce = function(level, message) {
  *
  * @see RapidContext.Util.registerFunctionNames
  */
-RapidContext.Util.functionName = function (func) {
-    if (func == null) {
-        return null;
-    } else if (func.name != null && func.name != "") {
-        return func.name;
-    } else {
-        return func.displayName;
-    }
-};
+RapidContext.Util.functionName = RapidContext.deprecatedFunction(
+    function (func) {
+        if (func == null) {
+            return null;
+        } else if (func.name != null && func.name != "") {
+            return func.name;
+        } else {
+            return func.displayName;
+        }
+    },
+    "RapidContext.Util.functionName is deprecated."
+);
 
 /**
  * Registers function names for anonymous functions. This is useful when
@@ -78,30 +102,33 @@ RapidContext.Util.functionName = function (func) {
  *
  * @see RapidContext.Util.functionName
  */
-RapidContext.Util.registerFunctionNames = function (obj, name) {
-    function worker(o, name, stack) {
-        var isObj = (o != null && typeof(o) === "object");
-        var isFunc = (typeof(o) === "function");
-        var isAnon = isFunc && (o.name == null || o.name == "");
-        var isProto = (o === Object.prototype || o === Function.prototype);
-        var isNode = isObj && (typeof(o.nodeType) === "number");
-        var isVisited = stack.includes(o);
-        if (isFunc && isAnon && !o.displayName) {
-            o.displayName = name;
-        }
-        if ((isObj || isFunc) && !isProto && !isNode && !isVisited) {
-            stack.push(o);
-            for (var prop in o) {
-                if (Object.prototype.hasOwnProperty.call(o, prop)) {
-                    worker(o[prop], name + "." + prop, stack);
-                }
+RapidContext.Util.registerFunctionNames = RapidContext.deprecatedFunction(
+    function (obj, name) {
+        function worker(o, name, stack) {
+            var isObj = (o != null && typeof(o) === "object");
+            var isFunc = (typeof(o) === "function");
+            var isAnon = isFunc && (o.name == null || o.name == "");
+            var isProto = (o === Object.prototype || o === Function.prototype);
+            var isNode = isObj && (typeof(o.nodeType) === "number");
+            var isVisited = stack.includes(o);
+            if (isFunc && isAnon && !o.displayName) {
+                o.displayName = name;
             }
-            worker(o.prototype, name + ".prototype", stack);
-            stack.pop();
+            if ((isObj || isFunc) && !isProto && !isNode && !isVisited) {
+                stack.push(o);
+                for (var prop in o) {
+                    if (Object.prototype.hasOwnProperty.call(o, prop)) {
+                        worker(o[prop], name + "." + prop, stack);
+                    }
+                }
+                worker(o.prototype, name + ".prototype", stack);
+                stack.pop();
+            }
         }
-    }
-    worker(obj, name || obj.name || obj.displayName || obj.NAME || "", []);
-};
+        worker(obj, name || obj.name || obj.displayName || obj.NAME || "", []);
+    },
+    "RapidContext.Util.registerFunctionNames is deprecated."
+);
 
 /**
  * Returns the current execution stack trace. The stack trace is an array of
@@ -122,35 +149,38 @@ RapidContext.Util.registerFunctionNames = function (obj, name) {
  * @see RapidContext.Util.functionName
  * @see RapidContext.Util.injectStackTrace
  */
-RapidContext.Util.stackTrace = function (maxDepth) {
-    var func = arguments.callee.caller;
-    var visited = [];
-    var res = [];
-    maxDepth = maxDepth || 20;
-    while (func != null) {
-        if (MochiKit.Base.findIdentical(visited, func) >= 0) {
-            res.push("...recursion...");
-            break;
+RapidContext.Util.stackTrace = RapidContext.deprecatedFunction(
+    function (maxDepth) {
+        var func = arguments.callee.caller;
+        var visited = [];
+        var res = [];
+        maxDepth = maxDepth || 20;
+        while (func != null) {
+            if (MochiKit.Base.findIdentical(visited, func) >= 0) {
+                res.push("...recursion...");
+                break;
+            }
+            if (func.$stackTrace != null) {
+                res = res.concat(func.$stackTrace);
+                break;
+            }
+            var name = RapidContext.Util.functionName(func);
+            if (name === null) {
+                // Skip stack trace when null (but not when undefined)
+            } else {
+                res.push(name || "<anonymous>");
+            }
+            visited.push(func);
+            if (visited.length >= maxDepth) {
+                res.push("...");
+                break;
+            }
+            func = func.caller;
         }
-        if (func.$stackTrace != null) {
-            res = res.concat(func.$stackTrace);
-            break;
-        }
-        var name = RapidContext.Util.functionName(func);
-        if (name === null) {
-            // Skip stack trace when null (but not when undefined)
-        } else {
-            res.push(name || "<anonymous>");
-        }
-        visited.push(func);
-        if (visited.length >= maxDepth) {
-            res.push("...");
-            break;
-        }
-        func = func.caller;
-    }
-    return res;
-};
+        return res;
+    },
+    "RapidContext.Util.stackTrace is deprecated."
+);
 
 /**
  * Injects a stack trace for a function. This method is useful for creating a
@@ -165,16 +195,19 @@ RapidContext.Util.stackTrace = function (maxDepth) {
  *     logging and determining stack traces is obsolete, since `console.log`
  *     now provides a better solution.
  */
-RapidContext.Util.injectStackTrace = function (stackTrace, func) {
-    func = func || arguments.callee.caller;
-    if (func != null) {
-        if (stackTrace) {
-            func.$stackTrace = stackTrace;
-        } else {
-            delete func.$stackTrace;
+RapidContext.Util.injectStackTrace = RapidContext.deprecatedFunction(
+    function (stackTrace, func) {
+        func = func || arguments.callee.caller;
+        if (func != null) {
+            if (stackTrace) {
+                func.$stackTrace = stackTrace;
+            } else {
+                delete func.$stackTrace;
+            }
         }
-    }
-};
+    },
+    "RapidContext.Util.injectStackTrace is deprecated."
+);
 
 /**
  * Checks if the specified value corresponds to false. This function
@@ -188,12 +221,12 @@ RapidContext.Util.injectStackTrace = function (stackTrace, func) {
  *
  * @deprecated Use MochiKit.Base.bool instead.
  */
-RapidContext.Util.isFalse = function (value) {
-    var msg = "RapidContext.Util.isFalse is deprecated. Use " +
-              "MochiKit.Base.bool instead.";
-    RapidContext.Util._logOnce('DEBUG', msg);
-    return !MochiKit.Base.bool(value);
-};
+RapidContext.Util.isFalse = RapidContext.deprecatedFunction(
+    function (value) {
+        return !MochiKit.Base.bool(value);
+    },
+    "RapidContext.Util.isFalse is deprecated."
+);
 
 /**
  * Returns the first argument that is not undefined.
@@ -219,14 +252,17 @@ RapidContext.Util.isFalse = function (value) {
  * RapidContext.Util.defaultValue()
  *     --> undefined
  */
-RapidContext.Util.defaultValue = function (/* ... */) {
-    for (var i = 0; i < arguments.length; i++) {
-        if (typeof(arguments[i]) != "undefined") {
-            return arguments[i];
+RapidContext.Util.defaultValue = RapidContext.deprecatedFunction(
+    function (/* ... */) {
+        for (var i = 0; i < arguments.length; i++) {
+            if (typeof(arguments[i]) != "undefined") {
+                return arguments[i];
+            }
         }
-    }
-    return arguments[0];
-};
+        return arguments[0];
+    },
+    "RapidContext.Util.defaultValue is deprecated."
+);
 
 /**
  * Creates a new object by copying keys and values from another
@@ -251,19 +287,22 @@ RapidContext.Util.defaultValue = function (/* ... */) {
  * RapidContext.Util.select({ a: 1, b: 2 }, { a: true, c: true });
  *     --> { a: 1 }
  */
-RapidContext.Util.select = function (src, keys) {
-    var res = {};
-    if (!MochiKit.Base.isArrayLike(keys)) {
-        keys = MochiKit.Base.keys(keys);
-    }
-    for (var i = 0; i < keys.length; i++) {
-        var k = keys[i];
-        if (k in src) {
-            res[k] = src[k];
+RapidContext.Util.select = RapidContext.deprecatedFunction(
+    function (src, keys) {
+        var res = {};
+        if (!MochiKit.Base.isArrayLike(keys)) {
+            keys = MochiKit.Base.keys(keys);
         }
-    }
-    return res;
-};
+        for (var i = 0; i < keys.length; i++) {
+            var k = keys[i];
+            if (k in src) {
+                res[k] = src[k];
+            }
+        }
+        return res;
+    },
+    "RapidContext.Util.select is deprecated."
+);
 
 /**
  * Finds the index of an object in a list having a specific property
@@ -278,21 +317,24 @@ RapidContext.Util.select = function (src, keys) {
  * @return {Number} the array index found, or
  *         -1 if not found
  */
-RapidContext.Util.findProperty = function (lst, key, value, start, end) {
-    if (typeof(end) == "undefined" || end === null) {
-        end = (lst == null) ? 0 : lst.length;
-    }
-    if (typeof(start) == "undefined" || start === null) {
-        start = 0;
-    }
-    var cmp = MochiKit.Base.compare;
-    for (var i = start; lst != null && i < end; i++) {
-        if (lst[i] != null && cmp(lst[i][key], value) === 0) {
-            return i;
+RapidContext.Util.findProperty = RapidContext.deprecatedFunction(
+    function (lst, key, value, start, end) {
+        if (typeof(end) == "undefined" || end === null) {
+            end = (lst == null) ? 0 : lst.length;
         }
-    }
-    return -1;
-};
+        if (typeof(start) == "undefined" || start === null) {
+            start = 0;
+        }
+        var cmp = MochiKit.Base.compare;
+        for (var i = start; lst != null && i < end; i++) {
+            if (lst[i] != null && cmp(lst[i][key], value) === 0) {
+                return i;
+            }
+        }
+        return -1;
+    },
+    "RapidContext.Util.findProperty is deprecated."
+);
 
 /**
  * Returns a truncated copy of a string or an array. If the string
@@ -309,12 +351,12 @@ RapidContext.Util.findProperty = function (lst, key, value, start, end) {
  *
  * @deprecated Use MochiKit.Text.truncate instead.
  */
-RapidContext.Util.truncate = function (obj, maxLength, tail) {
-    var msg = "RapidContext.Util.truncate is deprecated. Use " +
-              "MochiKit.Text.truncate instead.";
-    RapidContext.Util._logOnce('DEBUG', msg);
-    return MochiKit.Text.truncate(obj, maxLength, tail);
-};
+RapidContext.Util.truncate = RapidContext.deprecatedFunction(
+    function (obj, maxLength, tail) {
+        return MochiKit.Text.truncate(obj, maxLength, tail);
+    },
+    "RapidContext.Util.truncate is deprecated."
+);
 
 /**
  * Formats a number using two digits, i.e. pads with a leading zero
@@ -326,7 +368,10 @@ RapidContext.Util.truncate = function (obj, maxLength, tail) {
  *
  * @function
  */
-RapidContext.Util.twoDigitNumber = MochiKit.Format.numberFormatter("00");
+RapidContext.Util.twoDigitNumber = RapidContext.deprecatedFunction(
+    MochiKit.Format.numberFormatter("00"),
+    "RapidContext.Util.twoDigitNumber is deprecated."
+);
 
 RapidContext.Util._MILLIS_PER_SECOND = 1000;
 RapidContext.Util._MILLIS_PER_MINUTE = 60 * 1000;
@@ -358,22 +403,25 @@ RapidContext.Util._toDuration = function (millis) {
  *
  * @return {String} the string representation of the period
  */
-RapidContext.Util.toApproxPeriod = function (millis) {
-    var p = RapidContext.Util._toDuration(millis);
-    if (p.days >= 10) {
-        return p.days + " days";
-    } else if (p.days >= 1) {
-        return p.days + " days " + p.hours + " hours";
-    } else if (p.hours >= 1) {
-        return p.hours + ":" + MochiKit.Text.padLeft("" + p.minutes, 2, "0") + " hours";
-    } else if (p.minutes >= 1) {
-        return p.minutes + ":" + MochiKit.Text.padLeft("" + p.seconds, 2, "0") + " minutes";
-    } else if (p.seconds >= 1) {
-        return p.seconds + " seconds";
-    } else {
-        return p.millis + " milliseconds";
-    }
-};
+RapidContext.Util.toApproxPeriod = RapidContext.deprecatedFunction(
+    function (millis) {
+        var p = RapidContext.Util._toDuration(millis);
+        if (p.days >= 10) {
+            return p.days + " days";
+        } else if (p.days >= 1) {
+            return p.days + " days " + p.hours + " hours";
+        } else if (p.hours >= 1) {
+            return p.hours + ":" + MochiKit.Text.padLeft("" + p.minutes, 2, "0") + " hours";
+        } else if (p.minutes >= 1) {
+            return p.minutes + ":" + MochiKit.Text.padLeft("" + p.seconds, 2, "0") + " minutes";
+        } else if (p.seconds >= 1) {
+            return p.seconds + " seconds";
+        } else {
+            return p.millis + " milliseconds";
+        }
+    },
+    "RapidContext.Util.toApproxPeriod is deprecated."
+);
 
 /**
  * Creates a programmers debug representation of a DOM node. This method is
@@ -384,29 +432,32 @@ RapidContext.Util.toApproxPeriod = function (millis) {
  *
  * @return {String} a debug representation of the DOM node
  */
-RapidContext.Util.reprDOM = function (node) {
-    if (node == null) {
-        return "null";
-    } else if (typeof(node) === 'string') {
-        return node;
-    } else if (node.nodeType === 1) { // Node.ELEMENT_NODE
-        var res = "<" + node.tagName.toLowerCase();
-        var attrs = MochiKit.Base.map(RapidContext.Util.reprDOM, node.attributes);
-        res += attrs.join("");
-        if (node.hasChildNodes()) {
-            res += " ["  + node.childNodes.length + " child nodes]";
+RapidContext.Util.reprDOM = RapidContext.deprecatedFunction(
+    function (node) {
+        if (node == null) {
+            return "null";
+        } else if (typeof(node) === 'string') {
+            return node;
+        } else if (node.nodeType === 1) { // Node.ELEMENT_NODE
+            var res = "<" + node.tagName.toLowerCase();
+            var attrs = MochiKit.Base.map(RapidContext.Util.reprDOM, node.attributes);
+            res += attrs.join("");
+            if (node.hasChildNodes()) {
+                res += " ["  + node.childNodes.length + " child nodes]";
+            }
+            res += "/>";
+            return res;
+        } else if (node.nodeType === 2) { // Node.ATTRIBUTE_NODE
+            return " " + node.name + '="' +
+                   MochiKit.DOM.escapeHTML(node.value) + '"';
+        } else if (node.nodeType === 3) { // Node.TEXT_NODE
+            return MochiKit.DOM.escapeHTML(node.nodeValue);
+        } else {
+            return node.toString();
         }
-        res += "/>";
-        return res;
-    } else if (node.nodeType === 2) { // Node.ATTRIBUTE_NODE
-        return " " + node.name + '="' +
-               MochiKit.DOM.escapeHTML(node.value) + '"';
-    } else if (node.nodeType === 3) { // Node.TEXT_NODE
-        return MochiKit.DOM.escapeHTML(node.nodeValue);
-    } else {
-        return node.toString();
-    }
-};
+    },
+    "RapidContext.Util.reprDOM is deprecated."
+);
 
 /**
  * Returns the margin sizes for an HTML DOM node. The margin sizes
@@ -417,14 +468,17 @@ RapidContext.Util.reprDOM = function (node) {
  * @return {Object} an object with "t", "b", "l" and "r" properties,
  *         each containing either an integer value or null
  */
-RapidContext.Util.getMarginBox = function (node) {
-    var getStyle = MochiKit.Style.getStyle;
-    var px = RapidContext.Util.toPixels;
-    return { t: px(getStyle(node, "margin-top")),
-             b: px(getStyle(node, "margin-bottom")),
-             l: px(getStyle(node, "margin-left")),
-             r: px(getStyle(node, "margin-right")) };
-};
+RapidContext.Util.getMarginBox = RapidContext.deprecatedFunction(
+    function (node) {
+        var getStyle = MochiKit.Style.getStyle;
+        var px = RapidContext.Util.toPixels;
+        return { t: px(getStyle(node, "margin-top")),
+                 b: px(getStyle(node, "margin-bottom")),
+                 l: px(getStyle(node, "margin-left")),
+                 r: px(getStyle(node, "margin-right")) };
+    },
+    "RapidContext.Util.getMarginBox is deprecated."
+);
 
 /**
  * Returns the border widths for an HTML DOM node. The widths for
@@ -435,14 +489,17 @@ RapidContext.Util.getMarginBox = function (node) {
  * @return {Object} an object with "t", "b", "l" and "r" properties,
  *         each containing either an integer value or null
  */
-RapidContext.Util.getBorderBox = function (node) {
-    var getStyle = MochiKit.Style.getStyle;
-    var px = RapidContext.Util.toPixels;
-    return { t: px(getStyle(node, "border-width-top")),
-             b: px(getStyle(node, "border-width-bottom")),
-             l: px(getStyle(node, "border-width-left")),
-             r: px(getStyle(node, "border-width-right")) };
-};
+RapidContext.Util.getBorderBox = RapidContext.deprecatedFunction(
+    function (node) {
+        var getStyle = MochiKit.Style.getStyle;
+        var px = RapidContext.Util.toPixels;
+        return { t: px(getStyle(node, "border-width-top")),
+                 b: px(getStyle(node, "border-width-bottom")),
+                 l: px(getStyle(node, "border-width-left")),
+                 r: px(getStyle(node, "border-width-right")) };
+    },
+    "RapidContext.Util.getBorderBox is deprecated."
+);
 
 /**
  * Returns the padding sizes for an HTML DOM node. The sizes for all
@@ -453,14 +510,17 @@ RapidContext.Util.getBorderBox = function (node) {
  * @return {Object} an object with "t", "b", "l" and "r" properties,
  *         each containing either an integer value or null
  */
-RapidContext.Util.getPaddingBox = function (node) {
-    var getStyle = MochiKit.Style.getStyle;
-    var px = RapidContext.Util.toPixels;
-    return { t: px(getStyle(node, "padding-top")),
-             b: px(getStyle(node, "padding-bottom")),
-             l: px(getStyle(node, "padding-left")),
-             r: px(getStyle(node, "padding-right")) };
-};
+RapidContext.Util.getPaddingBox = RapidContext.deprecatedFunction(
+    function (node) {
+        var getStyle = MochiKit.Style.getStyle;
+        var px = RapidContext.Util.toPixels;
+        return { t: px(getStyle(node, "padding-top")),
+                 b: px(getStyle(node, "padding-bottom")),
+                 l: px(getStyle(node, "padding-left")),
+                 r: px(getStyle(node, "padding-right")) };
+    },
+    "RapidContext.Util.getPaddingBox is deprecated."
+);
 
 /**
  * Converts a style pixel value to the corresponding integer. If the
@@ -471,10 +531,13 @@ RapidContext.Util.getPaddingBox = function (node) {
  * @return {Number} the numeric value, or
  *         null if the conversion failed
  */
-RapidContext.Util.toPixels = function (value) {
-    value = parseInt(value);
-    return isNaN(value) ? null : value;
-};
+RapidContext.Util.toPixels = RapidContext.deprecatedFunction(
+    function (value) {
+        value = parseInt(value);
+        return isNaN(value) ? null : value;
+    },
+    "RapidContext.Util.toPixels is deprecated."
+);
 
 /**
  * Returns the scroll offset for an HTML DOM node.
@@ -484,12 +547,15 @@ RapidContext.Util.toPixels = function (value) {
  * @return {Object} a MochiKit.Style.Coordinates object with "x" and
  *         "y" properties containing the element scroll offset
  */
-RapidContext.Util.getScrollOffset = function (node) {
-    node = MochiKit.DOM.getElement(node);
-    var x = node.scrollLeft || 0;
-    var y = node.scrollTop || 0;
-    return new MochiKit.Style.Coordinates(x, y);
-};
+RapidContext.Util.getScrollOffset = RapidContext.deprecatedFunction(
+    function (node) {
+        node = MochiKit.DOM.getElement(node);
+        var x = node.scrollLeft || 0;
+        var y = node.scrollTop || 0;
+        return new MochiKit.Style.Coordinates(x, y);
+    },
+    "RapidContext.Util.getScrollOffset is deprecated."
+);
 
 /**
  * Sets the scroll offset for an HTML DOM node.
@@ -498,11 +564,14 @@ RapidContext.Util.getScrollOffset = function (node) {
  * @param {Object} offset the MochiKit.Style.Coordinates containing
  *            the new scroll offset "x" and "y" values
  */
-RapidContext.Util.setScrollOffset = function (node, offset) {
-    node = MochiKit.DOM.getElement(node);
-    node.scrollLeft = offset.x;
-    node.scrollTop = offset.y;
-};
+RapidContext.Util.setScrollOffset = RapidContext.deprecatedFunction(
+    function (node, offset) {
+        node = MochiKit.DOM.getElement(node);
+        node.scrollLeft = offset.x;
+        node.scrollTop = offset.y;
+    },
+    "RapidContext.Util.setScrollOffset is deprecated."
+);
 
 /**
  * Resets the scroll offsets to zero for for an HTML DOM node.
@@ -512,20 +581,23 @@ RapidContext.Util.setScrollOffset = function (node, offset) {
  * @param {Boolean} [recursive] the recursive flag, defaults to
  *            false
  */
-RapidContext.Util.resetScrollOffset = function (node, recursive) {
-    node = MochiKit.DOM.getElement(node);
-    node.scrollLeft = 0;
-    node.scrollTop = 0;
-    if (recursive) {
-        node = node.firstChild;
-        while (node != null) {
-            if (node.nodeType === 1) { // Node.ELEMENT_NODE
-                RapidContext.Util.resetScrollOffset(node, true);
+RapidContext.Util.resetScrollOffset = RapidContext.deprecatedFunction(
+    function (node, recursive) {
+        node = MochiKit.DOM.getElement(node);
+        node.scrollLeft = 0;
+        node.scrollTop = 0;
+        if (recursive) {
+            node = node.firstChild;
+            while (node != null) {
+                if (node.nodeType === 1) { // Node.ELEMENT_NODE
+                    RapidContext.Util.resetScrollOffset(node, true);
+                }
+                node = node.nextSibling;
             }
-            node = node.nextSibling;
         }
-    }
-};
+    },
+    "RapidContext.Util.resetScrollOffset is deprecated."
+);
 
 /**
  * Adjusts the scroll offsets for an HTML DOM node to ensure optimal
@@ -538,23 +610,26 @@ RapidContext.Util.resetScrollOffset = function (node, recursive) {
  * @param {Object} box the coordinates box with optional properties
  *            {l, t, r, b} or {x, y, w, h}
  */
-RapidContext.Util.adjustScrollOffset = function (node, box) {
-    node = MochiKit.DOM.getElement(node);
-    var dim = MochiKit.Style.getElementDimensions(node);
-    var xMin = RapidContext.Util.defaultValue(box.l, box.x, NaN);
-    var xMax = RapidContext.Util.defaultValue(box.r, xMin + box.w, NaN);
-    var yMin = RapidContext.Util.defaultValue(box.t, box.y, NaN);
-    var yMax = RapidContext.Util.defaultValue(box.b, yMin + box.h, NaN);
-    if (!isNaN(xMax) && node.scrollLeft + dim.w < xMax) {
-        node.scrollLeft = xMax - dim.h;
-    }
-    if (!isNaN(xMin) && node.scrollLeft > xMin) {
-        node.scrollLeft = xMin;
-    }
-    if (!isNaN(yMax) && node.scrollTop + dim.h < yMax) {
-        node.scrollTop = yMax - dim.h;
-    }
-    if (!isNaN(yMin) && node.scrollTop > yMin) {
-        node.scrollTop = yMin;
-    }
-};
+RapidContext.Util.adjustScrollOffset = RapidContext.deprecatedFunction(
+    function (node, box) {
+        node = MochiKit.DOM.getElement(node);
+        var dim = MochiKit.Style.getElementDimensions(node);
+        var xMin = RapidContext.Util.defaultValue(box.l, box.x, NaN);
+        var xMax = RapidContext.Util.defaultValue(box.r, xMin + box.w, NaN);
+        var yMin = RapidContext.Util.defaultValue(box.t, box.y, NaN);
+        var yMax = RapidContext.Util.defaultValue(box.b, yMin + box.h, NaN);
+        if (!isNaN(xMax) && node.scrollLeft + dim.w < xMax) {
+            node.scrollLeft = xMax - dim.h;
+        }
+        if (!isNaN(xMin) && node.scrollLeft > xMin) {
+            node.scrollLeft = xMin;
+        }
+        if (!isNaN(yMax) && node.scrollTop + dim.h < yMax) {
+            node.scrollTop = yMax - dim.h;
+        }
+        if (!isNaN(yMin) && node.scrollTop > yMin) {
+            node.scrollTop = yMin;
+        }
+    },
+    "RapidContext.Util.adjustScrollOffset is deprecated."
+);

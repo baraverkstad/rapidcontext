@@ -26,148 +26,152 @@ if (typeof(RapidContext.SVG) == "undefined") {
     RapidContext.SVG = {};
 }
 
-/**
- * Creates an SVG document node.
- *
- * @function
- * @param {Object} [attrs] the optional node attributes
- * @param {Object} [...] the nodes or text to add as children
- *
- * @return {Node} the SVG DOM document node created
- */
-RapidContext.SVG.SVG =
-    RapidContext.Util.createDOMFuncExt(RapidContext.Util.NS.SVG, "svg",
-                                   [],
-                                   { version: "1.1", baseProfile: "full" });
+(function () {
+    arguments.callee && (arguments.callee.deprecated = true);
 
-/**
- * Creates an SVG definitions node.
- *
- * @function
- * @param {Object} [attrs] the optional node attributes
- * @param {Object} [...] the nodes or text to add as children
- *
- * @return {Node} the SVG DOM document node created
- */
-RapidContext.SVG.DEFS =
-    RapidContext.Util.createDOMFuncExt(RapidContext.Util.NS.SVG, "defs");
+    /**
+     * Creates an SVG document node.
+     *
+     * @function
+     * @param {Object} [attrs] the optional node attributes
+     * @param {Object} [...] the nodes or text to add as children
+     *
+     * @return {Node} the SVG DOM document node created
+     */
+    RapidContext.SVG.SVG =
+        RapidContext.Util.createDOMFuncExt(RapidContext.Util.NS.SVG, "svg",
+                                       [],
+                                       { version: "1.1", baseProfile: "full" });
 
-/**
- * Creates an SVG group node.
- *
- * @function
- * @param {Object} [attrs] the optional node attributes
- * @param {Object} [...] the nodes or text to add as children
- *
- * @return {Node} the SVG DOM document node created
- */
-RapidContext.SVG.G =
-    RapidContext.Util.createDOMFuncExt(RapidContext.Util.NS.SVG, "g");
+    /**
+     * Creates an SVG definitions node.
+     *
+     * @function
+     * @param {Object} [attrs] the optional node attributes
+     * @param {Object} [...] the nodes or text to add as children
+     *
+     * @return {Node} the SVG DOM document node created
+     */
+    RapidContext.SVG.DEFS =
+        RapidContext.Util.createDOMFuncExt(RapidContext.Util.NS.SVG, "defs");
 
-/**
- * Creates an SVG line node.
- *
- * @function
- * @param {String} x1 the x1 coordinate value
- * @param {String} y1 the y1 coordinate value
- * @param {String} x2 the x2 coordinate value
- * @param {String} y2 the y2 coordinate value
- * @param {Object} [attrs] the optional node attributes
- *
- * @return {Node} the SVG DOM document node created
- */
-RapidContext.SVG.LINE =
-    RapidContext.Util.createDOMFuncExt(RapidContext.Util.NS.SVG, "line",
-                                   ["x1", "y1", "x2", "y2"]);
+    /**
+     * Creates an SVG group node.
+     *
+     * @function
+     * @param {Object} [attrs] the optional node attributes
+     * @param {Object} [...] the nodes or text to add as children
+     *
+     * @return {Node} the SVG DOM document node created
+     */
+    RapidContext.SVG.G =
+        RapidContext.Util.createDOMFuncExt(RapidContext.Util.NS.SVG, "g");
 
-/**
- * Creates an SVG rectangle node.
- *
- * @function
- * @param {String} x the x coordinate value
- * @param {String} y the y coordinate value
- * @param {String} width the width value
- * @param {String} height the height value
- * @param {Object} [attrs] the optional node attributes
- *
- * @return {Node} the SVG DOM document node created
- */
-RapidContext.SVG.RECT =
-    RapidContext.Util.createDOMFuncExt(RapidContext.Util.NS.SVG, "rect",
-                                   ["x", "y", "width", "height"]);
+    /**
+     * Creates an SVG line node.
+     *
+     * @function
+     * @param {String} x1 the x1 coordinate value
+     * @param {String} y1 the y1 coordinate value
+     * @param {String} x2 the x2 coordinate value
+     * @param {String} y2 the y2 coordinate value
+     * @param {Object} [attrs] the optional node attributes
+     *
+     * @return {Node} the SVG DOM document node created
+     */
+    RapidContext.SVG.LINE =
+        RapidContext.Util.createDOMFuncExt(RapidContext.Util.NS.SVG, "line",
+                                       ["x1", "y1", "x2", "y2"]);
 
-/**
- * Creates an SVG circle node.
- *
- * @function
- * @param {String} cx the center x coordinate value
- * @param {String} cy the center y coordinate value
- * @param {String} r the radius value
- * @param {Object} [attrs] the optional node attributes
- *
- * @return {Node} the SVG DOM document node created
- */
-RapidContext.SVG.CIRCLE =
-    RapidContext.Util.createDOMFuncExt(RapidContext.Util.NS.SVG, "circle",
-                                   ["cx", "cy", "r"]);
+    /**
+     * Creates an SVG rectangle node.
+     *
+     * @function
+     * @param {String} x the x coordinate value
+     * @param {String} y the y coordinate value
+     * @param {String} width the width value
+     * @param {String} height the height value
+     * @param {Object} [attrs] the optional node attributes
+     *
+     * @return {Node} the SVG DOM document node created
+     */
+    RapidContext.SVG.RECT =
+        RapidContext.Util.createDOMFuncExt(RapidContext.Util.NS.SVG, "rect",
+                                       ["x", "y", "width", "height"]);
 
-/**
- * Creates an SVG path node.
- *
- * @function
- * @param {String} d the path data value
- * @param {Object} [attrs] the optional node attributes
- *
- * @return {Node} the SVG DOM document node created
- */
-RapidContext.SVG.PATH =
-    RapidContext.Util.createDOMFuncExt(RapidContext.Util.NS.SVG, "path",
-                                   ["d"]);
+    /**
+     * Creates an SVG circle node.
+     *
+     * @function
+     * @param {String} cx the center x coordinate value
+     * @param {String} cy the center y coordinate value
+     * @param {String} r the radius value
+     * @param {Object} [attrs] the optional node attributes
+     *
+     * @return {Node} the SVG DOM document node created
+     */
+    RapidContext.SVG.CIRCLE =
+        RapidContext.Util.createDOMFuncExt(RapidContext.Util.NS.SVG, "circle",
+                                       ["cx", "cy", "r"]);
 
-/**
- * Creates an SVG text node.
- *
- * @function
- * @param {String} x the x coordinate value
- * @param {String} y the y coordinate value
- * @param {Object} [attrs] the optional node attributes
- * @param {Object} [...] the text to add as children
- *
- * @return {Node} the SVG DOM document node created
- */
-RapidContext.SVG.TEXT =
-    RapidContext.Util.createDOMFuncExt(RapidContext.Util.NS.SVG, "text",
-                                   ["x", "y"]);
+    /**
+     * Creates an SVG path node.
+     *
+     * @function
+     * @param {String} d the path data value
+     * @param {Object} [attrs] the optional node attributes
+     *
+     * @return {Node} the SVG DOM document node created
+     */
+    RapidContext.SVG.PATH =
+        RapidContext.Util.createDOMFuncExt(RapidContext.Util.NS.SVG, "path",
+                                       ["d"]);
 
-/**
- * Creates an SVG radial gradient node.
- *
- * @function
- * @param {String} id the id of the node
- * @param {Object} [attrs] the optional node attributes
- * @param {Object} [...] the stop nodes to add as children
- *
- * @return {Node} the SVG DOM document node created
- */
-RapidContext.SVG.RADIALGRADIENT =
-    RapidContext.Util.createDOMFuncExt(RapidContext.Util.NS.SVG, "radialGradient",
-                                   ["id"],
-                                   { gradientUnits: "objectBoundingBox",
-                                     cx: "0.5", cy: "0.5", r: "0.5" });
+    /**
+     * Creates an SVG text node.
+     *
+     * @function
+     * @param {String} x the x coordinate value
+     * @param {String} y the y coordinate value
+     * @param {Object} [attrs] the optional node attributes
+     * @param {Object} [...] the text to add as children
+     *
+     * @return {Node} the SVG DOM document node created
+     */
+    RapidContext.SVG.TEXT =
+        RapidContext.Util.createDOMFuncExt(RapidContext.Util.NS.SVG, "text",
+                                       ["x", "y"]);
 
-/**
- * Creates an SVG gradient stop node.
- *
- * @function
- * @param {String} offset the stop offset
- * @param {String} color the stop color
- * @param {Object} [attrs] the optional node attributes
- *
- * @return {Node} the SVG DOM document node created
- */
-RapidContext.SVG.STOP =
-    RapidContext.Util.createDOMFuncExt(RapidContext.Util.NS.SVG, "stop",
-                                   ["offset", "stop-color"]);
+    /**
+     * Creates an SVG radial gradient node.
+     *
+     * @function
+     * @param {String} id the id of the node
+     * @param {Object} [attrs] the optional node attributes
+     * @param {Object} [...] the stop nodes to add as children
+     *
+     * @return {Node} the SVG DOM document node created
+     */
+    RapidContext.SVG.RADIALGRADIENT =
+        RapidContext.Util.createDOMFuncExt(RapidContext.Util.NS.SVG, "radialGradient",
+                                       ["id"],
+                                       { gradientUnits: "objectBoundingBox",
+                                         cx: "0.5", cy: "0.5", r: "0.5" });
+
+    /**
+     * Creates an SVG gradient stop node.
+     *
+     * @function
+     * @param {String} offset the stop offset
+     * @param {String} color the stop color
+     * @param {Object} [attrs] the optional node attributes
+     *
+     * @return {Node} the SVG DOM document node created
+     */
+    RapidContext.SVG.STOP =
+        RapidContext.Util.createDOMFuncExt(RapidContext.Util.NS.SVG, "stop",
+                                       ["offset", "stop-color"]);
+})();
 
 /**
  * Moves a node to the top of the SVG drawing order (i.e. z-index).
@@ -226,3 +230,6 @@ RapidContext.SVG.rotate = function (node, angle, x, y) {
     str += "rotate(" + angle + "," + x + "," + y + ")";
     MochiKit.DOM.setNodeAttribute(node, "transform", str);
 };
+
+// Log deprecation warnings
+RapidContext.deprecatedModule(RapidContext.SVG, "RapidContext.SVG is deprecated.");

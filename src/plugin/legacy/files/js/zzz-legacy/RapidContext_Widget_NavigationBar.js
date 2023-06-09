@@ -45,6 +45,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * <!-- No support for menu items in XML yet -->
  */
 RapidContext.Widget.NavigationBar = function (attrs) {
+    RapidContext.deprecated("RapidContext.Widget.NavigationBar is deprecated.");
     var tr = MochiKit.DOM.TR();
     var tbody = MochiKit.DOM.TBODY({}, tr);
     var o = MochiKit.DOM.TABLE({}, tbody);

@@ -51,6 +51,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * });
  */
 RapidContext.Widget.FileStreamer = function (attrs) {
+    RapidContext.deprecated("RapidContext.Widget.FileStreamer is deprecated.");
     var defs = {
         src: "about:blank",
         scrolling: "no",

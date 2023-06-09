@@ -32,6 +32,7 @@ RapidContext.Widget = RapidContext.Widget || {};
  * @static
  */
 RapidContext.Widget.isFormField = function (obj) {
+    RapidContext.deprecated("RapidContext.Widget.isFormField is deprecated.");
     if (!RapidContext.Util.isHTML(obj) || typeof(obj.tagName) !== "string") {
         return false;
     }
@@ -56,6 +57,7 @@ RapidContext.Widget.isFormField = function (obj) {
  * @deprecated Use _dispatch() instead to emit a proper Event object.
  */
 RapidContext.Widget.emitSignal = function (node, sig/*, ...*/) {
+    RapidContext.deprecated("RapidContext.Widget.emitSignal is deprecated.");
     var args = $.makeArray(arguments);
     function later() {
         try {
