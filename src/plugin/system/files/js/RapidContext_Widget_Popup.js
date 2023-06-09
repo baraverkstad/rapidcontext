@@ -184,7 +184,7 @@ RapidContext.Widget.Popup.prototype.resetDelay = function () {
  *         null if no node is selected
  */
 RapidContext.Widget.Popup.prototype.selectedChild = function () {
-    return RapidContext.Util.childNode(this, this.selectedIndex);
+    return this.childNodes[this.selectedIndex] || null;
 };
 
 /**
@@ -203,12 +203,9 @@ RapidContext.Widget.Popup.prototype.selectChild = function (indexOrNode) {
     if (node != null) {
         node.classList.remove("selected");
     }
-    node = RapidContext.Util.childNode(this, indexOrNode);
-    if (typeof(indexOrNode) == "number") {
-        index = indexOrNode;
-    } else {
-        index = MochiKit.Base.findIdentical(this.childNodes, node);
-    }
+    var isNumber = typeof(indexOrNode) == "number";
+    index = isNumber ? indexOrNode : Array.from(this.childNodes).indexOf(indexOrNode);
+    node = this.childNodes[index];
     var selector = "li:not(.disabled), .widgetPopupItem:not(.disabled)";
     if (index >= 0 && node && node.matches(selector)) {
         this.selectedIndex = index;
@@ -255,7 +252,7 @@ RapidContext.Widget.Popup.prototype.selectMove = function (offset) {
  */
 RapidContext.Widget.Popup.prototype._handleMouseMove = function (evt) {
     this.show();
-    var node = RapidContext.Util.childNode(this, evt.target());
+    var node = evt.target().closest(".widgetPopup > *");
     this.selectChild(node || -1);
 };
 
@@ -266,7 +263,7 @@ RapidContext.Widget.Popup.prototype._handleMouseMove = function (evt) {
  */
 RapidContext.Widget.Popup.prototype._handleMouseClick = function (evt) {
     this.show();
-    var node = RapidContext.Util.childNode(this, evt.target());
+    var node = evt.target().closest(".widgetPopup > *");
     if (this.selectChild(node || -1) >= 0) {
         var detail = { menu: this, item: node };
         this._dispatch("menuselect", { detail });
