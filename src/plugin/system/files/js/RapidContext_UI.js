@@ -109,9 +109,9 @@
             // Node.TEXT_NODE or Node.CDATA_SECTION_NODE
             var str = node.nodeValue;
             if (str && str.trim() && node.nodeType === 3) {
-                return RapidContext.Util.createTextNode(str.replace(/\s+/g, " "));
+                return document.createTextNode(str.replace(/\s+/g, " "));
             } else if (str && node.nodeType === 4) {
-                return RapidContext.Util.createTextNode(str);
+                return document.createTextNode(str);
             }
         }
         return null;
