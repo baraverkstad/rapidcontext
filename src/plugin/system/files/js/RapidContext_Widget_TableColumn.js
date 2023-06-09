@@ -256,11 +256,11 @@ RapidContext.Widget.TableColumn.prototype._render = function (obj) {
         try {
             this.renderer(td, value, obj.$data);
         } catch (e) {
-            td.appendChild(RapidContext.Util.createTextNode(e));
+            td.append(e.toString());
         }
     } else if (typeof(value) == "boolean") {
         var css = value ? "fa fa-check-square-o" : "fa fa-square-o";
-        td.appendChild(RapidContext.Widget.Icon(css));
+        td.append(RapidContext.Widget.Icon(css));
     } else {
         if (value == null || (typeof(value) == "number" && isNaN(value))) {
             value = "";
@@ -271,7 +271,7 @@ RapidContext.Widget.TableColumn.prototype._render = function (obj) {
             td.title = value;
             value = MochiKit.Text.truncate(value, this.maxLength, "...");
         }
-        td.appendChild(RapidContext.Util.createTextNode(value));
+        td.append(value);
     }
     return td;
 };

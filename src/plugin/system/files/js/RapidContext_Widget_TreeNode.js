@@ -108,7 +108,7 @@ RapidContext.Widget.TreeNode.prototype._containerNode = function (create) {
         return container;
     } else if (create) {
         container = MochiKit.DOM.DIV({ "class": "widgetTreeNodeContainer widgetHidden" });
-        this.appendChild(container);
+        this.append(container);
         this.firstChild.childNodes[0].setAttrs({ "class": "fa fa-fw fa-plus-square-o" });
         if (!this.attributes.icon) {
             this.firstChild.childNodes[1].setAttrs({ "class": "fa fa-fw fa-folder" });
@@ -166,7 +166,7 @@ RapidContext.Widget.TreeNode.prototype.addChildNode = function (child) {
     if (!RapidContext.Widget.isWidget(child, "TreeNode")) {
         throw new Error("TreeNode widget can only have TreeNode children");
     }
-    this._containerNode(true).appendChild(child);
+    this._containerNode(true).append(child);
 };
 
 /**

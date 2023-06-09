@@ -58,11 +58,11 @@ AdminApp.prototype.start = function () {
         } else if (!data._openChannels) {
             cls = "fa fa-exclamation-triangle widget-yellow";
         }
-        td.appendChild(RapidContext.Widget.Icon({ "class": cls }));
+        td.append(RapidContext.Widget.Icon({ "class": cls }));
     };
     var typeRenderer = function (td, value, data) {
         if (/^connection\//.test(value)) {
-            td.appendChild(RapidContext.Util.createTextNode(value.substr(11)));
+            td.append(value.substr(11));
         }
     };
     this.ui.cxnTable.getChildNodes()[1].setAttrs({ renderer: statusRenderer });
@@ -79,7 +79,7 @@ AdminApp.prototype.start = function () {
         if (value) {
             var ico = RapidContext.Widget.Icon({ "class": "fa fa-external-link-square ml-1" });
             var link = MochiKit.DOM.A({ href: value, target: "_blank" }, value, ico);
-            td.appendChild(link);
+            td.append(link);
         }
     };
     this.ui.appResourceTable.getChildNodes()[1].setAttrs({ renderer: urlRenderer });
@@ -347,7 +347,7 @@ AdminApp.prototype._initConnectionEdit = function (data) {
                     if (data.type === k) {
                         attrs.selected = true;
                     }
-                    select.appendChild(MochiKit.DOM.OPTION(attrs, k));
+                    select.append(MochiKit.DOM.OPTION(attrs, k));
                 }
             }
         })
@@ -770,7 +770,7 @@ AdminApp.prototype._callbackShowProcedure = function (procName, res) {
                 var col2 = MochiKit.DOM.TD({ "class": "text-nowrap pr-2" }, field, btn);
                 var col3 = MochiKit.DOM.TD({ "class": "text-pre-wrap w-100 pt-1" }, b.description);
                 var tr = MochiKit.DOM.TR({}, col1, col2, col3);
-                this.ui.procArgTable.appendChild(tr);
+                this.ui.procArgTable.append(tr);
                 count++;
             }
         }
@@ -913,7 +913,7 @@ AdminApp.prototype._initProcEdit = function (data) {
             MochiKit.DOM.replaceChildNodes(select);
             Object.keys(res).sort().forEach(function (k) {
                 var name = k.replace("procedure/", "");
-                select.appendChild(MochiKit.DOM.OPTION({ value: k }, name));
+                select.append(MochiKit.DOM.OPTION({ value: k }, name));
                 var values = res[k].bindings;
                 var keys = MochiKit.Base.map(MochiKit.Base.itemgetter("name"), values);
                 data.defaults[k] = RapidContext.Util.dict(keys, values);
@@ -965,12 +965,12 @@ AdminApp.prototype._renderProcEdit = function () {
     for (var k in data.bindings) {
         var b = data.bindings[k];
         var def = data.defaults[data.type][b.name];
-        parents[b.type].appendChild(buildBinding(b, def));
+        parents[b.type].append(buildBinding(b, def));
     }
     Object.values(parents).forEach(function (node) {
         if (node.childNodes.length == 0) {
             var div = MochiKit.DOM.DIV({ "class": "py-1 widget-grey binding" }, "\u2014");
-            node.appendChild(div);
+            node.append(div);
         }
     });
     var isTypeJs = data.type == "procedure/javascript";

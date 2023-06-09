@@ -198,7 +198,7 @@ RapidContext.Widget.Table.prototype.addChildNode = function (child) {
         throw new Error("Table widget can only have TableColumn children");
     }
     this.clear();
-    this._containerNode().appendChild(child);
+    this._containerNode().append(child);
 };
 
 /**
@@ -432,7 +432,7 @@ RapidContext.Widget.Table.prototype._renderRows = function () {
     }));
     if (this._rows.length == 0) {
         // Add empty row to avoid browser bugs
-        tbody.appendChild(MochiKit.DOM.TR());
+        tbody.append(MochiKit.DOM.TR());
     }
 };
 

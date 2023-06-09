@@ -130,8 +130,8 @@ RapidContext.Widget.TabContainer.prototype.addChildNode = function (child) {
     }
     var labelAttrs = { "class": "widgetTabContainerLabel" };
     var label = MochiKit.DOM.DIV(labelAttrs, MochiKit.DOM.DIV({}, text, icon));
-    this.firstChild.appendChild(label);
-    this.lastChild.appendChild(child);
+    this.firstChild.append(label);
+    this.lastChild.append(child);
     if (this._selectedIndex < 0) {
         this.selectChild(0);
     }

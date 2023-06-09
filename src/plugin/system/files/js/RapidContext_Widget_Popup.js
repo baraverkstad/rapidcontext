@@ -133,7 +133,7 @@ RapidContext.Widget.Popup.prototype.addChildNode = function (child) {
     if (!child.nodeType) {
         child = MochiKit.DOM.LI(null, child);
     }
-    this._containerNode(true).appendChild(child);
+    this._containerNode(true).append(child);
 };
 
 /**

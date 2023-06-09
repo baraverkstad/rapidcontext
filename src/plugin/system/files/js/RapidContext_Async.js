@@ -282,7 +282,7 @@
                 reject(new URIError("failed to load: " + url, url));
             };
             Object.assign(el, attrs);
-            parent && parent.appendChild(el);
+            parent && parent.append(el);
         });
     }
 

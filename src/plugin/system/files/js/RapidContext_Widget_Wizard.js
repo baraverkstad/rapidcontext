@@ -63,7 +63,7 @@ RapidContext.Widget.Wizard = function (attrs/*, ... */) {
     o.addClass("widgetWizard");
     o.resizeContent = o._resizeContent;
     o._selectedIndex = -1;
-    o.appendChild(MochiKit.DOM.H3({ "class": "widgetWizardTitle" }));
+    o.append(MochiKit.DOM.H3({ "class": "widgetWizardTitle" }));
     var bCancel = RapidContext.Widget.Button(
         { icon: "fa fa-lg fa-times", "class": "mr-2" },
         "Cancel"
@@ -83,7 +83,7 @@ RapidContext.Widget.Wizard = function (attrs/*, ... */) {
     );
     bCancel.hide();
     var divAttrs = { "class": "widgetWizardButtons" };
-    o.appendChild(MochiKit.DOM.DIV(divAttrs, bCancel, bPrev, bNext, bDone));
+    o.append(MochiKit.DOM.DIV(divAttrs, bCancel, bPrev, bNext, bDone));
     MochiKit.Signal.connect(bCancel, "onclick", o, "cancel");
     MochiKit.Signal.connect(bPrev, "onclick", o, "previous");
     MochiKit.Signal.connect(bNext, "onclick", o, "next");
@@ -141,7 +141,7 @@ RapidContext.Widget.Wizard.prototype.addChildNode = function (child) {
     }
     RapidContext.Util.registerSizeConstraints(child, "100%", "100%-65");
     child.hide();
-    this.appendChild(child);
+    this.append(child);
     child.style.position = "absolute";
     // TODO: remove hard-coded size here...
     MochiKit.Style.setElementPosition(child, { x: 0, y: 24 });

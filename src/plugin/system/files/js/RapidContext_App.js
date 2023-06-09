@@ -716,7 +716,7 @@ RapidContext.App.downloadFile = function (url, data) {
             width: "0"
         };
         var iframe = MochiKit.DOM.createDOM("iframe", attrs);
-        document.body.appendChild(iframe);
+        document.body.append(iframe);
     } else {
         var name = MochiKit.DOM.INPUT({ name: "fileName", value: url });
         var file = MochiKit.DOM.INPUT({ name: "fileData", value: data });
@@ -728,7 +728,7 @@ RapidContext.App.downloadFile = function (url, data) {
             style: { display: "none" }
         };
         var form = MochiKit.DOM.FORM(formAttrs, name, file, flag);
-        document.body.appendChild(form);
+        document.body.append(form);
         form.submit();
     }
 };

@@ -53,7 +53,7 @@
                 "</Dialog>"
             ].join("");
             errorDialog = buildUI(xml);
-            window.document.body.appendChild(errorDialog);
+            window.document.body.append(errorDialog);
         }
         if (errorDialog.isHidden()) {
             errorDialog.querySelector("[data-message]").innerText = msg;
@@ -171,7 +171,7 @@
     function _buildUIStylesheet(css) {
         var style = document.createElement("style");
         style.setAttribute("type", "text/css");
-        document.getElementsByTagName("head")[0].appendChild(style);
+        document.getElementsByTagName("head")[0].append(style);
         try {
             style.innerHTML = css;
         } catch (e) {

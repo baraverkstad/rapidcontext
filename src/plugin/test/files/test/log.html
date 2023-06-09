@@ -35,13 +35,13 @@ function update() {
         td4.innerHTML = e.context || "";
         td5.innerHTML = e.message || "";
         td6.innerHTML = (e.data || "").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-        tr.appendChild(td1);
-        tr.appendChild(td2);
-        tr.appendChild(td3);
-        tr.appendChild(td4);
-        tr.appendChild(td5);
-        tr.appendChild(td6);
-        table.appendChild(tr);
+        tr.append(td1);
+        tr.append(td2);
+        tr.append(td3);
+        tr.append(td4);
+        tr.append(td5);
+        tr.append(td6);
+        table.append(tr);
     }
 }
     </script>

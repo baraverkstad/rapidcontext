@@ -535,7 +535,7 @@ RapidContext.Widget.prototype.getChildNodes = function () {
 RapidContext.Widget.prototype.addChildNode = function (child) {
     var elem = this._containerNode();
     if (elem) {
-        elem.appendChild(child);
+        elem.append(child);
     } else {
         throw new Error("cannot add child node, widget is not a container");
     }
@@ -568,19 +568,10 @@ RapidContext.Widget.prototype.removeChildNode = function (child) {
  *
  * @param {Object} [...] the children to add
  */
-RapidContext.Widget.prototype.addAll = function (/* ... */) {
-    var args = MochiKit.Base.flattenArray(arguments);
-    for (var i = 0; i < args.length; i++) {
-        if (args[i] == null) {
-            // Ignore null values
-        } else if (RapidContext.Util.isDOM(args[i])) {
-            this.addChildNode(args[i]);
-            // TODO: remove this call for performance
-            RapidContext.Util.resizeElements(args[i]);
-        } else {
-            this.addChildNode(RapidContext.Util.createTextNode(args[i]));
-        }
-    }
+RapidContext.Widget.prototype.addAll = function (...children) {
+    [].concat(...children).filter((o) => o != null).forEach((child) => {
+        this.addChildNode(child);
+    });
 };
 
 /**

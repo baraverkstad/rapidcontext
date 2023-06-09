@@ -99,7 +99,7 @@ RapidContext.Widget.Tree.prototype.addChildNode = function (child) {
     if (!RapidContext.Widget.isWidget(child, "TreeNode")) {
         throw new Error("Tree widget can only have TreeNode children");
     }
-    this.appendChild(child);
+    this.append(child);
 };
 
 /**

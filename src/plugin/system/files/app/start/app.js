@@ -393,7 +393,7 @@ StartApp.prototype._loginAuthCallback = function (res) {
  */
 StartApp.prototype._tourStart = function () {
     if (this.ui.tourDialog.isHidden()) {
-        document.body.appendChild(this.ui.tourDialog);
+        document.body.append(this.ui.tourDialog);
         var dim = MochiKit.Style.getViewportDimensions();
         var opts = {
             effect: "Move",
@@ -487,7 +487,7 @@ StartApp.prototype._tourLocateUser = function () {
  * @param {Node} ... the DOM node elements to locate
  */
 StartApp.prototype._tourLocate = function () {
-    document.body.appendChild(this.ui.tourLocator);
+    document.body.append(this.ui.tourLocator);
     this.ui.tourLocator.animate({ effect: "cancel" });
     var dialogBox = this._getBoundingBox(this.ui.tourDialog);
     MochiKit.Style.setElementDimensions(this.ui.tourLocator, dialogBox);

@@ -268,7 +268,7 @@ RapidContext.Widget.Dialog.prototype._setHiddenDialog = function (value) {
                 attrs.dark = true;
             }
             this._modalNode = RapidContext.Widget.Overlay(attrs);
-            this.parentNode.appendChild(this._modalNode);
+            this.parentNode.append(this._modalNode);
         }
         this._setHidden(false);
         this.resetScroll();
