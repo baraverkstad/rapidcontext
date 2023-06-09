@@ -87,7 +87,7 @@ RapidContext.Widget.Button.prototype.setAttrs = function (attrs) {
         } else if (!child) {
             this.insertBefore(RapidContext.Widget.Icon(locals.icon), this.firstChild);
         } else if (locals.icon.nodeType) {
-            MochiKit.DOM.swapDOM(child, locals.icon);
+            child.replaceWith(locals.icon);
         } else {
             child.setAttrs ? child.setAttrs(locals.icon) : $(child).attr(locals.icon);
         }

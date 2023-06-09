@@ -149,7 +149,7 @@ RapidContext.Widget.TreeNode.prototype.setAttrs = function (attrs) {
     if (typeof(locals.icon) != "undefined") {
         this.setAttribute("icon", String(locals.icon));
         var icon = RapidContext.Widget.Icon(locals.icon);
-        MochiKit.DOM.swapDOM(this.firstChild.childNodes[1], icon);
+        this.firstChild.childNodes[1].replaceWith(icon);
     }
     if (typeof(locals.tooltip) != "undefined") {
         this.firstChild.title = locals.tooltip;
