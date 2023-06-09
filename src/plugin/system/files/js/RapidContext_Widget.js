@@ -59,7 +59,7 @@ RapidContext.Widget._nextId = MochiKit.Base.counter();
  * @static
  */
 RapidContext.Widget.isWidget = function (obj, className) {
-    return RapidContext.Util.isHTML(obj) &&
+    return RapidContext.Util.isDOM(obj) &&
            obj.classList.contains("widget") &&
            (!className || obj.classList.contains("widget" + className));
 };

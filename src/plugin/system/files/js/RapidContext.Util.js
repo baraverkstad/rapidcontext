@@ -206,14 +206,6 @@ RapidContext.Util.resolveURI = function (uri, base) {
 
 // DOM utility functions
 
-RapidContext.Util.NS = {
-    XHTML: "http://www.w3.org/1999/xhtml",
-    XLINK: "http://www.w3.org/1999/xlink",
-    SVG: "http://www.w3.org/2000/svg",
-    XUL: "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-};
-RapidContext.Util.NS.HTML = [undefined, null, "", RapidContext.Util.NS.XHTML];
-
 /**
  * Returns `true` if the specified object looks like a DOM node. Otherwise,
  * `false` will be returned. Any non-null object with a `nodeType` > 0 will be
@@ -228,22 +220,6 @@ RapidContext.Util.isDOM = function (obj) {
     return obj != null &&
            typeof(obj.nodeType) === "number" &&
            obj.nodeType > 0;
-};
-
-/**
- * Returns `true` if the specified object looks like an HTML or XHTML DOM node.
- * Otherwise, `false` will be returned. Any non-null object with a
- * `nodeType` > 0 will be considered a DOM node, but only those with a matching
- * `namespaceURI` will be considered HTML DOM nodes.
- *
- * @param {Object} obj the object to check
- *
- * @return {Boolean} `true` if the object looks like an HTML DOM node,
- *         or `false` otherwise
- */
-RapidContext.Util.isHTML = function (obj) {
-    return RapidContext.Util.isDOM(obj) &&
-           RapidContext.Util.NS.HTML.includes(obj.namespaceURI);
 };
 
 /**
@@ -300,77 +276,6 @@ RapidContext.Util.childNode = function (parent, indexOrNode) {
         }
         return (node == null || node === parent) ? null : node;
     }
-};
-
-/**
- * Creates a DOM node with a namespace.
- *
- * @param {String} ns the DOM namespace
- * @param {String} tag the DOM tag name
- * @param {Object} [attrs] the node attributes, or null for none
- * @param {Object} [...] the nodes or text to add as children
- *
- * @return {Object} the DOM node created
- *
- * @example
- * RapidContext.Util.createDOMExt("http://www.w3.org/2000/svg", "g");
- * ==> an SVG <g> element
- */
-RapidContext.Util.createDOMExt = function (ns, tag, attrs/*, ...*/) {
-    var doc = MochiKit.DOM.currentDocument();
-    var node = (ns) ? doc.createElementNS(ns, tag) : doc.createElement(tag);
-    MochiKit.DOM.updateNodeAttributes(node, attrs);
-    var children = Array.from(arguments).slice(3);
-    node.append(...children);
-    return node;
-};
-
-/**
- * Creates a DOM text node from the specified text. This is a convenience
- * function for `currentDocument().createTextNode`, in order to be compatible
- * with the `withDocument()` function.
- *
- * @param {String} text the text content
- *
- * @return {Object} the DOM text node created
- */
-RapidContext.Util.createTextNode = function (text) {
-    return MochiKit.DOM.currentDocument().createTextNode(text);
-};
-
-/**
- * Returns a function for creating a specific kind of DOM nodes. The returned
- * function will optionally require a sequence of non-null arguments that will
- * be added as attributes to the node creation. The returned function will
- * otherwise work similar to the `createDOMExt()` function, taking attributes
- * and child nodes.
- *
- * @param {String} ns the DOM namespace, or `null` for HTML
- * @param {String} tag the DOM tag name
- * @param {Array} [args] the array with required arguments, or `null` for no
- *            required arguments
- * @param {Object} [attrs] the default node attributes, or `null` for none
- * @param {Object} [...] the default nodes or text to add as children
- *
- * @return {Function} the function that creates the DOM nodes
- */
-RapidContext.Util.createDOMFuncExt = function (ns, tag, args, attrs/*, ...*/) {
-    args = args || [];
-    attrs = attrs || {};
-    var children = Array.from(arguments).slice(4);
-    return function (/*arg1, ..., argN, attrs, ...*/) {
-        var myArgs = Array.from(arguments);
-        var myAttrs = Object.assign({}, attrs);
-        args.forEach(function (key, idx) {
-            if (myArgs[idx] == null) {
-                throw new Error("Argument '" + key + "' cannot be null");
-            }
-            myAttrs[key] = myArgs[idx];
-        });
-        Object.assign(myAttrs, myArgs[args.length]);
-        var myChildren = [].concat(children, myArgs.slice(args.length + 1));
-        return RapidContext.Util.createDOMExt(ns, tag, myAttrs, myChildren);
-    };
 };
 
 /**
