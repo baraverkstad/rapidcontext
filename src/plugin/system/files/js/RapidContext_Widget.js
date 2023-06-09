@@ -165,7 +165,7 @@ RapidContext.Widget.destroyWidget = function (node) {
             node.destroy();
         }
         if (node.parentNode != null) {
-            MochiKit.DOM.removeElement(node);
+            node.remove();
         }
         MochiKit.Signal.disconnectAll(node);
         MochiKit.Signal.disconnectAllTo(node);

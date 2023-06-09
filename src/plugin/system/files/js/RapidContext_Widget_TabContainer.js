@@ -158,7 +158,7 @@ RapidContext.Widget.TabContainer.prototype.removeChildNode = function (child) {
         this._selectedIndex = -1;
     }
     RapidContext.Widget.destroyWidget(this.firstChild.childNodes[index]);
-    MochiKit.DOM.removeElement(child);
+    child.remove();
     child._dispatch && child._dispatch("close");
     if (this._selectedIndex > index) {
         this._selectedIndex--;
