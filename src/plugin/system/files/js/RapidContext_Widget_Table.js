@@ -342,7 +342,7 @@ RapidContext.Widget.Table.prototype.getData = function () {
  */
 RapidContext.Widget.Table.prototype.setData = function (data) {
     var cols = this.getChildNodes();
-    var selectedIds = this.getSelectedIds();
+    var selectedIds = this.getIdKey() ? this.getSelectedIds() : [];
     this._dispatch("clear");
     this._data = data;
     this._rows = [];
@@ -363,8 +363,12 @@ RapidContext.Widget.Table.prototype.setData = function (data) {
     } else {
         this._renderRows();
     }
-    if (this.getIdKey() != null) {
-        this._addSelectedIds(selectedIds);
+    if (this._selectMode !== "none") {
+        if (this._rows.length === 1 && !selectedIds.includes(this._rows[0].$id)) {
+            this.addSelectedIds(this._rows[0].$id);
+        } else {
+            this._addSelectedIds(selectedIds);
+        }
     }
 };
 
@@ -471,10 +475,7 @@ RapidContext.Widget.Table.prototype.getRowId = function (index) {
  * @return {Array} an array with the selected row ids
  */
 RapidContext.Widget.Table.prototype.getSelectedIds = function () {
-    var rows = this._rows;
-    return this._selected.map(function (idx) {
-        return rows[idx].$id;
-    });
+    return this._selected.map((idx) => this._rows[idx].$id);
 };
 
 /**
@@ -484,10 +485,7 @@ RapidContext.Widget.Table.prototype.getSelectedIds = function () {
  *         an array of selected data rows if multiple selection is enabled
  */
 RapidContext.Widget.Table.prototype.getSelectedData = function () {
-    var rows = this._rows;
-    var data = this._selected.map(function (idx) {
-        return rows[idx].$data;
-    });
+    let data = this._selected.map((idx) => this._rows[idx].$data);
     return (this._selectMode === "multiple") ? data : data[0];
 };
 
@@ -499,19 +497,18 @@ RapidContext.Widget.Table.prototype.getSelectedData = function () {
  *
  * @return {Array} an array with the row ids actually modified
  */
-RapidContext.Widget.Table.prototype.setSelectedIds = function () {
-    var args = MochiKit.Base.flattenArguments(arguments);
-    var ids = RapidContext.Util.dict(args, true);
-    var oldIds = RapidContext.Util.dict(this.getSelectedIds(), true);
-    var res = [];
-    for (var i = 0; i < this._rows.length; i++) {
-        var rowId = this._rows[i].$id;
-        if (ids[rowId] && !oldIds[rowId]) {
+RapidContext.Widget.Table.prototype.setSelectedIds = function (...ids) {
+    let $ids = RapidContext.Util.dict([].concat(...ids), true);
+    let oldIds = RapidContext.Util.dict(this.getSelectedIds(), true);
+    let res = [];
+    for (let i = 0; i < this._rows.length; i++) {
+        let rowId = this._rows[i].$id;
+        if ($ids[rowId] && !oldIds[rowId]) {
             this._selected.push(i);
             this._markSelection(i);
             res.push(rowId);
-        } else if (!ids[rowId] && oldIds[rowId]) {
-            var pos = MochiKit.Base.findIdentical(this._selected, i);
+        } else if (!$ids[rowId] && oldIds[rowId]) {
+            let pos = this._selected.indexOf(i);
             if (pos >= 0) {
                 this._selected.splice(pos, 1);
                 this._unmarkSelection(i);
@@ -533,8 +530,8 @@ RapidContext.Widget.Table.prototype.setSelectedIds = function () {
  *
  * @return {Array} an array with the new row ids actually selected
  */
-RapidContext.Widget.Table.prototype.addSelectedIds = function () {
-    var res = this._addSelectedIds(arguments);
+RapidContext.Widget.Table.prototype.addSelectedIds = function (...ids) {
+    let res = this._addSelectedIds(...ids);
     if (res.length > 0) {
         this._dispatch("select");
     }
@@ -549,13 +546,12 @@ RapidContext.Widget.Table.prototype.addSelectedIds = function () {
  *
  * @return {Array} an array with the new row ids actually selected
  */
-RapidContext.Widget.Table.prototype._addSelectedIds = function () {
-    var args = MochiKit.Base.flattenArguments(arguments);
-    var ids = RapidContext.Util.dict(args, true);
-    var res = [];
-    Object.assign(ids, RapidContext.Util.dict(this.getSelectedIds(), false));
+RapidContext.Widget.Table.prototype._addSelectedIds = function (...ids) {
+    let $ids = RapidContext.Util.dict([].concat(...ids), true);
+    Object.assign($ids, RapidContext.Util.dict(this.getSelectedIds(), false));
+    let res = [];
     for (var i = 0; i < this._rows.length; i++) {
-        if (ids[this._rows[i].$id]) {
+        if ($ids[this._rows[i].$id] === true) {
             this._selected.push(i);
             this._markSelection(i);
             res.push(this._rows[i].$id);
@@ -572,13 +568,12 @@ RapidContext.Widget.Table.prototype._addSelectedIds = function () {
  *
  * @return {Array} an array with the row ids actually unselected
  */
-RapidContext.Widget.Table.prototype.removeSelectedIds = function () {
-    var args = MochiKit.Base.flattenArguments(arguments);
-    var ids = RapidContext.Util.dict(args, true);
-    var res = [];
-    for (var i = 0; i < this._rows.length; i++) {
-        if (ids[this._rows[i].$id]) {
-            var pos = MochiKit.Base.findIdentical(this._selected, i);
+RapidContext.Widget.Table.prototype.removeSelectedIds = function (...ids) {
+    let $ids = RapidContext.Util.dict([].concat(...ids), true);
+    let res = [];
+    for (let i = 0; i < this._rows.length; i++) {
+        if ($ids[this._rows[i].$id] === true) {
+            let pos = this._selected.indexOf(i);
             if (pos >= 0) {
                 this._selected.splice(pos, 1);
                 this._unmarkSelection(i);
