@@ -13,8 +13,8 @@
  */
 
 /**
- * @name RapidContext.Storage
- * @namespace Provides functions for accessing the server storage (BETA).
+ * Provides functions for accessing the server storage (BETA).
+ * @namespace RapidContext.Storage
  */
 (function (window) {
 
@@ -23,9 +23,9 @@
      * object, its 'type' and 'id' properties will be used to form
      * the path.
      *
-     * @param {String/Object} pathOrObj the path or object
+     * @param {string|Object} pathOrObj the path or object
      *
-     * @return {String} the URL to the resource
+     * @return {string} the URL to the resource
      *
      * @throws {Error} if the object didn't have both 'type' and 'id'
      *     properties
@@ -46,7 +46,7 @@
      *
      * @param {Object} obj the object to store
      *
-     * @return {String} the storage path, or null if not available
+     * @return {string} the storage path, or null if not available
      *
      * @memberof RapidContext.Storage
      */
@@ -60,7 +60,7 @@
      * a JSON representation of the object, regardless of the actual
      * object type.
      *
-     * @param {String/Object} pathOrObj the path or object to read
+     * @param {string|Object} pathOrObj the path or object to read
      *
      * @return {Promise} a `RapidContext.Async` promise that will
      *         resolve with the object data
@@ -78,7 +78,7 @@
      * specified path will be removed. If a path is specified without
      * data, only the removal is performed.
      *
-     * @param {String/Object} pathOrObj the path or object to write
+     * @param {string|Object} pathOrObj the path or object to write
      * @param {Object} [data] the object to write (if path was string)
      *
      * @return {Promise} a `RapidContext.Async` promise that will
@@ -103,7 +103,7 @@
      * properties with the same name in the destination object. No
      * merging of property values will be performed.
      *
-     * @param {String/Object} pathOrObj the path or object to write
+     * @param {string|Object} pathOrObj the path or object to write
      * @param {Object} [data] the partial object (changes) to write
      *
      * @return {Promise} a `RapidContext.Async` promise that will

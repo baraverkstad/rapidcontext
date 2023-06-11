@@ -23,18 +23,18 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  *
  * @constructor
  * @param {Object} attrs the widget and node attributes
- * @param {String} attrs.name the form field name to validate
- * @param {Boolean} [attrs.mandatory] the mandatory field flag,
+ * @param {string} attrs.name the form field name to validate
+ * @param {boolean} [attrs.mandatory] the mandatory field flag,
  *            defaults to `true`
- * @param {String/RegExp} [attrs.regex] the regular expression to
+ * @param {string|RegExp} [attrs.regex] the regular expression to
  *            match the field value against, defaults to `null`
- * @param {String} [attrs.display] the validator display setting
+ * @param {string} [attrs.display] the validator display setting
  *            (either "none", "icon", "text" or "both"), defaults
  *            to "both"
- * @param {String} [attrs.message] the message to display, defaults
+ * @param {string} [attrs.message] the message to display, defaults
  *            to the validator function error message
- * @param {Function} [attrs.validator] the validator function
- * @param {Boolean} [attrs.hidden] the hidden widget flag, defaults to `false`
+ * @param {function} [attrs.validator] the validator function
+ * @param {boolean} [attrs.hidden] the hidden widget flag, defaults to `false`
  *
  * @return {Widget} the widget DOM node
  *
@@ -42,18 +42,18 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  *     validation failures, using a `<span>` HTML element. It is normally
  *     hidden by default and may be configured to only modify its related form
  *     field.
- * @property {String} name The form field name to validate.
- * @property {String} message The default validation message.
- * @property {Function} validator The validator function in use.
+ * @property {string} name The form field name to validate.
+ * @property {string} message The default validation message.
+ * @property {function} validator The validator function in use.
  * @extends RapidContext.Widget
  *
- * @example {JavaScript}
+ * @example <caption>JavaScript</caption>
  * var field = RapidContext.Widget.TextField({ name: "name", placeholder: "Your Name Here" });
  * var attrs = { name: "name", message: "Please enter your name to proceed." };
  * var valid = RapidContext.Widget.FormValidator(attrs);
  * var exampleForm = RapidContext.Widget.Form({}, field, valid);
  *
- * @example {User Interface XML}
+ * @example <caption>User Interface XML</caption>
  * <Form id="exampleForm">
  *   <TextField name="name" placeholder="Your Name Here" />
  *   <FormValidator name="name" message="Please enter your name to proceed." />
@@ -77,15 +77,15 @@ RapidContext.Widget.Classes.FormValidator = RapidContext.Widget.FormValidator;
  * Updates the widget or HTML DOM node attributes.
  *
  * @param {Object} attrs the widget and node attributes to set
- * @param {String} [attrs.name] the form field name to validate
- * @param {Boolean} [attrs.mandatory] the mandatory field flag
- * @param {String/RegExp} [attrs.regex] the regular expression to
+ * @param {string} [attrs.name] the form field name to validate
+ * @param {boolean} [attrs.mandatory] the mandatory field flag
+ * @param {string|RegExp} [attrs.regex] the regular expression to
  *            match the field value against
- * @param {String} [attrs.display] the validator display setting
+ * @param {string} [attrs.display] the validator display setting
  *            (either "none", "icon", "text" or "both")
- * @param {String} [attrs.message] the message to display
- * @param {Function} [attrs.validator] the validator function
- * @param {Boolean} [attrs.hidden] the hidden widget flag
+ * @param {string} [attrs.message] the message to display
+ * @param {function} [attrs.validator] the validator function
+ * @param {boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.FormValidator.prototype.setAttrs = function (attrs) {
     attrs = Object.assign({}, attrs);
@@ -147,10 +147,10 @@ RapidContext.Widget.FormValidator.prototype.reset = function () {
  * Note that this method is normally not called directly, instead the
  * validation is performed by the `RapidContext.Widget.Form` widget.
  *
- * @param {Widget/Node} field the form field DOM node
- * @param {String} [value] the form field value to check
+ * @param {Widget|Node} field the form field DOM node
+ * @param {string} [value] the form field value to check
  *
- * @return {Boolean} `true` if the form validated successfully, or
+ * @return {boolean} `true` if the form validated successfully, or
  *         `false` if the validation failed
  *
  * @see RapidContext.Widget.Form#validate
@@ -190,8 +190,8 @@ RapidContext.Widget.FormValidator.prototype.verify = function (field, value) {
  * Note that this method is normally not called directly, instead the
  * validation is performed by the `RapidContext.Widget.Form` widget.
  *
- * @param {Widget/Node} field the field DOM node
- * @param {String} message the validation error message
+ * @param {Widget|Node} field the field DOM node
+ * @param {string} message the validation error message
  *
  * @see RapidContext.Widget.Form#validate
  */

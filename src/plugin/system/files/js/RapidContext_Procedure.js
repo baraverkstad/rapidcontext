@@ -20,8 +20,8 @@
      * JavaScript function with additional methods.
      *
      * @constructor
-     * @param {String} procedure the procedure name
-     * @property {String} procedure The procedure name.
+     * @param {string} procedure the procedure name
+     * @property {string} procedure The procedure name.
      * @property {Array} args The arguments used in the last call.
      *
      * @name RapidContext.Procedure
@@ -122,7 +122,7 @@
      * Note that any previously running call will automatically be cancelled, since
      * only a single call can be processed at any time.
      *
-     * @methodOf RapidContext.Procedure.prototype
+     * @memberof RapidContext.Procedure.prototype
      * @return {Promise} a `RapidContext.Async` promise that will resolve with
      *         the response data or error
      */
@@ -163,9 +163,9 @@
      * function can be supplied to transform each individual result. If the
      * `transform` function throws an error, that result will be omitted.
      *
-     * @methodOf RapidContext.Procedure.prototype
+     * @memberof RapidContext.Procedure.prototype
      * @param {Array} args the array of argument arrays
-     * @param {Function} [transform] the optional result transform function
+     * @param {function} [transform] the optional result transform function
      * @return {Promise} a `RapidContext.Async` promise that will resolve with
      *         the response data or error
      */
@@ -217,7 +217,7 @@
      * Cancels any current execution of this procedure. This method does nothing if
      * no procedure call was currently executing.
      *
-     * @methodOf RapidContext.Procedure.prototype
+     * @memberof RapidContext.Procedure.prototype
      */
     function cancel() {
         if (this._promise !== null) {
@@ -233,7 +233,7 @@
      * Cancels any current execution and removes the reference to the arguments of
      * this procedure.
      *
-     * @methodOf RapidContext.Procedure.prototype
+     * @memberof RapidContext.Procedure.prototype
      */
     function reset() {
         this.cancel();

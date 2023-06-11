@@ -18,11 +18,10 @@ if (typeof(RapidContext) == "undefined") {
 }
 
 /**
- * @name RapidContext.Util
- * @namespace
  * Provides utility functions for basic objects, arrays, DOM nodes and CSS.
  * These functions are complementary to what is available in MochiKit and/or
  * jQuery.
+ * @namespace RapidContext.Util
  */
 if (typeof(RapidContext.Util) == "undefined") {
     RapidContext.Util = {};
@@ -89,7 +88,7 @@ RapidContext.Util.dict = function (itemsOrKeys, values) {
  * the specified keys.
  *
  * @param {Object} src the source object to select and modify
- * @param {Array/Object} keys the list of keys to remove, or an
+ * @param {Array|Object} keys the list of keys to remove, or an
  *            object with the keys to remove
  *
  * @return {Object} a new object containing the matching keys and
@@ -130,9 +129,9 @@ RapidContext.Util.mask = function (src, keys) {
  * recognized as word boundaries. Note that this function does not change the
  * capitalization of other characters in the string.
  *
- * @param {String} str the string to convert
+ * @param {string} str the string to convert
  *
- * @return {String} the converted string
+ * @return {string} the converted string
  *
  * @example
  * RapidContext.Util.toTitleCase("a short heading")
@@ -166,11 +165,11 @@ RapidContext.Util.toTitleCase = function (str) {
  * absolute URI:s directly and traverse any "../" directory paths in the
  * specified URI. The base URI provided must be absolute.
  *
- * @param {String} uri the relative URI to resolve
- * @param {String} [base] the absolute base URI, defaults to the
+ * @param {string} uri the relative URI to resolve
+ * @param {string} [base] the absolute base URI, defaults to the
  *            the current document base URI
  *
- * @return {String} the resolved absolute URI
+ * @return {string} the resolved absolute URI
  *
  * @deprecated This function will be removed and/or renamed in the future.
  *     Better solutions for handling URL:s is to use a URL-parsing library such
@@ -235,8 +234,8 @@ RapidContext.Util.blurAll = function (node) {
  * also be bounded by the parent element size to avoid calculation errors.
  *
  * @param {Object} node the HTML DOM node
- * @param {Number/String/Function} [width] the width constraint
- * @param {Number/String/Function} [height] the height constraint
+ * @param {number|string|function} [width] the width constraint
+ * @param {number|string|function} [height] the height constraint
  *
  * @see RapidContext.Util.resizeElements
  *
@@ -289,7 +288,7 @@ RapidContext.Util.registerSizeConstraints = function (node, width, height) {
  * handle all subnode resizing, making it possible to limit or omitting the
  * DOM tree traversal.
  *
- * @param {Object} [...] the HTML DOM nodes to resize
+ * @param {...Node} node the HTML DOM nodes to resize
  *
  * @see RapidContext.Util.registerSizeConstraints
  *

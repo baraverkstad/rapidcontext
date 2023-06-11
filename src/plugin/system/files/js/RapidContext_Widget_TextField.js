@@ -23,27 +23,27 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  *
  * @constructor
  * @param {Object} attrs the widget and node attributes
- * @param {String} [attrs.name] the form field name
- * @param {String} [attrs.value] the field value, defaults to ""
- * @param {String} [attrs.helpText] the help text when empty (deprecated)
- * @param {Boolean} [attrs.disabled] the disabled widget flag, defaults to
+ * @param {string} [attrs.name] the form field name
+ * @param {string} [attrs.value] the field value, defaults to ""
+ * @param {string} [attrs.helpText] the help text when empty (deprecated)
+ * @param {boolean} [attrs.disabled] the disabled widget flag, defaults to
  *            false
- * @param {Boolean} [attrs.hidden] the hidden widget flag, defaults to false
- * @param {Object} [...] the initial text content
+ * @param {boolean} [attrs.hidden] the hidden widget flag, defaults to false
+ * @param {...(string|Node)} [value] the initial text content
  *
  * @return {Widget} the widget DOM node
  *
  * @class The text field widget class. Used to provide a text input field for a
  *     single line, using the `<input>` HTML element.
- * @property {Boolean} disabled The read-only widget disabled flag.
- * @property {String} defaultValue The value to use on form reset.
+ * @property {boolean} disabled The read-only widget disabled flag.
+ * @property {string} defaultValue The value to use on form reset.
  * @extends RapidContext.Widget
  *
- * @example {JavaScript}
+ * @example <caption>JavaScript</caption>
  * var attrs = { name: "name", placeholder: "Your Name Here" };
  * var field = RapidContext.Widget.TextField(attrs);
  *
- * @example {User Interface XML}
+ * @example <caption>User Interface XML</caption>
  * <TextField name="name" placeholder="Your Name Here" />
  */
 RapidContext.Widget.TextField = function (attrs/*, ...*/) {
@@ -88,11 +88,11 @@ RapidContext.Widget.TextField.prototype.destroy = function () {
  * Updates the widget or HTML DOM node attributes.
  *
  * @param {Object} attrs the widget and node attributes to set
- * @param {String} [attrs.name] the form field name
- * @param {String} [attrs.value] the field value
- * @param {String} [attrs.helpText] the help text when empty (deprecated)
- * @param {Boolean} [attrs.disabled] the disabled widget flag
- * @param {Boolean} [attrs.hidden] the hidden widget flag
+ * @param {string} [attrs.name] the form field name
+ * @param {string} [attrs.value] the field value
+ * @param {string} [attrs.helpText] the help text when empty (deprecated)
+ * @param {boolean} [attrs.disabled] the disabled widget flag
+ * @param {boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.TextField.prototype.setAttrs = function (attrs) {
     attrs = Object.assign({}, attrs);
@@ -117,7 +117,7 @@ RapidContext.Widget.TextField.prototype.reset = function () {
 /**
  * Returns the text field value.
  *
- * @return {String} the field value
+ * @return {string} the field value
  */
 RapidContext.Widget.TextField.prototype.getValue = function () {
     return this.value;

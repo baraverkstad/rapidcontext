@@ -13,16 +13,16 @@
  */
 
 /**
- * @name RapidContext.Encode
- * @namespace Provides functions for encoding and decoding data.
+ * Provides functions for encoding and decoding data.
+ * @namespace RapidContext.Encode
  */
 (function (window) {
 
     /**
      * Returns the unicode escape sequence for a character.
      *
-     * @param {String} chr the single character string
-     * @return {String} the unicode escape sequence
+     * @param {string} chr the single character string
+     * @return {string} the unicode escape sequence
      * @private
      */
     function toCharEscape(chr) {
@@ -35,7 +35,7 @@
      * for any non-printable ASCII characters.
      *
      * @param {Object} val the value to serialize
-     * @return {String} the JSON string
+     * @return {string} the JSON string
      * @memberof RapidContext.Encode
      */
     function toJSON(val) {
@@ -49,7 +49,7 @@
      *
      * @param {Object} val the value to serialize
      * @param {Object} isForm the flag for using `+` instead of `%20`
-     * @return {String} the URL-encoded string
+     * @return {string} the URL-encoded string
      * @memberof RapidContext.Encode
      */
     function toUrlPart(val, isForm) {
@@ -65,7 +65,7 @@
      *
      * @param {Object} val the key-value pairs to serialize
      * @param {Object} isForm the flag for using `+` instead of `%20`
-     * @return {String} the URL-encoded query string
+     * @return {string} the URL-encoded query string
      * @memberof RapidContext.Encode
      */
     function toUrlQuery(data, isForm) {

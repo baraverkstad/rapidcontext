@@ -36,11 +36,11 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  *     navigating.
  * @property {Array} path The path being navigated.
  *
- * @example {JavaScript}
+ * @example <caption>JavaScript</caption>
  * var navBar = RapidContext.NavigationBar();
  * navBar.moveTo(0, ["Step 1", "Step 2", "Step 3"]);
  *
- * @example {User Interface XML}
+ * @example <caption>User Interface XML</caption>
  * <NavigationBar id="navBar" />
  * <!-- No support for menu items in XML yet -->
  */

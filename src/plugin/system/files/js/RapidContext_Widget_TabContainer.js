@@ -23,9 +23,8 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  *
  * @constructor
  * @param {Object} attrs the widget and node attributes
- * @param {Boolean} [attrs.hidden] the hidden widget flag, defaults to false
- * @param {Widget} [...] the child widgets or DOM nodes (should be
- *            Pane widgets)
+ * @param {boolean} [attrs.hidden] the hidden widget flag, defaults to false
+ * @param {...Pane} [child] the child Pane widgets
  *
  * @return {Widget} the widget DOM node
  *
@@ -36,7 +35,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  *     `pageCloseable`, a close button will be available on the tab label.
  * @extends RapidContext.Widget
  *
- * @example {JavaScript}
+ * @example <caption>JavaScript</caption>
  * var page1 = RapidContext.Widget.Pane({ pageTitle: "One" });
  * ...
  * var page2 = RapidContext.Widget.Pane({ pageTitle: "Two", pageCloseable: true });
@@ -44,7 +43,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * var attrs = { style: { width: "100%", height: "100%" } };
  * var tabs = RapidContext.Widget.TabContainer(attrs, page1, page2);
  *
- * @example {User Interface XML}
+ * @example <caption>User Interface XML</caption>
  * <TabContainer style="width: 100%; height: 100%;">
  *   <Pane pageTitle="One">
  *     ...
@@ -145,7 +144,7 @@ RapidContext.Widget.TabContainer.prototype.addChildNode = function (child) {
  * Note that this method will NOT destroy the removed child widget,
  * so care must be taken to ensure proper child widget destruction.
  *
- * @param {Widget/Node} child the DOM node to remove
+ * @param {Widget|Node} child the DOM node to remove
  */
 RapidContext.Widget.TabContainer.prototype.removeChildNode = function (child) {
     var children = this.getChildNodes();
@@ -174,7 +173,7 @@ RapidContext.Widget.TabContainer.prototype.removeChildNode = function (child) {
  * Returns the index of the currently selected child in the tab
  * container.
  *
- * @return {Number} the index of the selected child, or
+ * @return {number} the index of the selected child, or
  *         -1 if no child is selected
  */
 RapidContext.Widget.TabContainer.prototype.selectedIndex = function () {
@@ -196,7 +195,7 @@ RapidContext.Widget.TabContainer.prototype.selectedChild = function () {
  * Selects a specified child in the tab container. This method can be
  * called without arguments to re-select the currently selected tab.
  *
- * @param {Number/Node} [indexOrChild] the child index or node
+ * @param {number|Node} [indexOrChild] the child index or node
  */
 RapidContext.Widget.TabContainer.prototype.selectChild = function (indexOrChild) {
     var children = this.getChildNodes();

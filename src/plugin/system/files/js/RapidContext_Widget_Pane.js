@@ -23,16 +23,16 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  *
  * @constructor
  * @param {Object} attrs the widget and node attributes
- * @param {String} [attrs.pageTitle] the page title used when inside
+ * @param {string} [attrs.pageTitle] the page title used when inside
  *            a page container, defaults to "Page"
- * @param {String/Object} [attrs.pageStatus] the page status used
+ * @param {string|Object} [attrs.pageStatus] the page status used
  *            when inside a page container, use one of the predefined
  *            status constants in this class, defaults to `ANY`
- * @param {Boolean} [attrs.pageCloseable] the page closeable flag
+ * @param {boolean} [attrs.pageCloseable] the page closeable flag
  *            used when inside some page containers, defaults to
  *            `false`
- * @param {Boolean} [attrs.hidden] the hidden widget flag, defaults to false
- * @param {Object} [...] the child widgets or DOM nodes
+ * @param {boolean} [attrs.hidden] the hidden widget flag, defaults to false
+ * @param {...(string|Node|Array)} [child] the child widgets or DOM nodes
  *
  * @return {Widget} the widget DOM node
  *
@@ -41,17 +41,17 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  *     such as a `TabContainer`, a `Wizard` or similar. A pane only uses a
  *     `<div>` HTML element, and supports being hidden and shown according to
  *     any page transitions required by a parent container.
- * @property {String} pageTitle [read-only] The current page title.
+ * @property {string} pageTitle [read-only] The current page title.
  * @property {Object} pageStatus [read-only] The current page status.
- * @property {Boolean} pageCloseable [read-only] The current page
+ * @property {boolean} pageCloseable [read-only] The current page
  *               closeable flag value.
  * @extends RapidContext.Widget
  *
- * @example {JavaScript}
+ * @example <caption>JavaScript</caption>
  * var h1 = MochiKit.DOM.H1({}, "Hello, world!");
  * var helloPane = RapidContext.Widget.Pane({}, h1);
  *
- * @example {User Interface XML}
+ * @example <caption>User Interface XML</caption>
  * <Pane id="helloPane">
  *   <h1>Hello, world!</h1>
  * </Pane>
@@ -92,30 +92,18 @@ RapidContext.Widget.Classes.Pane = RapidContext.Widget.Pane;
 /**
  * The default page status. Allows page transitions both to the
  * previous and the next page.
- *
- * @memberOf RapidContext.Widget.Pane
- * @name ANY
- * @static
  */
 RapidContext.Widget.Pane.ANY = { previous: true, next: true };
 
 /**
  * The forward-only page status. Allows transitions only to the next
  * page.
- *
- * @memberOf RapidContext.Widget.Pane
- * @name FORWARD
- * @static
  */
 RapidContext.Widget.Pane.FORWARD = { previous: false, next: true };
 
 /**
  * The backward-only page status. Allows transitions only to the
  * previous page.
- *
- * @memberOf RapidContext.Widget.Pane
- * @name BACKWARD
- * @static
  */
 RapidContext.Widget.Pane.BACKWARD = { previous: true, next: false };
 
@@ -123,10 +111,6 @@ RapidContext.Widget.Pane.BACKWARD = { previous: true, next: false };
  * The working page status. Will disable transitions both to the
  * previous and the next page. The page container may also display a
  * cancel button to allow user cancellation of the ongoing operation.
- *
- * @memberOf RapidContext.Widget.Pane
- * @name WORKING
- * @static
  */
 RapidContext.Widget.Pane.WORKING = { previous: false, next: false };
 
@@ -134,14 +118,14 @@ RapidContext.Widget.Pane.WORKING = { previous: false, next: false };
  * Updates the widget or HTML DOM node attributes.
  *
  * @param {Object} attrs the widget and node attributes to set
- * @param {String} [attrs.pageTitle] the page title used when inside
+ * @param {string} [attrs.pageTitle] the page title used when inside
  *            a page container
- * @param {String/Object} [attrs.pageStatus] the page status used
+ * @param {string|Object} [attrs.pageStatus] the page status used
  *            when inside a page container, use one of the predefined
  *            status constants in this class
- * @param {Boolean} [attrs.pageCloseable] the page closeable flag
+ * @param {boolean} [attrs.pageCloseable] the page closeable flag
  *            used when inside some page containers
- * @param {Boolean} [attrs.hidden] the hidden widget flag
+ * @param {boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.Pane.prototype.setAttrs = function (attrs) {
     attrs = Object.assign({}, attrs);
@@ -176,8 +160,8 @@ RapidContext.Widget.Pane.prototype.setAttrs = function (attrs) {
  * and finally trigger the "onenter" event.
  *
  * @param {Object} opts the page transition options
- * @param {Boolean} [opts.show] the show pane flag, defaults to `true`
- * @param {Boolean} [opts.validateReset] the form validation reset
+ * @param {boolean} [opts.show] the show pane flag, defaults to `true`
+ * @param {boolean} [opts.validateReset] the form validation reset
  *            flag, used to clear all form validations in the pane
  */
 RapidContext.Widget.Pane.prototype._handleEnter = function (opts) {
@@ -204,12 +188,12 @@ RapidContext.Widget.Pane.prototype._handleEnter = function (opts) {
  * pane (optional), and finally trigger the "onexit" event.
  *
  * @param {Object} opts the page transition options
- * @param {Boolean} [opts.hide] the hide pane flag, defaults to `true`
- * @param {Boolean} [opts.validate] the form validation flag, used to
+ * @param {boolean} [opts.hide] the hide pane flag, defaults to `true`
+ * @param {boolean} [opts.validate] the form validation flag, used to
  *            check all forms in the page for valid entries before
  *            proceeding, defaults to `false`
  *
- * @return {Boolean} `true` if the page exit event completed, or
+ * @return {boolean} `true` if the page exit event completed, or
  *         `false` if it was cancelled (due to validation errors)
  */
 RapidContext.Widget.Pane.prototype._handleExit = function (opts) {

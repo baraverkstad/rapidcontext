@@ -132,7 +132,7 @@ HelpApp.prototype._treeInsertChildren = function (parentNode, topic) {
  * Expands the tree topic corresponding to a specified URL. The URL
  * must exactly match a topic URL, or no match will be found.
  *
- * @param {String} url the URL to search for
+ * @param {string} url the URL to search for
  *
  * @return {TreeNode} the TreeNode widget for the matching topic
  */
@@ -200,7 +200,7 @@ HelpApp.prototype.clearContent = function () {
  * topic matching the URL (if any). Note that for external URL:s, a
  * separate window (tab) is opened instead.
  *
- * @param {String} url the content URL (HTML document)
+ * @param {string} url the content URL (HTML document)
  */
 HelpApp.prototype.loadContent = function (url) {
     var node = this._treeExpandUrl(url);
@@ -246,7 +246,7 @@ HelpApp.prototype._callbackContent = function (data) {
  * HTML document with script handlers to be able to open new
  * documents either in new windows or in the same content pane.
  *
- * @param {String} html the HTML data to display
+ * @param {string} html the HTML data to display
  */
 HelpApp.prototype._showContentHtml = function (html) {
     html = html.replace(/^[\s\S]*<body[^>]*>/i, "");
@@ -308,7 +308,7 @@ HelpApp.prototype._handleClick = function (evt) {
 /**
  * Scrolls the content pane to make the specified link name visible.
  *
- * @param {String} name the link name attribute
+ * @param {string} name the link name attribute
  */
 HelpApp.prototype._scrollLink = function (name) {
     var selector = "a[name='" + name + "'], *[id='" + name + "']";

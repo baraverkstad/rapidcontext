@@ -237,7 +237,7 @@ AdminApp.prototype._validateConnections = function () {
  * the connection specified, update the connection list and finally
  * display the connection details.
  *
- * @param {String} id the connection identifier
+ * @param {string} id the connection identifier
  */
 AdminApp.prototype.showConnection = function (id) {
     this.ui.tabContainer.selectChild(this.ui.cxnTab);
@@ -696,7 +696,7 @@ AdminApp.prototype._callbackProcedures = function (res) {
  * Shows the specified procedure in the procedure tree and in the
  * details area.
  *
- * @param {String} name the procedure name
+ * @param {string} name the procedure name
  */
 AdminApp.prototype.showProcedure = function (name) {
     var node = this.ui.procTree.findByPath(name.split(/[./]/g));
@@ -735,7 +735,7 @@ AdminApp.prototype._showProcedure = function () {
 /**
  * Callback function for showing detailed procedure information.
  *
- * @param {String} procName the procedure name
+ * @param {string} procName the procedure name
  * @param {Object} res the result object or error
  */
 AdminApp.prototype._callbackShowProcedure = function (procName, res) {
@@ -808,7 +808,7 @@ AdminApp.prototype._getProcArgs = function () {
 /**
  * Opens the procedure argument editor for a specific argument.
  *
- * @param {Number} idx the argument index
+ * @param {number} idx the argument index
  */
 AdminApp.prototype._editProcArg = function (idx) {
     var args = this._getProcArgs();
@@ -1522,10 +1522,10 @@ AdminApp.prototype._showLogDetails = function () {
  * length. If the keepspace flag is set, the newlines and space
  * characters at the end of each line will be preserved.
  *
- * @param {String} str the string to split
- * @param {Number} [maxlen] the maximum line length, or zero for
+ * @param {string} str the string to split
+ * @param {number} [maxlen] the maximum line length, or zero for
  *            unlimited (defaults to 0)
- * @param {Boolean} [keepspace] the boolean flag to keep
+ * @param {boolean} [keepspace] the boolean flag to keep
  *            trailing whitespace (defaults to false)
  *
  * @return {Array} an array of string for each line

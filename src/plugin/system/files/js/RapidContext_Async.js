@@ -24,7 +24,7 @@
      * @memberOf RapidContext.Async
      * @param {Object} value the object to check
      *
-     * @return {Boolean} `true` if the object is a promise, or `false` otherwise
+     * @return {boolean} `true` if the object is a promise, or `false` otherwise
      */
     function isPromise(value) {
         return !!value && isFunction(value.then) && isFunction(value.catch);
@@ -43,8 +43,8 @@
      * no-op if the action is already performed.
      *
      * @constructor
-     * @param {Promise/Deferred/Function/Error/Object} promise the promise to wrap
-     * @param {Function} [onCancelled] the cancellation callback function
+     * @param {Promise|Deferred|Function|Error|Object} promise the promise to wrap
+     * @param {function} [onCancelled] the cancellation callback function
      *
      * @name RapidContext.Async
      * @class A cancellable Promise that is backwards-compatible with
@@ -79,16 +79,15 @@
     // FIXME: Change to Promise.prototype once MochiKit is removed
     Async.prototype = Object.create(MochiKit.Async.Deferred.prototype);
 
-    /**#@+ @methodOf RapidContext.Async.prototype */
     Object.assign(Async.prototype, {
         constructor: Async,
 
         /**
          * Registers one or two callback functions to this promise.
          *
-         * @name then
-         * @param {Function} [onFulfilled] a callback if promise fulfilled
-         * @param {Function} [onRejected] a callback if promise rejected
+         * @memberof RapidContext.Async.prototype
+         * @param {function} [onFulfilled] a callback if promise fulfilled
+         * @param {function} [onRejected] a callback if promise rejected
          * @returns {Async} a new promise that resolves to whatever value the
          *     callback functions return
          */
@@ -100,8 +99,8 @@
         /**
          * Registers a reject callback function to this promise.
          *
-         * @name catch
-         * @param {Function} onRejected a callback if promise rejected
+         * @memberof RapidContext.Async.prototype
+         * @param {function} onRejected a callback if promise rejected
          * @returns {Async} a new promise that resolves to whatever value the
          *     callback function returned
          */
@@ -113,8 +112,8 @@
          * Registers a finalizer callback function to this promise. Note that
          * the finalizer MAY NOT BE CALLED if the promise is cancelled.
          *
-         * @name finally
-         * @param {Function} onFinally a callback for promise resolved
+         * @memberof RapidContext.Async.prototype
+         * @param {function} onFinally a callback for promise resolved
          * @returns {Async} a new promise
          */
         finally: function (onFinally) {
@@ -127,7 +126,7 @@
          * No other callbacks will be triggered after the promise has been
          * cancelled (except finalizer).
          *
-         * @name cancel
+         * @memberof RapidContext.Async.prototype
          */
         cancel: function () {
             this._cancelled = true;
@@ -138,9 +137,9 @@
         /**
          * Registers one or two callback functions to this promise.
          *
-         * @name addCallbacks
-         * @param {Function} [onFulfilled] a callback if promise fulfilled
-         * @param {Function} [onRejected] a callback if promise rejected
+         * @memberof RapidContext.Async.prototype
+         * @param {function} [onFulfilled] a callback if promise fulfilled
+         * @param {function} [onRejected] a callback if promise rejected
          * @returns {Async} this same promise
          * @deprecated Provided for `MochiKit.Async.Deferred` compatibility
          */
@@ -152,8 +151,8 @@
         /**
          * Registers a fulfilled callback function to this promise.
          *
-         * @name addCallback
-         * @param {Function} [callback] a callback if promise fulfilled
+         * @memberof RapidContext.Async.prototype
+         * @param {function} [callback] a callback if promise fulfilled
          * @returns {Async} this same promise
          * @deprecated Provided for `MochiKit.Async.Deferred` compatibility
          */
@@ -170,8 +169,8 @@
         /**
          * Registers a reject callback function to this promise.
          *
-         * @name addErrback
-         * @param {Function} errback a callback if promise rejected
+         * @memberof RapidContext.Async.prototype
+         * @param {function} errback a callback if promise rejected
          * @returns {Async} this same promise
          * @deprecated Provided for `MochiKit.Async.Deferred` compatibility
          */
@@ -188,8 +187,8 @@
         /**
          * Registers a callback function to this promise.
          *
-         * @name addBoth
-         * @param {Function} [callback] a callback if promise either fulfilled
+         * @memberof RapidContext.Async.prototype
+         * @param {function} [callback] a callback if promise either fulfilled
          *        or rejected
          * @returns {Async} this same promise
          * @deprecated Provided for `MochiKit.Async.Deferred` compatibility
@@ -204,7 +203,6 @@
             return this;
         }
     });
-    /**#@- */
 
     function wrapPromise(self, callback, errback) {
         var onSuccess = isFunction(callback) ? wrapCallback(self, callback) : callback;
@@ -223,7 +221,7 @@
      * Returns a delayed value.
      *
      * @memberOf RapidContext.Async
-     * @param {Number} millis the number of milliseconds to wait
+     * @param {number} millis the number of milliseconds to wait
      * @param {Object} [value] the value to resolve with
      * @return {Async} a new promise that resolves with the value
      */
@@ -239,7 +237,7 @@
      * Loads an image from a URL.
      *
      * @memberOf RapidContext.Async
-     * @param {String} url the image URL to load
+     * @param {string} url the image URL to load
      * @return {Async} a promise that resolves with the DOM `<img>` element
      */
     function img(url) {
@@ -250,7 +248,7 @@
      * Injects a CSS stylesheet to the current page.
      *
      * @memberOf RapidContext.Async
-     * @param {String} url the stylesheet URL to load
+     * @param {string} url the stylesheet URL to load
      * @return {Async} a promise that resolves with the DOM `<link>` element
      */
     function css(url) {
@@ -262,7 +260,7 @@
      * Injects a JavaScript to the current page.
      *
      * @memberOf RapidContext.Async
-     * @param {String} url the script URL to load
+     * @param {string} url the script URL to load
      * @return {Async} a promise that resolves with the DOM `<script>` element
      */
     function script(url) {
@@ -290,14 +288,14 @@
      * Performs an XmlHttpRequest to a URL.
      *
      * @memberOf RapidContext.Async
-     * @param {String} url the URL to request
+     * @param {string} url the URL to request
      * @param {Object} [options] the request options
-     * @config {String} [method] the HTTP method (e.g. `GET`, `POST`...)
+     * @config {string} [method] the HTTP method (e.g. `GET`, `POST`...)
      * @config {Object} [headers] the HTTP headers to send
-     * @config {Number} [timeout] the timeout in milliseconds (default is 30s)
-     * @config {String} [log] the logging prefix, or `null` (defaults to `request`)
-     * @config {String} [responseType] the expected HTTP response (e.g. `json`)
-     * @config {String} [body] the HTTP request body to send
+     * @config {number} [timeout] the timeout in milliseconds (default is 30s)
+     * @config {string} [log] the logging prefix, or `null` (defaults to `request`)
+     * @config {string} [responseType] the expected HTTP response (e.g. `json`)
+     * @config {string} [body] the HTTP request body to send
      *
      * @return {Async} a new promise that resolves with either the XHR object,
      *     or an error if the request failed

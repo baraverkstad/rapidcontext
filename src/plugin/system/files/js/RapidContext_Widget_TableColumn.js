@@ -23,23 +23,23 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  *
  * @constructor
  * @param {Object} attrs the widget and node attributes
- * @param {String} attrs.title the column title
- * @param {String} attrs.field the data property name
- * @param {String} [attrs.type] the data property type, one of
+ * @param {string} attrs.title the column title
+ * @param {string} attrs.field the data property name
+ * @param {string} [attrs.type] the data property type, one of
  *            "string", "number", "date", "time", "datetime",
  *            "boolean" or "object" (defaults to "string")
- * @param {String} [attrs.sort] the sort direction, one of "asc",
+ * @param {string} [attrs.sort] the sort direction, one of "asc",
  *            "desc", "none" (disabled) or null (unsorted)
- * @param {Number} [attrs.maxLength] the maximum data length,
+ * @param {number} [attrs.maxLength] the maximum data length,
  *            overflow will be displayed as a tooltip, only used by
  *            the default renderer
- * @param {Boolean} [attrs.key] the unique key value flag, only to be
+ * @param {boolean} [attrs.key] the unique key value flag, only to be
  *            set for a single column per table
- * @param {String} [attrs.tooltip] the tooltip text to display on the
+ * @param {string} [attrs.tooltip] the tooltip text to display on the
  *            column header
- * @param {String} [attrs.cellStyle] the CSS styles or class names to set on
+ * @param {string} [attrs.cellStyle] the CSS styles or class names to set on
  *            the rendered cells
- * @param {Function} [attrs.renderer] the function that renders the converted
+ * @param {function} [attrs.renderer] the function that renders the converted
  *            data value into a table cell, called as
  *            `renderer(<td>, value, data)` with the DOM node, field value and
  *            data object as arguments
@@ -51,7 +51,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  *     to `<td>` HTML elements).
  * @extends RapidContext.Widget
  *
- * @example {JavaScript}
+ * @example <caption>JavaScript</caption>
  * var attrs1 = { field: "id", title: "Identifier", key: true, type: "number" };
  * var attrs2 = { field: "name", title: "Name", maxLength: 50, sort: "asc" };
  * var attrs3 = { field: "modified", title: "Last Modified", type: "datetime" };
@@ -61,7 +61,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * var exampleTable = RapidContext.Widget.Table({}, col1, col2, col3);
  * RapidContext.Util.registerSizeConstraints(exampleTable, "50%", "100%");
  *
- * @example {User Interface XML}
+ * @example <caption>User Interface XML</caption>
  * <Table id="exampleTable" w="50%" h="100%">
  *   <TableColumn field="id" title="Identifier" key="true" type="number" />
  *   <TableColumn field="name" title="Name" maxLength="50" sort="asc" />
@@ -106,23 +106,23 @@ RapidContext.Widget.TableColumn.prototype._containerNode = function () {
  * or data is reloaded.
  *
  * @param {Object} attrs the widget and node attributes to set
- * @param {String} [attrs.title] the column title
- * @param {String} [attrs.field] the data property name
- * @param {String} [attrs.type] the data property type, one of
+ * @param {string} [attrs.title] the column title
+ * @param {string} [attrs.field] the data property name
+ * @param {string} [attrs.type] the data property type, one of
  *            "string", "number", "date", "time", "datetime",
  *            "boolean" or "object"
- * @param {String} [attrs.sort] the sort direction, one of "asc",
+ * @param {string} [attrs.sort] the sort direction, one of "asc",
  *            "desc", "none" (disabled) or null (unsorted)
- * @param {Number} [attrs.maxLength] the maximum data length,
+ * @param {number} [attrs.maxLength] the maximum data length,
  *            overflow will be displayed as a tooltip, only used by
  *            the default renderer
- * @param {Boolean} [attrs.key] the unique key value flag, only to be
+ * @param {boolean} [attrs.key] the unique key value flag, only to be
  *            set for a single column per table
- * @param {String} [attrs.tooltip] the tooltip text to display on the
+ * @param {string} [attrs.tooltip] the tooltip text to display on the
  *            column header
- * @param {String} [attrs.cellStyle] the CSS styles or class names to set on
+ * @param {string} [attrs.cellStyle] the CSS styles or class names to set on
  *            the rendered cells
- * @param {Function} [attrs.renderer] the function that renders the converted
+ * @param {function} [attrs.renderer] the function that renders the converted
  *            data value into a table cell, called as
  *            `renderer(<td>, value, data)` with the DOM node, field value and
  *            data object as arguments

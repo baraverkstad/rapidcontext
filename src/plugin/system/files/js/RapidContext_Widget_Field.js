@@ -23,19 +23,19 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  *
  * @constructor
  * @param {Object} attrs the widget and node attributes
- * @param {String} attrs.name the form field name
- * @param {String} [attrs.value] the initial field value, defaults
+ * @param {string} attrs.name the form field name
+ * @param {string} [attrs.value] the initial field value, defaults
  *            to an empty string
- * @param {String} [attrs.format] the field format string, defaults
+ * @param {string} [attrs.format] the field format string, defaults
  *            to "{:s}"
- * @param {Function} [attrs.formatter] the value formatter function
- * @param {Number} [attrs.maxLength] the maximum data length,
+ * @param {function} [attrs.formatter] the value formatter function
+ * @param {number} [attrs.maxLength] the maximum data length,
  *            overflow will be displayed as a tooltip, defaults to
  *            -1 (unlimited)
- * @param {Boolean} [attrs.mask] the masked display flag, when set
+ * @param {boolean} [attrs.mask] the masked display flag, when set
  *            the field value is only displayed after the user has
  *            clicked the field, defaults to false
- * @param {Boolean} [attrs.hidden] the hidden widget flag, defaults to false
+ * @param {boolean} [attrs.hidden] the hidden widget flag, defaults to false
  *
  * @return {Widget} the widget DOM node
  *
@@ -43,11 +43,11 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  *     visible display of form data, using a `<span>` HTML element.
  * @extends RapidContext.Widget
  *
- * @example {JavaScript}
+ * @example <caption>JavaScript</caption>
  * var attrs = { name: "ratio", value: 0.23, format: "Ratio: {:%}" };
  * var field = RapidContext.Widget.Field(attrs);
  *
- * @example {User Interface XML}
+ * @example <caption>User Interface XML</caption>
  * <Field name="ratio" value="0.23" format="Ratio: {:%}" />
  */
 RapidContext.Widget.Field = function (attrs) {
@@ -85,16 +85,16 @@ RapidContext.Widget.Field.prototype._containerNode = function () {
  * Updates the widget or HTML DOM node attributes.
  *
  * @param {Object} attrs the widget and node attributes to set
- * @param {String} [attrs.name] the form field name
- * @param {String} [attrs.value] the field value
- * @param {String} [attrs.format] the field format string
- * @param {Function} [attrs.formatter] the value formatter function
- * @param {Number} [attrs.maxLength] the maximum data length,
+ * @param {string} [attrs.name] the form field name
+ * @param {string} [attrs.value] the field value
+ * @param {string} [attrs.format] the field format string
+ * @param {function} [attrs.formatter] the value formatter function
+ * @param {number} [attrs.maxLength] the maximum data length,
  *            overflow will be displayed as a tooltip
- * @param {Boolean} [attrs.mask] the masked display flag, when set
+ * @param {boolean} [attrs.mask] the masked display flag, when set
  *            the field value is only displayed after the user has
  *            clicked the field
- * @param {Boolean} [attrs.hidden] the hidden widget flag
+ * @param {boolean} [attrs.hidden] the hidden widget flag
  *
  * @example
  * field.setAttrs({ value: 0.23 });

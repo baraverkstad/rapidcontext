@@ -13,8 +13,7 @@
  */
 
 /**
- * @name RapidContext.Log
- * @namespace Provides a logging service for debugging apps and server calls.
+ * Provides a logging service for debugging apps and server calls.
  *
  * All log messages are filtered by log level and either discarded or
  * stored to an internal array. Log messages on the error or warning levels
@@ -23,6 +22,8 @@
  * This module replaces the built-in `console.error()`, `console.warn()`,
  * `console.info()`, `console.log()` and `console.debug()` functions with its
  * own versions, passing through the log messages if not filtered.
+ *
+ * @namespace RapidContext.Log
  */
 (function (window) {
 
@@ -56,10 +57,10 @@
      * functions. Safe to call multiple times to change or update config.
      *
      * @param {Object} [opts] the log configuration options, or null
-     * @config {Number} [interval] the publish delay in millis, default is 10s
-     * @config {String} [url] the publish URL endpoint
-     * @config {Function} [filter] the event filter, returns a boolean
-     * @config {Function} [publisher] the event publisher, returns a Promise
+     * @config {number} [interval] the publish delay in millis, default is 10s
+     * @config {string} [url] the publish URL endpoint
+     * @config {function} [filter] the event filter, returns a boolean
+     * @config {function} [publisher] the event publisher, returns a Promise
      *
      * @memberof RapidContext.Log
      */
@@ -117,8 +118,8 @@
      * Returns and optionally sets the current log level. The supported log
      * level values are -- "none", "error", "warn", "info", "log" and "all".
      *
-     * @param {String} [value] the new log level
-     * @return {String} the current log level
+     * @param {string} [value] the new log level
+     * @return {string} the current log level
      *
      * @memberof RapidContext.Log
      */
@@ -158,9 +159,9 @@
      * used to tag all subsequent log messages until the context is removed or
      * modified.
      *
-     * @param {String} [value] the new log context, or null to clear
+     * @param {string} [value] the new log context, or null to clear
      *
-     * @return {String} the current log context, or null for none
+     * @return {string} the current log context, or null for none
      *
      * @example
      * RapidContext.Log.context('mybutton.onclick');
@@ -186,8 +187,8 @@
      * Logs an error message with optional data. Also available as the global
      * `console.error()` function.
      *
-     * @param {String} msg the log message
-     * @param {Object} [...] the additional log data or messages
+     * @param {string} msg the log message
+     * @param {...Object} [data] the additional log data or messages
      *
      * @example
      * console.error('failed to initialize module');
@@ -206,8 +207,8 @@
      * Logs a warning message with optional data. Also available as the global
      * `console.warn()` function.
      *
-     * @param {String} msg the log message
-     * @param {Object} [...] the additional log data or messages
+     * @param {string} msg the log message
+     * @param {...Object} [data] the additional log data or messages
      *
      * @example
      * console.warn('missing "data" attribute on document root:', document.body);
@@ -226,8 +227,8 @@
      * Logs an information message with optional data. Also available as the
      * global `console.info()` function.
      *
-     * @param {String} msg the log message
-     * @param {Object} [...] the additional log data or messages
+     * @param {string} msg the log message
+     * @param {...Object} [data] the additional log data or messages
      *
      * @example
      * console.info('authorization failed, user not logged in');
@@ -246,8 +247,8 @@
      * Logs a debug message with optional data. Also available as the global
      * `console.log()` and `console.debug()` functions.
      *
-     * @param {String} msg the log message
-     * @param {Object} [...] the additional log data or messages
+     * @param {string} msg the log message
+     * @param {...Object} [data] the additional log data or messages
      *
      * @example
      * console.log('init AJAX call to URL:', url);
@@ -280,7 +281,7 @@
     /**
      * Logs a message to one of the console loggers.
      *
-     * @param {String} level the log level (i.e. function 'error', 'warn'...)
+     * @param {string} level the log level (i.e. function 'error', 'warn'...)
      * @param {Array} args the log message & data (as raw objects)
      */
     function _log(level, args) {
@@ -295,7 +296,7 @@
      * Calls the `console.group` and `console.groupEnd` functions (if
      * they exist) to change the group label (if needed).
      *
-     * @param {String} label the log context label
+     * @param {string} label the log context label
      */
     function _group(label) {
         var console = window.console;
@@ -318,7 +319,7 @@
     /**
      * Stores a log message to the history.
      *
-     * @param {String} level the message log level
+     * @param {string} level the message log level
      * @param {Array} args the log message arguments (as strings)
      */
     function _store(level, args) {
@@ -397,7 +398,7 @@
      *
      * @param {Object} val the value or object to convert
      *
-     * @return {String} the string representation of the value
+     * @return {string} the string representation of the value
      *
      * @memberof RapidContext.Log
      */

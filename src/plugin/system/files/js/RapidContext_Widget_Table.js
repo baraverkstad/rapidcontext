@@ -23,12 +23,12 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  *
  * @constructor
  * @param {Object} attrs the widget and node attributes
- * @param {String} [attrs.select] the row selection mode ('none', 'one',
+ * @param {string} [attrs.select] the row selection mode ('none', 'one',
  *            'multiple' or 'auto'), defaults to 'one'
- * @param {String} [attrs.key] the unique key identifier column field,
+ * @param {string} [attrs.key] the unique key identifier column field,
  *            defaults to null
- * @param {Boolean} [attrs.hidden] the hidden widget flag, defaults to false
- * @param {Widget} [...] the child table columns
+ * @param {boolean} [attrs.hidden] the hidden widget flag, defaults to false
+ * @param {...TableColumn} [child] the child table columns
  *
  * @return {Widget} the widget DOM node
  *
@@ -38,7 +38,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  *     visible data column in the table.
  * @extends RapidContext.Widget
  *
- * @example {JavaScript}
+ * @example <caption>JavaScript</caption>
  * var attrs1 = { field: "id", title: "Identifier", key: true, type: "number" };
  * var attrs2 = { field: "name", title: "Name", maxLength: 50, sort: "asc" };
  * var attrs3 = { field: "modified", title: "Last Modified", type: "datetime" };
@@ -48,7 +48,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * var exampleTable = RapidContext.Widget.Table({}, col1, col2, col3);
  * RapidContext.Util.registerSizeConstraints(exampleTable, "50%", "100%");
  *
- * @example {User Interface XML}
+ * @example <caption>User Interface XML</caption>
  * <Table id="exampleTable" w="50%" h="100%">
  *   <TableColumn field="id" title="Identifier" key="true" type="number" />
  *   <TableColumn field="name" title="Name" maxLength="50" sort="asc" />
@@ -171,10 +171,10 @@ RapidContext.Widget.Table.prototype._handleClick = function (evt) {
  * Updates the widget or HTML DOM node attributes.
  *
  * @param {Object} attrs the widget and node attributes to set
- * @param {String} [attrs.select] the row selection mode ('none', 'one' or
+ * @param {string} [attrs.select] the row selection mode ('none', 'one' or
  *            'multiple')
- * @param {String} [attrs.key] the unique key identifier column field
- * @param {Boolean} [attrs.hidden] the hidden widget flag
+ * @param {string} [attrs.key] the unique key identifier column field
+ * @param {boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.Table.prototype.setAttrs = function (attrs) {
     attrs = Object.assign({}, attrs);
@@ -215,9 +215,9 @@ RapidContext.Widget.Table.prototype.removeChildNode = function (child) {
 /**
  * Returns the column index of a field.
  *
- * @param {String} field the field name
+ * @param {string} field the field name
  *
- * @return {Number} the column index, or
+ * @return {number} the column index, or
  *         -1 if not found
  */
 RapidContext.Widget.Table.prototype.getColumnIndex = function (field) {
@@ -234,7 +234,7 @@ RapidContext.Widget.Table.prototype.getColumnIndex = function (field) {
  * Returns the unique key identifier column field, or null if none
  * was set.
  *
- * @return {String} the key column field name, or
+ * @return {string} the key column field name, or
  *         null for none
  */
 RapidContext.Widget.Table.prototype.getIdKey = function () {
@@ -255,7 +255,7 @@ RapidContext.Widget.Table.prototype.getIdKey = function () {
  * method will regenerate all row identifiers if the table already
  * contains data.
  *
- * @param {String} key the new key column field name
+ * @param {string} key the new key column field name
  */
 RapidContext.Widget.Table.prototype.setIdKey = function (key) {
     this._keyField = key;
@@ -270,7 +270,7 @@ RapidContext.Widget.Table.prototype.setIdKey = function (key) {
 /**
  * Returns the current sort key for the table.
  *
- * @return {String} the current sort field, or
+ * @return {string} the current sort field, or
  *         null for none
  */
 RapidContext.Widget.Table.prototype.getSortKey = function () {
@@ -286,8 +286,8 @@ RapidContext.Widget.Table.prototype.getSortKey = function () {
 /**
  * Returns a table cell element.
  *
- * @param {Number} row the row index
- * @param {Number} col the column index
+ * @param {number} row the row index
+ * @param {number} col the column index
  *
  * @return {Node} the table cell element node, or
  *         null if not found
@@ -376,8 +376,8 @@ RapidContext.Widget.Table.prototype.setData = function (data) {
 /**
  * Sorts the table data by field and direction.
  *
- * @param {String} field the sort field
- * @param {String} [direction] the sort direction, either "asc" or
+ * @param {string} field the sort field
+ * @param {string} [direction] the sort direction, either "asc" or
  *            "desc"
  */
 RapidContext.Widget.Table.prototype.sortData = function (field, direction) {
@@ -446,7 +446,7 @@ RapidContext.Widget.Table.prototype._renderRows = function () {
  * Returns the number of rows in the table. This is a convenience
  * method for `getData().length`.
  *
- * @return {Number} the number of table rows
+ * @return {number} the number of table rows
  */
 RapidContext.Widget.Table.prototype.getRowCount = function () {
     return this._rows.length;
@@ -459,9 +459,9 @@ RapidContext.Widget.Table.prototype.getRowCount = function () {
  * values if no key column is set. Note that the row index uses the
  * current table sort order.
  *
- * @param {Number} index the row index, 0 <= index < row count
+ * @param {number} index the row index, 0 <= index < row count
  *
- * @return {String} the unique row id, or null if not found
+ * @return {string} the unique row id, or null if not found
  */
 RapidContext.Widget.Table.prototype.getRowId = function (index) {
     var row = this._rows[index];
@@ -483,7 +483,7 @@ RapidContext.Widget.Table.prototype.getSelectedIds = function () {
 /**
  * Returns the currently selected row data.
  *
- * @return {Object/Array} the data row selected, or
+ * @return {Object|Array} the data row selected, or
  *         an array of selected data rows if multiple selection is enabled
  */
 RapidContext.Widget.Table.prototype.getSelectedData = function () {
@@ -495,7 +495,7 @@ RapidContext.Widget.Table.prototype.getSelectedData = function () {
  * Sets the selection to the specified row id values. If the current
  * selection is changed the select signal will be emitted.
  *
- * @param {String/Array} [...] the row ids or array with ids to select
+ * @param {...(string|Array)} id the row ids or array with ids to select
  *
  * @return {Array} an array with the row ids actually modified
  */
@@ -528,7 +528,7 @@ RapidContext.Widget.Table.prototype.setSelectedIds = function (...ids) {
  * Adds the specified row id values to the selection. If the current
  * selection is changed the select signal will be emitted.
  *
- * @param {String/Array} [...] the row ids or array with ids to select
+ * @param {...(string|Array)} id the row ids or array with ids to select
  *
  * @return {Array} an array with the new row ids actually selected
  */
@@ -544,7 +544,7 @@ RapidContext.Widget.Table.prototype.addSelectedIds = function (...ids) {
  * Adds the specified row id values to the selection. Note that this
  * method does not emit any selection signal.
  *
- * @param {String/Array} [...] the row ids or array with ids to select
+ * @param {...(string|Array)} id the row ids or array with ids to select
  *
  * @return {Array} an array with the new row ids actually selected
  */
@@ -566,7 +566,7 @@ RapidContext.Widget.Table.prototype._addSelectedIds = function (...ids) {
  * Removes the specified row id values from the selection. If the
  * current selection is changed the select signal will be emitted.
  *
- * @param {String/Array} [...] the row ids or array with ids to unselect
+ * @param {...(string|Array)} id the row ids or array with ids to unselect
  *
  * @return {Array} an array with the row ids actually unselected
  */
@@ -592,7 +592,7 @@ RapidContext.Widget.Table.prototype.removeSelectedIds = function (...ids) {
 /**
  * Marks selected rows.
  *
- * @param {Number} [index] the row index, or null to mark all
+ * @param {number} [index] the row index, or null to mark all
  */
 RapidContext.Widget.Table.prototype._markSelection = function (index) {
     var tbody = this.firstChild.lastChild;
@@ -605,7 +605,7 @@ RapidContext.Widget.Table.prototype._markSelection = function (index) {
 /**
  * Unmarks selected rows.
  *
- * @param {Number} [index] the row index, or null to unmark all
+ * @param {number} [index] the row index, or null to unmark all
  */
 RapidContext.Widget.Table.prototype._unmarkSelection = function (index) {
     var tbody = this.firstChild.lastChild;

@@ -23,14 +23,14 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  *
  * @constructor
  * @param {Object} attrs the widget and node attributes
- * @param {String} attrs.name the tree node name
- * @param {Boolean} [attrs.folder] the folder flag, defaults to `false` if no
+ * @param {string} attrs.name the tree node name
+ * @param {boolean} [attrs.folder] the folder flag, defaults to `false` if no
  *            child nodes are provided in constructor call
- * @param {String} [attrs.icon] the icon reference to use, defaults
+ * @param {string} [attrs.icon] the icon reference to use, defaults
  *            to "FOLDER" for folders and "DOCUMENT" otherwise
- * @param {String} [attrs.tooltip] the tooltip text when hovering
- * @param {Boolean} [attrs.hidden] the hidden widget flag, defaults to `false`
- * @param {Widget} [...] the child tree node widgets
+ * @param {string} [attrs.tooltip] the tooltip text when hovering
+ * @param {boolean} [attrs.hidden] the hidden widget flag, defaults to `false`
+ * @param {...TreeNode} [child] the child tree node widgets
  *
  * @return {Widget} the widget DOM node
  *
@@ -40,12 +40,12 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  *     the tree as a whole.
  * @extends RapidContext.Widget
  *
- * @example {JavaScript}
+ * @example <caption>JavaScript</caption>
  * var parent = RapidContext.Widget.TreeNode({ folder: true, name: "Parent" });
  * var child = RapidContext.Widget.TreeNode({ name: "Child" });
  * parent.addAll(child);
  *
- * @example {User Interface XML}
+ * @example <caption>User Interface XML</caption>
  * <TreeNode name="Parent">
  *   <TreeNode name="Child" />
  * </TreeNode>
@@ -97,7 +97,7 @@ RapidContext.Widget.TreeNode.prototype._handleLabelClick = function (evt) {
  * Returns and optionally creates the widget container DOM node. If a
  * child container is created, it will be hidden by default.
  *
- * @param {Boolean} [create] the create flag, defaults to `false`
+ * @param {boolean} [create] the create flag, defaults to `false`
  *
  * @return {Node} the container DOM node, or
  *         null if this widget has no container (yet)
@@ -123,13 +123,13 @@ RapidContext.Widget.TreeNode.prototype._containerNode = function (create) {
  * Updates the widget or HTML DOM node attributes.
  *
  * @param {Object} attrs the widget and node attributes to set
- * @param {String} [attrs.name] the tree node name
- * @param {Boolean} [attrs.folder] the folder flag, cannot be
+ * @param {string} [attrs.name] the tree node name
+ * @param {boolean} [attrs.folder] the folder flag, cannot be
  *            reverted to `false` once set (implicitly or explicitly)
- * @param {Icon/Object/String} [attrs.icon] icon the icon to set, or
+ * @param {Icon|Object|string} [attrs.icon] icon the icon to set, or
  *            null to remove
- * @param {String} [attrs.tooltip] the tooltip text when hovering
- * @param {Boolean} [attrs.hidden] the hidden widget flag
+ * @param {string} [attrs.tooltip] the tooltip text when hovering
+ * @param {boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.TreeNode.prototype.setAttrs = function (attrs) {
     attrs = Object.assign({}, attrs);
@@ -219,7 +219,7 @@ RapidContext.Widget.TreeNode.prototype.markAll = function () {
 /**
  * Checks if this node is a folder.
  *
- * @return {Boolean} `true` if this node is a folder, or
+ * @return {boolean} `true` if this node is a folder, or
  *         `false` otherwise
  */
 RapidContext.Widget.TreeNode.prototype.isFolder = function () {
@@ -229,7 +229,7 @@ RapidContext.Widget.TreeNode.prototype.isFolder = function () {
 /**
  * Checks if this folder node is expanded.
  *
- * @return {Boolean} `true` if this node is expanded, or
+ * @return {boolean} `true` if this node is expanded, or
  *         `false` otherwise
  */
 RapidContext.Widget.TreeNode.prototype.isExpanded = function () {
@@ -240,7 +240,7 @@ RapidContext.Widget.TreeNode.prototype.isExpanded = function () {
 /**
  * Checks if this node is selected.
  *
- * @return {Boolean} `true` if the node is selected, or
+ * @return {boolean} `true` if the node is selected, or
  *         `false` otherwise
  */
 RapidContext.Widget.TreeNode.prototype.isSelected = function () {
@@ -299,7 +299,7 @@ RapidContext.Widget.TreeNode.prototype.path = function () {
 /**
  * Finds a child tree node with the specified name.
  *
- * @param {String} name the child tree node name
+ * @param {string} name the child tree node name
  *
  * @return {Widget} the child tree node found, or
  *         null if not found
@@ -383,7 +383,7 @@ RapidContext.Widget.TreeNode.prototype.expand = function () {
  * Recursively expands this node and all its children. If a depth is
  * specified, expansions will not continue below that depth.
  *
- * @param {Number} [depth] the optional maximum depth
+ * @param {number} [depth] the optional maximum depth
  */
 RapidContext.Widget.TreeNode.prototype.expandAll = function (depth) {
     if (typeof(depth) !== "number") {
@@ -419,7 +419,7 @@ RapidContext.Widget.TreeNode.prototype.collapse = function () {
  * Recursively collapses this node and all its children. If a depth
  * is specified, only children below that depth will be collapsed.
  *
- * @param {Number} [depth] the optional minimum depth
+ * @param {number} [depth] the optional minimum depth
  */
 RapidContext.Widget.TreeNode.prototype.collapseAll = function (depth) {
     if (typeof(depth) !== "number") {

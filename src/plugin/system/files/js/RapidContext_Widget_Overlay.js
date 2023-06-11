@@ -23,12 +23,12 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  *
  * @constructor
  * @param {Object} attrs the widget and node attributes
- * @param {Boolean} [attrs.loading] the display loading icon flag, defaults to
+ * @param {boolean} [attrs.loading] the display loading icon flag, defaults to
  *            `true`
- * @param {String} [attrs.message] the overlay message text, defaults to
+ * @param {string} [attrs.message] the overlay message text, defaults to
  *            "Working..."
- * @param {Boolean} [attrs.dark] the dark overlay flag, defaults to `false`
- * @param {Boolean} [attrs.hidden] the hidden widget flag, defaults to `true`
+ * @param {boolean} [attrs.dark] the dark overlay flag, defaults to `false`
+ * @param {boolean} [attrs.hidden] the hidden widget flag, defaults to `true`
  *
  * @return {Widget} the widget DOM node
  *
@@ -37,10 +37,10 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  *     disabling the user interface during an operation.
  * @extends RapidContext.Widget
  *
- * @example {JavaScript}
+ * @example <caption>JavaScript</caption>
  * var workOverlay = RapidContext.WidgetOverlay({ message: "Doing Stuff..." });
  *
- * @example {User Interface XML}
+ * @example <caption>User Interface XML</caption>
  * <Overlay id="workOverlay" message="Doing Stuff..." />
  */
 RapidContext.Widget.Overlay = function (attrs) {
@@ -69,9 +69,9 @@ RapidContext.Widget.Overlay.prototype._containerNode = function () {
  * Updates the widget or HTML DOM node attributes.
  *
  * @param {Object} attrs the widget and node attributes to set
- * @param {Boolean} [attrs.loading] the display loading icon flag
- * @param {String} [attrs.message] the overlay message text
- * @param {Boolean} [attrs.hidden] the hidden widget flag
+ * @param {boolean} [attrs.loading] the display loading icon flag
+ * @param {string} [attrs.message] the overlay message text
+ * @param {boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.Overlay.prototype.setAttrs = function (attrs) {
     attrs = Object.assign({}, attrs);

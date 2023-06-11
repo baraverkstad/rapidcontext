@@ -23,8 +23,8 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  *
  * @constructor
  * @param {Object} attrs the widget and node attributes
- * @param {Boolean} [attrs.hidden] the hidden widget flag, defaults to false
- * @param {Object} [...] the child widgets or DOM nodes
+ * @param {boolean} [attrs.hidden] the hidden widget flag, defaults to false
+ * @param {...(string|Node|Array)} [child] the child widgets or DOM nodes
  *
  * @return {Widget} the widget DOM node
  *
@@ -33,13 +33,13 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  *     and data retrieval.
  * @extends RapidContext.Widget
  *
- * @example {JavaScript}
+ * @example <caption>JavaScript</caption>
  * var field = RapidContext.Widget.TextField({ name: "name", placeholder: "Your Name Here" });
  * var attrs = { name: "name", message: "Please enter your name to proceed." };
  * var valid = RapidContext.Widget.FormValidator(attrs);
  * var exampleForm = RapidContext.Widget.Form({}, field, valid);
  *
- * @example {User Interface XML}
+ * @example <caption>User Interface XML</caption>
  * <Form id="exampleForm">
  *   <TextField name="name" placeholder="Your Name Here" />
  *   <FormValidator name="name" message="Please enter your name to proceed." />
@@ -214,8 +214,8 @@ RapidContext.Widget.Form.prototype.update = function (values) {
  * regardless of checked state. Radio validators will only be called with
  * either the first or the checked `<input>` element.
  *
- * @param {String/Element} field the form field or name
- * @param {Function} validator the validator function
+ * @param {string|Element} field the form field or name
+ * @param {function} validator the validator function
  */
 RapidContext.Widget.Form.prototype.addValidator = function (field, validator) {
     var name = String(field.name || field);
@@ -226,7 +226,7 @@ RapidContext.Widget.Form.prototype.addValidator = function (field, validator) {
 /**
  * Removes all custom form validators for a named form field.
  *
- * @param {String/Element} [field] the form field, name, or null for all
+ * @param {string|Element} [field] the form field, name, or null for all
  */
 RapidContext.Widget.Form.prototype.removeValidators = function (field) {
     if (field) {
@@ -269,7 +269,7 @@ RapidContext.Widget.Form.prototype.validators = function () {
 /**
  * Validates this form using the form validators found.
  *
- * @return {Boolean} `true` if the form validated successfully, or
+ * @return {boolean} `true` if the form validated successfully, or
  *         `false` if the validation failed
  */
 RapidContext.Widget.Form.prototype.validate = function () {

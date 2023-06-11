@@ -23,9 +23,8 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  *
  * @constructor
  * @param {Object} attrs the widget and node attributes
- * @param {Boolean} [attrs.hidden] the hidden widget flag, defaults to false
- * @param {Widget} [...] the child widgets or DOM nodes (should be
- *            Pane widgets)
+ * @param {boolean} [attrs.hidden] the hidden widget flag, defaults to false
+ * @param {...Pane} [child] the child Pane widgets
  *
  * @return {Widget} the widget DOM node
  *
@@ -35,7 +34,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  *     according to the page transitions.
  * @extends RapidContext.Widget
  *
- * @example {JavaScript}
+ * @example <caption>JavaScript</caption>
  * var page1 = RapidContext.Widget.Pane({ pageTitle: "The first step" });
  * ...
  * var page2 = RapidContext.Widget.Pane({ pageTitle: "The second step" });
@@ -45,7 +44,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * var exampleDialog = RapidContext.Widget.Dialog({ title: "Example Dialog" }, exampleWizard);
  * RapidContext.Util.registerSizeConstraints(exampleDialog, "80%", "50%");
  *
- * @example {User Interface XML}
+ * @example <caption>User Interface XML</caption>
  * <Dialog id="exampleDialog" title="Example Dialog" w="80%" h="50%">
  *   <Wizard id="exampleWizard" style="width: 100%; height: 100%;">
  *     <Pane pageTitle="The first step">
@@ -228,7 +227,7 @@ RapidContext.Widget.Wizard.prototype.activePageIndex = function () {
  * forward, the old page must pass a form validation check, or nothing will
  * happen.
  *
- * @param {Number/Widget} indexOrPage the page index or page DOM node
+ * @param {number|Widget} indexOrPage the page index or page DOM node
  *
  * @see #next
  * @see #previous

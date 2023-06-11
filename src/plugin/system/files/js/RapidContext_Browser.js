@@ -13,8 +13,8 @@
  */
 
 /**
- * @name RapidContext.Browser
- * @namespace Provides a browser compatibility and diagnostics information.
+ * Provides a browser compatibility and diagnostics information.
+ * @namespace RapidContext.Browser
  */
 (function (window) {
 
@@ -170,7 +170,7 @@
     /**
      * Checks if the browser supports all required APIs.
      *
-     * @return {Boolean} true if the browser is supported, or false otherwise
+     * @return {boolean} true if the browser is supported, or false otherwise
      *
      * @memberof RapidContext.Browser
      */
@@ -189,9 +189,8 @@
      * Checks for browser support for one or more specified APIs. Supports
      * checking JavaScript APIs, JavaScript syntax and CSS support.
      *
-     * @param {String/Object/Array} feature one or more features to check
-     * @param {String/Object} [...] the additional features to check
-     * @return {Boolean} true if supported, or false otherwise
+     * @param {...(string|Object|Array)} feature one or more features to check
+     * @return {boolean} `true` if supported, or `false` otherwise
      *
      * @example
      * RapidContext.Browser.supports("Array.isArray") ==> true;
@@ -249,7 +248,7 @@
     /**
      * Returns browser information version and platform information.
      *
-     * @param {String} [userAgent] the agent string, or undefined for this browser
+     * @param {string} [userAgent] the agent string, or undefined for this browser
      * @return {Object} a browser meta-data object
      *
      * @memberof RapidContext.Browser
@@ -336,9 +335,9 @@
     /**
      * Gets, sets or removes browser cookies.
      *
-     * @param {String} [name] the cookie name to get/set
-     * @param {String} [value] the cookie value to set, or null to remove
-     * @return {Object/String} all cookie values or a single value
+     * @param {string} [name] the cookie name to get/set
+     * @param {string} [value] the cookie value to set, or null to remove
+     * @return {Object|string} all cookie values or a single value
      *
       * @memberof RapidContext.Browser
      */

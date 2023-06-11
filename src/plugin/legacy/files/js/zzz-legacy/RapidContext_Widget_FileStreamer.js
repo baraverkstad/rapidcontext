@@ -42,7 +42,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  *     `<form>` and `<input>` elements are created automatically.
  * @extends RapidContext.Widget
  *
- * @example {JavaScript}
+ * @example <caption>JavaScript</caption>
  * var file = RapidContext.Widget.FileStreamer({ url: "rapidcontext/upload/my_id" });
  * form.addAll(file);
  * MochiKit.Signal.connect(file, "onselect", function () {

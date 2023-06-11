@@ -226,7 +226,7 @@ StartApp.prototype._handleKeyEvent = function (evt) {
 /**
  * Shows or hides the application launcher modifier icons.
  *
- * @param {Boolean} visible the visible flag
+ * @param {boolean} visible the visible flag
  */
 StartApp.prototype._showAppModifiers = function (visible) {
     var icons = $(this.ui.appTable).find("a > i").not(".launch-window");
@@ -255,9 +255,9 @@ StartApp.prototype._handleAppLaunch = function (evt) {
  *
  * @param {Widget} [pane] the optional container pane (null to create)
  * @param {Object} [opts] the options for the pane to create
- * @param {String} [opts.title] the pane title in the app switcher
- * @param {Boolean} [opts.closeable] the closeable flag (defaults to true)
- * @param {Boolean} [opts.background] the background flag (defaults to false)
+ * @param {string} [opts.title] the pane title in the app switcher
+ * @param {boolean} [opts.closeable] the closeable flag (defaults to true)
+ * @param {boolean} [opts.background] the background flag (defaults to false)
  * @return {Object} a UI object with "root" and "overlay" properties
  */
 StartApp.prototype.initAppPane = function (pane, opts) {
@@ -284,7 +284,7 @@ StartApp.prototype.initAppPane = function (pane, opts) {
 /**
  * Starts an app with the specified class name.
  *
- * @param {String} app the app id or class name
+ * @param {string} app the app id or class name
  * @param {Widget} [container] the optional container widget
  */
 StartApp.prototype.startApp = function (app, container) {

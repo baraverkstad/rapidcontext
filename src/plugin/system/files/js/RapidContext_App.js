@@ -13,17 +13,17 @@
  */
 
 /**
- * @name RapidContext
- * @namespace The base RapidContext namespace.
+ * The base RapidContext namespace.
+ * @namespace RapidContext
+ * @private
  */
 if (typeof(RapidContext) == "undefined") {
     RapidContext = {};
 }
 
 /**
- * @name RapidContext.App
- * @namespace Provides functions for application bootstrap and server
- *     communication.
+ * Provides functions for application bootstrap and server communication.
+ * @namespace RapidContext.App
  */
 if (typeof(RapidContext.App) == "undefined") {
     RapidContext.App = {};
@@ -35,7 +35,7 @@ if (typeof(RapidContext.App) == "undefined") {
  * created. Instead the app will be launched with the root document
  * as its UI container.
  *
- * @param {String/Object} [app] the app id or class name to start
+ * @param {string|Object} [app] the app id or class name to start
  *
  * @return {Promise} a promise that will resolve when initialization has
  *         either completed or failed
@@ -137,7 +137,7 @@ RapidContext.App._instances = function () {
  * launcher. In the last case, the matching cached launcher will be
  * returned.
  *
- * @param {String/Object} app the app id, instance, class name or
+ * @param {string|Object} app the app id, instance, class name or
  *        launcher
  *
  * @return {Object} the read-only app launcher, or
@@ -167,7 +167,7 @@ RapidContext.App.findApp = function (app) {
  * immediately with a `null` app instance (normal app communication is not
  * possible cross-window).
  *
- * @param {String/Object} app the app id, class name or launcher
+ * @param {string|Object} app the app id, class name or launcher
  * @param {Widget/Window} [container] the app container widget or
  *            window, defaults to create a new pane in the app tab
  *            container
@@ -319,7 +319,7 @@ RapidContext.App.startApp = function (app, container) {
  * Stops an app instance. If only the class name or launcher is specified, the
  * most recently created instance will be stopped.
  *
- * @param {String/Object} app the app id, instance, class name or launcher
+ * @param {string|Object} app the app id, instance, class name or launcher
  *
  * @return {Promise} a `RapidContext.Async` promise that will
  *         resolve when the app has been stopped
@@ -360,8 +360,8 @@ RapidContext.App.stopApp = function (app) {
  * If no instance is running, one will be started. Also, before calling the app
  * method, the app UI will be focused.
  *
- * @param {String/Object} app the app id, instance, class name or launcher
- * @param {String} method the app method name
+ * @param {string|Object} app the app id, instance, class name or launcher
+ * @param {string} method the app method name
  * @param {Mixed} [args] additional parameters sent to method
  *
  * @return {Promise} a `RapidContext.Async` promise that will
@@ -411,7 +411,7 @@ RapidContext.App.callApp = function (app, method) {
 /**
  * Performs an asynchronous procedure call.
  *
- * @param {String} name the procedure name
+ * @param {string} name the procedure name
  * @param {Array} [args] the array of arguments, or `null`
  *
  * @return {Promise} a `RapidContext.Async` promise that will
@@ -460,9 +460,9 @@ RapidContext.App.callProc = function (name, args) {
  * authentication token is specified, the login and password fields are not
  * used (can be null).
  *
- * @param {String} login the user login name or email address
- * @param {String} password the password to authenticate the user
- * @param {String} [token] the authentication token to identify user/password
+ * @param {string} login the user login name or email address
+ * @param {string} password the password to authenticate the user
+ * @param {string} [token] the authentication token to identify user/password
  *
  * @return {Promise} a `RapidContext.Async` promise that resolves when
  *         the authentication has either succeeded or failed
@@ -520,7 +520,7 @@ RapidContext.App.login = function (login, password, token) {
  * session and either reloads the browser window or returns a deferred object
  * that will produce either a `callback` or an `errback` response.
  *
- * @param {Boolean} [reload] the reload browser flag, defaults to true
+ * @param {boolean} [reload] the reload browser flag, defaults to true
  *
  * @return {Promise} a `RapidContext.Async` promise that will
  *         resolve when user is logged out
@@ -541,11 +541,11 @@ RapidContext.App.logout = function (reload) {
  * depending on the `Content-Type` header. The parameters will be sent either
  * in the URL or as the request payload (depending on the HTTP `method`).
  *
- * @param {String} url the URL to request
+ * @param {string} url the URL to request
  * @param {Object} [params] the request parameters, or `null`
  * @param {Object} [options] the request options, or `null`
- * @config {String} [method] the HTTP method, default is `GET`
- * @config {Number} [timeout] the timeout in milliseconds, default is 30s
+ * @config {string} [method] the HTTP method, default is `GET`
+ * @config {number} [timeout] the timeout in milliseconds, default is 30s
  * @config {Object} [headers] the specific HTTP headers to use
  *
  * @return {Promise} a `RapidContext.Async` promise that will
@@ -564,11 +564,11 @@ RapidContext.App.loadJSON = function (url, params, options) {
  * depending on the `Content-Type` header. The parameters will be sent either
  * in the URL or as the request payload (depending on the HTTP `method`).
  *
- * @param {String} url the URL to request
+ * @param {string} url the URL to request
  * @param {Object} [params] the request parameters, or `null`
  * @param {Object} [options] the request options, or `null`
- * @config {String} [method] the HTTP method, "GET" or "POST"
- * @config {Number} [timeout] the timeout in milliseconds, default is 30s
+ * @config {string} [method] the HTTP method, "GET" or "POST"
+ * @config {number} [timeout] the timeout in milliseconds, default is 30s
  * @config {Object} [headers] the specific HTTP headers to use
  *
  * @return {Promise} a `RapidContext.Async` promise that will
@@ -587,11 +587,11 @@ RapidContext.App.loadText = function (url, params, options) {
  * depending on the `Content-Type` header. The parameters will be sent either
  * in the URL or as the request payload (depending on the HTTP `method`).
  *
- * @param {String} url the URL to request
+ * @param {string} url the URL to request
  * @param {Object} [params] the request parameters, or `null`
  * @param {Object} [options] the request options, or `null`
- * @config {String} [method] the HTTP method, "GET" or "POST"
- * @config {Number} [timeout] the timeout in milliseconds, default is 30s
+ * @config {string} [method] the HTTP method, "GET" or "POST"
+ * @config {number} [timeout] the timeout in milliseconds, default is 30s
  * @config {Object} [headers] the specific HTTP headers to use
  *
  * @return {Promise} a `RapidContext.Async` promise that will
@@ -610,11 +610,11 @@ RapidContext.App.loadXML = function (url, params, options) {
  * `Content-Type` header. The parameters will be sent either in the URL or as
  * the request payload (depending on the HTTP `method`).
  *
- * @param {String} url the URL to request
+ * @param {string} url the URL to request
  * @param {Object} [params] the request parameters, or `null`
  * @param {Object} [options] the request options, or `null`
- * @config {String} [method] the HTTP method, default is `GET`
- * @config {Number} [timeout] the timeout in milliseconds, default is 30s
+ * @config {string} [method] the HTTP method, default is `GET`
+ * @config {number} [timeout] the timeout in milliseconds, default is 30s
  * @config {Object} [headers] the specific HTTP headers to use
  *
  * @return {Promise} a `RapidContext.Async` promise that will
@@ -653,7 +653,7 @@ RapidContext.App.loadXHR = function (url, params, options) {
  * become accessible after loading. If the script is already loaded, the
  * promise will resolve immediately.
  *
- * @param {String} url the URL to the script
+ * @param {string} url the URL to the script
  *
  * @return {Promise} a `RapidContext.Async` promise that will
  *         resolve when the script has loaded
@@ -676,7 +676,7 @@ RapidContext.App.loadScript = function (url) {
  * stylesheet is loaded by inserting a `<link>` tag in the document `head`.
  * If the stylesheet is already loaded, the promise will resolve immediately.
  *
- * @param {String} url the URL to the stylesheet
+ * @param {string} url the URL to the stylesheet
  *
  * @return {Promise} a `RapidContext.Async` promise that will
  *         callback when the stylesheet has been loaded
@@ -700,8 +700,8 @@ RapidContext.App.loadStyles = function (url) {
  * This function can also be used for saving a file that doesn't
  * exist by first posting the file (text) content to the server.
  *
- * @param {String} url the URL or filename to download
- * @param {String} [data] the optional file data (if not available
+ * @param {string} url the URL or filename to download
+ * @param {string} [data] the optional file data (if not available
  *            on the server-side)
  */
 RapidContext.App.downloadFile = function (url, data) {
@@ -736,9 +736,9 @@ RapidContext.App.downloadFile = function (url, data) {
  * Uploads a file to the server. The upload is handled by an
  * asynchronous HTTP request.
  *
- * @param {String} id the upload identifier to use
+ * @param {string} id the upload identifier to use
  * @param {File} file the file object to upload
- * @param {Function} [onProgress] the progress event handler
+ * @param {function} [onProgress] the progress event handler
  */
 RapidContext.App.uploadFile = function (id, file, onProgress) {
     var formData = new FormData();

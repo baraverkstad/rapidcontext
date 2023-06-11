@@ -23,14 +23,14 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  *
  * @constructor
  * @param {Object} attrs the widget and node attributes
- * @param {Boolean} [attrs.disabled] the disabled widget flag, defaults to
+ * @param {boolean} [attrs.disabled] the disabled widget flag, defaults to
  *            false
- * @param {Boolean} [attrs.hidden] the hidden widget flag, defaults to false
- * @param {Boolean} [attrs.highlight] the highlight option flag,
+ * @param {boolean} [attrs.hidden] the hidden widget flag, defaults to false
+ * @param {boolean} [attrs.highlight] the highlight option flag,
  *            defaults to false
- * @param {String} [attrs.icon] the icon reference to use, defaults
+ * @param {string} [attrs.icon] the icon reference to use, defaults
  *            to null (no icon)
- * @param {Object} [...] the child widgets or DOM nodes
+ * @param {...(string|Node|Array)} [child] the child widgets or DOM nodes
  *
  * @return {Widget} the widget DOM node
  *
@@ -38,10 +38,10 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  *     button, using the `<button>` HTML element.
  * @extends RapidContext.Widget
  *
- * @example {JavaScript}
+ * @example <caption>JavaScript</caption>
  * var closeBtn = RapidContext.Widget.Button({ icon: "OK", highlight: true }, "Close");
  *
- * @example {User Interface XML}
+ * @example <caption>User Interface XML</caption>
  * <Button id="closeBtn" icon="OK" highlight="true">Close</Button>
  */
 RapidContext.Widget.Button = function (attrs/*, ...*/) {
@@ -68,10 +68,10 @@ RapidContext.Widget.Classes.Button = RapidContext.Widget.Button;
  * Updates the widget or HTML DOM node attributes.
  *
  * @param {Object} attrs the widget and node attributes to set
- * @param {Boolean} [attrs.disabled] the disabled widget flag
- * @param {Boolean} [attrs.hidden] the hidden widget flag
- * @param {Boolean} [attrs.highlight] the highlight option flag
- * @param {Icon/Object/String} [attrs.icon] the icon reference to use
+ * @param {boolean} [attrs.disabled] the disabled widget flag
+ * @param {boolean} [attrs.hidden] the hidden widget flag
+ * @param {boolean} [attrs.highlight] the highlight option flag
+ * @param {Icon|Object|string} [attrs.icon] the icon reference to use
  */
 RapidContext.Widget.Button.prototype.setAttrs = function (attrs) {
     attrs = Object.assign({}, attrs);

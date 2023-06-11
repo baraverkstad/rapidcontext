@@ -18,9 +18,11 @@ if (typeof(RapidContext) == "undefined") {
 }
 
 /**
- * @namespace The base class for the HTML user interface widgets.
- *     The Widget class shouldn't be instantiated directly, instead
- *     one of the subclasses should be instantiated.
+ * The base class for the HTML user interface widgets. The Widget
+ * class shouldn't be instantiated directly, instead one of the
+ * subclasses should be instantiated.
+ *
+ * @class
  */
 RapidContext.Widget = function () {
     throw new ReferenceError("cannot call Widget constructor");
@@ -37,7 +39,7 @@ RapidContext.Widget.Classes = {};
 /**
  * Function to return unique identifiers.
  *
- * @return {Number} the next number in the sequence
+ * @return {number} the next number in the sequence
  */
 RapidContext.Widget._nextId = MochiKit.Base.counter();
 
@@ -51,12 +53,10 @@ RapidContext.Widget._nextId = MochiKit.Base.counter();
  * widgets).
  *
  * @param {Object} obj the object to check
- * @param {String} [className] the optional widget class name
+ * @param {string} [className] the optional widget class name
  *
- * @return {Boolean} `true` if the object looks like a widget, or
+ * @return {boolean} `true` if the object looks like a widget, or
  *         `false` otherwise
- *
- * @static
  */
 RapidContext.Widget.isWidget = function (obj, className) {
     return obj &&
@@ -68,7 +68,7 @@ RapidContext.Widget.isWidget = function (obj, className) {
 /**
  * Splits a string of CSS class names into an array.
  *
- * @param {Array/String/Object} val the CSS class names
+ * @param {Array|string} val the CSS class names
  *
  * @return {Array} nested arrays with single CSS class names
  */
@@ -92,7 +92,7 @@ RapidContext.Widget._toCssClass = function (val) {
  * "__" if also defined in the widget class.
  *
  * @param {Node} node the DOM node to modify
- * @param {Object/Function} [...] the widget class or constructor
+ * @param {...(Object|function)} cls the widget class or constructor
  *
  * @return {Widget} the widget DOM node
  */
@@ -128,16 +128,14 @@ RapidContext.Widget._widgetMixin = function (node/*, objOrClass, ...*/) {
  * exception will be thrown. This function is identical to calling
  * the constructor function directly.
  *
- * @param {String} name the widget class name
+ * @param {string} name the widget class name
  * @param {Object} attrs the widget and node attributes
- * @param {Object} [...] the child widgets or DOM nodes
+ * @param {...(Node|Widget)} [child] the child widgets or DOM nodes
  *
  * @return {Widget} the widget DOM node
  *
  * @throws {ReferenceError} if the widget class name couldn't be
  *             found in `RapidContext.Widget.Classes`
- *
- * @static
  */
 RapidContext.Widget.createWidget = function (name, attrs/*, ...*/) {
     var cls = RapidContext.Widget.Classes[name];
@@ -156,9 +154,7 @@ RapidContext.Widget.createWidget = function (name, attrs/*, ...*/) {
  * Once destroyed, all references to the widget object should be
  * cleared to reclaim browser memory.
  *
- * @param {Widget/Node/NodeList/Array} node the DOM node or list
- *
- * @static
+ * @param {Widget|Node|NodeList|Array} node the DOM node or list
  */
 RapidContext.Widget.destroyWidget = function (node) {
     if (node && node.nodeType === 1) {
@@ -181,7 +177,7 @@ RapidContext.Widget.destroyWidget = function (node) {
  * already been set, that id will be returned. Otherwise a new id
  * will be generated and assigned to the widget DOM node.
  *
- * @return {String} the the unique DOM node identifier
+ * @return {string} the the unique DOM node identifier
  */
 RapidContext.Widget.prototype.uid = function () {
     if (!this.id) {
@@ -226,8 +222,8 @@ RapidContext.Widget.prototype._styleNode = function () {
  * Dispatches a custom event from this DOM node. The event will be
  * created and emitted asynchronously (via setTimeout).
  *
- * @param {String} type the event type (e.g. "validate")
- * @param {Object} [opts] the event options (e.g. "{ bubbles: true }")
+ * @param {string} type the event type (e.g. `validate`)
+ * @param {Object} [opts] the event options (e.g. `{ bubbles: true }`)
  */
 RapidContext.Widget.prototype._dispatch = function (type, opts) {
     var self = this;
@@ -243,9 +239,9 @@ RapidContext.Widget.prototype._dispatch = function (type, opts) {
  * of additional widget attributes.
  *
  * @param {Object} attrs the widget and node attributes to set
- * @param {Boolean} [attrs.disabled] the disabled widget flag
- * @param {Boolean} [attrs.hidden] the hidden widget flag
- * @param {String} [attrs.class] the CSS class names
+ * @param {boolean} [attrs.disabled] the disabled widget flag
+ * @param {boolean} [attrs.hidden] the hidden widget flag
+ * @param {string} [attrs.class] the CSS class names
  */
 RapidContext.Widget.prototype.setAttrs = function (attrs) {
     /* eslint max-depth: "off" */
@@ -311,9 +307,9 @@ RapidContext.Widget.prototype.setStyle = function (styles) {
  * Note that more than one CSS class name may be checked, in which
  * case all must be present.
  *
- * @param {String} [...] the CSS class names to check
+ * @param {...(string|Array)} cls the CSS class names to check
  *
- * @return {Boolean} `true` if all CSS classes were present, or
+ * @return {boolean} `true` if all CSS classes were present, or
  *         `false` otherwise
  */
 RapidContext.Widget.prototype.hasClass = function (/* ... */) {
@@ -332,7 +328,7 @@ RapidContext.Widget.prototype.hasClass = function (/* ... */) {
 /**
  * Adds the specified CSS class names to this HTML DOM node.
  *
- * @param {String} [...] the CSS class names to add
+ * @param {...(string|Array)} cls the CSS class names to add
  */
 RapidContext.Widget.prototype.addClass = function (/* ... */) {
     function add(val) {
@@ -352,7 +348,7 @@ RapidContext.Widget.prototype.addClass = function (/* ... */) {
  * Note that this method will not remove any class starting with
  * "widget".
  *
- * @param {String} [...] the CSS class names to remove
+ * @param {...(string|Array)} cls the CSS class names to remove
  */
 RapidContext.Widget.prototype.removeClass = function (/* ... */) {
     function remove(val) {
@@ -372,9 +368,9 @@ RapidContext.Widget.prototype.removeClass = function (/* ... */) {
  * from this HTML DOM node. If all the CSS classes are already set,
  * they will be removed. Otherwise they will be added.
  *
- * @param {String} [...] the CSS class names to remove
+ * @param {...(string|Array)} cls the CSS class names to remove
  *
- * @return {Boolean} `true` if the CSS classes were added, or
+ * @return {boolean} `true` if the CSS classes were added, or
  *         `false` otherwise
  */
 RapidContext.Widget.prototype.toggleClass = function (/* ... */) {
@@ -393,7 +389,7 @@ RapidContext.Widget.prototype.toggleClass = function (/* ... */) {
  * to the disabled status can be made with `enable()`, `disable()` or
  * `setAttrs()`.
  *
- * @return {Boolean} `true` if the widget is disabled, or
+ * @return {boolean} `true` if the widget is disabled, or
  *         `false` otherwise
  */
 RapidContext.Widget.prototype.isDisabled = function () {
@@ -404,7 +400,7 @@ RapidContext.Widget.prototype.isDisabled = function () {
  * Performs the changes corresponding to setting the `disabled`
  * widget attribute.
  *
- * @param {Boolean} value the new attribute value
+ * @param {boolean} value the new attribute value
  */
 RapidContext.Widget.prototype._setDisabled = function (value) {
     value = MochiKit.Base.bool(value);
@@ -435,7 +431,7 @@ RapidContext.Widget.prototype.disable = function () {
  * actual widget visibility (the `display` style property set by
  * animations for example).
  *
- * @return {Boolean} `true` if the widget is hidden, or
+ * @return {boolean} `true` if the widget is hidden, or
  *         `false` otherwise
  */
 RapidContext.Widget.prototype.isHidden = function () {
@@ -446,7 +442,7 @@ RapidContext.Widget.prototype.isHidden = function () {
  * Performs the changes corresponding to setting the `hidden`
  * widget attribute.
  *
- * @param {Boolean} value the new attribute value
+ * @param {boolean} value the new attribute value
  */
 RapidContext.Widget.prototype._setHidden = function (value) {
     value = MochiKit.Base.bool(value);
@@ -482,14 +478,16 @@ RapidContext.Widget.prototype.hide = function () {
  * `MochiKit.Visual` function.
  *
  * @param {Object} opts the visual effect options
- * @param {String} opts.effect the MochiKit.Visual effect name
- * @param {String} opts.queue the MochiKit.Visual queue handling,
+ * @param {string} opts.effect the MochiKit.Visual effect name
+ * @param {string} opts.queue the MochiKit.Visual queue handling,
  *            defaults to "replace" and a unique scope for each widget
  *            (see `MochiKit.Visual` for full options)
  *
  * @example
  * widget.animate({ effect: "fade", duration: 0.5 });
  * widget.animate({ effect: "Move", transition: "spring", y: 300 });
+ *
+ * @deprecated Use CSS animations instead.
  */
 RapidContext.Widget.prototype.animate = function (opts) {
     var queue = { scope: this.uid(), position: "replace" };
@@ -531,7 +529,7 @@ RapidContext.Widget.prototype.getChildNodes = function () {
  * sometimes overridden by child widgets in order to hide or control
  * intermediate DOM nodes required by the widget.
  *
- * @param {Widget/Node} child the DOM node to add
+ * @param {Widget|Node} child the DOM node to add
  */
 RapidContext.Widget.prototype.addChildNode = function (child) {
     var elem = this._containerNode();
@@ -550,7 +548,7 @@ RapidContext.Widget.prototype.addChildNode = function (child) {
  * Note that this method will NOT destroy the removed child widget,
  * so care must be taken to ensure proper child widget destruction.
  *
- * @param {Widget/Node} child the DOM node to remove
+ * @param {Widget|Node} child the DOM node to remove
  */
 RapidContext.Widget.prototype.removeChildNode = function (child) {
     var elem = this._containerNode();
@@ -567,7 +565,7 @@ RapidContext.Widget.prototype.removeChildNode = function (child) {
  * `addChildNode()` method instead of this one, since that is the basis for
  * DOM node insertion.
  *
- * @param {Object} [...] the children to add
+ * @param {...(string|Node|Array)} child the children to add
  */
 RapidContext.Widget.prototype.addAll = function (...children) {
     [].concat(...children).filter((o) => o != null).forEach((child) => {

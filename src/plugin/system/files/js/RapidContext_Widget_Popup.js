@@ -23,14 +23,14 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  *
  * @constructor
  * @param {Object} attrs the widget and node attributes
- * @param {Number} [attrs.delay] the widget auto-hide delay in
+ * @param {number} [attrs.delay] the widget auto-hide delay in
  *            milliseconds, defaults to `5000`
  * @param {Object} [attrs.showAnim] the optional animation options
               when showing the popup, defaults to none
  * @param {Object} [attrs.hideAnim] the optional animation options
  *            when hiding the popup, defaults to none
- * @param {Boolean} [attrs.hidden] the hidden widget flag, defaults to `true`
- * @param {Widget} [...] the child widgets or DOM nodes
+ * @param {boolean} [attrs.hidden] the hidden widget flag, defaults to `true`
+ * @param {...(Node|Array)} [child] the child widgets or DOM nodes
  *
  * @return {Widget} the widget DOM node
  *
@@ -40,12 +40,12 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  *     keyboard or mouse actions related to the popup.
  * @extends RapidContext.Widget
  *
- * @example {JavaScript}
+ * @example <caption>JavaScript</caption>
  * var hr = MochiKit.DOM.HR();
  * var third = MochiKit.DOM.LI({ "class": "disabled" }, "Third");
  * var popup = RapidContext.Widget.Popup({}, "First",  "Second", hr, third);
  *
- * @example {User Interface XML}
+ * @example <caption>User Interface XML</caption>
  * <Popup id="examplePopup">
  *   <li>&#187; First Item</div>
  *   <li>&#187; Second Item</div>
@@ -97,13 +97,13 @@ RapidContext.Widget.Classes.Popup = RapidContext.Widget.Popup;
  * Updates the widget or HTML DOM node attributes.
  *
  * @param {Object} attrs the widget and node attributes to set
- * @param {Number} [attrs.delay] the widget auto-hide delay in
+ * @param {number} [attrs.delay] the widget auto-hide delay in
  *            milliseconds, defaults to 5000
  * @param {Object} [attrs.showAnim] the optional animation options
               when showing the popup, defaults to none
  * @param {Object} [attrs.hideAnim] the optional animation options
  *            when hiding the popup, defaults to none
- * @param {Boolean} [attrs.hidden] the hidden widget flag
+ * @param {boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.Popup.prototype.setAttrs = function (attrs) {
     attrs = Object.assign({}, attrs);
@@ -127,7 +127,7 @@ RapidContext.Widget.Popup.prototype.setAttrs = function (attrs) {
 /**
  * Adds a single child node to this widget.
  *
- * @param {String/Node/Widget} child the item to add
+ * @param {string|Node|Widget} child the item to add
  */
 RapidContext.Widget.Popup.prototype.addChildNode = function (child) {
     if (!child.nodeType) {
@@ -140,7 +140,7 @@ RapidContext.Widget.Popup.prototype.addChildNode = function (child) {
  * Performs the changes corresponding to setting the `hidden`
  * widget attribute for the `Popup` widget.
  *
- * @param {Boolean} value the new attribute value
+ * @param {boolean} value the new attribute value
  */
 RapidContext.Widget.Popup.prototype._setHiddenPopup = function (value) {
     if (value && !this.isHidden()) {
@@ -191,7 +191,7 @@ RapidContext.Widget.Popup.prototype.selectedChild = function () {
  * Marks a popup child as selected. The currently selected child will
  * automatically be unselected by this method.
  *
- * @param {Number/Node} indexOrNode the child node index or DOM node,
+ * @param {number|Node} indexOrNode the child node index or DOM node,
  *            use a negative value to unselect
  *
  * @return the index of the newly selected child, or
@@ -227,7 +227,7 @@ RapidContext.Widget.Popup.prototype.selectChild = function (indexOrNode) {
 /**
  * Moves the current selection by a numeric offset.
  *
- * @param {Number} offset the selection offset (a positive or
+ * @param {number} offset the selection offset (a positive or
  *            negative number)
  *
  * @return the index of the newly selected child, or

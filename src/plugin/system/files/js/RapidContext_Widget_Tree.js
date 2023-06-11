@@ -23,8 +23,8 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  *
  * @constructor
  * @param {Object} attrs the widget and node attributes
- * @param {Boolean} [attrs.hidden] the hidden widget flag, defaults to false
- * @param {Widget} [...] the child tree node widgets
+ * @param {boolean} [attrs.hidden] the hidden widget flag, defaults to false
+ * @param {...TreeNode} [child] the child tree node widgets
  *
  * @return {Widget} the widget DOM node
  *
@@ -32,14 +32,14 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  *     tree nodes, using a number of `<div>` HTML elements.
  * @extends RapidContext.Widget
  *
- * @example {JavaScript}
+ * @example <caption>JavaScript</caption>
  * var tree = RapidContext.Widget.Tree({ style: { width: "200px", height: "400px" } });
  * var root = RapidContext.Widget.TreeNode({ folder: true, name: "Root" });
  * var child = RapidContext.Widget.TreeNode({ name: "Child" });
  * root.addAll(child);
  * tree.addAll(root);
  *
- * @example {User Interface XML}
+ * @example <caption>User Interface XML</caption>
  * <Tree style="width: 200px; height: 400px;">
  *   <TreeNode name="Root">
  *     <TreeNode name="Child" />
@@ -151,7 +151,7 @@ RapidContext.Widget.Tree.prototype.markAll = function () {
 /**
  * Finds a root tree node with the specified name.
  *
- * @param {String} name the root tree node name
+ * @param {string} name the root tree node name
  *
  * @return {Widget} the root tree node found, or
  *         null if not found
@@ -224,7 +224,7 @@ RapidContext.Widget.Tree.prototype._handleSelect = function (node) {
  * Recursively expands all nodes. If a depth is specified,
  * expansions will not continue below that depth.
  *
- * @param {Number} [depth] the optional maximum depth
+ * @param {number} [depth] the optional maximum depth
  */
 RapidContext.Widget.Tree.prototype.expandAll = function (depth) {
     if (typeof(depth) !== "number") {
@@ -240,7 +240,7 @@ RapidContext.Widget.Tree.prototype.expandAll = function (depth) {
  * Recursively collapses all nodes. If a depth is specified, only
  * nodes below that depth will be collapsed.
  *
- * @param {Number} [depth] the optional minimum depth
+ * @param {number} [depth] the optional minimum depth
  */
 RapidContext.Widget.Tree.prototype.collapseAll = function (depth) {
     if (typeof(depth) !== "number") {

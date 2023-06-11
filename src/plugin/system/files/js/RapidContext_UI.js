@@ -13,8 +13,8 @@
  */
 
 /**
- * @name RapidContext.UI
- * @namespace Provides functions for managing the app user interface.
+ * Provides functions for managing the app user interface.
+ * @namespace RapidContext.UI
  */
 (function (window) {
 
@@ -27,7 +27,7 @@
      * displayed (depending on implementation). All arguments will be
      * concatenated and displayed.
      *
-     * @param {String/Error} [args] the messages or errors to display
+     * @param {...(String|Error)} [arg] the messages or errors to display
      *
      * @memberof RapidContext.UI
      */
@@ -78,7 +78,7 @@
      * @param {Object} node the XML document or node
      * @param {Object} [ids] the optional node id mappings
      *
-     * @return {Array/Object} an array or an object with the root
+     * @return {Array|Object} an array or an object with the root
      *         widget(s) created
      *
      * @memberof RapidContext.UI
@@ -151,7 +151,7 @@
     /**
      * Creates and injects a stylesheet element from a set of CSS rules.
      *
-     * @param {String} css the CSS rules to inject
+     * @param {string} css the CSS rules to inject
      */
     function _buildUIStylesheet(css) {
         var style = document.createElement("style");

@@ -23,21 +23,21 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  *
  * @constructor
  * @param {Object} attrs the widget and node attributes
- * @param {Number} [attrs.min] the minimum range value, defaults to 0
- * @param {Number} [attrs.max] the maximum range value, defaults to 100
- * @param {Number} [attrs.value] the progress value, a number between `min`
+ * @param {number} [attrs.min] the minimum range value, defaults to 0
+ * @param {number} [attrs.max] the maximum range value, defaults to 100
+ * @param {number} [attrs.value] the progress value, a number between `min`
  *            and `max`, defaults to 0
- * @param {Number} [attrs.ratio] the progress ratio, a floating-point number
+ * @param {number} [attrs.ratio] the progress ratio, a floating-point number
  *            between 0.0 and 1.0, defaults to 0.0
- * @param {Number} [attrs.text] the additional information text, defaults to
+ * @param {number} [attrs.text] the additional information text, defaults to
  *            blank
- * @param {Boolean} [attrs.noratio] the hide ratio (in percent) display flag,
+ * @param {boolean} [attrs.noratio] the hide ratio (in percent) display flag,
  *            defaults to `false`
- * @param {Boolean} [attrs.novalue] the hide value display flag, defaults to
+ * @param {boolean} [attrs.novalue] the hide value display flag, defaults to
  *            `false`
- * @param {Boolean} [attrs.notime] the hide remaining time display flag,
+ * @param {boolean} [attrs.notime] the hide remaining time display flag,
  *            defaults to `false`
- * @param {Boolean} [attrs.hidden] the hidden widget flag, defaults to false
+ * @param {boolean} [attrs.hidden] the hidden widget flag, defaults to false
  *
  * @return {Widget} the widget DOM node
  *
@@ -47,11 +47,11 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  *     range is modified, the time estimation is reset.
  * @extends RapidContext.Widget
  *
- * @example {JavaScript}
+ * @example <caption>JavaScript</caption>
  * var attrs = { text: "Working", noratio: true, notime: true };
  * var w = RapidContext.Widget.ProgressBar(attrs);
  *
- * @example {User Interface XML}
+ * @example <caption>User Interface XML</caption>
  * <ProgressBar text="Working" noratio="true" notime="true" />
  */
 RapidContext.Widget.ProgressBar = function (attrs) {
@@ -82,19 +82,19 @@ RapidContext.Widget.ProgressBar.prototype._containerNode = function () {
  * may trigger a new remaining time estimation.
  *
  * @param {Object} attrs the widget and node attributes to set
- * @param {Number} [attrs.min] the minimum range value, if modified the current
+ * @param {number} [attrs.min] the minimum range value, if modified the current
  *            value and ratio are reset
- * @param {Number} [attrs.max] the maximum range value, if modified the current
+ * @param {number} [attrs.max] the maximum range value, if modified the current
  *            value and ratio are reset
- * @param {Number} [attrs.value] the progress value, a number between `min`
+ * @param {number} [attrs.value] the progress value, a number between `min`
  *            and `max`
- * @param {Number} [attrs.ratio] the progress ratio, a floating-point number
+ * @param {number} [attrs.ratio] the progress ratio, a floating-point number
  *            between 0.0 and 1.0
- * @param {Number} [attrs.text] the additional information text
- * @param {Boolean} [attrs.noratio] the hide ratio (in percent) display flag
- * @param {Boolean} [attrs.novalue] the hide value display flag
- * @param {Boolean} [attrs.notime] the hide remaining time display flag
- * @param {Boolean} [attrs.hidden] the hidden widget flag
+ * @param {number} [attrs.text] the additional information text
+ * @param {boolean} [attrs.noratio] the hide ratio (in percent) display flag
+ * @param {boolean} [attrs.novalue] the hide value display flag
+ * @param {boolean} [attrs.notime] the hide remaining time display flag
+ * @param {boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.ProgressBar.prototype.setAttrs = function (attrs) {
     attrs = Object.assign({}, attrs);

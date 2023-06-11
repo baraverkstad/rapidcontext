@@ -23,17 +23,17 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  *
  * @constructor
  * @param {Object} attrs the widget and node attributes
- * @param {String} [attrs.title] the dialog title, defaults to "Dialog"
- * @param {Boolean} [attrs.modal] the modal dialog flag, defaults to `false`
- * @param {Boolean} [attrs.system] the system dialog flag, implies modal,
+ * @param {string} [attrs.title] the dialog title, defaults to "Dialog"
+ * @param {boolean} [attrs.modal] the modal dialog flag, defaults to `false`
+ * @param {boolean} [attrs.system] the system dialog flag, implies modal,
  *            defaults to `false`
- * @param {Boolean} [attrs.center] the center dialog flag, defaults to `true`
- * @param {Boolean} [attrs.closeable] the closeable dialog flag, defaults to
+ * @param {boolean} [attrs.center] the center dialog flag, defaults to `true`
+ * @param {boolean} [attrs.closeable] the closeable dialog flag, defaults to
  *            `true`
- * @param {Boolean} [attrs.resizeable] the resize dialog flag, defaults to
+ * @param {boolean} [attrs.resizeable] the resize dialog flag, defaults to
  *            `true`
- * @param {Boolean} [attrs.hidden] the hidden widget flag, defaults to `true`
- * @param {Object} [...] the child widgets or DOM nodes
+ * @param {boolean} [attrs.hidden] the hidden widget flag, defaults to `true`
+ * @param {...(Node|Widget|string)} [child] the child widgets or DOM nodes
  *
  * @return {Widget} the widget DOM node
  *
@@ -42,13 +42,13 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  *     number of `<div>` HTML elements.
  * @extends RapidContext.Widget
  *
- * @example {JavaScript}
+ * @example <caption>JavaScript</caption>
  * var h1 = MochiKit.DOM.H1({}, "Hello, world!");
  * var attrs = { title: "Hello", modal: true };
  * var helloDialog = RapidContext.Widget.Dialog(attrs, h1);
  * RapidContext.Util.registerSizeConstraints(helloDialog, "200", "75");
  *
- * @example {User Interface XML}
+ * @example <caption>User Interface XML</caption>
  * <Dialog id="helloDialog" title="Hello" modal="true" w="200" h="75">
  *   <h1>Hello, world!</h1>
  * </Dialog>
@@ -202,13 +202,13 @@ RapidContext.Widget.Dialog.prototype._handleMouseMove = function (evt) {
  * Updates the dialog or HTML DOM node attributes.
  *
  * @param {Object} attrs the widget and node attributes to set
- * @param {String} [attrs.title] the dialog title
- * @param {Boolean} [attrs.modal] the modal dialog flag
- * @param {Boolean} [attrs.system] the system dialog flag, implies modal
- * @param {Boolean} [attrs.center] the center dialog flag
- * @param {Boolean} [attrs.closeable] the closeable dialog flag
- * @param {Boolean} [attrs.resizeable] the resize dialog flag
- * @param {Boolean} [attrs.hidden] the hidden widget flag
+ * @param {string} [attrs.title] the dialog title
+ * @param {boolean} [attrs.modal] the modal dialog flag
+ * @param {boolean} [attrs.system] the system dialog flag, implies modal
+ * @param {boolean} [attrs.center] the center dialog flag
+ * @param {boolean} [attrs.closeable] the closeable dialog flag
+ * @param {boolean} [attrs.resizeable] the resize dialog flag
+ * @param {boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.Dialog.prototype.setAttrs = function (attrs) {
     attrs = Object.assign({}, attrs);
@@ -245,7 +245,7 @@ RapidContext.Widget.Dialog.prototype.setAttrs = function (attrs) {
  * Performs the changes corresponding to setting the `hidden`
  * widget attribute for the Dialog widget.
  *
- * @param {Boolean} value the new attribute value
+ * @param {boolean} value the new attribute value
  */
 RapidContext.Widget.Dialog.prototype._setHiddenDialog = function (value) {
     if (!!value === this.isHidden()) {
@@ -282,8 +282,8 @@ RapidContext.Widget.Dialog.prototype._setHiddenDialog = function (value) {
  * parent DOM node). The position will be restrained by the parent
  * DOM node size.
  *
- * @param {Number} x the horizontal position (in pixels)
- * @param {Number} y the vertical position (in pixels)
+ * @param {number} x the horizontal position (in pixels)
+ * @param {number} y the vertical position (in pixels)
  */
 RapidContext.Widget.Dialog.prototype.moveTo = function (x, y) {
     var max = {
@@ -323,8 +323,8 @@ RapidContext.Widget.Dialog.prototype.moveToCenter = function () {
  * Resizes the dialog to the specified size (in pixels). The size
  * will be restrained by the parent DOM node size.
  *
- * @param {Number} w the width (in pixels)
- * @param {Number} h the height (in pixels)
+ * @param {number} w the width (in pixels)
+ * @param {number} h the height (in pixels)
  *
  * @return {Dimensions} an object with "w" and "h" properties for the
  *         actual size used
