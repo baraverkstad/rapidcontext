@@ -131,7 +131,7 @@
     function _buildUIElem(node, ids) {
         var name = node.nodeName;
         if (name == "style") {
-            _buildUIStylesheet(MochiKit.DOM.scrapeText(node));
+            _buildUIStylesheet(node.innerText);
             node.parentNode.removeChild(node);
             return null;
         }
