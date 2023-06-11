@@ -92,7 +92,8 @@ RapidContext.Widget.Overlay.prototype.setAttrs = function (attrs) {
     if (this.showLoading) {
         var icon = RapidContext.Widget.Icon("fa fa-refresh fa-spin m-1");
     }
-    MochiKit.DOM.replaceChildNodes(this.lastChild, icon, this.message);
+    this.lastChild.innerHTML = "";
+    this.lastChild.append(icon, this.message);
     this.lastChild.classList.toggle("widgetHidden", !this.showLoading && !this.message);
     this.__setAttrs(attrs);
 };

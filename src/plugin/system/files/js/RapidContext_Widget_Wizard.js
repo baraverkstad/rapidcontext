@@ -195,7 +195,8 @@ RapidContext.Widget.Wizard.prototype._updateStatus = function () {
     bNext.setAttrs({ disabled: !status.next });
     bDone.setAttrs({ disabled: !status.next });
     info = MochiKit.DOM.SPAN({ "class": "widgetWizardInfo" }, info);
-    MochiKit.DOM.replaceChildNodes(h3, icon, title, info);
+    h3.innerHTML = "";
+    h3.append(icon, title, info);
 };
 
 /**

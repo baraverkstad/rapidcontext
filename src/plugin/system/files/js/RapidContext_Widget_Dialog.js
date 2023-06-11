@@ -216,7 +216,7 @@ RapidContext.Widget.Dialog.prototype.setAttrs = function (attrs) {
         "title", "modal", "system", "center", "resizeable", "closeable", "hidden"
     ]);
     if (typeof(locals.title) != "undefined") {
-        MochiKit.DOM.replaceChildNodes(this.firstChild, locals.title);
+        this.firstChild.innerText = locals.title;
     }
     if (typeof(locals.modal) != "undefined") {
         this.modal = MochiKit.Base.bool(locals.modal);

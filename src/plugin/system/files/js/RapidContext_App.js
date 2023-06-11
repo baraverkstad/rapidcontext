@@ -54,9 +54,8 @@ RapidContext.App.init = function (app) {
     RapidContext.Util.registerSizeConstraints(document.body, "100%-20", "100%-20");
     var resizer = () => RapidContext.Util.resizeElements(document.body);
     MochiKit.Signal.connect(window, "onresize", resizer);
-    RapidContext.Util.resizeElements(document.body);
-    var overlay = new RapidContext.Widget.Overlay({ message: "Loading..." });
-    MochiKit.DOM.replaceChildNodes(document.body, overlay);
+    document.body.innerHTML = "";
+    document.body.append(new RapidContext.Widget.Overlay({ message: "Loading..." }));
 
     // Load platform data (into cache)
     var cachedData = [

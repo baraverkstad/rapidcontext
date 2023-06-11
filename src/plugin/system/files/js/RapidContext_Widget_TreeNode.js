@@ -141,7 +141,7 @@ RapidContext.Widget.TreeNode.prototype.setAttrs = function (attrs) {
         while (!node.classList.contains("widgetTreeNodeText")) {
             node = node.nextSibling;
         }
-        MochiKit.DOM.replaceChildNodes(node, locals.name);
+        node.innerText = locals.name;
     }
     if (MochiKit.Base.bool(locals.folder)) {
         this._containerNode(true);

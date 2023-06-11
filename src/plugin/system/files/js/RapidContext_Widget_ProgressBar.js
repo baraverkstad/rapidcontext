@@ -203,5 +203,5 @@ RapidContext.Widget.ProgressBar.prototype._render = function () {
     if (this.timeRemaining && percent < 100) {
         info.push(this.timeRemaining + " remaining");
     }
-    MochiKit.DOM.replaceChildNodes(this.firstChild, info.join(" \u2022 "));
+    this.firstChild.innerText = info.join(" \u2022 ");
 };

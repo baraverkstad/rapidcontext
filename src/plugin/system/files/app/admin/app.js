@@ -415,9 +415,9 @@ AdminApp.prototype._updateConnectionEdit = function () {
     if (this._types[data.type]) {
         var type = this._types[data.type];
         Object.assign(props, type.properties);
-        MochiKit.DOM.replaceChildNodes(this.ui.cxnEditTypeDescr, type.description);
+        this.ui.cxnEditTypeDescr.innerText = type.description;
     } else {
-        MochiKit.DOM.replaceChildNodes(this.ui.cxnEditTypeDescr);
+        this.ui.cxnEditTypeDescr.innerText = "";
     }
     for (var name in data) {
         var val = String(data[name]).trim();
@@ -516,15 +516,17 @@ AdminApp.prototype._showApp = function () {
     this.ui.appForm.reset();
     if (data) {
         this.ui.appForm.update(data);
-        var iconNode = data.icon ? data.icon.cloneNode(true) : null;
-        MochiKit.DOM.replaceChildNodes(this.ui.appIcon, iconNode);
+        this.ui.appIcon.innerHTML = "";
+        if (data.icon) {
+            this.ui.appIcon.append(data.icon.cloneNode(true));
+        }
         var url = "rapidcontext/storage/app/" + data.id;
         this.ui.appLink.setAttribute("href", url);
         this.ui.appLink.classList.remove("hidden");
         this.ui.appResourceTable.show();
         this.ui.appResourceTable.setData(data.resources);
     } else {
-        MochiKit.DOM.replaceChildNodes(this.ui.appIcon);
+        this.ui.appIcon.innerHTML = "";
         this.ui.appLink.classList.add("hidden");
         this.ui.appResourceTable.hide();
     }
@@ -716,7 +718,7 @@ AdminApp.prototype._showProcedure = function () {
     this.ui.procReload.hide();
     this.ui.procLoading.hide();
     this.ui.procAlias.classList.add("hidden");
-    MochiKit.DOM.replaceChildNodes(this.ui.procArgTable);
+    this.ui.procArgTable.innerHTML = "";
     this.ui.procExec.disable();
     this.ui.procBatch.disable();
     this.ui.procExecResult.removeAll();
@@ -751,7 +753,7 @@ AdminApp.prototype._callbackShowProcedure = function (procName, res) {
         }
         this.ui.procAlias.classList.toggle("hidden", !res.alias);
         this.ui.procForm.update(res);
-        MochiKit.DOM.replaceChildNodes(this.ui.procArgTable);
+        this.ui.procArgTable.innerHTML = "";
         var count = 0;
         for (var i = 0; i < res.bindings.length; i++) {
             var b = res.bindings[i];
@@ -910,7 +912,7 @@ AdminApp.prototype._initProcEdit = function (data) {
     var select = this.ui.procEditType;
     return this.proc.procTypes()
         .then(function (res) {
-            MochiKit.DOM.replaceChildNodes(select);
+            select.innerHTML = "";
             Object.keys(res).sort().forEach(function (k) {
                 var name = k.replace("procedure/", "");
                 select.append(MochiKit.DOM.OPTION({ value: k }, name));
@@ -1471,7 +1473,7 @@ AdminApp.prototype._updateLogLevel = function (evt) {
 AdminApp.prototype._clearLogs = function () {
     RapidContext.Log.clear();
     this.ui.logTable.setData([]);
-    MochiKit.DOM.replaceChildNodes(this.ui.logData);
+    this.ui.logData.innerText = "";
 };
 
 /**
@@ -1504,9 +1506,9 @@ AdminApp.prototype._showLogDetails = function () {
             }
             list[i] = res + str;
         }
-        text = MochiKit.DOM.PRE(null, list.join("\n"));
+        text = list.join("\n");
     }
-    MochiKit.DOM.replaceChildNodes(this.ui.logData, text);
+    this.ui.logData.innerText = text;
 };
 
 /**

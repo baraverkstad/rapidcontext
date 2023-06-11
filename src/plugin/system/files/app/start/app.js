@@ -30,7 +30,7 @@ StartApp.prototype.start = function () {
     this._initInfoMenu();
     var env = status.environment;
     env = (env && env.name) ? env.name : "<none>";
-    MochiKit.DOM.replaceChildNodes(this.ui.infoEnv, env);
+    this.ui.infoEnv.innerText = env;
     var show = { effect: "appear", duration: 0.2 };
     var hide = { effect: "fade", duration: 0.2, delay: 0.2 };
     this.ui.menu.setAttrs({ showAnim: show, hideAnim: hide });
@@ -47,7 +47,7 @@ StartApp.prototype.start = function () {
 
     // About dialog
     var version = MochiKit.Text.format("{version} ({date})", status);
-    MochiKit.DOM.replaceChildNodes(this.ui.aboutVersion, version);
+    this.ui.aboutVersion.innerText = version;
 
     // Password dialog
     MochiKit.Signal.connect(this.ui.passwordForm, "onsubmit", this, "_changePassword");
@@ -87,13 +87,13 @@ StartApp.prototype.stop = function () {
 StartApp.prototype._initInfoMenu = function () {
     var user = RapidContext.App.user();
     if (user && user.id) {
-        MochiKit.DOM.replaceChildNodes(this.ui.infoUser, user.name || user.id);
-        MochiKit.DOM.replaceChildNodes(this.ui.menuTitle, user.longName);
-        MochiKit.DOM.replaceChildNodes(this.ui.menuLogInOut, "Logout");
+        this.ui.infoUser.innerText = user.name || user.id;
+        this.ui.menuTitle.innerText = user.longName;
+        this.ui.menuLogInOut.innerText = "Logout";
     } else {
-        MochiKit.DOM.replaceChildNodes(this.ui.infoUser, "anonymous");
-        MochiKit.DOM.replaceChildNodes(this.ui.menuTitle, "Anonymous User");
-        MochiKit.DOM.replaceChildNodes(this.ui.menuLogInOut, "Login");
+        this.ui.infoUser.innerText = "anonymous";
+        this.ui.menuTitle.innerText = "Anonymous User";
+        this.ui.menuLogInOut.innerText = "Login";
     }
     this.ui.menuPassword.classList.toggle("disabled", !user || user.type != "user");
 };
@@ -275,8 +275,9 @@ StartApp.prototype.initAppPane = function (pane, opts) {
             this.ui.tabContainer.selectChild(pane);
         }
     }
+    pane.innerHTML = "";
     var overlay = new RapidContext.Widget.Overlay({ message: "Loading app..." });
-    MochiKit.DOM.replaceChildNodes(pane, overlay);
+    pane.append(overlay);
     return { root: pane, overlay: overlay };
 };
 

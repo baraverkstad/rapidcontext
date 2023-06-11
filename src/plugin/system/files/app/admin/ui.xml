@@ -596,7 +596,7 @@
         </div>
         <div h="66.666%">
           <h3>Log Data:</h3>
-          <p id="logData" w="100%" h="100%-2.2em" class="overflow-auto unimportant"></p>
+          <p id="logData" w="100%" h="100%-2.2em" class="overflow-auto text-pre font-monospace unimportant"></p>
         </div>
       </div>
     </Pane>

@@ -134,7 +134,7 @@ RapidContext.Widget.TableColumn.prototype.setAttrs = function (attrs) {
         "cellStyle", "renderer"
     ]);
     if (typeof(locals.title) !== "undefined") {
-        MochiKit.DOM.replaceChildNodes(this, locals.title);
+        this.innerText = locals.title;
     }
     if (typeof(locals.field) !== "undefined") {
         this.field = locals.field;

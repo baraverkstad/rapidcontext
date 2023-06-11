@@ -190,8 +190,8 @@ HelpApp.prototype.clearContent = function () {
     this._currentUrl = "";
     this.ui.contentLoading.hide();
     this.ui.contentLink.classList.add("hidden");
-    MochiKit.DOM.replaceChildNodes(this.ui.contentInfo);
-    MochiKit.DOM.replaceChildNodes(this.ui.contentText);
+    this.ui.contentInfo.innerHTML = "";
+    this.ui.contentText.innerHTML = "";
 };
 
 /**
@@ -215,7 +215,7 @@ HelpApp.prototype.loadContent = function (url) {
         this._currentUrl = url;
         this.ui.contentLoading.show();
         var source = (node && node.data) ? node.data.source || "" : "";
-        MochiKit.DOM.replaceChildNodes(this.ui.contentInfo, source);
+        this.ui.contentInfo.innerText = source;
         RapidContext.App.loadText(fileUrl)
             .then((data) => this._callbackContent(data))
             .catch(RapidContext.UI.showError)
@@ -237,7 +237,7 @@ HelpApp.prototype._callbackContent = function (data) {
             this.ui.contentScroll.scrollTop = 0;
         }
     } else {
-        MochiKit.DOM.replaceChildNodes(this.ui.contentInfo, "Not Found");
+        this.ui.contentInfo.innerText = "Not Found";
     }
 };
 

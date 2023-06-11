@@ -149,15 +149,13 @@ RapidContext.Widget.Field.prototype.redraw = function () {
         str = MochiKit.Text.truncate(str, this.maxLength, "...");
     }
     if (this.mask) {
-        var tooltip = "Click to Show Value";
-        var mask = "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022";
-        var icon = RapidContext.Widget.Icon({ ref: "LOCK", tooltip: tooltip });
         this.addClass("widgetFieldMask");
-        this.title = tooltip;
-        MochiKit.DOM.replaceChildNodes(this, mask, icon);
+        this.title = "Click to show";
+        this.innerText = "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022";
+        this.append(RapidContext.Widget.Icon({ ref: "LOCK", tooltip: "Click to show" }));
     } else {
         this.title = (str == longStr) ? null : longStr;
-        MochiKit.DOM.replaceChildNodes(this, str);
+        this.innerText = str;
     }
 };
 
