@@ -90,29 +90,19 @@
         } else if (node.documentElement) {
             return buildUI(node.documentElement.childNodes, ids);
         } else if (typeof(node.item) != "undefined" && typeof(node.length) == "number") {
-            var res = [];
-            var elems = Array.from(node);
-            for (var i = 0; i < elems.length; i++) {
-                var elem = buildUI(elems[i], ids);
-                if (elem) {
-                    res.push(elem);
-                }
-            }
-            return res;
+            return Array.from(node).map((el) => buildUI(el, ids)).filter(Boolean);
         } else if (node.nodeType === 1) { // Node.ELEMENT_NODE
             try {
                 return _buildUIElem(node, ids);
             } catch (e) {
-                RapidContext.Log.error("Failed to build UI element", node, e);
+                console.error("Failed to build UI element", node, e);
             }
-        } else if (node.nodeType === 3 || node.nodeType === 4) {
-            // Node.TEXT_NODE or Node.CDATA_SECTION_NODE
-            var str = node.nodeValue;
-            if (str && str.trim() && node.nodeType === 3) {
-                return document.createTextNode(str.replace(/\s+/g, " "));
-            } else if (str && node.nodeType === 4) {
-                return document.createTextNode(str);
-            }
+        } else if (node.nodeType === 3) { // Node.TEXT_NODE
+            let str = (node.nodeValue || "").replace(/\s+/g, " ");
+            return str.trim() ? document.createTextNode(str) : null;
+        } else if (node.nodeType === 4) { // Node.CDATA_SECTION_NODE
+            let str = node.nodeValue || "";
+            return str ? document.createTextNode(str) : null;
         }
         return null;
     }
@@ -136,19 +126,12 @@
             return null;
         }
         var attrs = Array.from(node.attributes)
-            .filter((a) => a.specified)
             .reduce((o, a) => Object.assign(o, { [a.name]: a.value }), {});
         var locals = RapidContext.Util.mask(attrs, ["id", "w", "h"]);
         var children = buildUI(node.childNodes, ids);
         var widget;
         if (RapidContext.Widget.Classes[name]) {
-            if (name == "Table" && attrs.multiple) {
-                // TODO: remove deprecated code, eventually...
-                RapidContext.Log.warn("Table 'multiple' attribute is deprecated, use 'select'", node);
-                attrs.select = MochiKit.Base.bool(attrs.multiple) ? "multiple" : "one";
-                delete attrs.multiple;
-            }
-            widget = RapidContext.Widget.createWidget(name, attrs, children);
+            widget = RapidContext.Widget.Classes[name](attrs, ...children);
         } else {
             widget = MochiKit.DOM.createDOM(name, attrs, children);
         }
