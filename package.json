@@ -13,13 +13,8 @@
   },
   "devDependencies": {
     "eslint": "8.42.0",
-    "html-validate": "8.0.0",
-    "stylelint": "15.6.3",
+    "html-validate": "8.0.2",
+    "stylelint": "15.7.0",
     "stylelint-config-standard": "33.0.0"
-  },
-  "overrides": {
-    "stylelint": {
-      "cosmiconfig": "8.1.3"
-    }
   }
 }
