@@ -267,7 +267,7 @@ AdminApp.prototype._showConnection = function () {
     if (data.plugin && data.id) {
         this.ui.cxnEdit.show();
         var url = "rapidcontext/storage/connection/" + data.id;
-        MochiKit.DOM.setNodeAttribute(this.ui.cxnLink, "href", url);
+        this.ui.cxnLink.setAttribute("href", url);
         this.ui.cxnLink.classList.remove("hidden");
     } else {
         this.ui.cxnEdit.hide();
@@ -519,7 +519,7 @@ AdminApp.prototype._showApp = function () {
         var iconNode = data.icon ? data.icon.cloneNode(true) : null;
         MochiKit.DOM.replaceChildNodes(this.ui.appIcon, iconNode);
         var url = "rapidcontext/storage/app/" + data.id;
-        MochiKit.DOM.setNodeAttribute(this.ui.appLink, "href", url);
+        this.ui.appLink.setAttribute("href", url);
         this.ui.appLink.classList.remove("hidden");
         this.ui.appResourceTable.show();
         this.ui.appResourceTable.setData(data.resources);
@@ -566,7 +566,7 @@ AdminApp.prototype._showPlugin = function () {
         this.ui.pluginLink.classList.remove("hidden");
         var path = "/storage/plugin/" + data.id + "/";
         var url = "rapidcontext/storage" + path;
-        MochiKit.DOM.setNodeAttribute(this.ui.pluginLink, "href", url);
+        this.ui.pluginLink.setAttribute("href", url);
         if (data.loaded) {
             this.ui.pluginLoad.hide();
             this.ui.pluginUnload.show();

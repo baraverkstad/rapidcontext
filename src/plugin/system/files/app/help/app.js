@@ -228,7 +228,7 @@ HelpApp.prototype.loadContent = function (url) {
  */
 HelpApp.prototype._callbackContent = function (data) {
     if (typeof(data) == "string") {
-        MochiKit.DOM.setNodeAttribute(this.ui.contentLink, "href", this._currentUrl);
+        this.ui.contentLink.setAttribute("href", this._currentUrl);
         this.ui.contentLink.classList.remove("hidden");
         this._showContentHtml(data);
         if (/#.+/.test(this._currentUrl)) {

@@ -274,7 +274,7 @@ RapidContext.Widget.prototype.setAttrs = function (attrs) {
             }
             this.setStyle(value);
         } else if (value != null) {
-            MochiKit.DOM.setNodeAttribute(this, name, value);
+            this.setAttribute(name, value);
             if (typeof(value) != "object") {
                 this[name] = value;
             }
@@ -409,7 +409,7 @@ RapidContext.Widget.prototype.isDisabled = function () {
 RapidContext.Widget.prototype._setDisabled = function (value) {
     value = MochiKit.Base.bool(value);
     this.classList.toggle("widgetDisabled", value);
-    MochiKit.DOM.setNodeAttribute(this, "disabled", value);
+    this.setAttribute("disabled", value);
     this.disabled = value;
 };
 
@@ -451,7 +451,7 @@ RapidContext.Widget.prototype.isHidden = function () {
 RapidContext.Widget.prototype._setHidden = function (value) {
     value = MochiKit.Base.bool(value);
     this.classList.toggle("widgetHidden", value);
-    MochiKit.DOM.setNodeAttribute(this, "hidden", value);
+    this.setAttribute("hidden", value);
     this.hidden = value;
 };
 
