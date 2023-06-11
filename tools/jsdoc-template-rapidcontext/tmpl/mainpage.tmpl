@@ -1,0 +1,21 @@
+<?js
+  let data = obj;
+  let self = this;
+?>
+
+<table class="summary-table">
+  <caption>Summary</caption>
+  <tbody>
+    <?js self.find({kind: ['namespace','class','interface']}).forEach((obj) => { ?>
+    <tr>
+      <td class="name-description">
+        <?js= self.linkto(obj.longname, obj.longname) ?>
+        <?js= self.typeLabel(obj) ?>
+      </td>
+      <td class="description">
+        <?js= self.summarize(obj.classdesc || obj.description) ?>
+      </td>
+    </tr>
+    <?js }); ?>
+  </tbody>
+</table>

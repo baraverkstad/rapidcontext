@@ -1,9 +1,0 @@
-{ "topic": "RapidContext/JavaScript API", "children": [
-<for each="symbol" in="data">
-    { "topic": "{+symbol.alias+}", "url": "doc/js/{+symbol.alias+".html"+}", "children": [
-    <for each="prop" in="allOwnProperties(symbol)">
-        { "topic": "{+prop.name+}", "url": "doc/js/{+prop.memberOf+".html"+}#{+Link.symbolNameToLinkName(prop)+}" }<if test="!$prop_last">,</if>
-    </for>
-    ] }<if test="!$symbol_last">,</if>
-</for>
-] }

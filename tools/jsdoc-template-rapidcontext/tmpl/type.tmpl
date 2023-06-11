@@ -1,0 +1,6 @@
+<?js
+    let data = obj;
+    let self = this;
+    let tag = (name) => `<b>${self.htmlsafe(name)}</b>`
+?>
+    <span class="param-type">{<?js= data.map(tag).join('|') ?>}</span>

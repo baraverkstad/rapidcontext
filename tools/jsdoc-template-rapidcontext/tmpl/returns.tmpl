@@ -1,0 +1,6 @@
+<?js
+    let self = this;
+    let data = obj || {};
+?>
+    <?js= data.type && this.partial('type.tmpl', data.type.names) || '' ?>
+    <?js= self.htmltext(data.description, true) ?>

@@ -233,18 +233,9 @@
   </target>
 
   <target name="doc-js">
-    <property name="jsdoc.dir" value="${basedir}/tools/jsdoc-toolkit" />
-    <pathconvert property="jsdoc.files" pathsep=" ">
-      <fileset dir="src/plugin/system/files/js" includes="RapidContext*.js" />
-      <flattenmapper/>
-    </pathconvert>
-    <java jar="${jsdoc.dir}/jsrun.jar" fork="true" dir="src/plugin/system/files/js">
-      <sysproperty key="jsdoc.dir" value="${jsdoc.dir}" />
-      <arg value="${jsdoc.dir}/app/run.js" />
-      <arg value="-t=${jsdoc.dir}/templates/rapidcontext" />
-      <arg value="-d=${basedir}/doc/js" />
-      <arg line="${jsdoc.files}" />
-    </java>
+    <exec executable="npx">
+      <arg line="jsdoc -c .jsdoc.json -t tools/jsdoc-template-rapidcontext/ -d doc/js/ src/plugin/system/files/js/"/>
+    </exec>
     <replaceregexp match="\s+$" replace="" flags="g" byline="true">
       <fileset dir="doc/js">
         <include name="**/*.html" />
@@ -375,12 +366,10 @@
     <replaceregexp match="(20\d\d)-20\d\d" replace="\1-2023" flags="g" byline="true">
       <fileset dir=".">
         <patternset refid="pattern.srcfiles" />
+        <include name="tools/jsdoc-template-rapidcontext/tmpl/*.tmpl"/>
         <exclude name="doc/external/**"/>
         <exclude name="src/plugin/legacy/**"/>
         <exclude name="src/plugin/system/files/js/crypto-*.js"/>
-      </fileset>
-      <fileset dir=".">
-        <include name="tools/jsdoc-toolkit/templates/rapidcontext/static/*.html"/>
       </fileset>
     </replaceregexp>
   </target>

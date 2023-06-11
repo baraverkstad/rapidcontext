@@ -1,0 +1,194 @@
+<?js
+    var data = obj;
+    var self = this;
+    var defaultObjectClass = '';
+    
+    // Check if the default value is an object or array; if so, apply code highlighting
+    if (data.defaultvalue && (data.defaultvaluetype === 'object' || data.defaultvaluetype === 'array')) {
+        data.defaultvalue = `<pre class="hljs"><code>${data.defaultvalue}</code></pre>`;
+        defaultObjectClass = 'object-value';
+    }
+?>
+
+<dl class="details">
+    <?js if (data.properties && data.properties.length) { ?>
+    <dt class="tag-props">Properties:</dt>
+    <dd class="tag-props">
+        <?js= this.partial('properties.tmpl', data) ?>
+    </dd>
+    <?js } ?>
+
+    <?js if (data.params) {?>
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+        <?js= this.partial('params.tmpl', params) ?>
+    </dd>
+    <?js } ?>
+
+    <?js if (data.returns) {?>
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+        <?js= self.htmllist(data.returns.map((r) => self.partial('returns.tmpl', r))) ?>
+    </dd>
+    <?js } ?>
+
+    <?js if (data.inherited && data.inherits && !data.overrides) { ?>
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <?js= this.linkto(data.inherits, this.htmlsafe(data.inherits)) ?>
+    </dd>
+    <?js } ?>
+
+    <?js if (data.overrides) { ?>
+    <dt class="tag-overrides">Overrides:</dt>
+    <dd class="tag-overrides">
+        <?js= this.linkto(data.overrides, this.htmlsafe(data.overrides)) ?>
+    </dd>
+    <?js } ?>
+
+    <?js if (data.implementations && data.implementations.length) { ?>
+    <dt class="implementations">Implementations:</dt>
+    <dd class="implementations">
+        <?js= self.htmllist(data.implementations.map((o) => self.linkto(o, self.htmlsafe(o)))) ?>
+    </dd>
+    <?js } ?>
+
+    <?js if (data.implements && data.implements.length) { ?>
+    <dt class="implements">Implements:</dt>
+    <dd class="implements">
+        <?js= self.htmllist(data.implements.map((o) => self.linkto(o, self.htmlsafe(o)))) ?>
+    </dd>
+    <?js } ?>
+
+    <?js if (data.mixes && data.mixes.length) { ?>
+    <dt class="mixes">Mixes In:</dt>
+    <dd class="mixes"><ul>
+        <?js= self.htmllist(data.mixes.map((o) => self.linkto(o, self.htmlsafe(o)))) ?>
+    </dd>
+    <?js } ?>
+
+    <?js if (data.defaultvalue) {?>
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default <?js= defaultObjectClass ?>">
+        <?js= data.defaultvalue ?>
+    </dd>
+    <?js } ?>
+
+    <?js if (data.fires && data.fires.length) { ?>
+    <dt class="tag-fires">Fires:</dt>
+    <dd class="tag-fires">
+        <?js= self.htmllist(data.fires.map((o) => self.linkto(o))) ?>
+    </dd>
+    <?js } ?>
+
+    <?js if (data.listens && data.listens.length) { ?>
+    <dt class="tag-listens">Listens to Events:</dt>
+    <dd class="tag-listens">
+        <?js= self.htmllist(data.listens.map((o) => self.linkto(o))) ?>
+    </dd>
+    <?js } ?>
+
+    <?js if (data.listeners && data.listeners.length) { ?>
+    <dt class="tag-listeners">Listeners of This Event:</dt>
+    <dd class="tag-listeners">
+        <?js= self.htmllist(data.listeners.map((o) => self.linkto(o))) ?>
+    </dd>
+    <?js } ?>
+
+    <?js if (data.modifies && data.modifies.length) { ?>
+    <dt class="tag-modifies">Modifies:</dt>
+    <dd class="tag-modifies">
+        <?js= self.htmllist(data.modifies.map((o) => self.partial('modifies.tmpl', o))) ?>
+    </dd>
+    <?js } ?>
+
+    <?js if (data.exceptions && data.exceptions.length) { ?>
+    <dt class="tag-exceptions">Throws:</dt>
+    <dd class="tag-exceptions">
+        <?js= self.htmllist(data.exceptions.map((o) => self.partial('returns.tmpl', o))) ?>
+    </dd>
+    <?js } ?>
+
+    <?js if (data.yields && data.yields.length) { ?>
+    <dt class="tag-yields">Yields:</dt>
+    <dd class="tag-yields">
+        <?js= self.htmllist(data.yields.map((o) => self.partial('returns.tmpl', o))) ?>
+    </dd>
+    <?js } ?>
+
+    <?js if (data.deprecated) { ?>
+        <dt class="tag-deprecated">Deprecated:</dt>
+        <dd class="important">
+            <?js= (data.deprecated === true) ? 'Yes' : self.htmlsafe(data.deprecated) ?>
+        </dd>
+    <?js } ?>
+
+    <?js if (data.see && data.see.length) {?>
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <?js= self.htmllist(data.see.map((o) => self.linkto(o))) ?>
+    </dd>
+    <?js } ?>
+
+    <?js if (data.requires && data.requires.length) { ?>
+    <dt class="tag-requires">Requires:</dt>
+    <dd class="tag-requires">
+        <?js= self.htmllist(data.requires.map((o) => self.linkto(o))) ?>
+    </dd>
+    <?js } ?>
+
+    <?js if (data.examples && data.examples.length) { ?>
+    <dt class="tag-examples">Example<?js= data.examples.length > 1? 's':'' ?>:</dt>
+    <dd class="tag-examples">
+        <?js= this.partial('examples.tmpl', data.examples) ?>
+    </dd>
+    <?js } ?>
+
+    <?js if (data.tutorials && data.tutorials.length) {?>
+    <dt class="tag-tutorial">Tutorials:</dt>
+    <dd class="tag-tutorial">
+        <?js= self.htmllist(data.tutorials.map((o) => self.tutoriallink(o))) ?>
+    </dd>
+    <?js } ?>
+
+    <?js if (data.todo && data.todo.length) {?>
+    <dt class="tag-todo">To Do:</dt>
+    <dd class="tag-todo">
+        <?js= self.htmllist(data.todo.map((o) => self.htmlsafe(o))) ?>
+    </dd>
+    <?js } ?>
+
+    <?js if (data.version) {?>
+    <dt class="tag-version">Version:</dt>
+    <dd class="tag-version"><?js= version ?></dd>
+    <?js } ?>
+
+    <?js if (data.since) {?>
+    <dt class="tag-since">Since:</dt>
+    <dd class="tag-since"><?js= since ?></dd>
+    <?js } ?>
+
+    <?js if (data.author && data.author.length) {?>
+    <dt class="tag-author">Author:</dt>
+    <dd class="tag-author">
+        <?js= self.htmllist(data.author.map((o) => self.resolveAuthorLinks(o))) ?>
+    </dd>
+    <?js } ?>
+
+    <?js if (data.copyright) {?>
+    <dt class="tag-copyright">Copyright:</dt>
+    <dd class="tag-copyright"><?js= self.htmlsafe(data.copyright) ?></dd>
+    <?js } ?>
+
+    <?js if (data.license) {?>
+    <dt class="tag-license">License:</dt>
+    <dd class="tag-license"><?js= self.htmlsafe(data.license) ?></dd>
+    <?js } ?>
+
+    <?js if (data.meta && self.outputSourceFiles) {?>
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <?js= self.linkto(meta.shortpath) ?>, <?js= self.linkto(meta.shortpath, 'line ' + meta.lineno, null, 'line' + meta.lineno) ?>
+    </dd>
+    <?js } ?>
+</dl>

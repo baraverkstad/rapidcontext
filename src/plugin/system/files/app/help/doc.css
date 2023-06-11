@@ -199,15 +199,18 @@ body.doc .center {
 
 
 /**
- * Documentation style for JSDoc 2.x
+ * Documentation style for JSDoc
  */
-.doc .summaryTable,
-.doc div.sectionTitle {
-    width: 100%;
-    margin: 16px 0 8px;
+.doc .jsdoc {
+    padding-bottom: 2em;
 }
-.doc .summaryTable caption,
-.doc div.sectionTitle {
+.doc .jsdoc .summary-table,
+.doc .jsdoc .section-title {
+    width: 100%;
+    margin: 2em 0 0.5em;
+}
+.doc .jsdoc .summary-table caption,
+.doc .jsdoc .section-title {
     background: #cef;
     color: #1e466e;
     font-size: 1.333em;
@@ -215,54 +218,235 @@ body.doc .center {
     font-weight: bold;
     text-align: left;
 }
-.doc .summaryTable caption,
-.doc .summaryTable th,
-.doc .summaryTable td,
-.doc div.sectionTitle {
+.doc .jsdoc .summary-table caption,
+.doc .jsdoc .summary-table th,
+.doc .jsdoc .summary-table td,
+.doc .jsdoc .section-title {
     border: 1px solid #ace;
     padding: 3px 6px;
     vertical-align: top;
 }
-.doc .summaryTable caption {
+.doc .jsdoc .summary-table caption {
     border-bottom-width: 0;
 }
-.doc .summaryTable td.attributes {
+.doc .jsdoc .summary-table td.attributes {
     width: 140px;
     text-align: right;
 }
-.doc .summaryTable td.attributes,
-.doc .fixedFont {
+.doc .jsdoc .summary-table td.attributes,
+.doc .jsdoc .fixed-font {
     color: #1e466e;
     font-family: ui-monospace, "Courier New", monospace;
 }
-.doc .summaryTable td.nameDescription {
+.doc .jsdoc .summary-table td.name-description {
     text-align: left;
 }
-.doc .summaryTable td.nameDescription,
-.doc .summaryTable .description {
+.doc .jsdoc .summary-table td.name-description,
+.doc .jsdoc .summary-table .description {
     margin: 3px 0;
 }
-div.description {
-    margin: 10px 20px;
+.doc .jsdoc .summary-table td.name-description .deprecated {
+    text-decoration: line-through;
 }
-.doc .detailList dt {
-    margin-left: 20px;
+.doc .jsdoc header h2 {
+    display: none;
 }
-.doc .detailList .heading {
-    font-weight: bold;
-    padding-bottom: 6px;
-    margin-left: 0;
+.doc .jsdoc h4 {
+    margin-top: 1em;
+    border-top: 5px solid #ccc;
+    padding-top: 1em;
+    font-size: 1.2em;
 }
-.doc .linkList dd {
-    display: list-item;
-    margin: 0;
-    list-style: circle inside;
+.doc .jsdoc h2 + h4,
+.doc .jsdoc h3 + h4 {
+    border-top: none;
+    padding-top: 0;
 }
-.doc .light,
-.doc td.attributes,
-.doc .light a:link,
-.doc .light a:visited {
-    color: #777;
-    font-style: italic;
+.doc .jsdoc h5,
+.doc .jsdoc h6 {
+    margin: 0.5em 0 0 0;
+}
+.doc .jsdoc .signature-attributes {
+    vertical-align: -0.25em;
+    font-weight: 200;
+    font-size: 75%;
+    padding: 0 0.1em
+}
+.doc .jsdoc .type-signature {
     font-weight: normal;
+    color: #397;
+}
+.doc .jsdoc .type-prefix,
+.doc .jsdoc .param-type {
+    color: #aaa;
+}
+.doc .jsdoc .param-type b {
+    padding: 0 0.1em;
+    font-weight: normal;
+    color: #397;
+}
+.doc .jsdoc .attributes {
+    font-weight: 200;
+    font-style: italic;
+}
+.doc .jsdoc dl {
+    padding: 0;
+}
+.doc .jsdoc dl > dd {
+    margin-bottom: 0.5em;
+    margin-left: 2em;
+}
+.doc .jsdoc dl > dd > ul {
+    margin: 0;
+}
+.doc .jsdoc table.params th,
+.doc .jsdoc table.params td,
+.doc .jsdoc table.props th,
+.doc .jsdoc table.props td {
+    padding-right: 1em;
+}
+.doc .jsdoc table.params th,
+.doc .jsdoc table.props th {
+    border-bottom: 1px solid #eee;
+    font-weight: normal;
+    color: #999;
+}
+.doc .jsdoc table.params tr:first-child > td,
+.doc .jsdoc table.props tr:first-child > td {
+    padding-top: 0.25em;
+}
+.doc .jsdoc [class^="label-"] {
+    margin: 0 0.3em;
+    padding: 0.1em 0.3em;
+    border-radius: 0.2em;
+    font-size: 0.8em;
+    color: #fff;
+    cursor: default;
+}
+.label-namespace {
+    background: #8ac;
+}
+.label-interface {
+    background: #c8a;
+}
+.label-class {
+    background: #ac8;
+}
+.doc .jsdoc .code-caption {
+    margin: 0;
+    color: #666;
+}
+.doc .jsdoc .code-caption::after {
+    content: ':';
+}
+
+
+/**
+ * Documentation style for Highlight JS (source code)
+ */
+.doc .hljs {
+    display: block;
+    border: 1px solid #eee;
+    border-radius: 0.5em;
+    padding: 1em;
+    overflow-x: auto;
+    background: #f5f5f5;
+}
+.doc .hljs .lineno {
+    display: inline-block;
+    width: 3em;
+    margin-right: 0.5em;
+    border-right: 1px solid #e8e8e8;
+    padding-right: 0.5em;
+    text-align: right;
+    color: #ccc;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.doc .hljs,
+.doc .hljs ::selection,
+.doc .hljs::selection,
+.doc .hljs-operator,
+.doc .hljs-punctuation,
+.doc .hljs-subst  {
+    color: #303030;
+}
+.doc .hljs ::selection,
+.doc .hljs::selection {
+    background-color: #d0d0d0;
+}
+.doc .hljs-comment {
+    color:#b0b0b0
+}
+.doc .hljs-tag {
+    color:#505050
+}
+.doc .hljs-operator {
+    opacity:.7
+}
+.doc .hljs-bullet,
+.doc .hljs-deletion,
+.doc .hljs-name,
+.doc .hljs-selector-tag,
+.doc .hljs-template-variable,
+.doc .hljs-variable {
+    color:#ac4142
+}
+.doc .hljs-attr,
+.doc .hljs-link,
+.doc .hljs-literal,
+.doc .hljs-number,
+.doc .hljs-symbol,
+.doc .hljs-variable.constant_ {
+    color:#d28445
+}
+.doc .hljs-class .hljs-title,
+.doc .hljs-title,
+.doc .hljs-title.class_,
+.doc .hljs-strong {
+    color:#f4bf75
+}
+.doc .hljs-strong {
+    font-weight: 700;
+}
+.doc .hljs-addition,
+.doc .hljs-code,
+.doc .hljs-string,
+.doc .hljs-title.class_.inherited__ {
+    color:#90a959
+}
+.doc .hljs-built_in,
+.doc .hljs-doctag,
+.doc .hljs-keyword.hljs-atrule,
+.doc .hljs-quote,
+.doc .hljs-regexp {
+    color:#75b5aa
+}
+.doc .hljs-attribute,
+.doc .hljs-function .hljs-title,
+.doc .hljs-section,
+.doc .hljs-title.function_,
+.doc .ruby .hljs-property {
+    color:#6a9fb5
+}
+.doc .diff .hljs-meta,
+.doc .hljs-keyword,
+.doc .hljs-template-tag,
+.doc .hljs-type,
+.doc .hljs-emphasis {
+    color:#aa759f
+}
+.doc .hljs-emphasis {
+    font-style:italic
+}
+.doc .hljs-meta,
+.doc .hljs-meta .hljs-keyword,
+.doc .hljs-meta .hljs-string {
+    color:#8f5536
+}
+.doc .hljs-meta .hljs-keyword,
+.doc .hljs-meta-keyword {
+    font-weight: 700
 }
