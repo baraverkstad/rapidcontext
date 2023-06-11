@@ -60,7 +60,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * </Form>
  */
 RapidContext.Widget.FormValidator = function (attrs) {
-    var o = MochiKit.DOM.SPAN();
+    var o = document.createElement("span");
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.FormValidator);
     o.addClass("widgetFormValidator");
     var defaults = { name: "", mandatory: true, display: "both", message: null, validator: null };
@@ -207,7 +207,8 @@ RapidContext.Widget.FormValidator.prototype.addError = function (field, message)
                 this.addClass("block");
             }
             if (this.display !== "icon") {
-                span = MochiKit.DOM.SPAN({}, message);
+                span = document.createElement("span");
+                span.append(message);
             }
             if (this.display !== "text") {
                 icon = RapidContext.Widget.Icon({ ref: "ERROR", tooltip: message });

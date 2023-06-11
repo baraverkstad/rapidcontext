@@ -51,7 +51,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * <Field name="ratio" value="0.23" format="Ratio: {:%}" />
  */
 RapidContext.Widget.Field = function (attrs) {
-    var o = MochiKit.DOM.SPAN();
+    var o = document.createElement("span");
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Field);
     o.addClass("widgetField");
     o.setAttrs(Object.assign({ name: "", value: "", maxLength: -1, mask: false }, attrs));

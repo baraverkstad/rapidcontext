@@ -57,7 +57,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * </Pane>
  */
 RapidContext.Widget.Pane = function (attrs/*, ... */) {
-    var o = MochiKit.DOM.DIV();
+    var o = document.createElement("div");
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Pane);
     o.addClass("widgetPane");
     o.setAttrs(Object.assign({ pageTitle: "Page", pageStatus: "ANY", pageCloseable: false }, attrs));

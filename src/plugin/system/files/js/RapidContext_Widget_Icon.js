@@ -57,7 +57,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * </h3>
  */
 RapidContext.Widget.Icon = function (def) {
-    var o = (def && def.nodeType === 1) ? def : MochiKit.DOM.createDOM("i");
+    var o = (def && def.nodeType === 1) ? def : document.createElement("i");
     if (!RapidContext.Widget.isWidget(o, "Icon")) {
         RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Icon);
         o.addClass("widgetIcon");

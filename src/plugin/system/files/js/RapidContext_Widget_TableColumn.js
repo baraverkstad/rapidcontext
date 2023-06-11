@@ -72,7 +72,7 @@ RapidContext.Widget.TableColumn = function (attrs) {
     if (attrs.field == null) {
         throw new Error("The 'field' attribute cannot be null for a TableColumn");
     }
-    var o = MochiKit.DOM.TH();
+    var o = document.createElement("th");
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.TableColumn);
     o.addClass("widgetTableColumn");
     o.setAttrs(Object.assign({ title: attrs.field, type: "string", key: false }, attrs));
@@ -245,7 +245,7 @@ RapidContext.Widget.TableColumn.prototype._map = function (src, dst) {
  * @return the table cell DOM node
  */
 RapidContext.Widget.TableColumn.prototype._render = function (obj) {
-    var td = MochiKit.DOM.TD();
+    var td = document.createElement("td");
     var value = obj[this.field];
     if (typeof(this.cellStyle) === "string" && this.cellStyle.includes(":")) {
         td.style = this.cellStyle;

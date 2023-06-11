@@ -430,13 +430,13 @@ RapidContext.Widget.Table.prototype._renderRows = function () {
     var cols = this.getChildNodes();
     var tbody = this.firstChild.lastChild;
     MochiKit.DOM.replaceChildNodes(tbody, this._rows.map(function (row) {
-        return MochiKit.DOM.TR({}, cols.map(function (col) {
-            return col._render(row);
-        }));
+        let tr = document.createElement("tr");
+        tr.append(...cols.map((col) => col._render(row)));
+        return tr;
     }));
     if (this._rows.length == 0) {
         // Add empty row to avoid browser bugs
-        tbody.append(MochiKit.DOM.TR());
+        tbody.append(document.createElement("tr"));
     }
 };
 
