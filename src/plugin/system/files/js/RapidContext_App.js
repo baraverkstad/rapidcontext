@@ -791,7 +791,7 @@ RapidContext.App._Cache = {
                 return "json";
             } else if (!type && /ui\.xml$/i.test(url)) {
                 return "ui";
-            } else if (!type && !app.icon && /\.(gif|jpg|jpeg|png)$/i.test(url)) {
+            } else if (!type && !app.icon && /\.(gif|jpg|jpeg|png|svg)$/i.test(url)) {
                 return "icon";
             } else {
                 return type;
