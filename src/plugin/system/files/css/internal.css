@@ -41,9 +41,11 @@ table.-form-layout-table td {
 }
 
 /***
- ** App HTML icon
+ ** App icon
  */
 .-app-icon {
+    max-width: 48px;
+    max-height: 48px;
     font-size: 1.7em;
 }
 .-app-icon > .fa-stack-2x {

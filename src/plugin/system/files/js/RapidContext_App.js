@@ -799,12 +799,12 @@ RapidContext.App._Cache = {
         }
         function toIcon(res) {
             if (res.url) {
-                return $("<img/>").attr({ src: res.url }).get(0);
+                return $("<img/>").attr({ src: res.url }).addClass("-app-icon").get(0);
             } else if (res.html) {
-                var node = $("<span/>").html(res.html).get(0);
+                var node = $("<span/>").html(res.html).addClass("-app-icon").get(0);
                 return node.childNodes.length === 1 ? node.childNodes[0] : node;
             } else if (res["class"]) {
-                return $("<i/>").addClass(res["class"]).get(0);
+                return $("<i/>").addClass(res["class"]).addClass("-app-icon").get(0);
             } else {
                 return null;
             }
