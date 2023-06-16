@@ -171,13 +171,14 @@ public class ApiUtil {
      */
     public static boolean update(Storage storage, Path src, Path dst, Dict patch) {
         try {
-            boolean rename = !src.equals(dst);
+            src = Storage.objectPath(src);
+            boolean rename = !src.equals(Storage.objectPath(dst));
             LOG.fine("updating storage path " + src + (rename ? " -> " + dst : ""));
             Object prev = StorableObject.sterilize(storage.load(src), false, true, false);
             patch = (Dict) StorableObject.sterilize(patch, false, true, true);
             if (prev instanceof Dict) {
                 storage.store(dst, ((Dict) prev).merge(patch));
-                if (rename && !Storage.objectPath(src).equals(Storage.objectPath(dst))) {
+                if (rename) {
                     storage.remove(src);
                 }
                 return true;
