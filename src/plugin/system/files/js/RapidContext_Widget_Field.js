@@ -154,7 +154,11 @@ RapidContext.Widget.Field.prototype.redraw = function () {
         this.innerText = "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022";
         this.append(RapidContext.Widget.Icon({ ref: "LOCK", tooltip: "Click to show" }));
     } else {
-        this.title = (str == longStr) ? null : longStr;
+        if (str == longStr) {
+            delete this.title;
+        } else {
+            this.title = longStr;
+        }
         this.innerText = str;
     }
 };
