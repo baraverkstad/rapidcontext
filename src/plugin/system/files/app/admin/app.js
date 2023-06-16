@@ -480,11 +480,13 @@ AdminApp.prototype._storeConnection = function () {
         }
         var oldPath = prev.id ? RapidContext.Storage.path(prev) : null;
         var newPath = RapidContext.Storage.path(data);
-        var path = newPath + ".yaml";
+        var opts = { path: newPath + ".yaml" };
         if (oldPath && oldPath !== newPath) {
-            path = { path: oldPath, updateTo: path };
+            opts = { path: oldPath, updateTo: opts.path };
+        } else if (oldPath) {
+            opts.update = true;
         }
-        RapidContext.App.callProc("system/storage/write", [path, data])
+        RapidContext.App.callProc("system/storage/write", [opts, data])
             .then(() => this.ui.cxnEditDialog.hide())
             .then(() => this.showConnection(data.id))
             .catch(RapidContext.UI.showError);
@@ -1084,11 +1086,13 @@ AdminApp.prototype._saveProcedure = function () {
     }
     var oldPath = prev.id ? RapidContext.Storage.path(prev) : null;
     var newPath = RapidContext.Storage.path(data);
-    var path = newPath + ".yaml";
+    var opts = { path: newPath + ".yaml" };
     if (oldPath && oldPath !== newPath) {
-        path = { path: oldPath, updateTo: path };
+        opts = { path: oldPath, updateTo: opts.path };
+    } else if (oldPath) {
+        opts.update = true;
     }
-    RapidContext.App.callProc("system/storage/write", [path, data])
+    RapidContext.App.callProc("system/storage/write", [opts, data])
         .then(() => this.ui.procEditDialog.hide())
         .then(() => this.proc.procList.recall())
         .then(() => this.showProcedure(data.id))
