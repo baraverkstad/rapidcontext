@@ -768,7 +768,7 @@ AdminApp.prototype._callbackShowProcedure = function (procName, res) {
                     "class": "font-smaller ml-1",
                     "icon": "fa fa-lg fa-pencil"
                 });
-                btn.onclick = () => this._editProcArg(count);
+                btn.onclick = this._editProcArg.bind(this, count);
                 var col2 = MochiKit.DOM.TD({ "class": "text-nowrap pr-2" }, field, btn);
                 var col3 = MochiKit.DOM.TD({ "class": "text-pre-wrap w-100 pt-1" }, b.description);
                 var tr = MochiKit.DOM.TR({}, col1, col2, col3);
