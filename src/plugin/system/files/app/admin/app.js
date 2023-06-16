@@ -277,22 +277,22 @@ AdminApp.prototype._showConnection = function () {
     RapidContext.Widget.destroyWidget(clones);
     var hidden = ["id", "type", "plugin", "description", "lastAccess", "maxOpen"];
     RapidContext.Util.mask(data, hidden);
-    for (var k in data) {
-        if (!k.startsWith("_")) {
+    for (let k in data) {
+        var v = data[k];
+        if (!k.startsWith("_") || (/error$/i.test(k) && v)) {
             var title = RapidContext.Util.toTitleCase(k);
-            var value = data[k];
-            if (value == null) {
-                value = "";
+            if (v == null) {
+                v = "";
             }
             if (/error$/i.test(k)) {
-                value = MochiKit.DOM.SPAN({ "class": "important" }, value);
+                v = MochiKit.DOM.SPAN({ "class": "important" }, v);
             } else if (/password$/i.test(k)) {
-                value = RapidContext.Widget.Field({ name: k, value: value, mask: true });
+                v = RapidContext.Widget.Field({ name: k, value: v, mask: true });
             }
             var tr = this.ui.cxnTemplate.cloneNode(true);
             tr.className = "clone";
             tr.firstChild.append(title + ":");
-            tr.lastChild.append(value);
+            tr.lastChild.append(v);
             this.ui.cxnTemplate.before(tr);
         }
     }
