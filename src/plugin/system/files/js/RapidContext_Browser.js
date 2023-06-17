@@ -139,20 +139,28 @@
         // "Array.prototype.at",
         "Array.prototype.flat",
         "Array.prototype.flatMap",
-        // "Element.prototype.replaceChildren",
+        "BigInt",
+        "Element.prototype.replaceChildren",
+        // "Element.prototype.scrollIntoView",
+        // "HTMLDialogElement",
         // "navigator.credentials.create",
         // "navigator.credentials.get",
-        // "Object.fromEntries",
-        // "Promise.allSettled",
-        // "Promise.any",
+        "Object.fromEntries",
+        "Promise.allSettled",
+        "Promise.any",
         // "SubtleCrypto.prototype.digest",
         // "Temporal",
-        // "ResizeObserver",
-        // "globalThis",
-        { test: "/^\\p{L}+$/u.test('a\u00E5\u00C4')", name: "regexp Unicode property escapes" },
-        // { test: "var a = null; a?.dummy; true", name: "optional chaining operator (?.)" },
-        // { test: "null ?? true", name: "nullish coalescing operator (??)" },
-        { test: "'noModule' in HTMLScriptElement.prototype", name: "ES6 modules (import/export)" }
+        "TextEncoder",
+        "TextDecoder",
+        "ResizeObserver",
+        { test: "globalThis === window", name: "globalThis" },
+        { test: "'key' in KeyboardEvent.prototype", name: "KeyboardEvent.key" },
+        { test: "/^\\p{L}+$/u.test('a\u00E5\u00C4')", name: "regexp Unicode character class escape" },
+        { test: "'noModule' in HTMLScriptElement.prototype", name: "ES6 modules (import/export)" },
+        { test: "var a = null; a?.dummy; true", name: "optional chaining operator (?.)" },
+        { test: "null ?? true", name: "nullish coalescing operator (??)" },
+        "selector(:has(*))",
+        // "user-select: none"
     ];
 
     /**
@@ -211,7 +219,7 @@
             }
         }
         function check(test) {
-            var isCSS = /^[a-z-]+:/i.test(test);
+            var isCSS = /^[a-z-]+:|selector\(/i.test(test);
             var isPath = /^[a-z]+(\.[a-z]+)*$/i.test(test);
             var isValid = (
                 (isCSS && checkCSS(test)) ||
