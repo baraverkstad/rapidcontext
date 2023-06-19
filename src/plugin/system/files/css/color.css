@@ -1,3 +1,6 @@
+/**
+ * Color palettes
+ */
 :root {
     /* Danger palette */
     --danger-000: #fff8f8;
@@ -70,4 +73,20 @@
     --focus-700: #12b3df;
     --focus-800: #0292b9;
     --focus-900: #006b88;
+}
+
+/**
+ * Text colors
+ */
+.color-danger {
+    color: var(--danger-700);
+}
+.color-warning {
+    color: var(--warning-500);
+}
+.color-success {
+    color: var(--success-700);
+}
+.color-info {
+    color: var(--info-700);
 }
