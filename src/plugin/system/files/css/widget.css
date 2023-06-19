@@ -99,6 +99,22 @@
     -webkit-user-select: none; /* stylelint-disable-line property-no-vendor-prefix */
     user-select: none;
 }
+.widgetDialog.danger > .widgetDialogTitle {
+    background: linear-gradient(to bottom, var(--danger-500), var(--danger-700));
+}
+.widgetDialog.warning > .widgetDialogTitle {
+    background: linear-gradient(to bottom, var(--warning-300), var(--warning-500));
+}
+.widgetDialog.success > .widgetDialogTitle {
+    background: linear-gradient(to bottom, var(--success-500), var(--success-700));
+}
+.widgetDialog.info > .widgetDialogTitle {
+    background: linear-gradient(to bottom, var(--info-500), var(--info-700));
+}
+.widgetDialog.warning > .widgetDialogTitle,
+.widgetDialog.warning > .widgetDialogClose {
+    color: #000c;
+}
 .widgetDialogContent {
     box-sizing: border-box;
     width: calc(100% - 4px);
