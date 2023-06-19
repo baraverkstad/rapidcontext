@@ -122,6 +122,7 @@
         { test: "class Test {}; true", name: "Class declarations" },
         { test: "(() => true)()", name: "Arrow functions" },
         { test: "async () => await Promise.resolve(true)", name: "async/await functions" },
+        "--variable-name: #fff",
         "display: flex"
     ];
 
