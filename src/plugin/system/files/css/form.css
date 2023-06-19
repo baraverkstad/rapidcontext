@@ -57,21 +57,21 @@ button:focus:not(:disabled):not(.disabled),
 button.focus:not(:disabled):not(.disabled),
 .btn:focus:not(:disabled):not(.disabled),
 .btn.focus:not(:disabled):not(.disabled) {
-    border-color: #80bdff;
-    box-shadow: 0 0 0 0.2em #007bff40;
+    border-color: var(--focus-400);
+    box-shadow: 0 0 0 0.3em var(--focus-200);
     outline: none;
 }
 button.primary:not(:disabled):not(.disabled),
 .btn.primary:not(:disabled):not(.disabled) {
-    background: linear-gradient(to bottom, #fff8dd, #ed9);
-    border-color: #cba;
+    background: linear-gradient(to bottom, var(--highlight-100), var(--highlight-300));
+    border-color: var(--highlight-500);
     font-weight: 600;
 }
 button.primary:hover:not(:disabled):not(.disabled),
 button.primary.hover:not(:disabled):not(.disabled),
 .btn.primary:hover:not(:disabled):not(.disabled),
 .btn.primary.hover:not(:disabled):not(.disabled) {
-    background: linear-gradient(to bottom, #fffcee, #f8e8a8);
+    background: linear-gradient(to bottom, var(--highlight-000), var(--highlight-200));
 }
 button.primary:active:not(:disabled):not(.disabled),
 button.primary.active:not(:disabled):not(.disabled),
@@ -191,16 +191,16 @@ input:focus,
 input.focus,
 textarea:focus,
 textarea.focus {
-    border-color: #80bdff;
-    box-shadow: 0 0 0 0.2em #007bff40;
+    border-color: var(--focus-400);
+    box-shadow: 0 0 0 0.3em var(--focus-200);
     outline: none;
 }
 .invalid input:invalid,
 input.invalid,
 .invalid textarea:invalid,
 textarea.invalid {
-    border-color: #c79a9a;
-    background: #fdf9f9;
+    border-color: var(--danger-600);
+    background: var(--danger-000);
 }
 .invalid input:invalid:focus,
 input.invalid:focus,
@@ -210,8 +210,8 @@ input.invalid.focus,
 textarea.invalid:focus,
 .invalid textarea:invalid.focus,
 textarea.invalid.focus {
-    border-color: #c79a9a;
-    box-shadow: 0 0 0 0.2em #dc354540;
+    border-color: var(--danger-600);;
+    box-shadow: 0 0 0 0.3em var(--danger-200);
 }
 input[type="search"] {
     border-radius: 2em;
@@ -259,23 +259,23 @@ select.disabled {
 }
 select:focus,
 select.focus {
-    border-color: #80bdff;
-    box-shadow: 0 0 0 0.2em #007bff40;
+    border-color: var(--focus-400);
+    box-shadow: 0 0 0 0.3em var(--focus-200);
     outline: none;
 }
 .invalid select:invalid,
 select.invalid {
-    border-color: #c79a9a;
+    border-color: var(--danger-600);;
     background:
         url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 25' width='22' height='25'%3E%3ClinearGradient id='red' x1='0' x2='0' y1='0' y2='1'%3E%3Cstop offset='0%' stop-color='%23e46161'/%3E%3Cstop offset='100%' stop-color='%23b61313'/%3E%3C/linearGradient%3E%3Cpath d='M0 0h22v25H0z' fill='url(%23red)'/%3E%3Cpath d='M6 9l5 5 5-5z' fill='%23fff'/%3E%3C/svg%3E") 100% 0 / 2em no-repeat,
-        linear-gradient(to bottom, #fdf9f9, #fdf0f0);
+        linear-gradient(to bottom, var(--danger-000), var(--danger-100));
 }
 .invalid select:invalid:focus,
 select.invalid:focus,
 .invalid select:invalid.focus,
 select.invalid.focus {
-    border-color: #c79a9a;
-    box-shadow: 0 0 0 0.2em #dc354540;
+    border-color: var(--danger-600);;
+    box-shadow: 0 0 0 0.3em var(--danger-200);
 }
 select::-ms-expand {
     display: none;
@@ -307,14 +307,14 @@ progress {
     border-radius: 1em;
     overflow: hidden;
     background-color: #eee;
-    accent-color: #006bda;
+    accent-color: var(--info-700);
 }
 ::-webkit-progress-bar {
     background-color: #eee;
 }
 ::-webkit-progress-value {
-    background: #006bda;
+    background: var(--info-700);
 }
 ::-moz-progress-bar {
-    background-color: #006bda;
+    background-color: var(--info-700);
 }

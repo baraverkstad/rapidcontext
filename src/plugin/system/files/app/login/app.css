@@ -2,13 +2,13 @@
     margin-bottom: 10px;
     border-radius: 6px;
     padding: 8px 10px;
-    box-shadow: 0 1px 2px #660000 inset;
-    background: linear-gradient(to bottom, #FFF8F8, #FFDDDD);
+    box-shadow: 0 1px 2px var(--danger-900) inset;
+    background: linear-gradient(to bottom, var(--danger-000), var(--danger-100));
 }
 .login-app .warning {
     margin-bottom: 10px;
     border-radius: 6px;
     padding: 8px 10px;
-    box-shadow: 0 1px 2px #665500 inset;
-    background: linear-gradient(to bottom, #FFFFF8, #FFFFDD);
+    box-shadow: 0 1px 2px var(--warning-900) inset;
+    background: linear-gradient(to bottom, var(--warning-000), var(--warning-100));
 }

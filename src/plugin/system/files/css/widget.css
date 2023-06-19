@@ -129,7 +129,7 @@
 .widgetFormValidator {
     display: inline-block;
     font-weight: bold;
-    color: #c33;
+    color: var(--danger-700);
 }
 .widgetFormValidator:not(.block) {
     padding-left: 0.25rem;
@@ -268,8 +268,7 @@ button > .widgetIcon.fa,
 }
 .widgetPopup > li.selected:not(.disabled),
 .widgetPopupItem.selected:not(.disabled) {
-    background: #eefcff;
-    background: linear-gradient(to bottom, #f8feff, #eefcff);
+    background: linear-gradient(to bottom, var(--focus-000), var(--focus-100));
     box-shadow: 0 0 1px #99b7d2;
     text-shadow: 0 1px #fff;
 }
@@ -318,11 +317,10 @@ button > .widgetIcon.fa,
     margin-left: 0.5rem;
 }
 .widgetTabContainerLabel:hover {
-    background: #eefcff;
-    background: linear-gradient(to bottom, #f8feff, #eefcff);
-    border-top: 1px solid #cef;
-    border-left: 1px solid #cef;
-    border-right: 1px solid #cef;
+    background: linear-gradient(to bottom, var(--focus-000), var(--focus-100));
+    border-top: 1px solid var(--focus-300);
+    border-left: 1px solid var(--focus-300);
+    border-right: 1px solid var(--focus-300);
     color: black;
 }
 .widgetTabContainerLabel.selected,
@@ -382,13 +380,13 @@ table.widgetTable td {
     background: white;
 }
 table.widgetTable tbody tr:hover td {
-    background: #d8eaff;
+    background: var(--focus-200);
 }
 table.widgetTable tbody tr.selected td {
-    background: #ffa;
+    background: var(--highlight-200);
 }
 table.widgetTable tbody tr.selected:hover td {
-    background: #ff0;
+    background: var(--highlight-400);
 }
 table.widgetTable tbody tr:nth-child(even):not(.selected):not(:hover) td {
     background: #f8f8f8;
@@ -420,8 +418,7 @@ th.widgetTableColumn::after {
 }
 th.widgetTableColumn.sortAsc,
 th.widgetTableColumn.sortDesc {
-    background: #f0d447;
-    background: linear-gradient(to bottom, #fff272, #f0d447);
+    background: linear-gradient(to bottom, var(--highlight-300), var(--highlight-500));
 }
 th.widgetTableColumn.sortAsc::after {
     top: 0.45em;
@@ -457,7 +454,7 @@ th.widgetTableColumn.sortNone::after {
     cursor: pointer;
 }
 .widgetTreeNode .selected {
-    background: #ffa;
+    background: var(--highlight-200);
     font-weight: bold;
 }
 .widgetTreeNodeLabel {
@@ -465,23 +462,23 @@ th.widgetTableColumn.sortNone::after {
     padding-bottom: 1px;
 }
 .widgetTreeNodeLabel:hover {
-    background: #def;
+    background: var(--focus-200);
 }
 .widgetTreeNodeLabel.selected:hover {
-    background: #ff0;
+    background: var(--highlight-400);
 }
 .widgetTreeNodeLabel i.fa {
-    color: #468;
+    color: var(--success-600);
 }
 .widgetTreeNodeLabel i.fa.fa-minus-square-o,
 .widgetTreeNodeLabel i.fa.fa-plus-square-o {
     color: #777;
 }
 .widgetTreeNodeLabel i.fa.fa-folder {
-    color: #dcb;
+    color: var(--success-900);
 }
 .widgetTreeNodeLabel i.fa.fa-folder-open {
-    color: #fa1;
+    color: var(--success-700);
 }
 .widgetTreeNodeText {
     padding-left: 3px;
