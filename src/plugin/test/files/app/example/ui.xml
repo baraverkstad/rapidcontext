@@ -9,12 +9,20 @@
           <Button>Normal</Button>
           <Button highlight="true">Highlighted</Button>
           <Button disabled="true">Disabled</Button>
+          <Button class="danger">Danger</Button>
+          <Button class="warning">Warning</Button>
+          <Button class="success">Success</Button>
+          <Button class="info">Info</Button>
         </fieldset>
         <fieldset>
           <legend>Icon Buttons</legend>
           <Button icon="OK">Normal</Button>
           <Button icon="OK" highlight="true">Highlighted</Button>
           <Button icon="OK" disabled="true">Disabled</Button>
+          <Button icon="fa fa-bolt" class="danger">Danger</Button>
+          <Button icon="fa fa-exclamation-triangle" class="warning">Warning</Button>
+          <Button icon="fa fa-heart" class="success">Success</Button>
+          <Button icon="fa fa-info-circle" class="info">Info</Button>
         </fieldset>
         <fieldset>
           <legend>Text Fields</legend>

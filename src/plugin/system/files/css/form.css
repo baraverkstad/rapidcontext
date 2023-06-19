@@ -63,46 +63,26 @@ button.focus:not(:disabled):not(.disabled),
 }
 button.primary:not(:disabled):not(.disabled),
 .btn.primary:not(:disabled):not(.disabled) {
-    background: linear-gradient(to bottom, var(--highlight-100), var(--highlight-300));
-    border-color: var(--highlight-500);
+    background: linear-gradient(to bottom, var(--highlight-100), var(--highlight-500));
+    border-color: var(--highlight-600);
     font-weight: 600;
 }
 button.primary:hover:not(:disabled):not(.disabled),
 button.primary.hover:not(:disabled):not(.disabled),
 .btn.primary:hover:not(:disabled):not(.disabled),
 .btn.primary.hover:not(:disabled):not(.disabled) {
-    background: linear-gradient(to bottom, var(--highlight-000), var(--highlight-200));
+    background: linear-gradient(to bottom, var(--highlight-000), var(--highlight-300));
 }
 button.primary:active:not(:disabled):not(.disabled),
 button.primary.active:not(:disabled):not(.disabled),
 .btn.primary:active:not(:disabled):not(.disabled),
 .btn.primary.active:not(:disabled):not(.disabled) {
-    background: linear-gradient(to bottom, #f8e8a8, #ed9);
-}
-button.info:not(:disabled):not(.disabled),
-.btn.info:not(:disabled):not(.disabled) {
-    background: linear-gradient(to bottom, #5fb3fb, #006bda);
-    border-color: #0054ab;
-    font-weight: 600;
-    text-shadow: none;
-    color: #fff !important;
-}
-button.info:hover:not(:disabled):not(.disabled),
-button.info.hover:not(:disabled):not(.disabled),
-.btn.info:hover:not(:disabled):not(.disabled),
-.btn.info.hover:not(:disabled):not(.disabled) {
-    background: linear-gradient(to bottom, #7ec4ff, #007dff);
-}
-button.info:active:not(:disabled):not(.disabled),
-button.info.active:not(:disabled):not(.disabled),
-.btn.info:active:not(:disabled):not(.disabled),
-.btn.info.active:not(:disabled):not(.disabled) {
-    background: linear-gradient(to bottom, #007dff, #006bda);
+    background: linear-gradient(to bottom, var(--highlight-500), var(--highlight-300));
 }
 button.danger:not(:disabled):not(.disabled),
 .btn.danger:not(:disabled):not(.disabled) {
-    background: linear-gradient(to bottom, #e46161, #b61313);
-    border-color: #960909;
+    background: linear-gradient(to bottom, var(--danger-500), var(--danger-700));
+    border-color: var(--danger-800);
     font-weight: 600;
     text-shadow: none;
     color: #fff !important;
@@ -111,14 +91,74 @@ button.danger:hover:not(:disabled):not(.disabled),
 button.danger.hover:not(:disabled):not(.disabled),
 .btn.danger:hover:not(:disabled):not(.disabled),
 .btn.danger.hover:not(:disabled):not(.disabled) {
-    background: linear-gradient(to bottom, #ff7d7d, #d41f1f);
+    background: linear-gradient(to bottom, var(--danger-400), var(--danger-600));
 }
 button.danger:active:not(:disabled):not(.disabled),
 button.danger.active:not(:disabled):not(.disabled),
 .btn.danger:active:not(:disabled):not(.disabled),
 .btn.danger.active:not(:disabled):not(.disabled) {
-    background: linear-gradient(to bottom, #b61313, #b61313);
+    background: linear-gradient(to bottom, var(--danger-700), var(--danger-600));
 }
+button.warning:not(:disabled):not(.disabled),
+.btn.warning:not(:disabled):not(.disabled) {
+    background: linear-gradient(to bottom, var(--warning-400), var(--warning-600));
+    border-color: var(--warning-700);
+    font-weight: 600;
+    text-shadow: none;
+}
+button.warning:hover:not(:disabled):not(.disabled),
+button.warning.hover:not(:disabled):not(.disabled),
+.btn.warning:hover:not(:disabled):not(.disabled),
+.btn.warning.hover:not(:disabled):not(.disabled) {
+    background: linear-gradient(to bottom, var(--warning-300), var(--warning-500));
+}
+button.warning:active:not(:disabled):not(.disabled),
+button.warning.active:not(:disabled):not(.disabled),
+.btn.warning:active:not(:disabled):not(.disabled),
+.btn.warning.active:not(:disabled):not(.disabled) {
+    background: linear-gradient(to bottom, var(--warning-600), var(--warning-500));
+}
+button.success:not(:disabled):not(.disabled),
+.btn.success:not(:disabled):not(.disabled) {
+    background: linear-gradient(to bottom, var(--success-500), var(--success-700));
+    border-color: var(--success-800);
+    font-weight: 600;
+    text-shadow: none;
+    color: #fff !important;
+}
+button.success:hover:not(:disabled):not(.disabled),
+button.success.hover:not(:disabled):not(.disabled),
+.btn.success:hover:not(:disabled):not(.disabled),
+.btn.success.hover:not(:disabled):not(.disabled) {
+    background: linear-gradient(to bottom, var(--success-400), var(--success-600));
+}
+button.success:active:not(:disabled):not(.disabled),
+button.success.active:not(:disabled):not(.disabled),
+.btn.success:active:not(:disabled):not(.disabled),
+.btn.success.active:not(:disabled):not(.disabled) {
+    background: linear-gradient(to bottom, var(--success-700), var(--success-600));
+}
+button.info:not(:disabled):not(.disabled),
+.btn.info:not(:disabled):not(.disabled) {
+    background: linear-gradient(to bottom, var(--info-500), var(--info-700));
+    border-color: var(--info-800);
+    font-weight: 600;
+    text-shadow: none;
+    color: #fff !important;
+}
+button.info:hover:not(:disabled):not(.disabled),
+button.info.hover:not(:disabled):not(.disabled),
+.btn.info:hover:not(:disabled):not(.disabled),
+.btn.info.hover:not(:disabled):not(.disabled) {
+    background: linear-gradient(to bottom, var(--info-400), var(--info-600));
+}
+button.info:active:not(:disabled):not(.disabled),
+button.info.active:not(:disabled):not(.disabled),
+.btn.info:active:not(:disabled):not(.disabled),
+.btn.info.active:not(:disabled):not(.disabled) {
+    background: linear-gradient(to bottom, var(--info-700), var(--info-600));
+}
+
 button.left,
 .btn.left {
     border-right-width: 0.5px;
