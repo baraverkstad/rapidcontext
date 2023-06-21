@@ -23,8 +23,8 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  *
  * @constructor
  * @param {Object} attrs the widget and node attributes
- * @param {String} [attrs.select] the row selection mode ('none', 'one' or
- *            'multiple'), defaults to 'one'
+ * @param {String} [attrs.select] the row selection mode ('none', 'one',
+ *            'multiple' or 'auto'), defaults to 'one'
  * @param {String} [attrs.key] the unique key identifier column field,
  *            defaults to null
  * @param {Boolean} [attrs.hidden] the hidden widget flag, defaults to false
@@ -364,7 +364,8 @@ RapidContext.Widget.Table.prototype.setData = function (data) {
         this._renderRows();
     }
     if (this._selectMode !== "none") {
-        if (this._rows.length === 1 && !selectedIds.includes(this._rows[0].$id)) {
+        var isAuto = this._selectMode === "auto" && this._rows.length === 1;
+        if (isAuto && !selectedIds.includes(this._rows[0].$id)) {
             this.addSelectedIds(this._rows[0].$id);
         } else {
             this._addSelectedIds(selectedIds);
