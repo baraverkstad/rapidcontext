@@ -161,6 +161,9 @@
         { test: "var a = null; a?.dummy; true", name: "optional chaining operator (?.)" },
         { test: "null ?? true", name: "nullish coalescing operator (??)" },
         "selector(:has(*))",
+        // "appearance: none",
+        // "inset: 0",
+        // "line-clamp: 3",
         // "user-select: none"
     ];
 
