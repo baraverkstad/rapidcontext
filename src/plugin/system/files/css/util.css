@@ -148,14 +148,14 @@
     top: 0;
     bottom: 0;
     left: 0;
-    right: 0; /* stylelint-disable-line declaration-block-no-redundant-longhand-properties */
+    right: 0;
 }
 .position-cover {
     position: absolute;
     top: 0;
     bottom: 0;
     left: 0;
-    right: 0; /* stylelint-disable-line declaration-block-no-redundant-longhand-properties */
+    right: 0;
 }
 .position-center {
     position: absolute;
@@ -593,9 +593,9 @@
     overflow: hidden;
     text-overflow: ellipsis;
     /* CSS hack that works in most browsers (as of 2020-11-30): */
-    display: -webkit-box; /* stylelint-disable-line value-no-vendor-prefix */
-    -webkit-line-clamp: 3; /* stylelint-disable-line property-no-vendor-prefix */
-    -webkit-box-orient: vertical; /* stylelint-disable-line property-no-vendor-prefix */
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
 }
 
 
@@ -710,7 +710,6 @@
 /**
  * Text selection
  */
-/* stylelint-disable property-no-vendor-prefix */
 .select-all {
     -moz-user-select: all;
     -ms-user-select: all;
@@ -731,4 +730,3 @@
     -webkit-user-select: none;
     user-select: none;
 }
-/* stylelint-enable property-no-vendor-prefix */

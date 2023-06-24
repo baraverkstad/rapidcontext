@@ -46,7 +46,7 @@ test: test-css test-html test-js
 	ant test
 
 test-css:
-	npx stylelint 'src/plugin/system/files/css/*.css' 'tools/javadoc/stylesheet.css' '!**/*.min.css'
+	npx stylelint 'src/plugin/system/files/**/*.css' 'tools/javadoc/stylesheet.css' '!**/*.min.css'
 
 test-html:
 	npx html-validate 'doc/*.html' 'src/plugin/*/files/index.tmpl'

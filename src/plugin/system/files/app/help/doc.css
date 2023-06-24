@@ -168,7 +168,7 @@ body.doc .center {
     display: inline-block;
 }
 .doc .breadcrumb li:first-child::before {
-    font-family: FontAwesome; /* stylelint-disable-line font-family-no-missing-generic-family-keyword */
+    font-family: FontAwesome;
     content: "\f02e";
     padding: 0 10px 0 0;
     color: #2b5661;

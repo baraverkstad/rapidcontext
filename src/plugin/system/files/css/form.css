@@ -22,11 +22,9 @@ button,
     text-decoration: none !important;
     text-shadow: 0 1px #fff;
     color: #333 !important;
-    /* stylelint-disable property-no-vendor-prefix */
     -moz-user-select: none;
     -ms-user-select: none;
     -webkit-user-select: none;
-    /* stylelint-enable property-no-vendor-prefix */
     user-select: none;
 }
 button:disabled,
@@ -280,8 +278,8 @@ select {
     border-radius: 0.25rem;
     padding: 0.2em 2.2em 0.1em 0.5em;
     box-shadow: 0 0 2px #0002;
-    -webkit-appearance: none; /* stylelint-disable-line property-no-vendor-prefix */
-    -moz-appearance: none; /* stylelint-disable-line property-no-vendor-prefix */
+    -webkit-appearance: none;
+    -moz-appearance: none;
     appearance: none;
     background:
         url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22px' height='25px' viewBox='0 0 22 25'%3E%3ClinearGradient id='blue' x1='0' x2='0' y1='0' y2='1'%3E%3Cstop offset='0%' stop-color='%235fb3fb'/%3E%3Cstop offset='100%' stop-color='%23006bda'/%3E%3C/linearGradient%3E%3Cpath d='M0 0 h22 v25 H0 z' fill='url(%23blue)'/%3E%3Cpath d='M6 9 l5 5 5-5 z' fill='%23fff'/%3E%3C/svg%3E") 100% 0 / 1.7em no-repeat,

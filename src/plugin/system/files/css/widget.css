@@ -94,9 +94,9 @@
     line-height: 1.5;
     font-weight: bold;
     cursor: default;
-    -moz-user-select: none; /* stylelint-disable-line property-no-vendor-prefix */
-    -ms-user-select: none; /* stylelint-disable-line property-no-vendor-prefix */
-    -webkit-user-select: none; /* stylelint-disable-line property-no-vendor-prefix */
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
     user-select: none;
 }
 .widgetDialog.danger > .widgetDialogTitle {
@@ -270,7 +270,7 @@ button > .widgetIcon.fa,
 .widgetPopupItem::before {
     visibility: hidden;
     padding-right: 0.25em;
-    font-family: FontAwesome; /* stylelint-disable-line font-family-no-missing-generic-family-keyword */
+    font-family: FontAwesome;
     content: "\f105";
     color: #68a;
 }
@@ -324,9 +324,9 @@ button > .widgetIcon.fa,
     cursor: pointer;
     white-space: nowrap;
     color: #666;
-    -moz-user-select: none; /* stylelint-disable-line property-no-vendor-prefix */
-    -ms-user-select: none; /* stylelint-disable-line property-no-vendor-prefix */
-    -webkit-user-select: none; /* stylelint-disable-line property-no-vendor-prefix */
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
     user-select: none;
 }
 .widgetTabContainerLabel:first-child {
@@ -418,9 +418,9 @@ th.widgetTableColumn {
     background: #eee;
     background: linear-gradient(to bottom, #f0f0f0, #ddd);
     text-align: left;
-    -moz-user-select: none; /* stylelint-disable-line property-no-vendor-prefix */
-    -ms-user-select: none; /* stylelint-disable-line property-no-vendor-prefix */
-    -webkit-user-select: none; /* stylelint-disable-line property-no-vendor-prefix */
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
     user-select: none;
     white-space: nowrap;
 }
@@ -429,7 +429,7 @@ th.widgetTableColumn::after {
     top: 0.3em;
     right: 0.3em;
     color: #bbb;
-    font-family: FontAwesome; /* stylelint-disable-line font-family-no-missing-generic-family-keyword */
+    font-family: FontAwesome;
     content: "\f0dc";
 }
 th.widgetTableColumn.sortAsc,
