@@ -352,8 +352,7 @@ StartApp.prototype._changePasswordCallback = function (res) {
 StartApp.prototype._loginOut = function () {
     var user = RapidContext.App.user();
     if (user && user.id) {
-        RapidContext.App.logout(false);
-        this.ui.logoutDialog.show();
+        RapidContext.App.logout();
     } else {
         this.ui.loginForm.reset();
         this.ui.loginDialog.show();

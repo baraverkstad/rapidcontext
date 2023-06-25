@@ -520,7 +520,7 @@ RapidContext.App.login = function (login, password, token) {
  * session and either reloads the browser window or returns a deferred object
  * that will produce either a `callback` or an `errback` response.
  *
- * @param {boolean} [reload] the reload browser flag, defaults to true
+ * @param {boolean} [reload=true] the reload browser flag
  *
  * @return {Promise} a `RapidContext.Async` promise that will
  *         resolve when user is logged out
@@ -528,9 +528,7 @@ RapidContext.App.login = function (login, password, token) {
 RapidContext.App.logout = function (reload) {
     var promise = RapidContext.App.callProc("system/session/terminate", [null]);
     if (reload !== false) {
-        promise.then(function () {
-            window.location.reload();
-        });
+        promise.then(() => window.location.reload());
     }
     return promise;
 };

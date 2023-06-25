@@ -113,12 +113,6 @@
       </div>
     </Form>
   </Dialog>
-  <Dialog id="logoutDialog" title="Logout Completed" system="true" closeable="false" resizeable="false" style="width: 20rem;">
-    <div class="mx-2 mb-2">
-      <h2>You've been logged out.</h2>
-      <p>Please close your web browser in order to complete the logout process.</p>
-    </div>
-  </Dialog>
   <Dialog id="about" title="About RapidContext" modal="true" resizeable="false" class="about" style="width: 35rem;">
     <div class="header position-absolute top-0 left-0 right-0 py-3">
       <div class="center">
