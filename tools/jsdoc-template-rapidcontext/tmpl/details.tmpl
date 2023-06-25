@@ -11,6 +11,27 @@
 ?>
 
 <dl class="details">
+    <?js if (data.augments && data.alias && data.alias.startsWith('module:')) { ?>
+    <dt class="tag-augments">Extends:</dt>
+    <dd class="tag-augments">
+        <?js= self.partial('augments.tmpl', data) ?>
+    </dd>
+    <?js } ?>
+
+    <?js if (data.type && data.type.names) { ?>
+    <dt class="tag-type">Type:</dt>
+    <dd class="tag-type">
+        <?js= self.partial('type.tmpl', data.type.names) ?>
+    </dd>
+    <?js } ?>
+
+    <?js if (data['this']) { ?>
+        <dt class="tag-this">This:</dt>
+        <dd class="tag-this">
+            <?js= this.linkto(data['this'], data['this']) ?>
+        </dd>
+    <?js } ?>
+
     <?js if (data.properties && data.properties.length) { ?>
     <dt class="tag-props">Properties:</dt>
     <dd class="tag-props">

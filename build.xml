@@ -234,7 +234,7 @@
 
   <target name="doc-js">
     <exec executable="npx">
-      <arg line="jsdoc -c .jsdoc.json -t tools/jsdoc-template-rapidcontext/ -d doc/js/ src/plugin/system/files/js/"/>
+      <arg line="jsdoc -c .jsdoc.json -t tools/jsdoc-template-rapidcontext/ -d doc/js/ -r src/plugin/system/files/js/"/>
     </exec>
     <replaceregexp match="\s+$" replace="" flags="g" byline="true">
       <fileset dir="doc/js">

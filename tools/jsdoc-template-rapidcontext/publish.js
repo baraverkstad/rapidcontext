@@ -27,7 +27,7 @@ function upperFirst(s) {
 }
 
 function htmlsafe(text) {
-    return (text || '')
+    return String(text || '')
         .replaceAll('&', '&amp;')
         .replaceAll('<', '&lt;')
         .replaceAll('>', '&gt;')
@@ -51,6 +51,14 @@ function htmllist(items) {
 function summarize(text) {
     let s = (text || '').split(/\n\n|\.\s/g)[0].trim();
     return htmltext(s.endsWith('.') ? s : s + '.', true);
+}
+
+function highlight(code, language) {
+    if (language) {
+        return hljs.highlight(code, { language }).value;
+    } else {
+        return hljs.highlightAuto(code).value;
+    }
 }
 
 function typeLabel({ kind }) {
@@ -289,8 +297,7 @@ function generateSourceFiles(sourceFiles, encoding='utf8') {
         helper.registerLink(fileName, outfile);
         try {
             let code = fs.readFileSync(sourceFiles[file].resolved, encoding);
-            let html = hljs.highlight(code, { language: 'js' }).value;
-            html = html.split(/\n/g).map(lineno).join('\n');
+            let html = highlight(code, 'js').split(/\n/g).map(lineno).join('\n');
             let source = { kind: 'source', name: fileName, code: html };
             generate(`Source ${fileName}`, [source], outfile, false);
         } catch (e) {
@@ -548,7 +555,7 @@ exports.publish = (taffyData, opts, tutorials) => {
     // add template helpers
     Object.assign(view, {
         find, linkto, resolveAuthorLinks, tutoriallink, outputSourceFiles,
-        htmlsafe, htmltext, htmllist, summarize, typeLabel
+        htmlsafe, htmltext, htmllist, summarize, highlight, typeLabel
     });
 
     // once for all

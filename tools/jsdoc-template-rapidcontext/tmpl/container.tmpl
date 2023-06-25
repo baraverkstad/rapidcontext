@@ -85,7 +85,7 @@
                     </td>
                     <td class="name-description">
                         <div <?js if (m.deprecated) { ?>class="deprecated"<?js } ?>>
-                            <code><a href="#<?js= m.id ?>"><?js= m.name + (m.signature || '') ?></a></code>
+                            <code><a href="#<?js= m.id ?>"><?js= m.name.replaceAll(':', '.') + (m.signature || '') ?></a></code>
                         </div>
                         <div class="description"><?js= self.summarize(m.description) ?></div>
                     </td>
@@ -189,18 +189,6 @@
         <dl><?js mixins.forEach(function(m) { ?>
             <dt><?js= self.linkto(m.longname, m.name) ?></dt>
             <dd><?js if (m.summary) { ?><?js= m.summary ?><?js } ?></dd>
-        <?js }); ?></dl>
-    <?js } ?>
-
-    <?js
-        var namespaces = self.find({kind: 'namespace', memberof: doc.longname});
-        if (!isGlobalPage && namespaces && namespaces.length) {
-    ?>
-        <h3 class="section-title">Namespaces</h3>
-
-        <dl><?js namespaces.forEach(function(n) { ?>
-            <dt><?js= self.linkto(n.longname, n.name) ?></dt>
-            <dd><?js if (n.summary) { ?><?js= n.summary ?><?js } ?></dd>
         <?js }); ?></dl>
     <?js } ?>
 
