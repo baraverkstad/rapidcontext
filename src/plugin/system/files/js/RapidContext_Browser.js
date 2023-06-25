@@ -146,6 +146,7 @@
         // "HTMLDialogElement",
         // "navigator.credentials.create",
         // "navigator.credentials.get",
+        // "Object.hasOwn",
         "Object.fromEntries",
         "Promise.allSettled",
         "Promise.any",
