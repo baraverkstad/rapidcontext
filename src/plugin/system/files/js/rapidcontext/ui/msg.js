@@ -289,6 +289,18 @@
      */
     const info = show.bind(null, "info");
 
+    Object.assign(error, {
+        loggedOut() {
+            return error({
+                title: "Logged out",
+                text: "You've been logged out. Please reload the page to login again.",
+                actions: {
+                    reload: "Reload page"
+                }
+            });
+        }
+    });
+
     Object.assign(warning, {
         /**
          * Displays an object removal warning, similar to `confirm()`. This is

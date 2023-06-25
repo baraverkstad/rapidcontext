@@ -67,6 +67,8 @@ RapidContext.App.init = function (app) {
     // Launch app
     return Promise.all(cachedData)
         .then(function () {
+            const hourly = 60 * 60 * 1000;
+            setInterval(() => RapidContext.App.callProc("system/session/current"), hourly);
             if (app && app !== "start") {
                 return RapidContext.App.startApp(app || "start").catch(function (err) {
                     RapidContext.UI.showError(err);
@@ -447,7 +449,7 @@ RapidContext.App.callProc = function (name, args) {
         } else {
             RapidContext.Log.log(name + " response:", res.data);
         }
-        if (name.startsWith("system/") && !res.error && res.data) {
+        if (name.startsWith("system/") && !res.error) {
             RapidContext.App._Cache.update(name, res.data);
         }
         return res.data;
@@ -761,19 +763,6 @@ RapidContext.App._Cache = {
     user: null,
     apps: {},
 
-    // Compares two object on the 'id' property
-    compareId: function (a, b) {
-        // TODO: replace with MochiKit.Base.keyComparator once #331 is fixed
-        if (a == null || b == null) {
-            return MochiKit.Base.compare(a, b);
-        } else {
-            return this._cmpId(a, b);
-        }
-    },
-
-    // Object comparator for 'id' property
-    _cmpId: MochiKit.Base.keyComparator("id"),
-
     // Normalizes an app manifest and its resources
     _normalizeApp: function (app) {
         function toType(type, url) {
@@ -833,28 +822,27 @@ RapidContext.App._Cache = {
         switch (proc) {
         case "system/status":
             this.status = Object.assign({}, data);
-            RapidContext.Log.log("Updated cached status", this.status);
+            console.log("Updated cached status", this.status);
             break;
         case "system/session/current":
-            if (this.compareId(this.user, data.user) != 0) {
+            if (this.user && this.user.id !== (data && data.user && data.user.id)) {
+                RapidContext.UI.Msg.error.loggedOut();
+                RapidContext.App.callProc = () => Promise.reject(new Error("logged out"));
+            } else if (data && data.user && !this.user) {
                 // TODO: use deep clone
                 data = Object.assign({}, data.user);
-                if (data.name != "") {
-                    data.longName = data.name + " (" + data.id + ")";
-                } else {
-                    data.longName = data.id;
-                }
+                data.longName = data.name ? `${data.name} (${data.id})` : data.id;
                 this.user = data;
-                RapidContext.Log.log("Updated cached user", this.user);
+                console.log("Updated cached user", this.user);
             }
             break;
         case "system/app/list":
-            for (var i = 0; i < data.length; i++) {
+            for (var i = 0; data && i < data.length; i++) {
                 var launcher = this._normalizeApp(data[i]);
                 launcher.instances = (this.apps[launcher.id] || {}).instances || [];
                 this.apps[launcher.id] = Object.assign(this.apps[launcher.id] || {}, launcher);
             }
-            RapidContext.Log.log("Updated cached apps", this.apps);
+            console.log("Updated cached apps", this.apps);
             break;
         }
     }
