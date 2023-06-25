@@ -61,7 +61,7 @@ button.focus:not(:disabled):not(.disabled),
 }
 button.primary:not(:disabled):not(.disabled),
 .btn.primary:not(:disabled):not(.disabled) {
-    background: linear-gradient(to bottom, var(--highlight-100), var(--highlight-600));
+    background: linear-gradient(to bottom, var(--highlight-100), var(--highlight-500));
     border-color: var(--highlight-700);
     font-weight: 600;
 }
@@ -69,13 +69,13 @@ button.primary:hover:not(:disabled):not(.disabled),
 button.primary.hover:not(:disabled):not(.disabled),
 .btn.primary:hover:not(:disabled):not(.disabled),
 .btn.primary.hover:not(:disabled):not(.disabled) {
-    background: linear-gradient(to bottom, var(--highlight-000), var(--highlight-500));
+    background: linear-gradient(to bottom, var(--highlight-000), var(--highlight-300));
 }
 button.primary:active:not(:disabled):not(.disabled),
 button.primary.active:not(:disabled):not(.disabled),
 .btn.primary:active:not(:disabled):not(.disabled),
 .btn.primary.active:not(:disabled):not(.disabled) {
-    background: linear-gradient(to bottom, var(--highlight-600), var(--highlight-500));
+    background: linear-gradient(to bottom, var(--highlight-500), var(--highlight-300));
 }
 button.danger:not(:disabled):not(.disabled),
 .btn.danger:not(:disabled):not(.disabled) {
