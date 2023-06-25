@@ -114,7 +114,7 @@ RapidContext.Widget._widgetMixin = function (node/*, objOrClass, ...*/) {
                 node[key] = obj[key];
             } catch (e) {
                 var msg = "failed to overwrite '" + key + "' in DOM node";
-                RapidContext.Log.warn(msg, e, node);
+                console.warn(msg, e, node);
             }
         }
     }
