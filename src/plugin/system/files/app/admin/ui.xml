@@ -282,12 +282,6 @@
               </td>
             </tr>
             <tr>
-              <th class="label" style="padding-right: 4px;">Java Class:</th>
-              <td>
-                <Field name="className" />
-              </td>
-            </tr>
-            <tr>
               <td colspan="2" style="padding-top: 4px;">
                 <Button id="pluginLoad" icon="fa fa-lg fa-puzzle-piece">Load</Button>
                 <Button id="pluginUnload" icon="fa fa-lg fa-ban">Unload</Button>

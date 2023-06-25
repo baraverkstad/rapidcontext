@@ -597,13 +597,14 @@ AdminApp.prototype._togglePlugin = function () {
     }
     this.ui.pluginReload.hide();
     this.ui.pluginLoading.show();
-    var data = this.ui.pluginTable.getSelectedData();
-    var proc = data.loaded ? "system/plugin/unload" : "system/plugin/load";
+    let data = this.ui.pluginTable.getSelectedData();
+    let isJava = data.loaded && /\blib\b/.test(data.content);
+    let proc = data.loaded ? "system/plugin/unload" : "system/plugin/load";
     RapidContext.App.callProc(proc, [data.id])
         .catch(RapidContext.UI.showError)
-        .then((data.loaded && data.className) ? showRestartMesssage : function () {})
         .then(() => this.resetServer())
-        .then(() => this.loadPlugins());
+        .then(() => this.loadPlugins())
+        .then(isJava ? showRestartMesssage : () => true);
 };
 
 /**
