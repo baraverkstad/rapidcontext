@@ -309,14 +309,15 @@ AdminApp.prototype._addConnection = function () {
  * Removes a connection (after user confirmation).
  */
 AdminApp.prototype._removeConnection = function () {
-    var data = this.ui.cxnTable.getSelectedData();
-    var msg = "Delete the connection '" + data.id + "'?";
-    if (confirm(msg)) {
-        var path = RapidContext.Storage.path(data);
-        RapidContext.App.callProc("system/storage/write", [path, null])
-            .then(() => this.proc.cxnList.recall())
-            .catch(RapidContext.UI.showError);
-    }
+    let data = this.ui.cxnTable.getSelectedData();
+    RapidContext.UI.Msg.warning.remove("connection", data.id)
+        .then(() => {
+            var path = RapidContext.Storage.path(data);
+            RapidContext.App.callProc("system/storage/write", [path, null])
+                .then(() => this.proc.cxnList.recall())
+                .catch(RapidContext.UI.showError);
+        })
+        .catch(() => true);
 };
 
 /**
@@ -448,12 +449,12 @@ AdminApp.prototype._addRemoveConnectionProps = function (evt) {
     var $el = $(evt.target()).closest("[data-action]");
     if ($el.data("action") === "add") {
         var name = this.ui.cxnEditAddParam.value.trim();
-        if (/[a-z0-9_-]+/i.test(name)) {
+        if (/^[a-z0-9_-]+$/i.test(name)) {
             this.ui.cxnEditAddParam.setAttrs({ name: name, value: "value" });
             this._updateConnectionEdit();
             this.ui.cxnEditAddParam.setAttrs({ name: "_add", value: "" });
         } else {
-            alert("Invalid parameter name.");
+            RapidContext.UI.Msg.error("Invalid parameter name.");
         }
     } else if ($el.data("action") === "remove") {
         RapidContext.Widget.destroyWidget($el.closest("tr").get(0));
@@ -593,7 +594,8 @@ AdminApp.prototype._showPlugin = function () {
  */
 AdminApp.prototype._togglePlugin = function () {
     function showRestartMesssage() {
-        alert("Note: Unloading Java resources requires a full server restart.");
+        let msg = "Unloading Java resources requires a full server restart.";
+        return RapidContext.UI.Msg.info(msg);
     }
     this.ui.pluginReload.hide();
     this.ui.pluginLoading.show();
@@ -660,7 +662,7 @@ AdminApp.prototype._pluginUpload = function () {
  */
 AdminApp.prototype.resetServer = function (e) {
     function showMessage() {
-        alert("Server reset complete");
+        RapidContext.UI.Msg.success("Server reset complete");
     }
     var promise = RapidContext.App.callProc("system/reset");
     if (e instanceof MochiKit.Signal.Event) {
@@ -874,12 +876,13 @@ AdminApp.prototype._addProcedure = function () {
  * Removes the currently shown procedure (if in the local plug-in).
  */
 AdminApp.prototype._removeProcedure = function () {
-    var p = this._currentProc;
-    var msg = "Do you really want to delete the\nprocedure '" + p.name + "'?";
-    if (confirm(msg)) {
-        this.ui.overlay.setAttrs({ message: "Deleting..." });
-        this.proc.procDelete(p.name);
-    }
+    let proc = this._currentProc.name;
+    RapidContext.UI.Msg.warning.remove("procedure", proc)
+        .then(() => {
+            this.ui.overlay.setAttrs({ message: "Deleting..." });
+            this.proc.procDelete(proc);
+        })
+        .catch(() => true);
 };
 
 /**
