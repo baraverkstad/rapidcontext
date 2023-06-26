@@ -77,7 +77,7 @@ RapidContext.Widget.Classes.TabContainer = RapidContext.Widget.TabContainer;
  */
 RapidContext.Widget.TabContainer.prototype.destroy = function () {
     // FIXME: Use AbortSignal instead to disconnect
-    this.removeEventListener("click", this._handleLabelClick);
+    this.firstChild.removeEventListener("click", this._handleLabelClick);
 };
 
 /**
@@ -86,15 +86,14 @@ RapidContext.Widget.TabContainer.prototype.destroy = function () {
  * @param {Event} evt the DOM Event object
  */
 RapidContext.Widget.TabContainer.prototype._handleLabelClick = function (evt) {
-    var pos = $(evt.target).closest("div.widgetTabContainerLabel").index();
-    var parent = $(evt.target).closest("div.widgetTabContainer").get(0);
-    var child = parent.getChildNodes()[pos];
-    if (parent && child) {
-        if (RapidContext.Widget.isWidget(evt.target, "Icon")) {
-            parent.removeChildNode(child);
-        } else {
-            parent.selectChild(child);
-        }
+    let label = evt.target.closest("div.widgetTabContainerLabel");
+    let pos = label ? Array.from(this.children).indexOf(label) : -1;
+    let parent = this.parentNode;
+    let child = parent.getChildNodes()[pos];
+    if (child && evt.target.dataset.close) {
+        parent.removeChildNode(child);
+    } else if (child) {
+        parent.selectChild(child);
     }
 };
 
@@ -126,6 +125,7 @@ RapidContext.Widget.TabContainer.prototype.addChildNode = function (child) {
     var text = MochiKit.DOM.SPAN(null, child.pageTitle);
     if (child.pageCloseable) {
         var icon = RapidContext.Widget.Icon({ "class": "fa fa-close", tooltip: "Close" });
+        icon.dataset.close = true;
     }
     var labelAttrs = { "class": "widgetTabContainerLabel" };
     var label = MochiKit.DOM.DIV(labelAttrs, MochiKit.DOM.DIV({}, text, icon));
