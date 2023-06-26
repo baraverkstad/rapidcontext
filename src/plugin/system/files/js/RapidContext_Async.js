@@ -335,7 +335,7 @@
             xhr.send(opts.body);
         });
         var cancel = function () {
-            xhr && setTimeout(() => xhr.abort());
+            xhr && setTimeout(xhr.abort.bind(xhr));
             xhr = null;
         };
         return new Async(promise, cancel);
