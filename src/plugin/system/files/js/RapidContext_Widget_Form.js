@@ -312,7 +312,9 @@ RapidContext.Widget.Form.prototype.validateReset = function () {
             f.setCustomValidity && f.setCustomValidity("");
         });
     });
-    $(this).find(".invalid").addBack().removeClass("invalid");
+    [this, ...this.querySelectorAll(".invalid")].forEach((el) => {
+        el.classList.remove("invalid");
+    });
     this.validators().forEach(function (validator) {
         validator.reset();
     });
