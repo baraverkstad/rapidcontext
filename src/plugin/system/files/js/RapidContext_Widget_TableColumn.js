@@ -144,9 +144,9 @@ RapidContext.Widget.TableColumn.prototype.setAttrs = function (attrs) {
     }
     if (typeof(locals.sort) !== "undefined") {
         this.sort = locals.sort;
-        $(this).toggleClass("sortNone", locals.sort === "none");
-        $(this).toggleClass("sortDesc", locals.sort === "desc");
-        $(this).toggleClass("sortAsc", locals.sort === "asc");
+        this.classList.toggle("sortNone", locals.sort === "none");
+        this.classList.toggle("sortDesc", locals.sort === "desc");
+        this.classList.toggle("sortAsc", locals.sort === "asc");
     }
     if (typeof(locals.maxLength) !== "undefined") {
         this.maxLength = parseInt(locals.maxLength);
@@ -280,11 +280,7 @@ RapidContext.Widget.TableColumn.prototype._render = function (obj) {
  * Handles click events on the column header.
  */
 RapidContext.Widget.TableColumn.prototype._handleClick = function () {
-    if (this.parentNode != null) {
-        var dir = (this.sort == "asc") ? "desc" : "asc";
-        var tr = this.parentNode;
-        var thead = tr.parentNode;
-        var table = thead.parentNode;
-        table.parentNode.sortData(this.field, dir);
-    }
+    let table = this.closest(".widget.widgetTable");
+    let dir = (this.sort == "asc") ? "desc" : "asc";
+    table && table.sortData(this.field, dir);
 };
