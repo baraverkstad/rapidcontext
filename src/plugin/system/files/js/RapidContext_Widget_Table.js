@@ -132,7 +132,7 @@ RapidContext.Widget.Table.prototype._handleMouseDown = function (evt) {
  * @param {Event} evt the DOM Event object
  */
 RapidContext.Widget.Table.prototype._handleClick = function (evt) {
-    var tr = $(evt.target).closest("tbody > tr").get(0);
+    var tr = evt.target.closest(".widgetTable > tbody > tr");
     var row = tr && (tr.rowIndex - 1);
     var isMulti = tr && this._selectMode === "multiple";
     var isSingle = tr && this._selectMode !== "none";
