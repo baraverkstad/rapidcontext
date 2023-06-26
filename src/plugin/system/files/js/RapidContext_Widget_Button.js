@@ -78,7 +78,7 @@ RapidContext.Widget.Button.prototype.setAttrs = function (attrs) {
     var locals = RapidContext.Util.mask(attrs, ["highlight", "icon"]);
     this.__setAttrs(attrs);
     if ("highlight" in locals) {
-        $(this).toggleClass("primary", MochiKit.Base.bool(locals.highlight));
+        this.classList.toggle("primary", MochiKit.Base.bool(locals.highlight));
     }
     if ("icon" in locals) {
         var child = this.querySelector("i");
@@ -88,8 +88,12 @@ RapidContext.Widget.Button.prototype.setAttrs = function (attrs) {
             this.insertBefore(RapidContext.Widget.Icon(locals.icon), this.firstChild);
         } else if (locals.icon.nodeType) {
             child.replaceWith(locals.icon);
+        } else if (child.setAttrs) {
+            child.setAttrs(locals.icon);
+        } else if (typeof(locals.icon) === "string") {
+            child.className = locals.icon;
         } else {
-            child.setAttrs ? child.setAttrs(locals.icon) : $(child).attr(locals.icon);
+            Object.keys(locals.icon).forEach((k) => child.setAttribute(k, locals.icon[k]));
         }
     }
 };
