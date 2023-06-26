@@ -99,8 +99,8 @@ RapidContext.Widget.Classes.Table = RapidContext.Widget.Table;
  */
 RapidContext.Widget.Table.prototype.destroy = function () {
     // FIXME: Use AbortSignal instead to disconnect
-    this.addEventListener("mousedown", this._handleMouseDown);
-    this.addEventListener("click", this._handleClick);
+    this.removeEventListener("mousedown", this._handleMouseDown);
+    this.removeEventListener("click", this._handleClick);
 };
 
 /**

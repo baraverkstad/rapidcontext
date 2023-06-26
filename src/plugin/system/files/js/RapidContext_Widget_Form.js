@@ -67,9 +67,9 @@ RapidContext.Widget.Classes.Form = RapidContext.Widget.Form;
  */
 RapidContext.Widget.Form.prototype.destroy = function () {
     // FIXME: Use AbortSignal instead to disconnect
-    this.addEventListener("input", this._handleInput);
-    this.addEventListener("invalid", this._handleInvalid, { capture: true });
-    this.addEventListener("submit", this._handleSubmit);
+    this.removeEventListener("input", this._handleInput);
+    this.removeEventListener("invalid", this._handleInvalid, { capture: true });
+    this.removeEventListener("submit", this._handleSubmit);
 };
 
 /**
