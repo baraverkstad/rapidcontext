@@ -142,8 +142,8 @@ RapidContext.Widget.Dialog.prototype._styleNode = function () {
  * @param {Event} evt the DOM Event object
  */
 RapidContext.Widget.Dialog.prototype._handleClick = function (evt) {
-    var action = $(evt.target).closest("[data-dialog]").data("dialog");
-    if (action == "close") {
+    let el = evt.target.closest("[data-dialog]");
+    if (el && el.dataset.dialog == "close") {
         this.hide();
     }
 };
@@ -156,7 +156,8 @@ RapidContext.Widget.Dialog.prototype._handleClick = function (evt) {
  * @param {Event} evt the DOM Event object
  */
 RapidContext.Widget.Dialog.prototype._handleMouseDown = function (evt) {
-    var action = $(evt.target).closest("[data-dialog]").data("dialog");
+    let el = evt.target.closest("[data-dialog]");
+    let action = el && el.dataset.dialog;
     if (action == "move" || action == "resize") {
         var isDim = action == "resize";
         var x = (isDim ? this.offsetWidth : this.offsetLeft) - evt.pageX;
@@ -228,8 +229,8 @@ RapidContext.Widget.Dialog.prototype.setAttrs = function (attrs) {
         this.center = MochiKit.Base.bool(locals.center);
     }
     if (typeof(locals.resizeable) != "undefined") {
-        var resize = this.childNodes[2];
-        $(resize).toggleClass("hidden", !MochiKit.Base.bool(locals.resizeable));
+        let resize = this.childNodes[2];
+        resize.classList.toggle("hidden", !MochiKit.Base.bool(locals.resizeable));
     }
     if (typeof(locals.closeable) != "undefined") {
         var close = this.childNodes[1];
