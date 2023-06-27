@@ -575,16 +575,17 @@ exports.publish = (taffyData, opts, tutorials) => {
     // Create topics JSON
     topics = JSON.stringify({
         topic: "RapidContext/JavaScript API",
-        children: find({ kind: ['namespace','class','interface'] }).map((ns) => {
+        children: find({ kind: ['namespace', 'class', 'interface'] }).map((ns) => {
             return {
                 topic: ns.longname,
                 url: 'doc/js/' + helper.longnameToUrl[ns.longname],
                 children: find({ memberof: ns.longname }).map((m) => {
-                    return {
-                        topic: m.name,
+                    const blocked = ['namespace', 'class', 'interface', 'typedef'];
+                    return !blocked.includes(m.kind) && {
+                        topic: m.name.replaceAll(':', '.'),
                         url: 'doc/js/' + helper.longnameToUrl[m.longname]
                     }
-                })
+                }).filter(Boolean)
             }
         })
     }, null, 2);
