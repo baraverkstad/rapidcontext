@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "crypto-js": "4.1.1",
-    "jquery": "3.6.1"
+    "jquery": "3.7.0"
   },
   "devDependencies": {
     "eslint": "^8.42.0",
