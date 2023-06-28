@@ -261,13 +261,21 @@ RapidContext.App.startApp = function (app, container) {
                 ui.overlay.setAttrs({ message: "Working..." });
                 return RapidContext.App.callApp(instance, "start");
             })
-            .catch(function (err) {
-                console.error("Failed to start app", err);
+            .catch(function (e) {
+                console.error("Failed to start app", e);
                 MochiKit.Signal.disconnectAll(ui.root, "onclose");
-                var label = MochiKit.DOM.STRONG(null, "Error: ");
-                ui.root.append(label, err.message);
+                let div = document.createElement("div");
+                div.append(String(e));
+                ui.root.append(div);
+                if (e.url) {
+                    let link = document.createElement("a");
+                    link.className = "block mt-2";
+                    link.setAttribute("href", e.url);
+                    link.append(e.url);
+                    ui.root.append(link);
+                }
                 ui.overlay.hide();
-                return Promise.reject(err);
+                return Promise.reject(e);
             })
             .finally(function () {
                 RapidContext.Log.context(null);
