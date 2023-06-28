@@ -217,9 +217,9 @@ textarea.disabled {
     box-shadow: none;
     background: #f5f5f5;
 }
-input:read-only:not(:disabled):not(.disabled),
+input[readonly]:not(:disabled):not(.disabled),
 input.readonly:not(:disabled):not(.disabled),
-textarea:read-only:not(:disabled):not(.disabled),
+textarea[readonly]:not(:disabled):not(.disabled),
 textarea.readonly:not(:disabled):not(.disabled) {
     border-color: #0001;
     box-shadow: none !important;
