@@ -44,24 +44,26 @@
 
 <h1>2. Installing &amp; Connecting</h1>
 
-<h2 id="requirements">2.1. System Requirements</h2>
+<h2 id="requirements">2.1 System Requirements</h2>
 
-<p>RapidContext comes bundled with most of its dependencies. A special server
-launcher is also available for Mac OS X.</p>
+<p>The standard RapidContext download package comes bundled with most of its
+dependencies. Additional launchers for Docker and Mac OS X are also available
+separately.</p>
 
 <ul class="box yellow">
   <li>
     <strong>Web Browser</strong> &mdash; All modern browsers work, with
     full support for:
     <ul>
-      <li>Apple Safari 9+</li>
-      <li>Google Chrome 65+</li>
+      <li>Apple Safari 11+</li>
+      <li>Google Chrome 69+</li>
       <li>Microsoft Edge 79+</li>
-      <li>Mozilla Firefox 55+</li>
+      <li>Mozilla Firefox 65+</li>
     </ul>
   </li>
   <li>
-    <strong>Server Environment</strong> &mdash; Only needed on the RapidContext server.
+    <strong>Server Environment</strong> &mdash; Only needed on the RapidContext
+    server (unless Docker is used).
     <ul>
       <li>Java Runtime (JRE) 11+</li>
       <li>Unzip or similar utility</li>
@@ -71,7 +73,79 @@ launcher is also available for Mac OS X.</p>
 </ul>
 
 
-<h2 id="installation">2.2. Server Installation</h2>
+<h2 id="docker">2.2 Docker Images</h2>
+
+<p>The easiest way to run RapidContext is with a pre-built Docker image.
+This only requires a Docker server and supports standard port-mapping and
+local data volume arguments:</p>
+
+<div class="box blue">
+  <i class="box-icon fa fa-fw fa-code"></i>
+  <pre class="box-content code">
+<span class="comment">$&gt;</span> docker run \
+     -p 8080:80
+     -v local-data:/opt/local \
+     ghcr.io/baraverkstad/rapidcontext:vXYZ
+  </pre>
+</div>
+
+<p>The command above starts a new server on
+<a href="http://localhost:8080/">localhost:8080</a> and creates a default
+<code>admin</code> user on the first run (unless other users are found).</p>
+
+<div class="box green mt-0">
+  <i class="box-icon fa fa-fw fa-info-circle"></i>
+  <div class="box-content">
+    <h2 class="m-0">Notice</h2>
+    <p>A new RapidContext server can be accessed with the following login:</p>
+    <table class="my-2">
+      <tbody>
+        <tr>
+          <th scope="row">Login:</th>
+          <td><var>admin</var></td>
+        </tr>
+        <tr>
+          <th scope="row" class="pr-3">Password:</th>
+          <td>blank (anything is accepted)</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>It is important to change the password for the default <var>admin</var>
+    user before allowing access to the system.</p>
+  </div>
+</div>
+
+<p>The Docker image is based on Alpine Linux for minimal size. It is
+multi-architecture and supports both <code>linux/amd64</code> and
+<code>linux/arm64</code>. The
+<a href="https://github.com/baraverkstad/rapidcontext/pkgs/container/rapidcontext">list of available versions</a>
+shows the image tags available. Note that <code>latest</code> references
+the current development version. </p>
+
+<p>An alternative way to run RapidContext in Docker is to build your
+own image. This can either be built from scratch, or reuse the default
+image to install additional software, etc:</p>
+
+<div class="box blue">
+  <i class="box-icon fa fa-fw fa-code"></i>
+  <pre class="box-content code">
+FROM ghcr.io/baraverkstad/rapidcontext
+
+<span class="comment"># Install extras</span>
+RUN apk add --no-cache ...
+
+<span class="comment"># Diagnostics</span>
+HEALTHCHECK --timeout=5s CMD \
+    wget -q --spider http://localhost/rapidcontext/status
+  </pre>
+</div>
+
+<p>Either way, the RapidContext
+<a href="https://github.com/baraverkstad/rapidcontext/blob/main/share/docker/Dockerfile">Dockerfile</a>
+is a good reference for how to build an image.</p>
+
+
+<h2 id="installation">2.3 Server Installation</h2>
 
 <p>RapidContext can be installed either as a stand-alone server (recommended)
 or inside a Java Servlet container, such as Jetty or Tomcat. To install and
@@ -163,31 +237,8 @@ it shows a simple server control panel as below:</p>
   <img src="images/screenshot-server.png" alt="Screenshot">
 </p>
 
-<div class="box green mt-0">
-  <i class="box-icon fa fa-fw fa-info-circle"></i>
-  <div class="box-content">
-    <h2 class="m-0">Notice</h2>
-    <p>A new RapidContext installation can be accessed with the following
-    login:</p>
-    <table class="my-2">
-      <tbody>
-        <tr>
-          <th scope="row">Login:</th>
-          <td><var>admin</var></td>
-        </tr>
-        <tr>
-          <th scope="row" class="pr-3">Password:</th>
-          <td>blank (anything is accepted)</td>
-        </tr>
-      </tbody>
-    </table>
-    <p>It is important to change the password for the default <var>admin</var>
-    user before allowing other users onto the system.</p>
-  </div>
-</div>
 
-
-<h2 id="plugin_install">2.3. Plug-in Installation</h2>
+<h2 id="plugin_install">2.4 Plug-in Installation</h2>
 
 <p>Plug-ins are installed or updated by using the built-in
 <strong>Admin</strong> app. The steps below explain how to install or update
@@ -229,7 +280,7 @@ a plug-in:</p>
 </div>
 
 
-<h2 id="plugin_loading">2.4. Plug-in Activation &amp; Deactivation</h2>
+<h2 id="plugin_loading">2.5 Plug-in Activation &amp; Deactivation</h2>
 
 <p>Plug-ins can both be loaded and unloaded in the built-in
 <strong>Admin</strong> app. The steps below explain how to do it.</p>
@@ -248,7 +299,7 @@ a plug-in:</p>
 </ol>
 
 
-<h2 id="plugin_removal">2.5. Plug-in Removal</h2>
+<h2 id="plugin_removal">2.6 Plug-in Removal</h2>
 
 <p>Normally, it is not necessary to completely remove a plug-in from the
 server. Leaving it in unloaded status ensures that it has no effect on the
@@ -266,7 +317,7 @@ steps:</p>
 </ol>
 
 
-<h2 id="connections">2.6. Connections</h2>
+<h2 id="connections">2.7 Connections</h2>
 
 <p>Connections to external systems can be created and modified in the built-in
 <strong>Admin</strong> app. The steps below explain how to do it:</p>
@@ -321,7 +372,7 @@ editing:</p>
 </ul>
 
 
-<h2 id="environments">2.7. Environments</h2>
+<h2 id="environments">2.8 Environments</h2>
 
 <p>An environment is used to signal the RapidContext server location to the
 user. The environment name is displayed at the top right corner of the standard

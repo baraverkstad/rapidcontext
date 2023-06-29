@@ -1,59 +1,60 @@
 { "topic": "RapidContext", "children": [
     { "topic": "1. Introduction", "url": "doc/1_introduction.html", "children": [
-        { "topic": "1.1. Overview", "url": "doc/1_introduction.html#overview" },
-        { "topic": "1.2. Standard Setup", "url": "doc/1_introduction.html#setup" },
-        { "topic": "1.3. Features", "url": "doc/1_introduction.html#features" },
-        { "topic": "1.4. Concepts & Terminology", "url": "doc/1_introduction.html#concepts" }
+        { "topic": "1.1 Overview", "url": "doc/1_introduction.html#overview" },
+        { "topic": "1.2 Standard Setup", "url": "doc/1_introduction.html#setup" },
+        { "topic": "1.3 Features", "url": "doc/1_introduction.html#features" },
+        { "topic": "1.4 Concepts & Terminology", "url": "doc/1_introduction.html#concepts" }
     ] },
     { "topic": "2. Installing & Connecting", "url": "doc/2_install.html", "children": [
-        { "topic": "2.1. System Requirements", "url": "doc/2_install.html#requirements" },
-        { "topic": "2.2. Server Installation", "url": "doc/2_install.html#installation" },
-        { "topic": "2.3. Plug-in Installation", "url": "doc/2_install.html#plugin_install" },
-        { "topic": "2.4. Plug-in Activation & Deactivation", "url": "doc/2_install.html#plugin_loading" },
-        { "topic": "2.5. Plug-in Removal", "url": "doc/2_install.html#plugin_removal" },
-        { "topic": "2.6. Connections", "url": "doc/2_install.html#connections" },
-        { "topic": "2.7. Environments", "url": "doc/2_install.html#environments" }
+        { "topic": "2.1 System Requirements", "url": "doc/2_install.html#requirements" },
+        { "topic": "2.2 Docker Images", "url": "doc/2_install.html#docker" },
+        { "topic": "2.3 Server Installation", "url": "doc/2_install.html#installation" },
+        { "topic": "2.4 Plug-in Installation", "url": "doc/2_install.html#plugin_install" },
+        { "topic": "2.5 Plug-in Activation & Deactivation", "url": "doc/2_install.html#plugin_loading" },
+        { "topic": "2.6 Plug-in Removal", "url": "doc/2_install.html#plugin_removal" },
+        { "topic": "2.7 Connections", "url": "doc/2_install.html#connections" },
+        { "topic": "2.8 Environments", "url": "doc/2_install.html#environments" }
     ] },
     { "topic": "3. Users & Security", "url": "doc/3_security.html", "children": [
-        { "topic": "3.1. Default Users & Roles", "url": "doc/3_security.html#default_users" },
-        { "topic": "3.2. User Authentication", "url": "doc/3_security.html#user_authentication" },
-        { "topic": "3.3. Sessions & Persistent Cookie Authentication", "url": "doc/3_security.html#sessions" },
-        { "topic": "3.4. User Management & Storage", "url": "doc/3_security.html#user_management" },
-        { "topic": "3.5. Roles & Access Control", "url": "doc/3_security.html#roles_access_control" },
-        { "topic": "3.6. Role Management & Storage", "url": "doc/3_security.html#role_management" },
-        { "topic": "3.7. Security Checklist", "url": "doc/3_security.html#security_checklist" }
+        { "topic": "3.1 Default Users & Roles", "url": "doc/3_security.html#default_users" },
+        { "topic": "3.2 User Authentication", "url": "doc/3_security.html#user_authentication" },
+        { "topic": "3.3 Sessions & Persistent Cookie Authentication", "url": "doc/3_security.html#sessions" },
+        { "topic": "3.4 User Management & Storage", "url": "doc/3_security.html#user_management" },
+        { "topic": "3.5 Roles & Access Control", "url": "doc/3_security.html#roles_access_control" },
+        { "topic": "3.6 Role Management & Storage", "url": "doc/3_security.html#role_management" },
+        { "topic": "3.7 Security Checklist", "url": "doc/3_security.html#security_checklist" }
     ] },
     { "topic": "4. Plug-Ins & Storage", "url": "doc/4_storage.html", "children": [
-        { "topic": "4.1. Plug-Ins & Server Files", "url": "doc/4_storage.html#plugins" },
-        { "topic": "4.2. Storage Overview", "url": "doc/4_storage.html#storage" },
-        { "topic": "4.3. Storage Tree", "url": "doc/4_storage.html#storage_tree" },
-        { "topic": "4.4. Storage Data Types", "url": "doc/4_storage.html#storage_type" },
-        { "topic": "4.5. Hidden & Computed Properties", "url": "doc/4_storage.html#hidden_props" }
+        { "topic": "4.1 Plug-Ins & Server Files", "url": "doc/4_storage.html#plugins" },
+        { "topic": "4.2 Storage Overview", "url": "doc/4_storage.html#storage" },
+        { "topic": "4.3 Storage Tree", "url": "doc/4_storage.html#storage_tree" },
+        { "topic": "4.4 Storage Data Types", "url": "doc/4_storage.html#storage_type" },
+        { "topic": "4.5 Hidden & Computed Properties", "url": "doc/4_storage.html#hidden_props" }
     ] },
     { "topic": "5. Server-side & Plug-In Development", "url": "doc/5_plugin_dev.html", "children": [
-        { "topic": "5.1. Plug-in Structure", "url": "doc/5_plugin_dev.html#plugin_struct" },
-        { "topic": "5.2. Plug-in Configuration", "url": "doc/5_plugin_dev.html#plugin_config" },
-        { "topic": "5.3. Procedures & Procedure Types", "url": "doc/5_plugin_dev.html#procedures" },
-        { "topic": "5.4. Procedure Editing", "url": "doc/5_plugin_dev.html#procedure_editing" },
-        { "topic": "5.5. JavaScript Procedures", "url": "doc/5_plugin_dev.html#javascript" }
+        { "topic": "5.1 Plug-in Structure", "url": "doc/5_plugin_dev.html#plugin_struct" },
+        { "topic": "5.2 Plug-in Configuration", "url": "doc/5_plugin_dev.html#plugin_config" },
+        { "topic": "5.3 Procedures & Procedure Types", "url": "doc/5_plugin_dev.html#procedures" },
+        { "topic": "5.4 Procedure Editing", "url": "doc/5_plugin_dev.html#procedure_editing" },
+        { "topic": "5.5 JavaScript Procedures", "url": "doc/5_plugin_dev.html#javascript" }
     ] },
     { "topic": "6. App Development", "url": "doc/6_app_dev.html", "children": [
-        { "topic": "6.1. Technology Reference", "url": "doc/6_app_dev.html#tech_ref" },
-        { "topic": "6.2. App Configuration", "url": "doc/6_app_dev.html#app_config" },
-        { "topic": "6.3. App Implementation", "url": "doc/6_app_dev.html#app_impl" },
-        { "topic": "6.4. User Interface XML", "url": "doc/6_app_dev.html#ui_xml" },
-        { "topic": "6.5. User Interface Style", "url": "doc/6_app_dev.html#ui_style" },
-        { "topic": "6.6. Web Listeners & Services", "url": "doc/6_app_dev.html#web_service" }
+        { "topic": "6.1 Technology Reference", "url": "doc/6_app_dev.html#tech_ref" },
+        { "topic": "6.2 App Configuration", "url": "doc/6_app_dev.html#app_config" },
+        { "topic": "6.3 App Implementation", "url": "doc/6_app_dev.html#app_impl" },
+        { "topic": "6.4 User Interface XML", "url": "doc/6_app_dev.html#ui_xml" },
+        { "topic": "6.5 User Interface Style", "url": "doc/6_app_dev.html#ui_style" },
+        { "topic": "6.6 Web Listeners & Services", "url": "doc/6_app_dev.html#web_service" }
     ] },
     { "topic": "7. Development Guidelines", "url": "doc/7_guidelines.html", "children": [
-        { "topic": "7.1. Design Principle Usage", "url": "doc/7_guidelines.html#usage" },
-        { "topic": "7.2. Less is More", "url": "doc/7_guidelines.html#less_is_more" },
-        { "topic": "7.3. Declarative over Imperative", "url": "doc/7_guidelines.html#declarative" },
-        { "topic": "7.4. Simplicity over Documentation", "url": "doc/7_guidelines.html#simplicity" },
-        { "topic": "7.5. Defaults over Configuration", "url": "doc/7_guidelines.html#defaults" },
-        { "topic": "7.6. Implementation over Specification", "url": "doc/7_guidelines.html#implementation" },
-        { "topic": "7.7. Dynamic over Strict Types", "url": "doc/7_guidelines.html#dynamic_types" },
-        { "topic": "7.8. Exploratory over Automated Testing", "url": "doc/7_guidelines.html#testing" }
+        { "topic": "7.1 Design Principle Usage", "url": "doc/7_guidelines.html#usage" },
+        { "topic": "7.2 Less is More", "url": "doc/7_guidelines.html#less_is_more" },
+        { "topic": "7.3 Declarative over Imperative", "url": "doc/7_guidelines.html#declarative" },
+        { "topic": "7.4 Simplicity over Documentation", "url": "doc/7_guidelines.html#simplicity" },
+        { "topic": "7.5 Defaults over Configuration", "url": "doc/7_guidelines.html#defaults" },
+        { "topic": "7.6 Implementation over Specification", "url": "doc/7_guidelines.html#implementation" },
+        { "topic": "7.7 Dynamic over Strict Types", "url": "doc/7_guidelines.html#dynamic_types" },
+        { "topic": "7.8 Exploratory over Automated Testing", "url": "doc/7_guidelines.html#testing" }
     ] },
     { "topic": "Plug-In: Command-line", "url": "doc/plugin-cmdline.html", "children": [
         { "topic": "1. Built-in Procedure & Procedure Type", "url": "doc/plugin-cmdline.html#builtins" },
