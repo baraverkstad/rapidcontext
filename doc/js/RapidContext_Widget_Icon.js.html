@@ -1,0 +1,837 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="JsDoc" />
+    <link rel="stylesheet" href="../css/style.css" type="text/css">
+    <link rel="stylesheet" href="../css/doc.css" type="text/css">
+    <link rel="stylesheet" href="../css/font-awesome-4.7.0.min.css" type="text/css">
+    <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="../images/logotype-icon.ico">
+    <link rel="icon" type="image/png" sizes="256x256" href="../images/logotype-icon-256x256.png">
+    <link rel="apple-touch-icon" sizes="256x256" href="../images/logotype-icon-256x256.png">
+    <title>RapidContext :: JavaScript API</title>
+  </head>
+  <body class="doc">
+
+    <section class="header">
+      <div class="center">
+        <a href="https://www.rapidcontext.com/" class="logotype">
+          <img src="../images/logotype.png" />
+        </a>
+        <div class="text">
+          <a href="https://www.rapidcontext.com/">
+            <span style="font-size: 3.6em;">RapidContext</span><br>
+            <span style="font-size: 1.75em; color: #caf3ff;">Access &#183; Discovery &#183; Insight</span><br>
+            <span style="font-size: 1.3em; letter-spacing: 0.34em; line-height: 1.8em;">www.rapidcontext.com</span>
+          </a>
+        </div>
+      </div>
+      <div class="menu">
+        <a href="https://www.rapidcontext.com/doc/index.html">Docs</a>
+        &bull; <a href="https://github.com/cederberg/rapidcontext/releases">Downloads</a>
+        &bull; <a href="https://github.com/cederberg/rapidcontext">Project</a>
+      </div>
+    </section>
+
+    <section class="content center">
+      <ol class="breadcrumb">
+        <li><a href="../index.html">Documentation</a></li>
+
+        <li><a href="index.html">JavaScript API</a></li>
+        <li class="active">RapidContext_Widget_Icon.js</li>
+
+      </ol>
+
+      <div class="jsdoc">
+        <h1 class="classTitle">Source RapidContext_Widget_Icon.js</h1>
+
+
+
+
+    <section>
+        <article>
+            <pre><code class="hljs language-js"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
+<span id="line2" class="lineno">2</span> * RapidContext &lt;https://www.rapidcontext.com/&gt;
+<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2023 Per Cederberg. All rights reserved.
+<span id="line4" class="lineno">4</span> *
+<span id="line5" class="lineno">5</span> * This program is free software: you can redistribute it and/or
+<span id="line6" class="lineno">6</span> * modify it under the terms of the BSD license.
+<span id="line7" class="lineno">7</span> *
+<span id="line8" class="lineno">8</span> * This program is distributed in the hope that it will be useful,
+<span id="line9" class="lineno">9</span> * but WITHOUT ANY WARRANTY; without even the implied warranty of
+<span id="line10" class="lineno">10</span> * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+<span id="line11" class="lineno">11</span> *
+<span id="line12" class="lineno">12</span> * See the RapidContext LICENSE for more details.
+<span id="line13" class="lineno">13</span> */</span>
+<span id="line14" class="lineno">14</span>
+<span id="line15" class="lineno">15</span><span class="hljs-comment">// Namespace initialization</span>
+<span id="line16" class="lineno">16</span><span class="hljs-keyword">if</span> (<span class="hljs-title function_">typeof</span>(<span class="hljs-title class_">RapidContext</span>) == <span class="hljs-string">&quot;undefined&quot;</span>) {
+<span id="line17" class="lineno">17</span>    <span class="hljs-title class_">RapidContext</span> = {};
+<span id="line18" class="lineno">18</span>}
+<span id="line19" class="lineno">19</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span> = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span> || { <span class="hljs-title class_">Classes</span>: {} };
+<span id="line20" class="lineno">20</span>
+<span id="line21" class="lineno">21</span><span class="hljs-comment">/**
+<span id="line22" class="lineno">22</span> * Creates a new icon widget.
+<span id="line23" class="lineno">23</span> *
+<span id="line24" class="lineno">24</span> * <span class="hljs-doctag">@constructor</span>
+<span id="line25" class="lineno">25</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string|Object|Node</span>} def the icon ref, class, attributes or DOM node
+<span id="line26" class="lineno">26</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} [def.ref] the predefined icon name (reference)
+<span id="line27" class="lineno">27</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} [def.class] the icon CSS class names
+<span id="line28" class="lineno">28</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} [def.url] the icon image URL
+<span id="line29" class="lineno">29</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} [def.position] the icon image position
+<span id="line30" class="lineno">30</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">number</span>} [def.width] the icon width (in pixels)
+<span id="line31" class="lineno">31</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">number</span>} [def.height] the icon height (in pixels)
+<span id="line32" class="lineno">32</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} [def.tooltip] the icon tooltip text
+<span id="line33" class="lineno">33</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">boolean</span>} [def.disabled] the disabled widget flag, defaults to
+<span id="line34" class="lineno">34</span> *            false
+<span id="line35" class="lineno">35</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">boolean</span>} [def.hidden] the hidden widget flag, defaults to false
+<span id="line36" class="lineno">36</span> *
+<span id="line37" class="lineno">37</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Widget</span>} the widget DOM node
+<span id="line38" class="lineno">38</span> *
+<span id="line39" class="lineno">39</span> * <span class="hljs-doctag">@class</span> The icon widget class. Used to provide a small clickable image, using
+<span id="line40" class="lineno">40</span> *     the `&lt;i&gt;` HTML element. The icons can be either image- or font-based,
+<span id="line41" class="lineno">41</span> *     causing slightly different behaviours with respect to size. A number of
+<span id="line42" class="lineno">42</span> *     predefined icons suitable for different actions are available (using the
+<span id="line43" class="lineno">43</span> *     Font-Awesome icon font).
+<span id="line44" class="lineno">44</span> * <span class="hljs-doctag">@extends</span> RapidContext.Widget
+<span id="line45" class="lineno">45</span> *
+<span id="line46" class="lineno">46</span> * <span class="hljs-doctag">@example</span> &lt;caption&gt;JavaScript&lt;/caption&gt;
+<span id="line47" class="lineno">47</span> * var style = { &quot;margin-left&quot;: &quot;3px&quot; };
+<span id="line48" class="lineno">48</span> * var dataReload = RapidContext.Widget.Icon({ ref: &quot;RELOAD&quot;, style: style });
+<span id="line49" class="lineno">49</span> * var dataLoading = RapidContext.Widget.Icon({ ref: &quot;LOADING&quot;, hidden: true, style: style });
+<span id="line50" class="lineno">50</span> * var h3 = MochiKit.DOM.H3({}, &quot;Data List:&quot;, dataReload, dataLoading);
+<span id="line51" class="lineno">51</span> *
+<span id="line52" class="lineno">52</span> * <span class="hljs-doctag">@example</span> &lt;caption&gt;User Interface XML&lt;/caption&gt;
+<span id="line53" class="lineno">53</span> * &lt;h3&gt;
+<span id="line54" class="lineno">54</span> *   Data List:
+<span id="line55" class="lineno">55</span> *   &lt;Icon id=&quot;dataReload&quot; ref=&quot;RELOAD&quot; style=&quot;margin-left: 3px;&quot; /&gt;
+<span id="line56" class="lineno">56</span> *   &lt;Icon id=&quot;dataLoading&quot; ref=&quot;LOADING&quot; hidden=&quot;true&quot; style=&quot;margin-left: 3px;&quot; /&gt;
+<span id="line57" class="lineno">57</span> * &lt;/h3&gt;
+<span id="line58" class="lineno">58</span> */</span>
+<span id="line59" class="lineno">59</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Icon</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">def</span>) {
+<span id="line60" class="lineno">60</span>    <span class="hljs-keyword">var</span> o = (def &amp;&amp; def.<span class="hljs-property">nodeType</span> === <span class="hljs-number">1</span>) ? def : <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&quot;i&quot;</span>);
+<span id="line61" class="lineno">61</span>    <span class="hljs-keyword">if</span> (!<span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title function_">isWidget</span>(o, <span class="hljs-string">&quot;Icon&quot;</span>)) {
+<span id="line62" class="lineno">62</span>        <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title function_">_widgetMixin</span>(o, <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Icon</span>);
+<span id="line63" class="lineno">63</span>        o.<span class="hljs-title function_">addClass</span>(<span class="hljs-string">&quot;widgetIcon&quot;</span>);
+<span id="line64" class="lineno">64</span>    }
+<span id="line65" class="lineno">65</span>    o.<span class="hljs-title function_">setAttrs</span>((def &amp;&amp; def.<span class="hljs-property">nodeType</span> === <span class="hljs-number">1</span>) ? {} : def);
+<span id="line66" class="lineno">66</span>    <span class="hljs-keyword">return</span> o;
+<span id="line67" class="lineno">67</span>};
+<span id="line68" class="lineno">68</span>
+<span id="line69" class="lineno">69</span><span class="hljs-comment">// Register widget class</span>
+<span id="line70" class="lineno">70</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Classes</span>.<span class="hljs-property">Icon</span> = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Icon</span>;
+<span id="line71" class="lineno">71</span>
+<span id="line72" class="lineno">72</span><span class="hljs-comment">/**
+<span id="line73" class="lineno">73</span> * Returns the widget container DOM node.
+<span id="line74" class="lineno">74</span> *
+<span id="line75" class="lineno">75</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Node</span>} returns null, since child nodes are not supported
+<span id="line76" class="lineno">76</span> */</span>
+<span id="line77" class="lineno">77</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Icon</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">_containerNode</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line78" class="lineno">78</span>    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+<span id="line79" class="lineno">79</span>};
+<span id="line80" class="lineno">80</span>
+<span id="line81" class="lineno">81</span><span class="hljs-comment">/**
+<span id="line82" class="lineno">82</span> * Updates the icon or HTML DOM node attributes.
+<span id="line83" class="lineno">83</span> *
+<span id="line84" class="lineno">84</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string|Object</span>} attrs the icon ref, class or attributes to set
+<span id="line85" class="lineno">85</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} [attrs.ref] the predefined icon name (reference)
+<span id="line86" class="lineno">86</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} [attrs.class] the icon CSS class names
+<span id="line87" class="lineno">87</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} [attrs.url] the icon image URL
+<span id="line88" class="lineno">88</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} [attrs.position] the icon image position
+<span id="line89" class="lineno">89</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">number</span>} [attrs.width] the icon width (in pixels)
+<span id="line90" class="lineno">90</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">number</span>} [attrs.height] the icon height (in pixels)
+<span id="line91" class="lineno">91</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} [attrs.tooltip] the icon tooltip text
+<span id="line92" class="lineno">92</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">boolean</span>} [attrs.disabled] the disabled widget flag
+<span id="line93" class="lineno">93</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">boolean</span>} [attrs.hidden] the hidden widget flag
+<span id="line94" class="lineno">94</span> */</span>
+<span id="line95" class="lineno">95</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Icon</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">setAttrs</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">attrs</span>) {
+<span id="line96" class="lineno">96</span>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">typeof</span>(attrs) === <span class="hljs-string">&quot;string&quot;</span>) {
+<span id="line97" class="lineno">97</span>        <span class="hljs-keyword">var</span> key = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Icon</span>[attrs] ? <span class="hljs-string">&quot;ref&quot;</span> : <span class="hljs-string">&quot;class&quot;</span>;
+<span id="line98" class="lineno">98</span>        <span class="hljs-keyword">var</span> val = attrs;
+<span id="line99" class="lineno">99</span>        attrs = {};
+<span id="line100" class="lineno">100</span>        attrs[key] = val;
+<span id="line101" class="lineno">101</span>    }
+<span id="line102" class="lineno">102</span>    <span class="hljs-keyword">var</span> locals = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>({}, attrs);
+<span id="line103" class="lineno">103</span>    <span class="hljs-keyword">while</span> (locals.<span class="hljs-property">ref</span>) {
+<span id="line104" class="lineno">104</span>        <span class="hljs-keyword">var</span> o = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Icon</span>[locals.<span class="hljs-property">ref</span>] || {};
+<span id="line105" class="lineno">105</span>        <span class="hljs-keyword">delete</span> locals.<span class="hljs-property">ref</span>;
+<span id="line106" class="lineno">106</span>        <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Base</span>.<span class="hljs-title function_">setdefault</span>(locals, o);
+<span id="line107" class="lineno">107</span>    }
+<span id="line108" class="lineno">108</span>    <span class="hljs-keyword">var</span> styles = {};
+<span id="line109" class="lineno">109</span>    <span class="hljs-keyword">if</span> (locals.<span class="hljs-property">url</span>) {
+<span id="line110" class="lineno">110</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">addClass</span>(<span class="hljs-string">&quot;widgetIconSprite&quot;</span>);
+<span id="line111" class="lineno">111</span>        styles.<span class="hljs-property">backgroundImage</span> = <span class="hljs-string">&quot;url(&#x27;&quot;</span> + locals.<span class="hljs-property">url</span> + <span class="hljs-string">&quot;&#x27;)&quot;</span>;
+<span id="line112" class="lineno">112</span>        <span class="hljs-keyword">delete</span> locals.<span class="hljs-property">url</span>;
+<span id="line113" class="lineno">113</span>    }
+<span id="line114" class="lineno">114</span>    <span class="hljs-keyword">if</span> (locals.<span class="hljs-property">position</span>) {
+<span id="line115" class="lineno">115</span>        styles.<span class="hljs-property">backgroundPosition</span> = locals.<span class="hljs-property">position</span>;
+<span id="line116" class="lineno">116</span>        <span class="hljs-keyword">delete</span> locals.<span class="hljs-property">position</span>;
+<span id="line117" class="lineno">117</span>    }
+<span id="line118" class="lineno">118</span>    <span class="hljs-keyword">if</span> (locals.<span class="hljs-property">width</span>) {
+<span id="line119" class="lineno">119</span>        styles.<span class="hljs-property">width</span> = locals.<span class="hljs-property">width</span> + <span class="hljs-string">&quot;px&quot;</span>;
+<span id="line120" class="lineno">120</span>        <span class="hljs-keyword">delete</span> locals.<span class="hljs-property">width</span>;
+<span id="line121" class="lineno">121</span>    }
+<span id="line122" class="lineno">122</span>    <span class="hljs-keyword">if</span> (locals.<span class="hljs-property">height</span>) {
+<span id="line123" class="lineno">123</span>        styles.<span class="hljs-property">height</span> = locals.<span class="hljs-property">height</span> + <span class="hljs-string">&quot;px&quot;</span>;
+<span id="line124" class="lineno">124</span>        <span class="hljs-keyword">delete</span> locals.<span class="hljs-property">height</span>;
+<span id="line125" class="lineno">125</span>    }
+<span id="line126" class="lineno">126</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setStyle</span>(styles);
+<span id="line127" class="lineno">127</span>    <span class="hljs-keyword">if</span> (locals.<span class="hljs-property">tooltip</span> &amp;&amp; !locals.<span class="hljs-property">title</span>) {
+<span id="line128" class="lineno">128</span>        locals.<span class="hljs-property">title</span> = locals.<span class="hljs-property">tooltip</span>;
+<span id="line129" class="lineno">129</span>        <span class="hljs-keyword">delete</span> locals.<span class="hljs-property">tooltip</span>;
+<span id="line130" class="lineno">130</span>    }
+<span id="line131" class="lineno">131</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">__setAttrs</span>(locals);
+<span id="line132" class="lineno">132</span>};
+<span id="line133" class="lineno">133</span>
+<span id="line134" class="lineno">134</span><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(<span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Icon</span>, {
+<span id="line135" class="lineno">135</span>    <span class="hljs-comment">/**
+<span id="line136" class="lineno">136</span>     * The default icon definition, inherited by all others.
+<span id="line137" class="lineno">137</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line138" class="lineno">138</span>     */</span>
+<span id="line139" class="lineno">139</span>    <span class="hljs-attr">DEFAULT</span>: { <span class="hljs-attr">url</span>: <span class="hljs-string">&quot;rapidcontext/files/images/icons/icons_16x16.png&quot;</span>, <span class="hljs-attr">width</span>: <span class="hljs-number">16</span>, <span class="hljs-attr">height</span>: <span class="hljs-number">16</span> },
+<span id="line140" class="lineno">140</span>    <span class="hljs-comment">/**
+<span id="line141" class="lineno">141</span>     * The blank icon definition.
+<span id="line142" class="lineno">142</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line143" class="lineno">143</span>     */</span>
+<span id="line144" class="lineno">144</span>    <span class="hljs-attr">BLANK</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;0px 0px&quot;</span>, <span class="hljs-attr">style</span>: { <span class="hljs-attr">cursor</span>: <span class="hljs-string">&quot;default&quot;</span> } },
+<span id="line145" class="lineno">145</span>    <span class="hljs-comment">/**
+<span id="line146" class="lineno">146</span>     * The loading icon definition.
+<span id="line147" class="lineno">147</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line148" class="lineno">148</span>     */</span>
+<span id="line149" class="lineno">149</span>    <span class="hljs-attr">LOADING</span>: { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-refresh fa-spin&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Loading...&quot;</span> },
+<span id="line150" class="lineno">150</span>    <span class="hljs-comment">/**
+<span id="line151" class="lineno">151</span>     * The close icon definition.
+<span id="line152" class="lineno">152</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line153" class="lineno">153</span>     */</span>
+<span id="line154" class="lineno">154</span>    <span class="hljs-attr">CLOSE</span>: { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-times&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Close&quot;</span> },
+<span id="line155" class="lineno">155</span>    <span class="hljs-comment">/**
+<span id="line156" class="lineno">156</span>     * The close (inverse video) icon definition.
+<span id="line157" class="lineno">157</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line158" class="lineno">158</span>     */</span>
+<span id="line159" class="lineno">159</span>    <span class="hljs-attr">CLOSE_INVERSE</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;0px -32px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Close&quot;</span> },
+<span id="line160" class="lineno">160</span>    <span class="hljs-comment">/**
+<span id="line161" class="lineno">161</span>     * The close active icon definition.
+<span id="line162" class="lineno">162</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line163" class="lineno">163</span>     */</span>
+<span id="line164" class="lineno">164</span>    <span class="hljs-attr">CLOSE_ACTIVE</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;0px -48px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Close&quot;</span> },
+<span id="line165" class="lineno">165</span>    <span class="hljs-comment">/**
+<span id="line166" class="lineno">166</span>     * The bluewhite close icon definition.
+<span id="line167" class="lineno">167</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line168" class="lineno">168</span>     */</span>
+<span id="line169" class="lineno">169</span>    <span class="hljs-attr">CLOSE_BLUEWHITE</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;0px -64px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Close&quot;</span> },
+<span id="line170" class="lineno">170</span>    <span class="hljs-comment">/**
+<span id="line171" class="lineno">171</span>     * The blue close icon definition.
+<span id="line172" class="lineno">172</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line173" class="lineno">173</span>     */</span>
+<span id="line174" class="lineno">174</span>    <span class="hljs-attr">CLOSE_BLUE</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;0px -80px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Close&quot;</span> },
+<span id="line175" class="lineno">175</span>    <span class="hljs-comment">/**
+<span id="line176" class="lineno">176</span>     * The resize icon definition.
+<span id="line177" class="lineno">177</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line178" class="lineno">178</span>     */</span>
+<span id="line179" class="lineno">179</span>    <span class="hljs-attr">RESIZE</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;0px -96px&quot;</span>, <span class="hljs-attr">style</span>: { <span class="hljs-attr">cursor</span>: <span class="hljs-string">&quot;se-resize&quot;</span> } },
+<span id="line180" class="lineno">180</span>    <span class="hljs-comment">/**
+<span id="line181" class="lineno">181</span>     * The ok icon definition.
+<span id="line182" class="lineno">182</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line183" class="lineno">183</span>     */</span>
+<span id="line184" class="lineno">184</span>    <span class="hljs-attr">OK</span>: { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-check&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;OK&quot;</span> },
+<span id="line185" class="lineno">185</span>    <span class="hljs-comment">/**
+<span id="line186" class="lineno">186</span>     * The stop icon definition.
+<span id="line187" class="lineno">187</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line188" class="lineno">188</span>     */</span>
+<span id="line189" class="lineno">189</span>    <span class="hljs-attr">STOP</span>: { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-stop&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Stop&quot;</span> },
+<span id="line190" class="lineno">190</span>    <span class="hljs-comment">/**
+<span id="line191" class="lineno">191</span>     * The yes icon definition.
+<span id="line192" class="lineno">192</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line193" class="lineno">193</span>     */</span>
+<span id="line194" class="lineno">194</span>    <span class="hljs-attr">YES</span>: { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-check-square-o&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Yes&quot;</span> },
+<span id="line195" class="lineno">195</span>    <span class="hljs-comment">/**
+<span id="line196" class="lineno">196</span>     * The no icon definition.
+<span id="line197" class="lineno">197</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line198" class="lineno">198</span>     */</span>
+<span id="line199" class="lineno">199</span>    <span class="hljs-attr">NO</span>: { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-square-o&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;No&quot;</span> },
+<span id="line200" class="lineno">200</span>    <span class="hljs-comment">/**
+<span id="line201" class="lineno">201</span>     * The cancel icon definition.
+<span id="line202" class="lineno">202</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line203" class="lineno">203</span>     */</span>
+<span id="line204" class="lineno">204</span>    <span class="hljs-attr">CANCEL</span>: { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-times&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Cancel&quot;</span> },
+<span id="line205" class="lineno">205</span>    <span class="hljs-comment">/**
+<span id="line206" class="lineno">206</span>     * The up icon definition.
+<span id="line207" class="lineno">207</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line208" class="lineno">208</span>     */</span>
+<span id="line209" class="lineno">209</span>    <span class="hljs-attr">UP</span>: { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-chevron-up&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Move up&quot;</span> },
+<span id="line210" class="lineno">210</span>    <span class="hljs-comment">/**
+<span id="line211" class="lineno">211</span>     * The down icon definition.
+<span id="line212" class="lineno">212</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line213" class="lineno">213</span>     */</span>
+<span id="line214" class="lineno">214</span>    <span class="hljs-attr">DOWN</span>: { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-chevron-down&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Move down&quot;</span> },
+<span id="line215" class="lineno">215</span>    <span class="hljs-comment">/**
+<span id="line216" class="lineno">216</span>     * The left icon definition.
+<span id="line217" class="lineno">217</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line218" class="lineno">218</span>     */</span>
+<span id="line219" class="lineno">219</span>    <span class="hljs-attr">LEFT</span>: { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-chevron-left&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Move left&quot;</span> },
+<span id="line220" class="lineno">220</span>    <span class="hljs-comment">/**
+<span id="line221" class="lineno">221</span>     * The right icon definition.
+<span id="line222" class="lineno">222</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line223" class="lineno">223</span>     */</span>
+<span id="line224" class="lineno">224</span>    <span class="hljs-attr">RIGHT</span>: { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-chevron-right&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Move right&quot;</span> },
+<span id="line225" class="lineno">225</span>    <span class="hljs-comment">/**
+<span id="line226" class="lineno">226</span>     * The first icon definition.
+<span id="line227" class="lineno">227</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line228" class="lineno">228</span>     */</span>
+<span id="line229" class="lineno">229</span>    <span class="hljs-attr">FIRST</span>: { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-step-backward&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;First&quot;</span> },
+<span id="line230" class="lineno">230</span>    <span class="hljs-comment">/**
+<span id="line231" class="lineno">231</span>     * The last icon definition.
+<span id="line232" class="lineno">232</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line233" class="lineno">233</span>     */</span>
+<span id="line234" class="lineno">234</span>    <span class="hljs-attr">LAST</span>: { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-step-forward&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Last&quot;</span> },
+<span id="line235" class="lineno">235</span>    <span class="hljs-comment">/**
+<span id="line236" class="lineno">236</span>     * The previous icon definition.
+<span id="line237" class="lineno">237</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line238" class="lineno">238</span>     */</span>
+<span id="line239" class="lineno">239</span>    <span class="hljs-attr">PREVIOUS</span>: { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-caret-left&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Previous&quot;</span> },
+<span id="line240" class="lineno">240</span>    <span class="hljs-comment">/**
+<span id="line241" class="lineno">241</span>     * The next icon definition.
+<span id="line242" class="lineno">242</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line243" class="lineno">243</span>     */</span>
+<span id="line244" class="lineno">244</span>    <span class="hljs-attr">NEXT</span>: { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-caret-right&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Next&quot;</span> },
+<span id="line245" class="lineno">245</span>    <span class="hljs-comment">/**
+<span id="line246" class="lineno">246</span>     * The plus icon definition.
+<span id="line247" class="lineno">247</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line248" class="lineno">248</span>     */</span>
+<span id="line249" class="lineno">249</span>    <span class="hljs-attr">PLUS</span>: { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-plus-square-o&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Show&quot;</span> },
+<span id="line250" class="lineno">250</span>    <span class="hljs-comment">/**
+<span id="line251" class="lineno">251</span>     * The minus icon definition.
+<span id="line252" class="lineno">252</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line253" class="lineno">253</span>     */</span>
+<span id="line254" class="lineno">254</span>    <span class="hljs-attr">MINUS</span>: { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-minus-square-o&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Hide&quot;</span> },
+<span id="line255" class="lineno">255</span>    <span class="hljs-comment">/**
+<span id="line256" class="lineno">256</span>     * The remove icon definition.
+<span id="line257" class="lineno">257</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line258" class="lineno">258</span>     */</span>
+<span id="line259" class="lineno">259</span>    <span class="hljs-attr">REMOVE</span>: { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-minus-square widget-red&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Remove&quot;</span> },
+<span id="line260" class="lineno">260</span>    <span class="hljs-comment">/**
+<span id="line261" class="lineno">261</span>     * The add icon definition.
+<span id="line262" class="lineno">262</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line263" class="lineno">263</span>     */</span>
+<span id="line264" class="lineno">264</span>    <span class="hljs-attr">ADD</span>: { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-plus-square widget-green&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Add&quot;</span> },
+<span id="line265" class="lineno">265</span>    <span class="hljs-comment">/**
+<span id="line266" class="lineno">266</span>     * The copy icon definition.
+<span id="line267" class="lineno">267</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line268" class="lineno">268</span>     */</span>
+<span id="line269" class="lineno">269</span>    <span class="hljs-attr">COPY</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-48px -32px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Copy&quot;</span> },
+<span id="line270" class="lineno">270</span>    <span class="hljs-comment">/**
+<span id="line271" class="lineno">271</span>     * The cut icon definition.
+<span id="line272" class="lineno">272</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line273" class="lineno">273</span>     */</span>
+<span id="line274" class="lineno">274</span>    <span class="hljs-attr">CUT</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-48px -48px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Cut&quot;</span> },
+<span id="line275" class="lineno">275</span>    <span class="hljs-comment">/**
+<span id="line276" class="lineno">276</span>     * The delete icon definition.
+<span id="line277" class="lineno">277</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line278" class="lineno">278</span>     */</span>
+<span id="line279" class="lineno">279</span>    <span class="hljs-attr">DELETE</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-48px -64px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Delete&quot;</span> },
+<span id="line280" class="lineno">280</span>    <span class="hljs-comment">/**
+<span id="line281" class="lineno">281</span>     * The reload icon definition.
+<span id="line282" class="lineno">282</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line283" class="lineno">283</span>     */</span>
+<span id="line284" class="lineno">284</span>    <span class="hljs-attr">RELOAD</span>: { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-refresh&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Reload&quot;</span> },
+<span id="line285" class="lineno">285</span>    <span class="hljs-comment">/**
+<span id="line286" class="lineno">286</span>     * The edit icon definition.
+<span id="line287" class="lineno">287</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line288" class="lineno">288</span>     */</span>
+<span id="line289" class="lineno">289</span>    <span class="hljs-attr">EDIT</span>: { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-pencil-square widget-yellow&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Edit&quot;</span> },
+<span id="line290" class="lineno">290</span>    <span class="hljs-comment">/**
+<span id="line291" class="lineno">291</span>     * The white edit icon definition.
+<span id="line292" class="lineno">292</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line293" class="lineno">293</span>     */</span>
+<span id="line294" class="lineno">294</span>    <span class="hljs-attr">EDIT_WHITE</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-48px -112px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Edit&quot;</span> },
+<span id="line295" class="lineno">295</span>    <span class="hljs-comment">/**
+<span id="line296" class="lineno">296</span>     * The layout edit icon definition.
+<span id="line297" class="lineno">297</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line298" class="lineno">298</span>     */</span>
+<span id="line299" class="lineno">299</span>    <span class="hljs-attr">EDIT_LAYOUT</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-48px -128px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Edit&quot;</span> },
+<span id="line300" class="lineno">300</span>    <span class="hljs-comment">/**
+<span id="line301" class="lineno">301</span>     * The search icon definition.
+<span id="line302" class="lineno">302</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line303" class="lineno">303</span>     */</span>
+<span id="line304" class="lineno">304</span>    <span class="hljs-attr">SEARCH</span>: { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-search&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Search&quot;</span> },
+<span id="line305" class="lineno">305</span>    <span class="hljs-comment">/**
+<span id="line306" class="lineno">306</span>     * The expand icon definition.
+<span id="line307" class="lineno">307</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line308" class="lineno">308</span>     */</span>
+<span id="line309" class="lineno">309</span>    <span class="hljs-attr">EXPAND</span>: { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-external-link&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Open in new window&quot;</span> },
+<span id="line310" class="lineno">310</span>    <span class="hljs-comment">/**
+<span id="line311" class="lineno">311</span>     * The asterisk icon definition.
+<span id="line312" class="lineno">312</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line313" class="lineno">313</span>     */</span>
+<span id="line314" class="lineno">314</span>    <span class="hljs-attr">ASTERISK</span>: { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-asterisk&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Mark&quot;</span> },
+<span id="line315" class="lineno">315</span>    <span class="hljs-comment">/**
+<span id="line316" class="lineno">316</span>     * The select icon definition.
+<span id="line317" class="lineno">317</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line318" class="lineno">318</span>     */</span>
+<span id="line319" class="lineno">319</span>    <span class="hljs-attr">SELECT</span>: { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-star&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Select / Unselect&quot;</span> },
+<span id="line320" class="lineno">320</span>    <span class="hljs-comment">/**
+<span id="line321" class="lineno">321</span>     * The like icon definition.
+<span id="line322" class="lineno">322</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line323" class="lineno">323</span>     */</span>
+<span id="line324" class="lineno">324</span>    <span class="hljs-attr">LIKE</span>: { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-heart&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Like / Unlike&quot;</span> },
+<span id="line325" class="lineno">325</span>    <span class="hljs-comment">/**
+<span id="line326" class="lineno">326</span>     * The flag icon definition.
+<span id="line327" class="lineno">327</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line328" class="lineno">328</span>     */</span>
+<span id="line329" class="lineno">329</span>    <span class="hljs-attr">FLAG</span>: { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-flag&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Flag&quot;</span> },
+<span id="line330" class="lineno">330</span>    <span class="hljs-comment">/**
+<span id="line331" class="lineno">331</span>     * The red flag icon definition.
+<span id="line332" class="lineno">332</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line333" class="lineno">333</span>     */</span>
+<span id="line334" class="lineno">334</span>    <span class="hljs-attr">FLAG_RED</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-64px -48px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Flag&quot;</span> },
+<span id="line335" class="lineno">335</span>    <span class="hljs-comment">/**
+<span id="line336" class="lineno">336</span>     * The blue flag icon definition.
+<span id="line337" class="lineno">337</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line338" class="lineno">338</span>     */</span>
+<span id="line339" class="lineno">339</span>    <span class="hljs-attr">FLAG_BLUE</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-64px -64px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Flag&quot;</span> },
+<span id="line340" class="lineno">340</span>    <span class="hljs-comment">/**
+<span id="line341" class="lineno">341</span>     * The green flag icon definition.
+<span id="line342" class="lineno">342</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line343" class="lineno">343</span>     */</span>
+<span id="line344" class="lineno">344</span>    <span class="hljs-attr">FLAG_GREEN</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-64px -80px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Flag&quot;</span> },
+<span id="line345" class="lineno">345</span>    <span class="hljs-comment">/**
+<span id="line346" class="lineno">346</span>     * The yellow flag icon definition.
+<span id="line347" class="lineno">347</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line348" class="lineno">348</span>     */</span>
+<span id="line349" class="lineno">349</span>    <span class="hljs-attr">FLAG_YELLOW</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-64px -96px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Flag&quot;</span> },
+<span id="line350" class="lineno">350</span>    <span class="hljs-comment">/**
+<span id="line351" class="lineno">351</span>     * The tag icon definition.
+<span id="line352" class="lineno">352</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line353" class="lineno">353</span>     */</span>
+<span id="line354" class="lineno">354</span>    <span class="hljs-attr">TAG</span>: { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-tag&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Tag&quot;</span> },
+<span id="line355" class="lineno">355</span>    <span class="hljs-comment">/**
+<span id="line356" class="lineno">356</span>     * The red tag icon definition.
+<span id="line357" class="lineno">357</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line358" class="lineno">358</span>     */</span>
+<span id="line359" class="lineno">359</span>    <span class="hljs-attr">TAG_RED</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-64px -112px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Tag&quot;</span> },
+<span id="line360" class="lineno">360</span>    <span class="hljs-comment">/**
+<span id="line361" class="lineno">361</span>     * The blue tag icon definition.
+<span id="line362" class="lineno">362</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line363" class="lineno">363</span>     */</span>
+<span id="line364" class="lineno">364</span>    <span class="hljs-attr">TAG_BLUE</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-64px -128px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Tag&quot;</span> },
+<span id="line365" class="lineno">365</span>    <span class="hljs-comment">/**
+<span id="line366" class="lineno">366</span>     * The green tag icon definition.
+<span id="line367" class="lineno">367</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line368" class="lineno">368</span>     */</span>
+<span id="line369" class="lineno">369</span>    <span class="hljs-attr">TAG_GREEN</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-64px -144px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Tag&quot;</span> },
+<span id="line370" class="lineno">370</span>    <span class="hljs-comment">/**
+<span id="line371" class="lineno">371</span>     * The yellow tag icon definition.
+<span id="line372" class="lineno">372</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line373" class="lineno">373</span>     */</span>
+<span id="line374" class="lineno">374</span>    <span class="hljs-attr">TAG_YELLOW</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-64px -160px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Tag&quot;</span> },
+<span id="line375" class="lineno">375</span>    <span class="hljs-comment">/**
+<span id="line376" class="lineno">376</span>     * The options icon definition.
+<span id="line377" class="lineno">377</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line378" class="lineno">378</span>     */</span>
+<span id="line379" class="lineno">379</span>    <span class="hljs-attr">OPTIONS</span>: { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-cog&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Options&quot;</span> },
+<span id="line380" class="lineno">380</span>    <span class="hljs-comment">/**
+<span id="line381" class="lineno">381</span>     * The configure icon definition.
+<span id="line382" class="lineno">382</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line383" class="lineno">383</span>     */</span>
+<span id="line384" class="lineno">384</span>    <span class="hljs-attr">CONFIG</span>: { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-wrench&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Configure&quot;</span> },
+<span id="line385" class="lineno">385</span>    <span class="hljs-comment">/**
+<span id="line386" class="lineno">386</span>     * The attach file icon definition.
+<span id="line387" class="lineno">387</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line388" class="lineno">388</span>     */</span>
+<span id="line389" class="lineno">389</span>    <span class="hljs-attr">ATTACH</span>: { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-paperclip&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Attach file&quot;</span> },
+<span id="line390" class="lineno">390</span>    <span class="hljs-comment">/**
+<span id="line391" class="lineno">391</span>     * The automatic icon definition.
+<span id="line392" class="lineno">392</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line393" class="lineno">393</span>     */</span>
+<span id="line394" class="lineno">394</span>    <span class="hljs-attr">AUTOMATIC</span>: { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-magic&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Automatic actions&quot;</span> },
+<span id="line395" class="lineno">395</span>    <span class="hljs-comment">/**
+<span id="line396" class="lineno">396</span>     * The export icon definition.
+<span id="line397" class="lineno">397</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line398" class="lineno">398</span>     */</span>
+<span id="line399" class="lineno">399</span>    <span class="hljs-attr">EXPORT</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-80px -64px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Export&quot;</span> },
+<span id="line400" class="lineno">400</span>    <span class="hljs-comment">/**
+<span id="line401" class="lineno">401</span>     * The information icon definition.
+<span id="line402" class="lineno">402</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line403" class="lineno">403</span>     */</span>
+<span id="line404" class="lineno">404</span>    <span class="hljs-attr">INFO</span>: { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-info-circle&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Information&quot;</span> },
+<span id="line405" class="lineno">405</span>    <span class="hljs-comment">/**
+<span id="line406" class="lineno">406</span>     * The help icon definition.
+<span id="line407" class="lineno">407</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line408" class="lineno">408</span>     */</span>
+<span id="line409" class="lineno">409</span>    <span class="hljs-attr">HELP</span>: { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-life-ring&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Help&quot;</span> },
+<span id="line410" class="lineno">410</span>    <span class="hljs-comment">/**
+<span id="line411" class="lineno">411</span>     * The warning icon definition.
+<span id="line412" class="lineno">412</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line413" class="lineno">413</span>     */</span>
+<span id="line414" class="lineno">414</span>    <span class="hljs-attr">WARNING</span>: { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-exclamation-triangle&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Warning&quot;</span> },
+<span id="line415" class="lineno">415</span>    <span class="hljs-comment">/**
+<span id="line416" class="lineno">416</span>     * The error icon definition.
+<span id="line417" class="lineno">417</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line418" class="lineno">418</span>     */</span>
+<span id="line419" class="lineno">419</span>    <span class="hljs-attr">ERROR</span>: { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-exclamation-circle&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Error&quot;</span> },
+<span id="line420" class="lineno">420</span>    <span class="hljs-comment">/**
+<span id="line421" class="lineno">421</span>     * The bar chart icon definition.
+<span id="line422" class="lineno">422</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line423" class="lineno">423</span>     */</span>
+<span id="line424" class="lineno">424</span>    <span class="hljs-attr">BARCHART</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-112px 0px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Bar chart&quot;</span> },
+<span id="line425" class="lineno">425</span>    <span class="hljs-comment">/**
+<span id="line426" class="lineno">426</span>     * The line chart icon definition.
+<span id="line427" class="lineno">427</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line428" class="lineno">428</span>     */</span>
+<span id="line429" class="lineno">429</span>    <span class="hljs-attr">LINECHART</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-112px -16px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Line chart&quot;</span> },
+<span id="line430" class="lineno">430</span>    <span class="hljs-comment">/**
+<span id="line431" class="lineno">431</span>     * The curve chart icon definition.
+<span id="line432" class="lineno">432</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line433" class="lineno">433</span>     */</span>
+<span id="line434" class="lineno">434</span>    <span class="hljs-attr">CURVECHART</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-112px -32px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Curve chart&quot;</span> },
+<span id="line435" class="lineno">435</span>    <span class="hljs-comment">/**
+<span id="line436" class="lineno">436</span>     * The pie chart icon definition.
+<span id="line437" class="lineno">437</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line438" class="lineno">438</span>     */</span>
+<span id="line439" class="lineno">439</span>    <span class="hljs-attr">PIECHART</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-112px -48px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Pie chart&quot;</span> },
+<span id="line440" class="lineno">440</span>    <span class="hljs-comment">/**
+<span id="line441" class="lineno">441</span>     * The organization chart icon definition.
+<span id="line442" class="lineno">442</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line443" class="lineno">443</span>     */</span>
+<span id="line444" class="lineno">444</span>    <span class="hljs-attr">ORGCHART</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-112px -64px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Organization chart&quot;</span> },
+<span id="line445" class="lineno">445</span>    <span class="hljs-comment">/**
+<span id="line446" class="lineno">446</span>     * The web feed icon definition.
+<span id="line447" class="lineno">447</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line448" class="lineno">448</span>     */</span>
+<span id="line449" class="lineno">449</span>    <span class="hljs-attr">FEED</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-128px 0px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;RSS/Atom feed&quot;</span> },
+<span id="line450" class="lineno">450</span>    <span class="hljs-comment">/**
+<span id="line451" class="lineno">451</span>     * The RSS icon definition.
+<span id="line452" class="lineno">452</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line453" class="lineno">453</span>     */</span>
+<span id="line454" class="lineno">454</span>    <span class="hljs-attr">RSS</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-128px -16px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;RSS feed&quot;</span> },
+<span id="line455" class="lineno">455</span>    <span class="hljs-comment">/**
+<span id="line456" class="lineno">456</span>     * The CSS icon definition.
+<span id="line457" class="lineno">457</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line458" class="lineno">458</span>     */</span>
+<span id="line459" class="lineno">459</span>    <span class="hljs-attr">CSS</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-128px -32px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;CSS&quot;</span> },
+<span id="line460" class="lineno">460</span>    <span class="hljs-comment">/**
+<span id="line461" class="lineno">461</span>     * The HTML icon definition.
+<span id="line462" class="lineno">462</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line463" class="lineno">463</span>     */</span>
+<span id="line464" class="lineno">464</span>    <span class="hljs-attr">HTML</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-128px -48px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;HTML&quot;</span> },
+<span id="line465" class="lineno">465</span>    <span class="hljs-comment">/**
+<span id="line466" class="lineno">466</span>     * The XHTML icon definition.
+<span id="line467" class="lineno">467</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line468" class="lineno">468</span>     */</span>
+<span id="line469" class="lineno">469</span>    <span class="hljs-attr">XHTML</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-128px -64px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;XHTML&quot;</span> },
+<span id="line470" class="lineno">470</span>    <span class="hljs-comment">/**
+<span id="line471" class="lineno">471</span>     * The font icon definition.
+<span id="line472" class="lineno">472</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line473" class="lineno">473</span>     */</span>
+<span id="line474" class="lineno">474</span>    <span class="hljs-attr">FONT</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-144px 0px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Font&quot;</span> },
+<span id="line475" class="lineno">475</span>    <span class="hljs-comment">/**
+<span id="line476" class="lineno">476</span>     * The style icon definition.
+<span id="line477" class="lineno">477</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line478" class="lineno">478</span>     */</span>
+<span id="line479" class="lineno">479</span>    <span class="hljs-attr">STYLE</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-144px -16px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Style&quot;</span> },
+<span id="line480" class="lineno">480</span>    <span class="hljs-comment">/**
+<span id="line481" class="lineno">481</span>     * The text format icon definition.
+<span id="line482" class="lineno">482</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line483" class="lineno">483</span>     */</span>
+<span id="line484" class="lineno">484</span>    <span class="hljs-attr">TEXT_FORMAT</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-144px -32px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Text format&quot;</span> },
+<span id="line485" class="lineno">485</span>    <span class="hljs-comment">/**
+<span id="line486" class="lineno">486</span>     * The calendar icon definition.
+<span id="line487" class="lineno">487</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line488" class="lineno">488</span>     */</span>
+<span id="line489" class="lineno">489</span>    <span class="hljs-attr">CALENDAR</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-144px -48px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Calendar&quot;</span> },
+<span id="line490" class="lineno">490</span>    <span class="hljs-comment">/**
+<span id="line491" class="lineno">491</span>     * The date icon definition.
+<span id="line492" class="lineno">492</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line493" class="lineno">493</span>     */</span>
+<span id="line494" class="lineno">494</span>    <span class="hljs-attr">DATE</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-144px -64px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Date&quot;</span> },
+<span id="line495" class="lineno">495</span>    <span class="hljs-comment">/**
+<span id="line496" class="lineno">496</span>     * The layout icon definition.
+<span id="line497" class="lineno">497</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line498" class="lineno">498</span>     */</span>
+<span id="line499" class="lineno">499</span>    <span class="hljs-attr">LAYOUT</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-144px -80px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Layout&quot;</span> },
+<span id="line500" class="lineno">500</span>    <span class="hljs-comment">/**
+<span id="line501" class="lineno">501</span>     * The table icon definition.
+<span id="line502" class="lineno">502</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line503" class="lineno">503</span>     */</span>
+<span id="line504" class="lineno">504</span>    <span class="hljs-attr">TABLE</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-144px -96px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Table&quot;</span> },
+<span id="line505" class="lineno">505</span>    <span class="hljs-comment">/**
+<span id="line506" class="lineno">506</span>     * The sum icon definition.
+<span id="line507" class="lineno">507</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line508" class="lineno">508</span>     */</span>
+<span id="line509" class="lineno">509</span>    <span class="hljs-attr">SUM</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-144px -112px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Sum&quot;</span> },
+<span id="line510" class="lineno">510</span>    <span class="hljs-comment">/**
+<span id="line511" class="lineno">511</span>     * The vector icon definition.
+<span id="line512" class="lineno">512</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line513" class="lineno">513</span>     */</span>
+<span id="line514" class="lineno">514</span>    <span class="hljs-attr">VECTOR</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-144px -128px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Vectors&quot;</span> },
+<span id="line515" class="lineno">515</span>    <span class="hljs-comment">/**
+<span id="line516" class="lineno">516</span>     * The color icon definition.
+<span id="line517" class="lineno">517</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line518" class="lineno">518</span>     */</span>
+<span id="line519" class="lineno">519</span>    <span class="hljs-attr">COLOR</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-144px -144px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Color&quot;</span> },
+<span id="line520" class="lineno">520</span>    <span class="hljs-comment">/**
+<span id="line521" class="lineno">521</span>     * The HTML source icon definition.
+<span id="line522" class="lineno">522</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line523" class="lineno">523</span>     */</span>
+<span id="line524" class="lineno">524</span>    <span class="hljs-attr">HTML_SOURCE</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-144px -160px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;HTML source&quot;</span> },
+<span id="line525" class="lineno">525</span>    <span class="hljs-comment">/**
+<span id="line526" class="lineno">526</span>     * The plug-in icon definition.
+<span id="line527" class="lineno">527</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line528" class="lineno">528</span>     */</span>
+<span id="line529" class="lineno">529</span>    <span class="hljs-attr">PLUGIN</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-160px 0px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Plug-in&quot;</span> },
+<span id="line530" class="lineno">530</span>    <span class="hljs-comment">/**
+<span id="line531" class="lineno">531</span>     * The add plug-in icon definition.
+<span id="line532" class="lineno">532</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line533" class="lineno">533</span>     */</span>
+<span id="line534" class="lineno">534</span>    <span class="hljs-attr">PLUGIN_ADD</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-160px -16px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Add plug-in&quot;</span> },
+<span id="line535" class="lineno">535</span>    <span class="hljs-comment">/**
+<span id="line536" class="lineno">536</span>     * The remove plug-in icon definition.
+<span id="line537" class="lineno">537</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line538" class="lineno">538</span>     */</span>
+<span id="line539" class="lineno">539</span>    <span class="hljs-attr">PLUGIN_REMOVE</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-160px -32px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Remove plug-in&quot;</span> },
+<span id="line540" class="lineno">540</span>    <span class="hljs-comment">/**
+<span id="line541" class="lineno">541</span>     * The inactive plug-in icon definition.
+<span id="line542" class="lineno">542</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line543" class="lineno">543</span>     */</span>
+<span id="line544" class="lineno">544</span>    <span class="hljs-attr">PLUGIN_INACTIVE</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-160px -48px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Inactive plug-in&quot;</span> },
+<span id="line545" class="lineno">545</span>    <span class="hljs-comment">/**
+<span id="line546" class="lineno">546</span>     * The plug-in error icon definition.
+<span id="line547" class="lineno">547</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line548" class="lineno">548</span>     */</span>
+<span id="line549" class="lineno">549</span>    <span class="hljs-attr">PLUGIN_ERROR</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-160px -64px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Plug-in error&quot;</span> },
+<span id="line550" class="lineno">550</span>    <span class="hljs-comment">/**
+<span id="line551" class="lineno">551</span>     * The user icon definition.
+<span id="line552" class="lineno">552</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line553" class="lineno">553</span>     */</span>
+<span id="line554" class="lineno">554</span>    <span class="hljs-attr">USER</span>: { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-user&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;User&quot;</span> },
+<span id="line555" class="lineno">555</span>    <span class="hljs-comment">/**
+<span id="line556" class="lineno">556</span>     * The group icon definition.
+<span id="line557" class="lineno">557</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line558" class="lineno">558</span>     */</span>
+<span id="line559" class="lineno">559</span>    <span class="hljs-attr">GROUP</span>: { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-users&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Group&quot;</span> },
+<span id="line560" class="lineno">560</span>    <span class="hljs-comment">/**
+<span id="line561" class="lineno">561</span>     * The folder icon definition.
+<span id="line562" class="lineno">562</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line563" class="lineno">563</span>     */</span>
+<span id="line564" class="lineno">564</span>    <span class="hljs-attr">FOLDER</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-176px 0px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Folder&quot;</span> },
+<span id="line565" class="lineno">565</span>    <span class="hljs-comment">/**
+<span id="line566" class="lineno">566</span>     * The add folder icon definition.
+<span id="line567" class="lineno">567</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line568" class="lineno">568</span>     */</span>
+<span id="line569" class="lineno">569</span>    <span class="hljs-attr">FOLDER_ADD</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-176px -16px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Add folder&quot;</span> },
+<span id="line570" class="lineno">570</span>    <span class="hljs-comment">/**
+<span id="line571" class="lineno">571</span>     * The lock icon definition.
+<span id="line572" class="lineno">572</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line573" class="lineno">573</span>     */</span>
+<span id="line574" class="lineno">574</span>    <span class="hljs-attr">LOCK</span>: { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-lock&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Lock&quot;</span> },
+<span id="line575" class="lineno">575</span>    <span class="hljs-comment">/**
+<span id="line576" class="lineno">576</span>     * The key icon definition.
+<span id="line577" class="lineno">577</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line578" class="lineno">578</span>     */</span>
+<span id="line579" class="lineno">579</span>    <span class="hljs-attr">KEY</span>: { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-key&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Key&quot;</span> },
+<span id="line580" class="lineno">580</span>    <span class="hljs-comment">/**
+<span id="line581" class="lineno">581</span>     * The document icon definition.
+<span id="line582" class="lineno">582</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line583" class="lineno">583</span>     */</span>
+<span id="line584" class="lineno">584</span>    <span class="hljs-attr">DOCUMENT</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-192px 0px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Document&quot;</span> },
+<span id="line585" class="lineno">585</span>    <span class="hljs-comment">/**
+<span id="line586" class="lineno">586</span>     * The Word document icon definition.
+<span id="line587" class="lineno">587</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line588" class="lineno">588</span>     */</span>
+<span id="line589" class="lineno">589</span>    <span class="hljs-attr">DOCUMENT_WORD</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-192px -16px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Word document&quot;</span> },
+<span id="line590" class="lineno">590</span>    <span class="hljs-comment">/**
+<span id="line591" class="lineno">591</span>     * The Excel document icon definition.
+<span id="line592" class="lineno">592</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line593" class="lineno">593</span>     */</span>
+<span id="line594" class="lineno">594</span>    <span class="hljs-attr">DOCUMENT_EXCEL</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-192px -32px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Excel document&quot;</span> },
+<span id="line595" class="lineno">595</span>    <span class="hljs-comment">/**
+<span id="line596" class="lineno">596</span>     * The Office document icon definition.
+<span id="line597" class="lineno">597</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line598" class="lineno">598</span>     */</span>
+<span id="line599" class="lineno">599</span>    <span class="hljs-attr">DOCUMENT_OFFICE</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-192px -48px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Office document&quot;</span> },
+<span id="line600" class="lineno">600</span>    <span class="hljs-comment">/**
+<span id="line601" class="lineno">601</span>     * The PDF document icon definition.
+<span id="line602" class="lineno">602</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line603" class="lineno">603</span>     */</span>
+<span id="line604" class="lineno">604</span>    <span class="hljs-attr">DOCUMENT_PDF</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-192px -64px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;PDF document&quot;</span> },
+<span id="line605" class="lineno">605</span>    <span class="hljs-comment">/**
+<span id="line606" class="lineno">606</span>     * The document search icon definition.
+<span id="line607" class="lineno">607</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line608" class="lineno">608</span>     */</span>
+<span id="line609" class="lineno">609</span>    <span class="hljs-attr">DOCUMENT_SEARCH</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-192px -80px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Search document&quot;</span> },
+<span id="line610" class="lineno">610</span>    <span class="hljs-comment">/**
+<span id="line611" class="lineno">611</span>     * The code document icon definition.
+<span id="line612" class="lineno">612</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line613" class="lineno">613</span>     */</span>
+<span id="line614" class="lineno">614</span>    <span class="hljs-attr">DOCUMENT_CODE</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-192px -96px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Code document&quot;</span> },
+<span id="line615" class="lineno">615</span>    <span class="hljs-comment">/**
+<span id="line616" class="lineno">616</span>     * The text document icon definition.
+<span id="line617" class="lineno">617</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line618" class="lineno">618</span>     */</span>
+<span id="line619" class="lineno">619</span>    <span class="hljs-attr">DOCUMENT_TEXT</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-192px -112px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Text document&quot;</span> },
+<span id="line620" class="lineno">620</span>    <span class="hljs-comment">/**
+<span id="line621" class="lineno">621</span>     * The contact icon definition.
+<span id="line622" class="lineno">622</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line623" class="lineno">623</span>     */</span>
+<span id="line624" class="lineno">624</span>    <span class="hljs-attr">CONTACT</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-208px 0px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Contact&quot;</span> },
+<span id="line625" class="lineno">625</span>    <span class="hljs-comment">/**
+<span id="line626" class="lineno">626</span>     * The phone icon definition.
+<span id="line627" class="lineno">627</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line628" class="lineno">628</span>     */</span>
+<span id="line629" class="lineno">629</span>    <span class="hljs-attr">PHONE</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-208px -16px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Phone number&quot;</span> },
+<span id="line630" class="lineno">630</span>    <span class="hljs-comment">/**
+<span id="line631" class="lineno">631</span>     * The mobile phone icon definition.
+<span id="line632" class="lineno">632</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line633" class="lineno">633</span>     */</span>
+<span id="line634" class="lineno">634</span>    <span class="hljs-attr">PHONE_MOBILE</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-208px -32px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Mobile phone number&quot;</span> },
+<span id="line635" class="lineno">635</span>    <span class="hljs-comment">/**
+<span id="line636" class="lineno">636</span>     * The comment icon definition.
+<span id="line637" class="lineno">637</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line638" class="lineno">638</span>     */</span>
+<span id="line639" class="lineno">639</span>    <span class="hljs-attr">COMMENT</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-208px -48px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Comment&quot;</span> },
+<span id="line640" class="lineno">640</span>    <span class="hljs-comment">/**
+<span id="line641" class="lineno">641</span>     * The comments icon definition.
+<span id="line642" class="lineno">642</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line643" class="lineno">643</span>     */</span>
+<span id="line644" class="lineno">644</span>    <span class="hljs-attr">COMMENTS</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-208px -64px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Comments&quot;</span> },
+<span id="line645" class="lineno">645</span>    <span class="hljs-comment">/**
+<span id="line646" class="lineno">646</span>     * The note icon definition.
+<span id="line647" class="lineno">647</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line648" class="lineno">648</span>     */</span>
+<span id="line649" class="lineno">649</span>    <span class="hljs-attr">NOTE</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-208px -80px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Note&quot;</span> },
+<span id="line650" class="lineno">650</span>    <span class="hljs-comment">/**
+<span id="line651" class="lineno">651</span>     * The application icon definition.
+<span id="line652" class="lineno">652</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line653" class="lineno">653</span>     */</span>
+<span id="line654" class="lineno">654</span>    <span class="hljs-attr">APPLICATION</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-224px 0px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Application&quot;</span> },
+<span id="line655" class="lineno">655</span>    <span class="hljs-comment">/**
+<span id="line656" class="lineno">656</span>     * The application terminal icon definition.
+<span id="line657" class="lineno">657</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line658" class="lineno">658</span>     */</span>
+<span id="line659" class="lineno">659</span>    <span class="hljs-attr">APPLICATION_TERMINAL</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-224px -16px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Terminal&quot;</span> },
+<span id="line660" class="lineno">660</span>    <span class="hljs-comment">/**
+<span id="line661" class="lineno">661</span>     * The dialog icon definition.
+<span id="line662" class="lineno">662</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line663" class="lineno">663</span>     */</span>
+<span id="line664" class="lineno">664</span>    <span class="hljs-attr">DIALOG</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-224px -32px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Dialog&quot;</span> },
+<span id="line665" class="lineno">665</span>    <span class="hljs-comment">/**
+<span id="line666" class="lineno">666</span>     * The script icon definition.
+<span id="line667" class="lineno">667</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line668" class="lineno">668</span>     */</span>
+<span id="line669" class="lineno">669</span>    <span class="hljs-attr">SCRIPT</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-224px -48px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Script&quot;</span> },
+<span id="line670" class="lineno">670</span>    <span class="hljs-comment">/**
+<span id="line671" class="lineno">671</span>     * The component icon definition.
+<span id="line672" class="lineno">672</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line673" class="lineno">673</span>     */</span>
+<span id="line674" class="lineno">674</span>    <span class="hljs-attr">COMPONENT</span>: { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-cube&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Component&quot;</span> },
+<span id="line675" class="lineno">675</span>    <span class="hljs-comment">/**
+<span id="line676" class="lineno">676</span>     * The components icon definition.
+<span id="line677" class="lineno">677</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line678" class="lineno">678</span>     */</span>
+<span id="line679" class="lineno">679</span>    <span class="hljs-attr">COMPONENTS</span>: { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-cubes&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Components&quot;</span> },
+<span id="line680" class="lineno">680</span>    <span class="hljs-comment">/**
+<span id="line681" class="lineno">681</span>     * The package icon definition.
+<span id="line682" class="lineno">682</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line683" class="lineno">683</span>     */</span>
+<span id="line684" class="lineno">684</span>    <span class="hljs-attr">PACKAGE</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-224px -96px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Package&quot;</span> },
+<span id="line685" class="lineno">685</span>    <span class="hljs-comment">/**
+<span id="line686" class="lineno">686</span>     * The textfield icon definition.
+<span id="line687" class="lineno">687</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line688" class="lineno">688</span>     */</span>
+<span id="line689" class="lineno">689</span>    <span class="hljs-attr">TEXTFIELD</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-224px -112px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Text field&quot;</span> },
+<span id="line690" class="lineno">690</span>    <span class="hljs-comment">/**
+<span id="line691" class="lineno">691</span>     * The network drive icon definition.
+<span id="line692" class="lineno">692</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line693" class="lineno">693</span>     */</span>
+<span id="line694" class="lineno">694</span>    <span class="hljs-attr">DRIVE_NETWORK</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-240px 0px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Network drive&quot;</span> },
+<span id="line695" class="lineno">695</span>    <span class="hljs-comment">/**
+<span id="line696" class="lineno">696</span>     * The monitor icon definition.
+<span id="line697" class="lineno">697</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line698" class="lineno">698</span>     */</span>
+<span id="line699" class="lineno">699</span>    <span class="hljs-attr">MONITOR</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-240px -16px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Monitor&quot;</span> },
+<span id="line700" class="lineno">700</span>    <span class="hljs-comment">/**
+<span id="line701" class="lineno">701</span>     * The keyboard icon definition.
+<span id="line702" class="lineno">702</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line703" class="lineno">703</span>     */</span>
+<span id="line704" class="lineno">704</span>    <span class="hljs-attr">KEYBOARD</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-240px -32px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Keyboard&quot;</span> },
+<span id="line705" class="lineno">705</span>    <span class="hljs-comment">/**
+<span id="line706" class="lineno">706</span>     * The printer icon definition.
+<span id="line707" class="lineno">707</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line708" class="lineno">708</span>     */</span>
+<span id="line709" class="lineno">709</span>    <span class="hljs-attr">PRINTER</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-240px -48px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Printer&quot;</span> },
+<span id="line710" class="lineno">710</span>    <span class="hljs-comment">/**
+<span id="line711" class="lineno">711</span>     * The server icon definition.
+<span id="line712" class="lineno">712</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line713" class="lineno">713</span>     */</span>
+<span id="line714" class="lineno">714</span>    <span class="hljs-attr">SERVER</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-240px -64px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Server&quot;</span> },
+<span id="line715" class="lineno">715</span>    <span class="hljs-comment">/**
+<span id="line716" class="lineno">716</span>     * The disk icon definition.
+<span id="line717" class="lineno">717</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line718" class="lineno">718</span>     */</span>
+<span id="line719" class="lineno">719</span>    <span class="hljs-attr">DISK</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-240px -80px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Disk&quot;</span> },
+<span id="line720" class="lineno">720</span>    <span class="hljs-comment">/**
+<span id="line721" class="lineno">721</span>     * The database icon definition.
+<span id="line722" class="lineno">722</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line723" class="lineno">723</span>     */</span>
+<span id="line724" class="lineno">724</span>    <span class="hljs-attr">DATABASE</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-240px -96px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Database&quot;</span> },
+<span id="line725" class="lineno">725</span>    <span class="hljs-comment">/**
+<span id="line726" class="lineno">726</span>     * The email icon definition.
+<span id="line727" class="lineno">727</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line728" class="lineno">728</span>     */</span>
+<span id="line729" class="lineno">729</span>    <span class="hljs-attr">EMAIL</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-240px -112px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Email&quot;</span> },
+<span id="line730" class="lineno">730</span>    <span class="hljs-comment">/**
+<span id="line731" class="lineno">731</span>     * The image icon definition.
+<span id="line732" class="lineno">732</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line733" class="lineno">733</span>     */</span>
+<span id="line734" class="lineno">734</span>    <span class="hljs-attr">IMAGE</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-256px 0px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Image&quot;</span> },
+<span id="line735" class="lineno">735</span>    <span class="hljs-comment">/**
+<span id="line736" class="lineno">736</span>     * The calculator icon definition.
+<span id="line737" class="lineno">737</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line738" class="lineno">738</span>     */</span>
+<span id="line739" class="lineno">739</span>    <span class="hljs-attr">CALCULATOR</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-256px -16px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Calculator&quot;</span> },
+<span id="line740" class="lineno">740</span>    <span class="hljs-comment">/**
+<span id="line741" class="lineno">741</span>     * The home icon definition.
+<span id="line742" class="lineno">742</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line743" class="lineno">743</span>     */</span>
+<span id="line744" class="lineno">744</span>    <span class="hljs-attr">HOME</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-256px -32px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Home&quot;</span> },
+<span id="line745" class="lineno">745</span>    <span class="hljs-comment">/**
+<span id="line746" class="lineno">746</span>     * The book icon definition.
+<span id="line747" class="lineno">747</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line748" class="lineno">748</span>     */</span>
+<span id="line749" class="lineno">749</span>    <span class="hljs-attr">BOOK</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-256px -48px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Book&quot;</span> },
+<span id="line750" class="lineno">750</span>    <span class="hljs-comment">/**
+<span id="line751" class="lineno">751</span>     * The open book icon definition.
+<span id="line752" class="lineno">752</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line753" class="lineno">753</span>     */</span>
+<span id="line754" class="lineno">754</span>    <span class="hljs-attr">BOOK_OPEN</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-256px -64px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Book&quot;</span> },
+<span id="line755" class="lineno">755</span>    <span class="hljs-comment">/**
+<span id="line756" class="lineno">756</span>     * The clock icon definition.
+<span id="line757" class="lineno">757</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line758" class="lineno">758</span>     */</span>
+<span id="line759" class="lineno">759</span>    <span class="hljs-attr">CLOCK</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-256px -80px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Clock&quot;</span> },
+<span id="line760" class="lineno">760</span>    <span class="hljs-comment">/**
+<span id="line761" class="lineno">761</span>     * The delay icon definition.
+<span id="line762" class="lineno">762</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Widget.Icon
+<span id="line763" class="lineno">763</span>     */</span>
+<span id="line764" class="lineno">764</span>    <span class="hljs-attr">DELAY</span>: { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;DEFAULT&quot;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;-256px -96px&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Delay&quot;</span> }
+<span id="line765" class="lineno">765</span>});
+<span id="line766" class="lineno">766</span></code></pre>
+        </article>
+    </section>
+
+
+
+
+      </div>
+    </section>
+
+    <section class="footer center fineprint">
+      <hr>
+      Copyright &copy; 2007-2023 Per Cederberg. All rights reserved.
+    </section>
+
+  </body>
+</html>

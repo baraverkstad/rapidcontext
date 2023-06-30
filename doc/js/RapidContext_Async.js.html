@@ -1,0 +1,443 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="JsDoc" />
+    <link rel="stylesheet" href="../css/style.css" type="text/css">
+    <link rel="stylesheet" href="../css/doc.css" type="text/css">
+    <link rel="stylesheet" href="../css/font-awesome-4.7.0.min.css" type="text/css">
+    <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="../images/logotype-icon.ico">
+    <link rel="icon" type="image/png" sizes="256x256" href="../images/logotype-icon-256x256.png">
+    <link rel="apple-touch-icon" sizes="256x256" href="../images/logotype-icon-256x256.png">
+    <title>RapidContext :: JavaScript API</title>
+  </head>
+  <body class="doc">
+
+    <section class="header">
+      <div class="center">
+        <a href="https://www.rapidcontext.com/" class="logotype">
+          <img src="../images/logotype.png" />
+        </a>
+        <div class="text">
+          <a href="https://www.rapidcontext.com/">
+            <span style="font-size: 3.6em;">RapidContext</span><br>
+            <span style="font-size: 1.75em; color: #caf3ff;">Access &#183; Discovery &#183; Insight</span><br>
+            <span style="font-size: 1.3em; letter-spacing: 0.34em; line-height: 1.8em;">www.rapidcontext.com</span>
+          </a>
+        </div>
+      </div>
+      <div class="menu">
+        <a href="https://www.rapidcontext.com/doc/index.html">Docs</a>
+        &bull; <a href="https://github.com/cederberg/rapidcontext/releases">Downloads</a>
+        &bull; <a href="https://github.com/cederberg/rapidcontext">Project</a>
+      </div>
+    </section>
+
+    <section class="content center">
+      <ol class="breadcrumb">
+        <li><a href="../index.html">Documentation</a></li>
+
+        <li><a href="index.html">JavaScript API</a></li>
+        <li class="active">RapidContext_Async.js</li>
+
+      </ol>
+
+      <div class="jsdoc">
+        <h1 class="classTitle">Source RapidContext_Async.js</h1>
+
+
+
+
+    <section>
+        <article>
+            <pre><code class="hljs language-js"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
+<span id="line2" class="lineno">2</span> * RapidContext &lt;https://www.rapidcontext.com/&gt;
+<span id="line3" class="lineno">3</span> * Copyright (c) 2022-2023 Per Cederberg. All rights reserved.
+<span id="line4" class="lineno">4</span> *
+<span id="line5" class="lineno">5</span> * This program is free software: you can redistribute it and/or
+<span id="line6" class="lineno">6</span> * modify it under the terms of the BSD license.
+<span id="line7" class="lineno">7</span> *
+<span id="line8" class="lineno">8</span> * This program is distributed in the hope that it will be useful,
+<span id="line9" class="lineno">9</span> * but WITHOUT ANY WARRANTY; without even the implied warranty of
+<span id="line10" class="lineno">10</span> * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+<span id="line11" class="lineno">11</span> *
+<span id="line12" class="lineno">12</span> * See the RapidContext LICENSE for more details.
+<span id="line13" class="lineno">13</span> */</span>
+<span id="line14" class="lineno">14</span>
+<span id="line15" class="lineno">15</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params"><span class="hljs-variable language_">window</span></span>) {
+<span id="line16" class="lineno">16</span>
+<span id="line17" class="lineno">17</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">isFunction</span>(<span class="hljs-params">value</span>) {
+<span id="line18" class="lineno">18</span>        <span class="hljs-keyword">return</span> <span class="hljs-title function_">typeof</span>(value) === <span class="hljs-string">&quot;function&quot;</span>;
+<span id="line19" class="lineno">19</span>    }
+<span id="line20" class="lineno">20</span>
+<span id="line21" class="lineno">21</span>    <span class="hljs-comment">/**
+<span id="line22" class="lineno">22</span>     * Checks if an object conforms to the `Promise` API.
+<span id="line23" class="lineno">23</span>     *
+<span id="line24" class="lineno">24</span>     * <span class="hljs-doctag">@memberOf</span> RapidContext.Async
+<span id="line25" class="lineno">25</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Object</span>} value the object to check
+<span id="line26" class="lineno">26</span>     *
+<span id="line27" class="lineno">27</span>     * <span class="hljs-doctag">@return</span> {<span class="hljs-type">boolean</span>} `true` if the object is a promise, or `false` otherwise
+<span id="line28" class="lineno">28</span>     */</span>
+<span id="line29" class="lineno">29</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">isPromise</span>(<span class="hljs-params">value</span>) {
+<span id="line30" class="lineno">30</span>        <span class="hljs-keyword">return</span> !!value &amp;&amp; <span class="hljs-title function_">isFunction</span>(value.<span class="hljs-property">then</span>) &amp;&amp; <span class="hljs-title function_">isFunction</span>(value.<span class="hljs-property">catch</span>);
+<span id="line31" class="lineno">31</span>    }
+<span id="line32" class="lineno">32</span>
+<span id="line33" class="lineno">33</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">isDeferred</span>(<span class="hljs-params">value</span>) {
+<span id="line34" class="lineno">34</span>        <span class="hljs-keyword">return</span> !<span class="hljs-title function_">isPromise</span>(value) &amp;&amp; value <span class="hljs-keyword">instanceof</span> <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Async</span>.<span class="hljs-property">Deferred</span>;
+<span id="line35" class="lineno">35</span>    }
+<span id="line36" class="lineno">36</span>
+<span id="line37" class="lineno">37</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">isCancellable</span>(<span class="hljs-params">value</span>) {
+<span id="line38" class="lineno">38</span>        <span class="hljs-keyword">return</span> <span class="hljs-title function_">isPromise</span>(value) &amp;&amp; <span class="hljs-title function_">isFunction</span>(value.<span class="hljs-property">cancel</span>);
+<span id="line39" class="lineno">39</span>    }
+<span id="line40" class="lineno">40</span>
+<span id="line41" class="lineno">41</span>    <span class="hljs-comment">/**
+<span id="line42" class="lineno">42</span>     * Creates a new cancellable promise. The cancellation callback must be a
+<span id="line43" class="lineno">43</span>     * no-op if the action is already performed.
+<span id="line44" class="lineno">44</span>     *
+<span id="line45" class="lineno">45</span>     * <span class="hljs-doctag">@constructor</span>
+<span id="line46" class="lineno">46</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Promise|Deferred|Function|Error|Object</span>} promise the promise to wrap
+<span id="line47" class="lineno">47</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">function</span>} [onCancelled] the cancellation callback function
+<span id="line48" class="lineno">48</span>     *
+<span id="line49" class="lineno">49</span>     * <span class="hljs-doctag">@name</span> RapidContext.Async
+<span id="line50" class="lineno">50</span>     * <span class="hljs-doctag">@class</span> A cancellable Promise that is backwards-compatible with
+<span id="line51" class="lineno">51</span>     * `MochiKit.Async.Deferred`. These promises can be used either as a deferred
+<span id="line52" class="lineno">52</span>     * or as a normal promise (recommended).
+<span id="line53" class="lineno">53</span>     *
+<span id="line54" class="lineno">54</span>     * Instances of this class are `instanceof MochiKit.Async.Deferred` (and
+<span id="line55" class="lineno">55</span>     * NOT `instanceof Promise`) due to backwards compatibility. Use
+<span id="line56" class="lineno">56</span>     * `RapidContext.Async.isPromise` to check for a promise-compatible API.
+<span id="line57" class="lineno">57</span>     */</span>
+<span id="line58" class="lineno">58</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">Async</span>(<span class="hljs-params">promise, onCancelled</span>) {
+<span id="line59" class="lineno">59</span>        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isPromise</span>(promise)) {
+<span id="line60" class="lineno">60</span>            <span class="hljs-variable language_">this</span>.<span class="hljs-property">_promise</span> = promise;
+<span id="line61" class="lineno">61</span>        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isDeferred</span>(promise)) {
+<span id="line62" class="lineno">62</span>            <span class="hljs-variable language_">this</span>.<span class="hljs-property">_promise</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params">resolve, reject</span>) {
+<span id="line63" class="lineno">63</span>                promise.<span class="hljs-title function_">addBoth</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params">res</span>) {
+<span id="line64" class="lineno">64</span>                    <span class="hljs-keyword">var</span> cb = (res <span class="hljs-keyword">instanceof</span> <span class="hljs-title class_">Error</span>) ? reject : resolve;
+<span id="line65" class="lineno">65</span>                    <span class="hljs-title function_">cb</span>(res);
+<span id="line66" class="lineno">66</span>                });
+<span id="line67" class="lineno">67</span>            });
+<span id="line68" class="lineno">68</span>        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isFunction</span>(promise)) {
+<span id="line69" class="lineno">69</span>            <span class="hljs-variable language_">this</span>.<span class="hljs-property">_promise</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(promise);
+<span id="line70" class="lineno">70</span>        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (promise <span class="hljs-keyword">instanceof</span> <span class="hljs-title class_">Error</span>) {
+<span id="line71" class="lineno">71</span>            <span class="hljs-variable language_">this</span>.<span class="hljs-property">_promise</span> = <span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">reject</span>(promise);
+<span id="line72" class="lineno">72</span>        } <span class="hljs-keyword">else</span> {
+<span id="line73" class="lineno">73</span>            <span class="hljs-variable language_">this</span>.<span class="hljs-property">_promise</span> = <span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">resolve</span>(promise);
+<span id="line74" class="lineno">74</span>        }
+<span id="line75" class="lineno">75</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">_cancel</span> = onCancelled;
+<span id="line76" class="lineno">76</span>    }
+<span id="line77" class="lineno">77</span>
+<span id="line78" class="lineno">78</span>    <span class="hljs-comment">// Setup prototype chain (for instanceof)</span>
+<span id="line79" class="lineno">79</span>    <span class="hljs-comment">// <span class="hljs-doctag">FIXME:</span> Change to Promise.prototype once MochiKit is removed</span>
+<span id="line80" class="lineno">80</span>    <span class="hljs-title class_">Async</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Async</span>.<span class="hljs-property">Deferred</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
+<span id="line81" class="lineno">81</span>
+<span id="line82" class="lineno">82</span>    <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(<span class="hljs-title class_">Async</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>, {
+<span id="line83" class="lineno">83</span>        <span class="hljs-attr">constructor</span>: <span class="hljs-title class_">Async</span>,
+<span id="line84" class="lineno">84</span>
+<span id="line85" class="lineno">85</span>        <span class="hljs-comment">/**
+<span id="line86" class="lineno">86</span>         * Registers one or two callback functions to this promise.
+<span id="line87" class="lineno">87</span>         *
+<span id="line88" class="lineno">88</span>         * <span class="hljs-doctag">@memberof</span> RapidContext.Async.prototype
+<span id="line89" class="lineno">89</span>         * <span class="hljs-doctag">@param</span> {<span class="hljs-type">function</span>} [onFulfilled] a callback if promise fulfilled
+<span id="line90" class="lineno">90</span>         * <span class="hljs-doctag">@param</span> {<span class="hljs-type">function</span>} [onRejected] a callback if promise rejected
+<span id="line91" class="lineno">91</span>         * <span class="hljs-doctag">@returns</span> {<span class="hljs-type">Async</span>} a new promise that resolves to whatever value the
+<span id="line92" class="lineno">92</span>         *     callback functions return
+<span id="line93" class="lineno">93</span>         */</span>
+<span id="line94" class="lineno">94</span>        <span class="hljs-attr">then</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">onFulfilled, onRejected</span>) {
+<span id="line95" class="lineno">95</span>            <span class="hljs-keyword">var</span> promise = <span class="hljs-title function_">wrapPromise</span>(<span class="hljs-variable language_">this</span>, onFulfilled, onRejected);
+<span id="line96" class="lineno">96</span>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Async</span>(promise, <span class="hljs-function">() =&gt;</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cancel</span>());
+<span id="line97" class="lineno">97</span>        },
+<span id="line98" class="lineno">98</span>
+<span id="line99" class="lineno">99</span>        <span class="hljs-comment">/**
+<span id="line100" class="lineno">100</span>         * Registers a reject callback function to this promise.
+<span id="line101" class="lineno">101</span>         *
+<span id="line102" class="lineno">102</span>         * <span class="hljs-doctag">@memberof</span> RapidContext.Async.prototype
+<span id="line103" class="lineno">103</span>         * <span class="hljs-doctag">@param</span> {<span class="hljs-type">function</span>} onRejected a callback if promise rejected
+<span id="line104" class="lineno">104</span>         * <span class="hljs-doctag">@returns</span> {<span class="hljs-type">Async</span>} a new promise that resolves to whatever value the
+<span id="line105" class="lineno">105</span>         *     callback function returned
+<span id="line106" class="lineno">106</span>         */</span>
+<span id="line107" class="lineno">107</span>        <span class="hljs-attr">catch</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">onRejected</span>) {
+<span id="line108" class="lineno">108</span>            <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">then</span>(<span class="hljs-literal">undefined</span>, onRejected);
+<span id="line109" class="lineno">109</span>        },
+<span id="line110" class="lineno">110</span>
+<span id="line111" class="lineno">111</span>        <span class="hljs-comment">/**
+<span id="line112" class="lineno">112</span>         * Registers a finalizer callback function to this promise. Note that
+<span id="line113" class="lineno">113</span>         * the finalizer MAY NOT BE CALLED if the promise is cancelled.
+<span id="line114" class="lineno">114</span>         *
+<span id="line115" class="lineno">115</span>         * <span class="hljs-doctag">@memberof</span> RapidContext.Async.prototype
+<span id="line116" class="lineno">116</span>         * <span class="hljs-doctag">@param</span> {<span class="hljs-type">function</span>} onFinally a callback for promise resolved
+<span id="line117" class="lineno">117</span>         * <span class="hljs-doctag">@returns</span> {<span class="hljs-type">Async</span>} a new promise
+<span id="line118" class="lineno">118</span>         */</span>
+<span id="line119" class="lineno">119</span>        <span class="hljs-attr">finally</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">onFinally</span>) {
+<span id="line120" class="lineno">120</span>            <span class="hljs-keyword">var</span> promise = <span class="hljs-variable language_">this</span>.<span class="hljs-property">_promise</span>.<span class="hljs-title function_">finally</span>(onFinally);
+<span id="line121" class="lineno">121</span>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Async</span>(promise, <span class="hljs-function">() =&gt;</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cancel</span>());
+<span id="line122" class="lineno">122</span>        },
+<span id="line123" class="lineno">123</span>
+<span id="line124" class="lineno">124</span>        <span class="hljs-comment">/**
+<span id="line125" class="lineno">125</span>         * Cancels this promise and calls the registered cancellation handler.
+<span id="line126" class="lineno">126</span>         * No other callbacks will be triggered after the promise has been
+<span id="line127" class="lineno">127</span>         * cancelled (except finalizer).
+<span id="line128" class="lineno">128</span>         *
+<span id="line129" class="lineno">129</span>         * <span class="hljs-doctag">@memberof</span> RapidContext.Async.prototype
+<span id="line130" class="lineno">130</span>         */</span>
+<span id="line131" class="lineno">131</span>        <span class="hljs-attr">cancel</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line132" class="lineno">132</span>            <span class="hljs-variable language_">this</span>.<span class="hljs-property">_cancelled</span> = <span class="hljs-literal">true</span>;
+<span id="line133" class="lineno">133</span>            <span class="hljs-title function_">isFunction</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">_cancel</span>) &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_cancel</span>();
+<span id="line134" class="lineno">134</span>            <span class="hljs-title function_">isCancellable</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">_result</span>) &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">_result</span>.<span class="hljs-title function_">cancel</span>();
+<span id="line135" class="lineno">135</span>        },
+<span id="line136" class="lineno">136</span>
+<span id="line137" class="lineno">137</span>        <span class="hljs-comment">/**
+<span id="line138" class="lineno">138</span>         * Registers one or two callback functions to this promise.
+<span id="line139" class="lineno">139</span>         *
+<span id="line140" class="lineno">140</span>         * <span class="hljs-doctag">@memberof</span> RapidContext.Async.prototype
+<span id="line141" class="lineno">141</span>         * <span class="hljs-doctag">@param</span> {<span class="hljs-type">function</span>} [onFulfilled] a callback if promise fulfilled
+<span id="line142" class="lineno">142</span>         * <span class="hljs-doctag">@param</span> {<span class="hljs-type">function</span>} [onRejected] a callback if promise rejected
+<span id="line143" class="lineno">143</span>         * <span class="hljs-doctag">@returns</span> {<span class="hljs-type">Async</span>} this same promise
+<span id="line144" class="lineno">144</span>         * <span class="hljs-doctag">@deprecated</span> Provided for `MochiKit.Async.Deferred` compatibility
+<span id="line145" class="lineno">145</span>         */</span>
+<span id="line146" class="lineno">146</span>        <span class="hljs-attr">addCallbacks</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">callback, errback</span>) {
+<span id="line147" class="lineno">147</span>            <span class="hljs-variable language_">this</span>.<span class="hljs-property">_promise</span> = <span class="hljs-title function_">wrapPromise</span>(<span class="hljs-variable language_">this</span>, callback, errback);
+<span id="line148" class="lineno">148</span>            <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
+<span id="line149" class="lineno">149</span>        },
+<span id="line150" class="lineno">150</span>
+<span id="line151" class="lineno">151</span>        <span class="hljs-comment">/**
+<span id="line152" class="lineno">152</span>         * Registers a fulfilled callback function to this promise.
+<span id="line153" class="lineno">153</span>         *
+<span id="line154" class="lineno">154</span>         * <span class="hljs-doctag">@memberof</span> RapidContext.Async.prototype
+<span id="line155" class="lineno">155</span>         * <span class="hljs-doctag">@param</span> {<span class="hljs-type">function</span>} [callback] a callback if promise fulfilled
+<span id="line156" class="lineno">156</span>         * <span class="hljs-doctag">@returns</span> {<span class="hljs-type">Async</span>} this same promise
+<span id="line157" class="lineno">157</span>         * <span class="hljs-doctag">@deprecated</span> Provided for `MochiKit.Async.Deferred` compatibility
+<span id="line158" class="lineno">158</span>         */</span>
+<span id="line159" class="lineno">159</span>        <span class="hljs-attr">addCallback</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">callback</span>) {
+<span id="line160" class="lineno">160</span>            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">arguments</span>.<span class="hljs-property">length</span> &gt; <span class="hljs-number">1</span>) {
+<span id="line161" class="lineno">161</span>                <span class="hljs-keyword">var</span> args = <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(<span class="hljs-variable language_">arguments</span>);
+<span id="line162" class="lineno">162</span>                args.<span class="hljs-title function_">splice</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-literal">undefined</span>);
+<span id="line163" class="lineno">163</span>                callback = callback.<span class="hljs-property">bind</span>.<span class="hljs-title function_">apply</span>(callback, args);
+<span id="line164" class="lineno">164</span>            }
+<span id="line165" class="lineno">165</span>            <span class="hljs-variable language_">this</span>.<span class="hljs-property">_promise</span> = <span class="hljs-title function_">wrapPromise</span>(<span class="hljs-variable language_">this</span>, callback, <span class="hljs-literal">undefined</span>);
+<span id="line166" class="lineno">166</span>            <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
+<span id="line167" class="lineno">167</span>        },
+<span id="line168" class="lineno">168</span>
+<span id="line169" class="lineno">169</span>        <span class="hljs-comment">/**
+<span id="line170" class="lineno">170</span>         * Registers a reject callback function to this promise.
+<span id="line171" class="lineno">171</span>         *
+<span id="line172" class="lineno">172</span>         * <span class="hljs-doctag">@memberof</span> RapidContext.Async.prototype
+<span id="line173" class="lineno">173</span>         * <span class="hljs-doctag">@param</span> {<span class="hljs-type">function</span>} errback a callback if promise rejected
+<span id="line174" class="lineno">174</span>         * <span class="hljs-doctag">@returns</span> {<span class="hljs-type">Async</span>} this same promise
+<span id="line175" class="lineno">175</span>         * <span class="hljs-doctag">@deprecated</span> Provided for `MochiKit.Async.Deferred` compatibility
+<span id="line176" class="lineno">176</span>         */</span>
+<span id="line177" class="lineno">177</span>        <span class="hljs-attr">addErrback</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">errback</span>) {
+<span id="line178" class="lineno">178</span>            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">arguments</span>.<span class="hljs-property">length</span> &gt; <span class="hljs-number">1</span>) {
+<span id="line179" class="lineno">179</span>                <span class="hljs-keyword">var</span> args = <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(<span class="hljs-variable language_">arguments</span>);
+<span id="line180" class="lineno">180</span>                args.<span class="hljs-title function_">splice</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-literal">undefined</span>);
+<span id="line181" class="lineno">181</span>                errback = errback.<span class="hljs-property">bind</span>.<span class="hljs-title function_">apply</span>(errback, args);
+<span id="line182" class="lineno">182</span>            }
+<span id="line183" class="lineno">183</span>            <span class="hljs-variable language_">this</span>.<span class="hljs-property">_promise</span> = <span class="hljs-title function_">wrapPromise</span>(<span class="hljs-variable language_">this</span>, <span class="hljs-literal">undefined</span>, errback);
+<span id="line184" class="lineno">184</span>            <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
+<span id="line185" class="lineno">185</span>        },
+<span id="line186" class="lineno">186</span>
+<span id="line187" class="lineno">187</span>        <span class="hljs-comment">/**
+<span id="line188" class="lineno">188</span>         * Registers a callback function to this promise.
+<span id="line189" class="lineno">189</span>         *
+<span id="line190" class="lineno">190</span>         * <span class="hljs-doctag">@memberof</span> RapidContext.Async.prototype
+<span id="line191" class="lineno">191</span>         * <span class="hljs-doctag">@param</span> {<span class="hljs-type">function</span>} [callback] a callback if promise either fulfilled
+<span id="line192" class="lineno">192</span>         *        or rejected
+<span id="line193" class="lineno">193</span>         * <span class="hljs-doctag">@returns</span> {<span class="hljs-type">Async</span>} this same promise
+<span id="line194" class="lineno">194</span>         * <span class="hljs-doctag">@deprecated</span> Provided for `MochiKit.Async.Deferred` compatibility
+<span id="line195" class="lineno">195</span>         */</span>
+<span id="line196" class="lineno">196</span>        <span class="hljs-attr">addBoth</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">callback</span>) {
+<span id="line197" class="lineno">197</span>            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">arguments</span>.<span class="hljs-property">length</span> &gt; <span class="hljs-number">1</span>) {
+<span id="line198" class="lineno">198</span>                <span class="hljs-keyword">var</span> args = <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(<span class="hljs-variable language_">arguments</span>);
+<span id="line199" class="lineno">199</span>                args.<span class="hljs-title function_">splice</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-literal">undefined</span>);
+<span id="line200" class="lineno">200</span>                callback = callback.<span class="hljs-property">bind</span>.<span class="hljs-title function_">apply</span>(callback, args);
+<span id="line201" class="lineno">201</span>            }
+<span id="line202" class="lineno">202</span>            <span class="hljs-variable language_">this</span>.<span class="hljs-property">_promise</span> = <span class="hljs-title function_">wrapPromise</span>(<span class="hljs-variable language_">this</span>, callback, callback);
+<span id="line203" class="lineno">203</span>            <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
+<span id="line204" class="lineno">204</span>        }
+<span id="line205" class="lineno">205</span>    });
+<span id="line206" class="lineno">206</span>
+<span id="line207" class="lineno">207</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">wrapPromise</span>(<span class="hljs-params">self, callback, errback</span>) {
+<span id="line208" class="lineno">208</span>        <span class="hljs-keyword">var</span> onSuccess = <span class="hljs-title function_">isFunction</span>(callback) ? <span class="hljs-title function_">wrapCallback</span>(self, callback) : callback;
+<span id="line209" class="lineno">209</span>        <span class="hljs-keyword">var</span> onError = <span class="hljs-title function_">isFunction</span>(errback) ? <span class="hljs-title function_">wrapCallback</span>(self, errback) : errback;
+<span id="line210" class="lineno">210</span>        <span class="hljs-keyword">return</span> self.<span class="hljs-property">_promise</span>.<span class="hljs-title function_">then</span>(onSuccess, onError);
+<span id="line211" class="lineno">211</span>    }
+<span id="line212" class="lineno">212</span>
+<span id="line213" class="lineno">213</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">wrapCallback</span>(<span class="hljs-params">self, callback</span>) {
+<span id="line214" class="lineno">214</span>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
+<span id="line215" class="lineno">215</span>            <span class="hljs-keyword">var</span> res = self.<span class="hljs-property">_cancelled</span> ? <span class="hljs-literal">undefined</span> : <span class="hljs-title function_">callback</span>(val);
+<span id="line216" class="lineno">216</span>            <span class="hljs-keyword">return</span> self.<span class="hljs-property">_result</span> = (<span class="hljs-title function_">isDeferred</span>(res) ? <span class="hljs-keyword">new</span> <span class="hljs-title class_">Async</span>(res) : res);
+<span id="line217" class="lineno">217</span>        };
+<span id="line218" class="lineno">218</span>    }
+<span id="line219" class="lineno">219</span>
+<span id="line220" class="lineno">220</span>    <span class="hljs-comment">/**
+<span id="line221" class="lineno">221</span>     * Returns a delayed value.
+<span id="line222" class="lineno">222</span>     *
+<span id="line223" class="lineno">223</span>     * <span class="hljs-doctag">@memberOf</span> RapidContext.Async
+<span id="line224" class="lineno">224</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">number</span>} millis the number of milliseconds to wait
+<span id="line225" class="lineno">225</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Object</span>} [value] the value to resolve with
+<span id="line226" class="lineno">226</span>     * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Async</span>} a new promise that resolves with the value
+<span id="line227" class="lineno">227</span>     */</span>
+<span id="line228" class="lineno">228</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">wait</span>(<span class="hljs-params">millis, value</span>) {
+<span id="line229" class="lineno">229</span>        <span class="hljs-keyword">var</span> timer = <span class="hljs-literal">null</span>;
+<span id="line230" class="lineno">230</span>        <span class="hljs-keyword">function</span> <span class="hljs-title function_">callLater</span>(<span class="hljs-params">resolve</span>) {
+<span id="line231" class="lineno">231</span>            timer = <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">resolve</span>(value), millis);
+<span id="line232" class="lineno">232</span>        }
+<span id="line233" class="lineno">233</span>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Async</span>(callLater, <span class="hljs-function">() =&gt;</span> <span class="hljs-built_in">clearTimeout</span>(timer));
+<span id="line234" class="lineno">234</span>    }
+<span id="line235" class="lineno">235</span>
+<span id="line236" class="lineno">236</span>    <span class="hljs-comment">/**
+<span id="line237" class="lineno">237</span>     * Loads an image from a URL.
+<span id="line238" class="lineno">238</span>     *
+<span id="line239" class="lineno">239</span>     * <span class="hljs-doctag">@memberOf</span> RapidContext.Async
+<span id="line240" class="lineno">240</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} url the image URL to load
+<span id="line241" class="lineno">241</span>     * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Async</span>} a promise that resolves with the DOM `&lt;img&gt;` element
+<span id="line242" class="lineno">242</span>     */</span>
+<span id="line243" class="lineno">243</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">img</span>(<span class="hljs-params">url</span>) {
+<span id="line244" class="lineno">244</span>        <span class="hljs-keyword">return</span> <span class="hljs-title function_">create</span>(<span class="hljs-string">&quot;img&quot;</span>, { <span class="hljs-attr">src</span>: url });
+<span id="line245" class="lineno">245</span>    }
+<span id="line246" class="lineno">246</span>
+<span id="line247" class="lineno">247</span>    <span class="hljs-comment">/**
+<span id="line248" class="lineno">248</span>     * Injects a CSS stylesheet to the current page.
+<span id="line249" class="lineno">249</span>     *
+<span id="line250" class="lineno">250</span>     * <span class="hljs-doctag">@memberOf</span> RapidContext.Async
+<span id="line251" class="lineno">251</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} url the stylesheet URL to load
+<span id="line252" class="lineno">252</span>     * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Async</span>} a promise that resolves with the DOM `&lt;link&gt;` element
+<span id="line253" class="lineno">253</span>     */</span>
+<span id="line254" class="lineno">254</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">css</span>(<span class="hljs-params">url</span>) {
+<span id="line255" class="lineno">255</span>        <span class="hljs-keyword">var</span> attrs = { <span class="hljs-attr">rel</span>: <span class="hljs-string">&quot;stylesheet&quot;</span>, <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;text/css&quot;</span>, <span class="hljs-attr">href</span>: url };
+<span id="line256" class="lineno">256</span>        <span class="hljs-keyword">return</span> <span class="hljs-title function_">create</span>(<span class="hljs-string">&quot;link&quot;</span>, attrs, <span class="hljs-variable language_">document</span>.<span class="hljs-property">head</span>);
+<span id="line257" class="lineno">257</span>    }
+<span id="line258" class="lineno">258</span>
+<span id="line259" class="lineno">259</span>    <span class="hljs-comment">/**
+<span id="line260" class="lineno">260</span>     * Injects a JavaScript to the current page.
+<span id="line261" class="lineno">261</span>     *
+<span id="line262" class="lineno">262</span>     * <span class="hljs-doctag">@memberOf</span> RapidContext.Async
+<span id="line263" class="lineno">263</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} url the script URL to load
+<span id="line264" class="lineno">264</span>     * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Async</span>} a promise that resolves with the DOM `&lt;script&gt;` element
+<span id="line265" class="lineno">265</span>     */</span>
+<span id="line266" class="lineno">266</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">script</span>(<span class="hljs-params">url</span>) {
+<span id="line267" class="lineno">267</span>        <span class="hljs-keyword">return</span> <span class="hljs-title function_">create</span>(<span class="hljs-string">&quot;script&quot;</span>, { <span class="hljs-attr">src</span>: url, <span class="hljs-attr">async</span>: <span class="hljs-literal">false</span> }, <span class="hljs-variable language_">document</span>.<span class="hljs-property">head</span>);
+<span id="line268" class="lineno">268</span>    }
+<span id="line269" class="lineno">269</span>
+<span id="line270" class="lineno">270</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">create</span>(<span class="hljs-params">tag, attrs, parent</span>) {
+<span id="line271" class="lineno">271</span>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Async</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params">resolve, reject</span>) {
+<span id="line272" class="lineno">272</span>            <span class="hljs-keyword">var</span> el = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(tag);
+<span id="line273" class="lineno">273</span>            el.<span class="hljs-property">onload</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line274" class="lineno">274</span>                el = el.<span class="hljs-property">onload</span> = el.<span class="hljs-property">onerror</span> = <span class="hljs-literal">null</span>;
+<span id="line275" class="lineno">275</span>                <span class="hljs-title function_">resolve</span>(el);
+<span id="line276" class="lineno">276</span>            };
+<span id="line277" class="lineno">277</span>            el.<span class="hljs-property">onerror</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">err</span>) {
+<span id="line278" class="lineno">278</span>                <span class="hljs-keyword">var</span> url = el.<span class="hljs-property">src</span> || el.<span class="hljs-property">href</span>;
+<span id="line279" class="lineno">279</span>                el = el.<span class="hljs-property">onload</span> = el.<span class="hljs-property">onerror</span> = <span class="hljs-literal">null</span>;
+<span id="line280" class="lineno">280</span>                <span class="hljs-title function_">reject</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">URIError</span>(<span class="hljs-string">&quot;failed to load: &quot;</span> + url, url));
+<span id="line281" class="lineno">281</span>            };
+<span id="line282" class="lineno">282</span>            <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(el, attrs);
+<span id="line283" class="lineno">283</span>            parent &amp;&amp; parent.<span class="hljs-title function_">append</span>(el);
+<span id="line284" class="lineno">284</span>        });
+<span id="line285" class="lineno">285</span>    }
+<span id="line286" class="lineno">286</span>
+<span id="line287" class="lineno">287</span>    <span class="hljs-comment">/**
+<span id="line288" class="lineno">288</span>     * Performs an XmlHttpRequest to a URL.
+<span id="line289" class="lineno">289</span>     *
+<span id="line290" class="lineno">290</span>     * <span class="hljs-doctag">@memberOf</span> RapidContext.Async
+<span id="line291" class="lineno">291</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} url the URL to request
+<span id="line292" class="lineno">292</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Object</span>} [options] the request options
+<span id="line293" class="lineno">293</span>     * <span class="hljs-doctag">@config</span> {<span class="hljs-type">string</span>} [method] the HTTP method (e.g. `GET`, `POST`...)
+<span id="line294" class="lineno">294</span>     * <span class="hljs-doctag">@config</span> {<span class="hljs-type">Object</span>} [headers] the HTTP headers to send
+<span id="line295" class="lineno">295</span>     * <span class="hljs-doctag">@config</span> {<span class="hljs-type">number</span>} [timeout] the timeout in milliseconds (default is 30s)
+<span id="line296" class="lineno">296</span>     * <span class="hljs-doctag">@config</span> {<span class="hljs-type">string</span>} [log] the logging prefix, or `null` (defaults to `request`)
+<span id="line297" class="lineno">297</span>     * <span class="hljs-doctag">@config</span> {<span class="hljs-type">string</span>} [responseType] the expected HTTP response (e.g. `json`)
+<span id="line298" class="lineno">298</span>     * <span class="hljs-doctag">@config</span> {<span class="hljs-type">string</span>} [body] the HTTP request body to send
+<span id="line299" class="lineno">299</span>     *
+<span id="line300" class="lineno">300</span>     * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Async</span>} a new promise that resolves with either the XHR object,
+<span id="line301" class="lineno">301</span>     *     or an error if the request failed
+<span id="line302" class="lineno">302</span>     */</span>
+<span id="line303" class="lineno">303</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">xhr</span>(<span class="hljs-params">url, options</span>) {
+<span id="line304" class="lineno">304</span>        <span class="hljs-keyword">var</span> opts = { <span class="hljs-attr">method</span>: <span class="hljs-string">&quot;GET&quot;</span>, <span class="hljs-attr">headers</span>: {}, <span class="hljs-attr">timeout</span>: <span class="hljs-number">30000</span>, <span class="hljs-attr">log</span>: <span class="hljs-string">&quot;XHR request&quot;</span> };
+<span id="line305" class="lineno">305</span>        <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(opts, options);
+<span id="line306" class="lineno">306</span>        <span class="hljs-keyword">if</span> (opts.<span class="hljs-property">responseType</span> === <span class="hljs-string">&quot;json&quot;</span> &amp;&amp; !opts.<span class="hljs-property">headers</span>[<span class="hljs-string">&quot;Accept&quot;</span>]) {
+<span id="line307" class="lineno">307</span>            opts.<span class="hljs-property">headers</span>[<span class="hljs-string">&quot;Accept&quot;</span>] = <span class="hljs-string">&quot;application/json&quot;</span>;
+<span id="line308" class="lineno">308</span>        }
+<span id="line309" class="lineno">309</span>        <span class="hljs-keyword">var</span> xhr = <span class="hljs-keyword">new</span> <span class="hljs-title class_">XMLHttpRequest</span>();
+<span id="line310" class="lineno">310</span>        <span class="hljs-keyword">var</span> promise = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params">resolve, reject</span>) {
+<span id="line311" class="lineno">311</span>            xhr.<span class="hljs-title function_">open</span>(opts.<span class="hljs-property">method</span>, url, <span class="hljs-literal">true</span>);
+<span id="line312" class="lineno">312</span>            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> key <span class="hljs-keyword">in</span> opts.<span class="hljs-property">headers</span>) {
+<span id="line313" class="lineno">313</span>                xhr.<span class="hljs-title function_">setRequestHeader</span>(key, opts.<span class="hljs-property">headers</span>[key]);
+<span id="line314" class="lineno">314</span>            }
+<span id="line315" class="lineno">315</span>            xhr.<span class="hljs-property">responseType</span> = opts.<span class="hljs-property">responseType</span> || <span class="hljs-string">&quot;text&quot;</span>;
+<span id="line316" class="lineno">316</span>            xhr.<span class="hljs-property">timeout</span> = opts.<span class="hljs-property">timeout</span>;
+<span id="line317" class="lineno">317</span>            <span class="hljs-keyword">if</span> (xhr.<span class="hljs-property">upload</span> &amp;&amp; <span class="hljs-title function_">isFunction</span>(opts.<span class="hljs-property">progress</span>)) {
+<span id="line318" class="lineno">318</span>                xhr.<span class="hljs-property">upload</span>.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&quot;progress&quot;</span>, opts.<span class="hljs-property">progress</span>);
+<span id="line319" class="lineno">319</span>            }
+<span id="line320" class="lineno">320</span>            xhr.<span class="hljs-property">onreadystatechange</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line321" class="lineno">321</span>                <span class="hljs-keyword">var</span> err;
+<span id="line322" class="lineno">322</span>                <span class="hljs-keyword">if</span> (xhr &amp;&amp; xhr.<span class="hljs-property">readyState</span> === <span class="hljs-number">4</span>) {
+<span id="line323" class="lineno">323</span>                    <span class="hljs-keyword">if</span> (xhr.<span class="hljs-property">status</span> &gt;= <span class="hljs-number">200</span> &amp;&amp; xhr.<span class="hljs-property">status</span> &lt;= <span class="hljs-number">299</span> &amp;&amp; xhr.<span class="hljs-property">response</span> != <span class="hljs-literal">null</span>) {
+<span id="line324" class="lineno">324</span>                        <span class="hljs-title function_">resolve</span>(xhr);
+<span id="line325" class="lineno">325</span>                    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (xhr.<span class="hljs-property">status</span> === <span class="hljs-number">0</span>) {
+<span id="line326" class="lineno">326</span>                        err = <span class="hljs-string">&quot;communication error or timeout&quot;</span>;
+<span id="line327" class="lineno">327</span>                        <span class="hljs-title function_">reject</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">AsyncError</span>(opts.<span class="hljs-property">method</span>, url, xhr, err, opts.<span class="hljs-property">log</span>));
+<span id="line328" class="lineno">328</span>                    } <span class="hljs-keyword">else</span> {
+<span id="line329" class="lineno">329</span>                        err = <span class="hljs-string">&quot;unexpected response code/data&quot;</span>;
+<span id="line330" class="lineno">330</span>                        <span class="hljs-title function_">reject</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">AsyncError</span>(opts.<span class="hljs-property">method</span>, url, xhr, err, opts.<span class="hljs-property">log</span>));
+<span id="line331" class="lineno">331</span>                    }
+<span id="line332" class="lineno">332</span>                    xhr = <span class="hljs-literal">null</span>; <span class="hljs-comment">// Stop duplicate events</span>
+<span id="line333" class="lineno">333</span>                }
+<span id="line334" class="lineno">334</span>            };
+<span id="line335" class="lineno">335</span>            xhr.<span class="hljs-title function_">send</span>(opts.<span class="hljs-property">body</span>);
+<span id="line336" class="lineno">336</span>        });
+<span id="line337" class="lineno">337</span>        <span class="hljs-keyword">var</span> cancel = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line338" class="lineno">338</span>            xhr &amp;&amp; <span class="hljs-built_in">setTimeout</span>(xhr.<span class="hljs-property">abort</span>.<span class="hljs-title function_">bind</span>(xhr));
+<span id="line339" class="lineno">339</span>            xhr = <span class="hljs-literal">null</span>;
+<span id="line340" class="lineno">340</span>        };
+<span id="line341" class="lineno">341</span>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Async</span>(promise, cancel);
+<span id="line342" class="lineno">342</span>    }
+<span id="line343" class="lineno">343</span>
+<span id="line344" class="lineno">344</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">AsyncError</span>(<span class="hljs-params">method, url, xhr, detail, log</span>) {
+<span id="line345" class="lineno">345</span>        <span class="hljs-keyword">var</span> parts = [].<span class="hljs-title function_">concat</span>(detail, <span class="hljs-string">&quot; [&quot;</span>);
+<span id="line346" class="lineno">346</span>        <span class="hljs-keyword">if</span> (xhr &amp;&amp; xhr.<span class="hljs-property">status</span> &gt; <span class="hljs-number">0</span>) {
+<span id="line347" class="lineno">347</span>            parts.<span class="hljs-title function_">push</span>(<span class="hljs-string">&quot;HTTP &quot;</span>, xhr.<span class="hljs-property">status</span>, <span class="hljs-string">&quot;: &quot;</span>);
+<span id="line348" class="lineno">348</span>        }
+<span id="line349" class="lineno">349</span>        parts.<span class="hljs-title function_">push</span>(method, <span class="hljs-string">&quot; &quot;</span>, url, <span class="hljs-string">&quot;]&quot;</span>);
+<span id="line350" class="lineno">350</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">message</span> = parts.<span class="hljs-title function_">filter</span>(<span class="hljs-title class_">Boolean</span>).<span class="hljs-title function_">join</span>(<span class="hljs-string">&quot;&quot;</span>);
+<span id="line351" class="lineno">351</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">method</span> = method;
+<span id="line352" class="lineno">352</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">url</span> = url;
+<span id="line353" class="lineno">353</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">code</span> = xhr &amp;&amp; xhr.<span class="hljs-property">status</span>;
+<span id="line354" class="lineno">354</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">stack</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>().<span class="hljs-property">stack</span>;
+<span id="line355" class="lineno">355</span>        <span class="hljs-keyword">if</span> (log) {
+<span id="line356" class="lineno">356</span>            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">warn</span>([log, <span class="hljs-variable language_">this</span>.<span class="hljs-property">message</span>].<span class="hljs-title function_">join</span>(<span class="hljs-string">&quot;: &quot;</span>), xhr &amp;&amp; xhr.<span class="hljs-property">response</span>);
+<span id="line357" class="lineno">357</span>        }
+<span id="line358" class="lineno">358</span>    }
+<span id="line359" class="lineno">359</span>
+<span id="line360" class="lineno">360</span>    <span class="hljs-title class_">AsyncError</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Error</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
+<span id="line361" class="lineno">361</span>    <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(<span class="hljs-title class_">AsyncError</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>, {
+<span id="line362" class="lineno">362</span>        <span class="hljs-attr">constructor</span>: <span class="hljs-title class_">AsyncError</span>,
+<span id="line363" class="lineno">363</span>        <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;AsyncError&quot;</span>
+<span id="line364" class="lineno">364</span>    });
+<span id="line365" class="lineno">365</span>
+<span id="line366" class="lineno">366</span>    <span class="hljs-comment">// Create namespace and export API</span>
+<span id="line367" class="lineno">367</span>    <span class="hljs-keyword">var</span> <span class="hljs-title class_">RapidContext</span> = <span class="hljs-variable language_">window</span>.<span class="hljs-property">RapidContext</span> || (<span class="hljs-variable language_">window</span>.<span class="hljs-property">RapidContext</span> = {});
+<span id="line368" class="lineno">368</span>    <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Async</span> = <span class="hljs-title class_">Async</span>;
+<span id="line369" class="lineno">369</span>    <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(<span class="hljs-title class_">Async</span>, { isPromise, wait, img, css, script, xhr, <span class="hljs-title class_">AsyncError</span> });
+<span id="line370" class="lineno">370</span>
+<span id="line371" class="lineno">371</span>})(<span class="hljs-variable language_">this</span>);
+<span id="line372" class="lineno">372</span></code></pre>
+        </article>
+    </section>
+
+
+
+
+      </div>
+    </section>
+
+    <section class="footer center fineprint">
+      <hr>
+      Copyright &copy; 2007-2023 Per Cederberg. All rights reserved.
+    </section>
+
+  </body>
+</html>

@@ -4,18 +4,18 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="generator" content="JsDoc Toolkit" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="generator" content="JsDoc" />
     <link rel="stylesheet" href="../css/style.css" type="text/css">
     <link rel="stylesheet" href="../css/doc.css" type="text/css">
     <link rel="stylesheet" href="../css/font-awesome-4.7.0.min.css" type="text/css">
     <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="../images/logotype-icon.ico">
     <link rel="icon" type="image/png" sizes="256x256" href="../images/logotype-icon-256x256.png">
     <link rel="apple-touch-icon" sizes="256x256" href="../images/logotype-icon-256x256.png">
-    <title>RapidContext :: RapidContext.Encode</title>
+    <title>RapidContext :: JavaScript API</title>
   </head>
   <body class="doc">
-        <section class="header">
+
+    <section class="header">
       <div class="center">
         <a href="https://www.rapidcontext.com/" class="logotype">
           <img src="../images/logotype.png" />
@@ -34,279 +34,221 @@
         &bull; <a href="https://github.com/cederberg/rapidcontext">Project</a>
       </div>
     </section>
+
     <section class="content center">
+      <ol class="breadcrumb">
+        <li><a href="../index.html">Documentation</a></li>
 
+        <li><a href="index.html">JavaScript API</a></li>
+        <li class="active">RapidContext.Encode</li>
 
-<ol class="breadcrumb">
-  <li><a href="../index.html">Documentation</a></li>
-  <li><a href="index.html">JavaScript API</a></li>
-  <li class="active">RapidContext.Encode</li>
-</ol>
+      </ol>
 
-<!--START-->
+      <div class="jsdoc">
+        <h1 class="classTitle">Namespace RapidContext.Encode</h1>
 
-<!-- ============================== class title ============================ -->
-            <h1 class="classTitle">
 
-                Namespace RapidContext.Encode
-            </h1>
 
-<!-- ============================== class summary ========================== -->
-            <p class="description">
 
+<header>
 
-                Provides functions for encoding and decoding data.
+        <h2>Encode</h2>
 
-                <br/><br/>
+            <div class="description"><p>Provides functions for encoding and decoding data.</p></div>
 
 
-                    <i>Source code:</i>
-                    <a href="src/RapidContext_Encode.js.html">RapidContext_Encode.js</a>
 
-            </p>
 
-<!-- ============================== constructor summary ==================== -->
 
-            <table class="summaryTable">
-                <caption>Namespace Summary</caption>
-                <tbody>
-                    <tr>
-                        <td class="attributes">&nbsp;</td>
-                        <td class="nameDescription" >
-                            <div class="fixedFont">
-                                <b><a href="RapidContext.Encode.html#constructor">RapidContext.Encode</a></b>
-                            </div>
-                            <div class="description"></div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
 
 
-<!-- ============================== properties summary ===================== -->
 
+        <table class="summary-table">
+            <caption>Method Summary</caption>
+            <tbody>
 
-<!-- ============================== methods summary ======================== -->
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature">(static) </span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#.toJSON">toJSON<span class="signature">(val)</span><span class="type-signature"> &rarr; {string}</span></a></code>
+                        </div>
+                        <div class="description">Serializes a value to JSON.</div>
+                    </td>
+                </tr>
 
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature">(static) </span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#.toUrlPart">toUrlPart<span class="signature">(val, isForm)</span><span class="type-signature"> &rarr; {string}</span></a></code>
+                        </div>
+                        <div class="description">Serializes a value to a URL component.</div>
+                    </td>
+                </tr>
 
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature">(static) </span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#.toUrlQuery">toUrlQuery<span class="signature">(val, isForm)</span><span class="type-signature"> &rarr; {string}</span></a></code>
+                        </div>
+                        <div class="description">Serializes an object to a URL query string.</div>
+                    </td>
+                </tr>
 
+            </tbody>
+        </table>
 
-                <table class="summaryTable">
-                    <caption>Method Summary</caption>
-                    <tbody>
 
-                        <tr>
-                            <td class="attributes">&lt;static&gt; &nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" >RapidContext.Encode.<b><a href="RapidContext.Encode.html#.toJSON">toJSON</a></b>(val)
-                                </div>
-                                <div class="description">Serializes a value to JSON.</div>
-                            </td>
-                        </tr>
 
-                        <tr>
-                            <td class="attributes">&lt;static&gt; &nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" >RapidContext.Encode.<b><a href="RapidContext.Encode.html#.toUrlPart">toUrlPart</a></b>(val, isForm)
-                                </div>
-                                <div class="description">Serializes a value to a URL component.</div>
-                            </td>
-                        </tr>
 
-                        <tr>
-                            <td class="attributes">&lt;static&gt; &nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" >RapidContext.Encode.<b><a href="RapidContext.Encode.html#.toUrlQuery">toUrlQuery</a></b>(val, isForm)
-                                </div>
-                                <div class="description">Serializes an object to a URL query string.</div>
-                            </td>
-                        </tr>
 
-                    </tbody>
-                </table>
+</header>
 
+<article>
+    <div class="container-overview">
 
+    </div>
 
 
-<!-- ============================== events summary ======================== -->
 
 
-<!-- ============================== constructor details ==================== -->
 
-            <div id="constructor" class="details">
-                <div class="sectionTitle">
-                    Namespace Detail
-                </div>
 
-                <div class="fixedFont">
-                        <b>RapidContext.Encode</b>
-                </div>
 
-                <div class="description">
 
 
-                </div>
 
 
 
+        <h3 class="section-title">Methods</h3>
 
 
 
 
 
+    <h4 class="name" id=".toJSON">
+        <span class="type-signature">(static) </span>toJSON<span class="signature">(val)</span><span class="type-signature"> &rarr; {string}</span>
+    </h4>
 
 
 
 
-            </div>
 
+<div class="description">
+    <p>Serializes a value to JSON. The value is serialized by
+<code>JSON.stringify</code>, but unicode escape sequences are inserted
+for any non-printable ASCII characters.</p>
+</div>
 
-<!-- ============================== field details ========================== -->
 
 
-<!-- ============================== method details ========================= -->
 
-                <div class="sectionTitle">
-                    Method Detail
-                </div>
+<dl class="details">
 
-                    <div id=".toJSON" class="fixedFont">&lt;static&gt;
 
-                    <span class="light">{String}</span>
-                    <span class="light">RapidContext.Encode.</span><b>toJSON</b>(val)
 
-                    </div>
-                    <div class="description">
-                        Serializes a value to JSON. The value is serialized by
-<var>JSON.stringify</var>, but unicode escape sequences are inserted
-for any non-printable ASCII characters.
 
 
-                    </div>
 
 
 
 
-                            <dl class="detailList">
-                            <dt class="heading">Parameters:</dt>
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
 
-                                <dt>
-                                    <span class="light fixedFont">{Object}</span> <b>val</b>
 
-                                </dt>
-                                <dd>the value to serialize</dd>
+<table class="params">
+    <thead>
+    <tr>
 
-                            </dl>
+        <th>Name</th>
 
 
+        <th>Type</th>
 
 
 
-                            <dl class="detailList">
-                            <dt class="heading">Returns:</dt>
 
-                                <dd><span class="light fixedFont">{String}</span> the JSON string</dd>
 
-                            </dl>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
+    <tbody>
 
 
+        <tr>
 
-                    <hr />
+                <td class="name"><code>val</code></td>
 
-                    <div id=".toUrlPart" class="fixedFont">&lt;static&gt;
 
-                    <span class="light">{String}</span>
-                    <span class="light">RapidContext.Encode.</span><b>toUrlPart</b>(val, isForm)
+            <td class="type">
 
-                    </div>
-                    <div class="description">
-                        Serializes a value to a URL component. The value is serialized
-by <var>encodeURIComponent</var>, but any non-String values are first
-converted to strings.
 
+    <span class="param-type">{<b>Object</b>}</span>
 
-                    </div>
 
+            </td>
 
 
 
-                            <dl class="detailList">
-                            <dt class="heading">Parameters:</dt>
 
-                                <dt>
-                                    <span class="light fixedFont">{Object}</span> <b>val</b>
 
-                                </dt>
-                                <dd>the value to serialize</dd>
+            <td class="description last">
+                the value to serialize
 
-                                <dt>
-                                    <span class="light fixedFont">{Object}</span> <b>isForm</b>
+            </td>
+        </tr>
 
-                                </dt>
-                                <dd>the flag for using <var>+</var> instead of <var>%20</var></dd>
 
-                            </dl>
+    </tbody>
+</table>
 
+    </dd>
 
 
 
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
 
-                            <dl class="detailList">
-                            <dt class="heading">Returns:</dt>
 
-                                <dd><span class="light fixedFont">{String}</span> the URL-encoded string</dd>
+    <span class="param-type">{<b>string</b>}</span>
 
-                            </dl>
+    the JSON string
 
+    </dd>
 
 
 
-                    <hr />
 
-                    <div id=".toUrlQuery" class="fixedFont">&lt;static&gt;
 
-                    <span class="light">{String}</span>
-                    <span class="light">RapidContext.Encode.</span><b>toUrlQuery</b>(val, isForm)
 
-                    </div>
-                    <div class="description">
-                        Serializes an object to a URL query string. If an object value
-is an array, each entry will be added to the query separately.
 
 
-                    </div>
 
 
 
 
-                            <dl class="detailList">
-                            <dt class="heading">Parameters:</dt>
 
-                                <dt>
-                                    <span class="light fixedFont">{Object}</span> <b>val</b>
 
-                                </dt>
-                                <dd>the key-value pairs to serialize</dd>
 
-                                <dt>
-                                    <span class="light fixedFont">{Object}</span> <b>isForm</b>
 
-                                </dt>
-                                <dd>the flag for using <var>+</var> instead of <var>%20</var></dd>
 
-                            </dl>
 
 
 
 
 
-                            <dl class="detailList">
-                            <dt class="heading">Returns:</dt>
 
-                                <dd><span class="light fixedFont">{String}</span> the URL-encoded query string</dd>
 
-                            </dl>
 
 
 
@@ -315,12 +257,401 @@ is an array, each entry will be added to the query separately.
 
 
 
-<!-- ============================== event details ========================= -->
 
 
-    <!--END-->
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Encode.js.html">RapidContext_Encode.js</a>, <a href="RapidContext_Encode.js.html#line41">line 41</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id=".toUrlPart">
+        <span class="type-signature">(static) </span>toUrlPart<span class="signature">(val, isForm)</span><span class="type-signature"> &rarr; {string}</span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Serializes a value to a URL component. The value is serialized
+by <code>encodeURIComponent</code>, but any non-String values are first
+converted to strings.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>val</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Object</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the value to serialize
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>isForm</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Object</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the flag for using <code>+</code> instead of <code>%20</code>
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>string</b>}</span>
+
+    the URL-encoded string
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Encode.js.html">RapidContext_Encode.js</a>, <a href="RapidContext_Encode.js.html#line55">line 55</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id=".toUrlQuery">
+        <span class="type-signature">(static) </span>toUrlQuery<span class="signature">(val, isForm)</span><span class="type-signature"> &rarr; {string}</span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Serializes an object to a URL query string. If an object value
+is an array, each entry will be added to the query separately.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>val</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Object</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the key-value pairs to serialize
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>isForm</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Object</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the flag for using <code>+</code> instead of <code>%20</code>
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>string</b>}</span>
+
+    the URL-encoded query string
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Encode.js.html">RapidContext_Encode.js</a>, <a href="RapidContext_Encode.js.html#line71">line 71</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+
+</article>
+
+
+
+
+
+      </div>
     </section>
+
     <section class="footer center fineprint">
       <hr>
       Copyright &copy; 2007-2023 Per Cederberg. All rights reserved.

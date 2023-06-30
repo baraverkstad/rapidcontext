@@ -1,0 +1,171 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="JsDoc" />
+    <link rel="stylesheet" href="../css/style.css" type="text/css">
+    <link rel="stylesheet" href="../css/doc.css" type="text/css">
+    <link rel="stylesheet" href="../css/font-awesome-4.7.0.min.css" type="text/css">
+    <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="../images/logotype-icon.ico">
+    <link rel="icon" type="image/png" sizes="256x256" href="../images/logotype-icon-256x256.png">
+    <link rel="apple-touch-icon" sizes="256x256" href="../images/logotype-icon-256x256.png">
+    <title>RapidContext :: JavaScript API</title>
+  </head>
+  <body class="doc">
+
+    <section class="header">
+      <div class="center">
+        <a href="https://www.rapidcontext.com/" class="logotype">
+          <img src="../images/logotype.png" />
+        </a>
+        <div class="text">
+          <a href="https://www.rapidcontext.com/">
+            <span style="font-size: 3.6em;">RapidContext</span><br>
+            <span style="font-size: 1.75em; color: #caf3ff;">Access &#183; Discovery &#183; Insight</span><br>
+            <span style="font-size: 1.3em; letter-spacing: 0.34em; line-height: 1.8em;">www.rapidcontext.com</span>
+          </a>
+        </div>
+      </div>
+      <div class="menu">
+        <a href="https://www.rapidcontext.com/doc/index.html">Docs</a>
+        &bull; <a href="https://github.com/cederberg/rapidcontext/releases">Downloads</a>
+        &bull; <a href="https://github.com/cederberg/rapidcontext">Project</a>
+      </div>
+    </section>
+
+    <section class="content center">
+      <ol class="breadcrumb">
+        <li><a href="../index.html">Documentation</a></li>
+
+        <li><a href="index.html">JavaScript API</a></li>
+        <li class="active">RapidContext_Widget_Overlay.js</li>
+
+      </ol>
+
+      <div class="jsdoc">
+        <h1 class="classTitle">Source RapidContext_Widget_Overlay.js</h1>
+
+
+
+
+    <section>
+        <article>
+            <pre><code class="hljs language-js"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
+<span id="line2" class="lineno">2</span> * RapidContext &lt;https://www.rapidcontext.com/&gt;
+<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2023 Per Cederberg. All rights reserved.
+<span id="line4" class="lineno">4</span> *
+<span id="line5" class="lineno">5</span> * This program is free software: you can redistribute it and/or
+<span id="line6" class="lineno">6</span> * modify it under the terms of the BSD license.
+<span id="line7" class="lineno">7</span> *
+<span id="line8" class="lineno">8</span> * This program is distributed in the hope that it will be useful,
+<span id="line9" class="lineno">9</span> * but WITHOUT ANY WARRANTY; without even the implied warranty of
+<span id="line10" class="lineno">10</span> * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+<span id="line11" class="lineno">11</span> *
+<span id="line12" class="lineno">12</span> * See the RapidContext LICENSE for more details.
+<span id="line13" class="lineno">13</span> */</span>
+<span id="line14" class="lineno">14</span>
+<span id="line15" class="lineno">15</span><span class="hljs-comment">// Namespace initialization</span>
+<span id="line16" class="lineno">16</span><span class="hljs-keyword">if</span> (<span class="hljs-title function_">typeof</span>(<span class="hljs-title class_">RapidContext</span>) == <span class="hljs-string">&quot;undefined&quot;</span>) {
+<span id="line17" class="lineno">17</span>    <span class="hljs-title class_">RapidContext</span> = {};
+<span id="line18" class="lineno">18</span>}
+<span id="line19" class="lineno">19</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span> = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span> || { <span class="hljs-title class_">Classes</span>: {} };
+<span id="line20" class="lineno">20</span>
+<span id="line21" class="lineno">21</span><span class="hljs-comment">/**
+<span id="line22" class="lineno">22</span> * Creates a new overlay widget.
+<span id="line23" class="lineno">23</span> *
+<span id="line24" class="lineno">24</span> * <span class="hljs-doctag">@constructor</span>
+<span id="line25" class="lineno">25</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Object</span>} attrs the widget and node attributes
+<span id="line26" class="lineno">26</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">boolean</span>} [attrs.loading] the display loading icon flag, defaults to
+<span id="line27" class="lineno">27</span> *            `true`
+<span id="line28" class="lineno">28</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} [attrs.message] the overlay message text, defaults to
+<span id="line29" class="lineno">29</span> *            &quot;Working...&quot;
+<span id="line30" class="lineno">30</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">boolean</span>} [attrs.dark] the dark overlay flag, defaults to `false`
+<span id="line31" class="lineno">31</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">boolean</span>} [attrs.hidden] the hidden widget flag, defaults to `true`
+<span id="line32" class="lineno">32</span> *
+<span id="line33" class="lineno">33</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Widget</span>} the widget DOM node
+<span id="line34" class="lineno">34</span> *
+<span id="line35" class="lineno">35</span> * <span class="hljs-doctag">@class</span> The overlay widget class. Used to provide a layer on top of the
+<span id="line36" class="lineno">36</span> *     parent node, using a `&lt;div&gt;` HTML element. This widget is useful for
+<span id="line37" class="lineno">37</span> *     disabling the user interface during an operation.
+<span id="line38" class="lineno">38</span> * <span class="hljs-doctag">@extends</span> RapidContext.Widget
+<span id="line39" class="lineno">39</span> *
+<span id="line40" class="lineno">40</span> * <span class="hljs-doctag">@example</span> &lt;caption&gt;JavaScript&lt;/caption&gt;
+<span id="line41" class="lineno">41</span> * var workOverlay = RapidContext.WidgetOverlay({ message: &quot;Doing Stuff...&quot; });
+<span id="line42" class="lineno">42</span> *
+<span id="line43" class="lineno">43</span> * <span class="hljs-doctag">@example</span> &lt;caption&gt;User Interface XML&lt;/caption&gt;
+<span id="line44" class="lineno">44</span> * &lt;Overlay id=&quot;workOverlay&quot; message=&quot;Doing Stuff...&quot; /&gt;
+<span id="line45" class="lineno">45</span> */</span>
+<span id="line46" class="lineno">46</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Overlay</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">attrs</span>) {
+<span id="line47" class="lineno">47</span>    <span class="hljs-keyword">var</span> cover = <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">DOM</span>.<span class="hljs-title function_">DIV</span>({ <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;widgetOverlayCover&quot;</span> });
+<span id="line48" class="lineno">48</span>    <span class="hljs-keyword">var</span> msg = <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">DOM</span>.<span class="hljs-title function_">DIV</span>({ <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;widgetOverlayMessage&quot;</span> });
+<span id="line49" class="lineno">49</span>    <span class="hljs-keyword">var</span> o = <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">DOM</span>.<span class="hljs-title function_">DIV</span>({}, cover, msg);
+<span id="line50" class="lineno">50</span>    <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title function_">_widgetMixin</span>(o, <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Overlay</span>);
+<span id="line51" class="lineno">51</span>    o.<span class="hljs-title function_">addClass</span>(<span class="hljs-string">&quot;widgetOverlay&quot;</span>);
+<span id="line52" class="lineno">52</span>    o.<span class="hljs-title function_">setAttrs</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>({ <span class="hljs-attr">loading</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">message</span>: <span class="hljs-string">&quot;Working...&quot;</span> }, attrs));
+<span id="line53" class="lineno">53</span>    <span class="hljs-keyword">return</span> o;
+<span id="line54" class="lineno">54</span>};
+<span id="line55" class="lineno">55</span>
+<span id="line56" class="lineno">56</span><span class="hljs-comment">// Register widget class</span>
+<span id="line57" class="lineno">57</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Classes</span>.<span class="hljs-property">Overlay</span> = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Overlay</span>;
+<span id="line58" class="lineno">58</span>
+<span id="line59" class="lineno">59</span><span class="hljs-comment">/**
+<span id="line60" class="lineno">60</span> * Returns the widget container DOM node.
+<span id="line61" class="lineno">61</span> *
+<span id="line62" class="lineno">62</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Node</span>} returns null, since child nodes are not supported
+<span id="line63" class="lineno">63</span> */</span>
+<span id="line64" class="lineno">64</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Overlay</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">_containerNode</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line65" class="lineno">65</span>    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+<span id="line66" class="lineno">66</span>};
+<span id="line67" class="lineno">67</span>
+<span id="line68" class="lineno">68</span><span class="hljs-comment">/**
+<span id="line69" class="lineno">69</span> * Updates the widget or HTML DOM node attributes.
+<span id="line70" class="lineno">70</span> *
+<span id="line71" class="lineno">71</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Object</span>} attrs the widget and node attributes to set
+<span id="line72" class="lineno">72</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">boolean</span>} [attrs.loading] the display loading icon flag
+<span id="line73" class="lineno">73</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} [attrs.message] the overlay message text
+<span id="line74" class="lineno">74</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">boolean</span>} [attrs.hidden] the hidden widget flag
+<span id="line75" class="lineno">75</span> */</span>
+<span id="line76" class="lineno">76</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Overlay</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">setAttrs</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">attrs</span>) {
+<span id="line77" class="lineno">77</span>    attrs = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>({}, attrs);
+<span id="line78" class="lineno">78</span>    <span class="hljs-keyword">var</span> locals = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Util</span>.<span class="hljs-title function_">mask</span>(attrs, [<span class="hljs-string">&quot;loading&quot;</span>, <span class="hljs-string">&quot;message&quot;</span>, <span class="hljs-string">&quot;dark&quot;</span>]);
+<span id="line79" class="lineno">79</span>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">typeof</span>(locals.<span class="hljs-property">loading</span>) != <span class="hljs-string">&quot;undefined&quot;</span>) {
+<span id="line80" class="lineno">80</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">showLoading</span> = <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Base</span>.<span class="hljs-title function_">bool</span>(locals.<span class="hljs-property">loading</span>);
+<span id="line81" class="lineno">81</span>    }
+<span id="line82" class="lineno">82</span>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">typeof</span>(locals.<span class="hljs-property">message</span>) != <span class="hljs-string">&quot;undefined&quot;</span>) {
+<span id="line83" class="lineno">83</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">message</span> = locals.<span class="hljs-property">message</span> || <span class="hljs-string">&quot;&quot;</span>;
+<span id="line84" class="lineno">84</span>    }
+<span id="line85" class="lineno">85</span>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">typeof</span>(locals.<span class="hljs-property">dark</span>) != <span class="hljs-string">&quot;undefined&quot;</span>) {
+<span id="line86" class="lineno">86</span>        <span class="hljs-keyword">if</span> (locals.<span class="hljs-property">dark</span>) {
+<span id="line87" class="lineno">87</span>            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">addClass</span>(<span class="hljs-string">&quot;widgetOverlayDark&quot;</span>);
+<span id="line88" class="lineno">88</span>        } <span class="hljs-keyword">else</span> {
+<span id="line89" class="lineno">89</span>            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">removeClass</span>(<span class="hljs-string">&quot;widgetOverlayDark&quot;</span>);
+<span id="line90" class="lineno">90</span>        }
+<span id="line91" class="lineno">91</span>    }
+<span id="line92" class="lineno">92</span>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">showLoading</span>) {
+<span id="line93" class="lineno">93</span>        <span class="hljs-keyword">var</span> icon = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title class_">Icon</span>(<span class="hljs-string">&quot;fa fa-refresh fa-spin m-1&quot;</span>);
+<span id="line94" class="lineno">94</span>    }
+<span id="line95" class="lineno">95</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lastChild</span>.<span class="hljs-property">innerHTML</span> = <span class="hljs-string">&quot;&quot;</span>;
+<span id="line96" class="lineno">96</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lastChild</span>.<span class="hljs-title function_">append</span>(icon, <span class="hljs-variable language_">this</span>.<span class="hljs-property">message</span>);
+<span id="line97" class="lineno">97</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lastChild</span>.<span class="hljs-property">classList</span>.<span class="hljs-title function_">toggle</span>(<span class="hljs-string">&quot;widgetHidden&quot;</span>, !<span class="hljs-variable language_">this</span>.<span class="hljs-property">showLoading</span> &amp;&amp; !<span class="hljs-variable language_">this</span>.<span class="hljs-property">message</span>);
+<span id="line98" class="lineno">98</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">__setAttrs</span>(attrs);
+<span id="line99" class="lineno">99</span>};
+<span id="line100" class="lineno">100</span></code></pre>
+        </article>
+    </section>
+
+
+
+
+      </div>
+    </section>
+
+    <section class="footer center fineprint">
+      <hr>
+      Copyright &copy; 2007-2023 Per Cederberg. All rights reserved.
+    </section>
+
+  </body>
+</html>

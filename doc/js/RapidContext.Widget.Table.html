@@ -4,18 +4,18 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="generator" content="JsDoc Toolkit" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="generator" content="JsDoc" />
     <link rel="stylesheet" href="../css/style.css" type="text/css">
     <link rel="stylesheet" href="../css/doc.css" type="text/css">
     <link rel="stylesheet" href="../css/font-awesome-4.7.0.min.css" type="text/css">
     <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="../images/logotype-icon.ico">
     <link rel="icon" type="image/png" sizes="256x256" href="../images/logotype-icon-256x256.png">
     <link rel="apple-touch-icon" sizes="256x256" href="../images/logotype-icon-256x256.png">
-    <title>RapidContext :: RapidContext.Widget.Table</title>
+    <title>RapidContext :: JavaScript API</title>
   </head>
   <body class="doc">
-        <section class="header">
+
+    <section class="header">
       <div class="center">
         <a href="https://www.rapidcontext.com/" class="logotype">
           <img src="../images/logotype.png" />
@@ -34,665 +34,848 @@
         &bull; <a href="https://github.com/cederberg/rapidcontext">Project</a>
       </div>
     </section>
+
     <section class="content center">
+      <ol class="breadcrumb">
+        <li><a href="../index.html">Documentation</a></li>
 
+        <li><a href="index.html">JavaScript API</a></li>
+        <li class="active">RapidContext.Widget.Table</li>
 
-<ol class="breadcrumb">
-  <li><a href="../index.html">Documentation</a></li>
-  <li><a href="index.html">JavaScript API</a></li>
-  <li class="active">RapidContext.Widget.Table</li>
-</ol>
+      </ol>
 
-<!--START-->
-
-<!-- ============================== class title ============================ -->
-            <h1 class="classTitle">
-
-                Class RapidContext.Widget.Table
-            </h1>
-
-<!-- ============================== class summary ========================== -->
-            <p class="description">
-
-                    <i>Extends:</i>
-                    <a href="RapidContext.Widget.html">RapidContext.Widget</a><br /><br />
-
-
-                The table widget class. Used to provide a sortable and scrolling
-    data table, using an outer <var>&lt;div&gt;</var> HTML element around a <var>&lt;table&gt;</var>. The
-    <var>Table</var> widget can only have <var>TableColumn</var> child nodes, each providing a
-    visible data column in the table.
-
-                <br/><br/>
-
-
-                    <i>Source code:</i>
-                    <a href="src/RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>
-
-            </p>
-
-<!-- ============================== constructor summary ==================== -->
-
-            <table class="summaryTable">
-                <caption>Class Summary</caption>
-                <tbody>
-                    <tr>
-                        <td class="attributes">&nbsp;</td>
-                        <td class="nameDescription" >
-                            <div class="fixedFont">
-                                <b><a href="RapidContext.Widget.Table.html#constructor">RapidContext.Widget.Table</a></b>(attrs)
-                            </div>
-                            <div class="description">Creates a new data table widget.</div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-
-
-<!-- ============================== properties summary ===================== -->
-
-
-<!-- ============================== methods summary ======================== -->
+      <div class="jsdoc">
+        <h1 class="classTitle">Class RapidContext.Widget.Table</h1>
 
 
 
 
-                <table class="summaryTable">
-                    <caption>Method Summary</caption>
-                    <tbody>
+<header>
 
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Table.html#addChildNode">addChildNode</a></b>(child)
-                                </div>
-                                <div class="description">Adds a single child table column widget to this widget.</div>
-                            </td>
-                        </tr>
+        <h2><span class="attribs"><span class="type-signature"></span></span>
+            <span class="ancestors"><a href="RapidContext.Widget.html">.Widget</a>.</span>Table<span class="signature">(attrs, &hellip;child<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Widget}</span></h2>
 
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Table.html#addSelectedIds">addSelectedIds</a></b>()
-                                </div>
-                                <div class="description">Adds the specified row id values to the selection.</div>
-                            </td>
-                        </tr>
+            <div class="class-description"><p>The table widget class. Used to provide a sortable and scrolling
+    data table, using an outer <code>&lt;div&gt;</code> HTML element around a <code>&lt;table&gt;</code>. The
+    <code>Table</code> widget can only have <code>TableColumn</code> child nodes, each providing a
+    visible data column in the table.</p></div>
 
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Table.html#clear">clear</a></b>()
-                                </div>
-                                <div class="description">Clears all the data in the table.</div>
-                            </td>
-                        </tr>
 
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Table.html#destroy">destroy</a></b>()
-                                </div>
-                                <div class="description">Destroys this widget.</div>
-                            </td>
-                        </tr>
 
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Table.html#getCellElem">getCellElem</a></b>(row, col)
-                                </div>
-                                <div class="description">Returns a table cell element.</div>
-                            </td>
-                        </tr>
 
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Table.html#getColumnIndex">getColumnIndex</a></b>(field)
-                                </div>
-                                <div class="description">Returns the column index of a field.</div>
-                            </td>
-                        </tr>
+    <table class="summary-table">
+        <caption>Constructor Summary</caption>
+        <tbody>
+            <tr>
+                <td class="attributes"></td>
+                <td class="name-description">
+                    <div><code><a href="#Table"><span class="type-signature"></span><span class="type-prefix">new</span> Table<span class="signature">(attrs, &hellip;child<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Widget}</span></a></code></div>
+                    <div class="description">Creates a new data table widget.</div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Table.html#getData">getData</a></b>()
-                                </div>
-                                <div class="description">Returns an array with the data in the table.</div>
-                            </td>
-                        </tr>
 
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Table.html#getIdKey">getIdKey</a></b>()
-                                </div>
-                                <div class="description">Returns the unique key identifier column field, or null if none
+
+
+
+        <table class="summary-table">
+            <caption>Method Summary</caption>
+            <tbody>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#addAll">addAll<span class="signature">(&hellip;child)</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Adds one or more children to this widget.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#addChildNode">addChildNode<span class="signature">(child)</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Adds a single child table column widget to this widget.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#addClass">addClass<span class="signature">(&hellip;cls)</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Adds the specified CSS class names to this HTML DOM node.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#addSelectedIds">addSelectedIds<span class="signature">(&hellip;id)</span><span class="type-signature"> &rarr; {Array}</span></a></code>
+                        </div>
+                        <div class="description">Adds the specified row id values to the selection.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div class="deprecated">
+                            <code><a href="#animate">animate<span class="signature">(opts)</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Performs a visual effect animation on this widget.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#blurAll">blurAll<span class="signature">()</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Blurs (unfocuses) this DOM node and all relevant child nodes.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#clear">clear<span class="signature">()</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Clears all the data in the table.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#destroy">destroy<span class="signature">()</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Destroys this widget.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#disable">disable<span class="signature">()</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Disables this widget if it was previously enabled.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#enable">enable<span class="signature">()</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Enables this widget if it was previously disabled.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#getCellElem">getCellElem<span class="signature">(row, col)</span><span class="type-signature"> &rarr; {Node}</span></a></code>
+                        </div>
+                        <div class="description">Returns a table cell element.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#getChildNodes">getChildNodes<span class="signature">()</span><span class="type-signature"> &rarr; {Array}</span></a></code>
+                        </div>
+                        <div class="description">Returns an array with all child DOM nodes.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#getColumnIndex">getColumnIndex<span class="signature">(field)</span><span class="type-signature"> &rarr; {number}</span></a></code>
+                        </div>
+                        <div class="description">Returns the column index of a field.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#getData">getData<span class="signature">()</span><span class="type-signature"> &rarr; {Array}</span></a></code>
+                        </div>
+                        <div class="description">Returns an array with the data in the table.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#getIdKey">getIdKey<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></a></code>
+                        </div>
+                        <div class="description">Returns the unique key identifier column field, or null if none
 was set.</div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Table.html#getRowCount">getRowCount</a></b>()
-                                </div>
-                                <div class="description">Returns the number of rows in the table.</div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Table.html#getRowId">getRowId</a></b>(index)
-                                </div>
-                                <div class="description">Returns the row id for the specified row index.</div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Table.html#getSelectedData">getSelectedData</a></b>()
-                                </div>
-                                <div class="description">Returns the currently selected row data.</div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Table.html#getSelectedIds">getSelectedIds</a></b>()
-                                </div>
-                                <div class="description">Returns the currently selected row ids.</div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Table.html#getSortKey">getSortKey</a></b>()
-                                </div>
-                                <div class="description">Returns the current sort key for the table.</div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Table.html#redraw">redraw</a></b>()
-                                </div>
-                                <div class="description">Redraws the table from updated source data.</div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Table.html#removeChildNode">removeChildNode</a></b>(child)
-                                </div>
-                                <div class="description">Removes a single child table column widget from this widget.</div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Table.html#removeSelectedIds">removeSelectedIds</a></b>()
-                                </div>
-                                <div class="description">Removes the specified row id values from the selection.</div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Table.html#setAttrs">setAttrs</a></b>(attrs)
-                                </div>
-                                <div class="description">Updates the widget or HTML DOM node attributes.</div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Table.html#setData">setData</a></b>(data)
-                                </div>
-                                <div class="description">Sets the table data.</div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Table.html#setIdKey">setIdKey</a></b>(key)
-                                </div>
-                                <div class="description">Sets the unique key identifier column field.</div>
-                            </td>
-                        </tr>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#getRowCount">getRowCount<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></a></code>
+                        </div>
+                        <div class="description">Returns the number of rows in the table.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#getRowId">getRowId<span class="signature">(index)</span><span class="type-signature"> &rarr; {string}</span></a></code>
+                        </div>
+                        <div class="description">Returns the row id for the specified row index.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#getSelectedData">getSelectedData<span class="signature">()</span><span class="type-signature"> &rarr; {Object|Array}</span></a></code>
+                        </div>
+                        <div class="description">Returns the currently selected row data.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#getSelectedIds">getSelectedIds<span class="signature">()</span><span class="type-signature"> &rarr; {Array}</span></a></code>
+                        </div>
+                        <div class="description">Returns the currently selected row ids.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#getSortKey">getSortKey<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></a></code>
+                        </div>
+                        <div class="description">Returns the current sort key for the table.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#hasClass">hasClass<span class="signature">(&hellip;cls)</span><span class="type-signature"> &rarr; {boolean}</span></a></code>
+                        </div>
+                        <div class="description">Checks if this HTML DOM node has the specified CSS class names.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#hide">hide<span class="signature">()</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Hides this widget node if it was previously visible.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#isDisabled">isDisabled<span class="signature">()</span><span class="type-signature"> &rarr; {boolean}</span></a></code>
+                        </div>
+                        <div class="description">Checks if this widget is disabled.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#isHidden">isHidden<span class="signature">()</span><span class="type-signature"> &rarr; {boolean}</span></a></code>
+                        </div>
+                        <div class="description">Checks if this widget node is hidden.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#redraw">redraw<span class="signature">()</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Redraws the table from updated source data.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#removeAll">removeAll<span class="signature">()</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Removes all children to this widget.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#removeChildNode">removeChildNode<span class="signature">(child)</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Removes a single child table column widget from this widget.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#removeClass">removeClass<span class="signature">(&hellip;cls)</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Removes the specified CSS class names from this HTML DOM node.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#removeSelectedIds">removeSelectedIds<span class="signature">(&hellip;id)</span><span class="type-signature"> &rarr; {Array}</span></a></code>
+                        </div>
+                        <div class="description">Removes the specified row id values from the selection.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#setAttrs">setAttrs<span class="signature">(attrs)</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Updates the widget or HTML DOM node attributes.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#setData">setData<span class="signature">(data)</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Sets the table data.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#setIdKey">setIdKey<span class="signature">(key)</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Sets the unique key identifier column field.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#setSelectedIds">setSelectedIds<span class="signature">(&hellip;id)</span><span class="type-signature"> &rarr; {Array}</span></a></code>
+                        </div>
+                        <div class="description">Sets the selection to the specified row id values.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#setStyle">setStyle<span class="signature">(styles)</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Updates the CSS styles of this HTML DOM node.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#show">show<span class="signature">()</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Shows this widget node if it was previously hidden.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#sortData">sortData<span class="signature">(field, direction<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Sorts the table data by field and direction.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#toggleClass">toggleClass<span class="signature">(&hellip;cls)</span><span class="type-signature"> &rarr; {boolean}</span></a></code>
+                        </div>
+                        <div class="description">Toggles adding and removing the specified CSS class names to and
+from this HTML DOM node.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#uid">uid<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></a></code>
+                        </div>
+                        <div class="description">Returns the unique identifier for this DOM node.</div>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+
+
+
+        <table class="summary-table">
+            <caption>Event Summary</caption>
+            <tbody>
+
+                <tr>
+                    <td class="attributes">
+
+                    </td>
+                    <td class="name-description">
+                        <div >
 
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Table.html#setSelectedIds">setSelectedIds</a></b>()
-                                </div>
-                                <div class="description">Sets the selection to the specified row id values.</div>
-                            </td>
-                        </tr>
+                            <code><a href="#event:onclear"><span class="type-prefix">on</span>clear</a></code>
+                        </div>
+                        <div class="description">Emitted when the table data is cleared.</div>
+                    </td>
+                </tr>
 
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Table.html#sortData">sortData</a></b>(field, direction)
-                                </div>
-                                <div class="description">Sorts the table data by field and direction.</div>
-                            </td>
-                        </tr>
+                <tr>
+                    <td class="attributes">
 
-                    </tbody>
-                </table>
+                    </td>
+                    <td class="name-description">
+                        <div >
 
+                            <code><a href="#event:onselect"><span class="type-prefix">on</span>select</a></code>
+                        </div>
+                        <div class="description">Emitted when the table selection changes.</div>
+                    </td>
+                </tr>
 
+            </tbody>
+        </table>
 
-                <dl class="inheritsList">
-                <dt>Methods borrowed from class <a href="RapidContext.Widget.html">RapidContext.Widget</a>: </dt><dd><a href="RapidContext.Widget.html#addAll">addAll</a>, <a href="RapidContext.Widget.html#addClass">addClass</a>, <a href="RapidContext.Widget.html#animate">animate</a>, <a href="RapidContext.Widget.html#blurAll">blurAll</a>, <a href="RapidContext.Widget.html#disable">disable</a>, <a href="RapidContext.Widget.html#enable">enable</a>, <a href="RapidContext.Widget.html#getChildNodes">getChildNodes</a>, <a href="RapidContext.Widget.html#hasClass">hasClass</a>, <a href="RapidContext.Widget.html#hide">hide</a>, <a href="RapidContext.Widget.html#isDisabled">isDisabled</a>, <a href="RapidContext.Widget.html#isHidden">isHidden</a>, <a href="RapidContext.Widget.html#removeAll">removeAll</a>, <a href="RapidContext.Widget.html#removeClass">removeClass</a>, <a href="RapidContext.Widget.html#setStyle">setStyle</a>, <a href="RapidContext.Widget.html#show">show</a>, <a href="RapidContext.Widget.html#toggleClass">toggleClass</a>, <a href="RapidContext.Widget.html#uid">uid</a></dd>
-                </dl>
 
 
-<!-- ============================== events summary ======================== -->
+</header>
 
+<article>
+    <div class="container-overview">
 
 
 
-                <table class="summaryTable">
-                    <caption>Event Summary</caption>
-                    <tbody>
 
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont"><b><a href="RapidContext.Widget.Table.html#event:onclear">onclear</a></b>()
-                                </div>
-                                <div class="description">Emitted when the table data is cleared.</div>
-                            </td>
-                        </tr>
+    <h2 class="section-title">Constructor</h2>
 
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont"><b><a href="RapidContext.Widget.Table.html#event:onselect">onselect</a></b>()
-                                </div>
-                                <div class="description">Emitted when the table selection changes.</div>
-                            </td>
-                        </tr>
 
-                    </tbody>
-                </table>
+    <h4 class="name" id="Table">
+        <span class="type-signature"></span><span class="type-prefix">new</span> Table<span class="signature">(attrs, &hellip;child<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Widget}</span>
+    </h4>
 
 
 
-                <dl class="inheritsList">
 
-                </dl>
 
+<div class="description">
+    <p>Creates a new data table widget.</p>
+</div>
 
 
-<!-- ============================== constructor details ==================== -->
 
-            <div id="constructor" class="details">
-                <div class="sectionTitle">
-                    Class Detail
-                </div>
 
-                <div class="fixedFont">
-                        <b>RapidContext.Widget.Table</b>(attrs)
-                </div>
+<dl class="details">
 
-                <div class="description">
-                    Creates a new data table widget.
 
-                </div>
 
 
 
-                <pre class="code"><span class="label">JavaScript:</span>
-var attrs1 = { field: "id", title: "Identifier", key: true, type: "number" };
-var attrs2 = { field: "name", title: "Name", maxLength: 50, sort: "asc" };
-var attrs3 = { field: "modified", title: "Last Modified", type: "datetime" };
-var col1 = RapidContext.Widget.TableColumn(attrs1);
-var col2 = RapidContext.Widget.TableColumn(attrs2);
-var col3 = RapidContext.Widget.TableColumn(attrs3);
-var exampleTable = RapidContext.Widget.Table({}, col1, col2, col3);
-RapidContext.Util.registerSizeConstraints(exampleTable, "50%", "100%");</pre>
 
-                <pre class="code"><span class="label">User Interface XML:</span>
-&lt;Table id="exampleTable" w="50%" h="100%"&gt;
-  &lt;TableColumn field="id" title="Identifier" key="true" type="number" /&gt;
-  &lt;TableColumn field="name" title="Name" maxLength="50" sort="asc" /&gt;
-  &lt;TableColumn field="modified" title="Last Modified" type="datetime" /&gt;
-&lt;/Table&gt;</pre>
 
 
 
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
 
 
-                        <dl class="detailList">
-                        <dt class="heading">Parameters:</dt>
+<table class="params">
+    <thead>
+    <tr>
 
-                            <dt>
-                                <span class="light fixedFont">{Object}</span>  <b>attrs</b>
+        <th>Name</th>
 
-                            </dt>
-                                <dd>the widget and node attributes</dd>
 
-                            <dt>
-                                <span class="light fixedFont">{String}</span>  <b>attrs.select</b>
-                                <i>Optional</i>
-                            </dt>
-                                <dd>the row selection mode (<q>none</q>, <q>one</q> or
-           <q>multiple</q>), defaults to <q>one</q></dd>
+        <th>Type</th>
 
-                            <dt>
-                                <span class="light fixedFont">{String}</span>  <b>attrs.key</b>
-                                <i>Optional</i>
-                            </dt>
-                                <dd>the unique key identifier column field,
-           defaults to null</dd>
 
-                            <dt>
-                                <span class="light fixedFont">{Boolean}</span>  <b>attrs.hidden</b>
-                                <i>Optional</i>
-                            </dt>
-                                <dd>the hidden widget flag, defaults to false</dd>
+        <th>Attributes</th>
 
-                            <dt>
-                                <span class="light fixedFont">{Widget}</span>  <b>...</b>
-                                <i>Optional</i>
-                            </dt>
-                                <dd>the child table columns</dd>
 
-                        </dl>
 
 
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
+    <tbody>
 
 
-                        <dl class="detailList">
-                        <dt class="heading">Returns:</dt>
+        <tr>
 
-                                <dd><span class="light fixedFont">{Widget}</span> the widget DOM node</dd>
+                <td class="name"><code>attrs</code></td>
 
-                        </dl>
 
+            <td class="type">
 
 
+    <span class="param-type">{<b>Object</b>}</span>
 
-            </div>
 
+            </td>
 
-<!-- ============================== field details ========================== -->
 
+                <td class="attributes">
 
-<!-- ============================== method details ========================= -->
 
-                <div class="sectionTitle">
-                    Method Detail
-                </div>
 
-                    <div id="destroy" class="fixedFont">
 
 
-                    <b>destroy</b>()
+                </td>
 
-                    </div>
-                    <div class="description">
-                        Destroys this widget.
 
 
-                    </div>
 
+            <td class="description last">
+                the widget and node attributes
 
+                    <h6>Properties</h6>
 
 
+<table class="params">
+    <thead>
+    <tr>
 
+        <th>Name</th>
 
 
+        <th>Type</th>
 
 
+        <th>Attributes</th>
 
 
-                    <hr />
 
-                    <div id="setAttrs" class="fixedFont">
 
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-                    <b>setAttrs</b>(attrs)
+    <tbody>
 
-                    </div>
-                    <div class="description">
-                        Updates the widget or HTML DOM node attributes.
 
+        <tr>
 
-                    </div>
+                <td class="name"><code>select</code></td>
 
 
+            <td class="type">
 
 
-                            <dl class="detailList">
-                            <dt class="heading">Parameters:</dt>
+    <span class="param-type">{<b>string</b>}</span>
 
-                                <dt>
-                                    <span class="light fixedFont">{Object}</span> <b>attrs</b>
 
-                                </dt>
-                                <dd>the widget and node attributes to set</dd>
+            </td>
 
-                                <dt>
-                                    <span class="light fixedFont">{String}</span> <b>attrs.select</b>
-                                    <i>Optional</i>
-                                </dt>
-                                <dd>the row selection mode (<q>none</q>, <q>one</q> or
-           <q>multiple</q>)</dd>
 
-                                <dt>
-                                    <span class="light fixedFont">{String}</span> <b>attrs.key</b>
-                                    <i>Optional</i>
-                                </dt>
-                                <dd>the unique key identifier column field</dd>
+                <td class="attributes">
 
-                                <dt>
-                                    <span class="light fixedFont">{Boolean}</span> <b>attrs.hidden</b>
-                                    <i>Optional</i>
-                                </dt>
-                                <dd>the hidden widget flag</dd>
+                    &lt;optional><br>
 
-                            </dl>
 
 
 
 
+                </td>
 
 
 
 
-                    <hr />
+            <td class="description last">
+                the row selection mode (&apos;none&apos;, &apos;one&apos;,
+           &apos;multiple&apos; or &apos;auto&apos;), defaults to &apos;one&apos;
 
-                    <div id="addChildNode" class="fixedFont">
+            </td>
+        </tr>
 
 
-                    <b>addChildNode</b>(child)
 
-                    </div>
-                    <div class="description">
-                        Adds a single child table column widget to this widget.
+        <tr>
 
+                <td class="name"><code>key</code></td>
 
-                    </div>
 
+            <td class="type">
 
 
+    <span class="param-type">{<b>string</b>}</span>
 
-                            <dl class="detailList">
-                            <dt class="heading">Parameters:</dt>
 
-                                <dt>
-                                    <span class="light fixedFont">{Widget}</span> <b>child</b>
+            </td>
 
-                                </dt>
-                                <dd>the table column widget to add</dd>
 
-                            </dl>
+                <td class="attributes">
 
+                    &lt;optional><br>
 
 
 
 
 
+                </td>
 
 
-                    <hr />
 
-                    <div id="removeChildNode" class="fixedFont">
 
+            <td class="description last">
+                the unique key identifier column field,
+           defaults to null
 
-                    <b>removeChildNode</b>(child)
+            </td>
+        </tr>
 
-                    </div>
-                    <div class="description">
-                        Removes a single child table column widget from this widget.
-This will also clear all the data in the table.
 
 
-                    </div>
+        <tr>
 
+                <td class="name"><code>hidden</code></td>
 
 
+            <td class="type">
 
-                            <dl class="detailList">
-                            <dt class="heading">Parameters:</dt>
 
-                                <dt>
-                                    <span class="light fixedFont">{Widget}</span> <b>child</b>
+    <span class="param-type">{<b>boolean</b>}</span>
 
-                                </dt>
-                                <dd>the table column widget to remove</dd>
 
-                            </dl>
+            </td>
 
 
+                <td class="attributes">
 
+                    &lt;optional><br>
 
 
 
 
 
-                    <hr />
+                </td>
 
-                    <div id="getColumnIndex" class="fixedFont">
 
-                    <span class="light">{Number}</span>
-                    <b>getColumnIndex</b>(field)
 
-                    </div>
-                    <div class="description">
-                        Returns the column index of a field.
 
+            <td class="description last">
+                the hidden widget flag, defaults to false
 
-                    </div>
+            </td>
+        </tr>
 
 
+    </tbody>
+</table>
 
 
-                            <dl class="detailList">
-                            <dt class="heading">Parameters:</dt>
+            </td>
+        </tr>
 
-                                <dt>
-                                    <span class="light fixedFont">{String}</span> <b>field</b>
 
-                                </dt>
-                                <dd>the field name</dd>
 
-                            </dl>
+        <tr>
 
+                <td class="name"><code>child</code></td>
 
 
+            <td class="type">
 
 
-                            <dl class="detailList">
-                            <dt class="heading">Returns:</dt>
+    <span class="param-type">{<b>TableColumn</b>}</span>
 
-                                <dd><span class="light fixedFont">{Number}</span> the column index, or
-        -1 if not found</dd>
 
-                            </dl>
+            </td>
 
 
+                <td class="attributes">
 
+                    &lt;optional><br>
 
-                    <hr />
 
-                    <div id="getIdKey" class="fixedFont">
 
-                    <span class="light">{String}</span>
-                    <b>getIdKey</b>()
 
-                    </div>
-                    <div class="description">
-                        Returns the unique key identifier column field, or null if none
-was set.
 
+                    &lt;repeatable><br>
 
-                    </div>
+                </td>
 
 
 
 
+            <td class="description last">
+                the child table columns
 
+            </td>
+        </tr>
 
 
+    </tbody>
+</table>
 
-                            <dl class="detailList">
-                            <dt class="heading">Returns:</dt>
+    </dd>
 
-                                <dd><span class="light fixedFont">{String}</span> the key column field name, or
-        null for none</dd>
 
-                            </dl>
 
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
 
 
+    <span class="param-type">{<b>Widget</b>}</span>
 
-                    <hr />
+    the widget DOM node
 
-                    <div id="setIdKey" class="fixedFont">
+    </dd>
 
 
-                    <b>setIdKey</b>(key)
 
-                    </div>
-                    <div class="description">
-                        Sets the unique key identifier column field. Note that this
-method will regenerate all row identifiers if the table already
-contains data.
 
 
-                    </div>
 
 
 
 
-                            <dl class="detailList">
-                            <dt class="heading">Parameters:</dt>
 
-                                <dt>
-                                    <span class="light fixedFont">{String}</span> <b>key</b>
 
-                                </dt>
-                                <dd>the new key column field name</dd>
 
-                            </dl>
 
 
 
@@ -701,19 +884,11 @@ contains data.
 
 
 
-                    <hr />
 
-                    <div id="getSortKey" class="fixedFont">
 
-                    <span class="light">{String}</span>
-                    <b>getSortKey</b>()
 
-                    </div>
-                    <div class="description">
-                        Returns the current sort key for the table.
 
 
-                    </div>
 
 
 
@@ -722,81 +897,71 @@ contains data.
 
 
 
-                            <dl class="detailList">
-                            <dt class="heading">Returns:</dt>
+    <dt class="tag-examples">Examples:</dt>
+    <dd class="tag-examples">
 
-                                <dd><span class="light fixedFont">{String}</span> the current sort field, or
-        null for none</dd>
+        <p class="code-caption">JavaScript</p>
 
-                            </dl>
+    <pre class="hljs"><code><span class="hljs-keyword">var</span> attrs1 = { field: <span class="hljs-string">&quot;id&quot;</span>, title: <span class="hljs-string">&quot;Identifier&quot;</span>, key: <span class="hljs-literal">true</span>, <span class="hljs-keyword">type</span>: <span class="hljs-string">&quot;number&quot;</span> };
+<span class="hljs-keyword">var</span> attrs2 = { field: <span class="hljs-string">&quot;name&quot;</span>, title: <span class="hljs-string">&quot;Name&quot;</span>, maxLength: <span class="hljs-number">50</span>, sort: <span class="hljs-string">&quot;asc&quot;</span> };
+<span class="hljs-keyword">var</span> attrs3 = { field: <span class="hljs-string">&quot;modified&quot;</span>, title: <span class="hljs-string">&quot;Last Modified&quot;</span>, <span class="hljs-keyword">type</span>: <span class="hljs-string">&quot;datetime&quot;</span> };
+<span class="hljs-keyword">var</span> col1 = RapidContext.Widget.TableColumn(attrs1);
+<span class="hljs-keyword">var</span> col2 = RapidContext.Widget.TableColumn(attrs2);
+<span class="hljs-keyword">var</span> col3 = RapidContext.Widget.TableColumn(attrs3);
+<span class="hljs-keyword">var</span> exampleTable = RapidContext.Widget.Table({}, col1, col2, col3);
+RapidContext.Util.registerSizeConstraints(exampleTable, <span class="hljs-string">&quot;50%&quot;</span>, <span class="hljs-string">&quot;100%&quot;</span>);</code></pre>
 
+        <p class="code-caption">User Interface XML</p>
 
+    <pre class="hljs"><code><span class="hljs-tag">&lt;<span class="hljs-name">Table</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;exampleTable&quot;</span> <span class="hljs-attr">w</span>=<span class="hljs-string">&quot;50%&quot;</span> <span class="hljs-attr">h</span>=<span class="hljs-string">&quot;100%&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">TableColumn</span> <span class="hljs-attr">field</span>=<span class="hljs-string">&quot;id&quot;</span> <span class="hljs-attr">title</span>=<span class="hljs-string">&quot;Identifier&quot;</span> <span class="hljs-attr">key</span>=<span class="hljs-string">&quot;true&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;number&quot;</span> /&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">TableColumn</span> <span class="hljs-attr">field</span>=<span class="hljs-string">&quot;name&quot;</span> <span class="hljs-attr">title</span>=<span class="hljs-string">&quot;Name&quot;</span> <span class="hljs-attr">maxLength</span>=<span class="hljs-string">&quot;50&quot;</span> <span class="hljs-attr">sort</span>=<span class="hljs-string">&quot;asc&quot;</span> /&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">TableColumn</span> <span class="hljs-attr">field</span>=<span class="hljs-string">&quot;modified&quot;</span> <span class="hljs-attr">title</span>=<span class="hljs-string">&quot;Last Modified&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;datetime&quot;</span> /&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">Table</span>&gt;</span></code></pre>
 
+    </dd>
 
-                    <hr />
 
-                    <div id="getCellElem" class="fixedFont">
 
-                    <span class="light">{Node}</span>
-                    <b>getCellElem</b>(row, col)
 
-                    </div>
-                    <div class="description">
-                        Returns a table cell element.
 
 
-                    </div>
 
 
 
 
-                            <dl class="detailList">
-                            <dt class="heading">Parameters:</dt>
 
-                                <dt>
-                                    <span class="light fixedFont">{Number}</span> <b>row</b>
 
-                                </dt>
-                                <dd>the row index</dd>
 
-                                <dt>
-                                    <span class="light fixedFont">{Number}</span> <b>col</b>
 
-                                </dt>
-                                <dd>the column index</dd>
 
-                            </dl>
 
 
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line58">line 58</a>
+    </dd>
 
+</dl>
 
 
-                            <dl class="detailList">
-                            <dt class="heading">Returns:</dt>
 
-                                <dd><span class="light fixedFont">{Node}</span> the table cell element node, or
-        null if not found</dd>
+    </div>
 
-                            </dl>
 
+        <h3 class="section-title">Extends</h3>
 
 
 
-                    <hr />
 
-                    <div id="clear" class="fixedFont">
+    <ul>
+        <li><a href="RapidContext.Widget.html">RapidContext.Widget</a></li>
+    </ul>
 
 
-                    <b>clear</b>()
 
-                    </div>
-                    <div class="description">
-                        Clears all the data in the table. The column headers will not be
-affected by this method. Use <var>removeAll()</var> or <var>removeChildNode()</var> to
-also remove columns.
 
 
-                    </div>
 
 
 
@@ -805,83 +970,1835 @@ also remove columns.
 
 
 
+        <h3 class="section-title">Methods</h3>
 
 
 
-                    <hr />
 
-                    <div id="getData" class="fixedFont">
 
-                    <span class="light">{Array}</span>
-                    <b>getData</b>()
+    <h4 class="name" id="addAll">
+        <span class="type-signature"></span>addAll<span class="signature">(&hellip;child)</span><span class="type-signature"></span>
+    </h4>
 
-                    </div>
-                    <div class="description">
-                        Returns an array with the data in the table. The array returned
+
+
+
+
+<div class="description">
+    <p>Adds one or more children to this widget. This method will flatten any
+arrays among the arguments and ignores any <code>null</code> or <code>undefined</code> arguments.
+Any DOM nodes or widgets will be added to the end, and other objects will be
+converted to a text node first. Subclasses should normally override the
+<code>addChildNode()</code> method instead of this one, since that is the basis for
+DOM node insertion.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>child</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>|<b>Node</b>|<b>Array</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+
+
+
+
+                    &lt;repeatable><br>
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the children to add
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#addAll">RapidContext.Widget#addAll</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line570">line 570</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="addChildNode">
+        <span class="type-signature"></span>addChildNode<span class="signature">(child)</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Adds a single child table column widget to this widget.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>child</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Widget</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the table column widget to add
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+
+
+
+
+    <dt class="tag-overrides">Overrides:</dt>
+    <dd class="tag-overrides">
+        <a href="RapidContext.Widget.html#addChildNode">RapidContext.Widget#addChildNode</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line196">line 196</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="addClass">
+        <span class="type-signature"></span>addClass<span class="signature">(&hellip;cls)</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Adds the specified CSS class names to this HTML DOM node.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>cls</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>|<b>Array</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+
+
+
+
+                    &lt;repeatable><br>
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the CSS class names to add
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#addClass">RapidContext.Widget#addClass</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line333">line 333</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="addSelectedIds">
+        <span class="type-signature"></span>addSelectedIds<span class="signature">(&hellip;id)</span><span class="type-signature"> &rarr; {Array}</span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Adds the specified row id values to the selection. If the current
+selection is changed the select signal will be emitted.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>id</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>|<b>Array</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+
+
+
+
+                    &lt;repeatable><br>
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the row ids or array with ids to select
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>Array</b>}</span>
+
+    an array with the new row ids actually selected
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line535">line 535</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="animate">
+        <span class="type-signature"></span>animate<span class="signature">(opts)</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Performs a visual effect animation on this widget. This is
+implemented using the <code>MochiKit.Visual</code> effect package. All options
+sent to this function will be passed on to the appropriate
+<code>MochiKit.Visual</code> function.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>opts</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Object</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the visual effect options
+
+                    <h6>Properties</h6>
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>effect</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the MochiKit.Visual effect name
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>queue</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the MochiKit.Visual queue handling,
+           defaults to &quot;replace&quot; and a unique scope for each widget
+           (see <code>MochiKit.Visual</code> for full options)
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#animate">RapidContext.Widget#animate</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <dt class="tag-deprecated">Deprecated:</dt>
+        <dd class="important">
+            Use CSS animations instead.
+        </dd>
+
+
+
+
+
+
+
+    <dt class="tag-examples">Example:</dt>
+    <dd class="tag-examples">
+
+    <pre class="hljs"><code>widget.<span class="hljs-title function_ invoke__">animate</span>({ <span class="hljs-attr">effect</span>: <span class="hljs-string">&quot;fade&quot;</span>, <span class="hljs-attr">duration</span>: <span class="hljs-number">0.5</span> });
+widget.<span class="hljs-title function_ invoke__">animate</span>({ <span class="hljs-attr">effect</span>: <span class="hljs-string">&quot;Move&quot;</span>, <span class="hljs-attr">transition</span>: <span class="hljs-string">&quot;spring&quot;</span>, <span class="hljs-attr">y</span>: <span class="hljs-number">300</span> });</code></pre>
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line492">line 492</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="blurAll">
+        <span class="type-signature"></span>blurAll<span class="signature">()</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Blurs (unfocuses) this DOM node and all relevant child nodes. This function
+will recursively blur all <code>&lt;a&gt;</code>, <code>&lt;button&gt;</code>, <code>&lt;input&gt;</code>, <code>&lt;textarea&gt;</code> and
+<code>&lt;select&gt;</code> child nodes found.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#blurAll">RapidContext.Widget#blurAll</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line510">line 510</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="clear">
+        <span class="type-signature"></span>clear<span class="signature">()</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Clears all the data in the table. The column headers will not be
+affected by this method. Use <code>removeAll()</code> or <code>removeChildNode()</code> to
+also remove columns.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line310">line 310</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="destroy">
+        <span class="type-signature"></span>destroy<span class="signature">()</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Destroys this widget.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-overrides">Overrides:</dt>
+    <dd class="tag-overrides">
+        <a href="RapidContext.Widget.html#destroy">RapidContext.Widget#destroy</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line100">line 100</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="disable">
+        <span class="type-signature"></span>disable<span class="signature">()</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Disables this widget if it was previously enabled. This method is
+equivalent to calling <code>setAttrs({ disabled: true })</code>.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#disable">RapidContext.Widget#disable</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line424">line 424</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="enable">
+        <span class="type-signature"></span>enable<span class="signature">()</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Enables this widget if it was previously disabled. This is
+equivalent to calling <code>setAttrs({ disabled: false })</code>.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#enable">RapidContext.Widget#enable</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line416">line 416</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="getCellElem">
+        <span class="type-signature"></span>getCellElem<span class="signature">(row, col)</span><span class="type-signature"> &rarr; {Node}</span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Returns a table cell element.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>row</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>number</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the row index
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>col</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>number</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the column index
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>Node</b>}</span>
+
+    the table cell element node, or
+        null if not found
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line295">line 295</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="getChildNodes">
+        <span class="type-signature"></span>getChildNodes<span class="signature">()</span><span class="type-signature"> &rarr; {Array}</span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Returns an array with all child DOM nodes. Note that the array is
+a real JavaScript array, not a dynamic <code>NodeList</code>. This method is
+sometimes overridden by child widgets in order to hide
+intermediate DOM nodes required by the widget.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>Array</b>}</span>
+
+    the array of child DOM nodes
+
+    </dd>
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#getChildNodes">RapidContext.Widget#getChildNodes</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line522">line 522</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="getColumnIndex">
+        <span class="type-signature"></span>getColumnIndex<span class="signature">(field)</span><span class="type-signature"> &rarr; {number}</span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Returns the column index of a field.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>field</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the field name
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>number</b>}</span>
+
+    the column index, or
+        -1 if not found
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line223">line 223</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="getData">
+        <span class="type-signature"></span>getData<span class="signature">()</span><span class="type-signature"> &rarr; {Array}</span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Returns an array with the data in the table. The array returned
 should correspond exactly to the one previously set, i.e. it has
-not been sorted or modified in other ways.
+not been sorted or modified in other ways.</p>
+</div>
 
 
-                    </div>
 
 
+<dl class="details">
 
 
 
 
 
 
-                            <dl class="detailList">
-                            <dt class="heading">Returns:</dt>
 
-                                <dd><span class="light fixedFont">{Array}</span> an array with the data in the table</dd>
 
-                            </dl>
 
 
 
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
 
-                    <hr />
 
-                    <div id="setData" class="fixedFont">
+    <span class="param-type">{<b>Array</b>}</span>
 
+    an array with the data in the table
 
-                    <b>setData</b>(data)
+    </dd>
 
-                    </div>
-                    <div class="description">
-                        Sets the table data. The table data is an array of objects, each
-having properties corresponding to the table column fields. Any
-object property not mapped to a table column will be ignored (i.e.
-a hidden column). See the <var>TableColumn</var> class for data mapping
-details. Note that automatically generated row ids will be reset
-by this method and any selection on such tables is lost.
 
 
-                    </div>
 
 
 
-                    <pre class="code">var data = [
-    { id: 1, name: "John Doe", modified: "@1300000000000" },
-    { id: 2, name: "First Last", modified: new Date() },
-    { id: 3, name: "Another Name", modified: "2004-11-30 13:33:20" }
-];
-table.setData(data);</pre>
 
 
 
 
-                            <dl class="detailList">
-                            <dt class="heading">Parameters:</dt>
 
-                                <dt>
-                                    <span class="light fixedFont">{Array}</span> <b>data</b>
 
-                                </dt>
-                                <dd>an array with data objects</dd>
 
-                            </dl>
 
 
 
@@ -890,40 +2807,20 @@ table.setData(data);</pre>
 
 
 
-                    <hr />
 
-                    <div id="sortData" class="fixedFont">
 
 
-                    <b>sortData</b>(field, direction)
 
-                    </div>
-                    <div class="description">
-                        Sorts the table data by field and direction.
 
 
-                    </div>
 
 
 
 
-                            <dl class="detailList">
-                            <dt class="heading">Parameters:</dt>
 
-                                <dt>
-                                    <span class="light fixedFont">{String}</span> <b>field</b>
 
-                                </dt>
-                                <dd>the sort field</dd>
 
-                                <dt>
-                                    <span class="light fixedFont">{String}</span> <b>direction</b>
-                                    <i>Optional</i>
-                                </dt>
-                                <dd>the sort direction, either <q>asc</q> or
-           <q>desc</q></dd>
 
-                            </dl>
 
 
 
@@ -932,22 +2829,18 @@ table.setData(data);</pre>
 
 
 
-                    <hr />
 
-                    <div id="redraw" class="fixedFont">
 
 
-                    <b>redraw</b>()
 
-                    </div>
-                    <div class="description">
-                        Redraws the table from updated source data. Note that this method
-will not add or remove rows and keeps the current row order
-intact. For a more complete redraw of the table, use <var>setData()</var>.
 
 
-                    </div>
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line321">line 321</a>
+    </dd>
 
+</dl>
 
 
 
@@ -955,24 +2848,23 @@ intact. For a more complete redraw of the table, use <var>setData()</var>.
 
 
 
+    <h4 class="name" id="getIdKey">
+        <span class="type-signature"></span>getIdKey<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span>
+    </h4>
 
 
 
-                    <hr />
 
-                    <div id="getRowCount" class="fixedFont">
 
-                    <span class="light">{Number}</span>
-                    <b>getRowCount</b>()
+<div class="description">
+    <p>Returns the unique key identifier column field, or null if none
+was set.</p>
+</div>
 
-                    </div>
-                    <div class="description">
-                        Returns the number of rows in the table. This is a convenience
-method for <var>getData().length</var>.
 
 
-                    </div>
 
+<dl class="details">
 
 
 
@@ -980,109 +2872,476 @@ method for <var>getData().length</var>.
 
 
 
-                            <dl class="detailList">
-                            <dt class="heading">Returns:</dt>
 
-                                <dd><span class="light fixedFont">{Number}</span> the number of table rows</dd>
 
-                            </dl>
 
 
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
 
 
-                    <hr />
+    <span class="param-type">{<b>string</b>}</span>
 
-                    <div id="getRowId" class="fixedFont">
+    the key column field name, or
+        null for none
 
-                    <span class="light">{String}</span>
-                    <b>getRowId</b>(index)
+    </dd>
 
-                    </div>
-                    <div class="description">
-                        Returns the row id for the specified row index. If the row index
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line240">line 240</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="getRowCount">
+        <span class="type-signature"></span>getRowCount<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Returns the number of rows in the table. This is a convenience
+method for <code>getData().length</code>.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>number</b>}</span>
+
+    the number of table rows
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line451">line 451</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="getRowId">
+        <span class="type-signature"></span>getRowId<span class="signature">(index)</span><span class="type-signature"> &rarr; {string}</span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Returns the row id for the specified row index. If the row index
 is out of bounds, null will be returned. The row ids are the data
 values from the key column, or automatically generated internal
 values if no key column is set. Note that the row index uses the
-current table sort order.
-
-
-                    </div>
+current table sort order.</p>
+</div>
 
 
 
 
-                            <dl class="detailList">
-                            <dt class="heading">Parameters:</dt>
-
-                                <dt>
-                                    <span class="light fixedFont">{Number}</span> <b>index</b>
-
-                                </dt>
-                                <dd>the row index, 0 &lt;= index &lt; row count</dd>
-
-                            </dl>
+<dl class="details">
 
 
 
 
 
-                            <dl class="detailList">
-                            <dt class="heading">Returns:</dt>
-
-                                <dd><span class="light fixedFont">{String}</span> the unique row id, or null if not found</dd>
-
-                            </dl>
 
 
 
 
-                    <hr />
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
 
-                    <div id="getSelectedIds" class="fixedFont">
 
-                    <span class="light">{Array}</span>
-                    <b>getSelectedIds</b>()
+<table class="params">
+    <thead>
+    <tr>
 
-                    </div>
-                    <div class="description">
-                        Returns the currently selected row ids. If no rows are selected,
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>index</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>number</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the row index, 0 &lt;= index &lt; row count
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>string</b>}</span>
+
+    the unique row id, or null if not found
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line466">line 466</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="getSelectedData">
+        <span class="type-signature"></span>getSelectedData<span class="signature">()</span><span class="type-signature"> &rarr; {Object|Array}</span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Returns the currently selected row data.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>Object</b>|<b>Array</b>}</span>
+
+    the data row selected, or
+        an array of selected data rows if multiple selection is enabled
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line489">line 489</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="getSelectedIds">
+        <span class="type-signature"></span>getSelectedIds<span class="signature">()</span><span class="type-signature"> &rarr; {Array}</span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Returns the currently selected row ids. If no rows are selected,
 an empty array will be returned. The row ids are the data values
 from the key column, or automatically generated internal values
-if no key column is set.
+if no key column is set.</p>
+</div>
 
 
-                    </div>
 
 
+<dl class="details">
 
 
 
 
 
 
-                            <dl class="detailList">
-                            <dt class="heading">Returns:</dt>
 
-                                <dd><span class="light fixedFont">{Array}</span> an array with the selected row ids</dd>
 
-                            </dl>
 
 
 
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
 
-                    <hr />
 
-                    <div id="getSelectedData" class="fixedFont">
+    <span class="param-type">{<b>Array</b>}</span>
 
-                    <span class="light">{Object/Array}</span>
-                    <b>getSelectedData</b>()
+    an array with the selected row ids
 
-                    </div>
-                    <div class="description">
-                        Returns the currently selected row data.
+    </dd>
 
 
-                    </div>
 
 
 
@@ -1091,167 +3350,107 @@ if no key column is set.
 
 
 
-                            <dl class="detailList">
-                            <dt class="heading">Returns:</dt>
 
-                                <dd><span class="light fixedFont">{Object/Array}</span> the data row selected, or
-        an array of selected data rows if multiple selection is enabled</dd>
 
-                            </dl>
 
 
 
 
-                    <hr />
 
-                    <div id="setSelectedIds" class="fixedFont">
 
-                    <span class="light">{Array}</span>
-                    <b>setSelectedIds</b>()
 
-                    </div>
-                    <div class="description">
-                        Sets the selection to the specified row id values. If the current
-selection is changed the select signal will be emitted.
 
 
-                    </div>
 
 
 
 
-                            <dl class="detailList">
-                            <dt class="heading">Parameters:</dt>
 
-                                <dt>
-                                    <span class="light fixedFont">{String/Array}</span> <b>...</b>
-                                    <i>Optional</i>
-                                </dt>
-                                <dd>the row ids or array with ids to select</dd>
 
-                            </dl>
 
 
 
 
 
-                            <dl class="detailList">
-                            <dt class="heading">Returns:</dt>
 
-                                <dd><span class="light fixedFont">{Array}</span> an array with the row ids actually modified</dd>
 
-                            </dl>
 
 
 
 
-                    <hr />
 
-                    <div id="addSelectedIds" class="fixedFont">
 
-                    <span class="light">{Array}</span>
-                    <b>addSelectedIds</b>()
 
-                    </div>
-                    <div class="description">
-                        Adds the specified row id values to the selection. If the current
-selection is changed the select signal will be emitted.
 
 
-                    </div>
 
 
 
 
-                            <dl class="detailList">
-                            <dt class="heading">Parameters:</dt>
 
-                                <dt>
-                                    <span class="light fixedFont">{String/Array}</span> <b>...</b>
-                                    <i>Optional</i>
-                                </dt>
-                                <dd>the row ids or array with ids to select</dd>
 
-                            </dl>
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line479">line 479</a>
+    </dd>
 
+</dl>
 
 
 
 
-                            <dl class="detailList">
-                            <dt class="heading">Returns:</dt>
 
-                                <dd><span class="light fixedFont">{Array}</span> an array with the new row ids actually selected</dd>
 
-                            </dl>
 
+    <h4 class="name" id="getSortKey">
+        <span class="type-signature"></span>getSortKey<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span>
+    </h4>
 
 
 
-                    <hr />
 
-                    <div id="removeSelectedIds" class="fixedFont">
 
-                    <span class="light">{Array}</span>
-                    <b>removeSelectedIds</b>()
+<div class="description">
+    <p>Returns the current sort key for the table.</p>
+</div>
 
-                    </div>
-                    <div class="description">
-                        Removes the specified row id values from the selection. If the
-current selection is changed the select signal will be emitted.
 
 
-                    </div>
 
+<dl class="details">
 
 
 
-                            <dl class="detailList">
-                            <dt class="heading">Parameters:</dt>
 
-                                <dt>
-                                    <span class="light fixedFont">{String/Array}</span> <b>...</b>
-                                    <i>Optional</i>
-                                </dt>
-                                <dd>the row ids or array with ids to unselect</dd>
 
-                            </dl>
 
 
 
 
 
-                            <dl class="detailList">
-                            <dt class="heading">Returns:</dt>
 
-                                <dd><span class="light fixedFont">{Array}</span> an array with the row ids actually unselected</dd>
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
 
-                            </dl>
 
+    <span class="param-type">{<b>string</b>}</span>
 
+    the current sort field, or
+        null for none
 
+    </dd>
 
 
 
 
 
-<!-- ============================== event details ========================= -->
 
-                <div class="sectionTitle">
-                    Event Detail
-                </div>
 
-                    <div id="event:onclear" class="fixedFont">
 
 
-                    <b>onclear</b>()
 
-                    </div>
-                    <div class="description">
-                        Emitted when the table data is cleared.
 
 
-                    </div>
 
 
 
@@ -1263,19 +3462,12 @@ current selection is changed the select signal will be emitted.
 
 
 
-                    <hr />
 
-                    <div id="event:onselect" class="fixedFont">
 
 
-                    <b>onselect</b>()
 
-                    </div>
-                    <div class="description">
-                        Emitted when the table selection changes.
 
 
-                    </div>
 
 
 
@@ -1291,9 +3483,2811 @@ current selection is changed the select signal will be emitted.
 
 
 
-    <!--END-->
 
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line276">line 276</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="hasClass">
+        <span class="type-signature"></span>hasClass<span class="signature">(&hellip;cls)</span><span class="type-signature"> &rarr; {boolean}</span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Checks if this HTML DOM node has the specified CSS class names.
+Note that more than one CSS class name may be checked, in which
+case all must be present.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>cls</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>|<b>Array</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+
+
+
+
+                    &lt;repeatable><br>
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the CSS class names to check
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>boolean</b>}</span>
+
+    <code>true</code> if all CSS classes were present, or
+        <code>false</code> otherwise
+
+    </dd>
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#hasClass">RapidContext.Widget#hasClass</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line315">line 315</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="hide">
+        <span class="type-signature"></span>hide<span class="signature">()</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Hides this widget node if it was previously visible. This method
+is equivalent to calling <code>setAttrs({ hidden: true })</code>. It is safe
+for all types of widgets, since it only adds the <code>widgetHidden</code>
+CSS class instead of setting the <code>display</code> style property.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#hide">RapidContext.Widget#hide</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line470">line 470</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="isDisabled">
+        <span class="type-signature"></span>isDisabled<span class="signature">()</span><span class="type-signature"> &rarr; {boolean}</span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Checks if this widget is disabled. This method checks both the
+&quot;widgetDisabled&quot; CSS class and the <code>disabled</code> property. Changes
+to the disabled status can be made with <code>enable()</code>, <code>disable()</code> or
+<code>setAttrs()</code>.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>boolean</b>}</span>
+
+    <code>true</code> if the widget is disabled, or
+        <code>false</code> otherwise
+
+    </dd>
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#isDisabled">RapidContext.Widget#isDisabled</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line395">line 395</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="isHidden">
+        <span class="type-signature"></span>isHidden<span class="signature">()</span><span class="type-signature"> &rarr; {boolean}</span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Checks if this widget node is hidden. This method checks for the
+existence of the <code>widgetHidden</code> CSS class. It does NOT check the
+actual widget visibility (the <code>display</code> style property set by
+animations for example).</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>boolean</b>}</span>
+
+    <code>true</code> if the widget is hidden, or
+        <code>false</code> otherwise
+
+    </dd>
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#isHidden">RapidContext.Widget#isHidden</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line437">line 437</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="redraw">
+        <span class="type-signature"></span>redraw<span class="signature">()</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Redraws the table from updated source data. Note that this method
+will not add or remove rows and keeps the current row order
+intact. For a more complete redraw of the table, use <code>setData()</code>.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line413">line 413</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="removeAll">
+        <span class="type-signature"></span>removeAll<span class="signature">()</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Removes all children to this widget. This method will also destroy and child
+widgets and disconnect all signal listeners. This method uses the
+<code>getChildNodes()</code> and <code>removeChildNode()</code> methods to find and remove the
+individual child nodes.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#removeAll">RapidContext.Widget#removeAll</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line582">line 582</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="removeChildNode">
+        <span class="type-signature"></span>removeChildNode<span class="signature">(child)</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Removes a single child table column widget from this widget.
+This will also clear all the data in the table.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>child</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Widget</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the table column widget to remove
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+
+
+
+
+    <dt class="tag-overrides">Overrides:</dt>
+    <dd class="tag-overrides">
+        <a href="RapidContext.Widget.html#removeChildNode">RapidContext.Widget#removeChildNode</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line210">line 210</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="removeClass">
+        <span class="type-signature"></span>removeClass<span class="signature">(&hellip;cls)</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Removes the specified CSS class names from this HTML DOM node.
+Note that this method will not remove any class starting with
+&quot;widget&quot;.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>cls</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>|<b>Array</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+
+
+
+
+                    &lt;repeatable><br>
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the CSS class names to remove
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#removeClass">RapidContext.Widget#removeClass</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line353">line 353</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="removeSelectedIds">
+        <span class="type-signature"></span>removeSelectedIds<span class="signature">(&hellip;id)</span><span class="type-signature"> &rarr; {Array}</span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Removes the specified row id values from the selection. If the
+current selection is changed the select signal will be emitted.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>id</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>|<b>Array</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+
+
+
+
+                    &lt;repeatable><br>
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the row ids or array with ids to unselect
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>Array</b>}</span>
+
+    an array with the row ids actually unselected
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line573">line 573</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="setAttrs">
+        <span class="type-signature"></span>setAttrs<span class="signature">(attrs)</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Updates the widget or HTML DOM node attributes.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>attrs</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Object</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the widget and node attributes to set
+
+                    <h6>Properties</h6>
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>select</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the row selection mode (&apos;none&apos;, &apos;one&apos; or
+           &apos;multiple&apos;)
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>key</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the unique key identifier column field
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>hidden</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>boolean</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the hidden widget flag
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+
+
+
+
+    <dt class="tag-overrides">Overrides:</dt>
+    <dd class="tag-overrides">
+        <a href="RapidContext.Widget.html#setAttrs">RapidContext.Widget#setAttrs</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line179">line 179</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="setData">
+        <span class="type-signature"></span>setData<span class="signature">(data)</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Sets the table data. The table data is an array of objects, each
+having properties corresponding to the table column fields. Any
+object property not mapped to a table column will be ignored (i.e.
+a hidden column). See the <code>TableColumn</code> class for data mapping
+details. Note that automatically generated row ids will be reset
+by this method and any selection on such tables is lost.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>data</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Array</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                an array with data objects
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-examples">Example:</dt>
+    <dd class="tag-examples">
+
+    <pre class="hljs"><code><span class="hljs-string">var</span> <span class="hljs-string">data</span> <span class="hljs-string">=</span> [
+    { <span class="hljs-attr">id:</span> <span class="hljs-number">1</span>, <span class="hljs-attr">name:</span> <span class="hljs-string">&quot;John Doe&quot;</span>, <span class="hljs-attr">modified:</span> <span class="hljs-string">&quot;@1300000000000&quot;</span> },
+    { <span class="hljs-attr">id:</span> <span class="hljs-number">2</span>, <span class="hljs-attr">name:</span> <span class="hljs-string">&quot;First Last&quot;</span>, <span class="hljs-attr">modified:</span> <span class="hljs-string">new</span> <span class="hljs-string">Date()</span> },
+    { <span class="hljs-attr">id:</span> <span class="hljs-number">3</span>, <span class="hljs-attr">name:</span> <span class="hljs-string">&quot;Another Name&quot;</span>, <span class="hljs-attr">modified:</span> <span class="hljs-string">&quot;2004-11-30 13:33:20&quot;</span> }
+]<span class="hljs-string">;</span>
+<span class="hljs-string">table.setData(data);</span></code></pre>
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line343">line 343</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="setIdKey">
+        <span class="type-signature"></span>setIdKey<span class="signature">(key)</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Sets the unique key identifier column field. Note that this
+method will regenerate all row identifiers if the table already
+contains data.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>key</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the new key column field name
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line260">line 260</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="setSelectedIds">
+        <span class="type-signature"></span>setSelectedIds<span class="signature">(&hellip;id)</span><span class="type-signature"> &rarr; {Array}</span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Sets the selection to the specified row id values. If the current
+selection is changed the select signal will be emitted.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>id</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>|<b>Array</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+
+
+
+
+                    &lt;repeatable><br>
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the row ids or array with ids to select
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>Array</b>}</span>
+
+    an array with the row ids actually modified
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line502">line 502</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="setStyle">
+        <span class="type-signature"></span>setStyle<span class="signature">(styles)</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Updates the CSS styles of this HTML DOM node. This method is
+identical to <code>MochiKit.Style.setStyle</code>, but uses &quot;this&quot; as the
+first argument.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>styles</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Object</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                an object with the styles to set
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#setStyle">RapidContext.Widget#setStyle</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-examples">Example:</dt>
+    <dd class="tag-examples">
+
+    <pre class="hljs"><code>widget<span class="hljs-selector-class">.setStyle</span>({ &quot;<span class="hljs-attribute">font-size</span>&quot;: <span class="hljs-string">&quot;bold&quot;</span>, <span class="hljs-string">&quot;color&quot;</span>: <span class="hljs-string">&quot;red&quot;</span> });</code></pre>
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line294">line 294</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="show">
+        <span class="type-signature"></span>show<span class="signature">()</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Shows this widget node if it was previously hidden. This method is
+equivalent to calling <code>setAttrs({ hidden: false })</code>. It is safe
+for all types of widgets, since it only removes the <code>widgetHidden</code>
+CSS class instead of setting the <code>display</code> style property.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#show">RapidContext.Widget#show</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line460">line 460</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="sortData">
+        <span class="type-signature"></span>sortData<span class="signature">(field, direction<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Sorts the table data by field and direction.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>field</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the sort field
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>direction</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the sort direction, either &quot;asc&quot; or
+           &quot;desc&quot;
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line383">line 383</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="toggleClass">
+        <span class="type-signature"></span>toggleClass<span class="signature">(&hellip;cls)</span><span class="type-signature"> &rarr; {boolean}</span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Toggles adding and removing the specified CSS class names to and
+from this HTML DOM node. If all the CSS classes are already set,
+they will be removed. Otherwise they will be added.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>cls</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>|<b>Array</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+
+
+
+
+                    &lt;repeatable><br>
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the CSS class names to remove
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>boolean</b>}</span>
+
+    <code>true</code> if the CSS classes were added, or
+        <code>false</code> otherwise
+
+    </dd>
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#toggleClass">RapidContext.Widget#toggleClass</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line376">line 376</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="uid">
+        <span class="type-signature"></span>uid<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Returns the unique identifier for this DOM node. If a node id has
+already been set, that id will be returned. Otherwise a new id
+will be generated and assigned to the widget DOM node.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>string</b>}</span>
+
+    the the unique DOM node identifier
+
+    </dd>
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#uid">RapidContext.Widget#uid</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line182">line 182</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+
+        <h3 class="section-title">Events</h3>
+
+
+
+
+
+
+    <h4 class="name" id="event:onclear">
+        <span class="type-prefix">on</span>clear
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Emitted when the table data is cleared.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line83">line 83</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="event:onselect">
+        <span class="type-prefix">on</span>select
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Emitted when the table selection changes.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line90">line 90</a>
+    </dd>
+
+</dl>
+
+
+
+
+</article>
+
+
+
+
+
+      </div>
     </section>
+
     <section class="footer center fineprint">
       <hr>
       Copyright &copy; 2007-2023 Per Cederberg. All rights reserved.

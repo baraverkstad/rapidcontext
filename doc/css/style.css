@@ -133,50 +133,6 @@ p, ol, ul, dl {
 
 
 /**
- * Internal box sizing helpers
- */
-.-box-sizing-border,
-.-box-sizing-border *,
-.-box-sizing-border *::after,
-.-box-sizing-border *::before {
-    box-sizing: border-box;
-}
-.-box-sizing-content,
-.-box-sizing-content *,
-.-box-sizing-content *::after,
-.-box-sizing-content *::before {
-    box-sizing: content-box;
-}
-
-
-/***
- **  Internal form layout styles
- */
-table.-form-layout-table {
-    width: 100%;
-}
-table.-form-layout-table th {
-    padding: 0 0.5rem 0.5rem 0.5rem;
-    font-weight: 600;
-    white-space: nowrap;
-    color: #0008;
-    text-align: right;
-}
-table.-form-layout-table td {
-    padding: 0 0 0.5rem 0;
-}
-.-form-layout-label {
-    padding-top: calc(0.2em + 1px) !important;
-}
-.-form-layout-table button,
-.-form-layout-table input,
-.-form-layout-table textarea,
-.-form-layout-table select {
-    margin: 0;
-}
-
-
-/**
  * Colored & Boxed styles
  */
 .box {
@@ -188,7 +144,7 @@ table.-form-layout-table td {
     page-break-inside: avoid;
     background-color: #eee;
     background-image: linear-gradient(to bottom, #fdfdfd, #eee);
-    box-shadow: 0 1px 3px #ccc;
+    box-shadow: 0 0 0.25rem #0004;
 }
 ol.box, ul.box {
     padding: 0.5rem 2rem;
@@ -307,8 +263,9 @@ pre.code.box {
 
 /* Field label style */
 .label {
-    font-weight: bold;
-    color: #666;
+    font-weight: 600;
+    color: #0008;
+    white-space: nowrap;
 }
 
 /* Code style */
@@ -362,5 +319,5 @@ hr.short {
     cursor: pointer;
 }
 .clickable:hover {
-    background: #eef8ff;
+    background: var(--focus-100);
 }

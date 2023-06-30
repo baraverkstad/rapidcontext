@@ -4,18 +4,18 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="generator" content="JsDoc Toolkit" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="generator" content="JsDoc" />
     <link rel="stylesheet" href="../css/style.css" type="text/css">
     <link rel="stylesheet" href="../css/doc.css" type="text/css">
     <link rel="stylesheet" href="../css/font-awesome-4.7.0.min.css" type="text/css">
     <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="../images/logotype-icon.ico">
     <link rel="icon" type="image/png" sizes="256x256" href="../images/logotype-icon-256x256.png">
     <link rel="apple-touch-icon" sizes="256x256" href="../images/logotype-icon-256x256.png">
-    <title>RapidContext :: RapidContext.Widget.Tree</title>
+    <title>RapidContext :: JavaScript API</title>
   </head>
   <body class="doc">
-        <section class="header">
+
+    <section class="header">
       <div class="center">
         <a href="https://www.rapidcontext.com/" class="logotype">
           <img src="../images/logotype.png" />
@@ -34,398 +34,3298 @@
         &bull; <a href="https://github.com/cederberg/rapidcontext">Project</a>
       </div>
     </section>
+
     <section class="content center">
+      <ol class="breadcrumb">
+        <li><a href="../index.html">Documentation</a></li>
+
+        <li><a href="index.html">JavaScript API</a></li>
+        <li class="active">RapidContext.Widget.Tree</li>
+
+      </ol>
+
+      <div class="jsdoc">
+        <h1 class="classTitle">Class RapidContext.Widget.Tree</h1>
+
+
+
+
+<header>
+
+        <h2><span class="attribs"><span class="type-signature"></span></span>
+            <span class="ancestors"><a href="RapidContext.Widget.html">.Widget</a>.</span>Tree<span class="signature">(attrs, &hellip;child<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Widget}</span></h2>
+
+            <div class="class-description"><p>The tree widget class. Used to provide a dynamic tree with expandable
+    tree nodes, using a number of <code>&lt;div&gt;</code> HTML elements.</p></div>
+
+
+
+
+    <table class="summary-table">
+        <caption>Constructor Summary</caption>
+        <tbody>
+            <tr>
+                <td class="attributes"></td>
+                <td class="name-description">
+                    <div><code><a href="#Tree"><span class="type-signature"></span><span class="type-prefix">new</span> Tree<span class="signature">(attrs, &hellip;child<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Widget}</span></a></code></div>
+                    <div class="description">Creates a new tree widget.</div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+
+
+
+
+        <table class="summary-table">
+            <caption>Method Summary</caption>
+            <tbody>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#addAll">addAll<span class="signature">(&hellip;child)</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Adds one or more children to this widget.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#addChildNode">addChildNode<span class="signature">(child)</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Adds a single child tree node widget to this widget.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#addClass">addClass<span class="signature">(&hellip;cls)</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Adds the specified CSS class names to this HTML DOM node.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#addPath">addPath<span class="signature">(path)</span><span class="type-signature"> &rarr; {Widget}</span></a></code>
+                        </div>
+                        <div class="description">Adds a path to the tree as a recursive list of child nodes.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div class="deprecated">
+                            <code><a href="#animate">animate<span class="signature">(opts)</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Performs a visual effect animation on this widget.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#blurAll">blurAll<span class="signature">()</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Blurs (unfocuses) this DOM node and all relevant child nodes.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#collapseAll">collapseAll<span class="signature">(depth<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Recursively collapses all nodes.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#destroy">destroy<span class="signature">()</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">The internal widget destructor function.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#disable">disable<span class="signature">()</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Disables this widget if it was previously enabled.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#enable">enable<span class="signature">()</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Enables this widget if it was previously disabled.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#expandAll">expandAll<span class="signature">(depth<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Recursively expands all nodes.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#findByPath">findByPath<span class="signature">(path)</span><span class="type-signature"> &rarr; {Widget}</span></a></code>
+                        </div>
+                        <div class="description">Searches for a tree node from the specified path.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#findRoot">findRoot<span class="signature">(name)</span><span class="type-signature"> &rarr; {Widget}</span></a></code>
+                        </div>
+                        <div class="description">Finds a root tree node with the specified name.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#getChildNodes">getChildNodes<span class="signature">()</span><span class="type-signature"> &rarr; {Array}</span></a></code>
+                        </div>
+                        <div class="description">Returns an array with all child DOM nodes.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#hasClass">hasClass<span class="signature">(&hellip;cls)</span><span class="type-signature"> &rarr; {boolean}</span></a></code>
+                        </div>
+                        <div class="description">Checks if this HTML DOM node has the specified CSS class names.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#hide">hide<span class="signature">()</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Hides this widget node if it was previously visible.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#isDisabled">isDisabled<span class="signature">()</span><span class="type-signature"> &rarr; {boolean}</span></a></code>
+                        </div>
+                        <div class="description">Checks if this widget is disabled.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#isHidden">isHidden<span class="signature">()</span><span class="type-signature"> &rarr; {boolean}</span></a></code>
+                        </div>
+                        <div class="description">Checks if this widget node is hidden.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#markAll">markAll<span class="signature">()</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Marks this tree node and all child nodes recursively.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#removeAll">removeAll<span class="signature">()</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Removes all children to this widget.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#removeAllMarked">removeAllMarked<span class="signature">()</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Removes all marked tree nodes.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#removeChildNode">removeChildNode<span class="signature">(child)</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Removes a single child DOM node from this widget.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#removeClass">removeClass<span class="signature">(&hellip;cls)</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Removes the specified CSS class names from this HTML DOM node.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#selectedChild">selectedChild<span class="signature">()</span><span class="type-signature"> &rarr; {Widget}</span></a></code>
+                        </div>
+                        <div class="description">Returns the currently selected tree node.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#setAttrs">setAttrs<span class="signature">(attrs)</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Updates the widget or HTML DOM node attributes.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#setStyle">setStyle<span class="signature">(styles)</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Updates the CSS styles of this HTML DOM node.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#show">show<span class="signature">()</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Shows this widget node if it was previously hidden.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#toggleClass">toggleClass<span class="signature">(&hellip;cls)</span><span class="type-signature"> &rarr; {boolean}</span></a></code>
+                        </div>
+                        <div class="description">Toggles adding and removing the specified CSS class names to and
+from this HTML DOM node.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#uid">uid<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></a></code>
+                        </div>
+                        <div class="description">Returns the unique identifier for this DOM node.</div>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+
+
+
+        <table class="summary-table">
+            <caption>Event Summary</caption>
+            <tbody>
+
+                <tr>
+                    <td class="attributes">
+
+                    </td>
+                    <td class="name-description">
+                        <div >
+
+                            <code><a href="#event:oncollapse"><span class="type-prefix">on</span>collapse</a></code>
+                        </div>
+                        <div class="description">Emitted when a tree node is collapsed.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+
+                    </td>
+                    <td class="name-description">
+                        <div >
+
+                            <code><a href="#event:onexpand"><span class="type-prefix">on</span>expand</a></code>
+                        </div>
+                        <div class="description">Emitted when a tree node is expanded.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+
+                    </td>
+                    <td class="name-description">
+                        <div >
+
+                            <code><a href="#event:onselect"><span class="type-prefix">on</span>select</a></code>
+                        </div>
+                        <div class="description">Emitted when a tree node is selected.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+
+                    </td>
+                    <td class="name-description">
+                        <div >
+
+                            <code><a href="#event:onunselect"><span class="type-prefix">on</span>unselect</a></code>
+                        </div>
+                        <div class="description">Emitted when a tree node selection is removed.</div>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+
+
+
+</header>
+
+<article>
+    <div class="container-overview">
+
+
+
+
+    <h2 class="section-title">Constructor</h2>
+
+
+    <h4 class="name" id="Tree">
+        <span class="type-signature"></span><span class="type-prefix">new</span> Tree<span class="signature">(attrs, &hellip;child<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Widget}</span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Creates a new tree widget.</p>
+</div>
+
 
+
 
-<ol class="breadcrumb">
-  <li><a href="../index.html">Documentation</a></li>
-  <li><a href="index.html">JavaScript API</a></li>
-  <li class="active">RapidContext.Widget.Tree</li>
-</ol>
+<dl class="details">
 
-<!--START-->
 
-<!-- ============================== class title ============================ -->
-            <h1 class="classTitle">
 
-                Class RapidContext.Widget.Tree
-            </h1>
 
-<!-- ============================== class summary ========================== -->
-            <p class="description">
 
-                    <i>Extends:</i>
-                    <a href="RapidContext.Widget.html">RapidContext.Widget</a><br /><br />
-
-
-                The tree widget class. Used to provide a dynamic tree with expandable
-    tree nodes, using a number of <var>&lt;div&gt;</var> HTML elements.
-
-                <br/><br/>
-
-
-                    <i>Source code:</i>
-                    <a href="src/RapidContext_Widget_Tree.js.html">RapidContext_Widget_Tree.js</a>
-
-            </p>
-
-<!-- ============================== constructor summary ==================== -->
-
-            <table class="summaryTable">
-                <caption>Class Summary</caption>
-                <tbody>
-                    <tr>
-                        <td class="attributes">&nbsp;</td>
-                        <td class="nameDescription" >
-                            <div class="fixedFont">
-                                <b><a href="RapidContext.Widget.Tree.html#constructor">RapidContext.Widget.Tree</a></b>(attrs)
-                            </div>
-                            <div class="description">Creates a new tree widget.</div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-
-
-<!-- ============================== properties summary ===================== -->
-
-
-<!-- ============================== methods summary ======================== -->
-
-
 
 
-                <table class="summaryTable">
-                    <caption>Method Summary</caption>
-                    <tbody>
 
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Tree.html#addChildNode">addChildNode</a></b>(child)
-                                </div>
-                                <div class="description">Adds a single child tree node widget to this widget.</div>
-                            </td>
-                        </tr>
 
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Tree.html#addPath">addPath</a></b>(path)
-                                </div>
-                                <div class="description">Adds a path to the tree as a recursive list of child nodes.</div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Tree.html#collapseAll">collapseAll</a></b>(depth)
-                                </div>
-                                <div class="description">Recursively collapses all nodes.</div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Tree.html#expandAll">expandAll</a></b>(depth)
-                                </div>
-                                <div class="description">Recursively expands all nodes.</div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Tree.html#findByPath">findByPath</a></b>(path)
-                                </div>
-                                <div class="description">Searches for a tree node from the specified path.</div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Tree.html#findRoot">findRoot</a></b>(name)
-                                </div>
-                                <div class="description">Finds a root tree node with the specified name.</div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Tree.html#markAll">markAll</a></b>()
-                                </div>
-                                <div class="description">Marks this tree node and all child nodes recursively.</div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Tree.html#removeAllMarked">removeAllMarked</a></b>()
-                                </div>
-                                <div class="description">Removes all marked tree nodes.</div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Tree.html#selectedChild">selectedChild</a></b>()
-                                </div>
-                                <div class="description">Returns the currently selected tree node.</div>
-                            </td>
-                        </tr>
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
 
-                    </tbody>
-                </table>
 
+<table class="params">
+    <thead>
+    <tr>
 
+        <th>Name</th>
 
-                <dl class="inheritsList">
-                <dt>Methods borrowed from class <a href="RapidContext.Widget.html">RapidContext.Widget</a>: </dt><dd><a href="RapidContext.Widget.html#addAll">addAll</a>, <a href="RapidContext.Widget.html#addClass">addClass</a>, <a href="RapidContext.Widget.html#animate">animate</a>, <a href="RapidContext.Widget.html#blurAll">blurAll</a>, <a href="RapidContext.Widget.html#destroy">destroy</a>, <a href="RapidContext.Widget.html#disable">disable</a>, <a href="RapidContext.Widget.html#enable">enable</a>, <a href="RapidContext.Widget.html#getChildNodes">getChildNodes</a>, <a href="RapidContext.Widget.html#hasClass">hasClass</a>, <a href="RapidContext.Widget.html#hide">hide</a>, <a href="RapidContext.Widget.html#isDisabled">isDisabled</a>, <a href="RapidContext.Widget.html#isHidden">isHidden</a>, <a href="RapidContext.Widget.html#removeAll">removeAll</a>, <a href="RapidContext.Widget.html#removeChildNode">removeChildNode</a>, <a href="RapidContext.Widget.html#removeClass">removeClass</a>, <a href="RapidContext.Widget.html#setAttrs">setAttrs</a>, <a href="RapidContext.Widget.html#setStyle">setStyle</a>, <a href="RapidContext.Widget.html#show">show</a>, <a href="RapidContext.Widget.html#toggleClass">toggleClass</a>, <a href="RapidContext.Widget.html#uid">uid</a></dd>
-                </dl>
 
+        <th>Type</th>
 
-<!-- ============================== events summary ======================== -->
 
+        <th>Attributes</th>
 
 
 
-                <table class="summaryTable">
-                    <caption>Event Summary</caption>
-                    <tbody>
 
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont"><b><a href="RapidContext.Widget.Tree.html#event:oncollapse">oncollapse</a></b>()
-                                </div>
-                                <div class="description">Emitted when a tree node is collapsed.</div>
-                            </td>
-                        </tr>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont"><b><a href="RapidContext.Widget.Tree.html#event:onexpand">onexpand</a></b>()
-                                </div>
-                                <div class="description">Emitted when a tree node is expanded.</div>
-                            </td>
-                        </tr>
+    <tbody>
 
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont"><b><a href="RapidContext.Widget.Tree.html#event:onselect">onselect</a></b>()
-                                </div>
-                                <div class="description">Emitted when a tree node is selected.</div>
-                            </td>
-                        </tr>
 
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont"><b><a href="RapidContext.Widget.Tree.html#event:onunselect">onunselect</a></b>()
-                                </div>
-                                <div class="description">Emitted when a tree node selection is removed.</div>
-                            </td>
-                        </tr>
+        <tr>
 
-                    </tbody>
-                </table>
+                <td class="name"><code>attrs</code></td>
 
 
+            <td class="type">
 
-                <dl class="inheritsList">
 
-                </dl>
+    <span class="param-type">{<b>Object</b>}</span>
 
 
+            </td>
 
-<!-- ============================== constructor details ==================== -->
 
-            <div id="constructor" class="details">
-                <div class="sectionTitle">
-                    Class Detail
-                </div>
+                <td class="attributes">
 
-                <div class="fixedFont">
-                        <b>RapidContext.Widget.Tree</b>(attrs)
-                </div>
 
-                <div class="description">
-                    Creates a new tree widget.
 
-                </div>
 
 
+                </td>
 
-                <pre class="code"><span class="label">JavaScript:</span>
-var tree = RapidContext.Widget.Tree({ style: { width: "200px", height: "400px" } });
-var root = RapidContext.Widget.TreeNode({ folder: true, name: "Root" });
-var child = RapidContext.Widget.TreeNode({ name: "Child" });
-root.addAll(child);
-tree.addAll(root);</pre>
 
-                <pre class="code"><span class="label">User Interface XML:</span>
-&lt;Tree style="width: 200px; height: 400px;"&gt;
-  &lt;TreeNode name="Root"&gt;
-    &lt;TreeNode name="Child" /&gt;
-  &lt;/TreeNode&gt;
-&lt;/Tree&gt;</pre>
 
 
+            <td class="description last">
+                the widget and node attributes
 
+                    <h6>Properties</h6>
 
 
-                        <dl class="detailList">
-                        <dt class="heading">Parameters:</dt>
+<table class="params">
+    <thead>
+    <tr>
 
-                            <dt>
-                                <span class="light fixedFont">{Object}</span>  <b>attrs</b>
+        <th>Name</th>
 
-                            </dt>
-                                <dd>the widget and node attributes</dd>
 
-                            <dt>
-                                <span class="light fixedFont">{Boolean}</span>  <b>attrs.hidden</b>
-                                <i>Optional</i>
-                            </dt>
-                                <dd>the hidden widget flag, defaults to false</dd>
+        <th>Type</th>
 
-                            <dt>
-                                <span class="light fixedFont">{Widget}</span>  <b>...</b>
-                                <i>Optional</i>
-                            </dt>
-                                <dd>the child tree node widgets</dd>
 
-                        </dl>
+        <th>Attributes</th>
 
 
 
 
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-                        <dl class="detailList">
-                        <dt class="heading">Returns:</dt>
+    <tbody>
 
-                                <dd><span class="light fixedFont">{Widget}</span> the widget DOM node</dd>
 
-                        </dl>
+        <tr>
 
+                <td class="name"><code>hidden</code></td>
 
 
+            <td class="type">
 
-            </div>
 
+    <span class="param-type">{<b>boolean</b>}</span>
 
-<!-- ============================== field details ========================== -->
 
+            </td>
 
-<!-- ============================== method details ========================= -->
 
-                <div class="sectionTitle">
-                    Method Detail
-                </div>
+                <td class="attributes">
 
-                    <div id="addChildNode" class="fixedFont">
+                    &lt;optional><br>
 
 
-                    <b>addChildNode</b>(child)
 
-                    </div>
-                    <div class="description">
-                        Adds a single child tree node widget to this widget.
 
 
-                    </div>
+                </td>
 
 
 
 
-                            <dl class="detailList">
-                            <dt class="heading">Parameters:</dt>
+            <td class="description last">
+                the hidden widget flag, defaults to false
 
-                                <dt>
-                                    <span class="light fixedFont">{Widget}</span> <b>child</b>
+            </td>
+        </tr>
 
-                                </dt>
-                                <dd>the tree node widget to add</dd>
 
-                            </dl>
+    </tbody>
+</table>
 
 
+            </td>
+        </tr>
 
 
 
+        <tr>
 
+                <td class="name"><code>child</code></td>
 
 
-                    <hr />
+            <td class="type">
 
-                    <div id="removeAllMarked" class="fixedFont">
 
+    <span class="param-type">{<b>TreeNode</b>}</span>
 
-                    <b>removeAllMarked</b>()
 
-                    </div>
-                    <div class="description">
-                        Removes all marked tree nodes. When adding or updating tree nodes, any
-node modified is automatically unmarked (e.g. by calling <var>setAttrs</var> on the
-tree nodes or <var>addPath</var> on the tree). This makes it easy to prune a tree
-after an update, by initially marking all tree nodes with <var>markAll()</var>,
-inserting or touching all nodes to keep, and finally calling this method to
-remove the remaining nodes.
+            </td>
 
 
-                    </div>
+                <td class="attributes">
 
+                    &lt;optional><br>
 
 
-                    <pre class="code">tree.markAll();
-tree.addPath(["Root", "Child"]);
-...
-tree.removeAllMarked();</pre>
 
 
 
+                    &lt;repeatable><br>
 
+                </td>
 
 
 
 
+            <td class="description last">
+                the child tree node widgets
 
+            </td>
+        </tr>
 
 
-                    <hr />
+    </tbody>
+</table>
 
-                    <div id="markAll" class="fixedFont">
+    </dd>
 
 
-                    <b>markAll</b>()
 
-                    </div>
-                    <div class="description">
-                        Marks this tree node and all child nodes recursively. When adding or
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>Widget</b>}</span>
+
+    the widget DOM node
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-examples">Examples:</dt>
+    <dd class="tag-examples">
+
+        <p class="code-caption">JavaScript</p>
+
+    <pre class="hljs"><code><span class="hljs-keyword">var</span> tree = RapidContext.Widget.<span class="hljs-title function_ invoke__">Tree</span>({ <span class="hljs-attr">style</span>: { <span class="hljs-attr">width</span>: <span class="hljs-string">&quot;200px&quot;</span>, <span class="hljs-attr">height</span>: <span class="hljs-string">&quot;400px&quot;</span> } });
+<span class="hljs-keyword">var</span> root = RapidContext.Widget.<span class="hljs-title function_ invoke__">TreeNode</span>({ <span class="hljs-attr">folder</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;Root&quot;</span> });
+<span class="hljs-keyword">var</span> child = RapidContext.Widget.<span class="hljs-title function_ invoke__">TreeNode</span>({ <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;Child&quot;</span> });
+root.<span class="hljs-title function_ invoke__">addAll</span>(child);
+tree.<span class="hljs-title function_ invoke__">addAll</span>(root);</code></pre>
+
+        <p class="code-caption">User Interface XML</p>
+
+    <pre class="hljs"><code><span class="hljs-tag">&lt;<span class="hljs-name">Tree</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&quot;width: 200px; height: 400px;&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">TreeNode</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;Root&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">TreeNode</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;Child&quot;</span> /&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">TreeNode</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">Tree</span>&gt;</span></code></pre>
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Tree.js.html">RapidContext_Widget_Tree.js</a>, <a href="RapidContext_Widget_Tree.js.html#line49">line 49</a>
+    </dd>
+
+</dl>
+
+
+
+    </div>
+
+
+        <h3 class="section-title">Extends</h3>
+
+
+
+
+    <ul>
+        <li><a href="RapidContext.Widget.html">RapidContext.Widget</a></li>
+    </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <h3 class="section-title">Methods</h3>
+
+
+
+
+
+    <h4 class="name" id="addAll">
+        <span class="type-signature"></span>addAll<span class="signature">(&hellip;child)</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Adds one or more children to this widget. This method will flatten any
+arrays among the arguments and ignores any <code>null</code> or <code>undefined</code> arguments.
+Any DOM nodes or widgets will be added to the end, and other objects will be
+converted to a text node first. Subclasses should normally override the
+<code>addChildNode()</code> method instead of this one, since that is the basis for
+DOM node insertion.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>child</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>|<b>Node</b>|<b>Array</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+
+
+
+
+                    &lt;repeatable><br>
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the children to add
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#addAll">RapidContext.Widget#addAll</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line570">line 570</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="addChildNode">
+        <span class="type-signature"></span>addChildNode<span class="signature">(child)</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Adds a single child tree node widget to this widget.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>child</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Widget</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the tree node widget to add
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+
+
+
+
+    <dt class="tag-overrides">Overrides:</dt>
+    <dd class="tag-overrides">
+        <a href="RapidContext.Widget.html#addChildNode">RapidContext.Widget#addChildNode</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Tree.js.html">RapidContext_Widget_Tree.js</a>, <a href="RapidContext_Widget_Tree.js.html#line98">line 98</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="addClass">
+        <span class="type-signature"></span>addClass<span class="signature">(&hellip;cls)</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Adds the specified CSS class names to this HTML DOM node.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>cls</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>|<b>Array</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+
+
+
+
+                    &lt;repeatable><br>
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the CSS class names to add
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#addClass">RapidContext.Widget#addClass</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line333">line 333</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="addPath">
+        <span class="type-signature"></span>addPath<span class="signature">(path)</span><span class="type-signature"> &rarr; {Widget}</span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Adds a path to the tree as a recursive list of child nodes. If
+nodes in the specified path already exists, they will be used
+instead of creating new nodes.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>path</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Array</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the tree node path (array of names)
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>Widget</b>}</span>
+
+    the last node in the path
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Tree.js.html">RapidContext_Widget_Tree.js</a>, <a href="RapidContext_Widget_Tree.js.html#line264">line 264</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="animate">
+        <span class="type-signature"></span>animate<span class="signature">(opts)</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Performs a visual effect animation on this widget. This is
+implemented using the <code>MochiKit.Visual</code> effect package. All options
+sent to this function will be passed on to the appropriate
+<code>MochiKit.Visual</code> function.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>opts</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Object</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the visual effect options
+
+                    <h6>Properties</h6>
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>effect</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the MochiKit.Visual effect name
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>queue</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the MochiKit.Visual queue handling,
+           defaults to &quot;replace&quot; and a unique scope for each widget
+           (see <code>MochiKit.Visual</code> for full options)
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#animate">RapidContext.Widget#animate</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <dt class="tag-deprecated">Deprecated:</dt>
+        <dd class="important">
+            Use CSS animations instead.
+        </dd>
+
+
+
+
+
+
+
+    <dt class="tag-examples">Example:</dt>
+    <dd class="tag-examples">
+
+    <pre class="hljs"><code>widget.<span class="hljs-title function_ invoke__">animate</span>({ <span class="hljs-attr">effect</span>: <span class="hljs-string">&quot;fade&quot;</span>, <span class="hljs-attr">duration</span>: <span class="hljs-number">0.5</span> });
+widget.<span class="hljs-title function_ invoke__">animate</span>({ <span class="hljs-attr">effect</span>: <span class="hljs-string">&quot;Move&quot;</span>, <span class="hljs-attr">transition</span>: <span class="hljs-string">&quot;spring&quot;</span>, <span class="hljs-attr">y</span>: <span class="hljs-number">300</span> });</code></pre>
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line492">line 492</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="blurAll">
+        <span class="type-signature"></span>blurAll<span class="signature">()</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Blurs (unfocuses) this DOM node and all relevant child nodes. This function
+will recursively blur all <code>&lt;a&gt;</code>, <code>&lt;button&gt;</code>, <code>&lt;input&gt;</code>, <code>&lt;textarea&gt;</code> and
+<code>&lt;select&gt;</code> child nodes found.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#blurAll">RapidContext.Widget#blurAll</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line510">line 510</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="collapseAll">
+        <span class="type-signature"></span>collapseAll<span class="signature">(depth<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Recursively collapses all nodes. If a depth is specified, only
+nodes below that depth will be collapsed.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>depth</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>number</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the optional minimum depth
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Tree.js.html">RapidContext_Widget_Tree.js</a>, <a href="RapidContext_Widget_Tree.js.html#line245">line 245</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="destroy">
+        <span class="type-signature"></span>destroy<span class="signature">()</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>The internal widget destructor function. This method should only
+be called by <code>destroyWidget()</code> and may be overridden by subclasses.
+By default this method does nothing.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#destroy">RapidContext.Widget#destroy</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line194">line 194</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="disable">
+        <span class="type-signature"></span>disable<span class="signature">()</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Disables this widget if it was previously enabled. This method is
+equivalent to calling <code>setAttrs({ disabled: true })</code>.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#disable">RapidContext.Widget#disable</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line424">line 424</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="enable">
+        <span class="type-signature"></span>enable<span class="signature">()</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Enables this widget if it was previously disabled. This is
+equivalent to calling <code>setAttrs({ disabled: false })</code>.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#enable">RapidContext.Widget#enable</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line416">line 416</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="expandAll">
+        <span class="type-signature"></span>expandAll<span class="signature">(depth<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Recursively expands all nodes. If a depth is specified,
+expansions will not continue below that depth.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>depth</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>number</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the optional maximum depth
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Tree.js.html">RapidContext_Widget_Tree.js</a>, <a href="RapidContext_Widget_Tree.js.html#line229">line 229</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="findByPath">
+        <span class="type-signature"></span>findByPath<span class="signature">(path)</span><span class="type-signature"> &rarr; {Widget}</span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Searches for a tree node from the specified path.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>path</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Array</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the tree node path (array of names)
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>Widget</b>}</span>
+
+    the descendant tree node found, or
+        null if not found
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Tree.js.html">RapidContext_Widget_Tree.js</a>, <a href="RapidContext_Widget_Tree.js.html#line177">line 177</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="findRoot">
+        <span class="type-signature"></span>findRoot<span class="signature">(name)</span><span class="type-signature"> &rarr; {Widget}</span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Finds a root tree node with the specified name.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>name</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the root tree node name
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>Widget</b>}</span>
+
+    the root tree node found, or
+        null if not found
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Tree.js.html">RapidContext_Widget_Tree.js</a>, <a href="RapidContext_Widget_Tree.js.html#line159">line 159</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="getChildNodes">
+        <span class="type-signature"></span>getChildNodes<span class="signature">()</span><span class="type-signature"> &rarr; {Array}</span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Returns an array with all child DOM nodes. Note that the array is
+a real JavaScript array, not a dynamic <code>NodeList</code>. This method is
+sometimes overridden by child widgets in order to hide
+intermediate DOM nodes required by the widget.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>Array</b>}</span>
+
+    the array of child DOM nodes
+
+    </dd>
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#getChildNodes">RapidContext.Widget#getChildNodes</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line522">line 522</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="hasClass">
+        <span class="type-signature"></span>hasClass<span class="signature">(&hellip;cls)</span><span class="type-signature"> &rarr; {boolean}</span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Checks if this HTML DOM node has the specified CSS class names.
+Note that more than one CSS class name may be checked, in which
+case all must be present.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>cls</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>|<b>Array</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+
+
+
+
+                    &lt;repeatable><br>
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the CSS class names to check
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>boolean</b>}</span>
+
+    <code>true</code> if all CSS classes were present, or
+        <code>false</code> otherwise
+
+    </dd>
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#hasClass">RapidContext.Widget#hasClass</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line315">line 315</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="hide">
+        <span class="type-signature"></span>hide<span class="signature">()</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Hides this widget node if it was previously visible. This method
+is equivalent to calling <code>setAttrs({ hidden: true })</code>. It is safe
+for all types of widgets, since it only adds the <code>widgetHidden</code>
+CSS class instead of setting the <code>display</code> style property.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#hide">RapidContext.Widget#hide</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line470">line 470</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="isDisabled">
+        <span class="type-signature"></span>isDisabled<span class="signature">()</span><span class="type-signature"> &rarr; {boolean}</span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Checks if this widget is disabled. This method checks both the
+&quot;widgetDisabled&quot; CSS class and the <code>disabled</code> property. Changes
+to the disabled status can be made with <code>enable()</code>, <code>disable()</code> or
+<code>setAttrs()</code>.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>boolean</b>}</span>
+
+    <code>true</code> if the widget is disabled, or
+        <code>false</code> otherwise
+
+    </dd>
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#isDisabled">RapidContext.Widget#isDisabled</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line395">line 395</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="isHidden">
+        <span class="type-signature"></span>isHidden<span class="signature">()</span><span class="type-signature"> &rarr; {boolean}</span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Checks if this widget node is hidden. This method checks for the
+existence of the <code>widgetHidden</code> CSS class. It does NOT check the
+actual widget visibility (the <code>display</code> style property set by
+animations for example).</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>boolean</b>}</span>
+
+    <code>true</code> if the widget is hidden, or
+        <code>false</code> otherwise
+
+    </dd>
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#isHidden">RapidContext.Widget#isHidden</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line437">line 437</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="markAll">
+        <span class="type-signature"></span>markAll<span class="signature">()</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Marks this tree node and all child nodes recursively. When adding or
 updating tree nodes, any node modified is automatically unmarked (e.g. by
-calling <var>setAttrs</var> on the tree nodes or <var>addPath</var> on the tree). This makes
+calling <code>setAttrs</code> on the tree nodes or <code>addPath</code> on the tree). This makes
 it easy to prune a tree after an update, by initially marking all tree
 nodes, inserting or touching all nodes to keep, and finally calling
-<var>removeAllMarked()</var> to remove the remaining nodes.
+<code>removeAllMarked()</code> to remove the remaining nodes.</p>
+</div>
 
 
-                    </div>
+
+
+<dl class="details">
 
 
 
-                    <pre class="code">tree.markAll();
-tree.addPath(["Root", "Child"]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-examples">Example:</dt>
+    <dd class="tag-examples">
+
+    <pre class="hljs"><code>tree<span class="hljs-selector-class">.markAll</span>();
+tree<span class="hljs-selector-class">.addPath</span>(<span class="hljs-selector-attr">[<span class="hljs-string">&quot;Root&quot;</span>, <span class="hljs-string">&quot;Child&quot;</span>]</span>);
 ...
-tree.removeAllMarked();</pre>
+tree<span class="hljs-selector-class">.removeAllMarked</span>();</code></pre>
 
+    </dd>
 
 
 
@@ -436,105 +3336,76 @@ tree.removeAllMarked();</pre>
 
 
 
-                    <hr />
 
-                    <div id="findRoot" class="fixedFont">
 
-                    <span class="light">{Widget}</span>
-                    <b>findRoot</b>(name)
 
-                    </div>
-                    <div class="description">
-                        Finds a root tree node with the specified name.
 
 
-                    </div>
 
 
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Tree.js.html">RapidContext_Widget_Tree.js</a>, <a href="RapidContext_Widget_Tree.js.html#line144">line 144</a>
+    </dd>
 
+</dl>
 
-                            <dl class="detailList">
-                            <dt class="heading">Parameters:</dt>
 
-                                <dt>
-                                    <span class="light fixedFont">{String}</span> <b>name</b>
 
-                                </dt>
-                                <dd>the root tree node name</dd>
 
-                            </dl>
 
 
 
+    <h4 class="name" id="removeAll">
+        <span class="type-signature"></span>removeAll<span class="signature">()</span><span class="type-signature"></span>
+    </h4>
 
 
-                            <dl class="detailList">
-                            <dt class="heading">Returns:</dt>
 
-                                <dd><span class="light fixedFont">{Widget}</span> the root tree node found, or
-        null if not found</dd>
 
-                            </dl>
 
+<div class="description">
+    <p>Removes all children to this widget. This method will also destroy and child
+widgets and disconnect all signal listeners. This method uses the
+<code>getChildNodes()</code> and <code>removeChildNode()</code> methods to find and remove the
+individual child nodes.</p>
+</div>
 
 
 
-                    <hr />
 
-                    <div id="findByPath" class="fixedFont">
+<dl class="details">
 
-                    <span class="light">{Widget}</span>
-                    <b>findByPath</b>(path)
 
-                    </div>
-                    <div class="description">
-                        Searches for a tree node from the specified path.
 
 
-                    </div>
 
 
 
 
-                            <dl class="detailList">
-                            <dt class="heading">Parameters:</dt>
 
-                                <dt>
-                                    <span class="light fixedFont">{Array}</span> <b>path</b>
 
-                                </dt>
-                                <dd>the tree node path (array of names)</dd>
 
-                            </dl>
 
 
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#removeAll">RapidContext.Widget#removeAll</a>
+    </dd>
 
 
 
-                            <dl class="detailList">
-                            <dt class="heading">Returns:</dt>
 
-                                <dd><span class="light fixedFont">{Widget}</span> the descendant tree node found, or
-        null if not found</dd>
 
-                            </dl>
 
 
 
 
-                    <hr />
 
-                    <div id="selectedChild" class="fixedFont">
 
-                    <span class="light">{Widget}</span>
-                    <b>selectedChild</b>()
 
-                    </div>
-                    <div class="description">
-                        Returns the currently selected tree node.
 
 
-                    </div>
 
 
 
@@ -543,45 +3414,24 @@ tree.removeAllMarked();</pre>
 
 
 
-                            <dl class="detailList">
-                            <dt class="heading">Returns:</dt>
 
-                                <dd><span class="light fixedFont">{Widget}</span> the currently selected tree node, or
-        null if no node is selected</dd>
 
-                            </dl>
 
 
 
 
-                    <hr />
 
-                    <div id="expandAll" class="fixedFont">
 
 
-                    <b>expandAll</b>(depth)
 
-                    </div>
-                    <div class="description">
-                        Recursively expands all nodes. If a depth is specified,
-expansions will not continue below that depth.
 
 
-                    </div>
 
 
 
 
-                            <dl class="detailList">
-                            <dt class="heading">Parameters:</dt>
 
-                                <dt>
-                                    <span class="light fixedFont">{Number}</span> <b>depth</b>
-                                    <i>Optional</i>
-                                </dt>
-                                <dd>the optional maximum depth</dd>
 
-                            </dl>
 
 
 
@@ -589,83 +3439,63 @@ expansions will not continue below that depth.
 
 
 
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line582">line 582</a>
+    </dd>
 
-                    <hr />
+</dl>
 
-                    <div id="collapseAll" class="fixedFont">
 
 
-                    <b>collapseAll</b>(depth)
 
-                    </div>
-                    <div class="description">
-                        Recursively collapses all nodes. If a depth is specified, only
-nodes below that depth will be collapsed.
 
 
-                    </div>
 
+    <h4 class="name" id="removeAllMarked">
+        <span class="type-signature"></span>removeAllMarked<span class="signature">()</span><span class="type-signature"></span>
+    </h4>
 
 
 
-                            <dl class="detailList">
-                            <dt class="heading">Parameters:</dt>
 
-                                <dt>
-                                    <span class="light fixedFont">{Number}</span> <b>depth</b>
-                                    <i>Optional</i>
-                                </dt>
-                                <dd>the optional minimum depth</dd>
 
-                            </dl>
+<div class="description">
+    <p>Removes all marked tree nodes. When adding or updating tree nodes, any
+node modified is automatically unmarked (e.g. by calling <code>setAttrs</code> on the
+tree nodes or <code>addPath</code> on the tree). This makes it easy to prune a tree
+after an update, by initially marking all tree nodes with <code>markAll()</code>,
+inserting or touching all nodes to keep, and finally calling this method to
+remove the remaining nodes.</p>
+</div>
 
 
 
 
+<dl class="details">
 
 
 
 
-                    <hr />
 
-                    <div id="addPath" class="fixedFont">
 
-                    <span class="light">{Widget}</span>
-                    <b>addPath</b>(path)
 
-                    </div>
-                    <div class="description">
-                        Adds a path to the tree as a recursive list of child nodes. If
-nodes in the specified path already exists, they will be used
-instead of creating new nodes.
 
 
-                    </div>
 
 
 
 
-                            <dl class="detailList">
-                            <dt class="heading">Parameters:</dt>
 
-                                <dt>
-                                    <span class="light fixedFont">{Array}</span> <b>path</b>
 
-                                </dt>
-                                <dd>the tree node path (array of names)</dd>
 
-                            </dl>
 
 
 
 
 
-                            <dl class="detailList">
-                            <dt class="heading">Returns:</dt>
 
-                                <dd><span class="light fixedFont">{Widget}</span> the last node in the path</dd>
 
-                            </dl>
 
 
 
@@ -674,47 +3504,37 @@ instead of creating new nodes.
 
 
 
-<!-- ============================== event details ========================= -->
 
-                <div class="sectionTitle">
-                    Event Detail
-                </div>
 
-                    <div id="event:onexpand" class="fixedFont">
 
 
-                    <b>onexpand</b>()
 
-                    </div>
-                    <div class="description">
-                        Emitted when a tree node is expanded.
 
 
-                    </div>
 
 
 
 
 
+    <dt class="tag-examples">Example:</dt>
+    <dd class="tag-examples">
 
+    <pre class="hljs"><code>tree<span class="hljs-selector-class">.markAll</span>();
+tree<span class="hljs-selector-class">.addPath</span>(<span class="hljs-selector-attr">[<span class="hljs-string">&quot;Root&quot;</span>, <span class="hljs-string">&quot;Child&quot;</span>]</span>);
+...
+tree<span class="hljs-selector-class">.removeAllMarked</span>();</code></pre>
 
+    </dd>
 
 
 
 
-                    <hr />
 
-                    <div id="event:oncollapse" class="fixedFont">
 
 
-                    <b>oncollapse</b>()
 
-                    </div>
-                    <div class="description">
-                        Emitted when a tree node is collapsed.
 
 
-                    </div>
 
 
 
@@ -722,67 +3542,1605 @@ instead of creating new nodes.
 
 
 
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Tree.js.html">RapidContext_Widget_Tree.js</a>, <a href="RapidContext_Widget_Tree.js.html#line119">line 119</a>
+    </dd>
 
+</dl>
 
 
 
-                    <hr />
 
-                    <div id="event:onselect" class="fixedFont">
 
 
-                    <b>onselect</b>()
 
-                    </div>
-                    <div class="description">
-                        Emitted when a tree node is selected. It will be emitted after
-<q>onunselect</q> if another node was previously selected.
+    <h4 class="name" id="removeChildNode">
+        <span class="type-signature"></span>removeChildNode<span class="signature">(child)</span><span class="type-signature"></span>
+    </h4>
 
 
-                    </div>
 
 
 
+<div class="description">
+    <p>Removes a single child DOM node from this widget. This method is
+sometimes overridden by child widgets in order to hide or control
+intermediate DOM nodes required by the widget.</p>
 
+<p>Note that this method will NOT destroy the removed child widget,
+so care must be taken to ensure proper child widget destruction.</p>
+</div>
 
 
 
 
+<dl class="details">
 
 
 
-                    <hr />
 
-                    <div id="event:onunselect" class="fixedFont">
 
 
-                    <b>onunselect</b>()
 
-                    </div>
-                    <div class="description">
-                        Emitted when a tree node selection is removed. It will be emitted
-before <q>onselect</q> if another node was previously selected.
 
 
-                    </div>
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
 
 
+<table class="params">
+    <thead>
+    <tr>
 
+        <th>Name</th>
 
 
+        <th>Type</th>
 
 
 
 
 
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
+    <tbody>
 
 
+        <tr>
 
+                <td class="name"><code>child</code></td>
 
-    <!--END-->
 
+            <td class="type">
+
+
+    <span class="param-type">{<b>Widget</b>|<b>Node</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the DOM node to remove
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#removeChildNode">RapidContext.Widget#removeChildNode</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line553">line 553</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="removeClass">
+        <span class="type-signature"></span>removeClass<span class="signature">(&hellip;cls)</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Removes the specified CSS class names from this HTML DOM node.
+Note that this method will not remove any class starting with
+&quot;widget&quot;.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>cls</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>|<b>Array</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+
+
+
+
+                    &lt;repeatable><br>
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the CSS class names to remove
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#removeClass">RapidContext.Widget#removeClass</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line353">line 353</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="selectedChild">
+        <span class="type-signature"></span>selectedChild<span class="signature">()</span><span class="type-signature"> &rarr; {Widget}</span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Returns the currently selected tree node.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>Widget</b>}</span>
+
+    the currently selected tree node, or
+        null if no node is selected
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Tree.js.html">RapidContext_Widget_Tree.js</a>, <a href="RapidContext_Widget_Tree.js.html#line195">line 195</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="setAttrs">
+        <span class="type-signature"></span>setAttrs<span class="signature">(attrs)</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Updates the widget or HTML DOM node attributes. This method is
+sometimes overridden by individual widgets to allow modification
+of additional widget attributes.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>attrs</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Object</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the widget and node attributes to set
+
+                    <h6>Properties</h6>
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>disabled</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>boolean</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the disabled widget flag
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>hidden</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>boolean</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the hidden widget flag
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>class</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the CSS class names
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#setAttrs">RapidContext.Widget#setAttrs</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line246">line 246</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="setStyle">
+        <span class="type-signature"></span>setStyle<span class="signature">(styles)</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Updates the CSS styles of this HTML DOM node. This method is
+identical to <code>MochiKit.Style.setStyle</code>, but uses &quot;this&quot; as the
+first argument.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>styles</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Object</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                an object with the styles to set
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#setStyle">RapidContext.Widget#setStyle</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-examples">Example:</dt>
+    <dd class="tag-examples">
+
+    <pre class="hljs"><code>widget<span class="hljs-selector-class">.setStyle</span>({ &quot;<span class="hljs-attribute">font-size</span>&quot;: <span class="hljs-string">&quot;bold&quot;</span>, <span class="hljs-string">&quot;color&quot;</span>: <span class="hljs-string">&quot;red&quot;</span> });</code></pre>
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line294">line 294</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="show">
+        <span class="type-signature"></span>show<span class="signature">()</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Shows this widget node if it was previously hidden. This method is
+equivalent to calling <code>setAttrs({ hidden: false })</code>. It is safe
+for all types of widgets, since it only removes the <code>widgetHidden</code>
+CSS class instead of setting the <code>display</code> style property.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#show">RapidContext.Widget#show</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line460">line 460</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="toggleClass">
+        <span class="type-signature"></span>toggleClass<span class="signature">(&hellip;cls)</span><span class="type-signature"> &rarr; {boolean}</span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Toggles adding and removing the specified CSS class names to and
+from this HTML DOM node. If all the CSS classes are already set,
+they will be removed. Otherwise they will be added.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>cls</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>|<b>Array</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+
+
+
+
+                    &lt;repeatable><br>
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the CSS class names to remove
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>boolean</b>}</span>
+
+    <code>true</code> if the CSS classes were added, or
+        <code>false</code> otherwise
+
+    </dd>
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#toggleClass">RapidContext.Widget#toggleClass</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line376">line 376</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="uid">
+        <span class="type-signature"></span>uid<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Returns the unique identifier for this DOM node. If a node id has
+already been set, that id will be returned. Otherwise a new id
+will be generated and assigned to the widget DOM node.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>string</b>}</span>
+
+    the the unique DOM node identifier
+
+    </dd>
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#uid">RapidContext.Widget#uid</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line182">line 182</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+
+        <h3 class="section-title">Events</h3>
+
+
+
+
+
+
+    <h4 class="name" id="event:oncollapse">
+        <span class="type-prefix">on</span>collapse
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Emitted when a tree node is collapsed.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Tree.js.html">RapidContext_Widget_Tree.js</a>, <a href="RapidContext_Widget_Tree.js.html#line70">line 70</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="event:onexpand">
+        <span class="type-prefix">on</span>expand
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Emitted when a tree node is expanded.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Tree.js.html">RapidContext_Widget_Tree.js</a>, <a href="RapidContext_Widget_Tree.js.html#line63">line 63</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="event:onselect">
+        <span class="type-prefix">on</span>select
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Emitted when a tree node is selected. It will be emitted after
+&quot;onunselect&quot; if another node was previously selected.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Tree.js.html">RapidContext_Widget_Tree.js</a>, <a href="RapidContext_Widget_Tree.js.html#line77">line 77</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="event:onunselect">
+        <span class="type-prefix">on</span>unselect
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Emitted when a tree node selection is removed. It will be emitted
+before &quot;onselect&quot; if another node was previously selected.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Tree.js.html">RapidContext_Widget_Tree.js</a>, <a href="RapidContext_Widget_Tree.js.html#line85">line 85</a>
+    </dd>
+
+</dl>
+
+
+
+
+</article>
+
+
+
+
+
+      </div>
     </section>
+
     <section class="footer center fineprint">
       <hr>
       Copyright &copy; 2007-2023 Per Cederberg. All rights reserved.

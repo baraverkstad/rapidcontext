@@ -4,18 +4,18 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="generator" content="JsDoc Toolkit" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="generator" content="JsDoc" />
     <link rel="stylesheet" href="../css/style.css" type="text/css">
     <link rel="stylesheet" href="../css/doc.css" type="text/css">
     <link rel="stylesheet" href="../css/font-awesome-4.7.0.min.css" type="text/css">
     <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="../images/logotype-icon.ico">
     <link rel="icon" type="image/png" sizes="256x256" href="../images/logotype-icon-256x256.png">
     <link rel="apple-touch-icon" sizes="256x256" href="../images/logotype-icon-256x256.png">
-    <title>RapidContext :: RapidContext.Widget.Wizard</title>
+    <title>RapidContext :: JavaScript API</title>
   </head>
   <body class="doc">
-        <section class="header">
+
+    <section class="header">
       <div class="center">
         <a href="https://www.rapidcontext.com/" class="logotype">
           <img src="../images/logotype.png" />
@@ -34,318 +34,758 @@
         &bull; <a href="https://github.com/cederberg/rapidcontext">Project</a>
       </div>
     </section>
+
     <section class="content center">
+      <ol class="breadcrumb">
+        <li><a href="../index.html">Documentation</a></li>
+
+        <li><a href="index.html">JavaScript API</a></li>
+        <li class="active">RapidContext.Widget.Wizard</li>
+
+      </ol>
+
+      <div class="jsdoc">
+        <h1 class="classTitle">Class RapidContext.Widget.Wizard</h1>
 
 
-<ol class="breadcrumb">
-  <li><a href="../index.html">Documentation</a></li>
-  <li><a href="index.html">JavaScript API</a></li>
-  <li class="active">RapidContext.Widget.Wizard</li>
-</ol>
-
-<!--START-->
-
-<!-- ============================== class title ============================ -->
-            <h1 class="classTitle">
-
-                Class RapidContext.Widget.Wizard
-            </h1>
-
-<!-- ============================== class summary ========================== -->
-            <p class="description">
-
-                    <i>Extends:</i>
-                    <a href="RapidContext.Widget.html">RapidContext.Widget</a><br /><br />
 
 
-                The wizard widget class. Used to provide a sequence of pages, where
+<header>
+
+        <h2><span class="attribs"><span class="type-signature"></span></span>
+            <span class="ancestors"><a href="RapidContext.Widget.html">.Widget</a>.</span>Wizard<span class="signature">(attrs, &hellip;child<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Widget}</span></h2>
+
+            <div class="class-description"><p>The wizard widget class. Used to provide a sequence of pages, where
     the user can step forward and backward with buttons. Internally it uses
-    a <var>&lt;div&gt;</var> HTML element containing Pane widgets that are hidden and shown
-    according to the page transitions.
-
-                <br/><br/>
-
-
-                    <i>Source code:</i>
-                    <a href="src/RapidContext_Widget_Wizard.js.html">RapidContext_Widget_Wizard.js</a>
-
-            </p>
-
-<!-- ============================== constructor summary ==================== -->
-
-            <table class="summaryTable">
-                <caption>Class Summary</caption>
-                <tbody>
-                    <tr>
-                        <td class="attributes">&nbsp;</td>
-                        <td class="nameDescription" >
-                            <div class="fixedFont">
-                                <b><a href="RapidContext.Widget.Wizard.html#constructor">RapidContext.Widget.Wizard</a></b>(attrs)
-                            </div>
-                            <div class="description">Creates a new wizard widget.</div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-
-
-<!-- ============================== properties summary ===================== -->
-
-
-<!-- ============================== methods summary ======================== -->
+    a <code>&lt;div&gt;</code> HTML element containing Pane widgets that are hidden and shown
+    according to the page transitions.</p></div>
 
 
 
 
-                <table class="summaryTable">
-                    <caption>Method Summary</caption>
-                    <tbody>
+    <table class="summary-table">
+        <caption>Constructor Summary</caption>
+        <tbody>
+            <tr>
+                <td class="attributes"></td>
+                <td class="name-description">
+                    <div><code><a href="#Wizard"><span class="type-signature"></span><span class="type-prefix">new</span> Wizard<span class="signature">(attrs, &hellip;child<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Widget}</span></a></code></div>
+                    <div class="description">Creates a new wizard widget.</div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Wizard.html#activatePage">activatePage</a></b>(indexOrPage)
-                                </div>
-                                <div class="description">Activates a new page and sends the <var>onchange</var> signal.</div>
-                            </td>
-                        </tr>
 
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Wizard.html#activePage">activePage</a></b>()
-                                </div>
-                                <div class="description">Returns the active page.</div>
-                            </td>
-                        </tr>
 
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Wizard.html#activePageIndex">activePageIndex</a></b>()
-                                </div>
-                                <div class="description">Returns the active page index.</div>
-                            </td>
-                        </tr>
 
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Wizard.html#addChildNode">addChildNode</a></b>(child)
-                                </div>
-                                <div class="description">Adds a single child page widget to this widget.</div>
-                            </td>
-                        </tr>
 
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Wizard.html#cancel">cancel</a></b>()
-                                </div>
-                                <div class="description">Cancels the active page operation.</div>
-                            </td>
-                        </tr>
+        <table class="summary-table">
+            <caption>Method Summary</caption>
+            <tbody>
 
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Wizard.html#done">done</a></b>()
-                                </div>
-                                <div class="description">Sends the wizard <var>onclose</var> signal.</div>
-                            </td>
-                        </tr>
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#activatePage">activatePage<span class="signature">(indexOrPage)</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Activates a new page and sends the <code>onchange</code> signal.</div>
+                    </td>
+                </tr>
 
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Wizard.html#getChildNodes">getChildNodes</a></b>()
-                                </div>
-                                <div class="description">Returns an array with all child pane widgets.</div>
-                            </td>
-                        </tr>
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#activePage">activePage<span class="signature">()</span><span class="type-signature"> &rarr; {Widget}</span></a></code>
+                        </div>
+                        <div class="description">Returns the active page.</div>
+                    </td>
+                </tr>
 
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Wizard.html#next">next</a></b>()
-                                </div>
-                                <div class="description">Moves the wizard forward to the next page and sends the <var>onchange</var> signal.</div>
-                            </td>
-                        </tr>
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#activePageIndex">activePageIndex<span class="signature">()</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Returns the active page index.</div>
+                    </td>
+                </tr>
 
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont" ><b><a href="RapidContext.Widget.Wizard.html#previous">previous</a></b>()
-                                </div>
-                                <div class="description">Moves the wizard backward to the previous page and sends the <var>onchange</var>
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#addAll">addAll<span class="signature">(&hellip;child)</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Adds one or more children to this widget.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#addChildNode">addChildNode<span class="signature">(child)</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Adds a single child page widget to this widget.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#addClass">addClass<span class="signature">(&hellip;cls)</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Adds the specified CSS class names to this HTML DOM node.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div class="deprecated">
+                            <code><a href="#animate">animate<span class="signature">(opts)</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Performs a visual effect animation on this widget.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#blurAll">blurAll<span class="signature">()</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Blurs (unfocuses) this DOM node and all relevant child nodes.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#cancel">cancel<span class="signature">()</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Cancels the active page operation.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#destroy">destroy<span class="signature">()</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">The internal widget destructor function.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#disable">disable<span class="signature">()</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Disables this widget if it was previously enabled.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#done">done<span class="signature">()</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Sends the wizard <code>onclose</code> signal.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#enable">enable<span class="signature">()</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Enables this widget if it was previously disabled.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#getChildNodes">getChildNodes<span class="signature">()</span><span class="type-signature"> &rarr; {Array}</span></a></code>
+                        </div>
+                        <div class="description">Returns an array with all child pane widgets.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#hasClass">hasClass<span class="signature">(&hellip;cls)</span><span class="type-signature"> &rarr; {boolean}</span></a></code>
+                        </div>
+                        <div class="description">Checks if this HTML DOM node has the specified CSS class names.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#hide">hide<span class="signature">()</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Hides this widget node if it was previously visible.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#isDisabled">isDisabled<span class="signature">()</span><span class="type-signature"> &rarr; {boolean}</span></a></code>
+                        </div>
+                        <div class="description">Checks if this widget is disabled.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#isHidden">isHidden<span class="signature">()</span><span class="type-signature"> &rarr; {boolean}</span></a></code>
+                        </div>
+                        <div class="description">Checks if this widget node is hidden.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#next">next<span class="signature">()</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Moves the wizard forward to the next page and sends the <code>onchange</code> signal.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#previous">previous<span class="signature">()</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Moves the wizard backward to the previous page and sends the <code>onchange</code>
 signal.</div>
-                            </td>
-                        </tr>
+                    </td>
+                </tr>
 
-                    </tbody>
-                </table>
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#removeAll">removeAll<span class="signature">()</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Removes all children to this widget.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#removeChildNode">removeChildNode<span class="signature">(child)</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Removes a single child DOM node from this widget.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#removeClass">removeClass<span class="signature">(&hellip;cls)</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Removes the specified CSS class names from this HTML DOM node.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#setAttrs">setAttrs<span class="signature">(attrs)</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Updates the widget or HTML DOM node attributes.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#setStyle">setStyle<span class="signature">(styles)</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Updates the CSS styles of this HTML DOM node.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#show">show<span class="signature">()</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Shows this widget node if it was previously hidden.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#toggleClass">toggleClass<span class="signature">(&hellip;cls)</span><span class="type-signature"> &rarr; {boolean}</span></a></code>
+                        </div>
+                        <div class="description">Toggles adding and removing the specified CSS class names to and
+from this HTML DOM node.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#uid">uid<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></a></code>
+                        </div>
+                        <div class="description">Returns the unique identifier for this DOM node.</div>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
 
 
 
-                <dl class="inheritsList">
-                <dt>Methods borrowed from class <a href="RapidContext.Widget.html">RapidContext.Widget</a>: </dt><dd><a href="RapidContext.Widget.html#addAll">addAll</a>, <a href="RapidContext.Widget.html#addClass">addClass</a>, <a href="RapidContext.Widget.html#animate">animate</a>, <a href="RapidContext.Widget.html#blurAll">blurAll</a>, <a href="RapidContext.Widget.html#destroy">destroy</a>, <a href="RapidContext.Widget.html#disable">disable</a>, <a href="RapidContext.Widget.html#enable">enable</a>, <a href="RapidContext.Widget.html#hasClass">hasClass</a>, <a href="RapidContext.Widget.html#hide">hide</a>, <a href="RapidContext.Widget.html#isDisabled">isDisabled</a>, <a href="RapidContext.Widget.html#isHidden">isHidden</a>, <a href="RapidContext.Widget.html#removeAll">removeAll</a>, <a href="RapidContext.Widget.html#removeChildNode">removeChildNode</a>, <a href="RapidContext.Widget.html#removeClass">removeClass</a>, <a href="RapidContext.Widget.html#setAttrs">setAttrs</a>, <a href="RapidContext.Widget.html#setStyle">setStyle</a>, <a href="RapidContext.Widget.html#show">show</a>, <a href="RapidContext.Widget.html#toggleClass">toggleClass</a>, <a href="RapidContext.Widget.html#uid">uid</a></dd>
-                </dl>
+        <table class="summary-table">
+            <caption>Event Summary</caption>
+            <tbody>
 
+                <tr>
+                    <td class="attributes">
 
-<!-- ============================== events summary ======================== -->
+                    </td>
+                    <td class="name-description">
+                        <div >
 
+                            <code><a href="#event:oncancel"><span class="type-prefix">on</span>cancel</a></code>
+                        </div>
+                        <div class="description">Emitted when the user selects to cancel the page flow.</div>
+                    </td>
+                </tr>
 
+                <tr>
+                    <td class="attributes">
 
+                    </td>
+                    <td class="name-description">
+                        <div >
 
-                <table class="summaryTable">
-                    <caption>Event Summary</caption>
-                    <tbody>
+                            <code><a href="#event:onchange"><span class="type-prefix">on</span>change</a></code>
+                        </div>
+                        <div class="description">Emitted when a page transition is performed.</div>
+                    </td>
+                </tr>
 
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont"><b><a href="RapidContext.Widget.Wizard.html#event:oncancel">oncancel</a></b>()
-                                </div>
-                                <div class="description">Emitted when the user selects to cancel the page flow.</div>
-                            </td>
-                        </tr>
+                <tr>
+                    <td class="attributes">
 
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont"><b><a href="RapidContext.Widget.Wizard.html#event:onchange">onchange</a></b>()
-                                </div>
-                                <div class="description">Emitted when a page transition is performed.</div>
-                            </td>
-                        </tr>
+                    </td>
+                    <td class="name-description">
+                        <div >
 
-                        <tr>
-                            <td class="attributes">&nbsp;</td>
-                            <td class="nameDescription">
-                                <div class="fixedFont"><b><a href="RapidContext.Widget.Wizard.html#event:onclose">onclose</a></b>()
-                                </div>
-                                <div class="description">Emitted when the user has completed the page flow.</div>
-                            </td>
-                        </tr>
+                            <code><a href="#event:onclose"><span class="type-prefix">on</span>close</a></code>
+                        </div>
+                        <div class="description">Emitted when the user has completed the page flow.</div>
+                    </td>
+                </tr>
 
-                    </tbody>
-                </table>
-
-
-
-                <dl class="inheritsList">
-
-                </dl>
+            </tbody>
+        </table>
 
 
 
-<!-- ============================== constructor details ==================== -->
+</header>
 
-            <div id="constructor" class="details">
-                <div class="sectionTitle">
-                    Class Detail
-                </div>
-
-                <div class="fixedFont">
-                        <b>RapidContext.Widget.Wizard</b>(attrs)
-                </div>
-
-                <div class="description">
-                    Creates a new wizard widget.
-
-                </div>
+<article>
+    <div class="container-overview">
 
 
 
-                <pre class="code"><span class="label">JavaScript:</span>
-var page1 = RapidContext.Widget.Pane({ pageTitle: "The first step" });
+
+    <h2 class="section-title">Constructor</h2>
+
+
+    <h4 class="name" id="Wizard">
+        <span class="type-signature"></span><span class="type-prefix">new</span> Wizard<span class="signature">(attrs, &hellip;child<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Widget}</span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Creates a new wizard widget.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>attrs</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Object</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the widget and node attributes
+
+                    <h6>Properties</h6>
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>hidden</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>boolean</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the hidden widget flag, defaults to false
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>child</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Pane</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                    &lt;repeatable><br>
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the child Pane widgets
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>Widget</b>}</span>
+
+    the widget DOM node
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-examples">Examples:</dt>
+    <dd class="tag-examples">
+
+        <p class="code-caption">JavaScript</p>
+
+    <pre class="hljs"><code><span class="hljs-keyword">var</span> page1 = RapidContext.Widget.<span class="hljs-title function_ invoke__">Pane</span>({ <span class="hljs-attr">pageTitle</span>: <span class="hljs-string">&quot;The first step&quot;</span> });
 ...
-var page2 = RapidContext.Widget.Pane({ pageTitle: "The second step" });
+<span class="hljs-keyword">var</span> page2 = RapidContext.Widget.<span class="hljs-title function_ invoke__">Pane</span>({ <span class="hljs-attr">pageTitle</span>: <span class="hljs-string">&quot;The second step&quot;</span> });
 ...
-var attrs = { style: { width: "100%", height: "100%" } };
-var exampleWizard = RapidContext.Widget.Wizard(attrs, page1, page2);
-var exampleDialog = RapidContext.Widget.Dialog({ title: "Example Dialog" }, exampleWizard);
-RapidContext.Util.registerSizeConstraints(exampleDialog, "80%", "50%");</pre>
+<span class="hljs-keyword">var</span> attrs = { style: { width: <span class="hljs-string">&quot;100%&quot;</span>, height: <span class="hljs-string">&quot;100%&quot;</span> } };
+<span class="hljs-keyword">var</span> exampleWizard = RapidContext.Widget.<span class="hljs-title function_ invoke__">Wizard</span>(attrs, page1, page2);
+<span class="hljs-keyword">var</span> exampleDialog = RapidContext.Widget.<span class="hljs-title function_ invoke__">Dialog</span>({ <span class="hljs-attr">title</span>: <span class="hljs-string">&quot;Example Dialog&quot;</span> }, exampleWizard);
+RapidContext.Util.<span class="hljs-title function_ invoke__">registerSizeConstraints</span>(exampleDialog, <span class="hljs-string">&quot;80%&quot;</span>, <span class="hljs-string">&quot;50%&quot;</span>);</code></pre>
 
-                <pre class="code"><span class="label">User Interface XML:</span>
-&lt;Dialog id="exampleDialog" title="Example Dialog" w="80%" h="50%"&gt;
-  &lt;Wizard id="exampleWizard" style="width: 100%; height: 100%;"&gt;
-    &lt;Pane pageTitle="The first step"&gt;
+        <p class="code-caption">User Interface XML</p>
+
+    <pre class="hljs"><code><span class="hljs-tag">&lt;<span class="hljs-name">Dialog</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;exampleDialog&quot;</span> <span class="hljs-attr">title</span>=<span class="hljs-string">&quot;Example Dialog&quot;</span> <span class="hljs-attr">w</span>=<span class="hljs-string">&quot;80%&quot;</span> <span class="hljs-attr">h</span>=<span class="hljs-string">&quot;50%&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">Wizard</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;exampleWizard&quot;</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&quot;width: 100%; height: 100%;&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">Pane</span> <span class="hljs-attr">pageTitle</span>=<span class="hljs-string">&quot;The first step&quot;</span>&gt;</span>
       ...
-    &lt;/Pane&gt;
-    &lt;Pane pageTitle="The second step"&gt;
+    <span class="hljs-tag">&lt;/<span class="hljs-name">Pane</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">Pane</span> <span class="hljs-attr">pageTitle</span>=<span class="hljs-string">&quot;The second step&quot;</span>&gt;</span>
       ...
-    &lt;/Pane&gt;
-  &lt;/Wizard&gt;
-&lt;/Dialog&gt;</pre>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">Pane</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">Wizard</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">Dialog</span>&gt;</span></code></pre>
 
+    </dd>
 
 
 
 
-                        <dl class="detailList">
-                        <dt class="heading">Parameters:</dt>
 
-                            <dt>
-                                <span class="light fixedFont">{Object}</span>  <b>attrs</b>
 
-                            </dt>
-                                <dd>the widget and node attributes</dd>
 
-                            <dt>
-                                <span class="light fixedFont">{Boolean}</span>  <b>attrs.hidden</b>
-                                <i>Optional</i>
-                            </dt>
-                                <dd>the hidden widget flag, defaults to false</dd>
 
-                            <dt>
-                                <span class="light fixedFont">{Widget}</span>  <b>...</b>
-                                <i>Optional</i>
-                            </dt>
-                                <dd>the child widgets or DOM nodes (should be
-           Pane widgets)</dd>
 
-                        </dl>
 
 
 
 
 
-                        <dl class="detailList">
-                        <dt class="heading">Returns:</dt>
 
-                                <dd><span class="light fixedFont">{Widget}</span> the widget DOM node</dd>
 
-                        </dl>
 
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Wizard.js.html">RapidContext_Widget_Wizard.js</a>, <a href="RapidContext_Widget_Wizard.js.html#line59">line 59</a>
+    </dd>
 
+</dl>
 
 
-            </div>
 
+    </div>
 
-<!-- ============================== field details ========================== -->
 
+        <h3 class="section-title">Extends</h3>
 
-<!-- ============================== method details ========================= -->
 
-                <div class="sectionTitle">
-                    Method Detail
-                </div>
 
-                    <div id="getChildNodes" class="fixedFont">
 
-                    <span class="light">{Array}</span>
-                    <b>getChildNodes</b>()
+    <ul>
+        <li><a href="RapidContext.Widget.html">RapidContext.Widget</a></li>
+    </ul>
 
-                    </div>
-                    <div class="description">
-                        Returns an array with all child pane widgets. Note that the array
-is a real JavaScript array, not a dynamic NodeList.
 
 
-                    </div>
 
 
 
@@ -354,178 +794,32 @@ is a real JavaScript array, not a dynamic NodeList.
 
 
 
-                            <dl class="detailList">
-                            <dt class="heading">Returns:</dt>
 
-                                <dd><span class="light fixedFont">{Array}</span> the array of child wizard page widgets</dd>
 
-                            </dl>
+        <h3 class="section-title">Methods</h3>
 
 
 
 
-                    <hr />
 
-                    <div id="addChildNode" class="fixedFont">
+    <h4 class="name" id="activatePage">
+        <span class="type-signature"></span>activatePage<span class="signature">(indexOrPage)</span><span class="type-signature"></span>
+    </h4>
 
 
-                    <b>addChildNode</b>(child)
 
-                    </div>
-                    <div class="description">
-                        Adds a single child page widget to this widget. The child widget should be a
-<var>RapidContext.Widget.Pane</var> widget, or a new one will be created where it
-will be added.
 
 
-                    </div>
-
-
-
-
-                            <dl class="detailList">
-                            <dt class="heading">Parameters:</dt>
-
-                                <dt>
-                                    <span class="light fixedFont">{Widget}</span> <b>child</b>
-
-                                </dt>
-                                <dd>the page widget to add</dd>
-
-                            </dl>
-
-
-
-
-
-
-
-
-                    <hr />
-
-                    <div id="activePage" class="fixedFont">
-
-                    <span class="light">{Widget}</span>
-                    <b>activePage</b>()
-
-                    </div>
-                    <div class="description">
-                        Returns the active page.
-
-
-                    </div>
-
-
-
-
-
-
-
-
-                            <dl class="detailList">
-                            <dt class="heading">Returns:</dt>
-
-                                <dd><span class="light fixedFont">{Widget}</span> the active page, or
-        null if no pages have been added</dd>
-
-                            </dl>
-
-
-
-
-                    <hr />
-
-                    <div id="activePageIndex" class="fixedFont">
-
-
-                    <b>activePageIndex</b>()
-
-                    </div>
-                    <div class="description">
-                        Returns the active page index.
-
-
-                    </div>
-
-
-
-
-
-
-
-
-                            <dl class="detailList">
-                            <dt class="heading">Returns:</dt>
-
-                                <dd>the active page index, or
-        -1 if no page is active</dd>
-
-                            </dl>
-
-
-
-
-                    <hr />
-
-                    <div id="activatePage" class="fixedFont">
-
-
-                    <b>activatePage</b>(indexOrPage)
-
-                    </div>
-                    <div class="description">
-                        Activates a new page and sends the <var>onchange</var> signal. If the page is moved
+<div class="description">
+    <p>Activates a new page and sends the <code>onchange</code> signal. If the page is moved
 forward, the old page must pass a form validation check, or nothing will
-happen.
-
-
-                    </div>
-
-
-
-
-                            <dl class="detailList">
-                            <dt class="heading">Parameters:</dt>
-
-                                <dt>
-                                    <span class="light fixedFont">{Number/Widget}</span> <b>indexOrPage</b>
-
-                                </dt>
-                                <dd>the page index or page DOM node</dd>
-
-                            </dl>
+happen.</p>
+</div>
 
 
 
 
-
-
-
-                            <dl class="detailList linkList">
-                            <dt class="heading">See:</dt>
-
-                                <dd><a href="RapidContext.Widget.Wizard.html#next">#next</a></dd>
-
-                                <dd><a href="RapidContext.Widget.Wizard.html#previous">#previous</a></dd>
-
-                            </dl>
-
-
-                    <hr />
-
-                    <div id="cancel" class="fixedFont">
-
-
-                    <b>cancel</b>()
-
-                    </div>
-                    <div class="description">
-                        Cancels the active page operation. This method will also reset the page
-status of the currently active page to <var>ANY</var>. This method is triggered when
-the user presses the <q>Cancel</q> button.
-
-
-                    </div>
+<dl class="details">
 
 
 
@@ -535,30 +829,58 @@ the user presses the <q>Cancel</q> button.
 
 
 
-
-                            <dl class="detailList linkList">
-                            <dt class="heading">See:</dt>
-
-                                <dd><a href="RapidContext.Widget.Pane.html#.ANY">RapidContext.Widget.Pane.ANY</a></dd>
-
-                            </dl>
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
 
 
-                    <hr />
+<table class="params">
+    <thead>
+    <tr>
 
-                    <div id="previous" class="fixedFont">
-
-
-                    <b>previous</b>()
-
-                    </div>
-                    <div class="description">
-                        Moves the wizard backward to the previous page and sends the <var>onchange</var>
-signal. This method is triggered when the user presses the <q>Previous</q>
-button.
+        <th>Name</th>
 
 
-                    </div>
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>indexOrPage</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>number</b>|<b>Widget</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the page index or page DOM node
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
 
 
 
@@ -570,23 +892,2134 @@ button.
 
 
 
-                    <hr />
-
-                    <div id="next" class="fixedFont">
 
 
-                    <b>next</b>()
 
-                    </div>
-                    <div class="description">
-                        Moves the wizard forward to the next page and sends the <var>onchange</var> signal.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul><li><a href="RapidContext.Widget.Wizard.html#next">#next</a></li>,<li><a href="RapidContext.Widget.Wizard.html#previous">#previous</a></li></ul>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Wizard.js.html">RapidContext_Widget_Wizard.js</a>, <a href="RapidContext_Widget_Wizard.js.html#line235">line 235</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="activePage">
+        <span class="type-signature"></span>activePage<span class="signature">()</span><span class="type-signature"> &rarr; {Widget}</span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Returns the active page.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>Widget</b>}</span>
+
+    the active page, or
+        null if no pages have been added
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Wizard.js.html">RapidContext_Widget_Wizard.js</a>, <a href="RapidContext_Widget_Wizard.js.html#line207">line 207</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="activePageIndex">
+        <span class="type-signature"></span>activePageIndex<span class="signature">()</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Returns the active page index.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    the active page index, or
+        -1 if no page is active
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Wizard.js.html">RapidContext_Widget_Wizard.js</a>, <a href="RapidContext_Widget_Wizard.js.html#line221">line 221</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="addAll">
+        <span class="type-signature"></span>addAll<span class="signature">(&hellip;child)</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Adds one or more children to this widget. This method will flatten any
+arrays among the arguments and ignores any <code>null</code> or <code>undefined</code> arguments.
+Any DOM nodes or widgets will be added to the end, and other objects will be
+converted to a text node first. Subclasses should normally override the
+<code>addChildNode()</code> method instead of this one, since that is the basis for
+DOM node insertion.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>child</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>|<b>Node</b>|<b>Array</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+
+
+
+
+                    &lt;repeatable><br>
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the children to add
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#addAll">RapidContext.Widget#addAll</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line570">line 570</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="addChildNode">
+        <span class="type-signature"></span>addChildNode<span class="signature">(child)</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Adds a single child page widget to this widget. The child widget should be a
+<code>RapidContext.Widget.Pane</code> widget, or a new one will be created where it
+will be added.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>child</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Widget</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the page widget to add
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+
+
+
+
+    <dt class="tag-overrides">Overrides:</dt>
+    <dd class="tag-overrides">
+        <a href="RapidContext.Widget.html#addChildNode">RapidContext.Widget#addChildNode</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Wizard.js.html">RapidContext_Widget_Wizard.js</a>, <a href="RapidContext_Widget_Wizard.js.html#line137">line 137</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="addClass">
+        <span class="type-signature"></span>addClass<span class="signature">(&hellip;cls)</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Adds the specified CSS class names to this HTML DOM node.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>cls</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>|<b>Array</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+
+
+
+
+                    &lt;repeatable><br>
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the CSS class names to add
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#addClass">RapidContext.Widget#addClass</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line333">line 333</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="animate">
+        <span class="type-signature"></span>animate<span class="signature">(opts)</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Performs a visual effect animation on this widget. This is
+implemented using the <code>MochiKit.Visual</code> effect package. All options
+sent to this function will be passed on to the appropriate
+<code>MochiKit.Visual</code> function.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>opts</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Object</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the visual effect options
+
+                    <h6>Properties</h6>
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>effect</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the MochiKit.Visual effect name
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>queue</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the MochiKit.Visual queue handling,
+           defaults to &quot;replace&quot; and a unique scope for each widget
+           (see <code>MochiKit.Visual</code> for full options)
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#animate">RapidContext.Widget#animate</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <dt class="tag-deprecated">Deprecated:</dt>
+        <dd class="important">
+            Use CSS animations instead.
+        </dd>
+
+
+
+
+
+
+
+    <dt class="tag-examples">Example:</dt>
+    <dd class="tag-examples">
+
+    <pre class="hljs"><code>widget.<span class="hljs-title function_ invoke__">animate</span>({ <span class="hljs-attr">effect</span>: <span class="hljs-string">&quot;fade&quot;</span>, <span class="hljs-attr">duration</span>: <span class="hljs-number">0.5</span> });
+widget.<span class="hljs-title function_ invoke__">animate</span>({ <span class="hljs-attr">effect</span>: <span class="hljs-string">&quot;Move&quot;</span>, <span class="hljs-attr">transition</span>: <span class="hljs-string">&quot;spring&quot;</span>, <span class="hljs-attr">y</span>: <span class="hljs-number">300</span> });</code></pre>
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line492">line 492</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="blurAll">
+        <span class="type-signature"></span>blurAll<span class="signature">()</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Blurs (unfocuses) this DOM node and all relevant child nodes. This function
+will recursively blur all <code>&lt;a&gt;</code>, <code>&lt;button&gt;</code>, <code>&lt;input&gt;</code>, <code>&lt;textarea&gt;</code> and
+<code>&lt;select&gt;</code> child nodes found.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#blurAll">RapidContext.Widget#blurAll</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line510">line 510</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="cancel">
+        <span class="type-signature"></span>cancel<span class="signature">()</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Cancels the active page operation. This method will also reset the page
+status of the currently active page to <code>ANY</code>. This method is triggered when
+the user presses the &quot;Cancel&quot; button.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <a href="RapidContext.Widget.Pane.html#.ANY">RapidContext.Widget.Pane.ANY</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Wizard.js.html">RapidContext_Widget_Wizard.js</a>, <a href="RapidContext_Widget_Wizard.js.html#line283">line 283</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="destroy">
+        <span class="type-signature"></span>destroy<span class="signature">()</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>The internal widget destructor function. This method should only
+be called by <code>destroyWidget()</code> and may be overridden by subclasses.
+By default this method does nothing.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#destroy">RapidContext.Widget#destroy</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line194">line 194</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="disable">
+        <span class="type-signature"></span>disable<span class="signature">()</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Disables this widget if it was previously enabled. This method is
+equivalent to calling <code>setAttrs({ disabled: true })</code>.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#disable">RapidContext.Widget#disable</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line424">line 424</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="done">
+        <span class="type-signature"></span>done<span class="signature">()</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Sends the wizard <code>onclose</code> signal. This method is triggered when the user
+presses the &quot;Finish&quot; button.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Wizard.js.html">RapidContext_Widget_Wizard.js</a>, <a href="RapidContext_Widget_Wizard.js.html#line315">line 315</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="enable">
+        <span class="type-signature"></span>enable<span class="signature">()</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Enables this widget if it was previously disabled. This is
+equivalent to calling <code>setAttrs({ disabled: false })</code>.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#enable">RapidContext.Widget#enable</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line416">line 416</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="getChildNodes">
+        <span class="type-signature"></span>getChildNodes<span class="signature">()</span><span class="type-signature"> &rarr; {Array}</span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Returns an array with all child pane widgets. Note that the array
+is a real JavaScript array, not a dynamic NodeList.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>Array</b>}</span>
+
+    the array of child wizard page widgets
+
+    </dd>
+
+
+
+
+
+    <dt class="tag-overrides">Overrides:</dt>
+    <dd class="tag-overrides">
+        <a href="RapidContext.Widget.html#getChildNodes">RapidContext.Widget#getChildNodes</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Wizard.js.html">RapidContext_Widget_Wizard.js</a>, <a href="RapidContext_Widget_Wizard.js.html#line126">line 126</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="hasClass">
+        <span class="type-signature"></span>hasClass<span class="signature">(&hellip;cls)</span><span class="type-signature"> &rarr; {boolean}</span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Checks if this HTML DOM node has the specified CSS class names.
+Note that more than one CSS class name may be checked, in which
+case all must be present.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>cls</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>|<b>Array</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+
+
+
+
+                    &lt;repeatable><br>
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the CSS class names to check
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>boolean</b>}</span>
+
+    <code>true</code> if all CSS classes were present, or
+        <code>false</code> otherwise
+
+    </dd>
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#hasClass">RapidContext.Widget#hasClass</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line315">line 315</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="hide">
+        <span class="type-signature"></span>hide<span class="signature">()</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Hides this widget node if it was previously visible. This method
+is equivalent to calling <code>setAttrs({ hidden: true })</code>. It is safe
+for all types of widgets, since it only adds the <code>widgetHidden</code>
+CSS class instead of setting the <code>display</code> style property.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#hide">RapidContext.Widget#hide</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line470">line 470</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="isDisabled">
+        <span class="type-signature"></span>isDisabled<span class="signature">()</span><span class="type-signature"> &rarr; {boolean}</span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Checks if this widget is disabled. This method checks both the
+&quot;widgetDisabled&quot; CSS class and the <code>disabled</code> property. Changes
+to the disabled status can be made with <code>enable()</code>, <code>disable()</code> or
+<code>setAttrs()</code>.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>boolean</b>}</span>
+
+    <code>true</code> if the widget is disabled, or
+        <code>false</code> otherwise
+
+    </dd>
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#isDisabled">RapidContext.Widget#isDisabled</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line395">line 395</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="isHidden">
+        <span class="type-signature"></span>isHidden<span class="signature">()</span><span class="type-signature"> &rarr; {boolean}</span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Checks if this widget node is hidden. This method checks for the
+existence of the <code>widgetHidden</code> CSS class. It does NOT check the
+actual widget visibility (the <code>display</code> style property set by
+animations for example).</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>boolean</b>}</span>
+
+    <code>true</code> if the widget is hidden, or
+        <code>false</code> otherwise
+
+    </dd>
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#isHidden">RapidContext.Widget#isHidden</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line437">line 437</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="next">
+        <span class="type-signature"></span>next<span class="signature">()</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Moves the wizard forward to the next page and sends the <code>onchange</code> signal.
 The page will not be changed if the active page fails a validation check.
-This method is triggered when the user presses the <q>Next</q> button.
+This method is triggered when the user presses the &quot;Next&quot; button.</p>
+</div>
 
 
-                    </div>
 
 
+<dl class="details">
 
 
 
@@ -596,20 +3029,12 @@ This method is triggered when the user presses the <q>Next</q> button.
 
 
 
-                    <hr />
 
-                    <div id="done" class="fixedFont">
 
 
-                    <b>done</b>()
 
-                    </div>
-                    <div class="description">
-                        Sends the wizard <var>onclose</var> signal. This method is triggered when the user
-presses the <q>Finish</q> button.
 
 
-                    </div>
 
 
 
@@ -625,23 +3050,13 @@ presses the <q>Finish</q> button.
 
 
 
-<!-- ============================== event details ========================= -->
 
-                <div class="sectionTitle">
-                    Event Detail
-                </div>
 
-                    <div id="event:onchange" class="fixedFont">
 
 
-                    <b>onchange</b>()
 
-                    </div>
-                    <div class="description">
-                        Emitted when a page transition is performed.
 
 
-                    </div>
 
 
 
@@ -653,48 +3068,48 @@ presses the <q>Finish</q> button.
 
 
 
-                    <hr />
 
-                    <div id="event:oncancel" class="fixedFont">
 
 
-                    <b>oncancel</b>()
 
-                    </div>
-                    <div class="description">
-                        Emitted when the user selects to cancel the page flow.
 
 
-                    </div>
 
 
 
 
 
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Wizard.js.html">RapidContext_Widget_Wizard.js</a>, <a href="RapidContext_Widget_Wizard.js.html#line305">line 305</a>
+    </dd>
 
+</dl>
 
 
 
 
 
-                    <hr />
 
-                    <div id="event:onclose" class="fixedFont">
 
+    <h4 class="name" id="previous">
+        <span class="type-signature"></span>previous<span class="signature">()</span><span class="type-signature"></span>
+    </h4>
 
-                    <b>onclose</b>()
 
-                    </div>
-                    <div class="description">
-                        Emitted when the user has completed the page flow.
 
 
-                    </div>
 
+<div class="description">
+    <p>Moves the wizard backward to the previous page and sends the <code>onchange</code>
+signal. This method is triggered when the user presses the &quot;Previous&quot;
+button.</p>
+</div>
 
 
 
 
+<dl class="details">
 
 
 
@@ -705,9 +3120,1561 @@ presses the <q>Finish</q> button.
 
 
 
-    <!--END-->
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Wizard.js.html">RapidContext_Widget_Wizard.js</a>, <a href="RapidContext_Widget_Wizard.js.html#line294">line 294</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="removeAll">
+        <span class="type-signature"></span>removeAll<span class="signature">()</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Removes all children to this widget. This method will also destroy and child
+widgets and disconnect all signal listeners. This method uses the
+<code>getChildNodes()</code> and <code>removeChildNode()</code> methods to find and remove the
+individual child nodes.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#removeAll">RapidContext.Widget#removeAll</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line582">line 582</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="removeChildNode">
+        <span class="type-signature"></span>removeChildNode<span class="signature">(child)</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Removes a single child DOM node from this widget. This method is
+sometimes overridden by child widgets in order to hide or control
+intermediate DOM nodes required by the widget.</p>
+
+<p>Note that this method will NOT destroy the removed child widget,
+so care must be taken to ensure proper child widget destruction.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>child</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Widget</b>|<b>Node</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the DOM node to remove
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#removeChildNode">RapidContext.Widget#removeChildNode</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line553">line 553</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="removeClass">
+        <span class="type-signature"></span>removeClass<span class="signature">(&hellip;cls)</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Removes the specified CSS class names from this HTML DOM node.
+Note that this method will not remove any class starting with
+&quot;widget&quot;.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>cls</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>|<b>Array</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+
+
+
+
+                    &lt;repeatable><br>
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the CSS class names to remove
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#removeClass">RapidContext.Widget#removeClass</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line353">line 353</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="setAttrs">
+        <span class="type-signature"></span>setAttrs<span class="signature">(attrs)</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Updates the widget or HTML DOM node attributes. This method is
+sometimes overridden by individual widgets to allow modification
+of additional widget attributes.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>attrs</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Object</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the widget and node attributes to set
+
+                    <h6>Properties</h6>
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>disabled</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>boolean</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the disabled widget flag
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>hidden</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>boolean</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the hidden widget flag
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>class</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the CSS class names
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#setAttrs">RapidContext.Widget#setAttrs</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line246">line 246</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="setStyle">
+        <span class="type-signature"></span>setStyle<span class="signature">(styles)</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Updates the CSS styles of this HTML DOM node. This method is
+identical to <code>MochiKit.Style.setStyle</code>, but uses &quot;this&quot; as the
+first argument.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>styles</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Object</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                an object with the styles to set
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#setStyle">RapidContext.Widget#setStyle</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-examples">Example:</dt>
+    <dd class="tag-examples">
+
+    <pre class="hljs"><code>widget<span class="hljs-selector-class">.setStyle</span>({ &quot;<span class="hljs-attribute">font-size</span>&quot;: <span class="hljs-string">&quot;bold&quot;</span>, <span class="hljs-string">&quot;color&quot;</span>: <span class="hljs-string">&quot;red&quot;</span> });</code></pre>
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line294">line 294</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="show">
+        <span class="type-signature"></span>show<span class="signature">()</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Shows this widget node if it was previously hidden. This method is
+equivalent to calling <code>setAttrs({ hidden: false })</code>. It is safe
+for all types of widgets, since it only removes the <code>widgetHidden</code>
+CSS class instead of setting the <code>display</code> style property.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#show">RapidContext.Widget#show</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line460">line 460</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="toggleClass">
+        <span class="type-signature"></span>toggleClass<span class="signature">(&hellip;cls)</span><span class="type-signature"> &rarr; {boolean}</span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Toggles adding and removing the specified CSS class names to and
+from this HTML DOM node. If all the CSS classes are already set,
+they will be removed. Otherwise they will be added.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>cls</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>|<b>Array</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+
+
+
+
+                    &lt;repeatable><br>
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the CSS class names to remove
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>boolean</b>}</span>
+
+    <code>true</code> if the CSS classes were added, or
+        <code>false</code> otherwise
+
+    </dd>
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#toggleClass">RapidContext.Widget#toggleClass</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line376">line 376</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="uid">
+        <span class="type-signature"></span>uid<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Returns the unique identifier for this DOM node. If a node id has
+already been set, that id will be returned. Otherwise a new id
+will be generated and assigned to the widget DOM node.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>string</b>}</span>
+
+    the the unique DOM node identifier
+
+    </dd>
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.Widget.html#uid">RapidContext.Widget#uid</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line182">line 182</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+
+        <h3 class="section-title">Events</h3>
+
+
+
+
+
+
+    <h4 class="name" id="event:oncancel">
+        <span class="type-prefix">on</span>cancel
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Emitted when the user selects to cancel the page flow.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Wizard.js.html">RapidContext_Widget_Wizard.js</a>, <a href="RapidContext_Widget_Wizard.js.html#line106">line 106</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="event:onchange">
+        <span class="type-prefix">on</span>change
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Emitted when a page transition is performed.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Wizard.js.html">RapidContext_Widget_Wizard.js</a>, <a href="RapidContext_Widget_Wizard.js.html#line99">line 99</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="event:onclose">
+        <span class="type-prefix">on</span>close
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Emitted when the user has completed the page flow.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Wizard.js.html">RapidContext_Widget_Wizard.js</a>, <a href="RapidContext_Widget_Wizard.js.html#line113">line 113</a>
+    </dd>
+
+</dl>
+
+
+
+
+</article>
+
+
+
+
+
+      </div>
     </section>
+
     <section class="footer center fineprint">
       <hr>
       Copyright &copy; 2007-2023 Per Cederberg. All rights reserved.
