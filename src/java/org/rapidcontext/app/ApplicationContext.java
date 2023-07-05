@@ -255,7 +255,7 @@ public class ApplicationContext {
         initPlugins();
         initScheduler();
         // TODO: Move aliases into storage catalog
-        library.refreshAliases();
+        scheduler.submit(() -> library.refreshAliases());
         // TODO: Remove singleton environment reference
         env = Environment.all(storage).findFirst().orElse(null);
         try {
