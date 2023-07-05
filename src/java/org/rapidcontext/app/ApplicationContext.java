@@ -21,9 +21,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang3.time.DateUtils;
 import org.rapidcontext.app.model.AppStorage;
 import org.rapidcontext.app.plugin.PluginException;
 import org.rapidcontext.app.plugin.PluginManager;
@@ -38,8 +41,6 @@ import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.storage.StorageException;
-import org.rapidcontext.core.task.Scheduler;
-import org.rapidcontext.core.task.Task;
 import org.rapidcontext.core.type.Environment;
 import org.rapidcontext.core.type.Session;
 import org.rapidcontext.core.type.WebMatcher;
@@ -79,15 +80,40 @@ public class ApplicationContext {
     public static Date START_TIME = new Date();
 
     /**
-     * The number of milliseconds between each run of the expired
-     * session cleaner job.
+     * The seconds to wait between runs of the storage cache cleaner job.
      */
-    private static final long EXPIRED_INTERVAL_MILLIS = DateUtils.MILLIS_PER_HOUR;
+    private static final int CACHE_CLEAN_WAIT_SECS = 30;
+
+    /**
+     * The minutes to wait between runs of the expired session cleaner job.
+     */
+    private static final int SESSION_CLEAN_WAIT_MINS = 60;
 
     /**
      * The singleton application context instance.
      */
     private static ApplicationContext instance = null;
+
+    /**
+     * The thread factory for background (scheduled) jobs.
+     */
+    private static final ThreadFactory THREAD_FACTORY = new ThreadFactory() {
+
+        /**
+         * The thread group to use.
+         */
+        private ThreadGroup group = new ThreadGroup("background");
+
+        /**
+         * The count of created threads.
+         */
+        private int count = 0;
+
+        @Override
+        public synchronized Thread newThread(Runnable r) {
+            return new Thread(group, r, "background-" + count++);
+        }
+    };
 
     /**
      * The application root storage.
@@ -98,6 +124,11 @@ public class ApplicationContext {
      * The plug-in manager.
      */
     private PluginManager pluginManager;
+
+    /**
+     * The background task scheduler.
+     */
+    private ScheduledThreadPoolExecutor scheduler = null;
 
     /**
      * The application configuration.
@@ -146,13 +177,6 @@ public class ApplicationContext {
         }
         if (start) {
             instance.initAll();
-            Task sessionCleaner = new Task("storage session cleaner") {
-                public void execute() {
-                    Session.removeExpired(getInstance().getStorage());
-                }
-            };
-            long delay = EXPIRED_INTERVAL_MILLIS;
-            Scheduler.schedule(sessionCleaner, 1000, delay);
         }
         return instance;
     }
@@ -162,7 +186,6 @@ public class ApplicationContext {
      */
     protected static synchronized void destroy() {
         if (instance != null) {
-            Scheduler.unscheduleAll();
             instance.destroyAll();
             instance = null;
         }
@@ -230,6 +253,7 @@ public class ApplicationContext {
     private void initAll() {
         initLibrary();
         initPlugins();
+        initScheduler();
         // TODO: Move aliases into storage catalog
         library.refreshAliases();
         // TODO: Remove singleton environment reference
@@ -269,9 +293,31 @@ public class ApplicationContext {
     }
 
     /**
+     * Initializes and starts the background task scheduler.
+     */
+    private void initScheduler() {
+        scheduler = new ScheduledThreadPoolExecutor(1, THREAD_FACTORY);
+        scheduler.setRemoveOnCancelPolicy(true);
+        scheduler.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
+        scheduler.setContinueExistingPeriodicTasksAfterShutdownPolicy(false);
+        scheduler.scheduleWithFixedDelay(
+                () -> storage.cacheClean(false),
+                ThreadLocalRandom.current().nextInt(CACHE_CLEAN_WAIT_SECS),
+                CACHE_CLEAN_WAIT_SECS,
+                TimeUnit.SECONDS);
+        scheduler.scheduleWithFixedDelay(
+                () -> Session.removeExpired(this.getStorage()),
+                ThreadLocalRandom.current().nextInt(SESSION_CLEAN_WAIT_MINS),
+                SESSION_CLEAN_WAIT_MINS,
+                TimeUnit.MINUTES);
+    }
+
+    /**
      * Destroys this context and frees all resources.
      */
     private void destroyAll() {
+        scheduler.shutdownNow();
+        scheduler = null;
         pluginManager.unloadAll();
         library = new Library(this.storage);
         matchers = null;

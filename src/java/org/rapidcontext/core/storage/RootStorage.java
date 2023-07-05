@@ -24,8 +24,6 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.task.Scheduler;
-import org.rapidcontext.core.task.Task;
 import org.rapidcontext.core.type.Type;
 
 /**
@@ -77,12 +75,6 @@ public class RootStorage extends MemoryStorage {
     public static final Path PATH_STORAGE = Path.from("/storage/");
 
     /**
-     * The number of seconds between each run of the object cache
-     * cleaner job.
-     */
-    private static final int PASSIVATE_INTERVAL_SECS = 30;
-
-    /**
      * The sorted array of mounted storages. This array is sorted
      * every time a mount point is added or modified.
      */
@@ -132,13 +124,6 @@ public class RootStorage extends MemoryStorage {
         super("/", readWrite, true);
         dict.set(KEY_TYPE, "storage/root");
         dict.set("storages", mountedStorages);
-        Task cacheCleaner = new Task("storage cache cleaner") {
-            public void execute() {
-                cacheClean(false);
-            }
-        };
-        long delay = PASSIVATE_INTERVAL_SECS * 1000L;
-        Scheduler.schedule(cacheCleaner, delay, delay);
     }
 
     /**
