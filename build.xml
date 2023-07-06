@@ -359,19 +359,4 @@
     </zip>
   </target>
 
-
-<!-- TOOLING & HELPER TARGETS -->
-
-  <target name="util-copyright" description="Updates copyright years in sources">
-    <replaceregexp match="(20\d\d)-20\d\d" replace="\1-2023" flags="g" byline="true">
-      <fileset dir=".">
-        <patternset refid="pattern.srcfiles" />
-        <include name="tools/jsdoc-template-rapidcontext/tmpl/*.tmpl"/>
-        <exclude name="doc/external/**"/>
-        <exclude name="src/plugin/legacy/**"/>
-        <exclude name="src/plugin/system/files/js/crypto-*.js"/>
-      </fileset>
-    </replaceregexp>
-  </target>
-
 </project>

@@ -64,3 +64,9 @@ run:
 	cd share/docker && docker compose build --build-arg VERSION=$(VER) --pull
 	rm share/docker/rapidcontext-$(VER).zip
 	cd share/docker && docker compose run --rm --service-ports rapidcontext
+
+
+# Update source code copyright year
+fix-copyright:
+	git grep -Ilrwz Copyright -- ':!doc/external/*' | \
+		xargs -0 -n 1 sed -Ei '' 's/(20[0-9]{2})-20[0-9]{2}/\1-2023/'
