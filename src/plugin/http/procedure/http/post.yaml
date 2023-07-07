@@ -4,7 +4,7 @@ alias: PlugIn.Http.Post
 className: org.rapidcontext.app.plugin.http.HttpPostBuiltInProcedure
 description: >-
     Sends an HTTP POST request and returns the result.
-    This procedure is deprecated, call 'http/request' instead.
+deprecated: Use http/request with method POST instead.
 binding:
   - name: url
     type: argument

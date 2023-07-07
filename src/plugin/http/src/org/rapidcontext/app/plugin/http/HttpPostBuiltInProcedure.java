@@ -14,8 +14,6 @@
 
 package org.rapidcontext.app.plugin.http;
 
-import java.util.logging.Logger;
-
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
@@ -33,11 +31,6 @@ import org.rapidcontext.core.type.Procedure;
  */
 @Deprecated
 public class HttpPostBuiltInProcedure extends Procedure {
-
-    /**
-     * The class logger.
-     */
-    private static final Logger LOG = Logger.getLogger(HttpPostBuiltInProcedure.class.getName());
 
     /**
      * Creates a new procedure from a serialized representation.
@@ -69,7 +62,6 @@ public class HttpPostBuiltInProcedure extends Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        LOG.warning("deprecated: " + this + " called, use http/request instead");
         bindings.set(HttpRequestProcedure.BINDING_CONNECTION, Bindings.ARGUMENT, "", null);
         bindings.set(HttpRequestProcedure.BINDING_METHOD, Bindings.ARGUMENT, "POST", null);
         bindings.set(HttpRequestProcedure.BINDING_FLAGS, Bindings.ARGUMENT, "", null);
