@@ -172,10 +172,10 @@ RapidContext.Util.toTitleCase = function (str) {
  * @return {string} the resolved absolute URI
  *
  * @deprecated This function will be removed and/or renamed in the future.
- *     Better solutions for handling URL:s is to use a URL-parsing library such
- *     as URL.js.
+ *     Use `new URL(..., document.baseURI)` instead.
  */
 RapidContext.Util.resolveURI = function (uri, base) {
+    console.warn("deprecated: resolveURI() called, use 'new URL(...)' instead");
     var pos;
     base = base || document.baseURI || document.getElementsByTagName("base")[0].href;
     if (uri.includes(":")) {
