@@ -18,7 +18,12 @@ property:
   - name: alias
     description: >-
         The procedure alias, used for migration from legacy procedure names.
-        Optional, defaults to blank.
+        Optional, defaults to null.
+    required: false
+  - name: deprecated
+    description: >-
+        The deprecation message for an outdated procedure. Use to warn users
+        prior to eventual removal of a procedure. Optional, defaults to null.
     required: false
   - name: binding
     description: >-

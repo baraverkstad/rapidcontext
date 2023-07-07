@@ -50,6 +50,11 @@ public abstract class Procedure extends StorableObject implements org.rapidconte
     public static final String KEY_ALIAS = "alias";
 
     /**
+     * The dictionary key for the optional deprecation message.
+     */
+    public static final String KEY_DEPRECATED = "deprecated";
+
+    /**
      * The dictionary key for the binding array.
      */
     public static final String KEY_BINDING = "binding";
@@ -139,6 +144,15 @@ public abstract class Procedure extends StorableObject implements org.rapidconte
      */
     public String alias() {
         return dict.getString(KEY_ALIAS, null);
+    }
+
+    /**
+     * Returns the optional deprecation message.
+     *
+     * @return the deprecation message, or null for none
+     */
+    public String deprecated() {
+        return dict.getString(KEY_DEPRECATED, null);
     }
 
     /**
