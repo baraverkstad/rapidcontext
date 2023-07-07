@@ -723,6 +723,7 @@ AdminApp.prototype._showProcedure = function () {
     this.ui.procReload.hide();
     this.ui.procLoading.hide();
     this.ui.procAlias.classList.add("hidden");
+    this.ui.procDeprecated.classList.add("hidden");
     this.ui.procArgTable.innerHTML = "";
     this.ui.procExec.disable();
     this.ui.procBatch.disable();
@@ -757,6 +758,7 @@ AdminApp.prototype._callbackShowProcedure = function (procName, res) {
             this.ui.procEdit.show();
         }
         this.ui.procAlias.classList.toggle("hidden", !res.alias);
+        this.ui.procDeprecated.classList.toggle("hidden", !res.deprecated);
         this.ui.procForm.update(res);
         this.ui.procArgTable.innerHTML = "";
         var count = 0;

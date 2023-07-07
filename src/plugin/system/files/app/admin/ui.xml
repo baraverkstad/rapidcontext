@@ -320,8 +320,14 @@
               </tr>
               <tr id="procAlias" class="hidden">
                 <th class="label pr-2">Alias:</th>
-                <td class="w-100">
-                  <i><Field name="alias" /> (deprecated)</i>
+                <td>
+                  <Field name="alias" class="unimportant" />
+                </td>
+              </tr>
+              <tr id="procDeprecated" class="hidden">
+                <th class="label color-danger pr-2">Deprecated:</th>
+                <td>
+                  <Field name="deprecated" class="color-danger text-pre-wrap"/>
                 </td>
               </tr>
               <tr>
