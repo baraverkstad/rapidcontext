@@ -64,7 +64,7 @@ HelpApp.prototype.loadTopics = function () {
             topicUrls[obj.url] = topic;
         }
         if (obj.external) {
-            topic.url = RapidContext.Util.resolveURI(obj.url);
+            topic.url = new URL(obj.url, document.baseURI).toString();
         }
         addAll(topic, topic.source, obj.children);
     }
@@ -255,51 +255,44 @@ HelpApp.prototype._showContentHtml = function (html) {
     html = html.replace(/<!--END-->[\s\S]*$/, "");
     html = html.replace(/^[\s\S]*(<div class="document">)/i, "$1");
     this.ui.contentText.innerHTML = html;
-    var baseUrl = RapidContext.Util.resolveURI("");
-    var links = this.ui.contentText.getElementsByTagName("a");
-    for (var i = 0; i < links.length; i++) {
-        var href = links[i].getAttribute("href");
-        if (href && href != "") {
-            href = RapidContext.Util.resolveURI(href, this._currentUrl);
-            if (href.startsWith(baseUrl)) {
-                href = href.substring(baseUrl.length);
+    let base = document.baseURI.replace(/[^/]+$/, "");
+    let current = new URL(this._currentUrl, base);
+    this.ui.contentText.querySelectorAll("a").forEach((el) => {
+        let href = el.getAttribute("href");
+        if (href) {
+            href = new URL(href, current).toString();
+            if (href.startsWith(base)) {
+                href = href.substring(base.length);
+                el.setAttribute("href", href);
             }
-            if (links[i].hasAttribute("target")) {
-                links[i].setAttribute("target", "doc");
-            }
-            if (href.includes("://")) {
-                links[i].setAttribute("target", "doc");
-            } else {
-                links[i].setAttribute("href", href);
+            if (href.includes("://") || el.hasAttribute("target")) {
+                el.setAttribute("target", "doc");
             }
         }
-    }
-    var images = this.ui.contentText.getElementsByTagName("img");
-    for (var j = 0; j < images.length; j++) {
-        var src = images[j].getAttribute("src");
+    });
+    this.ui.contentText.querySelectorAll("img").forEach((el) => {
+        let src = el.getAttribute("src");
         if (src) {
-            src = RapidContext.Util.resolveURI(src, this._currentUrl);
-            if (src.startsWith(baseUrl)) {
-                src = src.substring(baseUrl.length);
-            }
-            if (!src.includes("://")) {
-                images[j].setAttribute("src", src);
+            src = new URL(src, current).toString();
+            if (src.startsWith(base)) {
+                src = src.substring(base.length);
+                el.setAttribute("src", src);
             }
         }
-    }
+    });
 };
 
 /**
  * Handles click events in the content text.
  */
 HelpApp.prototype._handleClick = function (evt) {
-    var elem = evt.target().closest("a");
+    let elem = evt.target().closest("a");
     if (elem && elem.hasAttribute("href") && !elem.hasAttribute("target")) {
         evt.stop();
-        var href = elem.getAttribute("href");
-        var baseUrl = RapidContext.Util.resolveURI("");
-        if (href.startsWith(baseUrl)) {
-            href = href.substring(baseUrl.length);
+        let href = elem.getAttribute("href");
+        let base = document.baseURI.replace(/[^/]+$/, "");
+        if (href.startsWith(base)) {
+            href = href.substring(base.length);
         }
         this.loadContent(href);
     }
