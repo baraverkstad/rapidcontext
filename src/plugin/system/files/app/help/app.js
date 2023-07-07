@@ -71,10 +71,8 @@ HelpApp.prototype.loadTopics = function () {
 
     // Add a list of help topics
     function addAll(parent, source, obj) {
-        if (MochiKit.Base.isArrayLike(obj)) {
-            for (var i = 0; i < obj.length; i++) {
-                addAll(parent, source, obj[i]);
-            }
+        if (Array.isArray(obj)) {
+            obj.forEach((item) => addAll(parent, source, item));
         } else if (obj && typeof(obj.topic) == "string") {
             add(parent, source, obj);
         }
@@ -309,25 +307,8 @@ HelpApp.prototype._scrollLink = function (name) {
     if (ctx.length) {
         var elem = ctx[0];
         this.ui.contentScroll.scrollTop = elem.offsetTop;
-        this.ui.contentLocator.animate({ effect: "cancel" });
-        MochiKit.Style.setElementPosition(this.ui.contentLocator, { y: elem.offsetTop });
-        MochiKit.Style.setOpacity(this.ui.contentLocator, 0);
-        MochiKit.Style.showElement(this.ui.contentLocator);
-        var opts = {
-            effect: "Opacity",
-            duration: 0.8,
-            transition: function (pos) {
-                if (pos < 0.2) {
-                    pos = pos / 0.2;
-                } else {
-                    pos = 1 - (pos - 0.2) / 0.8;
-                }
-                return MochiKit.Visual.Transitions.sinoidal(pos);
-            },
-            afterFinish: function (effect) {
-                MochiKit.Style.setOpacity(effect.element, 0);
-            }
-        };
-        this.ui.contentLocator.animate(opts);
+        this.ui.contentLocator.classList.remove("hidden", "-fade-out");
+        this.ui.contentLocator.style.top = elem.offsetTop + "px";
+        this.ui.contentLocator.classList.add("-fade-out");
     }
 };

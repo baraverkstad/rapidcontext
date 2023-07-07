@@ -18,7 +18,8 @@
     <div id="contentInfo" class="unimportant" style="position: absolute; top: 2px; right: 20px;"></div>
     <div id="contentScroll" w="100%" h="100%-22" class="doc overflow-auto position-relative">
       <div id="contentText" style="margin-right: 20px;"></div>
-      <Pane id="contentLocator" style="position: absolute; left: 0px; top: 0px; width: 8px; height: 150px; z-index: 10; background: #AAAAAA; border-radius: 3px; display: none;"></Pane>
+      <div id="contentLocator" class="position-absolute left-0 z-max rounded-pill hidden"
+           style="width: 1em; height: 15em; background: var(--highlight-400); opacity: 0.8;"></div>
     </div>
   </div>
 </ui>

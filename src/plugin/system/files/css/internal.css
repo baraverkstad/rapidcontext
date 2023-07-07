@@ -1,5 +1,5 @@
-/**
- * Box sizing helpers
+/***
+ ** Box sizing helpers
  */
 .-box-sizing-border,
 .-box-sizing-border *,
@@ -12,6 +12,14 @@
 .-box-sizing-content *::after,
 .-box-sizing-content *::before {
     box-sizing: content-box;
+}
+
+/***
+ ** Animations
+ */
+.-fade-out {
+    transition: opacity 1.5s;
+    opacity: 0 !important;
 }
 
 /***
