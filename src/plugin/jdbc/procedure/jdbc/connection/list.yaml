@@ -2,4 +2,6 @@ id: jdbc/connection/list
 type: procedure
 alias: PlugIn.Jdbc.Connection.List
 className: org.rapidcontext.app.plugin.jdbc.JdbcBuiltInConnectionListProcedure
-description: Lists all available JDBC connections and their current status.
+description: >-
+    Lists all available JDBC connections and their current status.
+deprecated: Use system/connection/list and filter results instead.

@@ -28,11 +28,12 @@ import org.rapidcontext.core.type.Procedure;
  * provides a list of all currently available JDBC connections,
  * with some additional status information.
  *
- * @deprecate Use System.Connection.List instead.
+ * @deprecated Use system/connection/list and filter results instead.
  *
  * @author   Per Cederberg
  * @version  1.0
  */
+@Deprecated
 public class JdbcBuiltInConnectionListProcedure extends Procedure {
 
     /**
