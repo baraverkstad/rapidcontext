@@ -85,7 +85,7 @@ public class ProcedureReadProcedure extends Procedure {
      * @throws ProcedureException if the bindings data access
      *             failed
      */
-    static Dict getProcedureData(Library library, org.rapidcontext.core.proc.Procedure proc)
+    static Object getProcedureData(Library library, org.rapidcontext.core.proc.Procedure proc)
     throws ProcedureException {
         Storage storage = ApplicationContext.getInstance().getStorage();
         Path storagePath = Plugin.storagePath(PluginManager.LOCAL_PLUGIN);
@@ -94,9 +94,8 @@ public class ProcedureReadProcedure extends Procedure {
         Dict res = new Dict();
         if (proc instanceof StorableObject) {
             StorableObject storable = (StorableObject) proc;
-            res.set("id", storable.id());
-            res.set("type", storable.type());
-            res.set("alias", storable.serialize().getString("alias", null));
+            res.setAll(storable.serialize());
+            res.remove(KEY_BINDING);
         } else if (proc instanceof AddOnProcedure) {
             res.set("type", ((AddOnProcedure) proc).getType());
         } else {
@@ -106,7 +105,7 @@ public class ProcedureReadProcedure extends Procedure {
         res.set("description", proc.getDescription());
         res.set("local", meta != null);
         res.set("bindings", getBindingsData(proc.getBindings()));
-        return res;
+        return StorableObject.sterilize(res, true, true, true);
     }
 
     /**
