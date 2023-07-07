@@ -189,7 +189,7 @@ RapidContext.App.startApp = function (app, container) {
         if (res.type == "code") {
             return RapidContext.App.loadScript(res.url);
         } else if (res.type == "module") {
-            return import(RapidContext.Util.resolveURI(res.url)).then(function (mod) {
+            return import(new URL(res.url, document.baseURI)).then(function (mod) {
                 launcher.creator = mod["default"] || mod["create"];
             });
         } else if (res.type == "style") {
@@ -301,7 +301,7 @@ RapidContext.App.startApp = function (app, container) {
         if ($.isWindow(container)) {
             // Launch app into separate window/tab
             var href = "rapidcontext/app/" + launcher.id;
-            container.location.href = RapidContext.Util.resolveURI(href);
+            container.location.href = new URL(href, document.baseURI).toString();
             resolve();
         } else if (start && start.instances && start.instances.length > 0) {
             // Launch app into start app tab
