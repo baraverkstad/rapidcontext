@@ -7,6 +7,7 @@ description: >-
     plug-in. Other versions of the connection may still exist in other
     plug-ins, but will be hidden. Only connections in the local plug-in can
     be removed.
+deprecated: Use system/storage/write instead.
 binding:
   - name: id
     type: argument
