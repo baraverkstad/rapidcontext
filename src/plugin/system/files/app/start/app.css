@@ -56,3 +56,54 @@
     margin-top: 0.5em;
     text-shadow: 2px 2px 2px #024a;
 }
+.start-app .bounce-down {
+    animation: start-app-bounce-down 1.5s ease-in-out;
+    animation-fill-mode: both;
+}
+@keyframes start-app-bounce-down {
+    0% {
+        transform: translate3d(0, -3000px, 0) scaleY(5);
+    }
+    60% {
+        transform: translate3d(0, 50px, 0) scaleY(0.85);
+    }
+    75% {
+        transform: translate3d(0, -20px, 0) scaleY(1.1);
+    }
+    90% {
+        transform: translate3d(0, 5px, 0);
+    }
+    100% {
+        transform: translate3d(0, 0, 0);
+    }
+}
+.start-app .locate {
+    animation: start-app-locate 1.8s linear;
+    animation-fill-mode: both;
+}
+@keyframes start-app-locate {
+    0% {
+        opacity: 0;
+        transform: scale3d(0.3, 0.3, 0.3);
+    }
+    10% {
+        transform: scale3d(1.1, 1.1, 1.1);
+    }
+    20% {
+        transform: scale3d(0.9, 0.9, 0.9);
+    }
+    30% {
+        opacity: 0.75;
+        transform: scale3d(1.03, 1.03, 1.03);
+    }
+    40% {
+        transform: scale3d(0.97, 0.97, 0.97);
+    }
+    50% {
+        transform: scale3d(1, 1, 1);
+        opacity: 0.75;
+    }
+    100% {
+        opacity: 0;
+    }
+}

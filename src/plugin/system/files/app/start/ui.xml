@@ -164,7 +164,8 @@
       </Button>
     </div>
   </Dialog>
-  <Dialog id="tourDialog" title="RapidContext Quick Tour" center="false" resizeable="false" w="80%" h="190">
+  <Dialog id="tourDialog" title="RapidContext Quick Tour" center="false" resizeable="false"
+          w="80%" h="190" style="top: calc(85% - 190px); left: 10%;">
     <Wizard id="tourWizard" class="w-100 h-100">
       <Pane pageTitle="Welcome to the Quick Tour of RapidContext!">
         <ul>
@@ -215,5 +216,6 @@
       </Pane>
     </Wizard>
   </Dialog>
-  <Pane id="tourLocator" class="position-absolute z-max" style="border: 3px solid #88AACC; background: #DDEEFF; display: none;"></Pane>
+  <div id="tourLocator" class="position-absolute z-max rounded hidden"
+       style="border: 3px solid var(--highlight-500); background: var(--highlight-100);"></div>
 </ui>

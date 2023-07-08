@@ -389,17 +389,7 @@ StartApp.prototype._loginAuthCallback = function (res) {
 StartApp.prototype._tourStart = function () {
     if (this.ui.tourDialog.isHidden()) {
         document.body.append(this.ui.tourDialog);
-        var dim = MochiKit.Style.getViewportDimensions();
-        var opts = {
-            effect: "Move",
-            mode: "absolute",
-            duration: 1.5,
-            transition: "spring",
-            x: Math.floor(dim.w * 0.1),
-            y: Math.floor(dim.h - 400)
-        };
-        MochiKit.Style.setElementPosition(this.ui.tourDialog, { x: opts.x, y: -200 });
-        this.ui.tourDialog.animate(opts);
+        this.ui.tourDialog.classList.add("bounce-down");
         this.ui.tourWizard.activatePage(0);
         this.ui.tourDialog.show();
     }
@@ -419,10 +409,11 @@ StartApp.prototype._tourChange = function () {
     var promise = RapidContext.Async.wait(0);
     switch (this.ui.tourWizard.activePageIndex()) {
     case 1:
+        this.ui.tabContainer.selectChild(0);
         promise = promise.then(() => this._tourLocateStart());
         break;
     case 2:
-        promise = RapidContext.App.callApp("help", "loadTopics")
+        promise = RapidContext.App.callApp("help", "clearContent")
             .then(() => RapidContext.Async.wait(1))
             .then(() => this._tourLocateHelp());
         break;
@@ -449,7 +440,9 @@ StartApp.prototype._tourLocateStart = function () {
 StartApp.prototype._tourLocateHelp = function () {
     var tab = this.ui.tabContainer.selectedChild();
     var box = this._getBoundingBox(tab.firstChild.nextSibling);
-    box.h = 200;
+    box.x -= 15;
+    box.y -= 5;
+    box.h = 350;
     this._tourLocate(box);
 };
 
@@ -459,7 +452,10 @@ StartApp.prototype._tourLocateHelp = function () {
 StartApp.prototype._tourLocateTabs = function () {
     var tabs = this.ui.tabContainer.firstChild;
     var box = this._getBoundingBox(tabs.firstChild, tabs.lastChild);
-    box.h += 30;
+    box.y -= 5;
+    box.h += 10;
+    box.x -= 10;
+    box.w += 100;
     this._tourLocate(box);
 };
 
@@ -482,23 +478,18 @@ StartApp.prototype._tourLocateUser = function () {
  * @param {Node} ... the DOM node elements to locate
  */
 StartApp.prototype._tourLocate = function () {
-    document.body.append(this.ui.tourLocator);
-    this.ui.tourLocator.animate({ effect: "cancel" });
-    var dialogBox = this._getBoundingBox(this.ui.tourDialog);
-    MochiKit.Style.setElementDimensions(this.ui.tourLocator, dialogBox);
-    MochiKit.Style.setElementPosition(this.ui.tourLocator, dialogBox);
-    MochiKit.Style.setOpacity(this.ui.tourLocator, 0.3);
-    MochiKit.Style.showElement(this.ui.tourLocator);
-    var box = this._getBoundingBox.apply(this, arguments);
+    var box = this._getBoundingBox(...arguments);
     var style = {
         left: box.x + "px",
         top: box.y + "px",
         width: box.w + "px",
         height: box.h + "px"
     };
-    var opts = { effect: "Morph", duration: 3.0, transition: "spring", style: style };
-    this.ui.tourLocator.animate(opts);
-    this.ui.tourLocator.animate({ effect: "fade", delay: 2.4, queue: "parallel" });
+    Object.assign(this.ui.tourLocator.style, style);
+    this.ui.tourLocator.classList.remove("hidden");
+    this.ui.tourLocator.classList.add("locate");
+    document.body.append(this.ui.tourLocator);
+    setTimeout(() => this.ui.tourLocator.classList.add("hidden"), 1500);
 };
 
 /**
