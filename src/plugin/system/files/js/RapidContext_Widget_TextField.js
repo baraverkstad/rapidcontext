@@ -98,6 +98,7 @@ RapidContext.Widget.TextField.prototype.setAttrs = function (attrs) {
     attrs = Object.assign({}, attrs);
     var locals = RapidContext.Util.mask(attrs, ["helpText", "value"]);
     if ("helpText" in locals) {
+        console.warn("deprecated: setting 'helpText' attribute, use 'placeholder' instead");
         attrs.placeholder = attrs.placeholder || locals.helpText;
     }
     if ("value" in locals) {
