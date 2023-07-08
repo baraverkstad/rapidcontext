@@ -25,10 +25,6 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * @param {Object} attrs the widget and node attributes
  * @param {number} [attrs.delay] the widget auto-hide delay in
  *            milliseconds, defaults to `5000`
- * @param {Object} [attrs.showAnim] the optional animation options
-              when showing the popup, defaults to none
- * @param {Object} [attrs.hideAnim] the optional animation options
- *            when hiding the popup, defaults to none
  * @param {boolean} [attrs.hidden] the hidden widget flag, defaults to `true`
  * @param {...(Node|Array)} [child] the child widgets or DOM nodes
  *
@@ -99,10 +95,6 @@ RapidContext.Widget.Classes.Popup = RapidContext.Widget.Popup;
  * @param {Object} attrs the widget and node attributes to set
  * @param {number} [attrs.delay] the widget auto-hide delay in
  *            milliseconds, defaults to 5000
- * @param {Object} [attrs.showAnim] the optional animation options
-              when showing the popup, defaults to none
- * @param {Object} [attrs.hideAnim] the optional animation options
- *            when hiding the popup, defaults to none
  * @param {boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.Popup.prototype.setAttrs = function (attrs) {
@@ -113,10 +105,10 @@ RapidContext.Widget.Popup.prototype.setAttrs = function (attrs) {
         this.resetDelay();
     }
     if (typeof(locals.showAnim) != "undefined") {
-        this.showAnim = locals.showAnim;
+        console.warn("deprecated: popup 'showAnim' attribute is ignored");
     }
     if (typeof(locals.hideAnim) != "undefined") {
-        this.hideAnim = locals.hideAnim;
+        console.warn("deprecated: popup 'hideAnim' attribute is ignored");
     }
     if (typeof(locals.hidden) != "undefined") {
         this._setHiddenPopup(locals.hidden);
@@ -145,17 +137,13 @@ RapidContext.Widget.Popup.prototype.addChildNode = function (child) {
 RapidContext.Widget.Popup.prototype._setHiddenPopup = function (value) {
     if (value && !this.isHidden()) {
         this._setHidden(true);
-        if (this.hideAnim) {
-            this.animate(this.hideAnim);
-        }
+        this.style.maxHeight = 0;
         this._dispatch("hide");
         setTimeout(() => this.blur(), 100);
     } else if (!value && this.isHidden()) {
         this.selectChild(-1);
         this._setHidden(false);
-        if (this.showAnim) {
-            this.animate(this.showAnim);
-        }
+        this.style.maxHeight = (this.scrollHeight + 10) + "px";
         this.scrollTop = 0;
         this._dispatch("show");
         setTimeout(() => this.focus(), 100);

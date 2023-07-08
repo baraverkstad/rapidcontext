@@ -244,6 +244,14 @@ button > .widgetIcon.fa,
     color: #1e466e;
     cursor: default;
     box-shadow: 0 0.5rem 1rem #00000026;
+    transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out, border-width 0.3s;
+}
+.widgetPopup[hidden],
+.widgetPopup.widgetHidden {
+    display: block !important;
+    opacity: 0;
+    max-height: 0;
+    border-width: 0;
 }
 .widgetPopup > h3 {
     margin: 0 0 0.2em 0;

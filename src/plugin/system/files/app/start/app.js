@@ -31,9 +31,6 @@ StartApp.prototype.start = function () {
     var env = status.environment;
     env = (env && env.name) ? env.name : "<none>";
     this.ui.infoEnv.innerText = env;
-    var show = { effect: "appear", duration: 0.2 };
-    var hide = { effect: "fade", duration: 0.2, delay: 0.2 };
-    this.ui.menu.setAttrs({ showAnim: show, hideAnim: hide });
     MochiKit.Signal.connect(this.proc.sessionInfo, "onsuccess", this, "_initInfoMenu");
     MochiKit.Signal.connect(this.ui.infoBar, "onmousemove", this.ui.menu, "show");
     MochiKit.Signal.connect(this.ui.infoBar, "onmouseleave", this.ui.menu, "hide");
@@ -295,9 +292,7 @@ StartApp.prototype.startApp = function (app, container) {
  * Handles a popup menu item selection.
  */
 StartApp.prototype._popupSelect = function (evt) {
-    this.ui.menu.setAttrs({ hideAnim: { effect: "fade", duration: 0 } });
     this.ui.menu.hide();
-    this.ui.menu.setAttrs({ hideAnim: { effect: "fade", duration: 0.2, delay: 0.2 } });
     switch (evt.event().detail.item.dataset.action) {
     case "about":
         this.ui.about.show();

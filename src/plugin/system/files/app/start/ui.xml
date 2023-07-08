@@ -37,7 +37,7 @@
     <span id="infoEnv" class="pl-1"></span>
     <i class="fa fa-lg fa-caret-down pl-2 pr-1"></i>
   </Pane>
-  <Popup id="menu" class="z-max overflow-hidden" style="top: 29px; right: 10px; display: none; min-width: 200px;">
+  <Popup id="menu" class="z-max overflow-hidden" style="top: 29px; right: 10px; min-width: 200px;">
     <h3 id="menuTitle">Anonymous User</h3>
     <li id="menuAbout" data-action="about">About RapidContext</li>
     <li id="menuHelp" data-action="help">Help &amp; Documentation</li>
