@@ -490,6 +490,7 @@ RapidContext.Widget.prototype.hide = function () {
  * @deprecated Use CSS animations instead.
  */
 RapidContext.Widget.prototype.animate = function (opts) {
+    console.warn("deprecated: animate() method called, use CSS animations instead");
     var queue = { scope: this.uid(), position: "replace" };
     opts = MochiKit.Base.updatetree({ queue: queue }, opts);
     if (typeof(opts.queue) == "string") {
