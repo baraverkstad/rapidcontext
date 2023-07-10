@@ -251,36 +251,32 @@ AdminApp.prototype.showConnection = function (id) {
  * Shows detailed connection information.
  */
 AdminApp.prototype._showConnection = function () {
-    var data = this.ui.cxnTable.getSelectedData();
+    let data = this.ui.cxnTable.getSelectedData();
     data = Object.assign({}, data);
     if (/^@\d+$/.test(data._lastUsedTime)) {
-        var dttm = new Date(+data._lastUsedTime.substr(1));
+        let dttm = new Date(+data._lastUsedTime.substr(1));
         data.lastAccess = MochiKit.DateTime.toISOTimestamp(dttm);
     }
     this.ui.cxnForm.reset();
     this.ui.cxnForm.update(data);
-    if (data.plugin == "local") {
-        this.ui.cxnRemove.show();
-    } else {
-        this.ui.cxnRemove.hide();
-    }
+    this.ui.cxnRemove.setAttrs({ hidden: data.plugin != "local" });
     if (data.plugin && data.id) {
         this.ui.cxnEdit.show();
-        var url = "rapidcontext/storage/connection/" + data.id;
+        let url = "rapidcontext/storage/connection/" + data.id;
         this.ui.cxnLink.setAttribute("href", url);
         this.ui.cxnLink.classList.remove("hidden");
     } else {
         this.ui.cxnEdit.hide();
         this.ui.cxnLink.classList.add("hidden");
     }
-    var clones = this.ui.cxnTemplate.parentNode.querySelectorAll(".clone");
+    let clones = this.ui.cxnTemplate.parentNode.querySelectorAll(".clone");
     RapidContext.Widget.destroyWidget(clones);
-    var hidden = ["id", "type", "plugin", "description", "lastAccess", "maxOpen"];
-    RapidContext.Util.mask(data, hidden);
+    let props = ["id", "type", "plugin", "description", "lastAccess", "maxOpen"];
     for (let k in data) {
-        var v = data[k];
-        if (!k.startsWith("_") || (/error$/i.test(k) && v)) {
-            var title = RapidContext.Util.toTitleCase(k);
+        let v = data[k];
+        let hidden = k.startsWith("_") || props.includes(k);
+        if (!hidden || (/error$/i.test(k) && v)) {
+            let title = RapidContext.Util.toTitleCase(k);
             if (v == null) {
                 v = "";
             }
@@ -289,7 +285,7 @@ AdminApp.prototype._showConnection = function () {
             } else if (/password$/i.test(k)) {
                 v = RapidContext.Widget.Field({ name: k, value: v, mask: true });
             }
-            var tr = this.ui.cxnTemplate.cloneNode(true);
+            let tr = this.ui.cxnTemplate.cloneNode(true);
             tr.className = "clone";
             tr.firstChild.append(title + ":");
             tr.lastChild.append(v);
