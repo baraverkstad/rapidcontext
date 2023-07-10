@@ -107,6 +107,7 @@ RapidContext.Util.dict = function (itemsOrKeys, values) {
  * ==> { a: 1 } and modifies o to { b: 2 }
  */
 RapidContext.Util.mask = function (src, keys) {
+    console.warn("deprecated: mask() called, use object destructuring assignment instead");
     var res = {};
     if (!MochiKit.Base.isArrayLike(keys)) {
         keys = MochiKit.Base.keys(keys);
