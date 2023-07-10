@@ -297,14 +297,16 @@ RapidContext.Widget.prototype.setAttrs = function (attrs) {
  * widget.setStyle({ "font-size": "bold", "color": "red" });
  */
 RapidContext.Widget.prototype.setStyle = function (styles) {
-    styles = Object.assign({}, styles);
-    var posDimNames = [
+    let copyStyle = (o, k) => (o[k] = styles[k], o);
+    let thisProps = [
         "width", "height", "zIndex", "z-index",
         "position", "top", "bottom", "left", "right"
-    ];
-    var posDimStyles = RapidContext.Util.mask(styles, posDimNames);
-    MochiKit.Style.setStyle(this, posDimStyles);
-    MochiKit.Style.setStyle(this._styleNode(), styles);
+    ].filter((k) => k in styles);
+    let thisStyles = thisProps.reduce(copyStyle, {});
+    let otherProps = Object.keys(styles).filter((k) => !thisProps.includes(k));
+    let otherStyles = otherProps.reduce(copyStyle, {});
+    MochiKit.Style.setStyle(this, thisStyles);
+    MochiKit.Style.setStyle(this._styleNode(), otherStyles);
 };
 
 /**

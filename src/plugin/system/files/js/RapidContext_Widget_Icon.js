@@ -126,7 +126,7 @@ RapidContext.Widget.Icon.prototype.setAttrs = function (attrs) {
         attrs.title = attrs.title || attrs.tooltip;
         delete attrs.tooltip;
     }
-    this.setStyle(styles);
+    Object.keys(styles).length && this.setStyle(styles);
     this.__setAttrs(attrs);
 };
 
