@@ -1218,7 +1218,7 @@ AdminApp.prototype._showExecData = function (node, data) {
         for (var k in data) {
             var v = data[k];
             if (typeof(v) === "undefined") {
-                v = data[parseInt(k)];
+                v = data[parseInt(k, 10)];
             }
             var vt = typeName(v);
             var attrs = { name: k + ": " + dataLabel(vt, v, true) };
