@@ -357,6 +357,11 @@ interpreted as follows:</p>
       <var>document.getElementById</var>. Also, this solution avoids collisions
       when the same app is launched twice or when multiple apps use the same
       identifiers.</li>
+  <li><strong>The <q><var>$id</var></q> Attribute</strong> &mdash; The
+      <q><var>$id</var></q> attribute assigns the element <var>id</var>.
+      Note that this may cause issues if multiple instances of the app is
+      created, as <var>document.getElementById</var> will only return one of
+      the elements.</li>
   <li><strong>The <q><var>class</var></q> Attribute</strong> &mdash; The
       <q><var>class</var></q> attribute is set on the HTML DOM node created
       (similar to HTML). Note that widgets have additional CSS classes,

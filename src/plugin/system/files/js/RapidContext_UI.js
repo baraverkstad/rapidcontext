@@ -119,31 +119,33 @@
      * @return {Object} an object with the widget created
      */
     function _buildUIElem(node, ids) {
-        var name = node.nodeName;
+        let name = node.nodeName;
         if (name == "style") {
             _buildUIStylesheet(node.innerText);
             node.parentNode.removeChild(node);
             return null;
         }
-        var attrs = Array.from(node.attributes)
+        let specials = [ids && "id", "$id", "w", "h"].filter(Boolean);
+        let attrs = Array.from(node.attributes)
+            .filter((a) => !specials.includes(a.name))
             .reduce((o, a) => Object.assign(o, { [a.name]: a.value }), {});
-        var locals = RapidContext.Util.mask(attrs, ["id", "w", "h"]);
-        var children = buildUI(node.childNodes, ids);
-        var widget;
+        let children = buildUI(node.childNodes, ids);
+        let widget;
         if (RapidContext.Widget.Classes[name]) {
             widget = RapidContext.Widget.Classes[name](attrs, ...children);
         } else {
             widget = MochiKit.DOM.createDOM(name, attrs, children);
         }
-        if (locals.id) {
-            if (ids) {
-                ids[locals.id] = widget;
-            } else {
-                widget.id = locals.id;
-            }
+        if ("id" in node.attributes && ids) {
+            ids[node.attributes.id.value] = widget;
         }
-        if (locals.w || locals.h) {
-            RapidContext.Util.registerSizeConstraints(widget, locals.w, locals.h);
+        if ("$id" in node.attributes) {
+            widget.id = node.attributes.$id.value;
+        }
+        if ("w" in node.attributes || "h" in node.attributes) {
+            let w = node.attributes.w && node.attributes.w.value;
+            let h = node.attributes.h && node.attributes.h.value;
+            RapidContext.Util.registerSizeConstraints(widget, w, h);
         }
         return widget;
     }
