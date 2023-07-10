@@ -129,28 +129,16 @@ RapidContext.Widget.Pane.WORKING = { previous: false, next: false };
  */
 RapidContext.Widget.Pane.prototype.setAttrs = function (attrs) {
     attrs = Object.assign({}, attrs);
-    var locals = RapidContext.Util.mask(attrs, ["pageTitle", "pageStatus", "pageCloseable"]);
-    var modified = false;
-    if (typeof(locals.pageTitle) != "undefined") {
-        this.pageTitle = locals.pageTitle;
-        modified = true;
+    if ("pageStatus" in attrs && typeof(attrs.pageStatus) != "object") {
+        attrs.pageStatus = RapidContext.Widget.Pane[attrs.pageStatus] || RapidContext.Widget.Pane.ANY;
     }
-    if (typeof(locals.pageStatus) != "undefined") {
-        if (typeof(locals.pageStatus) == "string") {
-            locals.pageStatus = RapidContext.Widget.Pane[locals.pageStatus];
-        }
-        this.pageStatus = locals.pageStatus;
-        modified = true;
-    }
-    if (typeof(locals.pageCloseable) != "undefined") {
-        this.pageCloseable = MochiKit.Base.bool(locals.pageCloseable);
-        modified = true;
-    }
-    if (modified && this.parentNode &&
-        typeof(this.parentNode._updateStatus) == "function") {
-        this.parentNode._updateStatus();
+    if ("pageCloseable" in attrs) {
+        attrs.pageCloseable = MochiKit.Base.bool(attrs.pageCloseable);
     }
     this.__setAttrs(attrs);
+    if (this.parentNode && typeof(this.parentNode._updateStatus) == "function") {
+        this.parentNode._updateStatus();
+    }
 };
 
 /**

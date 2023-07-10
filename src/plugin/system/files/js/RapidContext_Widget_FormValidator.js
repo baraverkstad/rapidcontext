@@ -89,34 +89,21 @@ RapidContext.Widget.Classes.FormValidator = RapidContext.Widget.FormValidator;
  */
 RapidContext.Widget.FormValidator.prototype.setAttrs = function (attrs) {
     attrs = Object.assign({}, attrs);
-    var locals = RapidContext.Util.mask(attrs, ["name", "mandatory", "regex", "display", "message", "validator"]);
-    if (typeof(locals.name) != "undefined") {
-        this.name = locals.name;
+    if ("mandatory" in attrs) {
+        attrs.mandatory = MochiKit.Base.bool(attrs.mandatory);
     }
-    if (typeof(locals.mandatory) != "undefined") {
-        this.mandatory = MochiKit.Base.bool(locals.mandatory);
-    }
-    if (typeof(locals.regex) != "undefined") {
-        if (locals.regex instanceof RegExp) {
-            this.regex = locals.regex;
-        } else {
-            if (!locals.regex.startsWith("^")) {
-                locals.regex = "^" + locals.regex;
-            }
-            if (!locals.regex.endsWith("$")) {
-                locals.regex += "$";
-            }
-            this.regex = new RegExp(locals.regex);
+    if ("regex" in attrs && attrs.regex && !(attrs.regex instanceof RegExp)) {
+        if (!attrs.regex.startsWith("^")) {
+            attrs.regex = "^" + attrs.regex;
         }
+        if (!attrs.regex.endsWith("$")) {
+            attrs.regex += "$";
+        }
+        attrs.regex = new RegExp(attrs.regex);
     }
-    if (typeof(locals.display) != "undefined") {
-        this.display = locals.display;
-    }
-    if (typeof(locals.message) != "undefined") {
-        this.message = locals.message;
-    }
-    if (typeof(locals.validator) != "undefined") {
-        this.validator = locals.validator;
+    if ("validator" in attrs) {
+        let valid = typeof(attrs.validator) == "function";
+        attrs.validator = valid ? attrs.validator : null;
     }
     this.__setAttrs(attrs);
 };

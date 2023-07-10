@@ -94,41 +94,40 @@ RapidContext.Widget.Icon.prototype._containerNode = function () {
  */
 RapidContext.Widget.Icon.prototype.setAttrs = function (attrs) {
     if (typeof(attrs) === "string") {
-        var key = RapidContext.Widget.Icon[attrs] ? "ref" : "class";
-        var val = attrs;
-        attrs = {};
-        attrs[key] = val;
+        let key = (attrs in RapidContext.Widget.Icon) ? "ref" : "class";
+        attrs = { [key]: attrs };
+    } else {
+        attrs = Object.assign({}, attrs);
     }
-    var locals = Object.assign({}, attrs);
-    while (locals.ref) {
-        var o = RapidContext.Widget.Icon[locals.ref] || {};
-        delete locals.ref;
-        MochiKit.Base.setdefault(locals, o);
+    while ("ref" in attrs) {
+        let def = RapidContext.Widget.Icon[attrs.ref] || {};
+        delete attrs.ref;
+        attrs = Object.assign({}, def, attrs);
     }
-    var styles = {};
-    if (locals.url) {
+    let styles = {};
+    if ("url" in attrs) {
         this.addClass("widgetIconSprite");
-        styles.backgroundImage = "url('" + locals.url + "')";
-        delete locals.url;
+        styles.backgroundImage = "url('" + attrs.url + "')";
+        delete attrs.url;
     }
-    if (locals.position) {
-        styles.backgroundPosition = locals.position;
-        delete locals.position;
+    if ("position" in attrs) {
+        styles.backgroundPosition = attrs.position;
+        delete attrs.position;
     }
-    if (locals.width) {
-        styles.width = locals.width + "px";
-        delete locals.width;
+    if ("width" in attrs) {
+        styles.width = attrs.width + "px";
+        delete attrs.width;
     }
-    if (locals.height) {
-        styles.height = locals.height + "px";
-        delete locals.height;
+    if ("height" in attrs) {
+        styles.height = attrs.height + "px";
+        delete attrs.height;
+    }
+    if ("tooltip" in attrs) {
+        attrs.title = attrs.title || attrs.tooltip;
+        delete attrs.tooltip;
     }
     this.setStyle(styles);
-    if (locals.tooltip && !locals.title) {
-        locals.title = locals.tooltip;
-        delete locals.tooltip;
-    }
-    this.__setAttrs(locals);
+    this.__setAttrs(attrs);
 };
 
 Object.assign(RapidContext.Widget.Icon, {

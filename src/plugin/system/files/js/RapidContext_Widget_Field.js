@@ -31,7 +31,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * @param {function} [attrs.formatter] the value formatter function
  * @param {number} [attrs.maxLength] the maximum data length,
  *            overflow will be displayed as a tooltip, defaults to
- *            -1 (unlimited)
+ *            unlimited
  * @param {boolean} [attrs.mask] the masked display flag, when set
  *            the field value is only displayed after the user has
  *            clicked the field, defaults to false
@@ -54,9 +54,9 @@ RapidContext.Widget.Field = function (attrs) {
     var o = document.createElement("span");
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Field);
     o.addClass("widgetField");
-    o.setAttrs(Object.assign({ name: "", value: "", maxLength: -1, mask: false }, attrs));
+    o.setAttrs(Object.assign({ name: "", value: "" }, attrs));
     o.defaultValue = o.value;
-    o.defaultMask = o.mask;
+    o.defaultMask = !!o.mask;
     o.addEventListener("click", o._handleClick);
     return o;
 };
@@ -101,24 +101,16 @@ RapidContext.Widget.Field.prototype._containerNode = function () {
  */
 RapidContext.Widget.Field.prototype.setAttrs = function (attrs) {
     attrs = Object.assign({}, attrs);
-    var locals = RapidContext.Util.mask(attrs, ["name", "value", "format", "formatter", "maxLength", "mask"]);
-    if (typeof(locals.name) != "undefined") {
-        this.name = locals.name;
+    if ("formatter" in attrs) {
+        let valid = typeof(attrs.formatter) == "function";
+        attrs.formatter = valid ? attrs.formatter : null;
     }
-    if (typeof(locals.format) != "undefined") {
-        this.format = locals.format;
+    if ("maxLength" in attrs) {
+        let val = parseInt(attrs.maxLength, 10);
+        attrs.maxLength = isNaN(val) ? null : val;
     }
-    if (typeof(locals.formatter) != "undefined") {
-        this.formatter = locals.formatter;
-    }
-    if (typeof(locals.maxLength) != "undefined") {
-        this.maxLength = parseInt(locals.maxLength);
-    }
-    if (typeof(locals.mask) != "undefined") {
-        this.mask = locals.mask;
-    }
-    if (typeof(locals.value) != "undefined") {
-        this.value = locals.value;
+    if ("mask" in attrs) {
+        attrs.mask = MochiKit.Base.bool(attrs.mask);
     }
     this.__setAttrs(attrs);
     this.redraw();

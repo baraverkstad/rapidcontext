@@ -95,16 +95,15 @@ RapidContext.Widget.TextArea.prototype.destroy = function () {
  */
 RapidContext.Widget.TextArea.prototype.setAttrs = function (attrs) {
     attrs = Object.assign({}, attrs);
-    var locals = RapidContext.Util.mask(attrs, ["helpText", "value"]);
-    if ("helpText" in locals) {
+    if ("helpText" in attrs) {
         console.warn("deprecated: setting 'helpText' attribute, use 'placeholder' instead");
-        attrs.placeholder = attrs.placeholder || locals.helpText;
-    }
-    if ("value" in locals) {
-        this.value = locals.value || "";
-        this._handleChange(null);
+        attrs.placeholder = attrs.placeholder || attrs.helpText;
+        delete attrs.helpText;
     }
     this.__setAttrs(attrs);
+    if ("value" in attrs) {
+        this._handleChange(null);
+    }
 };
 
 /**

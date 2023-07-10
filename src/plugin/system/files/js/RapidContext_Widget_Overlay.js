@@ -75,25 +75,16 @@ RapidContext.Widget.Overlay.prototype._containerNode = function () {
  */
 RapidContext.Widget.Overlay.prototype.setAttrs = function (attrs) {
     attrs = Object.assign({}, attrs);
-    var locals = RapidContext.Util.mask(attrs, ["loading", "message", "dark"]);
-    if (typeof(locals.loading) != "undefined") {
-        this.showLoading = MochiKit.Base.bool(locals.loading);
+    if ("loading" in attrs) {
+        attrs.loading = MochiKit.Base.bool(attrs.loading);
     }
-    if (typeof(locals.message) != "undefined") {
-        this.message = locals.message || "";
+    if ("dark" in attrs) {
+        attrs.dark = MochiKit.Base.bool(attrs.dark);
+        this.classList.toggle("widgetOverlayDark", attrs.dark);
     }
-    if (typeof(locals.dark) != "undefined") {
-        if (locals.dark) {
-            this.addClass("widgetOverlayDark");
-        } else {
-            this.removeClass("widgetOverlayDark");
-        }
-    }
-    if (this.showLoading) {
-        var icon = RapidContext.Widget.Icon("fa fa-refresh fa-spin m-1");
-    }
-    this.lastChild.innerHTML = "";
-    this.lastChild.append(icon, this.message);
-    this.lastChild.classList.toggle("widgetHidden", !this.showLoading && !this.message);
     this.__setAttrs(attrs);
+    this.lastChild.innerHTML = "";
+    let icon = this.loading && RapidContext.Widget.Icon("fa fa-refresh fa-spin m-1");
+    this.lastChild.append(icon || "", this.message || "");
+    this.lastChild.classList.toggle("widgetHidden", !this.loading && !this.message);
 };

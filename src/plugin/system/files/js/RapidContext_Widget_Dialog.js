@@ -213,31 +213,30 @@ RapidContext.Widget.Dialog.prototype._handleMouseMove = function (evt) {
  */
 RapidContext.Widget.Dialog.prototype.setAttrs = function (attrs) {
     attrs = Object.assign({}, attrs);
-    var locals = RapidContext.Util.mask(attrs, [
-        "title", "modal", "system", "center", "resizeable", "closeable", "hidden"
-    ]);
-    if (typeof(locals.title) != "undefined") {
-        this.firstChild.innerText = locals.title;
+    if ("title" in attrs) {
+        this.firstChild.innerText = attrs.title || "";
+        delete attrs.title;
     }
-    if (typeof(locals.modal) != "undefined") {
-        this.modal = MochiKit.Base.bool(locals.modal);
+    if ("modal" in attrs) {
+        attrs.modal = MochiKit.Base.bool(attrs.modal);
     }
-    if (typeof(locals.system) != "undefined") {
-        this.system = MochiKit.Base.bool(locals.system);
+    if ("system" in attrs) {
+        attrs.system = MochiKit.Base.bool(attrs.system);
     }
-    if (typeof(locals.center) != "undefined") {
-        this.center = MochiKit.Base.bool(locals.center);
+    if ("center" in attrs) {
+        attrs.center = MochiKit.Base.bool(attrs.center);
     }
-    if (typeof(locals.resizeable) != "undefined") {
-        let resize = this.childNodes[2];
-        resize.classList.toggle("hidden", !MochiKit.Base.bool(locals.resizeable));
+    if ("resizeable" in attrs) {
+        attrs.resizeable = MochiKit.Base.bool(attrs.resizeable);
+        this.childNodes[2].classList.toggle("hidden", !attrs.resizeable);
     }
-    if (typeof(locals.closeable) != "undefined") {
-        var close = this.childNodes[1];
-        close.setAttrs({ hidden: !MochiKit.Base.bool(locals.closeable) });
+    if ("closeable" in attrs) {
+        attrs.closeable = MochiKit.Base.bool(attrs.closeable);
+        this.childNodes[1].setAttrs({ hidden: !attrs.closeable });
     }
-    if (typeof(locals.hidden) != "undefined") {
-        this._setHiddenDialog(locals.hidden);
+    if ("hidden" in attrs) {
+        this._setHiddenDialog(MochiKit.Base.bool(attrs.hidden));
+        delete attrs.hidden;
     }
     this.__setAttrs(attrs);
 };

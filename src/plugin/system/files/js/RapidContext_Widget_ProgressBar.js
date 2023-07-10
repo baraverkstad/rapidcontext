@@ -97,50 +97,44 @@ RapidContext.Widget.ProgressBar.prototype._containerNode = function () {
  * @param {boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.ProgressBar.prototype.setAttrs = function (attrs) {
+    /* eslint complexity: "off" */
+    let now = new Date().getTime();
     attrs = Object.assign({}, attrs);
-    var nowTime = new Date().getTime();
-    if (typeof(attrs.min) != "undefined" || typeof(attrs.max) != "undefined") {
-        this.min = attrs.min = Math.max(parseInt(attrs.min) || this.min || 0, 0);
-        this.max = attrs.max = Math.max(parseInt(attrs.max) || this.max || 100, this.min);
+    if ("min" in attrs || "max" in attrs) {
+        attrs.min = Math.max(parseInt(attrs.min, 10) || this.min || 0, 0);
+        attrs.max = Math.max(parseInt(attrs.max, 10) || this.max || 100, attrs.min);
         attrs.value = attrs.value || null;
         attrs.ratio = attrs.ratio || 0.0;
-        this.startTime = nowTime;
-        this.updateTime = nowTime;
+        this.startTime = now;
+        this.updateTime = now;
         this.timeRemaining = null;
     }
-    if (typeof(attrs.value) != "undefined") {
-        var value = Math.min(Math.max(parseFloat(attrs.value), this.min), this.max);
-        if (!isNaN(value)) {
-            attrs.value = value;
-            var calc = (value - this.min) / (this.max - this.min);
-            attrs.ratio = attrs.ratio || calc;
-        } else {
-            delete attrs.value;
-        }
+    if ("value" in attrs) {
+        let min = attrs.min || this.min;
+        let max = attrs.max || this.max;
+        let val = Math.min(Math.max(parseFloat(attrs.value), min), max);
+        attrs.value = isNaN(val) ? null : val;
+        attrs.ratio = isNaN(val) ? null : (val - min) / (max - min);
     }
-    if (typeof(attrs.ratio) != "undefined") {
-        var ratio = Math.min(Math.max(parseFloat(attrs.ratio), 0.0), 1.0);
-        if (!isNaN(ratio)) {
-            attrs.ratio = ratio;
-        } else {
-            delete attrs.ratio;
-        }
+    if ("ratio" in attrs) {
+        let val = Math.min(Math.max(parseFloat(attrs.ratio), 0.0), 1.0);
+        attrs.ratio = isNaN(val) ? null : val;
     }
-    if (typeof(attrs.noratio) != "undefined") {
+    if ("noratio" in attrs) {
         attrs.noratio = MochiKit.Base.bool(attrs.noratio) || null;
     }
-    if (typeof(attrs.novalue) != "undefined") {
+    if ("novalue" in attrs) {
         attrs.novalue = MochiKit.Base.bool(attrs.novalue) || null;
     }
-    if (typeof(attrs.notime) != "undefined") {
+    if ("notime" in attrs) {
         attrs.notime = MochiKit.Base.bool(attrs.notime) || null;
         this.timeRemaining = null;
     }
     this.__setAttrs(attrs);
-    if (!this.notime && nowTime - this.updateTime > 1000) {
-        this.updateTime = nowTime;
-        var time = this._remainingTime();
-        this.timeRemaining = (time && time.text) ? time.text : null;
+    if (!this.notime && now - this.updateTime > 1000) {
+        let estimate = this._remainingTime();
+        this.updateTime = now;
+        this.timeRemaining = (estimate && estimate.text) || null;
     }
     this._render();
 };
@@ -186,7 +180,7 @@ RapidContext.Widget.ProgressBar.prototype._remainingTime = function () {
 RapidContext.Widget.ProgressBar.prototype._render = function () {
     this.lastChild.min = this.min;
     this.lastChild.max = this.max;
-    this.lastChild.value = this.value || (this.max - this.max) * this.ratio;
+    this.lastChild.value = this.value || (this.max - this.max) * this.ratio || null;
     var info = [];
     if (!this.noratio) {
         var percent = Math.round(this.ratio * 1000) / 10;

@@ -75,25 +75,26 @@ RapidContext.Widget.Classes.Button = RapidContext.Widget.Button;
  */
 RapidContext.Widget.Button.prototype.setAttrs = function (attrs) {
     attrs = Object.assign({}, attrs);
-    var locals = RapidContext.Util.mask(attrs, ["highlight", "icon"]);
-    this.__setAttrs(attrs);
-    if ("highlight" in locals) {
-        this.classList.toggle("primary", MochiKit.Base.bool(locals.highlight));
+    if ("highlight" in attrs) {
+        this.classList.toggle("primary", MochiKit.Base.bool(attrs.highlight));
+        delete attrs.highlight;
     }
-    if ("icon" in locals) {
-        var child = this.querySelector("i");
-        if (!locals.icon) {
+    if ("icon" in attrs) {
+        let child = this.querySelector("i");
+        if (!attrs.icon) {
             child && RapidContext.Widget.destroyWidget(child);
         } else if (!child) {
-            this.insertBefore(RapidContext.Widget.Icon(locals.icon), this.firstChild);
-        } else if (locals.icon.nodeType) {
-            child.replaceWith(locals.icon);
+            this.insertBefore(RapidContext.Widget.Icon(attrs.icon), this.firstChild);
+        } else if (attrs.icon.nodeType) {
+            child.replaceWith(attrs.icon);
         } else if (child.setAttrs) {
-            child.setAttrs(locals.icon);
-        } else if (typeof(locals.icon) === "string") {
-            child.className = locals.icon;
+            child.setAttrs(attrs.icon);
+        } else if (typeof(attrs.icon) === "string") {
+            child.className = attrs.icon;
         } else {
-            Object.keys(locals.icon).forEach((k) => child.setAttribute(k, locals.icon[k]));
+            Object.keys(attrs.icon).forEach((k) => child.setAttribute(k, attrs.icon[k]));
         }
+        delete attrs.icon;
     }
+    this.__setAttrs(attrs);
 };

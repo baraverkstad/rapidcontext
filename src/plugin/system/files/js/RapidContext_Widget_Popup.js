@@ -99,19 +99,21 @@ RapidContext.Widget.Classes.Popup = RapidContext.Widget.Popup;
  */
 RapidContext.Widget.Popup.prototype.setAttrs = function (attrs) {
     attrs = Object.assign({}, attrs);
-    var locals = RapidContext.Util.mask(attrs, ["delay", "showAnim", "hideAnim", "hidden"]);
-    if (typeof(locals.delay) != "undefined") {
-        this.delay = parseInt(locals.delay);
+    if ("delay" in attrs) {
+        attrs.delay = parseInt(attrs.delay, 10) || 5000;
         this.resetDelay();
     }
-    if (typeof(locals.showAnim) != "undefined") {
+    if ("showAnim" in attrs) {
         console.warn("deprecated: popup 'showAnim' attribute is ignored");
+        delete attrs.showAnim;
     }
-    if (typeof(locals.hideAnim) != "undefined") {
+    if ("hideAnim" in attrs) {
         console.warn("deprecated: popup 'hideAnim' attribute is ignored");
+        delete attrs.hideAnim;
     }
-    if (typeof(locals.hidden) != "undefined") {
-        this._setHiddenPopup(locals.hidden);
+    if ("hidden" in attrs) {
+        this._setHiddenPopup(MochiKit.Base.bool(attrs.hidden));
+        delete attrs.hidden;
     }
     this.__setAttrs(attrs);
 };

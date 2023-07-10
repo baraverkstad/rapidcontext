@@ -245,38 +245,43 @@ RapidContext.Widget.prototype._dispatch = function (type, opts) {
  */
 RapidContext.Widget.prototype.setAttrs = function (attrs) {
     /* eslint max-depth: "off" */
-    for (var name in attrs) {
-        var value = attrs[name];
+    for (let name in attrs) {
+        let value = attrs[name];
         if (name == "disabled") {
             this._setDisabled(value);
         } else if (name == "hidden") {
             this._setHidden(value);
         } else if (name == "class") {
-            var elem = this._styleNode();
+            let elem = this._styleNode();
             this.removeClass.apply(this, elem.className.split(/\s+/));
             this.addClass.apply(this, value.split(/\s+/));
         } else if (name == "style") {
             if (typeof(value) == "string") {
-                var styles = {};
-                var parts = value.split(";");
-                for (var i = 0; i < parts.length; i++) {
-                    var a = parts[i].split(":");
-                    var k = a[0].trim();
-                    if (k != "" && a.length > 1) {
-                        styles[k] = a[1].trim();
+                let func = (res, part) => {
+                    let a = part.split(":");
+                    let k = a[0].trim();
+                    if (k && a.length > 1) {
+                        res[k] = a.slice(1).join(":").trim();
                     }
-                }
-                value = styles;
+                    return res;
+                };
+                value = value.split(";").reduce(func, {});
             }
             this.setStyle(value);
-        } else if (value != null) {
-            this.setAttribute(name, value);
-            if (typeof(value) != "object") {
-                this[name] = value;
-            }
         } else {
-            this.removeAttribute(name);
-            delete this[name];
+            let isString = typeof(value) == "string";
+            let isBoolean = typeof(value) == "boolean";
+            let isNumber = typeof(value) == "number";
+            if (isString || isBoolean || isNumber) {
+                this.setAttribute(name, value);
+            } else {
+                this.removeAttribute(name);
+            }
+            if (value != null) {
+                this[name] = value;
+            } else {
+                delete this[name];
+            }
         }
     }
 };

@@ -178,12 +178,11 @@ RapidContext.Widget.Table.prototype._handleClick = function (evt) {
  */
 RapidContext.Widget.Table.prototype.setAttrs = function (attrs) {
     attrs = Object.assign({}, attrs);
-    var locals = RapidContext.Util.mask(attrs, ["select", "key"]);
-    if (typeof(locals.select) != "undefined") {
-        this._selectMode = locals.select;
+    if ("select" in attrs) {
+        this._selectMode = attrs.select;
     }
-    if (typeof(locals.key) != "undefined") {
-        this.setIdKey(locals.key);
+    if ("key" in attrs) {
+        this.setIdKey(attrs.key);
     }
     this.__setAttrs(attrs);
 };

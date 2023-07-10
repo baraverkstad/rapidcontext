@@ -129,39 +129,28 @@ RapidContext.Widget.TableColumn.prototype._containerNode = function () {
  */
 RapidContext.Widget.TableColumn.prototype.setAttrs = function (attrs) {
     attrs = Object.assign({}, attrs);
-    var locals = RapidContext.Util.mask(attrs, [
-        "title", "field", "type", "sort", "maxLength", "key", "tooltip",
-        "cellStyle", "renderer"
-    ]);
-    if (typeof(locals.title) !== "undefined") {
-        this.innerText = locals.title;
+    if ("title" in attrs) {
+        this.innerText = attrs.title;
+        delete attrs.title;
     }
-    if (typeof(locals.field) !== "undefined") {
-        this.field = locals.field;
+    if ("sort" in attrs) {
+        this.classList.toggle("sortNone", attrs.sort == "none");
+        this.classList.toggle("sortDesc", attrs.sort == "desc");
+        this.classList.toggle("sortAsc", attrs.sort == "asc");
     }
-    if (typeof(locals.type) !== "undefined") {
-        this.type = locals.type;
+    if ("maxLength" in attrs) {
+        attrs.maxLength = parseInt(attrs.maxLength, 10) || null;
     }
-    if (typeof(locals.sort) !== "undefined") {
-        this.sort = locals.sort;
-        this.classList.toggle("sortNone", locals.sort === "none");
-        this.classList.toggle("sortDesc", locals.sort === "desc");
-        this.classList.toggle("sortAsc", locals.sort === "asc");
+    if ("key" in attrs) {
+        attrs.key = MochiKit.Base.bool(attrs.key);
     }
-    if (typeof(locals.maxLength) !== "undefined") {
-        this.maxLength = parseInt(locals.maxLength);
+    if ("tooltip" in attrs) {
+        attrs.title = attrs.tooltip;
+        delete attrs.tooltip;
     }
-    if (typeof(locals.key) !== "undefined") {
-        this.key = MochiKit.Base.bool(locals.key);
-    }
-    if (typeof(locals.tooltip) !== "undefined") {
-        this.title = locals.tooltip;
-    }
-    if (typeof(locals.cellStyle) !== "undefined") {
-        this.cellStyle = locals.cellStyle;
-    }
-    if (typeof(locals.renderer) === "function") {
-        this.renderer = locals.renderer;
+    if ("renderer" in attrs) {
+        let valid = typeof(attrs.renderer) === "function";
+        attrs.renderer = valid ? attrs.renderer : null;
     }
     this.__setAttrs(attrs);
 };
