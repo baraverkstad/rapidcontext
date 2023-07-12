@@ -3,11 +3,11 @@
 <plist version="1.0">
 <dict>
     <key>CFBundleName</key>
-    <string>@build.title@</string>
+    <string>RapidContext</string>
     <key>CFBundleDisplayName</key>
-    <string>@build.title@</string>
+    <string>RapidContext</string>
     <key>CFBundleIdentifier</key>
-    <string>@build.package@</string>
+    <string>org.rapidcontext</string>
     <key>CFBundleVersion</key>
     <string>@build.version@</string>
     <key>CFBundleShortVersionString</key>
@@ -18,5 +18,10 @@
     <string>start</string>
     <key>CFBundleIconFile</key>
     <string>logotype.icns</string>
+    <key>LSArchitecturePriority</key>
+    <array>
+        <string>arm64</string>
+        <string>x86_64</string>
+    </array>
 </dict>
 </plist>
