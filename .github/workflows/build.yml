@@ -54,4 +54,4 @@ jobs:
         registry: ghcr.io
 
     - name: Build Docker & Publish
-      run: make VERSION=${{ env.VERSION }} build-docker
+      run: make VERSION=${{ env.VERSION }} package-docker

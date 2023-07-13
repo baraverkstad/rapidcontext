@@ -1,13 +1,15 @@
 DATE    := $(or $(DATE),$(shell date '+%F'))
-TAG     := $(or $(VERSION),'latest')
 VER     := $(if $(VERSION),$(patsubst v%,%,$(VERSION)),$(shell date '+%Y.%m.%d-beta'))
+REPO    := 'ghcr.io/baraverkstad/rapidcontext'
+TAG     := $(or $(VERSION),'latest')
+ARCH    := 'linux/amd64,linux/arm64'
 
 all:
 	@echo '🌈 Makefile commands'
 	@grep -E -A 1 '^#' Makefile | awk 'BEGIN { RS = "--\n"; FS = "\n" }; { sub("#+ +", "", $$1); sub(":.*", "", $$2); printf " · make %-18s- %s\n", $$2, $$1}'
 	@echo
 	@echo '🚀 Release builds'
-	@echo ' · make VERSION=v2022.08 build build-docker'
+	@echo ' · make VERSION=v2022.08 clean setup build test package'
 	@echo
 	@echo '💡 Related commands'
 	@echo ' · npm outdated           - Show outdated libraries and tools'
@@ -26,20 +28,7 @@ setup: clean
 
 # Compile source and build plug-ins
 build:
-	rm -f share/docker/rapidcontext-*.zip
 	DATE=$(DATE) VERSION=$(VER) ant compile doc
-
-build-docker:
-	cp rapidcontext-$(VER).zip share/docker/
-	( \
-		cd share/docker && \
-		docker buildx build . \
-			-t ghcr.io/baraverkstad/rapidcontext:$(TAG) \
-			--build-arg VERSION=$(VER) \
-			--platform linux/amd64,linux/arm64 \
-			--push \
-	)
-	rm share/docker/rapidcontext-$(VER).zip
 
 
 # Run tests & code style checks
@@ -76,19 +65,26 @@ package-zip:
 	cd tmp/ && zip -r9 ../rapidcontext-$(VER).zip rapidcontext-$(VER)
 
 package-mac:
-	mkdir -p tmp/RapidContext.app
+	mkdir -p tmp/RapidContext.app/
 	cp -r src/mac/app/* tmp/RapidContext.app/
 	cp -r *.md bin lib plugin share doc.zip tmp/RapidContext.app/Contents/Resources/
 	sed -Ei '' "s/@build.version@/$(VER)/" tmp/RapidContext.app/Contents/Info.plist
 	cd tmp/ && zip -r9 ../rapidcontext-$(VER)-mac.zip RapidContext.app
 
+package-docker: package-zip
+	mkdir -p tmp/docker/
+	cp -r share/docker/* tmp/docker/
+	cp rapidcontext-$(VER).zip tmp/docker/
+	cd tmp/docker && docker buildx build . -t $(REPO):$(TAG) --build-arg VERSION=$(VER) --platform $(ARCH) --push
+
 
 # Run local development server
-run:
-	cp rapidcontext-$(VER).zip share/docker/
-	cd share/docker && docker compose build --build-arg VERSION=$(VER) --pull
-	rm share/docker/rapidcontext-$(VER).zip
-	cd share/docker && docker compose run --rm --service-ports rapidcontext
+run: build package-zip
+	mkdir -p tmp/docker/
+	cp -r share/docker/* tmp/docker/
+	cp rapidcontext-$(VER).zip tmp/docker/
+	cd tmp/docker && docker compose build --build-arg VERSION=$(VER) --pull
+	cd tmp/docker && docker compose run --rm --service-ports rapidcontext
 
 
 # Update source code copyright year
