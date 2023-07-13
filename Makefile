@@ -33,7 +33,7 @@ build:
 
 # Generate API documentation
 doc: doc-java doc-js
-	rm doc.zip
+	rm -f doc.zip
 	zip -r9 doc.zip doc/
 
 doc-java:
@@ -52,7 +52,7 @@ doc-js:
 	rm -rf doc/js/*
 	npx jsdoc -c .jsdoc.json -t share/jsdoc-template-rapidcontext/ -d doc/js/ -r src/plugin/system/files/js/
 	sed -i.bak -e 's/[[:space:]]*$$//' doc/js/*.html
-	rm doc/js/*.bak
+	rm -f doc/js/*.bak
 
 
 # Run tests & code style checks
@@ -93,7 +93,7 @@ package-war:
 	mkdir -p tmp/war/
 	cp -r *.md plugin doc.zip src/web/* tmp/war/
 	cp -r lib tmp/war/WEB-INF/
-	rm tmp/war/WEB-INF/lib/{servlet-api,jetty-*,slf4j-*}.jar
+	rm -f tmp/war/WEB-INF/lib/{servlet-api,jetty-*,slf4j-*}.jar
 	jar -cvf tmp/rapidcontext.war -C tmp/war/ .
 	cd tmp/ && zip -r9 ../rapidcontext-$(VER)-war.zip rapidcontext.war
 
