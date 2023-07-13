@@ -55,8 +55,7 @@ doc-js:
 
 
 # Run tests & code style checks
-test: test-css test-html test-js
-	ant test
+test: test-css test-html test-js test-java
 
 test-css:
 	npx stylelint 'src/plugin/system/files/**/*.css' 'share/**/*.css' '!**/*.min.css'
@@ -69,6 +68,21 @@ test-js:
 		--ignore-pattern 'src/plugin/legacy/**/*.js' \
 		--ignore-pattern '**/*.min.js' \
 		--ignore-pattern '**/MochiKit.js'
+
+test-java:
+	mkdir -p test/classes/
+	rm -rf test/classes/*
+	javac -d "test/classes" -classpath "lib/*:test/lib/*" --release 11 \
+		-sourcepath "test/src/java" \
+		-g -deprecation \
+		-Xlint:all,-missing-explicit-ctor \
+		-Xdoclint:all,-missing \
+		$(shell find test/src/java -name '*.java')
+	find test/classes -name "*Test*.class" | \
+		sed -e 's|test/classes/||' -e 's|.class||' -e 's|/|.|g' \
+		> test/classes/test.lst
+	java -classpath "lib/*:test/lib/*:test/classes:test/src/java" \
+		org.junit.runner.JUnitCore $(shell cat test/classes/test.lst)
 
 
 # Package downloads for distribution
