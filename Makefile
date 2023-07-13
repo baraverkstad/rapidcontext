@@ -37,7 +37,7 @@ doc: doc-java doc-js
 	zip -r9 doc.zip doc/
 
 doc-java:
-	find doc/java/ -not -name "topics.json" -delete
+	find doc/java -mindepth 1 -not -name "topics.json" -delete
 	javadoc -quiet -d "doc/java" -classpath "lib/*" --release 11 \
 		-sourcepath "src/java" -subpackages "org.rapidcontext" \
 		-group "Application Layer" "org.rapidcontext.app:org.rapidcontext.app.*" \
