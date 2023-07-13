@@ -47,7 +47,6 @@
     <include name="**/*.properties" />
     <include name="**/*.sh" />
     <include name="**/*.xml" />
-    <exclude name="tools/**" />
   </patternset>
 
 
@@ -186,61 +185,6 @@
       </batchtest>
       <formatter type="brief" usefile="false" />
     </junit>
-  </target>
-
-
-<!-- DOCUMENTATION TARGETS -->
-  <target name="doc"
-          depends="doc-clean,doc-java,doc-js"
-          description="Generates the application documentation">
-    <zip destfile="doc.zip" basedir="doc" level="9">
-    </zip>
-  </target>
-
-  <target name="doc-clean">
-    <delete file="doc.zip" quiet="true" />
-    <delete quiet="true" includeemptydirs="true">
-      <fileset dir="doc/java" includes="**/*" excludes="topics.json" />
-    </delete>
-    <delete dir="doc/js" quiet="true" includeemptydirs="true" />
-    <mkdir dir="doc/js" />
-  </target>
-
-  <target name="doc-java">
-    <javadoc destdir="doc/java"
-             sourcepath="src/java"
-             classpathref="build.classpath"
-             stylesheetfile="tools/javadoc/stylesheet.css"
-             version="true"
-             use="true"
-             author="true"
-             windowtitle="${build.title} ${build.version} Java API"
-             failonerror="true">
-      <group title="Application Layer" packages="${build.package}.app:${build.package}.app.*" />
-      <group title="Core Library Layer" packages="${build.package}.core:${build.package}.core.*" />
-      <group title="Utilities Layer" packages="${build.package}.util:${build.package}.util.*" />
-    </javadoc>
-    <replaceregexp match="//class-use" replace="/class-use/" flags="g">
-      <fileset dir="doc/java">
-        <include name="**/*.html" />
-      </fileset>
-    </replaceregexp>
-    <replaceregexp match="\s+$" replace="" flags="g" byline="true">
-      <fileset dir="doc/java">
-        <include name="**/*.html" />
-      </fileset>
-    </replaceregexp>
-  </target>
-
-  <target name="doc-js">
-    <exec executable="npx">
-      <arg line="jsdoc -c .jsdoc.json -t tools/jsdoc-template-rapidcontext/ -d doc/js/ -r src/plugin/system/files/js/"/>
-    </exec>
-    <replaceregexp match="\s+$" replace="" flags="g" byline="true">
-      <fileset dir="doc/js">
-        <include name="**/*.html" />
-      </fileset>
-    </replaceregexp>
   </target>
 
 </project>

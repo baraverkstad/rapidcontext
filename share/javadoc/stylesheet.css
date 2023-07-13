@@ -277,9 +277,12 @@ dl.notes > dt {
     color: #4e4e4e;
 }
 dl.notes > dd {
-    margin: 5px 10px 10px 0;
+    margin: 5px 10px 10px 2em;
     font-size: 14px;
     font-family: ui-serif, Georgia, "Times New Roman", serif;
+}
+dl.notes > dd > ul {
+    padding-left: 0;
 }
 dl.name-value > dt {
     margin-left: 1px;

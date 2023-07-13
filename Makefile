@@ -9,7 +9,7 @@ all:
 	@grep -E -A 1 '^#' Makefile | awk 'BEGIN { RS = "--\n"; FS = "\n" }; { sub("#+ +", "", $$1); sub(":.*", "", $$2); printf " · make %-18s- %s\n", $$2, $$1}'
 	@echo
 	@echo '🚀 Release builds'
-	@echo ' · make VERSION=v2022.08 clean setup build test package'
+	@echo ' · make VERSION=v2022.08 clean setup build doc test package'
 	@echo
 	@echo '💡 Related commands'
 	@echo ' · npm outdated           - Show outdated libraries and tools'
@@ -28,7 +28,30 @@ setup: clean
 
 # Compile source and build plug-ins
 build:
-	DATE=$(DATE) VERSION=$(VER) ant compile doc
+	DATE=$(DATE) VERSION=$(VER) ant compile
+
+
+# Generate API documentation
+doc: doc-java doc-js
+	rm doc.zip
+	zip -r9 doc.zip doc/
+
+doc-java:
+	find doc/java/ -not -name "topics.json" -delete
+	javadoc -quiet -d "doc/java" -classpath "lib/*" --release 11 \
+		-sourcepath "src/java" -subpackages "org.rapidcontext" \
+		-group "Application Layer" "org.rapidcontext.app:org.rapidcontext.app.*" \
+		-group "Core Library Layer" "org.rapidcontext.core:org.rapidcontext.core.*" \
+		-group "Utilities Layer" "org.rapidcontext.util:org.rapidcontext.util.*" \
+		-version -use -windowtitle "RapidContext $(VER) Java API" \
+		-stylesheetfile "share/javadoc/stylesheet.css" \
+		-Xdoclint:all
+
+doc-js:
+	mkdir -p doc/js/
+	rm -rf doc/js/*
+	npx jsdoc -c .jsdoc.json -t share/jsdoc-template-rapidcontext/ -d doc/js/ -r src/plugin/system/files/js/
+	sed -i '' 's/[[:space:]]*$$//' doc/js/*.html
 
 
 # Run tests & code style checks
@@ -36,7 +59,7 @@ test: test-css test-html test-js
 	ant test
 
 test-css:
-	npx stylelint 'src/plugin/system/files/**/*.css' 'tools/javadoc/stylesheet.css' '!**/*.min.css'
+	npx stylelint 'src/plugin/system/files/**/*.css' 'share/**/*.css' '!**/*.min.css'
 
 test-html:
 	npx html-validate 'doc/*.html' 'src/plugin/*/files/index.tmpl'
