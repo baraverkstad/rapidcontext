@@ -51,7 +51,8 @@ doc-js:
 	mkdir -p doc/js/
 	rm -rf doc/js/*
 	npx jsdoc -c .jsdoc.json -t share/jsdoc-template-rapidcontext/ -d doc/js/ -r src/plugin/system/files/js/
-	sed -i '' 's/[[:space:]]*$$//' doc/js/*.html
+	sed -i.bak -e 's/[[:space:]]*$$//' doc/js/*.html
+	rm doc/js/*.bak
 
 
 # Run tests & code style checks
