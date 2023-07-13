@@ -15,7 +15,8 @@ all:
 
 # Cleanup intermediary files
 clean:
-	rm -rf package-lock.json node_modules/ tmp/
+	rm -rf package-lock.json node_modules/ plugin/ tmp/ rapidcontext-*.zip
+	find . -name .DS_Store -delete
 
 
 # Setup development environment
@@ -23,10 +24,10 @@ setup: clean
 	npm install --omit=optional
 
 
-# Build release artifacts
+# Compile source and build plug-ins
 build:
 	rm -f share/docker/rapidcontext-*.zip
-	DATE=$(DATE) VERSION=$(VER) ant package
+	DATE=$(DATE) VERSION=$(VER) ant compile doc
 
 build-docker:
 	cp rapidcontext-$(VER).zip share/docker/
@@ -41,7 +42,7 @@ build-docker:
 	rm share/docker/rapidcontext-$(VER).zip
 
 
-# Tests & code style checks
+# Run tests & code style checks
 test: test-css test-html test-js
 	ant test
 
@@ -56,6 +57,30 @@ test-js:
 		--ignore-pattern 'src/plugin/legacy/**/*.js' \
 		--ignore-pattern '**/*.min.js' \
 		--ignore-pattern '**/MochiKit.js'
+
+
+# Package downloads for distribution
+package: package-war package-zip package-mac
+
+package-war:
+	mkdir -p tmp/war/
+	cp -r *.md plugin doc.zip src/web/* tmp/war/
+	cp -r lib tmp/war/WEB-INF/
+	rm tmp/war/WEB-INF/lib/{servlet-api,jetty-*,slf4j-*}.jar
+	jar -cvf tmp/rapidcontext.war -C tmp/war/ .
+	cd tmp/ && zip -r9 ../rapidcontext-$(VER)-war.zip rapidcontext.war
+
+package-zip:
+	mkdir -p tmp/rapidcontext-$(VER)/
+	cp -r *.md bin lib plugin share doc.zip tmp/rapidcontext-$(VER)/
+	cd tmp/ && zip -r9 ../rapidcontext-$(VER).zip rapidcontext-$(VER)
+
+package-mac:
+	mkdir -p tmp/RapidContext.app
+	cp -r src/mac/app/* tmp/RapidContext.app/
+	cp -r *.md bin lib plugin share doc.zip tmp/RapidContext.app/Contents/Resources/
+	sed -Ei '' "s/@build.version@/$(VER)/" tmp/RapidContext.app/Contents/Info.plist
+	cd tmp/ && zip -r9 ../rapidcontext-$(VER)-mac.zip RapidContext.app
 
 
 # Run local development server

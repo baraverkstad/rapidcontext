@@ -25,6 +25,4 @@
 /doc/js/
 
 # Package output files
-/rapidcontext.war
-/RapidContext.app
 /rapidcontext-*.zip
