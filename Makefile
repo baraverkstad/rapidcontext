@@ -63,7 +63,7 @@ build-plugins:
 # Generate API documentation
 doc: doc-java doc-js
 	rm -f doc.zip
-	zip -r9 doc.zip doc/
+	cd doc/ && zip -r9 ../doc.zip .
 
 doc-java:
 	find doc/java -mindepth 1 -not -name "topics.json" -delete
