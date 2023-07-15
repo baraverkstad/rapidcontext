@@ -78,7 +78,7 @@ public class Type extends StorableObject {
     /**
      * The storable object initializer constructor arguments.
      */
-    private static final Class<?>[] CONSTRUCTOR_ARGS = new Class[] {
+    private static final Class<?>[] CONSTRUCTOR_ARGS = new Class<?>[] {
         String.class, String.class, Dict.class
     };
 
@@ -143,7 +143,7 @@ public class Type extends StorableObject {
                 return cls.getConstructor(CONSTRUCTOR_ARGS);
             } catch (Exception e) {
                 try {
-                    Constructor<?> ctor = cls.getConstructor(new Class[] { Dict.class });
+                    Constructor<?> ctor = cls.getConstructor(new Class<?>[] { Dict.class });
                     LOG.warning("deprecated: " + typeId + " initializer missing " +
                                 cls.getName() + "(String, String, Dict) constructor");
                     return ctor;

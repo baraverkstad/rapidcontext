@@ -64,7 +64,7 @@ public class CallStack {
      *         null if the stack is empty
      */
     public Procedure bottom() {
-        return (stack.size() > 0) ? (Procedure) stack.get(0) : null;
+        return (stack.size() > 0) ? stack.get(0) : null;
     }
 
     /**
@@ -75,7 +75,7 @@ public class CallStack {
      *         null if the stack is empty
      */
     public Procedure top() {
-        return (stack.size() > 0) ? (Procedure) stack.get(stack.size() - 1) : null;
+        return (stack.size() > 0) ? stack.get(stack.size() - 1) : null;
     }
 
     /**

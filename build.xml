@@ -84,11 +84,11 @@
     <javac srcdir="src/java"
            destdir="classes"
            classpathref="build.classpath"
-           target="11"
-           source="11"
+           release="11"
            debug="on"
            deprecation="on">
-      <compilerarg value="-Xlint:unchecked"/>
+      <compilerarg value="-Xlint:all,-missing-explicit-ctor,-serial"/>
+      <compilerarg value="-Xdoclint:all,-missing"/>
     </javac>
     <copy file="build.properties" todir="classes/org/rapidcontext/app/"/>
     <propertyfile file="classes/org/rapidcontext/app/build.properties">

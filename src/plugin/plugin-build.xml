@@ -71,12 +71,12 @@
     <javac srcdir="src"
            destdir="classes"
            classpathref="build.classpath"
-           target="11"
-           source="11"
+           release="11"
            debug="on"
            deprecation="on"
            includeantruntime="off">
-      <compilerarg value="-Xlint:unchecked"/>
+      <compilerarg value="-Xlint:all,-missing-explicit-ctor,-serial"/>
+      <compilerarg value="-Xdoclint:all,-missing"/>
     </javac>
     <mkdir dir="lib" />
     <jar jarfile="lib/${plugin.id}-${build.version}.jar" level="9">

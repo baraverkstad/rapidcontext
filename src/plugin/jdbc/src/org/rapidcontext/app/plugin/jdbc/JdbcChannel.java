@@ -635,7 +635,6 @@ public class JdbcChannel extends Channel {
                         while ((count = is.read(buffer)) > 0 && os.size() < 1000000) {
                             os.write(buffer, 0, count);
                         }
-                        is.close();
                         return os.toByteArray();
                     }
                 } else {

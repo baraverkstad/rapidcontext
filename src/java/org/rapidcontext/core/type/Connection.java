@@ -301,7 +301,7 @@ public abstract class Connection extends StorableObject {
             // TODO: handle shared channels
             msg = "reserving connection channel in " + this;
             LOG.fine(msg);
-            channel = (Channel) channelPool.borrowObject();
+            channel = channelPool.borrowObject();
             LOG.fine("done " + msg);
         } catch (ConnectionException e) {
             lastError = e.getMessage();

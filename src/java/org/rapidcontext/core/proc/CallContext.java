@@ -420,7 +420,7 @@ public class CallContext {
         } catch (ProcedureException e) {
             String msg = "Execution error in procedure '" + name + "'";
             LOG.log(Level.FINE, msg, e);
-            throw (ProcedureException) e;
+            throw e;
         } catch (Exception e) {
             String msg = "Unhandled exception in procedure '" + name + "'";
             LOG.log(Level.WARNING, msg, e);

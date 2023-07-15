@@ -76,7 +76,7 @@ test-java:
 	javac -d "test/classes" -classpath "lib/*:test/lib/*" --release 11 \
 		-sourcepath "test/src/java" \
 		-g -deprecation \
-		-Xlint:all,-missing-explicit-ctor \
+		-Xlint:all,-missing-explicit-ctor,-serial \
 		-Xdoclint:all,-missing \
 		$(shell find test/src/java -name '*.java')
 	find test/classes -name "*Test*.class" | \

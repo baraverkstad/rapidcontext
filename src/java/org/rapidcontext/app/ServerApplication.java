@@ -64,10 +64,9 @@ public class ServerApplication {
      * @return true if the port number can be used, or
      *         false otherwise
      */
+    @SuppressWarnings("try")
     public static boolean isPortAvailable(int port) {
-        try (
-            ServerSocket socket = new ServerSocket(port);
-        ) {
+        try (ServerSocket socket = new ServerSocket(port)) {
             return true;
         } catch (Exception e) {
             return false;

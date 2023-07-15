@@ -177,7 +177,7 @@ public class MacApplication {
 
         ClassLoader loader = getClass().getClassLoader();
         Class<?> cls = Class.forName(className);
-        return Proxy.newProxyInstance(loader, new Class[] { cls }, handler);
+        return Proxy.newProxyInstance(loader, new Class<?>[] { cls }, handler);
     }
 
 
