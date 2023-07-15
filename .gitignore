@@ -1,28 +1,29 @@
-# General files
+# General
 .DS_Store
 /node_modules/
 /package-lock.json
 
-# Compile output files
+# Build
 /classes/
 /lib/rapidcontext-*.jar
 /plugin/
 /test/classes/
 /tmp/
 
-# Plug-In compile output files
-/src/plugin/*/build.number
+# Plug-in Build
+/src/plugin/*/.build
 /src/plugin/*/classes
+/src/plugin/*/tmp
 /src/plugin/*/*.plugin
 /src/plugin/cmdline/lib/cmdline-*.jar
 /src/plugin/http/lib/http-*.jar
 /src/plugin/jdbc/lib/jdbc-*.jar
 
-# Documentation output files
+# Documentation
 /doc.zip
 /doc/java/
 !/doc/java/topics.json
 /doc/js/
 
-# Package output files
+# Package
 /rapidcontext-*.zip

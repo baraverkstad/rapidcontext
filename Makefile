@@ -3,6 +3,8 @@ VER     := $(if $(VERSION),$(patsubst v%,%,$(VERSION)),$(shell date '+%Y.%m.%d-b
 REPO    := 'ghcr.io/baraverkstad/rapidcontext'
 TAG     := $(or $(VERSION),'latest')
 ARCH    := 'linux/amd64,linux/arm64'
+MAKE    := $(MAKE) --no-print-directory
+
 
 all:
 	@echo '🌈 Makefile commands'
@@ -19,6 +21,13 @@ all:
 clean:
 	rm -rf package-lock.json node_modules/ plugin/ tmp/ rapidcontext-*.zip
 	find . -name .DS_Store -delete
+	@$(MAKE) -C src/plugin/system clean
+	@$(MAKE) -C src/plugin/local clean
+	@$(MAKE) -C src/plugin/cmdline clean
+	@$(MAKE) -C src/plugin/http clean
+	@$(MAKE) -C src/plugin/jdbc clean
+	@$(MAKE) -C src/plugin/legacy clean
+	@$(MAKE) -C src/plugin/test clean
 
 
 # Setup development environment
@@ -27,8 +36,28 @@ setup: clean
 
 
 # Compile source and build plug-ins
-build:
+build: build-java build-plugins
+
+build-java:
 	DATE=$(DATE) VERSION=$(VER) ant compile
+
+build-plugins: CLASSPATH=$(wildcard $(PWD)/lib/rapidcontext-*.jar)
+build-plugins:
+	rm -rf plugin
+	mkdir -p plugin
+	@$(MAKE) -C src/plugin/system VERSION=$(VER)
+	@$(MAKE) -C src/plugin/local VERSION=$(VER)
+	@$(MAKE) -C src/plugin/cmdline VERSION=$(VER)
+	@$(MAKE) -C src/plugin/http VERSION=$(VER)
+	@$(MAKE) -C src/plugin/jdbc VERSION=$(VER)
+	@$(MAKE) -C src/plugin/legacy VERSION=$(VER)
+	@$(MAKE) -C src/plugin/test VERSION=$(VER)
+	@echo
+	cp src/plugin/*/*.plugin plugin/
+	for FILE in plugin/*.plugin ; do mv $$FILE $${FILE%-$(VER).plugin}.zip ; done
+	mkdir -p plugin/local
+	unzip -d plugin/local plugin/local.zip
+	rm -f plugin/local.zip
 
 
 # Generate API documentation
@@ -106,7 +135,8 @@ package-mac:
 	mkdir -p tmp/RapidContext.app/
 	cp -r src/mac/app/* tmp/RapidContext.app/
 	cp -r *.md bin lib plugin share doc.zip tmp/RapidContext.app/Contents/Resources/
-	sed -Ei '' "s/@build.version@/$(VER)/" tmp/RapidContext.app/Contents/Info.plist
+	sed -i.bak "s/@build.version@/$(VER)/" tmp/RapidContext.app/Contents/Info.plist
+	rm -f tmp/RapidContext.app/Contents/Info.plist.bak
 	cd tmp/ && zip -r9 ../rapidcontext-$(VER)-mac.zip RapidContext.app
 
 package-docker: package-zip
@@ -128,4 +158,5 @@ run: build package-zip
 # Update source code copyright year
 fix-copyright:
 	git grep -Ilrwz Copyright -- ':!doc/external/*' | \
-		xargs -0 -n 1 sed -Ei '' 's/(20[0-9]{2})-20[0-9]{2}/\1-2023/'
+		xargs -0 -n 1 sed -i.bak -E 's/(20[0-9]{2})-20[0-9]{2}/\1-2023/'
+	find . -name "*.bak" -delete

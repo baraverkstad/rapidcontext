@@ -27,7 +27,6 @@
   <condition property="build.version" value="${env.VERSION}" else="${DSTAMP}">
     <isset property="env.VERSION" />
   </condition>
-  <property name="build.platform" value="${build.version}" />
   <path id="build.classpath">
     <fileset dir="lib" includes="**/*.jar" />
   </path>
@@ -46,7 +45,7 @@
 
 <!-- COMPILATION TARGETS -->
   <target name="compile"
-          depends="compile-clean,compile-java,compile-plugins"
+          depends="compile-clean,compile-java"
           description="Compiles the application source code">
     <pathconvert property="manifest.classpath" pathsep=" " refid="build.classpath">
       <mapper type="flatten"/>
@@ -100,43 +99,6 @@
         <include name="*.png"/>
       </fileset>
     </copy>
-  </target>
-
-  <macrodef name="buildplugin">
-    <attribute name="id" />
-    <sequential>
-      <path id="plugin.classpath">
-        <path refid="build.classpath" />
-        <pathelement location="classes" />
-      </path>
-      <ant dir="src/plugin/@{id}" antfile="../plugin-build.xml">
-        <property name="java.class.path" value="${toString:plugin.classpath}" />
-        <property name="plugin.id" value="@{id}" />
-      </ant>
-      <delete quiet="true" includeemptydirs="true">
-        <fileset dir="plugin/@{id}" defaultexcludes="false" />
-        <fileset dir="plugin" includes="@{id}.zip" />
-      </delete>
-      <copy tofile="plugin/@{id}.zip">
-        <fileset dir="src/plugin/@{id}" includes="@{id}*.plugin" />
-      </copy>
-      <ant dir="src/plugin/@{id}" antfile="../plugin-build.xml" target="clean">
-        <property name="plugin.id" value="@{id}" />
-      </ant>
-    </sequential>
-  </macrodef>
-
-  <target name="compile-plugins">
-    <buildplugin id="system" />
-    <buildplugin id="local" />
-    <buildplugin id="cmdline" />
-    <buildplugin id="http" />
-    <buildplugin id="jdbc" />
-    <buildplugin id="legacy" />
-    <buildplugin id="test" />
-    <mkdir dir="plugin/local" />
-    <unzip dest="plugin/local" src="plugin/local.zip" />
-    <delete file="plugin/local.zip" quiet="true" />
   </target>
 
 </project>
