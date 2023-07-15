@@ -17,7 +17,6 @@ package org.rapidcontext.app.proc;
 import java.util.Date;
 
 import org.rapidcontext.app.ApplicationContext;
-import org.rapidcontext.app.plugin.PluginManager;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
@@ -74,7 +73,7 @@ public class StatusProcedure extends Procedure {
      */
     public static Dict getStatusData() {
         ApplicationContext ctx = ApplicationContext.getInstance();
-        Dict res = ctx.getStorage().load(PluginManager.PATH_INFO, Dict.class);
+        Dict res = ctx.getStorage().load(ApplicationContext.PATH_PLATFORM, Dict.class);
         if (res == null) {
             return null;
         }

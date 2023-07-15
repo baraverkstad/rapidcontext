@@ -70,6 +70,11 @@ public class ApplicationContext {
     public static final Path PATH_CONFIG = Path.from("/config");
 
     /**
+     * The path to the platform information.
+     */
+    public static final Path PATH_PLATFORM = Path.from("/platform");
+
+    /**
      * The class load time (system initialization time).
      */
     public static final Date INIT_TIME = new Date();

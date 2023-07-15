@@ -27,7 +27,6 @@ import java.util.regex.Pattern;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.app.ApplicationContext;
-import org.rapidcontext.app.plugin.PluginManager;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.security.SecurityContext;
@@ -118,7 +117,7 @@ public class AppWebService extends FileWebService {
      */
     protected static String version() {
         ApplicationContext ctx = ApplicationContext.getInstance();
-        Dict dict = ctx.getStorage().load(PluginManager.PATH_INFO, Dict.class);
+        Dict dict = ctx.getStorage().load(ApplicationContext.PATH_PLATFORM, Dict.class);
         return dict.getString("version", "1");
     }
 

@@ -52,11 +52,6 @@ public class PluginManager {
         Logger.getLogger(PluginManager.class.getName());
 
     /**
-     * The platform information path.
-     */
-    public static final Path PATH_INFO = Path.from("/platform");
-
-    /**
      * The identifier of the system plug-in.
      */
     public static final String SYSTEM_PLUGIN = "system";
@@ -82,11 +77,6 @@ public class PluginManager {
      * The storage to use when loading and unloading plug-ins.
      */
     public AppStorage storage;
-
-    /**
-     * The platform information dictionary.
-     */
-    public Dict platformInfo;
 
     /**
      * The plug-in class loader.
@@ -125,7 +115,6 @@ public class PluginManager {
         } catch (PluginException ignore) {
             // Error already logged, ignored here
         }
-        this.platformInfo = storage.load(PATH_INFO, Dict.class);
         initStorages(pluginDir);
         initStorages(builtinDir);
         try {
