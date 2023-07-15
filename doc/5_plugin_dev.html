@@ -111,11 +111,9 @@ fields:</p>
       ASCII alphanumeric characters without spaces or separators.</li>
   <li><var>name</var> &mdash; The plug-in name as presented to the users.</li>
   <li><var>version</var> &mdash; The plug-in version number. This number is
-      automatically modified if the Ant script in <var>plugin-build.xml</var>
-      is used for packaging the plug-in.</li>
+      automatically modified by the default build tools (in <var>share/plugin</var>).</li>
   <li><var>date</var> &mdash; The plug-in build date. This number is
-      automatically set if the Ant script in <var>plugin-build.xml</var> is
-      used for packaging the plug-in.</li>
+      automatically set by the default build tools (in <var>share/plugin</var>).</li>
   <li><var>description</var> &mdash; The optional description text that
       explains the functionality provided by the plug-in.</li>
   <li><var>copyright</var> &mdash; The optional copyright statement text.</li>
@@ -140,8 +138,9 @@ className = org.rapidcontext.app.plugin.example.ExamplePlugin
   </pre>
 </div>
 
-<p>Once the <var>plugin.properties</var> file has been created, the Ant script
-in <var>plugin-build.xml</var> can be used for packaging the plug-in.</p>
+<p>Once the <var>plugin.properties</var> file has been created, the build tools
+in <var>share/plugin</var> can be used for packaging the plug-in (using a
+<var>Makefile</var> or an Ant <var>build.xml</var> file).</p>
 
 
 <h2 id="procedures">5.3 Procedures &amp; Procedure Types</h2>
