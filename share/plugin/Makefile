@@ -18,8 +18,14 @@ VER       := $(subst version,,$(subst :,,$(subst =,,$(VER))))
 VER       := $(or $(VER),$(DATE)).$(BUILD)
 endif
 SRC       := $(shell [[ -d src ]] && find src -name '*.java')
-ifneq (,$(wildcard ../../../lib/rapidcontext-*.jar))
-CLASSPATH := $(wildcard ../../../lib/rapidcontext-*.jar):$(CLASSPATH)
+ifneq (,$(wildcard ../../../lib/*.jar))
+CLASSPATH := ../../../lib/*:$(CLASSPATH)
+endif
+ifneq (,$(wildcard ../../lib/*.jar))
+CLASSPATH := ../../lib/*:$(CLASSPATH)
+endif
+ifneq (,$(wildcard ../lib/*.jar))
+CLASSPATH := ../lib/*:$(CLASSPATH)
 endif
 ifneq (,$(filter-out $(wildcard lib/$(ID)-*.jar),$(wildcard lib/*)))
 CLASSPATH := lib/*:$(CLASSPATH)
