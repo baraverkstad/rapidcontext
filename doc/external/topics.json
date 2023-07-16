@@ -1,6 +1,5 @@
 { "topic": "RapidContext/JavaScript Environment", "children": [
     { "topic": "Standard built-in objects", "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects" },
-    { "topic": "Crypto-JS MD5 (3.1.2)", "url": "http://code.google.com/p/crypto-js/#MD5" },
     { "topic": "jQuery (3.6.0)", "url": "http://api.jquery.com/" },
     { "topic": "MochiKit (1.5 Dev)", "url": "doc/external/mochikit/index.html" }
 ] }
