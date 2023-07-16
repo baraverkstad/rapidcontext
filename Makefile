@@ -19,8 +19,12 @@ all:
 
 # Cleanup intermediary files
 clean:
-	rm -rf package-lock.json node_modules/ plugin/ tmp/ rapidcontext-*.zip
+	rm -rf package-lock.json node_modules/ \
+		classes/ lib/rapidcontext-*.jar plugin/ \
+		doc.zip doc/js/* \
+		tmp/ rapidcontext-*.zip
 	find . -name .DS_Store -delete
+	find doc/java -mindepth 1 -not -name "topics.json" -delete
 	@$(MAKE) -C src/plugin/system clean
 	@$(MAKE) -C src/plugin/local clean
 	@$(MAKE) -C src/plugin/cmdline clean
@@ -39,12 +43,29 @@ setup: clean
 build: build-java build-plugins
 
 build-java:
-	DATE=$(DATE) VERSION=$(VER) ant compile
+	mkdir -p classes/
+	rm -rf classes/* lib/rapidcontext-*.jar
+	javac -d "classes" -classpath "lib/*" --release 11 \
+		-sourcepath "src/java" \
+		-g -deprecation \
+		-Xlint:all,-missing-explicit-ctor,-serial \
+		-Xdoclint:all,-missing \
+		$(shell find src/java -name '*.java')
+	cp src/plugin/system/files/images/logotype*.png classes/org/rapidcontext/app/ui/
+	echo "build.version = $(VER)" >> classes/org/rapidcontext/app/build.properties
+	echo "build.date = $(DATE)" >> classes/org/rapidcontext/app/build.properties
+	mkdir -p classes/META-INF/
+	echo "Package-Title: rapidcontext" >> classes/META-INF/MANIFEST.MF
+	echo "Package-Version: $(VER)" >> classes/META-INF/MANIFEST.MF
+	echo "Package-Date: $(DATE)" >> classes/META-INF/MANIFEST.MF
+	echo "Main-Class: org.rapidcontext.app.Main" >> classes/META-INF/MANIFEST.MF
+	echo "Class-Path: $(subst lib/,,$(wildcard lib/*.jar))" >> classes/META-INF/MANIFEST.MF
+	jar -c -m classes/META-INF/MANIFEST.MF -f lib/rapidcontext-$(VER).jar -C classes/ .
 
 build-plugins: CLASSPATH=$(wildcard $(PWD)/lib/rapidcontext-*.jar)
 build-plugins:
-	rm -rf plugin
-	mkdir -p plugin
+	mkdir -p plugin/
+	rm -rf plugin/*
 	@$(MAKE) -C src/plugin/system VERSION=$(VER)
 	@$(MAKE) -C src/plugin/local VERSION=$(VER)
 	@$(MAKE) -C src/plugin/cmdline VERSION=$(VER)
@@ -55,8 +76,8 @@ build-plugins:
 	@echo
 	cp src/plugin/*/*.plugin plugin/
 	for FILE in plugin/*.plugin ; do mv $$FILE $${FILE%-$(VER).plugin}.zip ; done
-	mkdir -p plugin/local
-	unzip -d plugin/local plugin/local.zip
+	mkdir -p plugin/local/
+	unzip -d plugin/local/ plugin/local.zip
 	rm -f plugin/local.zip
 
 
@@ -155,8 +176,12 @@ run: build package-zip
 	cd tmp/docker && docker compose run --rm --service-ports rapidcontext
 
 
-# Update source code copyright year
 fix-copyright:
-	git grep -Ilrwz Copyright -- ':!doc/external/*' | \
-		xargs -0 -n 1 sed -i.bak -E 's/(20[0-9]{2})-20[0-9]{2}/\1-2023/'
+	git grep -PIlwz Copyright -- ':!doc/external/*' | \
+		xargs -0 -n 1 sed -i.bak -E -e 's/(20[0-9]{2})-20[0-9]{2}/\1-2023/'
+	find . -name "*.bak" -delete
+
+fix-trailing-space:
+	git grep -PIlz '\s+$$' -- ':!*.bat' ':!src/plugin/system/files/fonts' | \
+		xargs -0 -n 1 sed -i.bak -E -e 's/[[:space]]*$$//'
 	find . -name "*.bak" -delete
