@@ -21,11 +21,11 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.Objects;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.JsonSerializer;
@@ -244,7 +244,7 @@ public abstract class HttpProcedure extends Procedure {
                 return data;
             } else {
                 String msg = con.getHeaderField(0);
-                if (StringUtils.isNotEmpty(text)) {
+                if (!text.isBlank()) {
                     msg += ": " + text;
                 }
                 throw new ProcedureException(msg);
@@ -267,7 +267,7 @@ public abstract class HttpProcedure extends Procedure {
      *         UTF-8 if not specified
      */
     private static String responseCharset(HttpURLConnection con) {
-        String contentType = StringUtils.defaultString(con.getContentType());
+        String contentType = Objects.requireNonNullElse(con.getContentType(), "");
         for (String param : contentType.replace(" ", "").split(";")) {
             if (param.startsWith("charset=")) {
                 return param.split("=", 2)[1];
