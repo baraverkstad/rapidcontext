@@ -60,7 +60,7 @@ package:
 		-e 's/^version\( *[:=]\).*$$/version\1 $(VER)/' \
 		tmp/$(CONFIG)
 	rm -f tmp/$(CONFIG).bak
-ifneq (,$(wildcard tmp/platform.*))
+ifneq (,$(wildcard platform.*))
 	sed -i.bak \
 		-e 's/^date\( *[:=]\).*$$/date\1 $(DATE)/' \
 		-e 's/^version\( *[:=]\).*$$/version\1 $(VER)/' \
