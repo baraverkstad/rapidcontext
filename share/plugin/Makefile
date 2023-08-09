@@ -53,7 +53,7 @@ compile-java:
 
 package:
 	mkdir -p tmp
-	cp -r $(filter-out .build Makefile classes src tmp,$(wildcard *)) tmp/
+	cp -r $(filter-out Makefile classes src tmp,$(shell ls)) tmp/
 	rm -f tmp/lib/rapidcontext-*.jar
 	sed -i.bak \
 		-e 's/^date\( *[:=]\).*$$/date\1 $(DATE)/' \
