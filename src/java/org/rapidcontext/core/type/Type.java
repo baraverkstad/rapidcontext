@@ -15,6 +15,7 @@
 package org.rapidcontext.core.type;
 
 import java.lang.reflect.Constructor;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
@@ -172,7 +173,7 @@ public class Type extends StorableObject {
         } catch (Exception e) {
             String msg = "couldn't find or load " + objId +
                          " initializer class " + className;
-            LOG.warning(msg);
+            LOG.log(Level.WARNING, msg, e);
             return null;
         }
     }
