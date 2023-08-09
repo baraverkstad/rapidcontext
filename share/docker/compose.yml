@@ -5,5 +5,5 @@ services:
     ports:
       - 8080:80/tcp
     volumes:
-      - ../../tmp:/opt/local
+      - ../../tmp/run:/opt/local
     restart: unless-stopped
