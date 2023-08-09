@@ -17,7 +17,7 @@ VER       := $(lastword $(shell grep -rE "^version\s[:=]" $(CONFIG)))
 VER       := $(subst version,,$(subst :,,$(subst =,,$(VER))))
 VER       := $(or $(VER),$(DATE)).$(BUILD)
 endif
-SRC       := $(shell [[ -d src ]] && find src -name '*.java')
+SRC       := $(shell test -d src && find src -name '*.java')
 ifneq (,$(wildcard ../../../lib/*.jar))
 CLASSPATH := ../../../lib/*:$(CLASSPATH)
 endif
