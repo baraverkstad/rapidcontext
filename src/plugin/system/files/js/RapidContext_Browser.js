@@ -150,6 +150,7 @@
         "Object.fromEntries",
         "Promise.allSettled",
         "Promise.any",
+        "String.prototype.replaceAll",
         // "SubtleCrypto.prototype.digest",
         // "Temporal",
         "TextEncoder",
