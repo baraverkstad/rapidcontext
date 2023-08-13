@@ -225,13 +225,13 @@ RapidContext.App.startApp = function (app, container) {
         var root = ui.documentElement;
         for (var i = 0; i < root.attributes.length; i++) {
             var attr = root.attributes[i];
-            if (attr.specified && typeof(parent.setAttrs) === "function") {
+            if (typeof(parent.setAttrs) === "function") {
                 parent.setAttrs({ [attr.name]: attr.value });
-            } else if (attr.specified && attr.name === "class") {
+            } else if (attr.name === "class") {
                 attr.value.split(/\s+/g).forEach(function (cls) {
                     parent.classList.add(cls);
                 });
-            } else if (attr.specified) {
+            } else {
                 parent.setAttribute(attr.name, attr.value);
             }
         }
