@@ -376,6 +376,20 @@ public class Session extends StorableObject {
     }
 
     /**
+     * Sets the scheduled session destruction timestamp.
+     *
+     * @param date the destruction timestamp, or null for default
+     */
+    public void setDestroyTime(Date date) {
+        if (date == null) {
+            dict.remove(KEY_DESTROY_TIME);
+        } else {
+            dict.set(KEY_DESTROY_TIME, date);
+        }
+        modified = true;
+    }
+
+    /**
      * Returns the session last access timestamp.
      *
      * @return the session last access timestamp.
