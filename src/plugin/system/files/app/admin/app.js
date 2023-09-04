@@ -309,7 +309,7 @@ AdminApp.prototype._removeConnection = function () {
     RapidContext.UI.Msg.warning.remove("connection", data.id)
         .then(() => {
             var path = RapidContext.Storage.path(data);
-            RapidContext.App.callProc("system/storage/write", [path, null])
+            RapidContext.App.callProc("system/storage/delete", [path])
                 .then(() => this.proc.cxnList.recall())
                 .catch(RapidContext.UI.showError);
         })
