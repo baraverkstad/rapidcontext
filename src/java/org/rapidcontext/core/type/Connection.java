@@ -80,7 +80,7 @@ public abstract class Connection extends StorableObject {
     /**
      * The maximum time to wait for acquiring an object from the pool.
      */
-    private static long MAX_WAIT_MILLIS = 500L;
+    private static long MAX_WAIT_MILLIS = 5000L;
 
     /**
      * The connection channel pool used for managing objects. The
