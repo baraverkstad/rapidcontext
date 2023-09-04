@@ -75,7 +75,8 @@ public class StorageWriteProcedure extends Procedure {
         String updateTo = opts.getString("updateTo", null);
         boolean update = opts.getBoolean("update", false) || updateTo != null;
         Path dst = (updateTo == null) ? path : Path.from(updateTo);
-        Object data = bindings.getValue("data", "");
+        Object data = bindings.getValue("data", null);
+        boolean delete = data == null;
         boolean isString = data instanceof String;
         boolean isDict = data instanceof Dict;
         boolean isArray = data instanceof Array;
@@ -84,7 +85,7 @@ public class StorageWriteProcedure extends Procedure {
             throw new ProcedureException(this, "update only supported for dictionary data");
         } else if (isString) {
             data = new Binary.BinaryString((String) data);
-        } else if (!isString && !isDict && !isArray && !isBinary) {
+        } else if (!delete && !isString && !isDict && !isArray && !isBinary) {
             throw new ProcedureException(this, "input data type not supported");
         }
         boolean isObjectPath = path.equals(Storage.objectPath(path));
@@ -109,7 +110,9 @@ public class StorageWriteProcedure extends Procedure {
             String msg = "invalid data format '" + fmt + "' for path " + path;
             throw new ProcedureException(this, msg);
         }
-        if (update) {
+        if (delete) {
+            return ApiUtil.delete(cx.getStorage(), path);
+        } else if (update) {
             return ApiUtil.update(cx.getStorage(), path, dst, (Dict) data);
         } else {
             return ApiUtil.store(cx.getStorage(), path, data);
