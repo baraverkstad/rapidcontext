@@ -101,15 +101,15 @@
         "</Dialog>"
     ].join("");
 
-    function isString(o) {
-        return typeof(o) === "string";
+    function isObject(o) {
+        return Object.prototype.toString.call(o) === '[object Object]';
     }
 
     function show(type, cfg) {
-        cfg = Object.assign({}, TYPES[type], isString(cfg) ? { text: cfg } : cfg);
+        cfg = Object.assign({}, TYPES[type], isObject(cfg) ? cfg : { text: String(cfg) });
         let dlg = RapidContext.UI.buildUI(XML);
         dlg.setAttrs({ title: cfg.title });
-        if (!isString(cfg.css) || /:/.test(cfg.css)) {
+        if (isObject(cfg.css) || /:/.test(cfg.css)) {
             dlg.setAttrs({ style: cfg.css });
         } else {
             dlg.classList.add(...cfg.css.split(/\s+/g));
@@ -150,7 +150,7 @@
     }
 
     function normalizeAction(key, val) {
-        val = isString(val) ? { text: val } : val;
+        val = isObject(val) ? val : { text: String(val) };
         if (key === "reload" || val.action === "reload") {
             let href = "javascript:window.location.reload();";
             let css = val.css || "danger";
