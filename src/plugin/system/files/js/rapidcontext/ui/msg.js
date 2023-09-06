@@ -102,7 +102,7 @@
     ].join("");
 
     function isObject(o) {
-        return Object.prototype.toString.call(o) === '[object Object]';
+        return Object.prototype.toString.call(o) === "[object Object]";
     }
 
     function show(type, cfg) {
@@ -115,7 +115,11 @@
             dlg.classList.add(...cfg.css.split(/\s+/g));
         }
         dlg.querySelector(".ui-msg-icon").classList.add(...cfg.icon.split(/\s+/g));
-        if (cfg.html) {
+        if (cfg.html && cfg.html.nodeType > 0) {
+            // FIXME: Use replaceChildren(..) instead
+            dlg.querySelector(".ui-msg-text").innerHTML = "";
+            dlg.querySelector(".ui-msg-text").append(cfg.html);
+        } else if (cfg.html) {
             dlg.querySelector(".ui-msg-text").innerHTML = cfg.html;
         } else {
             dlg.querySelector(".ui-msg-text").innerText = cfg.text;
@@ -204,7 +208,7 @@
      * @param {string|Object} msg the message text or message configuration options
      * @param {string} [msg.title="Error"] the dialog title
      * @param {string} [msg.text="An error message"] the message text
-     * @param {string} [msg.html] the message in HTML format
+     * @param {string|Node} [msg.html] the message in HTML format
      * @param {string} [msg.css] the dialog css
      * @param {Actions} [msg.actions] the action buttons to show
      * @return {Promise} a promise that resolves with the selected action
@@ -229,7 +233,7 @@
      * @param {string|Object} msg the message text or message configuration options
      * @param {string} [msg.title="Warning"] the dialog title
      * @param {string} [msg.text="A warning message"] the message text
-     * @param {string} [msg.html] the message in HTML format
+     * @param {string|Node} [msg.html] the message in HTML format
      * @param {string} [msg.css] the dialog css
      * @param {Actions} [msg.actions] the action buttons to show
      * @return {Promise} a promise that resolves with the selected action
@@ -255,7 +259,7 @@
      * @param {string|Object} msg the message text or message configuration options
      * @param {string} [msg.title="Success"] the dialog title
      * @param {string} [msg.text="A success message"] the message text
-     * @param {string} [msg.html] the message in HTML format
+     * @param {string|Node} [msg.html] the message in HTML format
      * @param {string} [msg.css] the dialog css
      * @param {Actions} [msg.actions] the action buttons to show
      * @return {Promise} a promise that resolves with the selected action
@@ -276,7 +280,7 @@
      * @param {string|Object} msg the message text or message configuration options
      * @param {string} [msg.title="Information"] the dialog title
      * @param {string} [msg.text="An information message"] the message text
-     * @param {string} [msg.html] the message in HTML format
+     * @param {string|Node} [msg.html] the message in HTML format
      * @param {string} [msg.css] the dialog css
      * @param {Actions} [msg.actions] the action buttons to show
      * @return {Promise} a promise that resolves with the selected action
