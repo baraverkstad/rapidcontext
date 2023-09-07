@@ -18,6 +18,8 @@ import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
+import org.rapidcontext.core.storage.StorableObject;
+import org.rapidcontext.core.type.Channel;
 import org.rapidcontext.core.type.Procedure;
 
 /**
@@ -60,7 +62,7 @@ public class ConnectionValidateProcedure extends Procedure {
 
         String id = (String) bindings.getValue("connection");
         CallContext.checkAccess("connection/" + id, cx.readPermission(1));
-        cx.connectionReserve(id);
-        return "OK";
+        Channel channel = cx.connectionReserve(id);
+        return (Dict) StorableObject.sterilize(channel.getConnection(), true, false, true);
     }
 }

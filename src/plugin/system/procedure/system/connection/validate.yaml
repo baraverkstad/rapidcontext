@@ -2,7 +2,10 @@ id: system/connection/validate
 type: procedure
 alias: System.Connection.Validate
 className: org.rapidcontext.app.proc.ConnectionValidateProcedure
-description: Validates a connection by reserving a connection channel.
+description: >-
+    Validates a connection and returns the updated connection object.
+    This is a no-op for connections (or types) that doesn't have a
+    validation method.
 binding:
   - name: connection
     type: argument
