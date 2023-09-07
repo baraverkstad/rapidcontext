@@ -97,8 +97,10 @@ public class HttpChannel extends Channel {
                 try {
                     HttpProcedure.setRequestHeaders(con, getHeaders());
                     HttpProcedure.setRequestMethod(con, method);
+                    HttpProcedure.logRequest(null, con, null);
                     con.connect();
                     int code = con.getResponseCode();
+                    HttpProcedure.logResponse(null, con, HttpProcedure.responseText(con));
                     if (code / 100 != 2) {
                         LOG.warning("validation failure, invalid response: HTTP " + code);
                         invalidate();

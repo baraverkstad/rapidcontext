@@ -287,15 +287,15 @@ public abstract class HttpProcedure extends Procedure {
      *
      * @throws IOException if the response couldn't be read properly
      */
-    @SuppressWarnings("resource")
-    private static String responseText(HttpURLConnection con) throws IOException {
+    protected static String responseText(HttpURLConnection con) throws IOException {
         boolean success = (con.getResponseCode() / 100 == 2);
-        InputStream is = success ? con.getInputStream() : con.getErrorStream();
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        if (is != null) {
-            FileUtil.copy(is, os);
+        try (InputStream is = success ? con.getInputStream() : con.getErrorStream();
+             ByteArrayOutputStream os = new ByteArrayOutputStream()) {
+            if (is != null) {
+                FileUtil.copy(is, os);
+            }
+            return os.toString(responseCharset(con));
         }
-        return os.toString(responseCharset(con));
     }
 
     /**
@@ -318,17 +318,19 @@ public abstract class HttpProcedure extends Procedure {
     /**
      * Logs the HTTP request if trace or debug logging is enabled.
      *
-     * @param cx             the procedure call context
+     * @param cx             the procedure call context, or null
      * @param con            the HTTP connection
-     * @param data           the HTTP request data
+     * @param data           the HTTP request data, or null
      */
-    private static void logRequest(CallContext cx,
-                                   HttpURLConnection con,
-                                   String data) {
+    protected static void logRequest(CallContext cx,
+                                     HttpURLConnection con,
+                                     String data) {
 
-        if (LOG.isLoggable(Level.FINE) || cx.isTracing()) {
+        if (LOG.isLoggable(Level.FINE) || (cx != null && cx.isTracing())) {
             StringBuilder buffer = new StringBuilder();
-            buffer.append("HTTP ");
+            buffer.append("[");
+            buffer.append(Integer.toHexString(con.hashCode()));
+            buffer.append("] HTTP ");
             buffer.append(con.getRequestMethod());
             buffer.append(" ");
             buffer.append(con.getURL());
@@ -346,7 +348,9 @@ public abstract class HttpProcedure extends Procedure {
                 buffer.append("\n");
             }
             LOG.fine(buffer.toString());
-            cx.log(buffer.toString());
+            if (cx != null && cx.isTracing()) {
+                cx.log(buffer.toString());
+            }
         }
     }
 
@@ -354,16 +358,19 @@ public abstract class HttpProcedure extends Procedure {
      * Logs the HTTP response if trace or debug logging is enabled.
      * Also logs an INFO message on non-200 response codes.
      *
-     * @param cx             the procedure call context
+     * @param cx             the procedure call context, or null
      * @param con            the HTTP connection
      * @param data           the HTTP response data
      */
-    private static void logResponse(CallContext cx,
-                                    HttpURLConnection con,
-                                    String data) {
+    protected static void logResponse(CallContext cx,
+                                      HttpURLConnection con,
+                                      String data) {
 
-        if (LOG.isLoggable(Level.FINE) || cx.isTracing()) {
+        if (LOG.isLoggable(Level.FINE) || (cx != null && cx.isTracing())) {
             StringBuilder buffer = new StringBuilder();
+            buffer.append("[");
+            buffer.append(Integer.toHexString(con.hashCode()));
+            buffer.append("] ");
             buffer.append(con.getHeaderField(0));
             buffer.append("\n");
             for (int i = 1; true; i++) {
@@ -383,7 +390,9 @@ public abstract class HttpProcedure extends Procedure {
                 buffer.append("\n");
             }
             LOG.fine(buffer.toString());
-            cx.log(buffer.toString());
+            if (cx != null && cx.isTracing()) {
+                cx.log(buffer.toString());
+            }
         }
         try {
             if (con.getResponseCode() / 100 != 2) {
