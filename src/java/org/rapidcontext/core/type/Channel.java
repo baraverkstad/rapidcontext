@@ -33,6 +33,12 @@ public abstract class Channel {
     protected boolean valid = true;
 
     /**
+     * The recent error count. Will be set to zero (0) on success.
+     * If count reaches 3, the channel is invalidated.
+     */
+    protected int errors = 0;
+
+    /**
      * The parent connection for this channel.
      */
     protected Connection connection;
@@ -121,6 +127,22 @@ public abstract class Channel {
      */
     public void invalidate() {
         valid = false;
+    }
+
+    /**
+     * Reports on successful or failed usage of the channel.
+     *
+     * @param success        the success flag
+     * @param message        the error message, or null
+     */
+    public void report(boolean success, String message) {
+        errors = success ? 0 : errors + 1;
+        if (errors >= 3) {
+            invalidate();
+        }
+        if (!success && message != null) {
+            connection.lastError = message;
+        }
     }
 
     /**
