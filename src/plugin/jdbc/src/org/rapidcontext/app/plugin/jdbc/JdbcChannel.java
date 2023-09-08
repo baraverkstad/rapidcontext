@@ -305,10 +305,12 @@ public class JdbcChannel extends Channel {
             } catch (SQLException ignore) {
                 // Ignore errors on generated keys
             }
+            report(true, null);
             return res;
         } catch (SQLException e) {
             String msg = "failed to execute statement: " + e.getMessage();
             LOG.warning(prefix + msg);
+            report(false, msg);
             throw new ConnectionException(msg);
         }
     }
@@ -390,11 +392,13 @@ public class JdbcChannel extends Channel {
 
         try {
             try (ResultSet set = stmt.executeQuery()) {
+                report(true, null);
                 return createResults(set, flags);
             }
         } catch (SQLException e) {
             String msg = "failed to execute query: " + e.getMessage();
             LOG.warning(prefix + msg);
+            report(false, msg);
             throw new ConnectionException(msg);
         } finally {
             try {
@@ -443,6 +447,7 @@ public class JdbcChannel extends Channel {
         } catch (SQLException e) {
             String msg = "failed to prepare SQL: " + e.getMessage();
             LOG.warning(prefix + msg + "\n" + sql + "\n" + params);
+            report(false, msg);
             throw new ConnectionException(msg);
         }
     }
@@ -466,6 +471,7 @@ public class JdbcChannel extends Channel {
         } catch (SQLException e) {
             String msg = "failed to fetch result meta-data: " + e.getMessage();
             LOG.warning(prefix + msg);
+            report(false, msg);
             throw new ConnectionException(msg);
         }
         if (hasFlag(flags, "metadata", false)) {
@@ -509,6 +515,7 @@ public class JdbcChannel extends Channel {
         } catch (SQLException e) {
             String msg = "failed to read result meta-data: " + e.getMessage();
             LOG.warning(prefix + msg);
+            report(false, msg);
             throw new ConnectionException(msg);
         }
         return cols;
@@ -564,6 +571,7 @@ public class JdbcChannel extends Channel {
         } catch (SQLException e) {
             String msg = "failed to extract query results: " + e.getMessage();
             LOG.warning(prefix + msg);
+            report(false, msg);
             throw new ConnectionException(msg);
         }
         if (flagSingleRow) {
@@ -652,6 +660,7 @@ public class JdbcChannel extends Channel {
             String msg = "failed to extract query result value for column " +
                          column + ": " + e.getMessage();
             LOG.warning(prefix + msg);
+            report(false, msg);
             throw new ConnectionException(msg);
         }
     }
