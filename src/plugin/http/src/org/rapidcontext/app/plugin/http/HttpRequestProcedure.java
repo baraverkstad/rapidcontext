@@ -157,7 +157,16 @@ public class HttpRequestProcedure extends HttpProcedure {
                 data = bindings.processTemplate(data, TextEncoding.NONE);
             }
             send(cx, con, data);
-            return receive(cx, con, metadata, jsonData, jsonError);
+            Object res = receive(cx, con, metadata, jsonData, jsonError);
+            if (channel != null) {
+                channel.report(true, null);
+            }
+            return res;
+        } catch (ProcedureException e) {
+            if (channel != null) {
+                channel.report(false, e.getMessage());
+            }
+            throw e;
         } finally {
             con.disconnect();
         }
