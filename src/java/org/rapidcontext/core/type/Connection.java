@@ -95,7 +95,7 @@ public abstract class Connection extends StorableObject {
      * is used in the default mechanism for determining if the
      * connection is active.
      */
-    protected long lastUsedTime = System.currentTimeMillis();
+    protected long lastUsedTime = 0;
 
     /**
      * The error message for the last error. This will set or cleared
@@ -265,10 +265,11 @@ public abstract class Connection extends StorableObject {
      * used in the default mechanism for determining if the
      * connection is active.
      *
-     * @return the timestamp of the last connection usage
+     * @return the timestamp of the last connection usage, or
+     *         null if the connection hasn't been used
      */
     public Date lastUsed() {
-        return new Date(lastUsedTime);
+        return (lastUsedTime > 0) ? new Date(lastUsedTime) : null;
     }
 
     /**
