@@ -52,10 +52,12 @@ AdminApp.prototype.start = function () {
     MochiKit.Signal.connect(this.ui.cxnEditForm, "onclick", this, "_addRemoveConnectionProps");
     MochiKit.Signal.connect(this.ui.cxnEditForm, "onsubmit", this, "_storeConnection");
     var statusRenderer = function (td, value, data) {
-        var cls = "fa fa-check";
+        let usedAt = data && data._lastUsedTime || "@0";
+        let since = Date.now() - parseInt(usedAt.substr(1), 10);
+        let cls = "fa fa-check";
         if (data._error || data._lastError) {
             cls = "fa fa-exclamation-circle widget-red";
-        } else if (!data._openChannels) {
+        } else if (!data._openChannels && since > 5 * 60 * 1000) {
             cls = "fa fa-exclamation-triangle widget-yellow";
         }
         td.append(RapidContext.Widget.Icon({ "class": cls }));
