@@ -32,11 +32,11 @@
      * @memberof RapidContext.UI
      */
     function showError() {
-        console.warn.apply(console, arguments);
         var msg = Array.from(arguments).map(function (arg) {
             var isError = arg instanceof Error && arg.message;
             return isError ? arg.message : arg;
         }).join(", ");
+        console.warn(msg, ...arguments);
         if (!errorDialog) {
             var xml = [
                 "<Dialog title='Error' system='true' style='width: 25rem;'>",
