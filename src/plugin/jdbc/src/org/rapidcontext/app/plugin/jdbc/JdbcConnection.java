@@ -91,7 +91,7 @@ public class JdbcConnection extends Connection {
     public static Dict normalize(String id, Dict dict) {
         if (dict.containsKey(JDBC_PASSWORD)) {
             LOG.warning("deprecated: connection " + id + " data: password not hidden");
-            String pwd = dict.getString(JDBC_PASSWORD, "");
+            String pwd = dict.get(JDBC_PASSWORD, String.class, "");
             dict.remove(JDBC_PASSWORD);
             dict.set(PREFIX_HIDDEN + JDBC_PASSWORD, pwd);
         }
@@ -115,9 +115,9 @@ public class JdbcConnection extends Connection {
      * @throws StorageException if the initialization failed
      */
     protected void init() throws StorageException {
-        String driver = dict.getString(JDBC_DRIVER, "").trim();
-        String url = dict.getString(JDBC_URL, "").trim().toLowerCase();
-        String ping = dict.getString(JDBC_PING, "").trim();
+        String driver = dict.get(JDBC_DRIVER, String.class, "").trim();
+        String url = dict.get(JDBC_URL, String.class, "").trim().toLowerCase();
+        String ping = dict.get(JDBC_PING, String.class, "").trim();
         if (driver.length() == 0) {
             // Adjust older MySQL connection URLs (for default driver)
             if (url.startsWith("jdbc:mysql:thin:")) {
@@ -151,8 +151,8 @@ public class JdbcConnection extends Connection {
         } else {
             dict.set(PREFIX_COMPUTED + JDBC_PING, ping);
         }
-        dict.setBoolean(PREFIX_COMPUTED + JDBC_AUTOCOMMIT, autoCommit());
-        dict.setInt(PREFIX_COMPUTED + JDBC_TIMEOUT, timeout());
+        dict.set(PREFIX_COMPUTED + JDBC_AUTOCOMMIT, autoCommit());
+        dict.set(PREFIX_COMPUTED + JDBC_TIMEOUT, timeout());
         super.init();
     }
 
@@ -176,9 +176,9 @@ public class JdbcConnection extends Connection {
     public Driver driver() throws ConnectionException {
         String driverClass;
         if (dict.containsKey(PREFIX_COMPUTED + JDBC_DRIVER)) {
-            driverClass = dict.getString(PREFIX_COMPUTED + JDBC_DRIVER, "");
+            driverClass = dict.get(PREFIX_COMPUTED + JDBC_DRIVER, String.class, "");
         } else {
-            driverClass = dict.getString(JDBC_DRIVER, "");
+            driverClass = dict.get(JDBC_DRIVER, String.class, "");
         }
         String msg;
         try {
@@ -206,9 +206,9 @@ public class JdbcConnection extends Connection {
      */
     public String url() {
         if (dict.containsKey(PREFIX_COMPUTED + JDBC_URL)) {
-            return dict.getString(PREFIX_COMPUTED + JDBC_URL, "");
+            return dict.get(PREFIX_COMPUTED + JDBC_URL, String.class, "");
         } else {
-            return dict.getString(JDBC_URL, "");
+            return dict.get(JDBC_URL, String.class, "");
         }
     }
 
@@ -220,9 +220,9 @@ public class JdbcConnection extends Connection {
      */
     public String ping() {
         if (dict.containsKey(PREFIX_COMPUTED + JDBC_PING)) {
-            return dict.getString(PREFIX_COMPUTED + JDBC_PING, null);
+            return dict.get(PREFIX_COMPUTED + JDBC_PING, String.class);
         } else {
-            return dict.getString(JDBC_PING, null);
+            return dict.get(JDBC_PING, String.class);
         }
     }
 
@@ -233,9 +233,9 @@ public class JdbcConnection extends Connection {
      */
     public boolean autoCommit() {
         if (dict.containsKey(PREFIX_COMPUTED + JDBC_AUTOCOMMIT)) {
-            return dict.getBoolean(PREFIX_COMPUTED + JDBC_AUTOCOMMIT, false);
+            return dict.get(PREFIX_COMPUTED + JDBC_AUTOCOMMIT, Boolean.class, false);
         } else {
-            return dict.getBoolean(JDBC_AUTOCOMMIT, false);
+            return dict.get(JDBC_AUTOCOMMIT, Boolean.class, false);
         }
     }
 
@@ -247,14 +247,14 @@ public class JdbcConnection extends Connection {
     public int timeout() {
         try {
             if (dict.containsKey(PREFIX_COMPUTED + JDBC_TIMEOUT)) {
-                return dict.getInt(PREFIX_COMPUTED + JDBC_TIMEOUT, 30);
+                return dict.get(PREFIX_COMPUTED + JDBC_TIMEOUT, Integer.class, 30);
             } else {
-                return dict.getInt(JDBC_TIMEOUT, 30);
+                return dict.get(JDBC_TIMEOUT, Integer.class, 30);
             }
         } catch (Exception e) {
             LOG.warning(this + ": failed to parse timeout value: " +
                         dict.get(JDBC_TIMEOUT));
-            dict.setInt(PREFIX_COMPUTED + JDBC_TIMEOUT, 30);
+            dict.set(PREFIX_COMPUTED + JDBC_TIMEOUT, 30);
             return 30;
         }
     }
@@ -272,9 +272,9 @@ public class JdbcConnection extends Connection {
         for (String key : dict.keys()) {
             if (key.startsWith(PREFIX_HIDDEN)) {
                 String name = key.substring(PREFIX_HIDDEN.length());
-                props.setProperty(name, dict.getString(key, ""));
+                props.setProperty(name, dict.get(key, String.class, ""));
             } else if (!key.startsWith(PREFIX_COMPUTED)) {
-                props.setProperty(key, dict.getString(key, ""));
+                props.setProperty(key, dict.get(key, String.class, ""));
             }
         }
         props.remove(KEY_ID);

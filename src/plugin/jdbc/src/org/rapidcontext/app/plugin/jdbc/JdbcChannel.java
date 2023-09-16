@@ -227,12 +227,12 @@ public class JdbcChannel extends Channel {
             Dict res = new Dict();
             res.set("dbName", meta.getDatabaseProductName());
             res.set("dbVersion", meta.getDatabaseProductVersion());
-            res.setInt("dbVersionMajor", meta.getDatabaseMajorVersion());
-            res.setInt("dbVersionMinor", meta.getDatabaseMinorVersion());
+            res.set("dbVersionMajor", meta.getDatabaseMajorVersion());
+            res.set("dbVersionMinor", meta.getDatabaseMinorVersion());
             res.set("driverName", meta.getDriverName());
             res.set("driverVersion", meta.getDriverVersion());
-            res.setInt("driverVersionMajor", meta.getDriverMajorVersion());
-            res.setInt("driverVersionMinor", meta.getDriverMinorVersion());
+            res.set("driverVersionMajor", meta.getDriverMajorVersion());
+            res.set("driverVersionMinor", meta.getDriverMinorVersion());
             Array schemas = new Array();
             try (ResultSet rs = meta.getCatalogs()) {
                 Array arr = (Array) createResults(rs, "no-column-names");
@@ -506,7 +506,7 @@ public class JdbcChannel extends Channel {
                 obj.set("name", meta.getColumnLabel(i + 1).toLowerCase());
                 obj.set("catalog", meta.getCatalogName(i + 1));
                 obj.set("type", meta.getColumnTypeName(i + 1));
-                obj.setInt("jdbcType", meta.getColumnType(i + 1));
+                obj.set("jdbcType", meta.getColumnType(i + 1));
                 obj.set("schema", meta.getSchemaName(i + 1));
                 obj.set("table", meta.getTableName(i + 1));
                 obj.set("column", meta.getColumnName(i + 1));

@@ -89,10 +89,10 @@ public class JdbcBuiltInConnectionWriteProcedure extends Procedure {
             data.remove(JdbcConnection.KEY_TYPE);
             for (Object o : type.properties()) {
                 Dict dict = (Dict) o;
-                String name = dict.getString("name", null);
+                String name = dict.get("name", String.class);
                 if (data.containsKey(name)) {
                     res.set(name, data.get(name));
-                } else if (dict.getBoolean("required", false)) {
+                } else if (dict.get("required", Boolean.class, false)) {
                     String msg = "missing required '" + name + "' property";
                     throw new ProcedureException(this, msg);
                 }
