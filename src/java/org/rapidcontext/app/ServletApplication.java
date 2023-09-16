@@ -140,7 +140,9 @@ public class ServletApplication extends HttpServlet {
                 session.updateAccessTime();
             }
             String cookieSession = request.getSessionId();
-            String cookiePath = (bestMatcher == null) ? null : bestMatcher.path();
+            // FIXME: Add support for configurable cookie name, domain, path, expiry, etc.
+            // String cookiePath = (bestMatcher == null) ? null : bestMatcher.path();
+            String cookiePath = null;
             if (session != null && !session.id().equals(cookieSession)) {
                 request.setSessionId(session.id(), cookiePath);
             } else if (session == null && cookieSession != null) {
