@@ -46,8 +46,8 @@ import org.rapidcontext.core.storage.StorageException;
  *   <li><strong>Connection Sharing</strong> -- Communication channel
  *       sharing (multiple tasks sharing the same channel) is also
  *       built-in and easily enabled.
- *   <li><strong>Validation &amp; Keep-Alive</strong> -- All channels
- *       are validated before usage and kept-alive with regular
+ *   <li><strong>Validation &amp; Keep-Alive</strong> -- All pooled
+ *       channels are validated after usage and kept-alive with regular
  *       validation requests when pooled for reuse.
  * </ul>
  *
@@ -163,7 +163,8 @@ public abstract class Connection extends StorableObject {
         channelPool.setMaxWait(Duration.ofMillis(MAX_WAIT_MILLIS));
         channelPool.setMinEvictableIdle(Duration.ofSeconds(idle));
         channelPool.setLifo(false);
-        channelPool.setTestOnBorrow(true);
+        channelPool.setTestOnCreate(false);
+        channelPool.setTestOnBorrow(false);
         channelPool.setTestOnReturn(true);
         channelPool.setTestWhileIdle(true);
         channelPool.setBlockWhenExhausted(true);
