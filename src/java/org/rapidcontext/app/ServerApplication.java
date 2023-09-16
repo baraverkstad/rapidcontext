@@ -85,7 +85,7 @@ public class ServerApplication {
         if (port > 0 && isPortAvailable(port)) {
             return port;
         }
-        port = ApplicationContext.getInstance().getConfig().getInt("port", 0);
+        port = ApplicationContext.getInstance().getConfig().get("port", Integer.class, 0);
         if (port > 0 && isPortAvailable(port)) {
             return port;
         }

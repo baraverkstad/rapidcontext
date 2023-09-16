@@ -79,7 +79,7 @@ public class ApiUtil {
     public static Stream<Metadata> lookup(Storage storage, Path path, String perm, Dict opts) {
         Query query = storage.query(path).filterAccess(perm);
         if (opts.containsKey("depth")) {
-            query.filterDepth(opts.getInt("depth", -1));
+            query.filterDepth(opts.get("depth", Integer.class, -1));
         }
         if (opts.containsKey("fileType")) {
             query.filterFileExtension("." + opts.getString("fileType", ""));
@@ -97,7 +97,7 @@ public class ApiUtil {
                 return StringUtils.equalsIgnoreCase(meta.category(), category);
             });
         }
-        int limit = opts.getInt("limit", 1000);
+        int limit = opts.get("limit", Integer.class, 1000);
         if (limit > 0) {
             stream = stream.limit(limit);
         }

@@ -211,7 +211,7 @@ public abstract class Connection extends StorableObject {
      */
     public int maxOpen() {
         try {
-            return dict.getInt(KEY_MAX_OPEN, 4);
+            return dict.get(KEY_MAX_OPEN, Integer.class, 4);
         } catch (NumberFormatException e) {
             String msg = this + ": invalid value for config parameter " +
                          KEY_MAX_OPEN + ": " + dict.get(KEY_MAX_OPEN);
@@ -230,7 +230,7 @@ public abstract class Connection extends StorableObject {
      */
     public int maxIdleSeconds() {
         try {
-            return dict.getInt(KEY_MAX_IDLE_SECS, 600);
+            return dict.get(KEY_MAX_IDLE_SECS, Integer.class, 600);
         } catch (NumberFormatException e) {
             String msg = this + ": invalid value for config parameter " +
                          KEY_MAX_IDLE_SECS + ": " + dict.get(KEY_MAX_IDLE_SECS);

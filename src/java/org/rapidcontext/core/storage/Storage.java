@@ -321,7 +321,7 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
      *         -1 if not mounted
      */
     public int mountOverlayPrio() {
-        return dict.getInt(KEY_MOUNT_OVERLAY_PRIO, -1);
+        return dict.get(KEY_MOUNT_OVERLAY_PRIO, Integer.class, -1);
     }
 
     /**

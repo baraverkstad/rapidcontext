@@ -452,7 +452,10 @@ public class Dict {
      *
      * @throws NumberFormatException if the value wasn't possible to
      *             parse as an integer
+     *
+     * @deprecated Use get(key, Integer.class, defaultValue) instead.
      */
+    @Deprecated
     public int getInt(String key, int defaultValue) {
         return get(key, Integer.class, defaultValue);
     }

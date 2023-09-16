@@ -99,7 +99,7 @@ public class WebMatcher {
      *         zero (0) match any port
      */
     public int port() {
-        return dict.getInt("port", 0);
+        return dict.get("port", Integer.class, 0);
     }
 
     /**
@@ -130,7 +130,7 @@ public class WebMatcher {
      *         zero (0) if not set
      */
     public int prio() {
-        return dict.getInt("prio", 0);
+        return dict.get("prio", Integer.class, 0);
     }
 
     /**
@@ -139,7 +139,7 @@ public class WebMatcher {
      * @return the web matcher score
      */
     public int score() {
-        int score = dict.getInt("_score", 0);
+        int score = dict.get("_score", Integer.class, 0);
         if (score == 0) {
             if (method() != null) {
                 score += 400;
