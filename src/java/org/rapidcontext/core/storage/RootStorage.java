@@ -510,7 +510,7 @@ public class RootStorage extends MemoryStorage {
         if (ctor != null) {
             // TODO: Remove support for legacy object initializers eventually...
             boolean isLegacy = ctor.getParameterCount() == 1;
-            type = dict.getString(KEY_TYPE, type);
+            type = dict.get(KEY_TYPE, String.class, type);
             Object[] args = isLegacy ? new Object[] { dict } : new Object[] { id, type, dict };
             try {
                 StorableObject obj = (StorableObject) ctor.newInstance(args);

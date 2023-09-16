@@ -109,7 +109,7 @@ public abstract class AddOnProcedure implements Procedure {
      * @return the procedure name
      */
     public String getName() {
-        return data.getString("name", "");
+        return data.get("name", String.class, "");
     }
 
     /**
@@ -118,7 +118,7 @@ public abstract class AddOnProcedure implements Procedure {
      * @return the procedure description
      */
     public String getDescription() {
-        return data.getString("description", "");
+        return data.get("description", String.class, "");
     }
 
     /**
@@ -127,7 +127,7 @@ public abstract class AddOnProcedure implements Procedure {
      * @return procedure type name
      */
     public String getType() {
-        return data.getString("type", "");
+        return data.get("type", String.class, "");
     }
 
     /**

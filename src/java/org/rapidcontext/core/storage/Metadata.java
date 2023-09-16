@@ -239,7 +239,7 @@ public class Metadata extends StorableObject {
      * @see #CATEGORY_BINARY
      */
     public String category() {
-        return dict.getString(KEY_CATEGORY, null);
+        return dict.get(KEY_CATEGORY, String.class);
     }
 
     /**
@@ -285,7 +285,7 @@ public class Metadata extends StorableObject {
      * @return the MIME type for the object, or null
      */
     public String mimeType() {
-        return dict.getString(KEY_MIMETYPE, null);
+        return dict.get(KEY_MIMETYPE, String.class);
     }
 
     /**

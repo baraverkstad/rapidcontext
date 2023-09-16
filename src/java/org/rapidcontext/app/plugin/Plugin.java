@@ -60,7 +60,7 @@ public class Plugin extends org.rapidcontext.core.type.Plugin {
      */
     @Deprecated
     public Plugin(Dict dict) {
-        super(dict.getString(KEY_ID, ""), "plugin", dict);
+        super(dict.get(KEY_ID, String.class, ""), "plugin", dict);
         LOG.warning("deprecated: legacy plug-in constructor called for " + this);
     }
 }

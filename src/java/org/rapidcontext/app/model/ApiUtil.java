@@ -82,17 +82,17 @@ public class ApiUtil {
             query.filterDepth(opts.get("depth", Integer.class, -1));
         }
         if (opts.containsKey("fileType")) {
-            query.filterFileExtension("." + opts.getString("fileType", ""));
+            query.filterFileExtension("." + opts.get("fileType", String.class, ""));
         }
         Stream<Metadata> stream = query.metadatas();
         if (opts.containsKey("mimeType")) {
-            String mimeType = opts.getString("mimeType", "");
+            String mimeType = opts.get("mimeType", String.class, "");
             stream = stream.filter(meta -> {
                 return StringUtils.startsWithIgnoreCase(meta.mimeType(), mimeType);
             });
         }
         if (opts.containsKey("category")) {
-            String category = opts.getString("category", "");
+            String category = opts.get("category", String.class, "");
             stream = stream.filter(meta -> {
                 return StringUtils.equalsIgnoreCase(meta.category(), category);
             });

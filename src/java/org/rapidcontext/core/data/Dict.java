@@ -415,7 +415,10 @@ public class Dict {
      *
      * @return the dictionary key value, or
      *         the default value if the key or value is not defined
+     *
+     * @deprecated Use get(key, String.class, defaultValue) instead.
      */
+    @Deprecated
     public String getString(String key, String defaultValue) {
         return get(key, String.class, defaultValue);
     }

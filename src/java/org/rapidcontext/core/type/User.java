@@ -153,7 +153,7 @@ public class User extends StorableObject {
             LOG.warning("deprecated: user " + id + " data: missing 'type' property");
             dict.set(KEY_TYPE, "user");
             dict.set(KEY_ID, id);
-            dict.set(KEY_NAME, dict.getString(KEY_DESCRIPTION, ""));
+            dict.set(KEY_NAME, dict.get(KEY_DESCRIPTION, String.class, ""));
             dict.set(KEY_DESCRIPTION, "");
             Array list = new Array();
             for (Object o : dict.getArray(KEY_ROLE)) {
@@ -163,7 +163,7 @@ public class User extends StorableObject {
         }
         if (dict.containsKey(KEY_PASSWORD)) {
             LOG.warning("deprecated: user " + id + " data: password not hidden");
-            String pwd = dict.getString(KEY_PASSWORD, "");
+            String pwd = dict.get(KEY_PASSWORD, String.class, "");
             dict.remove(KEY_PASSWORD);
             dict.set(PREFIX_HIDDEN + KEY_PASSWORD, pwd);
         }
@@ -243,7 +243,7 @@ public class User extends StorableObject {
      * @return the user name.
      */
     public String name() {
-        return dict.getString(KEY_NAME, "");
+        return dict.get(KEY_NAME, String.class, "");
     }
 
     /**
@@ -261,7 +261,7 @@ public class User extends StorableObject {
      * @return the user email address.
      */
     public String email() {
-        return dict.getString(KEY_EMAIL, "");
+        return dict.get(KEY_EMAIL, String.class, "");
     }
 
     /**
@@ -279,7 +279,7 @@ public class User extends StorableObject {
      * @return the user description.
      */
     public String description() {
-        return dict.getString(KEY_DESCRIPTION, "");
+        return dict.get(KEY_DESCRIPTION, String.class, "");
     }
 
     /**
@@ -319,7 +319,7 @@ public class User extends StorableObject {
      * @return the user realm.
      */
     public String realm() {
-        return dict.getString(KEY_REALM, DEFAULT_REALM);
+        return dict.get(KEY_REALM, String.class, DEFAULT_REALM);
     }
 
     /**
@@ -344,7 +344,7 @@ public class User extends StorableObject {
      * @see #verifyPasswordHash(String)
      */
     public String passwordHash() {
-        return dict.getString(PREFIX_HIDDEN + KEY_PASSWORD, "");
+        return dict.get(PREFIX_HIDDEN + KEY_PASSWORD, String.class, "");
     }
 
     /**

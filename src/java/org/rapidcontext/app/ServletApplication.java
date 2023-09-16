@@ -241,27 +241,27 @@ public class ServletApplication extends HttpServlet {
      */
     private void processAuthResponse(Request request, Dict auth)
     throws Exception {
-        String scheme = auth.getString("scheme", "");
+        String scheme = auth.get("scheme", String.class, "");
         if (scheme.equalsIgnoreCase("Digest")) {
             if (!User.DEFAULT_REALM.equals(auth.get("realm"))) {
                 String msg = "Unsupported authentication realm: " + auth.get("realm");
                 throw new SecurityException(msg);
-            } else if (!"MD5".equalsIgnoreCase(auth.getString("algorithm", "MD5"))) {
+            } else if (!"MD5".equalsIgnoreCase(auth.get("algorithm", String.class, "MD5"))) {
                 String msg = "Unsupported authentication algorithm: " + auth.get("algorithm");
                 throw new SecurityException(msg);
             }
-            String user = auth.getString("username", "");
-            String uri = auth.getString("uri", request.getAbsolutePath());
-            String nonce = auth.getString("nonce", "");
-            String nc = auth.getString("nc", "");
-            String cnonce = auth.getString("cnonce", "");
-            String response = auth.getString("response", "");
+            String user = auth.get("username", String.class, "");
+            String uri = auth.get("uri", String.class, request.getAbsolutePath());
+            String nonce = auth.get("nonce", String.class, "");
+            String nc = auth.get("nc", String.class, "");
+            String cnonce = auth.get("cnonce", String.class, "");
+            String response = auth.get("response", String.class, "");
             SecurityContext.verifyNonce(nonce);
             String suffix = ":" + nonce + ":" + nc + ":" + cnonce + ":auth:" +
                             BinaryUtil.hashMD5(request.getMethod() + ":" + uri);
             SecurityContext.authHash(user, suffix, response);
         } else if (scheme.equalsIgnoreCase("Token")) {
-            SecurityContext.authToken(auth.getString("data", ""));
+            SecurityContext.authToken(auth.get("data", String.class, ""));
         } else {
             throw new SecurityException("Unsupported authentication scheme: " + scheme);
         }

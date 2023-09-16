@@ -107,7 +107,7 @@ public class AppListProcedure extends Procedure {
         for (int i = 0; i < arr.size(); i++) {
             Object obj = arr.get(i);
             Dict resource = (obj instanceof Dict) ? (Dict) obj : new Dict();
-            String url = resource.getString("url", obj.toString());
+            String url = resource.get("url", String.class, obj.toString());
             if (!url.contains("//:") && StringUtils.containsAny(url, "*?")) {
                 arr.remove(i--);
                 for (String str : resolveFiles(storage, url, permission)) {

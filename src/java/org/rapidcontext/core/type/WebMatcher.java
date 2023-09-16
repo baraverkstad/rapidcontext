@@ -66,7 +66,7 @@ public class WebMatcher {
      * @return the HTTP request method to match
      */
     public String method() {
-        return dict.getString("method", null);
+        return dict.get("method", String.class);
     }
 
     /**
@@ -77,7 +77,7 @@ public class WebMatcher {
      *         null to match any protocol
      */
     public String protocol() {
-        return dict.getString("protocol", null);
+        return dict.get("protocol", String.class);
     }
 
     /**
@@ -88,7 +88,7 @@ public class WebMatcher {
      *         null to match any host
      */
     public String host() {
-        return dict.getString("host", null);
+        return dict.get("host", String.class);
     }
 
     /**
@@ -110,7 +110,7 @@ public class WebMatcher {
      *         an empty string to match any request
      */
     public String path() {
-        return StringUtils.removeStart(dict.getString("path", ""), "/");
+        return StringUtils.removeStart(dict.get("path", String.class, ""), "/");
     }
 
     /**

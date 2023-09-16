@@ -159,8 +159,8 @@ public class LogWebService extends WebService {
      * @param dict           the dict containing message, level, etc
      */
     private static void logMessage(Request request, Dict dict) {
-        String level = dict.getString("level", "log");
-        String msg = dict.getString("message", "");
+        String level = dict.get("level", String.class, "log");
+        String msg = dict.get("message", String.class, "");
         Object obj = dict.get("data");
         String data = null;
         if (obj instanceof Array) {

@@ -162,7 +162,7 @@ public class Bindings {
         }
         for (Object o : data) {
             Dict bind = (Dict) o;
-            set.add(bind.getString("name", null));
+            set.add(bind.get("name", String.class));
         }
         return set;
     }
@@ -177,7 +177,7 @@ public class Bindings {
      * @throws ProcedureException if the binding name wasn't found
      */
     public int getType(String name) throws ProcedureException {
-        String type = find(name).getString("type", null);
+        String type = find(name).get("type", String.class);
         if (type == null) {
             throw new ProcedureException("no binding type for '" + name + "' found");
         }
@@ -255,7 +255,7 @@ public class Bindings {
      * @throws ProcedureException if the binding name wasn't found
      */
     public String getDescription(String name) throws ProcedureException {
-        String desc = find(name).getString("description", "");
+        String desc = find(name).get("description", String.class, "");
         if (desc.equals("") && parent != null && parent.hasName(name)) {
             return parent.getDescription(name);
         } else if (desc.equals("") && getType(name) == ARGUMENT) {
@@ -341,7 +341,7 @@ public class Bindings {
     private int findLocal(String name) {
         for (int i = 0; i < data.size(); i++) {
             Dict bind = data.getDict(i);
-            if (name.equals(bind.getString("name", null))) {
+            if (name.equals(bind.get("name", String.class))) {
                 return i;
             }
         }
@@ -361,10 +361,10 @@ public class Bindings {
     public String processTemplate(String tpl, TextEncoding encoding) {
         for (Object o : data) {
             Dict bind = (Dict) o;
-            String key = bind.getString("name", null);
-            String type = bind.getString("type", "");
+            String key = bind.get("name", String.class);
+            String type = bind.get("type", String.class, "");
             if (type.equals("4") || type.equals("argument")) {
-                String val = bind.getString("value", "");
+                String val = bind.get("value", String.class, "");
                 if (StringUtils.contains(tpl, "@" + key)) {
                     tpl = StringUtils.replace(tpl, "@" + key, val);
                 }

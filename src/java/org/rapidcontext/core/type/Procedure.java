@@ -122,7 +122,7 @@ public abstract class Procedure extends StorableObject implements org.rapidconte
      * @return the procedure description
      */
     public String description() {
-        return dict.getString(KEY_DESCRIPTION, "");
+        return dict.get(KEY_DESCRIPTION, String.class, "");
     }
 
     /**
@@ -143,7 +143,7 @@ public abstract class Procedure extends StorableObject implements org.rapidconte
      * @return the procedure alias, or null for none
      */
     public String alias() {
-        return dict.getString(KEY_ALIAS, null);
+        return dict.get(KEY_ALIAS, String.class);
     }
 
     /**
@@ -152,7 +152,7 @@ public abstract class Procedure extends StorableObject implements org.rapidconte
      * @return the deprecation message, or null for none
      */
     public String deprecated() {
-        return dict.getString(KEY_DEPRECATED, null);
+        return dict.get(KEY_DEPRECATED, String.class);
     }
 
     /**

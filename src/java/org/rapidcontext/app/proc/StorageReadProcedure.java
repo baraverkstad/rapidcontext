@@ -64,7 +64,7 @@ public class StorageReadProcedure extends Procedure {
         throws ProcedureException {
 
         Dict opts = ApiUtil.options("path", bindings.getValue("path"));
-        Path path = Path.from(opts.getString("path", "/"));
+        Path path = Path.from(opts.get("path", String.class, "/"));
         if (path.isIndex()) {
             CallContext.checkSearchAccess(path.toString());
         } else {

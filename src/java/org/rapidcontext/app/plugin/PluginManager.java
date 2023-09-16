@@ -284,7 +284,7 @@ public class PluginManager {
             if (dict == null) {
                 throw new PluginException("missing plugin.properties");
             }
-            pluginId = dict.getString(Plugin.KEY_ID, null);
+            pluginId = dict.get(Plugin.KEY_ID, String.class);
             if (pluginId == null || pluginId.trim().length() < 0) {
                 msg = "missing plug-in identifier in plugin.properties";
                 throw new PluginException(msg);

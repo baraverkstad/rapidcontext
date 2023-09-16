@@ -198,6 +198,6 @@ public class Plugin extends StorableObject {
      *         null if not available
      */
     public String version() {
-        return dict.getString(KEY_VERSION, null);
+        return dict.get(KEY_VERSION, String.class);
     }
 }

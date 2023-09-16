@@ -130,7 +130,7 @@ public abstract class WebService extends StorableObject implements HttpUtil {
      * @return the description text.
      */
     public String description() {
-        return dict.getString(KEY_DESCRIPTION, "");
+        return dict.get(KEY_DESCRIPTION, String.class, "");
     }
 
     /**

@@ -326,7 +326,7 @@ public class Session extends StorableObject {
      * @return the session user identifier.
      */
     public String userId() {
-        return dict.getString(KEY_USER, "");
+        return dict.get(KEY_USER, String.class, "");
     }
 
     /**
@@ -413,7 +413,7 @@ public class Session extends StorableObject {
      * @return the session source IP address.
      */
     public String ip() {
-        return dict.getString(KEY_IP, "");
+        return dict.get(KEY_IP, String.class, "");
     }
 
     /**
@@ -433,7 +433,7 @@ public class Session extends StorableObject {
      * @return the session user agent string.
      */
     public String client() {
-        return dict.getString(KEY_CLIENT, "");
+        return dict.get(KEY_CLIENT, String.class, "");
     }
 
     /**

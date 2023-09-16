@@ -408,12 +408,12 @@ public class Library {
      */
     private AddOnProcedure createProcedure(Dict data) throws ProcedureException {
         String msg;
-        String name = data.getString("name", null);
+        String name = data.get("name", String.class);
         if (name == null) {
             msg = "failed to find required procedure property 'name'";
             throw new ProcedureException(msg);
         }
-        String type = data.getString("type", null);
+        String type = data.get("type", String.class);
         if (type == null) {
             msg = "failed to create procedure '" + name + "': " +
                   "missing required procedure property 'type'";

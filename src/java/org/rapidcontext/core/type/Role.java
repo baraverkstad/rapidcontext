@@ -164,9 +164,9 @@ public class Role extends StorableObject {
      * @param dict           the access data
      */
     private static void normalizeAccess(String id, Dict dict) {
-        String type = dict.getString("type", null);
-        String name = dict.getString("name", null);
-        String regex = dict.getString("regexp", null);
+        String type = dict.get("type", String.class);
+        String name = dict.get("name", String.class);
+        String regex = dict.get("regexp", String.class);
         if (type != null && name != null) {
             LOG.warning("deprecated: role " + id + " data: legacy access path permission");
             dict.remove("type");
@@ -206,7 +206,7 @@ public class Role extends StorableObject {
      * @return the role name.
      */
     public String name() {
-        return dict.getString(KEY_NAME, "");
+        return dict.get(KEY_NAME, String.class, "");
     }
 
     /**
@@ -215,7 +215,7 @@ public class Role extends StorableObject {
      * @return the role description.
      */
     public String description() {
-        return dict.getString(KEY_DESCRIPTION, "");
+        return dict.get(KEY_DESCRIPTION, String.class, "");
     }
 
     /**
@@ -225,7 +225,7 @@ public class Role extends StorableObject {
      * @return the automatic role attachment type
      */
     public String auto() {
-        return dict.getString(KEY_AUTO, "none");
+        return dict.get(KEY_AUTO, String.class, "none");
     }
 
     /**
@@ -266,7 +266,7 @@ public class Role extends StorableObject {
         for (Object o : dict.getArray(KEY_ACCESS)) {
             Dict dict = (Dict) o;
             if (matchPath(dict, path)) {
-                String perms = dict.getString(ACCESS_PERMISSION, "").trim();
+                String perms = dict.get(ACCESS_PERMISSION, String.class, "").trim();
                 @SuppressWarnings("unchecked")
                 HashSet<String> set = dict.get(PREFIX_COMPUTED + ACCESS_PERMISSION, HashSet.class);
                 if (set == null) {
@@ -304,8 +304,8 @@ public class Role extends StorableObject {
      *         false otherwise
      */
     private boolean matchPath(Dict dict, String path) {
-        String glob = dict.getString(ACCESS_PATH, null);
-        String regex = dict.getString(ACCESS_REGEX, null);
+        String glob = dict.get(ACCESS_PATH, String.class);
+        String regex = dict.get(ACCESS_REGEX, String.class);
         Pattern m = dict.get(PREFIX_COMPUTED + ACCESS_REGEX, Pattern.class);
         if (m == null && glob != null) {
             glob = glob.replace("\\", "\\\\").replace(".", "\\.");

@@ -118,7 +118,7 @@ public class AppWebService extends FileWebService {
     protected static String version() {
         ApplicationContext ctx = ApplicationContext.getInstance();
         Dict dict = ctx.getStorage().load(ApplicationContext.PATH_PLATFORM, Dict.class);
-        return dict.getString("version", "1");
+        return dict.get("version", String.class, "1");
     }
 
     /**
@@ -183,7 +183,7 @@ public class AppWebService extends FileWebService {
      *         null if the "index.html" file contains the app
      */
     public String appId() {
-        return dict.getString(KEY_APP, null);
+        return dict.get(KEY_APP, String.class);
     }
 
     /**
@@ -193,7 +193,7 @@ public class AppWebService extends FileWebService {
      *         "login" if not specified
      */
     public String loginId() {
-        return dict.getString(KEY_LOGIN, "login");
+        return dict.get(KEY_LOGIN, String.class, "login");
     }
 
     /**
@@ -203,7 +203,7 @@ public class AppWebService extends FileWebService {
      *         "RapidContext" if not defined
      */
     public String title() {
-        return dict.getString(KEY_TITLE, "RapidContext");
+        return dict.get(KEY_TITLE, String.class, "RapidContext");
     }
 
     /**
@@ -213,7 +213,7 @@ public class AppWebService extends FileWebService {
      *         "en" if not defined
      */
     public String lang() {
-        return dict.getString(KEY_LANG, "en");
+        return dict.get(KEY_LANG, String.class, "en");
     }
 
     /**
@@ -223,7 +223,7 @@ public class AppWebService extends FileWebService {
      *         a full device width setting if not defined
      */
     public String viewport() {
-        return dict.getString(KEY_VIEWPORT, "width=device-width, initial-scale=1");
+        return dict.get(KEY_VIEWPORT, String.class, "width=device-width, initial-scale=1");
     }
 
     /**

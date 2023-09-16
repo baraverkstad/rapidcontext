@@ -228,7 +228,7 @@ public class StorableObject {
      * @return the object identifier
      */
     public String id() {
-        return dict.getString(KEY_ID, "");
+        return dict.get(KEY_ID, String.class, "");
     }
 
     /**
@@ -237,7 +237,7 @@ public class StorableObject {
      * @return the object type name
      */
     public String type() {
-        return dict.getString(KEY_TYPE, "");
+        return dict.get(KEY_TYPE, String.class, "");
     }
 
     /**

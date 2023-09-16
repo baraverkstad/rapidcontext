@@ -125,8 +125,8 @@ public class Type extends StorableObject {
      *         null if not found
      */
     public static Constructor<?> constructor(Storage storage, Dict dict) {
-        String typeId = dict.getString(KEY_TYPE, null);
-        String className = dict.getString(KEY_CLASSNAME, null);
+        String typeId = dict.get(KEY_TYPE, String.class);
+        String className = dict.get(KEY_CLASSNAME, String.class);
         Class<?> cls = null;
         if (typeId != null && typeId.equals("type")) {
             cls = Type.class;
@@ -224,7 +224,7 @@ public class Type extends StorableObject {
      * @return the type alias, or an empty string
      */
     public String alias() {
-        return dict.getString(KEY_ALIAS, "");
+        return dict.get(KEY_ALIAS, String.class, "");
     }
 
     /**
@@ -233,7 +233,7 @@ public class Type extends StorableObject {
      * @return the type description
      */
     public String description() {
-        return dict.getString(KEY_DESCRIPTION, "");
+        return dict.get(KEY_DESCRIPTION, String.class, "");
     }
 
     /**
@@ -253,7 +253,7 @@ public class Type extends StorableObject {
      * @return the type initializer class
      */
     public Class<?> initializer() {
-        return loadClass(dict.getString(KEY_INITIALIZER, null), toString());
+        return loadClass(dict.get(KEY_INITIALIZER, String.class), toString());
     }
 
     /**

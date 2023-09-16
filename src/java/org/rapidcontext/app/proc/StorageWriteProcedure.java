@@ -67,12 +67,12 @@ public class StorageWriteProcedure extends Procedure {
         throws ProcedureException {
 
         Dict opts = ApiUtil.options("path", bindings.getValue("path"));
-        Path path = Path.from(opts.getString("path", "/"));
+        Path path = Path.from(opts.get("path", String.class, "/"));
         if (path.isIndex()) {
             throw new ProcedureException(this, "cannot write to index: " + path);
         }
         CallContext.checkWriteAccess(path.toString());
-        String updateTo = opts.getString("updateTo", null);
+        String updateTo = opts.get("updateTo", String.class);
         boolean update = opts.get("update", Boolean.class, false) || updateTo != null;
         Path dst = (updateTo == null) ? path : Path.from(updateTo);
         Object data = bindings.getValue("data", null);

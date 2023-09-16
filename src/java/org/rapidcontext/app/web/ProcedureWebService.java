@@ -81,7 +81,7 @@ public class ProcedureWebService extends WebService {
      *         an empty string for none
      */
     public String prefix() {
-        return dict.getString(KEY_PREFIX, "");
+        return dict.get(KEY_PREFIX, String.class, "");
     }
 
     /**
@@ -90,7 +90,7 @@ public class ProcedureWebService extends WebService {
      * @return the input arguments data format
      */
     public String inputType() {
-        return dict.getString(KEY_INPUT_TYPE, "json");
+        return dict.get(KEY_INPUT_TYPE, String.class, "json");
     }
 
     /**
@@ -99,7 +99,7 @@ public class ProcedureWebService extends WebService {
      * @return the output response data format
      */
     public String outputType() {
-        return dict.getString(KEY_OUTPUT_TYPE, "json+metadata");
+        return dict.get(KEY_OUTPUT_TYPE, String.class, "json+metadata");
     }
 
     /**
@@ -155,14 +155,14 @@ public class ProcedureWebService extends WebService {
         res.set("execTime", (int) execTime);
         if (outputType().equalsIgnoreCase("text")) {
             if (res.containsKey("error")) {
-                String error = res.getString("error", "internal error");
+                String error = res.get("error", String.class, "internal error");
                 request.sendError(STATUS.BAD_REQUEST, Mime.TEXT[0], error);
             } else {
-                request.sendText(Mime.TEXT[0], res.getString("data", ""));
+                request.sendText(Mime.TEXT[0], res.get("data", String.class, ""));
             }
         } else if (outputType().equalsIgnoreCase("json")) {
             if (res.containsKey("error")) {
-                String error = res.getString("error", "internal error");
+                String error = res.get("error", String.class, "internal error");
                 request.sendError(STATUS.BAD_REQUEST, Mime.TEXT[0], error);
             } else {
                 Object data = res.get("data");
