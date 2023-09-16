@@ -26,6 +26,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * @param {string} [attrs.name] the form field name
  * @param {string} [attrs.value] the field value, defaults to ""
  * @param {string} [attrs.helpText] the help text when empty (deprecated)
+ * @param {boolean} [attrs.autosize] the auto-resize flag, defaults to false
  * @param {boolean} [attrs.disabled] the disabled widget flag, defaults to
  *            false
  * @param {boolean} [attrs.hidden] the hidden widget flag, defaults to false
@@ -90,6 +91,7 @@ RapidContext.Widget.TextArea.prototype.destroy = function () {
  * @param {string} [attrs.name] the form field name
  * @param {string} [attrs.value] the field value
  * @param {string} [attrs.helpText] the help text when empty (deprecated)
+ * @param {boolean} [attrs.autosize] the auto-resize flag
  * @param {boolean} [attrs.disabled] the disabled widget flag
  * @param {boolean} [attrs.hidden] the hidden widget flag
  */
@@ -147,4 +149,8 @@ RapidContext.Widget.TextArea.prototype._handleChange = function (evt) {
     var detail = { before: this.storedValue || "", after: this.value, cause: cause };
     this._dispatch("change", { detail: detail, bubbles: true });
     this.storedValue = this.value;
+    if (this.autosize) {
+        this.style.height = "auto";
+        this.style.height = this.scrollHeight + "px";
+    }
 };
