@@ -66,7 +66,7 @@ public class HttpConnection extends Connection {
         // TODO: Remove this legacy conversion (added 2017-02-01)
         if (dict.containsKey("header")) {
             LOG.warning("deprecated: connection " + id + " data: legacy header");
-            String headers = dict.getString("header", "");
+            String headers = dict.get("header", String.class, "");
             dict.remove("header");
             dict.set(HTTP_HEADERS, headers);
         }
@@ -90,7 +90,7 @@ public class HttpConnection extends Connection {
      * @return the base URL, or an empty string
      */
     public String url() {
-        return dict.getString(HTTP_URL, "");
+        return dict.get(HTTP_URL, String.class, "");
     }
 
     /**
@@ -100,7 +100,7 @@ public class HttpConnection extends Connection {
      *         an empty string if not set
      */
     public String headers() {
-        return dict.getString(HttpConnection.HTTP_HEADERS, "");
+        return dict.get(HttpConnection.HTTP_HEADERS, String.class, "");
     }
 
     /**
@@ -110,7 +110,7 @@ public class HttpConnection extends Connection {
      *         an empty string if not set
      */
     public String validateMethod() {
-        return dict.getString(HttpConnection.HTTP_VALIDATE, "");
+        return dict.get(HttpConnection.HTTP_VALIDATE, String.class, "");
     }
 
     /**

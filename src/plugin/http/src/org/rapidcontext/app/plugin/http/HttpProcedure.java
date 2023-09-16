@@ -224,9 +224,9 @@ public abstract class HttpProcedure extends Procedure {
             if (metadata) {
                 Dict dict = new Dict();
                 Dict headers = new Dict();
-                dict.setBoolean("success", success);
+                dict.set("success", success);
                 dict.set("response", con.getHeaderField(0));
-                dict.setInt("responseCode", httpCode);
+                dict.set("responseCode", httpCode);
                 dict.set("responseMessage", con.getResponseMessage());
                 dict.set("headers", headers);
                 for (int i = 1; true; i++) {
