@@ -204,7 +204,7 @@ public class CmdLineExecProcedure extends Procedure {
             }
         }
         Dict res = new Dict();
-        res.setInt("exitValue", exitValue);
+        res.set("exitValue", exitValue);
         res.set("output", output.toString());
         res.set("error", error.toString());
         return res;
