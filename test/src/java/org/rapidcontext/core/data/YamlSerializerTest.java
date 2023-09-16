@@ -57,8 +57,8 @@ public class YamlSerializerTest {
         Dict root = new Dict();
         root.set("id", "yamldata");
         root.set("a", "abc\u00E5\u00E4\u00F6");
-        root.setInt("b", 2);
-        root.setBoolean("c", false);
+        root.set("b", 2);
+        root.set("c", false);
         root.set("d", new Date(0));
         root.set("object", new Dict().set("key", "value"));
         root.set("array", new Array().add("item 1").add("item 2"));
