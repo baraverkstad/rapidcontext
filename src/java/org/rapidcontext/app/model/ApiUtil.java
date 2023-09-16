@@ -115,8 +115,8 @@ public class ApiUtil {
      * @return a stream of serialized matching objects
      */
     public static Stream<Object> load(Storage storage, Path path, String perm, Dict opts) {
-        boolean computed = opts.getBoolean("computed", false);
-        boolean metadata = opts.getBoolean("metadata", false);
+        boolean computed = opts.get("computed", Boolean.class, false);
+        boolean metadata = opts.get("metadata", Boolean.class, false);
         return lookup(storage, path, perm, opts)
             .map(m -> {
                 Object o = storage.load(m.path());

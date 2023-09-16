@@ -432,7 +432,10 @@ public class Dict {
      *
      * @return the dictionary key value, or
      *         the default value if the key or value is not defined
+     *
+     * @deprecated Use get(key, Boolean.class, defaultValue) instead.
      */
+    @Deprecated
     public boolean getBoolean(String key, boolean defaultValue) {
         return get(key, Boolean.class, defaultValue);
     }

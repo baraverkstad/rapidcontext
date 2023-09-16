@@ -298,7 +298,7 @@ public class User extends StorableObject {
      *         false otherwise
      */
     public boolean isEnabled() {
-        return dict.getBoolean(KEY_ENABLED, true);
+        return dict.get(KEY_ENABLED, Boolean.class, true);
     }
 
     /**

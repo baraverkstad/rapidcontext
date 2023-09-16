@@ -70,7 +70,7 @@ public class StorageQueryProcedure extends Procedure {
         } else {
             CallContext.checkAccess(path.toString(), cx.readPermission(1));
         }
-        boolean computed = opts.getBoolean("computed", false);
+        boolean computed = opts.get("computed", Boolean.class, false);
         Stream<Object> stream = ApiUtil.lookup(cx.getStorage(), path, cx.readPermission(1), opts)
             .map(m -> ApiUtil.serialize(m.path(), m, !computed, true));
         if (path.isIndex()) {

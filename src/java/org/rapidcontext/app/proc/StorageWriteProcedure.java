@@ -73,7 +73,7 @@ public class StorageWriteProcedure extends Procedure {
         }
         CallContext.checkWriteAccess(path.toString());
         String updateTo = opts.getString("updateTo", null);
-        boolean update = opts.getBoolean("update", false) || updateTo != null;
+        boolean update = opts.get("update", Boolean.class, false) || updateTo != null;
         Path dst = (updateTo == null) ? path : Path.from(updateTo);
         Object data = bindings.getValue("data", null);
         boolean delete = data == null;

@@ -287,7 +287,7 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
      *         false otherwise
      */
     public boolean isReadWrite() {
-        return dict.getBoolean(KEY_READWRITE, false);
+        return dict.get(KEY_READWRITE, Boolean.class, false);
     }
 
     /**

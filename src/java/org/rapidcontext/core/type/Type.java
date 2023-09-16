@@ -244,7 +244,7 @@ public class Type extends StorableObject {
      *         false otherwise (default)
      */
     public boolean remote() {
-        return dict.getBoolean(KEY_REMOTE, false);
+        return dict.get(KEY_REMOTE, Boolean.class, false);
     }
 
     /**

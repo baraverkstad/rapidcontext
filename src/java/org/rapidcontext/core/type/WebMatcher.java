@@ -120,7 +120,7 @@ public class WebMatcher {
      *         false if it is optional
      */
     public boolean auth() {
-        return dict.getBoolean("auth", false);
+        return dict.get("auth", Boolean.class, false);
     }
 
     /**
