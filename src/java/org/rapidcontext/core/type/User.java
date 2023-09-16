@@ -496,7 +496,7 @@ public class User extends StorableObject {
      * @return the oldest valid authentication timestamp
      */
     public Date authorizedTime() {
-        return dict.getDate(KEY_AUTHORIZED_TIME, new Date(0));
+        return dict.get(KEY_AUTHORIZED_TIME, Date.class, new Date(0));
     }
 
     /**

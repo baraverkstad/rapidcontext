@@ -254,10 +254,11 @@ public class StorableObject {
      * Returns the timestamp of the latest object activation. This is
      * updated each time the object is fetched from storage.
      *
-     * @return the timestamp of the latest object activation
+     * @return the timestamp of the latest object activation, or
+     *         null if not activated
      */
     protected Date activatedTime() {
-        return dict.getDate(PREFIX_COMPUTED + KEY_ACTIVATED_TIME, null);
+        return dict.get(PREFIX_COMPUTED + KEY_ACTIVATED_TIME, Date.class);
     }
 
     /**

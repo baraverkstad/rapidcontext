@@ -472,10 +472,11 @@ public class Dict {
      *
      * @throws NumberFormatException if the value didn't contain a
      *             valid date, number or numeric string
+     *
+     * @deprecated Use get(key, Date.class, defaultValue) instead.
      */
-    public Date getDate(String key, Date defaultValue)
-        throws NumberFormatException {
-
+    @Deprecated
+    public Date getDate(String key, Date defaultValue) {
         return get(key, Date.class, defaultValue);
     }
 
