@@ -226,7 +226,7 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
      */
     protected Storage(String id, String storageType, boolean readWrite) {
         super(id, "storage/" + storageType);
-        dict.setBoolean(KEY_READWRITE, readWrite);
+        dict.set(KEY_READWRITE, readWrite);
     }
 
     /**
@@ -341,9 +341,9 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
         lastMountTime = Math.max(System.currentTimeMillis(), lastMountTime + 1);
         dict.set(KEY_MOUNT_PATH, path);
         dict.set(KEY_MOUNT_TIME, new Date(lastMountTime));
-        dict.setBoolean(KEY_READWRITE, readWrite);
+        dict.set(KEY_READWRITE, readWrite);
         dict.set(KEY_MOUNT_OVERLAY_PATH, overlay);
-        dict.setInt(KEY_MOUNT_OVERLAY_PRIO, (overlay != null) ? prio : -1);
+        dict.set(KEY_MOUNT_OVERLAY_PRIO, (overlay != null) ? prio : -1);
     }
 
     /**

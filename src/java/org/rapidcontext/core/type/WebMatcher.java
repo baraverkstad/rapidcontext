@@ -154,7 +154,7 @@ public class WebMatcher {
                 score += 100;
             }
             score += 1 + path().length() + prio();
-            dict.setInt("_score", score);
+            dict.set("_score", score);
         }
         return score;
     }

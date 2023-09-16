@@ -152,7 +152,7 @@ public class ProcedureWebService extends WebService {
                      execTime + " millis");
         }
         res.set("execStart", new Date(startTime));
-        res.setInt("execTime", (int) execTime);
+        res.set("execTime", (int) execTime);
         if (outputType().equalsIgnoreCase("text")) {
             if (res.containsKey("error")) {
                 String error = res.getString("error", "internal error");

@@ -154,8 +154,8 @@ public abstract class Connection extends StorableObject {
         int open = maxOpen();
         int idle = maxIdleSeconds();
 
-        dict.setInt(PREFIX_COMPUTED + KEY_MAX_OPEN, open);
-        dict.setInt(PREFIX_COMPUTED + KEY_MAX_IDLE_SECS, idle);
+        dict.set(PREFIX_COMPUTED + KEY_MAX_OPEN, open);
+        dict.set(PREFIX_COMPUTED + KEY_MAX_IDLE_SECS, idle);
         channelPool = new GenericObjectPool<>(new ChannelFactory());
         channelPool.setMaxTotal(open);
         channelPool.setMaxIdle(open);
@@ -397,8 +397,8 @@ public abstract class Connection extends StorableObject {
      */
     public Dict serialize() {
         Dict copy = super.serialize();
-        copy.setInt(PREFIX_COMPUTED + "openChannels", openChannels());
-        copy.setInt(PREFIX_COMPUTED + "usedChannels", usedChannels());
+        copy.set(PREFIX_COMPUTED + "openChannels", openChannels());
+        copy.set(PREFIX_COMPUTED + "usedChannels", usedChannels());
         copy.set(PREFIX_COMPUTED + "lastUsedTime", lastUsed());
         copy.set(PREFIX_COMPUTED + "lastError", lastError());
         return copy;

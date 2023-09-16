@@ -87,13 +87,13 @@ public class PluginListProcedure extends Procedure {
                     Dict config = storage.load(configPath, Dict.class);
                     if (instance != null) {
                         config = instance.serialize();
-                        config.setBoolean("loaded", true);
+                        config.set("loaded", true);
                     } else if (config != null) {
-                        config.setBoolean("loaded", false);
+                        config.set("loaded", false);
                     } else {
                         config = new Dict();
                         config.set(Plugin.KEY_ID, pluginId);
-                        config.setBoolean("loaded", false);
+                        config.set("loaded", false);
                     }
                     Stream<String> types = idx.indices().filter(s -> !s.equals("plugin"));
                     config.set("content", types.collect(Collectors.joining(" \u2022 ")));

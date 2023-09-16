@@ -70,7 +70,7 @@ public class StorageListProcedure extends Procedure {
         }
         CallContext.checkSearchAccess(path.toString());
         Dict opts = new Dict();
-        opts.setInt("limit", -1);
+        opts.set("limit", -1);
         Array res = new Array();
         ApiUtil.load(cx.getStorage(), path, cx.readPermission(1), opts).forEach(o -> res.add(o));
         return res;

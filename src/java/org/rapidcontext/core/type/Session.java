@@ -557,7 +557,7 @@ public class Session extends StorableObject {
      */
     public Dict serialize() {
         Dict copy = super.serialize();
-        copy.setBoolean(PREFIX_COMPUTED + "expired", isExpired());
+        copy.set(PREFIX_COMPUTED + "expired", isExpired());
         if (!copy.containsKey(KEY_DESTROY_TIME)) {
             copy.set(PREFIX_COMPUTED + KEY_DESTROY_TIME, destroyTime());
         }

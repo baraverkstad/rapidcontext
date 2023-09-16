@@ -555,7 +555,10 @@ public class Dict {
      *             string
      * @throws UnsupportedOperationException if this object has been
      *             sealed
+     *
+     * @deprecated Use set(key, value) with auto-boxing instead.
      */
+    @Deprecated
     public Dict setBoolean(String key, boolean value)
         throws NullPointerException, UnsupportedOperationException {
 
@@ -575,7 +578,10 @@ public class Dict {
      *             string
      * @throws UnsupportedOperationException if this object has been
      *             sealed
+     *
+     * @deprecated Use set(key, value) with auto-boxing instead.
      */
+    @Deprecated
     public Dict setInt(String key, int value)
         throws NullPointerException, UnsupportedOperationException {
 

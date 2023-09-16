@@ -106,7 +106,7 @@ public class User extends StorableObject {
         DEFAULTS.set(KEY_NAME, "");
         DEFAULTS.set(KEY_EMAIL, "");
         DEFAULTS.set(KEY_DESCRIPTION, "");
-        DEFAULTS.setBoolean(KEY_ENABLED, true);
+        DEFAULTS.set(KEY_ENABLED, true);
         DEFAULTS.set(KEY_REALM, DEFAULT_REALM);
         DEFAULTS.set(PREFIX_HIDDEN + KEY_PASSWORD, "");
         DEFAULTS.set(KEY_ROLE, new Array());
@@ -308,7 +308,7 @@ public class User extends StorableObject {
      */
     public void setEnabled(boolean enabled) {
         if (isEnabled() != enabled) {
-            dict.setBoolean(KEY_ENABLED, enabled);
+            dict.set(KEY_ENABLED, enabled);
             dict.set(KEY_AUTHORIZED_TIME, new Date());
         }
     }
