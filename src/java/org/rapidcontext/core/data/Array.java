@@ -388,7 +388,10 @@ public class Array implements Iterable<Object> {
      *
      * @return the array element value, or
      *         the default value if the index or value is not defined
+     *
+     * @deprecated Use get(index, Object.class, defaultValue) instead.
      */
+    @Deprecated
     public Object get(int index, Object defaultValue) {
         Object value = get(index);
         return (value == null) ? defaultValue : value;
@@ -431,7 +434,10 @@ public class Array implements Iterable<Object> {
      *
      * @return the array element value, or
      *         the default value if the index or value is not defined
+     *
+     * @deprecated Use get(index, String.class, defaultValue) instead.
      */
+    @Deprecated
     public String getString(int index, String defaultValue) {
         return get(index, String.class, defaultValue);
     }
@@ -448,7 +454,10 @@ public class Array implements Iterable<Object> {
      *
      * @return the array element value, or
      *         the default value if the index or value is not defined
+     *
+     * @deprecated Use get(index, Boolean.class, defaultValue) instead.
      */
+    @Deprecated
     public boolean getBoolean(int index, boolean defaultValue) {
         return get(index, Boolean.class, defaultValue);
     }
@@ -468,7 +477,10 @@ public class Array implements Iterable<Object> {
      *
      * @throws NumberFormatException if the value didn't contain a
      *             valid integer
+     *
+     * @deprecated Use get(index, Integer.class, defaultValue) instead.
      */
+    @Deprecated
     public int getInt(int index, int defaultValue) {
         return get(index, Integer.class, defaultValue);
     }
@@ -488,7 +500,10 @@ public class Array implements Iterable<Object> {
      *
      * @throws NumberFormatException if the value didn't contain a
      *             valid date, number or numeric string
+     *
+     * @deprecated Use get(index, Date.class, defaultValue) instead.
      */
+    @Deprecated
     public Date getDate(int index, Date defaultValue) {
         return get(index, Date.class, defaultValue);
     }
@@ -569,7 +584,10 @@ public class Array implements Iterable<Object> {
      * @throws IndexOutOfBoundsException if index is negative
      * @throws UnsupportedOperationException if this object has been
      *             sealed
+     *
+     * @deprecated Use set(index, value) with auto-boxing instead.
      */
+    @Deprecated
     public Array setBoolean(int index, boolean value)
         throws IndexOutOfBoundsException, UnsupportedOperationException {
 
@@ -589,7 +607,10 @@ public class Array implements Iterable<Object> {
      * @throws IndexOutOfBoundsException if index is negative
      * @throws UnsupportedOperationException if this object has been
      *             sealed
+     *
+     * @deprecated Use set(index, value) with auto-boxing instead.
      */
+    @Deprecated
     public Array setInt(int index, int value)
         throws IndexOutOfBoundsException, UnsupportedOperationException {
 
@@ -627,7 +648,10 @@ public class Array implements Iterable<Object> {
      *
      * @throws UnsupportedOperationException if this object has been
      *             sealed
+     *
+     * @deprecated Use add(value) with auto-boxing instead.
      */
+    @Deprecated
     public Array addBoolean(boolean value)
         throws UnsupportedOperationException {
 
@@ -644,7 +668,10 @@ public class Array implements Iterable<Object> {
      *
      * @throws UnsupportedOperationException if this object has been
      *             sealed
+     *
+     * @deprecated Use add(value) with auto-boxing instead.
      */
+    @Deprecated
     public Array addInt(int value) throws UnsupportedOperationException {
         return add(Integer.valueOf(value));
     }

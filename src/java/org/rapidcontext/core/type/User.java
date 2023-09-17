@@ -473,7 +473,7 @@ public class User extends StorableObject {
     public void setRoles(String[] roles) {
         Array list = dict.getArray(KEY_ROLE);
         for (int i = 0; i < list.size(); i++) {
-            if (ArrayUtils.indexOf(roles, list.getString(i, "")) < 0) {
+            if (ArrayUtils.indexOf(roles, list.get(i, String.class, "")) < 0) {
                 list.remove(i);
                 i--;
             }
