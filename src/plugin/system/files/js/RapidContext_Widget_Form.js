@@ -195,11 +195,10 @@ RapidContext.Widget.Form.prototype.update = function (values) {
         } else if (field.type === "radio" || field.type === "checkbox") {
             var found = Array.isArray(v) && v.includes(field.value);
             field.checked = found || v === field.value || v === true;
+        } else if (typeof(field.setAttrs) == "function") {
+            field.setAttrs({ value: v });
         } else {
             field.value = MochiKit.Base.isArrayLike(v) ? v.join(", ") : v;
-        }
-        if (typeof(field._handleChange) === "function") {
-            field._handleChange(null);
         }
     }
     this.fields().forEach(setValue);

@@ -101,10 +101,15 @@ RapidContext.Widget.TextField.prototype.setAttrs = function (attrs) {
         attrs.placeholder = attrs.placeholder || attrs.helpText;
         delete attrs.helpText;
     }
-    this.__setAttrs(attrs);
     if ("value" in attrs) {
+        // FIXME: This is wrong, since we're setting an attribute here.
+        // But until Form.update() has some other way to set a field
+        // value and trigger changes, this will remain.
+        this.value = attrs.value || "";
         this._handleChange(null);
+        delete attrs.value;
     }
+    this.__setAttrs(attrs);
 };
 
 /**
