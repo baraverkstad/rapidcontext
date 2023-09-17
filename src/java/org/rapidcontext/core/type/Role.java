@@ -268,7 +268,7 @@ public class Role extends StorableObject {
             if (matchPath(dict, path)) {
                 String perms = dict.getString(ACCESS_PERMISSION, "").trim();
                 @SuppressWarnings("unchecked")
-                HashSet<String> set = (HashSet<String>) dict.get(PREFIX_COMPUTED + ACCESS_PERMISSION);
+                HashSet<String> set = dict.get(PREFIX_COMPUTED + ACCESS_PERMISSION, HashSet.class);
                 if (set == null) {
                     String[] list = perms.split("[,;\\s]+");
                     set = new HashSet<>(list.length + 1);
@@ -306,7 +306,7 @@ public class Role extends StorableObject {
     private boolean matchPath(Dict dict, String path) {
         String glob = dict.getString(ACCESS_PATH, null);
         String regex = dict.getString(ACCESS_REGEX, null);
-        Pattern m = (Pattern) dict.get(PREFIX_COMPUTED + ACCESS_REGEX);
+        Pattern m = dict.get(PREFIX_COMPUTED + ACCESS_REGEX, Pattern.class);
         if (m == null && glob != null) {
             glob = glob.replace("\\", "\\\\").replace(".", "\\.");
             glob = glob.replace("+", "\\+").replace("|", "\\|");

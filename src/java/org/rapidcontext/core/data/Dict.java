@@ -67,6 +67,66 @@ public class Dict {
     private boolean sealed = false;
 
     /**
+     * Converts a value to a specified object class. The value is
+     * either converted (as below) or casted.
+     *
+     * <p>If the object class is String (and the value isn't), the
+     * string representation will be returned. Any Date object will
+     * instead be converted to "\@millis".</p>
+     *
+     * <p>If the object class is Boolean (and the value isn't), the
+     * string representation that does not equal "", "0", "f",
+     * "false", "no" or "off" is considered true.</p>
+     *
+     * <p>If the object class is Integer or Long (and the value
+     * isn't), a numeric conversion of the string representation will
+     * be attempted.</p>
+     *
+     * <p>If the object class is Date (and the value isn't), a number
+     * conversion (to milliseconds) of the string representation
+     * (excluding any '@' prefix) will be attempted.</p>
+     *
+     * @param <T>            the object type to return
+     * @param value          the object value
+     * @param clazz          the object class
+     *
+     * @return the converted or casted value
+     *
+     * @throws ClassCastException if the wasn't possible to cast to
+     *             the specified object class
+     * @throws NumberFormatException if the value wasn't possible to
+     *             parse as a number
+     */
+    @SuppressWarnings("unchecked")
+    protected static <T> T convert(Object value, Class<T> clazz) {
+        if (value == null || clazz.isInstance(value)) {
+            return (T) value;
+        } else if (clazz.equals(String.class) && value instanceof Date) {
+            return (T) DateUtil.asEpochMillis((Date) value);
+        } else if (clazz.equals(String.class)) {
+            return (T) value.toString();
+        } else if (clazz.equals(Boolean.class)) {
+            String str = value.toString().toLowerCase().trim();
+            return (T) Boolean.valueOf(ArrayUtils.contains(OFF, str));
+        } else if (clazz.equals(Integer.class)) {
+            return (T) Integer.valueOf(value.toString());
+        } else if (clazz.equals(Long.class)) {
+            return (T) Long.valueOf(value.toString());
+        } else if (clazz.equals(Date.class) && value instanceof Number) {
+            long millis = ((Number) value).longValue();
+            return (T) new Date(millis);
+        } else if (clazz.equals(Date.class)) {
+            String str = value.toString();
+            if (str.startsWith("@")) {
+                str = str.substring(1);
+            }
+            return (T) new Date(Long.parseLong(str));
+        } else {
+            return (T) value; // throws ClassCastException
+        }
+    }
+
+    /**
      * Creates a new empty dictionary.
      */
     public Dict() {
@@ -278,6 +338,28 @@ public class Dict {
     }
 
     /**
+     * Returns the dictionary value for the specified key. The value
+     * is either converted or casted to a specified object class.
+     *
+     * @param <T>            the object type to return
+     * @param key            the dictionary key name
+     * @param clazz          the object class
+     *
+     * @return the dictionary key value value, or
+     *         null if the key or value is not defined
+     *
+     * @throws ClassCastException if the wasn't possible to cast to
+     *             the specified object class
+     * @throws NumberFormatException if the value wasn't possible to
+     *             parse as a number
+     *
+     * @see #convert(Object, Class)
+     */
+    public <T> T get(String key, Class<T> clazz) {
+        return convert(get(key), clazz);
+    }
+
+    /**
      * Returns the dictionary value for the specified key. If the key
      * is not defined or if the value is set to null, a default
      * value will be returned instead.
@@ -294,6 +376,32 @@ public class Dict {
     }
 
     /**
+     * Returns the dictionary value for the specified key. The value
+     * is either converted or casted to a specified object class. If
+     * the key is not defined or if the value is set to null, a
+     * default value will be returned instead.
+     *
+     * @param <T>            the object type to return
+     * @param key            the dictionary key name
+     * @param clazz          the object class
+     * @param defaultValue   the default value
+     *
+     * @return the dictionary key value value, or
+     *         the default value if the key or value is not defined
+     *
+     * @throws ClassCastException if the wasn't possible to cast to
+     *             the specified object class
+     * @throws NumberFormatException if the value wasn't possible to
+     *             parse as a number
+     *
+     * @see #convert(Object, Class)
+     */
+    public <T> T get(String key, Class<T> clazz, T defaultValue) {
+        T value = get(key, clazz);
+        return (value == null) ? defaultValue : value;
+    }
+
+    /**
      * Returns the dictionary string value for the specified key. If
      * the key is not defined or if the value is set to null, a
      * default value will be returned instead. If the value object
@@ -306,16 +414,7 @@ public class Dict {
      *         the default value if the key or value is not defined
      */
     public String getString(String key, String defaultValue) {
-        Object value = get(key);
-        if (value == null) {
-            return defaultValue;
-        } else if (value instanceof String) {
-            return (String) value;
-        } else if (value instanceof Date) {
-            return DateUtil.asEpochMillis((Date) value);
-        } else {
-            return value.toString();
-        }
+        return get(key, String.class, defaultValue);
     }
 
     /**
@@ -332,15 +431,7 @@ public class Dict {
      *         the default value if the key or value is not defined
      */
     public boolean getBoolean(String key, boolean defaultValue) {
-        Object value = get(key);
-        if (value == null) {
-            return defaultValue;
-        } else if (value instanceof Boolean) {
-            return ((Boolean) value).booleanValue();
-        } else {
-            String str = value.toString().toLowerCase().trim();
-            return ArrayUtils.contains(OFF, str);
-        }
+        return get(key, Boolean.class, defaultValue);
     }
 
     /**
@@ -356,20 +447,11 @@ public class Dict {
      * @return the dictionary key value, or
      *         the default value if the key or value is not defined
      *
-     * @throws NumberFormatException if the value didn't contain a
-     *             valid integer
+     * @throws NumberFormatException if the value wasn't possible to
+     *             parse as an integer
      */
-    public int getInt(String key, int defaultValue)
-        throws NumberFormatException {
-
-        Object value = get(key);
-        if (value == null) {
-            return defaultValue;
-        } else if (value instanceof Number) {
-            return ((Number) value).intValue();
-        } else {
-            return Integer.parseInt(value.toString());
-        }
+    public int getInt(String key, int defaultValue) {
+        return get(key, Integer.class, defaultValue);
     }
 
     /**
@@ -391,20 +473,7 @@ public class Dict {
     public Date getDate(String key, Date defaultValue)
         throws NumberFormatException {
 
-        Object value = get(key);
-        if (value == null) {
-            return defaultValue;
-        } else if (value instanceof Date) {
-            return (Date) value;
-        } else if (value instanceof Number) {
-            return new Date(((Number) value).longValue());
-        } else {
-            String str = value.toString();
-            if (str.startsWith("@")) {
-                str = str.substring(1);
-            }
-            return new Date(Long.parseLong(str));
-        }
+        return get(key, Date.class, defaultValue);
     }
 
     /**
@@ -419,7 +488,7 @@ public class Dict {
      * @throws ClassCastException if the value is not a dictionary
      */
     public Dict getDict(String key) throws ClassCastException {
-        Dict dict = (Dict) get(key);
+        Dict dict = get(key, Dict.class);
         return (dict == null) ? new Dict() : dict;
     }
 
@@ -435,7 +504,7 @@ public class Dict {
      * @throws ClassCastException if the value is not an array
      */
     public Array getArray(String key) throws ClassCastException {
-        Array arr = (Array) get(key);
+        Array arr = get(key, Array.class);
         return (arr == null) ? new Array() : arr;
     }
 

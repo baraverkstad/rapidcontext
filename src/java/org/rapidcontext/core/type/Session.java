@@ -465,7 +465,7 @@ public class Session extends StorableObject {
      *         null if no such file was found
      */
     public File file(String id) {
-        return (File) files().get(id);
+        return files().get(id, File.class);
     }
 
     /**

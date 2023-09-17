@@ -248,7 +248,7 @@ public class Metadata extends StorableObject {
      * @return the class for the object
      */
     public Class<?> classInstance() {
-        return (Class<?>) dict.get(KEY_CLASS);
+        return dict.get(KEY_CLASS, Class.class);
     }
 
     /**
@@ -266,7 +266,7 @@ public class Metadata extends StorableObject {
      * @return the absolute object path
      */
     public Path path() {
-        return (Path) dict.get(KEY_PATH);
+        return dict.get(KEY_PATH, Path.class);
     }
 
     /**
@@ -306,7 +306,7 @@ public class Metadata extends StorableObject {
      * @return the last modified date for the object
      */
     public Date modified() {
-        return (Date) dict.get(KEY_MODIFIED);
+        return dict.get(KEY_MODIFIED, Date.class);
     }
 
     /**
@@ -328,7 +328,7 @@ public class Metadata extends StorableObject {
      *         zero (0) if unknown
      */
     public long size() {
-        return (Long) dict.get(KEY_SIZE);
+        return dict.get(KEY_SIZE, Long.class);
     }
 
     /**

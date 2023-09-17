@@ -145,7 +145,7 @@ public class ZipStorage extends Storage {
      * @return the ZIP file being read
      */
     public File file() {
-        return (File) dict.get(KEY_FILE);
+        return dict.get(KEY_FILE, File.class);
     }
 
     /**

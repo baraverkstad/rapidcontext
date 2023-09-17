@@ -71,7 +71,7 @@ public class DirStorage extends Storage {
      * @return the base directory for data files
      */
     public File dir() {
-        return (File) dict.get(KEY_DIR);
+        return dict.get(KEY_DIR, File.class);
     }
 
     /**

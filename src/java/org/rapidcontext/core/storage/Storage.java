@@ -260,8 +260,7 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
      *         the root path if the storage isn't mounted
      */
     public Path path() {
-        Path path = (Path) dict.get(KEY_MOUNT_PATH);
-        return (path == null) ? Path.ROOT : path;
+        return dict.get(KEY_MOUNT_PATH, Path.class, Path.ROOT);
     }
 
     /**
@@ -298,8 +297,7 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
      *         the current system time if not mounted
      */
     public Date mountTime() {
-        Date date = (Date) dict.get(KEY_MOUNT_TIME);
-        return (date == null) ? new Date() : date;
+        return dict.get(KEY_MOUNT_TIME, Date.class, new Date());
     }
 
     /**
@@ -312,7 +310,7 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
      *         null if no mount overlay is used
      */
     public Path mountOverlayPath() {
-        return (Path) dict.get(KEY_MOUNT_OVERLAY_PATH);
+        return dict.get(KEY_MOUNT_OVERLAY_PATH, Path.class);
     }
 
     /**
