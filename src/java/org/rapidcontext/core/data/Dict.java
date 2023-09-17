@@ -369,7 +369,10 @@ public class Dict {
      *
      * @return the dictionary key value value, or
      *         the default value if the key or value is not defined
+     *
+     * @deprecated Use get(key, Object.class, defaultValue) instead.
      */
+    @Deprecated
     public Object get(String key, Object defaultValue) {
         Object value = get(key);
         return (value == null) ? defaultValue : value;
