@@ -23,7 +23,6 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.rapidcontext.util.DateUtil;
 
 /**
  * A general data array. Compared to the standard ArrayList, this
@@ -152,6 +151,25 @@ public class Array implements Iterable<Object> {
      */
     public Stream<Object> stream() {
         return (list == null) ? Stream.empty() : list.stream();
+    }
+
+    /**
+     * Returns a stream of all elements in the array.
+     *
+     * @param <T>            the object type to return
+     * @param clazz          the object class
+     *
+     * @return the object stream
+     *
+     * @throws ClassCastException if the wasn't possible to cast to
+     *             the specified object class
+     * @throws NumberFormatException if the value wasn't possible to
+     *             parse as a number
+     *
+     * @see Dict#convert(Object, Class)
+     */
+    public <T> Stream<T> stream(Class<T> clazz) {
+        return stream().map(o -> Dict.convert(o, clazz));
     }
 
     /**
@@ -339,6 +357,28 @@ public class Array implements Iterable<Object> {
     }
 
     /**
+     * Returns the array value at the specified index. The value is
+     * either converted or casted to a specified object class.
+     *
+     * @param <T>            the object type to return
+     * @param index          the array index
+     * @param clazz          the object class
+     *
+     * @return the array element value, or
+     *         null if the index or value is not defined
+     *
+     * @throws ClassCastException if the wasn't possible to cast to
+     *             the specified object class
+     * @throws NumberFormatException if the value wasn't possible to
+     *             parse as a number
+     *
+     * @see Dict#convert(Object, Class)
+     */
+    public <T> T get(int index, Class<T> clazz) {
+        return Dict.convert(get(index), clazz);
+    }
+
+    /**
      * Returns the array value at the specified index. If the index
      * is not defined or if the value is set to null, a default
      * value will be returned instead.
@@ -355,6 +395,32 @@ public class Array implements Iterable<Object> {
     }
 
     /**
+     * Returns the array value at the specified index. The value is
+     * either converted or casted to a specified object class. If the
+     * index is not defined or if the value is set to null, a default
+     * value will be returned instead.
+     *
+     * @param <T>            the object type to return
+     * @param index          the array index
+     * @param clazz          the object class
+     * @param defaultValue   the default value
+     *
+     * @return the array element value, or
+     *         null if the index or value is not defined
+     *
+     * @throws ClassCastException if the wasn't possible to cast to
+     *             the specified object class
+     * @throws NumberFormatException if the value wasn't possible to
+     *             parse as a number
+     *
+     * @see Dict#convert(Object, Class)
+     */
+    public <T> T get(int index, Class<T> clazz, T defaultValue) {
+        T value = get(index, clazz);
+        return (value == null) ? defaultValue : value;
+    }
+
+    /**
      * Returns the array string value for the specified index. If
      * the index is not defined or if the value is set to null, a
      * default value will be returned instead. If the value object
@@ -367,16 +433,7 @@ public class Array implements Iterable<Object> {
      *         the default value if the index or value is not defined
      */
     public String getString(int index, String defaultValue) {
-        Object value = get(index);
-        if (value == null) {
-            return defaultValue;
-        } else if (value instanceof String) {
-            return (String) value;
-        } else if (value instanceof Date) {
-            return DateUtil.asEpochMillis((Date) value);
-        } else {
-            return value.toString();
-        }
+        return get(index, String.class, defaultValue);
     }
 
     /**
@@ -393,15 +450,7 @@ public class Array implements Iterable<Object> {
      *         the default value if the index or value is not defined
      */
     public boolean getBoolean(int index, boolean defaultValue) {
-        Object value = get(index);
-        if (value == null) {
-            return defaultValue;
-        } else if (value instanceof Boolean) {
-            return ((Boolean) value).booleanValue();
-        } else {
-            String str = value.toString().toLowerCase().trim();
-            return ArrayUtils.contains(Dict.OFF, str);
-        }
+        return get(index, Boolean.class, defaultValue);
     }
 
     /**
@@ -420,17 +469,8 @@ public class Array implements Iterable<Object> {
      * @throws NumberFormatException if the value didn't contain a
      *             valid integer
      */
-    public int getInt(int index, int defaultValue)
-        throws NumberFormatException {
-
-        Object value = get(index);
-        if (value == null) {
-            return defaultValue;
-        } else if (value instanceof Number) {
-            return ((Number) value).intValue();
-        } else {
-            return Integer.parseInt(value.toString());
-        }
+    public int getInt(int index, int defaultValue) {
+        return get(index, Integer.class, defaultValue);
     }
 
     /**
@@ -449,23 +489,8 @@ public class Array implements Iterable<Object> {
      * @throws NumberFormatException if the value didn't contain a
      *             valid date, number or numeric string
      */
-    public Date getDate(int index, Date defaultValue)
-        throws NumberFormatException {
-
-        Object value = get(index);
-        if (value == null) {
-            return defaultValue;
-        } else if (value instanceof Date) {
-            return (Date) value;
-        } else if (value instanceof Number) {
-            return new Date(((Number) value).longValue());
-        } else {
-            String str = value.toString();
-            if (str.startsWith("@")) {
-                str = str.substring(1);
-            }
-            return new Date(Long.parseLong(str));
-        }
+    public Date getDate(int index, Date defaultValue) {
+        return get(index, Date.class, defaultValue);
     }
 
     /**
@@ -480,7 +505,7 @@ public class Array implements Iterable<Object> {
      * @throws ClassCastException if the value is not a dictionary
      */
     public Dict getDict(int index) throws ClassCastException {
-        Dict dict = (Dict) get(index);
+        Dict dict = get(index, Dict.class);
         return (dict == null) ? new Dict() : dict;
     }
 
@@ -496,7 +521,7 @@ public class Array implements Iterable<Object> {
      * @throws ClassCastException if the value is not an array
      */
     public Array getArray(int index) throws ClassCastException {
-        Array arr = (Array) get(index);
+        Array arr = get(index, Array.class);
         return (arr == null) ? new Array() : arr;
     }
 

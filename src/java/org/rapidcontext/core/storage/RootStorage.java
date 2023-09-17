@@ -146,8 +146,7 @@ public class RootStorage extends MemoryStorage {
      * @return the stream of mounted storages
      */
     public Stream<Storage> mounts(Path path) {
-        return mountedStorages.stream()
-            .map(Storage.class::cast)
+        return mountedStorages.stream(Storage.class)
             .filter(storage -> storage.path().startsWith(path));
     }
 
@@ -159,13 +158,10 @@ public class RootStorage extends MemoryStorage {
      * @return the storage found, or null if not found
      */
     private Storage getMountedStorage(Path path) {
-        for (Object o : mountedStorages) {
-            Storage storage = (Storage) o;
-            if (storage.path().equals(path)) {
-                return storage;
-            }
-        }
-        return null;
+        return mountedStorages.stream(Storage.class)
+            .filter(storage -> storage.path().equals(path))
+            .findFirst()
+            .orElse(null);
     }
 
     /**
@@ -269,7 +265,7 @@ public class RootStorage extends MemoryStorage {
      */
     public synchronized void unmountAll() {
         while (mountedStorages.size() > 0) {
-            Storage storage = (Storage) mountedStorages.get(-1);
+            Storage storage = mountedStorages.get(-1, Storage.class);
             try {
                 unmount(storage.path());
             } catch (Exception e) {
