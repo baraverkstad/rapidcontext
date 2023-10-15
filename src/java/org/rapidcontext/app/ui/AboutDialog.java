@@ -34,7 +34,7 @@ import javax.swing.JLabel;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class AboutDialog extends JDialog {
+public final class AboutDialog extends JDialog {
 
     /**
      * Creates new about dialog.

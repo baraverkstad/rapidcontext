@@ -49,7 +49,7 @@ import org.rapidcontext.app.ServerApplication;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class ControlPanel extends JFrame {
+public final class ControlPanel extends JFrame {
 
     /**
      * The server being controlled.
