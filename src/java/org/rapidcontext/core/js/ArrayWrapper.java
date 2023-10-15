@@ -32,7 +32,7 @@ import org.rapidcontext.core.data.Array;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class ArrayWrapper extends ScriptableObject implements Wrapper {
+public final class ArrayWrapper extends ScriptableObject implements Wrapper {
 
     /**
      * The encapsulated array.

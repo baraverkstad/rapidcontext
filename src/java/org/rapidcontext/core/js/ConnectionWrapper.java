@@ -35,7 +35,7 @@ import org.rapidcontext.core.type.Channel;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class ConnectionWrapper extends ScriptableObject implements Wrapper {
+public final class ConnectionWrapper extends ScriptableObject implements Wrapper {
 
     // Hidden method names
     private static final Set<String> HIDDEN = Set.of(

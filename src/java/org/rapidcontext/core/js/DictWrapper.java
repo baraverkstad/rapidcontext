@@ -28,7 +28,7 @@ import org.rapidcontext.core.data.Dict;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class DictWrapper extends ScriptableObject implements Wrapper {
+public final class DictWrapper extends ScriptableObject implements Wrapper {
 
     /**
      * The encapsulated dictionary.
