@@ -47,7 +47,6 @@ public class WebMatcher {
     protected WebMatcher(WebService service, Dict dict) {
         this.service = service;
         this.dict = dict;
-        score();
     }
 
     /**

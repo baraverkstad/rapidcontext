@@ -259,7 +259,7 @@ public class Request implements HttpUtil {
      *
      * @return the full request URL
      */
-    public String getUrl() {
+    public final String getUrl() {
         if (requestUrl == null) {
             StringBuilder buffer = new StringBuilder();
             buffer.append(getProtocol());
@@ -280,7 +280,7 @@ public class Request implements HttpUtil {
      *
      * @return the protocol name (i.e. "http" or "https")
      */
-    public String getProtocol() {
+    public final String getProtocol() {
         if (requestProtocol == null) {
             String proto = request.getHeader("X-Forwarded-Proto");
             proto = RegexUtil.firstMatch(RE_HEADER_VALUE, proto);
@@ -294,7 +294,7 @@ public class Request implements HttpUtil {
      *
      * @return the host name
      */
-    public String getHost() {
+    public final String getHost() {
         if (requestHost == null) {
             String host = request.getHeader("X-Forwarded-Host");
             host = RegexUtil.firstMatch(RE_HEADER_VALUE, host);
@@ -316,7 +316,7 @@ public class Request implements HttpUtil {
      *
      * @return the port number
      */
-    public int getPort() {
+    public final int getPort() {
         if (requestPort <= 0) {
             String port = request.getHeader("X-Forwarded-Port");
             String host = request.getHeader("X-Forwarded-Host");
@@ -344,7 +344,7 @@ public class Request implements HttpUtil {
      *
      * @return the request method name
      */
-    public String getMethod() {
+    public final String getMethod() {
         return request.getMethod();
     }
 
@@ -355,7 +355,7 @@ public class Request implements HttpUtil {
      *
      * @return the full request path with file name
      */
-    public String getAbsolutePath() {
+    public final String getAbsolutePath() {
         String path = request.getPathInfo();
         if (path == null) {
             return request.getContextPath();
@@ -372,7 +372,7 @@ public class Request implements HttpUtil {
      *
      * @return the local request path
      */
-    public String getPath() {
+    public final String getPath() {
         if (requestPath == null) {
             String path = request.getPathInfo();
             path = StringUtils.removeStart(path, "/");
@@ -993,7 +993,7 @@ public class Request implements HttpUtil {
             buffer.append("[");
             buffer.append(request.getRemoteAddr());
             buffer.append("] ");
-            buffer.append(getMethod());
+            buffer.append(request.getMethod());
             buffer.append(" ");
             buffer.append(getUrl());
             buffer.append("\n");
