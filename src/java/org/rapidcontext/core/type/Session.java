@@ -221,7 +221,7 @@ public class Session extends StorableObject {
      */
     public Session(String id, String type, Dict dict) {
         super(id, type, dict);
-        this.dict.set(KEY_FILES, new Dict());
+        dict.setDefault(KEY_FILES, new Dict());
     }
 
     /**

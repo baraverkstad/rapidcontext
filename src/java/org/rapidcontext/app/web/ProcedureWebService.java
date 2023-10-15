@@ -69,9 +69,9 @@ public class ProcedureWebService extends WebService {
      */
     public ProcedureWebService(String id, String type, Dict dict) {
         super(id, type, dict);
-        this.dict.set(KEY_PREFIX, prefix());
-        this.dict.set(KEY_INPUT_TYPE, inputType());
-        this.dict.set(KEY_OUTPUT_TYPE, outputType());
+        this.dict.setDefault(KEY_PREFIX, "");
+        this.dict.setDefault(KEY_INPUT_TYPE, "json");
+        this.dict.setDefault(KEY_OUTPUT_TYPE, "json+metadata");
     }
 
     /**

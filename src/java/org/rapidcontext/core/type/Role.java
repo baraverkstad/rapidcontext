@@ -196,8 +196,8 @@ public class Role extends StorableObject {
      */
     public Role(String id, String type, Dict dict) {
         super(id, type, normalize(id, dict));
-        dict.set(KEY_NAME, name());
-        dict.set(KEY_DESCRIPTION, description());
+        dict.setDefault(KEY_NAME, "");
+        dict.setDefault(KEY_DESCRIPTION, "");
     }
 
     /**

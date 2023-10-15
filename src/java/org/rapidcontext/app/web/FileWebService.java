@@ -51,7 +51,7 @@ public class FileWebService extends WebService {
      */
     public FileWebService(String id, String type, Dict dict) {
         super(id, type, dict);
-        this.dict.set(KEY_PATH, path());
+        this.dict.setDefault(KEY_PATH, RootStorage.PATH_FILES);
     }
 
     /**

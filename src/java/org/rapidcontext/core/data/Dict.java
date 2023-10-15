@@ -17,6 +17,7 @@ package org.rapidcontext.core.data;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.rapidcontext.util.DateUtil;
@@ -549,6 +550,46 @@ public class Dict {
             map = new LinkedHashMap<>();
         }
         map.put(key, value);
+        return this;
+    }
+
+    /**
+     * Sets a dictionary value if not already defined.
+     *
+     * @param key            the dictionary key name
+     * @param value          the value to set
+     *
+     * @return this dictionary for chained operations
+     *
+     * @throws NullPointerException if the key is null or an empty
+     *             string
+     * @throws UnsupportedOperationException if this object has been
+     *             sealed
+     */
+    public Dict setDefault(String key, Object value) {
+        if (!containsKey(key) || get(key) == null) {
+            set(key, value);
+        }
+        return this;
+    }
+
+    /**
+     * Sets a dictionary value if not already defined.
+     *
+     * @param key            the dictionary key name
+     * @param supplier       the supplier of the value
+     *
+     * @return this dictionary for chained operations
+     *
+     * @throws NullPointerException if the key is null or an empty
+     *             string
+     * @throws UnsupportedOperationException if this object has been
+     *             sealed
+     */
+    public Dict setDefault(String key, Supplier<Object> supplier) {
+        if (!containsKey(key) || get(key) == null) {
+            set(key, supplier.get());
+        }
         return this;
     }
 

@@ -187,7 +187,7 @@ public class Type extends StorableObject {
      */
     public Type(String id, String type, Dict dict) {
         super(id, type, dict);
-        this.dict.set(KEY_PROPERTY, properties());
+        this.dict.setDefault(KEY_PROPERTY, () -> new Array());
     }
 
     /**
