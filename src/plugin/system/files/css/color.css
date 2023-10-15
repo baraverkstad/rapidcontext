@@ -51,16 +51,16 @@
     --info-900: #003d7e;
 
     /* Highlight palette */
-    --highlight-000: #fffff8;
-    --highlight-100: #fffcdf;
-    --highlight-200: #fff593;
-    --highlight-300: #fff272;
-    --highlight-400: #ffeb39;
-    --highlight-500: #f7e161;
-    --highlight-600: #ddc853;
-    --highlight-700: #c9b234;
-    --highlight-800: #ab9000;
-    --highlight-900: #826e00;
+    --highlight-000: #feffff;
+    --highlight-100: #e6fbf6;
+    --highlight-200: #bef6ea;
+    --highlight-300: #b5f1e2;
+    --highlight-400: #a6e7d7;
+    --highlight-500: #8bcfc2;
+    --highlight-600: #7ac2ac;
+    --highlight-700: #6dbdaa;
+    --highlight-800: #68a095;
+    --highlight-900: #4d7c72;
 
     /* Focus palette */
     --focus-000: #f8feff;
@@ -73,6 +73,18 @@
     --focus-700: #12b3df;
     --focus-800: #0292b9;
     --focus-900: #006b88;
+
+    /* Spotlight palette */
+    --spotlight-000: #fffff8;
+    --spotlight-100: #fffcdf;
+    --spotlight-200: #fff593;
+    --spotlight-300: #fff272;
+    --spotlight-400: #ffeb39;
+    --spotlight-500: #f7e161;
+    --spotlight-600: #ddc853;
+    --spotlight-700: #c9b234;
+    --spotlight-800: #ab9000;
+    --spotlight-900: #826e00;
 }
 
 /**
