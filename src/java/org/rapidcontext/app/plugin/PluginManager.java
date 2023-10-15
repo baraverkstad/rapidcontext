@@ -43,7 +43,7 @@ import org.rapidcontext.util.FileUtil;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class PluginManager {
+public final class PluginManager {
 
     /**
      * The class logger.

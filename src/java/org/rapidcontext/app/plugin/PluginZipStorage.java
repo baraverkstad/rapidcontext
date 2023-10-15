@@ -30,7 +30,7 @@ import org.rapidcontext.core.type.Plugin;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class PluginZipStorage extends ZipStorage {
+public final class PluginZipStorage extends ZipStorage {
 
     /**
      * Creates a new read-only ZIP file storage for a plug-in.
