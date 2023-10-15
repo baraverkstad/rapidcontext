@@ -102,7 +102,7 @@ public class Index {
         if (normalize) {
             this.objects = new TreeSet<>();
             for (String str : src.objects) {
-                addObject(Storage.objectName(str));
+                this.objects.add(Storage.objectName(str));
             }
         } else {
             this.objects = new TreeSet<>(src.objects);

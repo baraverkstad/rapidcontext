@@ -96,7 +96,7 @@ public class ZipStorage extends Storage {
      * Initializes this object. This method locates all the ZIP file
      * entries and creates all the index objects.
      */
-    public void init() {
+    public final void init() {
         Index root = new Index(new Date(file().lastModified()));
         root.addObject(PATH_STORAGEINFO.name());
         paths.put(Path.ROOT, Path.ROOT);
@@ -144,7 +144,7 @@ public class ZipStorage extends Storage {
      *
      * @return the ZIP file being read
      */
-    public File file() {
+    public final File file() {
         return dict.get(KEY_FILE, File.class);
     }
 

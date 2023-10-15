@@ -71,7 +71,7 @@ public class MemoryStorage extends Storage {
         this.storageInfo = storageInfo;
         if (storageInfo) {
             objects.put(PATH_STORAGEINFO, dict);
-            meta.put(PATH_STORAGEINFO, new Metadata(Dict.class, PATH_STORAGEINFO, path()));
+            meta.put(PATH_STORAGEINFO, new Metadata(Dict.class, PATH_STORAGEINFO, Path.ROOT));
             indexInsert(PATH_STORAGEINFO);
         }
     }
@@ -243,7 +243,7 @@ public class MemoryStorage extends Storage {
             meta.get(parent).modified(null);
         } else {
             objects.put(parent, idx);
-            meta.put(parent, new Metadata(Index.class, parent, path()));
+            meta.put(parent, new Metadata(Index.class, parent, Path.ROOT));
             if (!parent.isRoot()) {
                 indexInsert(parent);
             }
