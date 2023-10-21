@@ -2,8 +2,8 @@
 
 <ui class="start-app">
   <TabContainer id="tabContainer" class="w-100 h-100">
-    <Pane pageTitle="Start" class="position-relative">
-      <div class="inline-block vertical-top h-100 border-r pr-2" w="30%">
+    <Pane pageTitle="Start" class="flex flex-dir-row">
+      <div class="border-r pr-2" w="30%">
         <h3>
           Apps:
           <Icon id="appReload" class="fa fa-refresh ml-1" />
@@ -16,7 +16,7 @@
           </table>
         </div>
       </div>
-      <Pane id="inlinePane" class="inline-block vertical-top h-100 overflow-auto pl-2" w="70%-1rem-1px">
+      <Pane id="inlinePane" class="flex-fill overflow-auto pl-2">
         <Pane class="dash-item box yellow float-left float-clear-left px-4" w="50%-3rem">
           <img src="images/logotype-icon-256x256.png" class="float-right" style="width: 128px; height: 128px;" />
           <h2 style="font-family: Trebuchet MS;">Welcome to RapidContext!</h2>
