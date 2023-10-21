@@ -201,11 +201,6 @@ public class DirStorage extends Storage {
             tmp = (File) data;
         } else {
             String name = objectName(path.name());
-            if (name.equals(path.name())) {
-                file = FileUtil.resolve(dir, path.name() + EXT_PROPERTIES);
-            } else {
-                file = FileUtil.resolve(dir, path.name());
-            }
             try {
                 tmp = FileUtil.tempFile(file.getName());
                 if (data instanceof StorableObject) {
