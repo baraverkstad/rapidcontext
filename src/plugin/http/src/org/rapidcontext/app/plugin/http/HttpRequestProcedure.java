@@ -189,10 +189,13 @@ public class HttpRequestProcedure extends HttpProcedure {
         Object obj = null;
         if (bindings.hasName(BINDING_CONNECTION)) {
             obj = bindings.getValue(BINDING_CONNECTION, null);
-        }
-        if (obj instanceof String) {
-            String str = ((String) obj).trim();
-            obj = (str.length() > 0) ? cx.connectionReserve(str) : null;
+            boolean isArg = bindings.getType(BINDING_CONNECTION) == Bindings.ARGUMENT;
+            String str = (obj instanceof String) ? ((String) obj).trim() : null;
+            if (str != null && str.isEmpty()) {
+                obj = null;
+            } else if (str != null) {
+                obj = cx.connectionReserve(str, cx.readPermission(isArg ? 1 : 0));
+            }
         }
         if (obj != null && !(obj instanceof HttpChannel)) {
             throw new ProcedureException("connection not of HTTP type: " +

@@ -61,8 +61,7 @@ public class ConnectionValidateProcedure extends Procedure {
     throws ProcedureException {
 
         String id = (String) bindings.getValue("connection");
-        CallContext.checkAccess("connection/" + id, cx.readPermission(1));
-        Channel channel = cx.connectionReserve(id);
+        Channel channel = cx.connectionReserve(id, cx.readPermission(1));
         // FIXME: call context trace should capture logs here
         channel.validate();
         return (Dict) StorableObject.sterilize(channel.getConnection(), true, false, true);

@@ -69,7 +69,9 @@ public abstract class JdbcProcedure extends Procedure {
 
         Object obj = bindings.getValue(BINDING_DB);
         if (obj instanceof String) {
-            obj = cx.connectionReserve((String) obj);
+            boolean isArg = bindings.getType(BINDING_DB) == Bindings.ARGUMENT;
+            String perm = cx.readPermission(isArg ? 1 : 0);
+            obj = cx.connectionReserve((String) obj, perm);
         }
         if (!JdbcChannel.class.isInstance(obj)) {
             String msg = "connection not of JDBC type: " + obj.getClass().getName();

@@ -564,6 +564,7 @@ public class CallContext {
      * stored in this context until all channels are released.
      *
      * @param id             the connection identifier
+     * @param permission     the required permission level
      *
      * @return the reserved connection channel
      *
@@ -572,11 +573,11 @@ public class CallContext {
      *
      * @see #connectionReleaseAll(boolean)
      */
-    public Channel connectionReserve(String id)
+    public Channel connectionReserve(String id, String permission)
         throws ProcedureException {
 
         if (id != null && !id.isBlank() && !connections.containsKey(id)) {
-            checkInternalAccess("connection/" + id);
+            checkAccess("connection/" + id, permission);
             if (isTracing()) {
                 logInternal(0, "... Reserving connection channel on '" + id + "'");
             }
@@ -617,7 +618,7 @@ public class CallContext {
      *
      * @param commit         the commit (or rollback) flag
      *
-     * @see #connectionReserve(String)
+     * @see #connectionReserve(String, String)
      */
     public void connectionReleaseAll(boolean commit) {
         for (Channel channel : connections.values()) {

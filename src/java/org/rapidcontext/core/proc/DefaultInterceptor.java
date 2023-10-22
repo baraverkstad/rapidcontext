@@ -16,6 +16,8 @@ package org.rapidcontext.core.proc;
 
 import java.util.ArrayList;
 
+import org.rapidcontext.core.type.Role;
+
 /**
  * The default procedure call interceptor. This interceptor provides
  * the standard implementation for all methods (necessary since it
@@ -58,7 +60,7 @@ public class DefaultInterceptor extends Interceptor {
             for (String name : bindings.getNames()) {
                 if (bindings.getType(name) == Bindings.CONNECTION) {
                     String value = (String) bindings.getValue(name, null);
-                    cx.connectionReserve(value);
+                    cx.connectionReserve(value, Role.PERM_INTERNAL);
                 } else if (bindings.getType(name) == Bindings.PROCEDURE) {
                     String value = (String) bindings.getValue(name);
                     cx.reserve(cx.getLibrary().getProcedure(value));
