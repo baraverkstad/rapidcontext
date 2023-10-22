@@ -78,6 +78,7 @@ public class ApiUtil {
      */
     public static Stream<Metadata> lookup(Storage storage, Path path, String perm, Dict opts) {
         Query query = storage.query(path).filterAccess(perm);
+        query.filterHidden(opts.get("hidden", Boolean.class, false));
         if (opts.containsKey("depth")) {
             query.filterDepth(opts.get("depth", Integer.class, -1));
         }
@@ -115,17 +116,8 @@ public class ApiUtil {
      * @return a stream of serialized matching objects
      */
     public static Stream<Object> load(Storage storage, Path path, String perm, Dict opts) {
-        boolean computed = opts.get("computed", Boolean.class, false);
-        boolean metadata = opts.get("metadata", Boolean.class, false);
         return lookup(storage, path, perm, opts)
-            .map(m -> {
-                Object o = storage.load(m.path());
-                if (metadata) {
-                    return serialize(m, o, !computed, true);
-                } else {
-                    return serialize(m.path(), o, !computed, true);
-                }
-            })
+            .map(m -> serialize(m, storage.load(m.path()), opts, true))
             .filter(Objects::nonNull);
     }
 
@@ -217,7 +209,7 @@ public class ApiUtil {
      *
      * @param meta           the object metadata
      * @param obj            the object to serialize
-     * @param skipComputed   filter out computed key-value pairs
+     * @param opts           the serialization options
      * @param limitedTypes   limit allowed object value types
      *
      * @return the serialized representation of the object, or
@@ -225,12 +217,16 @@ public class ApiUtil {
      */
     public static Object serialize(Metadata meta,
                                    Object obj,
-                                   boolean skipComputed,
+                                   Dict opts,
                                    boolean limitedTypes) {
-        Dict res = new Dict();
-        res.set("data", serialize(meta.path(), obj, skipComputed, limitedTypes));
-        res.set("metadata", serialize(meta.path(), meta, skipComputed, limitedTypes));
-        return res;
+        if (opts.get("metadata", Boolean.class, false)) {
+            Dict res = new Dict();
+            res.set("data", serialize(meta.path(), obj, opts, limitedTypes));
+            res.set("metadata", serialize(meta.path(), meta, opts, limitedTypes));
+            return res;
+        } else {
+            return serialize(meta.path(), obj, opts, limitedTypes);
+        }
     }
 
     /**
@@ -238,7 +234,7 @@ public class ApiUtil {
      *
      * @param path           the storage path
      * @param obj            the object to serialize
-     * @param skipComputed   filter out computed key-value pairs
+     * @param opts           the serialization options
      * @param limitedTypes   limit allowed object value types
      *
      * @return the serialized representation of the object, or
@@ -246,12 +242,13 @@ public class ApiUtil {
      */
     public static Object serialize(Path path,
                                    Object obj,
-                                   boolean skipComputed,
+                                   Dict opts,
                                    boolean limitedTypes) {
         if (obj instanceof Index) {
             Index idx = (Index) obj;
+            boolean hidden = opts.get("hidden", Boolean.class, false);
             Array paths = new Array();
-            idx.paths(path, false).forEach(p -> paths.add(p));
+            idx.paths(path, hidden).forEach(p -> paths.add(p));
             Dict dict = new Dict();
             dict.set("type", "index");
             dict.set("modified", idx.modified());
@@ -266,7 +263,7 @@ public class ApiUtil {
             dict.set("mimeType", data.mimeType());
             dict.set("modified", new Date(data.lastModified()));
             dict.set("size", Long.valueOf(data.size()));
-            if (!skipComputed) {
+            if (opts.get("computed", Boolean.class, false)) {
                 try (InputStream is = data.openStream()) {
                     if (Mime.isText(data.mimeType())) {
                         dict.set("_text", FileUtil.readText(is, "UTF-8"));
@@ -281,6 +278,7 @@ public class ApiUtil {
             }
             return dict;
         } else {
+            boolean skipComputed = !opts.get("computed", Boolean.class, false);
             return StorableObject.sterilize(obj, true, skipComputed, limitedTypes);
         }
     }

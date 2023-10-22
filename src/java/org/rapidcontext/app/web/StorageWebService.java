@@ -128,17 +128,20 @@ public class StorageWebService extends WebService {
         Path path = Path.from(request.getPath());
         Metadata meta = lookup(path);
         Object data = (meta == null) ? null : storage.load(meta.path());
-        boolean includeMeta = BooleanUtils.toBoolean(request.getParameter("metadata", "0"));
+        Dict opts = new Dict();
+        opts.set("computed", Boolean.TRUE);
+        opts.set("hidden", BooleanUtils.toBoolean(request.getParameter("hidden", "0")));
+        opts.set("metadata", BooleanUtils.toBoolean(request.getParameter("metadata", "0")));
         if (meta == null || data == null) {
             errorNotFound(request);
         } else if (data instanceof Binary && path.equals(meta.path())) {
             request.sendBinary((Binary) data);
-        } else if (includeMeta) {
-            Object o = ApiUtil.serialize(meta, data, false, false);
+        } else if (opts.get("metadata", Boolean.class, false)) {
+            Object o = ApiUtil.serialize(meta, data, opts, false);
             sendResult(request, meta.path(), null, o);
         } else {
-            Object m = ApiUtil.serialize(meta.path(), meta, false, false);
-            Object o = ApiUtil.serialize(meta.path(), data, false, false);
+            Object m = ApiUtil.serialize(meta.path(), meta, opts, false);
+            Object o = ApiUtil.serialize(meta.path(), data, opts, false);
             sendResult(request, meta.path(), m, o);
         }
     }
@@ -190,7 +193,9 @@ public class StorageWebService extends WebService {
                     request.sendError(STATUS.NOT_ACCEPTABLE, null, msg);
                 } else if (ApiUtil.update(storage, path, dst, (Dict) patch)) {
                     path = Storage.objectPath(dst);
-                    Object o = ApiUtil.serialize(dst, storage.load(path), false, false);
+                    Dict opts = new Dict();
+                    opts.set("computed", Boolean.TRUE);
+                    Object o = ApiUtil.serialize(dst, storage.load(path), opts, false);
                     request.sendText(Mime.JSON[0], JsonSerializer.serialize(o, true));
                 } else {
                     errorBadRequest(request, "failed to patch " + path);
