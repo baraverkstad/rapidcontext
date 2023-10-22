@@ -251,7 +251,7 @@ public class ApiUtil {
         if (obj instanceof Index) {
             Index idx = (Index) obj;
             Array paths = new Array();
-            idx.paths(path).forEach(p -> paths.add(p));
+            idx.paths(path, false).forEach(p -> paths.add(p));
             Dict dict = new Dict();
             dict.set("type", "index");
             dict.set("modified", idx.modified());

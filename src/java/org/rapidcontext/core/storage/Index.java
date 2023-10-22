@@ -161,19 +161,25 @@ public class Index {
     /**
      * Returns an array of sub-index names.
      *
+     * @param hidden         include hidden paths
+     *
      * @return an array of sub-index names
      */
-    public Stream<String> indices() {
-        return this.indices.stream();
+    public Stream<String> indices(boolean hidden) {
+        return this.indices.stream()
+            .filter((s) -> hidden || !s.startsWith(Path.PREFIX_HIDDEN));
     }
 
     /**
      * Returns an array of object names.
      *
+     * @param hidden         include hidden paths
+     *
      * @return an array of object names
      */
-    public Stream<String> objects() {
-        return this.objects.stream();
+    public Stream<String> objects(boolean hidden) {
+        return this.objects.stream()
+            .filter((s) -> hidden || !s.startsWith(Path.PREFIX_HIDDEN));
     }
 
     /**
@@ -181,13 +187,14 @@ public class Index {
      * objects in this index.
      *
      * @param basePath       the path of this index
+     * @param hidden         include hidden paths
      *
      * @return a stream path objects
      */
-    public Stream<Path> paths(Path basePath) {
+    public Stream<Path> paths(Path basePath, boolean hidden) {
         return Stream.concat(
-            indices().map((item) -> basePath.child(item, true)),
-            objects().map((item) -> basePath.child(item, false))
+            indices(hidden).map((item) -> basePath.child(item, true)),
+            objects(hidden).map((item) -> basePath.child(item, false))
         );
     }
 

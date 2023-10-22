@@ -212,7 +212,7 @@ public class MemoryStorage extends Storage {
         Object obj = objects.get(path);
         if (obj instanceof Index) {
             Index idx = (Index) obj;
-            idx.paths(path).forEach((item) -> remove(item, false));
+            idx.paths(path, true).forEach((item) -> remove(item, false));
         }
         if (obj != null) {
             objects.remove(path);

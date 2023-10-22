@@ -34,6 +34,17 @@ public class PathTest {
     }
 
     @Test
+    public void testToIdent() {
+        Path p = Path.from("/a/b/c/d");
+        assertEquals("", Path.ROOT.toIdent(0));
+        assertEquals("", Path.ROOT.toIdent(1));
+        assertEquals("a/b/c/d", p.toIdent(0));
+        assertEquals("c/d", p.toIdent(-2));
+        assertEquals("b/c/d", p.toIdent(1));
+        assertEquals("", p.toIdent(10));
+    }
+
+    @Test
     public void testEquals() {
         assertNotEquals(null, Path.from(""));
         assertNotEquals("/", Path.from(""));
@@ -45,14 +56,13 @@ public class PathTest {
     }
 
     @Test
-    public void testToIdent() {
-        Path p = Path.from("/a/b/c/d");
-        assertEquals("", Path.ROOT.toIdent(0));
-        assertEquals("", Path.ROOT.toIdent(1));
-        assertEquals("a/b/c/d", p.toIdent(0));
-        assertEquals("c/d", p.toIdent(-2));
-        assertEquals("b/c/d", p.toIdent(1));
-        assertEquals("", p.toIdent(10));
+    public void testIsHidden() {
+        assertFalse(Path.ROOT.isHidden());
+        assertFalse(Path.from("/a/b/c/d").isHidden());
+        assertTrue(Path.from("/.a/b/c/d").isHidden());
+        assertTrue(Path.from("/a/.b/c/d").isHidden());
+        assertTrue(Path.from("/a/b/.c/d").isHidden());
+        assertTrue(Path.from("/a/b/c/.d").isHidden());
     }
 
     @Test

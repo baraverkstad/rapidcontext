@@ -95,7 +95,7 @@ public class PluginListProcedure extends Procedure {
                         config.set(Plugin.KEY_ID, pluginId);
                         config.set("loaded", false);
                     }
-                    Stream<String> types = idx.indices().filter(s -> !s.equals("plugin"));
+                    Stream<String> types = idx.indices(false).filter(s -> !s.equals("plugin"));
                     config.set("content", types.collect(Collectors.joining(" \u2022 ")));
                     res.add(config);
                 }

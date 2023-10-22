@@ -37,6 +37,12 @@ public class Path {
     public static final Path ROOT = new Path(null, "", true);
 
     /**
+     * The prefix for hidden path elements. These paths are
+     * normally not included in listings or possible to load.
+     */
+    public static final String PREFIX_HIDDEN = ".";
+
+    /**
      * The parent path reference. Will be null for the path root.
      */
     private Path parent;
@@ -218,6 +224,17 @@ public class Path {
      */
     public boolean isIndex() {
         return this.index;
+    }
+
+    /**
+     * Checks if this path contains a hidden part.
+     *
+     * @return true if the path is hidden, or
+     *         false otherwise
+     */
+    public boolean isHidden() {
+        return this.name.startsWith(PREFIX_HIDDEN) ||
+               (this.parent != null && this.parent.isHidden());
     }
 
     /**

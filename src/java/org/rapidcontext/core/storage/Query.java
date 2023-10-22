@@ -42,6 +42,11 @@ public class Query {
     private Path base;
 
     /**
+     * The include hidden paths flag.
+     */
+    private boolean hidden = false;
+
+    /**
      * The maximum path depth to return;
      */
     private int maxDepth = Integer.MAX_VALUE;
@@ -71,6 +76,18 @@ public class Query {
      */
     public Query filter(Predicate<Path> predicate) {
         filters.add(predicate);
+        return this;
+    }
+
+    /**
+     * Toggle hidden path inclusion in results (defaults to false).
+     *
+     * @param hidden         include hidden paths
+     *
+     * @return this query instance
+     */
+    public Query filterHidden(boolean hidden) {
+        this.hidden = hidden;
         return this;
     }
 
@@ -125,7 +142,7 @@ public class Query {
             return Stream.empty();
         } else {
             boolean isMaxDepth = parent.depth() >= this.maxDepth;
-            return idx.paths(parent).flatMap(path -> {
+            return idx.paths(parent, this.hidden).flatMap(path -> {
                 if (path.isIndex()) {
                     return isMaxDepth ? Stream.empty() : allPaths(path);
                 } else {
