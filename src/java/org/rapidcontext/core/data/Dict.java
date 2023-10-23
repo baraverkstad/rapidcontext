@@ -586,7 +586,7 @@ public class Dict {
      * @throws UnsupportedOperationException if this object has been
      *             sealed
      */
-    public Dict setDefault(String key, Supplier<Object> supplier) {
+    public Dict setIfNull(String key, Supplier<Object> supplier) {
         if (!containsKey(key) || get(key) == null) {
             set(key, supplier.get());
         }
