@@ -577,12 +577,10 @@
     overflow: hidden !important;
 }
 .overflow-x-auto {
-    overflow-x: auto !important;
-    overflow-y: hidden !important;
+    overflow: auto hidden !important;
 }
 .overflow-y-auto {
-    overflow-x: hidden !important;
-    overflow-y: auto !important;
+    overflow: hidden auto !important;
 }
 .overflow-ellipsis {
     overflow: hidden;
