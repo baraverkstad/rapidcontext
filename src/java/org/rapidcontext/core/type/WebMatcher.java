@@ -50,6 +50,36 @@ public class WebMatcher {
     }
 
     /**
+     * Returns a string representation of this matcher.
+     *
+     * @return the string representation
+     */
+    public String toString() {
+        StringBuilder buffer = new StringBuilder();
+        if (method() != null) {
+            buffer.append(method());
+            buffer.append(" ");
+        }
+        if (protocol() != null) {
+            buffer.append(protocol());
+            buffer.append("://");
+        }
+        if (host() != null) {
+            buffer.append(host());
+        }
+        if (port() > 0) {
+            buffer.append(":");
+            buffer.append(port());
+        }
+        buffer.append("/");
+        if (path() != null) {
+            buffer.append(path());
+        }
+        buffer.append(" [" + service.id() + "]");
+        return buffer.toString();
+    }
+
+    /**
      * Returns the parent web service this matcher is connected to.
      *
      * @return the parent web service

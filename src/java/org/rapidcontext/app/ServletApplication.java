@@ -122,6 +122,7 @@ public class ServletApplication extends HttpServlet {
             LOG.fine(ip(request) + "Finding best matching web service");
             for (WebMatcher matcher : ctx.getWebMatchers()) {
                 int score = matcher.match(request);
+                LOG.fine(ip(request) + matcher + ", score " + score);
                 if (score > bestScore) {
                     bestScore = score;
                     bestMatcher = matcher;
