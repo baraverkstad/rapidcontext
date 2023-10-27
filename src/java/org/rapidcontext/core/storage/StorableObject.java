@@ -16,6 +16,7 @@ package org.rapidcontext.core.storage;
 
 import java.util.Date;
 
+import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 
@@ -247,7 +248,8 @@ public class StorableObject {
      * @return the object storage path
      */
     public Path path() {
-        return Path.from(type() + "/" + id());
+        String dir = StringUtils.split(type(), "/")[0];
+        return Path.from(dir + "/" + id());
     }
 
     /**
