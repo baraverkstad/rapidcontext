@@ -8,7 +8,7 @@
     "url": "https://github.com/baraverkstad/rapidcontext.git"
   },
   "dependencies": {
-    "crypto-js": "4.1.1",
+    "crypto-js": "4.2.0",
     "jquery": "3.7.0"
   },
   "devDependencies": {
