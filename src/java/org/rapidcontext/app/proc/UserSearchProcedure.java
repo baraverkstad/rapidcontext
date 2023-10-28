@@ -80,7 +80,7 @@ public class UserSearchProcedure extends Procedure {
                     dict.set(User.KEY_TYPE, user.type());
                     dict.set(User.KEY_REALM, user.realm());
                     dict.set(User.KEY_EMAIL, user.email());
-                    dict.set(User.KEY_ENABLED, Boolean.valueOf(user.isEnabled()));
+                    dict.set(User.KEY_ENABLED, user.isEnabled());
                     return dict;
                 }
             }

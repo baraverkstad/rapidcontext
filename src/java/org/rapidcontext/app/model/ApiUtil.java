@@ -262,7 +262,7 @@ public class ApiUtil {
             dict.set("name", path.name());
             dict.set("mimeType", data.mimeType());
             dict.set("modified", new Date(data.lastModified()));
-            dict.set("size", Long.valueOf(data.size()));
+            dict.set("size", data.size());
             if (opts.get("computed", Boolean.class, false)) {
                 try (InputStream is = data.openStream()) {
                     if (Mime.isText(data.mimeType())) {

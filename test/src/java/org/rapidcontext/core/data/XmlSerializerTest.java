@@ -33,8 +33,8 @@ public class XmlSerializerTest {
     @Test
     public void testTypeSupport() {
         assertEquals(PROLOG + "<o>test</o>\n", serialize("o", "test"));
-        assertEquals(PROLOG + "<o type=\"number\">123</o>\n", serialize("o", Integer.valueOf(123)));
-        assertEquals(PROLOG + "<o type=\"boolean\">true</o>\n", serialize("o", Boolean.TRUE));
+        assertEquals(PROLOG + "<o type=\"number\">123</o>\n", serialize("o", 123));
+        assertEquals(PROLOG + "<o type=\"boolean\">true</o>\n", serialize("o", true));
         assertEquals(PROLOG + "<o type=\"date\">@0</o>\n", serialize("o", new Date(0)));
     }
 

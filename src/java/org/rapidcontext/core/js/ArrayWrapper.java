@@ -105,7 +105,7 @@ public final class ArrayWrapper extends ScriptableObject implements Wrapper {
     public Object get(String name, Scriptable start) {
         switch (name) {
         case "length":
-            return Integer.valueOf(arr.size());
+            return arr.size();
         case "toJSON":
             return new LambdaFunction(this, name, 0, new Callable() {
                 public Object call(Context cx, Scriptable scope, Scriptable thisObj, Object[] args) {

@@ -33,8 +33,8 @@ public class YamlSerializerTest {
     @Test
     public void testTypeSupport() {
         assertEquals("test\n", serialize("test"));
-        assertEquals("123\n", serialize(Integer.valueOf(123)));
-        assertEquals("true\n", serialize(Boolean.TRUE));
+        assertEquals("123\n", serialize(123));
+        assertEquals("true\n", serialize(true));
         assertEquals("'@0'\n", serialize(new Date(0)));
     }
 

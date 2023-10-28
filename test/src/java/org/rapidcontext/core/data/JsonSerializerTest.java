@@ -33,8 +33,8 @@ public class JsonSerializerTest {
     @Test
     public void testTypeSupport() {
         assertEquals("\"test\"", serialize("test", false));
-        assertEquals("123", serialize(Integer.valueOf(123), false));
-        assertEquals("true", serialize(Boolean.TRUE, false));
+        assertEquals("123", serialize(123, false));
+        assertEquals("true", serialize(true, false));
         assertEquals("\"@0\"", serialize(new Date(0), false));
     }
 

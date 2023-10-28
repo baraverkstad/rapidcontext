@@ -245,7 +245,7 @@ public class CmdLineExecProcedure extends Procedure {
             if (m.find()) {
                 double d = Double.parseDouble(m.group(1));
                 if (cx.getCallStack().height() <= 1) {
-                    cx.setAttribute(CallContext.ATTRIBUTE_PROGRESS, Double.valueOf(d));
+                    cx.setAttribute(CallContext.ATTRIBUTE_PROGRESS, d);
                 }
             } else {
                 cx.log(line);

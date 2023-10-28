@@ -200,10 +200,10 @@ public final class ConnectionWrapper extends ScriptableObject implements Wrapper
                 for (Method m : target.getClass().getMethods()) {
                     boolean isPublic = (m.getModifiers() & Modifier.PUBLIC) > 0;
                     if (isPublic && m.getName().equals(methodName)) {
-                        return Integer.valueOf(m.getParameterCount());
+                        return m.getParameterCount();
                     }
                 }
-                return Integer.valueOf(0);
+                return 0;
             default:
                 return super.get(name, start);
             }

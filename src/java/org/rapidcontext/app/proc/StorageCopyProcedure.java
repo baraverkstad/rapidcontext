@@ -112,7 +112,7 @@ public class StorageCopyProcedure extends Procedure {
             dst += StringUtils.substringAfterLast("/" + src, "/");
         }
         LOG.info("copying storage path " + src + " to " + dst);
-        return Boolean.valueOf(copy(Path.from(src), Path.from(dst), update, ext));
+        return copy(Path.from(src), Path.from(dst), update, ext);
     }
 
     /**

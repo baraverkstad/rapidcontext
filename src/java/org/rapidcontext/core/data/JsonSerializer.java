@@ -80,7 +80,7 @@ public final class JsonSerializer {
                 String body = "return JSON.stringify(val, null, indent);";
                 serializeFunction = JsRuntime.compile("serialize", args, body);
             }
-            Object[] args = new Object[] { obj, Integer.valueOf(indent ? 2 : 0) };
+            Object[] args = new Object[] { obj, indent ? 2 : 0 };
             String str = JsRuntime.call(serializeFunction, args, null).toString();
             return toPrintableAscii(str);
         } catch (JsException ignore) {

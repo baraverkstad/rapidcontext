@@ -94,7 +94,7 @@ public class ThreadCreateProcedure extends Procedure {
         LOG.info("created " + name.toLowerCase() + " for " + proc + " by " +
                  SecurityContext.currentUser());
         thread.start();
-        return Integer.valueOf(thread.hashCode());
+        return thread.hashCode();
     }
 
     /**

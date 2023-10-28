@@ -102,7 +102,7 @@ class ProcedureWrapper extends BaseFunction implements Wrapper {
             } catch (ProcedureException ignore) {
                 // Ignore this exception
             }
-            return Integer.valueOf(args);
+            return args;
         default:
             return super.get(name, start);
         }
