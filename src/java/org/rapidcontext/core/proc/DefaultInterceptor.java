@@ -14,8 +14,6 @@
 
 package org.rapidcontext.core.proc;
 
-import java.util.ArrayList;
-
 import org.rapidcontext.core.type.Role;
 
 /**
@@ -124,14 +122,7 @@ public class DefaultInterceptor extends Interceptor {
         throws ProcedureException {
 
         try {
-            String[] names = bindings.getNames();
-            ArrayList<Object> args = new ArrayList<>(names.length);
-            for (String name : names) {
-                if (bindings.getType(name) == Bindings.ARGUMENT) {
-                    args.add(bindings.getValue(name, null));
-                }
-            }
-            cx.logCall(proc.getName(), args.toArray());
+            cx.logCall(proc.getName(), bindings);
             Object obj = proc.call(cx, bindings);
             cx.logResponse(obj);
             return obj;

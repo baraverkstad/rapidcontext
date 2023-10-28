@@ -14,6 +14,7 @@
 
 package org.rapidcontext.core.proc;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -651,6 +652,27 @@ public class CallContext {
         if (isTracing()) {
             int indent = 2 * getCallStack().height() - 2;
             logInternal(indent, logIndent(4, "... " + message));
+        }
+    }
+
+    /**
+     * Logs the specified call to the log if tracing is enabled.
+     *
+     * @param proc           the procedure name
+     * @param bindings       the procedure call bindings
+     *
+     * @throws ProcedureException if the call logging caused an error
+     */
+    public void logCall(String proc, Bindings bindings)
+    throws ProcedureException {
+        if (isTracing()) {
+            ArrayList<Object> args = new ArrayList<>();
+            for (String name : bindings.getNames()) {
+                if (bindings.getType(name) == Bindings.ARGUMENT) {
+                    args.add(bindings.getValue(name, null));
+                }
+            }
+            logCall(proc, args.toArray());
         }
     }
 
