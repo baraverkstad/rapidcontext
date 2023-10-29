@@ -116,8 +116,8 @@ public abstract class WebService extends StorableObject implements HttpUtil {
      */
     public WebService(String id, String type, Dict dict) {
         super(id, type, dict);
-        dict.setDefault(KEY_DESCRIPTION, "");
-        dict.setIfNull(KEY_MATCH, () -> new Array());
+        this.dict.setDefault(KEY_DESCRIPTION, "");
+        this.dict.setIfNull(KEY_MATCH, () -> new Array());
         matchers = new ArrayList<>();
     }
 

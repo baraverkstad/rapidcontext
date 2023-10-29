@@ -167,9 +167,9 @@ public class AppWebService extends FileWebService {
      */
     public AppWebService(String id, String type, Dict dict) {
         super(id, type, dict);
-        dict.setDefault(KEY_APP, null);
-        dict.setDefault(KEY_TITLE, "RapidContext");
-        dict.setDefault(KEY_LANG, "en");
+        this.dict.setDefault(KEY_APP, null);
+        this.dict.setDefault(KEY_TITLE, "RapidContext");
+        this.dict.setDefault(KEY_LANG, "en");
         logger = new LogWebService("id", "type", new Dict());
         status = new StatusWebService("id", "type", new Dict());
         procedure = new ProcedureWebService("id", "type", new Dict());
