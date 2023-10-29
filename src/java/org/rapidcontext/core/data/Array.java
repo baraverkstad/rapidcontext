@@ -117,14 +117,14 @@ public class Array implements Iterable<Object> {
         StringBuilder buffer = new StringBuilder();
         buffer.append("[");
         int len = size();
-        for (int i = 0; i < 5 && i < len; i++) {
+        for (int i = 0; i < 6 && i < len; i++) {
             if (i > 0) {
                 buffer.append(",");
             }
             buffer.append(" ");
             buffer.append(list.get(i));
         }
-        if (len > 5) {
+        if (len > 6) {
             buffer.append(", ...");
         }
         if (len > 0) {

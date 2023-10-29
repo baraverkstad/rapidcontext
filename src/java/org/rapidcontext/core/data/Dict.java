@@ -179,7 +179,7 @@ public class Dict {
         StringBuilder buffer = new StringBuilder();
         buffer.append("{");
         String[] keys = keys();
-        for (int i = 0; i < 3 && i < keys.length; i++) {
+        for (int i = 0; i < 4 && i < keys.length; i++) {
             if (i > 0) {
                 buffer.append(",");
             }
@@ -188,7 +188,7 @@ public class Dict {
             buffer.append(": ");
             buffer.append(map.get(keys[i]));
         }
-        if (keys.length > 3) {
+        if (keys.length > 4) {
             buffer.append(", ...");
         }
         if (keys.length > 0) {
