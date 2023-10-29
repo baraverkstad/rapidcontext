@@ -516,7 +516,6 @@ public class AppWebService extends FileWebService {
             if (fileId == null || fileId.trim().length() == 0) {
                 fileId = fileName;
             }
-            session.removeFile(fileId);
             File file = FileUtil.tempFile(fileName);
             try (InputStream is = stream.openStream()) {
                 FileUtil.copy(is, file);

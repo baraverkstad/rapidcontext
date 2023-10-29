@@ -453,7 +453,7 @@ public class Session extends StorableObject {
      * @return a dictionary of all files
      */
     public Dict files() {
-        return dict.getDict(KEY_FILES);
+        return dict.get(KEY_FILES, Dict.class);
     }
 
     /**
@@ -477,9 +477,7 @@ public class Session extends StorableObject {
      * @param file           the file to add
      */
     public void addFile(String id, File file) {
-        if (this.file(id) != null) {
-            removeFile(id);
-        }
+        removeFile(id);
         files().set(id, file);
     }
 
