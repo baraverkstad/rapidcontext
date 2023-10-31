@@ -86,7 +86,7 @@ public class Query {
      *
      * @return this query instance
      */
-    public Query filterHidden(boolean hidden) {
+    public Query filterShowHidden(boolean hidden) {
         this.hidden = hidden;
         return this;
     }

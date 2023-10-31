@@ -87,7 +87,7 @@ class Caches {
      */
     public Path[] listModified(Path storagePath, Path path) {
         MemoryStorage cache = cacheStorages.get(storagePath);
-        return cache.query(path).paths().filter(p -> {
+        return cache.query(path).filterShowHidden(true).paths().filter(p -> {
             Object obj = cache.load(p);
             if (obj instanceof StorableObject) {
                 StorableObject storable = (StorableObject) obj;

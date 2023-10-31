@@ -78,7 +78,7 @@ public class ApiUtil {
      */
     public static Stream<Metadata> lookup(Storage storage, Path path, String perm, Dict opts) {
         Query query = storage.query(path).filterAccess(perm);
-        query.filterHidden(opts.get("hidden", Boolean.class, false));
+        query.filterShowHidden(opts.get("hidden", Boolean.class, false));
         if (opts.containsKey("depth")) {
             query.filterDepth(opts.get("depth", Integer.class, -1));
         }

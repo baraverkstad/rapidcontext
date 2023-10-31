@@ -112,7 +112,7 @@ public class RootStorage extends MemoryStorage {
      *         false otherwise
      */
     public static boolean isObjectPath(Path path) {
-        return path.depth() > 0 && !isBinaryPath(path) && !path.isHidden();
+        return path.depth() > 0 && !isBinaryPath(path);
     }
 
     /**
