@@ -130,19 +130,33 @@ public abstract class Channel {
     }
 
     /**
-     * Reports on successful or failed usage of the channel.
+     * Reports channel usage metrics for a single query/call/etc.
      *
      * @param success        the success flag
-     * @param message        the error message, or null
+     * @param error          the optional error message
+     *
+     * @deprecated Use {@link #report(long, boolean, String)} instead.
      */
-    public void report(boolean success, String message) {
+    @Deprecated
+    public void report(boolean success, String error) {
+        report(0, success, error);
+    }
+
+    /**
+     * Reports channel usage metrics for a single query/call/etc. If the start
+     * time isn't positive, no actual usage and duration will be reported, only
+     * potential errors.
+     *
+     * @param start          the start time (in millis), or zero (0) for none
+     * @param success        the success flag
+     * @param error          the optional error message
+     */
+    public void report(long start, boolean success, String error) {
         errors = success ? 0 : errors + 1;
         if (errors >= 3) {
             invalidate();
         }
-        if (!success && message != null) {
-            connection.lastError = message;
-        }
+        connection.report(start, success, error);
     }
 
     /**

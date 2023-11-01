@@ -83,6 +83,11 @@ public abstract class Connection extends StorableObject {
     private static long MAX_WAIT_MILLIS = 5000L;
 
     /**
+     * The shared metrics to use for all connections.
+     */
+    private static Metrics metrics = null;
+
+    /**
      * The connection channel pool used for managing objects. The
      * pool will be used to create all objects, but only ones
      * supporting it will be returned (others immediately destroyed).
@@ -113,6 +118,13 @@ public abstract class Connection extends StorableObject {
      *         null if not found
      */
     public static Connection find(Storage storage, String id) {
+        if (metrics == null) {
+            try {
+                metrics = Metrics.findOrCreate(storage, "connection");
+            } catch (StorageException e) {
+                LOG.warning("failed to initialize connection usage metrics: " + e);
+            }
+        }
         return storage.load(Path.resolve(PATH, id), Connection.class);
     }
 
@@ -298,29 +310,22 @@ public abstract class Connection extends StorableObject {
      *             be created and validated
      */
     public Channel reserve() throws ConnectionException {
-        Channel  channel = null;
-        String   msg = null;
-
         lastUsedTime = System.currentTimeMillis();
-        lastError = null;
+        String msg = "reserving connection channel in " + this;
+        LOG.fine(msg);
         try {
-            // TODO: handle shared channels
-            msg = "reserving connection channel in " + this;
-            LOG.fine(msg);
-            channel = channelPool.borrowObject();
+            Channel channel = channelPool.borrowObject();
             LOG.fine("done " + msg);
+            return channel;
         } catch (ConnectionException e) {
-            lastError = e.getMessage();
             LOG.log(Level.WARNING, "failed " + msg, e);
-            cleanupChannel(channel);
+            report(lastUsedTime, false, e.toString());
             throw e;
         } catch (Exception e) {
-            lastError = e.getMessage();
             LOG.log(Level.WARNING, "failed " + msg, e);
-            cleanupChannel(channel);
+            report(lastUsedTime, false, e.toString());
             throw new ConnectionException(e.getMessage());
         }
-        return channel;
     }
 
     /**
@@ -390,6 +395,32 @@ public abstract class Connection extends StorableObject {
      * @param channel        the channel to destroy
      */
     protected abstract void destroyChannel(Channel channel);
+
+    /**
+     * Reports connection usage metrics for a single query/request/etc.
+     * If the start time isn't positive, no actual usage and duration
+     * will be reported, only potential errors.
+     *
+     * @param start          the start time (in millis), or zero (0) for none
+     * @param success        the success flag
+     * @param error          the optional error message
+     */
+    protected void report(long start, boolean success, String error) {
+        if (!success && error != null) {
+            // FIXME: remove this when metrics are no longer experimental
+            lastError = error;
+        }
+        if (metrics != null) {
+            long now = System.currentTimeMillis();
+            if (start > 0) {
+                int duration = (int) (System.currentTimeMillis() - start);
+                metrics.report(id(), now, 1, duration, success, error);
+            } else {
+                int count = success ? 0 : 1;
+                metrics.report(id(), now, count, 0, success, error);
+            }
+        }
+    }
 
     /**
      * Returns a serialized representation of this object. Used when
