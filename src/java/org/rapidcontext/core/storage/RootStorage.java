@@ -331,7 +331,7 @@ public class RootStorage extends MemoryStorage {
      * @return the metadata for the object, or null if not found
      */
     @Override
-    public Metadata lookup(Path path) {
+    public synchronized Metadata lookup(Path path) {
         if (path.startsWith(PATH_STORAGE)) {
             Metadata meta = caches.lookup(null, path);
             for (Object o : mountedStorages) {
@@ -394,7 +394,7 @@ public class RootStorage extends MemoryStorage {
      *         null if not found
      */
     @Override
-    public Object load(Path path) {
+    public synchronized Object load(Path path) {
         if (path.startsWith(PATH_STORAGE)) {
             Object res = caches.load(null, path);
             if (res != null) {
