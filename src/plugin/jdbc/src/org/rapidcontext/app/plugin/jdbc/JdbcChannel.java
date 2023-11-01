@@ -68,6 +68,11 @@ public class JdbcChannel extends Channel {
     protected String prefix;
 
     /**
+     * The SQL initialization statement.
+     */
+    protected String sqlInit;
+
+    /**
      * The SQL ping query.
      */
     protected String sqlPing;
@@ -90,6 +95,7 @@ public class JdbcChannel extends Channel {
 
         super(parent);
         this.prefix = "[JDBC:" + (++counter) + "] ";
+        this.sqlInit = parent.sqlInit();
         this.sqlPing = parent.ping();
         this.timeout = parent.timeout();
         try {
@@ -169,6 +175,7 @@ public class JdbcChannel extends Channel {
     @Override
     public void validate() {
         if (sqlPing != null && sqlPing.trim().length() > 0) {
+            reset();
             try {
                 executeQuery(sqlPing);
             } catch (Exception e) {
@@ -217,6 +224,20 @@ public class JdbcChannel extends Channel {
             con.rollback();
         } catch (SQLException e) {
             LOG.log(Level.WARNING, prefix + "failed to rollback connection", e);
+        }
+    }
+
+    /**
+     * Resets this connection before usage. This will execute any SQL
+     * initialization statements for the connection before usage.
+     */
+    public void reset() {
+        if (sqlInit != null) {
+            try {
+                executeStatement(sqlInit);
+            } catch (Exception e) {
+                LOG.log(Level.WARNING, prefix + "connection SQL init failure", e);
+            }
         }
     }
 

@@ -30,6 +30,11 @@ property:
     description: The database user password (leave blank to keep existing).
     required: true
     format: password
+  - name: sqlinit
+    description: >-
+        The SQL initialization statement for each session. Optional, defaults
+        to an empty string if omitted.
+    required: false
   - name: sqlping
     description: >-
         The SQL ping query for checking the connection. Optional, will default

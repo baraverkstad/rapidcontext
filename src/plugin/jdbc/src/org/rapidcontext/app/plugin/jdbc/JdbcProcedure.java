@@ -73,11 +73,14 @@ public abstract class JdbcProcedure extends Procedure {
             String perm = cx.readPermission(isArg ? 1 : 0);
             obj = cx.connectionReserve((String) obj, perm);
         }
-        if (!JdbcChannel.class.isInstance(obj)) {
+        if (obj instanceof JdbcChannel) {
+            JdbcChannel channel = (JdbcChannel) obj;
+            channel.reset();
+            return channel;
+        } else {
             String msg = "connection not of JDBC type: " + obj.getClass().getName();
             throw new ProcedureException(msg);
         }
-        return (JdbcChannel) obj;
     }
 
     /**

@@ -63,6 +63,12 @@ public class JdbcConnection extends Connection {
     protected static final String JDBC_PASSWORD = "password";
 
     /**
+     * The JDBC SQL initialization configuration parameter name
+     * (optional, defaults to an empty string).
+     */
+    protected static final String JDBC_SQL_INIT = "sqlinit";
+
+    /**
      * The JDBC SQL ping configuration parameter name (optional,
      * defaults to 'SELECT 1').
      */
@@ -118,6 +124,10 @@ public class JdbcConnection extends Connection {
     protected void init() throws StorageException {
         String driver = dict.get(JDBC_DRIVER, String.class, "").trim();
         String url = dict.get(JDBC_URL, String.class, "").trim().toLowerCase();
+        String init = dict.get(JDBC_SQL_INIT, String.class, "");
+        if (init.isBlank()) {
+            dict.remove(JDBC_SQL_INIT);
+        }
         String ping = dict.get(JDBC_PING, String.class, "").trim();
         if (driver.length() == 0) {
             // Adjust older MySQL connection URLs (for default driver)
@@ -212,6 +222,16 @@ public class JdbcConnection extends Connection {
         } else {
             return dict.get(JDBC_URL, String.class, "");
         }
+    }
+
+    /**
+     * Returns the SQL initialization statement.
+     *
+     * @return the SQL initialization statement, or
+     *         null if not configured
+     */
+    public String sqlInit() {
+        return dict.get(JDBC_SQL_INIT, String.class);
     }
 
     /**
