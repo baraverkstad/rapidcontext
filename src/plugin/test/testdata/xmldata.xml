@@ -12,4 +12,10 @@
     <item>item 1</item>
     <item>item 2</item>
   </array>
+  <empty type="object">
+    <obj type="object">
+    </obj>
+    <arr type="array">
+    </arr>
+  </empty>
 </root>
