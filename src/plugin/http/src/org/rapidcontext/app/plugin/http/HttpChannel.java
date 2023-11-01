@@ -58,6 +58,7 @@ public class HttpChannel extends Channel {
      * @return true if the channel can be pooled and reused, or
      *         false otherwise
      */
+    @Override
     protected boolean isPoolable() {
         return false;
     }
@@ -67,6 +68,7 @@ public class HttpChannel extends Channel {
      * before a channel is to be used, i.e. when a new channel has
      * been created or fetched from a resource pool.
      */
+    @Override
     protected void reserve() {
         // Nothing to do here
     }
@@ -78,6 +80,7 @@ public class HttpChannel extends Channel {
      * again without affecting previous results or operations (if
      * the channel is pooled).
      */
+    @Override
     protected void release() {
         // Nothing to do here
     }
@@ -89,6 +92,7 @@ public class HttpChannel extends Channel {
      * This method can only mark a valid channel as invalid, never
      * the other way around.
      */
+    @Override
     public void validate() {
         String method = ((HttpConnection) connection).validateMethod();
         if (method != null && method.trim().length() > 0) {
@@ -124,6 +128,7 @@ public class HttpChannel extends Channel {
      * In case of error, a subclass should log the message and
      * invalidate the channel.
      */
+    @Override
     public void commit() {
         // Not supported
     }
@@ -137,6 +142,7 @@ public class HttpChannel extends Channel {
      * In case of error, a subclass should log the message and
      * invalidate the channel.
      */
+    @Override
     public void rollback() {
         // Not supported
     }

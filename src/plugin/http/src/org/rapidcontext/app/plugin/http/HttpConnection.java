@@ -121,6 +121,7 @@ public class HttpConnection extends Connection {
      * @throws ConnectionException if the channel couldn't be created
      *             properly
      */
+    @Override
     protected Channel createChannel() throws ConnectionException {
         return new HttpChannel(this);
     }
@@ -131,6 +132,7 @@ public class HttpConnection extends Connection {
      *
      * @param channel        the channel to destroy
      */
+    @Override
     protected void destroyChannel(Channel channel) {
         // Nothing to do, HTTP channels close automatically
     }
