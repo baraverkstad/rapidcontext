@@ -116,6 +116,7 @@ public class JdbcChannel extends Channel {
      * @return true if the channel can be pooled and reused, or
      *         false otherwise
      */
+    @Override
     protected boolean isPoolable() {
         return true;
     }
@@ -128,6 +129,7 @@ public class JdbcChannel extends Channel {
      * @throws ConnectionException if the channel couldn't be
      *             reserved (channel will be destroyed)
      */
+    @Override
     protected void reserve() throws ConnectionException {
         try {
             if (con.isClosed()) {
@@ -149,6 +151,7 @@ public class JdbcChannel extends Channel {
      * again without affecting previous results or operations (if
      * the channel is pooled).
      */
+    @Override
     protected void release() {
         // Nothing to do here
     }
@@ -163,6 +166,7 @@ public class JdbcChannel extends Channel {
      * @see #isValid()
      * @see #invalidate()
      */
+    @Override
     public void validate() {
         if (sqlPing != null && sqlPing.trim().length() > 0) {
             try {
@@ -193,6 +197,7 @@ public class JdbcChannel extends Channel {
      * successful procedure tree execution that included this
      * connection.
      */
+    @Override
     public void commit() {
         try {
             con.commit();
@@ -206,6 +211,7 @@ public class JdbcChannel extends Channel {
      * unsuccessful procedure tree execution that included this
      * connection.
      */
+    @Override
     public void rollback() {
         try {
             con.rollback();

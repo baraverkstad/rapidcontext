@@ -107,6 +107,7 @@ public abstract class JdbcProcedure extends Procedure {
      * @throws ProcedureException if the call execution caused an
      *             error
      */
+    @Override
     public Object call(CallContext cx, Bindings bindings)
     throws ProcedureException {
 
@@ -284,6 +285,7 @@ public abstract class JdbcProcedure extends Procedure {
          * @throws ClassCastException if the other object isn't an
          *             SQLField instance
          */
+        @Override
         public int compareTo(SqlField obj) throws ClassCastException {
             return this.startPos - obj.startPos;
         }

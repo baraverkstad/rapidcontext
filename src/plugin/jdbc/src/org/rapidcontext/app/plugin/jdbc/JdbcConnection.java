@@ -114,6 +114,7 @@ public class JdbcConnection extends Connection {
      *
      * @throws StorageException if the initialization failed
      */
+    @Override
     protected void init() throws StorageException {
         String driver = dict.get(JDBC_DRIVER, String.class, "").trim();
         String url = dict.get(JDBC_URL, String.class, "").trim().toLowerCase();
@@ -160,6 +161,7 @@ public class JdbcConnection extends Connection {
      * Destroys this connection. This method overrides the default to
      * provide package access to it when testing connections.
      */
+    @Override
     protected void destroy() {
         super.destroy();
     }
@@ -267,6 +269,7 @@ public class JdbcConnection extends Connection {
      * @throws ConnectionException if the channel couldn't be created
      *             properly
      */
+    @Override
     protected Channel createChannel() throws ConnectionException {
         Properties props = new Properties();
         for (String key : dict.keys()) {
@@ -290,6 +293,7 @@ public class JdbcConnection extends Connection {
      *
      * @param channel        the channel to destroy
      */
+    @Override
     protected void destroyChannel(Channel channel) {
         ((JdbcChannel) channel).close();
     }

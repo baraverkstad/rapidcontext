@@ -57,6 +57,7 @@ public class JdbcBuiltInStatementProcedure extends Procedure {
      * @throws ProcedureException if the call execution caused an
      *             error
      */
+    @Override
     public Object call(CallContext cx, Bindings bindings)
     throws ProcedureException {
 

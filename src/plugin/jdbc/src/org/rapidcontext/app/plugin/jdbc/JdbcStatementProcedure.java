@@ -62,6 +62,7 @@ public class JdbcStatementProcedure extends JdbcProcedure {
      * @throws ProcedureException if the SQL couldn't be executed
      *             correctly
      */
+    @Override
     protected Object execute(JdbcChannel con,
                              PreparedStatement stmt,
                              String flags)
