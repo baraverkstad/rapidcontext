@@ -265,6 +265,7 @@ public class Metadata extends StorableObject {
      *
      * @return the absolute object path
      */
+    @Override
     public Path path() {
         return dict.get(KEY_PATH, Path.class);
     }
@@ -351,6 +352,7 @@ public class Metadata extends StorableObject {
      *
      * @return the serialized representation of this object
      */
+    @Override
     public Dict serialize() {
         Dict copy = super.serialize();
         copy.remove(KEY_ID);

@@ -191,6 +191,7 @@ public class StorableObject {
      *
      * @return a string representation of this object
      */
+    @Override
     public String toString() {
         return type() + " " + id();
     }

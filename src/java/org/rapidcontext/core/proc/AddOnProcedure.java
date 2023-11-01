@@ -108,6 +108,7 @@ public abstract class AddOnProcedure implements Procedure {
      *
      * @return the procedure name
      */
+    @Override
     public String getName() {
         return data.get("name", String.class, "");
     }
@@ -117,6 +118,7 @@ public abstract class AddOnProcedure implements Procedure {
      *
      * @return the procedure description
      */
+    @Override
     public String getDescription() {
         return data.get("description", String.class, "");
     }
@@ -150,6 +152,7 @@ public abstract class AddOnProcedure implements Procedure {
      *
      * @return the bindings for this procedure
      */
+    @Override
     public Bindings getBindings() {
         return bindings;
     }

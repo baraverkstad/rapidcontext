@@ -59,6 +59,7 @@ public final class DictWrapper extends ScriptableObject implements Wrapper {
      *
      * @return the class name
      */
+    @Override
     public String getClassName() {
         return "DictWrapper";
     }
@@ -70,6 +71,7 @@ public final class DictWrapper extends ScriptableObject implements Wrapper {
      *
      * @return always returns false (no instances possible)
      */
+    @Override
     public boolean hasInstance(Scriptable instance) {
         return false;
     }
@@ -83,6 +85,7 @@ public final class DictWrapper extends ScriptableObject implements Wrapper {
      * @return the value of the property, or
      *         NOT_FOUND if not found
      */
+    @Override
     public Object get(String name, Scriptable start) {
         if (dict.containsKey(name)) {
             if (!cache.containsKey(name)) {
@@ -101,6 +104,7 @@ public final class DictWrapper extends ScriptableObject implements Wrapper {
      * @param start          the object in which the lookup began
      * @param value          the value to set
      */
+    @Override
     public void put(String name, Scriptable start, Object value) {
         if (name != null && name.length() > 0) {
             dict.set(name, value);
@@ -114,6 +118,7 @@ public final class DictWrapper extends ScriptableObject implements Wrapper {
      *
      * @param name           the name of the property
      */
+    @Override
     public void delete(String name) {
         dict.remove(name);
         cache.remove(name);
@@ -127,6 +132,7 @@ public final class DictWrapper extends ScriptableObject implements Wrapper {
      *
      * @return the unwrapped object
      */
+    @Override
     public Object unwrap() {
         if (!dict.isSealed()) {
             for (String key : dict.keys()) {

@@ -50,6 +50,7 @@ public class JsCompileInterceptor extends Interceptor {
      * @throws ProcedureException if the connections couldn't be
      *             reserved
      */
+    @Override
     public void reserve(CallContext cx, Procedure proc)
     throws ProcedureException {
 

@@ -107,6 +107,7 @@ public interface Binary {
          * @return the object size (in bytes), or
          *         -1 if unknown
          */
+        @Override
         public long size() {
             return file.length();
         }
@@ -117,6 +118,7 @@ public interface Binary {
          * @return the last modified timestamp, or
          *         zero (0) or the current system if unknown
          */
+        @Override
         public long lastModified() {
             return file.lastModified();
         }
@@ -128,6 +130,7 @@ public interface Binary {
          *
          * @return the MIME type of the binary data
          */
+        @Override
         public String mimeType() {
             return Mime.type(file);
         }
@@ -138,6 +141,7 @@ public interface Binary {
          * @return the hexadecimal string with the SHA-256 hash, or
          *         null if not available
          */
+        @Override
         public String sha256() {
             try (FileInputStream input = new FileInputStream(file)) {
                 return BinaryUtil.hashSHA256(input);
@@ -154,6 +158,7 @@ public interface Binary {
          *
          * @throws IOException if the data couldn't be opened for reading
          */
+        @Override
         public InputStream openStream() throws IOException {
             return new FileInputStream(file);
         }
@@ -187,6 +192,7 @@ public interface Binary {
          * @return the object size (in bytes), or
          *         -1 if unknown
          */
+        @Override
         public long size() {
             return data.length();
         }
@@ -197,6 +203,7 @@ public interface Binary {
          * @return the last modified timestamp, or
          *         zero (0) or the current system if unknown
          */
+        @Override
         public long lastModified() {
             return System.currentTimeMillis();
         }
@@ -208,6 +215,7 @@ public interface Binary {
          *
          * @return the MIME type of the binary data
          */
+        @Override
         public String mimeType() {
             return Mime.TEXT[0];
         }
@@ -218,6 +226,7 @@ public interface Binary {
          * @return the hexadecimal string with the SHA-256 hash, or
          *         null if not available
          */
+        @Override
         public String sha256() {
             try {
                 return BinaryUtil.hashSHA256(data);
@@ -234,6 +243,7 @@ public interface Binary {
          *
          * @throws IOException if the data couldn't be opened for reading
          */
+        @Override
         public InputStream openStream() throws IOException {
             return new ByteArrayInputStream(data.getBytes("UTF-8"));
         }
@@ -277,6 +287,7 @@ public interface Binary {
          * @return the object size (in bytes), or
          *         -1 if unknown
          */
+        @Override
         public long size() {
             return size;
         }
@@ -287,6 +298,7 @@ public interface Binary {
          * @return the last modified timestamp, or
          *         zero (0) or the current system if unknown
          */
+        @Override
         public long lastModified() {
             return System.currentTimeMillis();
         }
@@ -298,6 +310,7 @@ public interface Binary {
          *
          * @return the MIME type of the binary data
          */
+        @Override
         public String mimeType() {
             return Mime.BIN[0];
         }
@@ -308,6 +321,7 @@ public interface Binary {
          * @return the hexadecimal string with the SHA-256 hash, or
          *         null if not available
          */
+        @Override
         public String sha256() {
             return null;
         }
@@ -319,6 +333,7 @@ public interface Binary {
          *
          * @throws IOException if the data couldn't be opened for reading
          */
+        @Override
         public InputStream openStream() throws IOException {
             return is;
         }

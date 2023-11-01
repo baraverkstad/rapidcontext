@@ -96,6 +96,7 @@ public class ZipStorage extends Storage {
      * Initializes this object. This method locates all the ZIP file
      * entries and creates all the index objects.
      */
+    @Override
     public final void init() {
         Index root = new Index(new Date(file().lastModified()));
         root.addObject(PATH_STORAGEINFO.name());
@@ -129,6 +130,7 @@ public class ZipStorage extends Storage {
      *
      * @throws StorageException if the destruction failed
      */
+    @Override
     public void destroy() throws StorageException {
         try {
             paths.clear();
@@ -158,6 +160,7 @@ public class ZipStorage extends Storage {
      * @return the metadata for the object, or
      *         null if not found
      */
+    @Override
     public Metadata lookup(Path path) {
         if (PATH_STORAGEINFO.equals(path)) {
             Metadata m = new Metadata(Dict.class, PATH_STORAGEINFO, path());
@@ -193,6 +196,7 @@ public class ZipStorage extends Storage {
      * @return the data read, or
      *         null if not found
      */
+    @Override
     public Object load(Path path) {
         if (PATH_STORAGEINFO.equals(path)) {
             return dict;
@@ -231,6 +235,7 @@ public class ZipStorage extends Storage {
      *
      * @throws StorageException if the data couldn't be written
      */
+    @Override
     public void store(Path path, Object data) throws StorageException {
         String msg = "cannot store to read-only storage at " + path();
         LOG.warning(msg);
@@ -246,6 +251,7 @@ public class ZipStorage extends Storage {
      *
      * @throws StorageException if the data couldn't be removed
      */
+    @Override
     public void remove(Path path) throws StorageException {
         String msg = "cannot remove from read-only storage at " + path();
         LOG.warning(msg);
@@ -294,6 +300,7 @@ public class ZipStorage extends Storage {
          * @return the object size (in bytes), or
          *         -1 if unknown
          */
+        @Override
         public long size() {
             return entry.getSize();
         }
@@ -304,6 +311,7 @@ public class ZipStorage extends Storage {
          * @return the last modified timestamp, or
          *         negative or the current system if unknown
          */
+        @Override
         public long lastModified() {
             return entry.getTime();
         }
@@ -315,6 +323,7 @@ public class ZipStorage extends Storage {
          *
          * @return the MIME type of the binary data
          */
+        @Override
         public String mimeType() {
             return Mime.type(entry.getName());
         }
@@ -325,6 +334,7 @@ public class ZipStorage extends Storage {
          * @return the hexadecimal string with the SHA-256 hash, or
          *         null if not available
          */
+        @Override
         public String sha256() {
             try (InputStream input = openStream()) {
                 return BinaryUtil.hashSHA256(input);
@@ -341,6 +351,7 @@ public class ZipStorage extends Storage {
          *
          * @throws IOException if the data couldn't be opened for reading
          */
+        @Override
         public InputStream openStream() throws IOException {
             return zip.getInputStream(entry);
         }

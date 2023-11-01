@@ -65,6 +65,7 @@ public final class ArrayWrapper extends ScriptableObject implements Wrapper {
      *
      * @return the class name
      */
+    @Override
     public String getClassName() {
         return "Array";  // support Array.isArray()
     }
@@ -76,6 +77,7 @@ public final class ArrayWrapper extends ScriptableObject implements Wrapper {
      *
      * @return always returns false (no instances possible)
      */
+    @Override
     public boolean hasInstance(Scriptable instance) {
         return false;
     }
@@ -89,6 +91,7 @@ public final class ArrayWrapper extends ScriptableObject implements Wrapper {
      * @return true if the index is defined, or
      *         false otherwise
      */
+    @Override
     public boolean has(int index, Scriptable start) {
         return arr.containsIndex(index);
     }
@@ -102,12 +105,14 @@ public final class ArrayWrapper extends ScriptableObject implements Wrapper {
      * @return the value of the property, or
      *         NOT_FOUND if not found
      */
+    @Override
     public Object get(String name, Scriptable start) {
         switch (name) {
         case "length":
             return arr.size();
         case "toJSON":
             return new LambdaFunction(this, name, 0, new Callable() {
+                @Override
                 public Object call(Context cx, Scriptable scope, Scriptable thisObj, Object[] args) {
                     Object[] values = new Object[arr.size()];
                     for (int i = 0; i < arr.size(); i++) {
@@ -135,6 +140,7 @@ public final class ArrayWrapper extends ScriptableObject implements Wrapper {
      * @return the value of the property, or
      *         NOT_FOUND if not found
      */
+    @Override
     public Object get(int index, Scriptable start) {
         if (arr.containsIndex(index)) {
             if (!cache.containsKey(index)) {
@@ -152,6 +158,7 @@ public final class ArrayWrapper extends ScriptableObject implements Wrapper {
      * @param start          the object in which the lookup began
      * @param value          the value to set
      */
+    @Override
     public void put(String name, Scriptable start, Object value) {
         double idx;
         if (name.equals("length")) {
@@ -185,6 +192,7 @@ public final class ArrayWrapper extends ScriptableObject implements Wrapper {
      * @param start          the object in which the lookup began
      * @param value          the value to set
      */
+    @Override
     public void put(int index, Scriptable start, Object value) {
         arr.set(index, value);
         cache.remove(index);
@@ -196,6 +204,7 @@ public final class ArrayWrapper extends ScriptableObject implements Wrapper {
      *
      * @param index          the index of the property
      */
+    @Override
     public void delete(int index) {
         // Emulates JS semantics by not renumbering array
         arr.set(index, null);
@@ -209,6 +218,7 @@ public final class ArrayWrapper extends ScriptableObject implements Wrapper {
      *
      * @return the unwrapped object
      */
+    @Override
     public Object unwrap() {
         if (!arr.isSealed()) {
             for (int i = 0; i < arr.size(); i++) {

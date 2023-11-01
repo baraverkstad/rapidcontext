@@ -54,6 +54,7 @@ public class WebMatcher {
      *
      * @return the string representation
      */
+    @Override
     public String toString() {
         StringBuilder buffer = new StringBuilder();
         if (method() != null) {

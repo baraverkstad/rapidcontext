@@ -124,6 +124,7 @@ public abstract class WebService extends StorableObject implements HttpUtil {
     /**
      * Initializes this web service after loading it from a storage.
      */
+    @Override
     protected void init() {
         for (Object o : dict.getArray(KEY_MATCH)) {
             matchers.add(new WebMatcher(this, (Dict) o));

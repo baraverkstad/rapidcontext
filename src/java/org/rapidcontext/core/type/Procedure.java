@@ -100,6 +100,7 @@ public abstract class Procedure extends StorableObject implements org.rapidconte
      * @return true if the object is considered active, or
      *         false otherwise
      */
+    @Override
     protected boolean isActive() {
         return System.currentTimeMillis() - activatedTime().getTime() <= ACTIVE_MILLIS;
     }
@@ -112,6 +113,7 @@ public abstract class Procedure extends StorableObject implements org.rapidconte
      * @deprecated Use id() instead.
      */
     @Deprecated
+    @Override
     public String getName() {
         return id();
     }
@@ -133,6 +135,7 @@ public abstract class Procedure extends StorableObject implements org.rapidconte
      * @deprecated Use description() instead.
      */
     @Deprecated
+    @Override
     public String getDescription() {
         return description();
     }
@@ -163,6 +166,7 @@ public abstract class Procedure extends StorableObject implements org.rapidconte
      *
      * @return the bindings for this procedure
      */
+    @Override
     public Bindings getBindings() {
         return new Bindings(null, dict.getArray(KEY_BINDING));
     }

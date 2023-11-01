@@ -93,6 +93,7 @@ public final class ConnectionWrapper extends ScriptableObject implements Wrapper
      *
      * @return the class name
      */
+    @Override
     public String getClassName() {
         return "ConnectionWrapper";
     }
@@ -104,6 +105,7 @@ public final class ConnectionWrapper extends ScriptableObject implements Wrapper
      *
      * @return always returns false (no instances possible)
      */
+    @Override
     public boolean hasInstance(Scriptable instance) {
         return false;
     }
@@ -117,6 +119,7 @@ public final class ConnectionWrapper extends ScriptableObject implements Wrapper
      * @return the value of the property, or
      *         NOT_FOUND if not found
      */
+    @Override
     public Object get(String name, Scriptable start) {
         if (methods.contains(name)) {
             return new ConnectionMethodWrapper(name);
@@ -130,6 +133,7 @@ public final class ConnectionWrapper extends ScriptableObject implements Wrapper
      *
      * @return the unwrapped object
      */
+    @Override
     public Object unwrap() {
         return channel;
     }
@@ -166,6 +170,7 @@ public final class ConnectionWrapper extends ScriptableObject implements Wrapper
          *
          * @return the class name
          */
+        @Override
         public String getClassName() {
             return "ConnectionMethodWrapper";
         }
@@ -177,6 +182,7 @@ public final class ConnectionWrapper extends ScriptableObject implements Wrapper
          *
          * @return always returns false (no instances possible)
          */
+        @Override
         public boolean hasInstance(Scriptable instance) {
             return false;
         }
@@ -190,6 +196,7 @@ public final class ConnectionWrapper extends ScriptableObject implements Wrapper
          * @return the value of the property, or
          *         NOT_FOUND if not found
          */
+        @Override
         public Object get(String name, Scriptable start) {
             switch (name) {
             case "name":
@@ -219,6 +226,7 @@ public final class ConnectionWrapper extends ScriptableObject implements Wrapper
          *
          * @return the result of the function call
          */
+        @Override
         public Object call(Context ctx,
                            Scriptable scope,
                            Scriptable thisObj,

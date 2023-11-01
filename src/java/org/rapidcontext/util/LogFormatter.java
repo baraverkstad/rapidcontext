@@ -80,6 +80,7 @@ public class LogFormatter extends Formatter {
      *
      * @return the formatted log record
      */
+    @Override
     public String format(LogRecord record) {
         Date dttm = new Date(record.getMillis());
         String src = getSource(record);

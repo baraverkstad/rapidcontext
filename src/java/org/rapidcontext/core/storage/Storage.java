@@ -240,6 +240,7 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
      *
      * @throws ClassCastException if the object wasn't comparable
      */
+    @Override
     public int compareTo(Storage other) throws ClassCastException {
         int      cmp1 = mountOverlayPrio() - other.mountOverlayPrio();
         int      cmp2 = mountTime().compareTo(other.mountTime());
@@ -259,6 +260,7 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
      * @return the storage mount path, or
      *         the root path if the storage isn't mounted
      */
+    @Override
     public Path path() {
         return dict.get(KEY_MOUNT_PATH, Path.class, Path.ROOT);
     }

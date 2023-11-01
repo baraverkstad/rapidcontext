@@ -84,6 +84,7 @@ public class DirStorage extends Storage {
      * @return the metadata for the object, or
      *         null if not found
      */
+    @Override
     public Metadata lookup(Path path) {
         if (PATH_STORAGEINFO.equals(path)) {
             Metadata m = new Metadata(Dict.class, PATH_STORAGEINFO, path());
@@ -120,6 +121,7 @@ public class DirStorage extends Storage {
      * @return the data read, or
      *         null if not found
      */
+    @Override
     public Object load(Path path) {
         if (PATH_STORAGEINFO.equals(path)) {
             return dict;
@@ -166,6 +168,7 @@ public class DirStorage extends Storage {
      *
      * @throws StorageException if the data couldn't be written
      */
+    @Override
     public void store(Path path, Object data) throws StorageException {
         if (path.isIndex()) {
             String msg = "cannot write to index " + path;
@@ -237,6 +240,7 @@ public class DirStorage extends Storage {
      *
      * @throws StorageException if the data couldn't be removed
      */
+    @Override
     public void remove(Path path) throws StorageException {
         if (!isReadWrite()) {
             String msg = "cannot remove from read-only storage at " + path();

@@ -61,6 +61,7 @@ class ProcedureWrapper extends BaseFunction implements Wrapper {
      *
      * @return the class name
      */
+    @Override
     public String getClassName() {
         return "ProcedureWrapper";
     }
@@ -72,6 +73,7 @@ class ProcedureWrapper extends BaseFunction implements Wrapper {
      *
      * @return always returns false (no instances possible)
      */
+    @Override
     public boolean hasInstance(Scriptable instance) {
         return false;
     }
@@ -85,6 +87,7 @@ class ProcedureWrapper extends BaseFunction implements Wrapper {
      * @return the value of the property, or
      *         NOT_FOUND if not found
      */
+    @Override
     public Object get(String name, Scriptable start) {
         switch (name) {
         case "name":
@@ -119,6 +122,7 @@ class ProcedureWrapper extends BaseFunction implements Wrapper {
      *
      * @return the result of the procedure call
      */
+    @Override
     public Object call(Context scriptContext,
                        Scriptable scope,
                        Scriptable thisObj,
@@ -141,6 +145,7 @@ class ProcedureWrapper extends BaseFunction implements Wrapper {
      *
      * @return the unwrapped object
      */
+    @Override
     public Object unwrap() {
         return proc;
     }

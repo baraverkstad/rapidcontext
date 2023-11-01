@@ -46,6 +46,7 @@ public class DefaultInterceptor extends Interceptor {
      * @throws ProcedureException if the connections couldn't be
      *             reserved
      */
+    @Override
     public void reserve(CallContext cx, Procedure proc)
     throws ProcedureException {
 
@@ -77,6 +78,7 @@ public class DefaultInterceptor extends Interceptor {
      * @param cx             the procedure context
      * @param commit         the commit (or rollback) flag
      */
+    @Override
     public void releaseAll(CallContext cx, boolean commit) {
         cx.connectionReleaseAll(commit);
     }
@@ -94,6 +96,7 @@ public class DefaultInterceptor extends Interceptor {
      * @throws ProcedureException if the call execution caused an
      *             error
      */
+    @Override
     public Object call(CallContext cx, Procedure proc, Bindings bindings)
         throws ProcedureException {
 

@@ -330,6 +330,7 @@ public class RootStorage extends MemoryStorage {
      *
      * @return the metadata for the object, or null if not found
      */
+    @Override
     public Metadata lookup(Path path) {
         if (path.startsWith(PATH_STORAGE)) {
             Metadata meta = caches.lookup(null, path);
@@ -392,6 +393,7 @@ public class RootStorage extends MemoryStorage {
      * @return the data read, or
      *         null if not found
      */
+    @Override
     public Object load(Path path) {
         if (path.startsWith(PATH_STORAGE)) {
             Object res = caches.load(null, path);
@@ -536,6 +538,7 @@ public class RootStorage extends MemoryStorage {
      *
      * @throws StorageException if the data couldn't be written
      */
+    @Override
     public synchronized void store(Path path, Object data) throws StorageException {
         boolean isBinary = data instanceof Binary || data instanceof File;
         if (!isBinary && !path.name().contains(".")) {
@@ -589,6 +592,7 @@ public class RootStorage extends MemoryStorage {
      *
      * @throws StorageException if the data couldn't be removed
      */
+    @Override
     public synchronized void remove(Path path) throws StorageException {
         if (path.startsWith(PATH_STORAGE)) {
             if (caches.remove(null, path, true)) {

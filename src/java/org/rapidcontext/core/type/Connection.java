@@ -137,6 +137,7 @@ public abstract class Connection extends StorableObject {
      * @return true if the object is considered active, or
      *         false otherwise
      */
+    @Override
     protected boolean isActive() {
         return System.currentTimeMillis() - lastUsedTime <= 60000L ||
                openChannels() > 0;
@@ -150,6 +151,7 @@ public abstract class Connection extends StorableObject {
      *
      * @throws StorageException if the initialization failed
      */
+    @Override
     protected void init() throws StorageException {
         int open = maxOpen();
         int idle = maxIdleSeconds();
@@ -176,6 +178,7 @@ public abstract class Connection extends StorableObject {
      * is called when an object is removed from the in-memory storage
      * (object cache).
      */
+    @Override
     protected void destroy() {
         try {
             LOG.fine("closing all connections in " + this);
@@ -192,6 +195,7 @@ public abstract class Connection extends StorableObject {
      * connection channels from the pool and should only be called
      * from a background job.
      */
+    @Override
     protected void passivate() {
         try {
             LOG.fine("starting eviction on " + this);
@@ -395,6 +399,7 @@ public abstract class Connection extends StorableObject {
      *
      * @return the serialized representation of this object
      */
+    @Override
     public Dict serialize() {
         Dict copy = super.serialize();
         copy.set(PREFIX_COMPUTED + "openChannels", openChannels());
@@ -429,6 +434,7 @@ public abstract class Connection extends StorableObject {
          *
          * @throws Exception if the channel couldn't be created
          */
+        @Override
         public PooledObject<Channel> makeObject() throws Exception {
             return new DefaultPooledObject<>(createChannel());
         }
@@ -438,6 +444,7 @@ public abstract class Connection extends StorableObject {
          *
          * @param obj            the pooled channel to destroy
          */
+        @Override
         public void destroyObject(PooledObject<Channel> obj) {
             destroyChannel(obj.getObject());
         }
@@ -450,6 +457,7 @@ public abstract class Connection extends StorableObject {
          * @return true if the channel was valid, or
          *         false otherwise
          */
+        @Override
         public boolean validateObject(PooledObject<Channel> obj) {
             Channel channel = obj.getObject();
             channel.validate();
@@ -463,6 +471,7 @@ public abstract class Connection extends StorableObject {
          *
          * @throws Exception if the channel couldn't be activated
          */
+        @Override
         public void activateObject(PooledObject<Channel> obj) throws Exception {
             obj.getObject().reserve();
         }
@@ -474,6 +483,7 @@ public abstract class Connection extends StorableObject {
          *
          * @throws Exception if the channel couldn't be passivated
          */
+        @Override
         public void passivateObject(PooledObject<Channel> obj) throws Exception {
             obj.getObject().release();
         }

@@ -196,6 +196,7 @@ public class Type extends StorableObject {
      *
      * @throws StorageException if the initialization failed
      */
+    @Override
     protected void init() throws StorageException {
         Class<?> cls = initializer();
         if (cls != null) {

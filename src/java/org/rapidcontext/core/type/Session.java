@@ -255,6 +255,7 @@ public class Session extends StorableObject {
      *
      * @see #ACTIVE_MILLIS
      */
+    @Override
     protected boolean isActive() {
         long now = System.currentTimeMillis();
         long lastActive = accessTime().getTime() + ACTIVE_MILLIS;
@@ -268,6 +269,7 @@ public class Session extends StorableObject {
      * @return true if the object has been modified, or
      *         false otherwise
      */
+    @Override
     protected boolean isModified() {
         return modified;
     }
@@ -278,6 +280,7 @@ public class Session extends StorableObject {
      * when the session instance is removed from in-memory storage
      * (the object cache).
      */
+    @Override
     protected void destroy() {
         removeAllFiles();
     }
@@ -285,6 +288,7 @@ public class Session extends StorableObject {
     /**
      * Discards the modified flag for this object.
      */
+    @Override
     protected void passivate() {
         created = false;
         modified = false;
@@ -553,6 +557,7 @@ public class Session extends StorableObject {
      *
      * @return the serialized representation of this object
      */
+    @Override
     public Dict serialize() {
         Dict copy = super.serialize();
         copy.set(PREFIX_COMPUTED + "expired", isExpired());

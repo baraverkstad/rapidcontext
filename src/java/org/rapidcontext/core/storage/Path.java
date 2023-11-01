@@ -152,6 +152,7 @@ public class Path {
      *
      * @return a string representation of this object
      */
+    @Override
     public String toString() {
         return "/" + toIdent(0);
     }
@@ -187,6 +188,7 @@ public class Path {
      * @return true if the two paths are equal, or
      *         false otherwise
      */
+    @Override
     public boolean equals(Object obj) {
         Path path = (obj instanceof Path) ? (Path) obj : null;
         return path != null &&
@@ -201,6 +203,7 @@ public class Path {
      *
      * @return a hash code for this object
      */
+    @Override
     public int hashCode() {
         int code = (this.parent == null) ? 0 : this.parent.hashCode();
         return code + this.name.toLowerCase().hashCode();

@@ -94,6 +94,7 @@ public class MemoryStorage extends Storage {
      * Destroys this storage. Note that the objects in the storage
      * will NOT be destroyed by this method.
      */
+    @Override
     public synchronized void destroy() {
         objects.clear();
         meta.clear();
@@ -111,6 +112,7 @@ public class MemoryStorage extends Storage {
      * @return the metadata for the object, or
      *         null if not found
      */
+    @Override
     public synchronized Metadata lookup(Path path) {
         if (storageInfo && PATH_STORAGEINFO.equals(path)) {
             Metadata m = new Metadata(Dict.class, PATH_STORAGEINFO, path());
@@ -130,6 +132,7 @@ public class MemoryStorage extends Storage {
      * @return the data read, or
      *         null if not found
      */
+    @Override
     public synchronized Object load(Path path) {
         if (storageInfo && PATH_STORAGEINFO.equals(path)) {
             return serialize();
@@ -149,6 +152,7 @@ public class MemoryStorage extends Storage {
      *
      * @throws StorageException if the data couldn't be written
      */
+    @Override
     public synchronized void store(Path path, Object data) throws StorageException {
         if (path.isIndex()) {
             String msg = "cannot write to index " + path;
@@ -189,6 +193,7 @@ public class MemoryStorage extends Storage {
      *
      * @throws StorageException if the data couldn't be removed
      */
+    @Override
     public synchronized void remove(Path path) throws StorageException {
         if (!isReadWrite()) {
             String msg = "cannot remove from read-only storage at " + path();
@@ -285,6 +290,7 @@ public class MemoryStorage extends Storage {
      *
      * @return the serialized representation of this object
      */
+    @Override
     public Dict serialize() {
         Dict copy = super.serialize();
         copy.set(PREFIX_COMPUTED + "objectCount", objects.size());

@@ -95,6 +95,7 @@ public class Array implements Iterable<Object> {
      * @return true if the two arrays are equal, or
      *         false otherwise
      */
+    @Override
     public boolean equals(final Object obj) {
         return (obj instanceof Array) && Objects.equals(this.list, ((Array) obj).list);
     }
@@ -104,6 +105,7 @@ public class Array implements Iterable<Object> {
      *
      * @return a hash code for this object
      */
+    @Override
     public int hashCode() {
         return Objects.hashCode(this.list);
     }
@@ -113,6 +115,7 @@ public class Array implements Iterable<Object> {
      *
      * @return a string representation of this object
      */
+    @Override
     public String toString() {
         StringBuilder buffer = new StringBuilder();
         buffer.append("[");

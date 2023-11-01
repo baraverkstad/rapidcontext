@@ -157,6 +157,7 @@ public class Dict {
      * @return true if the two dictionaries are equal, or
      *         false otherwise
      */
+    @Override
     public boolean equals(final Object obj) {
         return (obj instanceof Dict) && Objects.equals(this.map, ((Dict) obj).map);
     }
@@ -166,6 +167,7 @@ public class Dict {
      *
      * @return a hash code for this object
      */
+    @Override
     public int hashCode() {
         return Objects.hashCode(this.map);
     }
@@ -175,6 +177,7 @@ public class Dict {
      *
      * @return a string representation of this object
      */
+    @Override
     public String toString() {
         StringBuilder buffer = new StringBuilder();
         buffer.append("{");

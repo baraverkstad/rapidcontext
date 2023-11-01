@@ -90,6 +90,7 @@ class JsErrorHandler implements ErrorReporter {
      * @param src            the source file line text (or null)
      * @param col            the source file line offset
      */
+    @Override
     public void error(String msg, String file, int line, String src, int col) {
         errors.add(format(msg, file, line, src, col));
     }
@@ -104,6 +105,7 @@ class JsErrorHandler implements ErrorReporter {
      * @param src            the source file line text (or null)
      * @param col            the source file line offset
      */
+    @Override
     public void warning(String msg, String file, int line, String src, int col) {
         warnings.add(format(msg, file, line, src, col));
     }
@@ -121,6 +123,7 @@ class JsErrorHandler implements ErrorReporter {
      *
      * @return a new run-time evaluator exception
      */
+    @Override
     public EvaluatorException runtimeError(String msg,
                                            String file,
                                            int line,

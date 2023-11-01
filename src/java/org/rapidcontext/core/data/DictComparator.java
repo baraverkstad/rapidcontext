@@ -53,6 +53,7 @@ public class DictComparator implements Comparator<Object> {
      *
      * @throws ClassCastException if the values were not comparable
      */
+    @Override
     public int compare(Object o1, Object o2) throws ClassCastException {
         Dict d1 = (Dict) o1;
         Dict d2 = (Dict) o2;
