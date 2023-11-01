@@ -19,8 +19,6 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Properties;
 
 import javax.swing.ImageIcon;
@@ -116,13 +114,11 @@ public final class AboutDialog extends JDialog {
         label.setFont(label.getFont().deriveFont(Font.BOLD));
         getContentPane().add(label, c);
         link = new HyperLink("BSD License");
-        link.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                try {
-                    AppUtils.openURL("https://www.rapidcontext.com/doc/LICENSE.md");
-                } catch (Exception e) {
-                    parent.error(e.getMessage());
-                }
+        link.addActionListener(evt -> {
+            try {
+                AppUtils.openURL("https://www.rapidcontext.com/doc/LICENSE.md");
+            } catch (Exception e) {
+                parent.error(e.getMessage());
             }
         });
         c = new GridBagConstraints();
@@ -159,13 +155,11 @@ public final class AboutDialog extends JDialog {
         c.insets = new Insets(10, 15, 0, 15);
         getContentPane().add(label, c);
         link = new HyperLink("https://www.rapidcontext.com/");
-        link.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                try {
-                    AppUtils.openURL("https://www.rapidcontext.com/");
-                } catch (Exception e) {
-                    parent.error(e.getMessage());
-                }
+        link.addActionListener(evt -> {
+            try {
+                AppUtils.openURL("https://www.rapidcontext.com/");
+            } catch (Exception e) {
+                parent.error(e.getMessage());
             }
         });
         c = new GridBagConstraints();
@@ -178,11 +172,7 @@ public final class AboutDialog extends JDialog {
 
         // Add close button
         button = new JButton("Close");
-        button.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-            }
-        });
+        button.addActionListener(evt -> dispose());
         c = new GridBagConstraints();
         c.gridx = 1;
         c.gridy = 7;

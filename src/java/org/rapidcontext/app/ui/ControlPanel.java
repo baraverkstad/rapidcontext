@@ -25,8 +25,6 @@ import java.awt.MenuBar;
 import java.awt.MenuItem;
 import java.awt.MenuShortcut;
 import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.net.InetAddress;
 import java.util.Properties;
@@ -148,13 +146,11 @@ public final class ControlPanel extends JFrame {
         c.anchor = GridBagConstraints.WEST;
         getContentPane().add(new JLabel("Server URL:"), c);
         serverLink.setText("http://localhost:" + server.port + "/");
-        serverLink.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                try {
-                    AppUtils.openURL(serverLink.getText());
-                } catch (Exception e) {
-                    error(e.getMessage());
-                }
+        serverLink.addActionListener(evt -> {
+            try {
+                AppUtils.openURL(serverLink.getText());
+            } catch (Exception e) {
+                error(e.getMessage());
             }
         });
         c = new GridBagConstraints();
@@ -209,11 +205,7 @@ public final class ControlPanel extends JFrame {
         getContentPane().add(new JLabel(str), c);
 
         // Add buttons
-        startButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                start();
-            }
-        });
+        startButton.addActionListener(evt -> start());
         c = new GridBagConstraints();
         c.gridx = 1;
         c.gridy = 4;
@@ -221,11 +213,7 @@ public final class ControlPanel extends JFrame {
         c.insets = new Insets(0, 10, 10, 10);
         c.anchor = GridBagConstraints.SOUTH;
         getContentPane().add(startButton, c);
-        stopButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                stop();
-            }
-        });
+        stopButton.addActionListener(evt -> stop());
         c = new GridBagConstraints();
         c.gridx = 2;
         c.gridy = 4;
@@ -254,20 +242,12 @@ public final class ControlPanel extends JFrame {
         if (!SystemUtils.IS_OS_MAC_OSX) {
             menu = new Menu("File");
             item = new MenuItem("Exit", new MenuShortcut(KeyEvent.VK_Q));
-            item.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    quit();
-                }
-            });
+            item.addActionListener(evt -> quit());
             menu.add(item);
             menuBar.add(menu);
             menu = new Menu("Help");
             item = new MenuItem("About");
-            item.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    about();
-                }
-            });
+            item.addActionListener(evt -> about());
             menu.add(item);
             menuBar.add(menu);
         }
@@ -275,11 +255,7 @@ public final class ControlPanel extends JFrame {
         // Fix Mac OS specific menus
         if (SystemUtils.IS_OS_MAC_OSX) {
             try {
-                MacApplication.get().setAboutHandler(new ActionListener() {
-                    public void actionPerformed(ActionEvent evt) {
-                        about();
-                    }
-                });
+                MacApplication.get().setAboutHandler(evt -> about());
                 MacApplication.get().setPreferencesHandler(null);
             } catch (Exception ignore) {
                 // Errors are ignored

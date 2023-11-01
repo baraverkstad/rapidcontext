@@ -159,7 +159,7 @@ public class ApplicationContext {
      * The thread call context map.
      */
     private Map<Thread, CallContext> threadContext =
-        Collections.synchronizedMap(new HashMap<Thread, CallContext>());
+        Collections.synchronizedMap(new HashMap<>());
 
     /**
      * Creates and initializes the application context. If the start
