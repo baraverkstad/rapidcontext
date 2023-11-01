@@ -97,30 +97,6 @@ public class DefaultInterceptor extends Interceptor {
     public Object call(CallContext cx, Procedure proc, Bindings bindings)
         throws ProcedureException {
 
-        if (cx.isTracing()) {
-            return traceCall(cx, proc, bindings);
-        } else {
-            return proc.call(cx, bindings);
-        }
-    }
-
-    /**
-     * Calls a procedure with the specified bindings while logging
-     * both call parameters and response data.
-     *
-     * @param cx             the procedure context
-     * @param proc           the procedure definition
-     * @param bindings       the procedure bindings
-     *
-     * @return the result of the call, or
-     *         null if the call produced no result
-     *
-     * @throws ProcedureException if the call execution caused an
-     *             error
-     */
-    private Object traceCall(CallContext cx, Procedure proc, Bindings bindings)
-        throws ProcedureException {
-
         try {
             cx.logCall(proc.getName(), bindings);
             Object obj = proc.call(cx, bindings);
