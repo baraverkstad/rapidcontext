@@ -137,6 +137,7 @@ public class HttpRequestProcedure extends HttpProcedure {
         String headers = getHeaders(bindings);
         String data = bindings.getValue(BINDING_DATA).toString();
         HttpURLConnection con = setup(url, data.length() > 0);
+        long startTime = System.currentTimeMillis();
         try {
             if (channel != null) {
                 setRequestHeaders(con, channel.getHeaders());
@@ -160,12 +161,12 @@ public class HttpRequestProcedure extends HttpProcedure {
             send(cx, con, data);
             Object res = receive(cx, con, metadata, jsonData, jsonError);
             if (channel != null) {
-                channel.report(true, null);
+                channel.report(startTime, true, null);
             }
             return res;
         } catch (ProcedureException e) {
             if (channel != null) {
-                channel.report(false, e.getMessage());
+                channel.report(startTime, false, e.getMessage());
             }
             throw e;
         } finally {

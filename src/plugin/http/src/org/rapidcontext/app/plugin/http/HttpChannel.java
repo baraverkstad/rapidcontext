@@ -112,8 +112,10 @@ public class HttpChannel extends Channel {
                 } finally {
                     con.disconnect();
                 }
+                report(0, true, null);
             } catch (Exception e) {
                 LOG.log(Level.WARNING, "validation failure", e);
+                report(0, false, e.toString());
                 invalidate();
             }
         }
