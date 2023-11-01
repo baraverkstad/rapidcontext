@@ -52,6 +52,7 @@ public class StatusWebService extends WebService {
      *
      * @see #methods(Request)
      */
+    @Override
     protected String[] methodsImpl(Request request) {
         return METHODS_GET;
     }
@@ -61,6 +62,7 @@ public class StatusWebService extends WebService {
      *
      * @param request        the request to process
      */
+    @Override
     protected void doGet(Request request) {
         Dict res = StatusProcedure.getStatusData();
         request.sendText(Mime.JSON[0], JsonSerializer.serialize(res, true));

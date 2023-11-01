@@ -72,6 +72,7 @@ public class ThreadCreateProcedure extends Procedure {
      * @throws ProcedureException if the call execution caused an
      *             error
      */
+    @Override
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
@@ -142,6 +143,7 @@ public class ThreadCreateProcedure extends Procedure {
         /**
          * Executes the procedure in the current application context.
          */
+        @Override
         public void run() {
             SecurityContext.auth(userName);
             try {

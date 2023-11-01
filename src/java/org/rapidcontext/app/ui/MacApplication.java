@@ -225,6 +225,7 @@ public class MacApplication {
          *
          * @throws Exception if an error occurred
          */
+        @Override
         public Object invoke(Object p, Method m, Object[] args) throws Exception {
             if (methodName == null || m.getName().equals(methodName)) {
                 listener.actionPerformed(new ActionEvent(source,

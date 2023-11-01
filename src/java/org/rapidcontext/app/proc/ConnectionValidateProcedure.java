@@ -57,8 +57,9 @@ public class ConnectionValidateProcedure extends Procedure {
      * @throws ProcedureException if the call execution caused an
      *             error
      */
+    @Override
     public Object call(CallContext cx, Bindings bindings)
-    throws ProcedureException {
+        throws ProcedureException {
 
         String id = (String) bindings.getValue("connection");
         Channel channel = cx.connectionReserve(id, cx.readPermission(1));

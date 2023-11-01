@@ -58,8 +58,10 @@ public class TypeListProcedure extends Procedure {
      * @throws ProcedureException if the call execution caused an
      *             error
      */
+    @Override
     public Object call(CallContext cx, Bindings bindings)
-    throws ProcedureException {
+        throws ProcedureException {
+
         Array res = new Array();
         Type.all(cx.getStorage())
             .forEach(t -> res.add(StorableObject.sterilize(t, true, true, true)));

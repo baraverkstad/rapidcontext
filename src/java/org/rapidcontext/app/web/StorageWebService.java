@@ -98,6 +98,7 @@ public class StorageWebService extends WebService {
      *
      * @see #methods(Request)
      */
+    @Override
     protected String[] methodsImpl(Request request) {
         return METHODS;
     }
@@ -107,6 +108,7 @@ public class StorageWebService extends WebService {
      *
      * @param request        the request to process
      */
+    @Override
     protected void doOptions(Request request) {
         request.setResponseHeader(HEADER.ACCEPT_PATCH, Mime.JSON[0]);
         super.doOptions(request);
@@ -117,6 +119,7 @@ public class StorageWebService extends WebService {
      *
      * @param request        the request to process
      */
+    @Override
     protected void doGet(Request request) {
         // TODO: Change to read-access here once a solution has been devised
         //       to disable search queries for certain paths and/or users.
@@ -171,6 +174,7 @@ public class StorageWebService extends WebService {
      *
      * @param request        the request to process
      */
+    @Override
     protected void doPatch(Request request) {
         Path path = Path.from(request.getPath());
         String str = request.getHeader("X-Move-To");
@@ -213,6 +217,7 @@ public class StorageWebService extends WebService {
      *
      * @param request        the request to process
      */
+    @Override
     protected void doPost(Request request) {
         Path path = Path.from(request.getPath());
         if (!SecurityContext.hasWriteAccess(path.toString())) {
@@ -244,6 +249,7 @@ public class StorageWebService extends WebService {
      *
      * @param request        the request to process
      */
+    @Override
     protected void doPut(Request request) {
         Path path = Path.from(request.getPath());
         if (!SecurityContext.hasWriteAccess(path.toString())) {
@@ -274,6 +280,7 @@ public class StorageWebService extends WebService {
      *
      * @param request        the request to process
      */
+    @Override
     protected void doDelete(Request request) {
         Storage storage = ApplicationContext.getInstance().getStorage();
         Path path = Path.from(request.getPath());

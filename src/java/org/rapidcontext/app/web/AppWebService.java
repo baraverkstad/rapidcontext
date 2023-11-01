@@ -251,6 +251,7 @@ public class AppWebService extends FileWebService {
      *
      * @see #methods(Request)
      */
+    @Override
     protected String[] methodsImpl(Request request) {
         if (request.matchPath("rapidcontext/log")) {
             return logger.methodsImpl(request);
@@ -275,6 +276,7 @@ public class AppWebService extends FileWebService {
      *
      * @param request the request to process
      */
+    @Override
     public void process(Request request) {
         if (request.matchPath("rapidcontext/log")) {
             logger.process(request);
@@ -294,6 +296,7 @@ public class AppWebService extends FileWebService {
      *
      * @param request        the request to process
      */
+    @Override
     protected void doGet(Request request) {
         String baseUrl = StringUtils.removeEnd(request.getUrl(), request.getPath());
         if (request.getPath().startsWith("rapidcontext/files@")) {
@@ -319,6 +322,7 @@ public class AppWebService extends FileWebService {
      *
      * @param request        the request to process
      */
+    @Override
     protected void doPost(Request request) {
         if (request.matchPath("rapidcontext/download")) {
             processDownload(request);

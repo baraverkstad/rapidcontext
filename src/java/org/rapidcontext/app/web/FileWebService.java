@@ -59,6 +59,7 @@ public class FileWebService extends WebService {
      *
      * @return the base storage path
      */
+    @Override
     public Path path() {
         Object obj = dict.get(KEY_PATH);
         if (obj == null) {
@@ -81,6 +82,7 @@ public class FileWebService extends WebService {
      *
      * @see #methods(Request)
      */
+    @Override
     protected String[] methodsImpl(Request request) {
         return METHODS_GET;
     }
@@ -90,6 +92,7 @@ public class FileWebService extends WebService {
      *
      * @param request        the request to process
      */
+    @Override
     protected void doGet(Request request) {
         processFile(request, Path.resolve(path(), request.getPath()), false);
     }

@@ -73,6 +73,7 @@ public class ServletApplication extends HttpServlet {
      *
      * @throws ServletException if the initialization failed
      */
+    @Override
     public void init() throws ServletException {
         super.init();
         Mime.context = getServletContext();
@@ -94,6 +95,7 @@ public class ServletApplication extends HttpServlet {
     /**
      * Uninitializes this servlet.
      */
+    @Override
     public void destroy() {
         ApplicationContext.destroy();
         super.destroy();
@@ -109,6 +111,7 @@ public class ServletApplication extends HttpServlet {
      *             the request
      * @throws IOException if an IO error occurred when processing the request
      */
+    @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp)
     throws ServletException, IOException {
 

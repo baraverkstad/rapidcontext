@@ -67,6 +67,7 @@ public class LogWebService extends WebService {
      *
      * @see #methods(Request)
      */
+    @Override
     protected String[] methodsImpl(Request request) {
         return METHODS_GET_POST;
     }
@@ -76,6 +77,7 @@ public class LogWebService extends WebService {
      *
      * @param request        the request to process
      */
+    @Override
     protected void doGet(Request request) {
         doLog(request);
     }
@@ -85,6 +87,7 @@ public class LogWebService extends WebService {
      *
      * @param request        the request to process
      */
+    @Override
     protected void doPost(Request request) {
         doLog(request);
     }

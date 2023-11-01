@@ -68,6 +68,7 @@ public class AppStorage extends RootStorage {
      *
      * @return the metadata for the object, or null if not found
      */
+    @Override
     public Metadata lookup(Path path) {
         return isAccessible(path) ? super.lookup(redirect(path)) : null;
     }
@@ -83,6 +84,7 @@ public class AppStorage extends RootStorage {
      * @return the data read, or
      *         null if not found
      */
+    @Override
     public Object load(Path path) {
         return isAccessible(path) ? super.load(redirect(path)) : null;
     }

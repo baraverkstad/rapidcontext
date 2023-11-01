@@ -60,8 +60,9 @@ public class ConnectionListProcedure extends Procedure {
      * @throws ProcedureException if the call execution caused an
      *             error
      */
+    @Override
     public Object call(CallContext cx, Bindings bindings)
-    throws ProcedureException {
+        throws ProcedureException {
 
         CallContext.checkSearchAccess(Connection.PATH.toString());
         Array res = new Array();
