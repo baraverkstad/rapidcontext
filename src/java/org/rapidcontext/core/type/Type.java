@@ -113,48 +113,70 @@ public class Type extends StorableObject {
     }
 
     /**
-     * Returns a constructor for creating a Java object instance. If
-     * no object type or initializer was found, or if an error
-     * occurred, null is returned. This method will lookup the
-     * corresponding type in the storage dynamically.
+     * Returns the initializer class for creating a Java object. If
+     * no object type, initializer or className property was found,
+     * null is returned. This method will lookup the corresponding
+     * type in storage before checking for a 'className' property in
+     * the object dictionary data.
      *
      * @param storage        the storage to use for type lookups
-     * @param dict           the dictionary data
+     * @param dict           the object dictionary data
+     *
+     * @return the Java object class, or
+     *         null if not found
+     */
+    public static Class<?> classFor(Storage storage, Dict dict) {
+        String typeId = dict.get(KEY_TYPE, String.class);
+        if (typeId == null) {
+            return null;
+        } else if (typeId.equals("type")) {
+            return Type.class;
+        }
+        Type type = find(storage, typeId);
+        if (type == null || type.remote()) {
+            return null;
+        }
+        String className = dict.get(KEY_CLASSNAME, String.class);
+        if (className == null) {
+            return type.initializer();
+        } else {
+            return loadClass(className, typeId + " " + dict.get(KEY_ID));
+        }
+    }
+
+    /**
+     * Returns the constructor for creating a Java object. If no Java
+     * class was found or the constructor signature isn't correct,
+     * null is returned.
+     *
+     * @param storage        the storage to use for type lookups
+     * @param dict           the object dictionary data
      *
      * @return the Java object constructor, or
      *         null if not found
+     *
+     * @see #classFor(Storage, Dict)
      */
-    public static Constructor<?> constructor(Storage storage, Dict dict) {
-        String typeId = dict.get(KEY_TYPE, String.class);
-        String className = dict.get(KEY_CLASSNAME, String.class);
-        Class<?> cls = null;
-        if (typeId != null && typeId.equals("type")) {
-            cls = Type.class;
-        } else if (typeId != null) {
-            Type type = find(storage, typeId);
-            boolean instantiable = type != null && !type.remote();
-            if (instantiable && className != null) {
-                cls = loadClass(className, typeId + " " + dict.get(KEY_ID));
-            } else if (instantiable) {
-                cls = type.initializer();
-            }
+    public static Constructor<?> constructorFor(Storage storage, Dict dict) {
+        Class<?> cls = classFor(storage, dict);
+        if (cls == null) {
+            return null;
         }
-        if (cls != null) {
+        try {
+            return cls.getConstructor(CONSTRUCTOR_ARGS);
+        } catch (Exception e) {
+            String typeId = dict.get(KEY_TYPE, String.class);
             try {
-                return cls.getConstructor(CONSTRUCTOR_ARGS);
-            } catch (Exception e) {
-                try {
-                    Constructor<?> ctor = cls.getConstructor(new Class<?>[] { Dict.class });
-                    LOG.warning("deprecated: " + typeId + " initializer missing " +
-                                cls.getName() + "(String, String, Dict) constructor");
-                    return ctor;
-                } catch (Exception ex) {
-                    LOG.warning("invalid " + typeId + "initializer: missing " +
-                                cls.getName() + "(String, String, Dict) constructor");
-                }
+                Constructor<?> ctor = cls.getConstructor(new Class<?>[] { Dict.class });
+                LOG.warning("deprecated: " + typeId + " initializer missing " +
+                            cls.getName() + "(String, String, Dict) constructor");
+                return ctor;
+            } catch (Exception ex) {
+                LOG.warning("invalid " + typeId + "initializer: missing " +
+                            cls.getName() + "(String, String, Dict) constructor");
+                return null;
             }
         }
-        return null;
     }
 
     /**

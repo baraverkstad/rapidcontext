@@ -504,7 +504,7 @@ public class RootStorage extends MemoryStorage {
         copy.set(KEY_ID, id);
         copy.set(KEY_TYPE, type);
         copy.setAll(dict);
-        Constructor<?> ctor = Type.constructor(this, copy);
+        Constructor<?> ctor = Type.constructorFor(this, copy);
         if (ctor != null) {
             // TODO: Remove support for legacy object initializers eventually...
             boolean isLegacy = ctor.getParameterCount() == 1;
