@@ -8,3 +8,6 @@ object:
 array:
   - item 1
   - item 2
+empty:
+    obj: {}
+    arr: []

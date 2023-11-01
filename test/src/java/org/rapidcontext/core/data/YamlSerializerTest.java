@@ -62,6 +62,7 @@ public class YamlSerializerTest {
         root.set("d", new Date(0));
         root.set("object", new Dict().set("key", "value"));
         root.set("array", new Array().add("item 1").add("item 2"));
+        root.set("empty", new Dict().add("obj", new Dict()).add("arr", new Array()));
         return root;
     }
 }

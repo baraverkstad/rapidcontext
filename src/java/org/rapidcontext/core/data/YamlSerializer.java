@@ -138,13 +138,8 @@ public class YamlSerializer {
         LinkedHashMap<String,Object> map = new LinkedHashMap<>();
         for (String k : dict.keys()) {
             Object v = dict.get(k);
-            boolean isEmpty = (
-                v == null ||
-                (v instanceof Dict && ((Dict) v).size() == 0) ||
-                (v instanceof Array && ((Array) v).size() == 0)
-            );
-            if (!isEmpty) {
-                map.put(k, toYaml(dict.get(k)));
+            if (v != null) {
+                map.put(k, toYaml(v));
             }
         }
         return map;
