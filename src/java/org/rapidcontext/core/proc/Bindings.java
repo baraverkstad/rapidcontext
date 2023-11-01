@@ -143,7 +143,7 @@ public class Bindings {
      * @return an array with all binding names
      */
     public String[] getNames() {
-        LinkedHashSet<String> set = getNames(new LinkedHashSet<String>());
+        LinkedHashSet<String> set = getNames(new LinkedHashSet<>());
         String[] res = new String[set.size()];
         return set.toArray(res);
     }
