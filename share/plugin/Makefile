@@ -46,7 +46,7 @@ compile-java:
 	mkdir -p classes lib
 	javac -d "classes" -classpath "$(CLASSPATH)" --release 11 \
 		-g -deprecation \
-		-Xlint:all,-missing-explicit-ctor,-path,-serial \
+		-Xlint:all,-path,-serial \
 		-Xdoclint:all,-missing \
 		$(SRC)
 	jar -cf lib/$(ID)-$(VER).jar -C classes/ .

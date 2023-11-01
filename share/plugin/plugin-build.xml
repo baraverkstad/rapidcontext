@@ -75,7 +75,7 @@
            debug="on"
            deprecation="on"
            includeantruntime="off">
-      <compilerarg value="-Xlint:all,-missing-explicit-ctor,-path,-serial"/>
+      <compilerarg value="-Xlint:all,-path,-serial"/>
       <compilerarg value="-Xdoclint:all,-missing"/>
     </javac>
     <mkdir dir="lib" />

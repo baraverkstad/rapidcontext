@@ -48,7 +48,7 @@ build-java:
 	javac -d "classes" -classpath "lib/*" --release 11 \
 		-sourcepath "src/java" \
 		-g -deprecation \
-		-Xlint:all,-missing-explicit-ctor,-path,-serial \
+		-Xlint:all,-path,-serial \
 		-Xdoclint:all,-missing \
 		$(shell find src/java -name '*.java')
 	cp src/plugin/system/files/images/logotype*.png classes/org/rapidcontext/app/ui/
@@ -126,7 +126,7 @@ test-java:
 	javac -d "test/classes" -classpath "lib/*:test/lib/*" --release 11 \
 		-sourcepath "test/src/java" \
 		-g -deprecation \
-		-Xlint:all,-missing-explicit-ctor,-path,-serial \
+		-Xlint:all,-path,-serial \
 		-Xdoclint:all,-missing \
 		$(shell find test/src/java -name '*.java')
 	find test/classes -name "*Test*.class" | \
