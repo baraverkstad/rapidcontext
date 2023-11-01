@@ -100,13 +100,16 @@ public class DefaultInterceptor extends Interceptor {
     public Object call(CallContext cx, Procedure proc, Bindings bindings)
         throws ProcedureException {
 
+        long start = System.currentTimeMillis();
         try {
             cx.logCall(proc.getName(), bindings);
             Object obj = proc.call(cx, bindings);
             cx.logResponse(obj);
+            cx.getLibrary().report(proc, start, true, null);
             return obj;
         } catch (ProcedureException e) {
             cx.logError(e);
+            cx.getLibrary().report(proc, start, false, e.toString());
             throw e;
         }
     }

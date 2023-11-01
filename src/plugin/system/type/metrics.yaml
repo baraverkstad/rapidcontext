@@ -1,0 +1,20 @@
+id: metrics
+type: type
+alias: metrics/usage
+experimental: >-
+    This object type is not finalized and might be modified or removed without
+    notice.
+description: >-
+    A metrics set for tracking resource usage. A combined set of usage metrics
+    are tracked for each key (i.e. object identifier), including usage per
+    hour, day and week. In addition, it is also possible to track recent
+    errors and a rolling duration (e.g. execution time) for each key.
+
+    [EXPERIMENTAL] This object type is not finalized and might be modified or
+    removed without notice.
+initializer: org.rapidcontext.core.type.Metrics
+property:
+  - name: data
+    description: >-
+        The metrics data set, indexed by a key (typically an object identifier).
+    required: true

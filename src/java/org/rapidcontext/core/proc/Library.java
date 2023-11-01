@@ -23,6 +23,7 @@ import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.storage.StorageException;
+import org.rapidcontext.core.type.Metrics;
 import org.rapidcontext.core.type.Type;
 
 /**
@@ -95,6 +96,11 @@ public class Library {
      * The procedure call interceptor.
      */
     private Interceptor interceptor = new DefaultInterceptor();
+
+    /**
+     * The procedure call metrics.
+     */
+    private Metrics metrics = null;
 
     /**
      * Registers a procedure type name. All add-on procedures should
@@ -490,5 +496,29 @@ public class Library {
         } else {
             traces.remove(name);
         }
+    }
+
+    /**
+     * Reports procedure usage metrics for a single call.
+     *
+     * @param proc           the procedure executed
+     * @param start          the start time (in millis)
+     * @param success        the success flag
+     * @param error          the optional error message
+     */
+    public void report(Procedure proc, long start, boolean success, String error) {
+        if (metrics == null) {
+            synchronized (this) {
+                try {
+                    metrics = Metrics.findOrCreate(storage, "procedure");
+                } catch (StorageException e) {
+                    LOG.warning("failed to initialize procedure usage metrics: " + e);
+                    return;
+                }
+            }
+        }
+        long now = System.currentTimeMillis();
+        int duration = (int) (System.currentTimeMillis() - start);
+        metrics.report(proc.getName(), now, 1, duration, success, error);
     }
 }
