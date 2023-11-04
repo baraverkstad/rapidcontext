@@ -86,35 +86,37 @@ RapidContext.Widget._toCssClass = function (val) {
 /**
  * Adds all functions from a widget class to a DOM node. This will also convert
  * the DOM node into a widget by adding the "widget" CSS class and all the
- * default widget functions from `Widget.prototype`.
+ * default widget functions from `Widget.prototype` (if not already done).
  *
  * The default widget functions are added non-destructively, using the prefix
  * "__" if also defined in the widget class.
  *
  * @param {Node} node the DOM node to modify
- * @param {...(Object|function)} cls the widget class or constructor
+ * @param {...(Object|function)} mixins the prototypes or classes to mixin
  *
  * @return {Widget} the widget DOM node
  */
-RapidContext.Widget._widgetMixin = function (node/*, objOrClass, ...*/) {
-    node.classList.add("widget");
-    var protos = Array.from(arguments).slice(1);
-    protos.push(RapidContext.Widget);
-    while (protos.length > 0) {
-        var obj = protos.pop();
-        if (typeof(obj) === "function") {
-            obj = obj.prototype;
+RapidContext.Widget._widgetMixin = function (node, ...mixins) {
+    if (!RapidContext.Widget.isWidget(node)) {
+        node.classList.add("widget");
+        mixins.push(RapidContext.Widget);
+    }
+    while (mixins.length > 0) {
+        let proto = mixins.pop();
+        if (typeof(proto) === "function") {
+            proto = proto.prototype;
         }
-        for (var key in obj) {
-            var prevKey = "__" + key;
-            if (key in node) {
-                node[prevKey] = node[key];
-            }
-            try {
-                node[key] = obj[key];
-            } catch (e) {
-                var msg = "failed to overwrite '" + key + "' in DOM node";
-                console.warn(msg, e, node);
+        for (let k of Object.getOwnPropertyNames(proto)) {
+            if (k !== "constructor") {
+                try {
+                    if (k in node) {
+                        node["__" + k] = node[k];
+                    }
+                    let desc = Object.getOwnPropertyDescriptor(proto, k);
+                    Object.defineProperty(node, k, desc);
+                } catch (e) {
+                    console.warn(`failed to set "${k}" in DOM node`, e, node);
+                }
             }
         }
     }

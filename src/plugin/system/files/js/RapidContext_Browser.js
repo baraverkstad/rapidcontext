@@ -67,6 +67,8 @@
         "Object.create",
         "Object.defineProperty",
         "Object.entries",
+        "Object.getOwnPropertyDescriptor",
+        "Object.getOwnPropertyNames",
         "Object.getPrototypeOf",
         "Object.is",
         "Object.keys",
