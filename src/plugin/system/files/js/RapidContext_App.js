@@ -190,7 +190,7 @@ RapidContext.App.startApp = function (app, container) {
             return RapidContext.App.loadScript(res.url);
         } else if (res.type == "module") {
             return import(new URL(res.url, document.baseURI)).then(function (mod) {
-                launcher.creator = mod["default"] || mod["create"];
+                launcher.creator = launcher.creator || mod["default"] || mod["create"];
             });
         } else if (res.type == "style") {
             return RapidContext.App.loadStyles(res.url);
