@@ -248,7 +248,7 @@ RapidContext.Widget.TableColumn.prototype._render = function (obj) {
             td.append(e.toString());
         }
     } else if (typeof(value) == "boolean") {
-        var css = value ? "fa fa-check-square-o" : "fa fa-square-o";
+        var css = value ? "fa fa-check-square" : "fa fa-square-o";
         td.append(RapidContext.Widget.Icon(css));
     } else {
         if (value == null || (typeof(value) == "number" && isNaN(value))) {

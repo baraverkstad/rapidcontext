@@ -190,7 +190,7 @@ Object.assign(RapidContext.Widget.Icon, {
      * The yes icon definition.
      * @memberof RapidContext.Widget.Icon
      */
-    YES: { "class": "fa fa-check-square-o", tooltip: "Yes" },
+    YES: { "class": "fa fa-check-square", tooltip: "Yes" },
     /**
      * The no icon definition.
      * @memberof RapidContext.Widget.Icon
