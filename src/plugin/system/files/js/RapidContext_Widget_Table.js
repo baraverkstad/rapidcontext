@@ -72,8 +72,8 @@ RapidContext.Widget.Table = function (attrs/*, ...*/) {
     o._mouseY = 0;
     o.setAttrs(attrs);
     o.addAll(Array.from(arguments).slice(1));
-    o.addEventListener("mousedown", o._handleMouseDown);
-    o.addEventListener("click", o._handleClick);
+    o.on("mousedown", o._handleMouseDown);
+    o.on("click", o._handleClick);
     return o;
 };
 
@@ -93,15 +93,6 @@ RapidContext.Widget.Classes.Table = RapidContext.Widget.Table;
  * @name RapidContext.Widget.Table#onselect
  * @event
  */
-
-/**
- * Destroys this widget.
- */
-RapidContext.Widget.Table.prototype.destroy = function () {
-    // FIXME: Use AbortSignal instead to disconnect
-    this.removeEventListener("mousedown", this._handleMouseDown);
-    this.removeEventListener("click", this._handleClick);
-};
 
 /**
  * Returns the widget container DOM node.

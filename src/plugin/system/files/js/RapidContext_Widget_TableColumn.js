@@ -76,20 +76,12 @@ RapidContext.Widget.TableColumn = function (attrs) {
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.TableColumn);
     o.addClass("widgetTableColumn");
     o.setAttrs(Object.assign({ title: attrs.field, type: "string", key: false }, attrs));
-    o.addEventListener("click", o._handleClick);
+    o.on("click", o._handleClick);
     return o;
 };
 
 // Register widget class
 RapidContext.Widget.Classes.TableColumn = RapidContext.Widget.TableColumn;
-
-/**
- * Destroys this widget.
- */
-RapidContext.Widget.TableColumn.prototype.destroy = function () {
-    // FIXME: Use AbortSignal instead to disconnect
-    this.removeEventListener("click", this._handleClick);
-};
 
 /**
  * Returns the widget container DOM node.

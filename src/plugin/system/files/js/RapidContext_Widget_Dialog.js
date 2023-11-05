@@ -70,8 +70,8 @@ RapidContext.Widget.Dialog = function (attrs/*, ... */) {
     o._setHidden(true);
     o.setAttrs(Object.assign({ modal: false, system: false, center: true }, attrs));
     o.addAll(Array.from(arguments).slice(1));
-    o.addEventListener("click", o._handleClick);
-    o.addEventListener("mousedown", o._handleMouseDown);
+    o.on("click", "[data-dialog]", o._handleClick);
+    o.on("mousedown", "[data-dialog]", o._handleMouseDown);
     return o;
 };
 
@@ -109,15 +109,6 @@ RapidContext.Widget.Classes.Dialog = RapidContext.Widget.Dialog;
  */
 
 /**
- * Destroys this widget.
- */
-RapidContext.Widget.Dialog.prototype.destroy = function () {
-    // FIXME: Use AbortSignal instead to disconnect
-    this.removeEventListener("click", this._handleClick);
-    this.removeEventListener("mousedown", this._handleMouseDown);
-};
-
-/**
  * Returns the widget container DOM node.
  *
  * @return {Node} the container DOM node
@@ -142,8 +133,7 @@ RapidContext.Widget.Dialog.prototype._styleNode = function () {
  * @param {Event} evt the DOM Event object
  */
 RapidContext.Widget.Dialog.prototype._handleClick = function (evt) {
-    let el = evt.target.closest("[data-dialog]");
-    if (el && el.dataset.dialog == "close") {
+    if (evt.delegateTarget.dataset.dialog == "close") {
         this.hide();
     }
 };
@@ -156,14 +146,13 @@ RapidContext.Widget.Dialog.prototype._handleClick = function (evt) {
  * @param {Event} evt the DOM Event object
  */
 RapidContext.Widget.Dialog.prototype._handleMouseDown = function (evt) {
-    let el = evt.target.closest("[data-dialog]");
-    let action = el && el.dataset.dialog;
+    let action = evt.delegateTarget.dataset.dialog;
     if (action == "move" || action == "resize") {
+        evt.preventDefault();
         var isDim = action == "resize";
         var x = (isDim ? this.offsetWidth : this.offsetLeft) - evt.pageX;
         var y = (isDim ? this.offsetHeight : this.offsetTop) - evt.pageY;
         document._drag = { target: this, action: action, x: x, y: y };
-        evt.preventDefault();
         document.addEventListener("mouseup", this._handleMouseUp);
         document.addEventListener("mousemove", this._handleMouseMove);
     }

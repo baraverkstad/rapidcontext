@@ -57,20 +57,12 @@ RapidContext.Widget.Field = function (attrs) {
     o.setAttrs(Object.assign({ name: "", value: "" }, attrs));
     o.defaultValue = o.value;
     o.defaultMask = !!o.mask;
-    o.addEventListener("click", o._handleClick);
+    o.on("click", o._handleClick);
     return o;
 };
 
 // Register widget class
 RapidContext.Widget.Classes.Field = RapidContext.Widget.Field;
-
-/**
- * Destroys this widget.
- */
-RapidContext.Widget.Field.prototype.destroy = function () {
-    // FIXME: Use AbortSignal instead to disconnect
-    this.removeEventListener("click", this._handleClick);
-};
 
 /**
  * Returns the widget container DOM node.

@@ -63,35 +63,11 @@ RapidContext.Widget.TreeNode = function (attrs/*, ...*/) {
     attrs = Object.assign({ name: "Tree Node", folder: isFolder }, attrs);
     o.setAttrs(attrs);
     o.addAll(Array.from(arguments).slice(1));
-    // FIXME: Consider using a single click handler in parent Tree instead...
-    div.addEventListener("click", o._handleLabelClick);
     return o;
 };
 
 // Register widget class
 RapidContext.Widget.Classes.TreeNode = RapidContext.Widget.TreeNode;
-
-/**
- * Destroys this widget.
- */
-RapidContext.Widget.TreeNode.prototype.destroy = function () {
-    // FIXME: Use AbortSignal instead to disconnect
-    this.firstChild.removeEventListener("click", this._handleLabelClick);
-};
-
-/**
- * Handles label click events.
- *
- * @param {Event} evt the DOM Event object
- */
-RapidContext.Widget.TreeNode.prototype._handleLabelClick = function (evt) {
-    var node = evt.target.closest("div.widgetTreeNode");
-    if (RapidContext.Widget.isWidget(evt.target, "Icon")) {
-        node.toggle();
-    } else {
-        node.select();
-    }
-};
 
 /**
  * Returns and optionally creates the widget container DOM node. If a

@@ -54,6 +54,7 @@ RapidContext.Widget.Tree = function (attrs/*, ...*/) {
     o.selectedPath = null;
     o.setAttrs(attrs);
     o.addAll(Array.from(arguments).slice(1));
+    o.on("click", ".widgetTreeNodeLabel", o._handleNodeLabelClick);
     return o;
 };
 
@@ -89,6 +90,20 @@ RapidContext.Widget.Classes.Tree = RapidContext.Widget.Tree;
  * @name RapidContext.Widget.Tree#onunselect
  * @event
  */
+
+/**
+ * Handles node label click events.
+ *
+ * @param {Event} evt the DOM Event object
+ */
+RapidContext.Widget.Tree.prototype._handleNodeLabelClick = function (evt) {
+    var node = evt.target.closest("div.widgetTreeNode");
+    if (RapidContext.Widget.isWidget(evt.target, "Icon")) {
+        node.toggle();
+    } else {
+        node.select();
+    }
+};
 
 /**
  * Adds a single child tree node widget to this widget.

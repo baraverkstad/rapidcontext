@@ -64,32 +64,29 @@ RapidContext.Widget.Wizard = function (attrs/*, ... */) {
     o._selectedIndex = -1;
     o.append(MochiKit.DOM.H3({ "class": "widgetWizardTitle" }));
     var bCancel = RapidContext.Widget.Button(
-        { icon: "fa fa-lg fa-times", "class": "mr-2" },
+        { icon: "fa fa-lg fa-times", "class": "mr-2", "data-action": "cancel" },
         "Cancel"
     );
     var bPrev = RapidContext.Widget.Button(
-        { icon: "fa fa-lg fa-caret-left", "class": "mr-2" },
+        { icon: "fa fa-lg fa-caret-left", "class": "mr-2", "data-action": "previous" },
         "Previous"
     );
     var bNext = RapidContext.Widget.Button(
-        {},
+        { "data-action": "next" },
         "Next",
         RapidContext.Widget.Icon({ class: "fa fa-lg fa-caret-right" })
     );
     var bDone = RapidContext.Widget.Button(
-        { icon: "fa fa-lg fa-check", highlight: true },
+        { icon: "fa fa-lg fa-check", highlight: true, "data-action": "done" },
         "Finish"
     );
     bCancel.hide();
     var divAttrs = { "class": "widgetWizardButtons" };
     o.append(MochiKit.DOM.DIV(divAttrs, bCancel, bPrev, bNext, bDone));
-    MochiKit.Signal.connect(bCancel, "onclick", o, "cancel");
-    MochiKit.Signal.connect(bPrev, "onclick", o, "previous");
-    MochiKit.Signal.connect(bNext, "onclick", o, "next");
-    MochiKit.Signal.connect(bDone, "onclick", o, "done");
     o._updateStatus();
     o.setAttrs(attrs);
     o.addAll(Array.from(arguments).slice(1));
+    o.on("click", ".widgetWizardButtons [data-action]", o._handleBtnClick);
     return o;
 };
 
@@ -116,6 +113,18 @@ RapidContext.Widget.Classes.Wizard = RapidContext.Widget.Wizard;
  * @name RapidContext.Widget.Wizard#onclose
  * @event
  */
+
+/**
+ * Handles button click events.
+ *
+ * @param {Event} evt the DOM Event object
+ */
+RapidContext.Widget.Wizard.prototype._handleBtnClick = function (evt) {
+    let action = evt.delegateTarget.dataset.action;
+    if (typeof(this[action]) == "function") {
+        this[action]();
+    }
+};
 
 /**
  * Returns an array with all child pane widgets. Note that the array

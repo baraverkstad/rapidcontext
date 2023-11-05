@@ -57,7 +57,7 @@ RapidContext.Widget.TextArea = function (attrs/*, ...*/) {
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.TextArea);
     o.addClass("widgetTextArea");
     o.setAttrs(Object.assign({}, attrs, { value: text }));
-    o.addEventListener("input", o._handleChange);
+    o.on("input", o._handleChange);
     return o;
 };
 
@@ -75,14 +75,6 @@ RapidContext.Widget.Classes.TextArea = RapidContext.Widget.TextArea;
  * @name RapidContext.Widget.TextArea#onchange
  * @event
  */
-
-/**
- * Destroys this widget.
- */
-RapidContext.Widget.TextArea.prototype.destroy = function () {
-    // FIXME: Use AbortSignal instead to disconnect
-    this.removeEventListener("input", this._handleChange);
-};
 
 /**
  * Updates the widget or HTML DOM node attributes.

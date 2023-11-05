@@ -59,9 +59,8 @@ RapidContext.Widget.Popup = function (attrs/*, ...*/) {
     o._delayTimer = null;
     o.setAttrs(Object.assign({ delay: 5000 }, attrs));
     o.addAll(Array.from(arguments).slice(1));
-    MochiKit.Signal.connect(o, "onmousemove", o, "_handleMouseMove");
-    MochiKit.Signal.connect(o, "onclick", o, "_handleMouseClick");
-    MochiKit.Signal.connect(o, "onkeydown", o, "_handleKeyDown");
+    o.on("click mousemove", ".widgetPopup > *", o._handleMouseEvent);
+    o.on("keydown", o._handleKeyDown);
     return o;
 };
 
@@ -236,26 +235,15 @@ RapidContext.Widget.Popup.prototype.selectMove = function (offset) {
 };
 
 /**
- * Handles mouse move events over the popup.
+ * Handles mouse events on the popup.
  *
- * @param {Event} evt the MochiKit.Signal.Event object
+ * @param {Event} evt the DOM Event object
  */
-RapidContext.Widget.Popup.prototype._handleMouseMove = function (evt) {
+RapidContext.Widget.Popup.prototype._handleMouseEvent = function (evt) {
     this.show();
-    var node = evt.target().closest(".widgetPopup > *");
-    this.selectChild(node || -1);
-};
-
-/**
- * Handles mouse click events on the popup.
- *
- * @param {Event} evt the `MochiKit.Signal.Event` object
- */
-RapidContext.Widget.Popup.prototype._handleMouseClick = function (evt) {
-    this.show();
-    var node = evt.target().closest(".widgetPopup > *");
-    if (this.selectChild(node || -1) >= 0) {
-        var detail = { menu: this, item: node };
+    let node = evt.delegateTarget;
+    if (this.selectChild(node) >= 0 && evt.type == "click") {
+        let detail = { menu: this, item: node };
         this.emit("menuselect", { detail });
     }
 };
@@ -263,26 +251,28 @@ RapidContext.Widget.Popup.prototype._handleMouseClick = function (evt) {
 /**
  * Handles the key down event on the popup.
  *
- * @param {Event} evt the `MochiKit.Signal.Event` object
+ * @param {Event} evt the DOM Event object
  */
 RapidContext.Widget.Popup.prototype._handleKeyDown = function (evt) {
     this.show();
-    switch (evt.key().string) {
-    case "KEY_ARROW_UP":
-    case "KEY_ARROW_DOWN":
-        evt.stop();
-        this.selectMove(evt.key().string == "KEY_ARROW_UP" ? -1 : 1);
+    switch (evt.key) {
+    case "ArrowUp":
+    case "ArrowDown":
+        evt.preventDefault();
+        evt.stopImmediatePropagation();
+        this.selectMove(evt.key == "ArrowUp" ? -1 : 1);
         break;
-    case "KEY_ESCAPE":
-        evt.stop();
+    case "Escape":
+        evt.preventDefault();
+        evt.stopImmediatePropagation();
         this.hide();
         break;
-    case "KEY_TAB":
-    case "KEY_ENTER":
-        evt.stop();
-        var node = this.selectedChild();
-        if (node != null) {
-            var detail = { menu: this, item: node };
+    case "Tab":
+    case "Enter":
+        evt.preventDefault();
+        evt.stopImmediatePropagation();
+        if (this.selectedChild()) {
+            let detail = { menu: this, item: this.selectedChild() };
             this.emit("menuselect", { detail });
         }
         break;

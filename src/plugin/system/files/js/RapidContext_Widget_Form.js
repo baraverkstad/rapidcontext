@@ -53,24 +53,14 @@ RapidContext.Widget.Form = function (attrs/*, ...*/) {
     o.addClass("widgetForm");
     o.setAttrs(attrs);
     o.addAll(Array.from(arguments).slice(1));
-    o.addEventListener("input", o._handleInput);
-    o.addEventListener("invalid", o._handleInvalid, { capture: true });
-    o.addEventListener("submit", o._handleSubmit);
+    o.on("input", o._handleInput);
+    o.on("invalid", o._handleInvalid, { capture: true });
+    o.on("submit", o._handleSubmit);
     return o;
 };
 
 // Register widget class
 RapidContext.Widget.Classes.Form = RapidContext.Widget.Form;
-
-/**
- * Destroys this widget.
- */
-RapidContext.Widget.Form.prototype.destroy = function () {
-    // FIXME: Use AbortSignal instead to disconnect
-    this.removeEventListener("input", this._handleInput);
-    this.removeEventListener("invalid", this._handleInvalid, { capture: true });
-    this.removeEventListener("submit", this._handleSubmit);
-};
 
 /**
  * Applies custom validators on field input.

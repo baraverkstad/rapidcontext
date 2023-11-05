@@ -65,7 +65,7 @@ RapidContext.Widget.TabContainer = function (attrs/*, ... */) {
     o._selectedIndex = -1;
     o.setAttrs(attrs);
     o.addAll(Array.from(arguments).slice(1));
-    labels.addEventListener("click", o._handleLabelClick);
+    o.on("click", ".widgetTabContainerLabel", o._handleLabelClick);
     return o;
 };
 
@@ -73,27 +73,18 @@ RapidContext.Widget.TabContainer = function (attrs/*, ... */) {
 RapidContext.Widget.Classes.TabContainer = RapidContext.Widget.TabContainer;
 
 /**
- * Destroys this widget.
- */
-RapidContext.Widget.TabContainer.prototype.destroy = function () {
-    // FIXME: Use AbortSignal instead to disconnect
-    this.firstChild.removeEventListener("click", this._handleLabelClick);
-};
-
-/**
  * Handles tab label click events.
  *
  * @param {Event} evt the DOM Event object
  */
 RapidContext.Widget.TabContainer.prototype._handleLabelClick = function (evt) {
-    let label = evt.target.closest("div.widgetTabContainerLabel");
-    let pos = label ? Array.from(this.children).indexOf(label) : -1;
-    let parent = this.parentNode;
-    let child = parent.getChildNodes()[pos];
+    let label = evt.delegateTarget;
+    let pos = label ? Array.from(label.parentNode.children).indexOf(label) : -1;
+    let child = this.getChildNodes()[pos];
     if (child && evt.target.dataset.close) {
-        parent.removeChildNode(child);
+        this.removeChildNode(child);
     } else if (child) {
-        parent.selectChild(child);
+        this.selectChild(child);
     }
 };
 

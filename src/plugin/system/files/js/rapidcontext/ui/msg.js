@@ -181,21 +181,19 @@
 
     function createEventHandler(dlg) {
         return new Promise(function (resolve, reject) {
-            let btns = dlg.querySelector(".ui-msg-btns");
             let handler = (evt) => {
-                let el = evt.target.closest("[data-action]");
-                if (el && el.dataset.action) {
-                    btns.removeEventListener("click", handler);
+                let action = evt.delegateTarget.dataset.action;
+                if (action) {
                     dlg.hide();
                     RapidContext.Widget.destroyWidget(dlg);
-                    if (el.dataset.action === "cancel") {
+                    if (action === "cancel") {
                         reject(new Error("operation cancelled"));
                     } else {
-                        resolve(el.dataset.action);
+                        resolve(action);
                     }
                 }
             };
-            btns.addEventListener("click", handler);
+            dlg.once("click", ".ui-msg-btns [data-action]", handler);
         });
     }
 
