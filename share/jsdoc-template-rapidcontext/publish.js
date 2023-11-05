@@ -66,7 +66,8 @@ function typeLabel({ kind }) {
         namespace: 'NS',
         class: 'C',
         interface: 'I',
-        method: 'M'
+        method: 'M',
+        mixin: 'MI',
     };
     return `<span class="label-${kind}" title="${upperFirst(kind)}">${shortname[kind] || kind}</span>`;
 }

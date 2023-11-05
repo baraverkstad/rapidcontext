@@ -6,7 +6,7 @@
 <table class="summary-table">
   <caption>Summary</caption>
   <tbody>
-    <?js self.find({kind: ['namespace','class','interface']}).forEach((obj) => { ?>
+    <?js self.find({kind: ['namespace','class','interface','mixin']}).forEach((obj) => { ?>
     <tr>
       <td class="name-description">
         <?js= self.linkto(obj.longname, obj.longname) ?>

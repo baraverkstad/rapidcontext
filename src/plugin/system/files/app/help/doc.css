@@ -326,7 +326,8 @@ body.doc .center {
 .label-namespace {
     background: #8ac;
 }
-.label-interface {
+.label-interface,
+.label-mixin {
     background: #c8a;
 }
 .label-class {
