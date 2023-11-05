@@ -257,7 +257,7 @@ RapidContext.Widget.Dialog.prototype._setHiddenDialog = function (value) {
         }
         this.blurAll();
         this._setHidden(true);
-        this._dispatch("hide");
+        this.emit("hide");
     } else {
         if (this.parentNode == null) {
             throw new Error("Cannot show Dialog widget without setting a parent DOM node");
@@ -273,7 +273,7 @@ RapidContext.Widget.Dialog.prototype._setHiddenDialog = function (value) {
         this._setHidden(false);
         this.resetScroll();
         this._resizeContent();
-        this._dispatch("show");
+        this.emit("show");
     }
 };
 
@@ -300,7 +300,7 @@ RapidContext.Widget.Dialog.prototype.moveTo = function (x, y) {
     el.style.maxWidth = (this.parentNode.offsetWidth - pos.x - el.offsetLeft - 5) + "px";
     el.style.maxHeight = (this.parentNode.offsetHeight - pos.y - el.offsetTop - 5) + "px";
     this.center = false;
-    this._dispatch("move", { detail: pos });
+    this.emit("move", { detail: pos });
 };
 
 /**
@@ -343,7 +343,7 @@ RapidContext.Widget.Dialog.prototype.resizeTo = function (w, h) {
     delete this.sizeConstraints; // FIXME: Remove with RapidContext.Util.registerSizeConstraints
     this.center = false;
     this._resizeContent();
-    this._dispatch("resize", { detail: dim });
+    this.emit("resize", { detail: dim });
     return dim;
 };
 

@@ -295,7 +295,7 @@ RapidContext.Widget.Form.prototype.validate = function () {
     success = this.checkValidity() && success;
     success || this.addClass("invalid");
     delete this._validationTimer;
-    this._dispatch("validate", { detail: success, bubbles: true });
+    this.emit("validate", { detail: success, bubbles: true });
     return success;
 };
 

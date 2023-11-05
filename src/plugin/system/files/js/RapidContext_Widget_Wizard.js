@@ -270,7 +270,7 @@ RapidContext.Widget.Wizard.prototype.activatePage = function (indexOrPage) {
         page._handleEnter({ validateReset: true });
     }
     var detail = { index: index, page: page };
-    this._dispatch("change", { detail: detail });
+    this.emit("change", { detail: detail });
 };
 
 /**
@@ -283,7 +283,7 @@ RapidContext.Widget.Wizard.prototype.activatePage = function (indexOrPage) {
 RapidContext.Widget.Wizard.prototype.cancel = function () {
     var page = this.activePage();
     page.setAttrs({ pageStatus: RapidContext.Widget.Pane.ANY });
-    this._dispatch("cancel");
+    this.emit("cancel");
 };
 
 /**
@@ -320,7 +320,7 @@ RapidContext.Widget.Wizard.prototype.done = function () {
             return;
         }
     }
-    this._dispatch("close");
+    this.emit("close");
 };
 
 /**

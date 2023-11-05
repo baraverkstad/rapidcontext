@@ -146,7 +146,7 @@ RapidContext.Widget.Table.prototype._handleClick = function (evt) {
             this._selected.push(row);
             this._markSelection(row);
         }
-        this._dispatch("select");
+        this.emit("select");
     } else if (isMulti && evt.shiftKey) {
         evt.preventDefault();
         this._unmarkSelection();
@@ -158,12 +158,12 @@ RapidContext.Widget.Table.prototype._handleClick = function (evt) {
             this._selected.push(i);
         }
         this._markSelection();
-        this._dispatch("select");
+        this.emit("select");
     } else if (isSingle) {
         this._unmarkSelection();
         this._selected = [row];
         this._markSelection();
-        this._dispatch("select");
+        this.emit("select");
     }
 };
 
@@ -342,7 +342,7 @@ RapidContext.Widget.Table.prototype.getData = function () {
 RapidContext.Widget.Table.prototype.setData = function (data) {
     var cols = this.getChildNodes();
     var selectedIds = this.getIdKey() ? this.getSelectedIds() : [];
-    this._dispatch("clear");
+    this.emit("clear");
     this._data = data;
     this._rows = [];
     this._selected = [];
@@ -518,7 +518,7 @@ RapidContext.Widget.Table.prototype.setSelectedIds = function (...ids) {
         }
     }
     if (res.length > 0) {
-        this._dispatch("select");
+        this.emit("select");
     }
     return res;
 };
@@ -534,7 +534,7 @@ RapidContext.Widget.Table.prototype.setSelectedIds = function (...ids) {
 RapidContext.Widget.Table.prototype.addSelectedIds = function (...ids) {
     let res = this._addSelectedIds(...ids);
     if (res.length > 0) {
-        this._dispatch("select");
+        this.emit("select");
     }
     return res;
 };
@@ -583,7 +583,7 @@ RapidContext.Widget.Table.prototype.removeSelectedIds = function (...ids) {
         }
     }
     if (res.length > 0) {
-        this._dispatch("select");
+        this.emit("select");
     }
     return res;
 };

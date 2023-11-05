@@ -210,13 +210,13 @@ RapidContext.Widget.Tree.prototype._handleSelect = function (node) {
     var prev = this.selectedChild();
     if (node == null) {
         this.selectedPath = null;
-        this._dispatch("unselect");
+        this.emit("unselect");
     } else {
         if (prev != null && prev !== node) {
             prev.unselect();
         }
         this.selectedPath = node.path();
-        this._dispatch("select");
+        this.emit("select");
     }
 };
 

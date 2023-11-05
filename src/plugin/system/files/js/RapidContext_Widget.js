@@ -23,6 +23,7 @@ if (typeof(RapidContext) == "undefined") {
  * subclasses should be instantiated.
  *
  * @class
+ * @mixes RapidContext.UI.Event
  */
 RapidContext.Widget = function () {
     throw new ReferenceError("cannot call Widget constructor");
@@ -100,6 +101,7 @@ RapidContext.Widget._widgetMixin = function (node, ...mixins) {
     if (!RapidContext.Widget.isWidget(node)) {
         node.classList.add("widget");
         mixins.push(RapidContext.Widget);
+        mixins.push(RapidContext.UI.Event);
     }
     while (mixins.length > 0) {
         let proto = mixins.pop();
@@ -168,6 +170,7 @@ RapidContext.Widget.destroyWidget = function (node) {
         }
         MochiKit.Signal.disconnectAll(node);
         MochiKit.Signal.disconnectAllTo(node);
+        RapidContext.UI.Event.off(node);
         RapidContext.Widget.destroyWidget(node.childNodes);
     } else if (node && typeof(node.length) === "number") {
         Array.from(node).forEach(RapidContext.Widget.destroyWidget);
@@ -226,13 +229,12 @@ RapidContext.Widget.prototype._styleNode = function () {
  *
  * @param {string} type the event type (e.g. `validate`)
  * @param {Object} [opts] the event options (e.g. `{ bubbles: true }`)
+ *
+ * @deprecated Use `emit(type, opts)` instead.
  */
 RapidContext.Widget.prototype._dispatch = function (type, opts) {
-    var self = this;
-    function later() {
-        self.dispatchEvent(new CustomEvent(type, opts));
-    }
-    setTimeout(later);
+    console.warn("deprecated: use 'emit' method instead of '_dispatch'");
+    this.emit(type, opts);
 };
 
 /**

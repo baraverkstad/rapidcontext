@@ -140,14 +140,14 @@ RapidContext.Widget.Popup.prototype._setHiddenPopup = function (value) {
     if (value && !this.isHidden()) {
         this._setHidden(true);
         this.style.maxHeight = 0;
-        this._dispatch("hide");
+        this.emit("hide");
         setTimeout(() => this.blur(), 100);
     } else if (!value && this.isHidden()) {
         this.selectChild(-1);
         this._setHidden(false);
         this.style.maxHeight = (this.scrollHeight + 10) + "px";
         this.scrollTop = 0;
-        this._dispatch("show");
+        this.emit("show");
         setTimeout(() => this.focus(), 100);
     }
     this.resetDelay();
@@ -256,7 +256,7 @@ RapidContext.Widget.Popup.prototype._handleMouseClick = function (evt) {
     var node = evt.target().closest(".widgetPopup > *");
     if (this.selectChild(node || -1) >= 0) {
         var detail = { menu: this, item: node };
-        this._dispatch("menuselect", { detail });
+        this.emit("menuselect", { detail });
     }
 };
 
@@ -283,7 +283,7 @@ RapidContext.Widget.Popup.prototype._handleKeyDown = function (evt) {
         var node = this.selectedChild();
         if (node != null) {
             var detail = { menu: this, item: node };
-            this._dispatch("menuselect", { detail });
+            this.emit("menuselect", { detail });
         }
         break;
     }

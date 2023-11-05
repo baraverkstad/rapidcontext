@@ -166,7 +166,7 @@ RapidContext.Widget.Pane.prototype._handleEnter = function (opts) {
         this.show();
         RapidContext.Util.resizeElements(this);
     }
-    this._dispatch("enter");
+    this.emit("enter");
 };
 
 /**
@@ -207,6 +207,6 @@ RapidContext.Widget.Pane.prototype._handleExit = function (opts) {
     if (MochiKit.Base.bool(opts.hide)) {
         this.hide();
     }
-    this._dispatch("exit");
+    this.emit("exit");
     return true;
 };

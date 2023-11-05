@@ -158,7 +158,7 @@ RapidContext.Widget.TabContainer.prototype.removeChildNode = function (child) {
     }
     RapidContext.Widget.destroyWidget(this.firstChild.childNodes[index]);
     child.remove();
-    child._dispatch && child._dispatch("close");
+    child.emit && child.emit("close");
     if (this._selectedIndex > index) {
         this._selectedIndex--;
     }

@@ -152,7 +152,7 @@ RapidContext.Widget.TextArea.prototype.getValue = function () {
 RapidContext.Widget.TextArea.prototype._handleChange = function (evt) {
     var cause = (evt && evt.inputType) || "set";
     var detail = { before: this.storedValue || "", after: this.value, cause: cause };
-    this._dispatch("change", { detail: detail, bubbles: true });
+    this.emit("change", { detail: detail, bubbles: true });
     this.storedValue = this.value;
     if (this.autosize) {
         this.style.height = "auto";

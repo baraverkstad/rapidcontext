@@ -136,6 +136,6 @@ RapidContext.Widget.TextField.prototype.getValue = function () {
 RapidContext.Widget.TextField.prototype._handleChange = function (evt) {
     var cause = (evt && evt.inputType) || "set";
     var detail = { before: this.storedValue || "", after: this.value, cause: cause };
-    this._dispatch("change", { detail: detail, bubbles: true });
+    this.emit("change", { detail: detail, bubbles: true });
     this.storedValue = this.value;
 };

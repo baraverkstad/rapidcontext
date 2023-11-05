@@ -368,7 +368,7 @@ RapidContext.Widget.TreeNode.prototype.expand = function () {
         var tree = this.tree();
         if (tree != null) {
             var detail = { tree: tree, node: this };
-            tree._dispatch("expand", { detail: detail });
+            tree.emit("expand", { detail: detail });
         }
     }
 };
@@ -404,7 +404,7 @@ RapidContext.Widget.TreeNode.prototype.collapse = function () {
         var tree = this.tree();
         if (tree != null) {
             var detail = { tree: tree, node: this };
-            tree._dispatch("collapse", { detail: detail });
+            tree.emit("collapse", { detail: detail });
         }
     }
 };
