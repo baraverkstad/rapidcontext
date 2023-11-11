@@ -49,7 +49,7 @@
                 <tr>
                   <th class="pl-4">Identifier:</th>
                   <td>
-                    <settings:id-link id="pluginIdLink" type="plugin" url="rapidcontext/storage/storage/plugin/{{value}}/" />
+                    <settings:id-link id="pluginIdLink" type="plugin" url="rapidcontext/storage/.storage/plugin/{{value}}/" />
                   </td>
                 </tr>
                 <settings:template id="pluginPropTpl">

@@ -562,7 +562,7 @@ AdminApp.prototype._showPlugin = function () {
     if (data) {
         this.ui.pluginForm.update(data);
         this.ui.pluginLink.classList.remove("hidden");
-        var path = "/storage/plugin/" + data.id + "/";
+        var path = "/.storage/plugin/" + data.id + "/";
         var url = "rapidcontext/storage" + path;
         this.ui.pluginLink.setAttribute("href", url);
         if (data._loaded) {
