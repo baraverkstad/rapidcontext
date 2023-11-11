@@ -330,6 +330,22 @@
         }
     });
 
+    Object.assign(info, {
+        updateAvailable() {
+            return info({
+                title: "Update available",
+                text: [
+                    "An updated version is available. Please reload the page ",
+                    "to access the latest version."
+                ].join(""),
+                actions: {
+                    close: "Maybe later",
+                    reload: { text: "Reload page", action: "info" }
+                }
+            });
+        }
+    });
+
     // Export module
     const RapidContext = window.RapidContext || (window.RapidContext = {});
     RapidContext.UI || (RapidContext.UI = {});
