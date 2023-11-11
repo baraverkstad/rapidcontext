@@ -46,7 +46,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * </Form>
  */
 RapidContext.Widget.Form = function (attrs/*, ...*/) {
-    var o = MochiKit.DOM.FORM(attrs);
+    var o = RapidContext.UI.FORM(attrs);
     o._validators = {};
     o._originalReset = o.reset;
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Form);

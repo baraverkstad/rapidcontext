@@ -21,4 +21,14 @@ export default { data, fn, ui };
 // Note: Setting window.RapidContext here for legacy global API
 let RapidContext = window.RapidContext || (window.RapidContext = {});
 Object.assign(RapidContext, { Data: data, Fn: fn, UI: RapidContext.UI || {} });
-Object.assign(RapidContext.UI, { Event: ui.event, Msg: ui.msg });
+Object.assign(RapidContext.UI, { create: ui.create, Event: ui.event, Msg: ui.msg });
+[
+    'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'p', 'pre', 'div',
+    'b', 'i', 'em', 'small', 'strong', 'code', 'var', 'span', 'br',
+    'a', 'img', 'picture', 'video', 'source', 'object',
+    'ol', 'ul', 'li', 'dl', 'dd', 'dt',
+    'table', 'thead', 'tbody', 'tfoot', 'tr', 'th', 'td',
+    'dialog', 'menu', 'meter', 'nav', 'output', 'progress',
+    'form', 'label', 'button', 'input', 'textarea', 'select',
+    'option', 'optgroup', 'fieldset', 'datalist',
+].forEach((k) => RapidContext.UI[k.toUpperCase()] = ui.create.bind(null, k));

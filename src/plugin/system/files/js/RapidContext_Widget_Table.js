@@ -56,10 +56,10 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * </Table>
  */
 RapidContext.Widget.Table = function (attrs/*, ...*/) {
-    let thead = MochiKit.DOM.THEAD({}, MochiKit.DOM.TR());
-    let tbody = MochiKit.DOM.TBODY();
-    let table = MochiKit.DOM.TABLE({ "class": "widgetTable" }, thead, tbody);
-    let o = MochiKit.DOM.DIV({}, table);
+    let thead = RapidContext.UI.THEAD({}, document.createElement("tr"));
+    let tbody = RapidContext.UI.TBODY();
+    let table = RapidContext.UI.TABLE({ "class": "widgetTable" }, thead, tbody);
+    let o = RapidContext.UI.DIV({}, table);
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Table);
     o.classList.add("widgetTable");
     o.resizeContent = o._resizeContent;

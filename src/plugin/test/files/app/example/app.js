@@ -83,8 +83,7 @@ window.ExampleApp = class {
 
     // Creates the icon table content dynamically
     initIcons() {
-        let TD = MochiKit.DOM.TD;
-        let TR = MochiKit.DOM.TR;
+        let TD = RapidContext.UI.TD;
         let Icon = RapidContext.Widget.Icon;
         let rows = [];
         for (let k in Icon) {
@@ -106,7 +105,7 @@ window.ExampleApp = class {
         let col2 = rows.slice(len, len + len);
         let col3 = rows.slice(len + len);
         for (let i = 0; i < len; i++) {
-            let tr = TR({}, ...col1[i]);
+            let tr = RapidContext.UI.TR({}, ...col1[i]);
             if (col2[i]) {
                 tr.append(TD({ "class": "space" }), ...col2[i]);
             }

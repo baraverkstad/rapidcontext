@@ -37,8 +37,8 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * @extends RapidContext.Widget
  *
  * @example <caption>JavaScript</caption>
- * let hr = MochiKit.DOM.HR();
- * let third = MochiKit.DOM.LI({ "class": "disabled" }, "Third");
+ * let hr = document.createElement("hr");
+ * let third = RapidContext.UI.LI({ "class": "disabled" }, "Third");
  * let popup = RapidContext.Widget.Popup({}, "First",  "Second", hr, third);
  *
  * @example <caption>User Interface XML</caption>
@@ -124,7 +124,7 @@ RapidContext.Widget.Popup.prototype.setAttrs = function (attrs) {
  */
 RapidContext.Widget.Popup.prototype.addChildNode = function (child) {
     if (!child.nodeType) {
-        child = MochiKit.DOM.LI(null, child);
+        child = RapidContext.UI.LI({}, child);
     }
     this._containerNode(true).append(child);
 };

@@ -84,92 +84,22 @@
      * @memberof RapidContext.UI
      */
     function buildUI(node, ids) {
-        if (typeof(node) === "string") {
-            node = new DOMParser().parseFromString(node, "text/xml");
-            return buildUI(node.documentElement, ids);
-        } else if (node.documentElement) {
+        if (node.documentElement) {
             return buildUI(node.documentElement.childNodes, ids);
-        } else if (typeof(node.item) != "undefined" && typeof(node.length) == "number") {
+        } else if (node && node.item && typeof(node.length) == "number") {
             return Array.from(node).map((el) => buildUI(el, ids)).filter(Boolean);
-        } else if (node.nodeType === 1) { // Node.ELEMENT_NODE
+        } else {
             try {
-                return _buildUIElem(node, ids);
+                let el = RapidContext.UI.create(node);
+                if (el) {
+                    [el.matches("[id]") && el, ...el.querySelectorAll("[id]")]
+                        .filter(Boolean)
+                        .forEach((el) => ids[el.attributes.id.value] = el);
+                }
+                return el;
             } catch (e) {
                 console.error("Failed to build UI element", node, e);
-            }
-        } else if (node.nodeType === 3) { // Node.TEXT_NODE
-            let str = (node.nodeValue || "").replace(/\s+/g, " ");
-            return str.trim() ? document.createTextNode(str) : null;
-        } else if (node.nodeType === 4) { // Node.CDATA_SECTION_NODE
-            let str = node.nodeValue || "";
-            return str ? document.createTextNode(str) : null;
-        }
-        return null;
-    }
-
-    /**
-     * Creates a widget from a parsed XML element. This function will
-     * call `createWidget()`, performing some basic adjustments on the
-     * element attributes before sending them as attributes to the widget
-     * constructor.
-     *
-     * @param {Object} node the XML document or node
-     * @param {Object} [ids] the optional node id mappings
-     *
-     * @return {Object} an object with the widget created
-     */
-    function _buildUIElem(node, ids) {
-        let name = node.nodeName;
-        if (name == "style") {
-            _buildUIStylesheet(node.innerText);
-            node.parentNode.removeChild(node);
-            return null;
-        }
-        let specials = [ids && "id", "$id", "w", "h"].filter(Boolean);
-        let attrs = Array.from(node.attributes)
-            .filter((a) => !specials.includes(a.name))
-            .reduce((o, a) => Object.assign(o, { [a.name]: a.value }), {});
-        let children = buildUI(node.childNodes, ids);
-        let widget;
-        if (RapidContext.Widget.Classes[name]) {
-            widget = RapidContext.Widget.Classes[name](attrs, ...children);
-        } else {
-            widget = MochiKit.DOM.createDOM(name, attrs, children);
-        }
-        if ("id" in node.attributes && ids) {
-            ids[node.attributes.id.value] = widget;
-        }
-        if ("$id" in node.attributes) {
-            widget.id = node.attributes.$id.value;
-        }
-        if ("w" in node.attributes || "h" in node.attributes) {
-            let w = node.attributes.w && node.attributes.w.value;
-            let h = node.attributes.h && node.attributes.h.value;
-            RapidContext.Util.registerSizeConstraints(widget, w, h);
-        }
-        return widget;
-    }
-
-    /**
-     * Creates and injects a stylesheet element from a set of CSS rules.
-     *
-     * @param {string} css the CSS rules to inject
-     */
-    function _buildUIStylesheet(css) {
-        var style = document.createElement("style");
-        style.setAttribute("type", "text/css");
-        document.getElementsByTagName("head")[0].append(style);
-        try {
-            style.innerHTML = css;
-        } catch (e) {
-            var parts = css.split(/\s*[{}]\s*/);
-            for (var i = 0; i < parts.length; i += 2) {
-                var rules = parts[i].split(/\s*,\s*/);
-                var styles = parts[i + 1];
-                for (var j = 0; j < rules.length; j++) {
-                    var rule = rules[j].replace(/\s+/, " ").trim();
-                    style.styleSheet.addRule(rule, styles);
-                }
+                return null;
             }
         }
     }
@@ -202,11 +132,9 @@
         }
     }
 
-    // Create namespaces
-    var RapidContext = window.RapidContext || (window.RapidContext = {});
-    var module = RapidContext.UI || (RapidContext.UI = {});
-
-    // Export namespace symbols
+    // Export module API
+    let RapidContext = window.RapidContext || (window.RapidContext = {});
+    let module = RapidContext.UI || (RapidContext.UI = {});
     Object.assign(module, { showError, buildUI, connectProc });
 
 })(this);

@@ -54,9 +54,9 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * <TabContainer>
  */
 RapidContext.Widget.TabContainer = function (attrs/*, ... */) {
-    let labels = MochiKit.DOM.DIV({ "class": "widgetTabContainerLabels" });
-    let container = MochiKit.DOM.DIV({ "class": "widgetTabContainerContent" });
-    let o = MochiKit.DOM.DIV(attrs, labels, container);
+    let labels = RapidContext.UI.DIV({ "class": "widgetTabContainerLabels" });
+    let container = RapidContext.UI.DIV({ "class": "widgetTabContainerContent" });
+    let o = RapidContext.UI.DIV(attrs, labels, container);
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.TabContainer);
     o.classList.add("widgetTabContainer");
     RapidContext.Util.registerSizeConstraints(container, "100% - 20", "100% - 40");
@@ -117,14 +117,14 @@ RapidContext.Widget.TabContainer.prototype.addChildNode = function (child) {
     }
     RapidContext.Util.registerSizeConstraints(child, "100%", "100%");
     child.hide();
-    let text = MochiKit.DOM.SPAN(null, child.pageTitle);
+    let text = RapidContext.UI.SPAN({}, child.pageTitle);
     let icon = null;
     if (child.pageCloseable) {
         icon = RapidContext.Widget.Icon({ "class": "fa fa-close", tooltip: "Close" });
         icon.dataset.close = true;
     }
     let labelAttrs = { "class": "widgetTabContainerLabel" };
-    let label = MochiKit.DOM.DIV(labelAttrs, MochiKit.DOM.DIV({}, text, icon));
+    let label = RapidContext.UI.DIV(labelAttrs, RapidContext.UI.DIV({}, text, icon));
     this.firstChild.append(label);
     this.lastChild.append(child);
     if (this._selectedIndex < 0) {
