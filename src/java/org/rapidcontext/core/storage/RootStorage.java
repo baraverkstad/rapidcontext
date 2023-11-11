@@ -72,7 +72,7 @@ public class RootStorage extends MemoryStorage {
     /**
      * The storage path for mounted storages.
      */
-    public static final Path PATH_STORAGE = Path.from("/storage/");
+    public static final Path PATH_STORAGE = Path.from("/.storage/");
 
     /**
      * The sorted array of mounted storages. This array is sorted
