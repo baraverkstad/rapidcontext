@@ -263,6 +263,7 @@ public class Role extends StorableObject {
      *         false otherwise
      */
     public boolean hasAccess(String path, String permission) {
+        LOG.fine(this + ": " + permission + " permission check for " + path);
         for (Object o : dict.getArray(KEY_ACCESS)) {
             Dict dict = (Dict) o;
             if (matchPath(dict, path)) {
