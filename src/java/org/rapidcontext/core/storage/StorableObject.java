@@ -186,6 +186,16 @@ public class StorableObject {
         this.dict.set(KEY_ID, id);  // Overwrite dict value (if set)
     }
 
+    public <T> T get(String key, Class<T> clazz, T defaultValue) {
+        if (this.dict.containsKey(PREFIX_COMPUTED + key)) {
+            return this.dict.get(PREFIX_COMPUTED + key, clazz, defaultValue);
+        } else if (this.dict.containsKey(PREFIX_HIDDEN + key)) {
+            return this.dict.get(PREFIX_HIDDEN + key, clazz, defaultValue);
+        } else {
+            return this.dict.get(key, clazz, defaultValue);
+        }
+    }
+
     /**
      * Returns a string representation of this object.
      *
