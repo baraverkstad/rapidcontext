@@ -65,6 +65,13 @@ public class StorableObject {
     public static final String KEY_TYPE = "type";
 
     /**
+     * The dictionary key for the optional alias. The values stored
+     * is a string or an array of strings containing alternative
+     * ids for this objects.
+     */
+    public static final String KEY_ALIAS = "alias";
+
+    /**
      * The dictionary key for the Java class name. The value stored
      * is a string with the fully qualified Java class name for
      * initializing the object from storage. The class is used
