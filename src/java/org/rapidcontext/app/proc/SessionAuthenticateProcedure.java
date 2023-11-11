@@ -70,6 +70,7 @@ public class SessionAuthenticateProcedure extends Procedure {
         String userId = bindings.getValue("user").toString();
         String nonce = bindings.getValue("nonce").toString();
         String hash = bindings.getValue("hash").toString();
+        // FIXME: Include session id in hash to avoid replay attacks
         try {
             SecurityContext.verifyNonce(nonce);
             SecurityContext.authHash(userId, ":" + nonce, hash);
