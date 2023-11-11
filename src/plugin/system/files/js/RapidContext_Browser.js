@@ -19,6 +19,11 @@
 (function (window) {
 
     /**
+     * Polyfills provided by core-js package. Used for logging.
+     */
+    var POLYFILL = window["__core-js_shared__"];
+
+    /**
      * List of all required browser features.
      *
      * @name REQUIRED
@@ -212,8 +217,12 @@
             }
         }
         function checkPath(base, path) {
+            var debug = path.join(".");
             while (base && path.length > 0) {
                 base = base[path.shift()];
+            }
+            if (POLYFILL && POLYFILL.state.get(base)) {
+                console.warn("browser: polyfilled support for " + debug);
             }
             return typeof(base) === "function";
         }
