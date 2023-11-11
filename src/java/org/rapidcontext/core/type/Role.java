@@ -206,7 +206,7 @@ public class Role extends StorableObject {
      * @return the role name.
      */
     public String name() {
-        return dict.get(KEY_NAME, String.class, "");
+        return get(KEY_NAME, String.class, "");
     }
 
     /**
@@ -215,7 +215,7 @@ public class Role extends StorableObject {
      * @return the role description.
      */
     public String description() {
-        return dict.get(KEY_DESCRIPTION, String.class, "");
+        return get(KEY_DESCRIPTION, String.class, "");
     }
 
     /**
@@ -225,7 +225,7 @@ public class Role extends StorableObject {
      * @return the automatic role attachment type
      */
     public String auto() {
-        return dict.get(KEY_AUTO, String.class, "none");
+        return get(KEY_AUTO, String.class, "none");
     }
 
     /**

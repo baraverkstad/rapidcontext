@@ -181,6 +181,36 @@ public class StorableObject {
     }
 
     /**
+     * Returns the dictionary value for the specified key. The key
+     * may be stored with either a computed or hidden prefix. The
+     * value is converted or casted to a specified object class.
+     *
+     * @param <T>            the object type to return
+     * @param key            the dictionary key name
+     * @param clazz          the object class
+     * @param defaultValue   the default value
+     *
+     * @return the dictionary key value value, or
+     *         the default value if the key or value is not defined
+     *
+     * @throws ClassCastException if the wasn't possible to cast to
+     *             the specified object class
+     * @throws NumberFormatException if the value wasn't possible to
+     *             parse as a number
+     *
+     * @see Dict#get(String, Class, Object)
+     */
+    public <T> T get(String key, Class<T> clazz, T defaultValue) {
+        if (dict.containsKey(PREFIX_COMPUTED + key)) {
+            return dict.get(PREFIX_COMPUTED + key, clazz, defaultValue);
+        } else if (dict.containsKey(PREFIX_HIDDEN + key)) {
+            return dict.get(PREFIX_HIDDEN + key, clazz, defaultValue);
+        } else {
+            return dict.get(key, clazz, defaultValue);
+        }
+    }
+
+    /**
      * Returns a string representation of this object.
      *
      * @return a string representation of this object
@@ -255,7 +285,7 @@ public class StorableObject {
      *         null if not activated
      */
     protected Date activatedTime() {
-        return dict.get(PREFIX_COMPUTED + KEY_ACTIVATED_TIME, Date.class);
+        return get(KEY_ACTIVATED_TIME, Date.class, null);
     }
 
     /**

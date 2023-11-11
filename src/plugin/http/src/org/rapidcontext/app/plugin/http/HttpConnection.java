@@ -90,7 +90,7 @@ public class HttpConnection extends Connection {
      * @return the base URL, or an empty string
      */
     public String url() {
-        return dict.get(HTTP_URL, String.class, "");
+        return get(HTTP_URL, String.class, "");
     }
 
     /**
@@ -100,7 +100,7 @@ public class HttpConnection extends Connection {
      *         an empty string if not set
      */
     public String headers() {
-        return dict.get(HttpConnection.HTTP_HEADERS, String.class, "");
+        return get(HttpConnection.HTTP_HEADERS, String.class, "");
     }
 
     /**
@@ -110,7 +110,7 @@ public class HttpConnection extends Connection {
      *         an empty string if not set
      */
     public String validateMethod() {
-        return dict.get(HttpConnection.HTTP_VALIDATE, String.class, "");
+        return get(HttpConnection.HTTP_VALIDATE, String.class, "");
     }
 
     /**

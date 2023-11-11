@@ -89,7 +89,7 @@ public class Environment extends StorableObject {
      * @return the environment description.
      */
     public String description() {
-        return dict.get(KEY_DESCRIPTION, String.class, "");
+        return get(KEY_DESCRIPTION, String.class, "");
     }
 
     /**
@@ -100,7 +100,7 @@ public class Environment extends StorableObject {
     public String connectionPath() {
         String prefix;
 
-        prefix = dict.get(KEY_CONNECTIONS, String.class);
+        prefix = get(KEY_CONNECTIONS, String.class, null);
         if (prefix != null) {
             prefix = StringUtils.removeStart(prefix, "/");
             if (!prefix.endsWith("/")) {

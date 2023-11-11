@@ -262,7 +262,7 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
      */
     @Override
     public Path path() {
-        return dict.get(KEY_MOUNT_PATH, Path.class, Path.ROOT);
+        return get(KEY_MOUNT_PATH, Path.class, Path.ROOT);
     }
 
     /**
@@ -289,7 +289,7 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
      *         false otherwise
      */
     public boolean isReadWrite() {
-        return dict.get(KEY_READWRITE, Boolean.class, false);
+        return get(KEY_READWRITE, Boolean.class, false);
     }
 
     /**
@@ -299,7 +299,7 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
      *         the current system time if not mounted
      */
     public Date mountTime() {
-        return dict.get(KEY_MOUNT_TIME, Date.class, new Date());
+        return get(KEY_MOUNT_TIME, Date.class, new Date());
     }
 
     /**
@@ -312,7 +312,7 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
      *         null if no mount overlay is used
      */
     public Path mountOverlayPath() {
-        return dict.get(KEY_MOUNT_OVERLAY_PATH, Path.class);
+        return get(KEY_MOUNT_OVERLAY_PATH, Path.class, null);
     }
 
     /**
@@ -323,7 +323,7 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
      *         -1 if not mounted
      */
     public int mountOverlayPrio() {
-        return dict.get(KEY_MOUNT_OVERLAY_PRIO, Integer.class, -1);
+        return get(KEY_MOUNT_OVERLAY_PRIO, Integer.class, -1);
     }
 
     /**
