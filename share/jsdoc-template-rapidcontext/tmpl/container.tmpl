@@ -116,27 +116,6 @@
             </tbody>
         </table>
     <?js } ?>
-
-    <?js if (classes.length > 0) { ?>
-        <table class="summary-table">
-            <caption>Class Summary</caption>
-            <tbody>
-            <?js classes.forEach((c) => { ?>
-                <tr>
-                    <td class="attributes">
-                        <?js= c.attribs ?>
-                    </td>
-                    <td class="name-description">
-                        <div <?js if (c.deprecated) { ?>class="deprecated"<?js } ?>>
-                            <?js= self.linkto(c.longname, c.longname) ?>
-                        </div>
-                        <div class="description"><?js= self.summarize(c.classdesc || c.description) ?></div>
-                    </td>
-                </tr>
-            <?js }); ?>
-            </tbody>
-        </table>
-    <?js } ?>
 </header>
 
 <article>
@@ -177,18 +156,6 @@
         <dl><?js interfaces.forEach(function(i) { ?>
             <dt><?js= self.linkto(i.longname, i.name) ?></dt>
             <dd><?js if (i.summary) { ?><?js= i.summary ?><?js } ?></dd>
-        <?js }); ?></dl>
-    <?js } ?>
-
-    <?js
-        var mixins = self.find({kind: 'mixin', memberof: doc.longname});
-        if (!isGlobalPage && mixins && mixins.length) {
-    ?>
-        <h3 class="section-title">Mixins</h3>
-
-        <dl><?js mixins.forEach(function(m) { ?>
-            <dt><?js= self.linkto(m.longname, m.name) ?></dt>
-            <dd><?js if (m.summary) { ?><?js= m.summary ?><?js } ?></dd>
         <?js }); ?></dl>
     <?js } ?>
 
