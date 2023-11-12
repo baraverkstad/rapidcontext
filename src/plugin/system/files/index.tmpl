@@ -10,6 +10,16 @@
       MochiKit = {__export__: false};
       RapidContext = { _basePath: "%BASE_PATH%" };
     </script>
+    <script type="importmap">
+      {
+        "imports": {
+          "rapidcontext": "./%FILES%/js/rapidcontext/index.mjs",
+          "rapidcontext/ui": "./%FILES%/js/rapidcontext/ui/index.mjs",
+          "rapidcontext/ui/event": "./%FILES%/js/rapidcontext/ui/event.mjs",
+          "rapidcontext/ui/msg": "./%FILES%/js/rapidcontext/ui/msg.mjs"
+        }
+      }
+    </script>
     <script src="%JS_FILES%" defer></script>
     <title>%TITLE%</title>
   </head>

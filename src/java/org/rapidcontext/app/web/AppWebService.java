@@ -442,6 +442,9 @@ public class AppWebService extends FileWebService {
                 res.append(line.replace("%HEADER%", str));
                 res.append("\n");
             }
+        } else if (line.contains("%FILES%")) {
+            String str = "rapidcontext/files@" + version();
+            res.append(line.replace("%FILES%", str));
         } else if (line.contains("%JS_FILES%")) {
             for (String str : resources("js", path())) {
                 res.append(line.replace("%JS_FILES%", str));
