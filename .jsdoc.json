@@ -1,5 +1,8 @@
 {
     "plugins": [
         "plugins/underscore"
-    ]
+    ],
+    "source": {
+        "includePattern": ".+\\.(js(doc|x)?|mjs)$"
+    }
 }

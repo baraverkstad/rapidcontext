@@ -18,6 +18,7 @@
 /src/plugin/cmdline/lib/cmdline-*.jar
 /src/plugin/http/lib/http-*.jar
 /src/plugin/jdbc/lib/jdbc-*.jar
+/src/plugin/system/files/js/rapidcontext.min.js
 
 # Documentation
 /doc.zip

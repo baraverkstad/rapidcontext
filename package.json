@@ -12,6 +12,7 @@
     "jquery": "3.7.1"
   },
   "devDependencies": {
+    "esbuild": "^0.19.5",
     "eslint": "^8.44.0",
     "highlight.js": "^11.8.0",
     "html-validate": "^8.0.5",
