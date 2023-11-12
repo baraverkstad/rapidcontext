@@ -12,11 +12,12 @@
  * See the RapidContext LICENSE for more details.
  */
 
+import fn from './fn.mjs';
 import ui from './ui/index.mjs';
 
-export default { ui };
+export default { fn, ui };
 
 // Note: Setting window.RapidContext here for legacy global API
 let RapidContext = window.RapidContext || (window.RapidContext = {});
-RapidContext.UI || (RapidContext.UI = {});
+Object.assign(RapidContext, { Fn: fn, UI: RapidContext.UI || {} });
 Object.assign(RapidContext.UI, { Event: ui.event, Msg: ui.msg });
