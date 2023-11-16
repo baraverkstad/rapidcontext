@@ -123,6 +123,7 @@ test-js:
 		--ignore-pattern 'src/plugin/legacy/**/*.js' \
 		--ignore-pattern '**/*.min.js' \
 		--ignore-pattern '**/MochiKit.js'
+	npx tap --allow-incomplete-coverage '**/*.test.@(js|mjs)'
 
 test-java:
 	mkdir -p test/classes/
