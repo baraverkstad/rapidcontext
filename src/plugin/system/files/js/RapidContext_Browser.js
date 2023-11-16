@@ -124,6 +124,7 @@
         { test: "class Test {}; true", name: "Class declarations" },
         { test: "(() => true)()", name: "Arrow functions" },
         { test: "async () => await Promise.resolve(true)", name: "async/await functions" },
+        { test: "typeof(Symbol.iterator) === 'symbol'", name: "Symbol.iterator" },
         "--variable-name: #fff",
         "display: flex"
     ];
