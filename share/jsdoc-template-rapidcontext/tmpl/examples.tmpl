@@ -7,7 +7,7 @@
     ?>
         <p class="code-caption"><?js= self.htmlsafe(example.caption) ?></p>
     <?js } ?>
-    <pre class="hljs"><code><?js= self.highlight(example.code) ?></code></pre>
+    <pre class="hljs"><code><?js= self.highlight(example.code, example.caption ? null : 'js') ?></code></pre>
 <?js
     });
 ?>
