@@ -14,14 +14,15 @@
 
 import data from './data.mjs';
 import fn from './fn.mjs';
+import text from './text.mjs';
 import ui from './ui/index.mjs';
 
-export { data, fn, ui };
-export default { data, fn, ui };
+export { data, fn, text, ui };
+export default { data, fn, text, ui };
 
 // Note: Setting window.RapidContext here for legacy global API
 const RapidContext = globalThis.RapidContext || (globalThis.RapidContext = {});
-Object.assign(RapidContext, { Data: data, Fn: fn, UI: RapidContext.UI || {} });
+Object.assign(RapidContext, { Data: data, Fn: fn, Text: text, UI: RapidContext.UI || {} });
 Object.assign(RapidContext.UI, { create: ui.create, Event: ui.event, Msg: ui.msg });
 [
     'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'p', 'pre', 'div',
