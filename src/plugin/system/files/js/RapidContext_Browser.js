@@ -28,6 +28,7 @@
     var REQUIRED = [
         "Array.isArray",
         "Array.from",
+        "Array.of",
         "Array.prototype.every",
         "Array.prototype.filter",
         "Array.prototype.find",
