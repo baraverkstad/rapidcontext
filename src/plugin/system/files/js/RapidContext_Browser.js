@@ -285,6 +285,7 @@
             return res;
         }
         var BROWSERS = {
+            "Bot": /Bot|Spider|PhantomJS|Headless|Electron|slimerjs/i,
             "Edge": /Edg(?:e|A|iOS|)\/([^\s;]+)/,
             "Chrome": /Chrome\/([^\s;]+)/,
             "Chrome iOS": /CriOS\/([^\s;]+)/,
@@ -316,8 +317,6 @@
             res["browser"] = browser;
             res["platform"] = platform;
             res["device"] = device || "Desktop/Other";
-        } else {
-            res["userAgent"] = String(ua);
         }
         if (!userAgent) {
             res["language"] = window.navigator.language;
@@ -325,6 +324,7 @@
             res["window"] = clone(window, ["innerWidth", "innerHeight", "devicePixelRatio"]);
             res["cookies"] = _cookies();
         }
+        res["userAgent"] = String(ua);
         return res;
     }
 
