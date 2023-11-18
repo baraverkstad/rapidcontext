@@ -81,10 +81,14 @@ RapidContext.Widget.TabContainer.prototype._handleLabelClick = function (evt) {
     let label = evt.delegateTarget;
     let pos = label ? Array.from(label.parentNode.children).indexOf(label) : -1;
     let child = this.getChildNodes()[pos];
-    if (child && evt.target.dataset.close) {
-        this.removeChildNode(child);
-    } else if (child) {
-        this.selectChild(child);
+    if (child) {
+        evt.preventDefault();
+        evt.stopImmediatePropagation();
+        if (evt.target.dataset.close) {
+            this.removeChildNode(child);
+        } else {
+            this.selectChild(child);
+        }
     }
 };
 
