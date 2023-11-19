@@ -222,24 +222,18 @@ public abstract class HttpProcedure extends Procedure {
                 }
             }
             if (metadata) {
-                Dict dict = new Dict();
                 Dict headers = new Dict();
-                dict.set("success", success);
-                dict.set("response", con.getHeaderField(0));
-                dict.set("responseCode", httpCode);
-                dict.set("responseMessage", con.getResponseMessage());
-                dict.set("headers", headers);
-                for (int i = 1; true; i++) {
-                    String key = con.getHeaderFieldKey(i);
-                    String val = con.getHeaderField(i);
-                    if (key == null || val == null) {
-                        break;
-                    }
-                    headers.set(key, val);
-                }
-                dict.set("data", success ? data : null);
-                dict.set("error", success ? null : data);
-                return dict;
+                con.getHeaderFields().forEach((k, v) -> {
+                    headers.add(k, (v.size() == 1) ? v.get(0) : v);
+                });
+                return new Dict()
+                    .set("success", success)
+                    .set("response", con.getHeaderField(0))
+                    .set("responseCode", httpCode)
+                    .set("responseMessage", con.getResponseMessage())
+                    .set("headers", headers)
+                    .set("data", success ? data : null)
+                    .set("error", success ? null : data);
             } else if (success || jsonError) {
                 return data;
             } else {
