@@ -117,6 +117,21 @@ public class Array implements Iterable<Object> {
     }
 
     /**
+     * Creates a new array from an array of elements.
+     *
+     * @param values the values to add to the array
+     *
+     * @return a new array with the specified elements
+     */
+    public static Array of(Object... values) {
+        Array arr = new Array(values.length);
+        for (Object o : values) {
+            arr.add(o);
+        }
+        return arr;
+    }
+
+    /**
      * Creates a new empty array.
      */
     public Array() {

@@ -28,7 +28,7 @@ public class MovingSumTest {
 
     @Test
     public void testSerialize() {
-        MovingSum sum1 = new MovingSum(0, build(0, 10, 0, 20, 0, 30));
+        MovingSum sum1 = new MovingSum(0, Array.of(0, 10, 0, 20, 0, 30));
         assertEquals(0, sum1.time());
         assertEquals(10.0, sum1.valueFor(Interval.HOUR), 0.01);
         assertEquals(20.0, sum1.valueFor(Interval.DAY), 0.01);
@@ -44,7 +44,7 @@ public class MovingSumTest {
 
     @Test
     public void testValueFor() {
-        MovingSum sum1 = new MovingSum(0, build(0, 10, 0, 100, 0, 1000));
+        MovingSum sum1 = new MovingSum(0, Array.of(0, 10, 0, 100, 0, 1000));
         assertEquals(10.0, sum1.valueFor(Interval.HOUR), 0.1);
         assertEquals(100.0, sum1.valueFor(Interval.DAY), 0.1);
         assertEquals(1000.0, sum1.valueFor(Interval.MONTH), 0.1);
@@ -75,16 +75,5 @@ public class MovingSumTest {
         assertEquals("[ 13, 0, 13, 0, 13, 0 ]", sum.serialize().toString());
         sum.add(7);
         assertEquals("[ 20, 0, 20, 0, 20, 0 ]", sum.serialize().toString());
-    }
-
-    private Array build(int h0, int h1, int d0, int d1, int m0, int m1) {
-        Array a = new Array();
-        a.set(0, h0);
-        a.set(1, h1);
-        a.set(2, d0);
-        a.set(3, d1);
-        a.set(4, m0);
-        a.set(5, m1);
-        return a;
     }
 }

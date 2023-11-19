@@ -76,7 +76,7 @@ public class XmlSerializerTest {
             .set("c", false)
             .set("d", new Date(0))
             .set("object", new Dict().set("key", "value"))
-            .set("array", new Array().add("item 1").add("item 2"))
+            .set("array", Array.of("item 1", "item 2"))
             .set("empty", new Dict().add("obj", new Dict()).add("arr", new Array()));
     }
 }

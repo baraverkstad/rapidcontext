@@ -93,14 +93,14 @@ public class MovingSum {
      * @return the serialized array of long values
      */
     public Array serialize() {
-        Array arr = new Array(6);
-        arr.set(0, Math.round(h0));
-        arr.set(1, Math.round(h1));
-        arr.set(2, Math.round(d0));
-        arr.set(3, Math.round(d1));
-        arr.set(4, Math.round(m0));
-        arr.set(5, Math.round(m1));
-        return arr;
+        return Array.of(
+            Math.round(h0),
+            Math.round(h1),
+            Math.round(d0),
+            Math.round(d1),
+            Math.round(m0),
+            Math.round(m1)
+        );
     }
 
     /**

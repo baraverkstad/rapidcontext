@@ -183,7 +183,7 @@ public class Metadata extends StorableObject {
         dict.set(KEY_MIMETYPE, null);
         dict.set(KEY_MODIFIED, new Date());
         dict.set(KEY_SIZE, 0L);
-        dict.set(PREFIX_COMPUTED + KEY_STORAGES, new Array().add(storagePath));
+        dict.set(PREFIX_COMPUTED + KEY_STORAGES, Array.of(storagePath));
     }
 
     /**

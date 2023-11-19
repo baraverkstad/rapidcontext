@@ -88,11 +88,11 @@ public class MovingAverage {
      * @return the serialized array of long values
      */
     public Array serialize() {
-        Array arr = new Array(3);
-        arr.set(0, Math.round(s * Window.SHORT.size));
-        arr.set(1, Math.round(m * Window.MEDIUM.size));
-        arr.set(2, Math.round(l * Window.LONG.size));
-        return arr;
+        return Array.of(
+            Math.round(s * Window.SHORT.size),
+            Math.round(m * Window.MEDIUM.size),
+            Math.round(l * Window.LONG.size)
+        );
     }
 
     /**
@@ -103,11 +103,11 @@ public class MovingAverage {
      * @return an array of long values
      */
     public Array values() {
-        Array arr = new Array(3);
-        arr.set(0, Math.round(s));
-        arr.set(1, Math.round(m));
-        arr.set(2, Math.round(l));
-        return arr;
+        return Array.of(
+            Math.round(s),
+            Math.round(m),
+            Math.round(l)
+        );
     }
 
     /**

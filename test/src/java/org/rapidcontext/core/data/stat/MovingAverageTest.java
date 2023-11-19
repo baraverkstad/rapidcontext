@@ -31,11 +31,7 @@ public class MovingAverageTest {
         assertEquals("[ 30, 300, 3000 ]", avg1.serialize().toString());
         MovingAverage avg2 = new MovingAverage(avg1.serialize());
         assertEquals("[ 30, 300, 3000 ]", avg2.serialize().toString());
-        Array arr = new Array();
-        arr.add(10);
-        arr.add(200);
-        arr.add(3000);
-        MovingAverage avg3 = new MovingAverage(arr);
+        MovingAverage avg3 = new MovingAverage(Array.of(10, 200, 3000));
         assertEquals(1.0, avg3.valueFor(MovingAverage.Window.SHORT), 0.1);
         assertEquals(2.0, avg3.valueFor(MovingAverage.Window.MEDIUM), 0.1);
         assertEquals(3.0, avg3.valueFor(MovingAverage.Window.LONG), 0.1);
