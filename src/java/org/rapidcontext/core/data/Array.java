@@ -67,17 +67,31 @@ public class Array implements Iterable<Object> {
     private boolean sealed = false;
 
     /**
-     * Creates a new array containing all provided elements. Any
-     * iterable or map elements will be converted to Array or Dict
-     * recursively.
+     * Creates a new array containing all elements in an iterable.
+     * All contained iterable or map elements will be converted to
+     * Array or Dict recursively.
      *
-     * @param iter           the iterable to copy
+     * @param iter           the iterable to read
      *
-     * @return a new array with all provided elements
+     * @return a new array with all elements
      */
     public static Array from(Iterable<?> iter) {
+        return from(iter.iterator());
+    }
+
+    /**
+     * Creates a new array containing all elements in an iterator.
+     * All contained iterable or map elements will be converted to
+     * Array or Dict recursively.
+     *
+     * @param iter           the iterator to read
+     *
+     * @return a new array with all elements
+     */
+    public static Array from(Iterator<?> iter) {
         Array arr = new Array();
-        for (Object val : iter) {
+        while (iter.hasNext()) {
+            var val = iter.next();
             if (val instanceof Iterable<?>) {
                 arr.add(Array.from((Iterable<?>) val));
             } else if (val instanceof Map<?, ?>) {
@@ -87,6 +101,19 @@ public class Array implements Iterable<Object> {
             }
         }
         return arr;
+    }
+
+    /**
+     * Creates a new array containing all elements in a stream. All
+     * contained iterable or map elements will be converted to Array
+     * or Dict recursively.
+     *
+     * @param stream         the stream to read
+     *
+     * @return a new array with all elements
+     */
+    public static Array from(Stream<?> stream) {
+        return from(stream.iterator());
     }
 
     /**
@@ -789,13 +816,9 @@ public class Array implements Iterable<Object> {
         if (size() <= 0 || !containsAny(arr)) {
             return arr;
         } else {
-            Array res = new Array(arr.size());
-            for (Object value : arr) {
-                if (!containsValue(value)) {
-                    res.add(value);
-                }
-            }
-            return res;
+            return Array.from(
+                arr.stream().filter(o -> !containsValue(o)).iterator()
+            );
         }
     }
 
@@ -816,13 +839,9 @@ public class Array implements Iterable<Object> {
         } else if (size() <= 0) {
             return this;
         } else {
-            Array res = new Array(Math.min(size(), arr.size()));
-            for (Object value : arr) {
-                if (containsValue(value)) {
-                    res.add(value);
-                }
-            }
-            return res;
+            return Array.from(
+                arr.stream().filter(o -> containsValue(o)).iterator()
+            );
         }
     }
 

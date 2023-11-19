@@ -129,10 +129,10 @@ public class Dict {
     }
 
     /**
-     * Creates a new dictionary containing all provided entries. Any
-     * iterable or map values will be converted to Array or Dict
-     * recursively. All map keys will be converted to String via
-     * Objects.toString().
+     * Creates a new dictionary containing all entries in a map. All
+     * map keys will be converted to String via Objects.toString().
+     * Any iterable or map values will be converted to Array or Dict
+     * recursively.
      *
      * @param map            the map to copy
      *
