@@ -98,19 +98,16 @@ public class User extends StorableObject {
     /**
      * The default user data (copied for new users).
      */
-    private static final Dict DEFAULTS = new Dict();
-
-    static {
-        DEFAULTS.set(KEY_ID, "");
-        DEFAULTS.set(KEY_TYPE, "user");
-        DEFAULTS.set(KEY_NAME, "");
-        DEFAULTS.set(KEY_EMAIL, "");
-        DEFAULTS.set(KEY_DESCRIPTION, "");
-        DEFAULTS.set(KEY_ENABLED, true);
-        DEFAULTS.set(KEY_REALM, DEFAULT_REALM);
-        DEFAULTS.set(PREFIX_HIDDEN + KEY_PASSWORD, "");
-        DEFAULTS.set(KEY_ROLE, new Array());
-    }
+    private static final Dict DEFAULTS = new Dict()
+        .set(KEY_ID, "")
+        .set(KEY_TYPE, "user")
+        .set(KEY_NAME, "")
+        .set(KEY_EMAIL, "")
+        .set(KEY_DESCRIPTION, "")
+        .set(KEY_ENABLED, true)
+        .set(KEY_REALM, DEFAULT_REALM)
+        .set(PREFIX_HIDDEN + KEY_PASSWORD, "")
+        .set(KEY_ROLE, new Array());
 
     /**
      * Searches for a specific user in the storage.

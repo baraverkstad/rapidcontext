@@ -500,10 +500,10 @@ public class RootStorage extends MemoryStorage {
      */
     private Object initObject(String id, String type, Dict dict) {
         // TODO: Remove type normalization when legacy data migrated
-        Dict copy = new Dict();
-        copy.set(KEY_ID, id);
-        copy.set(KEY_TYPE, type);
-        copy.setAll(dict);
+        Dict copy = new Dict()
+            .set(KEY_ID, id)
+            .set(KEY_TYPE, type)
+            .setAll(dict);
         Constructor<?> ctor = Type.constructorFor(this, copy);
         if (ctor != null) {
             // TODO: Remove support for legacy object initializers eventually...

@@ -120,11 +120,10 @@ public class MovingSum {
      * @return a dictionary with sums for each interval
      */
     public Dict values() {
-        Dict res = new Dict();
-        res.set("hour", Math.round(valueFor(Interval.HOUR)));
-        res.set("day", Math.round(valueFor(Interval.DAY)));
-        res.set("month", Math.round(valueFor(Interval.MONTH)));
-        return res;
+        return new Dict()
+            .set("hour", Math.round(valueFor(Interval.HOUR)))
+            .set("day", Math.round(valueFor(Interval.DAY)))
+            .set("month", Math.round(valueFor(Interval.MONTH)));
     }
 
     /**
