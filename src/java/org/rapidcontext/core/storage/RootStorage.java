@@ -493,6 +493,7 @@ public class RootStorage extends MemoryStorage {
      * If no type is registered, the dictionary is returned as-is.
      *
      * @param id             the object id
+     * @param type           the object type
      * @param dict           the dictionary data
      *
      * @return the StorableObject instance created, or
