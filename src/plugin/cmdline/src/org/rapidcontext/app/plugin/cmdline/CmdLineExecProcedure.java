@@ -204,11 +204,10 @@ public class CmdLineExecProcedure extends Procedure {
                 }
             }
         }
-        Dict res = new Dict();
-        res.set("exitValue", exitValue);
-        res.set("output", output.toString());
-        res.set("error", error.toString());
-        return res;
+        return new Dict()
+            .set("exitValue", exitValue)
+            .set("output", output.toString())
+            .set("error", error.toString());
     }
 
     /**
