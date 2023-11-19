@@ -69,11 +69,11 @@ public class JdbcBuiltInConnectionListProcedure extends Procedure {
 
         CallContext.checkSearchAccess(Connection.PATH.toString());
         Storage storage = cx.getStorage();
-        Array res = new Array();
-        storage.query(Connection.PATH)
+        return Array.from(
+            storage.query(Connection.PATH)
             .filterAccess(cx.readPermission(1))
             .objects(JdbcConnection.class)
-            .forEach(con -> res.add(con.serialize()));
-        return res;
+            .map(con -> con.serialize())
+        );
     }
 }

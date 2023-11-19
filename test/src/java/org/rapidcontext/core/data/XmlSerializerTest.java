@@ -69,15 +69,14 @@ public class XmlSerializerTest {
     }
 
     private Dict buildDict() {
-        Dict root = new Dict();
-        root.set("id", "xmldata");
-        root.set("a", "abc\u00E5\u00E4\u00F6");
-        root.set("b", 2);
-        root.set("c", false);
-        root.set("d", new Date(0));
-        root.set("object", new Dict().set("key", "value"));
-        root.set("array", new Array().add("item 1").add("item 2"));
-        root.set("empty", new Dict().add("obj", new Dict()).add("arr", new Array()));
-        return root;
+        return new Dict()
+            .set("id", "xmldata")
+            .set("a", "abc\u00E5\u00E4\u00F6")
+            .set("b", 2)
+            .set("c", false)
+            .set("d", new Date(0))
+            .set("object", new Dict().set("key", "value"))
+            .set("array", new Array().add("item 1").add("item 2"))
+            .set("empty", new Dict().add("obj", new Dict()).add("arr", new Array()));
     }
 }
