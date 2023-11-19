@@ -14,7 +14,7 @@
 
 package org.rapidcontext.app.proc;
 
-import java.util.stream.Collectors;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 import org.rapidcontext.app.model.AppStorage;
@@ -71,10 +71,10 @@ public class PluginListProcedure extends Procedure {
 
         CallContext.checkSearchAccess(Plugin.PATH_STORAGE.toString());
         AppStorage storage = (AppStorage) cx.getStorage();
-        Array res = new Array();
-        storage.mounts(Plugin.PATH_STORAGE)
-            .map(s -> s.path().name())
-            .forEach(pluginId -> {
+        return Array.from(
+            storage.mounts(Plugin.PATH_STORAGE)
+            .map(mount -> {
+                String pluginId = mount.path().name();
                 Path storagePath = Plugin.storagePath(pluginId);
                 Path instancePath = Plugin.instancePath(pluginId);
                 Path configPath = Plugin.configPath(pluginId);
@@ -88,19 +88,22 @@ public class PluginListProcedure extends Procedure {
                     Dict config = storage.load(configPath, Dict.class);
                     if (instance != null) {
                         config = instance.serialize();
-                        config.set("loaded", true);
+                        config.set("_loaded", true);
                     } else if (config != null) {
-                        config.set("loaded", false);
+                        config.set("_loaded", false);
                     } else {
                         config = new Dict();
                         config.set(Plugin.KEY_ID, pluginId);
-                        config.set("loaded", false);
+                        config.set("_loaded", false);
                     }
-                    Stream<String> types = idx.indices(false).filter(s -> !s.equals("plugin"));
-                    config.set("content", types.collect(Collectors.joining(" \u2022 ")));
-                    res.add(config);
+                    Stream<?> types = idx.indices(false).filter(s -> !s.equals("plugin"));
+                    config.set("_content", Array.from(types));
+                    return config;
+                } else {
+                    return null;
                 }
-            });
-        return res;
+            })
+            .filter(Objects::nonNull)
+        );
     }
 }
