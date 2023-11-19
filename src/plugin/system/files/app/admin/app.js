@@ -570,7 +570,7 @@ AdminApp.prototype._showPlugin = function () {
         var path = "/storage/plugin/" + data.id + "/";
         var url = "rapidcontext/storage" + path;
         this.ui.pluginLink.setAttribute("href", url);
-        if (data.loaded) {
+        if (data._loaded) {
             this.ui.pluginLoad.hide();
             this.ui.pluginUnload.show();
         } else {
@@ -598,8 +598,8 @@ AdminApp.prototype._togglePlugin = function () {
     this.ui.pluginReload.hide();
     this.ui.pluginLoading.show();
     let data = this.ui.pluginTable.getSelectedData();
-    let isJava = data.loaded && /\blib\b/.test(data.content);
-    let proc = data.loaded ? "system/plugin/unload" : "system/plugin/load";
+    let isJava = data._loaded && /\blib\b/.test(data._content);
+    let proc = data._loaded ? "system/plugin/unload" : "system/plugin/load";
     RapidContext.App.callProc(proc, [data.id])
         .catch(RapidContext.UI.showError)
         .then(() => this.resetServer())

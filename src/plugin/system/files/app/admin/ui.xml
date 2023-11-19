@@ -224,7 +224,7 @@
           <Icon id="pluginLoading" class="fa fa-spin fa-refresh ml-1" />
         </h3>
         <Table id="pluginTable" w="100%" h="100%-2.2em">
-          <TableColumn title="Status" field="loaded" type="boolean" />
+          <TableColumn title="Status" field="_loaded" type="boolean" />
           <TableColumn title="Identifier" field="id" key="true" />
           <TableColumn title="Version" field="version" />
           <TableColumn title="Name" field="name" />
