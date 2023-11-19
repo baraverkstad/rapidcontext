@@ -514,10 +514,9 @@ public class JdbcChannel extends Channel {
             throw new ConnectionException(msg);
         }
         if (hasFlag(flags, "metadata", false)) {
-            Dict dict = new Dict();
-            dict.set("columns", createColumnData(meta, flags));
-            dict.set("rows", createRowData(meta, rs, flags));
-            return dict;
+            return new Dict()
+                .set("columns", createColumnData(meta, flags))
+                .set("rows", createRowData(meta, rs, flags));
         } else {
             return createRowData(meta, rs, flags);
         }
@@ -541,15 +540,16 @@ public class JdbcChannel extends Channel {
             int colCount = meta.getColumnCount();
             cols = new Array(colCount);
             for (int i = 0; i < colCount; i++) {
-                Dict obj = new Dict();
-                obj.set("name", meta.getColumnLabel(i + 1).toLowerCase());
-                obj.set("catalog", meta.getCatalogName(i + 1));
-                obj.set("type", meta.getColumnTypeName(i + 1));
-                obj.set("jdbcType", meta.getColumnType(i + 1));
-                obj.set("schema", meta.getSchemaName(i + 1));
-                obj.set("table", meta.getTableName(i + 1));
-                obj.set("column", meta.getColumnName(i + 1));
-                cols.add(obj);
+                cols.add(
+                    new Dict()
+                    .set("name", meta.getColumnLabel(i + 1).toLowerCase())
+                    .set("catalog", meta.getCatalogName(i + 1))
+                    .set("type", meta.getColumnTypeName(i + 1))
+                    .set("jdbcType", meta.getColumnType(i + 1))
+                    .set("schema", meta.getSchemaName(i + 1))
+                    .set("table", meta.getTableName(i + 1))
+                    .set("column", meta.getColumnName(i + 1))
+                );
             }
         } catch (SQLException e) {
             String msg = "failed to read result meta-data: " + e.getMessage();
