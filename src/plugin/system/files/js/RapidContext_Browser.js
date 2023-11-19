@@ -285,7 +285,7 @@
             return res;
         }
         var BROWSERS = {
-            "Bot": /Bot|Spider|PhantomJS|Headless|Electron|slimerjs/i,
+            "Bot": /Bot|Spider|PhantomJS|Headless|Electron|slimerjs|Python/i,
             "Edge": /Edg(?:e|A|iOS|)\/([^\s;]+)/,
             "Chrome": /Chrome\/([^\s;]+)/,
             "Chrome iOS": /CriOS\/([^\s;]+)/,
