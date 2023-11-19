@@ -155,11 +155,10 @@ public class User extends StorableObject {
             dict.set(KEY_ID, id);
             dict.set(KEY_NAME, dict.get(KEY_DESCRIPTION, String.class, ""));
             dict.set(KEY_DESCRIPTION, "");
-            Array list = new Array();
-            for (Object o : dict.getArray(KEY_ROLE)) {
-                list.add(o.toString().toLowerCase());
-            }
-            dict.set(KEY_ROLE, list);
+            dict.set(KEY_ROLE, Array.from(
+                dict.getArray(KEY_ROLE).stream()
+                .map(o -> o.toString().toLowerCase())
+            ));
         }
         if (dict.containsKey(KEY_PASSWORD)) {
             LOG.warning("deprecated: user " + id + " data: password not hidden");

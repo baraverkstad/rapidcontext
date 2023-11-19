@@ -62,9 +62,9 @@ public class TypeListProcedure extends Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        Array res = new Array();
-        Type.all(cx.getStorage())
-            .forEach(t -> res.add(StorableObject.sterilize(t, true, true, true)));
-        return res;
+        return Array.from(
+            Type.all(cx.getStorage())
+            .map(t -> StorableObject.sterilize(t, true, true, true))
+        );
     }
 }

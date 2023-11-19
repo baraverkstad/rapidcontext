@@ -67,11 +67,12 @@ public class UserListProcedure extends Procedure {
 
         CallContext.checkSearchAccess(User.PATH.toString());
         Storage storage = cx.getStorage();
-        Array res = new Array();
-        storage.query(User.PATH)
+        Array res = Array.from(
+            storage.query(User.PATH)
             .filterAccess(cx.readPermission(1))
             .objects(User.class)
-            .forEach(user -> res.add(StorableObject.sterilize(user, true, true, true)));
+            .map(user -> StorableObject.sterilize(user, true, true, true))
+        );
         res.sort("id");
         return res;
     }

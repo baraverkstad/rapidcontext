@@ -14,6 +14,8 @@
 
 package org.rapidcontext.app.proc;
 
+import java.util.Objects;
+
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
@@ -65,12 +67,12 @@ public class ConnectionListProcedure extends Procedure {
         throws ProcedureException {
 
         CallContext.checkSearchAccess(Connection.PATH.toString());
-        Array res = new Array();
         Storage storage = cx.getStorage();
-        storage.query(Connection.PATH)
+        return Array.from(
+            storage.query(Connection.PATH)
             .filterAccess(cx.readPermission(1))
             .metadatas()
-            .forEach(meta -> {
+            .map(meta -> {
                 Object o = storage.load(meta.path());
                 Dict dict = null;
                 if (o instanceof Connection) {
@@ -85,9 +87,10 @@ public class ConnectionListProcedure extends Procedure {
                 }
                 if (dict != null) {
                     dict.add("plugin", Plugin.source(meta));
-                    res.add(dict);
                 }
-            });
-        return res;
+                return dict;
+            })
+            .filter(Objects::nonNull)
+        );
     }
 }

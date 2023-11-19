@@ -82,15 +82,12 @@ public class AppListProcedure extends Procedure {
 
         CallContext.checkSearchAccess(PATH_APP.toString());
         Storage storage = cx.getStorage();
-        Dict[] apps = storage.query(PATH_APP)
+        Array res = Array.from(
+            storage.query(PATH_APP)
             .filterAccess(cx.readPermission(1))
             .metadatas(Dict.class)
             .map(meta -> loadApp(storage, meta, cx.readPermission(1)))
-            .toArray(Dict[]::new);
-        Array res = new Array(apps.length);
-        for (Dict app : apps) {
-            res.add(app);
-        }
+        );
         res.sort("name");
         return res;
     }

@@ -247,12 +247,10 @@ public class ApiUtil {
         if (obj instanceof Index) {
             Index idx = (Index) obj;
             boolean hidden = opts.get("hidden", Boolean.class, false);
-            Array paths = new Array();
-            idx.paths(path, hidden).forEach(p -> paths.add(p));
             Dict dict = new Dict();
             dict.set("type", "index");
             dict.set("modified", idx.modified());
-            dict.set("paths", paths);
+            dict.set("paths", Array.from(idx.paths(path, hidden)));
             return dict;
         } else if (obj instanceof Binary) {
             Binary data = (Binary) obj;

@@ -135,11 +135,10 @@ public class StorableObject {
             }
             return dst;
         } else if (obj instanceof Array) {
-            Array arr = new Array();
-            for (Object o : (Array) obj) {
-                arr.add(sterilize(o, skipHidden, skipComputed, limitedTypes));
-            }
-            return arr;
+            return Array.from(
+                ((Array) obj).stream()
+                .map(o -> sterilize(o, skipHidden, skipComputed, limitedTypes))
+            );
         } else if (obj instanceof StorableObject) {
             StorableObject o = (StorableObject) obj;
             return sterilize(o.serialize(), skipHidden, skipComputed, limitedTypes);

@@ -74,9 +74,7 @@ public class StorageQueryProcedure extends Procedure {
         Stream<Object> stream = ApiUtil.lookup(cx.getStorage(), path, cx.readPermission(1), opts)
             .map(m -> ApiUtil.serialize(m.path(), m, opts, true));
         if (path.isIndex()) {
-            Array res = new Array();
-            stream.forEach(o -> res.add(o));
-            return res;
+            return Array.from(stream);
         } else {
             return stream.findFirst().orElse(null);
         }
