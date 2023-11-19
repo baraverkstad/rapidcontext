@@ -16,6 +16,7 @@ package org.rapidcontext.core.data;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Supplier;
 
@@ -125,6 +126,32 @@ public class Dict {
         } else {
             return (T) value; // throws ClassCastException
         }
+    }
+
+    /**
+     * Creates a new dictionary containing all provided entries. Any
+     * iterable or map values will be converted to Array or Dict
+     * recursively. All map keys will be converted to String via
+     * Objects.toString().
+     *
+     * @param map            the map to copy
+     *
+     * @return a new array with all provided entries
+     */
+    public static Dict from(Map<?, ?> map) {
+        Dict dict = new Dict(map.size());
+        for (var entry : map.entrySet()) {
+            String key = Objects.toString(entry.getKey());
+            Object val = entry.getValue();
+            if (val instanceof Map<?, ?>) {
+                dict.set(key, Dict.from((Map<?, ?>) val));
+            } else if (val instanceof Iterable<?>) {
+                dict.set(key, Array.from((Iterable<?>) val));
+            } else {
+                dict.set(key, val);
+            }
+        }
+        return dict;
     }
 
     /**

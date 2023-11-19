@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -64,6 +65,29 @@ public class Array implements Iterable<Object> {
      * modifier methods will result in a run-time exception.
      */
     private boolean sealed = false;
+
+    /**
+     * Creates a new array containing all provided elements. Any
+     * iterable or map elements will be converted to Array or Dict
+     * recursively.
+     *
+     * @param iter           the iterable to copy
+     *
+     * @return a new array with all provided elements
+     */
+    public static Array from(Iterable<?> iter) {
+        Array arr = new Array();
+        for (Object val : iter) {
+            if (val instanceof Iterable<?>) {
+                arr.add(Array.from((Iterable<?>) val));
+            } else if (val instanceof Map<?, ?>) {
+                arr.add(Dict.from((Map<?, ?>) val));
+            } else {
+                arr.add(val);
+            }
+        }
+        return arr;
+    }
 
     /**
      * Creates a new empty array.
