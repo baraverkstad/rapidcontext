@@ -68,20 +68,18 @@ public class ThreadListProcedure extends Procedure {
         for (Thread t : Thread.getAllStackTraces().keySet()) {
             int id = t.hashCode();
             if (SecurityContext.hasReadAccess("thread/" + id)) {
-                Dict dict = new Dict();
-                dict.set("id", t.hashCode());
-                dict.set("name", t.getName());
-                dict.set("priority", t.getPriority());
-                dict.set("group", t.getThreadGroup().getName());
-                dict.set("daemon", t.isDaemon());
-                dict.set("alive", t.isAlive());
-                CallContext threadCx = ctx.findContext(t);
-                if (threadCx == null) {
-                    dict.set("context", null);
-                } else {
-                    dict.set("context", ThreadContextProcedure.getContextData(threadCx));
-                }
-                res.add(dict);
+                CallContext tcx = ctx.findContext(t);
+                Dict data = (tcx == null) ? null : ThreadContextProcedure.getContextData(tcx);
+                res.add(
+                    new Dict()
+                    .set("id", t.hashCode())
+                    .set("name", t.getName())
+                    .set("priority", t.getPriority())
+                    .set("group", t.getThreadGroup().getName())
+                    .set("daemon", t.isDaemon())
+                    .set("alive", t.isAlive())
+                    .set("context", data)
+                );
             }
         }
         return res;

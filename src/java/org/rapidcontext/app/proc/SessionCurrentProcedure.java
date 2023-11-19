@@ -106,13 +106,12 @@ public class SessionCurrentProcedure extends Procedure {
      * @return the serialized file dictionary
      */
     public static Dict serialize(File file) {
-        Dict dict = new Dict();
-        dict.set("name", file.getName());
-        dict.set("size", String.valueOf(file.length()));
-        dict.set("mimeType", Mime.type(file));
         Date date = new Date(file.lastModified());
-        dict.set("creationTime", date);
-        dict.set("creationDate", DateUtil.asDateTimeUTC(date));
-        return dict;
+        return new Dict()
+            .set("name", file.getName())
+            .set("size", String.valueOf(file.length()))
+            .set("mimeType", Mime.type(file))
+            .set("creationTime", date)
+            .set("creationDate", DateUtil.asDateTimeUTC(date));
     }
 }

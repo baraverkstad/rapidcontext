@@ -90,10 +90,9 @@ public class SessionAuthenticateProcedure extends Procedure {
      * @return the authentication response object
      */
     public static Dict response(boolean success, String message, String userId) {
-        Dict res = new Dict();
-        res.set("success", success);
-        res.set(success ? "message" : "error", message);
-        res.set("user", userId);
-        return res;
+        return new Dict()
+            .set("success", success)
+            .set(success ? "message" : "error", message)
+            .set("user", userId);
     }
 }

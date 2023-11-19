@@ -76,9 +76,9 @@ public class ProcedureWriteProcedure extends Procedure {
         }
         CallContext.checkWriteAccess("procedure/" + name);
         LOG.info("writing procedure " + name);
-        Dict dict = new Dict();
-        dict.set("description", bindings.getValue("description", ""));
-        dict.set("binding", bindings.getValue("bindings"));
+        Dict dict = new Dict()
+            .set("description", bindings.getValue("description", ""))
+            .set("binding", bindings.getValue("bindings"));
         org.rapidcontext.core.proc.Procedure proc = cx.getLibrary().storeProcedure(name, type, dict);
         return ProcedureReadProcedure.getProcedureData(cx.getLibrary(), proc);
     }

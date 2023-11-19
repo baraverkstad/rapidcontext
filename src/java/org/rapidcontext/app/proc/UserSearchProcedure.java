@@ -76,13 +76,12 @@ public class UserSearchProcedure extends Procedure {
                 if (SecurityContext.hasReadAccess(path.toString())) {
                     return StorableObject.sterilize(user, true, true, true);
                 } else {
-                    Dict dict = new Dict();
-                    dict.set(User.KEY_ID, user.id());
-                    dict.set(User.KEY_TYPE, user.type());
-                    dict.set(User.KEY_REALM, user.realm());
-                    dict.set(User.KEY_EMAIL, user.email());
-                    dict.set(User.KEY_ENABLED, user.isEnabled());
-                    return dict;
+                    return new Dict()
+                        .set(User.KEY_ID, user.id())
+                        .set(User.KEY_TYPE, user.type())
+                        .set(User.KEY_REALM, user.realm())
+                        .set(User.KEY_EMAIL, user.email())
+                        .set(User.KEY_ENABLED, user.isEnabled());
                 }
             }
             return null;

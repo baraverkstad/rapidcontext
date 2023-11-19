@@ -98,10 +98,9 @@ public class StatusProcedure extends Procedure {
      */
     private static Dict getEnvironmentData(Environment env) {
         if (env != null) {
-            Dict res = new Dict();
-            res.set("name", env.id());
-            res.set("description", env.description());
-            return res;
+            return new Dict()
+                .set("name", env.id())
+                .set("description", env.description());
         } else {
             return null;
         }

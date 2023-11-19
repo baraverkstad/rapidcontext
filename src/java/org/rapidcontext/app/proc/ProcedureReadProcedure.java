@@ -123,12 +123,13 @@ public class ProcedureReadProcedure extends Procedure {
         String[] names = bindings.getNames();
         Array res = new Array(names.length);
         for (String s : names) {
-            Dict dict = new Dict();
-            dict.set("name", s);
-            dict.set("type", bindings.getTypeName(s));
-            dict.set("value", bindings.getValue(s, ""));
-            dict.set("description", bindings.getDescription(s));
-            res.add(dict);
+            res.add(
+                new Dict()
+                .set("name", s)
+                .set("type", bindings.getTypeName(s))
+                .set("value", bindings.getValue(s, ""))
+                .set("description", bindings.getDescription(s))
+            );
         }
         return res;
     }

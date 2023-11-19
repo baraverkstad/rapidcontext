@@ -15,6 +15,7 @@
 package org.rapidcontext.app.proc;
 
 import org.rapidcontext.app.ApplicationContext;
+import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
@@ -69,19 +70,15 @@ public class ProcedureTypesProcedure extends Procedure {
         Dict res = new Dict();
         Type.all(storage).forEach(t -> {
             if (t.id().startsWith("procedure/")) {
-                Dict dict = new Dict();
-                dict.set("type", t.id());
-                dict.set("bindings", t.serialize().getArray("binding"));
-                res.set(t.id(), dict);
+                Array arr = t.serialize().getArray("binding");
+                res.set(t.id(), new Dict().set("type", t.id()).set("bindings", arr));
             }
         });
         for (String name : Library.getTypes()) {
             Bindings defs = Library.getDefaultBindings(name);
             if (defs != null) {
-                Dict dict = new Dict();
-                dict.set("type", name);
-                dict.set("bindings", ProcedureReadProcedure.getBindingsData(defs));
-                res.set(name, dict);
+                Array data = ProcedureReadProcedure.getBindingsData(defs);
+                res.set(name, new Dict().set("type", name).set("bindings", data));
             }
         }
         return res;

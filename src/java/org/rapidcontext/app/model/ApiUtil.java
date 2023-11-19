@@ -220,10 +220,9 @@ public class ApiUtil {
                                    Dict opts,
                                    boolean limitedTypes) {
         if (opts.get("metadata", Boolean.class, false)) {
-            Dict res = new Dict();
-            res.set("data", serialize(meta.path(), obj, opts, limitedTypes));
-            res.set("metadata", serialize(meta.path(), meta, opts, limitedTypes));
-            return res;
+            return new Dict()
+                .set("data", serialize(meta.path(), obj, opts, limitedTypes))
+                .set("metadata", serialize(meta.path(), meta, opts, limitedTypes));
         } else {
             return serialize(meta.path(), obj, opts, limitedTypes);
         }
@@ -247,20 +246,19 @@ public class ApiUtil {
         if (obj instanceof Index) {
             Index idx = (Index) obj;
             boolean hidden = opts.get("hidden", Boolean.class, false);
-            Dict dict = new Dict();
-            dict.set("type", "index");
-            dict.set("modified", idx.modified());
-            dict.set("paths", Array.from(idx.paths(path, hidden)));
-            return dict;
+            return new Dict()
+                .set("type", "index")
+                .set("modified", idx.modified())
+                .set("paths", Array.from(idx.paths(path, hidden)));
         } else if (obj instanceof Binary) {
             Binary data = (Binary) obj;
-            Dict dict = new Dict();
-            dict.set("type", "file");
-            dict.set("path", path);
-            dict.set("name", path.name());
-            dict.set("mimeType", data.mimeType());
-            dict.set("modified", new Date(data.lastModified()));
-            dict.set("size", data.size());
+            Dict dict = new Dict()
+                .set("type", "file")
+                .set("path", path)
+                .set("name", path.name())
+                .set("mimeType", data.mimeType())
+                .set("modified", new Date(data.lastModified()))
+                .set("size", data.size());
             if (opts.get("computed", Boolean.class, false)) {
                 try (InputStream is = data.openStream()) {
                     if (Mime.isText(data.mimeType())) {
