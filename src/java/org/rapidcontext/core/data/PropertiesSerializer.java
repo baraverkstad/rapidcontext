@@ -27,6 +27,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.lang3.CharUtils;
@@ -356,6 +357,10 @@ public final class PropertiesSerializer {
             write(os, prefix, (Dict) obj);
         } else if (obj instanceof Array) {
             write(os, prefix, (Array) obj);
+        } else if (obj instanceof Map) {
+            write(os, prefix, Dict.from((Map<?, ?>) obj));
+        } else if (obj instanceof Iterable) {
+            write(os, prefix, Array.from((Iterable<?>) obj));
         } else if (obj instanceof Date) {
             write(os, prefix, DateUtil.asEpochMillis((Date) obj));
         } else {

@@ -18,10 +18,13 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.Map;
 
 import org.junit.Test;
 import org.rapidcontext.util.FileUtil;
+
 import static org.rapidcontext.core.data.YamlSerializer.*;
 
 /**
@@ -36,6 +39,8 @@ public class YamlSerializerTest {
         assertEquals("123\n", serialize(123));
         assertEquals("true\n", serialize(true));
         assertEquals("'@0'\n", serialize(new Date(0)));
+        assertEquals("  - 1\n  - 2\n", serialize(Arrays.asList(1, 2)));
+        assertEquals("a: 1\n", serialize(Map.of("a", 1)));
     }
 
     @Test

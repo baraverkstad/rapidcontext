@@ -118,6 +118,10 @@ public class YamlSerializer {
             return toYaml((Dict) obj);
         } else if (obj instanceof Array) {
             return toYaml((Array) obj);
+        } else if (obj instanceof Map) {
+            return toYaml(Dict.from((Map<?, ?>) obj));
+        } else if (obj instanceof Iterable) {
+            return toYaml(Array.from((Iterable<?>) obj));
         } else if (obj instanceof Date) {
             return DateUtil.asEpochMillis((Date) obj);
         } else if (obj == null || obj instanceof Boolean || obj instanceof Number) {

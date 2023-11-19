@@ -18,7 +18,9 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.Map;
 
 import org.junit.Test;
 import org.rapidcontext.util.FileUtil;
@@ -36,6 +38,8 @@ public class JsonSerializerTest {
         assertEquals("123", serialize(123, false));
         assertEquals("true", serialize(true, false));
         assertEquals("\"@0\"", serialize(new Date(0), false));
+        assertEquals("[1,2]", serialize(Arrays.asList(1, 2), false));
+        assertEquals("{\"a\":1}", serialize(Map.of("a", 1), false));
     }
 
     @Test

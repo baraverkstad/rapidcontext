@@ -18,7 +18,9 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.Map;
 
 import org.junit.Test;
 import org.rapidcontext.util.FileUtil;
@@ -36,6 +38,19 @@ public class XmlSerializerTest {
         assertEquals(PROLOG + "<o type=\"number\">123</o>\n", serialize("o", 123));
         assertEquals(PROLOG + "<o type=\"boolean\">true</o>\n", serialize("o", true));
         assertEquals(PROLOG + "<o type=\"date\">@0</o>\n", serialize("o", new Date(0)));
+        StringBuilder buf = new StringBuilder();
+        buf.append(PROLOG);
+        buf.append("<a type=\"array\">\n");
+        buf.append("  <item type=\"number\">1</item>\n");
+        buf.append("  <item type=\"number\">2</item>\n");
+        buf.append("</a>\n");
+        assertEquals(buf.toString(), serialize("a", Arrays.asList(1, 2)));
+        buf.setLength(0);
+        buf.append(PROLOG);
+        buf.append("<o type=\"object\">\n");
+        buf.append("  <a type=\"number\">1</a>\n");
+        buf.append("</o>\n");
+        assertEquals(buf.toString(), serialize("o", Map.of("a", 1)));
     }
 
     @Test

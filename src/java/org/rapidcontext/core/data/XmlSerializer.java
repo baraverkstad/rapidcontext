@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.Date;
+import java.util.Map;
 
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
@@ -133,6 +134,10 @@ public final class XmlSerializer {
             toXml(id, (Dict) obj, indent, buffer);
         } else if (obj instanceof Array) {
             toXml(id, (Array) obj, indent, buffer);
+        } else if (obj instanceof Map) {
+            toXml(id, Dict.from((Map<?, ?>) obj), indent, buffer);
+        } else if (obj instanceof Iterable) {
+            toXml(id, Array.from((Iterable<?>) obj), indent, buffer);
         } else if (obj instanceof Boolean) {
             tagStart(id, "boolean", buffer);
             buffer.append(TextEncoding.encodeXml(obj.toString(), false));

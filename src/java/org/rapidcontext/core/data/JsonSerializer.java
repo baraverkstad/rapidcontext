@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.Date;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.mozilla.javascript.Function;
@@ -98,6 +99,10 @@ public final class JsonSerializer {
             serialize((Dict) obj, indent, buffer);
         } else if (obj instanceof Array) {
             serialize((Array) obj, indent, buffer);
+        } else if (obj instanceof Map) {
+            serialize(Dict.from((Map<?, ?>) obj), indent, buffer);
+        } else if (obj instanceof Iterable) {
+            serialize(Array.from((Iterable<?>) obj), indent, buffer);
         } else if (obj instanceof Boolean) {
             buffer.append(obj.toString());
         } else if (obj instanceof Number) {
