@@ -16,6 +16,7 @@ package org.rapidcontext.app;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,7 +25,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Path;
@@ -200,7 +200,7 @@ public class ServletApplication extends HttpServlet {
         processAuthReset();
 
         // Check for valid session
-        String sessionId = StringUtils.defaultString(request.getSessionId());
+        String sessionId = Objects.toString(request.getSessionId(), "");
         Session session = null;
         try {
             if (sessionId.length() > 0) {

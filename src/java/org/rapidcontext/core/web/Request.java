@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -830,8 +831,8 @@ public class Request implements HttpUtil {
      * @param path           the cookie path, or null for default
      */
     public void setSessionId(String sessionId, String path) {
-        path = StringUtils.defaultString(path, request.getContextPath() + "/");
-        Cookie cookie = new Cookie(SESSION_COOKIE, StringUtils.defaultString(sessionId, "deleted"));
+        path = Objects.toString(path, request.getContextPath() + "/");
+        Cookie cookie = new Cookie(SESSION_COOKIE, Objects.toString(sessionId, "deleted"));
         cookie.setPath(StringUtils.prependIfMissing(path, "/"));
         cookie.setSecure(request.isSecure());
         cookie.setMaxAge((sessionId == null) ? 0 : (int) Session.MAX_AGE_MILLIS / 1000);
