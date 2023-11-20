@@ -286,39 +286,25 @@ public final class PluginManager {
      *             correctly
      */
     public String install(File file) throws PluginException {
-        ZipStorage  storage = null;
-        Dict        dict;
-        String      pluginId;
-        File        dst;
-        String      msg;
-
+        ZipStorage storage = null;
         try {
             // TODO: Support /plugin/<id>.yaml location too
             storage = new ZipStorage(file);
-            dict = storage.load(Path.from("/plugin"), Dict.class);
+            Dict dict = storage.load(Path.from("/plugin"), Dict.class);
             if (dict == null) {
                 throw new PluginException("missing plugin.properties");
             }
-            pluginId = dict.get(Plugin.KEY_ID, String.class);
+            String pluginId = dict.get(Plugin.KEY_ID, String.class);
             if (pluginId == null || pluginId.trim().length() < 0) {
-                msg = "missing plug-in identifier in plugin.properties";
+                String msg = "missing plug-in identifier in plugin.properties";
                 throw new PluginException(msg);
             }
-            if (isAvailable(pluginId)) {
-                unload(pluginId);
-                destroyStorage(pluginId);
-            }
-            dst = new File(pluginDir, pluginId);
-            if (dst.exists()) {
-                FileUtil.delete(dst);
-            }
-            dst = new File(pluginDir, pluginId + ".zip");
-            if (dst.exists()) {
-                FileUtil.delete(dst);
-            }
-            FileUtil.copy(file, dst);
+            uninstall(pluginId);
+            FileUtil.copy(file, new File(pluginDir, pluginId + ".zip"));
+            createStorage(pluginId);
+            return pluginId;
         } catch (Exception e) {
-            msg = "invalid plug-in file " + file.getName();
+            String msg = "invalid plug-in file " + file.getName();
             LOG.log(Level.WARNING, msg, e);
             throw new PluginException(msg + ": " + e.getMessage());
         } finally {
@@ -330,8 +316,32 @@ public final class PluginManager {
                 }
             }
         }
-        createStorage(pluginId);
-        return pluginId;
+    }
+
+    /**
+     * Uninstalls and removes a plug-in file. If the plug-in is
+     * loaded or mounted, it will first be unloaded and the
+     * associated storage will be destroyed.
+     *
+     * @param pluginId       the unique plug-in id
+     *
+     * @throws PluginException if the plug-in removal failed
+     */
+    public void uninstall(String pluginId) throws PluginException {
+        if (isAvailable(pluginId)) {
+            unload(pluginId);
+            destroyStorage(pluginId);
+        }
+        File file = storageFile(pluginId);
+        if (file != null && !isBuiltIn(pluginId)) {
+            try {
+                FileUtil.delete(file);
+            } catch (IOException e) {
+                String msg = "failed to delete plug-in file " + file.getName();
+                LOG.log(Level.WARNING, msg, e);
+                throw new PluginException(msg + ": " + e.getMessage());
+            }
+        }
     }
 
     /**

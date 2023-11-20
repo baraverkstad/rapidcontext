@@ -442,6 +442,20 @@ public class ApplicationContext {
     }
 
     /**
+     * Uninstalls and removes a plug-in file. If the plug-in is
+     * loaded or mounted, it will first be unloaded and the
+     * associated storage will be destroyed.
+     *
+     * @param pluginId       the unique plug-in id
+     *
+     * @throws PluginException if the plug-in removal failed
+     */
+    public void uninstallPlugin(String pluginId) throws PluginException {
+        unloadPlugin(pluginId);
+        pluginManager.uninstall(pluginId);
+    }
+
+    /**
      * Loads a plug-in. If the plug-in was loaded successfully, it will
      * also be added to the default configuration for automatic
      * launch on the next restart.

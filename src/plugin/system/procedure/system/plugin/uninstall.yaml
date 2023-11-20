@@ -1,0 +1,8 @@
+id: system/plugin/uninstall
+type: procedure
+className: org.rapidcontext.app.proc.PluginUninstallProcedure
+description: Uninstalls and removes a plug-in file.
+binding:
+  - name: pluginId
+    type: argument
+    description: The plug-in identifier
