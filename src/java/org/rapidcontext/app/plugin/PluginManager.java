@@ -159,6 +159,21 @@ public final class PluginManager {
     }
 
     /**
+     * Checks if the specified plug-in is built-in (or installed).
+     * Note any plug-ins located in the built-in plug-in directory
+     * will be considered built-in.
+     *
+     * @param pluginId       the unique plug-in id
+     *
+     * @return true if the plug-in exists and is built-in, or
+     *         false otherwise
+     */
+    public boolean isBuiltIn(String pluginId) {
+        File f = storageFile(pluginId);
+        return f != null && f.getParentFile().equals(builtinDir);
+    }
+
+    /**
      * Returns the plug-in identifier corresponding to a storage file
      * or directory.
      *

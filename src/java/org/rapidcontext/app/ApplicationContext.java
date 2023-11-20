@@ -408,6 +408,20 @@ public class ApplicationContext {
     }
 
     /**
+     * Checks if the specified plug-in is built-in (or installed).
+     * Note any plug-ins located in the built-in plug-in directory
+     * will be considered built-in.
+     *
+     * @param pluginId       the unique plug-in id
+     *
+     * @return true if the plug-in exists and is built-in, or
+     *         false otherwise
+     */
+    public boolean isPluginBuiltIn(String pluginId) {
+        return pluginManager.isBuiltIn(pluginId);
+    }
+
+    /**
      * Installs a plug-in from the specified file. If an existing
      * plug-in with the same id already exists, it will be
      * replaced without warning. After installation, the new plug-in

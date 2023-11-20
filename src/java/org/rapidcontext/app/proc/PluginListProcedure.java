@@ -17,6 +17,7 @@ package org.rapidcontext.app.proc;
 import java.util.Objects;
 import java.util.stream.Stream;
 
+import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.app.model.AppStorage;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
@@ -70,6 +71,7 @@ public class PluginListProcedure extends Procedure {
         throws ProcedureException {
 
         CallContext.checkSearchAccess(Plugin.PATH_STORAGE.toString());
+        ApplicationContext ctx = ApplicationContext.getInstance();
         AppStorage storage = (AppStorage) cx.getStorage();
         return Array.from(
             storage.mounts(Plugin.PATH_STORAGE)
@@ -98,6 +100,7 @@ public class PluginListProcedure extends Procedure {
                     }
                     Stream<?> types = idx.indices(false).filter(s -> !s.equals("plugin"));
                     config.set("_content", Array.from(types));
+                    config.set("_builtin", ctx.isPluginBuiltIn(pluginId));
                     return config;
                 } else {
                     return null;
