@@ -21,7 +21,7 @@
 	<classpathentry kind="lib" path="lib/jetty-util-6.1.9.jar"/>
 	<classpathentry kind="lib" path="lib/rhino-1.7.14.jar"/>
 	<classpathentry kind="lib" path="lib/servlet-api.jar"/>
-	<classpathentry kind="lib" path="lib/snakeyaml-engine-2.5.jar"/>
+	<classpathentry kind="lib" path="lib/snakeyaml-engine-2.7.jar"/>
 	<classpathentry kind="lib" path="test/lib/junit-4.13.2.jar"/>
 	<classpathentry kind="lib" path="test/lib/hamcrest-2.2.jar"/>
 	<classpathentry kind="output" path="classes"/>
