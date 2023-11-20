@@ -175,7 +175,7 @@ public abstract class Connection extends StorableObject {
         channelPool.setMaxIdle(open);
         channelPool.setMinIdle(0);
         channelPool.setMaxWait(Duration.ofMillis(MAX_WAIT_MILLIS));
-        channelPool.setMinEvictableIdle(Duration.ofSeconds(idle));
+        channelPool.setMinEvictableIdleDuration(Duration.ofSeconds(idle));
         channelPool.setLifo(false);
         channelPool.setTestOnCreate(false);
         channelPool.setTestOnBorrow(false);
