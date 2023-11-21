@@ -66,7 +66,7 @@ StartApp.prototype.start = function () {
     MochiKit.Signal.connect(this.ui.tourTabsLocate, "onclick", this, "_tourLocateTabs");
 
     // Init app list
-    this.proc.appList();
+    this._initApps();
 };
 
 /**
