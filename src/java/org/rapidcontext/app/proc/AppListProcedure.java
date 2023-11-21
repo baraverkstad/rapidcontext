@@ -82,14 +82,12 @@ public class AppListProcedure extends Procedure {
 
         CallContext.checkSearchAccess(PATH_APP.toString());
         Storage storage = cx.getStorage();
-        Array res = Array.from(
+        return Array.from(
             storage.query(PATH_APP)
             .filterAccess(cx.readPermission(1))
             .metadatas(Dict.class)
             .map(meta -> loadApp(storage, meta, cx.readPermission(1)))
         );
-        res.sort("name");
-        return res;
     }
 
     private Dict loadApp(Storage storage, Metadata meta, String permission) {
