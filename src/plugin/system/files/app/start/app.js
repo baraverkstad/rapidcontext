@@ -101,52 +101,31 @@ StartApp.prototype._initInfoMenu = function () {
  * list is refreshed.
  */
 StartApp.prototype._initApps = function () {
-    var apps = RapidContext.App.apps();
-    var instances = 0;
-    var launchers = [];
-    var help = null;
-    var admin = null;
+    let apps = RapidContext.App.apps();
 
-    // Find app instances and manual launchers
-    apps.forEach(function (app) {
-        if (app.instances) {
-            instances += app.instances.length;
-        }
-        if (app.id === "help") {
-            help = app;
-        } else if (app.id === "admin") {
-            admin = app;
-        } else if (app.launch == "auto" || app.launch == "manual" || app.launch == "window") {
-            launchers.push(app);
-        }
-    });
-
-    // Add helps and admin apps to the bottom
-    this.ui.menuHelp.classList.toggle("disabled", help == null);
-    if (help) {
-        launchers.push(help);
-    }
-    this.ui.menuAdmin.classList.toggle("disabled", admin == null);
-    if (admin) {
-        launchers.push(admin);
-    }
+    // Hide help and admin apps menu items if not available
+    let launchers = RapidContext.Data.object("id", apps);
+    this.ui.menuHelp.classList.toggle("disabled", !launchers.help);
+    this.ui.menuAdmin.classList.toggle("disabled", !launchers.admin);
 
     // Redraw the app launcher table
-    var $appTable = $(this.ui.appTable).empty();
-    launchers.forEach(function (app) {
-        var $tr = $("<tr>").addClass("clickable").attr("data-appid", app.id).appendTo($appTable);
-        var icon = app.icon && app.icon.cloneNode(true);
+    let $appTable = $(this.ui.appTable).empty();
+    let sortKey = (a) => (a.sort || a.id).toLowerCase();
+    let isListed = (a) => a.launch == "auto" || a.launch == "manual" || a.launch == "window";
+    RapidContext.Data.sort(sortKey, apps).filter(isListed).forEach(function (app) {
+        let $tr = $("<tr>").addClass("clickable").attr("data-appid", app.id).appendTo($appTable);
+        let icon = app.icon && app.icon.cloneNode(true);
         $("<td class='p-2'>").append(icon).appendTo($tr);
-        var ext = RapidContext.Widget.Icon("fa fa-external-link-square ml-1");
+        let ext = RapidContext.Widget.Icon("fa fa-external-link-square ml-1");
         ext.addClass((app.launch == "window") ? "launch-window" : "hidden");
-        var $title = $("<a href='#' class='h4 m-0'>").text(app.name).append(ext);
-        var $desc = $("<span class='text-pre-wrap'>").text(app.description);
+        let $title = $("<a href='#' class='h4 m-0'>").text(app.name).append(ext);
+        let $desc = $("<span class='text-pre-wrap'>").text(app.description);
         $("<td class='pl-1 pr-2 py-2'>").append($title, $desc).appendTo($tr);
     });
 
     // Start auto and inline apps
-    for (var i = 0; i < apps.length; i++) {
-        var app = apps[i];
+    let instances = apps.reduce((c, a) => c + a.instances.length, 0);
+    for (let app of apps) {
         if (this.appStatus[app.id] || instances > 1) {
             // Do nothing, auto-startup disabled
         } else if (app.instances && app.instances.length) {
