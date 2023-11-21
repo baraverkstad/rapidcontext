@@ -14,6 +14,10 @@ property:
     description: >-
         The app description presented to the user. Optional, defaults to blank.
     required: false
+  - name: sort
+    description: >-
+        The app alphanumeric sort key. Defaults to the app name.
+    required: false
   - name: className
     description: >-
         The app JavaScript class name (for non-ESM code). This name refers to

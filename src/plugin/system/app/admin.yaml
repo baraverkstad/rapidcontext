@@ -3,9 +3,9 @@ name: Admin
 description: >-
     Provides access to administrative functions. Allows execution of arbitrary
     procedures, etc.
+sort: zzz-admin
 launch: manual
 className: AdminApp
-
 resources:
   - url: app/admin/**
   - type: icon

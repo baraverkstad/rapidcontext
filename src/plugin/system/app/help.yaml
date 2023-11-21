@@ -2,9 +2,9 @@ id: help
 name: Help & Docs
 description: >-
     Displays help and documentation for the platform and installed apps.
+sort: yyy-help
 launch: manual
 className: HelpApp
-
 resources:
   - url: app/help/**
   - type: icon

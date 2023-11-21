@@ -4,7 +4,6 @@ description: >-
     Provides a login window to allow users to authenticate.
 launch: limited
 className: LoginApp
-
 resources:
   - url: app/login/**
   - type: icon
