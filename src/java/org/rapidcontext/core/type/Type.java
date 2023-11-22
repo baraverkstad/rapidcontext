@@ -311,7 +311,7 @@ public class Type extends StorableObject {
      */
     public Type parentType(Storage storage) {
         String[] parts = id().split("/");
-        for (int i = parts.length - 1; i > 0; i++) {
+        for (int i = parts.length - 1; i > 0; i--) {
             Type type = find(storage, StringUtils.join(parts, '/', 0, i));
             if (type != null) {
                 return type;
