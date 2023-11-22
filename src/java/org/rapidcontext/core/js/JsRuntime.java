@@ -215,7 +215,7 @@ public final class JsRuntime {
             int length = (int) nativeArr.getLength();
             Array arr = new Array(length);
             for (int i = 0; i < length; i++) {
-                arr.set(i, unwrap(nativeArr.get(i, nativeArr)));
+                arr.set(i, unwrap(nativeArr.get(i)));
             }
             return arr;
         } else if (obj instanceof Scriptable) {
