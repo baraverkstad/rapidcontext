@@ -182,7 +182,7 @@ public class ServletApplication extends HttpServlet {
                 LOG.log(Level.WARNING, "failed to store session " + session.id(), e);
             }
         }
-        Session.activeSession.set(null);
+        Session.activeSession.remove();
         SecurityContext.deauth();
     }
 
