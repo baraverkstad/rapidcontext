@@ -121,7 +121,7 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
     public static String objectName(String name) {
         for (String ext : EXT_ALL) {
             String str = StringUtils.removeEndIgnoreCase(name, ext);
-            if (str != name) {
+            if (!str.equals(name)) {
                 return str;
             }
         }
