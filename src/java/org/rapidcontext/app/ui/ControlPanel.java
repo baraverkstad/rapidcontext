@@ -163,7 +163,7 @@ public final class ControlPanel extends JFrame {
         // Add login info label
         label = new JLabel("Login as 'admin' on a new server.");
         font = label.getFont();
-        font = font.deriveFont(Font.ITALIC, font.getSize() - 2);
+        font = font.deriveFont(Font.ITALIC, font.getSize() - 2.0f);
         label.setFont(font);
         c = new GridBagConstraints();
         c.gridx = 2;

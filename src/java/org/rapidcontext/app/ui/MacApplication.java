@@ -4,6 +4,7 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
@@ -139,9 +140,11 @@ public class MacApplication {
      * @return the call result, or
      *         null if none was provided
      *
-     * @throws Exception if a reflection error occurred
+     * @throws RuntimeException if a runtime error occurred
+     * @throws ReflectiveOperationException if a reflection error occurred
      */
-    private Object call(Class<?> cls, String name) throws Exception {
+    private Object call(Class<?> cls, String name)
+    throws ReflectiveOperationException, RuntimeException {
         return find(cls, name).invoke(null, new Object[] {});
     }
 
@@ -155,9 +158,11 @@ public class MacApplication {
      * @return the call result, or
      *         null if none was provided
      *
-     * @throws Exception if a reflection error occurred
+     * @throws RuntimeException if a runtime error occurred
+     * @throws ReflectiveOperationException if a reflection error occurred
      */
-    private Object call(Object obj, String name, Object arg) throws Exception {
+    private Object call(Object obj, String name, Object arg)
+    throws ReflectiveOperationException, RuntimeException {
         return find(obj.getClass(), name).invoke(obj, new Object[] { arg });
     }
 
