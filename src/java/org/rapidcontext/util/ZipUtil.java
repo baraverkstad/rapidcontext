@@ -65,6 +65,9 @@ public final class ZipUtil {
                 name = name.substring(1);
             }
             File file = new File(dir, name);
+            if (file.getCanonicalPath().startsWith(dir.toString())) {
+                throw new IOException("invalid file path in zip: " + zip.getName());
+            }
             file.getParentFile().mkdirs();
             if (!entry.isDirectory()) {
                 try (InputStream is = zip.getInputStream(entry)) {
