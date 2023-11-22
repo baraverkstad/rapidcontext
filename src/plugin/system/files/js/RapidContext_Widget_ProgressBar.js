@@ -180,7 +180,7 @@ RapidContext.Widget.ProgressBar.prototype._remainingTime = function () {
 RapidContext.Widget.ProgressBar.prototype._render = function () {
     this.lastChild.min = this.min;
     this.lastChild.max = this.max;
-    this.lastChild.value = this.value || (this.max - this.max) * this.ratio || null;
+    this.lastChild.value = this.value || (this.max - this.min) * this.ratio || null;
     var info = [];
     if (!this.noratio) {
         var percent = Math.round(this.ratio * 1000) / 10;
