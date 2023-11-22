@@ -346,7 +346,7 @@ public final class SecurityContext {
      * reset to the anonymous user.
      */
     public static void deauth() {
-        authUser.set(null);
+        authUser.remove();
     }
 
     // No instances
