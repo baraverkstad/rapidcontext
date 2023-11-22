@@ -247,63 +247,12 @@ public final class FileUtil {
     }
 
     /**
-     * Creates a new temporary directory. If a temporary directory
-     * has been set, it will be used. Otherwise the default temporary
-     * directory will be used.
-     *
-     * @param prefix         the directory name prefix
-     * @param suffix         the directory name suffix
-     *
-     * @return a new empty temporary directory
-     *
-     * @throws IOException if the temporary directory couldn't be created
-     */
-    public static File tempDir(String prefix, String suffix) throws IOException {
-        File dir = File.createTempFile(prefix, suffix, tempDir);
-        dir.delete();
-        dir.mkdir();
-        dir.deleteOnExit();
-        return dir;
-    }
-
-    /**
      * Sets the temporary directory to use.
      *
      * @param dir            the new temporary directory
      */
     public static void setTempDir(File dir) {
         tempDir = dir;
-    }
-
-    /**
-     * Creates a new temporary file. If a temporary directory has
-     * been set, it will be used. Otherwise the default temporary
-     * directory will be used. The generated file is guaranteed to
-     * keep the same file extension (suffix) as the specified one.
-     *
-     * @param prefix         the file name prefix
-     * @param suffix         the file name suffix (extension)
-     *
-     * @return a new empty temporary file
-     *
-     * @throws IOException if the temporary file couldn't be created
-     */
-    public static File tempFile(String prefix, String suffix) throws IOException {
-        File  file = null;
-
-        if (tempDir != null) {
-            file = new File(tempDir, prefix + suffix);
-            if (file.exists()) {
-                file = null;
-            } else {
-                file.createNewFile();
-            }
-        }
-        if (file == null) {
-            file = File.createTempFile(prefix, suffix, tempDir);
-        }
-        file.deleteOnExit();
-        return file;
     }
 
     /**
@@ -319,26 +268,17 @@ public final class FileUtil {
      * @throws IOException if the temporary file couldn't be created
      */
     public static File tempFile(String name) throws IOException {
-        String  prefix = StringUtils.substringBeforeLast(name, ".");
-        String  suffix = StringUtils.substringAfterLast(name, ".");
-        File    file = null;
-
+        String prefix = StringUtils.substringBeforeLast(name, ".");
+        String suffix = StringUtils.substringAfterLast(name, ".");
         if (prefix == null || prefix.length() <= 0) {
             prefix = "file";
         }
         if (suffix != null && suffix.length() > 0) {
             suffix = "." + suffix;
         }
-        if (tempDir != null) {
-            file = new File(tempDir, name);
-            if (file.exists()) {
-                file = null;
-            } else {
-                file.createNewFile();
-            }
-        }
-        if (file == null) {
-            file = File.createTempFile(prefix, suffix, tempDir);
+        File file = File.createTempFile(prefix + "-", suffix, tempDir);
+        if (tempDir == null || !file.getCanonicalPath().startsWith(tempDir.toString())) {
+            throw new IOException("invalid temporary file name");
         }
         file.deleteOnExit();
         return file;
