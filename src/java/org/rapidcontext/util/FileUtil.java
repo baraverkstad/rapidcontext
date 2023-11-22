@@ -131,9 +131,13 @@ public final class FileUtil {
             }
         } else {
             copy(new FileInputStream(src), dst);
-            dst.setExecutable(src.canExecute());
+            if (src.canExecute() && !dst.setExecutable(true)) {
+                throw new IOException("failed to set executable: " + dst);
+            }
         }
-        dst.setLastModified(src.lastModified());
+        if (!dst.setLastModified(src.lastModified())) {
+            throw new IOException("failed to set last modified: " + dst);
+        }
     }
 
     /**
