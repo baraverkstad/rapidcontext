@@ -77,17 +77,17 @@ public class ThreadInterruptProcedure extends Procedure {
         } catch (NumberFormatException e) {
             throw new ProcedureException(this, "invalid thread id: " + str);
         }
-        cx = ApplicationContext.getInstance().findContext(threadId);
-        if (cx == null) {
+        CallContext tcx = ApplicationContext.getInstance().findContext(threadId);
+        if (tcx == null) {
             throw new ProcedureException(this, "cannot interrupt thread without context");
         }
-        User user = (User) cx.getAttribute(CallContext.ATTRIBUTE_USER);
+        User user = (User) tcx.getAttribute(CallContext.ATTRIBUTE_USER);
         boolean isOwner = user != null && user == SecurityContext.currentUser();
         if (!isOwner) {
             CallContext.checkWriteAccess("thread/" + threadId);
         }
         LOG.info("interrupting thread " + threadId);
-        cx.interrupt();
+        tcx.interrupt();
         return null;
     }
 }

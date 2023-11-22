@@ -73,17 +73,17 @@ public class ThreadContextProcedure extends Procedure {
         } catch (NumberFormatException e) {
             throw new ProcedureException(this, "invalid thread id: " + str);
         }
-        cx = ApplicationContext.getInstance().findContext(threadId);
-        if (cx == null) {
+        CallContext tcx = ApplicationContext.getInstance().findContext(threadId);
+        if (tcx == null) {
             return null;
         }
-        User user = (User) cx.getAttribute(CallContext.ATTRIBUTE_USER);
+        User user = (User) tcx.getAttribute(CallContext.ATTRIBUTE_USER);
         boolean isOwner = user != null && user == SecurityContext.currentUser();
         if (isOwner) {
-            return getContextData(cx);
+            return getContextData(tcx);
         } else {
-            CallContext.checkAccess("thread/" + threadId, cx.readPermission(1));
-            return getContextData(cx);
+            CallContext.checkAccess("thread/" + threadId, tcx.readPermission(1));
+            return getContextData(tcx);
         }
     }
 
