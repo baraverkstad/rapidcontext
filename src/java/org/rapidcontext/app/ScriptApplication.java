@@ -200,15 +200,15 @@ public class ScriptApplication {
                 System.out.println();
                 if (delay > 0) {
                     try {
-                        Thread.sleep(delay * 1000);
+                        Thread.sleep(delay * 1000L);
                     } catch (InterruptedException e) {
-                        // Nothing to do here
+                        break;
                     }
                 }
             }
             if (lines > 0 && pos % 10 == 0) {
-                double d = System.currentTimeMillis() - startTime;
-                d = (d / pos) * (lines - pos);
+                double millis = (double) (System.currentTimeMillis() - startTime);
+                double d = (millis / pos) * (lines - pos);
                 doneTime = new Date(System.currentTimeMillis() + (long) d);
             }
         }
