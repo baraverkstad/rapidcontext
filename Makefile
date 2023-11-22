@@ -140,6 +140,18 @@ test-java:
 	java -classpath "lib/*:test/lib/*:test/classes:test/src/java" \
 		org.junit.runner.JUnitCore $(shell cat test/classes/test.lst)
 
+test-sonar-scan:
+	sonar-scanner \
+		-Dsonar.organization=baraverkstad \
+		-Dsonar.projectKey=baraverkstad_rapidcontext \
+		-Dsonar.sources=src \
+		-Dsonar.exclusions="src/java/**/package.html,src/plugin/system/files/js/*.min.js,src/plugin/system/files/js/MochiKit.js" \
+		-Dsonar.java.binaries=classes,src/plugin/*/classes \
+		-Dsonar.java.libraries=lib/*.jar \
+		-Dsonar.java.test.binaries=test/classes \
+		-Dsonar.java.test.libraries=test/lib/*.jar \
+		-Dsonar.host.url=https://sonarcloud.io
+
 
 # Package downloads for distribution
 package: package-war package-zip package-mac
