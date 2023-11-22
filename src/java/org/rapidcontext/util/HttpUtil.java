@@ -421,6 +421,7 @@ public interface HttpUtil {
          * The list of recognized browsers.
          */
         private static final Pattern[] BROWSERS = {
+            Pattern.compile("Bot|Spider|PhantomJS|Headless|Electron|slimerjs|Python", Pattern.CASE_INSENSITIVE),
             Pattern.compile("Edg(e|A|iOS|)/([^\\s;]+)"),
             Pattern.compile("(Chrome|CriOS)/[^\\s;]+"),
             Pattern.compile("(Firefox|FxiOS)/[^\\s;]+"),
@@ -444,7 +445,7 @@ public interface HttpUtil {
          * The list of recognized devices.
          */
         private static final Pattern[] DEVICES = {
-            Pattern.compile("iPad|iPhone|iPod"),
+            Pattern.compile("iPad|iPhone"),
             Pattern.compile("Tablet"),
             Pattern.compile("Mobile"),
         };
