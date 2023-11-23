@@ -381,11 +381,11 @@ public class StorageWebService extends WebService {
             renderObject(path, res, html);
             html.append("</div>\n<hr>\n");
             html.append("<p><strong>Data Formats:</strong>");
-            String link = path.isIndex() ? "index" : path.name();
-            html.append(" &nbsp;<a href='" + link + Storage.EXT_JSON + "'>JSON</a>");
-            html.append(" &nbsp;<a href='" + link + Storage.EXT_PROPERTIES + "'>PROPERTIES</a>");
-            html.append(" &nbsp;<a href='" + link + Storage.EXT_XML + "'>XML</a>");
-            html.append(" &nbsp;<a href='" + link + Storage.EXT_YAML + "'>YAML</a>");
+            String link = " &nbsp;<a href='" + (path.isIndex() ? "index" : path.name());
+            html.append(link + Storage.EXT_JSON + "'>JSON</a>");
+            html.append(link + Storage.EXT_PROPERTIES + "'>PROPERTIES</a>");
+            html.append(link + Storage.EXT_XML + "'>XML</a>");
+            html.append(link + Storage.EXT_YAML + "'>YAML</a>");
             html.append("</p>\n</body>\n</html>\n");
             return html.toString();
         }
@@ -416,7 +416,7 @@ public class StorageWebService extends WebService {
                 renderText(((Class<?>) obj).getName(), buffer);
             } else if (obj instanceof Path) {
                 Path p = (Path) obj;
-                String suffix = p.isIndex() ? "" : ".html";
+                String suffix = p.isIndex() ? "" : EXT_HTML;
                 if (p.equals(path)) {
                     renderLink(p.isIndex() ? "." : p.name(), p.toString(), buffer);
                 } else if (p.startsWith(path)) {

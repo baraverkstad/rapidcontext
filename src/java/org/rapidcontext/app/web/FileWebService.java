@@ -107,7 +107,7 @@ public class FileWebService extends WebService {
     protected void processFile(Request request, Path filePath, boolean exact) {
         Storage storage = ApplicationContext.getInstance().getStorage();
         Object obj = lookupPaths(filePath, exact)
-            .map(path -> storage.load(path))
+            .map(storage::load)
             .filter(o -> o instanceof Binary || o instanceof Index)
             .findFirst()
             .orElse(null);

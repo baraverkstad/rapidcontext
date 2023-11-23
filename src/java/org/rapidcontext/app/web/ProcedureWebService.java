@@ -14,6 +14,7 @@
 
 package org.rapidcontext.app.web;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
@@ -151,22 +152,18 @@ public class ProcedureWebService extends WebService {
         Dict res = processCall(name, request, source);
         long execTime = System.currentTimeMillis() - startTime;
         if (execTime > 10000L) {
-            LOG.info(source + ": slow procedure call to " + name + ", " +
-                     execTime + " millis");
+            LOG.info(() -> source + ": slow procedure call to " + name + ", " + execTime + " millis");
         }
         res.set("execStart", new Date(startTime));
         res.set("execTime", (int) execTime);
-        if (outputType().equalsIgnoreCase("text")) {
+        boolean isTextOutput = outputType().equalsIgnoreCase("text");
+        boolean isJsonOutput = outputType().equalsIgnoreCase("json");
+        if (isTextOutput || isJsonOutput) {
             if (res.containsKey("error")) {
                 String error = res.get("error", String.class, "internal error");
                 request.sendError(STATUS.BAD_REQUEST, Mime.TEXT[0], error);
-            } else {
+            } else if (isTextOutput) {
                 request.sendText(Mime.TEXT[0], res.get("data", String.class, ""));
-            }
-        } else if (outputType().equalsIgnoreCase("json")) {
-            if (res.containsKey("error")) {
-                String error = res.get("error", String.class, "internal error");
-                request.sendError(STATUS.BAD_REQUEST, Mime.TEXT[0], error);
             } else {
                 Object data = res.get("data");
                 request.sendText(Mime.JSON[0], JsonSerializer.serialize(data, true));
@@ -191,7 +188,7 @@ public class ProcedureWebService extends WebService {
         StringBuilder trace = null;
         Dict res = new Dict();
         try {
-            LOG.fine(logPrefix + "init procedure call");
+            LOG.fine(() -> logPrefix + "init procedure call");
             ApplicationContext ctx = ApplicationContext.getInstance();
             Procedure proc = ctx.getLibrary().getProcedure(name);
             Object[] args = processArgs(proc, request, logPrefix);
@@ -199,20 +196,20 @@ public class ProcedureWebService extends WebService {
                 trace = new StringBuilder();
             }
             res.set("data", ctx.execute(name, args, source, trace));
-            LOG.fine(logPrefix + "done procedure call");
+            LOG.fine(() -> logPrefix + "done procedure call");
         } catch (Exception e) {
             String msg = e.getMessage() != null ? e.getMessage() : e.toString();
             res.set("error", msg);
             if (e instanceof ProcedureException) {
                 LOG.info(logPrefix + msg);
             } else {
-                LOG.log(Level.WARNING, logPrefix + "internal error in procedure", e);
+                LOG.log(Level.WARNING, e, () -> logPrefix + "internal error in procedure");
             }
         }
         if (trace != null) {
             String logTrace = trace.toString();
             res.set("trace", logTrace);
-            LOG.log(Level.INFO, logPrefix + "execution trace:\n" + logTrace);
+            LOG.info(() -> logPrefix + "execution trace:\n" + logTrace);
         }
         return res;
     }
@@ -227,10 +224,11 @@ public class ProcedureWebService extends WebService {
      *
      * @return an array with procedure arguments
      *
-     * @throws Exception if an argument wasn't valid JSON
+     * @throws IOException if an argument wasn't valid JSON
+     * @throws ProcedureException if an argument was missing
      */
     protected Object[] processArgs(Procedure proc, Request request, String logPrefix)
-        throws Exception {
+    throws IOException, ProcedureException {
 
         boolean isTextFormat = inputType().equalsIgnoreCase("text");
         ArrayList<Object> args = new ArrayList<>();
@@ -238,7 +236,9 @@ public class ProcedureWebService extends WebService {
         Dict jsonArgs = null;
         if (Mime.isInputMatch(request, Mime.JSON)) {
             String input = request.getInputString();
-            LOG.fine(logPrefix + "arguments JSON: " + input);
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.fine(logPrefix + "arguments JSON: " + input);
+            }
             Object obj = JsonSerializer.unserialize(input);
             if (obj instanceof Dict) {
                 jsonArgs = (Dict) obj;
@@ -250,7 +250,7 @@ public class ProcedureWebService extends WebService {
                 Object val = null;
                 if (jsonArgs != null) {
                     boolean isNamed = jsonArgs.containsKey(name);
-                    boolean isRaw = !isNamed && args.size() == 0 && name.equals("json");
+                    boolean isRaw = !isNamed && args.isEmpty() && name.equals("json");
                     val = isNamed ? jsonArgs.get(name) : (isRaw ? jsonArgs : defval);
                 } else {
                     String param = "arg" + args.size();
@@ -261,7 +261,9 @@ public class ProcedureWebService extends WebService {
                         val = isTextFormat ? str : JsonSerializer.unserialize(str);
                     }
                 }
-                LOG.fine(logPrefix + "argument '" + name + "': " + val);
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.fine(logPrefix + "argument '" + name + "': " + val);
+                }
                 args.add(val);
             }
         }

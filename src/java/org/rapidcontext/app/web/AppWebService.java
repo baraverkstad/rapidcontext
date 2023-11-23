@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -98,17 +99,17 @@ public class AppWebService extends FileWebService {
     /**
      * The status web service used for the "rapidcontext/status" URL.
      */
-    protected StatusWebService status;
+    protected StatusWebService statusService;
 
     /**
      * The procedure web service used for the "rapidcontext/procedure/" URLs.
      */
-    protected ProcedureWebService procedure;
+    protected ProcedureWebService procedureService;
 
     /**
      * The storage web service used for the "rapidcontext/storage/" URLs.
      */
-    protected StorageWebService storage;
+    protected StorageWebService storageService;
 
     /**
      * Returns the platform version number.
@@ -171,9 +172,9 @@ public class AppWebService extends FileWebService {
         this.dict.setDefault(KEY_TITLE, "RapidContext");
         this.dict.setDefault(KEY_LANG, "en");
         logger = new LogWebService("id", "type", new Dict());
-        status = new StatusWebService("id", "type", new Dict());
-        procedure = new ProcedureWebService("id", "type", new Dict());
-        storage = new StorageWebService("id", "type", new Dict());
+        statusService = new StatusWebService("id", "type", new Dict());
+        procedureService = new ProcedureWebService("id", "type", new Dict());
+        storageService = new StorageWebService("id", "type", new Dict());
     }
 
     /**
@@ -256,11 +257,11 @@ public class AppWebService extends FileWebService {
         if (request.matchPath("rapidcontext/log")) {
             return logger.methodsImpl(request);
         } else if (request.matchPath("rapidcontext/status")) {
-            return status.methodsImpl(request);
+            return statusService.methodsImpl(request);
         } else if (request.matchPath("rapidcontext/procedure/")) {
-            return procedure.methodsImpl(request);
+            return procedureService.methodsImpl(request);
         } else if (request.matchPath("rapidcontext/storage/")) {
-            return storage.methodsImpl(request);
+            return storageService.methodsImpl(request);
         } else if (request.matchPath("rapidcontext/download")) {
             return METHODS_POST;
         } else if (request.matchPath("rapidcontext/upload")) {
@@ -281,11 +282,11 @@ public class AppWebService extends FileWebService {
         if (request.matchPath("rapidcontext/log")) {
             logger.process(request);
         } else if (request.matchPath("rapidcontext/status")) {
-            status.process(request);
+            statusService.process(request);
         } else if (request.matchPath("rapidcontext/procedure/")) {
-            procedure.process(request);
+            procedureService.process(request);
         } else if (request.matchPath("rapidcontext/storage/")) {
-            storage.process(request);
+            storageService.process(request);
         } else if (!request.hasResponse()) {
             super.process(request);
         }
@@ -350,7 +351,9 @@ public class AppWebService extends FileWebService {
             LOG.warning(this + " misconfigured; app '" + appId + "' not found,");
             appId = null;
         } else if (!SecurityContext.hasReadAccess(meta.path().toString())) {
-            LOG.fine("unauthorized access to app '" + appId + "', launching login");
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.fine("unauthorized access to app '" + appId + "', launching login");
+            }
             appId = loginId();
         }
         Object tpl = storage.load(RootStorage.PATH_FILES.child("index.tmpl", false));
@@ -386,7 +389,7 @@ public class AppWebService extends FileWebService {
 
         StringBuilder res = new StringBuilder();
         try (
-            InputStreamReader is = new InputStreamReader(template.openStream(), "UTF-8");
+            InputStreamReader is = new InputStreamReader(template.openStream(), StandardCharsets.UTF_8);
             BufferedReader reader = new BufferedReader(is);
         ) {
             String line;

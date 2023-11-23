@@ -215,7 +215,7 @@ public class LogWebService extends WebService {
                 buffer.append(browser);
             }
             buffer.append("\n# userAgent = ");
-            buffer.append(userAgent.replaceAll("[\n\r]", "_"));
+            buffer.append(userAgent);
             LOG.log(level, buffer.toString());
         }
     }
