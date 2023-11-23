@@ -124,9 +124,10 @@ test-js:
 		--ignore-pattern '**/*.min.js' \
 		--ignore-pattern '**/MochiKit.js'
 	npx tap --allow-incomplete-coverage '**/*.test.@(js|mjs)'
+	npx tap report --coverage-report=text-lcov > .tap/coverage.lcov
 
 test-java:
-	mkdir -p test/classes/
+	mkdir -p test/classes/ tmp/test/
 	rm -rf test/classes/*
 	javac -d "test/classes" -classpath "lib/*:test/lib/*" --release 11 \
 		-sourcepath "test/src/java" \
@@ -138,18 +139,26 @@ test-java:
 		sed -e 's|test/classes/||' -e 's|.class||' -e 's|/|.|g' \
 		> test/classes/test.lst
 	java -classpath "lib/*:test/lib/*:test/classes:test/src/java" \
+		-javaagent:test/lib/jacocoagent-0.8.11.jar=destfile=tmp/test/jacoco.exec \
 		org.junit.runner.JUnitCore $(shell cat test/classes/test.lst)
+	java -jar test/lib/jacococli-0.8.11.jar report \
+		tmp/test/jacoco.exec \
+		--classfiles lib/rapidcontext-*.jar \
+		--xml tmp/test/jacoco.xml
 
 test-sonar-scan:
 	sonar-scanner \
 		-Dsonar.organization=baraverkstad \
 		-Dsonar.projectKey=baraverkstad_rapidcontext \
 		-Dsonar.sources=src \
-		-Dsonar.exclusions="src/java/**/package.html,src/plugin/system/files/js/*.min.js,src/plugin/system/files/js/MochiKit.js" \
+		-Dsonar.exclusions="src/java/**/package.html,src/plugin/legacy/**/*,src/plugin/system/files/js/*.min.js,src/plugin/system/files/js/MochiKit.js,src/plugin/test/**/*" \
+		-Dsonar.java.source=11 \
 		-Dsonar.java.binaries=classes,src/plugin/*/classes \
 		-Dsonar.java.libraries=lib/*.jar \
 		-Dsonar.java.test.binaries=test/classes \
 		-Dsonar.java.test.libraries=test/lib/*.jar \
+		-Dsonar.javascript.lcov.reportPaths=.tap/coverage.lcov \
+		-Dsonar.coverage.jacoco.xmlReportPaths=tmp/test/jacoco.xml \
 		-Dsonar.host.url=https://sonarcloud.io
 
 
