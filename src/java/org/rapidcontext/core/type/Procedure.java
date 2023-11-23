@@ -112,7 +112,7 @@ public abstract class Procedure extends StorableObject implements org.rapidconte
      *
      * @deprecated Use id() instead.
      */
-    @Deprecated
+    @Deprecated(forRemoval=true)
     @Override
     public String getName() {
         return id();
@@ -134,7 +134,7 @@ public abstract class Procedure extends StorableObject implements org.rapidconte
      *
      * @deprecated Use description() instead.
      */
-    @Deprecated
+    @Deprecated(forRemoval=true)
     @Override
     public String getDescription() {
         return description();

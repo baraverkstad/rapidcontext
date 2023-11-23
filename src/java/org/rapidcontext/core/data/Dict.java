@@ -403,7 +403,7 @@ public class Dict {
      *
      * @deprecated Use get(key, Object.class, defaultValue) instead.
      */
-    @Deprecated
+    @Deprecated(forRemoval=true)
     public Object get(String key, Object defaultValue) {
         Object value = get(key);
         return (value == null) ? defaultValue : value;
@@ -449,7 +449,7 @@ public class Dict {
      *
      * @deprecated Use get(key, String.class, defaultValue) instead.
      */
-    @Deprecated
+    @Deprecated(forRemoval=true)
     public String getString(String key, String defaultValue) {
         return get(key, String.class, defaultValue);
     }
@@ -469,7 +469,7 @@ public class Dict {
      *
      * @deprecated Use get(key, Boolean.class, defaultValue) instead.
      */
-    @Deprecated
+    @Deprecated(forRemoval=true)
     public boolean getBoolean(String key, boolean defaultValue) {
         return get(key, Boolean.class, defaultValue);
     }
@@ -492,7 +492,7 @@ public class Dict {
      *
      * @deprecated Use get(key, Integer.class, defaultValue) instead.
      */
-    @Deprecated
+    @Deprecated(forRemoval=true)
     public int getInt(String key, int defaultValue) {
         return get(key, Integer.class, defaultValue);
     }
@@ -515,7 +515,7 @@ public class Dict {
      *
      * @deprecated Use get(key, Date.class, defaultValue) instead.
      */
-    @Deprecated
+    @Deprecated(forRemoval=true)
     public Date getDate(String key, Date defaultValue) {
         return get(key, Date.class, defaultValue);
     }
@@ -639,7 +639,7 @@ public class Dict {
      *
      * @deprecated Use set(key, value) with auto-boxing instead.
      */
-    @Deprecated
+    @Deprecated(forRemoval=true)
     public Dict setBoolean(String key, boolean value)
         throws NullPointerException, UnsupportedOperationException {
 
@@ -662,7 +662,7 @@ public class Dict {
      *
      * @deprecated Use set(key, value) with auto-boxing instead.
      */
-    @Deprecated
+    @Deprecated(forRemoval=true)
     public Dict setInt(String key, int value)
         throws NullPointerException, UnsupportedOperationException {
 

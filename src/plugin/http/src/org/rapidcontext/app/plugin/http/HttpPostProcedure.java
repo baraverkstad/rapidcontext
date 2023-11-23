@@ -30,7 +30,7 @@ import org.rapidcontext.core.proc.ProcedureException;
  *
  * @deprecated Use HttpRequestProcedure instead (2017-02-01)
  */
-@Deprecated
+@Deprecated(forRemoval=true)
 public class HttpPostProcedure extends HttpRequestProcedure {
 
     /**

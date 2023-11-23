@@ -35,7 +35,7 @@ import org.rapidcontext.core.type.Type;
  * @author   Per Cederberg
  * @version  1.0
  */
-@Deprecated
+@Deprecated(forRemoval=true)
 public class JdbcBuiltInConnectionWriteProcedure extends Procedure {
 
     /**

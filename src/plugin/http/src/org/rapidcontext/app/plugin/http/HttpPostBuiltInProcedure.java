@@ -29,7 +29,7 @@ import org.rapidcontext.core.type.Procedure;
  *
  * @deprecated Use HttpRequestBuiltInProcedure instead (2017-02-01)
  */
-@Deprecated
+@Deprecated(forRemoval=true)
 public class HttpPostBuiltInProcedure extends Procedure {
 
     /**

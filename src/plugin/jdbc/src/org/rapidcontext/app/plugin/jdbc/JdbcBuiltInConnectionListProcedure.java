@@ -33,7 +33,7 @@ import org.rapidcontext.core.type.Procedure;
  * @author   Per Cederberg
  * @version  1.0
  */
-@Deprecated
+@Deprecated(forRemoval=true)
 public class JdbcBuiltInConnectionListProcedure extends Procedure {
 
     /**

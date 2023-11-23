@@ -137,7 +137,7 @@ public abstract class Channel {
      *
      * @deprecated Use {@link #report(long, boolean, String)} instead.
      */
-    @Deprecated
+    @Deprecated(forRemoval=true)
     public void report(boolean success, String error) {
         report(0, success, error);
     }

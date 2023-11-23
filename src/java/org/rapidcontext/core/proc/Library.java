@@ -118,7 +118,7 @@ public class Library {
      *     of manually registering here. Storage types are
      *     automatically managed.
      */
-    @Deprecated
+    @Deprecated(forRemoval=true)
     public static void registerType(String type, Class<?> cls)
     throws ProcedureException {
 
@@ -144,7 +144,7 @@ public class Library {
      *     of manually registering here. Storage types are
      *     automatically managed.
      */
-    @Deprecated
+    @Deprecated(forRemoval=true)
     public static void unregisterType(String type) {
         types.remove(type);
         LOG.fine("unregistered procedure type " + type);
@@ -158,7 +158,7 @@ public class Library {
      * @deprecated Check the storage subtypes to 'type/procedure'
      *     instead of this.
      */
-    @Deprecated
+    @Deprecated(forRemoval=true)
     public static String[] getTypes() {
         String[] res = new String[types.size()];
         types.keySet().toArray(res);
@@ -178,7 +178,7 @@ public class Library {
      * @deprecated Check the storage subtypes to 'type/procedure'
      *     instead of this.
      */
-    @Deprecated
+    @Deprecated(forRemoval=true)
     public static Bindings getDefaultBindings(String type) {
         try {
             AddOnProcedure proc = (AddOnProcedure) types.get(type).getDeclaredConstructor().newInstance();
@@ -209,7 +209,7 @@ public class Library {
      * @deprecated Built-in procedures are managed as storable
      *     objects, so this method is no longer reliable.
      */
-    @Deprecated
+    @Deprecated(forRemoval=true)
     public boolean hasBuiltIn(String name) {
         return builtIns.containsKey(name);
     }
@@ -285,7 +285,7 @@ public class Library {
      * @deprecated Built-in procedures should be initialized via the 'className'
      *     property on a proper stored (serialized) object.
      */
-    @Deprecated
+    @Deprecated(forRemoval=true)
     public void addBuiltIn(Procedure proc) throws ProcedureException {
         if (builtIns.containsKey(proc.getName())) {
             String msg = "a procedure '" + proc.getName() + "' already exists";
@@ -303,7 +303,7 @@ public class Library {
      * @deprecated Built-in procedures should be managed as proper stored
      *     (serialized) objects.
      */
-    @Deprecated
+    @Deprecated(forRemoval=true)
     public void removeBuiltIn(String name) {
         builtIns.remove(name);
     }

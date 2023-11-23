@@ -28,7 +28,7 @@ import org.rapidcontext.core.data.Dict;
  * @version  1.0
  * @deprecated Use org.rapidcontext.core.type.Plugin instead.
  */
-@Deprecated
+@Deprecated(forRemoval=true)
 public class Plugin extends org.rapidcontext.core.type.Plugin {
 
     /**
@@ -58,7 +58,7 @@ public class Plugin extends org.rapidcontext.core.type.Plugin {
      * @deprecated Constructor signature has changed as plug-in objects
      *     are now initialized by the root storage.
      */
-    @Deprecated
+    @Deprecated(forRemoval=true)
     public Plugin(Dict dict) {
         super(dict.get(KEY_ID, String.class, ""), "plugin", dict);
         LOG.warning("deprecated: legacy plug-in constructor called for " + this);
