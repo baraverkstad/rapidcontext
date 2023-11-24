@@ -288,10 +288,10 @@ public class JdbcChannel extends Channel {
             report(startTime, true, null);
             return res;
         } catch (SQLException e) {
-            LOG.log(Level.WARNING, prefix + "failed to extract meta-data", e);
-            report(startTime, false, e.toString());
-            throw new ConnectionException("failed to extract meta-data: " +
-                                          e.getMessage());
+            String msg = "failed to extract meta-data: " + e.getMessage();
+            LOG.warning(prefix + msg);
+            report(startTime, false, msg);
+            throw new ConnectionException(msg);
         }
     }
 
