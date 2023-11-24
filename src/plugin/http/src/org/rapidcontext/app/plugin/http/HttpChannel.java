@@ -14,12 +14,12 @@
 
 package org.rapidcontext.app.plugin.http;
 
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.rapidcontext.core.proc.ProcedureException;
@@ -106,16 +106,16 @@ public class HttpChannel extends Channel {
                     int code = con.getResponseCode();
                     HttpProcedure.logResponse(null, con, HttpProcedure.responseText(con));
                     if (code / 100 != 2) {
-                        LOG.warning("validation failure, invalid response: HTTP " + code);
-                        invalidate();
+                        throw new IOException("invalid response: HTTP " + code);
                     }
                 } finally {
                     con.disconnect();
                 }
                 report(0, true, null);
             } catch (Exception e) {
-                LOG.log(Level.WARNING, "validation failure", e);
-                report(0, false, e.toString());
+                String msg = "validation failure: " + e.getMessage();
+                LOG.warning(msg);
+                report(0, false, msg);
                 invalidate();
             }
         }
