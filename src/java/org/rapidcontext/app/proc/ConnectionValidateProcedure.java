@@ -18,8 +18,12 @@ import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
+import org.rapidcontext.core.storage.Metadata;
+import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.core.type.Channel;
+import org.rapidcontext.core.type.Connection;
+import org.rapidcontext.core.type.Plugin;
 import org.rapidcontext.core.type.Procedure;
 
 /**
@@ -65,6 +69,9 @@ public class ConnectionValidateProcedure extends Procedure {
         Channel channel = cx.connectionReserve(id, cx.readPermission(1));
         // FIXME: call context trace should capture logs here
         channel.validate();
-        return (Dict) StorableObject.sterilize(channel.getConnection(), true, false, true);
+        Dict dict = (Dict) StorableObject.sterilize(channel.getConnection(), true, false, true);
+        Metadata meta = cx.getStorage().lookup(Path.resolve(Connection.PATH, id));
+        dict.add("plugin", Plugin.source(meta));
+        return dict;
     }
 }
