@@ -7,7 +7,7 @@
         <h3>
           Apps:
           <Icon id="appReload" class="fa fa-refresh ml-1" />
-          <Icon id="appLoading" class="fa fa-refresh fa-spin ml-1" />
+          <Icon id="appLoading" class="fa fa-refresh fa-spin ml-1" hidden="true" />
         </h3>
         <div class="overflow-y-auto w-100" h="100%-2em">
           <table>
