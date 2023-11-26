@@ -59,6 +59,8 @@
         "FileReader",
         "FormData",
         "Function.prototype.bind",
+        "HTMLTemplateElement",
+        "HTMLSlotElement",
         "JSON.parse",
         "JSON.stringify",
         "Math.imul",
@@ -127,7 +129,7 @@
         { test: "async () => await Promise.resolve(true)", name: "async/await functions" },
         { test: "typeof(Symbol.iterator) === 'symbol'", name: "Symbol.iterator" },
         "--variable-name: #fff",
-        "display: flex"
+        "display: flex",
     ];
 
     /**
