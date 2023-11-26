@@ -31,15 +31,19 @@ property:
     required: true
     format: password
   - name: sqlinit
+    title: SQL Init
     description: >-
         The SQL initialization statement for each session. Optional, defaults
         to an empty string if omitted.
     required: false
+    format: text
   - name: sqlping
+    title: SQL Ping
     description: >-
         The SQL ping query for checking the connection. Optional, will default
         to "SELECT 1" if omitted.
     required: false
+    format: text
   - name: autocommit
     description: >-
         The auto-commit each SQL statement flag. Optional, will default to
