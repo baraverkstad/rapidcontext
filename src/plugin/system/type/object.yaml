@@ -1,0 +1,30 @@
+id: object
+type: type
+description: >-
+    The object type information. An object type may provide automated
+    initialization to an internal Java object (server-side). The type also
+    provides meta-information about the available properties in the objects
+    belonging to that type.
+property:
+  - name: id
+    description: >-
+        The unique object identifier. The object identifier is used to form
+        the object storage path as "{base-type}/{id}". Note that the identifier
+        may contain additional "/" characters.
+    required: true
+  - name: type
+    description: >-
+        The object type. The object type identifies the kind of object, e.g.
+        "plugin", "session", etc.
+    required: false
+  - name: className
+    description: >-
+        The fully qualified Java class name used for creating an object instance
+        (from the serialized data). Optional, defaults to creating a dictionary
+        instance.
+    required: false
+  - name: _activatedTime
+    description: >-
+        The most recent object activation time.
+    required: false
+    format: datetime
