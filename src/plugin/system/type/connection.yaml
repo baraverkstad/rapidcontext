@@ -21,3 +21,25 @@ property:
         some connection types cannot be reused and thus ignores this setting.
     required: false
     format: number
+  - name: _openChannels
+    description: >-
+        The number of connection channels currently open.
+    required: false
+    format: number
+  - name: _usedChannels
+    description: >-
+        The number of connection channels currently in use.
+    required: false
+    format: number
+  - name: _lastUsedTime
+    description: >-
+        The last used timestamp. This will be updated on each connection
+        reservation or release. It is used in the default mechanism for
+        determining if the connection is active.
+    required: false
+    format: datetime
+  - name: _lastError
+    description: >-
+        The error message for the most recent error. Will be automatically
+        cleared on a successful query or connection reservation.
+    required: false

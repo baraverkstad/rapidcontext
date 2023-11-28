@@ -11,4 +11,3 @@ property:
         The storage path to service. Should be prefixed with '/files/', since
         it may be a security risk to expose other objects.
     required: true
-    format: text

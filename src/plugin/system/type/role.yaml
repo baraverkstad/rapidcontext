@@ -12,6 +12,7 @@ property:
   - name: description
     description: The role description or notes. Defaults to blank.
     required: false
+    format: text
   - name: auto
     description: >-
         The automatic user attachment type. Supports 'all' for all users, or
@@ -20,19 +21,20 @@ property:
   - name: access
     description: The access control array. Contains a list of access rules.
     required: false
-  - name: access.*.path
+    format: array
+  - name: access[].path
     description: >-
         The storage path glob pattern. Supports the '?', '*' and '**' glob
         symbols. Requires a match to the complete storage path (not just a
         prefix). Either 'path' or 'regex' is required.
     required: false
-  - name: access.*.regex
+  - name: access[].regex
     description: >-
         The storage path regular expression pattern. Requires a match to the
         complete storage path (not just a prefix). Either 'path' or 'regex' is
         required.
     required: false
-  - name: access.*.permission
+  - name: access[].permission
     description: >-
         The access rule permissions. A space-separated sequence of permission
         identifiers, either standard ones ('read', 'write', etc) or custom.

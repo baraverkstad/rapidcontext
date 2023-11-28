@@ -12,34 +12,28 @@ property:
         The storage path to service. Should be prefixed with '/files/', since
         it may be a security risk to expose other objects.
     required: true
-    format: text
   - name: app
     description: >-
         The app identifier for the default launcher. If an "index.html" file
         exists in the storage root, it will be returned instead of the default
         app launcher.
     required: false
-    format: text
   - name: login
     description: >-
         The app identifier to launch for non-authorized users. Defaults to
         'login' (i.e. the built-in login app).
     required: false
-    format: text
   - name: title
     description: Optional web page title. Defaults to "RapidContext".
     required: false
-    format: text
   - name: lang
     description: Optional web page ISO language code. Defaults to "en".
     required: false
-    format: text
   - name: viewport
     description: >-
         Optional web page meta viewport tag. Defaults to "width=device-width,
         initial-scale=1".
     required: false
-    format: text
   - name: header
     description: >-
         Optional HTML header lines to include in the default app launcher

@@ -17,11 +17,13 @@ property:
   - name: description
     description: The user description or notes. Defaults to blank.
     required: false
+    format: text
   - name: enabled
     description: >-
         The boolean enabled flag. If set to false, the user cannot login.
         Defaults to true.
     required: false
+    format: boolean
   - name: realm
     description: >-
         The user realm (or site) name. Included in the password hash and also
@@ -33,20 +35,24 @@ property:
         to match HTTP digest authentication. A blank password will match any
         input (can be used to reset passwords).
     required: false
+    format: password
   - name: role
     description: >-
         The list of role identifiers for the user. Defaults to an empty list.
         The user may still be associated to automatic roles.
     required: false
+    format: array
   - name: authorizedTime
     description: >-
         The oldest valid authentication timestamp. Any session, auth token or
         similar created prior is considered invalid. This timestamp should be
         reset when a password (or other means of authentication) is modified.
     required: false
+    format: datetime
   - name: settings
     description: >-
         The user settings dictionary. Can be used to store user preferences or
         other application-specific settings persistently. Defaults to an empty
         dictionary.
     required: false
+    format: dict

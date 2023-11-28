@@ -10,6 +10,7 @@ property:
     description: >-
         The description of the environment. Optional, defaults to blank.
     required: false
+    format: text
   - name: connections
     description: >-
         The connection path (or id) prefix used for lookup. Optional, defaults

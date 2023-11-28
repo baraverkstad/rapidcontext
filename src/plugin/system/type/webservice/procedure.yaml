@@ -12,13 +12,11 @@ property:
         execute. Any additional request path will be appended to this prefix to
         form the full procedure name.
     required: false
-    format: text
   - name: inputType
     description: >-
         The input arguments data format. Available options are 'json' (for
         serialized JSON data, the default), or 'text' (for plain text strings).
     required: false
-    format: text
   - name: outputType
     description: >-
         The output response data format. Available options are 'json+metadata'
@@ -26,4 +24,3 @@ property:
         default), 'json' (for just the serialized JSON response), or 'text'
         (for plain text output).
     required: false
-    format: text

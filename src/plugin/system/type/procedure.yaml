@@ -15,6 +15,7 @@ property:
     description: >-
         The description of the procedure. Optional, defaults to blank.
     required: false
+    format: text
   - name: alias
     description: >-
         The procedure alias, used for migration from legacy procedure names.
@@ -25,11 +26,29 @@ property:
         The deprecation message for an outdated procedure. Use to warn users
         prior to eventual removal of a procedure. Optional, defaults to null.
     required: false
+    format: text
   - name: binding
     description: >-
         The array of bindings, listing all resources required during execution.
-        Each binding is an object with 'name', 'type', 'description' and
-        'value' properties, some being optional depending on the bining type.
-        The four available binding types are \u2014 'data', 'procedure',
-        'connection' and 'argument'.
+    required: false
+    format: array
+  - name: binding[].type
+    description: >-
+        The binding type. One of four available types \u2014 'data',
+        'procedure', 'connection' and 'argument'. Depending on the type, the
+        'value' property has different meaning.
+    required: true
+  - name: binding[].name
+    description: >-
+        The binding name. Used for identifying a binding variable or value.
+    required: false
+  - name: binding[].value
+    description: >-
+        The binding value (or default value). Required for all binding types
+        except 'argument'. Identifies a connection, procedure or contains
+        static data.
+    required: false
+  - name: binding[].description
+    description: >-
+        The binding description for an 'argument' binding.
     required: false

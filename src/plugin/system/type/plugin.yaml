@@ -19,6 +19,8 @@ property:
   - name: copyright
     description: The plug-in copyright notice.
     required: false
+    format: text
   - name: description
     description: The plug-in description text.
     required: false
+    format: text

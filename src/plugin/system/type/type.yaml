@@ -14,6 +14,7 @@ property:
   - name: description
     description: The description for the type. Optional, defaults to blank.
     required: false
+    format: text
   - name: initializer
     description: >-
         The fully qualified Java class name used for creating an object instance
@@ -26,3 +27,4 @@ property:
         meta-data. Parent type properties are not repeated, unless they've
         changed semantical meaning. Optional, defaults to an empty array.
     required: false
+    format: array

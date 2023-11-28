@@ -14,6 +14,7 @@ property:
     description: >-
         The app description presented to the user. Optional, defaults to blank.
     required: false
+    format: text
   - name: sort
     description: >-
         The app alphanumeric sort key. Defaults to the app name.
@@ -36,3 +37,35 @@ property:
         The array of app resources. Each resource is a dictionary with 'type',
         'url' and several other available keys.
     required: true
+    format: array
+  - name: resources[].type
+    description: >-
+        The resource type. The "code", "module", "style", "ui", "icon" and
+        "json" types are supported when loading the app. The resource type is
+        optional if it can be guessed from the file extension.
+    required: false
+  - name: resources[].url
+    description: >-
+        The resource URL. Local resource URLs support glob matching (e.g. using
+        'my-app/**' to include all matching files).
+    required: false
+  - name: resources[].id
+    description: >-
+        The optional resource identifier. Used to bind a loaded resource to the
+        instance 'this.resource' dictionary.
+    required: false
+  - name: resources[].html
+    description: >-
+        The optional resource HTML. Used as an alternative to image app icons.
+    required: false
+  - name: resources[].class
+    description: >-
+        The optional resource CSS class. Used as an alternative to image app
+        icons.
+    required: false
+  - name: resources[].topic
+    description: >-
+        The optional resource help topic name. The corresponding resource URL
+        should point to an HTML help document for the app. The topic name may
+        contain / characters to indicate directories.
+    required: false

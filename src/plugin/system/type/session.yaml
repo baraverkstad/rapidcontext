@@ -15,12 +15,15 @@ property:
   - name: createTime
     description: The session creation timestamp.
     required: true
+    format: datetime
   - name: destroyTime
     description: The session destruction timestamp (in the future).
     required: true
+    format: datetime
   - name: accessTime
     description: The last access time for the session.
     required: true
+    format: datetime
   - name: ip
     description: The source IP address for the session.
     required: true

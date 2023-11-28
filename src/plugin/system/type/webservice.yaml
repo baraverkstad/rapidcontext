@@ -15,24 +15,27 @@ property:
     description: >-
         The web request match array. Contains a list of match criteria objects.
     required: false
-  - name: match.*.method
+    format: array
+  - name: match[].method
     description: The HTTP method to match.
     required: false
-  - name: match.*.protocol
+  - name: match[].protocol
     description: The HTTP protocol (i.e. 'http' or 'https') to match.
     required: false
-  - name: match.*.host
+  - name: match[].host
     description: The HTTP host name to match.
     required: false
-  - name: match.*.port
+  - name: match[].port
     description: The HTTP port number to match.
     required: false
-  - name: match.*.path
+    format: number
+  - name: match[].path
     description: The HTTP path prefix to match.
     required: false
-  - name: match.*.auth
+  - name: match[].auth
     description: The authentication required flag.
     required: false
-  - name: match.*.prio
+  - name: match[].prio
     description:  The priority value to separate identical matches.
     required: false
+    format: number
