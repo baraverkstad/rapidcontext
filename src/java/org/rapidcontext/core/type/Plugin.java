@@ -41,6 +41,16 @@ public class Plugin extends StorableObject {
     private static final Logger LOG = Logger.getLogger(Plugin.class.getName());
 
     /**
+     * The dictionary key for the plug-in name.
+     */
+    public static final String KEY_NAME = "name";
+
+    /**
+     * The dictionary key for the plug-in description text.
+     */
+    public static final String KEY_DESCRIPTION = "description";
+
+    /**
      * The dictionary key for the plug-in build version.
      */
     public static final String KEY_VERSION = "version";
@@ -48,6 +58,7 @@ public class Plugin extends StorableObject {
     /**
      * The dictionary key for the minimum platform version needed.
      */
+    @Deprecated(forRemoval=true)
     public static final String KEY_PLATFORM = "platform";
 
     /**
@@ -59,11 +70,6 @@ public class Plugin extends StorableObject {
      * The dictionary key for the plug-in copyright notice.
      */
     public static final String KEY_COPYRIGHT = "copyright";
-
-    /**
-     * The dictionary key for the plug-in description text.
-     */
-    public static final String KEY_DESCRIPTION = "description";
 
     /**
      * The plug-in object storage path.

@@ -7,20 +7,20 @@ description: >-
     ZIP file with the '.plugin' file extension.
 initializer: org.rapidcontext.core.type.Plugin
 property:
+  - name: name
+    description: The plug-in title or name.
+    required: false
+  - name: description
+    description: The plug-in description text.
+    required: false
+    format: text
   - name: version
     description: The plug-in build/release version.
-    required: false
-  - name: platform
-    description: The minimum platform (system) version needed.
     required: false
   - name: date
     description: The plug-in build/release date.
     required: false
   - name: copyright
     description: The plug-in copyright notice.
-    required: false
-    format: text
-  - name: description
-    description: The plug-in description text.
     required: false
     format: text
