@@ -43,6 +43,7 @@ property:
     required: false
     format: array
   - name: authorizedTime
+    title: Auth Since
     description: >-
         The oldest valid authentication timestamp. Any session, auth token or
         similar created prior is considered invalid. This timestamp should be

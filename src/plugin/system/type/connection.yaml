@@ -32,6 +32,7 @@ property:
     required: false
     format: number
   - name: _lastUsedTime
+    title: Last Used
     description: >-
         The last used timestamp. This will be updated on each connection
         reservation or release. It is used in the default mechanism for
@@ -43,3 +44,4 @@ property:
         The error message for the most recent error. Will be automatically
         cleared on a successful query or connection reservation.
     required: false
+    format: error
