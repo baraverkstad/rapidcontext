@@ -331,36 +331,66 @@ RapidContext.Widget.Table.prototype.getData = function () {
  * table.setData(data);
  */
 RapidContext.Widget.Table.prototype.setData = function (data) {
-    var cols = this.getChildNodes();
-    var selectedIds = this.getIdKey() ? this.getSelectedIds() : [];
+    let columns = this.getChildNodes();
+    let key = this.getIdKey() || "$id";
+    let selectedIds = key ? this.getSelectedIds() : [];
     this.emit("clear");
-    this._data = data;
-    this._rows = [];
+    this._data = (data || []);
+    this._rows = this._data.map((obj, idx) => this._mapRow(columns, key, obj, idx));
     this._selected = [];
-    for (var i = 0; data != null && i < data.length; i++) {
-        var row = { $id: "id" + i, $data: data[i] };
-        for (var j = 0; j < cols.length; j++) {
-            cols[j]._map(data[i], row);
-        }
-        if (this._keyField != null && data[i][this._keyField] != null) {
-            row.$id = data[i][this._keyField];
-        }
-        this._rows.push(row);
-    }
-    var key = this.getSortKey();
-    if (key) {
-        this.sortData(key);
+    let sort = this.getSortKey();
+    if (sort) {
+        this.sortData(sort);
     } else {
         this._renderRows();
     }
     if (this._selectMode !== "none") {
-        var isAuto = this._selectMode === "auto" && this._rows.length === 1;
+        let isAuto = this._selectMode === "auto" && this._rows.length === 1;
         if (isAuto && !selectedIds.includes(this._rows[0].$id)) {
             this.addSelectedIds(this._rows[0].$id);
         } else {
             this._addSelectedIds(selectedIds);
         }
     }
+};
+
+/**
+ * Updates one or more rows of table data. Data is matched to
+ * existing rows either via the key identifier field or object
+ * identity. Any matching rows will be mapped and re-rendered
+ * accordingly. Non-matching data will be be ignored.
+ *
+ * @param {Array|Object} data an array with data or a single data object
+ *
+ * @example
+ * table.updateData({ id: 2, name: "New Name", modified: new Date() });
+ */
+RapidContext.Widget.Table.prototype.updateData = function (data) {
+    data = Array.isArray(data) ? data : [data];
+    let columns = this.getChildNodes();
+    let key = this.getIdKey() || "$id";
+    for (let obj of data) {
+        let idx = this._rows.findIndex((o) => o.$id === obj[key] || o.$data === obj);
+        if (idx >= 0) {
+            let row = this._rows[idx] = this._mapRow(columns, key, obj, idx);
+            let tr = document.createElement("tr");
+            tr.append(...columns.map((col) => col._render(row)));
+            let tbody = this.firstChild.lastChild;
+            tbody.children[idx].replaceWith(tr);
+        }
+    }
+    for (let sel of this._selected) {
+        this._markSelection(sel);
+    }
+};
+
+RapidContext.Widget.Table.prototype._mapRow = function (colums, key, obj, idx) {
+    let id = (key && obj[key] != null) ? obj[key] : "id" + idx;
+    let row = { $id: id, $data: obj };
+    for (let col of colums) {
+        row[col.field] = col._map(obj);
+    }
+    return row;
 };
 
 /**
@@ -401,16 +431,15 @@ RapidContext.Widget.Table.prototype.sortData = function (field, direction) {
  * intact. For a more complete redraw of the table, use `setData()`.
  */
 RapidContext.Widget.Table.prototype.redraw = function () {
-    var cols = this.getChildNodes();
-    for (var i = 0; i < this._rows.length; i++) {
-        var row = this._rows[i];
-        for (var j = 0; j < cols.length; j++) {
-            cols[j]._map(row.$data, row);
+    let cols = this.getChildNodes();
+    for (let row of this._rows) {
+        for (let col of cols) {
+            row[col.field] = col._map(row.$data);
         }
     }
     this._renderRows();
-    for (var k = 0; k < this._selected.length; k++) {
-        this._markSelection(this._selected[k]);
+    for (let sel of this._selected) {
+        this._markSelection(sel);
     }
 };
 

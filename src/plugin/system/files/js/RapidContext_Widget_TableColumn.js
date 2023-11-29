@@ -148,18 +148,16 @@ RapidContext.Widget.TableColumn.prototype.setAttrs = function (attrs) {
 };
 
 /**
- * Maps the column field from one object onto another. This method
- * will also convert the data depending on the column data type.
+ * Maps and converts the column field value from the source object.
+ * The data is converted depending on the column data type.
  *
  * @param src                the source object (containing the field)
- * @param dst                the destination object
+ *
+ * @return the mapped value
  */
-RapidContext.Widget.TableColumn.prototype._map = function (src, dst) {
-    var value = src[this.field];
+RapidContext.Widget.TableColumn.prototype._map = function (src) {
+    let value = src[this.field];
     if (value != null) {
-        if (this.key) {
-            dst.$id = value;
-        }
         switch (this.type) {
         case "number":
             if (value instanceof Number) {
@@ -205,7 +203,7 @@ RapidContext.Widget.TableColumn.prototype._map = function (src, dst) {
             break;
         case "boolean":
             if (typeof(value) !== "boolean") {
-                value = MochiKit.Base.bool(value);
+                value = RapidContext.Data.bool(value);
             }
             break;
         case "string":
@@ -215,7 +213,7 @@ RapidContext.Widget.TableColumn.prototype._map = function (src, dst) {
             break;
         }
     }
-    dst[this.field] = value;
+    return value;
 };
 
 /**
