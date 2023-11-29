@@ -46,7 +46,7 @@
             <tr>
               <th class="label" style="padding-right: 4px;">Plug-In:</th>
               <td>
-                <Field name="plugin" />
+                <Field name="_plugin" />
               </td>
             </tr>
             <tr>

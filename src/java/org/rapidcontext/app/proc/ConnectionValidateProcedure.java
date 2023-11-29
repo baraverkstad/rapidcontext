@@ -71,7 +71,7 @@ public class ConnectionValidateProcedure extends Procedure {
         channel.validate();
         Dict dict = (Dict) StorableObject.sterilize(channel.getConnection(), true, false, true);
         Metadata meta = cx.getStorage().lookup(Path.resolve(Connection.PATH, id));
-        dict.add("plugin", Plugin.source(meta));
+        dict.add("_plugin", Plugin.source(meta));
         return dict;
     }
 }

@@ -86,7 +86,7 @@ public class ConnectionListProcedure extends Procedure {
                     }
                 }
                 if (dict != null) {
-                    dict.add("plugin", Plugin.source(meta));
+                    dict.add("_plugin", Plugin.source(meta));
                 }
                 return dict;
             })

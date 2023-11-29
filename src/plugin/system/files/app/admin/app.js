@@ -261,8 +261,8 @@ AdminApp.prototype._showConnection = function () {
     }
     this.ui.cxnForm.reset();
     this.ui.cxnForm.update(data);
-    this.ui.cxnRemove.setAttrs({ hidden: data.plugin != "local" });
-    if (data.plugin && data.id) {
+    this.ui.cxnRemove.setAttrs({ hidden: data._plugin != "local" });
+    if (data._plugin && data.id) {
         this.ui.cxnEdit.show();
         let url = "rapidcontext/storage/connection/" + data.id;
         this.ui.cxnLink.setAttribute("href", url);
@@ -273,7 +273,7 @@ AdminApp.prototype._showConnection = function () {
     }
     let clones = this.ui.cxnTemplate.parentNode.querySelectorAll(".clone");
     RapidContext.Widget.destroyWidget(clones);
-    let props = ["id", "type", "plugin", "description", "lastAccess", "maxOpen"];
+    let props = ["id", "type", "_plugin", "description", "lastAccess", "maxOpen"];
     for (let k in data) {
         let v = data[k];
         let hidden = k.startsWith("_") || props.includes(k);
@@ -409,7 +409,7 @@ AdminApp.prototype._updateConnectionEdit = function () {
     MochiKit.Base.setdefault(data, this.ui.cxnEditDialog.data);
     var clones = this.ui.cxnEditTemplate.parentNode.querySelectorAll(".clone");
     RapidContext.Widget.destroyWidget(clones);
-    var hiddenProps = { id: true, type: true, plugin: true };
+    var hiddenProps = { id: true, type: true, _plugin: true };
     var props = {};
     if (this._types[data.type]) {
         var type = this._types[data.type];
