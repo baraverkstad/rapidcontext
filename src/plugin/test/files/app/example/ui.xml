@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui class="example-app">
   <TabContainer w="100%" h="100%">
-    <Pane pageTitle="Widget Zoo" pageCloseable="false">
+    <Pane id="zooPane" pageTitle="Widget Zoo" pageCloseable="false">
       <div class="zoo" w="550" h="100%" style="float: left; padding: 0 10px 0 0;">
         <h3>Form Widgets:</h3>
         <fieldset>
           <legend>Plain Buttons</legend>
           <Button>Normal</Button>
-          <Button highlight="true">Highlighted</Button>
           <Button disabled="true">Disabled</Button>
+          <Button class="primary">Primary</Button>
           <Button class="danger">Danger</Button>
           <Button class="warning">Warning</Button>
           <Button class="success">Success</Button>
@@ -16,25 +16,26 @@
         </fieldset>
         <fieldset>
           <legend>Icon Buttons</legend>
-          <Button icon="OK">Normal</Button>
-          <Button icon="OK" highlight="true">Highlighted</Button>
-          <Button icon="OK" disabled="true">Disabled</Button>
+          <Button icon="fa fa-check">Normal</Button>
+          <Button icon="fa fa-check" disabled="true">Disabled</Button>
+          <Button icon="fa fa-check" class="primary">Primary</Button>
           <Button icon="fa fa-bolt" class="danger">Danger</Button>
           <Button icon="fa fa-exclamation-triangle" class="warning">Warning</Button>
           <Button icon="fa fa-heart" class="success">Success</Button>
           <Button icon="fa fa-info-circle" class="info">Info</Button>
         </fieldset>
         <fieldset>
-          <legend>Text Fields</legend>
-          <TextField />
-          <TextField placeholder="Enter a value" />
+          <legend>Text Input</legend>
+          <div>
+            <TextField type="search" placeholder="Search value" />
+          </div>
+          <div>
+            <TextField placeholder="Enter a value" />
+          </div>
+          <div>
+            <TextArea cols="40" rows="2" autosize="true" placeholder="Enter a multi-line value" />
+          </div>
         </fieldset>
-        <fieldset>
-          <legend>Text Areas</legend>
-          <TextArea cols="30" rows="3" />
-          <TextArea cols="30" rows="3" placeholder="Enter a value" />
-        </fieldset>
-        <h3 style="padding-top: 15px; border-top: 1px solid #ACF;">Progress Widgets:</h3>
         <fieldset w="100%-20">
           <legend>Progress Bar</legend>
           <Form id="progressForm">
@@ -53,15 +54,9 @@
           </Form>
           <ProgressBar id="progressBar" style="margin: 10px 0;" />
         </fieldset>
-        <fieldset w="100%-20" h="200">
-          <legend>Overlay</legend>
-          <div w="100%" h="100%-15" style="position: relative;">
-            <Overlay hidden="false" message="A Message Here..." />
-          </div>
-        </fieldset>
       </div>
       <div class="zoo" w="100%-575" h="100%" style="float: left; padding: 0 0 0 10px; border-left: 1px solid #ACF;">
-        <h3>Data Container Widgets:</h3>
+        <h3>Data Widgets:</h3>
         <fieldset w="100%-20">
           <legend>
             Table
@@ -71,8 +66,8 @@
           <Table id="appTable" select="multiple" style="width: 100%; height: 150px;">
             <TableColumn title="Id" field="id" sort="asc" />
             <TableColumn title="Name" field="name" />
-            <TableColumn title="Plugin" field="plugin" />
-            <TableColumn title="Version" field="version" />
+            <TableColumn title="Plugin" field="_plugin" />
+            <TableColumn title="Version" field="_version" />
           </Table>
         </fieldset>
         <fieldset w="100%-20">
@@ -88,16 +83,28 @@
             <TreeNode name="Three" />
           </Tree>
         </fieldset>
-        <h3 style="padding-top: 15px; border-top: 1px solid #ACF;">Dialog Widget:</h3>
+        <h3 style="padding-top: 15px; border-top: 1px solid #ACF;">Other Widgets:</h3>
         <fieldset w="100%-20">
-          <legend>Dialog</legend>
-          <Button id="dialogButton" icon="DIALOG">Open Dialog</Button>
+          <legend>Dialogs</legend>
+          <Button icon="fa fa-check" data-action="dlg-show">Show</Button>
+        </fieldset>
+        <fieldset w="100%-20">
+          <legend>Messages</legend>
+          <Button icon="fa fa-bolt" class="danger" data-action="msg-error">Error</Button>
+          <Button icon="fa fa-exclamation-triangle" class="warning" data-action="msg-warning">Warning</Button>
+          <Button icon="fa fa-heart" class="success" data-action="msg-success">Success</Button>
+          <Button icon="fa fa-info-circle" class="info" data-action="msg-info">Info</Button>
+        </fieldset>
+        <fieldset w="100%-20">
+          <legend>Overlay</legend>
+          <Button data-action="show-overlay">Show Overlay</Button>
         </fieldset>
       </div>
-      <Dialog id="dialog" w="200" h="200" modal="true">
+      <Dialog id="dialog" w="20em" modal="true">
         <h3>Example Dialog</h3>
-        <div style="position: absolute; bottom: 10px; right: 12px;">
-          <Button id="dialogClose" icon="OK" highlight="true">Close</Button>
+        <p>This is a simple example dialog.</p>
+        <div class="text-right">
+          <Button icon="fa fa-check" class="primary" data-dialog="close">Close</Button>
         </div>
       </Dialog>
     </Pane>

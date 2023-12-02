@@ -7,11 +7,6 @@
     clear: left;
     margin: 0 0 20px 0;
 }
-.example-app .zoo button,
-.example-app .zoo input,
-.example-app .zoo textarea {
-    margin: 0 5px;
-}
 
 /* Icon Exposé */
 .example-app .expose td {
