@@ -13,8 +13,8 @@ description: >-
 property:
   - name: description
     description: >-
-        The description of the procedure. Optional, defaults to blank.
-    required: false
+        The description of the procedure. Defaults to blank.
+    required: true
     format: text
   - name: alias
     description: >-

@@ -9,14 +9,14 @@ initializer: org.rapidcontext.core.type.Plugin
 property:
   - name: name
     description: The plug-in title or name.
-    required: false
+    required: true
   - name: description
     description: The plug-in description text.
-    required: false
+    required: true
     format: text
   - name: version
     description: The plug-in build/release version.
-    required: false
+    required: true
   - name: date
     description: The plug-in build/release date.
     required: false

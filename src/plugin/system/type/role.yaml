@@ -8,10 +8,10 @@ initializer: org.rapidcontext.core.type.Role
 property:
   - name: name
     description: The descriptive name of the role. Defaults to blank.
-    required: false
+    required: true
   - name: description
     description: The role description or notes. Defaults to blank.
-    required: false
+    required: true
     format: text
   - name: auto
     description: >-

@@ -12,8 +12,8 @@ property:
     required: true
   - name: description
     description: >-
-        The app description presented to the user. Optional, defaults to blank.
-    required: false
+        The app description presented to the user. Defaults to blank.
+    required: true
     format: text
   - name: sort
     description: >-

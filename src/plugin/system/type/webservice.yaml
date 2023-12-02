@@ -8,13 +8,13 @@ description: >-
 initializer: org.rapidcontext.core.type.WebService
 property:
   - name: description
-    description: The description of the web service. Optional, defaults to blank.
-    required: false
+    description: The description of the web service. Defaults to blank.
+    required: true
     format: text
   - name: match
     description: >-
         The web request match array. Contains a list of match criteria objects.
-    required: false
+    required: true
     format: array
   - name: match[].method
     description: The HTTP method to match.

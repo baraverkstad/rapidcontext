@@ -10,19 +10,19 @@ initializer: org.rapidcontext.core.type.User
 property:
   - name: name
     description: The descriptive name of the user. Defaults to blank.
-    required: false
+    required: true
   - name: email
     description: The email address for the user. Defaults to blank.
-    required: false
+    required: true
   - name: description
     description: The user description or notes. Defaults to blank.
-    required: false
+    required: true
     format: text
   - name: enabled
     description: >-
         The boolean enabled flag. If set to false, the user cannot login.
         Defaults to true.
-    required: false
+    required: true
     format: boolean
   - name: realm
     description: >-

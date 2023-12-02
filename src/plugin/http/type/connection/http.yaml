@@ -24,3 +24,4 @@ property:
         The optional HTTP method for validating the connection. Leave blank
         to skip validation, otherwise use 'OPTIONS' or 'HEAD' to minimize
         extra HTTP traffic. Only the HTTP response code is validated.
+    required: false

@@ -5,8 +5,8 @@ description: >-
     support for the actual connection types (JDBC, HTTP, etc).
 property:
   - name: description
-    description: The description of the connection. Optional, defaults to blank.
-    required: false
+    description: The description of the connection. Defaults to blank.
+    required: true
     format: text
   - name: maxOpen
     description: >-

@@ -8,8 +8,8 @@ initializer: org.rapidcontext.core.type.Environment
 property:
   - name: description
     description: >-
-        The description of the environment. Optional, defaults to blank.
-    required: false
+        The description of the environment. Defaults to blank.
+    required: true
     format: text
   - name: connections
     description: >-

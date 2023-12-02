@@ -12,8 +12,8 @@ property:
         The optional legacy type id (or alias). Optional, defaults to blank.
     required: false
   - name: description
-    description: The description for the type. Optional, defaults to blank.
-    required: false
+    description: The description for the type. Defaults to blank.
+    required: true
     format: text
   - name: initializer
     description: >-
@@ -26,5 +26,5 @@ property:
         'name', 'description' and 'required' that specify some property
         meta-data. Parent type properties are not repeated, unless they've
         changed semantical meaning. Optional, defaults to an empty array.
-    required: false
+    required: true
     format: array
