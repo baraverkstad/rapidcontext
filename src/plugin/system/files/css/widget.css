@@ -442,7 +442,7 @@ th.widgetTableColumn::after {
 }
 th.widgetTableColumn.sortAsc,
 th.widgetTableColumn.sortDesc {
-    background: linear-gradient(to bottom, var(--highlight-300), var(--highlight-500));
+    background: linear-gradient(to bottom, var(--highlight-200), var(--highlight-400));
 }
 th.widgetTableColumn.sortAsc::after {
     top: 0.45em;
@@ -492,17 +492,17 @@ th.widgetTableColumn.sortNone::after {
     background: var(--highlight-400);
 }
 .widgetTreeNodeLabel i.fa {
-    color: var(--success-600);
+    color: var(--highlight-700);
 }
 .widgetTreeNodeLabel i.fa.fa-minus-square-o,
 .widgetTreeNodeLabel i.fa.fa-plus-square-o {
     color: #777;
 }
 .widgetTreeNodeLabel i.fa.fa-folder {
-    color: var(--success-900);
+    color: var(--highlight-900);
 }
 .widgetTreeNodeLabel i.fa.fa-folder-open {
-    color: var(--success-700);
+    color: var(--highlight-800);
 }
 .widgetTreeNodeText {
     padding-left: 3px;

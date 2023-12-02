@@ -2,6 +2,18 @@
  * Color palettes
  */
 :root {
+    /* Highlight palette */
+    --highlight-000: #eefaff;
+    --highlight-100: #e0f5fe;
+    --highlight-200: #c4e8f8;
+    --highlight-300: #afe0f6;
+    --highlight-400: #a0d8f1;
+    --highlight-500: #87c6e2;
+    --highlight-600: #75b9d7;
+    --highlight-700: #65aece;
+    --highlight-800: #55a0c1;
+    --highlight-900: #418aaa;
+
     /* Danger palette */
     --danger-000: #fff8f8;
     --danger-100: #ffdede;
@@ -50,41 +62,17 @@
     --info-800: #0054ab;
     --info-900: #003d7e;
 
-    /* Highlight palette */
-    --highlight-000: #feffff;
-    --highlight-100: #e6fbf6;
-    --highlight-200: #bef6ea;
-    --highlight-300: #b5f1e2;
-    --highlight-400: #a6e7d7;
-    --highlight-500: #8bcfc2;
-    --highlight-600: #7ac2ac;
-    --highlight-700: #6dbdaa;
-    --highlight-800: #68a095;
-    --highlight-900: #4d7c72;
-
     /* Focus palette */
-    --focus-000: #f8feff;
-    --focus-100: #eefcff;
-    --focus-200: #daf8ff;
-    --focus-300: #c1f2ff;
-    --focus-400: #a0ebff;
-    --focus-500: #65deff;
-    --focus-600: #36cef8;
-    --focus-700: #12b3df;
-    --focus-800: #0292b9;
-    --focus-900: #006b88;
-
-    /* Spotlight palette */
-    --spotlight-000: #fffff8;
-    --spotlight-100: #fffcdf;
-    --spotlight-200: #fff593;
-    --spotlight-300: #fff272;
-    --spotlight-400: #ffeb39;
-    --spotlight-500: #f7e161;
-    --spotlight-600: #ddc853;
-    --spotlight-700: #c9b234;
-    --spotlight-800: #ab9000;
-    --spotlight-900: #826e00;
+    --focus-000: #fff6e6;
+    --focus-100: #ffeecf;
+    --focus-200: #fde5b8;
+    --focus-300: #fcdca1;
+    --focus-400: #f8cf82;
+    --focus-500: #f7c360;
+    --focus-600: #e8b24b;
+    --focus-700: #d19b36;
+    --focus-800: #b98625;
+    --focus-900: #a3741b;
 }
 
 /**
