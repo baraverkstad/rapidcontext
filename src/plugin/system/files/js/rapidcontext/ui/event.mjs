@@ -130,9 +130,9 @@ export function emit(src, event, opts) {
  */
 export function on(src, event, selector, listener, opts) {
     if (typeof(selector) == 'function') {
-        selector = null;
-        listener = arguments[2];
         opts = arguments[3];
+        listener = arguments[2];
+        selector = null;
     }
     let handler = (listener === false) ? stop : listener;
     if (opts && opts.delay) {
@@ -184,8 +184,8 @@ export function once(src, event, selector, listener, opts) {
  */
 export function off(src, event, selector, listener) {
     if (typeof(selector) == 'function') {
-        selector = null;
         listener = arguments[2];
+        selector = null;
     }
     let arr = (event == null || Array.isArray(event)) ? event : event.split(/\s+/g);
     let matches = listeners.filter((l) => {

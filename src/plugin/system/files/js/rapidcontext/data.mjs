@@ -374,8 +374,8 @@ export function compare(valueOf, a, b) {
     if (arguments.length < 2) {
         return compare.bind(null, ...arguments);
     } else if (arguments.length < 3 || !isFunction(valueOf)) {
-        a = arguments[0];
         b = arguments[1];
+        a = arguments[0];
     } else {
         a = valueOf(a);
         b = valueOf(b);
@@ -410,8 +410,8 @@ export function sort(fn, coll) {
     } else if (arguments.length === 1 && isFunction(fn)) {
         return sort.bind(null, fn);
     } else if (arguments.length === 1) {
-        fn = null;
         coll = arguments[0];
+        fn = null;
     }
     let arr = array(coll);
     arr.sort(fn ? compare(fn) : compare);
