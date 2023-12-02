@@ -19,7 +19,7 @@ let listeners = [];
  * mixin into RapidContext.Widget instances and similar, but also
  * provides static versions of the same functions.
  *
- * @mixin RapidContext.UI.Event
+ * @class RapidContext.UI.Event
  */
 export class Event {
 
@@ -35,9 +35,10 @@ export class Event {
      * @param {boolean} [opts.bubbles=false] the event bubbles flag
      * @param {boolean} [opts.cancelable=false] the cancellable event flag
      * @param {Object} [opts.detail] the additional event details
+     * @return {boolean} `true` if event was async or not cancelled
      */
     emit(event, opts) {
-        emit(this, event, opts);
+        return emit(this, event, opts);
     }
 
     /**
@@ -50,7 +51,7 @@ export class Event {
      * @param {function} listener the event handler function (or `false`)
      * @param {Object} [opts] the event listener options (see addEventListener)
      * @param {number} [opts.delay] an inactivity delay before calling listener
-     * @return {Object} this object (for chaining calls)
+     * @return {Node} the input DOM node (for chaining calls)
      */
     on(event, selector, listener, opts) {
         return on(this, event, selector, listener, opts);
@@ -101,8 +102,8 @@ export class Event {
  * @param {boolean} [opts.bubbles=false] the event bubbles flag
  * @param {boolean} [opts.cancelable=false] the cancellable event flag
  * @param {Object} [opts.detail] the additional event details
- * @return {boolean} `true` if event was not cancelled (or async)
- * @memberof RapidContext.UI.Event
+ * @return {boolean} `true` if event was async or not cancelled
+ * @function RapidContext.UI.Event.emit
  */
 export function emit(src, event, opts) {
     opts = Object.assign({ async: true }, opts);
@@ -125,7 +126,7 @@ export function emit(src, event, opts) {
  * @param {Object} [opts] the event listener options (see addEventListener)
  * @param {number} [opts.delay] an inactivity delay before calling listener
  * @return {Node} the input DOM node (for chaining calls)
- * @memberof RapidContext.UI.Event
+ * @function RapidContext.UI.Event.on
  */
 export function on(src, event, selector, listener, opts) {
     if (selector != null && typeof(selector) != 'string') {
@@ -159,7 +160,7 @@ export function on(src, event, selector, listener, opts) {
  * @param {Object} [opts] the event listener options (see addEventListener)
  * @param {number} [opts.delay] an inactivity delay before calling listener
  * @return {Node} the input DOM node (for chaining calls)
- * @memberof RapidContext.UI.Event
+ * @function RapidContext.UI.Event.once
  */
 export function once(src, event, selector, listener, opts) {
     function handler(evt) {
@@ -179,7 +180,7 @@ export function once(src, event, selector, listener, opts) {
  * @param {string} [selector] the CSS selector to match for event target
  * @param {function} [listener] the event handler function (or `false`)
  * @return {Node} the input DOM node (for chaining calls)
- * @memberof RapidContext.UI.Event
+ * @function RapidContext.UI.Event.off
  */
 export function off(src, event, selector, listener) {
     if (selector != null && typeof(selector) != 'string') {

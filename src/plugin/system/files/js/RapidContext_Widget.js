@@ -23,7 +23,7 @@ if (typeof(RapidContext) == "undefined") {
  * subclasses should be instantiated.
  *
  * @class
- * @mixes RapidContext.UI.Event
+ * @augments RapidContext.UI.Event
  */
 RapidContext.Widget = function () {
     throw new ReferenceError("cannot call Widget constructor");
