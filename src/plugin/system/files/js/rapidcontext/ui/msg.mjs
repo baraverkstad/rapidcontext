@@ -209,8 +209,7 @@ function createEventHandler(dlg) {
  * @param {string} [msg.css] the dialog css
  * @param {Actions} [msg.actions] the action buttons to show
  * @return {Promise} a promise that resolves with the selected action
- * @function
- * @memberof RapidContext.UI.Msg
+ * @function RapidContext.UI.Msg.error
  *
  * @example
  * try {
@@ -234,8 +233,7 @@ export const error = show.bind(null, 'error');
  * @param {string} [msg.css] the dialog css
  * @param {Actions} [msg.actions] the action buttons to show
  * @return {Promise} a promise that resolves with the selected action
- * @function
- * @memberof RapidContext.UI.Msg
+ * @function RapidContext.UI.Msg.warning
  *
  * @example
  * let text = "This will take some time to complete. Are you sure?";
@@ -260,8 +258,7 @@ export const warning = show.bind(null, 'warning');
  * @param {string} [msg.css] the dialog css
  * @param {Actions} [msg.actions] the action buttons to show
  * @return {Promise} a promise that resolves with the selected action
- * @function
- * @memberof RapidContext.UI.Msg
+ * @function RapidContext.UI.Msg.success
  *
  * @example
  * RapidContext.UI.Msg.success("Everything is proceeding as planned.");
@@ -281,8 +278,7 @@ export const success = show.bind(null, 'success');
  * @param {string} [msg.css] the dialog css
  * @param {Actions} [msg.actions] the action buttons to show
  * @return {Promise} a promise that resolves with the selected action
- * @function
- * @memberof RapidContext.UI.Msg
+ * @function RapidContext.UI.Msg.info
  *
  * @example
  * await RapidContext.UI.Msg.info("System will now reboot. Please wait.");
@@ -311,8 +307,15 @@ Object.assign(warning, {
      * @param {string} id the object name or id
      * @return {Promise} a promise that resolves when confirmed, or
      *                   rejects if cancelled
-     * @function warning:remove
-     * @memberof RapidContext.UI.Msg
+     * @function RapidContext.UI.Msg.warning:remove
+     *
+     * @example
+     * try {
+     *     await RapidContext.UI.Msg.warning.remove("person", "123");
+     *     ...
+     * } catch (e) {
+     *     // cancelled
+     * }
      */
     remove(type, id) {
         return warning({
