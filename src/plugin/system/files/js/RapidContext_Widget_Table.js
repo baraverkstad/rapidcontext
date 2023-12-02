@@ -384,10 +384,22 @@ RapidContext.Widget.Table.prototype.updateData = function (data) {
     }
 };
 
-RapidContext.Widget.Table.prototype._mapRow = function (colums, key, obj, idx) {
+/**
+ * Creates a data row by mapping an object according to specified
+ * columns. Also extracts or creates an '$id' property and maps the
+ * source data to '$data'.
+ *
+ * @param {Array} columns the array of columns to map
+ * @param {String} key the id field, or null if not set
+ * @param {Object} obj the object with data to map
+ * @param {number} idx the row index for automatic id creation
+ *
+ * @return {Object} the data row object created
+ */
+RapidContext.Widget.Table.prototype._mapRow = function (columns, key, obj, idx) {
     let id = (key && obj[key] != null) ? obj[key] : "id" + idx;
     let row = { $id: id, $data: obj };
-    for (let col of colums) {
+    for (let col of columns) {
         row[col.field] = col._map(obj);
     }
     return row;
