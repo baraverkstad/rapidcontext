@@ -215,13 +215,12 @@ button > .widgetIcon.fa,
     display: inline-block;
     position: relative;
     top: 25%;
-    border: 1px solid #cde;
+    border: 1px solid var(--highlight-300);
     border-radius: 0.5rem;
     padding: 1.5rem 3rem;
-    background-color: #f8fbff;
-    background-image: linear-gradient(to bottom, #fff, #f8fbff);
-    box-shadow: 0 1px 3px #ccc;
-    color: #468;
+    background: linear-gradient(to bottom, #fff, var(--highlight-000));
+    box-shadow: 0 0 10px #0002;
+    color: #057;
     font-size: 1.5em;
     font-weight: bold;
 }
@@ -499,7 +498,7 @@ th.widgetTableColumn.sortNone::after {
     color: #777;
 }
 .widgetTreeNodeLabel i.fa.fa-folder {
-    color: var(--highlight-900);
+    color: #789;
 }
 .widgetTreeNodeLabel i.fa.fa-folder-open {
     color: var(--highlight-800);
