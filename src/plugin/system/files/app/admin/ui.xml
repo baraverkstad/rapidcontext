@@ -21,9 +21,9 @@
       <Form id="cxnForm" w="50%" h="100%" class="inline-block vertical-top">
         <h3>
           Connection Details:
-          <Icon id="cxnAdd" class="fa fa-plus-square widget-green ml-1" title="Add connection" />
-          <Icon id="cxnRemove" class="fa fa-minus-square widget-red ml-1" title="Remove connection" hidden="true" />
-          <Icon id="cxnEdit" class="fa fa-pencil-square widget-yellow ml-1" title="Edit connection" hidden="true" />
+          <Icon id="cxnAdd" class="fa fa-plus-square color-success ml-1" title="Add connection" />
+          <Icon id="cxnRemove" class="fa fa-minus-square color-danger ml-1" title="Remove connection" hidden="true" />
+          <Icon id="cxnEdit" class="fa fa-pencil-square color-warning ml-1" title="Edit connection" hidden="true" />
         </h3>
         <table>
           <tbody>
@@ -304,9 +304,9 @@
         <Form id="procForm" class="w-100 h-100">
           <h3>
             Procedure Details:
-            <Icon id="procAdd" class="fa fa-plus-square widget-green ml-1" title="Add procedure" />
-            <Icon id="procRemove" class="fa fa-minus-square widget-red ml-1" title="Remove procedure" />
-            <Icon id="procEdit" class="fa fa-pencil-square widget-yellow ml-1" title="Edit procedure" />
+            <Icon id="procAdd" class="fa fa-plus-square color-success ml-1" title="Add procedure" />
+            <Icon id="procRemove" class="fa fa-minus-square color-danger ml-1" title="Remove procedure" />
+            <Icon id="procEdit" class="fa fa-pencil-square color-warning ml-1" title="Edit procedure" />
             <Icon id="procReload" class="fa fa-refresh ml-1" title="Reload" />
             <Icon id="procLoading" class="fa fa-spin fa-refresh ml-1" />
           </h3>
@@ -447,7 +447,7 @@
       <Form id="batchForm">
         <h3>
           Batch Control:
-          <Icon id="batchDelete" class="fa fa-minus-square widget-red ml-1" />
+          <Icon id="batchDelete" class="fa fa-minus-square color-danger ml-1" />
           <Icon id="batchDelay" class="fa fa-clock-o ml-1" />
           <Icon id="batchLoading" class="fa fa-spin fa-refresh ml-1" />
         </h3>
@@ -500,7 +500,7 @@
       <Form id="userForm" w="50%" h="100%" class="inline-block vertical-top">
         <h3>
           Edit User:
-          <Icon id="userAdd" class="fa fa-plus-square widget-green ml-1" />
+          <Icon id="userAdd" class="fa fa-plus-square color-success ml-1" />
         </h3>
         <table class="-form-layout-table -box-sizing-border">
           <tbody>
@@ -583,7 +583,7 @@
         <div h="33.333%-2rem-1px" class="border-b mb-3 pb-3">
           <h3>
             Log Entries:
-            <Icon id="logClear" class="fa fa-minus-square widget-red ml-1" title="Clear logs" />
+            <Icon id="logClear" class="fa fa-minus-square color-danger ml-1" title="Clear logs" />
             <Icon id="logReload" class="fa fa-refresh ml-1" title="Reload" />
           </h3>
           <Table id="logTable" w="100%" h="100%-2.2em">

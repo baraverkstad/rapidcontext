@@ -255,12 +255,12 @@ Object.assign(RapidContext.Widget.Icon, {
      * The remove icon definition.
      * @memberof RapidContext.Widget.Icon
      */
-    REMOVE: { "class": "fa fa-minus-square widget-red", tooltip: "Remove" },
+    REMOVE: { "class": "fa fa-minus-square color-danger", tooltip: "Remove" },
     /**
      * The add icon definition.
      * @memberof RapidContext.Widget.Icon
      */
-    ADD: { "class": "fa fa-plus-square widget-green", tooltip: "Add" },
+    ADD: { "class": "fa fa-plus-square color-success", tooltip: "Add" },
     /**
      * The copy icon definition.
      * @memberof RapidContext.Widget.Icon
@@ -285,7 +285,7 @@ Object.assign(RapidContext.Widget.Icon, {
      * The edit icon definition.
      * @memberof RapidContext.Widget.Icon
      */
-    EDIT: { "class": "fa fa-pencil-square widget-yellow", tooltip: "Edit" },
+    EDIT: { "class": "fa fa-pencil-square color-warning", tooltip: "Edit" },
     /**
      * The white edit icon definition.
      * @memberof RapidContext.Widget.Icon

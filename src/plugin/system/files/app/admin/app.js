@@ -56,9 +56,9 @@ AdminApp.prototype.start = function () {
         let since = Date.now() - parseInt(usedAt.substr(1), 10);
         let cls = "fa fa-check";
         if (data._error || data._lastError) {
-            cls = "fa fa-exclamation-circle widget-red";
+            cls = "fa fa-exclamation-circle color-danger";
         } else if (!data._openChannels && since > 5 * 60 * 1000) {
-            cls = "fa fa-exclamation-triangle widget-yellow";
+            cls = "fa fa-exclamation-triangle color-warning";
         }
         td.append(RapidContext.Widget.Icon({ "class": cls }));
     };
@@ -942,7 +942,7 @@ AdminApp.prototype._renderProcEdit = function () {
     }
     function buildBinding(b, def) {
         var name = MochiKit.DOM.STRONG({}, b.name + ": ");
-        var icon = def ? null : buildIcon("fa fa-minus-square widget-red", "remove");
+        var icon = def ? null : buildIcon("fa fa-minus-square color-danger", "remove");
         var up = def ? null : buildIcon("fa fa-arrow-circle-up widget-grey", "up");
         var desc = def ? def.description : b.description || "";
         var div = MochiKit.DOM.DIV({ "class": "text-pre-wrap py-1" }, name, icon, up, desc);
