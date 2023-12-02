@@ -129,10 +129,10 @@ export function emit(src, event, opts) {
  * @function RapidContext.UI.Event.on
  */
 export function on(src, event, selector, listener, opts) {
-    if (selector != null && typeof(selector) != 'string') {
-        opts = listener;
-        listener = selector;
+    if (typeof(selector) == 'function') {
         selector = null;
+        listener = arguments[2];
+        opts = arguments[3];
     }
     let handler = (listener === false) ? stop : listener;
     if (opts && opts.delay) {
@@ -183,9 +183,9 @@ export function once(src, event, selector, listener, opts) {
  * @function RapidContext.UI.Event.off
  */
 export function off(src, event, selector, listener) {
-    if (selector != null && typeof(selector) != 'string') {
-        listener = selector;
+    if (typeof(selector) == 'function') {
         selector = null;
+        listener = arguments[2];
     }
     let arr = (event == null || Array.isArray(event)) ? event : event.split(/\s+/g);
     let matches = listeners.filter((l) => {
