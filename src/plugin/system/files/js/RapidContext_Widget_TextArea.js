@@ -56,6 +56,7 @@ RapidContext.Widget.TextArea = function (attrs/*, ...*/) {
     var o = MochiKit.DOM.TEXTAREA({ value: text });
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.TextArea);
     o.addClass("widgetTextArea");
+    o.resizeContent = o._resizeContent;
     o.setAttrs(Object.assign({}, attrs, { value: text }));
     o.on("input", o._handleChange);
     return o;
@@ -146,8 +147,19 @@ RapidContext.Widget.TextArea.prototype._handleChange = function (evt) {
     var detail = { before: this.storedValue || "", after: this.value, cause: cause };
     this.emit("change", { detail: detail, bubbles: true });
     this.storedValue = this.value;
+    this._resizeContent();
+};
+
+/**
+ * Resizes the text area if auto-sized. This method is automatically
+ * called when a dialog is shown (or resized), and is also called if
+ * the input is modified.
+ */
+RapidContext.Widget.TextArea.prototype._resizeContent = function () {
     if (this.autosize) {
         this.style.height = "auto";
-        this.style.height = this.scrollHeight + "px";
+        if (this.scrollHeight > 10) {
+            this.style.height = this.scrollHeight + "px";
+        }
     }
 };
