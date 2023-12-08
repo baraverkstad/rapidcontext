@@ -16,6 +16,8 @@ package org.rapidcontext.core.type;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.stream.Stream;
 
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.stat.MovingUsage;
@@ -128,6 +130,15 @@ public class Metrics extends StorableObject {
     }
 
     /**
+     * Returns a stream of all resource usage metrics.
+     *
+     * @return the metrics entry stream
+     */
+    public Stream<Entry<String, MovingUsage>> stream() {
+        return points.entrySet().stream();
+    }
+
+    /**
      * Reports usage for a specified key.
      *
      * @param key        the object identifier or other key to track
@@ -170,10 +181,10 @@ public class Metrics extends StorableObject {
         Dict copy = super.serialize();
         copy.set(KEY_UPDATED, new Date(updated));
         Dict data = new Dict();
-        for (String key : points.keySet()) {
-            MovingUsage usage = points.get(key);
+        for (Entry<String, MovingUsage> e : points.entrySet()) {
+            MovingUsage usage = e.getValue();
             usage.move(updated);
-            data.set(key, usage.serialize());
+            data.set(e.getKey(), usage.serialize());
         }
         copy.set(KEY_DATA, data);
         return copy;

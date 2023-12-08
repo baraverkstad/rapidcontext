@@ -499,6 +499,25 @@ public class Library {
     }
 
     /**
+     * Returns the procedure usage metrics.
+     *
+     * @return the procedure usage metrics
+     */
+    public Metrics getMetrics() {
+        if (metrics == null) {
+            synchronized (this) {
+                try {
+                    metrics = Metrics.findOrCreate(storage, "procedure");
+                } catch (StorageException e) {
+                    LOG.warning("failed to initialize procedure usage metrics: " + e);
+                    return null;
+                }
+            }
+        }
+        return metrics;
+    }
+
+    /**
      * Reports procedure usage metrics for a single call.
      *
      * @param proc           the procedure executed
@@ -507,18 +526,11 @@ public class Library {
      * @param error          the optional error message
      */
     public void report(Procedure proc, long start, boolean success, String error) {
-        if (metrics == null) {
-            synchronized (this) {
-                try {
-                    metrics = Metrics.findOrCreate(storage, "procedure");
-                } catch (StorageException e) {
-                    LOG.warning("failed to initialize procedure usage metrics: " + e);
-                    return;
-                }
-            }
+        getMetrics();
+        if (metrics != null) {
+            long now = System.currentTimeMillis();
+            int duration = (int) (System.currentTimeMillis() - start);
+            metrics.report(proc.getName(), now, 1, duration, success, error);
         }
-        long now = System.currentTimeMillis();
-        int duration = (int) (System.currentTimeMillis() - start);
-        metrics.report(proc.getName(), now, 1, duration, success, error);
     }
 }
