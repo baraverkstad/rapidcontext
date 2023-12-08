@@ -1,0 +1,4 @@
+id: system/connection/metrics
+type: procedure
+className: org.rapidcontext.app.proc.ConnectionMetricsProcedure
+description: Returns the current connection metrics. [EXPERIMENTAL]

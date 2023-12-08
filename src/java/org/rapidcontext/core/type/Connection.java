@@ -119,13 +119,28 @@ public abstract class Connection extends StorableObject {
      */
     public static Connection find(Storage storage, String id) {
         if (metrics == null) {
+            getMetrics(storage);
+        }
+        return storage.load(Path.resolve(PATH, id), Connection.class);
+    }
+
+    /**
+     * Returns the connection usage metrics. The metrics will be loaded
+     * from storage if not already in memory.
+     *
+     * @param storage        the storage to load from
+     *
+     * @return the connection usage metrics
+     */
+    public static Metrics getMetrics(Storage storage) {
+        if (metrics == null) {
             try {
                 metrics = Metrics.findOrCreate(storage, "connection");
             } catch (StorageException e) {
                 LOG.warning("failed to initialize connection usage metrics: " + e);
             }
         }
-        return storage.load(Path.resolve(PATH, id), Connection.class);
+        return metrics;
     }
 
     /**
