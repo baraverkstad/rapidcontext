@@ -334,7 +334,7 @@ public abstract class Connection extends StorableObject {
             return channel;
         } catch (ConnectionException e) {
             LOG.log(Level.WARNING, "failed " + msg, e);
-            report(lastUsedTime, false, e.toString());
+            report(lastUsedTime, false, e.getMessage());
             throw e;
         } catch (Exception e) {
             LOG.log(Level.WARNING, "failed " + msg, e);
