@@ -14,11 +14,14 @@
 
 package org.rapidcontext.core.data;
 
+import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.rapidcontext.util.DateUtil;
@@ -226,6 +229,37 @@ public class Dict {
         }
         buffer.append("}");
         return buffer.toString();
+    }
+
+    /**
+     * Returns a stream of all entries in the dictionary.
+     *
+     * @return the entry object stream
+     */
+    public Stream<Entry<String, Object>> stream() {
+        return (map == null) ? Stream.empty() : map.entrySet().stream();
+    }
+
+    /**
+     * Returns a stream of all entries in the dictionary.
+     *
+     * @param <T>            the value object type to return
+     * @param clazz          the value object class
+     *
+     * @return the entry object stream
+     *
+     * @throws ClassCastException if the wasn't possible to cast to
+     *             the specified object class
+     * @throws NumberFormatException if the value wasn't possible to
+     *             parse as a number
+     *
+     * @see Dict#convert(Object, Class)
+     */
+    public <T> Stream<Entry<String, T>> stream(Class<T> clazz) {
+        return stream().map(e -> {
+            T val = convert(e.getValue(), clazz);
+            return new SimpleImmutableEntry<>(e.getKey(), val);
+        });
     }
 
     /**
