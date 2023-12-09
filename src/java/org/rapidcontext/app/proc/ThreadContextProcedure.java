@@ -140,7 +140,7 @@ public class ThreadContextProcedure extends Procedure {
         res.set("source", cx.getAttribute(CallContext.ATTRIBUTE_SOURCE));
         res.set("result", cx.getAttribute(CallContext.ATTRIBUTE_RESULT));
         res.set("error", cx.getAttribute(CallContext.ATTRIBUTE_ERROR));
-        StringBuffer log = (StringBuffer) cx.getAttribute(CallContext.ATTRIBUTE_LOG_BUFFER);
+        StringBuilder log = (StringBuilder) cx.getAttribute(CallContext.ATTRIBUTE_LOG_BUFFER);
         res.set("log", (log == null) ? "" : log.toString());
         org.rapidcontext.core.proc.Procedure[] procs = cx.getCallStack().toArray();
         Array list = new Array(procs.length);
