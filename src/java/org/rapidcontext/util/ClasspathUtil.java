@@ -74,9 +74,9 @@ public final class ClasspathUtil {
         if (path.startsWith("classpath:")) {
             path = path.substring(10);
         }
-        path = path.replaceAll("//", "/");
-        if (!path.startsWith("/")) {
-            path = "/" + path;
+        path = path.replace("//", File.separator);
+        if (!path.startsWith(File.separator)) {
+            path = File.separator + path;
         }
         return cls.getResource(path);
     }
@@ -105,15 +105,15 @@ public final class ClasspathUtil {
             str = path.toLowerCase();
             if (str.startsWith("jar:")) {
                 path = path.substring(4);
-                if (path.indexOf("!/") >= 0) {
+                if (path.contains("!/")) {
                     path = path.substring(0, path.indexOf("!/"));
                 }
             } else if (str.startsWith("file:/")) {
                 path = path.substring(6);
-                if (!path.startsWith("/")) {
-                    path = "/" + path;
+                if (!path.startsWith(File.separator)) {
+                    path = File.separator + path;
                 }
-                while (path.length() > 1 && path.charAt(1) == '/') {
+                while (path.length() > 1 && path.charAt(1) == File.separatorChar) {
                     path = path.substring(1);
                 }
             }
@@ -139,7 +139,7 @@ public final class ClasspathUtil {
             try {
                 JarURLConnection con = (JarURLConnection) url.openConnection();
                 return con.getManifest();
-            } catch (Throwable ignore) {
+            } catch (Exception ignore) {
                 // Ignore errors, return null instead
             }
         }
