@@ -1,0 +1,192 @@
+/**
+ * Vertical tabs
+ */
+.settings-app .vertical-tabs {
+    z-index: 10;
+    padding-top: 1rem;
+    text-align: center;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.settings-app .vertical-tabs > div {
+    margin-bottom: 0.5rem;
+    border: 1px solid #fff0;
+    border-radius: 0.5rem 0 0 0.5rem;
+    padding: 0.5rem;
+    color: #0006;
+    cursor: pointer;
+}
+.settings-app .vertical-tabs > div:hover:not(.disabled) {
+    border-color: var(--focus-400);
+    border-right-color: #ddd;
+    background-image: linear-gradient(to right, var(--focus-100), #fff);
+    color: #000a;
+    text-shadow: 0 1px 1px #fff;
+}
+.settings-app .vertical-tabs > div.selected {
+    border-color: var(--highlight-400);
+    border-right-color: #fff;
+    background-image: linear-gradient(to right, var(--highlight-100), #fff);
+    color: #000a;
+    text-shadow: 0 1px 1px #fff;
+}
+.settings-app .vertical-tabs > div.selected:hover {
+    border-right-color: #fff;
+}
+.settings-app .vertical-tabs > div.disabled {
+    color: #0002;
+    cursor: default;
+}
+
+/**
+ * Properties table
+ */
+.settings-app table.properties-table {
+    width: 100%;
+}
+.settings-app table.properties-table th,
+.settings-app table.properties-table td {
+    padding: 0 0 0.25em 0;
+}
+.settings-app table.properties-table th {
+    font-weight: 200;
+    text-align: right;
+    white-space: nowrap;
+}
+.settings-app table.properties-table th + td,
+.settings-app table.properties-table td + td,
+.settings-app table.properties-table td + th {
+    padding-left: 0.75em;
+}
+.settings-app table.properties-table label {
+    display: inline-block;
+    padding-top: calc(0.2em + 1px);
+}
+.settings-app table.properties-table button,
+.settings-app table.properties-table input[type="text"],
+.settings-app table.properties-table input[type="email"],
+.settings-app table.properties-table input[type="password"],
+.settings-app table.properties-table select,
+.settings-app table.properties-table textarea {
+    margin: 0 0 0 0;
+}
+
+/**
+ * Responsive container
+ */
+.settings-app .container-responsive {
+    container-type: inline-size;
+    container-name: container-responsive;
+}
+@container container-responsive (width < 65em) {
+    .settings-app .container-responsive .display-lg {
+        display: none;
+    }
+}
+@container container-responsive (width < 50em) {
+    .settings-app .container-responsive .display-md {
+        display: none;
+    }
+}
+@container container-responsive (width < 35em) {
+    .settings-app .container-responsive .display-sm  {
+        display: none;
+    }
+}
+
+/**
+ * Reactive button
+ */
+.settings-app button.reactive,
+.settings-app .btn.reactive {
+    margin: 0.1em 0.2em;
+    border-radius: 50%;
+    border-color: transparent;
+    padding: 0.4em 0.5em 0.3em 0.5em;
+    box-shadow: none;
+    text-shadow: 0 1px 1px #fff;
+    background: transparent;
+}
+.settings-app button.reactive:not(:active):not(.active):not(:hover):not(.hover),
+.settings-app .btn.reactive:not(:active):not(.active):not(:hover):not(.hover) {
+    opacity: 0.25;
+}
+.settings-app button.reactive:active:not(:disabled):not(.disabled),
+.settings-app button.reactive.active:not(:disabled):not(.disabled),
+.settings-app button.reactive:hover:not(:disabled):not(.disabled),
+.settings-app button.reactive.hover:not(:disabled):not(.disabled),
+.settings-app .btn.reactive:active:not(:disabled):not(.disabled),
+.settings-app .btn.reactive.active:not(:disabled):not(.disabled),
+.settings-app .btn.reactive:hover:not(:disabled):not(.disabled),
+.settings-app .btn.reactive.hover:not(:disabled):not(.disabled) {
+    border-color: var(--highlight-500);
+    background: linear-gradient(to bottom, var(--highlight-000), var(--highlight-200));
+    color: #000b !important;
+    box-shadow: 0 1px 2px #0002;
+}
+
+/**
+ * Toggle CheckBox
+ */
+.settings-app label.toggle {
+    padding: 0 !important;
+}
+.settings-app label.toggle input[type="checkbox"] {
+    position: absolute;
+    height: 0;
+    width: 0;
+    visibility: hidden;
+}
+.settings-app label.toggle i {
+    position: relative;
+    display: inline-block;
+    height: 1.2em;
+    margin: 0.1em 2.4em 0.1em 0;
+}
+.settings-app label.toggle input[type="checkbox"] + i::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 2em;
+    height: 1.2em;
+    content: "";
+    border-radius: 1em;
+    box-shadow: 0 0 0.2em #000a inset;
+    background: linear-gradient(to bottom, #aaa8, #aaa);
+}
+.settings-app label.toggle input[type="checkbox"]:checked + i::before {
+    background: linear-gradient(to bottom, var(--info-400), var(--info-600));
+}
+.settings-app label.toggle input[type="checkbox"] + i::after {
+    position: absolute;
+    top: 0.096em;
+    left: 0.09em;
+    width: 1.02em;
+    height: 1.02em;
+    content: "";
+    border-radius: 1em;
+    background: linear-gradient(to bottom right, #fff, #fff, #fffa);
+    transition: 0.3s;
+}
+.settings-app label.toggle input[type="checkbox"]:checked + i::after {
+    left: 1.95em;
+    transform: translateX(-100%);
+}
+.settings-app label.toggle span {
+    vertical-align: top;
+}
+
+/**
+ * Utilities
+ */
+.settings-app .default-value {
+    font-weight: 200;
+    color: #0006;
+}
+.settings-app .text-wrap-any {
+    word-wrap: anywhere;
+}
+.settings-app .separator {
+    padding-left: 0.1rem;
+    padding-right: 0.1rem;
+}

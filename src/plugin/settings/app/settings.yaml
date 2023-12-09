@@ -1,0 +1,17 @@
+id: settings
+name: System Settings
+description: >-
+    The system settings and configuration app. [EXPERIMENTAL]
+launch: manual
+
+resources:
+  - url: app/settings/app.mjs
+  - url: app/settings/app.css
+  - url: app/settings/ui.mjs
+  - url: app/settings/ui.xml
+  - type: icon
+    html: >-
+        <span class="fa-stack -app-icon">
+        <i class="fa fa-stack-2x"></i>
+        <i class="fa fa-stack-1x fa-sliders"></i>
+        </span>

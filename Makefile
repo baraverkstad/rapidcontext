@@ -31,6 +31,7 @@ clean:
 	@$(MAKE) -C src/plugin/http clean
 	@$(MAKE) -C src/plugin/jdbc clean
 	@$(MAKE) -C src/plugin/legacy clean
+	@$(MAKE) -C src/plugin/settings clean
 	@$(MAKE) -C src/plugin/test clean
 
 
@@ -76,6 +77,7 @@ build-plugins:
 	@$(MAKE) -C src/plugin/http VERSION=$(VER)
 	@$(MAKE) -C src/plugin/jdbc VERSION=$(VER)
 	@$(MAKE) -C src/plugin/legacy VERSION=$(VER)
+	@$(MAKE) -C src/plugin/settings VERSION=$(VER)
 	@$(MAKE) -C src/plugin/test VERSION=$(VER)
 	@echo
 	cp src/plugin/*/*.plugin plugin/

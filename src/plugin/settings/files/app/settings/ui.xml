@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui class="settings-app" xmlns:settings="app/settings">
+  <div class="flex flex-dir-row position-relative w-100 h-100">
+    <div id="tabs" class="vertical-tabs select-none" style="min-width: 7rem;">
+      <div data-view="pluginPane">
+        <i class="fa fa-3x fa-puzzle-piece" />
+        <h3>Plug-ins</h3>
+      </div>
+      <div data-view="cxnPane">
+        <i class="fa fa-3x fa-plug" />
+        <h3>Connections</h3>
+      </div>
+      <div class="disabled" data-view="procPane">
+        <i class="fa fa-3x fa-bolt" />
+        <h3>Procedures</h3>
+      </div>
+      <div data-view="userPane">
+        <i class="fa fa-3x fa-users" />
+        <h3>Users</h3>
+      </div>
+      <div class="disabled" data-view="storagePane">
+        <i class="fa fa-3x fa-sitemap" />
+        <h3>Storage</h3>
+      </div>
+    </div>
+    <div id="views" class="flex-fill position-relative border-l pl-3" style="left: -1px;">
+      <div id="pluginPane" class="view flex flex-dir-column w-100 h-100">
+        <settings:search-form id="pluginSearch" placeholder="Search by id, name, etc">
+          <label id="pluginInstall" class="btn m-0 mr-2">
+            <i class="fa fa-lg fa-puzzle-piece"></i>
+            <t>Install Plug-in</t>
+            <input id="pluginFile" type="file" accept=".plugin,.zip" class="hidden"/>
+          </label>
+          <Button id="pluginReset" icon="fa fa-refresh" class="m-0">Reset Server</Button>
+        </settings:search-form>
+        <ProgressBar id="pluginProgress" hidden="true" novalue="true" class="mb-2" />
+        <div class="flex-fill flex flex-dir-row" style="min-height: 0;">
+          <Table id="pluginTable" class="flex-fill container-responsive">
+            <TableColumn title="Status" field="_loaded" type="boolean" />
+            <TableColumn title="Identifier" field="id" key="true" cellStyle="text-nowrap" />
+            <TableColumn title="Version" field="version" class="display-md" cellStyle="display-md text-nowrap" />
+            <TableColumn title="Name" field="name" class="display-sm" cellStyle="display-sm" />
+            <TableColumn title="Content" field="_content" class="display-lg" cellStyle="display-lg" />
+          </Table>
+          <settings:details-form id="pluginDetails" w="25rem">
+            <table class="properties-table">
+              <tbody>
+                <tr>
+                  <th class="pl-4">Identifier:</th>
+                  <td>
+                    <settings:id-link id="pluginIdLink" type="plugin" url="rapidcontext/storage/storage/plugin/{{value}}/" />
+                  </td>
+                </tr>
+                <settings:template id="pluginPropTpl">
+                  <tr>
+                    <th>{{title}}:</th>
+                    <td class="text-pre-wrap text-wrap-any {{style}}">{{value}}</td>
+                  </tr>
+                </settings:template>
+              </tbody>
+            </table>
+            <div class="my-1">
+              <Button id="pluginLoad" icon="fa fa-lg fa-power-off">Load</Button>
+              <Button id="pluginUnload" class="danger" icon="fa fa-lg fa-power-off">Unload</Button>
+              <Button id="pluginRemove" class="danger" icon="fa fa-lg fa-ban">Remove</Button>
+            </div>
+          </settings:details-form>
+        </div>
+      </div>
+      <div id="cxnPane" class="view flex flex-dir-column w-100 h-100">
+        <settings:search-form id="cxnSearch" placeholder="Search by id, type, etc">
+          <Button id="cxnValidateAll" icon="fa fa-lg fa-magic" class="m-0 mr-2">Check all</Button>
+          <Button id="cxnAdd" icon="fa fa-lg fa-plus" class="m-0">Add connection</Button>
+        </settings:search-form>
+        <div class="flex-fill flex flex-dir-row" style="min-height: 0;">
+          <Table id="cxnTable" class="flex-fill container-responsive">
+            <TableColumn title="Identifier" field="id" sort="asc" key="true" />
+            <TableColumn title="Type" field="type" />
+            <TableColumn title="Plug-in" field="_plugin" />
+            <TableColumn title="Status" field="_status" sort="none" />
+            <TableColumn title="Open" field="_openChannels" type="number" />
+            <TableColumn title="Last Used" field="_lastUsedTime" type="datetime" class="display-lg" cellStyle="display-lg" />
+          </Table>
+          <settings:details-form id="cxnDetails" w="25rem">
+            <table class="properties-table">
+              <tbody>
+                <tr>
+                  <th class="pl-4">Identifier:</th>
+                  <td>
+                    <settings:id-link id="cxnIdLink" type="connection" />
+                  </td>
+                </tr>
+                <settings:template id="cxnPropTpl">
+                  <tr>
+                    <th>{{title}}:</th>
+                    <td class="text-pre-wrap text-wrap-any {{style}}">{{value}}</td>
+                  </tr>
+                </settings:template>
+              </tbody>
+            </table>
+            <div class="my-1">
+              <Button id="cxnValidate" class="primary" icon="fa fa-lg fa-magic">Check</Button>
+              <Button id="cxnEdit" icon="fa fa-lg fa-dot-circle-o">Edit</Button>
+              <Button id="cxnDelete" class="danger" icon="fa fa-lg fa-ban">Delete</Button>
+            </div>
+          </settings:details-form>
+        </div>
+        <Dialog id="cxnEditDialog" title="Edit Connection" modal="true" w="40rem">
+          <Form id="cxnEditForm">
+            <table class="properties-table">
+              <tbody>
+                <tr>
+                  <th><label>Identifier:</label></th>
+                  <td>
+                    <div class="flex flex-dir-row flex-align-center">
+                      <span class="unimportant pr-1">/connection/</span>
+                      <TextField id="cxnIdField" name="id" class="flex-fill"
+                          required="true" pattern="[a-zA-Z0-9._-]+(/[a-zA-Z0-9._-]+)*" />
+                    </div>
+                    <FormValidator name="id" message="Only alphanumeric characters allowed in identifier." />
+                    <div class="helptext pt-0">
+                      The unique connection identifier. Optionally prefixed with
+                      an environment path.
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <th><label>Type:</label></th>
+                  <td>
+                    <select id="cxnEditType" name="type" required="true">
+                      <option value="">&lt; Select Type &gt;</option>
+                    </select>
+                    <label class="select-none ml-2">
+                      <input type="checkbox" id="cxnEditShowAll" name="_showAll" value="yes" />
+                      Show all parameters
+                    </label>
+                    <FormValidator name="type" message="A valid connection type must be selected." />
+                    <div id="cxnEditTypeHelp" class="helptext pt-0"></div>
+                  </td>
+                </tr>
+                <settings:template id="cxnEditTpl">
+                  <tr>
+                    <th><label>{{title}}:</label></th>
+                    <td></td>
+                  </tr>
+                </settings:template>
+                <tr>
+                  <th><label>Add Parameter:</label></th>
+                  <td>
+                    <TextField id="cxnEditAddParam" name="_add" size="25" />
+                    <Button icon="fa fa-lg fa-plus" class="font-smaller mx-1" data-action="add" />
+                    <FormValidator id="cxnEditParamValidator1"
+                        message="Only alphanumeric characters allowed in parameter name." />
+                    <FormValidator id="cxnEditParamValidator2"
+                        message="A parameter with this name already exists." />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="text-right mt-1">
+              <Button icon="fa fa-lg fa-times" data-dialog="close">Cancel</Button>
+              <Button type="submit" highlight="true" icon="fa fa-lg fa-check">Save</Button>
+            </div>
+          </Form>
+        </Dialog>
+      </div>
+      <div id="procPane" class="view flex flex-dir-column w-100 h-100">
+      </div>
+      <div id="userPane" class="view flex flex-dir-column w-100 h-100">
+        <settings:search-form id="userSearch" placeholder="Search by name, email, etc">
+          <Button id="userAdd" icon="fa fa-lg fa-plus" class="m-0">Add user</Button>
+        </settings:search-form>
+        <div class="flex-fill flex flex-dir-row" style="min-height: 0;">
+          <Table id="userTable" class="flex-fill container-responsive">
+            <TableColumn title="Id" field="id" sort="asc" key="true" maxLength="20" />
+            <TableColumn title="Name" field="name" maxLength="40" />
+            <TableColumn title="E-mail" field="email" maxLength="40" class="display-lg" cellStyle="display-lg" />
+            <TableColumn title="Enabled" field="enabled" type="boolean" />
+            <TableColumn title="Admin" field="admin" type="boolean" />
+            <TableColumn title="Roles" field="roleCount" type="number" />
+          </Table>
+          <settings:details-form id="userDetails" w="25rem">
+            <table class="properties-table">
+              <tbody>
+                <tr>
+                  <th class="pl-4">Identifier:</th>
+                  <td>
+                    <settings:id-link id="userIdLink" type="user" />
+                  </td>
+                </tr>
+                <settings:template id="userPropTpl">
+                  <tr>
+                    <th>{{title}}:</th>
+                    <td class="text-pre-wrap text-wrap-any {{style}}">{{value}}</td>
+                  </tr>
+                </settings:template>
+                <tr>
+                  <th>Enabled:</th>
+                  <td>
+                    <i id="userEnabled" class="fa fa-square-o"></i>
+                    <span id="userEnabledText" class="ml-1" />
+                  </td>
+                </tr>
+                <tr>
+                  <th>Roles:</th>
+                  <td>
+                    <settings:template id="userRoleTpl">
+                      <div>
+                        <i class="fa fa-check-square"></i>
+                        {{name}}
+                        <span class="unimportant">&#8226; {{description}}</span>
+                      </div>
+                    </settings:template>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="my-1">
+              <Button id="userEdit" icon="fa fa-lg fa-dot-circle-o">Edit</Button>
+            </div>
+          </settings:details-form>
+        </div>
+        <Dialog id="userDialog" title="Edit User" modal="true" w="35rem">
+          <Form id="userForm">
+            <table class="properties-table">
+              <tbody>
+                <tr>
+                  <th><label>Identifier:</label></th>
+                  <td>
+                    <div class="flex flex-dir-row flex-align-center">
+                      <span class="unimportant pr-1">/user/</span>
+                      <TextField id="userIdField" name="id" class="flex-fill"
+                          required="true" pattern="[a-zA-Z0-9._-]+(/[a-zA-Z0-9._-]+)*" />
+                    </div>
+                    <FormValidator name="id" message="Only alphanumeric characters allowed in identifier." />
+                    <div class="helptext pt-0">
+                      The unique user identifier.
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <th><label>Name:</label></th>
+                  <td>
+                    <TextField name="name" class="w-100" />
+                    <div class="helptext pt-0">
+                      The optional descriptive name of the user.
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <th><label>E-mail:</label></th>
+                  <td>
+                    <TextField name="email" type="email" class="w-100" />
+                    <FormValidator name="email" mandatory="false" regex=".+@.+\..+"
+                                   message="Invalid e-mail address" />
+                    <div class="helptext pt-0">
+                      The optional user email address.
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <th><label>Description:</label></th>
+                  <td>
+                    <TextArea name="description" rows="2" autosize="true" class="w-100" />
+                    <div class="helptext pt-0">
+                      The optional user description, department or notes.
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <th><label>Password:</label></th>
+                  <td>
+                    <TextField id="userPwdField" type="password" name="password" minlength="5" size="25" />
+                    <span id="userPwdHint" class="unimportant ml-3">Leave blank for unmodified</span>
+                    <FormValidator name="password" mandatory="false"
+                                   message="Password must contain at least 5 characters" />
+                    <div class="helptext pt-0">
+                      The user login password (for built-in authentication).
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Access:</th>
+                  <td class="pb-2">
+                    <label class="inline">
+                      <input type="checkbox" name="enabled" /> Enabled
+                    </label>
+                    <span class="helptext vertical-top pt-0"> &#8226; Access is denied if not enabled.</span>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Roles:</th>
+                  <td>
+                    <settings:template id="userEditRoleTpl">
+                      <div style="padding-left: 2em; text-indent: -2em;">
+                        <label class="inline">
+                          <input type="checkbox" name="role" value="{{id}}" />
+                          {{name}}
+                        </label>
+                        <span class="unimportant">&#8226; {{description}}</span>
+                      </div>
+                    </settings:template>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="text-right mt-1">
+              <Button icon="fa fa-lg fa-times" data-dialog="close">Cancel</Button>
+              <Button type="submit" highlight="true" icon="fa fa-lg fa-check">Save</Button>
+            </div>
+          </Form>
+        </Dialog>
+      </div>
+      <div id="storagePane" class="view flex flex-dir-column w-100 h-100">
+      </div>
+    </div>
+  </div>
+</ui>
