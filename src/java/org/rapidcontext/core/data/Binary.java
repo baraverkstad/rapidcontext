@@ -20,6 +20,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 
 import org.rapidcontext.core.web.Mime;
@@ -245,7 +246,7 @@ public interface Binary {
          */
         @Override
         public InputStream openStream() throws IOException {
-            return new ByteArrayInputStream(data.getBytes("UTF-8"));
+            return new ByteArrayInputStream(data.getBytes(StandardCharsets.UTF_8));
         }
     }
 

@@ -45,7 +45,7 @@ public class JsonSerializerTest {
     @Test
     public void testSerialize() throws IOException {
         try (InputStream is = getClass().getResourceAsStream("jsondata.json")) {
-            String text = FileUtil.readText(is, "UTF-8").trim();
+            String text = FileUtil.readText(is).trim();
             assertEquals(text, serialize(buildDict(), true));
         }
     }

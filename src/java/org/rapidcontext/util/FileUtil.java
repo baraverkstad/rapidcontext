@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -69,36 +70,32 @@ public final class FileUtil {
     }
 
     /**
-     * Reads a file containing text content in the specified
-     * character set.
+     * Reads a file containing UTF-8 text content.
      *
      * @param file           the input file to read
-     * @param charset        the name of a supported charset/encoding
      *
      * @return the text content of the file
      *
      * @throws IOException if the file couldn't be read
      */
-    public static String readText(File file, String charset) throws IOException {
+    public static String readText(File file) throws IOException {
         try (FileInputStream is = new FileInputStream(file)) {
-            return readText(is, charset);
+            return readText(is);
         }
     }
 
     /**
-     * Reads an input stream containing text content in the specified
-     * character set.
+     * Reads an input stream containing UTF-8 text content.
      *
      * @param is             the input stream to read
-     * @param charset        the name of a supported charset/encoding
      *
      * @return the text content of the input stream
      *
      * @throws IOException if the input stream couldn't be read
      */
-    public static String readText(InputStream is, String charset) throws IOException {
+    public static String readText(InputStream is) throws IOException {
         try (
-            InputStreamReader stream = new InputStreamReader(is, charset);
+            InputStreamReader stream = new InputStreamReader(is, StandardCharsets.UTF_8);
             BufferedReader reader = new BufferedReader(stream);
         ) {
             StringBuilder res = new StringBuilder();

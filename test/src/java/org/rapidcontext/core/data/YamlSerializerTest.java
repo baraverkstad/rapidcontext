@@ -46,7 +46,7 @@ public class YamlSerializerTest {
     @Test
     public void testSerialize() throws IOException {
         try (InputStream is = getClass().getResourceAsStream("yamldata.yaml")) {
-            String text = FileUtil.readText(is, "UTF-8");
+            String text = FileUtil.readText(is);
             assertEquals(text, serialize(buildDict()));
         }
     }

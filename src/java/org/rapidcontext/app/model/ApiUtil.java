@@ -262,7 +262,7 @@ public class ApiUtil {
             if (opts.get("computed", Boolean.class, false)) {
                 try (InputStream is = data.openStream()) {
                     if (Mime.isText(data.mimeType())) {
-                        dict.set("_text", FileUtil.readText(is, "UTF-8"));
+                        dict.set("_text", FileUtil.readText(is));
                     } else {
                         dict.set("_data", Base64.getEncoder().encodeToString(is.readAllBytes()));
                     }

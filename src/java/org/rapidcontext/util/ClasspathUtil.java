@@ -19,6 +19,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.jar.Manifest;
 
 /**
@@ -118,11 +119,7 @@ public final class ClasspathUtil {
                 }
             }
         } while (path.length() < str.length());
-        try {
-            path = URLDecoder.decode(path, "UTF-8");
-        } catch (UnsupportedEncodingException ignore) {
-            // Yeah, right... That just HAD to be a checked exception.
-        }
+        path = URLDecoder.decode(path, StandardCharsets.UTF_8);
         file = new File(path);
         return file.exists() ? file.getAbsoluteFile() : null;
     }

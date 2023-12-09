@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Map;
 
@@ -57,7 +58,7 @@ public final class JsonSerializer {
      * @throws IOException if the data couldn't be serialized
      */
     public static void serialize(Object obj, OutputStream os) throws IOException {
-        try (OutputStreamWriter ow = new OutputStreamWriter(os, "UTF-8")) {
+        try (OutputStreamWriter ow = new OutputStreamWriter(os, StandardCharsets.UTF_8)) {
             ow.write(serialize(obj, true));
             ow.write("\n");
             ow.flush();
@@ -260,7 +261,7 @@ public final class JsonSerializer {
      * @throws IOException if the unserialization failed
      */
     public static Object unserialize(InputStream is) throws IOException {
-        return unserialize(FileUtil.readText(is, "UTF-8"));
+        return unserialize(FileUtil.readText(is));
     }
 
     /**

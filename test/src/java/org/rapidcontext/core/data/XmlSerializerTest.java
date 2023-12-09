@@ -56,7 +56,7 @@ public class XmlSerializerTest {
     @Test
     public void testSerialize() throws IOException {
         try (InputStream is = getClass().getResourceAsStream("xmldata.xml")) {
-            String text = FileUtil.readText(is, "UTF-8");
+            String text = FileUtil.readText(is);
             assertEquals(text, serialize("root", buildDict()));
         }
     }

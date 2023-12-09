@@ -17,6 +17,7 @@ package org.rapidcontext.app.plugin.cmdline;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -228,7 +229,7 @@ public class CmdLineExecProcedure extends Procedure {
         while ((avail = is.available()) > 0) {
             avail = Math.min(avail, buf.length);
             is.read(buf, 0, avail);
-            res.append(new String(buf, 0, avail, "UTF-8"));
+            res.append(new String(buf, 0, avail, StandardCharsets.UTF_8));
         }
         return res.toString();
     }

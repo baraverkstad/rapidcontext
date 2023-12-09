@@ -21,6 +21,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.TreeSet;
 import java.util.logging.Level;
@@ -166,7 +167,7 @@ public abstract class HttpProcedure extends Procedure {
         try {
             byte[] bytes = null;
             if (data != null && data.length() > 0) {
-                bytes = data.getBytes("UTF-8");
+                bytes = data.getBytes(StandardCharsets.UTF_8);
                 con.setRequestProperty("Content-Length", "" + bytes.length);
             }
             logRequest(cx, con, data);
