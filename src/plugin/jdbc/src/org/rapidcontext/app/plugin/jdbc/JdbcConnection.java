@@ -141,7 +141,7 @@ public class JdbcConnection extends Connection {
             // Set default driver
             if (url.startsWith("jdbc:odbc")) {
                 dict.set(PREFIX_COMPUTED + JDBC_DRIVER, "sun.jdbc.odbc.JdbcOdbcDriver");
-            } else if (url.startsWith("jdbc:mariadb:") || url.startsWith("jdbc:mysql:")) {
+            } else if (url.startsWith("jdbc:mariadb:")) {
                 dict.set(PREFIX_COMPUTED + JDBC_DRIVER, "org.mariadb.jdbc.Driver");
             } else if (url.startsWith("jdbc:postgresql:")) {
                 dict.set(PREFIX_COMPUTED + JDBC_DRIVER, "org.postgresql.Driver");

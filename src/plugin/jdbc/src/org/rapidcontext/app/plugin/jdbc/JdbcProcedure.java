@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -90,7 +91,7 @@ public abstract class JdbcProcedure extends Procedure {
      * @param type           the object type name
      * @param dict           the serialized representation
      */
-    public JdbcProcedure(String id, String type, Dict dict) {
+    protected JdbcProcedure(String id, String type, Dict dict) {
         super(id, type, dict);
     }
 
@@ -178,7 +179,7 @@ public abstract class JdbcProcedure extends Procedure {
         }
         Collections.sort(fields);
         ArrayList<Object> params = new ArrayList<>();
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         int pos = 0;
         for (SqlField field : fields) {
             Object value = bindings.getValue(field.fieldName, null);
@@ -359,11 +360,11 @@ public abstract class JdbcProcedure extends Procedure {
          *
          * @return the new SQL text for the field
          */
-        public String bind(Object value, ArrayList<Object> params) {
+        public String bind(Object value, List<Object> params) {
             if (value == null) {
                 return bindNull();
             } else if (value instanceof Array) {
-                return bindData((Array) value, params);
+                return bindData((Array) value);
             } else if (value instanceof Date) {
                 params.add(new java.sql.Timestamp(((Date) value).getTime()));
                 return cond(column, operator, "?");
@@ -377,11 +378,10 @@ public abstract class JdbcProcedure extends Procedure {
          * Binds the specified array to this field.
          *
          * @param value      the array to bind
-         * @param params     the array of SQL parameters
          *
          * @return the new SQL text for the field
          */
-        private String bindData(Array value, ArrayList<Object> params) {
+        private String bindData(Array value) {
             String op;
             if (operator == null) {
                 op = null;
@@ -469,17 +469,10 @@ public abstract class JdbcProcedure extends Procedure {
          * @return the corresponding SQL string literal
          */
         private String literal(String str) {
-            StringBuffer buffer = new StringBuffer();
+            StringBuilder buffer = new StringBuilder();
             buffer.append("'");
             for (int i = 0; i < str.length(); i++) {
-                switch (str.charAt(i)) {
-                case '\'':
-                    buffer.append("''");
-                    break;
-                default:
-                    buffer.append(str.charAt(i));
-                    break;
-                }
+                buffer.append((str.charAt(i) == '\'') ? "''" : str.charAt(i));
             }
             buffer.append("'");
             return buffer.toString();
@@ -511,7 +504,7 @@ public abstract class JdbcProcedure extends Procedure {
          * @return the corresponding SQL list of literals
          */
         private String literal(Array list) {
-            StringBuffer buffer = new StringBuffer();
+            StringBuilder buffer = new StringBuilder();
             buffer.append("(");
             for (int i = 0; i < list.size(); i++) {
                 if (i > 0) {
