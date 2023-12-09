@@ -15,6 +15,7 @@
 package org.rapidcontext.core.storage;
 
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -165,10 +166,10 @@ class Caches {
      */
     public boolean store(Path storagePath, Path path, Object data) {
         if (storagePath == null) {
-            for (Path p : cacheStorages.keySet()) {
-                Storage cache = cacheStorages.get(p);
+            for (Entry<Path, MemoryStorage> e : cacheStorages.entrySet()) {
+                MemoryStorage cache = e.getValue();
                 if (path.startsWith(cache.path())) {
-                    return store(p, cache.localPath(path), data);
+                    return store(e.getKey(), cache.localPath(path), data);
                 }
             }
         } else if (cacheStorages.containsKey(storagePath)) {
@@ -213,10 +214,10 @@ class Caches {
      */
     public boolean remove(Path storagePath, Path path, boolean force) {
         if (storagePath == null) {
-            for (Path p : cacheStorages.keySet()) {
-                Storage cache = cacheStorages.get(p);
+            for (Entry<Path, MemoryStorage> e : cacheStorages.entrySet()) {
+                MemoryStorage cache = e.getValue();
                 if (path.startsWith(cache.path())) {
-                    return remove(p, cache.localPath(path), true);
+                    return remove(e.getKey(), cache.localPath(path), true);
                 }
             }
         } else if (cacheStorages.containsKey(storagePath)) {

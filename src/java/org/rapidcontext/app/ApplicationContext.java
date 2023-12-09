@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
@@ -593,9 +594,9 @@ public class ApplicationContext {
      */
     public CallContext findContext(int threadId) {
         synchronized (threadContext) {
-            for (Thread thread : threadContext.keySet()) {
-                if (thread.hashCode() == threadId) {
-                    return threadContext.get(thread);
+            for (Entry<Thread, CallContext> e : threadContext.entrySet()) {
+                if (e.getKey().hashCode() == threadId) {
+                    return e.getValue();
                 }
             }
         }

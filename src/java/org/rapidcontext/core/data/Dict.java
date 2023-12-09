@@ -271,14 +271,14 @@ public class Dict {
     public Dict copy() {
         Dict res = new Dict(size());
         if (map != null) {
-            for (String key : map.keySet()) {
-                Object value = map.get(key);
+            for (Entry<String, Object> e : map.entrySet()) {
+                Object value = e.getValue();
                 if (value instanceof Dict) {
                     value = ((Dict) value).copy();
                 } else if (value instanceof Array) {
                     value = ((Array) value).copy();
                 }
-                res.map.put(key, value);
+                res.map.put(e.getKey(), value);
             }
         }
         return res;
@@ -305,8 +305,7 @@ public class Dict {
     public void seal(boolean recursive) {
         sealed = true;
         if (recursive && map != null) {
-            for (String key : map.keySet()) {
-                Object value = map.get(key);
+            for (Object value : map.values()) {
                 if (value instanceof Dict) {
                     ((Dict) value).seal(recursive);
                 } else if (value instanceof Array) {
@@ -367,12 +366,9 @@ public class Dict {
      */
     public String keyOf(Object value) {
         if (map != null) {
-            for (String key : map.keySet()) {
-                Object obj = map.get(key);
-                if (obj == null && value == null) {
-                    return key;
-                } else if (obj != null && obj.equals(value)) {
-                    return key;
+            for (Entry<String, Object> e : map.entrySet()) {
+                if (Objects.equals(value, e.getValue())) {
+                    return e.getKey();
                 }
             }
         }
@@ -717,8 +713,8 @@ public class Dict {
      */
     public Dict setAll(Dict dict) {
         if (dict != null && dict.size() > 0) {
-            for (String key : dict.map.keySet()) {
-                set(key, dict.map.get(key));
+            for (Entry<String, Object> e : dict.map.entrySet()) {
+                set(e.getKey(), e.getValue());
             }
         }
         return this;
@@ -765,12 +761,11 @@ public class Dict {
      */
     public Dict merge(Dict dict) {
         if (dict != null && dict.size() > 0) {
-            for (String key : dict.map.keySet()) {
-                Object val = dict.map.get(key);
-                if (val == null) {
-                    remove(key);
+            for (Entry<String, Object> e : dict.map.entrySet()) {
+                if (e.getValue() == null) {
+                    remove(e.getKey());
                 } else {
-                    set(key, val);
+                    set(e.getKey(), e.getValue());
                 }
             }
         }
