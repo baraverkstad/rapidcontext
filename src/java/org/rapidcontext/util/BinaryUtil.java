@@ -138,7 +138,7 @@ public final class BinaryUtil {
      * @return the hexadecimal string with the converted data
      */
     public static String encodeHexString(byte[] data) {
-        StringBuffer hexString = new StringBuffer();
+        StringBuilder hexString = new StringBuilder();
         for (byte b : data) {
             hexString.append(Character.forDigit((b & 0xF0) >> 4, 16));
             hexString.append(Character.forDigit(b & 0x0F, 16));
