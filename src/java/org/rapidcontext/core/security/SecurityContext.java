@@ -14,7 +14,6 @@
 
 package org.rapidcontext.core.security;
 
-import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -292,7 +291,7 @@ public final class SecurityContext {
                          ", expected: " + test + ", received: " + hash);
                 throw new SecurityException(msg);
             }
-        } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+        } catch (NoSuchAlgorithmException e) {
             String msg = "invalid environment, MD5 not supported";
             LOG.log(Level.SEVERE, msg, e);
             throw new SecurityException(msg, e);

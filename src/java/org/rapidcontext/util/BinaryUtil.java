@@ -16,7 +16,6 @@ package org.rapidcontext.util;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -41,11 +40,9 @@ public final class BinaryUtil {
      *
      * @throws NoSuchAlgorithmException if the MD5 algorithm isn't
      *             available (should be RuntimeException)
-     * @throws UnsupportedEncodingException if the UTF-8 encoding isn't
-     *             available (should be RuntimeException)
      */
     public static String hashMD5(String input)
-    throws NoSuchAlgorithmException, UnsupportedEncodingException {
+    throws NoSuchAlgorithmException {
         return encodeHexString(hashBytes("MD5", input.getBytes(StandardCharsets.UTF_8)));
     }
 
@@ -59,11 +56,9 @@ public final class BinaryUtil {
      *
      * @throws NoSuchAlgorithmException if the SHA-256 algorithm isn't
      *             available (should be RuntimeException)
-     * @throws UnsupportedEncodingException if the UTF-8 encoding isn't
-     *             available (should be RuntimeException)
      */
     public static String hashSHA256(String input)
-    throws NoSuchAlgorithmException, UnsupportedEncodingException {
+    throws NoSuchAlgorithmException {
         return encodeHexString(hashBytes("SHA-256", input.getBytes(StandardCharsets.UTF_8)));
     }
 

@@ -15,7 +15,6 @@
 package org.rapidcontext.util;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;

@@ -19,7 +19,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 
@@ -231,7 +230,7 @@ public interface Binary {
         public String sha256() {
             try {
                 return BinaryUtil.hashSHA256(data);
-            } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+            } catch (NoSuchAlgorithmException e) {
                 return null;
             }
         }
