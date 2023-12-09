@@ -122,6 +122,7 @@
         { test: "((a,  b, ...args) => true)()", name: "rest parameters" },
         { test: "Math.max(...[1, 2, 3]) === 3", name: "spread parameters" },
         { test: "[...[1, 2, 3]].length === 3", name: "spread array literals" },
+        { test: "({...{ a: 42}}).a == 42", name: "spread object literals" },
         { test: "var [a, ...b] = [1, 2, 3]; a == 1 && b.length == 2", name: "array destructuring assignment" },
         { test: "var {a, b} = { a: 1, b: 2, c: 3 }; a == 1 && b == 2", name: "object destructuring assignment" },
         { test: "class Test {}; true", name: "Class declarations" },
