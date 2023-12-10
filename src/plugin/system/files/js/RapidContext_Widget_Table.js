@@ -528,8 +528,8 @@ RapidContext.Widget.Table.prototype.getSelectedData = function () {
  * @return {Array} an array with the row ids actually modified
  */
 RapidContext.Widget.Table.prototype.setSelectedIds = function (...ids) {
-    let $ids = RapidContext.Util.dict([].concat(...ids), true);
-    let oldIds = RapidContext.Util.dict(this.getSelectedIds(), true);
+    let $ids = RapidContext.Data.object([].concat(...ids), true);
+    let oldIds = RapidContext.Data.object(this.getSelectedIds(), true);
     let res = [];
     for (let i = 0; i < this._rows.length; i++) {
         let rowId = this._rows[i].$id;
@@ -577,8 +577,8 @@ RapidContext.Widget.Table.prototype.addSelectedIds = function (...ids) {
  * @return {Array} an array with the new row ids actually selected
  */
 RapidContext.Widget.Table.prototype._addSelectedIds = function (...ids) {
-    let $ids = RapidContext.Util.dict([].concat(...ids), true);
-    Object.assign($ids, RapidContext.Util.dict(this.getSelectedIds(), false));
+    let $ids = RapidContext.Data.object([].concat(...ids), true);
+    Object.assign($ids, RapidContext.Data.object(this.getSelectedIds(), false));
     let res = [];
     for (let i = 0; i < this._rows.length; i++) {
         if ($ids[this._rows[i].$id] === true) {
@@ -599,7 +599,7 @@ RapidContext.Widget.Table.prototype._addSelectedIds = function (...ids) {
  * @return {Array} an array with the row ids actually unselected
  */
 RapidContext.Widget.Table.prototype.removeSelectedIds = function (...ids) {
-    let $ids = RapidContext.Util.dict([].concat(...ids), true);
+    let $ids = RapidContext.Data.object([].concat(...ids), true);
     let res = [];
     for (let i = 0; i < this._rows.length; i++) {
         if ($ids[this._rows[i].$id] === true) {

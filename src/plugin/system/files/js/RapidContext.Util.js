@@ -45,6 +45,8 @@ if (typeof(RapidContext.Util) == "undefined") {
  *
  * @return {Object} an object with properties for each key-value pair
  *
+ * @deprecated Use RapidContext.Data.object() instead.
+ *
  * @example
  * RapidContext.Util.dict(['a','b'], [1, 2])
  * ==> { a: 1, b: 2 }
@@ -58,6 +60,7 @@ if (typeof(RapidContext.Util) == "undefined") {
  * ==> { a: true, b: true }
  */
 RapidContext.Util.dict = function (itemsOrKeys, values) {
+    console.warn("deprecated: RapidContext.Util.dict() called, use RapidContext.Data.object() instead");
     var o = {};
     if (!MochiKit.Base.isArrayLike(itemsOrKeys)) {
         throw new TypeError("First argument must be array-like");
@@ -107,7 +110,7 @@ RapidContext.Util.dict = function (itemsOrKeys, values) {
  * ==> { a: 1 } and modifies o to { b: 2 }
  */
 RapidContext.Util.mask = function (src, keys) {
-    console.warn("deprecated: mask() called, use object destructuring assignment instead");
+    console.warn("deprecated: RapidContext.Util.mask() called, use object destructuring assignment instead");
     var res = {};
     if (!MochiKit.Base.isArrayLike(keys)) {
         keys = MochiKit.Base.keys(keys);

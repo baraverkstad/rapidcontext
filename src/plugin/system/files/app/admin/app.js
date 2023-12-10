@@ -924,7 +924,7 @@ AdminApp.prototype._initProcEdit = function (data) {
                 select.append(MochiKit.DOM.OPTION({ value: k }, name));
                 var values = res[k].bindings;
                 var keys = MochiKit.Base.map(MochiKit.Base.itemgetter("name"), values);
-                data.defaults[k] = RapidContext.Util.dict(keys, values);
+                data.defaults[k] = RapidContext.Data.object(keys, values);
             });
         })
         .then(() => this._renderProcEdit())
