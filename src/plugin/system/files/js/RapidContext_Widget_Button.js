@@ -39,22 +39,22 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * @extends RapidContext.Widget
  *
  * @example <caption>JavaScript</caption>
- * var closeBtn = RapidContext.Widget.Button({ icon: "OK", highlight: true }, "Close");
+ * let closeBtn = RapidContext.Widget.Button({ icon: "OK", highlight: true }, "Close");
  *
  * @example <caption>User Interface XML</caption>
  * <Button id="closeBtn" icon="OK" highlight="true">Close</Button>
  */
 RapidContext.Widget.Button = function (attrs/*, ...*/) {
     function textNode(val) {
-        var el = document.createElement("t");
+        let el = document.createElement("t");
         el.innerText = String(val && val.textContent || val).trim();
         return el;
     }
-    var o = MochiKit.DOM.BUTTON({ type: attrs.type || "button" });
+    let o = MochiKit.DOM.BUTTON({ type: attrs.type || "button" });
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Button);
     o.addClass("widgetButton");
     o.setAttrs(attrs);
-    var children = Array.from(arguments).slice(1).filter(Boolean);
+    let children = Array.from(arguments).slice(1).filter(Boolean);
     children.forEach(function (item) {
         o.addChildNode((item.nodeType === 1) ? item : textNode(item));
     });

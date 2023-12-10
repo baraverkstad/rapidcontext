@@ -48,8 +48,8 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * @extends RapidContext.Widget
  *
  * @example <caption>JavaScript</caption>
- * var h1 = MochiKit.DOM.H1({}, "Hello, world!");
- * var helloPane = RapidContext.Widget.Pane({}, h1);
+ * let h1 = MochiKit.DOM.H1({}, "Hello, world!");
+ * let helloPane = RapidContext.Widget.Pane({}, h1);
  *
  * @example <caption>User Interface XML</caption>
  * <Pane id="helloPane">
@@ -57,7 +57,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * </Pane>
  */
 RapidContext.Widget.Pane = function (attrs/*, ... */) {
-    var o = document.createElement("div");
+    let o = document.createElement("div");
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Pane);
     o.addClass("widgetPane");
     o.setAttrs(Object.assign({ pageTitle: "Page", pageStatus: "ANY", pageCloseable: false }, attrs));
@@ -155,8 +155,8 @@ RapidContext.Widget.Pane.prototype.setAttrs = function (attrs) {
 RapidContext.Widget.Pane.prototype._handleEnter = function (opts) {
     opts = Object.assign({ show: true, validateReset: false }, opts);
     if (RapidContext.Data.bool(opts.validateReset)) {
-        var forms = this.getElementsByTagName("FORM");
-        for (var i = 0; i < forms.length; i++) {
+        let forms = this.getElementsByTagName("FORM");
+        for (let i = 0; i < forms.length; i++) {
             if (typeof(forms[i].validateReset) == "function") {
                 forms[i].validateReset();
             }
@@ -186,8 +186,8 @@ RapidContext.Widget.Pane.prototype._handleEnter = function (opts) {
  */
 RapidContext.Widget.Pane.prototype._handleExit = function (opts) {
     function callFirst(obj, methods) {
-        for (var i = 0; i < methods.length; i++) {
-            var k = methods[i];
+        for (let i = 0; i < methods.length; i++) {
+            let k = methods[i];
             if (typeof(obj[k]) === "function") {
                 return obj[k]();
             }
@@ -196,8 +196,8 @@ RapidContext.Widget.Pane.prototype._handleExit = function (opts) {
     }
     opts = Object.assign({ hide: true, validate: false }, opts);
     if (RapidContext.Data.bool(opts.validate)) {
-        var forms = this.getElementsByTagName("FORM");
-        for (var i = 0; i < forms.length; i++) {
+        let forms = this.getElementsByTagName("FORM");
+        for (let i = 0; i < forms.length; i++) {
             if (callFirst(forms[i], ["validate", "checkValidity"]) === false) {
                 return false;
             }

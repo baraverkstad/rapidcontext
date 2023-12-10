@@ -43,9 +43,9 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * @extends RapidContext.Widget
  *
  * @example <caption>JavaScript</caption>
- * var h1 = MochiKit.DOM.H1({}, "Hello, world!");
- * var attrs = { title: "Hello", modal: true };
- * var helloDialog = RapidContext.Widget.Dialog(attrs, h1);
+ * let h1 = MochiKit.DOM.H1({}, "Hello, world!");
+ * let attrs = { title: "Hello", modal: true };
+ * let helloDialog = RapidContext.Widget.Dialog(attrs, h1);
  * RapidContext.Util.registerSizeConstraints(helloDialog, "200", "75");
  *
  * @example <caption>User Interface XML</caption>
@@ -54,16 +54,16 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * </Dialog>
  */
 RapidContext.Widget.Dialog = function (attrs/*, ... */) {
-    var DIV = MochiKit.DOM.DIV;
-    var title = DIV({ "class": "widgetDialogTitle", "data-dialog": "move" }, "Dialog");
-    var close = RapidContext.Widget.Icon({
+    let DIV = MochiKit.DOM.DIV;
+    let title = DIV({ "class": "widgetDialogTitle", "data-dialog": "move" }, "Dialog");
+    let close = RapidContext.Widget.Icon({
         "class": "widgetDialogClose fa fa-times",
         "title": "Close",
         "data-dialog": "close"
     });
-    var resize = DIV({ "class": "widgetDialogResize", "data-dialog": "resize" });
-    var content = DIV({ "class": "widgetDialogContent" });
-    var o = DIV({}, title, close, resize, content);
+    let resize = DIV({ "class": "widgetDialogResize", "data-dialog": "resize" });
+    let content = DIV({ "class": "widgetDialogContent" });
+    let o = DIV({}, title, close, resize, content);
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Dialog);
     o.classList.add("widgetDialog");
     o.resizeContent = o._resizeContent;
@@ -149,9 +149,9 @@ RapidContext.Widget.Dialog.prototype._handleMouseDown = function (evt) {
     let action = evt.delegateTarget.dataset.dialog;
     if (action == "move" || action == "resize") {
         evt.preventDefault();
-        var isDim = action == "resize";
-        var x = (isDim ? this.offsetWidth : this.offsetLeft) - evt.pageX;
-        var y = (isDim ? this.offsetHeight : this.offsetTop) - evt.pageY;
+        let isDim = action == "resize";
+        let x = (isDim ? this.offsetWidth : this.offsetLeft) - evt.pageX;
+        let y = (isDim ? this.offsetHeight : this.offsetTop) - evt.pageY;
         document._drag = { target: this, action: action, x: x, y: y };
         document.addEventListener("mouseup", this._handleMouseUp);
         document.addEventListener("mousemove", this._handleMouseMove);
@@ -165,7 +165,7 @@ RapidContext.Widget.Dialog.prototype._handleMouseDown = function (evt) {
  * @param {Event} evt the DOM Event object
  */
 RapidContext.Widget.Dialog.prototype._handleMouseUp = function (evt) {
-    var o = document._drag;
+    let o = document._drag;
     if (o && o.target) {
         // FIXME: Use AbortSignal instead to disconnect
         document.removeEventListener("mouseup", o.target._handleMouseUp);
@@ -180,7 +180,7 @@ RapidContext.Widget.Dialog.prototype._handleMouseUp = function (evt) {
  * @param {Event} evt the DOM Event object
  */
 RapidContext.Widget.Dialog.prototype._handleMouseMove = function (evt) {
-    var o = document._drag;
+    let o = document._drag;
     if (o && o.action == "move") {
         o.target.moveTo(o.x + evt.pageX, o.y + evt.pageY);
     } else if (o && o.action == "resize") {
@@ -252,7 +252,7 @@ RapidContext.Widget.Dialog.prototype._setHiddenDialog = function (value) {
             throw new Error("Cannot show Dialog widget without setting a parent DOM node");
         }
         if (this.modal || this.system) {
-            var attrs = { loading: false, message: "", style: { "z-index": "99" } };
+            let attrs = { loading: false, message: "", style: { "z-index": "99" } };
             if (this.system) {
                 attrs.dark = true;
             }
@@ -275,17 +275,17 @@ RapidContext.Widget.Dialog.prototype._setHiddenDialog = function (value) {
  * @param {number} y the vertical position (in pixels)
  */
 RapidContext.Widget.Dialog.prototype.moveTo = function (x, y) {
-    var max = {
+    let max = {
         x: this.parentNode.offsetWidth - this.offsetWidth - 2,
         y: this.parentNode.offsetHeight - this.offsetHeight - 2
     };
-    var pos = {
+    let pos = {
         x: Math.round(Math.max(0, Math.min(x, max.x))),
         y: Math.round(Math.max(0, Math.min(y, max.y)))
     };
     this.style.left = pos.x + "px";
     this.style.top = pos.y + "px";
-    var el = this.lastChild;
+    let el = this.lastChild;
     el.style.maxWidth = (this.parentNode.offsetWidth - pos.x - el.offsetLeft - 5) + "px";
     el.style.maxHeight = (this.parentNode.offsetHeight - pos.y - el.offsetTop - 5) + "px";
     this.center = false;
@@ -302,8 +302,8 @@ RapidContext.Widget.Dialog.prototype.moveToCenter = function () {
     this.style.top = "0px";
     this.lastChild.style.maxWidth = "";
     this.lastChild.style.maxHeight = "";
-    var x = (this.parentNode.offsetWidth - this.offsetWidth) / 2;
-    var y = (this.parentNode.offsetHeight - this.offsetHeight) / 2.618;
+    let x = (this.parentNode.offsetWidth - this.offsetWidth) / 2;
+    let y = (this.parentNode.offsetHeight - this.offsetHeight) / 2.618;
     this.moveTo(x, y);
     this.center = true;
 };
@@ -319,11 +319,11 @@ RapidContext.Widget.Dialog.prototype.moveToCenter = function () {
  *         actual size used
  */
 RapidContext.Widget.Dialog.prototype.resizeTo = function (w, h) {
-    var max = {
+    let max = {
         w: this.parentNode.offsetWidth - this.offsetLeft - 2,
         h: this.parentNode.offsetHeight - this.offsetTop - 2
     };
-    var dim = {
+    let dim = {
         w: Math.round(Math.max(150, Math.min(w, max.w))),
         h: Math.round(Math.max(100, Math.min(h, max.h)))
     };
@@ -346,9 +346,9 @@ RapidContext.Widget.Dialog.prototype.resizeTo = function (w, h) {
  *         actual size used
  */
 RapidContext.Widget.Dialog.prototype.resizeToContent = function () {
-    var el = this.lastChild;
-    var w = Math.max(el.scrollWidth, el.offsetWidth) + 2;
-    var h = Math.max(el.scrollHeight, el.offsetHeight) + el.offsetTop + 2;
+    let el = this.lastChild;
+    let w = Math.max(el.scrollWidth, el.offsetWidth) + 2;
+    let h = Math.max(el.scrollHeight, el.offsetHeight) + el.offsetTop + 2;
     return this.resizeTo(w, h);
 };
 

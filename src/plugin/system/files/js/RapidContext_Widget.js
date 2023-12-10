@@ -330,7 +330,7 @@ RapidContext.Widget.prototype.hasClass = function (/* ... */) {
             return elem.classList.contains(val);
         }
     }
-    var elem = this._styleNode();
+    let elem = this._styleNode();
     // FIXME: Use Array.prototype.flatMap(...) here
     return Array.from(arguments).map(RapidContext.Widget._toCssClass).every(isMatch);
 };
@@ -348,7 +348,7 @@ RapidContext.Widget.prototype.addClass = function (/* ... */) {
             elem.classList.add(val);
         }
     }
-    var elem = this._styleNode();
+    let elem = this._styleNode();
     // FIXME: Use Array.prototype.flatMap(...) here
     Array.from(arguments).map(RapidContext.Widget._toCssClass).forEach(add);
 };
@@ -368,7 +368,7 @@ RapidContext.Widget.prototype.removeClass = function (/* ... */) {
             elem.classList.remove(val);
         }
     }
-    var elem = this._styleNode();
+    let elem = this._styleNode();
     // FIXME: Use Array.prototype.flatMap(...) here
     Array.from(arguments).map(RapidContext.Widget._toCssClass).forEach(remove);
 };
@@ -501,13 +501,13 @@ RapidContext.Widget.prototype.hide = function () {
  */
 RapidContext.Widget.prototype.animate = function (opts) {
     console.warn("deprecated: animate() method called, use CSS animations instead");
-    var queue = { scope: this.uid(), position: "replace" };
+    let queue = { scope: this.uid(), position: "replace" };
     opts = MochiKit.Base.updatetree({ queue: queue }, opts);
     if (typeof(opts.queue) == "string") {
         queue.position = opts.queue;
         opts.queue = queue;
     }
-    var func = MochiKit.Visual[opts.effect];
+    let func = MochiKit.Visual[opts.effect];
     if (typeof(func) == "function") {
         func.call(null, this, opts);
     }
@@ -531,7 +531,7 @@ RapidContext.Widget.prototype.blurAll = function () {
  * @return {Array} the array of child DOM nodes
  */
 RapidContext.Widget.prototype.getChildNodes = function () {
-    var elem = this._containerNode();
+    let elem = this._containerNode();
     return elem ? Array.from(elem.childNodes) : [];
 };
 
@@ -543,7 +543,7 @@ RapidContext.Widget.prototype.getChildNodes = function () {
  * @param {Widget|Node} child the DOM node to add
  */
 RapidContext.Widget.prototype.addChildNode = function (child) {
-    var elem = this._containerNode();
+    let elem = this._containerNode();
     if (elem) {
         elem.append(child);
     } else {
@@ -562,7 +562,7 @@ RapidContext.Widget.prototype.addChildNode = function (child) {
  * @param {Widget|Node} child the DOM node to remove
  */
 RapidContext.Widget.prototype.removeChildNode = function (child) {
-    var elem = this._containerNode();
+    let elem = this._containerNode();
     if (elem) {
         elem.removeChild(child);
     }
@@ -591,8 +591,8 @@ RapidContext.Widget.prototype.addAll = function (...children) {
  * individual child nodes.
  */
 RapidContext.Widget.prototype.removeAll = function () {
-    var children = this.getChildNodes();
-    for (var i = children.length - 1; i >= 0; i--) {
+    let children = this.getChildNodes();
+    for (let i = children.length - 1; i >= 0; i--) {
         this.removeChildNode(children[i]);
         RapidContext.Widget.destroyWidget(children[i]);
     }

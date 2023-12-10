@@ -52,13 +52,13 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * @extends RapidContext.Widget
  *
  * @example <caption>JavaScript</caption>
- * var attrs1 = { field: "id", title: "Identifier", key: true, type: "number" };
- * var attrs2 = { field: "name", title: "Name", maxLength: 50, sort: "asc" };
- * var attrs3 = { field: "modified", title: "Last Modified", type: "datetime" };
- * var col1 = RapidContext.Widget.TableColumn(attrs1);
- * var col2 = RapidContext.Widget.TableColumn(attrs2);
- * var col3 = RapidContext.Widget.TableColumn(attrs3);
- * var exampleTable = RapidContext.Widget.Table({}, col1, col2, col3);
+ * let attrs1 = { field: "id", title: "Identifier", key: true, type: "number" };
+ * let attrs2 = { field: "name", title: "Name", maxLength: 50, sort: "asc" };
+ * let attrs3 = { field: "modified", title: "Last Modified", type: "datetime" };
+ * let col1 = RapidContext.Widget.TableColumn(attrs1);
+ * let col2 = RapidContext.Widget.TableColumn(attrs2);
+ * let col3 = RapidContext.Widget.TableColumn(attrs3);
+ * let exampleTable = RapidContext.Widget.Table({}, col1, col2, col3);
  * RapidContext.Util.registerSizeConstraints(exampleTable, "50%", "100%");
  *
  * @example <caption>User Interface XML</caption>
@@ -72,7 +72,7 @@ RapidContext.Widget.TableColumn = function (attrs) {
     if (attrs.field == null) {
         throw new Error("The 'field' attribute cannot be null for a TableColumn");
     }
-    var o = document.createElement("th");
+    let o = document.createElement("th");
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.TableColumn);
     o.addClass("widgetTableColumn");
     o.setAttrs(Object.assign({ title: attrs.field, type: "string", key: false }, attrs));
@@ -224,8 +224,8 @@ RapidContext.Widget.TableColumn.prototype._map = function (src) {
  * @return the table cell DOM node
  */
 RapidContext.Widget.TableColumn.prototype._render = function (obj) {
-    var td = document.createElement("td");
-    var value = obj[this.field];
+    let td = document.createElement("td");
+    let value = obj[this.field];
     if (typeof(this.cellStyle) === "string" && this.cellStyle.includes(":")) {
         td.style = this.cellStyle;
     } else if (typeof(this.cellStyle) === "string") {
@@ -238,7 +238,7 @@ RapidContext.Widget.TableColumn.prototype._render = function (obj) {
             td.append(e.toString());
         }
     } else if (typeof(value) == "boolean") {
-        var css = value ? "fa fa-check-square" : "fa fa-square-o";
+        let css = value ? "fa fa-check-square" : "fa fa-square-o";
         td.append(RapidContext.Widget.Icon(css));
     } else {
         if (value == null || (typeof(value) == "number" && isNaN(value))) {

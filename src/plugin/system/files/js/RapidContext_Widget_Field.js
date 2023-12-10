@@ -44,14 +44,14 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * @extends RapidContext.Widget
  *
  * @example <caption>JavaScript</caption>
- * var attrs = { name: "ratio", value: 0.23, format: "Ratio: {:%}" };
- * var field = RapidContext.Widget.Field(attrs);
+ * let attrs = { name: "ratio", value: 0.23, format: "Ratio: {:%}" };
+ * let field = RapidContext.Widget.Field(attrs);
  *
  * @example <caption>User Interface XML</caption>
  * <Field name="ratio" value="0.23" format="Ratio: {:%}" />
  */
 RapidContext.Widget.Field = function (attrs) {
-    var o = document.createElement("span");
+    let o = document.createElement("span");
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Field);
     o.addClass("widgetField");
     o.setAttrs(Object.assign({ name: "", value: "" }, attrs));
@@ -114,7 +114,7 @@ RapidContext.Widget.Field.prototype.setAttrs = function (attrs) {
  * called.
  */
 RapidContext.Widget.Field.prototype.redraw = function () {
-    var str = this.value;
+    let str = this.value;
     if (this.formatter) {
         try {
             str = this.formatter(str);
@@ -128,7 +128,7 @@ RapidContext.Widget.Field.prototype.redraw = function () {
     } else if (typeof(str) != "string") {
         str = str.toString();
     }
-    var longStr = str;
+    let longStr = str;
     if (this.maxLength > 0) {
         str = MochiKit.Text.truncate(str, this.maxLength, "...");
     }

@@ -37,9 +37,9 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * @extends RapidContext.Widget
  *
  * @example <caption>JavaScript</caption>
- * var hr = MochiKit.DOM.HR();
- * var third = MochiKit.DOM.LI({ "class": "disabled" }, "Third");
- * var popup = RapidContext.Widget.Popup({}, "First",  "Second", hr, third);
+ * let hr = MochiKit.DOM.HR();
+ * let third = MochiKit.DOM.LI({ "class": "disabled" }, "Third");
+ * let popup = RapidContext.Widget.Popup({}, "First",  "Second", hr, third);
  *
  * @example <caption>User Interface XML</caption>
  * <Popup id="examplePopup">
@@ -50,7 +50,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * </Popup>
  */
 RapidContext.Widget.Popup = function (attrs/*, ...*/) {
-    var o = document.createElement("menu");
+    let o = document.createElement("menu");
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Popup);
     o.addClass("widgetPopup");
     o._setHidden(true);
@@ -187,20 +187,20 @@ RapidContext.Widget.Popup.prototype.selectedChild = function () {
  *         -1 if none was selected
  */
 RapidContext.Widget.Popup.prototype.selectChild = function (indexOrNode) {
-    var index;
-    var node = this.selectedChild();
+    let index;
+    let node = this.selectedChild();
     if (node != null) {
         node.classList.remove("selected");
     }
-    var isNumber = typeof(indexOrNode) == "number";
+    let isNumber = typeof(indexOrNode) == "number";
     index = isNumber ? indexOrNode : Array.from(this.childNodes).indexOf(indexOrNode);
     node = this.childNodes[index];
-    var selector = "li:not(.disabled), .widgetPopupItem:not(.disabled)";
+    let selector = "li:not(.disabled), .widgetPopupItem:not(.disabled)";
     if (index >= 0 && node && node.matches(selector)) {
         this.selectedIndex = index;
         node.classList.add("selected");
-        var top = node.offsetTop;
-        var bottom = top + node.offsetHeight + 5;
+        let top = node.offsetTop;
+        let bottom = top + node.offsetHeight + 5;
         if (this.scrollTop + this.clientHeight < bottom) {
             this.scrollTop = bottom - this.clientHeight;
         }
@@ -223,9 +223,9 @@ RapidContext.Widget.Popup.prototype.selectChild = function (indexOrNode) {
  *         -1 if none was selected
  */
 RapidContext.Widget.Popup.prototype.selectMove = function (offset) {
-    var active = this.selectedChild();
-    var items = this.querySelectorAll("li:not(.disabled), .widgetPopupItem:not(.disabled)");
-    var index = (offset < 0) ? offset : Math.max(0, offset - 1);
+    let active = this.selectedChild();
+    let items = this.querySelectorAll("li:not(.disabled), .widgetPopupItem:not(.disabled)");
+    let index = (offset < 0) ? offset : Math.max(0, offset - 1);
     if (active) {
         index = Array.from(items).indexOf(active) + offset;
     }

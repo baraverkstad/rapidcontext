@@ -48,10 +48,10 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * @extends RapidContext.Widget
  *
  * @example <caption>JavaScript</caption>
- * var field = RapidContext.Widget.TextField({ name: "name", placeholder: "Your Name Here" });
- * var attrs = { name: "name", message: "Please enter your name to proceed." };
- * var valid = RapidContext.Widget.FormValidator(attrs);
- * var exampleForm = RapidContext.Widget.Form({}, field, valid);
+ * let field = RapidContext.Widget.TextField({ name: "name", placeholder: "Your Name Here" });
+ * let attrs = { name: "name", message: "Please enter your name to proceed." };
+ * let valid = RapidContext.Widget.FormValidator(attrs);
+ * let exampleForm = RapidContext.Widget.Form({}, field, valid);
  *
  * @example <caption>User Interface XML</caption>
  * <Form id="exampleForm">
@@ -60,10 +60,10 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * </Form>
  */
 RapidContext.Widget.FormValidator = function (attrs) {
-    var o = document.createElement("span");
+    let o = document.createElement("span");
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.FormValidator);
     o.addClass("widgetFormValidator");
-    var defaults = { name: "", mandatory: true, display: "both", message: null, validator: null };
+    let defaults = { name: "", mandatory: true, display: "both", message: null, validator: null };
     o.setAttrs(Object.assign(defaults, attrs));
     o.fields = [];
     o.hide();
@@ -149,7 +149,7 @@ RapidContext.Widget.FormValidator.prototype.verify = function (field, value) {
         } else if (arguments.length == 1) {
             value = field.value;
         }
-        var str = String(value).trim();
+        let str = String(value).trim();
         if (field.validationMessage) {
             this.addError(field, field.validationMessage);
             return false;
@@ -160,7 +160,7 @@ RapidContext.Widget.FormValidator.prototype.verify = function (field, value) {
             this.addError(field, "The field format is incorrect");
             return false;
         } else if (typeof(this.validator) == "function") {
-            var res = this.validator(value);
+            let res = this.validator(value);
             if (res !== true) {
                 this.addError(field, res || "Field validation failed");
                 return false;
@@ -188,8 +188,8 @@ RapidContext.Widget.FormValidator.prototype.addError = function (field, message)
         field.classList.add("invalid");
         if (this.display !== "none") {
             message = this.message || message;
-            var span = null;
-            var icon = null;
+            let span = null;
+            let icon = null;
             if (!this.display || this.display === "both") {
                 this.addClass("block");
             }

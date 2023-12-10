@@ -36,12 +36,12 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * @extends RapidContext.Widget
  *
  * @example <caption>JavaScript</caption>
- * var page1 = RapidContext.Widget.Pane({ pageTitle: "One" });
+ * let page1 = RapidContext.Widget.Pane({ pageTitle: "One" });
  * ...
- * var page2 = RapidContext.Widget.Pane({ pageTitle: "Two", pageCloseable: true });
+ * let page2 = RapidContext.Widget.Pane({ pageTitle: "Two", pageCloseable: true });
  * ...
- * var attrs = { style: { width: "100%", height: "100%" } };
- * var tabs = RapidContext.Widget.TabContainer(attrs, page1, page2);
+ * let attrs = { style: { width: "100%", height: "100%" } };
+ * let tabs = RapidContext.Widget.TabContainer(attrs, page1, page2);
  *
  * @example <caption>User Interface XML</caption>
  * <TabContainer style="width: 100%; height: 100%;">
@@ -54,9 +54,9 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * <TabContainer>
  */
 RapidContext.Widget.TabContainer = function (attrs/*, ... */) {
-    var labels = MochiKit.DOM.DIV({ "class": "widgetTabContainerLabels" });
-    var container = MochiKit.DOM.DIV({ "class": "widgetTabContainerContent" });
-    var o = MochiKit.DOM.DIV(attrs, labels, container);
+    let labels = MochiKit.DOM.DIV({ "class": "widgetTabContainerLabels" });
+    let container = MochiKit.DOM.DIV({ "class": "widgetTabContainerContent" });
+    let o = MochiKit.DOM.DIV(attrs, labels, container);
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.TabContainer);
     o.classList.add("widgetTabContainer");
     RapidContext.Util.registerSizeConstraints(container, "100% - 20", "100% - 40");
@@ -117,13 +117,14 @@ RapidContext.Widget.TabContainer.prototype.addChildNode = function (child) {
     }
     RapidContext.Util.registerSizeConstraints(child, "100%", "100%");
     child.hide();
-    var text = MochiKit.DOM.SPAN(null, child.pageTitle);
+    let text = MochiKit.DOM.SPAN(null, child.pageTitle);
+    let icon = null;
     if (child.pageCloseable) {
-        var icon = RapidContext.Widget.Icon({ "class": "fa fa-close", tooltip: "Close" });
+        icon = RapidContext.Widget.Icon({ "class": "fa fa-close", tooltip: "Close" });
         icon.dataset.close = true;
     }
-    var labelAttrs = { "class": "widgetTabContainerLabel" };
-    var label = MochiKit.DOM.DIV(labelAttrs, MochiKit.DOM.DIV({}, text, icon));
+    let labelAttrs = { "class": "widgetTabContainerLabel" };
+    let label = MochiKit.DOM.DIV(labelAttrs, MochiKit.DOM.DIV({}, text, icon));
     this.firstChild.append(label);
     this.lastChild.append(child);
     if (this._selectedIndex < 0) {
@@ -181,7 +182,7 @@ RapidContext.Widget.TabContainer.prototype.selectedIndex = function () {
  *         null if no child is selected
  */
 RapidContext.Widget.TabContainer.prototype.selectedChild = function () {
-    var children = this.getChildNodes();
+    let children = this.getChildNodes();
     return (this._selectedIndex < 0) ? null : children[this._selectedIndex];
 };
 
@@ -192,14 +193,14 @@ RapidContext.Widget.TabContainer.prototype.selectedChild = function () {
  * @param {number|Node} [indexOrChild] the child index or node
  */
 RapidContext.Widget.TabContainer.prototype.selectChild = function (indexOrChild) {
-    var children = this.getChildNodes();
-    var label;
+    let children = this.getChildNodes();
+    let label;
     if (this._selectedIndex >= 0) {
         label = this.firstChild.childNodes[this._selectedIndex];
         label.classList.remove("selected");
         children[this._selectedIndex]._handleExit();
     }
-    var index = -1;
+    let index = -1;
     if (indexOrChild == null) {
         index = this._selectedIndex;
     } else if (typeof(indexOrChild) == "number") {
@@ -224,7 +225,7 @@ RapidContext.Widget.TabContainer.prototype.selectChild = function (indexOrChild)
  */
 RapidContext.Widget.TabContainer.prototype._resizeContent = function () {
     RapidContext.Util.resizeElements(this.lastChild);
-    var child = this.selectedChild();
+    let child = this.selectedChild();
     if (child != null) {
         RapidContext.Util.resizeElements(child);
     }

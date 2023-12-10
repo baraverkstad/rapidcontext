@@ -48,16 +48,16 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * @extends RapidContext.Widget
  *
  * @example <caption>JavaScript</caption>
- * var attrs = { text: "Working", noratio: true, notime: true };
- * var w = RapidContext.Widget.ProgressBar(attrs);
+ * let attrs = { text: "Working", noratio: true, notime: true };
+ * let w = RapidContext.Widget.ProgressBar(attrs);
  *
  * @example <caption>User Interface XML</caption>
  * <ProgressBar text="Working" noratio="true" notime="true" />
  */
 RapidContext.Widget.ProgressBar = function (attrs) {
-    var text = MochiKit.DOM.DIV({ "class": "widgetProgressBarText" });
-    var meter = document.createElement("progress");
-    var o = MochiKit.DOM.DIV({}, text, meter);
+    let text = MochiKit.DOM.DIV({ "class": "widgetProgressBarText" });
+    let meter = document.createElement("progress");
+    let o = MochiKit.DOM.DIV({}, text, meter);
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.ProgressBar);
     o.addClass("widgetProgressBar");
     o.setAttrs(Object.assign({ min: 0, max: 100, value: 0 }, attrs));
@@ -121,13 +121,13 @@ RapidContext.Widget.ProgressBar.prototype.setAttrs = function (attrs) {
         attrs.ratio = isNaN(val) ? null : val;
     }
     if ("noratio" in attrs) {
-        attrs.noratio = MochiKit.Base.bool(attrs.noratio) || null;
+        attrs.noratio = RapidContext.Data.bool(attrs.noratio) || null;
     }
     if ("novalue" in attrs) {
-        attrs.novalue = MochiKit.Base.bool(attrs.novalue) || null;
+        attrs.novalue = RapidContext.Data.bool(attrs.novalue) || null;
     }
     if ("notime" in attrs) {
-        attrs.notime = MochiKit.Base.bool(attrs.notime) || null;
+        attrs.notime = RapidContext.Data.bool(attrs.notime) || null;
         this.timeRemaining = null;
     }
     this.__setAttrs(attrs);
@@ -146,10 +146,10 @@ RapidContext.Widget.ProgressBar.prototype.setAttrs = function (attrs) {
  *         `null` if not possible to estimate
  */
 RapidContext.Widget.ProgressBar.prototype._remainingTime = function () {
-    var duration = new Date().getTime() - this.startTime;
+    let duration = new Date().getTime() - this.startTime;
     duration = Math.max(Math.round(duration / this.ratio - duration), 0);
     if (isFinite(duration) && !isNaN(duration)) {
-        var res = {
+        let res = {
             total: duration,
             days: Math.floor(duration / 86400000),
             hours: Math.floor(duration / 3600000) % 24,
@@ -157,7 +157,7 @@ RapidContext.Widget.ProgressBar.prototype._remainingTime = function () {
             seconds: Math.floor(duration / 1000) % 60,
             millis: duration % 1000
         };
-        var pad = MochiKit.Text.padLeft;
+        let pad = MochiKit.Text.padLeft;
         if (res.days >= 10) {
             res.text = res.days + " days";
         } else if (res.days >= 1) {
@@ -181,20 +181,21 @@ RapidContext.Widget.ProgressBar.prototype._render = function () {
     this.lastChild.min = this.min;
     this.lastChild.max = this.max;
     this.lastChild.value = this.value || (this.max - this.min) * this.ratio || null;
-    var info = [];
+    let percent = 0;
+    let info = [];
     if (!this.noratio) {
-        var percent = Math.round(this.ratio * 1000) / 10;
+        percent = Math.round(this.ratio * 1000) / 10;
         info.push(Math.round(percent) + "%");
     }
     if (!this.novalue && typeof(this.value) == "number") {
-        var pos = this.value - this.min;
-        var total = this.max - this.min;
+        let pos = this.value - this.min;
+        let total = this.max - this.min;
         info.push(pos + " of " + total);
     }
     if (this.text) {
         info.push(this.text);
     }
-    if (this.timeRemaining && percent < 100) {
+    if (this.timeRemaining && percent > 0 && percent < 100) {
         info.push(this.timeRemaining + " remaining");
     }
     this.firstChild.innerText = info.join(" \u2022 ");
