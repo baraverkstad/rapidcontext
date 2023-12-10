@@ -102,7 +102,7 @@ RapidContext.Widget.Field.prototype.setAttrs = function (attrs) {
         attrs.maxLength = isNaN(val) ? null : val;
     }
     if ("mask" in attrs) {
-        attrs.mask = MochiKit.Base.bool(attrs.mask);
+        attrs.mask = RapidContext.Data.bool(attrs.mask);
     }
     this.__setAttrs(attrs);
     this.redraw();

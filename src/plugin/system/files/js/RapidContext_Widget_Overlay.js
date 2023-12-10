@@ -76,10 +76,10 @@ RapidContext.Widget.Overlay.prototype._containerNode = function () {
 RapidContext.Widget.Overlay.prototype.setAttrs = function (attrs) {
     attrs = Object.assign({}, attrs);
     if ("loading" in attrs) {
-        attrs.loading = MochiKit.Base.bool(attrs.loading);
+        attrs.loading = RapidContext.Data.bool(attrs.loading);
     }
     if ("dark" in attrs) {
-        attrs.dark = MochiKit.Base.bool(attrs.dark);
+        attrs.dark = RapidContext.Data.bool(attrs.dark);
         this.classList.toggle("widgetOverlayDark", attrs.dark);
     }
     this.__setAttrs(attrs);

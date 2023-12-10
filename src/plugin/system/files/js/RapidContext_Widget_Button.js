@@ -76,7 +76,7 @@ RapidContext.Widget.Classes.Button = RapidContext.Widget.Button;
 RapidContext.Widget.Button.prototype.setAttrs = function (attrs) {
     attrs = Object.assign({}, attrs);
     if ("highlight" in attrs) {
-        this.classList.toggle("primary", MochiKit.Base.bool(attrs.highlight));
+        this.classList.toggle("primary", RapidContext.Data.bool(attrs.highlight));
         delete attrs.highlight;
     }
     if ("icon" in attrs) {

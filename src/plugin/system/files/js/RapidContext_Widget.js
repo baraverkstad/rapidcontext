@@ -414,7 +414,7 @@ RapidContext.Widget.prototype.isDisabled = function () {
  * @param {boolean} value the new attribute value
  */
 RapidContext.Widget.prototype._setDisabled = function (value) {
-    value = MochiKit.Base.bool(value);
+    value = RapidContext.Data.bool(value);
     this.classList.toggle("widgetDisabled", value);
     this.setAttribute("disabled", value);
     this.disabled = value;
@@ -456,7 +456,7 @@ RapidContext.Widget.prototype.isHidden = function () {
  * @param {boolean} value the new attribute value
  */
 RapidContext.Widget.prototype._setHidden = function (value) {
-    value = MochiKit.Base.bool(value);
+    value = RapidContext.Data.bool(value);
     this.classList.toggle("widgetHidden", value);
     this.setAttribute("hidden", value);
     this.hidden = value;

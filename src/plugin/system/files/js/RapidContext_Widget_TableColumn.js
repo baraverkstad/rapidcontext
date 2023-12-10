@@ -134,7 +134,7 @@ RapidContext.Widget.TableColumn.prototype.setAttrs = function (attrs) {
         attrs.maxLength = parseInt(attrs.maxLength, 10) || null;
     }
     if ("key" in attrs) {
-        attrs.key = MochiKit.Base.bool(attrs.key);
+        attrs.key = RapidContext.Data.bool(attrs.key);
     }
     if ("tooltip" in attrs) {
         attrs.title = attrs.tooltip;

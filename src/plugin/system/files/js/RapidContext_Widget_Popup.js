@@ -111,7 +111,7 @@ RapidContext.Widget.Popup.prototype.setAttrs = function (attrs) {
         delete attrs.hideAnim;
     }
     if ("hidden" in attrs) {
-        this._setHiddenPopup(MochiKit.Base.bool(attrs.hidden));
+        this._setHiddenPopup(RapidContext.Data.bool(attrs.hidden));
         delete attrs.hidden;
     }
     this.__setAttrs(attrs);

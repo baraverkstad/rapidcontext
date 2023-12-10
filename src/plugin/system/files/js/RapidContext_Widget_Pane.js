@@ -133,7 +133,7 @@ RapidContext.Widget.Pane.prototype.setAttrs = function (attrs) {
         attrs.pageStatus = RapidContext.Widget.Pane[attrs.pageStatus] || RapidContext.Widget.Pane.ANY;
     }
     if ("pageCloseable" in attrs) {
-        attrs.pageCloseable = MochiKit.Base.bool(attrs.pageCloseable);
+        attrs.pageCloseable = RapidContext.Data.bool(attrs.pageCloseable);
     }
     this.__setAttrs(attrs);
     if (this.parentNode && typeof(this.parentNode._updateStatus) == "function") {
@@ -154,7 +154,7 @@ RapidContext.Widget.Pane.prototype.setAttrs = function (attrs) {
  */
 RapidContext.Widget.Pane.prototype._handleEnter = function (opts) {
     opts = Object.assign({ show: true, validateReset: false }, opts);
-    if (MochiKit.Base.bool(opts.validateReset)) {
+    if (RapidContext.Data.bool(opts.validateReset)) {
         var forms = this.getElementsByTagName("FORM");
         for (var i = 0; i < forms.length; i++) {
             if (typeof(forms[i].validateReset) == "function") {
@@ -162,7 +162,7 @@ RapidContext.Widget.Pane.prototype._handleEnter = function (opts) {
             }
         }
     }
-    if (MochiKit.Base.bool(opts.show)) {
+    if (RapidContext.Data.bool(opts.show)) {
         this.show();
         RapidContext.Util.resizeElements(this);
     }
@@ -195,7 +195,7 @@ RapidContext.Widget.Pane.prototype._handleExit = function (opts) {
         return undefined;
     }
     opts = Object.assign({ hide: true, validate: false }, opts);
-    if (MochiKit.Base.bool(opts.validate)) {
+    if (RapidContext.Data.bool(opts.validate)) {
         var forms = this.getElementsByTagName("FORM");
         for (var i = 0; i < forms.length; i++) {
             if (callFirst(forms[i], ["validate", "checkValidity"]) === false) {
@@ -204,7 +204,7 @@ RapidContext.Widget.Pane.prototype._handleExit = function (opts) {
         }
     }
     this.blurAll();
-    if (MochiKit.Base.bool(opts.hide)) {
+    if (RapidContext.Data.bool(opts.hide)) {
         this.hide();
     }
     this.emit("exit");

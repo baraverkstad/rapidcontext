@@ -207,24 +207,24 @@ RapidContext.Widget.Dialog.prototype.setAttrs = function (attrs) {
         delete attrs.title;
     }
     if ("modal" in attrs) {
-        attrs.modal = MochiKit.Base.bool(attrs.modal);
+        attrs.modal = RapidContext.Data.bool(attrs.modal);
     }
     if ("system" in attrs) {
-        attrs.system = MochiKit.Base.bool(attrs.system);
+        attrs.system = RapidContext.Data.bool(attrs.system);
     }
     if ("center" in attrs) {
-        attrs.center = MochiKit.Base.bool(attrs.center);
+        attrs.center = RapidContext.Data.bool(attrs.center);
     }
     if ("resizeable" in attrs) {
-        attrs.resizeable = MochiKit.Base.bool(attrs.resizeable);
+        attrs.resizeable = RapidContext.Data.bool(attrs.resizeable);
         this.childNodes[2].classList.toggle("hidden", !attrs.resizeable);
     }
     if ("closeable" in attrs) {
-        attrs.closeable = MochiKit.Base.bool(attrs.closeable);
+        attrs.closeable = RapidContext.Data.bool(attrs.closeable);
         this.childNodes[1].setAttrs({ hidden: !attrs.closeable });
     }
     if ("hidden" in attrs) {
-        this._setHiddenDialog(MochiKit.Base.bool(attrs.hidden));
+        this._setHiddenDialog(RapidContext.Data.bool(attrs.hidden));
         delete attrs.hidden;
     }
     this.__setAttrs(attrs);

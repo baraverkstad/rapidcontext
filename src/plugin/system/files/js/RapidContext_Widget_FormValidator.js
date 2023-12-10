@@ -90,7 +90,7 @@ RapidContext.Widget.Classes.FormValidator = RapidContext.Widget.FormValidator;
 RapidContext.Widget.FormValidator.prototype.setAttrs = function (attrs) {
     attrs = Object.assign({}, attrs);
     if ("mandatory" in attrs) {
-        attrs.mandatory = MochiKit.Base.bool(attrs.mandatory);
+        attrs.mandatory = RapidContext.Data.bool(attrs.mandatory);
     }
     if ("regex" in attrs && attrs.regex && !(attrs.regex instanceof RegExp)) {
         if (!attrs.regex.startsWith("^")) {
