@@ -426,7 +426,7 @@ RapidContext.Widget.Table.prototype.sortData = function (field, direction) {
             cols[i].setAttrs({ sort: null });
         }
     }
-    this._rows.sort(MochiKit.Base.keyComparator(field));
+    this._rows.sort(RapidContext.Data.compare((o) => o[field]));
     if (direction == "desc") {
         this._rows.reverse();
     }
