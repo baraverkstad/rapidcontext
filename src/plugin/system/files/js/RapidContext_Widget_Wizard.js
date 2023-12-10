@@ -248,7 +248,7 @@ RapidContext.Widget.Wizard.prototype.activatePage = function (indexOrPage) {
         page = this.childNodes[index + 2];
     } else {
         page = indexOrPage;
-        index = MochiKit.Base.findIdentical(this.childNodes, page, 2) - 2;
+        index = Array.from(this.childNodes).indexOf(page, 2) - 2;
     }
     if (index < 0 || index >= this.getChildNodes().length) {
         throw new RangeError("Page index out of bounds: " + index);

@@ -343,7 +343,7 @@ RapidContext.App.stopApp = function (app) {
             throw new Error([msg, ": ", app].join(""));
         }
         console.info("Stopping app " + launcher.name);
-        var pos = MochiKit.Base.findIdentical(launcher.instances, app);
+        var pos = launcher.instances.indexOf(app);
         if (pos < 0) {
             app = launcher.instances.pop();
         } else {
@@ -390,7 +390,7 @@ RapidContext.App.callApp = function (app, method) {
         var promise = exists ? RapidContext.Async.wait(0) : RapidContext.App.startApp(app);
         promise = promise.then(function () {
             RapidContext.Log.context("RapidContext.App.callApp(" + launcher.id + "," + method + ")");
-            var pos = MochiKit.Base.findIdentical(launcher.instances, app);
+            var pos = launcher.instances.indexOf(app);
             var instance = (pos >= 0) ? app : launcher.instances[launcher.instances.length - 1];
             var child = instance.ui.root;
             var parent = child.parentNode.closest(".widget");

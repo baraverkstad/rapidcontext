@@ -129,7 +129,7 @@ RapidContext.Widget.Table.prototype._handleClick = function (evt) {
     let isSingle = tr && this._selectMode !== "none";
     if (isMulti && (evt.ctrlKey || evt.metaKey)) {
         evt.preventDefault();
-        let pos = MochiKit.Base.findIdentical(this._selected, row);
+        let pos = this._selected.indexOf(row);
         if (pos >= 0) {
             this._unmarkSelection(row);
             this._selected.splice(pos, 1);

@@ -142,8 +142,7 @@ RapidContext.Widget.TabContainer.prototype.addChildNode = function (child) {
  * @param {Widget|Node} child the DOM node to remove
  */
 RapidContext.Widget.TabContainer.prototype.removeChildNode = function (child) {
-    var children = this.getChildNodes();
-    var index = MochiKit.Base.findIdentical(children, child);
+    let index = this.getChildNodes().indexOf(child);
     if (index < 0) {
         throw new Error("Cannot remove DOM node that is not a TabContainer child");
     }
@@ -206,7 +205,7 @@ RapidContext.Widget.TabContainer.prototype.selectChild = function (indexOrChild)
     } else if (typeof(indexOrChild) == "number") {
         index = indexOrChild;
     } else {
-        index = MochiKit.Base.findIdentical(children, indexOrChild);
+        index = children.indexOf(indexOrChild);
     }
     this._selectedIndex = (index < 0 || index >= children.length) ? -1 : index;
     if (this._selectedIndex >= 0) {

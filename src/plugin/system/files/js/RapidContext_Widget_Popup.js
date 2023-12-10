@@ -227,10 +227,10 @@ RapidContext.Widget.Popup.prototype.selectMove = function (offset) {
     var items = this.querySelectorAll("li:not(.disabled), .widgetPopupItem:not(.disabled)");
     var index = (offset < 0) ? offset : Math.max(0, offset - 1);
     if (active) {
-        index = MochiKit.Base.findIdentical(items, active) + offset;
+        index = Array.from(items).indexOf(active) + offset;
     }
     index += (index < 0) ? items.length : 0;
-    index -= (index >= items.length) ? items.length : 0;
+    index -= (index >= items.length) ? items.length - 1 : 0;
     return this.selectChild(items[index]);
 };
 
