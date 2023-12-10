@@ -39,13 +39,13 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * @extends RapidContext.Widget
  *
  * @example <caption>JavaScript</caption>
- * var attrs1 = { field: "id", title: "Identifier", key: true, type: "number" };
- * var attrs2 = { field: "name", title: "Name", maxLength: 50, sort: "asc" };
- * var attrs3 = { field: "modified", title: "Last Modified", type: "datetime" };
- * var col1 = RapidContext.Widget.TableColumn(attrs1);
- * var col2 = RapidContext.Widget.TableColumn(attrs2);
- * var col3 = RapidContext.Widget.TableColumn(attrs3);
- * var exampleTable = RapidContext.Widget.Table({}, col1, col2, col3);
+ * let attrs1 = { field: "id", title: "Identifier", key: true, type: "number" };
+ * let attrs2 = { field: "name", title: "Name", maxLength: 50, sort: "asc" };
+ * let attrs3 = { field: "modified", title: "Last Modified", type: "datetime" };
+ * let col1 = RapidContext.Widget.TableColumn(attrs1);
+ * let col2 = RapidContext.Widget.TableColumn(attrs2);
+ * let col3 = RapidContext.Widget.TableColumn(attrs3);
+ * let exampleTable = RapidContext.Widget.Table({}, col1, col2, col3);
  * RapidContext.Util.registerSizeConstraints(exampleTable, "50%", "100%");
  *
  * @example <caption>User Interface XML</caption>
@@ -56,15 +56,15 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * </Table>
  */
 RapidContext.Widget.Table = function (attrs/*, ...*/) {
-    var thead = MochiKit.DOM.THEAD({}, MochiKit.DOM.TR());
-    var tbody = MochiKit.DOM.TBODY();
-    var table = MochiKit.DOM.TABLE({ "class": "widgetTable" }, thead, tbody);
-    var o = MochiKit.DOM.DIV({}, table);
+    let thead = MochiKit.DOM.THEAD({}, MochiKit.DOM.TR());
+    let tbody = MochiKit.DOM.TBODY();
+    let table = MochiKit.DOM.TABLE({ "class": "widgetTable" }, thead, tbody);
+    let o = MochiKit.DOM.DIV({}, table);
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Table);
     o.classList.add("widgetTable");
     o.resizeContent = o._resizeContent;
+    o._data = [];
     o._rows = [];
-    o._data = null;
     o._keyField = null;
     o._selected = [];
     o._selectMode = "one";
@@ -100,9 +100,9 @@ RapidContext.Widget.Classes.Table = RapidContext.Widget.Table;
  * @return {Node} the container DOM node
  */
 RapidContext.Widget.Table.prototype._containerNode = function () {
-    var table = this.firstChild;
-    var thead = table.firstChild;
-    var tr = thead.firstChild;
+    let table = this.firstChild;
+    let thead = table.firstChild;
+    let tr = thead.firstChild;
     return tr;
 };
 
@@ -123,13 +123,13 @@ RapidContext.Widget.Table.prototype._handleMouseDown = function (evt) {
  * @param {Event} evt the DOM Event object
  */
 RapidContext.Widget.Table.prototype._handleClick = function (evt) {
-    var tr = evt.target.closest(".widgetTable > tbody > tr");
-    var row = tr && (tr.rowIndex - 1);
-    var isMulti = tr && this._selectMode === "multiple";
-    var isSingle = tr && this._selectMode !== "none";
+    let tr = evt.target.closest(".widgetTable > tbody > tr");
+    let row = tr && (tr.rowIndex - 1);
+    let isMulti = tr && this._selectMode === "multiple";
+    let isSingle = tr && this._selectMode !== "none";
     if (isMulti && (evt.ctrlKey || evt.metaKey)) {
         evt.preventDefault();
-        var pos = MochiKit.Base.findIdentical(this._selected, row);
+        let pos = MochiKit.Base.findIdentical(this._selected, row);
         if (pos >= 0) {
             this._unmarkSelection(row);
             this._selected.splice(pos, 1);
@@ -142,10 +142,10 @@ RapidContext.Widget.Table.prototype._handleClick = function (evt) {
         evt.preventDefault();
         this._unmarkSelection();
         this._selected.push(row);
-        var start = this._selected[0];
+        let start = this._selected[0];
         this._selected = [];
-        var step = (row >= start) ? 1 : -1;
-        for (var i = start; (step > 0) ? i <= row : i >= row; i += step) {
+        let step = (row >= start) ? 1 : -1;
+        for (let i = start; (step > 0) ? i <= row : i >= row; i += step) {
             this._selected.push(i);
         }
         this._markSelection();
@@ -211,13 +211,8 @@ RapidContext.Widget.Table.prototype.removeChildNode = function (child) {
  *         -1 if not found
  */
 RapidContext.Widget.Table.prototype.getColumnIndex = function (field) {
-    var cols = this.getChildNodes();
-    for (var i = 0; i < cols.length; i++) {
-        if (cols[i].field === field) {
-            return i;
-        }
-    }
-    return -1;
+    let cols = this.getChildNodes();
+    return cols.findIndex((col) => col.field === field);
 };
 
 /**
@@ -231,10 +226,10 @@ RapidContext.Widget.Table.prototype.getIdKey = function () {
     if (this._keyField) {
         return this._keyField;
     }
-    var cols = this.getChildNodes();
-    for (var i = 0; i < cols.length; i++) {
-        if (cols[i].key) {
-            return cols[i].field;
+    let cols = this.getChildNodes();
+    for (let col of cols) {
+        if (col.key) {
+            return col.field;
         }
     }
     return null;
@@ -249,9 +244,8 @@ RapidContext.Widget.Table.prototype.getIdKey = function () {
  */
 RapidContext.Widget.Table.prototype.setIdKey = function (key) {
     this._keyField = key;
-    for (var i = 0; this._rows != null && i < this._rows.length; i++) {
-        var row = this._rows[i];
-        if (this._keyField != null && row.$data[this._keyField] != null) {
+    for (let row of this._rows) {
+        if (this._keyField && row.$data[this._keyField] != null) {
             row.$id = row.$data[this._keyField];
         }
     }
@@ -264,10 +258,10 @@ RapidContext.Widget.Table.prototype.setIdKey = function (key) {
  *         null for none
  */
 RapidContext.Widget.Table.prototype.getSortKey = function () {
-    var cols = this.getChildNodes();
-    for (var i = 0; i < cols.length; i++) {
-        if (cols[i].sort != null && cols[i].sort != "none") {
-            return cols[i].field;
+    let cols = this.getChildNodes();
+    for (let col of cols) {
+        if (col.sort && col.sort != "none") {
+            return col.field;
         }
     }
     return null;
@@ -284,8 +278,8 @@ RapidContext.Widget.Table.prototype.getSortKey = function () {
  */
 RapidContext.Widget.Table.prototype.getCellElem = function (row, col) {
     try {
-        var table = this.firstChild;
-        var tbody = table.lastChild;
+        let table = this.firstChild;
+        let tbody = table.lastChild;
         return tbody.childNodes[row].childNodes[col];
     } catch (e) {
         return null;
@@ -325,7 +319,7 @@ RapidContext.Widget.Table.prototype.getData = function () {
  * @param {Array} data an array with data objects
  *
  * @example
- * var data = [
+ * let data = [
  *     { id: 1, name: "John Doe", modified: "@1300000000000" },
  *     { id: 2, name: "First Last", modified: new Date() },
  *     { id: 3, name: "Another Name", modified: "2004-11-30 13:33:20" }
@@ -337,7 +331,7 @@ RapidContext.Widget.Table.prototype.setData = function (data) {
     let key = this.getIdKey() || "$id";
     let selectedIds = key ? this.getSelectedIds() : [];
     this.emit("clear");
-    this._data = (data || []);
+    this._data = data || [];
     this._rows = this._data.map((obj, idx) => this._mapRow(columns, key, obj, idx));
     this._selected = [];
     let sort = this.getSortKey();
@@ -416,10 +410,10 @@ RapidContext.Widget.Table.prototype._mapRow = function (columns, key, obj, idx) 
  *            "desc"
  */
 RapidContext.Widget.Table.prototype.sortData = function (field, direction) {
-    var cols = this.getChildNodes();
-    var selectedIds = this.getSelectedIds();
+    let cols = this.getChildNodes();
+    let selectedIds = this.getSelectedIds();
     this._selected = [];
-    for (var i = 0; i < cols.length; i++) {
+    for (let i = 0; i < cols.length; i++) {
         if (cols[i].field === field) {
             if (cols[i].sort == "none") {
                 // Skip sorting if not allowed
@@ -462,14 +456,14 @@ RapidContext.Widget.Table.prototype.redraw = function () {
  * Renders the table rows.
  */
 RapidContext.Widget.Table.prototype._renderRows = function () {
-    var cols = this.getChildNodes();
-    var tbody = this.firstChild.lastChild;
+    let cols = this.getChildNodes();
+    let tbody = this.firstChild.lastChild;
     tbody.innerHTML = "";
-    this._rows.forEach(function (row) {
+    for (let row of this._rows) {
         let tr = document.createElement("tr");
         tr.append(...cols.map((col) => col._render(row)));
         tbody.append(tr);
-    });
+    }
     if (this._rows.length == 0) {
         // Add empty row to avoid browser bugs
         tbody.append(document.createElement("tr"));
@@ -498,7 +492,7 @@ RapidContext.Widget.Table.prototype.getRowCount = function () {
  * @return {string} the unique row id, or null if not found
  */
 RapidContext.Widget.Table.prototype.getRowId = function (index) {
-    var row = this._rows[index];
+    let row = this._rows[index];
     return row ? row.$id : null;
 };
 
@@ -586,7 +580,7 @@ RapidContext.Widget.Table.prototype._addSelectedIds = function (...ids) {
     let $ids = RapidContext.Util.dict([].concat(...ids), true);
     Object.assign($ids, RapidContext.Util.dict(this.getSelectedIds(), false));
     let res = [];
-    for (var i = 0; i < this._rows.length; i++) {
+    for (let i = 0; i < this._rows.length; i++) {
         if ($ids[this._rows[i].$id] === true) {
             this._selected.push(i);
             this._markSelection(i);
@@ -629,11 +623,11 @@ RapidContext.Widget.Table.prototype.removeSelectedIds = function (...ids) {
  * @param {number} [index] the row index, or null to mark all
  */
 RapidContext.Widget.Table.prototype._markSelection = function (index) {
-    var tbody = this.firstChild.lastChild;
-    var indices = (index == null) ? this._selected : [index];
-    indices.forEach(function (idx) {
+    let tbody = this.firstChild.lastChild;
+    let indices = (index == null) ? this._selected : [index];
+    for (let idx of indices) {
         tbody.childNodes[idx].classList.add("selected");
-    });
+    }
 };
 
 /**
@@ -642,11 +636,11 @@ RapidContext.Widget.Table.prototype._markSelection = function (index) {
  * @param {number} [index] the row index, or null to unmark all
  */
 RapidContext.Widget.Table.prototype._unmarkSelection = function (index) {
-    var tbody = this.firstChild.lastChild;
-    var indices = (index == null) ? this._selected : [index];
-    indices.forEach(function (idx) {
+    let tbody = this.firstChild.lastChild;
+    let indices = (index == null) ? this._selected : [index];
+    for (let idx of indices) {
         tbody.childNodes[idx].classList.remove("selected");
-    });
+    }
 };
 
 /**
@@ -656,13 +650,13 @@ RapidContext.Widget.Table.prototype._unmarkSelection = function (index) {
 RapidContext.Widget.Table.prototype._resizeContent = function () {
     // Work-around to restore scrollTop for WebKit browsers
     if (this.scrollTop == 0 && this._selected.length > 0) {
-        var index = this._selected[0];
-        var tbody = this.firstChild.lastChild;
-        var tr = tbody.childNodes[index];
-        var h = this.clientHeight;
-        var y = tr.offsetTop + tr.offsetHeight;
+        let index = this._selected[0];
+        let tbody = this.firstChild.lastChild;
+        let tr = tbody.childNodes[index];
+        let h = this.clientHeight;
+        let y = tr.offsetTop + tr.offsetHeight;
         this.scrollTop = Math.round(y - h / 2);
     }
-    var thead = this.firstChild.firstChild;
+    let thead = this.firstChild.firstChild;
     RapidContext.Util.resizeElements(thead);
 };
