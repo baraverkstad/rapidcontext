@@ -125,8 +125,7 @@ test-js:
 		--ignore-pattern 'src/plugin/legacy/**/*.js' \
 		--ignore-pattern '**/*.min.js' \
 		--ignore-pattern '**/MochiKit.js'
-	npx tap --allow-incomplete-coverage '**/*.test.@(js|mjs)'
-	npx tap report --coverage-report=text-lcov > .tap/coverage.lcov
+	node --import ./test/src/js/loader.mjs --test test/src/js/
 
 test-java:
 	mkdir -p test/classes/ tmp/test/
@@ -159,7 +158,6 @@ test-sonar-scan:
 		-Dsonar.java.libraries=lib/*.jar \
 		-Dsonar.java.test.binaries=test/classes \
 		-Dsonar.java.test.libraries=test/lib/*.jar \
-		-Dsonar.javascript.lcov.reportPaths=.tap/coverage.lcov \
 		-Dsonar.coverage.jacoco.xmlReportPaths=tmp/test/jacoco.xml \
 		-Dsonar.host.url=https://sonarcloud.io
 
