@@ -142,13 +142,12 @@ RapidContext.Widget._widgetMixin = function (node, ...mixins) {
  *             found in `RapidContext.Widget.Classes`
  */
 RapidContext.Widget.createWidget = function (name, attrs/*, ...*/) {
-    var cls = RapidContext.Widget.Classes[name];
+    let cls = RapidContext.Widget.Classes[name];
     if (cls == null) {
         throw new ReferenceError("failed to find widget '" + name +
                                  "' in RapidContext.Widget.Classes");
     }
-    var args = Array.from(arguments).slice(1);
-    return cls.apply(this, MochiKit.Base.flattenArray(args));
+    return cls.apply(this, Array.from(arguments).slice(1));
 };
 
 /**
