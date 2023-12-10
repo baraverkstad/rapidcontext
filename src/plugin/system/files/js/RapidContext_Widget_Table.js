@@ -303,8 +303,10 @@ RapidContext.Widget.Table.prototype.clear = function () {
 
 /**
  * Returns an array with the data in the table. The array returned
- * should correspond exactly to the one previously set, i.e. it has
- * not been sorted or modified in other ways.
+ * normally correspond exactly to the one previously set, i.e. it
+ * has not been sorted or modified in other ways. If `updateData()`
+ * is called however, a new data array is created to match current
+ * rows.
  *
  * @return {Array} an array with the data in the table
  */
@@ -379,6 +381,7 @@ RapidContext.Widget.Table.prototype.updateData = function (data) {
             tbody.children[idx].replaceWith(tr);
         }
     }
+    this._data = this._rows.map((o) => o.$data);
     for (let sel of this._selected) {
         this._markSelection(sel);
     }
