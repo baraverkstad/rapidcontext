@@ -339,8 +339,8 @@ export function uniq(fn, coll) {
     } else if (arguments.length === 1 && isFunction(fn)) {
         return uniq.bind(null, fn);
     } else if (arguments.length === 1) {
-        fn = JSON.stringify;
         coll = arguments[0];
+        fn = JSON.stringify;
     }
     let arr = array(coll);
     let keys = map(fn, arr).map(String);
