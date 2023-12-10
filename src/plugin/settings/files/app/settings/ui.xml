@@ -173,7 +173,7 @@
         </settings:search-form>
         <div class="flex-fill flex flex-dir-row" style="min-height: 0;">
           <Table id="userTable" class="flex-fill container-responsive">
-            <TableColumn title="Id" field="id" sort="asc" key="true" maxLength="20" />
+            <TableColumn title="Id" field="id" sort="asc" key="true" maxLength="40" />
             <TableColumn title="Name" field="name" maxLength="40" />
             <TableColumn title="E-mail" field="email" maxLength="40" class="display-lg" cellStyle="display-lg" />
             <TableColumn title="Enabled" field="enabled" type="boolean" />
@@ -221,7 +221,7 @@
             </div>
           </settings:details-form>
         </div>
-        <Dialog id="userDialog" title="Edit User" modal="true" w="35rem">
+        <Dialog id="userDialog" title="Edit User" modal="true" w="40rem">
           <Form id="userForm">
             <table class="properties-table">
               <tbody>

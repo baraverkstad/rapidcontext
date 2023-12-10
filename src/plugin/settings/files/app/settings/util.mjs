@@ -1,4 +1,4 @@
-import { hasValue } from 'rapidcontext/fn';
+import { hasValue, isObject } from 'rapidcontext/fn';
 import { object, flatten, sort } from 'rapidcontext/data';
 
 let textarea = document.createElement('textarea');
@@ -86,6 +86,8 @@ export function renderProp(prop, data) {
     let value = isSet ? data[prop.name] : data['_' + prop.name];
     if (Array.isArray(value)) {
         value = value.join(' \u2022 ');
+    } else if (isObject(value)) {
+        value = JSON.stringify(value, null, 2);
     } else if (/^@\d+$/.test(value)) {
         let dt = new Date(+value.substr(1));
         value = [dt.toISOString().replace('T', ' ').replace(/\.\d+Z/, ''), value].join(' \u2022 ');

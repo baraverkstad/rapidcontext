@@ -52,8 +52,11 @@ function openRenderer(td, value, data) {
 async function refresh(ui) {
     ui.cxnSearch.loading = true;
     try {
+        let selected = ui.cxnTable.getSelectedIds();
+        ui.cxnTable.setSelectedIds(); // clear selection
         connections = await RapidContext.App.callProc('system/connection/list', []);
         search(ui);
+        ui.cxnTable.setSelectedIds(selected);
     } catch (e) {
         RapidContext.UI.showError(e);
     }
@@ -87,25 +90,23 @@ function show(ui) {
 
 async function validate(ui, con) {
     let data = con || ui.cxnTable.getSelectedData();
-    data._loading = true;
-    ui.cxnTable.updateData(data);
+    ui.cxnTable.updateData({ _loading: true, ...data });
     try {
         data = await RapidContext.App.callProc('system/connection/validate', [data.id]);
         ui.cxnTable.updateData(data);
     } catch (e) {
-        delete data._loading;
         data._lastError = String(e);
         ui.cxnTable.updateData(data);
     }
     if (!con) {
-        ui.cxnTable.setSelectedIds(); // clear selection
-        ui.cxnTable.setSelectedIds(data.id);
+        await refresh(ui);
     }
 }
 
-function validateAll(ui) {
+async function validateAll(ui) {
     let data = ui.cxnTable.getData();
-    data.map((o) => validate(ui, o));
+    await Promise.allSettled(data.map((o) => validate(ui, o)));
+    await refresh(ui);
 }
 
 async function edit(ui, create) {
@@ -229,9 +230,10 @@ async function save(ui, evt) {
         }
         await RapidContext.App.callProc('system/storage/write', [opts, data]);
         ui.cxnEditDialog.hide();
-        ui.cxnTable.setSelectedIds(); // clear selection
         await refresh(ui);
-        ui.cxnTable.setSelectedIds(data.id);
+        if (oldPath !== newPath) {
+            ui.cxnTable.setSelectedIds(data.id);
+        }
     } catch (e) {
         RapidContext.UI.showError(e);
     } finally {
@@ -245,7 +247,6 @@ async function remove(ui) {
         await RapidContext.UI.Msg.warning.remove('connection', data.id);
         let path = RapidContext.Storage.path(data);
         await RapidContext.App.callProc('system/storage/delete', [path]);
-        ui.cxnTable.setSelectedIds(); // clear selection
         await refresh(ui);
     } catch (e) {
         // FIXME: Better detection of cancelled operation?
