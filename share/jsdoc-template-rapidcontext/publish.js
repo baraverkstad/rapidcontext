@@ -582,11 +582,16 @@ exports.publish = (taffyData, opts, tutorials) => {
                 url: 'doc/js/' + helper.longnameToUrl[ns.longname],
                 children: find({ memberof: ns.longname }).map((m) => {
                     const blocked = ['namespace', 'class', 'interface', 'typedef'];
-                    return !blocked.includes(m.kind) && {
-                        topic: m.name.replaceAll(':', '.'),
-                        url: 'doc/js/' + helper.longnameToUrl[m.longname]
-                    }
-                }).filter(Boolean)
+                    const isMethod = m.kind == 'function' && !m.id.startsWith('.');
+                    const isEvent = m.kind == 'event';
+                    const topic = [
+                        isMethod && '\u25aa',
+                        isEvent && '\u25ab',
+                        m.name.replaceAll(':', '.')
+                    ].filter(Boolean).join('');
+                    const url = 'doc/js/' + helper.longnameToUrl[m.longname];
+                    return !blocked.includes(m.kind) && { topic, url };
+                }).filter(Boolean).sort((a, b) => (a.topic < b.topic) ? -1 : (a.topic > b.topic) ? 1 : 0)
             }
         })
     }, null, 2);
