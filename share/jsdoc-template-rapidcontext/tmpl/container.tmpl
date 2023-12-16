@@ -1,5 +1,5 @@
 <?js
-    var self = this;
+    let self = this;
 
     docs.forEach(function(doc, i) {
         let isGlobalPage = (doc.kind === 'globalobj');
@@ -148,7 +148,7 @@
     <?js } ?>
 
     <?js
-        var interfaces = self.find({kind: 'interface', memberof: doc.longname});
+        let interfaces = self.find({kind: 'interface', memberof: doc.longname});
         if (!isGlobalPage && interfaces && interfaces.length) {
     ?>
         <h3 class="section-title">Interfaces</h3>
@@ -174,7 +174,7 @@
     <?js } ?>
 
     <?js
-        var typedefs = self.find({kind: 'typedef', memberof: isGlobalPage ? {isUndefined: true} : doc.longname});
+        let typedefs = self.find({kind: 'typedef', memberof: isGlobalPage ? {isUndefined: true} : doc.longname});
         if (typedefs && typedefs.length && typedefs.forEach) {
     ?>
         <h3 class="section-title">Type Definitions</h3>

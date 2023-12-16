@@ -1,8 +1,8 @@
 <?js
-    var data = obj;
-    var self = this;
-    var defaultObjectClass = '';
-    
+    let data = obj;
+    let self = this;
+    let defaultObjectClass = '';
+
     // Check if the default value is an object or array; if so, apply code highlighting
     if (data.defaultvalue && (data.defaultvaluetype === 'object' || data.defaultvaluetype === 'array')) {
         data.defaultvalue = `<pre class="hljs"><code>${data.defaultvalue}</code></pre>`;
