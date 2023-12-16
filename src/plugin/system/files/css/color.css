@@ -79,14 +79,51 @@
  * Text colors
  */
 .color-danger {
-    color: var(--danger-700);
+    color: var(--danger-700) !important;
 }
 .color-warning {
-    color: var(--warning-500);
+    color: var(--warning-700) !important;
 }
 .color-success {
-    color: var(--success-700);
+    color: var(--success-700) !important;
 }
 .color-info {
-    color: var(--info-700);
+    color: var(--info-700) !important;
+}
+.color-none {
+    color: transparent !important;
+}
+
+/**
+ * Background colors
+ */
+.bg-danger {
+    background: linear-gradient(to bottom, var(--danger-000), var(--danger-100)) !important;
+}
+.bg-danger-solid {
+    background: var(--danger-100) !important;
+}
+.bg-warning {
+    background: linear-gradient(to bottom, var(--warning-000), var(--warning-100)) !important;
+}
+.bg-warning-solid {
+    background: var(--warning-100) !important;
+}
+.bg-success {
+    background: linear-gradient(to bottom, var(--success-000), var(--success-100)) !important;
+}
+.bg-success-solid {
+    background: var(--success-100) !important;
+}
+.bg-info {
+    background: linear-gradient(to bottom, var(--info-000), var(--info-100)) !important;
+}
+.bg-info-solid {
+    background: var(--info-100) !important;
+}
+.bg-white {
+    background: #fff !important;
+}
+.bg-none {
+    background: none !important;
 }
