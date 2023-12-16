@@ -43,9 +43,9 @@ function openRenderer(td, value, data) {
     let arr = [data._usedChannels, data._openChannels, data._maxOpen];
     td.innerHTML = arr.join('<span class="separator">/</span>');
     if (data._openChannels >= data._maxOpen) {
-        td.classList.add('color-danger');
+        td.classList.add('color-danger bg-danger');
     } else if (data._openChannels >= data._maxOpen * 0.75) {
-        td.classList.add('color-warning');
+        td.classList.add('color-warning bg-warning');
     }
 }
 
