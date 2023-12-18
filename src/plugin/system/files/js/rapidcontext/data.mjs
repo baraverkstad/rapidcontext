@@ -19,7 +19,7 @@
 
 import { isNil, isFunction, isObject, isArrayLike, isIterable, hasProperty, hasValue } from './fn.mjs';
 
-const OFF = ['null', 'undefined', '0', 'f', 'false', 'off', 'no'];
+const OFF = ['null', 'undefined', '0', 'f', 'false', 'off', 'n', 'no'];
 
 /**
  * Converts a value to a boolean. This is identical to `!!val`, but also
