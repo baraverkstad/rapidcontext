@@ -423,31 +423,30 @@ RapidContext.App.callApp = function (app, method) {
  *
  * @param {string} name the procedure name
  * @param {Array} [args] the array of arguments, or `null`
+ * @param {Object} [opts] the procedure call options
+ * @param {boolean} [opts.session] the HTTP session required flag
+ * @param {boolean} [opts.trace] the procedure call trace flag
+ * @param {number} [opts.timeout] the timeout in milliseconds, default is 60s
  *
  * @return {Promise} a `RapidContext.Async` promise that will
  *         resolve with the response data on success
  */
-RapidContext.App.callProc = function (name, args) {
+RapidContext.App.callProc = function (name, args, opts) {
+    args = args || [];
+    opts = opts || {};
     // TODO: remove this legacy name conversion
     if (name.startsWith("RapidContext.")) {
         console.warn("deprecated: " + name + " procedure called, use new system/* name instead");
         name = "System" + name.substring(8);
     }
     console.log("Call request " + name, args);
-    var params = {};
-    for (var i = 0; args != null && i < args.length; i++) {
-        if (args[i] == null) {
-            params["arg" + i] = "null";
-        } else {
-            params["arg" + i] = RapidContext.Encode.toJSON(args[i]);
-        }
-    }
-    var logLevel = RapidContext.Log.level();
-    if (logLevel == "log" || logLevel == "all") {
-        params["system:trace"] = 1;
-    }
-    var url = "rapidcontext/procedure/" + name;
-    var options = { method: "POST", timeout: 60000 };
+    let params = RapidContext.Data.object(
+        args.map((val, idx) => ["arg" + idx, RapidContext.Encode.toJSON(val)])
+    );
+    params["system:session"] = !!opts.session;
+    params["system:trace"] = !!opts.trace || ["all", "log"].includes(RapidContext.Log.level());
+    let url = "rapidcontext/procedure/" + name;
+    let options = { method: "POST", timeout: opts.timeout || 60000 };
     return RapidContext.App.loadJSON(url, params, options).then(function (res) {
         if (res.trace != null) {
             console.log(name + " trace:", res.trace);
