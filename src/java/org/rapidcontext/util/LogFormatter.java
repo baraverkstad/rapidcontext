@@ -21,6 +21,9 @@ import java.util.logging.Formatter;
 import java.util.logging.LogManager;
 import java.util.logging.LogRecord;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+
 /**
  * A java.util.logging formatter with more output options. Adds to the default
  * simple formatter by indenting multiple line entries, shortening stack
@@ -65,75 +68,77 @@ public class LogFormatter extends Formatter {
         String val = manager.getProperty("org.rapidcontext.logging.format");
         FORMAT = (val == null) ? DEFAULT_FORMAT : val;
         val = manager.getProperty("org.rapidcontext.logging.format.indent");
-        INDENT = (val == null) ? "    " : val;
+        INDENT = StringUtils.repeat(" ", NumberUtils.toInt(val, 4));
     }
 
     /**
      * Creates a new log formatter instance.
      */
-    public LogFormatter() {}
+    public LogFormatter() {
+        // Nothing to do here
+    }
 
     /**
      * Formats the specified log record for output.
      *
-     * @param record         the log record to format
+     * @param entry          the log record to format
      *
      * @return the formatted log record
      */
     @Override
-    public String format(LogRecord record) {
-        Date dttm = new Date(record.getMillis());
-        String src = getSource(record);
-        String log = record.getLoggerName();
-        String level = record.getLevel().getLocalizedName();
-        String msg = formatMessage(record);
-        String stack = getStackTrace(record);
-        return indent(String.format(FORMAT, dttm, src, log, level, msg, stack));
+    public String format(LogRecord entry) {
+        Date dttm = new Date(entry.getMillis());
+        String src = getSource(entry);
+        String log = entry.getLoggerName();
+        String level = entry.getLevel().getLocalizedName();
+        String msg = formatMessage(entry);
+        String stack = getStackTrace(entry);
+        return indentFollowing(String.format(FORMAT, dttm, src, log, level, msg, stack));
     }
 
     /**
      * Returns the source class and method for a log record.
      *
-     * @param record         the log record to use
+     * @param entry          the log record to use
      *
      * @return the source class and method, or
      *         the logger name if not set
      */
-    protected String getSource(LogRecord record) {
-        if (record.getSourceClassName() == null) {
-            return record.getLoggerName();
+    protected String getSource(LogRecord entry) {
+        if (entry.getSourceClassName() == null) {
+            return entry.getLoggerName();
         }
-        String className = record.getSourceClassName();
+        String className = entry.getSourceClassName();
         if (className.startsWith("org.rapidcontext.")) {
             className = className.substring(17);
         }
-        if (record.getSourceMethodName() == null) {
+        if (entry.getSourceMethodName() == null) {
             return className;
         } else {
-            return className + "." + record.getSourceMethodName();
+            return className + "." + entry.getSourceMethodName();
         }
     }
 
     /**
      * Returns the stack trace from a log record.
      *
-     * @param record         the log record to use
+     * @param entry          the log record to use
      *
      * @return the formatted stack trace, or
      *         an empty string if not set
      */
-    protected String getStackTrace(LogRecord record) {
-        if (record.getThrown() == null) {
+    protected String getStackTrace(LogRecord entry) {
+        if (entry.getThrown() == null) {
             return "";
         }
         StringWriter sw = new StringWriter();
         try (PrintWriter pw = new PrintWriter(sw)) {
             pw.println();
-            record.getThrown().printStackTrace(pw);
+            entry.getThrown().printStackTrace(pw);
         }
-        String trace = sw.toString().replaceAll("\\(", " (");
-        if (record.getSourceClassName() != null) {
-            String prefix = "\tat " + record.getSourceClassName();
+        String trace = sw.toString().replace("\\(", " (");
+        if (entry.getSourceClassName() != null) {
+            String prefix = "\tat " + entry.getSourceClassName();
             String[] lines = trace.split("\n");
             int firstLine = lines.length;
             int lastLine = lines.length;
@@ -158,11 +163,7 @@ public class LogFormatter extends Formatter {
             }
             trace = filtered.toString();
         }
-        if (INDENT.length() <= 0 || INDENT.trim().length() > 0) {
-            return trace;
-        } else {
-            return trace.replaceAll("\t", INDENT);
-        }
+        return trace.replace("\t", INDENT);
     }
 
     /**
@@ -172,12 +173,12 @@ public class LogFormatter extends Formatter {
      *
      * @return the indented version of the log output
      */
-    protected String indent(String log) {
+    protected String indentFollowing(String log) {
         String str = log.trim();
         if (INDENT.length() <= 0 || !str.contains("\n")) {
             return log;
         } else {
-            str = str.replaceAll("\n", "\n" + INDENT);
+            str = str.replace("\n", "\n" + INDENT);
             return log.endsWith("\n") ? str + "\n" : str;
         }
     }
