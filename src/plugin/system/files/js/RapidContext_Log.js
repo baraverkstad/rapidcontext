@@ -57,10 +57,10 @@
      * functions. Safe to call multiple times to change or update config.
      *
      * @param {Object} [opts] the log configuration options, or null
-     * @config {number} [interval] the publish delay in millis, default is 10s
-     * @config {string} [url] the publish URL endpoint
-     * @config {function} [filter] the event filter, returns a boolean
-     * @config {function} [publisher] the event publisher, returns a Promise
+     * @param {number} [opts.interval] the publish delay in millis, default is 10s
+     * @param {string} [opts.url] the publish URL endpoint
+     * @param {function} [opts.filter] the event filter, returns a boolean
+     * @param {function} [opts.publisher] the event publisher, returns a Promise
      *
      * @memberof RapidContext.Log
      */
