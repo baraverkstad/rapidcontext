@@ -289,20 +289,19 @@
      *
      * @memberOf RapidContext.Async
      * @param {string} url the URL to request
-     * @param {Object} [options] the request options
-     * @config {string} [method] the HTTP method (e.g. `GET`, `POST`...)
-     * @config {Object} [headers] the HTTP headers to send
-     * @config {number} [timeout] the timeout in milliseconds (default is 30s)
-     * @config {string} [log] the logging prefix, or `null` (defaults to `request`)
-     * @config {string} [responseType] the expected HTTP response (e.g. `json`)
-     * @config {string} [body] the HTTP request body to send
+     * @param {Object} [opts] the request options
+     * @param {string} [opts.method] the HTTP method (e.g. `GET`, `POST`...)
+     * @param {Object} [opts.headers] the HTTP headers to send
+     * @param {number} [opts.timeout] the timeout in milliseconds (default is 30s)
+     * @param {string} [opts.log] the logging prefix, or `null` (defaults to `request`)
+     * @param {string} [opts.responseType] the expected HTTP response (e.g. `json`)
+     * @param {string} [opts.body] the HTTP request body to send
      *
      * @return {Async} a new promise that resolves with either the XHR object,
      *     or an error if the request failed
      */
-    function xhr(url, options) {
-        var opts = { method: "GET", headers: {}, timeout: 30000, log: "XHR request" };
-        Object.assign(opts, options);
+    function xhr(url, opts) {
+        opts = { method: "GET", headers: {}, timeout: 30000, log: "XHR request", ...opts };
         if (opts.responseType === "json" && !opts.headers["Accept"]) {
             opts.headers["Accept"] = "application/json";
         }
