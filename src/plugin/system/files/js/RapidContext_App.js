@@ -489,8 +489,9 @@ RapidContext.App.login = function (login, password, token) {
         });
     }
     function getNonce() {
-        var proc = "system/session/current";
-        return RapidContext.App.callProc(proc).then(function (session) {
+        let proc = "system/session/current";
+        let opts = { session: true };
+        return RapidContext.App.callProc(proc, [], opts).then(function (session) {
             return session.nonce;
         });
     }
