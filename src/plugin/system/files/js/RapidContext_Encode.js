@@ -39,6 +39,7 @@
      * @memberof RapidContext.Encode
      */
     function toJSON(val) {
+        val = (val == null) ? null : val;
         return JSON.stringify(val).replace(/[\u007F-\uFFFF]/g, toCharEscape);
     }
 
