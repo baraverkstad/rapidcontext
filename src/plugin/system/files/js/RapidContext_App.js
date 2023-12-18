@@ -551,19 +551,17 @@ RapidContext.App.logout = function (reload) {
  *
  * @param {string} url the URL to request
  * @param {Object} [params] the request parameters, or `null`
- * @param {Object} [options] the request options, or `null`
- * @config {string} [method] the HTTP method, default is `GET`
- * @config {number} [timeout] the timeout in milliseconds, default is 30s
- * @config {Object} [headers] the specific HTTP headers to use
+ * @param {Object} [opts] the request options, or `null`
+ * @param {string} [opts.method] the HTTP method, default is `GET`
+ * @param {number} [opts.timeout] the timeout in milliseconds, default is 30s
+ * @param {Object} [opts.headers] the specific HTTP headers to use
  *
  * @return {Promise} a `RapidContext.Async` promise that will
  *         resolve with the parsed response JSON on success
  */
-RapidContext.App.loadJSON = function (url, params, options) {
-    var opts = Object.assign({ responseType: "json" }, options);
-    return RapidContext.App.loadXHR(url, params, opts).then(function (xhr) {
-        return xhr.response;
-    });
+RapidContext.App.loadJSON = function (url, params, opts) {
+    opts = { responseType: "json", ...opts };
+    return RapidContext.App.loadXHR(url, params, opts).then((xhr) => xhr.response);
 };
 
 /**
@@ -574,19 +572,17 @@ RapidContext.App.loadJSON = function (url, params, options) {
  *
  * @param {string} url the URL to request
  * @param {Object} [params] the request parameters, or `null`
- * @param {Object} [options] the request options, or `null`
- * @config {string} [method] the HTTP method, "GET" or "POST"
- * @config {number} [timeout] the timeout in milliseconds, default is 30s
- * @config {Object} [headers] the specific HTTP headers to use
+ * @param {Object} [opts] the request options, or `null`
+ * @param {string} [opts.method] the HTTP method, "GET" or "POST"
+ * @param {number} [opts.timeout] the timeout in milliseconds, default is 30s
+ * @param {Object} [opts.headers] the specific HTTP headers to use
  *
  * @return {Promise} a `RapidContext.Async` promise that will
  *         resolve with the response text on success
  */
-RapidContext.App.loadText = function (url, params, options) {
-    var opts = Object.assign({ responseType: "text" }, options);
-    return RapidContext.App.loadXHR(url, params, opts).then(function (xhr) {
-        return xhr.response;
-    });
+RapidContext.App.loadText = function (url, params, opts) {
+    opts = { responseType: "text", ...opts };
+    return RapidContext.App.loadXHR(url, params, opts).then((xhr) => xhr.response);
 };
 
 /**
@@ -597,19 +593,17 @@ RapidContext.App.loadText = function (url, params, options) {
  *
  * @param {string} url the URL to request
  * @param {Object} [params] the request parameters, or `null`
- * @param {Object} [options] the request options, or `null`
- * @config {string} [method] the HTTP method, "GET" or "POST"
- * @config {number} [timeout] the timeout in milliseconds, default is 30s
- * @config {Object} [headers] the specific HTTP headers to use
+ * @param {Object} [opts] the request options, or `null`
+ * @param {string} [opts.method] the HTTP method, "GET" or "POST"
+ * @param {number} [opts.timeout] the timeout in milliseconds, default is 30s
+ * @param {Object} [opts.headers] the specific HTTP headers to use
  *
  * @return {Promise} a `RapidContext.Async` promise that will
  *         resolve with the parsed response XML document on success
  */
-RapidContext.App.loadXML = function (url, params, options) {
-    var opts = Object.assign({ responseType: "document" }, options);
-    return RapidContext.App.loadXHR(url, params, opts).then(function (xhr) {
-        return xhr.response;
-    });
+RapidContext.App.loadXML = function (url, params, opts) {
+    opts = { responseType: "document", ...opts };
+    return RapidContext.App.loadXHR(url, params, opts).then((xhr) => xhr.response);
 };
 
 /**
@@ -620,16 +614,16 @@ RapidContext.App.loadXML = function (url, params, options) {
  *
  * @param {string} url the URL to request
  * @param {Object} [params] the request parameters, or `null`
- * @param {Object} [options] the request options, or `null`
- * @config {string} [method] the HTTP method, default is `GET`
- * @config {number} [timeout] the timeout in milliseconds, default is 30s
- * @config {Object} [headers] the specific HTTP headers to use
+ * @param {Object} [opts] the request options, or `null`
+ * @param {string} [opts.method] the HTTP method, default is `GET`
+ * @param {number} [opts.timeout] the timeout in milliseconds, default is 30s
+ * @param {Object} [opts.headers] the specific HTTP headers to use
  *
  * @return {Promise} a `RapidContext.Async` promise that will
  *         resolve with the XMLHttpRequest instance on success
  */
-RapidContext.App.loadXHR = function (url, params, options) {
-    var opts = Object.assign({ method: "GET", headers: {}, timeout: 30000 }, options);
+RapidContext.App.loadXHR = function (url, params, opts) {
+    opts = { method: "GET", headers: {}, timeout: 30000, ...opts };
     opts.timeout = (opts.timeout < 1000) ? opts.timeout * 1000 : opts.timeout;
     var hasBody = params && ["PATCH", "POST", "PUT"].includes(opts.method);
     var hasJsonBody = opts.headers["Content-Type"] === "application/json";
