@@ -29,10 +29,10 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.XMLEvent;
 
-import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.CharUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.util.DateUtil;
+import org.rapidcontext.util.ValueUtil;
 
 /**
  * A data serializer for XML. It will read and write stand-alone XML
@@ -274,7 +274,7 @@ public final class XmlSerializer {
             }
             String str = (val == null) ? "" : val.toString();
             if (type.equalsIgnoreCase("boolean")) {
-                val = BooleanUtils.toBoolean(str);
+                val = ValueUtil.isOn(str);
             } else if (type.equalsIgnoreCase("date")) {
                 if (DateUtil.isEpochFormat(str)) {
                     val = new Date(Long.parseLong(str.substring(1)));

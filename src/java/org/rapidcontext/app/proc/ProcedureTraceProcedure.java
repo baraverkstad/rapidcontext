@@ -14,12 +14,12 @@
 
 package org.rapidcontext.app.proc;
 
-import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.type.Procedure;
+import org.rapidcontext.util.ValueUtil;
 
 /**
  * The built-in procedure trace procedure.
@@ -61,13 +61,11 @@ public class ProcedureTraceProcedure extends Procedure {
         throws ProcedureException {
 
         String name = ((String) bindings.getValue("name")).trim();
-        if (name.length() == 0) {
+        if (name.isEmpty()) {
             throw new ProcedureException(this, "invalid procedure name");
         }
         String flag = bindings.getValue("tracing").toString().trim();
-        boolean tracing = StringUtils.equalsIgnoreCase(flag, "true") ||
-                          StringUtils.equalsIgnoreCase(flag, "on") ||
-                          flag.equals("1");
+        boolean tracing = ValueUtil.isOn(flag);
         CallContext.checkWriteAccess("procedure/" + name);
         cx.getLibrary().setTracing(name, tracing);
         return "" + tracing;

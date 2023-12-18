@@ -22,7 +22,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
-import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.rapidcontext.app.ApplicationContext;
@@ -43,6 +42,7 @@ import org.rapidcontext.core.type.WebService;
 import org.rapidcontext.core.web.Mime;
 import org.rapidcontext.core.web.Request;
 import org.rapidcontext.util.DateUtil;
+import org.rapidcontext.util.ValueUtil;
 
 /**
  * A storage API web service. This service is used for accessing the
@@ -133,8 +133,8 @@ public class StorageWebService extends WebService {
         Object data = (meta == null) ? null : storage.load(meta.path());
         Dict opts = new Dict();
         opts.set("computed", Boolean.TRUE);
-        opts.set("hidden", BooleanUtils.toBoolean(request.getParameter("hidden", "0")));
-        opts.set("metadata", BooleanUtils.toBoolean(request.getParameter("metadata", "0")));
+        opts.set("hidden", ValueUtil.isOn(request.getParameter("hidden")));
+        opts.set("metadata", ValueUtil.isOn(request.getParameter("metadata")));
         if (meta == null || data == null) {
             errorNotFound(request);
         } else if (data instanceof Binary && path.equals(meta.path())) {
