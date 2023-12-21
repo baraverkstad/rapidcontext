@@ -226,8 +226,7 @@ RapidContext.Widget.Table.prototype.getIdKey = function () {
     if (this._keyField) {
         return this._keyField;
     }
-    let cols = this.getChildNodes();
-    for (let col of cols) {
+    for (let col of this.getChildNodes()) {
         if (col.key) {
             return col.field;
         }
@@ -258,8 +257,7 @@ RapidContext.Widget.Table.prototype.setIdKey = function (key) {
  *         null for none
  */
 RapidContext.Widget.Table.prototype.getSortKey = function () {
-    let cols = this.getChildNodes();
-    for (let col of cols) {
+    for (let col of this.getChildNodes()) {
         if (col.sort && col.sort != "none") {
             return col.field;
         }
@@ -410,20 +408,13 @@ RapidContext.Widget.Table.prototype._mapRow = function (columns, key, obj, idx) 
  *            "desc"
  */
 RapidContext.Widget.Table.prototype.sortData = function (field, direction) {
-    let cols = this.getChildNodes();
     let selectedIds = this.getSelectedIds();
     this._selected = [];
-    for (let i = 0; i < cols.length; i++) {
-        if (cols[i].field === field) {
-            if (cols[i].sort == "none") {
-                // Skip sorting if not allowed
-                return;
-            } else if (direction == null) {
-                direction = cols[i].sort || "asc";
-            }
-            cols[i].setAttrs({ sort: direction });
-        } else if (cols[i].sort != "none") {
-            cols[i].setAttrs({ sort: null });
+    for (let col of this.getChildNodes()) {
+        if (col.sort != "none") {
+            let match = col.field === field;
+            let sort = match ? direction || col.sort || "asc" : null;
+            col.setAttrs({ sort });
         }
     }
     this._rows.sort(RapidContext.Data.compare((o) => o[field]));
