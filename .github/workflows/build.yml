@@ -30,13 +30,15 @@ jobs:
 
     - name: Install Node.js
       uses: actions/setup-node@v3
+      with:
+        node-version: lts/*
 
     - name: Setup
       run: make clean setup
 
     - name: Set Version Tag
       if: ${{ github.ref_name != 'main' }}
-      run: echo "VERSION=${{ github.ref_name }}" >> $GITHUB_ENV  
+      run: echo "VERSION=${{ github.ref_name }}" >> $GITHUB_ENV
 
     - name: Build & Test
       run: make VERSION=${{ env.VERSION }} build doc test

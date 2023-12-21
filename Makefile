@@ -125,7 +125,7 @@ test-js:
 		--ignore-pattern 'src/plugin/legacy/**/*.js' \
 		--ignore-pattern '**/*.min.js' \
 		--ignore-pattern '**/MochiKit.js'
-	node --import ./test/src/js/loader.mjs --test 'test/**/*.test.?(c|m)js'
+	node --import ./test/src/js/loader.mjs --test test/src/js/
 
 test-java:
 	mkdir -p test/classes/ tmp/test/
