@@ -19,7 +19,10 @@ import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.jar.Manifest;
+
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * A set of utility methods for working with the classpath and class loaders.
@@ -54,7 +57,7 @@ public final class ClasspathUtil {
      *         null if not found
      */
     public static URL locate(Class<?> cls) {
-        String path = cls.getName().replace('.', '/') + ".class";
+        String path = cls.getName().replace('.', File.separatorChar) + ".class";
         return locate(cls, path);
     }
 
@@ -62,7 +65,7 @@ public final class ClasspathUtil {
      * Returns the resource URL corresponding the the specified path. The
      * resource will be located using the class loader for the specified class.
      * Also, the resource path will be normalized, removing any "classpath:"
-     * prefix and fixing the usage of "/" chars.
+     * prefix and normalizing the file path.
      *
      * @param cls            the base class (loader) to use
      * @param path           the resource path
@@ -71,13 +74,8 @@ public final class ClasspathUtil {
      *         null if not found
      */
     public static URL locate(Class<?> cls, String path) {
-        if (path.startsWith("classpath:")) {
-            path = path.substring(10);
-        }
-        path = path.replace("//", File.separator);
-        if (!path.startsWith(File.separator)) {
-            path = File.separator + path;
-        }
+        path = StringUtils.removeStartIgnoreCase(path, "classpath:");
+        path = Path.of(path).normalize().toString();
         return cls.getResource(path);
     }
 
@@ -92,35 +90,21 @@ public final class ClasspathUtil {
      *         null if not found
      */
     public static File locateFile(Class<?> cls) {
-        URL     url = locate(cls);
-        String  path;
-        String  str;
-        File    file;
-
-        if (url == null) {
-            return null;
-        }
-        path = url.toExternalForm();
-        do {
-            str = path.toLowerCase();
-            if (str.startsWith("jar:")) {
-                path = path.substring(4);
-                if (path.contains("!/")) {
-                    path = path.substring(0, path.indexOf("!/"));
-                }
-            } else if (str.startsWith("file:/")) {
-                path = path.substring(6);
-                if (!path.startsWith(File.separator)) {
-                    path = File.separator + path;
-                }
-                while (path.length() > 1 && path.charAt(1) == File.separatorChar) {
-                    path = path.substring(1);
-                }
+        URL url = locate(cls);
+        if (url != null) {
+            String path = url.toExternalForm();
+            if (StringUtils.startsWithIgnoreCase(path, "jar:")) {
+                path = StringUtils.substringBefore(path.substring(4), "!/");
             }
-        } while (path.length() < str.length());
-        path = URLDecoder.decode(path, StandardCharsets.UTF_8);
-        file = new File(path);
-        return file.exists() ? file.getAbsoluteFile() : null;
+            if (StringUtils.startsWithIgnoreCase(path, "file:")) {
+                path = path.substring(5);
+                path = Path.of(path).normalize().toString();
+                path = StringUtils.prependIfMissing(path, File.separator);
+            }
+            File file = new File(URLDecoder.decode(path, StandardCharsets.UTF_8));
+            return file.exists() ? file.getAbsoluteFile() : null;
+        }
+        return null;
     }
 
     /**
