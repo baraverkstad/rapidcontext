@@ -46,7 +46,7 @@ build: build-java build-plugins
 build-java:
 	mkdir -p classes/
 	rm -rf classes/* lib/rapidcontext-*.jar
-	javac -d "classes" -classpath "lib/*" --release 11 \
+	javac -d "classes" -classpath "lib/*" --release 17 \
 		-sourcepath "src/java" \
 		-g -deprecation \
 		-Xlint:all,-path,-serial \
@@ -94,7 +94,7 @@ doc: doc-java doc-js
 
 doc-java:
 	find doc/java -mindepth 1 -not -name "topics.json" -delete
-	javadoc -quiet -d "doc/java" -classpath "lib/*" --release 11 \
+	javadoc -quiet -d "doc/java" -classpath "lib/*" --release 17 \
 		-sourcepath "src/java" -subpackages "org.rapidcontext" \
 		-group "Application Layer" "org.rapidcontext.app:org.rapidcontext.app.*" \
 		-group "Core Library Layer" "org.rapidcontext.core:org.rapidcontext.core.*" \
@@ -130,7 +130,7 @@ test-js:
 test-java:
 	mkdir -p test/classes/ tmp/test/
 	rm -rf test/classes/*
-	javac -d "test/classes" -classpath "lib/*:test/lib/*" --release 11 \
+	javac -d "test/classes" -classpath "lib/*:test/lib/*" --release 17 \
 		-sourcepath "test/src/java" \
 		-g -deprecation \
 		-Xlint:all,-path,-serial \
@@ -153,7 +153,7 @@ test-sonar-scan:
 		-Dsonar.projectKey=baraverkstad_rapidcontext \
 		-Dsonar.sources=src \
 		-Dsonar.exclusions="src/java/**/package.html,src/plugin/legacy/**/*,src/plugin/system/files/js/*.min.js,src/plugin/system/files/js/MochiKit.js,src/plugin/test/**/*" \
-		-Dsonar.java.source=11 \
+		-Dsonar.java.source=17 \
 		-Dsonar.java.binaries=classes,src/plugin/*/classes \
 		-Dsonar.java.libraries=lib/*.jar \
 		-Dsonar.java.test.binaries=test/classes \

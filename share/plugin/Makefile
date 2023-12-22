@@ -3,7 +3,7 @@
 #
 # Requirements:
 # - GNU Make 4.x+
-# - Java SDK (javac, jar) 11+
+# - Java SDK (javac, jar) 17+
 # - Linux/BSD/MacOS command-line tools
 
 CONFIG    := $(firstword $(wildcard plugin.* plugin/*))
@@ -44,7 +44,7 @@ compile: $(if $(SRC),compile-java,)
 
 compile-java:
 	mkdir -p classes lib
-	javac -d "classes" -classpath "$(CLASSPATH)" --release 11 \
+	javac -d "classes" -classpath "$(CLASSPATH)" --release 17 \
 		-g -deprecation \
 		-Xlint:all,-path,-serial \
 		-Xdoclint:all,-missing \

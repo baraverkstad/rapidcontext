@@ -71,7 +71,7 @@
     <javac srcdir="src"
            destdir="classes"
            classpathref="build.classpath"
-           release="11"
+           release="17"
            debug="on"
            deprecation="on"
            includeantruntime="off">
