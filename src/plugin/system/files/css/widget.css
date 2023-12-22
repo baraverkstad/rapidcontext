@@ -88,8 +88,8 @@
     border-radius: 3px 3px 0 0;
     padding: 3px 6px;
     overflow: hidden;
-    color: white;
-    background-color: #468;
+    color: #fff;
+    background: linear-gradient(to right, var(--highlight-900), var(--highlight-700));
     font-size: 1.2em;
     line-height: 1.5;
     font-weight: bold;
@@ -100,16 +100,16 @@
     user-select: none;
 }
 .widgetDialog.danger > .widgetDialogTitle {
-    background: linear-gradient(to bottom, var(--danger-500), var(--danger-700));
+    background: linear-gradient(to right, var(--danger-700), var(--danger-500));
 }
 .widgetDialog.warning > .widgetDialogTitle {
-    background: linear-gradient(to bottom, var(--warning-300), var(--warning-500));
+    background: linear-gradient(to right, var(--warning-500), var(--warning-300));
 }
 .widgetDialog.success > .widgetDialogTitle {
-    background: linear-gradient(to bottom, var(--success-500), var(--success-700));
+    background: linear-gradient(to right, var(--success-700), var(--success-500));
 }
 .widgetDialog.info > .widgetDialogTitle {
-    background: linear-gradient(to bottom, var(--info-500), var(--info-700));
+    background: linear-gradient(to right, var(--info-700), var(--info-500));
 }
 .widgetDialog.warning > .widgetDialogTitle,
 .widgetDialog.warning > .widgetDialogClose {
@@ -205,11 +205,11 @@ button > .widgetIcon.fa,
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: white;
+    background-color: #fff;
     opacity: 0.75;
 }
 .widgetOverlayDark .widgetOverlayCover {
-    background-color: black;
+    background-color: #000;
 }
 .widgetOverlayMessage {
     display: inline-block;
@@ -367,11 +367,11 @@ button > .widgetIcon.fa,
     margin-right: -10px;
     border-radius: 3px;
     padding: 1px 0;
-    color: #ccc;
+    color: #0004;
 }
 .widgetTabContainerLabel .widgetIcon:hover {
     background: #e66;
-    color: white;
+    color: #fff;
 }
 .widgetTabContainerContent {
     position: relative;
@@ -400,7 +400,7 @@ table.widgetTable {
 }
 table.widgetTable td {
     padding: 0.2em 1em 0.2em 0.4em;
-    background: white;
+    background: #fff;
 }
 table.widgetTable tbody tr:hover td {
     background: var(--focus-200);
@@ -465,7 +465,7 @@ th.widgetTableColumn.sortNone::after {
     position: relative;
     overflow: auto;
     border: 1px solid #ddd;
-    background: white;
+    background: #fff;
 }
 
 
