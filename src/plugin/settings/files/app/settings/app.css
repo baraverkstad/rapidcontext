@@ -16,26 +16,25 @@
     color: #0006;
     cursor: pointer;
 }
-.settings-app .vertical-tabs > div:hover:not(.disabled) {
-    border-color: var(--focus-400);
-    border-right-color: #ddd;
-    background-image: linear-gradient(to right, var(--focus-100), #fff);
+.settings-app .vertical-tabs > div:hover:not(.disabled):not(.selected) {
+    border-color: #ddd;
+    background-image: linear-gradient(to right, #eee, #fff);
     color: #000a;
     text-shadow: 0 1px 1px #fff;
-}
-.settings-app .vertical-tabs > div.selected {
-    border-color: var(--highlight-400);
-    border-right-color: #fff;
-    background-image: linear-gradient(to right, var(--highlight-100), #fff);
-    color: #000a;
-    text-shadow: 0 1px 1px #fff;
-}
-.settings-app .vertical-tabs > div.selected:hover {
-    border-right-color: #fff;
 }
 .settings-app .vertical-tabs > div.disabled {
     color: #0002;
     cursor: default;
+}
+.settings-app .vertical-tabs > div.selected {
+    border-color: var(--highlight-300);
+    border-right-color: #fff;
+    background-image: linear-gradient(to right, var(--highlight-000), #fff);
+    color: #000a;
+    text-shadow: 0 1px 1px #fff;
+}
+.settings-app .vertical-tabs > div.selected:hover {
+    background-image: linear-gradient(to right, var(--highlight-100), #fff);
 }
 
 /**

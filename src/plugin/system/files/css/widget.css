@@ -291,7 +291,7 @@ button > .widgetIcon.fa,
 }
 .widgetPopup > li.selected:not(.disabled),
 .widgetPopupItem.selected:not(.disabled) {
-    background: linear-gradient(to bottom, var(--focus-000), var(--focus-100));
+    background: linear-gradient(to bottom, var(--highlight-000), var(--highlight-100));
     box-shadow: 0 0 1px #99b7d2;
     text-shadow: 0 1px #fff;
 }
@@ -339,21 +339,18 @@ button > .widgetIcon.fa,
 .widgetTabContainerLabel:first-child {
     margin-left: 0.5rem;
 }
-.widgetTabContainerLabel:hover {
-    background: linear-gradient(to bottom, var(--focus-000), var(--focus-100));
-    border-top: 1px solid var(--focus-300);
-    border-left: 1px solid var(--focus-300);
-    border-right: 1px solid var(--focus-300);
-    color: black;
-}
-.widgetTabContainerLabel.selected,
-.widgetTabContainerLabel.selected:hover {
-    border-top: 1px solid #ddd;
-    border-left: 1px solid #ddd;
-    border-right: 1px solid #ddd;
-    background: #eee;
+.widgetTabContainerLabel:hover:not(.selected) {
+    border-color: #ddd;
     background: linear-gradient(to bottom, #eee, #fff);
-    color: black;
+    color: #000;
+}
+.widgetTabContainerLabel.selected {
+    border-color: var(--highlight-200);
+    background: linear-gradient(to bottom, var(--highlight-000), #fff);
+    color: #000;
+}
+.widgetTabContainerLabel.selected:hover {
+    background: linear-gradient(to bottom, var(--highlight-100), #fff);
 }
 .widgetTabContainerLabel div {
     padding: 4px 15px 4px 6px;
@@ -402,14 +399,14 @@ table.widgetTable td {
     padding: 0.2em 1em 0.2em 0.4em;
     background: #fff;
 }
-table.widgetTable tbody tr:hover td {
-    background: var(--focus-200);
+table.widgetTable tbody tr:hover:not(.selected) td {
+    background: #ddd;
 }
 table.widgetTable tbody tr.selected td {
     background: var(--highlight-200);
 }
 table.widgetTable tbody tr.selected:hover td {
-    background: var(--highlight-400);
+    background: var(--highlight-300);
 }
 table.widgetTable tbody tr:nth-child(even):not(.selected):not(:hover) td {
     background: #f8f8f8;
@@ -441,7 +438,7 @@ th.widgetTableColumn::after {
 }
 th.widgetTableColumn.sortAsc,
 th.widgetTableColumn.sortDesc {
-    background: linear-gradient(to bottom, var(--highlight-200), var(--highlight-400));
+    background: linear-gradient(to bottom, var(--highlight-100), var(--highlight-400));
 }
 th.widgetTableColumn.sortAsc::after {
     top: 0.45em;
@@ -485,10 +482,10 @@ th.widgetTableColumn.sortNone::after {
     padding-bottom: 1px;
 }
 .widgetTreeNodeLabel:hover {
-    background: var(--focus-200);
+    background: var(--highlight-100);
 }
 .widgetTreeNodeLabel.selected:hover {
-    background: var(--highlight-400);
+    background: var(--highlight-300);
 }
 .widgetTreeNodeLabel i.fa {
     color: var(--highlight-700);
