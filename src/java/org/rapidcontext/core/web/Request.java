@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -644,7 +645,7 @@ public class Request implements HttpUtil {
         try (InputStream is = request.getInputStream()) {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             FileUtil.copy(is, os);
-            return os.toString("UTF-8");
+            return os.toString(StandardCharsets.UTF_8);
         } catch (IOException e) {
             LOG.warning("failed to read request input data: " + e.getMessage());
             return "";
@@ -933,11 +934,7 @@ public class Request implements HttpUtil {
         response.setContentType(responseMimeType);
         byte[] data = ArrayUtils.EMPTY_BYTE_ARRAY;
         if (responseData instanceof String s) {
-            try {
-                data = s.getBytes("UTF-8");
-            } catch (UnsupportedEncodingException ignore) {
-                // Silly Java exception doesn't happen
-            }
+            data = s.getBytes(StandardCharsets.UTF_8);
         }
         response.setContentLength(data.length);
         logResponse();
