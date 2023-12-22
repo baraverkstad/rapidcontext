@@ -102,7 +102,7 @@ public class AppListProcedure extends Procedure {
         Array arr = dict.getArray("resources");
         for (int i = 0; i < arr.size(); i++) {
             Object obj = arr.get(i);
-            Dict resource = (obj instanceof Dict) ? (Dict) obj : new Dict();
+            Dict resource = (obj instanceof Dict d) ? d : new Dict();
             String url = resource.get("url", String.class, obj.toString());
             if (!url.contains("//:") && StringUtils.containsAny(url, "*?")) {
                 arr.remove(i--);

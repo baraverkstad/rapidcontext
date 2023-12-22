@@ -64,8 +64,8 @@ public class ProcedureCallProcedure extends Procedure {
         CallContext.checkAccess("procedure/" + name, cx.readPermission(1));
         Object[] args = null;
         Object obj = bindings.getValue("arguments");
-        if (obj instanceof Array) {
-            args = ((Array) obj).values();
+        if (obj instanceof Array a) {
+            args = a.values();
         } else {
             args = new Object[1];
             args[0] = obj;

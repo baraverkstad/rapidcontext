@@ -106,8 +106,8 @@ public class Dict {
     protected static <T> T convert(Object value, Class<T> clazz) {
         if (value == null || clazz.isInstance(value)) {
             return (T) value;
-        } else if (clazz.equals(String.class) && value instanceof Date) {
-            return (T) DateUtil.asEpochMillis((Date) value);
+        } else if (clazz.equals(String.class) && value instanceof Date dt) {
+            return (T) DateUtil.asEpochMillis(dt);
         } else if (clazz.equals(String.class)) {
             return (T) value.toString();
         } else if (clazz.equals(Boolean.class)) {
@@ -117,8 +117,8 @@ public class Dict {
             return (T) Integer.valueOf(value.toString());
         } else if (clazz.equals(Long.class)) {
             return (T) Long.valueOf(value.toString());
-        } else if (clazz.equals(Date.class) && value instanceof Number) {
-            long millis = ((Number) value).longValue();
+        } else if (clazz.equals(Date.class) && value instanceof Number n) {
+            long millis = n.longValue();
             return (T) new Date(millis);
         } else if (clazz.equals(Date.class)) {
             String str = value.toString();
@@ -146,10 +146,10 @@ public class Dict {
         for (var entry : map.entrySet()) {
             String key = Objects.toString(entry.getKey());
             Object val = entry.getValue();
-            if (val instanceof Map<?, ?>) {
-                dict.set(key, Dict.from((Map<?, ?>) val));
-            } else if (val instanceof Iterable<?>) {
-                dict.set(key, Array.from((Iterable<?>) val));
+            if (val instanceof Map<?,?> m) {
+                dict.set(key, Dict.from(m));
+            } else if (val instanceof Iterable<?> i) {
+                dict.set(key, Array.from(i));
             } else {
                 dict.set(key, val);
             }
@@ -189,7 +189,7 @@ public class Dict {
      */
     @Override
     public boolean equals(final Object obj) {
-        return (obj instanceof Dict) && Objects.equals(this.map, ((Dict) obj).map);
+        return obj instanceof Dict d && Objects.equals(this.map, d.map);
     }
 
     /**
@@ -273,10 +273,10 @@ public class Dict {
         if (map != null) {
             for (Entry<String, Object> e : map.entrySet()) {
                 Object value = e.getValue();
-                if (value instanceof Dict) {
-                    value = ((Dict) value).copy();
-                } else if (value instanceof Array) {
-                    value = ((Array) value).copy();
+                if (value instanceof Dict d) {
+                    value = d.copy();
+                } else if (value instanceof Array a) {
+                    value = a.copy();
                 }
                 res.map.put(e.getKey(), value);
             }
@@ -306,10 +306,10 @@ public class Dict {
         sealed = true;
         if (recursive && map != null) {
             for (Object value : map.values()) {
-                if (value instanceof Dict) {
-                    ((Dict) value).seal(recursive);
-                } else if (value instanceof Array) {
-                    ((Array) value).seal(recursive);
+                if (value instanceof Dict d) {
+                    d.seal(recursive);
+                } else if (value instanceof Array a) {
+                    a.seal(recursive);
                 }
             }
         }

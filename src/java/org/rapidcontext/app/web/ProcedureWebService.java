@@ -243,8 +243,8 @@ public class ProcedureWebService extends WebService {
                 LOG.fine(logPrefix + "arguments JSON: " + input);
             }
             Object obj = JsonSerializer.unserialize(input);
-            if (obj instanceof Dict) {
-                jsonArgs = (Dict) obj;
+            if (obj instanceof Dict d) {
+                jsonArgs = d;
             }
         }
         for (String name : bindings.getNames()) {

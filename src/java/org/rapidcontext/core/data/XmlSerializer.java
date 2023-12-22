@@ -131,29 +131,29 @@ public final class XmlSerializer {
             buffer.append("<");
             tagName(id, buffer);
             buffer.append(" type=\"null\"/>");
-        } else if (obj instanceof Dict) {
-            toXml(id, (Dict) obj, indent, buffer);
-        } else if (obj instanceof Array) {
-            toXml(id, (Array) obj, indent, buffer);
-        } else if (obj instanceof Map) {
-            toXml(id, Dict.from((Map<?, ?>) obj), indent, buffer);
-        } else if (obj instanceof Iterable) {
-            toXml(id, Array.from((Iterable<?>) obj), indent, buffer);
+        } else if (obj instanceof Dict d) {
+            toXml(id, d, indent, buffer);
+        } else if (obj instanceof Array a) {
+            toXml(id, a, indent, buffer);
+        } else if (obj instanceof Map<?,?> m) {
+            toXml(id, Dict.from(m), indent, buffer);
+        } else if (obj instanceof Iterable<?> i) {
+            toXml(id, Array.from(i), indent, buffer);
         } else if (obj instanceof Boolean) {
             tagStart(id, "boolean", buffer);
             buffer.append(TextEncoding.encodeXml(obj.toString(), false));
             tagEnd(id, buffer);
-        } else if (obj instanceof Date) {
+        } else if (obj instanceof Date dt) {
             tagStart(id, "date", buffer);
-            buffer.append(DateUtil.asEpochMillis((Date) obj));
+            buffer.append(DateUtil.asEpochMillis(dt));
             tagEnd(id, buffer);
         } else if (obj instanceof Number) {
             tagStart(id, "number", buffer);
             buffer.append(TextEncoding.encodeXml(obj.toString(), false));
             tagEnd(id, buffer);
-        } else if (obj instanceof Class) {
+        } else if (obj instanceof Class<?> c) {
             tagStart(id, "class", buffer);
-            buffer.append(TextEncoding.encodeXml(((Class<?>) obj).getName(), false));
+            buffer.append(TextEncoding.encodeXml(c.getName(), false));
             tagEnd(id, buffer);
         } else {
             tagStart(id, null, buffer);

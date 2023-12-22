@@ -137,8 +137,8 @@ public class StorageWebService extends WebService {
         opts.set("metadata", ValueUtil.isOn(request.getParameter("metadata")));
         if (meta == null || data == null) {
             errorNotFound(request);
-        } else if (data instanceof Binary && path.equals(meta.path())) {
-            request.sendBinary((Binary) data);
+        } else if (data instanceof Binary b && path.equals(meta.path())) {
+            request.sendBinary(b);
         } else if (opts.get("metadata", Boolean.class, false)) {
             Object o = ApiUtil.serialize(meta, data, opts, false);
             sendResult(request, meta.path(), null, o);
@@ -400,22 +400,21 @@ public class StorageWebService extends WebService {
         private static void renderObject(Path path, Object obj, StringBuilder buffer) {
             if (obj == null) {
                 buffer.append("<code>N/A</code>");
-            } else if (obj instanceof Dict) {
-                renderDict(path, (Dict) obj, buffer);
-            } else if (obj instanceof Array) {
-                renderArray(path, (Array) obj, buffer);
-            } else if (obj instanceof Date) {
+            } else if (obj instanceof Dict d) {
+                renderDict(path, d, buffer);
+            } else if (obj instanceof Array a) {
+                renderArray(path, a, buffer);
+            } else if (obj instanceof Date dt) {
                 buffer.append("<time datetime='");
-                buffer.append(DateUtil.asDateTimeUTC((Date) obj));
+                buffer.append(DateUtil.asDateTimeUTC(dt));
                 buffer.append("'>");
-                buffer.append(DateUtil.asDateTimeUTC((Date) obj));
+                buffer.append(DateUtil.asDateTimeUTC(dt));
                 buffer.append(" <code>");
-                buffer.append(DateUtil.asEpochMillis((Date) obj));
+                buffer.append(DateUtil.asEpochMillis(dt));
                 buffer.append("</code></time>");
-            } else if (obj instanceof Class) {
-                renderText(((Class<?>) obj).getName(), buffer);
-            } else if (obj instanceof Path) {
-                Path p = (Path) obj;
+            } else if (obj instanceof Class<?> c) {
+                renderText(c.getName(), buffer);
+            } else if (obj instanceof Path p) {
                 String suffix = p.isIndex() ? "" : EXT_HTML;
                 if (p.equals(path)) {
                     renderLink(p.isIndex() ? "." : p.name(), p.toString(), buffer);

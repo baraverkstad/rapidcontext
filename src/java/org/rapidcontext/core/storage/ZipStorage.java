@@ -167,11 +167,9 @@ public class ZipStorage extends Storage {
         }
         Path match = locatePath(path);
         Object obj = (match == null) ? null : entries.get(match);
-        if (obj instanceof Index) {
-            Index idx = (Index) obj;
+        if (obj instanceof Index idx) {
             return new Metadata(Index.class, match, path(), idx.modified());
-        } else if (obj instanceof ZipEntry) {
-            ZipEntry entry = (ZipEntry) obj;
+        } else if (obj instanceof ZipEntry entry) {
             Date modified = new Date(entry.getTime());
             Metadata m = path.equals(match) ?
                 new Metadata(Binary.class, match, path(), modified) :
@@ -204,8 +202,7 @@ public class ZipStorage extends Storage {
         Object obj = (match == null) ? null : entries.get(match);
         if (obj instanceof Index) {
             return obj;
-        } else if (obj instanceof ZipEntry) {
-            ZipEntry entry = (ZipEntry) obj;
+        } else if (obj instanceof ZipEntry entry) {
             if (!path.equals(match)) {
                 try (InputStream is = zip.getInputStream(entry)) {
                     return unserialize(entry.getName(), is);

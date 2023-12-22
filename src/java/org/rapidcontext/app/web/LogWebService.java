@@ -102,10 +102,10 @@ public class LogWebService extends WebService {
             if (Mime.isInputMatch(request, Mime.JSON)) {
                 String input = request.getInputString();
                 Object obj = JsonSerializer.unserialize(input);
-                if (obj instanceof Dict) {
-                    logMessage(request, (Dict) obj);
-                } else if (obj instanceof Array) {
-                    logMessages(request, (Array) obj);
+                if (obj instanceof Dict d) {
+                    logMessage(request, d);
+                } else if (obj instanceof Array a) {
+                    logMessages(request, a);
                 }
             } else {
                 String level = request.getParameter("level", "log");
@@ -149,8 +149,8 @@ public class LogWebService extends WebService {
      */
     private static void logMessages(Request request, Array arr) {
         for (Object o : arr) {
-            if (o instanceof Dict) {
-                logMessage(request, (Dict) o);
+            if (o instanceof Dict d) {
+                logMessage(request, d);
             }
         }
     }
@@ -166,8 +166,8 @@ public class LogWebService extends WebService {
         String msg = dict.get("message", String.class, "");
         Object obj = dict.get("data");
         String data = null;
-        if (obj instanceof Array) {
-            data = ((Array) obj).toString();
+        if (obj instanceof Array a) {
+            data = a.toString();
         } else if (obj != null) {
             data = obj.toString();
         }

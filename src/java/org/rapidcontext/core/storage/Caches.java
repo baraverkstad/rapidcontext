@@ -90,9 +90,8 @@ class Caches {
         MemoryStorage cache = cacheStorages.get(storagePath);
         return cache.query(path).filterShowHidden(true).paths().filter(p -> {
             Object obj = cache.load(p);
-            if (obj instanceof StorableObject) {
-                StorableObject storable = (StorableObject) obj;
-                return storable.isModified();
+            if (obj instanceof StorableObject o) {
+                return o.isModified();
             }
             return false;
         }).toArray(Path[]::new);
@@ -141,9 +140,9 @@ class Caches {
             Object res = cache.load(path);
             if (res != null) {
                 LOG.fine("cache " + cache.path() + ": loaded " + path);
-                if (res instanceof StorableObject) {
+                if (res instanceof StorableObject o) {
                     LOG.fine("cache " + cache.path() + ": activating object " + path);
-                    ((StorableObject) res).activate();
+                    o.activate();
                 }
                 return res;
             }
@@ -177,10 +176,9 @@ class Caches {
             String debugPrefix = "cache " + cache.path() + ": ";
             path = Storage.objectPath(path);
             Object old = cache.load(path);
-            if (data instanceof StorableObject) {
-                StorableObject storable = (StorableObject) data;
+            if (data instanceof StorableObject o) {
                 LOG.fine(debugPrefix + "passivating object " + path);
-                storable.passivate();
+                o.passivate();
                 if (data != old) {
                     try {
                         LOG.fine(debugPrefix + "storing object " + path);
@@ -226,13 +224,12 @@ class Caches {
             LOG.fine("removing " + path + " from cache " + cache.path());
             for (Path p : cache.query(path).paths().toArray(Path[]::new)) {
                 Object obj = cache.load(p);
-                if (obj instanceof StorableObject) {
-                    StorableObject storable = (StorableObject) obj;
-                    if (force || !storable.isActive()) {
+                if (obj instanceof StorableObject o) {
+                    if (force || !o.isActive()) {
                         removeDestroy(cache, p, obj);
                     } else {
                         LOG.fine("cache " + cache.path() + ": passivating " + p);
-                        storable.passivate();
+                        o.passivate();
                     }
                 } else {
                     removeDestroy(cache, p, obj);
@@ -269,14 +266,13 @@ class Caches {
      * @param data           the storable object to destroy
      */
     private void destroyObject(MemoryStorage cache, Path path, Object data) {
-        if (data instanceof StorableObject) {
+        if (data instanceof StorableObject o) {
             String debugPrefix = "cache " + cache.path() + ": ";
-            StorableObject storable = (StorableObject) data;
             LOG.fine(debugPrefix + "passivating removed object " + path);
-            storable.passivate();
+            o.passivate();
             try {
                 LOG.fine(debugPrefix + "destroying removed object " + path);
-                storable.destroy();
+                o.destroy();
             } catch (StorageException e) {
                 LOG.log(Level.WARNING, "failed to destroy object", e);
             }

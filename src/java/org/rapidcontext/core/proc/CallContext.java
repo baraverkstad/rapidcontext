@@ -546,8 +546,8 @@ public class CallContext {
         if (isInterrupted()) {
             throw new ProcedureException(proc, "call interrupted");
         }
-        if (proc instanceof org.rapidcontext.core.type.Procedure) {
-            String deprecated = ((org.rapidcontext.core.type.Procedure) proc).deprecated();
+        if (proc instanceof org.rapidcontext.core.type.Procedure p) {
+            String deprecated = p.deprecated();
             if (deprecated != null) {
                 LOG.warning("deprecated: " + proc + " called; " + deprecated);
             }

@@ -91,8 +91,8 @@ public class UserChangeProcedure extends Procedure {
         }
         String[] roles = null;
         Object obj = bindings.getValue("roles");
-        if (obj instanceof Array) {
-            roles = ((Array) obj).values(ArrayUtils.EMPTY_STRING_ARRAY);
+        if (obj instanceof Array a) {
+            roles = a.values(ArrayUtils.EMPTY_STRING_ARRAY);
         } else {
             roles = obj.toString().split("[ ,]+");
         }

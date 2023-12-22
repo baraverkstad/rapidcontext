@@ -932,9 +932,9 @@ public class Request implements HttpUtil {
         commitHeaders(false, 0, null);
         response.setContentType(responseMimeType);
         byte[] data = ArrayUtils.EMPTY_BYTE_ARRAY;
-        if (responseData instanceof String) {
+        if (responseData instanceof String s) {
             try {
-                data = ((String) responseData).getBytes("UTF-8");
+                data = s.getBytes("UTF-8");
             } catch (UnsupportedEncodingException ignore) {
                 // Silly Java exception doesn't happen
             }

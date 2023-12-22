@@ -477,8 +477,8 @@ public class RootStorage extends MemoryStorage {
                 return res;
             }
             res = storage.load(queryPath);
-            if (res instanceof Dict && isObjectPath(queryPath) && isCached(storagePath)) {
-                res = initObject(queryPath.toIdent(1), queryPath.name(0), (Dict) res);
+            if (res instanceof Dict d && isObjectPath(queryPath) && isCached(storagePath)) {
+                res = initObject(queryPath.toIdent(1), queryPath.name(0), d);
                 caches.store(storagePath, queryPath, res);
             }
             if (res != null) {

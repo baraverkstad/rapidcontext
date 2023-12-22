@@ -162,8 +162,8 @@ public class StorageCopyProcedure extends Procedure {
             }
         }
         Object data = storage.load(src);
-        if (data instanceof Binary) {
-            try (InputStream is = ((Binary) data).openStream()) {
+        if (data instanceof Binary b) {
+            try (InputStream is = b.openStream()) {
                 File file = FileUtil.tempFile(src.name());
                 FileUtil.copy(is, file);
                 storage.store(dst, file);

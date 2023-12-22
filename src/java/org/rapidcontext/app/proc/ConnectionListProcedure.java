@@ -77,8 +77,8 @@ public class ConnectionListProcedure extends Procedure {
                 Dict dict = null;
                 if (o instanceof Connection) {
                     dict = (Dict) StorableObject.sterilize(o, true, false, true);
-                } else if (o instanceof Dict) {
-                    dict = (Dict) o;
+                } else if (o instanceof Dict d) {
+                    dict = d;
                     if (!dict.containsKey("_error")) {
                         String msg = "failed to initialize: plug-in for " +
                                      "connnection type probably not loaded";

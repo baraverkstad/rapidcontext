@@ -82,8 +82,8 @@ public class UserSettingsProcedure extends Procedure {
         if (user == null) {
             throw new ProcedureException(this, "cannot find user with id " + id);
         }
-        if (data instanceof Dict) {
-            user.updateSettings((Dict) data);
+        if (data instanceof Dict d) {
+            user.updateSettings(d);
             try {
                 LOG.info("updating " + user + " settings");
                 User.store(cx.getStorage(), user);

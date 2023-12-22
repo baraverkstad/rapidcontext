@@ -213,8 +213,8 @@ public final class PropertiesSerializer {
      *         null if not found
      */
     private static Object getKey(Object parent, String key) {
-        if (parent instanceof Array) {
-            return ((Array) parent).get(toIndex(key));
+        if (parent instanceof Array a) {
+            return a.get(toIndex(key));
         } else {
             return ((Dict) parent).get(key);
         }
@@ -229,12 +229,12 @@ public final class PropertiesSerializer {
      * @param value          the value to set
      */
     private static void setKey(Object parent, String key, Object value) {
-        if (parent instanceof Array) {
+        if (parent instanceof Array a) {
             int index = toIndex(key);
             if (index < 0) {
-                index = ((Array) parent).size();
+                index = a.size();
             }
-            ((Array) parent).set(index, value);
+            a.set(index, value);
         } else {
             ((Dict) parent).set(key, value);
         }
@@ -295,10 +295,10 @@ public final class PropertiesSerializer {
     private static void removeArrayNulls(Dict dict) {
         for (String key : dict.keys()) {
             Object obj = dict.get(key);
-            if (obj instanceof Dict) {
-                removeArrayNulls((Dict) obj);
-            } else if (obj instanceof Array) {
-                removeArrayNulls((Array) obj);
+            if (obj instanceof Dict d) {
+                removeArrayNulls(d);
+            } else if (obj instanceof Array a) {
+                removeArrayNulls(a);
             }
         }
     }
@@ -317,10 +317,10 @@ public final class PropertiesSerializer {
             Object obj = arr.get(i);
             if (obj == null) {
                 arr.remove(i--);
-            } else if (obj instanceof Dict) {
-                removeArrayNulls((Dict) obj);
-            } else if (obj instanceof Array) {
-                removeArrayNulls((Array) obj);
+            } else if (obj instanceof Dict d) {
+                removeArrayNulls(d);
+            } else if (obj instanceof Array a) {
+                removeArrayNulls(a);
             }
         }
     }
@@ -353,16 +353,16 @@ public final class PropertiesSerializer {
     private static void write(PrintWriter os, String prefix, Object obj) {
         if (obj == null) {
             // Nothing to write
-        } else if (obj instanceof Dict) {
-            write(os, prefix, (Dict) obj);
-        } else if (obj instanceof Array) {
-            write(os, prefix, (Array) obj);
-        } else if (obj instanceof Map) {
-            write(os, prefix, Dict.from((Map<?, ?>) obj));
-        } else if (obj instanceof Iterable) {
-            write(os, prefix, Array.from((Iterable<?>) obj));
-        } else if (obj instanceof Date) {
-            write(os, prefix, DateUtil.asEpochMillis((Date) obj));
+        } else if (obj instanceof Dict d) {
+            write(os, prefix, d);
+        } else if (obj instanceof Array a) {
+            write(os, prefix, a);
+        } else if (obj instanceof Map<?,?> m) {
+            write(os, prefix, Dict.from(m));
+        } else if (obj instanceof Iterable<?> i) {
+            write(os, prefix, Array.from(i));
+        } else if (obj instanceof Date dt) {
+            write(os, prefix, DateUtil.asEpochMillis(dt));
         } else {
             write(os, prefix, obj.toString());
         }
@@ -395,8 +395,8 @@ public final class PropertiesSerializer {
         for (String k : delayed) {
             Object obj = dict.get(k);
             boolean isEmpty = (
-                (obj instanceof Dict && ((Dict) obj).size() == 0) ||
-                (obj instanceof Array && ((Array) obj).size() == 0)
+                (obj instanceof Dict d && d.size() == 0) ||
+                (obj instanceof Array a && a.size() == 0)
             );
             if (!isEmpty && prefix.length() == 0) {
                 os.println();

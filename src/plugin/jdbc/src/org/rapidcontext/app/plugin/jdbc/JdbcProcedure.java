@@ -69,15 +69,14 @@ public abstract class JdbcProcedure extends Procedure {
     throws ProcedureException {
 
         Object obj = bindings.getValue(BINDING_DB);
-        if (obj instanceof String) {
+        if (obj instanceof String s) {
             boolean isArg = bindings.getType(BINDING_DB) == Bindings.ARGUMENT;
             String perm = cx.readPermission(isArg ? 1 : 0);
-            obj = cx.connectionReserve((String) obj, perm);
+            obj = cx.connectionReserve(s, perm);
         }
-        if (obj instanceof JdbcChannel) {
-            JdbcChannel channel = (JdbcChannel) obj;
-            channel.reset();
-            return channel;
+        if (obj instanceof JdbcChannel c) {
+            c.reset();
+            return c;
         } else {
             String msg = "connection not of JDBC type: " + obj.getClass().getName();
             throw new ProcedureException(msg);
@@ -363,10 +362,10 @@ public abstract class JdbcProcedure extends Procedure {
         public String bind(Object value, List<Object> params) {
             if (value == null) {
                 return bindNull();
-            } else if (value instanceof Array) {
-                return bindData((Array) value);
-            } else if (value instanceof Date) {
-                params.add(new java.sql.Timestamp(((Date) value).getTime()));
+            } else if (value instanceof Array a) {
+                return bindData(a);
+            } else if (value instanceof Date dt) {
+                params.add(new java.sql.Timestamp(dt.getTime()));
                 return cond(column, operator, "?");
             } else {
                 params.add(value);
@@ -452,10 +451,10 @@ public abstract class JdbcProcedure extends Procedure {
         private String literal(Object obj) {
             if (obj == null) {
                 return "NULL";
-            } else if (obj instanceof String) {
-                return literal((String) obj);
-            } else if (obj instanceof Number) {
-                return literal((Number) obj);
+            } else if (obj instanceof String s) {
+                return literal(s);
+            } else if (obj instanceof Number n) {
+                return literal(n);
             } else {
                 return literal(obj.toString());
             }

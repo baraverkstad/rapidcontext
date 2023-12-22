@@ -357,9 +357,9 @@ public class AppWebService extends FileWebService {
             appId = loginId();
         }
         Object tpl = storage.load(RootStorage.PATH_FILES.child("index.tmpl", false));
-        if (appId != null && tpl instanceof Binary) {
+        if (appId != null && tpl instanceof Binary b) {
             try {
-                String str = processAppTemplate((Binary) tpl, baseUrl, appId);
+                String str = processAppTemplate(b, baseUrl, appId);
                 request.sendText(Mime.HTML[0], str);
             } catch (IOException e) {
                 LOG.log(Level.WARNING, "failed to launch app: " + appId, e);

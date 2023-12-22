@@ -122,10 +122,10 @@ public final class JsRuntime {
             Scriptable scope = cx.newObject(globalScope);
             Object[] safeArgs = new Object[args.length];
             for (int i = 0; i < args.length; i++) {
-                if (args[i] instanceof Procedure) {
-                    safeArgs[i] = new ProcedureWrapper(procCx, (Procedure) args[i], scope);
-                } else if (args[i] instanceof Channel) {
-                    safeArgs[i] = new ConnectionWrapper(procCx, (Channel) args[i], scope);
+                if (args[i] instanceof Procedure p) {
+                    safeArgs[i] = new ProcedureWrapper(procCx, p, scope);
+                } else if (args[i] instanceof Channel c) {
+                    safeArgs[i] = new ConnectionWrapper(procCx, c, scope);
                 } else {
                     safeArgs[i] = wrap(args[i], scope);
                 }
@@ -146,10 +146,10 @@ public final class JsRuntime {
      * @return the procedure exception
      */
     private static JsException createException(String log, Throwable e) {
-        if (e instanceof JsException) {
-            return (JsException) e;
-        } else if (e instanceof WrappedException) {
-            return createException(log, ((WrappedException) e).getWrappedException());
+        if (e instanceof JsException exc) {
+            return exc;
+        } else if (e instanceof WrappedException exc) {
+            return createException(log, exc.getWrappedException());
         } else {
             LOG.log(Level.WARNING, log + ": " + e.getMessage(), e);
             return new JsException(e.getMessage(), e);
@@ -169,14 +169,14 @@ public final class JsRuntime {
      * @see org.rapidcontext.core.data.Dict
      */
     public static Object wrap(Object obj, Scriptable scope) {
-        if (obj instanceof Dict && scope != null) {
-            return new DictWrapper((Dict) obj, scope);
-        } else if (obj instanceof Array && scope != null) {
-            return new ArrayWrapper((Array) obj, scope);
+        if (obj instanceof Dict d && scope != null) {
+            return new DictWrapper(d, scope);
+        } else if (obj instanceof Array a && scope != null) {
+            return new ArrayWrapper(a, scope);
         } else if (obj instanceof StorableObject) {
             return wrap(StorableObject.sterilize(obj, true, true, true), scope);
-        } else if (obj instanceof Date) {
-            return DateUtil.asEpochMillis((Date) obj);
+        } else if (obj instanceof Date dt) {
+            return DateUtil.asEpochMillis(dt);
         } else {
             return Context.javaToJS(obj, scope);
         }
@@ -203,36 +203,34 @@ public final class JsRuntime {
             return null;
         } else if (obj instanceof Undefined || obj == UniqueTag.NOT_FOUND) {
             return null;
-        } else if (obj instanceof Wrapper) {
+        } else if (obj instanceof Wrapper w) {
             // Note: Need double unwrap due to JavaScript objects sometimes
             //       in turn wrapped inside e.g. NativeJavaObject...
-            return unwrap(((Wrapper) obj).unwrap());
-        } else if (obj instanceof Double) {
-            boolean isInt = ((Double) obj).doubleValue() % 1 == 0;
-            return isInt ? ((Double) obj).longValue() : obj;
-        } else if (obj instanceof Float) {
-            boolean isInt = ((Float) obj).floatValue() % 1 == 0;
-            return isInt ? ((Float) obj).intValue() : obj;
+            return unwrap(w.unwrap());
+        } else if (obj instanceof Double d) {
+            boolean isInt = d.doubleValue() % 1 == 0;
+            return isInt ? d.longValue() : obj;
+        } else if (obj instanceof Float f) {
+            boolean isInt = f.floatValue() % 1 == 0;
+            return isInt ? f.intValue() : obj;
         } else if (obj instanceof CharSequence) {
             String s = obj.toString();
             return DateUtil.isEpochFormat(s) ? new Date(Long.parseLong(s.substring(1))) : s;
-        } else if (obj instanceof NativeArray) {
-            NativeArray nativeArr = (NativeArray) obj;
-            int length = (int) nativeArr.getLength();
+        } else if (obj instanceof NativeArray na) {
+            int length = (int) na.getLength();
             Array arr = new Array(length);
             for (int i = 0; i < length; i++) {
-                arr.set(i, unwrap(nativeArr.get(i)));
+                arr.set(i, unwrap(na.get(i)));
             }
             return arr;
-        } else if (obj instanceof Scriptable) {
-            Scriptable scr = (Scriptable) obj;
+        } else if (obj instanceof Scriptable scr) {
             Object[] keys = scr.getIds();
             Dict dict = new Dict(keys.length);
             for (Object k : keys) {
                 String str = k.toString();
                 Object value = null;
-                if (k instanceof Integer) {
-                    value = scr.get(((Integer) k).intValue(), scr);
+                if (k instanceof Integer i) {
+                    value = scr.get(i.intValue(), scr);
                 } else {
                     value = scr.get(str, scr);
                 }

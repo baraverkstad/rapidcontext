@@ -54,8 +54,7 @@ public class JsCompileInterceptor extends Interceptor {
     public void reserve(CallContext cx, Procedure proc)
     throws ProcedureException {
 
-        if (proc instanceof JsProcedure) {
-            JsProcedure js = (JsProcedure) proc;
+        if (proc instanceof JsProcedure js) {
             if (!js.isCompiled()) {
                 js.compile();
             }

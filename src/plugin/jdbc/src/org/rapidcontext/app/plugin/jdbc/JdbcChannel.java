@@ -472,11 +472,8 @@ public class JdbcChannel extends Channel {
                                         ResultSet.HOLD_CURSORS_OVER_COMMIT);
             for (int i = 0; params != null && i < params.size(); i++) {
                 Object obj = params.get(i);
-                if (obj instanceof String && ((String) obj).length() > 255) {
-                    String str = (String) params.get(i);
-                    stmt.setCharacterStream(i + 1,
-                                            new StringReader(str),
-                                            str.length());
+                if (obj instanceof String s && s.length() > 255) {
+                    stmt.setCharacterStream(i + 1, new StringReader(s), s.length());
                 } else {
                     stmt.setObject(i + 1, obj);
                 }

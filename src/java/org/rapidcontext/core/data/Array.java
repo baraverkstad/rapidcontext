@@ -92,10 +92,10 @@ public class Array implements Iterable<Object> {
         Array arr = new Array();
         while (iter.hasNext()) {
             var val = iter.next();
-            if (val instanceof Iterable<?>) {
-                arr.add(Array.from((Iterable<?>) val));
-            } else if (val instanceof Map<?, ?>) {
-                arr.add(Dict.from((Map<?, ?>) val));
+            if (val instanceof Iterable<?> i) {
+                arr.add(Array.from(i));
+            } else if (val instanceof Map<?,?> m) {
+                arr.add(Dict.from(m));
             } else {
                 arr.add(val);
             }
@@ -163,7 +163,7 @@ public class Array implements Iterable<Object> {
      */
     @Override
     public boolean equals(final Object obj) {
-        return (obj instanceof Array) && Objects.equals(this.list, ((Array) obj).list);
+        return obj instanceof Array a && Objects.equals(this.list, a.list);
     }
 
     /**
@@ -251,10 +251,10 @@ public class Array implements Iterable<Object> {
         Array res = new Array(size());
         if (list != null) {
             for (Object value : list) {
-                if (value instanceof Dict) {
-                    value = ((Dict) value).copy();
-                } else if (value instanceof Array) {
-                    value = ((Array) value).copy();
+                if (value instanceof Dict d) {
+                    value = d.copy();
+                } else if (value instanceof Array a) {
+                    value = a.copy();
                 }
                 res.list.add(value);
             }
@@ -284,10 +284,10 @@ public class Array implements Iterable<Object> {
         sealed = true;
         if (recursive && list != null) {
             for (Object value : list) {
-                if (value instanceof Dict) {
-                    ((Dict) value).seal(recursive);
-                } else if (value instanceof Array) {
-                    ((Array) value).seal(recursive);
+                if (value instanceof Dict d) {
+                    d.seal(recursive);
+                } else if (value instanceof Array a) {
+                    a.seal(recursive);
                 }
             }
         }

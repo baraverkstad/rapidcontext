@@ -329,10 +329,10 @@ public class Library {
      */
     public Procedure loadProcedure(String name) throws ProcedureException {
         Object obj = storage.load(Path.resolve(PATH_PROC, name));
-        if (obj instanceof Procedure) {
-            return (Procedure) obj;
-        } else if (obj instanceof Dict) {
-            AddOnProcedure proc = createProcedure((Dict) obj);
+        if (obj instanceof Procedure p) {
+            return p;
+        } else if (obj instanceof Dict d) {
+            AddOnProcedure proc = createProcedure(d);
             cache.put(proc.getName(), proc);
             return proc;
         } else {

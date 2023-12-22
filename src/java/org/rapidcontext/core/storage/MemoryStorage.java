@@ -137,7 +137,7 @@ public class MemoryStorage extends Storage {
             return serialize();
         }
         Object obj = objects.get(path);
-        return (obj instanceof Index) ? new Index((Index) obj, false) : obj;
+        return obj instanceof Index i ? new Index(i, false) : obj;
     }
 
     /**
@@ -214,9 +214,8 @@ public class MemoryStorage extends Storage {
      */
     private void remove(Path path, boolean updateParent) {
         Object obj = objects.get(path);
-        if (obj instanceof Index) {
-            Index idx = (Index) obj;
-            idx.paths(path, true).forEach((item) -> remove(item, false));
+        if (obj instanceof Index i) {
+            i.paths(path, true).forEach((item) -> remove(item, false));
         }
         if (obj != null) {
             objects.remove(path);

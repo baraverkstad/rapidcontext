@@ -64,8 +64,8 @@ public class FileWebService extends WebService {
         Object obj = dict.get(KEY_PATH);
         if (obj == null) {
             return RootStorage.PATH_FILES;
-        } else if (obj instanceof Path) {
-            return (Path) obj;
+        } else if (obj instanceof Path p) {
+            return p;
         } else {
             return Path.from(obj.toString());
         }
@@ -111,12 +111,12 @@ public class FileWebService extends WebService {
             .filter(o -> o instanceof Binary || o instanceof Index)
             .findFirst()
             .orElse(null);
-        if (obj instanceof Binary) {
+        if (obj instanceof Binary b) {
             if (request.getParameter("download") != null) {
                 String str = "attachment; filename=" + filePath.name();
                 request.setResponseHeader("Content-Disposition", str);
             }
-            request.sendBinary((Binary) obj);
+            request.sendBinary(b);
         } else if (obj instanceof Index) {
             request.sendRedirect(request.getUrl() + "/");
         }

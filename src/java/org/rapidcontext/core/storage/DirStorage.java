@@ -188,8 +188,8 @@ public class DirStorage extends Storage {
         File dir = locateDir(path);
         File file = FileUtil.resolve(dir, path.name());
         File tmp = null;
-        if (data instanceof Binary) {
-            try (InputStream is = ((Binary) data).openStream()) {
+        if (data instanceof Binary b) {
+            try (InputStream is = b.openStream()) {
                 tmp = FileUtil.tempFile(file.getName());
                 FileUtil.copy(is, tmp);
             } catch (Exception e) {
@@ -198,8 +198,8 @@ public class DirStorage extends Storage {
                 LOG.warning(msg);
                 throw new StorageException(msg);
             }
-        } else if (data instanceof File) {
-            tmp = (File) data;
+        } else if (data instanceof File f) {
+            tmp = f;
         } else {
             String name = objectName(path.name());
             try {

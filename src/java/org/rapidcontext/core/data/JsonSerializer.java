@@ -96,24 +96,24 @@ public final class JsonSerializer {
     private static void serialize(Object obj, int indent, StringBuilder buffer) {
         if (obj == null) {
             buffer.append("null");
-        } else if (obj instanceof Dict) {
-            serialize((Dict) obj, indent, buffer);
-        } else if (obj instanceof Array) {
-            serialize((Array) obj, indent, buffer);
-        } else if (obj instanceof Map) {
-            serialize(Dict.from((Map<?, ?>) obj), indent, buffer);
-        } else if (obj instanceof Iterable) {
-            serialize(Array.from((Iterable<?>) obj), indent, buffer);
+        } else if (obj instanceof Dict d) {
+            serialize(d, indent, buffer);
+        } else if (obj instanceof Array a) {
+            serialize(a, indent, buffer);
+        } else if (obj instanceof Map<?,?> m) {
+            serialize(Dict.from(m), indent, buffer);
+        } else if (obj instanceof Iterable<?> i) {
+            serialize(Array.from(i), indent, buffer);
         } else if (obj instanceof Boolean) {
             buffer.append(obj.toString());
-        } else if (obj instanceof Number) {
-            buffer.append(StringUtils.removeEnd(obj.toString(), ".0"));
-        } else if (obj instanceof Date) {
-            String str = DateUtil.asEpochMillis((Date) obj);
+        } else if (obj instanceof Number n) {
+            boolean isInt = n.doubleValue() % 1 == 0;
+            buffer.append(isInt ? n.intValue() : obj);
+        } else if (obj instanceof Date dt) {
+            String str = DateUtil.asEpochMillis(dt);
             buffer.append(TextEncoding.encodeJsonString(str));
-        } else if (obj instanceof Class) {
-            String str = ((Class<?>) obj).getName();
-            buffer.append(TextEncoding.encodeJsonString(str));
+        } else if (obj instanceof Class<?> c) {
+            buffer.append(TextEncoding.encodeJsonString(c.getName()));
         } else {
             buffer.append(TextEncoding.encodeJsonString(obj.toString()));
         }
@@ -221,8 +221,7 @@ public final class JsonSerializer {
             return pos + 16;
         } else if (obj instanceof Dict && depth > 1) {
             return Integer.MAX_VALUE;
-        } else if (obj instanceof Dict) {
-            Dict d = (Dict) obj;
+        } else if (obj instanceof Dict d) {
             pos += 4;
             for (String key : d.keys()) {
                 pos += 5 + key.length();
@@ -234,9 +233,9 @@ public final class JsonSerializer {
             return pos;
         } else if (obj instanceof Array && depth > 1) {
             return Integer.MAX_VALUE;
-        } else if (obj instanceof Array) {
+        } else if (obj instanceof Array a) {
             pos += 2;
-            for (Object item : (Array) obj) {
+            for (Object item : a) {
                 pos += 2;
                 pos = serializedWidth(item, pos, depth + 1);
                 if (pos > 120) {

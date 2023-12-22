@@ -121,8 +121,7 @@ public class StorableObject {
             obj instanceof String ||
             obj instanceof Date) {
             return obj;
-        } else if (obj instanceof Dict) {
-            Dict src = (Dict) obj;
+        } else if (obj instanceof Dict src) {
             Dict dst = new Dict();
             for (String k : src.keys()) {
                 boolean skip = (
@@ -134,13 +133,11 @@ public class StorableObject {
                 };
             }
             return dst;
-        } else if (obj instanceof Array) {
+        } else if (obj instanceof Array a) {
             return Array.from(
-                ((Array) obj).stream()
-                .map(o -> sterilize(o, skipHidden, skipComputed, limitedTypes))
+                a.stream().map(o -> sterilize(o, skipHidden, skipComputed, limitedTypes))
             );
-        } else if (obj instanceof StorableObject) {
-            StorableObject o = (StorableObject) obj;
+        } else if (obj instanceof StorableObject o) {
             return sterilize(o.serialize(), skipHidden, skipComputed, limitedTypes);
         } else {
             return limitedTypes ? obj.toString() : obj;

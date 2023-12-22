@@ -190,12 +190,11 @@ public class Path {
      */
     @Override
     public boolean equals(Object obj) {
-        Path path = (obj instanceof Path) ? (Path) obj : null;
-        return path != null &&
-               this.length == path.length &&
-               this.index == path.index &&
-               this.name.equalsIgnoreCase(path.name) &&
-               Objects.equals(this.parent, path.parent);
+        return obj instanceof Path p &&
+               this.length == p.length &&
+               this.index == p.index &&
+               this.name.equalsIgnoreCase(p.name) &&
+               Objects.equals(this.parent, p.parent);
     }
 
     /**

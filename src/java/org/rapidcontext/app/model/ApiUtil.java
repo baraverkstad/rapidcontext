@@ -59,11 +59,7 @@ public class ApiUtil {
      * @return an options dictionary
      */
     public static Dict options(String defaultKey, Object value) {
-        if (value instanceof Dict) {
-            return (Dict) value;
-        } else {
-            return new Dict().set(defaultKey, value);
-        }
+        return (value instanceof Dict d) ? d : new Dict().set(defaultKey, value);
     }
 
     /**
@@ -168,8 +164,8 @@ public class ApiUtil {
             LOG.fine("updating storage path " + src + (rename ? " -> " + dst : ""));
             Object prev = StorableObject.sterilize(storage.load(src), false, true, false);
             patch = (Dict) StorableObject.sterilize(patch, false, true, true);
-            if (prev instanceof Dict) {
-                storage.store(dst, ((Dict) prev).merge(patch));
+            if (prev instanceof Dict d) {
+                storage.store(dst, d.merge(patch));
                 if (rename) {
                     storage.remove(src);
                 }
@@ -243,25 +239,23 @@ public class ApiUtil {
                                    Object obj,
                                    Dict opts,
                                    boolean limitedTypes) {
-        if (obj instanceof Index) {
-            Index idx = (Index) obj;
+        if (obj instanceof Index i) {
             boolean hidden = opts.get("hidden", Boolean.class, false);
             return new Dict()
                 .set("type", "index")
                 .set("modified", Objects.requireNonNullElse(idx.modified(), new Date()))
                 .set("paths", Array.from(idx.paths(path, hidden)));
-        } else if (obj instanceof Binary) {
-            Binary data = (Binary) obj;
+        } else if (obj instanceof Binary b) {
             Dict dict = new Dict()
                 .set("type", "file")
                 .set("path", path)
                 .set("name", path.name())
-                .set("mimeType", data.mimeType())
-                .set("modified", new Date(data.lastModified()))
-                .set("size", data.size());
+                .set("mimeType", b.mimeType())
+                .set("modified", new Date(b.lastModified()))
+                .set("size", b.size());
             if (opts.get("computed", Boolean.class, false)) {
-                try (InputStream is = data.openStream()) {
-                    if (Mime.isText(data.mimeType())) {
+                try (InputStream is = b.openStream()) {
+                    if (Mime.isText(b.mimeType())) {
                         dict.set("_text", FileUtil.readText(is));
                     } else {
                         dict.set("_data", Base64.getEncoder().encodeToString(is.readAllBytes()));

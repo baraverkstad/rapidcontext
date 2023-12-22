@@ -115,16 +115,16 @@ public class YamlSerializer {
      * @return the YAML-serializable representation
      */
     private static Object toYaml(Object obj) {
-        if (obj instanceof Dict) {
-            return toYaml((Dict) obj);
-        } else if (obj instanceof Array) {
-            return toYaml((Array) obj);
-        } else if (obj instanceof Map) {
-            return toYaml(Dict.from((Map<?, ?>) obj));
-        } else if (obj instanceof Iterable) {
-            return toYaml(Array.from((Iterable<?>) obj));
-        } else if (obj instanceof Date) {
-            return DateUtil.asEpochMillis((Date) obj);
+        if (obj instanceof Dict d) {
+            return toYaml(d);
+        } else if (obj instanceof Array a) {
+            return toYaml(a);
+        } else if (obj instanceof Map<?,?> m) {
+            return toYaml(Dict.from(m));
+        } else if (obj instanceof Iterable<?> i) {
+            return toYaml(Array.from(i));
+        } else if (obj instanceof Date dt) {
+            return DateUtil.asEpochMillis(dt);
         } else if (obj == null || obj instanceof Boolean || obj instanceof Number) {
             return obj;
         } else {
@@ -203,12 +203,12 @@ public class YamlSerializer {
      */
     @SuppressWarnings("unchecked")
     private static Object fromYaml(Object obj) {
-        if (obj instanceof Map) {
-            return fromYaml((Map<Object, Object>) obj);
-        } else if (obj instanceof List) {
-            return fromYaml((List<Object>) obj);
-        } else if (obj instanceof String) {
-            return fromYaml((String) obj);
+        if (obj instanceof Map<?,?> m) {
+            return fromYaml(m);
+        } else if (obj instanceof List<?> l) {
+            return fromYaml(l);
+        } else if (obj instanceof String s) {
+            return fromYaml(s);
         } else {
             return obj;
         }
@@ -221,7 +221,7 @@ public class YamlSerializer {
      *
      * @return the Dict containing the map data
      */
-    private static Dict fromYaml(Map<Object, Object> map) {
+    private static Dict fromYaml(Map<?,?> map) {
         Dict dict = new Dict(map.size());
         for (var entry : map.entrySet()) {
             dict.set(Objects.toString(entry.getKey()), fromYaml(entry.getValue()));
@@ -236,7 +236,7 @@ public class YamlSerializer {
      *
      * @return the Array containing the list data
      */
-    private static Array fromYaml(List<Object> list) {
+    private static Array fromYaml(List<?> list) {
         Array arr = new Array(list.size());
         for (Object item : list) {
             arr.add(fromYaml(item));
