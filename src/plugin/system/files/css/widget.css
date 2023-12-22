@@ -99,6 +99,9 @@
     -webkit-user-select: none;
     user-select: none;
 }
+.widgetDialog.system > .widgetDialogTitle {
+    background: #06293a;
+}
 .widgetDialog.danger > .widgetDialogTitle {
     background: linear-gradient(to right, var(--danger-700), var(--danger-500));
 }

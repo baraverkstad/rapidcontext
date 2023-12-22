@@ -113,7 +113,7 @@
       </div>
     </Form>
   </Dialog>
-  <Dialog id="about" title="About RapidContext" modal="true" resizeable="false" class="about" style="width: 35rem;">
+  <Dialog id="about" title="About RapidContext" system="true" resizeable="false" class="about" style="width: 35rem;">
     <div class="header position-absolute top-0 left-0 right-0 py-3">
       <div class="center">
         <a href="https://www.rapidcontext.com/" target="_blank" class="logotype" style="margin-left: 3em;">

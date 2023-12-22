@@ -211,6 +211,7 @@ RapidContext.Widget.Dialog.prototype.setAttrs = function (attrs) {
     }
     if ("system" in attrs) {
         attrs.system = RapidContext.Data.bool(attrs.system);
+        this.classList.toggle("system", attrs.system);
     }
     if ("center" in attrs) {
         attrs.center = RapidContext.Data.bool(attrs.center);
