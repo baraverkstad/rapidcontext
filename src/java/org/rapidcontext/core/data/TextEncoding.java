@@ -75,20 +75,14 @@ public enum TextEncoding {
      *         an empty string if input was null
      */
     public static String encode(TextEncoding encoding, String str) {
-        switch (encoding) {
-        case ASCII:
-            return encodeAscii(str, false);
-        case PROPERTIES:
-            return encodeProperty(str, false);
-        case JSON:
-            return encodeJson(str);
-        case XML:
-            return encodeXml(str, false);
-        case URL:
-            return encodeUrl(str);
-        default:
-            return str;
-        }
+        return switch (encoding) {
+            case ASCII -> encodeAscii(str, false);
+            case PROPERTIES -> encodeProperty(str, false);
+            case JSON -> encodeJson(str);
+            case XML -> encodeXml(str, false);
+            case URL -> encodeUrl(str);
+            default -> str;
+        };
     }
 
     /**
@@ -106,14 +100,10 @@ public enum TextEncoding {
         StringBuilder buffer = new StringBuilder();
         for (int i = 0; str != null && i < str.length(); i ++) {
             char c = str.charAt(i);
-            switch (c) {
-            case '\n':
-            case '\r':
-                buffer.append(linebreaks ? c : ' ');
-                break;
-            default:
-                buffer.append(CharUtils.isAsciiPrintable(c) ? c : ' ');
-            }
+            buffer.append(switch (c) {
+                case '\n', '\r' -> linebreaks ? c : ' ';
+                default -> CharUtils.isAsciiPrintable(c) ? c : ' ';
+            });
         }
         return buffer.toString();
     }

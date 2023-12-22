@@ -137,16 +137,12 @@ public class MovingSum {
      */
     public double valueFor(Interval interval) {
         double ratio = (time % interval.millis) / (double) interval.millis;
-        switch (interval) {
-        case HOUR:
-            return h0 + h1 * (1 - ratio);
-        case DAY:
-            return d0 + d1 * (1 - ratio);
-        case MONTH:
-            return m0 + m1 * (1 - ratio);
-        default:
-            return 0.0;
-        }
+        return switch (interval) {
+            case HOUR -> h0 + h1 * (1 - ratio);
+            case DAY -> d0 + d1 * (1 - ratio);
+            case MONTH -> m0 + m1 * (1 - ratio);
+            default -> 0.0;
+        };
     }
 
     /**

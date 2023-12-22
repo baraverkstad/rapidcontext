@@ -82,18 +82,13 @@ public class Bindings {
      * @throws ProcedureException if the binding type is invalid
      */
     private static String toTypeName(int type) throws ProcedureException {
-        switch (type) {
-        case DATA:
-            return "data";
-        case PROCEDURE:
-            return "procedure";
-        case CONNECTION:
-            return "connection";
-        case ARGUMENT:
-            return "argument";
-        default:
-            throw new ProcedureException("invalid binding type number: " + type);
-        }
+        return switch (type) {
+            case DATA -> "data";
+            case PROCEDURE -> "procedure";
+            case CONNECTION -> "connection";
+            case ARGUMENT -> "argument";
+            default -> throw new ProcedureException("invalid binding type number: " + type);
+        };
     }
 
     /**

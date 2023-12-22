@@ -127,18 +127,12 @@ public class LogWebService extends WebService {
      * @return the java.util.logging log level
      */
     private static Level logLevel(String level) {
-        switch (level.toLowerCase()) {
-        case "err":
-        case "error":
-            return Level.SEVERE;
-        case "warn":
-        case "warning":
-            return Level.WARNING;
-        case "info":
-            return Level.INFO;
-        default:
-            return Level.FINE;
-        }
+        return switch (level.toLowerCase()) {
+            case "err", "error" -> Level.SEVERE;
+            case "warn", "warning" -> Level.WARNING;
+            case "info" -> Level.INFO;
+            default -> Level.FINE;
+        };
     }
 
     /**

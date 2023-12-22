@@ -118,16 +118,12 @@ public class MovingAverage {
      * @return the approximate average for the specified window
      */
     public double valueFor(Window window) {
-        switch (window) {
-        case SHORT:
-            return s;
-        case MEDIUM:
-            return m;
-        case LONG:
-            return l;
-        default:
-            return 0.0;
-        }
+        return switch (window) {
+            case SHORT -> s;
+            case MEDIUM -> m;
+            case LONG -> l;
+            default -> 0.0;
+        };
     }
 
     /**
