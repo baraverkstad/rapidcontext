@@ -64,7 +64,7 @@ import org.apache.commons.lang3.time.FastDateFormat;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class LogFileHandler extends StreamHandler {
+public final class LogFileHandler extends StreamHandler {
 
     // The UTC time zone
     private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
