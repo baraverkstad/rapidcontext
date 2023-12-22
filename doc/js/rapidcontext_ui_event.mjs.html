@@ -1,0 +1,312 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="JsDoc" />
+    <link rel="stylesheet" href="../css/style.css" type="text/css">
+    <link rel="stylesheet" href="../css/doc.css" type="text/css">
+    <link rel="stylesheet" href="../css/font-awesome-4.7.0.min.css" type="text/css">
+    <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="../images/logotype-icon.ico">
+    <link rel="icon" type="image/png" sizes="256x256" href="../images/logotype-icon-256x256.png">
+    <link rel="apple-touch-icon" sizes="256x256" href="../images/logotype-icon-256x256.png">
+    <title>RapidContext :: JavaScript API</title>
+  </head>
+  <body class="doc">
+
+    <section class="header">
+      <div class="center">
+        <a href="https://www.rapidcontext.com/" class="logotype">
+          <img src="../images/logotype.png" />
+        </a>
+        <div class="text">
+          <a href="https://www.rapidcontext.com/">
+            <span style="font-size: 3.6em;">RapidContext</span><br>
+            <span style="font-size: 1.75em; color: #caf3ff;">Access &#183; Discovery &#183; Insight</span><br>
+            <span style="font-size: 1.3em; letter-spacing: 0.34em; line-height: 1.8em;">www.rapidcontext.com</span>
+          </a>
+        </div>
+      </div>
+      <div class="menu">
+        <a href="https://www.rapidcontext.com/doc/index.html">Docs</a>
+        &bull; <a href="https://github.com/cederberg/rapidcontext/releases">Downloads</a>
+        &bull; <a href="https://github.com/cederberg/rapidcontext">Project</a>
+      </div>
+    </section>
+
+    <section class="content center">
+      <ol class="breadcrumb">
+        <li><a href="../index.html">Documentation</a></li>
+
+        <li><a href="index.html">JavaScript API</a></li>
+        <li class="active">rapidcontext/ui/event.mjs</li>
+
+      </ol>
+
+      <div class="jsdoc">
+        <h1 class="classTitle">Source rapidcontext/ui/event.mjs</h1>
+
+
+
+
+    <section>
+        <article>
+            <pre><code class="hljs language-js"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
+<span id="line2" class="lineno">2</span> * RapidContext &lt;https://www.rapidcontext.com/&gt;
+<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2023 Per Cederberg. All rights reserved.
+<span id="line4" class="lineno">4</span> *
+<span id="line5" class="lineno">5</span> * This program is free software: you can redistribute it and/or
+<span id="line6" class="lineno">6</span> * modify it under the terms of the BSD license.
+<span id="line7" class="lineno">7</span> *
+<span id="line8" class="lineno">8</span> * This program is distributed in the hope that it will be useful,
+<span id="line9" class="lineno">9</span> * but WITHOUT ANY WARRANTY; without even the implied warranty of
+<span id="line10" class="lineno">10</span> * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+<span id="line11" class="lineno">11</span> *
+<span id="line12" class="lineno">12</span> * See the RapidContext LICENSE for more details.
+<span id="line13" class="lineno">13</span> */</span>
+<span id="line14" class="lineno">14</span>
+<span id="line15" class="lineno">15</span><span class="hljs-keyword">let</span> listeners = [];
+<span id="line16" class="lineno">16</span>
+<span id="line17" class="lineno">17</span><span class="hljs-comment">/**
+<span id="line18" class="lineno">18</span> * Provides simplified event handling for DOM nodes. Used as a
+<span id="line19" class="lineno">19</span> * mixin into RapidContext.Widget instances and similar, but also
+<span id="line20" class="lineno">20</span> * provides static versions of the same functions.
+<span id="line21" class="lineno">21</span> *
+<span id="line22" class="lineno">22</span> * <span class="hljs-doctag">@class</span> RapidContext.UI.Event
+<span id="line23" class="lineno">23</span> */</span>
+<span id="line24" class="lineno">24</span><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Event</span> {
+<span id="line25" class="lineno">25</span>
+<span id="line26" class="lineno">26</span>    <span class="hljs-comment">/**
+<span id="line27" class="lineno">27</span>     * Dispatches a single event from this DOM node. Also creates
+<span id="line28" class="lineno">28</span>     * a new CustomEvent instance if needed.
+<span id="line29" class="lineno">29</span>     *
+<span id="line30" class="lineno">30</span>     * <span class="hljs-doctag">@method</span> <span class="hljs-variable">emit</span>
+<span id="line31" class="lineno">31</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.UI.Event.prototype
+<span id="line32" class="lineno">32</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string/Event</span>} event the event type name or instance
+<span id="line33" class="lineno">33</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Object</span>} [opts] the event options
+<span id="line34" class="lineno">34</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">boolean</span>} [opts.async=true] the async dispatch flag
+<span id="line35" class="lineno">35</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">boolean</span>} [opts.bubbles=false] the event bubbles flag
+<span id="line36" class="lineno">36</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">boolean</span>} [opts.cancelable=false] the cancellable event flag
+<span id="line37" class="lineno">37</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Object</span>} [opts.detail] the additional event details
+<span id="line38" class="lineno">38</span>     * <span class="hljs-doctag">@return</span> {<span class="hljs-type">boolean</span>} `true` if event was async or not cancelled
+<span id="line39" class="lineno">39</span>     */</span>
+<span id="line40" class="lineno">40</span>    <span class="hljs-title function_">emit</span>(<span class="hljs-params">event, opts</span>) {
+<span id="line41" class="lineno">41</span>        <span class="hljs-keyword">return</span> <span class="hljs-title function_">emit</span>(<span class="hljs-variable language_">this</span>, event, opts);
+<span id="line42" class="lineno">42</span>    }
+<span id="line43" class="lineno">43</span>
+<span id="line44" class="lineno">44</span>    <span class="hljs-comment">/**
+<span id="line45" class="lineno">45</span>     * Attaches a listener function for one or more events.
+<span id="line46" class="lineno">46</span>     *
+<span id="line47" class="lineno">47</span>     * <span class="hljs-doctag">@method</span> <span class="hljs-variable">on</span>
+<span id="line48" class="lineno">48</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.UI.Event.prototype
+<span id="line49" class="lineno">49</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} event the event type name (or space separated names)
+<span id="line50" class="lineno">50</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} [selector] the CSS selector to match for event target
+<span id="line51" class="lineno">51</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">function</span>} listener the event handler function (or `false`)
+<span id="line52" class="lineno">52</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Object</span>} [opts] the event listener options (see addEventListener)
+<span id="line53" class="lineno">53</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">number</span>} [opts.delay] an inactivity delay before calling listener
+<span id="line54" class="lineno">54</span>     * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Node</span>} the input DOM node (for chaining calls)
+<span id="line55" class="lineno">55</span>     */</span>
+<span id="line56" class="lineno">56</span>    <span class="hljs-title function_">on</span>(<span class="hljs-params">event, selector, listener, opts</span>) {
+<span id="line57" class="lineno">57</span>        <span class="hljs-keyword">return</span> <span class="hljs-title function_">on</span>(<span class="hljs-variable language_">this</span>, event, selector, listener, opts);
+<span id="line58" class="lineno">58</span>    }
+<span id="line59" class="lineno">59</span>
+<span id="line60" class="lineno">60</span>    <span class="hljs-comment">/**
+<span id="line61" class="lineno">61</span>     * Attaches a single event listener function. The listener will
+<span id="line62" class="lineno">62</span>     * be removed the first time an event is triggered.
+<span id="line63" class="lineno">63</span>     *
+<span id="line64" class="lineno">64</span>     * <span class="hljs-doctag">@method</span> <span class="hljs-variable">once</span>
+<span id="line65" class="lineno">65</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.UI.Event.prototype
+<span id="line66" class="lineno">66</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} event the event type name (or space separated names)
+<span id="line67" class="lineno">67</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} [selector] the CSS selector to match for event target
+<span id="line68" class="lineno">68</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">function</span>} listener the event handler function (or `false`)
+<span id="line69" class="lineno">69</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Object</span>} [opts] the event listener options (see addEventListener)
+<span id="line70" class="lineno">70</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">number</span>} [opts.delay] an inactivity delay before calling listener
+<span id="line71" class="lineno">71</span>     * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Node</span>} the input DOM node (for chaining calls)
+<span id="line72" class="lineno">72</span>     */</span>
+<span id="line73" class="lineno">73</span>    <span class="hljs-title function_">once</span>(<span class="hljs-params">event, selector, listener, opts</span>) {
+<span id="line74" class="lineno">74</span>        <span class="hljs-keyword">return</span> <span class="hljs-title function_">once</span>(<span class="hljs-variable language_">this</span>, event, selector, listener, opts);
+<span id="line75" class="lineno">75</span>    }
+<span id="line76" class="lineno">76</span>
+<span id="line77" class="lineno">77</span>    <span class="hljs-comment">/**
+<span id="line78" class="lineno">78</span>     * Removes one or more previously attached event listeners. If
+<span id="line79" class="lineno">79</span>     * no event details or listeners are specified, all matching
+<span id="line80" class="lineno">80</span>     * handlers are removed.
+<span id="line81" class="lineno">81</span>     *
+<span id="line82" class="lineno">82</span>     * <span class="hljs-doctag">@method</span> <span class="hljs-variable">off</span>
+<span id="line83" class="lineno">83</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.UI.Event.prototype
+<span id="line84" class="lineno">84</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} [event] the event type name (or space separated names)
+<span id="line85" class="lineno">85</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} [selector] the CSS selector to match for event target
+<span id="line86" class="lineno">86</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">function</span>} [listener] the event handler function (or `false`)
+<span id="line87" class="lineno">87</span>     * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Node</span>} the input DOM node (for chaining calls)
+<span id="line88" class="lineno">88</span>     */</span>
+<span id="line89" class="lineno">89</span>    <span class="hljs-title function_">off</span>(<span class="hljs-params">event, selector, listener</span>) {
+<span id="line90" class="lineno">90</span>        <span class="hljs-keyword">return</span> <span class="hljs-title function_">off</span>(<span class="hljs-variable language_">this</span>, event, selector, listener);
+<span id="line91" class="lineno">91</span>    }
+<span id="line92" class="lineno">92</span>}
+<span id="line93" class="lineno">93</span>
+<span id="line94" class="lineno">94</span><span class="hljs-comment">/**
+<span id="line95" class="lineno">95</span> * Dispatches a single event for a DOM node. Also creates a new
+<span id="line96" class="lineno">96</span> * CustomEvent instance if needed.
+<span id="line97" class="lineno">97</span> *
+<span id="line98" class="lineno">98</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Node</span>} src the DOM node emitting the event
+<span id="line99" class="lineno">99</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string/Event</span>} event the event type name or instance
+<span id="line100" class="lineno">100</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Object</span>} [opts] the event options
+<span id="line101" class="lineno">101</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">boolean</span>} [opts.async=true] the async dispatch flag
+<span id="line102" class="lineno">102</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">boolean</span>} [opts.bubbles=false] the event bubbles flag
+<span id="line103" class="lineno">103</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">boolean</span>} [opts.cancelable=false] the cancellable event flag
+<span id="line104" class="lineno">104</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Object</span>} [opts.detail] the additional event details
+<span id="line105" class="lineno">105</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">boolean</span>} `true` if event was async or not cancelled
+<span id="line106" class="lineno">106</span> * <span class="hljs-doctag">@function</span> RapidContext.UI.Event.emit
+<span id="line107" class="lineno">107</span> */</span>
+<span id="line108" class="lineno">108</span><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">emit</span>(<span class="hljs-params">src, event, opts</span>) {
+<span id="line109" class="lineno">109</span>    opts = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>({ <span class="hljs-attr">async</span>: <span class="hljs-literal">true</span> }, opts);
+<span id="line110" class="lineno">110</span>    event = (event <span class="hljs-keyword">instanceof</span> <span class="hljs-variable language_">window</span>.<span class="hljs-property">Event</span>) ? event : <span class="hljs-keyword">new</span> <span class="hljs-title class_">CustomEvent</span>(event, opts);
+<span id="line111" class="lineno">111</span>    <span class="hljs-keyword">if</span> (opts.<span class="hljs-property">async</span>) {
+<span id="line112" class="lineno">112</span>        <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> src.<span class="hljs-title function_">dispatchEvent</span>(event));
+<span id="line113" class="lineno">113</span>        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+<span id="line114" class="lineno">114</span>    } <span class="hljs-keyword">else</span> {
+<span id="line115" class="lineno">115</span>        <span class="hljs-keyword">return</span> src.<span class="hljs-title function_">dispatchEvent</span>(event);
+<span id="line116" class="lineno">116</span>    }
+<span id="line117" class="lineno">117</span>}
+<span id="line118" class="lineno">118</span>
+<span id="line119" class="lineno">119</span><span class="hljs-comment">/**
+<span id="line120" class="lineno">120</span> * Attaches a listener function for one or more events.
+<span id="line121" class="lineno">121</span> *
+<span id="line122" class="lineno">122</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Node</span>} src the DOM node when event handler is attached
+<span id="line123" class="lineno">123</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} event the event type name (or space separated names)
+<span id="line124" class="lineno">124</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} [selector] the CSS selector to match for event target
+<span id="line125" class="lineno">125</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">function</span>} listener the event handler function (or `false`)
+<span id="line126" class="lineno">126</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Object</span>} [opts] the event listener options (see addEventListener)
+<span id="line127" class="lineno">127</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">number</span>} [opts.delay] an inactivity delay before calling listener
+<span id="line128" class="lineno">128</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Node</span>} the input DOM node (for chaining calls)
+<span id="line129" class="lineno">129</span> * <span class="hljs-doctag">@function</span> RapidContext.UI.Event.on
+<span id="line130" class="lineno">130</span> */</span>
+<span id="line131" class="lineno">131</span><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">on</span>(<span class="hljs-params">src, event, selector, listener, opts</span>) {
+<span id="line132" class="lineno">132</span>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">typeof</span>(selector) == <span class="hljs-string">&#x27;function&#x27;</span>) {
+<span id="line133" class="lineno">133</span>        opts = <span class="hljs-variable language_">arguments</span>[<span class="hljs-number">3</span>];
+<span id="line134" class="lineno">134</span>        listener = <span class="hljs-variable language_">arguments</span>[<span class="hljs-number">2</span>];
+<span id="line135" class="lineno">135</span>        selector = <span class="hljs-literal">null</span>;
+<span id="line136" class="lineno">136</span>    }
+<span id="line137" class="lineno">137</span>    <span class="hljs-keyword">let</span> handler = (listener === <span class="hljs-literal">false</span>) ? stop : listener;
+<span id="line138" class="lineno">138</span>    <span class="hljs-keyword">if</span> (opts &amp;&amp; opts.<span class="hljs-property">delay</span>) {
+<span id="line139" class="lineno">139</span>        handler = <span class="hljs-title function_">debounce</span>(opts.<span class="hljs-property">delay</span>, handler);
+<span id="line140" class="lineno">140</span>    }
+<span id="line141" class="lineno">141</span>    <span class="hljs-keyword">if</span> (selector) {
+<span id="line142" class="lineno">142</span>        handler = delegate.<span class="hljs-title function_">bind</span>(<span class="hljs-literal">null</span>, selector, handler);
+<span id="line143" class="lineno">143</span>    }
+<span id="line144" class="lineno">144</span>    <span class="hljs-keyword">let</span> arr = <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(event) ? event : event.<span class="hljs-title function_">split</span>(<span class="hljs-regexp">/\s+/g</span>);
+<span id="line145" class="lineno">145</span>    arr.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">event</span>) =&gt;</span> {
+<span id="line146" class="lineno">146</span>        src.<span class="hljs-title function_">addEventListener</span>(event, handler, opts);
+<span id="line147" class="lineno">147</span>        listeners.<span class="hljs-title function_">push</span>({ src, event, selector, listener, handler, opts });
+<span id="line148" class="lineno">148</span>    });
+<span id="line149" class="lineno">149</span>    <span class="hljs-keyword">return</span> src;
+<span id="line150" class="lineno">150</span>}
+<span id="line151" class="lineno">151</span>
+<span id="line152" class="lineno">152</span><span class="hljs-comment">/**
+<span id="line153" class="lineno">153</span> * Attaches a single event listener function. The listener will
+<span id="line154" class="lineno">154</span> * be removed the first time an event is triggered.
+<span id="line155" class="lineno">155</span> *
+<span id="line156" class="lineno">156</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Node</span>} src the DOM node when event handler is attached
+<span id="line157" class="lineno">157</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} event the event type name (or space separated names)
+<span id="line158" class="lineno">158</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} [selector] the CSS selector to match for event target
+<span id="line159" class="lineno">159</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">function</span>} listener the event handler function (or `false`)
+<span id="line160" class="lineno">160</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Object</span>} [opts] the event listener options (see addEventListener)
+<span id="line161" class="lineno">161</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">number</span>} [opts.delay] an inactivity delay before calling listener
+<span id="line162" class="lineno">162</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Node</span>} the input DOM node (for chaining calls)
+<span id="line163" class="lineno">163</span> * <span class="hljs-doctag">@function</span> RapidContext.UI.Event.once
+<span id="line164" class="lineno">164</span> */</span>
+<span id="line165" class="lineno">165</span><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">once</span>(<span class="hljs-params">src, event, selector, listener, opts</span>) {
+<span id="line166" class="lineno">166</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">handler</span>(<span class="hljs-params">evt</span>) {
+<span id="line167" class="lineno">167</span>        <span class="hljs-title function_">off</span>(src, event, selector, handler);
+<span id="line168" class="lineno">168</span>        listener.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, evt);
+<span id="line169" class="lineno">169</span>    }
+<span id="line170" class="lineno">170</span>    <span class="hljs-keyword">return</span> <span class="hljs-title function_">on</span>(src, event, selector, handler, opts);
+<span id="line171" class="lineno">171</span>}
+<span id="line172" class="lineno">172</span>
+<span id="line173" class="lineno">173</span><span class="hljs-comment">/**
+<span id="line174" class="lineno">174</span> * Removes one or more previously attached event listeners. If
+<span id="line175" class="lineno">175</span> * no event details or listeners are specified, all matching
+<span id="line176" class="lineno">176</span> * handlers are removed.
+<span id="line177" class="lineno">177</span> *
+<span id="line178" class="lineno">178</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Node</span>} src the DOM node when event handler is attached
+<span id="line179" class="lineno">179</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} [event] the event type name (or space separated names)
+<span id="line180" class="lineno">180</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} [selector] the CSS selector to match for event target
+<span id="line181" class="lineno">181</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">function</span>} [listener] the event handler function (or `false`)
+<span id="line182" class="lineno">182</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Node</span>} the input DOM node (for chaining calls)
+<span id="line183" class="lineno">183</span> * <span class="hljs-doctag">@function</span> RapidContext.UI.Event.off
+<span id="line184" class="lineno">184</span> */</span>
+<span id="line185" class="lineno">185</span><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">off</span>(<span class="hljs-params">src, event, selector, listener</span>) {
+<span id="line186" class="lineno">186</span>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">typeof</span>(selector) == <span class="hljs-string">&#x27;function&#x27;</span>) {
+<span id="line187" class="lineno">187</span>        listener = <span class="hljs-variable language_">arguments</span>[<span class="hljs-number">2</span>];
+<span id="line188" class="lineno">188</span>        selector = <span class="hljs-literal">null</span>;
+<span id="line189" class="lineno">189</span>    }
+<span id="line190" class="lineno">190</span>    <span class="hljs-keyword">let</span> arr = (event == <span class="hljs-literal">null</span> || <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(event)) ? event : event.<span class="hljs-title function_">split</span>(<span class="hljs-regexp">/\s+/g</span>);
+<span id="line191" class="lineno">191</span>    <span class="hljs-keyword">let</span> matches = listeners.<span class="hljs-title function_">filter</span>(<span class="hljs-function">(<span class="hljs-params">l</span>) =&gt;</span> {
+<span id="line192" class="lineno">192</span>        <span class="hljs-keyword">return</span> src === l.<span class="hljs-property">src</span> &amp;&amp;
+<span id="line193" class="lineno">193</span>               (arr == <span class="hljs-literal">null</span> || arr.<span class="hljs-title function_">includes</span>(l.<span class="hljs-property">event</span>)) &amp;&amp;
+<span id="line194" class="lineno">194</span>               (selector == <span class="hljs-literal">null</span> || selector === l.<span class="hljs-property">selector</span>) &amp;&amp;
+<span id="line195" class="lineno">195</span>               (listener == <span class="hljs-literal">null</span> || listener === l.<span class="hljs-property">listener</span>);
+<span id="line196" class="lineno">196</span>    });
+<span id="line197" class="lineno">197</span>    matches.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">l</span>) =&gt;</span> {
+<span id="line198" class="lineno">198</span>        src.<span class="hljs-title function_">removeEventListener</span>(l.<span class="hljs-property">event</span>, l.<span class="hljs-property">handler</span>, l.<span class="hljs-property">opts</span>);
+<span id="line199" class="lineno">199</span>        listeners.<span class="hljs-title function_">splice</span>(listeners.<span class="hljs-title function_">indexOf</span>(l), <span class="hljs-number">1</span>);
+<span id="line200" class="lineno">200</span>    });
+<span id="line201" class="lineno">201</span>    <span class="hljs-keyword">return</span> src;
+<span id="line202" class="lineno">202</span>}
+<span id="line203" class="lineno">203</span>
+<span id="line204" class="lineno">204</span><span class="hljs-keyword">function</span> <span class="hljs-title function_">parents</span>(<span class="hljs-params">el, ancestor</span>) {
+<span id="line205" class="lineno">205</span>    <span class="hljs-keyword">let</span> path = [];
+<span id="line206" class="lineno">206</span>    <span class="hljs-keyword">for</span> (; el &amp;&amp; el !== ancestor; el = el.<span class="hljs-property">parentElement</span>) {
+<span id="line207" class="lineno">207</span>        path.<span class="hljs-title function_">push</span>(el);
+<span id="line208" class="lineno">208</span>    }
+<span id="line209" class="lineno">209</span>    el &amp;&amp; path.<span class="hljs-title function_">push</span>(el);
+<span id="line210" class="lineno">210</span>    <span class="hljs-keyword">return</span> path;
+<span id="line211" class="lineno">211</span>}
+<span id="line212" class="lineno">212</span>
+<span id="line213" class="lineno">213</span><span class="hljs-keyword">function</span> <span class="hljs-title function_">delegate</span>(<span class="hljs-params">selector, listener, evt</span>) {
+<span id="line214" class="lineno">214</span>    <span class="hljs-keyword">let</span> <span class="hljs-title function_">isMatch</span> = (<span class="hljs-params">el</span>) =&gt; el.<span class="hljs-title function_">matches</span>(selector);
+<span id="line215" class="lineno">215</span>    <span class="hljs-keyword">let</span> <span class="hljs-title function_">forward</span> = (<span class="hljs-params">el</span>) =&gt; {
+<span id="line216" class="lineno">216</span>        <span class="hljs-keyword">try</span> {
+<span id="line217" class="lineno">217</span>            evt.<span class="hljs-property">delegateTarget</span> = el;
+<span id="line218" class="lineno">218</span>            listener.<span class="hljs-title function_">call</span>(evt.<span class="hljs-property">currentTarget</span>, evt);
+<span id="line219" class="lineno">219</span>        } <span class="hljs-keyword">finally</span> {
+<span id="line220" class="lineno">220</span>            <span class="hljs-keyword">delete</span> evt.<span class="hljs-property">delegateTarget</span>;
+<span id="line221" class="lineno">221</span>        }
+<span id="line222" class="lineno">222</span>    };
+<span id="line223" class="lineno">223</span>    <span class="hljs-title function_">parents</span>(evt.<span class="hljs-property">target</span>, evt.<span class="hljs-property">currentTarget</span>).<span class="hljs-title function_">filter</span>(isMatch).<span class="hljs-title function_">forEach</span>(forward);
+<span id="line224" class="lineno">224</span>}
+<span id="line225" class="lineno">225</span>
+<span id="line226" class="lineno">226</span><span class="hljs-keyword">function</span> <span class="hljs-title function_">stop</span>(<span class="hljs-params">evt</span>) {
+<span id="line227" class="lineno">227</span>    evt.<span class="hljs-title function_">preventDefault</span>();
+<span id="line228" class="lineno">228</span>    evt.<span class="hljs-title function_">stopImmediatePropagation</span>();
+<span id="line229" class="lineno">229</span>}
+<span id="line230" class="lineno">230</span>
+<span id="line231" class="lineno">231</span><span class="hljs-keyword">function</span> <span class="hljs-title function_">debounce</span>(<span class="hljs-params">delay, fn, thisObj</span>) {
+<span id="line232" class="lineno">232</span>    <span class="hljs-keyword">let</span> timer;
+<span id="line233" class="lineno">233</span>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line234" class="lineno">234</span>        <span class="hljs-built_in">clearTimeout</span>(timer);
+<span id="line235" class="lineno">235</span>        timer = <span class="hljs-built_in">setTimeout</span>(fn.<span class="hljs-title function_">bind</span>(thisObj || <span class="hljs-variable language_">this</span>, <span class="hljs-variable language_">arguments</span>), delay);
+<span id="line236" class="lineno">236</span>    };
+<span id="line237" class="lineno">237</span>}
+<span id="line238" class="lineno">238</span>
+<span id="line239" class="lineno">239</span><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(<span class="hljs-title class_">Event</span>, { on, once, off, emit });
+<span id="line240" class="lineno">240</span></code></pre>
+        </article>
+    </section>
+
+
+
+
+
+      </div>
+    </section>
+
+    <section class="footer center fineprint">
+      <hr>
+      Copyright &copy; 2007-2023 Per Cederberg. All rights reserved.
+    </section>
+
+  </body>
+</html>

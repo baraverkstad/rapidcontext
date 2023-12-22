@@ -1,0 +1,2328 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="JsDoc" />
+    <link rel="stylesheet" href="../css/style.css" type="text/css">
+    <link rel="stylesheet" href="../css/doc.css" type="text/css">
+    <link rel="stylesheet" href="../css/font-awesome-4.7.0.min.css" type="text/css">
+    <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="../images/logotype-icon.ico">
+    <link rel="icon" type="image/png" sizes="256x256" href="../images/logotype-icon-256x256.png">
+    <link rel="apple-touch-icon" sizes="256x256" href="../images/logotype-icon-256x256.png">
+    <title>RapidContext :: JavaScript API</title>
+  </head>
+  <body class="doc">
+
+    <section class="header">
+      <div class="center">
+        <a href="https://www.rapidcontext.com/" class="logotype">
+          <img src="../images/logotype.png" />
+        </a>
+        <div class="text">
+          <a href="https://www.rapidcontext.com/">
+            <span style="font-size: 3.6em;">RapidContext</span><br>
+            <span style="font-size: 1.75em; color: #caf3ff;">Access &#183; Discovery &#183; Insight</span><br>
+            <span style="font-size: 1.3em; letter-spacing: 0.34em; line-height: 1.8em;">www.rapidcontext.com</span>
+          </a>
+        </div>
+      </div>
+      <div class="menu">
+        <a href="https://www.rapidcontext.com/doc/index.html">Docs</a>
+        &bull; <a href="https://github.com/cederberg/rapidcontext/releases">Downloads</a>
+        &bull; <a href="https://github.com/cederberg/rapidcontext">Project</a>
+      </div>
+    </section>
+
+    <section class="content center">
+      <ol class="breadcrumb">
+        <li><a href="../index.html">Documentation</a></li>
+
+        <li><a href="index.html">JavaScript API</a></li>
+        <li class="active">RapidContext.Data</li>
+
+      </ol>
+
+      <div class="jsdoc">
+        <h1 class="classTitle">Namespace RapidContext.Data</h1>
+
+
+
+
+<header>
+
+        <h2>Data</h2>
+
+            <div class="description"><p>Provides functions for data conversion, filtering, mapping, etc.</p></div>
+
+
+
+
+
+
+        <table class="summary-table">
+            <caption>Field Summary</caption>
+            <tbody>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature">(static) </span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#.array">array<span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Creates a new array from a collection of elements.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature">(static) </span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#.bool">bool<span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Converts a value to a boolean.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature">(static) </span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#.clone">clone<span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Creates a deep copy of an <code>Array</code> or an <code>Object</code>.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature">(static) </span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#.compare">compare<span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Compares two values to determine relative order.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature">(static) </span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#.filter">filter<span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Filters a collection based on a predicate function.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature">(static) </span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#.flatten">flatten<span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Concatenates nested <code>Array</code> elements into a parent <code>Array</code>.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature">(static) </span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#.get">get<span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Retrieves one or more values from a data structure.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature">(static) </span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#.map">map<span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Applies a function to each item or property in an input collection and
+returns the results.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature">(static) </span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#.object">object<span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Creates a new object from a collection of properties.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature">(static) </span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#.sort">sort<span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Returns a sorted copy of a collection.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature">(static) </span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#.uniq">uniq<span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Returns the unique values of a collection.</div>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+
+
+
+
+
+</header>
+
+<article>
+    <div class="container-overview">
+
+    </div>
+
+
+
+
+
+
+
+
+        <h3 class="section-title">Members</h3>
+
+
+<h4 class="name" id=".array"><span class="type-signature">(static) </span>array<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Creates a new array from a collection of elements. This is similar to
+<code>Array.from()</code>, but also supports iterating over object properties (using
+<code>Object.values()</code>). When more than a single argument is provided, this
+function is similar to <code>Array.of()</code>.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>coll</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Object</b>|<b>Iterable</b>|<b>*</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the elements to include
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>Array</b>}</span>
+
+    a new <code>Array</code> with all the collection elements
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-examples">Example:</dt>
+    <dd class="tag-examples">
+
+    <pre class="hljs"><code><span class="hljs-title function_">array</span>(<span class="hljs-literal">null</span>) <span class="hljs-comment">//==&gt; []</span>
+<span class="hljs-title function_">array</span>({ <span class="hljs-attr">a</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">b</span>: <span class="hljs-number">2</span>, <span class="hljs-attr">c</span>: <span class="hljs-number">3</span> }) <span class="hljs-comment">//==&gt; [1, 2, 3]</span>
+<span class="hljs-title function_">array</span>(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>) <span class="hljs-comment">//==&gt; [1, 2, 3]</span></code></pre>
+
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="rapidcontext_data.mjs.html">rapidcontext/data.mjs</a>, <a href="rapidcontext_data.mjs.html#line42">line 42</a>
+    </dd>
+
+</dl>
+
+
+
+
+<h4 class="name" id=".bool"><span class="type-signature">(static) </span>bool<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Converts a value to a boolean. This is identical to <code>!!val</code>, but also
+converts <code>&quot;null&quot;</code>, <code>&quot;0&quot;</code>, <code>&quot;false&quot;</code>, <code>&quot;off&quot;</code> and similar values to <code>false</code>.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>val</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>*</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the value to convert
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>boolean</b>}</span>
+
+    <code>true</code> or <code>false</code> depending on the value
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-examples">Example:</dt>
+    <dd class="tag-examples">
+
+    <pre class="hljs"><code><span class="hljs-title function_">bool</span>(<span class="hljs-literal">undefined</span>) <span class="hljs-comment">//==&gt; false</span>
+<span class="hljs-title function_">bool</span>(<span class="hljs-string">&#x27;&#x27;</span>) <span class="hljs-comment">//==&gt; false</span>
+<span class="hljs-title function_">bool</span>(<span class="hljs-string">&#x27;FaLsE&#x27;</span>) <span class="hljs-comment">//==&gt; false</span></code></pre>
+
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="rapidcontext_data.mjs.html">rapidcontext/data.mjs</a>, <a href="rapidcontext_data.mjs.html#line24">line 24</a>
+    </dd>
+
+</dl>
+
+
+
+
+<h4 class="name" id=".clone"><span class="type-signature">(static) </span>clone<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Creates a deep copy of an <code>Array</code> or an <code>Object</code>. Nested values will be
+copied recursively. Only plain objects are be copied, others (including
+primitive values) are returned as-is.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>value</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Array</b>|<b>Object</b>|<b>*</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the object or array to copy
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>Array</b>|<b>Object</b>|<b>*</b>}</span>
+
+    a new <code>Array</code> or <code>Object</code> with the same content
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="rapidcontext_data.mjs.html">rapidcontext/data.mjs</a>, <a href="rapidcontext_data.mjs.html#line134">line 134</a>
+    </dd>
+
+</dl>
+
+
+
+
+<h4 class="name" id=".compare"><span class="type-signature">(static) </span>compare<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Compares two values to determine relative order. The return value is a
+number whose sign indicates the relative order: negative if <code>a</code> is less than
+<code>b</code>, positive if <code>a</code> is greater than <code>b</code>, or zero if they are equal. If the
+first argument is a function, it will be used to extract the values to
+compare from the other arguments. Returns a bound function if only a single
+argument is specified.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>valueOf</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>function</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                a function to extract the value
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>a</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>*</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the first value
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>b</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>*</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the second value
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>number</b>|<b>function</b>}</span>
+
+    the test result, or a bound function
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-examples">Examples:</dt>
+    <dd class="tag-examples">
+
+    <pre class="hljs"><code><span class="hljs-title function_">compare</span>(<span class="hljs-number">1</span>, <span class="hljs-number">1</span>) <span class="hljs-comment">//==&gt; 0</span>
+<span class="hljs-title function_">compare</span>(<span class="hljs-number">13</span>, <span class="hljs-number">42</span>) <span class="hljs-comment">//==&gt; -1</span>
+<span class="hljs-title function_">compare</span>(<span class="hljs-string">&#x27;b&#x27;</span>, <span class="hljs-string">&#x27;a&#x27;</span>) <span class="hljs-comment">//==&gt; +1</span></code></pre>
+
+    <pre class="hljs"><code><span class="hljs-title function_">compare</span>(<span class="hljs-function">(<span class="hljs-params">s</span>) =&gt;</span> s.<span class="hljs-title function_">toLowerCase</span>(), <span class="hljs-string">&#x27;Abc&#x27;</span>, <span class="hljs-string">&#x27;aBC&#x27;</span>) <span class="hljs-comment">//==&gt; 0</span></code></pre>
+
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="rapidcontext_data.mjs.html">rapidcontext/data.mjs</a>, <a href="rapidcontext_data.mjs.html#line350">line 350</a>
+    </dd>
+
+</dl>
+
+
+
+
+<h4 class="name" id=".filter"><span class="type-signature">(static) </span>filter<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Filters a collection based on a predicate function. The input collection can
+be either an Array-like object, or a plain object. The predicate function
+<code>fn(val, idx/key, arr/obj)</code> is called for each array item or object
+property. As an alternative to a function, a string query path can be
+specified instead. Returns a new <code>Array</code> or <code>Object</code> depending on the input
+collection. Returns a bound function if only a single argument is specified.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>fn</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>function</b>|<b>string</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the predicate function or query path
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>coll</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>object</b>|<b>Array</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the collection to filter
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>object</b>|<b>Array</b>|<b>function</b>}</span>
+
+    the new collection, or a bound function
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-examples">Example:</dt>
+    <dd class="tag-examples">
+
+    <pre class="hljs"><code><span class="hljs-title function_">filter</span>(<span class="hljs-title class_">Boolean</span>, [<span class="hljs-literal">null</span>, <span class="hljs-literal">undefined</span>, <span class="hljs-literal">true</span>, <span class="hljs-number">0</span>, <span class="hljs-string">&#x27;&#x27;</span>]) <span class="hljs-comment">//==&gt; [true]</span>
+<span class="hljs-title function_">filter</span>(<span class="hljs-title class_">Boolean</span>, { <span class="hljs-attr">a</span>: <span class="hljs-literal">null</span>, <span class="hljs-attr">b</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">c</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">d</span>: <span class="hljs-number">1</span> }) <span class="hljs-comment">//==&gt; { b: true, d: 1 }</span>
+<span class="hljs-title function_">filter</span>(<span class="hljs-string">&#x27;id&#x27;</span>, [<span class="hljs-literal">null</span>, { <span class="hljs-attr">id</span>: <span class="hljs-number">3</span> }, {}, { <span class="hljs-attr">id</span>: <span class="hljs-literal">false</span> }]) <span class="hljs-comment">//==&gt; [3]</span></code></pre>
+
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="rapidcontext_data.mjs.html">rapidcontext/data.mjs</a>, <a href="rapidcontext_data.mjs.html#line194">line 194</a>
+    </dd>
+
+</dl>
+
+
+
+
+<h4 class="name" id=".flatten"><span class="type-signature">(static) </span>flatten<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Concatenates nested <code>Array</code> elements into a parent <code>Array</code>. As an
+alternative, the array elements may be specified as arguments. Only the
+first level of <code>Array</code> elements are flattened by this method. In modern
+environments, consider using <code>Array.prototype.flat()</code> instead.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>arr</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Array</b>|<b>*</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the input array or sequence of elements
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>Array</b>}</span>
+
+    the new flattened <code>Array</code>
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="rapidcontext_data.mjs.html">rapidcontext/data.mjs</a>, <a href="rapidcontext_data.mjs.html#line248">line 248</a>
+    </dd>
+
+</dl>
+
+
+
+
+<h4 class="name" id=".get"><span class="type-signature">(static) </span>get<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Retrieves one or more values from a data structure. The <code>key</code> provides a
+dot-separated query path to traverse the data structure to any depth.
+Wildcard property names are specified as <code>*</code>. Wildcard array elements are
+specified as <code>[]</code>. The path may also be provided as an Array if needed.
+Returns a bound function if only a single argument is specified.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>key</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>|<b>Array</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the value query path
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>val</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>object</b>|<b>Array</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the data structure to traverse
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>number</b>|<b>function</b>}</span>
+
+    the value found, or a bound function
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-examples">Example:</dt>
+    <dd class="tag-examples">
+
+    <pre class="hljs"><code><span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;a.b&#x27;</span>, { <span class="hljs-attr">a</span>: { <span class="hljs-attr">b</span>: <span class="hljs-number">42</span> } }) <span class="hljs-comment">//==&gt; 42</span>
+<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;*.b&#x27;</span>, { <span class="hljs-attr">a</span>: { <span class="hljs-attr">b</span>: <span class="hljs-number">42</span> }, <span class="hljs-attr">c</span>: { <span class="hljs-attr">b</span>: <span class="hljs-number">13</span> } }) <span class="hljs-comment">//==&gt; [42, 13]</span>
+<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;a.*&#x27;</span>, { <span class="hljs-attr">a</span>: { <span class="hljs-attr">b</span>: <span class="hljs-number">42</span> }, <span class="hljs-attr">c</span>: { <span class="hljs-attr">b</span>: <span class="hljs-number">13</span> } }) <span class="hljs-comment">//==&gt; [42]</span>
+<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;[].b&#x27;</span>, [ { <span class="hljs-attr">a</span>: <span class="hljs-number">42</span> }, { <span class="hljs-attr">b</span>: <span class="hljs-number">13</span> }, { <span class="hljs-attr">b</span>: <span class="hljs-number">1</span>} }) <span class="hljs-comment">//==&gt; [13, 1]</span>
+<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;1.b&#x27;</span>, [ { <span class="hljs-attr">a</span>: <span class="hljs-number">42</span> }, { <span class="hljs-attr">b</span>: <span class="hljs-number">13</span> }, { <span class="hljs-attr">b</span>: <span class="hljs-number">1</span>} }) <span class="hljs-comment">//==&gt; 13</span></code></pre>
+
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="rapidcontext_data.mjs.html">rapidcontext/data.mjs</a>, <a href="rapidcontext_data.mjs.html#line152">line 152</a>
+    </dd>
+
+</dl>
+
+
+
+
+<h4 class="name" id=".map"><span class="type-signature">(static) </span>map<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Applies a function to each item or property in an input collection and
+returns the results. The input collection can be either an Array-like
+object, or a plain object. The mapping function <code>fn(val, idx/key, arr/obj)</code>
+is called for each array item or object property. As an alternative to a
+function, a string query path can be specified instead. Returns a new
+<code>Array</code> or <code>Object</code> depending on the input collection. Returns a bound
+function if only a single argument is specified.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>fn</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>function</b>|<b>string</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the mapping function or query path
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>coll</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>object</b>|<b>Array</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the collection to process
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>object</b>|<b>Array</b>|<b>function</b>}</span>
+
+    the new collection, or a bound function
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-examples">Example:</dt>
+    <dd class="tag-examples">
+
+    <pre class="hljs"><code><span class="hljs-title function_">map</span>(<span class="hljs-title class_">Boolean</span>, [<span class="hljs-literal">null</span>, <span class="hljs-literal">true</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-string">&#x27;&#x27;</span>]) <span class="hljs-comment">//==&gt; [false, true, false, true, false]</span>
+<span class="hljs-title function_">map</span>(<span class="hljs-title class_">Boolean</span>, { <span class="hljs-attr">a</span>: <span class="hljs-literal">null</span>, <span class="hljs-attr">b</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">c</span>: <span class="hljs-number">0</span> }) <span class="hljs-comment">//==&gt; { a: false, b: true, c: false }</span>
+<span class="hljs-title function_">map</span>(<span class="hljs-string">&#x27;id&#x27;</span>, [{ <span class="hljs-attr">id</span>: <span class="hljs-number">1</span> }, { <span class="hljs-attr">id</span>: <span class="hljs-number">3</span> }) <span class="hljs-comment">//==&gt; [1, 3]</span></code></pre>
+
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="rapidcontext_data.mjs.html">rapidcontext/data.mjs</a>, <a href="rapidcontext_data.mjs.html#line267">line 267</a>
+    </dd>
+
+</dl>
+
+
+
+
+<h4 class="name" id=".object"><span class="type-signature">(static) </span>object<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Creates a new object from a collection of properties. The properties can be
+specified in a number of ways, either as two separate arrays of keys and
+values, as a single array of key-value pairs, as a object with properties to
+copy, or as a lookup function (or query path). The values can be specified
+as an array, a lookup object, a generator function, or a constant value.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>keys</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Array</b>|<b>Object</b>|<b>function</b>|<b>string</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the object keys or key-pairs
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>values</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Array</b>|<b>Object</b>|<b>function</b>|<b>*</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the values or generator function
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>Object</b>}</span>
+
+    a new <code>Object</code> with the specified properties
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-examples">Example:</dt>
+    <dd class="tag-examples">
+
+    <pre class="hljs"><code><span class="hljs-title function_">object</span>([<span class="hljs-string">&#x27;a&#x27;</span>, <span class="hljs-string">&#x27;b&#x27;</span>], <span class="hljs-literal">true</span>) <span class="hljs-comment">//==&gt; { a: true, b: true }</span>
+<span class="hljs-title function_">object</span>([<span class="hljs-string">&#x27;a&#x27;</span>, <span class="hljs-string">&#x27;b&#x27;</span>], [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>]) <span class="hljs-comment">//==&gt; { a: 1, b: 2 }</span>
+<span class="hljs-title function_">object</span>([<span class="hljs-string">&#x27;a&#x27;</span>, <span class="hljs-string">&#x27;b&#x27;</span>], { <span class="hljs-attr">a</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">b</span>: <span class="hljs-number">2</span>, <span class="hljs-attr">c</span>: <span class="hljs-number">3</span>, <span class="hljs-attr">d</span>: <span class="hljs-number">4</span> }) <span class="hljs-comment">//==&gt; { a: 1, b: 2 }</span>
+<span class="hljs-title function_">object</span>({ <span class="hljs-attr">a</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">b</span>: <span class="hljs-number">2</span> }, <span class="hljs-literal">true</span>) <span class="hljs-comment">//==&gt; { a: true, b: true }</span>
+<span class="hljs-title function_">object</span>(<span class="hljs-string">&#x27;id&#x27;</span>, [{ <span class="hljs-attr">id</span>: <span class="hljs-string">&#x27;a&#x27;</span>, <span class="hljs-attr">val</span>: <span class="hljs-number">1</span> }, ...]) <span class="hljs-comment">//==&gt; { a: { id: &#x27;a&#x27;, val: 1 }, ... }</span></code></pre>
+
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="rapidcontext_data.mjs.html">rapidcontext/data.mjs</a>, <a href="rapidcontext_data.mjs.html#line70">line 70</a>
+    </dd>
+
+</dl>
+
+
+
+
+<h4 class="name" id=".sort"><span class="type-signature">(static) </span>sort<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Returns a sorted copy of a collection. An optional function may be provided
+to extract the value to compare with the other elements. If no function is
+specified, the comparison is made on the elements themselves. Returns a bound
+function if only a single function argument is specified.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>fn</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>function</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the value extract function
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>coll</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Array</b>|<b>Object</b>|<b>Iterable</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the input collection
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>Array</b>|<b>function</b>}</span>
+
+    the new sorted <code>Array</code>, or a bound function
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-examples">Examples:</dt>
+    <dd class="tag-examples">
+
+    <pre class="hljs"><code><span class="hljs-title function_">sort</span>([<span class="hljs-number">3</span>, <span class="hljs-number">2</span>, <span class="hljs-number">1</span>]) <span class="hljs-comment">//==&gt; [1, 2, 3]</span>
+<span class="hljs-title function_">sort</span>(<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;pos&#x27;</span>), [{ <span class="hljs-attr">pos</span>: <span class="hljs-number">3</span> }, { <span class="hljs-attr">pos</span>: <span class="hljs-number">1</span> }]) <span class="hljs-comment">//==&gt; [{ pos: 1 }, { pos: 3 }]</span></code></pre>
+
+    <pre class="hljs"><code><span class="hljs-keyword">const</span> <span class="hljs-title function_">toLower</span> = (<span class="hljs-params">s</span>) =&gt; s.<span class="hljs-title function_">toLowerCase</span>();
+<span class="hljs-keyword">const</span> sortInsensitive = <span class="hljs-title function_">sort</span>(toLower);
+<span class="hljs-title function_">sortInsensitive</span>([<span class="hljs-string">&#x27;b&#x27;</span>, <span class="hljs-string">&#x27;B&#x27;</span>, <span class="hljs-string">&#x27;a&#x27;</span>, <span class="hljs-string">&#x27;aa&#x27;</span>, <span class="hljs-string">&#x27;A&#x27;</span>]) <span class="hljs-comment">//==&gt; [&#x27;a&#x27;, &#x27;A&#x27;, &#x27;aa&#x27;, &#x27;b&#x27;, &#x27;B&#x27;]</span></code></pre>
+
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="rapidcontext_data.mjs.html">rapidcontext/data.mjs</a>, <a href="rapidcontext_data.mjs.html#line386">line 386</a>
+    </dd>
+
+</dl>
+
+
+
+
+<h4 class="name" id=".uniq"><span class="type-signature">(static) </span>uniq<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Returns the unique values of a collection. An optional function may be
+provided to extract the key to compare with the other elements. If no
+function is specified, <code>JSON.stringify</code> is used to determine uniqueness.
+Returns a bound function if only a single function argument is specified.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>fn</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>function</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the comparison key extract function
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>coll</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Array</b>|<b>Object</b>|<b>Iterable</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the input collection
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>Array</b>|<b>function</b>}</span>
+
+    the new <code>Array</code>, or a bound function
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-examples">Example:</dt>
+    <dd class="tag-examples">
+
+    <pre class="hljs"><code><span class="hljs-title function_">uniq</span>([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">3</span>, <span class="hljs-number">2</span>, <span class="hljs-number">1</span>]) <span class="hljs-comment">//==&gt; [1, 2, 3]</span>
+<span class="hljs-title function_">uniq</span>([{ <span class="hljs-attr">a</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">b</span>: <span class="hljs-number">2</span> }, { <span class="hljs-attr">b</span>: <span class="hljs-number">2</span>, <span class="hljs-attr">a</span>: <span class="hljs-number">1</span> }]) <span class="hljs-comment">//==&gt; [{ a: 1, b: 2 }, { b: 2, a: 1 }]</span></code></pre>
+
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="rapidcontext_data.mjs.html">rapidcontext/data.mjs</a>, <a href="rapidcontext_data.mjs.html#line320">line 320</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+
+
+      </div>
+    </section>
+
+    <section class="footer center fineprint">
+      <hr>
+      Copyright &copy; 2007-2023 Per Cederberg. All rights reserved.
+    </section>
+
+  </body>
+</html>

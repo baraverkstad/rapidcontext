@@ -133,16 +133,12 @@
 
 
 
-
-
 </header>
 
 <article>
     <div class="container-overview">
 
     </div>
-
-
 
 
 
@@ -348,7 +344,7 @@ action selected by the user.</p>
             <td class="type">
 
 
-    <span class="param-type">{<b>string</b>}</span>
+    <span class="param-type">{<b>string</b>|<b>Node</b>}</span>
 
 
             </td>
@@ -519,8 +515,9 @@ action selected by the user.</p>
     <pre class="hljs"><code><span class="hljs-keyword">try</span> {
     ...
 } <span class="hljs-keyword">catch</span> (e) {
-    <span class="hljs-keyword">await</span> RapidContext.UI.Msg.error(e.toString());
+    <span class="hljs-keyword">await</span> <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-property">Msg</span>.<span class="hljs-title function_">error</span>(e.<span class="hljs-title function_">toString</span>());
 }</code></pre>
+
 
     </dd>
 
@@ -542,7 +539,7 @@ action selected by the user.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="rapidcontext_ui_msg.js.html">rapidcontext/ui/msg.js</a>, <a href="rapidcontext_ui_msg.js.html#line221">line 221</a>
+        <a href="rapidcontext_ui_msg.mjs.html">rapidcontext/ui/msg.mjs</a>, <a href="rapidcontext_ui_msg.mjs.html#line199">line 199</a>
     </dd>
 
 </dl>
@@ -742,7 +739,7 @@ action selected by the user.</p>
             <td class="type">
 
 
-    <span class="param-type">{<b>string</b>}</span>
+    <span class="param-type">{<b>string</b>|<b>Node</b>}</span>
 
 
             </td>
@@ -910,8 +907,9 @@ action selected by the user.</p>
     <dt class="tag-examples">Example:</dt>
     <dd class="tag-examples">
 
-    <pre class="hljs"><code><span class="hljs-keyword">await</span> RapidContext.UI.Msg.info(<span class="hljs-string">&quot;System will now reboot. Please wait.&quot;</span>);
+    <pre class="hljs"><code><span class="hljs-keyword">await</span> <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-property">Msg</span>.<span class="hljs-title function_">info</span>(<span class="hljs-string">&quot;System will now reboot. Please wait.&quot;</span>);
 ...</code></pre>
+
 
     </dd>
 
@@ -933,7 +931,7 @@ action selected by the user.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="rapidcontext_ui_msg.js.html">rapidcontext/ui/msg.js</a>, <a href="rapidcontext_ui_msg.js.html#line290">line 290</a>
+        <a href="rapidcontext_ui_msg.mjs.html">rapidcontext/ui/msg.mjs</a>, <a href="rapidcontext_ui_msg.mjs.html#line268">line 268</a>
     </dd>
 
 </dl>
@@ -1133,7 +1131,7 @@ action selected by the user.</p>
             <td class="type">
 
 
-    <span class="param-type">{<b>string</b>}</span>
+    <span class="param-type">{<b>string</b>|<b>Node</b>}</span>
 
 
             </td>
@@ -1301,7 +1299,8 @@ action selected by the user.</p>
     <dt class="tag-examples">Example:</dt>
     <dd class="tag-examples">
 
-    <pre class="hljs"><code>RapidContext.UI.Msg.success(<span class="hljs-string">&quot;Everything is proceeding as planned.&quot;</span>);</code></pre>
+    <pre class="hljs"><code><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-property">Msg</span>.<span class="hljs-title function_">success</span>(<span class="hljs-string">&quot;Everything is proceeding as planned.&quot;</span>);</code></pre>
+
 
     </dd>
 
@@ -1323,7 +1322,7 @@ action selected by the user.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="rapidcontext_ui_msg.js.html">rapidcontext/ui/msg.js</a>, <a href="rapidcontext_ui_msg.js.html#line268">line 268</a>
+        <a href="rapidcontext_ui_msg.mjs.html">rapidcontext/ui/msg.mjs</a>, <a href="rapidcontext_ui_msg.mjs.html#line248">line 248</a>
     </dd>
 
 </dl>
@@ -1523,7 +1522,7 @@ action selected by the user.</p>
             <td class="type">
 
 
-    <span class="param-type">{<b>string</b>}</span>
+    <span class="param-type">{<b>string</b>|<b>Node</b>}</span>
 
 
             </td>
@@ -1691,12 +1690,13 @@ action selected by the user.</p>
     <dt class="tag-examples">Example:</dt>
     <dd class="tag-examples">
 
-    <pre class="hljs"><code><span class="hljs-built_in">let</span> text = <span class="hljs-string">&quot;This will take some time to complete. Are you sure?&quot;</span>;
-<span class="hljs-built_in">let</span> actions = {
-    cancel: <span class="hljs-string">&quot;No, I&#x27;ve changed my mind&quot;</span>,
-    warning: <span class="hljs-string">&quot;Yes, I understand&quot;</span>
+    <pre class="hljs"><code><span class="hljs-keyword">let</span> text = <span class="hljs-string">&quot;This will take some time to complete. Are you sure?&quot;</span>;
+<span class="hljs-keyword">let</span> actions = {
+    <span class="hljs-attr">cancel</span>: <span class="hljs-string">&quot;No, I&#x27;ve changed my mind&quot;</span>,
+    <span class="hljs-attr">warning</span>: <span class="hljs-string">&quot;Yes, I understand&quot;</span>
 }
-RapidContext.UI.Msg.warning({ text, actions }).<span class="hljs-keyword">then</span>(...);</code></pre>
+<span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-property">Msg</span>.<span class="hljs-title function_">warning</span>({ text, actions }).<span class="hljs-title function_">then</span>(...);</code></pre>
+
 
     </dd>
 
@@ -1718,7 +1718,7 @@ RapidContext.UI.Msg.warning({ text, actions }).<span class="hljs-keyword">then</
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="rapidcontext_ui_msg.js.html">rapidcontext/ui/msg.js</a>, <a href="rapidcontext_ui_msg.js.html#line247">line 247</a>
+        <a href="rapidcontext_ui_msg.mjs.html">rapidcontext/ui/msg.mjs</a>, <a href="rapidcontext_ui_msg.mjs.html#line223">line 223</a>
     </dd>
 
 </dl>
@@ -1878,6 +1878,19 @@ a simplified preset that uses the generic <code>warning</code> function.</p>
 
 
 
+    <dt class="tag-examples">Example:</dt>
+    <dd class="tag-examples">
+
+    <pre class="hljs"><code><span class="hljs-keyword">try</span> {
+    <span class="hljs-keyword">await</span> <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-property">Msg</span>.<span class="hljs-property">warning</span>.<span class="hljs-title function_">remove</span>(<span class="hljs-string">&quot;person&quot;</span>, <span class="hljs-string">&quot;123&quot;</span>);
+    ...
+} <span class="hljs-keyword">catch</span> (e) {
+    <span class="hljs-comment">// cancelled</span>
+}</code></pre>
+
+
+    </dd>
+
 
 
 
@@ -1896,7 +1909,7 @@ a simplified preset that uses the generic <code>warning</code> function.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="rapidcontext_ui_msg.js.html">rapidcontext/ui/msg.js</a>, <a href="rapidcontext_ui_msg.js.html#line305">line 305</a>
+        <a href="rapidcontext_ui_msg.mjs.html">rapidcontext/ui/msg.mjs</a>, <a href="rapidcontext_ui_msg.mjs.html#line302">line 302</a>
     </dd>
 
 </dl>
@@ -2259,15 +2272,16 @@ the returned action value.</p>
 
     <pre class="hljs"><code>{
    <span class="hljs-comment">// Actions can use either default styles or configuration</span>
-   danger: <span class="hljs-string">&quot;Yes, I know what I&#x27;m doing&quot;</span>,
-   custom: { text: <span class="hljs-string">&quot;Ok&quot;</span>, icon: <span class="hljs-string">&quot;fa fa-lg fa-check&quot;</span>, css: <span class="hljs-string">&#x27;primary&#x27;</span> },
+   <span class="hljs-attr">danger</span>: <span class="hljs-string">&quot;Yes, I know what I&#x27;m doing&quot;</span>,
+   <span class="hljs-attr">custom</span>: { <span class="hljs-attr">text</span>: <span class="hljs-string">&quot;Ok&quot;</span>, <span class="hljs-attr">icon</span>: <span class="hljs-string">&quot;fa fa-lg fa-check&quot;</span>, <span class="hljs-attr">css</span>: <span class="hljs-string">&#x27;primary&#x27;</span> },
 
    <span class="hljs-comment">// The special &#x27;cancel&#x27; action rejects the returned promise</span>
-   cancel: { text: <span class="hljs-string">&quot;Cancel&quot;</span>, icon: <span class="hljs-string">&quot;fa fa-lg fa-times&quot;</span> },
+   <span class="hljs-attr">cancel</span>: { <span class="hljs-attr">text</span>: <span class="hljs-string">&quot;Cancel&quot;</span>, <span class="hljs-attr">icon</span>: <span class="hljs-string">&quot;fa fa-lg fa-times&quot;</span> },
 
    <span class="hljs-comment">// The &#x27;reload&#x27; action triggers a reload of the current page</span>
-   reload: { text: <span class="hljs-string">&quot;Reload page&quot;</span> }
+   <span class="hljs-attr">reload</span>: { <span class="hljs-attr">text</span>: <span class="hljs-string">&quot;Reload page&quot;</span> }
 }</code></pre>
+
 
     </dd>
 
@@ -2289,7 +2303,7 @@ the returned action value.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="rapidcontext_ui_msg.js.html">rapidcontext/ui/msg.js</a>, <a href="rapidcontext_ui_msg.js.html#line21">line 21</a>
+        <a href="rapidcontext_ui_msg.mjs.html">rapidcontext/ui/msg.mjs</a>, <a href="rapidcontext_ui_msg.mjs.html#line20">line 20</a>
     </dd>
 
 </dl>

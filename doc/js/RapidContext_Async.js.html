@@ -344,89 +344,89 @@
 <span id="line289" class="lineno">289</span>     *
 <span id="line290" class="lineno">290</span>     * <span class="hljs-doctag">@memberOf</span> RapidContext.Async
 <span id="line291" class="lineno">291</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} url the URL to request
-<span id="line292" class="lineno">292</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Object</span>} [options] the request options
-<span id="line293" class="lineno">293</span>     * <span class="hljs-doctag">@config</span> {<span class="hljs-type">string</span>} [method] the HTTP method (e.g. `GET`, `POST`...)
-<span id="line294" class="lineno">294</span>     * <span class="hljs-doctag">@config</span> {<span class="hljs-type">Object</span>} [headers] the HTTP headers to send
-<span id="line295" class="lineno">295</span>     * <span class="hljs-doctag">@config</span> {<span class="hljs-type">number</span>} [timeout] the timeout in milliseconds (default is 30s)
-<span id="line296" class="lineno">296</span>     * <span class="hljs-doctag">@config</span> {<span class="hljs-type">string</span>} [log] the logging prefix, or `null` (defaults to `request`)
-<span id="line297" class="lineno">297</span>     * <span class="hljs-doctag">@config</span> {<span class="hljs-type">string</span>} [responseType] the expected HTTP response (e.g. `json`)
-<span id="line298" class="lineno">298</span>     * <span class="hljs-doctag">@config</span> {<span class="hljs-type">string</span>} [body] the HTTP request body to send
+<span id="line292" class="lineno">292</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Object</span>} [opts] the request options
+<span id="line293" class="lineno">293</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} [opts.method] the HTTP method (e.g. `GET`, `POST`...)
+<span id="line294" class="lineno">294</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Object</span>} [opts.headers] the HTTP headers to send
+<span id="line295" class="lineno">295</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">number</span>} [opts.timeout] the timeout in milliseconds (default is 30s)
+<span id="line296" class="lineno">296</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} [opts.log] the logging prefix, or `null` (defaults to `request`)
+<span id="line297" class="lineno">297</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} [opts.responseType] the expected HTTP response (e.g. `json`)
+<span id="line298" class="lineno">298</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} [opts.body] the HTTP request body to send
 <span id="line299" class="lineno">299</span>     *
 <span id="line300" class="lineno">300</span>     * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Async</span>} a new promise that resolves with either the XHR object,
 <span id="line301" class="lineno">301</span>     *     or an error if the request failed
 <span id="line302" class="lineno">302</span>     */</span>
-<span id="line303" class="lineno">303</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">xhr</span>(<span class="hljs-params">url, options</span>) {
-<span id="line304" class="lineno">304</span>        <span class="hljs-keyword">var</span> opts = { <span class="hljs-attr">method</span>: <span class="hljs-string">&quot;GET&quot;</span>, <span class="hljs-attr">headers</span>: {}, <span class="hljs-attr">timeout</span>: <span class="hljs-number">30000</span>, <span class="hljs-attr">log</span>: <span class="hljs-string">&quot;XHR request&quot;</span> };
-<span id="line305" class="lineno">305</span>        <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(opts, options);
-<span id="line306" class="lineno">306</span>        <span class="hljs-keyword">if</span> (opts.<span class="hljs-property">responseType</span> === <span class="hljs-string">&quot;json&quot;</span> &amp;&amp; !opts.<span class="hljs-property">headers</span>[<span class="hljs-string">&quot;Accept&quot;</span>]) {
-<span id="line307" class="lineno">307</span>            opts.<span class="hljs-property">headers</span>[<span class="hljs-string">&quot;Accept&quot;</span>] = <span class="hljs-string">&quot;application/json&quot;</span>;
-<span id="line308" class="lineno">308</span>        }
-<span id="line309" class="lineno">309</span>        <span class="hljs-keyword">var</span> xhr = <span class="hljs-keyword">new</span> <span class="hljs-title class_">XMLHttpRequest</span>();
-<span id="line310" class="lineno">310</span>        <span class="hljs-keyword">var</span> promise = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params">resolve, reject</span>) {
-<span id="line311" class="lineno">311</span>            xhr.<span class="hljs-title function_">open</span>(opts.<span class="hljs-property">method</span>, url, <span class="hljs-literal">true</span>);
-<span id="line312" class="lineno">312</span>            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> key <span class="hljs-keyword">in</span> opts.<span class="hljs-property">headers</span>) {
-<span id="line313" class="lineno">313</span>                xhr.<span class="hljs-title function_">setRequestHeader</span>(key, opts.<span class="hljs-property">headers</span>[key]);
-<span id="line314" class="lineno">314</span>            }
-<span id="line315" class="lineno">315</span>            xhr.<span class="hljs-property">responseType</span> = opts.<span class="hljs-property">responseType</span> || <span class="hljs-string">&quot;text&quot;</span>;
-<span id="line316" class="lineno">316</span>            xhr.<span class="hljs-property">timeout</span> = opts.<span class="hljs-property">timeout</span>;
-<span id="line317" class="lineno">317</span>            <span class="hljs-keyword">if</span> (xhr.<span class="hljs-property">upload</span> &amp;&amp; <span class="hljs-title function_">isFunction</span>(opts.<span class="hljs-property">progress</span>)) {
-<span id="line318" class="lineno">318</span>                xhr.<span class="hljs-property">upload</span>.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&quot;progress&quot;</span>, opts.<span class="hljs-property">progress</span>);
-<span id="line319" class="lineno">319</span>            }
-<span id="line320" class="lineno">320</span>            xhr.<span class="hljs-property">onreadystatechange</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line321" class="lineno">321</span>                <span class="hljs-keyword">var</span> err;
-<span id="line322" class="lineno">322</span>                <span class="hljs-keyword">if</span> (xhr &amp;&amp; xhr.<span class="hljs-property">readyState</span> === <span class="hljs-number">4</span>) {
-<span id="line323" class="lineno">323</span>                    <span class="hljs-keyword">if</span> (xhr.<span class="hljs-property">status</span> &gt;= <span class="hljs-number">200</span> &amp;&amp; xhr.<span class="hljs-property">status</span> &lt;= <span class="hljs-number">299</span> &amp;&amp; xhr.<span class="hljs-property">response</span> != <span class="hljs-literal">null</span>) {
-<span id="line324" class="lineno">324</span>                        <span class="hljs-title function_">resolve</span>(xhr);
-<span id="line325" class="lineno">325</span>                    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (xhr.<span class="hljs-property">status</span> === <span class="hljs-number">0</span>) {
-<span id="line326" class="lineno">326</span>                        err = <span class="hljs-string">&quot;communication error or timeout&quot;</span>;
-<span id="line327" class="lineno">327</span>                        <span class="hljs-title function_">reject</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">AsyncError</span>(opts.<span class="hljs-property">method</span>, url, xhr, err, opts.<span class="hljs-property">log</span>));
-<span id="line328" class="lineno">328</span>                    } <span class="hljs-keyword">else</span> {
-<span id="line329" class="lineno">329</span>                        err = <span class="hljs-string">&quot;unexpected response code/data&quot;</span>;
-<span id="line330" class="lineno">330</span>                        <span class="hljs-title function_">reject</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">AsyncError</span>(opts.<span class="hljs-property">method</span>, url, xhr, err, opts.<span class="hljs-property">log</span>));
-<span id="line331" class="lineno">331</span>                    }
-<span id="line332" class="lineno">332</span>                    xhr = <span class="hljs-literal">null</span>; <span class="hljs-comment">// Stop duplicate events</span>
-<span id="line333" class="lineno">333</span>                }
-<span id="line334" class="lineno">334</span>            };
-<span id="line335" class="lineno">335</span>            xhr.<span class="hljs-title function_">send</span>(opts.<span class="hljs-property">body</span>);
-<span id="line336" class="lineno">336</span>        });
-<span id="line337" class="lineno">337</span>        <span class="hljs-keyword">var</span> cancel = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line338" class="lineno">338</span>            xhr &amp;&amp; <span class="hljs-built_in">setTimeout</span>(xhr.<span class="hljs-property">abort</span>.<span class="hljs-title function_">bind</span>(xhr));
-<span id="line339" class="lineno">339</span>            xhr = <span class="hljs-literal">null</span>;
-<span id="line340" class="lineno">340</span>        };
-<span id="line341" class="lineno">341</span>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Async</span>(promise, cancel);
-<span id="line342" class="lineno">342</span>    }
-<span id="line343" class="lineno">343</span>
-<span id="line344" class="lineno">344</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">AsyncError</span>(<span class="hljs-params">method, url, xhr, detail, log</span>) {
-<span id="line345" class="lineno">345</span>        <span class="hljs-keyword">var</span> parts = [].<span class="hljs-title function_">concat</span>(detail, <span class="hljs-string">&quot; [&quot;</span>);
-<span id="line346" class="lineno">346</span>        <span class="hljs-keyword">if</span> (xhr &amp;&amp; xhr.<span class="hljs-property">status</span> &gt; <span class="hljs-number">0</span>) {
-<span id="line347" class="lineno">347</span>            parts.<span class="hljs-title function_">push</span>(<span class="hljs-string">&quot;HTTP &quot;</span>, xhr.<span class="hljs-property">status</span>, <span class="hljs-string">&quot;: &quot;</span>);
-<span id="line348" class="lineno">348</span>        }
-<span id="line349" class="lineno">349</span>        parts.<span class="hljs-title function_">push</span>(method, <span class="hljs-string">&quot; &quot;</span>, url, <span class="hljs-string">&quot;]&quot;</span>);
-<span id="line350" class="lineno">350</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">message</span> = parts.<span class="hljs-title function_">filter</span>(<span class="hljs-title class_">Boolean</span>).<span class="hljs-title function_">join</span>(<span class="hljs-string">&quot;&quot;</span>);
-<span id="line351" class="lineno">351</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">method</span> = method;
-<span id="line352" class="lineno">352</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">url</span> = url;
-<span id="line353" class="lineno">353</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">code</span> = xhr &amp;&amp; xhr.<span class="hljs-property">status</span>;
-<span id="line354" class="lineno">354</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">stack</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>().<span class="hljs-property">stack</span>;
-<span id="line355" class="lineno">355</span>        <span class="hljs-keyword">if</span> (log) {
-<span id="line356" class="lineno">356</span>            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">warn</span>([log, <span class="hljs-variable language_">this</span>.<span class="hljs-property">message</span>].<span class="hljs-title function_">join</span>(<span class="hljs-string">&quot;: &quot;</span>), xhr &amp;&amp; xhr.<span class="hljs-property">response</span>);
-<span id="line357" class="lineno">357</span>        }
-<span id="line358" class="lineno">358</span>    }
-<span id="line359" class="lineno">359</span>
-<span id="line360" class="lineno">360</span>    <span class="hljs-title class_">AsyncError</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Error</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
-<span id="line361" class="lineno">361</span>    <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(<span class="hljs-title class_">AsyncError</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>, {
-<span id="line362" class="lineno">362</span>        <span class="hljs-attr">constructor</span>: <span class="hljs-title class_">AsyncError</span>,
-<span id="line363" class="lineno">363</span>        <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;AsyncError&quot;</span>
-<span id="line364" class="lineno">364</span>    });
-<span id="line365" class="lineno">365</span>
-<span id="line366" class="lineno">366</span>    <span class="hljs-comment">// Create namespace and export API</span>
-<span id="line367" class="lineno">367</span>    <span class="hljs-keyword">var</span> <span class="hljs-title class_">RapidContext</span> = <span class="hljs-variable language_">window</span>.<span class="hljs-property">RapidContext</span> || (<span class="hljs-variable language_">window</span>.<span class="hljs-property">RapidContext</span> = {});
-<span id="line368" class="lineno">368</span>    <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Async</span> = <span class="hljs-title class_">Async</span>;
-<span id="line369" class="lineno">369</span>    <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(<span class="hljs-title class_">Async</span>, { isPromise, wait, img, css, script, xhr, <span class="hljs-title class_">AsyncError</span> });
-<span id="line370" class="lineno">370</span>
-<span id="line371" class="lineno">371</span>})(<span class="hljs-variable language_">this</span>);
-<span id="line372" class="lineno">372</span></code></pre>
+<span id="line303" class="lineno">303</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">xhr</span>(<span class="hljs-params">url, opts</span>) {
+<span id="line304" class="lineno">304</span>        opts = { <span class="hljs-attr">method</span>: <span class="hljs-string">&quot;GET&quot;</span>, <span class="hljs-attr">headers</span>: {}, <span class="hljs-attr">timeout</span>: <span class="hljs-number">30000</span>, <span class="hljs-attr">log</span>: <span class="hljs-string">&quot;XHR request&quot;</span>, ...opts };
+<span id="line305" class="lineno">305</span>        <span class="hljs-keyword">if</span> (opts.<span class="hljs-property">responseType</span> === <span class="hljs-string">&quot;json&quot;</span> &amp;&amp; !opts.<span class="hljs-property">headers</span>[<span class="hljs-string">&quot;Accept&quot;</span>]) {
+<span id="line306" class="lineno">306</span>            opts.<span class="hljs-property">headers</span>[<span class="hljs-string">&quot;Accept&quot;</span>] = <span class="hljs-string">&quot;application/json&quot;</span>;
+<span id="line307" class="lineno">307</span>        }
+<span id="line308" class="lineno">308</span>        <span class="hljs-keyword">var</span> xhr = <span class="hljs-keyword">new</span> <span class="hljs-title class_">XMLHttpRequest</span>();
+<span id="line309" class="lineno">309</span>        <span class="hljs-keyword">var</span> promise = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params">resolve, reject</span>) {
+<span id="line310" class="lineno">310</span>            xhr.<span class="hljs-title function_">open</span>(opts.<span class="hljs-property">method</span>, url, <span class="hljs-literal">true</span>);
+<span id="line311" class="lineno">311</span>            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> key <span class="hljs-keyword">in</span> opts.<span class="hljs-property">headers</span>) {
+<span id="line312" class="lineno">312</span>                xhr.<span class="hljs-title function_">setRequestHeader</span>(key, opts.<span class="hljs-property">headers</span>[key]);
+<span id="line313" class="lineno">313</span>            }
+<span id="line314" class="lineno">314</span>            xhr.<span class="hljs-property">responseType</span> = opts.<span class="hljs-property">responseType</span> || <span class="hljs-string">&quot;text&quot;</span>;
+<span id="line315" class="lineno">315</span>            xhr.<span class="hljs-property">timeout</span> = opts.<span class="hljs-property">timeout</span>;
+<span id="line316" class="lineno">316</span>            <span class="hljs-keyword">if</span> (xhr.<span class="hljs-property">upload</span> &amp;&amp; <span class="hljs-title function_">isFunction</span>(opts.<span class="hljs-property">progress</span>)) {
+<span id="line317" class="lineno">317</span>                xhr.<span class="hljs-property">upload</span>.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&quot;progress&quot;</span>, opts.<span class="hljs-property">progress</span>);
+<span id="line318" class="lineno">318</span>            }
+<span id="line319" class="lineno">319</span>            xhr.<span class="hljs-property">onreadystatechange</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line320" class="lineno">320</span>                <span class="hljs-keyword">var</span> err;
+<span id="line321" class="lineno">321</span>                <span class="hljs-keyword">if</span> (xhr &amp;&amp; xhr.<span class="hljs-property">readyState</span> === <span class="hljs-number">4</span>) {
+<span id="line322" class="lineno">322</span>                    <span class="hljs-keyword">if</span> (xhr.<span class="hljs-property">status</span> &gt;= <span class="hljs-number">200</span> &amp;&amp; xhr.<span class="hljs-property">status</span> &lt;= <span class="hljs-number">299</span> &amp;&amp; xhr.<span class="hljs-property">response</span> != <span class="hljs-literal">null</span>) {
+<span id="line323" class="lineno">323</span>                        <span class="hljs-title function_">resolve</span>(xhr);
+<span id="line324" class="lineno">324</span>                    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (xhr.<span class="hljs-property">status</span> === <span class="hljs-number">0</span>) {
+<span id="line325" class="lineno">325</span>                        err = <span class="hljs-string">&quot;communication error or timeout&quot;</span>;
+<span id="line326" class="lineno">326</span>                        <span class="hljs-title function_">reject</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">AsyncError</span>(opts.<span class="hljs-property">method</span>, url, xhr, err, opts.<span class="hljs-property">log</span>));
+<span id="line327" class="lineno">327</span>                    } <span class="hljs-keyword">else</span> {
+<span id="line328" class="lineno">328</span>                        err = <span class="hljs-string">&quot;unexpected response code/data&quot;</span>;
+<span id="line329" class="lineno">329</span>                        <span class="hljs-title function_">reject</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">AsyncError</span>(opts.<span class="hljs-property">method</span>, url, xhr, err, opts.<span class="hljs-property">log</span>));
+<span id="line330" class="lineno">330</span>                    }
+<span id="line331" class="lineno">331</span>                    xhr = <span class="hljs-literal">null</span>; <span class="hljs-comment">// Stop duplicate events</span>
+<span id="line332" class="lineno">332</span>                }
+<span id="line333" class="lineno">333</span>            };
+<span id="line334" class="lineno">334</span>            xhr.<span class="hljs-title function_">send</span>(opts.<span class="hljs-property">body</span>);
+<span id="line335" class="lineno">335</span>        });
+<span id="line336" class="lineno">336</span>        <span class="hljs-keyword">var</span> cancel = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line337" class="lineno">337</span>            xhr &amp;&amp; <span class="hljs-built_in">setTimeout</span>(xhr.<span class="hljs-property">abort</span>.<span class="hljs-title function_">bind</span>(xhr));
+<span id="line338" class="lineno">338</span>            xhr = <span class="hljs-literal">null</span>;
+<span id="line339" class="lineno">339</span>        };
+<span id="line340" class="lineno">340</span>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Async</span>(promise, cancel);
+<span id="line341" class="lineno">341</span>    }
+<span id="line342" class="lineno">342</span>
+<span id="line343" class="lineno">343</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">AsyncError</span>(<span class="hljs-params">method, url, xhr, detail, log</span>) {
+<span id="line344" class="lineno">344</span>        <span class="hljs-keyword">var</span> parts = [].<span class="hljs-title function_">concat</span>(detail, <span class="hljs-string">&quot; [&quot;</span>);
+<span id="line345" class="lineno">345</span>        <span class="hljs-keyword">if</span> (xhr &amp;&amp; xhr.<span class="hljs-property">status</span> &gt; <span class="hljs-number">0</span>) {
+<span id="line346" class="lineno">346</span>            parts.<span class="hljs-title function_">push</span>(<span class="hljs-string">&quot;HTTP &quot;</span>, xhr.<span class="hljs-property">status</span>, <span class="hljs-string">&quot;: &quot;</span>);
+<span id="line347" class="lineno">347</span>        }
+<span id="line348" class="lineno">348</span>        parts.<span class="hljs-title function_">push</span>(method, <span class="hljs-string">&quot; &quot;</span>, url, <span class="hljs-string">&quot;]&quot;</span>);
+<span id="line349" class="lineno">349</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">message</span> = parts.<span class="hljs-title function_">filter</span>(<span class="hljs-title class_">Boolean</span>).<span class="hljs-title function_">join</span>(<span class="hljs-string">&quot;&quot;</span>);
+<span id="line350" class="lineno">350</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">method</span> = method;
+<span id="line351" class="lineno">351</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">url</span> = url;
+<span id="line352" class="lineno">352</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">code</span> = xhr &amp;&amp; xhr.<span class="hljs-property">status</span>;
+<span id="line353" class="lineno">353</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">stack</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>().<span class="hljs-property">stack</span>;
+<span id="line354" class="lineno">354</span>        <span class="hljs-keyword">if</span> (log) {
+<span id="line355" class="lineno">355</span>            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">warn</span>([log, <span class="hljs-variable language_">this</span>.<span class="hljs-property">message</span>].<span class="hljs-title function_">join</span>(<span class="hljs-string">&quot;: &quot;</span>), xhr &amp;&amp; xhr.<span class="hljs-property">response</span>);
+<span id="line356" class="lineno">356</span>        }
+<span id="line357" class="lineno">357</span>    }
+<span id="line358" class="lineno">358</span>
+<span id="line359" class="lineno">359</span>    <span class="hljs-title class_">AsyncError</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Error</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
+<span id="line360" class="lineno">360</span>    <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(<span class="hljs-title class_">AsyncError</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>, {
+<span id="line361" class="lineno">361</span>        <span class="hljs-attr">constructor</span>: <span class="hljs-title class_">AsyncError</span>,
+<span id="line362" class="lineno">362</span>        <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;AsyncError&quot;</span>
+<span id="line363" class="lineno">363</span>    });
+<span id="line364" class="lineno">364</span>
+<span id="line365" class="lineno">365</span>    <span class="hljs-comment">// Create namespace and export API</span>
+<span id="line366" class="lineno">366</span>    <span class="hljs-keyword">var</span> <span class="hljs-title class_">RapidContext</span> = <span class="hljs-variable language_">window</span>.<span class="hljs-property">RapidContext</span> || (<span class="hljs-variable language_">window</span>.<span class="hljs-property">RapidContext</span> = {});
+<span id="line367" class="lineno">367</span>    <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Async</span> = <span class="hljs-title class_">Async</span>;
+<span id="line368" class="lineno">368</span>    <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(<span class="hljs-title class_">Async</span>, { isPromise, wait, img, css, script, xhr, <span class="hljs-title class_">AsyncError</span> });
+<span id="line369" class="lineno">369</span>
+<span id="line370" class="lineno">370</span>})(<span class="hljs-variable language_">this</span>);
+<span id="line371" class="lineno">371</span></code></pre>
         </article>
     </section>
+
 
 
 

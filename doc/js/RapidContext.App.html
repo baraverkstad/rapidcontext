@@ -97,7 +97,7 @@
                     </td>
                     <td class="name-description">
                         <div >
-                            <code><a href="#.callProc">callProc<span class="signature">(name, args<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise}</span></a></code>
+                            <code><a href="#.callProc">callProc<span class="signature">(name, args<span class="signature-attributes">opt</span>, opts<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise}</span></a></code>
                         </div>
                         <div class="description">Performs an asynchronous procedure call.</div>
                     </td>
@@ -146,7 +146,7 @@ launcher.</div>
                     </td>
                     <td class="name-description">
                         <div >
-                            <code><a href="#.loadJSON">loadJSON<span class="signature">(url, params<span class="signature-attributes">opt</span>, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise}</span></a></code>
+                            <code><a href="#.loadJSON">loadJSON<span class="signature">(url, params<span class="signature-attributes">opt</span>, opts<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise}</span></a></code>
                         </div>
                         <div class="description">Performs an asynchronous HTTP request and parses the JSON response.</div>
                     </td>
@@ -182,7 +182,7 @@ launcher.</div>
                     </td>
                     <td class="name-description">
                         <div >
-                            <code><a href="#.loadText">loadText<span class="signature">(url, params<span class="signature-attributes">opt</span>, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise}</span></a></code>
+                            <code><a href="#.loadText">loadText<span class="signature">(url, params<span class="signature-attributes">opt</span>, opts<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise}</span></a></code>
                         </div>
                         <div class="description">Performs an asynchronous HTTP request for a text document.</div>
                     </td>
@@ -194,7 +194,7 @@ launcher.</div>
                     </td>
                     <td class="name-description">
                         <div >
-                            <code><a href="#.loadXHR">loadXHR<span class="signature">(url, params<span class="signature-attributes">opt</span>, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise}</span></a></code>
+                            <code><a href="#.loadXHR">loadXHR<span class="signature">(url, params<span class="signature-attributes">opt</span>, opts<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise}</span></a></code>
                         </div>
                         <div class="description">Performs an asynchronous HTTP request.</div>
                     </td>
@@ -206,7 +206,7 @@ launcher.</div>
                     </td>
                     <td class="name-description">
                         <div >
-                            <code><a href="#.loadXML">loadXML<span class="signature">(url, params<span class="signature-attributes">opt</span>, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise}</span></a></code>
+                            <code><a href="#.loadXML">loadXML<span class="signature">(url, params<span class="signature-attributes">opt</span>, opts<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise}</span></a></code>
                         </div>
                         <div class="description">Performs an asynchronous HTTP request for an XML document.</div>
                     </td>
@@ -302,16 +302,12 @@ currently loaded environment.</div>
 
 
 
-
-
 </header>
 
 <article>
     <div class="container-overview">
 
     </div>
-
-
 
 
 
@@ -661,7 +657,7 @@ method, the app UI will be focused.</p>
 
 
     <h4 class="name" id=".callProc">
-        <span class="type-signature">(static) </span>callProc<span class="signature">(name, args<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise}</span>
+        <span class="type-signature">(static) </span>callProc<span class="signature">(name, args<span class="signature-attributes">opt</span>, opts<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise}</span>
     </h4>
 
 
@@ -778,6 +774,174 @@ method, the app UI will be focused.</p>
         </tr>
 
 
+
+        <tr>
+
+                <td class="name"><code>opts</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Object</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the procedure call options
+
+                    <h6>Properties</h6>
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>session</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>boolean</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the HTTP session required flag
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>trace</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>boolean</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the procedure call trace flag
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>timeout</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>number</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the timeout in milliseconds, default is 60s
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+
+            </td>
+        </tr>
+
+
     </tbody>
 </table>
 
@@ -846,7 +1010,7 @@ method, the app UI will be focused.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_App.js.html">RapidContext_App.js</a>, <a href="RapidContext_App.js.html#line430">line 430</a>
+        <a href="RapidContext_App.js.html">RapidContext_App.js</a>, <a href="RapidContext_App.js.html#line434">line 434</a>
     </dd>
 
 </dl>
@@ -1038,7 +1202,7 @@ exist by first posting the file (text) content to the server.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_App.js.html">RapidContext_App.js</a>, <a href="RapidContext_App.js.html#line715">line 715</a>
+        <a href="RapidContext_App.js.html">RapidContext_App.js</a>, <a href="RapidContext_App.js.html#line710">line 710</a>
     </dd>
 
 </dl>
@@ -1372,7 +1536,7 @@ as its UI container.</p>
 
 
     <h4 class="name" id=".loadJSON">
-        <span class="type-signature">(static) </span>loadJSON<span class="signature">(url, params<span class="signature-attributes">opt</span>, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise}</span>
+        <span class="type-signature">(static) </span>loadJSON<span class="signature">(url, params<span class="signature-attributes">opt</span>, opts<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise}</span>
     </h4>
 
 
@@ -1495,7 +1659,7 @@ in the URL or as the request payload (depending on the HTTP <code>method</code>)
 
         <tr>
 
-                <td class="name"><code>options</code></td>
+                <td class="name"><code>opts</code></td>
 
 
             <td class="type">
@@ -1522,6 +1686,139 @@ in the URL or as the request payload (depending on the HTTP <code>method</code>)
 
             <td class="description last">
                 the request options, or <code>null</code>
+
+                    <h6>Properties</h6>
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>method</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the HTTP method, default is <code>GET</code>
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>timeout</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>number</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the timeout in milliseconds, default is 30s
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>headers</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Object</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the specific HTTP headers to use
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
 
             </td>
         </tr>
@@ -1595,7 +1892,7 @@ in the URL or as the request payload (depending on the HTTP <code>method</code>)
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_App.js.html">RapidContext_App.js</a>, <a href="RapidContext_App.js.html#line562">line 562</a>
+        <a href="RapidContext_App.js.html">RapidContext_App.js</a>, <a href="RapidContext_App.js.html#line563">line 563</a>
     </dd>
 
 </dl>
@@ -1756,7 +2053,7 @@ promise will resolve immediately.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_App.js.html">RapidContext_App.js</a>, <a href="RapidContext_App.js.html#line671">line 671</a>
+        <a href="RapidContext_App.js.html">RapidContext_App.js</a>, <a href="RapidContext_App.js.html#line666">line 666</a>
     </dd>
 
 </dl>
@@ -1910,7 +2207,7 @@ If the stylesheet is already loaded, the promise will resolve immediately.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_App.js.html">RapidContext_App.js</a>, <a href="RapidContext_App.js.html#line692">line 692</a>
+        <a href="RapidContext_App.js.html">RapidContext_App.js</a>, <a href="RapidContext_App.js.html#line687">line 687</a>
     </dd>
 
 </dl>
@@ -1922,7 +2219,7 @@ If the stylesheet is already loaded, the promise will resolve immediately.</p>
 
 
     <h4 class="name" id=".loadText">
-        <span class="type-signature">(static) </span>loadText<span class="signature">(url, params<span class="signature-attributes">opt</span>, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise}</span>
+        <span class="type-signature">(static) </span>loadText<span class="signature">(url, params<span class="signature-attributes">opt</span>, opts<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise}</span>
     </h4>
 
 
@@ -2045,7 +2342,7 @@ in the URL or as the request payload (depending on the HTTP <code>method</code>)
 
         <tr>
 
-                <td class="name"><code>options</code></td>
+                <td class="name"><code>opts</code></td>
 
 
             <td class="type">
@@ -2072,6 +2369,139 @@ in the URL or as the request payload (depending on the HTTP <code>method</code>)
 
             <td class="description last">
                 the request options, or <code>null</code>
+
+                    <h6>Properties</h6>
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>method</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the HTTP method, &quot;GET&quot; or &quot;POST&quot;
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>timeout</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>number</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the timeout in milliseconds, default is 30s
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>headers</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Object</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the specific HTTP headers to use
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
 
             </td>
         </tr>
@@ -2145,7 +2575,7 @@ in the URL or as the request payload (depending on the HTTP <code>method</code>)
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_App.js.html">RapidContext_App.js</a>, <a href="RapidContext_App.js.html#line585">line 585</a>
+        <a href="RapidContext_App.js.html">RapidContext_App.js</a>, <a href="RapidContext_App.js.html#line584">line 584</a>
     </dd>
 
 </dl>
@@ -2157,7 +2587,7 @@ in the URL or as the request payload (depending on the HTTP <code>method</code>)
 
 
     <h4 class="name" id=".loadXHR">
-        <span class="type-signature">(static) </span>loadXHR<span class="signature">(url, params<span class="signature-attributes">opt</span>, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise}</span>
+        <span class="type-signature">(static) </span>loadXHR<span class="signature">(url, params<span class="signature-attributes">opt</span>, opts<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise}</span>
     </h4>
 
 
@@ -2280,7 +2710,7 @@ the request payload (depending on the HTTP <code>method</code>).</p>
 
         <tr>
 
-                <td class="name"><code>options</code></td>
+                <td class="name"><code>opts</code></td>
 
 
             <td class="type">
@@ -2307,6 +2737,139 @@ the request payload (depending on the HTTP <code>method</code>).</p>
 
             <td class="description last">
                 the request options, or <code>null</code>
+
+                    <h6>Properties</h6>
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>method</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the HTTP method, default is <code>GET</code>
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>timeout</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>number</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the timeout in milliseconds, default is 30s
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>headers</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Object</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the specific HTTP headers to use
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
 
             </td>
         </tr>
@@ -2380,7 +2943,7 @@ the request payload (depending on the HTTP <code>method</code>).</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_App.js.html">RapidContext_App.js</a>, <a href="RapidContext_App.js.html#line631">line 631</a>
+        <a href="RapidContext_App.js.html">RapidContext_App.js</a>, <a href="RapidContext_App.js.html#line626">line 626</a>
     </dd>
 
 </dl>
@@ -2392,7 +2955,7 @@ the request payload (depending on the HTTP <code>method</code>).</p>
 
 
     <h4 class="name" id=".loadXML">
-        <span class="type-signature">(static) </span>loadXML<span class="signature">(url, params<span class="signature-attributes">opt</span>, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise}</span>
+        <span class="type-signature">(static) </span>loadXML<span class="signature">(url, params<span class="signature-attributes">opt</span>, opts<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise}</span>
     </h4>
 
 
@@ -2515,7 +3078,7 @@ in the URL or as the request payload (depending on the HTTP <code>method</code>)
 
         <tr>
 
-                <td class="name"><code>options</code></td>
+                <td class="name"><code>opts</code></td>
 
 
             <td class="type">
@@ -2542,6 +3105,139 @@ in the URL or as the request payload (depending on the HTTP <code>method</code>)
 
             <td class="description last">
                 the request options, or <code>null</code>
+
+                    <h6>Properties</h6>
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>method</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the HTTP method, &quot;GET&quot; or &quot;POST&quot;
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>timeout</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>number</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the timeout in milliseconds, default is 30s
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>headers</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Object</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the specific HTTP headers to use
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
 
             </td>
         </tr>
@@ -2615,7 +3311,7 @@ in the URL or as the request payload (depending on the HTTP <code>method</code>)
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_App.js.html">RapidContext_App.js</a>, <a href="RapidContext_App.js.html#line608">line 608</a>
+        <a href="RapidContext_App.js.html">RapidContext_App.js</a>, <a href="RapidContext_App.js.html#line605">line 605</a>
     </dd>
 
 </dl>
@@ -3022,7 +3718,7 @@ that will produce either a <code>callback</code> or an <code>errback</code> resp
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_App.js.html">RapidContext_App.js</a>, <a href="RapidContext_App.js.html#line538">line 538</a>
+        <a href="RapidContext_App.js.html">RapidContext_App.js</a>, <a href="RapidContext_App.js.html#line539">line 539</a>
     </dd>
 
 </dl>
@@ -3218,6 +3914,7 @@ possible cross-window).</p>
 
 <span class="hljs-comment">// Starts the help app in a new window</span>
 <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">App</span>.<span class="hljs-title function_">startApp</span>(<span class="hljs-string">&#x27;help&#x27;</span>, <span class="hljs-variable language_">window</span>.<span class="hljs-title function_">open</span>());</code></pre>
+
 
     </dd>
 
@@ -3713,7 +4410,7 @@ asynchronous HTTP request.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_App.js.html">RapidContext_App.js</a>, <a href="RapidContext_App.js.html#line751">line 751</a>
+        <a href="RapidContext_App.js.html">RapidContext_App.js</a>, <a href="RapidContext_App.js.html#line746">line 746</a>
     </dd>
 
 </dl>

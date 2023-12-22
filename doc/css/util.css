@@ -24,15 +24,25 @@
 /**
  * Flex
  */
+.flex-row:not(.hidden):not([hidden]),
+.flex-row-reverse:not(.hidden):not([hidden]),
+.flex-col:not(.hidden):not([hidden]),
+.flex-col-reverse:not(.hidden):not([hidden]) {
+    display: flex;
+}
+.flex-row,
 .flex-dir-row {
     flex-direction: row !important;
 }
+.flex-row-reverse,
 .flex-dir-row-reverse {
     flex-direction: row-reverse !important;
 }
+.flex-col,
 .flex-dir-column {
     flex-direction: column !important;
 }
+.flex-col-reverse
 .flex-dir-column-reverse {
     flex-direction: column-reverse !important;
 }
@@ -108,12 +118,14 @@
 .flex-grow-0 {
     flex-grow: 0 !important;
 }
+.flex-grow,
 .flex-grow-1 {
     flex-grow: 1 !important;
 }
 .flex-shrink-0 {
     flex-shrink: 0 !important;
 }
+.flex-shrink,
 .flex-shrink-1 {
     flex-shrink: 1 !important;
 }
@@ -577,12 +589,10 @@
     overflow: hidden !important;
 }
 .overflow-x-auto {
-    overflow-x: auto !important;
-    overflow-y: hidden !important;
+    overflow: auto hidden !important;
 }
 .overflow-y-auto {
-    overflow-x: hidden !important;
-    overflow-y: auto !important;
+    overflow: hidden auto !important;
 }
 .overflow-ellipsis {
     overflow: hidden;

@@ -86,7 +86,7 @@ jQuery.</p></div>
                         <span class="type-signature">(static) </span>
                     </td>
                     <td class="name-description">
-                        <div >
+                        <div class="deprecated">
                             <code><a href="#.dict">dict<span class="signature">(itemsOrKeys, values<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Object}</span></a></code>
                         </div>
                         <div class="description">Creates a dictionary object from a list of keys and values.</div>
@@ -159,16 +159,12 @@ their parent element sizes.</div>
 
 
 
-
-
 </header>
 
 <article>
     <div class="container-overview">
 
     </div>
-
-
 
 
 
@@ -317,7 +313,7 @@ function will recursively blur all <code>&lt;a&gt;</code>, <code>&lt;button&gt;<
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext.Util.js.html">RapidContext.Util.js</a>, <a href="RapidContext.Util.js.html#line215">line 215</a>
+        <a href="RapidContext.Util.js.html">RapidContext.Util.js</a>, <a href="RapidContext.Util.js.html#line219">line 219</a>
     </dd>
 
 </dl>
@@ -496,6 +492,11 @@ this function is the reverse of <code>MochiKit.Base.items()</code>,
 
 
 
+        <dt class="tag-deprecated">Deprecated:</dt>
+        <dd class="important">
+            Use RapidContext.Data.object() instead.
+        </dd>
+
 
 
 
@@ -505,14 +506,15 @@ this function is the reverse of <code>MochiKit.Base.items()</code>,
     <dt class="tag-examples">Examples:</dt>
     <dd class="tag-examples">
 
-    <pre class="hljs"><code>RapidContext.Util.dict([<span class="hljs-string">&#x27;a&#x27;</span>,<span class="hljs-string">&#x27;b&#x27;</span>], [1, 2])
-==&gt; { a: 1, b: 2 }</code></pre>
+    <pre class="hljs"><code><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Util</span>.<span class="hljs-title function_">dict</span>([<span class="hljs-string">&#x27;a&#x27;</span>,<span class="hljs-string">&#x27;b&#x27;</span>], [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>])
+==&gt; { <span class="hljs-attr">a</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">b</span>: <span class="hljs-number">2</span> }</code></pre>
 
-    <pre class="hljs"><code>RapidContext.Util.dict(<span class="hljs-string">[[&#x27;a&#x27;, 1], [&#x27;b&#x27;, 2]]</span>)
-==&gt; { a: <span class="hljs-number">1</span>, b: <span class="hljs-number">2</span> }</code></pre>
+    <pre class="hljs"><code><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Util</span>.<span class="hljs-title function_">dict</span>([[<span class="hljs-string">&#x27;a&#x27;</span>, <span class="hljs-number">1</span>], [<span class="hljs-string">&#x27;b&#x27;</span>, <span class="hljs-number">2</span>]])
+==&gt; { <span class="hljs-attr">a</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">b</span>: <span class="hljs-number">2</span> }</code></pre>
 
-    <pre class="hljs"><code>RapidContext.Util.dict([<span class="hljs-string">&#x27;a&#x27;</span>,<span class="hljs-string">&#x27;b&#x27;</span>], <span class="hljs-literal">true</span>)
-==&gt; { a: <span class="hljs-literal">true</span>, b: <span class="hljs-literal">true</span> }</code></pre>
+    <pre class="hljs"><code><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Util</span>.<span class="hljs-title function_">dict</span>([<span class="hljs-string">&#x27;a&#x27;</span>,<span class="hljs-string">&#x27;b&#x27;</span>], <span class="hljs-literal">true</span>)
+==&gt; { <span class="hljs-attr">a</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">b</span>: <span class="hljs-literal">true</span> }</code></pre>
+
 
     </dd>
 
@@ -534,7 +536,7 @@ this function is the reverse of <code>MochiKit.Base.items()</code>,
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext.Util.js.html">RapidContext.Util.js</a>, <a href="RapidContext.Util.js.html#line60">line 60</a>
+        <a href="RapidContext.Util.js.html">RapidContext.Util.js</a>, <a href="RapidContext.Util.js.html#line62">line 62</a>
     </dd>
 
 </dl>
@@ -706,13 +708,14 @@ the specified keys.</p>
     <dt class="tag-examples">Examples:</dt>
     <dd class="tag-examples">
 
-    <pre class="hljs"><code><span class="hljs-string">var</span> <span class="hljs-string">o</span> <span class="hljs-string">=</span> { <span class="hljs-attr">a:</span> <span class="hljs-number">1</span>, <span class="hljs-attr">b:</span> <span class="hljs-number">2</span> }<span class="hljs-string">;</span>
-<span class="hljs-string">RapidContext.Util.mask(o,</span> [<span class="hljs-string">&#x27;a&#x27;</span>, <span class="hljs-string">&#x27;c&#x27;</span>]<span class="hljs-string">);</span>
-<span class="hljs-string">==&gt;</span> { <span class="hljs-attr">a:</span> <span class="hljs-number">1</span> } <span class="hljs-string">and</span> <span class="hljs-string">modifies</span> <span class="hljs-string">o</span> <span class="hljs-string">to</span> { <span class="hljs-attr">b:</span> <span class="hljs-number">2</span> }</code></pre>
+    <pre class="hljs"><code><span class="hljs-keyword">var</span> o = { <span class="hljs-attr">a</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">b</span>: <span class="hljs-number">2</span> };
+<span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Util</span>.<span class="hljs-title function_">mask</span>(o, [<span class="hljs-string">&#x27;a&#x27;</span>, <span class="hljs-string">&#x27;c&#x27;</span>]);
+==&gt; { <span class="hljs-attr">a</span>: <span class="hljs-number">1</span> } and modifies o to { <span class="hljs-attr">b</span>: <span class="hljs-number">2</span> }</code></pre>
 
-    <pre class="hljs"><code><span class="hljs-string">var</span> <span class="hljs-string">o</span> <span class="hljs-string">=</span> { <span class="hljs-attr">a:</span> <span class="hljs-number">1</span>, <span class="hljs-attr">b:</span> <span class="hljs-number">2</span> }<span class="hljs-string">;</span>
-<span class="hljs-string">RapidContext.Util.mask(o,</span> { <span class="hljs-attr">a:</span> <span class="hljs-literal">null</span>, <span class="hljs-attr">c:</span> <span class="hljs-literal">null</span> }<span class="hljs-string">);</span>
-<span class="hljs-string">==&gt;</span> { <span class="hljs-attr">a:</span> <span class="hljs-number">1</span> } <span class="hljs-string">and</span> <span class="hljs-string">modifies</span> <span class="hljs-string">o</span> <span class="hljs-string">to</span> { <span class="hljs-attr">b:</span> <span class="hljs-number">2</span> }</code></pre>
+    <pre class="hljs"><code><span class="hljs-keyword">var</span> o = { <span class="hljs-attr">a</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">b</span>: <span class="hljs-number">2</span> };
+<span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Util</span>.<span class="hljs-title function_">mask</span>(o, { <span class="hljs-attr">a</span>: <span class="hljs-literal">null</span>, <span class="hljs-attr">c</span>: <span class="hljs-literal">null</span> });
+==&gt; { <span class="hljs-attr">a</span>: <span class="hljs-number">1</span> } and modifies o to { <span class="hljs-attr">b</span>: <span class="hljs-number">2</span> }</code></pre>
+
 
     </dd>
 
@@ -734,7 +737,7 @@ the specified keys.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext.Util.js.html">RapidContext.Util.js</a>, <a href="RapidContext.Util.js.html#line109">line 109</a>
+        <a href="RapidContext.Util.js.html">RapidContext.Util.js</a>, <a href="RapidContext.Util.js.html#line112">line 112</a>
     </dd>
 
 </dl>
@@ -952,11 +955,12 @@ also be bounded by the parent element size to avoid calculation errors.</p>
     <dt class="tag-examples">Examples:</dt>
     <dd class="tag-examples">
 
-    <pre class="hljs"><code>RapidContext.Util.registerSizeConstraints(node, <span class="hljs-string">&quot;50%-20&quot;</span>, <span class="hljs-string">&quot;100%&quot;</span>);
-==&gt; Sets width <span class="hljs-keyword">to</span> <span class="hljs-number">50%</span>-<span class="hljs-number">20</span> px <span class="hljs-built_in">and</span> height <span class="hljs-keyword">to</span> <span class="hljs-number">100%</span> <span class="hljs-keyword">of</span> parent dimension</code></pre>
+    <pre class="hljs"><code><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Util</span>.<span class="hljs-title function_">registerSizeConstraints</span>(node, <span class="hljs-string">&quot;50%-20&quot;</span>, <span class="hljs-string">&quot;100%&quot;</span>);
+==&gt; <span class="hljs-title class_">Sets</span> width to <span class="hljs-number">50</span>%-<span class="hljs-number">20</span> px and height to <span class="hljs-number">100</span>% <span class="hljs-keyword">of</span> parent dimension</code></pre>
 
-    <pre class="hljs"><code>RapidContext.Util.<span class="hljs-title function_ invoke__">resizeElements</span>(node, otherNode);
-==&gt; Evaluates the size constraints <span class="hljs-keyword">for</span> <span class="hljs-title class_">both</span> nodes</code></pre>
+    <pre class="hljs"><code><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Util</span>.<span class="hljs-title function_">resizeElements</span>(node, otherNode);
+==&gt; <span class="hljs-title class_">Evaluates</span> the size constraints <span class="hljs-keyword">for</span> both nodes</code></pre>
+
 
     </dd>
 
@@ -978,7 +982,7 @@ also be bounded by the parent element size to avoid calculation errors.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext.Util.js.html">RapidContext.Util.js</a>, <a href="RapidContext.Util.js.html#line250">line 250</a>
+        <a href="RapidContext.Util.js.html">RapidContext.Util.js</a>, <a href="RapidContext.Util.js.html#line254">line 254</a>
     </dd>
 
 </dl>
@@ -1134,11 +1138,12 @@ DOM tree traversal.</p>
     <dt class="tag-examples">Examples:</dt>
     <dd class="tag-examples">
 
-    <pre class="hljs"><code>RapidContext.Util.resizeElements<span class="hljs-punctuation">(</span>node<span class="hljs-punctuation">)</span>;
-<span class="hljs-operator">==</span><span class="hljs-operator">&gt;</span> Evaluates the size constraints <span class="hljs-keyword">for</span> a node and <span class="hljs-built_in">all</span> child nodes</code></pre>
+    <pre class="hljs"><code><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Util</span>.<span class="hljs-title function_">resizeElements</span>(node);
+==&gt; <span class="hljs-title class_">Evaluates</span> the size constraints <span class="hljs-keyword">for</span> a node and all child nodes</code></pre>
 
     <pre class="hljs"><code>elem.<span class="hljs-property">resizeContent</span> = <span class="hljs-function">() =&gt;</span> {};
 ==&gt; <span class="hljs-title class_">Assigns</span> a no-op child resize handler to elem</code></pre>
+
 
     </dd>
 
@@ -1160,7 +1165,7 @@ DOM tree traversal.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext.Util.js.html">RapidContext.Util.js</a>, <a href="RapidContext.Util.js.html#line303">line 303</a>
+        <a href="RapidContext.Util.js.html">RapidContext.Util.js</a>, <a href="RapidContext.Util.js.html#line307">line 307</a>
     </dd>
 
 </dl>
@@ -1338,8 +1343,7 @@ specified URI. The base URI provided must be absolute.</p>
         <dt class="tag-deprecated">Deprecated:</dt>
         <dd class="important">
             This function will be removed and/or renamed in the future.
-    Better solutions for handling URL:s is to use a URL-parsing library such
-    as URL.js.
+    Use `new URL(..., document.baseURI)` instead.
         </dd>
 
 
@@ -1366,7 +1370,7 @@ specified URI. The base URI provided must be absolute.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext.Util.js.html">RapidContext.Util.js</a>, <a href="RapidContext.Util.js.html#line178">line 178</a>
+        <a href="RapidContext.Util.js.html">RapidContext.Util.js</a>, <a href="RapidContext.Util.js.html#line181">line 181</a>
     </dd>
 
 </dl>
@@ -1507,17 +1511,18 @@ capitalization of other characters in the string.</p>
     <dt class="tag-examples">Examples:</dt>
     <dd class="tag-examples">
 
-    <pre class="hljs"><code>RapidContext.Util.toTitleCase(<span class="hljs-string">&quot;a short heading&quot;</span>)
+    <pre class="hljs"><code><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Util</span>.<span class="hljs-title function_">toTitleCase</span>(<span class="hljs-string">&quot;a short heading&quot;</span>)
 ==&gt; <span class="hljs-string">&quot;A Short Heading&quot;</span></code></pre>
 
-    <pre class="hljs"><code>RapidContext.Util.toTitleCase(<span class="hljs-string">&quot;camelCase&quot;</span>)
+    <pre class="hljs"><code><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Util</span>.<span class="hljs-title function_">toTitleCase</span>(<span class="hljs-string">&quot;camelCase&quot;</span>)
 ==&gt; <span class="hljs-string">&quot;Camel Case&quot;</span></code></pre>
 
-    <pre class="hljs"><code>RapidContext.Util.toTitleCase(<span class="hljs-string">&quot;bounding-box&quot;</span>)
+    <pre class="hljs"><code><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Util</span>.<span class="hljs-title function_">toTitleCase</span>(<span class="hljs-string">&quot;bounding-box&quot;</span>)
 ==&gt; <span class="hljs-string">&quot;Bounding Box&quot;</span></code></pre>
 
-    <pre class="hljs"><code>RapidContext.Util.toTitleCase(<span class="hljs-string">&quot;UPPER_CASE_VALUE&quot;</span>)
+    <pre class="hljs"><code><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Util</span>.<span class="hljs-title function_">toTitleCase</span>(<span class="hljs-string">&quot;UPPER_CASE_VALUE&quot;</span>)
 ==&gt; <span class="hljs-string">&quot;UPPER CASE VALUE&quot;</span></code></pre>
+
 
     </dd>
 
@@ -1539,7 +1544,7 @@ capitalization of other characters in the string.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext.Util.js.html">RapidContext.Util.js</a>, <a href="RapidContext.Util.js.html#line152">line 152</a>
+        <a href="RapidContext.Util.js.html">RapidContext.Util.js</a>, <a href="RapidContext.Util.js.html#line156">line 156</a>
     </dd>
 
 </dl>

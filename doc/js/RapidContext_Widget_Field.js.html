@@ -86,7 +86,7 @@
 <span id="line31" class="lineno">31</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">function</span>} [attrs.formatter] the value formatter function
 <span id="line32" class="lineno">32</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">number</span>} [attrs.maxLength] the maximum data length,
 <span id="line33" class="lineno">33</span> *            overflow will be displayed as a tooltip, defaults to
-<span id="line34" class="lineno">34</span> *            -1 (unlimited)
+<span id="line34" class="lineno">34</span> *            unlimited
 <span id="line35" class="lineno">35</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">boolean</span>} [attrs.mask] the masked display flag, when set
 <span id="line36" class="lineno">36</span> *            the field value is only displayed after the user has
 <span id="line37" class="lineno">37</span> *            clicked the field, defaults to false
@@ -99,20 +99,20 @@
 <span id="line44" class="lineno">44</span> * <span class="hljs-doctag">@extends</span> RapidContext.Widget
 <span id="line45" class="lineno">45</span> *
 <span id="line46" class="lineno">46</span> * <span class="hljs-doctag">@example</span> &lt;caption&gt;JavaScript&lt;/caption&gt;
-<span id="line47" class="lineno">47</span> * var attrs = { name: &quot;ratio&quot;, value: 0.23, format: &quot;Ratio: {:%}&quot; };
-<span id="line48" class="lineno">48</span> * var field = RapidContext.Widget.Field(attrs);
+<span id="line47" class="lineno">47</span> * let attrs = { name: &quot;ratio&quot;, value: 0.23, format: &quot;Ratio: {:%}&quot; };
+<span id="line48" class="lineno">48</span> * let field = RapidContext.Widget.Field(attrs);
 <span id="line49" class="lineno">49</span> *
 <span id="line50" class="lineno">50</span> * <span class="hljs-doctag">@example</span> &lt;caption&gt;User Interface XML&lt;/caption&gt;
 <span id="line51" class="lineno">51</span> * &lt;Field name=&quot;ratio&quot; value=&quot;0.23&quot; format=&quot;Ratio: {:%}&quot; /&gt;
 <span id="line52" class="lineno">52</span> */</span>
 <span id="line53" class="lineno">53</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Field</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">attrs</span>) {
-<span id="line54" class="lineno">54</span>    <span class="hljs-keyword">var</span> o = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&quot;span&quot;</span>);
+<span id="line54" class="lineno">54</span>    <span class="hljs-keyword">let</span> o = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&quot;span&quot;</span>);
 <span id="line55" class="lineno">55</span>    <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title function_">_widgetMixin</span>(o, <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Field</span>);
 <span id="line56" class="lineno">56</span>    o.<span class="hljs-title function_">addClass</span>(<span class="hljs-string">&quot;widgetField&quot;</span>);
-<span id="line57" class="lineno">57</span>    o.<span class="hljs-title function_">setAttrs</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>({ <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;&quot;</span>, <span class="hljs-attr">value</span>: <span class="hljs-string">&quot;&quot;</span>, <span class="hljs-attr">maxLength</span>: -<span class="hljs-number">1</span>, <span class="hljs-attr">mask</span>: <span class="hljs-literal">false</span> }, attrs));
+<span id="line57" class="lineno">57</span>    o.<span class="hljs-title function_">setAttrs</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>({ <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;&quot;</span>, <span class="hljs-attr">value</span>: <span class="hljs-string">&quot;&quot;</span> }, attrs));
 <span id="line58" class="lineno">58</span>    o.<span class="hljs-property">defaultValue</span> = o.<span class="hljs-property">value</span>;
-<span id="line59" class="lineno">59</span>    o.<span class="hljs-property">defaultMask</span> = o.<span class="hljs-property">mask</span>;
-<span id="line60" class="lineno">60</span>    o.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&quot;click&quot;</span>, o.<span class="hljs-property">_handleClick</span>);
+<span id="line59" class="lineno">59</span>    o.<span class="hljs-property">defaultMask</span> = !!o.<span class="hljs-property">mask</span>;
+<span id="line60" class="lineno">60</span>    o.<span class="hljs-title function_">on</span>(<span class="hljs-string">&quot;click&quot;</span>, o.<span class="hljs-property">_handleClick</span>);
 <span id="line61" class="lineno">61</span>    <span class="hljs-keyword">return</span> o;
 <span id="line62" class="lineno">62</span>};
 <span id="line63" class="lineno">63</span>
@@ -120,124 +120,109 @@
 <span id="line65" class="lineno">65</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Classes</span>.<span class="hljs-property">Field</span> = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Field</span>;
 <span id="line66" class="lineno">66</span>
 <span id="line67" class="lineno">67</span><span class="hljs-comment">/**
-<span id="line68" class="lineno">68</span> * Destroys this widget.
-<span id="line69" class="lineno">69</span> */</span>
-<span id="line70" class="lineno">70</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Field</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">destroy</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line71" class="lineno">71</span>    <span class="hljs-comment">// <span class="hljs-doctag">FIXME:</span> Use AbortSignal instead to disconnect</span>
-<span id="line72" class="lineno">72</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">removeEventListener</span>(<span class="hljs-string">&quot;click&quot;</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">_handleClick</span>);
-<span id="line73" class="lineno">73</span>};
-<span id="line74" class="lineno">74</span>
-<span id="line75" class="lineno">75</span><span class="hljs-comment">/**
-<span id="line76" class="lineno">76</span> * Returns the widget container DOM node.
-<span id="line77" class="lineno">77</span> *
-<span id="line78" class="lineno">78</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Node</span>} returns null, since child nodes are not supported
-<span id="line79" class="lineno">79</span> */</span>
-<span id="line80" class="lineno">80</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Field</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">_containerNode</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line81" class="lineno">81</span>    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
-<span id="line82" class="lineno">82</span>};
-<span id="line83" class="lineno">83</span>
-<span id="line84" class="lineno">84</span><span class="hljs-comment">/**
-<span id="line85" class="lineno">85</span> * Updates the widget or HTML DOM node attributes.
-<span id="line86" class="lineno">86</span> *
-<span id="line87" class="lineno">87</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Object</span>} attrs the widget and node attributes to set
-<span id="line88" class="lineno">88</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} [attrs.name] the form field name
-<span id="line89" class="lineno">89</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} [attrs.value] the field value
-<span id="line90" class="lineno">90</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} [attrs.format] the field format string
-<span id="line91" class="lineno">91</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">function</span>} [attrs.formatter] the value formatter function
-<span id="line92" class="lineno">92</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">number</span>} [attrs.maxLength] the maximum data length,
-<span id="line93" class="lineno">93</span> *            overflow will be displayed as a tooltip
-<span id="line94" class="lineno">94</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">boolean</span>} [attrs.mask] the masked display flag, when set
-<span id="line95" class="lineno">95</span> *            the field value is only displayed after the user has
-<span id="line96" class="lineno">96</span> *            clicked the field
-<span id="line97" class="lineno">97</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">boolean</span>} [attrs.hidden] the hidden widget flag
-<span id="line98" class="lineno">98</span> *
-<span id="line99" class="lineno">99</span> * <span class="hljs-doctag">@example</span>
-<span id="line100" class="lineno">100</span> * field.setAttrs({ value: 0.23 });
-<span id="line101" class="lineno">101</span> */</span>
-<span id="line102" class="lineno">102</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Field</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">setAttrs</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">attrs</span>) {
-<span id="line103" class="lineno">103</span>    attrs = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>({}, attrs);
-<span id="line104" class="lineno">104</span>    <span class="hljs-keyword">var</span> locals = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Util</span>.<span class="hljs-title function_">mask</span>(attrs, [<span class="hljs-string">&quot;name&quot;</span>, <span class="hljs-string">&quot;value&quot;</span>, <span class="hljs-string">&quot;format&quot;</span>, <span class="hljs-string">&quot;formatter&quot;</span>, <span class="hljs-string">&quot;maxLength&quot;</span>, <span class="hljs-string">&quot;mask&quot;</span>]);
-<span id="line105" class="lineno">105</span>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">typeof</span>(locals.<span class="hljs-property">name</span>) != <span class="hljs-string">&quot;undefined&quot;</span>) {
-<span id="line106" class="lineno">106</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span> = locals.<span class="hljs-property">name</span>;
-<span id="line107" class="lineno">107</span>    }
-<span id="line108" class="lineno">108</span>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">typeof</span>(locals.<span class="hljs-property">format</span>) != <span class="hljs-string">&quot;undefined&quot;</span>) {
-<span id="line109" class="lineno">109</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">format</span> = locals.<span class="hljs-property">format</span>;
-<span id="line110" class="lineno">110</span>    }
-<span id="line111" class="lineno">111</span>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">typeof</span>(locals.<span class="hljs-property">formatter</span>) != <span class="hljs-string">&quot;undefined&quot;</span>) {
-<span id="line112" class="lineno">112</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">formatter</span> = locals.<span class="hljs-property">formatter</span>;
-<span id="line113" class="lineno">113</span>    }
-<span id="line114" class="lineno">114</span>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">typeof</span>(locals.<span class="hljs-property">maxLength</span>) != <span class="hljs-string">&quot;undefined&quot;</span>) {
-<span id="line115" class="lineno">115</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">maxLength</span> = <span class="hljs-built_in">parseInt</span>(locals.<span class="hljs-property">maxLength</span>);
-<span id="line116" class="lineno">116</span>    }
-<span id="line117" class="lineno">117</span>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">typeof</span>(locals.<span class="hljs-property">mask</span>) != <span class="hljs-string">&quot;undefined&quot;</span>) {
-<span id="line118" class="lineno">118</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">mask</span> = locals.<span class="hljs-property">mask</span>;
-<span id="line119" class="lineno">119</span>    }
-<span id="line120" class="lineno">120</span>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">typeof</span>(locals.<span class="hljs-property">value</span>) != <span class="hljs-string">&quot;undefined&quot;</span>) {
-<span id="line121" class="lineno">121</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">value</span> = locals.<span class="hljs-property">value</span>;
-<span id="line122" class="lineno">122</span>    }
-<span id="line123" class="lineno">123</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">__setAttrs</span>(attrs);
-<span id="line124" class="lineno">124</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">redraw</span>();
-<span id="line125" class="lineno">125</span>};
-<span id="line126" class="lineno">126</span>
-<span id="line127" class="lineno">127</span><span class="hljs-comment">/**
-<span id="line128" class="lineno">128</span> * Redraws the field from updated values or status. Note that this
-<span id="line129" class="lineno">129</span> * method is called automatically whenever the `setAttrs()` method is
-<span id="line130" class="lineno">130</span> * called.
-<span id="line131" class="lineno">131</span> */</span>
-<span id="line132" class="lineno">132</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Field</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">redraw</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line133" class="lineno">133</span>    <span class="hljs-keyword">var</span> str = <span class="hljs-variable language_">this</span>.<span class="hljs-property">value</span>;
-<span id="line134" class="lineno">134</span>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">formatter</span>) {
-<span id="line135" class="lineno">135</span>        <span class="hljs-keyword">try</span> {
-<span id="line136" class="lineno">136</span>            str = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">formatter</span>(str);
-<span id="line137" class="lineno">137</span>        } <span class="hljs-keyword">catch</span> (e) {
-<span id="line138" class="lineno">138</span>            str = e.<span class="hljs-property">message</span>;
-<span id="line139" class="lineno">139</span>        }
-<span id="line140" class="lineno">140</span>    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (str == <span class="hljs-literal">null</span> || str === <span class="hljs-string">&quot;&quot;</span>) {
-<span id="line141" class="lineno">141</span>        str = <span class="hljs-string">&quot;&quot;</span>;
-<span id="line142" class="lineno">142</span>    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">format</span>) {
-<span id="line143" class="lineno">143</span>        str = <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Text</span>.<span class="hljs-title function_">format</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">format</span>, str);
-<span id="line144" class="lineno">144</span>    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">typeof</span>(str) != <span class="hljs-string">&quot;string&quot;</span>) {
-<span id="line145" class="lineno">145</span>        str = str.<span class="hljs-title function_">toString</span>();
-<span id="line146" class="lineno">146</span>    }
-<span id="line147" class="lineno">147</span>    <span class="hljs-keyword">var</span> longStr = str;
-<span id="line148" class="lineno">148</span>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">maxLength</span> &gt; <span class="hljs-number">0</span>) {
-<span id="line149" class="lineno">149</span>        str = <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Text</span>.<span class="hljs-title function_">truncate</span>(str, <span class="hljs-variable language_">this</span>.<span class="hljs-property">maxLength</span>, <span class="hljs-string">&quot;...&quot;</span>);
-<span id="line150" class="lineno">150</span>    }
-<span id="line151" class="lineno">151</span>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">mask</span>) {
-<span id="line152" class="lineno">152</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">addClass</span>(<span class="hljs-string">&quot;widgetFieldMask&quot;</span>);
-<span id="line153" class="lineno">153</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">title</span> = <span class="hljs-string">&quot;Click to show&quot;</span>;
-<span id="line154" class="lineno">154</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">innerText</span> = <span class="hljs-string">&quot;\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022&quot;</span>;
-<span id="line155" class="lineno">155</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">append</span>(<span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title class_">Icon</span>({ <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;LOCK&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Click to show&quot;</span> }));
-<span id="line156" class="lineno">156</span>    } <span class="hljs-keyword">else</span> {
-<span id="line157" class="lineno">157</span>        <span class="hljs-keyword">if</span> (str == longStr) {
-<span id="line158" class="lineno">158</span>            <span class="hljs-keyword">delete</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">title</span>;
-<span id="line159" class="lineno">159</span>        } <span class="hljs-keyword">else</span> {
-<span id="line160" class="lineno">160</span>            <span class="hljs-variable language_">this</span>.<span class="hljs-property">title</span> = longStr;
-<span id="line161" class="lineno">161</span>        }
-<span id="line162" class="lineno">162</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">innerText</span> = str;
-<span id="line163" class="lineno">163</span>    }
-<span id="line164" class="lineno">164</span>};
-<span id="line165" class="lineno">165</span>
-<span id="line166" class="lineno">166</span><span class="hljs-comment">/**
-<span id="line167" class="lineno">167</span> * Resets the field value to the initial value.
-<span id="line168" class="lineno">168</span> */</span>
-<span id="line169" class="lineno">169</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Field</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">reset</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line170" class="lineno">170</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setAttrs</span>({ <span class="hljs-attr">value</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">defaultValue</span>, <span class="hljs-attr">mask</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">defaultMask</span> });
-<span id="line171" class="lineno">171</span>};
-<span id="line172" class="lineno">172</span>
-<span id="line173" class="lineno">173</span><span class="hljs-comment">/**
-<span id="line174" class="lineno">174</span> * Handles click events on the field (if masked).
-<span id="line175" class="lineno">175</span> */</span>
-<span id="line176" class="lineno">176</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Field</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">_handleClick</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line177" class="lineno">177</span>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">mask</span>) {
-<span id="line178" class="lineno">178</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">mask</span> = <span class="hljs-literal">false</span>;
-<span id="line179" class="lineno">179</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">removeClass</span>(<span class="hljs-string">&quot;widgetFieldMask&quot;</span>);
-<span id="line180" class="lineno">180</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">redraw</span>();
-<span id="line181" class="lineno">181</span>    }
-<span id="line182" class="lineno">182</span>};
-<span id="line183" class="lineno">183</span></code></pre>
+<span id="line68" class="lineno">68</span> * Returns the widget container DOM node.
+<span id="line69" class="lineno">69</span> *
+<span id="line70" class="lineno">70</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Node</span>} returns null, since child nodes are not supported
+<span id="line71" class="lineno">71</span> */</span>
+<span id="line72" class="lineno">72</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Field</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">_containerNode</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line73" class="lineno">73</span>    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+<span id="line74" class="lineno">74</span>};
+<span id="line75" class="lineno">75</span>
+<span id="line76" class="lineno">76</span><span class="hljs-comment">/**
+<span id="line77" class="lineno">77</span> * Updates the widget or HTML DOM node attributes.
+<span id="line78" class="lineno">78</span> *
+<span id="line79" class="lineno">79</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Object</span>} attrs the widget and node attributes to set
+<span id="line80" class="lineno">80</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} [attrs.name] the form field name
+<span id="line81" class="lineno">81</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} [attrs.value] the field value
+<span id="line82" class="lineno">82</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} [attrs.format] the field format string
+<span id="line83" class="lineno">83</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">function</span>} [attrs.formatter] the value formatter function
+<span id="line84" class="lineno">84</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">number</span>} [attrs.maxLength] the maximum data length,
+<span id="line85" class="lineno">85</span> *            overflow will be displayed as a tooltip
+<span id="line86" class="lineno">86</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">boolean</span>} [attrs.mask] the masked display flag, when set
+<span id="line87" class="lineno">87</span> *            the field value is only displayed after the user has
+<span id="line88" class="lineno">88</span> *            clicked the field
+<span id="line89" class="lineno">89</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">boolean</span>} [attrs.hidden] the hidden widget flag
+<span id="line90" class="lineno">90</span> *
+<span id="line91" class="lineno">91</span> * <span class="hljs-doctag">@example</span>
+<span id="line92" class="lineno">92</span> * field.setAttrs({ value: 0.23 });
+<span id="line93" class="lineno">93</span> */</span>
+<span id="line94" class="lineno">94</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Field</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">setAttrs</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">attrs</span>) {
+<span id="line95" class="lineno">95</span>    attrs = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>({}, attrs);
+<span id="line96" class="lineno">96</span>    <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;formatter&quot;</span> <span class="hljs-keyword">in</span> attrs) {
+<span id="line97" class="lineno">97</span>        <span class="hljs-keyword">let</span> valid = <span class="hljs-title function_">typeof</span>(attrs.<span class="hljs-property">formatter</span>) == <span class="hljs-string">&quot;function&quot;</span>;
+<span id="line98" class="lineno">98</span>        attrs.<span class="hljs-property">formatter</span> = valid ? attrs.<span class="hljs-property">formatter</span> : <span class="hljs-literal">null</span>;
+<span id="line99" class="lineno">99</span>    }
+<span id="line100" class="lineno">100</span>    <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;maxLength&quot;</span> <span class="hljs-keyword">in</span> attrs) {
+<span id="line101" class="lineno">101</span>        <span class="hljs-keyword">let</span> val = <span class="hljs-built_in">parseInt</span>(attrs.<span class="hljs-property">maxLength</span>, <span class="hljs-number">10</span>);
+<span id="line102" class="lineno">102</span>        attrs.<span class="hljs-property">maxLength</span> = <span class="hljs-built_in">isNaN</span>(val) ? <span class="hljs-literal">null</span> : val;
+<span id="line103" class="lineno">103</span>    }
+<span id="line104" class="lineno">104</span>    <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;mask&quot;</span> <span class="hljs-keyword">in</span> attrs) {
+<span id="line105" class="lineno">105</span>        attrs.<span class="hljs-property">mask</span> = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Data</span>.<span class="hljs-title function_">bool</span>(attrs.<span class="hljs-property">mask</span>);
+<span id="line106" class="lineno">106</span>    }
+<span id="line107" class="lineno">107</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">__setAttrs</span>(attrs);
+<span id="line108" class="lineno">108</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">redraw</span>();
+<span id="line109" class="lineno">109</span>};
+<span id="line110" class="lineno">110</span>
+<span id="line111" class="lineno">111</span><span class="hljs-comment">/**
+<span id="line112" class="lineno">112</span> * Redraws the field from updated values or status. Note that this
+<span id="line113" class="lineno">113</span> * method is called automatically whenever the `setAttrs()` method is
+<span id="line114" class="lineno">114</span> * called.
+<span id="line115" class="lineno">115</span> */</span>
+<span id="line116" class="lineno">116</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Field</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">redraw</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line117" class="lineno">117</span>    <span class="hljs-keyword">let</span> str = <span class="hljs-variable language_">this</span>.<span class="hljs-property">value</span>;
+<span id="line118" class="lineno">118</span>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">formatter</span>) {
+<span id="line119" class="lineno">119</span>        <span class="hljs-keyword">try</span> {
+<span id="line120" class="lineno">120</span>            str = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">formatter</span>(str);
+<span id="line121" class="lineno">121</span>        } <span class="hljs-keyword">catch</span> (e) {
+<span id="line122" class="lineno">122</span>            str = e.<span class="hljs-property">message</span>;
+<span id="line123" class="lineno">123</span>        }
+<span id="line124" class="lineno">124</span>    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (str == <span class="hljs-literal">null</span> || str === <span class="hljs-string">&quot;&quot;</span>) {
+<span id="line125" class="lineno">125</span>        str = <span class="hljs-string">&quot;&quot;</span>;
+<span id="line126" class="lineno">126</span>    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">format</span>) {
+<span id="line127" class="lineno">127</span>        str = <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Text</span>.<span class="hljs-title function_">format</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">format</span>, str);
+<span id="line128" class="lineno">128</span>    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">typeof</span>(str) != <span class="hljs-string">&quot;string&quot;</span>) {
+<span id="line129" class="lineno">129</span>        str = str.<span class="hljs-title function_">toString</span>();
+<span id="line130" class="lineno">130</span>    }
+<span id="line131" class="lineno">131</span>    <span class="hljs-keyword">let</span> longStr = str;
+<span id="line132" class="lineno">132</span>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">maxLength</span> &gt; <span class="hljs-number">0</span>) {
+<span id="line133" class="lineno">133</span>        str = <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Text</span>.<span class="hljs-title function_">truncate</span>(str, <span class="hljs-variable language_">this</span>.<span class="hljs-property">maxLength</span>, <span class="hljs-string">&quot;...&quot;</span>);
+<span id="line134" class="lineno">134</span>    }
+<span id="line135" class="lineno">135</span>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">mask</span>) {
+<span id="line136" class="lineno">136</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">addClass</span>(<span class="hljs-string">&quot;widgetFieldMask&quot;</span>);
+<span id="line137" class="lineno">137</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">title</span> = <span class="hljs-string">&quot;Click to show&quot;</span>;
+<span id="line138" class="lineno">138</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">innerText</span> = <span class="hljs-string">&quot;\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022&quot;</span>;
+<span id="line139" class="lineno">139</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">append</span>(<span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title class_">Icon</span>({ <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;LOCK&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Click to show&quot;</span> }));
+<span id="line140" class="lineno">140</span>    } <span class="hljs-keyword">else</span> {
+<span id="line141" class="lineno">141</span>        <span class="hljs-keyword">if</span> (str == longStr) {
+<span id="line142" class="lineno">142</span>            <span class="hljs-keyword">delete</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">title</span>;
+<span id="line143" class="lineno">143</span>        } <span class="hljs-keyword">else</span> {
+<span id="line144" class="lineno">144</span>            <span class="hljs-variable language_">this</span>.<span class="hljs-property">title</span> = longStr;
+<span id="line145" class="lineno">145</span>        }
+<span id="line146" class="lineno">146</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">innerText</span> = str;
+<span id="line147" class="lineno">147</span>    }
+<span id="line148" class="lineno">148</span>};
+<span id="line149" class="lineno">149</span>
+<span id="line150" class="lineno">150</span><span class="hljs-comment">/**
+<span id="line151" class="lineno">151</span> * Resets the field value to the initial value.
+<span id="line152" class="lineno">152</span> */</span>
+<span id="line153" class="lineno">153</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Field</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">reset</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line154" class="lineno">154</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setAttrs</span>({ <span class="hljs-attr">value</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">defaultValue</span>, <span class="hljs-attr">mask</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">defaultMask</span> });
+<span id="line155" class="lineno">155</span>};
+<span id="line156" class="lineno">156</span>
+<span id="line157" class="lineno">157</span><span class="hljs-comment">/**
+<span id="line158" class="lineno">158</span> * Handles click events on the field (if masked).
+<span id="line159" class="lineno">159</span> */</span>
+<span id="line160" class="lineno">160</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Field</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">_handleClick</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line161" class="lineno">161</span>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">mask</span>) {
+<span id="line162" class="lineno">162</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">mask</span> = <span class="hljs-literal">false</span>;
+<span id="line163" class="lineno">163</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">removeClass</span>(<span class="hljs-string">&quot;widgetFieldMask&quot;</span>);
+<span id="line164" class="lineno">164</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">redraw</span>();
+<span id="line165" class="lineno">165</span>    }
+<span id="line166" class="lineno">166</span>};
+<span id="line167" class="lineno">167</span></code></pre>
         </article>
     </section>
+
 
 
 

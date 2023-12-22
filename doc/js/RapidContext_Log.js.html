@@ -112,10 +112,10 @@
 <span id="line57" class="lineno">57</span>     * functions. Safe to call multiple times to change or update config.
 <span id="line58" class="lineno">58</span>     *
 <span id="line59" class="lineno">59</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Object</span>} [opts] the log configuration options, or null
-<span id="line60" class="lineno">60</span>     * <span class="hljs-doctag">@config</span> {<span class="hljs-type">number</span>} [interval] the publish delay in millis, default is 10s
-<span id="line61" class="lineno">61</span>     * <span class="hljs-doctag">@config</span> {<span class="hljs-type">string</span>} [url] the publish URL endpoint
-<span id="line62" class="lineno">62</span>     * <span class="hljs-doctag">@config</span> {<span class="hljs-type">function</span>} [filter] the event filter, returns a boolean
-<span id="line63" class="lineno">63</span>     * <span class="hljs-doctag">@config</span> {<span class="hljs-type">function</span>} [publisher] the event publisher, returns a Promise
+<span id="line60" class="lineno">60</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">number</span>} [opts.interval] the publish delay in millis, default is 10s
+<span id="line61" class="lineno">61</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} [opts.url] the publish URL endpoint
+<span id="line62" class="lineno">62</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">function</span>} [opts.filter] the event filter, returns a boolean
+<span id="line63" class="lineno">63</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">function</span>} [opts.publisher] the event publisher, returns a Promise
 <span id="line64" class="lineno">64</span>     *
 <span id="line65" class="lineno">65</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Log
 <span id="line66" class="lineno">66</span>     */</span>
@@ -512,6 +512,7 @@
 <span id="line457" class="lineno">457</span></code></pre>
         </article>
     </section>
+
 
 
 

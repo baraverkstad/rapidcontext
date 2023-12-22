@@ -176,7 +176,7 @@
                         <div >
                             <code><a href="#destroy">destroy<span class="signature">()</span><span class="type-signature"></span></a></code>
                         </div>
-                        <div class="description">Destroys this widget.</div>
+                        <div class="description">The internal widget destructor function.</div>
                     </td>
                 </tr>
 
@@ -189,6 +189,18 @@
                             <code><a href="#disable">disable<span class="signature">()</span><span class="type-signature"></span></a></code>
                         </div>
                         <div class="description">Disables this widget if it was previously enabled.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#emit">emit<span class="signature">(event, opts<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {boolean}</span></a></code>
+                        </div>
+                        <div class="description">Dispatches a single event from this DOM node.</div>
                     </td>
                 </tr>
 
@@ -379,6 +391,42 @@ was set.</div>
                     </td>
                     <td class="name-description">
                         <div >
+                            <code><a href="#off">off<span class="signature">(event<span class="signature-attributes">opt</span>, selector<span class="signature-attributes">opt</span>, listener<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Node}</span></a></code>
+                        </div>
+                        <div class="description">Removes one or more previously attached event listeners.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#on">on<span class="signature">(event, selector<span class="signature-attributes">opt</span>, listener, opts<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Node}</span></a></code>
+                        </div>
+                        <div class="description">Attaches a listener function for one or more events.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#once">once<span class="signature">(event, selector<span class="signature-attributes">opt</span>, listener, opts<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Node}</span></a></code>
+                        </div>
+                        <div class="description">Attaches a single event listener function.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
                             <code><a href="#redraw">redraw<span class="signature">()</span><span class="type-signature"></span></a></code>
                         </div>
                         <div class="description">Redraws the table from updated source data.</div>
@@ -542,6 +590,18 @@ from this HTML DOM node.</div>
                     </td>
                 </tr>
 
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature"></span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#updateData">updateData<span class="signature">(data)</span><span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Updates one or more rows of table data.</div>
+                    </td>
+                </tr>
+
             </tbody>
         </table>
 
@@ -579,8 +639,6 @@ from this HTML DOM node.</div>
 
             </tbody>
         </table>
-
-
 
 </header>
 
@@ -902,13 +960,13 @@ from this HTML DOM node.</div>
 
         <p class="code-caption">JavaScript</p>
 
-    <pre class="hljs"><code><span class="hljs-keyword">var</span> attrs1 = { field: <span class="hljs-string">&quot;id&quot;</span>, title: <span class="hljs-string">&quot;Identifier&quot;</span>, key: <span class="hljs-literal">true</span>, <span class="hljs-keyword">type</span>: <span class="hljs-string">&quot;number&quot;</span> };
-<span class="hljs-keyword">var</span> attrs2 = { field: <span class="hljs-string">&quot;name&quot;</span>, title: <span class="hljs-string">&quot;Name&quot;</span>, maxLength: <span class="hljs-number">50</span>, sort: <span class="hljs-string">&quot;asc&quot;</span> };
-<span class="hljs-keyword">var</span> attrs3 = { field: <span class="hljs-string">&quot;modified&quot;</span>, title: <span class="hljs-string">&quot;Last Modified&quot;</span>, <span class="hljs-keyword">type</span>: <span class="hljs-string">&quot;datetime&quot;</span> };
-<span class="hljs-keyword">var</span> col1 = RapidContext.Widget.TableColumn(attrs1);
-<span class="hljs-keyword">var</span> col2 = RapidContext.Widget.TableColumn(attrs2);
-<span class="hljs-keyword">var</span> col3 = RapidContext.Widget.TableColumn(attrs3);
-<span class="hljs-keyword">var</span> exampleTable = RapidContext.Widget.Table({}, col1, col2, col3);
+    <pre class="hljs"><code><span class="hljs-built_in">let</span> attrs1 = { field: <span class="hljs-string">&quot;id&quot;</span>, title: <span class="hljs-string">&quot;Identifier&quot;</span>, key: <span class="hljs-literal">true</span>, <span class="hljs-built_in">type</span>: <span class="hljs-string">&quot;number&quot;</span> };
+<span class="hljs-built_in">let</span> attrs2 = { field: <span class="hljs-string">&quot;name&quot;</span>, title: <span class="hljs-string">&quot;Name&quot;</span>, maxLength: 50, <span class="hljs-built_in">sort</span>: <span class="hljs-string">&quot;asc&quot;</span> };
+<span class="hljs-built_in">let</span> attrs3 = { field: <span class="hljs-string">&quot;modified&quot;</span>, title: <span class="hljs-string">&quot;Last Modified&quot;</span>, <span class="hljs-built_in">type</span>: <span class="hljs-string">&quot;datetime&quot;</span> };
+<span class="hljs-built_in">let</span> col1 = RapidContext.Widget.TableColumn(attrs1);
+<span class="hljs-built_in">let</span> col2 = RapidContext.Widget.TableColumn(attrs2);
+<span class="hljs-built_in">let</span> col3 = RapidContext.Widget.TableColumn(attrs3);
+<span class="hljs-built_in">let</span> exampleTable = RapidContext.Widget.Table({}, col1, col2, col3);
 RapidContext.Util.registerSizeConstraints(exampleTable, <span class="hljs-string">&quot;50%&quot;</span>, <span class="hljs-string">&quot;100%&quot;</span>);</code></pre>
 
         <p class="code-caption">User Interface XML</p>
@@ -918,6 +976,7 @@ RapidContext.Util.registerSizeConstraints(exampleTable, <span class="hljs-string
   <span class="hljs-tag">&lt;<span class="hljs-name">TableColumn</span> <span class="hljs-attr">field</span>=<span class="hljs-string">&quot;name&quot;</span> <span class="hljs-attr">title</span>=<span class="hljs-string">&quot;Name&quot;</span> <span class="hljs-attr">maxLength</span>=<span class="hljs-string">&quot;50&quot;</span> <span class="hljs-attr">sort</span>=<span class="hljs-string">&quot;asc&quot;</span> /&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-name">TableColumn</span> <span class="hljs-attr">field</span>=<span class="hljs-string">&quot;modified&quot;</span> <span class="hljs-attr">title</span>=<span class="hljs-string">&quot;Last Modified&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;datetime&quot;</span> /&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">Table</span>&gt;</span></code></pre>
+
 
     </dd>
 
@@ -957,8 +1016,6 @@ RapidContext.Util.registerSizeConstraints(exampleTable, <span class="hljs-string
     <ul>
         <li><a href="RapidContext.Widget.html">RapidContext.Widget</a></li>
     </ul>
-
-
 
 
 
@@ -1128,7 +1185,7 @@ DOM node insertion.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line570">line 570</a>
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line581">line 581</a>
     </dd>
 
 </dl>
@@ -1274,7 +1331,7 @@ DOM node insertion.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line196">line 196</a>
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line186">line 186</a>
     </dd>
 
 </dl>
@@ -1432,7 +1489,7 @@ DOM node insertion.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line333">line 333</a>
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line343">line 343</a>
     </dd>
 
 </dl>
@@ -1596,7 +1653,7 @@ selection is changed the select signal will be emitted.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line535">line 535</a>
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line554">line 554</a>
     </dd>
 
 </dl>
@@ -1813,8 +1870,9 @@ sent to this function will be passed on to the appropriate
     <dt class="tag-examples">Example:</dt>
     <dd class="tag-examples">
 
-    <pre class="hljs"><code>widget.<span class="hljs-title function_ invoke__">animate</span>({ <span class="hljs-attr">effect</span>: <span class="hljs-string">&quot;fade&quot;</span>, <span class="hljs-attr">duration</span>: <span class="hljs-number">0.5</span> });
-widget.<span class="hljs-title function_ invoke__">animate</span>({ <span class="hljs-attr">effect</span>: <span class="hljs-string">&quot;Move&quot;</span>, <span class="hljs-attr">transition</span>: <span class="hljs-string">&quot;spring&quot;</span>, <span class="hljs-attr">y</span>: <span class="hljs-number">300</span> });</code></pre>
+    <pre class="hljs"><code>widget.<span class="hljs-title function_">animate</span>({ <span class="hljs-attr">effect</span>: <span class="hljs-string">&quot;fade&quot;</span>, <span class="hljs-attr">duration</span>: <span class="hljs-number">0.5</span> });
+widget.<span class="hljs-title function_">animate</span>({ <span class="hljs-attr">effect</span>: <span class="hljs-string">&quot;Move&quot;</span>, <span class="hljs-attr">transition</span>: <span class="hljs-string">&quot;spring&quot;</span>, <span class="hljs-attr">y</span>: <span class="hljs-number">300</span> });</code></pre>
+
 
     </dd>
 
@@ -1836,7 +1894,7 @@ widget.<span class="hljs-title function_ invoke__">animate</span>({ <span class=
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line492">line 492</a>
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line502">line 502</a>
     </dd>
 
 </dl>
@@ -1931,7 +1989,7 @@ will recursively blur all <code>&lt;a&gt;</code>, <code>&lt;button&gt;</code>, <
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line510">line 510</a>
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line521">line 521</a>
     </dd>
 
 </dl>
@@ -2021,7 +2079,7 @@ also remove columns.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line310">line 310</a>
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line292">line 292</a>
     </dd>
 
 </dl>
@@ -2041,7 +2099,9 @@ also remove columns.</p>
 
 
 <div class="description">
-    <p>Destroys this widget.</p>
+    <p>The internal widget destructor function. This method should only
+be called by <code>destroyWidget()</code> and may be overridden by subclasses.
+By default this method does nothing.</p>
 </div>
 
 
@@ -2061,10 +2121,8 @@ also remove columns.</p>
 
 
 
-
-
-    <dt class="tag-overrides">Overrides:</dt>
-    <dd class="tag-overrides">
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
         <a href="RapidContext.Widget.html#destroy">RapidContext.Widget#destroy</a>
     </dd>
 
@@ -2112,9 +2170,11 @@ also remove columns.</p>
 
 
 
+
+
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line100">line 100</a>
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line198">line 198</a>
     </dd>
 
 </dl>
@@ -2208,7 +2268,401 @@ equivalent to calling <code>setAttrs({ disabled: true })</code>.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line424">line 424</a>
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line434">line 434</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="emit">
+        <span class="type-signature"></span>emit<span class="signature">(event, opts<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {boolean}</span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Dispatches a single event from this DOM node. Also creates
+a new CustomEvent instance if needed.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>event</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string/Event</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the event type name or instance
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>opts</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Object</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the event options
+
+                    <h6>Properties</h6>
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+        <th>Default</th>
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>async</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>boolean</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+                <td class="default">
+
+                    true
+
+                </td>
+
+
+            <td class="description last">
+                the async dispatch flag
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>bubbles</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>boolean</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+                <td class="default">
+
+
+
+                </td>
+
+
+            <td class="description last">
+                the event bubbles flag
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>cancelable</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>boolean</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+                <td class="default">
+
+
+
+                </td>
+
+
+            <td class="description last">
+                the cancellable event flag
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>detail</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Object</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+                <td class="default">
+
+                </td>
+
+
+            <td class="description last">
+                the additional event details
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>boolean</b>}</span>
+
+    <code>true</code> if event was async or not cancelled
+
+    </dd>
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.UI.Event.html#emit">RapidContext.UI.Event#emit</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="rapidcontext_ui_event.mjs.html">rapidcontext/ui/event.mjs</a>, <a href="rapidcontext_ui_event.mjs.html#line26">line 26</a>
     </dd>
 
 </dl>
@@ -2302,7 +2756,7 @@ equivalent to calling <code>setAttrs({ disabled: false })</code>.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line416">line 416</a>
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line426">line 426</a>
     </dd>
 
 </dl>
@@ -2479,7 +2933,7 @@ equivalent to calling <code>setAttrs({ disabled: false })</code>.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line295">line 295</a>
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line277">line 277</a>
     </dd>
 
 </dl>
@@ -2585,7 +3039,7 @@ intermediate DOM nodes required by the widget.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line522">line 522</a>
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line533">line 533</a>
     </dd>
 
 </dl>
@@ -2737,7 +3191,7 @@ intermediate DOM nodes required by the widget.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line223">line 223</a>
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line213">line 213</a>
     </dd>
 
 </dl>
@@ -2758,8 +3212,10 @@ intermediate DOM nodes required by the widget.</p>
 
 <div class="description">
     <p>Returns an array with the data in the table. The array returned
-should correspond exactly to the one previously set, i.e. it has
-not been sorted or modified in other ways.</p>
+normally correspond exactly to the one previously set, i.e. it
+has not been sorted or modified in other ways. If <code>updateData()</code>
+is called however, a new data array is created to match current
+rows.</p>
 </div>
 
 
@@ -2837,7 +3293,7 @@ not been sorted or modified in other ways.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line321">line 321</a>
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line305">line 305</a>
     </dd>
 
 </dl>
@@ -2937,7 +3393,7 @@ was set.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line240">line 240</a>
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line225">line 225</a>
     </dd>
 
 </dl>
@@ -3036,7 +3492,7 @@ method for <code>getData().length</code>.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line451">line 451</a>
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line470">line 470</a>
     </dd>
 
 </dl>
@@ -3191,7 +3647,7 @@ current table sort order.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line466">line 466</a>
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line485">line 485</a>
     </dd>
 
 </dl>
@@ -3290,7 +3746,7 @@ current table sort order.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line489">line 489</a>
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line508">line 508</a>
     </dd>
 
 </dl>
@@ -3391,7 +3847,7 @@ if no key column is set.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line479">line 479</a>
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line498">line 498</a>
     </dd>
 
 </dl>
@@ -3490,7 +3946,7 @@ if no key column is set.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line276">line 276</a>
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line259">line 259</a>
     </dd>
 
 </dl>
@@ -3661,7 +4117,7 @@ case all must be present.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line315">line 315</a>
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line325">line 325</a>
     </dd>
 
 </dl>
@@ -3757,7 +4213,7 @@ CSS class instead of setting the <code>display</code> style property.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line470">line 470</a>
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line480">line 480</a>
     </dd>
 
 </dl>
@@ -3864,7 +4320,7 @@ to the disabled status can be made with <code>enable()</code>, <code>disable()</
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line395">line 395</a>
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line405">line 405</a>
     </dd>
 
 </dl>
@@ -3971,7 +4427,912 @@ animations for example).</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line437">line 437</a>
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line447">line 447</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="off">
+        <span class="type-signature"></span>off<span class="signature">(event<span class="signature-attributes">opt</span>, selector<span class="signature-attributes">opt</span>, listener<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Node}</span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Removes one or more previously attached event listeners. If
+no event details or listeners are specified, all matching
+handlers are removed.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>event</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the event type name (or space separated names)
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>selector</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the CSS selector to match for event target
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>listener</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>function</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the event handler function (or <code>false</code>)
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>Node</b>}</span>
+
+    the input DOM node (for chaining calls)
+
+    </dd>
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.UI.Event.html#off">RapidContext.UI.Event#off</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="rapidcontext_ui_event.mjs.html">rapidcontext/ui/event.mjs</a>, <a href="rapidcontext_ui_event.mjs.html#line77">line 77</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="on">
+        <span class="type-signature"></span>on<span class="signature">(event, selector<span class="signature-attributes">opt</span>, listener, opts<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Node}</span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Attaches a listener function for one or more events.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>event</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the event type name (or space separated names)
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>selector</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the CSS selector to match for event target
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>listener</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>function</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the event handler function (or <code>false</code>)
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>opts</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Object</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the event listener options (see addEventListener)
+
+                    <h6>Properties</h6>
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>delay</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>number</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                an inactivity delay before calling listener
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>Node</b>}</span>
+
+    the input DOM node (for chaining calls)
+
+    </dd>
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.UI.Event.html#on">RapidContext.UI.Event#on</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="rapidcontext_ui_event.mjs.html">rapidcontext/ui/event.mjs</a>, <a href="rapidcontext_ui_event.mjs.html#line44">line 44</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="once">
+        <span class="type-signature"></span>once<span class="signature">(event, selector<span class="signature-attributes">opt</span>, listener, opts<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Node}</span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Attaches a single event listener function. The listener will
+be removed the first time an event is triggered.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>event</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the event type name (or space separated names)
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>selector</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the CSS selector to match for event target
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>listener</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>function</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the event handler function (or <code>false</code>)
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>opts</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Object</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the event listener options (see addEventListener)
+
+                    <h6>Properties</h6>
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>delay</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>number</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                an inactivity delay before calling listener
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>Node</b>}</span>
+
+    the input DOM node (for chaining calls)
+
+    </dd>
+
+
+
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+        <a href="RapidContext.UI.Event.html#once">RapidContext.UI.Event#once</a>
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="rapidcontext_ui_event.mjs.html">rapidcontext/ui/event.mjs</a>, <a href="rapidcontext_ui_event.mjs.html#line60">line 60</a>
     </dd>
 
 </dl>
@@ -4061,7 +5422,7 @@ intact. For a more complete redraw of the table, use <code>setData()</code>.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line413">line 413</a>
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line433">line 433</a>
     </dd>
 
 </dl>
@@ -4157,7 +5518,7 @@ individual child nodes.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line582">line 582</a>
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line593">line 593</a>
     </dd>
 
 </dl>
@@ -4304,7 +5665,7 @@ This will also clear all the data in the table.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line210">line 210</a>
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line200">line 200</a>
     </dd>
 
 </dl>
@@ -4464,7 +5825,7 @@ Note that this method will not remove any class starting with
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line353">line 353</a>
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line363">line 363</a>
     </dd>
 
 </dl>
@@ -4628,7 +5989,7 @@ current selection is changed the select signal will be emitted.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line573">line 573</a>
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line592">line 592</a>
     </dd>
 
 </dl>
@@ -4908,7 +6269,7 @@ current selection is changed the select signal will be emitted.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line179">line 179</a>
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line170">line 170</a>
     </dd>
 
 </dl>
@@ -5039,12 +6400,13 @@ by this method and any selection on such tables is lost.</p>
     <dt class="tag-examples">Example:</dt>
     <dd class="tag-examples">
 
-    <pre class="hljs"><code><span class="hljs-string">var</span> <span class="hljs-string">data</span> <span class="hljs-string">=</span> [
-    { <span class="hljs-attr">id:</span> <span class="hljs-number">1</span>, <span class="hljs-attr">name:</span> <span class="hljs-string">&quot;John Doe&quot;</span>, <span class="hljs-attr">modified:</span> <span class="hljs-string">&quot;@1300000000000&quot;</span> },
-    { <span class="hljs-attr">id:</span> <span class="hljs-number">2</span>, <span class="hljs-attr">name:</span> <span class="hljs-string">&quot;First Last&quot;</span>, <span class="hljs-attr">modified:</span> <span class="hljs-string">new</span> <span class="hljs-string">Date()</span> },
-    { <span class="hljs-attr">id:</span> <span class="hljs-number">3</span>, <span class="hljs-attr">name:</span> <span class="hljs-string">&quot;Another Name&quot;</span>, <span class="hljs-attr">modified:</span> <span class="hljs-string">&quot;2004-11-30 13:33:20&quot;</span> }
-]<span class="hljs-string">;</span>
-<span class="hljs-string">table.setData(data);</span></code></pre>
+    <pre class="hljs"><code><span class="hljs-keyword">let</span> data = [
+    { <span class="hljs-attr">id</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;John Doe&quot;</span>, <span class="hljs-attr">modified</span>: <span class="hljs-string">&quot;@1300000000000&quot;</span> },
+    { <span class="hljs-attr">id</span>: <span class="hljs-number">2</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;First Last&quot;</span>, <span class="hljs-attr">modified</span>: <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>() },
+    { <span class="hljs-attr">id</span>: <span class="hljs-number">3</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;Another Name&quot;</span>, <span class="hljs-attr">modified</span>: <span class="hljs-string">&quot;2004-11-30 13:33:20&quot;</span> }
+];
+table.<span class="hljs-title function_">setData</span>(data);</code></pre>
+
 
     </dd>
 
@@ -5066,7 +6428,7 @@ by this method and any selection on such tables is lost.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line343">line 343</a>
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line327">line 327</a>
     </dd>
 
 </dl>
@@ -5209,7 +6571,7 @@ contains data.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line260">line 260</a>
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line244">line 244</a>
     </dd>
 
 </dl>
@@ -5373,7 +6735,7 @@ selection is changed the select signal will be emitted.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line502">line 502</a>
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line521">line 521</a>
     </dd>
 
 </dl>
@@ -5506,7 +6868,8 @@ first argument.</p>
     <dt class="tag-examples">Example:</dt>
     <dd class="tag-examples">
 
-    <pre class="hljs"><code>widget<span class="hljs-selector-class">.setStyle</span>({ &quot;<span class="hljs-attribute">font-size</span>&quot;: <span class="hljs-string">&quot;bold&quot;</span>, <span class="hljs-string">&quot;color&quot;</span>: <span class="hljs-string">&quot;red&quot;</span> });</code></pre>
+    <pre class="hljs"><code>widget.<span class="hljs-title function_">setStyle</span>({ <span class="hljs-string">&quot;font-size&quot;</span>: <span class="hljs-string">&quot;bold&quot;</span>, <span class="hljs-string">&quot;color&quot;</span>: <span class="hljs-string">&quot;red&quot;</span> });</code></pre>
+
 
     </dd>
 
@@ -5528,7 +6891,7 @@ first argument.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line294">line 294</a>
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line302">line 302</a>
     </dd>
 
 </dl>
@@ -5624,7 +6987,7 @@ CSS class instead of setting the <code>display</code> style property.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line460">line 460</a>
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line470">line 470</a>
     </dd>
 
 </dl>
@@ -5811,7 +7174,7 @@ CSS class instead of setting the <code>display</code> style property.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line383">line 383</a>
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line410">line 410</a>
     </dd>
 
 </dl>
@@ -5982,7 +7345,7 @@ they will be removed. Otherwise they will be added.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line376">line 376</a>
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line386">line 386</a>
     </dd>
 
 </dl>
@@ -6087,7 +7450,159 @@ will be generated and assigned to the widget DOM node.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line182">line 182</a>
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line186">line 186</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id="updateData">
+        <span class="type-signature"></span>updateData<span class="signature">(data)</span><span class="type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Updates one or more rows of table data. Data is matched to
+existing rows either via the key identifier field or object
+identity. Any matching rows will be mapped and re-rendered
+accordingly. Non-matching data will be be ignored.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>data</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Array</b>|<b>Object</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                an array with data or a single data object
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-examples">Example:</dt>
+    <dd class="tag-examples">
+
+    <pre class="hljs"><code>table.<span class="hljs-title function_">updateData</span>({ <span class="hljs-attr">id</span>: <span class="hljs-number">2</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;New Name&quot;</span>, <span class="hljs-attr">modified</span>: <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>() });</code></pre>
+
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="RapidContext_Widget_Table.js.html">RapidContext_Widget_Table.js</a>, <a href="RapidContext_Widget_Table.js.html#line362">line 362</a>
     </dd>
 
 </dl>

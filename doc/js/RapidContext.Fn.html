@@ -1,0 +1,3563 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="JsDoc" />
+    <link rel="stylesheet" href="../css/style.css" type="text/css">
+    <link rel="stylesheet" href="../css/doc.css" type="text/css">
+    <link rel="stylesheet" href="../css/font-awesome-4.7.0.min.css" type="text/css">
+    <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="../images/logotype-icon.ico">
+    <link rel="icon" type="image/png" sizes="256x256" href="../images/logotype-icon-256x256.png">
+    <link rel="apple-touch-icon" sizes="256x256" href="../images/logotype-icon-256x256.png">
+    <title>RapidContext :: JavaScript API</title>
+  </head>
+  <body class="doc">
+
+    <section class="header">
+      <div class="center">
+        <a href="https://www.rapidcontext.com/" class="logotype">
+          <img src="../images/logotype.png" />
+        </a>
+        <div class="text">
+          <a href="https://www.rapidcontext.com/">
+            <span style="font-size: 3.6em;">RapidContext</span><br>
+            <span style="font-size: 1.75em; color: #caf3ff;">Access &#183; Discovery &#183; Insight</span><br>
+            <span style="font-size: 1.3em; letter-spacing: 0.34em; line-height: 1.8em;">www.rapidcontext.com</span>
+          </a>
+        </div>
+      </div>
+      <div class="menu">
+        <a href="https://www.rapidcontext.com/doc/index.html">Docs</a>
+        &bull; <a href="https://github.com/cederberg/rapidcontext/releases">Downloads</a>
+        &bull; <a href="https://github.com/cederberg/rapidcontext">Project</a>
+      </div>
+    </section>
+
+    <section class="content center">
+      <ol class="breadcrumb">
+        <li><a href="../index.html">Documentation</a></li>
+
+        <li><a href="index.html">JavaScript API</a></li>
+        <li class="active">RapidContext.Fn</li>
+
+      </ol>
+
+      <div class="jsdoc">
+        <h1 class="classTitle">Namespace RapidContext.Fn</h1>
+
+
+
+
+<header>
+
+        <h2>Fn</h2>
+
+            <div class="description"><p>Provides predicate functions for type checking and equality.</p></div>
+
+
+
+
+
+
+        <table class="summary-table">
+            <caption>Field Summary</caption>
+            <tbody>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature">(static) </span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#.eq">eq<span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Checks if one or more values are equal.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature">(static) </span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#.hasProperty">hasProperty<span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Checks if an object has an own property with a specified key.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature">(static) </span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#.hasValue">hasValue<span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Checks if a value is set.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature">(static) </span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#.isArrayLike">isArrayLike<span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Checks if a value is Array-like.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature">(static) </span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#.isBigInt">isBigInt<span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Checks if a value is a <code>bigint</code> (i.e.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature">(static) </span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#.isBoolean">isBoolean<span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Checks if a value is a <code>boolean</code>` (i.e.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature">(static) </span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#.isDate">isDate<span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Checks if a value is an instance of <code>Date</code>.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature">(static) </span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#.isError">isError<span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Checks if a value is an instance of <code>Error</code>.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature">(static) </span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#.isFunction">isFunction<span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Checks if a value is a <code>function</code> (i.e.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature">(static) </span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#.isInstanceOf">isInstanceOf<span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Checks if a value is <code>instanceof</code> a constructor function.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature">(static) </span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#.isIterable">isIterable<span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Checks if a value is iterable (i.e.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature">(static) </span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#.isNil">isNil<span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Checks if a value is either <code>null</code> or <code>undefined</code>.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature">(static) </span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#.isNull">isNull<span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Checks if a value is <code>null</code> (but not <code>undefined</code>).</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature">(static) </span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#.isNumber">isNumber<span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Checks if a value is a <code>number</code> (i.e.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature">(static) </span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#.isObject">isObject<span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Checks if a value is a plain <code>Object</code> (and not based on another prototype).</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature">(static) </span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#.isPromise">isPromise<span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Checks if a value is an instance of <code>Promise</code>.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature">(static) </span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#.isRegExp">isRegExp<span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Checks if a value is an instance of <code>RegExp</code>.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature">(static) </span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#.isSetLike">isSetLike<span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Checks if a value is Set-like.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature">(static) </span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#.isString">isString<span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Checks if a value is a <code>string</code> (i.e.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature">(static) </span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#.isTypeOf">isTypeOf<span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Checks if <code>typeof(val)</code> matches a string or an array element.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature">(static) </span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#.isUndefined">isUndefined<span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Checks if a value is <code>undefined</code> (but not <code>null</code>).</div>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+
+
+
+
+
+</header>
+
+<article>
+    <div class="container-overview">
+
+    </div>
+
+
+
+
+
+
+
+
+        <h3 class="section-title">Members</h3>
+
+
+<h4 class="name" id=".eq"><span class="type-signature">(static) </span>eq<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Checks if one or more values are equal. Supports recursively comparing both
+arrays and objects, as well as standard values. Returns a bound function if
+only the first argument is specified. Also returns a bound function if one
+argument is a function.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>values</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>*</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+
+
+
+
+                    &lt;repeatable><br>
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the values to compare
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>boolean</b>|<b>function</b>}</span>
+
+    the test result, or a bound function
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-examples">Examples:</dt>
+    <dd class="tag-examples">
+
+    <pre class="hljs"><code><span class="hljs-title function_">eq</span>(<span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">3</span>) <span class="hljs-comment">//==&gt; false</span>
+<span class="hljs-title function_">eq</span>({ <span class="hljs-attr">a</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">b</span>: <span class="hljs-number">2</span> }, { <span class="hljs-attr">b</span>: <span class="hljs-number">2</span>, <span class="hljs-attr">a</span>: <span class="hljs-number">1</span> }) <span class="hljs-comment">//==&gt; true</span></code></pre>
+
+    <pre class="hljs"><code><span class="hljs-keyword">let</span> isAbc = <span class="hljs-title function_">eq</span>(<span class="hljs-string">&quot;abc&quot;</span>);
+<span class="hljs-title function_">isAbc</span>(<span class="hljs-string">&quot;abc&quot;</span>) <span class="hljs-comment">//==&gt; true</span></code></pre>
+
+    <pre class="hljs"><code><span class="hljs-keyword">let</span> hasValidA = <span class="hljs-title function_">eq</span>(<span class="hljs-number">42</span>, <span class="hljs-title function_">get</span>(<span class="hljs-string">&quot;a&quot;</span>));
+<span class="hljs-title function_">hasValidA</span>({ <span class="hljs-attr">a</span>: <span class="hljs-number">42</span> }) <span class="hljs-comment">//==&gt; true</span></code></pre>
+
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="rapidcontext_fn.mjs.html">rapidcontext/fn.mjs</a>, <a href="rapidcontext_fn.mjs.html#line299">line 299</a>
+    </dd>
+
+</dl>
+
+
+
+
+<h4 class="name" id=".hasProperty"><span class="type-signature">(static) </span>hasProperty<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Checks if an object has an own property with a specified key. Returns a
+bound function if only the first argument is specified.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>key</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the property key to check for
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>obj</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Object</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the object to check
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>boolean</b>|<b>function</b>}</span>
+
+    the match result, or a bound function
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="rapidcontext_fn.mjs.html">rapidcontext/fn.mjs</a>, <a href="rapidcontext_fn.mjs.html#line257">line 257</a>
+    </dd>
+
+</dl>
+
+
+
+
+<h4 class="name" id=".hasValue"><span class="type-signature">(static) </span>hasValue<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Checks if a value is set. Returns <code>false</code> for <code>null</code>, <code>undefined</code>, empty
+arrays, empty objects or empty strings. Boolean <code>false</code> and <code>0</code> will return
+<code>true</code>, as these are defined values.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>val</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>*</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the value to check
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>boolean</b>}</span>
+
+    <code>true</code> if the value is set, or <code>false</code> otherwise
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="rapidcontext_fn.mjs.html">rapidcontext/fn.mjs</a>, <a href="rapidcontext_fn.mjs.html#line275">line 275</a>
+    </dd>
+
+</dl>
+
+
+
+
+<h4 class="name" id=".isArrayLike"><span class="type-signature">(static) </span>isArrayLike<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Checks if a value is Array-like. This is an object with a numeric <code>length</code>
+property (but not a function).</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>val</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>*</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the value to check
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>boolean</b>}</span>
+
+    <code>true</code> on match, or <code>false</code> otherwise
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="rapidcontext_fn.mjs.html">rapidcontext/fn.mjs</a>, <a href="rapidcontext_fn.mjs.html#line218">line 218</a>
+    </dd>
+
+</dl>
+
+
+
+
+<h4 class="name" id=".isBigInt"><span class="type-signature">(static) </span>isBigInt<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Checks if a value is a <code>bigint</code> (i.e. <code>typeof(..) = &quot;bigint&quot;</code>).</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>val</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>*</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the value to check
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>boolean</b>}</span>
+
+    <code>true</code> on match, or <code>false</code> otherwise
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="rapidcontext_fn.mjs.html">rapidcontext/fn.mjs</a>, <a href="rapidcontext_fn.mjs.html#line110">line 110</a>
+    </dd>
+
+</dl>
+
+
+
+
+<h4 class="name" id=".isBoolean"><span class="type-signature">(static) </span>isBoolean<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Checks if a value is a <code>boolean</code><code> (i.e. </code>typeof(..) = &quot;boolean&quot;`).</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>val</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>*</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the value to check
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>boolean</b>}</span>
+
+    <code>true</code> on match, or <code>false</code> otherwise
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="rapidcontext_fn.mjs.html">rapidcontext/fn.mjs</a>, <a href="rapidcontext_fn.mjs.html#line74">line 74</a>
+    </dd>
+
+</dl>
+
+
+
+
+<h4 class="name" id=".isDate"><span class="type-signature">(static) </span>isDate<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Checks if a value is an instance of <code>Date</code>.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>val</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>*</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the value to check
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>boolean</b>}</span>
+
+    <code>true</code> on match, or <code>false</code> otherwise
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="rapidcontext_fn.mjs.html">rapidcontext/fn.mjs</a>, <a href="rapidcontext_fn.mjs.html#line180">line 180</a>
+    </dd>
+
+</dl>
+
+
+
+
+<h4 class="name" id=".isError"><span class="type-signature">(static) </span>isError<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Checks if a value is an instance of <code>Error</code>.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>val</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>*</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the value to check
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>boolean</b>}</span>
+
+    <code>true</code> on match, or <code>false</code> otherwise
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="rapidcontext_fn.mjs.html">rapidcontext/fn.mjs</a>, <a href="rapidcontext_fn.mjs.html#line168">line 168</a>
+    </dd>
+
+</dl>
+
+
+
+
+<h4 class="name" id=".isFunction"><span class="type-signature">(static) </span>isFunction<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Checks if a value is a <code>function</code> (i.e. <code>typeof(..) = &quot;function&quot;</code>).</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>val</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>*</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the value to check
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>boolean</b>}</span>
+
+    <code>true</code> on match, or <code>false</code> otherwise
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="rapidcontext_fn.mjs.html">rapidcontext/fn.mjs</a>, <a href="rapidcontext_fn.mjs.html#line86">line 86</a>
+    </dd>
+
+</dl>
+
+
+
+
+<h4 class="name" id=".isInstanceOf"><span class="type-signature">(static) </span>isInstanceOf<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Checks if a value is <code>instanceof</code> a constructor function. Returns a bound
+function if only the first argument is specified.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>constructor</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>function</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the constructor function or class
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>val</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>*</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the value to check
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>boolean</b>|<b>function</b>}</span>
+
+    the match result, or a bound function
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="rapidcontext_fn.mjs.html">rapidcontext/fn.mjs</a>, <a href="rapidcontext_fn.mjs.html#line150">line 150</a>
+    </dd>
+
+</dl>
+
+
+
+
+<h4 class="name" id=".isIterable"><span class="type-signature">(static) </span>isIterable<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Checks if a value is iterable (i.e. follows the iterable protocol). This is
+an object with a <code>Symbol.iterator</code> method returning the values.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>val</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>*</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the value to check
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>boolean</b>}</span>
+
+    <code>true</code> on match, or <code>false</code> otherwise
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="rapidcontext_fn.mjs.html">rapidcontext/fn.mjs</a>, <a href="rapidcontext_fn.mjs.html#line244">line 244</a>
+    </dd>
+
+</dl>
+
+
+
+
+<h4 class="name" id=".isNil"><span class="type-signature">(static) </span>isNil<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Checks if a value is either <code>null</code> or <code>undefined</code>.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>val</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>*</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the value to check
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>boolean</b>}</span>
+
+    <code>true</code> on match, or <code>false</code> otherwise
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="rapidcontext_fn.mjs.html">rapidcontext/fn.mjs</a>, <a href="rapidcontext_fn.mjs.html#line20">line 20</a>
+    </dd>
+
+</dl>
+
+
+
+
+<h4 class="name" id=".isNull"><span class="type-signature">(static) </span>isNull<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Checks if a value is <code>null</code> (but not <code>undefined</code>).</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>val</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>*</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the value to check
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>boolean</b>}</span>
+
+    <code>true</code> on match, or <code>false</code> otherwise
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="rapidcontext_fn.mjs.html">rapidcontext/fn.mjs</a>, <a href="rapidcontext_fn.mjs.html#line32">line 32</a>
+    </dd>
+
+</dl>
+
+
+
+
+<h4 class="name" id=".isNumber"><span class="type-signature">(static) </span>isNumber<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Checks if a value is a <code>number</code> (i.e. <code>typeof(..) = &quot;number&quot;</code>).</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>val</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>*</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the value to check
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>boolean</b>}</span>
+
+    <code>true</code> on match, or <code>false</code> otherwise
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="rapidcontext_fn.mjs.html">rapidcontext/fn.mjs</a>, <a href="rapidcontext_fn.mjs.html#line98">line 98</a>
+    </dd>
+
+</dl>
+
+
+
+
+<h4 class="name" id=".isObject"><span class="type-signature">(static) </span>isObject<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Checks if a value is a plain <code>Object</code> (and not based on another prototype).</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>val</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>*</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the value to check
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>boolean</b>}</span>
+
+    <code>true</code> on match, or <code>false</code> otherwise
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="rapidcontext_fn.mjs.html">rapidcontext/fn.mjs</a>, <a href="rapidcontext_fn.mjs.html#line134">line 134</a>
+    </dd>
+
+</dl>
+
+
+
+
+<h4 class="name" id=".isPromise"><span class="type-signature">(static) </span>isPromise<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Checks if a value is an instance of <code>Promise</code>.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>val</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>*</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the value to check
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>boolean</b>}</span>
+
+    <code>true</code> on match, or <code>false</code> otherwise
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="rapidcontext_fn.mjs.html">rapidcontext/fn.mjs</a>, <a href="rapidcontext_fn.mjs.html#line204">line 204</a>
+    </dd>
+
+</dl>
+
+
+
+
+<h4 class="name" id=".isRegExp"><span class="type-signature">(static) </span>isRegExp<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Checks if a value is an instance of <code>RegExp</code>.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>val</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>*</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the value to check
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>boolean</b>}</span>
+
+    <code>true</code> on match, or <code>false</code> otherwise
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="rapidcontext_fn.mjs.html">rapidcontext/fn.mjs</a>, <a href="rapidcontext_fn.mjs.html#line192">line 192</a>
+    </dd>
+
+</dl>
+
+
+
+
+<h4 class="name" id=".isSetLike"><span class="type-signature">(static) </span>isSetLike<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Checks if a value is Set-like. This is an object with a numeric <code>size</code>
+property, and <code>has()</code> and <code>keys()</code> methods.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>val</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>*</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the value to check
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>boolean</b>}</span>
+
+    <code>true</code> on match, or <code>false</code> otherwise
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="rapidcontext_fn.mjs.html">rapidcontext/fn.mjs</a>, <a href="rapidcontext_fn.mjs.html#line231">line 231</a>
+    </dd>
+
+</dl>
+
+
+
+
+<h4 class="name" id=".isString"><span class="type-signature">(static) </span>isString<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Checks if a value is a <code>string</code> (i.e. <code>typeof(..) = &quot;string&quot;</code>).</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>val</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>*</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the value to check
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>boolean</b>}</span>
+
+    <code>true</code> on match, or <code>false</code> otherwise
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="rapidcontext_fn.mjs.html">rapidcontext/fn.mjs</a>, <a href="rapidcontext_fn.mjs.html#line122">line 122</a>
+    </dd>
+
+</dl>
+
+
+
+
+<h4 class="name" id=".isTypeOf"><span class="type-signature">(static) </span>isTypeOf<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Checks if <code>typeof(val)</code> matches a string or an array element. Returns a
+bound function if only the first argument is specified.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>type</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>|<b>Array</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the type name or array of type names
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>val</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>*</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the value to check
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>boolean</b>|<b>function</b>}</span>
+
+    the match result, or a bound function
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="rapidcontext_fn.mjs.html">rapidcontext/fn.mjs</a>, <a href="rapidcontext_fn.mjs.html#line44">line 44</a>
+    </dd>
+
+</dl>
+
+
+
+
+<h4 class="name" id=".isUndefined"><span class="type-signature">(static) </span>isUndefined<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Checks if a value is <code>undefined</code> (but not <code>null</code>).</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>val</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>*</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the value to check
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>boolean</b>}</span>
+
+    <code>true</code> on match, or <code>false</code> otherwise
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="rapidcontext_fn.mjs.html">rapidcontext/fn.mjs</a>, <a href="rapidcontext_fn.mjs.html#line62">line 62</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+
+
+      </div>
+    </section>
+
+    <section class="footer center fineprint">
+      <hr>
+      Copyright &copy; 2007-2023 Per Cederberg. All rights reserved.
+    </section>
+
+  </body>
+</html>

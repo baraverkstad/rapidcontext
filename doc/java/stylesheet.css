@@ -277,9 +277,12 @@ dl.notes > dt {
     color: #4e4e4e;
 }
 dl.notes > dd {
-    margin: 5px 10px 10px 0;
+    margin: 5px 10px 10px 2em;
     font-size: 14px;
     font-family: ui-serif, Georgia, "Times New Roman", serif;
+}
+dl.notes > dd > ul {
+    padding-left: 0;
 }
 dl.name-value > dt {
     margin-left: 1px;
@@ -637,8 +640,7 @@ section {
 .ui-autocomplete {
     max-height: 85%;
     max-width: 65%;
-    overflow-y: scroll;
-    overflow-x: scroll;
+    overflow: scroll;
     white-space: nowrap;
     box-shadow: 0 3px 6px rgb(0 0 0 / 16%), 0 3px 6px rgb(0 0 0 / 23%);
 }

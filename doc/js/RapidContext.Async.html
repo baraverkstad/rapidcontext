@@ -248,7 +248,7 @@ NOT <code>instanceof Promise</code>) due to backwards compatibility. Use
                     </td>
                     <td class="name-description">
                         <div >
-                            <code><a href="#.xhr">xhr<span class="signature">(url, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Async}</span></a></code>
+                            <code><a href="#.xhr">xhr<span class="signature">(url, opts<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Async}</span></a></code>
                         </div>
                         <div class="description">Performs an XmlHttpRequest to a URL.</div>
                     </td>
@@ -256,8 +256,6 @@ NOT <code>instanceof Promise</code>) due to backwards compatibility. Use
 
             </tbody>
         </table>
-
-
 
 
 
@@ -456,8 +454,6 @@ no-op if the action is already performed.</p>
 
 
     </div>
-
-
 
 
 
@@ -2564,7 +2560,7 @@ the finalizer MAY NOT BE CALLED if the promise is cancelled.</p>
 
 
     <h4 class="name" id=".xhr">
-        <span class="type-signature">(static) </span>xhr<span class="signature">(url, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Async}</span>
+        <span class="type-signature">(static) </span>xhr<span class="signature">(url, opts<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Async}</span>
     </h4>
 
 
@@ -2649,7 +2645,7 @@ the finalizer MAY NOT BE CALLED if the promise is cancelled.</p>
 
         <tr>
 
-                <td class="name"><code>options</code></td>
+                <td class="name"><code>opts</code></td>
 
 
             <td class="type">
@@ -2676,6 +2672,244 @@ the finalizer MAY NOT BE CALLED if the promise is cancelled.</p>
 
             <td class="description last">
                 the request options
+
+                    <h6>Properties</h6>
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>method</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the HTTP method (e.g. <code>GET</code>, <code>POST</code>...)
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>headers</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Object</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the HTTP headers to send
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>timeout</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>number</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the timeout in milliseconds (default is 30s)
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>log</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the logging prefix, or <code>null</code> (defaults to <code>request</code>)
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>responseType</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the expected HTTP response (e.g. <code>json</code>)
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>body</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the HTTP request body to send
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
 
             </td>
         </tr>

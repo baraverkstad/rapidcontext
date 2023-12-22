@@ -88,38 +88,6 @@
       "url": "doc/js/RapidContext.Async.html",
       "children": [
         {
-          "topic": "addBoth",
-          "url": "doc/js/RapidContext.Async.html#addBoth"
-        },
-        {
-          "topic": "addCallback",
-          "url": "doc/js/RapidContext.Async.html#addCallback"
-        },
-        {
-          "topic": "addCallbacks",
-          "url": "doc/js/RapidContext.Async.html#addCallbacks"
-        },
-        {
-          "topic": "addErrback",
-          "url": "doc/js/RapidContext.Async.html#addErrback"
-        },
-        {
-          "topic": "cancel",
-          "url": "doc/js/RapidContext.Async.html#cancel"
-        },
-        {
-          "topic": "catch",
-          "url": "doc/js/RapidContext.Async.html#catch"
-        },
-        {
-          "topic": "finally",
-          "url": "doc/js/RapidContext.Async.html#finally"
-        },
-        {
-          "topic": "then",
-          "url": "doc/js/RapidContext.Async.html#then"
-        },
-        {
           "topic": "css",
           "url": "doc/js/RapidContext.Async.html#.css"
         },
@@ -142,6 +110,38 @@
         {
           "topic": "xhr",
           "url": "doc/js/RapidContext.Async.html#.xhr"
+        },
+        {
+          "topic": "▪addBoth",
+          "url": "doc/js/RapidContext.Async.html#addBoth"
+        },
+        {
+          "topic": "▪addCallback",
+          "url": "doc/js/RapidContext.Async.html#addCallback"
+        },
+        {
+          "topic": "▪addCallbacks",
+          "url": "doc/js/RapidContext.Async.html#addCallbacks"
+        },
+        {
+          "topic": "▪addErrback",
+          "url": "doc/js/RapidContext.Async.html#addErrback"
+        },
+        {
+          "topic": "▪cancel",
+          "url": "doc/js/RapidContext.Async.html#cancel"
+        },
+        {
+          "topic": "▪catch",
+          "url": "doc/js/RapidContext.Async.html#catch"
+        },
+        {
+          "topic": "▪finally",
+          "url": "doc/js/RapidContext.Async.html#finally"
+        },
+        {
+          "topic": "▪then",
+          "url": "doc/js/RapidContext.Async.html#then"
         }
       ]
     },
@@ -176,6 +176,56 @@
       ]
     },
     {
+      "topic": "RapidContext.Data",
+      "url": "doc/js/RapidContext.Data.html",
+      "children": [
+        {
+          "topic": "array",
+          "url": "doc/js/RapidContext.Data.html#.array"
+        },
+        {
+          "topic": "bool",
+          "url": "doc/js/RapidContext.Data.html#.bool"
+        },
+        {
+          "topic": "clone",
+          "url": "doc/js/RapidContext.Data.html#.clone"
+        },
+        {
+          "topic": "compare",
+          "url": "doc/js/RapidContext.Data.html#.compare"
+        },
+        {
+          "topic": "filter",
+          "url": "doc/js/RapidContext.Data.html#.filter"
+        },
+        {
+          "topic": "flatten",
+          "url": "doc/js/RapidContext.Data.html#.flatten"
+        },
+        {
+          "topic": "get",
+          "url": "doc/js/RapidContext.Data.html#.get"
+        },
+        {
+          "topic": "map",
+          "url": "doc/js/RapidContext.Data.html#.map"
+        },
+        {
+          "topic": "object",
+          "url": "doc/js/RapidContext.Data.html#.object"
+        },
+        {
+          "topic": "sort",
+          "url": "doc/js/RapidContext.Data.html#.sort"
+        },
+        {
+          "topic": "uniq",
+          "url": "doc/js/RapidContext.Data.html#.uniq"
+        }
+      ]
+    },
+    {
       "topic": "RapidContext.Encode",
       "url": "doc/js/RapidContext.Encode.html",
       "children": [
@@ -190,6 +240,96 @@
         {
           "topic": "toUrlQuery",
           "url": "doc/js/RapidContext.Encode.html#.toUrlQuery"
+        }
+      ]
+    },
+    {
+      "topic": "RapidContext.Fn",
+      "url": "doc/js/RapidContext.Fn.html",
+      "children": [
+        {
+          "topic": "eq",
+          "url": "doc/js/RapidContext.Fn.html#.eq"
+        },
+        {
+          "topic": "hasProperty",
+          "url": "doc/js/RapidContext.Fn.html#.hasProperty"
+        },
+        {
+          "topic": "hasValue",
+          "url": "doc/js/RapidContext.Fn.html#.hasValue"
+        },
+        {
+          "topic": "isArrayLike",
+          "url": "doc/js/RapidContext.Fn.html#.isArrayLike"
+        },
+        {
+          "topic": "isBigInt",
+          "url": "doc/js/RapidContext.Fn.html#.isBigInt"
+        },
+        {
+          "topic": "isBoolean",
+          "url": "doc/js/RapidContext.Fn.html#.isBoolean"
+        },
+        {
+          "topic": "isDate",
+          "url": "doc/js/RapidContext.Fn.html#.isDate"
+        },
+        {
+          "topic": "isError",
+          "url": "doc/js/RapidContext.Fn.html#.isError"
+        },
+        {
+          "topic": "isFunction",
+          "url": "doc/js/RapidContext.Fn.html#.isFunction"
+        },
+        {
+          "topic": "isInstanceOf",
+          "url": "doc/js/RapidContext.Fn.html#.isInstanceOf"
+        },
+        {
+          "topic": "isIterable",
+          "url": "doc/js/RapidContext.Fn.html#.isIterable"
+        },
+        {
+          "topic": "isNil",
+          "url": "doc/js/RapidContext.Fn.html#.isNil"
+        },
+        {
+          "topic": "isNull",
+          "url": "doc/js/RapidContext.Fn.html#.isNull"
+        },
+        {
+          "topic": "isNumber",
+          "url": "doc/js/RapidContext.Fn.html#.isNumber"
+        },
+        {
+          "topic": "isObject",
+          "url": "doc/js/RapidContext.Fn.html#.isObject"
+        },
+        {
+          "topic": "isPromise",
+          "url": "doc/js/RapidContext.Fn.html#.isPromise"
+        },
+        {
+          "topic": "isRegExp",
+          "url": "doc/js/RapidContext.Fn.html#.isRegExp"
+        },
+        {
+          "topic": "isSetLike",
+          "url": "doc/js/RapidContext.Fn.html#.isSetLike"
+        },
+        {
+          "topic": "isString",
+          "url": "doc/js/RapidContext.Fn.html#.isString"
+        },
+        {
+          "topic": "isTypeOf",
+          "url": "doc/js/RapidContext.Fn.html#.isTypeOf"
+        },
+        {
+          "topic": "isUndefined",
+          "url": "doc/js/RapidContext.Fn.html#.isUndefined"
         }
       ]
     },
@@ -244,48 +384,48 @@
       "url": "doc/js/RapidContext.Procedure.html",
       "children": [
         {
-          "topic": "cancel",
+          "topic": "mapAll",
+          "url": "doc/js/RapidContext.Procedure.html#.mapAll"
+        },
+        {
+          "topic": "▪cancel",
           "url": "doc/js/RapidContext.Procedure.html#cancel"
         },
         {
-          "topic": "oncall",
-          "url": "doc/js/RapidContext.Procedure.html#event:oncall"
-        },
-        {
-          "topic": "oncancel",
-          "url": "doc/js/RapidContext.Procedure.html#event:oncancel"
-        },
-        {
-          "topic": "onerror",
-          "url": "doc/js/RapidContext.Procedure.html#event:onerror"
-        },
-        {
-          "topic": "onresponse",
-          "url": "doc/js/RapidContext.Procedure.html#event:onresponse"
-        },
-        {
-          "topic": "onsuccess",
-          "url": "doc/js/RapidContext.Procedure.html#event:onsuccess"
-        },
-        {
-          "topic": "onupdate",
-          "url": "doc/js/RapidContext.Procedure.html#event:onupdate"
-        },
-        {
-          "topic": "multicall",
+          "topic": "▪multicall",
           "url": "doc/js/RapidContext.Procedure.html#multicall"
         },
         {
-          "topic": "recall",
+          "topic": "▪recall",
           "url": "doc/js/RapidContext.Procedure.html#recall"
         },
         {
-          "topic": "reset",
+          "topic": "▪reset",
           "url": "doc/js/RapidContext.Procedure.html#reset"
         },
         {
-          "topic": "mapAll",
-          "url": "doc/js/RapidContext.Procedure.html#.mapAll"
+          "topic": "▫oncall",
+          "url": "doc/js/RapidContext.Procedure.html#event:oncall"
+        },
+        {
+          "topic": "▫oncancel",
+          "url": "doc/js/RapidContext.Procedure.html#event:oncancel"
+        },
+        {
+          "topic": "▫onerror",
+          "url": "doc/js/RapidContext.Procedure.html#event:onerror"
+        },
+        {
+          "topic": "▫onresponse",
+          "url": "doc/js/RapidContext.Procedure.html#event:onresponse"
+        },
+        {
+          "topic": "▫onsuccess",
+          "url": "doc/js/RapidContext.Procedure.html#event:onsuccess"
+        },
+        {
+          "topic": "▫onupdate",
+          "url": "doc/js/RapidContext.Procedure.html#event:onupdate"
         }
       ]
     },
@@ -326,6 +466,44 @@
         {
           "topic": "showError",
           "url": "doc/js/RapidContext.UI.html#.showError"
+        }
+      ]
+    },
+    {
+      "topic": "RapidContext.UI.Event",
+      "url": "doc/js/RapidContext.UI.Event.html",
+      "children": [
+        {
+          "topic": "emit",
+          "url": "doc/js/RapidContext.UI.Event.html#.emit"
+        },
+        {
+          "topic": "off",
+          "url": "doc/js/RapidContext.UI.Event.html#.off"
+        },
+        {
+          "topic": "on",
+          "url": "doc/js/RapidContext.UI.Event.html#.on"
+        },
+        {
+          "topic": "once",
+          "url": "doc/js/RapidContext.UI.Event.html#.once"
+        },
+        {
+          "topic": "▪emit",
+          "url": "doc/js/RapidContext.UI.Event.html#emit"
+        },
+        {
+          "topic": "▪off",
+          "url": "doc/js/RapidContext.UI.Event.html#off"
+        },
+        {
+          "topic": "▪on",
+          "url": "doc/js/RapidContext.UI.Event.html#on"
+        },
+        {
+          "topic": "▪once",
+          "url": "doc/js/RapidContext.UI.Event.html#once"
         }
       ]
     },
@@ -394,90 +572,6 @@
       "url": "doc/js/RapidContext.Widget.html",
       "children": [
         {
-          "topic": "addAll",
-          "url": "doc/js/RapidContext.Widget.html#addAll"
-        },
-        {
-          "topic": "addChildNode",
-          "url": "doc/js/RapidContext.Widget.html#addChildNode"
-        },
-        {
-          "topic": "addClass",
-          "url": "doc/js/RapidContext.Widget.html#addClass"
-        },
-        {
-          "topic": "animate",
-          "url": "doc/js/RapidContext.Widget.html#animate"
-        },
-        {
-          "topic": "blurAll",
-          "url": "doc/js/RapidContext.Widget.html#blurAll"
-        },
-        {
-          "topic": "destroy",
-          "url": "doc/js/RapidContext.Widget.html#destroy"
-        },
-        {
-          "topic": "disable",
-          "url": "doc/js/RapidContext.Widget.html#disable"
-        },
-        {
-          "topic": "enable",
-          "url": "doc/js/RapidContext.Widget.html#enable"
-        },
-        {
-          "topic": "getChildNodes",
-          "url": "doc/js/RapidContext.Widget.html#getChildNodes"
-        },
-        {
-          "topic": "hasClass",
-          "url": "doc/js/RapidContext.Widget.html#hasClass"
-        },
-        {
-          "topic": "hide",
-          "url": "doc/js/RapidContext.Widget.html#hide"
-        },
-        {
-          "topic": "isDisabled",
-          "url": "doc/js/RapidContext.Widget.html#isDisabled"
-        },
-        {
-          "topic": "isHidden",
-          "url": "doc/js/RapidContext.Widget.html#isHidden"
-        },
-        {
-          "topic": "removeAll",
-          "url": "doc/js/RapidContext.Widget.html#removeAll"
-        },
-        {
-          "topic": "removeChildNode",
-          "url": "doc/js/RapidContext.Widget.html#removeChildNode"
-        },
-        {
-          "topic": "removeClass",
-          "url": "doc/js/RapidContext.Widget.html#removeClass"
-        },
-        {
-          "topic": "setAttrs",
-          "url": "doc/js/RapidContext.Widget.html#setAttrs"
-        },
-        {
-          "topic": "setStyle",
-          "url": "doc/js/RapidContext.Widget.html#setStyle"
-        },
-        {
-          "topic": "show",
-          "url": "doc/js/RapidContext.Widget.html#show"
-        },
-        {
-          "topic": "toggleClass",
-          "url": "doc/js/RapidContext.Widget.html#toggleClass"
-        },
-        {
-          "topic": "uid",
-          "url": "doc/js/RapidContext.Widget.html#uid"
-        },
-        {
           "topic": "Classes",
           "url": "doc/js/RapidContext.Widget.html#.Classes"
         },
@@ -492,6 +586,106 @@
         {
           "topic": "isWidget",
           "url": "doc/js/RapidContext.Widget.html#.isWidget"
+        },
+        {
+          "topic": "▪addAll",
+          "url": "doc/js/RapidContext.Widget.html#addAll"
+        },
+        {
+          "topic": "▪addChildNode",
+          "url": "doc/js/RapidContext.Widget.html#addChildNode"
+        },
+        {
+          "topic": "▪addClass",
+          "url": "doc/js/RapidContext.Widget.html#addClass"
+        },
+        {
+          "topic": "▪animate",
+          "url": "doc/js/RapidContext.Widget.html#animate"
+        },
+        {
+          "topic": "▪blurAll",
+          "url": "doc/js/RapidContext.Widget.html#blurAll"
+        },
+        {
+          "topic": "▪destroy",
+          "url": "doc/js/RapidContext.Widget.html#destroy"
+        },
+        {
+          "topic": "▪disable",
+          "url": "doc/js/RapidContext.Widget.html#disable"
+        },
+        {
+          "topic": "▪emit",
+          "url": "doc/js/RapidContext.Widget.html#emit"
+        },
+        {
+          "topic": "▪enable",
+          "url": "doc/js/RapidContext.Widget.html#enable"
+        },
+        {
+          "topic": "▪getChildNodes",
+          "url": "doc/js/RapidContext.Widget.html#getChildNodes"
+        },
+        {
+          "topic": "▪hasClass",
+          "url": "doc/js/RapidContext.Widget.html#hasClass"
+        },
+        {
+          "topic": "▪hide",
+          "url": "doc/js/RapidContext.Widget.html#hide"
+        },
+        {
+          "topic": "▪isDisabled",
+          "url": "doc/js/RapidContext.Widget.html#isDisabled"
+        },
+        {
+          "topic": "▪isHidden",
+          "url": "doc/js/RapidContext.Widget.html#isHidden"
+        },
+        {
+          "topic": "▪off",
+          "url": "doc/js/RapidContext.Widget.html#off"
+        },
+        {
+          "topic": "▪on",
+          "url": "doc/js/RapidContext.Widget.html#on"
+        },
+        {
+          "topic": "▪once",
+          "url": "doc/js/RapidContext.Widget.html#once"
+        },
+        {
+          "topic": "▪removeAll",
+          "url": "doc/js/RapidContext.Widget.html#removeAll"
+        },
+        {
+          "topic": "▪removeChildNode",
+          "url": "doc/js/RapidContext.Widget.html#removeChildNode"
+        },
+        {
+          "topic": "▪removeClass",
+          "url": "doc/js/RapidContext.Widget.html#removeClass"
+        },
+        {
+          "topic": "▪setAttrs",
+          "url": "doc/js/RapidContext.Widget.html#setAttrs"
+        },
+        {
+          "topic": "▪setStyle",
+          "url": "doc/js/RapidContext.Widget.html#setStyle"
+        },
+        {
+          "topic": "▪show",
+          "url": "doc/js/RapidContext.Widget.html#show"
+        },
+        {
+          "topic": "▪toggleClass",
+          "url": "doc/js/RapidContext.Widget.html#toggleClass"
+        },
+        {
+          "topic": "▪uid",
+          "url": "doc/js/RapidContext.Widget.html#uid"
         }
       ]
     },
@@ -500,87 +694,103 @@
       "url": "doc/js/RapidContext.Widget.Button.html",
       "children": [
         {
-          "topic": "addAll",
+          "topic": "▪addAll",
           "url": "doc/js/RapidContext.Widget.Button.html#addAll"
         },
         {
-          "topic": "addChildNode",
+          "topic": "▪addChildNode",
           "url": "doc/js/RapidContext.Widget.Button.html#addChildNode"
         },
         {
-          "topic": "addClass",
+          "topic": "▪addClass",
           "url": "doc/js/RapidContext.Widget.Button.html#addClass"
         },
         {
-          "topic": "animate",
+          "topic": "▪animate",
           "url": "doc/js/RapidContext.Widget.Button.html#animate"
         },
         {
-          "topic": "blurAll",
+          "topic": "▪blurAll",
           "url": "doc/js/RapidContext.Widget.Button.html#blurAll"
         },
         {
-          "topic": "destroy",
+          "topic": "▪destroy",
           "url": "doc/js/RapidContext.Widget.Button.html#destroy"
         },
         {
-          "topic": "disable",
+          "topic": "▪disable",
           "url": "doc/js/RapidContext.Widget.Button.html#disable"
         },
         {
-          "topic": "enable",
+          "topic": "▪emit",
+          "url": "doc/js/RapidContext.Widget.Button.html#emit"
+        },
+        {
+          "topic": "▪enable",
           "url": "doc/js/RapidContext.Widget.Button.html#enable"
         },
         {
-          "topic": "getChildNodes",
+          "topic": "▪getChildNodes",
           "url": "doc/js/RapidContext.Widget.Button.html#getChildNodes"
         },
         {
-          "topic": "hasClass",
+          "topic": "▪hasClass",
           "url": "doc/js/RapidContext.Widget.Button.html#hasClass"
         },
         {
-          "topic": "hide",
+          "topic": "▪hide",
           "url": "doc/js/RapidContext.Widget.Button.html#hide"
         },
         {
-          "topic": "isDisabled",
+          "topic": "▪isDisabled",
           "url": "doc/js/RapidContext.Widget.Button.html#isDisabled"
         },
         {
-          "topic": "isHidden",
+          "topic": "▪isHidden",
           "url": "doc/js/RapidContext.Widget.Button.html#isHidden"
         },
         {
-          "topic": "removeAll",
+          "topic": "▪off",
+          "url": "doc/js/RapidContext.Widget.Button.html#off"
+        },
+        {
+          "topic": "▪on",
+          "url": "doc/js/RapidContext.Widget.Button.html#on"
+        },
+        {
+          "topic": "▪once",
+          "url": "doc/js/RapidContext.Widget.Button.html#once"
+        },
+        {
+          "topic": "▪removeAll",
           "url": "doc/js/RapidContext.Widget.Button.html#removeAll"
         },
         {
-          "topic": "removeChildNode",
+          "topic": "▪removeChildNode",
           "url": "doc/js/RapidContext.Widget.Button.html#removeChildNode"
         },
         {
-          "topic": "removeClass",
+          "topic": "▪removeClass",
           "url": "doc/js/RapidContext.Widget.Button.html#removeClass"
         },
         {
-          "topic": "setAttrs",
+          "topic": "▪setAttrs",
           "url": "doc/js/RapidContext.Widget.Button.html#setAttrs"
         },
         {
-          "topic": "setStyle",
+          "topic": "▪setStyle",
           "url": "doc/js/RapidContext.Widget.Button.html#setStyle"
         },
         {
-          "topic": "show",
+          "topic": "▪show",
           "url": "doc/js/RapidContext.Widget.Button.html#show"
         },
         {
-          "topic": "toggleClass",
+          "topic": "▪toggleClass",
           "url": "doc/js/RapidContext.Widget.Button.html#toggleClass"
         },
         {
-          "topic": "uid",
+          "topic": "▪uid",
           "url": "doc/js/RapidContext.Widget.Button.html#uid"
         }
       ]
@@ -590,124 +800,140 @@
       "url": "doc/js/RapidContext.Widget.Dialog.html",
       "children": [
         {
-          "topic": "addAll",
+          "topic": "▪addAll",
           "url": "doc/js/RapidContext.Widget.Dialog.html#addAll"
         },
         {
-          "topic": "addChildNode",
+          "topic": "▪addChildNode",
           "url": "doc/js/RapidContext.Widget.Dialog.html#addChildNode"
         },
         {
-          "topic": "addClass",
+          "topic": "▪addClass",
           "url": "doc/js/RapidContext.Widget.Dialog.html#addClass"
         },
         {
-          "topic": "animate",
+          "topic": "▪animate",
           "url": "doc/js/RapidContext.Widget.Dialog.html#animate"
         },
         {
-          "topic": "blurAll",
+          "topic": "▪blurAll",
           "url": "doc/js/RapidContext.Widget.Dialog.html#blurAll"
         },
         {
-          "topic": "destroy",
+          "topic": "▪destroy",
           "url": "doc/js/RapidContext.Widget.Dialog.html#destroy"
         },
         {
-          "topic": "disable",
+          "topic": "▪disable",
           "url": "doc/js/RapidContext.Widget.Dialog.html#disable"
         },
         {
-          "topic": "enable",
+          "topic": "▪emit",
+          "url": "doc/js/RapidContext.Widget.Dialog.html#emit"
+        },
+        {
+          "topic": "▪enable",
           "url": "doc/js/RapidContext.Widget.Dialog.html#enable"
         },
         {
-          "topic": "onhide",
-          "url": "doc/js/RapidContext.Widget.Dialog.html#event:onhide"
-        },
-        {
-          "topic": "onmove",
-          "url": "doc/js/RapidContext.Widget.Dialog.html#event:onmove"
-        },
-        {
-          "topic": "onresize",
-          "url": "doc/js/RapidContext.Widget.Dialog.html#event:onresize"
-        },
-        {
-          "topic": "onshow",
-          "url": "doc/js/RapidContext.Widget.Dialog.html#event:onshow"
-        },
-        {
-          "topic": "getChildNodes",
+          "topic": "▪getChildNodes",
           "url": "doc/js/RapidContext.Widget.Dialog.html#getChildNodes"
         },
         {
-          "topic": "hasClass",
+          "topic": "▪hasClass",
           "url": "doc/js/RapidContext.Widget.Dialog.html#hasClass"
         },
         {
-          "topic": "hide",
+          "topic": "▪hide",
           "url": "doc/js/RapidContext.Widget.Dialog.html#hide"
         },
         {
-          "topic": "isDisabled",
+          "topic": "▪isDisabled",
           "url": "doc/js/RapidContext.Widget.Dialog.html#isDisabled"
         },
         {
-          "topic": "isHidden",
+          "topic": "▪isHidden",
           "url": "doc/js/RapidContext.Widget.Dialog.html#isHidden"
         },
         {
-          "topic": "moveTo",
+          "topic": "▪moveTo",
           "url": "doc/js/RapidContext.Widget.Dialog.html#moveTo"
         },
         {
-          "topic": "moveToCenter",
+          "topic": "▪moveToCenter",
           "url": "doc/js/RapidContext.Widget.Dialog.html#moveToCenter"
         },
         {
-          "topic": "removeAll",
+          "topic": "▪off",
+          "url": "doc/js/RapidContext.Widget.Dialog.html#off"
+        },
+        {
+          "topic": "▪on",
+          "url": "doc/js/RapidContext.Widget.Dialog.html#on"
+        },
+        {
+          "topic": "▪once",
+          "url": "doc/js/RapidContext.Widget.Dialog.html#once"
+        },
+        {
+          "topic": "▪removeAll",
           "url": "doc/js/RapidContext.Widget.Dialog.html#removeAll"
         },
         {
-          "topic": "removeChildNode",
+          "topic": "▪removeChildNode",
           "url": "doc/js/RapidContext.Widget.Dialog.html#removeChildNode"
         },
         {
-          "topic": "removeClass",
+          "topic": "▪removeClass",
           "url": "doc/js/RapidContext.Widget.Dialog.html#removeClass"
         },
         {
-          "topic": "resetScroll",
+          "topic": "▪resetScroll",
           "url": "doc/js/RapidContext.Widget.Dialog.html#resetScroll"
         },
         {
-          "topic": "resizeTo",
+          "topic": "▪resizeTo",
           "url": "doc/js/RapidContext.Widget.Dialog.html#resizeTo"
         },
         {
-          "topic": "resizeToContent",
+          "topic": "▪resizeToContent",
           "url": "doc/js/RapidContext.Widget.Dialog.html#resizeToContent"
         },
         {
-          "topic": "setAttrs",
+          "topic": "▪setAttrs",
           "url": "doc/js/RapidContext.Widget.Dialog.html#setAttrs"
         },
         {
-          "topic": "setStyle",
+          "topic": "▪setStyle",
           "url": "doc/js/RapidContext.Widget.Dialog.html#setStyle"
         },
         {
-          "topic": "show",
+          "topic": "▪show",
           "url": "doc/js/RapidContext.Widget.Dialog.html#show"
         },
         {
-          "topic": "toggleClass",
+          "topic": "▪toggleClass",
           "url": "doc/js/RapidContext.Widget.Dialog.html#toggleClass"
         },
         {
-          "topic": "uid",
+          "topic": "▪uid",
           "url": "doc/js/RapidContext.Widget.Dialog.html#uid"
+        },
+        {
+          "topic": "▫onhide",
+          "url": "doc/js/RapidContext.Widget.Dialog.html#event:onhide"
+        },
+        {
+          "topic": "▫onmove",
+          "url": "doc/js/RapidContext.Widget.Dialog.html#event:onmove"
+        },
+        {
+          "topic": "▫onresize",
+          "url": "doc/js/RapidContext.Widget.Dialog.html#event:onresize"
+        },
+        {
+          "topic": "▫onshow",
+          "url": "doc/js/RapidContext.Widget.Dialog.html#event:onshow"
         }
       ]
     },
@@ -716,95 +942,111 @@
       "url": "doc/js/RapidContext.Widget.Field.html",
       "children": [
         {
-          "topic": "addAll",
+          "topic": "▪addAll",
           "url": "doc/js/RapidContext.Widget.Field.html#addAll"
         },
         {
-          "topic": "addChildNode",
+          "topic": "▪addChildNode",
           "url": "doc/js/RapidContext.Widget.Field.html#addChildNode"
         },
         {
-          "topic": "addClass",
+          "topic": "▪addClass",
           "url": "doc/js/RapidContext.Widget.Field.html#addClass"
         },
         {
-          "topic": "animate",
+          "topic": "▪animate",
           "url": "doc/js/RapidContext.Widget.Field.html#animate"
         },
         {
-          "topic": "blurAll",
+          "topic": "▪blurAll",
           "url": "doc/js/RapidContext.Widget.Field.html#blurAll"
         },
         {
-          "topic": "destroy",
+          "topic": "▪destroy",
           "url": "doc/js/RapidContext.Widget.Field.html#destroy"
         },
         {
-          "topic": "disable",
+          "topic": "▪disable",
           "url": "doc/js/RapidContext.Widget.Field.html#disable"
         },
         {
-          "topic": "enable",
+          "topic": "▪emit",
+          "url": "doc/js/RapidContext.Widget.Field.html#emit"
+        },
+        {
+          "topic": "▪enable",
           "url": "doc/js/RapidContext.Widget.Field.html#enable"
         },
         {
-          "topic": "getChildNodes",
+          "topic": "▪getChildNodes",
           "url": "doc/js/RapidContext.Widget.Field.html#getChildNodes"
         },
         {
-          "topic": "hasClass",
+          "topic": "▪hasClass",
           "url": "doc/js/RapidContext.Widget.Field.html#hasClass"
         },
         {
-          "topic": "hide",
+          "topic": "▪hide",
           "url": "doc/js/RapidContext.Widget.Field.html#hide"
         },
         {
-          "topic": "isDisabled",
+          "topic": "▪isDisabled",
           "url": "doc/js/RapidContext.Widget.Field.html#isDisabled"
         },
         {
-          "topic": "isHidden",
+          "topic": "▪isHidden",
           "url": "doc/js/RapidContext.Widget.Field.html#isHidden"
         },
         {
-          "topic": "redraw",
+          "topic": "▪off",
+          "url": "doc/js/RapidContext.Widget.Field.html#off"
+        },
+        {
+          "topic": "▪on",
+          "url": "doc/js/RapidContext.Widget.Field.html#on"
+        },
+        {
+          "topic": "▪once",
+          "url": "doc/js/RapidContext.Widget.Field.html#once"
+        },
+        {
+          "topic": "▪redraw",
           "url": "doc/js/RapidContext.Widget.Field.html#redraw"
         },
         {
-          "topic": "removeAll",
+          "topic": "▪removeAll",
           "url": "doc/js/RapidContext.Widget.Field.html#removeAll"
         },
         {
-          "topic": "removeChildNode",
+          "topic": "▪removeChildNode",
           "url": "doc/js/RapidContext.Widget.Field.html#removeChildNode"
         },
         {
-          "topic": "removeClass",
+          "topic": "▪removeClass",
           "url": "doc/js/RapidContext.Widget.Field.html#removeClass"
         },
         {
-          "topic": "reset",
+          "topic": "▪reset",
           "url": "doc/js/RapidContext.Widget.Field.html#reset"
         },
         {
-          "topic": "setAttrs",
+          "topic": "▪setAttrs",
           "url": "doc/js/RapidContext.Widget.Field.html#setAttrs"
         },
         {
-          "topic": "setStyle",
+          "topic": "▪setStyle",
           "url": "doc/js/RapidContext.Widget.Field.html#setStyle"
         },
         {
-          "topic": "show",
+          "topic": "▪show",
           "url": "doc/js/RapidContext.Widget.Field.html#show"
         },
         {
-          "topic": "toggleClass",
+          "topic": "▪toggleClass",
           "url": "doc/js/RapidContext.Widget.Field.html#toggleClass"
         },
         {
-          "topic": "uid",
+          "topic": "▪uid",
           "url": "doc/js/RapidContext.Widget.Field.html#uid"
         }
       ]
@@ -814,127 +1056,143 @@
       "url": "doc/js/RapidContext.Widget.Form.html",
       "children": [
         {
-          "topic": "addAll",
+          "topic": "▪addAll",
           "url": "doc/js/RapidContext.Widget.Form.html#addAll"
         },
         {
-          "topic": "addChildNode",
+          "topic": "▪addChildNode",
           "url": "doc/js/RapidContext.Widget.Form.html#addChildNode"
         },
         {
-          "topic": "addClass",
+          "topic": "▪addClass",
           "url": "doc/js/RapidContext.Widget.Form.html#addClass"
         },
         {
-          "topic": "addValidator",
+          "topic": "▪addValidator",
           "url": "doc/js/RapidContext.Widget.Form.html#addValidator"
         },
         {
-          "topic": "animate",
+          "topic": "▪animate",
           "url": "doc/js/RapidContext.Widget.Form.html#animate"
         },
         {
-          "topic": "blurAll",
+          "topic": "▪blurAll",
           "url": "doc/js/RapidContext.Widget.Form.html#blurAll"
         },
         {
-          "topic": "destroy",
+          "topic": "▪destroy",
           "url": "doc/js/RapidContext.Widget.Form.html#destroy"
         },
         {
-          "topic": "disable",
+          "topic": "▪disable",
           "url": "doc/js/RapidContext.Widget.Form.html#disable"
         },
         {
-          "topic": "enable",
+          "topic": "▪emit",
+          "url": "doc/js/RapidContext.Widget.Form.html#emit"
+        },
+        {
+          "topic": "▪enable",
           "url": "doc/js/RapidContext.Widget.Form.html#enable"
         },
         {
-          "topic": "fieldMap",
+          "topic": "▪fieldMap",
           "url": "doc/js/RapidContext.Widget.Form.html#fieldMap"
         },
         {
-          "topic": "fields",
+          "topic": "▪fields",
           "url": "doc/js/RapidContext.Widget.Form.html#fields"
         },
         {
-          "topic": "getChildNodes",
+          "topic": "▪getChildNodes",
           "url": "doc/js/RapidContext.Widget.Form.html#getChildNodes"
         },
         {
-          "topic": "hasClass",
+          "topic": "▪hasClass",
           "url": "doc/js/RapidContext.Widget.Form.html#hasClass"
         },
         {
-          "topic": "hide",
+          "topic": "▪hide",
           "url": "doc/js/RapidContext.Widget.Form.html#hide"
         },
         {
-          "topic": "isDisabled",
+          "topic": "▪isDisabled",
           "url": "doc/js/RapidContext.Widget.Form.html#isDisabled"
         },
         {
-          "topic": "isHidden",
+          "topic": "▪isHidden",
           "url": "doc/js/RapidContext.Widget.Form.html#isHidden"
         },
         {
-          "topic": "removeAll",
+          "topic": "▪off",
+          "url": "doc/js/RapidContext.Widget.Form.html#off"
+        },
+        {
+          "topic": "▪on",
+          "url": "doc/js/RapidContext.Widget.Form.html#on"
+        },
+        {
+          "topic": "▪once",
+          "url": "doc/js/RapidContext.Widget.Form.html#once"
+        },
+        {
+          "topic": "▪removeAll",
           "url": "doc/js/RapidContext.Widget.Form.html#removeAll"
         },
         {
-          "topic": "removeChildNode",
+          "topic": "▪removeChildNode",
           "url": "doc/js/RapidContext.Widget.Form.html#removeChildNode"
         },
         {
-          "topic": "removeClass",
+          "topic": "▪removeClass",
           "url": "doc/js/RapidContext.Widget.Form.html#removeClass"
         },
         {
-          "topic": "removeValidators",
+          "topic": "▪removeValidators",
           "url": "doc/js/RapidContext.Widget.Form.html#removeValidators"
         },
         {
-          "topic": "reset",
+          "topic": "▪reset",
           "url": "doc/js/RapidContext.Widget.Form.html#reset"
         },
         {
-          "topic": "setAttrs",
+          "topic": "▪setAttrs",
           "url": "doc/js/RapidContext.Widget.Form.html#setAttrs"
         },
         {
-          "topic": "setStyle",
+          "topic": "▪setStyle",
           "url": "doc/js/RapidContext.Widget.Form.html#setStyle"
         },
         {
-          "topic": "show",
+          "topic": "▪show",
           "url": "doc/js/RapidContext.Widget.Form.html#show"
         },
         {
-          "topic": "toggleClass",
+          "topic": "▪toggleClass",
           "url": "doc/js/RapidContext.Widget.Form.html#toggleClass"
         },
         {
-          "topic": "uid",
+          "topic": "▪uid",
           "url": "doc/js/RapidContext.Widget.Form.html#uid"
         },
         {
-          "topic": "update",
+          "topic": "▪update",
           "url": "doc/js/RapidContext.Widget.Form.html#update"
         },
         {
-          "topic": "validate",
+          "topic": "▪validate",
           "url": "doc/js/RapidContext.Widget.Form.html#validate"
         },
         {
-          "topic": "validateReset",
+          "topic": "▪validateReset",
           "url": "doc/js/RapidContext.Widget.Form.html#validateReset"
         },
         {
-          "topic": "validators",
+          "topic": "▪validators",
           "url": "doc/js/RapidContext.Widget.Form.html#validators"
         },
         {
-          "topic": "valueMap",
+          "topic": "▪valueMap",
           "url": "doc/js/RapidContext.Widget.Form.html#valueMap"
         }
       ]
@@ -944,99 +1202,115 @@
       "url": "doc/js/RapidContext.Widget.FormValidator.html",
       "children": [
         {
-          "topic": "addAll",
+          "topic": "▪addAll",
           "url": "doc/js/RapidContext.Widget.FormValidator.html#addAll"
         },
         {
-          "topic": "addChildNode",
+          "topic": "▪addChildNode",
           "url": "doc/js/RapidContext.Widget.FormValidator.html#addChildNode"
         },
         {
-          "topic": "addClass",
+          "topic": "▪addClass",
           "url": "doc/js/RapidContext.Widget.FormValidator.html#addClass"
         },
         {
-          "topic": "addError",
+          "topic": "▪addError",
           "url": "doc/js/RapidContext.Widget.FormValidator.html#addError"
         },
         {
-          "topic": "animate",
+          "topic": "▪animate",
           "url": "doc/js/RapidContext.Widget.FormValidator.html#animate"
         },
         {
-          "topic": "blurAll",
+          "topic": "▪blurAll",
           "url": "doc/js/RapidContext.Widget.FormValidator.html#blurAll"
         },
         {
-          "topic": "destroy",
+          "topic": "▪destroy",
           "url": "doc/js/RapidContext.Widget.FormValidator.html#destroy"
         },
         {
-          "topic": "disable",
+          "topic": "▪disable",
           "url": "doc/js/RapidContext.Widget.FormValidator.html#disable"
         },
         {
-          "topic": "enable",
+          "topic": "▪emit",
+          "url": "doc/js/RapidContext.Widget.FormValidator.html#emit"
+        },
+        {
+          "topic": "▪enable",
           "url": "doc/js/RapidContext.Widget.FormValidator.html#enable"
         },
         {
-          "topic": "getChildNodes",
+          "topic": "▪getChildNodes",
           "url": "doc/js/RapidContext.Widget.FormValidator.html#getChildNodes"
         },
         {
-          "topic": "hasClass",
+          "topic": "▪hasClass",
           "url": "doc/js/RapidContext.Widget.FormValidator.html#hasClass"
         },
         {
-          "topic": "hide",
+          "topic": "▪hide",
           "url": "doc/js/RapidContext.Widget.FormValidator.html#hide"
         },
         {
-          "topic": "isDisabled",
+          "topic": "▪isDisabled",
           "url": "doc/js/RapidContext.Widget.FormValidator.html#isDisabled"
         },
         {
-          "topic": "isHidden",
+          "topic": "▪isHidden",
           "url": "doc/js/RapidContext.Widget.FormValidator.html#isHidden"
         },
         {
-          "topic": "removeAll",
+          "topic": "▪off",
+          "url": "doc/js/RapidContext.Widget.FormValidator.html#off"
+        },
+        {
+          "topic": "▪on",
+          "url": "doc/js/RapidContext.Widget.FormValidator.html#on"
+        },
+        {
+          "topic": "▪once",
+          "url": "doc/js/RapidContext.Widget.FormValidator.html#once"
+        },
+        {
+          "topic": "▪removeAll",
           "url": "doc/js/RapidContext.Widget.FormValidator.html#removeAll"
         },
         {
-          "topic": "removeChildNode",
+          "topic": "▪removeChildNode",
           "url": "doc/js/RapidContext.Widget.FormValidator.html#removeChildNode"
         },
         {
-          "topic": "removeClass",
+          "topic": "▪removeClass",
           "url": "doc/js/RapidContext.Widget.FormValidator.html#removeClass"
         },
         {
-          "topic": "reset",
+          "topic": "▪reset",
           "url": "doc/js/RapidContext.Widget.FormValidator.html#reset"
         },
         {
-          "topic": "setAttrs",
+          "topic": "▪setAttrs",
           "url": "doc/js/RapidContext.Widget.FormValidator.html#setAttrs"
         },
         {
-          "topic": "setStyle",
+          "topic": "▪setStyle",
           "url": "doc/js/RapidContext.Widget.FormValidator.html#setStyle"
         },
         {
-          "topic": "show",
+          "topic": "▪show",
           "url": "doc/js/RapidContext.Widget.FormValidator.html#show"
         },
         {
-          "topic": "toggleClass",
+          "topic": "▪toggleClass",
           "url": "doc/js/RapidContext.Widget.FormValidator.html#toggleClass"
         },
         {
-          "topic": "uid",
+          "topic": "▪uid",
           "url": "doc/js/RapidContext.Widget.FormValidator.html#uid"
         },
         {
-          "topic": "verify",
+          "topic": "▪verify",
           "url": "doc/js/RapidContext.Widget.FormValidator.html#verify"
         }
       ]
@@ -1045,90 +1319,6 @@
       "topic": "RapidContext.Widget.Icon",
       "url": "doc/js/RapidContext.Widget.Icon.html",
       "children": [
-        {
-          "topic": "addAll",
-          "url": "doc/js/RapidContext.Widget.Icon.html#addAll"
-        },
-        {
-          "topic": "addChildNode",
-          "url": "doc/js/RapidContext.Widget.Icon.html#addChildNode"
-        },
-        {
-          "topic": "addClass",
-          "url": "doc/js/RapidContext.Widget.Icon.html#addClass"
-        },
-        {
-          "topic": "animate",
-          "url": "doc/js/RapidContext.Widget.Icon.html#animate"
-        },
-        {
-          "topic": "blurAll",
-          "url": "doc/js/RapidContext.Widget.Icon.html#blurAll"
-        },
-        {
-          "topic": "destroy",
-          "url": "doc/js/RapidContext.Widget.Icon.html#destroy"
-        },
-        {
-          "topic": "disable",
-          "url": "doc/js/RapidContext.Widget.Icon.html#disable"
-        },
-        {
-          "topic": "enable",
-          "url": "doc/js/RapidContext.Widget.Icon.html#enable"
-        },
-        {
-          "topic": "getChildNodes",
-          "url": "doc/js/RapidContext.Widget.Icon.html#getChildNodes"
-        },
-        {
-          "topic": "hasClass",
-          "url": "doc/js/RapidContext.Widget.Icon.html#hasClass"
-        },
-        {
-          "topic": "hide",
-          "url": "doc/js/RapidContext.Widget.Icon.html#hide"
-        },
-        {
-          "topic": "isDisabled",
-          "url": "doc/js/RapidContext.Widget.Icon.html#isDisabled"
-        },
-        {
-          "topic": "isHidden",
-          "url": "doc/js/RapidContext.Widget.Icon.html#isHidden"
-        },
-        {
-          "topic": "removeAll",
-          "url": "doc/js/RapidContext.Widget.Icon.html#removeAll"
-        },
-        {
-          "topic": "removeChildNode",
-          "url": "doc/js/RapidContext.Widget.Icon.html#removeChildNode"
-        },
-        {
-          "topic": "removeClass",
-          "url": "doc/js/RapidContext.Widget.Icon.html#removeClass"
-        },
-        {
-          "topic": "setAttrs",
-          "url": "doc/js/RapidContext.Widget.Icon.html#setAttrs"
-        },
-        {
-          "topic": "setStyle",
-          "url": "doc/js/RapidContext.Widget.Icon.html#setStyle"
-        },
-        {
-          "topic": "show",
-          "url": "doc/js/RapidContext.Widget.Icon.html#show"
-        },
-        {
-          "topic": "toggleClass",
-          "url": "doc/js/RapidContext.Widget.Icon.html#toggleClass"
-        },
-        {
-          "topic": "uid",
-          "url": "doc/js/RapidContext.Widget.Icon.html#uid"
-        },
         {
           "topic": "ADD",
           "url": "doc/js/RapidContext.Widget.Icon.html#.ADD"
@@ -1632,6 +1822,106 @@
         {
           "topic": "YES",
           "url": "doc/js/RapidContext.Widget.Icon.html#.YES"
+        },
+        {
+          "topic": "▪addAll",
+          "url": "doc/js/RapidContext.Widget.Icon.html#addAll"
+        },
+        {
+          "topic": "▪addChildNode",
+          "url": "doc/js/RapidContext.Widget.Icon.html#addChildNode"
+        },
+        {
+          "topic": "▪addClass",
+          "url": "doc/js/RapidContext.Widget.Icon.html#addClass"
+        },
+        {
+          "topic": "▪animate",
+          "url": "doc/js/RapidContext.Widget.Icon.html#animate"
+        },
+        {
+          "topic": "▪blurAll",
+          "url": "doc/js/RapidContext.Widget.Icon.html#blurAll"
+        },
+        {
+          "topic": "▪destroy",
+          "url": "doc/js/RapidContext.Widget.Icon.html#destroy"
+        },
+        {
+          "topic": "▪disable",
+          "url": "doc/js/RapidContext.Widget.Icon.html#disable"
+        },
+        {
+          "topic": "▪emit",
+          "url": "doc/js/RapidContext.Widget.Icon.html#emit"
+        },
+        {
+          "topic": "▪enable",
+          "url": "doc/js/RapidContext.Widget.Icon.html#enable"
+        },
+        {
+          "topic": "▪getChildNodes",
+          "url": "doc/js/RapidContext.Widget.Icon.html#getChildNodes"
+        },
+        {
+          "topic": "▪hasClass",
+          "url": "doc/js/RapidContext.Widget.Icon.html#hasClass"
+        },
+        {
+          "topic": "▪hide",
+          "url": "doc/js/RapidContext.Widget.Icon.html#hide"
+        },
+        {
+          "topic": "▪isDisabled",
+          "url": "doc/js/RapidContext.Widget.Icon.html#isDisabled"
+        },
+        {
+          "topic": "▪isHidden",
+          "url": "doc/js/RapidContext.Widget.Icon.html#isHidden"
+        },
+        {
+          "topic": "▪off",
+          "url": "doc/js/RapidContext.Widget.Icon.html#off"
+        },
+        {
+          "topic": "▪on",
+          "url": "doc/js/RapidContext.Widget.Icon.html#on"
+        },
+        {
+          "topic": "▪once",
+          "url": "doc/js/RapidContext.Widget.Icon.html#once"
+        },
+        {
+          "topic": "▪removeAll",
+          "url": "doc/js/RapidContext.Widget.Icon.html#removeAll"
+        },
+        {
+          "topic": "▪removeChildNode",
+          "url": "doc/js/RapidContext.Widget.Icon.html#removeChildNode"
+        },
+        {
+          "topic": "▪removeClass",
+          "url": "doc/js/RapidContext.Widget.Icon.html#removeClass"
+        },
+        {
+          "topic": "▪setAttrs",
+          "url": "doc/js/RapidContext.Widget.Icon.html#setAttrs"
+        },
+        {
+          "topic": "▪setStyle",
+          "url": "doc/js/RapidContext.Widget.Icon.html#setStyle"
+        },
+        {
+          "topic": "▪show",
+          "url": "doc/js/RapidContext.Widget.Icon.html#show"
+        },
+        {
+          "topic": "▪toggleClass",
+          "url": "doc/js/RapidContext.Widget.Icon.html#toggleClass"
+        },
+        {
+          "topic": "▪uid",
+          "url": "doc/js/RapidContext.Widget.Icon.html#uid"
         }
       ]
     },
@@ -1640,87 +1930,103 @@
       "url": "doc/js/RapidContext.Widget.Overlay.html",
       "children": [
         {
-          "topic": "addAll",
+          "topic": "▪addAll",
           "url": "doc/js/RapidContext.Widget.Overlay.html#addAll"
         },
         {
-          "topic": "addChildNode",
+          "topic": "▪addChildNode",
           "url": "doc/js/RapidContext.Widget.Overlay.html#addChildNode"
         },
         {
-          "topic": "addClass",
+          "topic": "▪addClass",
           "url": "doc/js/RapidContext.Widget.Overlay.html#addClass"
         },
         {
-          "topic": "animate",
+          "topic": "▪animate",
           "url": "doc/js/RapidContext.Widget.Overlay.html#animate"
         },
         {
-          "topic": "blurAll",
+          "topic": "▪blurAll",
           "url": "doc/js/RapidContext.Widget.Overlay.html#blurAll"
         },
         {
-          "topic": "destroy",
+          "topic": "▪destroy",
           "url": "doc/js/RapidContext.Widget.Overlay.html#destroy"
         },
         {
-          "topic": "disable",
+          "topic": "▪disable",
           "url": "doc/js/RapidContext.Widget.Overlay.html#disable"
         },
         {
-          "topic": "enable",
+          "topic": "▪emit",
+          "url": "doc/js/RapidContext.Widget.Overlay.html#emit"
+        },
+        {
+          "topic": "▪enable",
           "url": "doc/js/RapidContext.Widget.Overlay.html#enable"
         },
         {
-          "topic": "getChildNodes",
+          "topic": "▪getChildNodes",
           "url": "doc/js/RapidContext.Widget.Overlay.html#getChildNodes"
         },
         {
-          "topic": "hasClass",
+          "topic": "▪hasClass",
           "url": "doc/js/RapidContext.Widget.Overlay.html#hasClass"
         },
         {
-          "topic": "hide",
+          "topic": "▪hide",
           "url": "doc/js/RapidContext.Widget.Overlay.html#hide"
         },
         {
-          "topic": "isDisabled",
+          "topic": "▪isDisabled",
           "url": "doc/js/RapidContext.Widget.Overlay.html#isDisabled"
         },
         {
-          "topic": "isHidden",
+          "topic": "▪isHidden",
           "url": "doc/js/RapidContext.Widget.Overlay.html#isHidden"
         },
         {
-          "topic": "removeAll",
+          "topic": "▪off",
+          "url": "doc/js/RapidContext.Widget.Overlay.html#off"
+        },
+        {
+          "topic": "▪on",
+          "url": "doc/js/RapidContext.Widget.Overlay.html#on"
+        },
+        {
+          "topic": "▪once",
+          "url": "doc/js/RapidContext.Widget.Overlay.html#once"
+        },
+        {
+          "topic": "▪removeAll",
           "url": "doc/js/RapidContext.Widget.Overlay.html#removeAll"
         },
         {
-          "topic": "removeChildNode",
+          "topic": "▪removeChildNode",
           "url": "doc/js/RapidContext.Widget.Overlay.html#removeChildNode"
         },
         {
-          "topic": "removeClass",
+          "topic": "▪removeClass",
           "url": "doc/js/RapidContext.Widget.Overlay.html#removeClass"
         },
         {
-          "topic": "setAttrs",
+          "topic": "▪setAttrs",
           "url": "doc/js/RapidContext.Widget.Overlay.html#setAttrs"
         },
         {
-          "topic": "setStyle",
+          "topic": "▪setStyle",
           "url": "doc/js/RapidContext.Widget.Overlay.html#setStyle"
         },
         {
-          "topic": "show",
+          "topic": "▪show",
           "url": "doc/js/RapidContext.Widget.Overlay.html#show"
         },
         {
-          "topic": "toggleClass",
+          "topic": "▪toggleClass",
           "url": "doc/js/RapidContext.Widget.Overlay.html#toggleClass"
         },
         {
-          "topic": "uid",
+          "topic": "▪uid",
           "url": "doc/js/RapidContext.Widget.Overlay.html#uid"
         }
       ]
@@ -1729,102 +2035,6 @@
       "topic": "RapidContext.Widget.Pane",
       "url": "doc/js/RapidContext.Widget.Pane.html",
       "children": [
-        {
-          "topic": "addAll",
-          "url": "doc/js/RapidContext.Widget.Pane.html#addAll"
-        },
-        {
-          "topic": "addChildNode",
-          "url": "doc/js/RapidContext.Widget.Pane.html#addChildNode"
-        },
-        {
-          "topic": "addClass",
-          "url": "doc/js/RapidContext.Widget.Pane.html#addClass"
-        },
-        {
-          "topic": "animate",
-          "url": "doc/js/RapidContext.Widget.Pane.html#animate"
-        },
-        {
-          "topic": "blurAll",
-          "url": "doc/js/RapidContext.Widget.Pane.html#blurAll"
-        },
-        {
-          "topic": "destroy",
-          "url": "doc/js/RapidContext.Widget.Pane.html#destroy"
-        },
-        {
-          "topic": "disable",
-          "url": "doc/js/RapidContext.Widget.Pane.html#disable"
-        },
-        {
-          "topic": "enable",
-          "url": "doc/js/RapidContext.Widget.Pane.html#enable"
-        },
-        {
-          "topic": "onclose",
-          "url": "doc/js/RapidContext.Widget.Pane.html#event:onclose"
-        },
-        {
-          "topic": "onenter",
-          "url": "doc/js/RapidContext.Widget.Pane.html#event:onenter"
-        },
-        {
-          "topic": "onexit",
-          "url": "doc/js/RapidContext.Widget.Pane.html#event:onexit"
-        },
-        {
-          "topic": "getChildNodes",
-          "url": "doc/js/RapidContext.Widget.Pane.html#getChildNodes"
-        },
-        {
-          "topic": "hasClass",
-          "url": "doc/js/RapidContext.Widget.Pane.html#hasClass"
-        },
-        {
-          "topic": "hide",
-          "url": "doc/js/RapidContext.Widget.Pane.html#hide"
-        },
-        {
-          "topic": "isDisabled",
-          "url": "doc/js/RapidContext.Widget.Pane.html#isDisabled"
-        },
-        {
-          "topic": "isHidden",
-          "url": "doc/js/RapidContext.Widget.Pane.html#isHidden"
-        },
-        {
-          "topic": "removeAll",
-          "url": "doc/js/RapidContext.Widget.Pane.html#removeAll"
-        },
-        {
-          "topic": "removeChildNode",
-          "url": "doc/js/RapidContext.Widget.Pane.html#removeChildNode"
-        },
-        {
-          "topic": "removeClass",
-          "url": "doc/js/RapidContext.Widget.Pane.html#removeClass"
-        },
-        {
-          "topic": "setAttrs",
-          "url": "doc/js/RapidContext.Widget.Pane.html#setAttrs"
-        },
-        {
-          "topic": "setStyle",
-          "url": "doc/js/RapidContext.Widget.Pane.html#setStyle"
-        },
-        {
-          "topic": "show",
-          "url": "doc/js/RapidContext.Widget.Pane.html#show"
-        },
-        {
-          "topic": "toggleClass",
-          "url": "doc/js/RapidContext.Widget.Pane.html#toggleClass"
-        },
-        {
-          "topic": "uid",
-          "url": "doc/js/RapidContext.Widget.Pane.html#uid"
-        },
         {
           "topic": "ANY",
           "url": "doc/js/RapidContext.Widget.Pane.html#.ANY"
@@ -1840,6 +2050,118 @@
         {
           "topic": "WORKING",
           "url": "doc/js/RapidContext.Widget.Pane.html#.WORKING"
+        },
+        {
+          "topic": "▪addAll",
+          "url": "doc/js/RapidContext.Widget.Pane.html#addAll"
+        },
+        {
+          "topic": "▪addChildNode",
+          "url": "doc/js/RapidContext.Widget.Pane.html#addChildNode"
+        },
+        {
+          "topic": "▪addClass",
+          "url": "doc/js/RapidContext.Widget.Pane.html#addClass"
+        },
+        {
+          "topic": "▪animate",
+          "url": "doc/js/RapidContext.Widget.Pane.html#animate"
+        },
+        {
+          "topic": "▪blurAll",
+          "url": "doc/js/RapidContext.Widget.Pane.html#blurAll"
+        },
+        {
+          "topic": "▪destroy",
+          "url": "doc/js/RapidContext.Widget.Pane.html#destroy"
+        },
+        {
+          "topic": "▪disable",
+          "url": "doc/js/RapidContext.Widget.Pane.html#disable"
+        },
+        {
+          "topic": "▪emit",
+          "url": "doc/js/RapidContext.Widget.Pane.html#emit"
+        },
+        {
+          "topic": "▪enable",
+          "url": "doc/js/RapidContext.Widget.Pane.html#enable"
+        },
+        {
+          "topic": "▪getChildNodes",
+          "url": "doc/js/RapidContext.Widget.Pane.html#getChildNodes"
+        },
+        {
+          "topic": "▪hasClass",
+          "url": "doc/js/RapidContext.Widget.Pane.html#hasClass"
+        },
+        {
+          "topic": "▪hide",
+          "url": "doc/js/RapidContext.Widget.Pane.html#hide"
+        },
+        {
+          "topic": "▪isDisabled",
+          "url": "doc/js/RapidContext.Widget.Pane.html#isDisabled"
+        },
+        {
+          "topic": "▪isHidden",
+          "url": "doc/js/RapidContext.Widget.Pane.html#isHidden"
+        },
+        {
+          "topic": "▪off",
+          "url": "doc/js/RapidContext.Widget.Pane.html#off"
+        },
+        {
+          "topic": "▪on",
+          "url": "doc/js/RapidContext.Widget.Pane.html#on"
+        },
+        {
+          "topic": "▪once",
+          "url": "doc/js/RapidContext.Widget.Pane.html#once"
+        },
+        {
+          "topic": "▪removeAll",
+          "url": "doc/js/RapidContext.Widget.Pane.html#removeAll"
+        },
+        {
+          "topic": "▪removeChildNode",
+          "url": "doc/js/RapidContext.Widget.Pane.html#removeChildNode"
+        },
+        {
+          "topic": "▪removeClass",
+          "url": "doc/js/RapidContext.Widget.Pane.html#removeClass"
+        },
+        {
+          "topic": "▪setAttrs",
+          "url": "doc/js/RapidContext.Widget.Pane.html#setAttrs"
+        },
+        {
+          "topic": "▪setStyle",
+          "url": "doc/js/RapidContext.Widget.Pane.html#setStyle"
+        },
+        {
+          "topic": "▪show",
+          "url": "doc/js/RapidContext.Widget.Pane.html#show"
+        },
+        {
+          "topic": "▪toggleClass",
+          "url": "doc/js/RapidContext.Widget.Pane.html#toggleClass"
+        },
+        {
+          "topic": "▪uid",
+          "url": "doc/js/RapidContext.Widget.Pane.html#uid"
+        },
+        {
+          "topic": "▫onclose",
+          "url": "doc/js/RapidContext.Widget.Pane.html#event:onclose"
+        },
+        {
+          "topic": "▫onenter",
+          "url": "doc/js/RapidContext.Widget.Pane.html#event:onenter"
+        },
+        {
+          "topic": "▫onexit",
+          "url": "doc/js/RapidContext.Widget.Pane.html#event:onexit"
         }
       ]
     },
@@ -1848,116 +2170,132 @@
       "url": "doc/js/RapidContext.Widget.Popup.html",
       "children": [
         {
-          "topic": "addAll",
+          "topic": "▪addAll",
           "url": "doc/js/RapidContext.Widget.Popup.html#addAll"
         },
         {
-          "topic": "addChildNode",
+          "topic": "▪addChildNode",
           "url": "doc/js/RapidContext.Widget.Popup.html#addChildNode"
         },
         {
-          "topic": "addClass",
+          "topic": "▪addClass",
           "url": "doc/js/RapidContext.Widget.Popup.html#addClass"
         },
         {
-          "topic": "animate",
+          "topic": "▪animate",
           "url": "doc/js/RapidContext.Widget.Popup.html#animate"
         },
         {
-          "topic": "blurAll",
+          "topic": "▪blurAll",
           "url": "doc/js/RapidContext.Widget.Popup.html#blurAll"
         },
         {
-          "topic": "destroy",
+          "topic": "▪destroy",
           "url": "doc/js/RapidContext.Widget.Popup.html#destroy"
         },
         {
-          "topic": "disable",
+          "topic": "▪disable",
           "url": "doc/js/RapidContext.Widget.Popup.html#disable"
         },
         {
-          "topic": "enable",
+          "topic": "▪emit",
+          "url": "doc/js/RapidContext.Widget.Popup.html#emit"
+        },
+        {
+          "topic": "▪enable",
           "url": "doc/js/RapidContext.Widget.Popup.html#enable"
         },
         {
-          "topic": "menuselect",
-          "url": "doc/js/RapidContext.Widget.Popup.html#event:menuselect"
-        },
-        {
-          "topic": "onhide",
-          "url": "doc/js/RapidContext.Widget.Popup.html#event:onhide"
-        },
-        {
-          "topic": "onshow",
-          "url": "doc/js/RapidContext.Widget.Popup.html#event:onshow"
-        },
-        {
-          "topic": "getChildNodes",
+          "topic": "▪getChildNodes",
           "url": "doc/js/RapidContext.Widget.Popup.html#getChildNodes"
         },
         {
-          "topic": "hasClass",
+          "topic": "▪hasClass",
           "url": "doc/js/RapidContext.Widget.Popup.html#hasClass"
         },
         {
-          "topic": "hide",
+          "topic": "▪hide",
           "url": "doc/js/RapidContext.Widget.Popup.html#hide"
         },
         {
-          "topic": "isDisabled",
+          "topic": "▪isDisabled",
           "url": "doc/js/RapidContext.Widget.Popup.html#isDisabled"
         },
         {
-          "topic": "isHidden",
+          "topic": "▪isHidden",
           "url": "doc/js/RapidContext.Widget.Popup.html#isHidden"
         },
         {
-          "topic": "removeAll",
+          "topic": "▪off",
+          "url": "doc/js/RapidContext.Widget.Popup.html#off"
+        },
+        {
+          "topic": "▪on",
+          "url": "doc/js/RapidContext.Widget.Popup.html#on"
+        },
+        {
+          "topic": "▪once",
+          "url": "doc/js/RapidContext.Widget.Popup.html#once"
+        },
+        {
+          "topic": "▪removeAll",
           "url": "doc/js/RapidContext.Widget.Popup.html#removeAll"
         },
         {
-          "topic": "removeChildNode",
+          "topic": "▪removeChildNode",
           "url": "doc/js/RapidContext.Widget.Popup.html#removeChildNode"
         },
         {
-          "topic": "removeClass",
+          "topic": "▪removeClass",
           "url": "doc/js/RapidContext.Widget.Popup.html#removeClass"
         },
         {
-          "topic": "resetDelay",
+          "topic": "▪resetDelay",
           "url": "doc/js/RapidContext.Widget.Popup.html#resetDelay"
         },
         {
-          "topic": "selectChild",
+          "topic": "▪selectChild",
           "url": "doc/js/RapidContext.Widget.Popup.html#selectChild"
         },
         {
-          "topic": "selectMove",
+          "topic": "▪selectMove",
           "url": "doc/js/RapidContext.Widget.Popup.html#selectMove"
         },
         {
-          "topic": "selectedChild",
+          "topic": "▪selectedChild",
           "url": "doc/js/RapidContext.Widget.Popup.html#selectedChild"
         },
         {
-          "topic": "setAttrs",
+          "topic": "▪setAttrs",
           "url": "doc/js/RapidContext.Widget.Popup.html#setAttrs"
         },
         {
-          "topic": "setStyle",
+          "topic": "▪setStyle",
           "url": "doc/js/RapidContext.Widget.Popup.html#setStyle"
         },
         {
-          "topic": "show",
+          "topic": "▪show",
           "url": "doc/js/RapidContext.Widget.Popup.html#show"
         },
         {
-          "topic": "toggleClass",
+          "topic": "▪toggleClass",
           "url": "doc/js/RapidContext.Widget.Popup.html#toggleClass"
         },
         {
-          "topic": "uid",
+          "topic": "▪uid",
           "url": "doc/js/RapidContext.Widget.Popup.html#uid"
+        },
+        {
+          "topic": "▫menuselect",
+          "url": "doc/js/RapidContext.Widget.Popup.html#event:menuselect"
+        },
+        {
+          "topic": "▫onhide",
+          "url": "doc/js/RapidContext.Widget.Popup.html#event:onhide"
+        },
+        {
+          "topic": "▫onshow",
+          "url": "doc/js/RapidContext.Widget.Popup.html#event:onshow"
         }
       ]
     },
@@ -1966,87 +2304,103 @@
       "url": "doc/js/RapidContext.Widget.ProgressBar.html",
       "children": [
         {
-          "topic": "addAll",
+          "topic": "▪addAll",
           "url": "doc/js/RapidContext.Widget.ProgressBar.html#addAll"
         },
         {
-          "topic": "addChildNode",
+          "topic": "▪addChildNode",
           "url": "doc/js/RapidContext.Widget.ProgressBar.html#addChildNode"
         },
         {
-          "topic": "addClass",
+          "topic": "▪addClass",
           "url": "doc/js/RapidContext.Widget.ProgressBar.html#addClass"
         },
         {
-          "topic": "animate",
+          "topic": "▪animate",
           "url": "doc/js/RapidContext.Widget.ProgressBar.html#animate"
         },
         {
-          "topic": "blurAll",
+          "topic": "▪blurAll",
           "url": "doc/js/RapidContext.Widget.ProgressBar.html#blurAll"
         },
         {
-          "topic": "destroy",
+          "topic": "▪destroy",
           "url": "doc/js/RapidContext.Widget.ProgressBar.html#destroy"
         },
         {
-          "topic": "disable",
+          "topic": "▪disable",
           "url": "doc/js/RapidContext.Widget.ProgressBar.html#disable"
         },
         {
-          "topic": "enable",
+          "topic": "▪emit",
+          "url": "doc/js/RapidContext.Widget.ProgressBar.html#emit"
+        },
+        {
+          "topic": "▪enable",
           "url": "doc/js/RapidContext.Widget.ProgressBar.html#enable"
         },
         {
-          "topic": "getChildNodes",
+          "topic": "▪getChildNodes",
           "url": "doc/js/RapidContext.Widget.ProgressBar.html#getChildNodes"
         },
         {
-          "topic": "hasClass",
+          "topic": "▪hasClass",
           "url": "doc/js/RapidContext.Widget.ProgressBar.html#hasClass"
         },
         {
-          "topic": "hide",
+          "topic": "▪hide",
           "url": "doc/js/RapidContext.Widget.ProgressBar.html#hide"
         },
         {
-          "topic": "isDisabled",
+          "topic": "▪isDisabled",
           "url": "doc/js/RapidContext.Widget.ProgressBar.html#isDisabled"
         },
         {
-          "topic": "isHidden",
+          "topic": "▪isHidden",
           "url": "doc/js/RapidContext.Widget.ProgressBar.html#isHidden"
         },
         {
-          "topic": "removeAll",
+          "topic": "▪off",
+          "url": "doc/js/RapidContext.Widget.ProgressBar.html#off"
+        },
+        {
+          "topic": "▪on",
+          "url": "doc/js/RapidContext.Widget.ProgressBar.html#on"
+        },
+        {
+          "topic": "▪once",
+          "url": "doc/js/RapidContext.Widget.ProgressBar.html#once"
+        },
+        {
+          "topic": "▪removeAll",
           "url": "doc/js/RapidContext.Widget.ProgressBar.html#removeAll"
         },
         {
-          "topic": "removeChildNode",
+          "topic": "▪removeChildNode",
           "url": "doc/js/RapidContext.Widget.ProgressBar.html#removeChildNode"
         },
         {
-          "topic": "removeClass",
+          "topic": "▪removeClass",
           "url": "doc/js/RapidContext.Widget.ProgressBar.html#removeClass"
         },
         {
-          "topic": "setAttrs",
+          "topic": "▪setAttrs",
           "url": "doc/js/RapidContext.Widget.ProgressBar.html#setAttrs"
         },
         {
-          "topic": "setStyle",
+          "topic": "▪setStyle",
           "url": "doc/js/RapidContext.Widget.ProgressBar.html#setStyle"
         },
         {
-          "topic": "show",
+          "topic": "▪show",
           "url": "doc/js/RapidContext.Widget.ProgressBar.html#show"
         },
         {
-          "topic": "toggleClass",
+          "topic": "▪toggleClass",
           "url": "doc/js/RapidContext.Widget.ProgressBar.html#toggleClass"
         },
         {
-          "topic": "uid",
+          "topic": "▪uid",
           "url": "doc/js/RapidContext.Widget.ProgressBar.html#uid"
         }
       ]
@@ -2056,99 +2410,115 @@
       "url": "doc/js/RapidContext.Widget.TabContainer.html",
       "children": [
         {
-          "topic": "addAll",
+          "topic": "▪addAll",
           "url": "doc/js/RapidContext.Widget.TabContainer.html#addAll"
         },
         {
-          "topic": "addChildNode",
+          "topic": "▪addChildNode",
           "url": "doc/js/RapidContext.Widget.TabContainer.html#addChildNode"
         },
         {
-          "topic": "addClass",
+          "topic": "▪addClass",
           "url": "doc/js/RapidContext.Widget.TabContainer.html#addClass"
         },
         {
-          "topic": "animate",
+          "topic": "▪animate",
           "url": "doc/js/RapidContext.Widget.TabContainer.html#animate"
         },
         {
-          "topic": "blurAll",
+          "topic": "▪blurAll",
           "url": "doc/js/RapidContext.Widget.TabContainer.html#blurAll"
         },
         {
-          "topic": "destroy",
+          "topic": "▪destroy",
           "url": "doc/js/RapidContext.Widget.TabContainer.html#destroy"
         },
         {
-          "topic": "disable",
+          "topic": "▪disable",
           "url": "doc/js/RapidContext.Widget.TabContainer.html#disable"
         },
         {
-          "topic": "enable",
+          "topic": "▪emit",
+          "url": "doc/js/RapidContext.Widget.TabContainer.html#emit"
+        },
+        {
+          "topic": "▪enable",
           "url": "doc/js/RapidContext.Widget.TabContainer.html#enable"
         },
         {
-          "topic": "getChildNodes",
+          "topic": "▪getChildNodes",
           "url": "doc/js/RapidContext.Widget.TabContainer.html#getChildNodes"
         },
         {
-          "topic": "hasClass",
+          "topic": "▪hasClass",
           "url": "doc/js/RapidContext.Widget.TabContainer.html#hasClass"
         },
         {
-          "topic": "hide",
+          "topic": "▪hide",
           "url": "doc/js/RapidContext.Widget.TabContainer.html#hide"
         },
         {
-          "topic": "isDisabled",
+          "topic": "▪isDisabled",
           "url": "doc/js/RapidContext.Widget.TabContainer.html#isDisabled"
         },
         {
-          "topic": "isHidden",
+          "topic": "▪isHidden",
           "url": "doc/js/RapidContext.Widget.TabContainer.html#isHidden"
         },
         {
-          "topic": "removeAll",
+          "topic": "▪off",
+          "url": "doc/js/RapidContext.Widget.TabContainer.html#off"
+        },
+        {
+          "topic": "▪on",
+          "url": "doc/js/RapidContext.Widget.TabContainer.html#on"
+        },
+        {
+          "topic": "▪once",
+          "url": "doc/js/RapidContext.Widget.TabContainer.html#once"
+        },
+        {
+          "topic": "▪removeAll",
           "url": "doc/js/RapidContext.Widget.TabContainer.html#removeAll"
         },
         {
-          "topic": "removeChildNode",
+          "topic": "▪removeChildNode",
           "url": "doc/js/RapidContext.Widget.TabContainer.html#removeChildNode"
         },
         {
-          "topic": "removeClass",
+          "topic": "▪removeClass",
           "url": "doc/js/RapidContext.Widget.TabContainer.html#removeClass"
         },
         {
-          "topic": "selectChild",
+          "topic": "▪selectChild",
           "url": "doc/js/RapidContext.Widget.TabContainer.html#selectChild"
         },
         {
-          "topic": "selectedChild",
+          "topic": "▪selectedChild",
           "url": "doc/js/RapidContext.Widget.TabContainer.html#selectedChild"
         },
         {
-          "topic": "selectedIndex",
+          "topic": "▪selectedIndex",
           "url": "doc/js/RapidContext.Widget.TabContainer.html#selectedIndex"
         },
         {
-          "topic": "setAttrs",
+          "topic": "▪setAttrs",
           "url": "doc/js/RapidContext.Widget.TabContainer.html#setAttrs"
         },
         {
-          "topic": "setStyle",
+          "topic": "▪setStyle",
           "url": "doc/js/RapidContext.Widget.TabContainer.html#setStyle"
         },
         {
-          "topic": "show",
+          "topic": "▪show",
           "url": "doc/js/RapidContext.Widget.TabContainer.html#show"
         },
         {
-          "topic": "toggleClass",
+          "topic": "▪toggleClass",
           "url": "doc/js/RapidContext.Widget.TabContainer.html#toggleClass"
         },
         {
-          "topic": "uid",
+          "topic": "▪uid",
           "url": "doc/js/RapidContext.Widget.TabContainer.html#uid"
         }
       ]
@@ -2158,164 +2528,184 @@
       "url": "doc/js/RapidContext.Widget.Table.html",
       "children": [
         {
-          "topic": "addAll",
+          "topic": "▪addAll",
           "url": "doc/js/RapidContext.Widget.Table.html#addAll"
         },
         {
-          "topic": "addChildNode",
+          "topic": "▪addChildNode",
           "url": "doc/js/RapidContext.Widget.Table.html#addChildNode"
         },
         {
-          "topic": "addClass",
+          "topic": "▪addClass",
           "url": "doc/js/RapidContext.Widget.Table.html#addClass"
         },
         {
-          "topic": "addSelectedIds",
+          "topic": "▪addSelectedIds",
           "url": "doc/js/RapidContext.Widget.Table.html#addSelectedIds"
         },
         {
-          "topic": "animate",
+          "topic": "▪animate",
           "url": "doc/js/RapidContext.Widget.Table.html#animate"
         },
         {
-          "topic": "blurAll",
+          "topic": "▪blurAll",
           "url": "doc/js/RapidContext.Widget.Table.html#blurAll"
         },
         {
-          "topic": "clear",
+          "topic": "▪clear",
           "url": "doc/js/RapidContext.Widget.Table.html#clear"
         },
         {
-          "topic": "destroy",
+          "topic": "▪destroy",
           "url": "doc/js/RapidContext.Widget.Table.html#destroy"
         },
         {
-          "topic": "disable",
+          "topic": "▪disable",
           "url": "doc/js/RapidContext.Widget.Table.html#disable"
         },
         {
-          "topic": "enable",
+          "topic": "▪emit",
+          "url": "doc/js/RapidContext.Widget.Table.html#emit"
+        },
+        {
+          "topic": "▪enable",
           "url": "doc/js/RapidContext.Widget.Table.html#enable"
         },
         {
-          "topic": "onclear",
-          "url": "doc/js/RapidContext.Widget.Table.html#event:onclear"
-        },
-        {
-          "topic": "onselect",
-          "url": "doc/js/RapidContext.Widget.Table.html#event:onselect"
-        },
-        {
-          "topic": "getCellElem",
+          "topic": "▪getCellElem",
           "url": "doc/js/RapidContext.Widget.Table.html#getCellElem"
         },
         {
-          "topic": "getChildNodes",
+          "topic": "▪getChildNodes",
           "url": "doc/js/RapidContext.Widget.Table.html#getChildNodes"
         },
         {
-          "topic": "getColumnIndex",
+          "topic": "▪getColumnIndex",
           "url": "doc/js/RapidContext.Widget.Table.html#getColumnIndex"
         },
         {
-          "topic": "getData",
+          "topic": "▪getData",
           "url": "doc/js/RapidContext.Widget.Table.html#getData"
         },
         {
-          "topic": "getIdKey",
+          "topic": "▪getIdKey",
           "url": "doc/js/RapidContext.Widget.Table.html#getIdKey"
         },
         {
-          "topic": "getRowCount",
+          "topic": "▪getRowCount",
           "url": "doc/js/RapidContext.Widget.Table.html#getRowCount"
         },
         {
-          "topic": "getRowId",
+          "topic": "▪getRowId",
           "url": "doc/js/RapidContext.Widget.Table.html#getRowId"
         },
         {
-          "topic": "getSelectedData",
+          "topic": "▪getSelectedData",
           "url": "doc/js/RapidContext.Widget.Table.html#getSelectedData"
         },
         {
-          "topic": "getSelectedIds",
+          "topic": "▪getSelectedIds",
           "url": "doc/js/RapidContext.Widget.Table.html#getSelectedIds"
         },
         {
-          "topic": "getSortKey",
+          "topic": "▪getSortKey",
           "url": "doc/js/RapidContext.Widget.Table.html#getSortKey"
         },
         {
-          "topic": "hasClass",
+          "topic": "▪hasClass",
           "url": "doc/js/RapidContext.Widget.Table.html#hasClass"
         },
         {
-          "topic": "hide",
+          "topic": "▪hide",
           "url": "doc/js/RapidContext.Widget.Table.html#hide"
         },
         {
-          "topic": "isDisabled",
+          "topic": "▪isDisabled",
           "url": "doc/js/RapidContext.Widget.Table.html#isDisabled"
         },
         {
-          "topic": "isHidden",
+          "topic": "▪isHidden",
           "url": "doc/js/RapidContext.Widget.Table.html#isHidden"
         },
         {
-          "topic": "redraw",
+          "topic": "▪off",
+          "url": "doc/js/RapidContext.Widget.Table.html#off"
+        },
+        {
+          "topic": "▪on",
+          "url": "doc/js/RapidContext.Widget.Table.html#on"
+        },
+        {
+          "topic": "▪once",
+          "url": "doc/js/RapidContext.Widget.Table.html#once"
+        },
+        {
+          "topic": "▪redraw",
           "url": "doc/js/RapidContext.Widget.Table.html#redraw"
         },
         {
-          "topic": "removeAll",
+          "topic": "▪removeAll",
           "url": "doc/js/RapidContext.Widget.Table.html#removeAll"
         },
         {
-          "topic": "removeChildNode",
+          "topic": "▪removeChildNode",
           "url": "doc/js/RapidContext.Widget.Table.html#removeChildNode"
         },
         {
-          "topic": "removeClass",
+          "topic": "▪removeClass",
           "url": "doc/js/RapidContext.Widget.Table.html#removeClass"
         },
         {
-          "topic": "removeSelectedIds",
+          "topic": "▪removeSelectedIds",
           "url": "doc/js/RapidContext.Widget.Table.html#removeSelectedIds"
         },
         {
-          "topic": "setAttrs",
+          "topic": "▪setAttrs",
           "url": "doc/js/RapidContext.Widget.Table.html#setAttrs"
         },
         {
-          "topic": "setData",
+          "topic": "▪setData",
           "url": "doc/js/RapidContext.Widget.Table.html#setData"
         },
         {
-          "topic": "setIdKey",
+          "topic": "▪setIdKey",
           "url": "doc/js/RapidContext.Widget.Table.html#setIdKey"
         },
         {
-          "topic": "setSelectedIds",
+          "topic": "▪setSelectedIds",
           "url": "doc/js/RapidContext.Widget.Table.html#setSelectedIds"
         },
         {
-          "topic": "setStyle",
+          "topic": "▪setStyle",
           "url": "doc/js/RapidContext.Widget.Table.html#setStyle"
         },
         {
-          "topic": "show",
+          "topic": "▪show",
           "url": "doc/js/RapidContext.Widget.Table.html#show"
         },
         {
-          "topic": "sortData",
+          "topic": "▪sortData",
           "url": "doc/js/RapidContext.Widget.Table.html#sortData"
         },
         {
-          "topic": "toggleClass",
+          "topic": "▪toggleClass",
           "url": "doc/js/RapidContext.Widget.Table.html#toggleClass"
         },
         {
-          "topic": "uid",
+          "topic": "▪uid",
           "url": "doc/js/RapidContext.Widget.Table.html#uid"
+        },
+        {
+          "topic": "▪updateData",
+          "url": "doc/js/RapidContext.Widget.Table.html#updateData"
+        },
+        {
+          "topic": "▫onclear",
+          "url": "doc/js/RapidContext.Widget.Table.html#event:onclear"
+        },
+        {
+          "topic": "▫onselect",
+          "url": "doc/js/RapidContext.Widget.Table.html#event:onselect"
         }
       ]
     },
@@ -2324,87 +2714,103 @@
       "url": "doc/js/RapidContext.Widget.TableColumn.html",
       "children": [
         {
-          "topic": "addAll",
+          "topic": "▪addAll",
           "url": "doc/js/RapidContext.Widget.TableColumn.html#addAll"
         },
         {
-          "topic": "addChildNode",
+          "topic": "▪addChildNode",
           "url": "doc/js/RapidContext.Widget.TableColumn.html#addChildNode"
         },
         {
-          "topic": "addClass",
+          "topic": "▪addClass",
           "url": "doc/js/RapidContext.Widget.TableColumn.html#addClass"
         },
         {
-          "topic": "animate",
+          "topic": "▪animate",
           "url": "doc/js/RapidContext.Widget.TableColumn.html#animate"
         },
         {
-          "topic": "blurAll",
+          "topic": "▪blurAll",
           "url": "doc/js/RapidContext.Widget.TableColumn.html#blurAll"
         },
         {
-          "topic": "destroy",
+          "topic": "▪destroy",
           "url": "doc/js/RapidContext.Widget.TableColumn.html#destroy"
         },
         {
-          "topic": "disable",
+          "topic": "▪disable",
           "url": "doc/js/RapidContext.Widget.TableColumn.html#disable"
         },
         {
-          "topic": "enable",
+          "topic": "▪emit",
+          "url": "doc/js/RapidContext.Widget.TableColumn.html#emit"
+        },
+        {
+          "topic": "▪enable",
           "url": "doc/js/RapidContext.Widget.TableColumn.html#enable"
         },
         {
-          "topic": "getChildNodes",
+          "topic": "▪getChildNodes",
           "url": "doc/js/RapidContext.Widget.TableColumn.html#getChildNodes"
         },
         {
-          "topic": "hasClass",
+          "topic": "▪hasClass",
           "url": "doc/js/RapidContext.Widget.TableColumn.html#hasClass"
         },
         {
-          "topic": "hide",
+          "topic": "▪hide",
           "url": "doc/js/RapidContext.Widget.TableColumn.html#hide"
         },
         {
-          "topic": "isDisabled",
+          "topic": "▪isDisabled",
           "url": "doc/js/RapidContext.Widget.TableColumn.html#isDisabled"
         },
         {
-          "topic": "isHidden",
+          "topic": "▪isHidden",
           "url": "doc/js/RapidContext.Widget.TableColumn.html#isHidden"
         },
         {
-          "topic": "removeAll",
+          "topic": "▪off",
+          "url": "doc/js/RapidContext.Widget.TableColumn.html#off"
+        },
+        {
+          "topic": "▪on",
+          "url": "doc/js/RapidContext.Widget.TableColumn.html#on"
+        },
+        {
+          "topic": "▪once",
+          "url": "doc/js/RapidContext.Widget.TableColumn.html#once"
+        },
+        {
+          "topic": "▪removeAll",
           "url": "doc/js/RapidContext.Widget.TableColumn.html#removeAll"
         },
         {
-          "topic": "removeChildNode",
+          "topic": "▪removeChildNode",
           "url": "doc/js/RapidContext.Widget.TableColumn.html#removeChildNode"
         },
         {
-          "topic": "removeClass",
+          "topic": "▪removeClass",
           "url": "doc/js/RapidContext.Widget.TableColumn.html#removeClass"
         },
         {
-          "topic": "setAttrs",
+          "topic": "▪setAttrs",
           "url": "doc/js/RapidContext.Widget.TableColumn.html#setAttrs"
         },
         {
-          "topic": "setStyle",
+          "topic": "▪setStyle",
           "url": "doc/js/RapidContext.Widget.TableColumn.html#setStyle"
         },
         {
-          "topic": "show",
+          "topic": "▪show",
           "url": "doc/js/RapidContext.Widget.TableColumn.html#show"
         },
         {
-          "topic": "toggleClass",
+          "topic": "▪toggleClass",
           "url": "doc/js/RapidContext.Widget.TableColumn.html#toggleClass"
         },
         {
-          "topic": "uid",
+          "topic": "▪uid",
           "url": "doc/js/RapidContext.Widget.TableColumn.html#uid"
         }
       ]
@@ -2414,100 +2820,116 @@
       "url": "doc/js/RapidContext.Widget.TextArea.html",
       "children": [
         {
-          "topic": "addAll",
+          "topic": "▪addAll",
           "url": "doc/js/RapidContext.Widget.TextArea.html#addAll"
         },
         {
-          "topic": "addChildNode",
+          "topic": "▪addChildNode",
           "url": "doc/js/RapidContext.Widget.TextArea.html#addChildNode"
         },
         {
-          "topic": "addClass",
+          "topic": "▪addClass",
           "url": "doc/js/RapidContext.Widget.TextArea.html#addClass"
         },
         {
-          "topic": "animate",
+          "topic": "▪animate",
           "url": "doc/js/RapidContext.Widget.TextArea.html#animate"
         },
         {
-          "topic": "blurAll",
+          "topic": "▪blurAll",
           "url": "doc/js/RapidContext.Widget.TextArea.html#blurAll"
         },
         {
-          "topic": "destroy",
+          "topic": "▪destroy",
           "url": "doc/js/RapidContext.Widget.TextArea.html#destroy"
         },
         {
-          "topic": "disable",
+          "topic": "▪disable",
           "url": "doc/js/RapidContext.Widget.TextArea.html#disable"
         },
         {
-          "topic": "enable",
+          "topic": "▪emit",
+          "url": "doc/js/RapidContext.Widget.TextArea.html#emit"
+        },
+        {
+          "topic": "▪enable",
           "url": "doc/js/RapidContext.Widget.TextArea.html#enable"
         },
         {
-          "topic": "onchange",
-          "url": "doc/js/RapidContext.Widget.TextArea.html#event:onchange"
-        },
-        {
-          "topic": "getChildNodes",
+          "topic": "▪getChildNodes",
           "url": "doc/js/RapidContext.Widget.TextArea.html#getChildNodes"
         },
         {
-          "topic": "getValue",
+          "topic": "▪getValue",
           "url": "doc/js/RapidContext.Widget.TextArea.html#getValue"
         },
         {
-          "topic": "hasClass",
+          "topic": "▪hasClass",
           "url": "doc/js/RapidContext.Widget.TextArea.html#hasClass"
         },
         {
-          "topic": "hide",
+          "topic": "▪hide",
           "url": "doc/js/RapidContext.Widget.TextArea.html#hide"
         },
         {
-          "topic": "isDisabled",
+          "topic": "▪isDisabled",
           "url": "doc/js/RapidContext.Widget.TextArea.html#isDisabled"
         },
         {
-          "topic": "isHidden",
+          "topic": "▪isHidden",
           "url": "doc/js/RapidContext.Widget.TextArea.html#isHidden"
         },
         {
-          "topic": "removeAll",
+          "topic": "▪off",
+          "url": "doc/js/RapidContext.Widget.TextArea.html#off"
+        },
+        {
+          "topic": "▪on",
+          "url": "doc/js/RapidContext.Widget.TextArea.html#on"
+        },
+        {
+          "topic": "▪once",
+          "url": "doc/js/RapidContext.Widget.TextArea.html#once"
+        },
+        {
+          "topic": "▪removeAll",
           "url": "doc/js/RapidContext.Widget.TextArea.html#removeAll"
         },
         {
-          "topic": "removeChildNode",
+          "topic": "▪removeChildNode",
           "url": "doc/js/RapidContext.Widget.TextArea.html#removeChildNode"
         },
         {
-          "topic": "removeClass",
+          "topic": "▪removeClass",
           "url": "doc/js/RapidContext.Widget.TextArea.html#removeClass"
         },
         {
-          "topic": "reset",
+          "topic": "▪reset",
           "url": "doc/js/RapidContext.Widget.TextArea.html#reset"
         },
         {
-          "topic": "setAttrs",
+          "topic": "▪setAttrs",
           "url": "doc/js/RapidContext.Widget.TextArea.html#setAttrs"
         },
         {
-          "topic": "setStyle",
+          "topic": "▪setStyle",
           "url": "doc/js/RapidContext.Widget.TextArea.html#setStyle"
         },
         {
-          "topic": "show",
+          "topic": "▪show",
           "url": "doc/js/RapidContext.Widget.TextArea.html#show"
         },
         {
-          "topic": "toggleClass",
+          "topic": "▪toggleClass",
           "url": "doc/js/RapidContext.Widget.TextArea.html#toggleClass"
         },
         {
-          "topic": "uid",
+          "topic": "▪uid",
           "url": "doc/js/RapidContext.Widget.TextArea.html#uid"
+        },
+        {
+          "topic": "▫onchange",
+          "url": "doc/js/RapidContext.Widget.TextArea.html#event:onchange"
         }
       ]
     },
@@ -2516,100 +2938,116 @@
       "url": "doc/js/RapidContext.Widget.TextField.html",
       "children": [
         {
-          "topic": "addAll",
+          "topic": "▪addAll",
           "url": "doc/js/RapidContext.Widget.TextField.html#addAll"
         },
         {
-          "topic": "addChildNode",
+          "topic": "▪addChildNode",
           "url": "doc/js/RapidContext.Widget.TextField.html#addChildNode"
         },
         {
-          "topic": "addClass",
+          "topic": "▪addClass",
           "url": "doc/js/RapidContext.Widget.TextField.html#addClass"
         },
         {
-          "topic": "animate",
+          "topic": "▪animate",
           "url": "doc/js/RapidContext.Widget.TextField.html#animate"
         },
         {
-          "topic": "blurAll",
+          "topic": "▪blurAll",
           "url": "doc/js/RapidContext.Widget.TextField.html#blurAll"
         },
         {
-          "topic": "destroy",
+          "topic": "▪destroy",
           "url": "doc/js/RapidContext.Widget.TextField.html#destroy"
         },
         {
-          "topic": "disable",
+          "topic": "▪disable",
           "url": "doc/js/RapidContext.Widget.TextField.html#disable"
         },
         {
-          "topic": "enable",
+          "topic": "▪emit",
+          "url": "doc/js/RapidContext.Widget.TextField.html#emit"
+        },
+        {
+          "topic": "▪enable",
           "url": "doc/js/RapidContext.Widget.TextField.html#enable"
         },
         {
-          "topic": "onchange",
-          "url": "doc/js/RapidContext.Widget.TextField.html#event:onchange"
-        },
-        {
-          "topic": "getChildNodes",
+          "topic": "▪getChildNodes",
           "url": "doc/js/RapidContext.Widget.TextField.html#getChildNodes"
         },
         {
-          "topic": "getValue",
+          "topic": "▪getValue",
           "url": "doc/js/RapidContext.Widget.TextField.html#getValue"
         },
         {
-          "topic": "hasClass",
+          "topic": "▪hasClass",
           "url": "doc/js/RapidContext.Widget.TextField.html#hasClass"
         },
         {
-          "topic": "hide",
+          "topic": "▪hide",
           "url": "doc/js/RapidContext.Widget.TextField.html#hide"
         },
         {
-          "topic": "isDisabled",
+          "topic": "▪isDisabled",
           "url": "doc/js/RapidContext.Widget.TextField.html#isDisabled"
         },
         {
-          "topic": "isHidden",
+          "topic": "▪isHidden",
           "url": "doc/js/RapidContext.Widget.TextField.html#isHidden"
         },
         {
-          "topic": "removeAll",
+          "topic": "▪off",
+          "url": "doc/js/RapidContext.Widget.TextField.html#off"
+        },
+        {
+          "topic": "▪on",
+          "url": "doc/js/RapidContext.Widget.TextField.html#on"
+        },
+        {
+          "topic": "▪once",
+          "url": "doc/js/RapidContext.Widget.TextField.html#once"
+        },
+        {
+          "topic": "▪removeAll",
           "url": "doc/js/RapidContext.Widget.TextField.html#removeAll"
         },
         {
-          "topic": "removeChildNode",
+          "topic": "▪removeChildNode",
           "url": "doc/js/RapidContext.Widget.TextField.html#removeChildNode"
         },
         {
-          "topic": "removeClass",
+          "topic": "▪removeClass",
           "url": "doc/js/RapidContext.Widget.TextField.html#removeClass"
         },
         {
-          "topic": "reset",
+          "topic": "▪reset",
           "url": "doc/js/RapidContext.Widget.TextField.html#reset"
         },
         {
-          "topic": "setAttrs",
+          "topic": "▪setAttrs",
           "url": "doc/js/RapidContext.Widget.TextField.html#setAttrs"
         },
         {
-          "topic": "setStyle",
+          "topic": "▪setStyle",
           "url": "doc/js/RapidContext.Widget.TextField.html#setStyle"
         },
         {
-          "topic": "show",
+          "topic": "▪show",
           "url": "doc/js/RapidContext.Widget.TextField.html#show"
         },
         {
-          "topic": "toggleClass",
+          "topic": "▪toggleClass",
           "url": "doc/js/RapidContext.Widget.TextField.html#toggleClass"
         },
         {
-          "topic": "uid",
+          "topic": "▪uid",
           "url": "doc/js/RapidContext.Widget.TextField.html#uid"
+        },
+        {
+          "topic": "▫onchange",
+          "url": "doc/js/RapidContext.Widget.TextField.html#event:onchange"
         }
       ]
     },
@@ -2618,136 +3056,152 @@
       "url": "doc/js/RapidContext.Widget.Tree.html",
       "children": [
         {
-          "topic": "addAll",
+          "topic": "▪addAll",
           "url": "doc/js/RapidContext.Widget.Tree.html#addAll"
         },
         {
-          "topic": "addChildNode",
+          "topic": "▪addChildNode",
           "url": "doc/js/RapidContext.Widget.Tree.html#addChildNode"
         },
         {
-          "topic": "addClass",
+          "topic": "▪addClass",
           "url": "doc/js/RapidContext.Widget.Tree.html#addClass"
         },
         {
-          "topic": "addPath",
+          "topic": "▪addPath",
           "url": "doc/js/RapidContext.Widget.Tree.html#addPath"
         },
         {
-          "topic": "animate",
+          "topic": "▪animate",
           "url": "doc/js/RapidContext.Widget.Tree.html#animate"
         },
         {
-          "topic": "blurAll",
+          "topic": "▪blurAll",
           "url": "doc/js/RapidContext.Widget.Tree.html#blurAll"
         },
         {
-          "topic": "collapseAll",
+          "topic": "▪collapseAll",
           "url": "doc/js/RapidContext.Widget.Tree.html#collapseAll"
         },
         {
-          "topic": "destroy",
+          "topic": "▪destroy",
           "url": "doc/js/RapidContext.Widget.Tree.html#destroy"
         },
         {
-          "topic": "disable",
+          "topic": "▪disable",
           "url": "doc/js/RapidContext.Widget.Tree.html#disable"
         },
         {
-          "topic": "enable",
+          "topic": "▪emit",
+          "url": "doc/js/RapidContext.Widget.Tree.html#emit"
+        },
+        {
+          "topic": "▪enable",
           "url": "doc/js/RapidContext.Widget.Tree.html#enable"
         },
         {
-          "topic": "oncollapse",
-          "url": "doc/js/RapidContext.Widget.Tree.html#event:oncollapse"
-        },
-        {
-          "topic": "onexpand",
-          "url": "doc/js/RapidContext.Widget.Tree.html#event:onexpand"
-        },
-        {
-          "topic": "onselect",
-          "url": "doc/js/RapidContext.Widget.Tree.html#event:onselect"
-        },
-        {
-          "topic": "onunselect",
-          "url": "doc/js/RapidContext.Widget.Tree.html#event:onunselect"
-        },
-        {
-          "topic": "expandAll",
+          "topic": "▪expandAll",
           "url": "doc/js/RapidContext.Widget.Tree.html#expandAll"
         },
         {
-          "topic": "findByPath",
+          "topic": "▪findByPath",
           "url": "doc/js/RapidContext.Widget.Tree.html#findByPath"
         },
         {
-          "topic": "findRoot",
+          "topic": "▪findRoot",
           "url": "doc/js/RapidContext.Widget.Tree.html#findRoot"
         },
         {
-          "topic": "getChildNodes",
+          "topic": "▪getChildNodes",
           "url": "doc/js/RapidContext.Widget.Tree.html#getChildNodes"
         },
         {
-          "topic": "hasClass",
+          "topic": "▪hasClass",
           "url": "doc/js/RapidContext.Widget.Tree.html#hasClass"
         },
         {
-          "topic": "hide",
+          "topic": "▪hide",
           "url": "doc/js/RapidContext.Widget.Tree.html#hide"
         },
         {
-          "topic": "isDisabled",
+          "topic": "▪isDisabled",
           "url": "doc/js/RapidContext.Widget.Tree.html#isDisabled"
         },
         {
-          "topic": "isHidden",
+          "topic": "▪isHidden",
           "url": "doc/js/RapidContext.Widget.Tree.html#isHidden"
         },
         {
-          "topic": "markAll",
+          "topic": "▪markAll",
           "url": "doc/js/RapidContext.Widget.Tree.html#markAll"
         },
         {
-          "topic": "removeAll",
+          "topic": "▪off",
+          "url": "doc/js/RapidContext.Widget.Tree.html#off"
+        },
+        {
+          "topic": "▪on",
+          "url": "doc/js/RapidContext.Widget.Tree.html#on"
+        },
+        {
+          "topic": "▪once",
+          "url": "doc/js/RapidContext.Widget.Tree.html#once"
+        },
+        {
+          "topic": "▪removeAll",
           "url": "doc/js/RapidContext.Widget.Tree.html#removeAll"
         },
         {
-          "topic": "removeAllMarked",
+          "topic": "▪removeAllMarked",
           "url": "doc/js/RapidContext.Widget.Tree.html#removeAllMarked"
         },
         {
-          "topic": "removeChildNode",
+          "topic": "▪removeChildNode",
           "url": "doc/js/RapidContext.Widget.Tree.html#removeChildNode"
         },
         {
-          "topic": "removeClass",
+          "topic": "▪removeClass",
           "url": "doc/js/RapidContext.Widget.Tree.html#removeClass"
         },
         {
-          "topic": "selectedChild",
+          "topic": "▪selectedChild",
           "url": "doc/js/RapidContext.Widget.Tree.html#selectedChild"
         },
         {
-          "topic": "setAttrs",
+          "topic": "▪setAttrs",
           "url": "doc/js/RapidContext.Widget.Tree.html#setAttrs"
         },
         {
-          "topic": "setStyle",
+          "topic": "▪setStyle",
           "url": "doc/js/RapidContext.Widget.Tree.html#setStyle"
         },
         {
-          "topic": "show",
+          "topic": "▪show",
           "url": "doc/js/RapidContext.Widget.Tree.html#show"
         },
         {
-          "topic": "toggleClass",
+          "topic": "▪toggleClass",
           "url": "doc/js/RapidContext.Widget.Tree.html#toggleClass"
         },
         {
-          "topic": "uid",
+          "topic": "▪uid",
           "url": "doc/js/RapidContext.Widget.Tree.html#uid"
+        },
+        {
+          "topic": "▫oncollapse",
+          "url": "doc/js/RapidContext.Widget.Tree.html#event:oncollapse"
+        },
+        {
+          "topic": "▫onexpand",
+          "url": "doc/js/RapidContext.Widget.Tree.html#event:onexpand"
+        },
+        {
+          "topic": "▫onselect",
+          "url": "doc/js/RapidContext.Widget.Tree.html#event:onselect"
+        },
+        {
+          "topic": "▫onunselect",
+          "url": "doc/js/RapidContext.Widget.Tree.html#event:onunselect"
         }
       ]
     },
@@ -2756,155 +3210,171 @@
       "url": "doc/js/RapidContext.Widget.TreeNode.html",
       "children": [
         {
-          "topic": "addAll",
+          "topic": "▪addAll",
           "url": "doc/js/RapidContext.Widget.TreeNode.html#addAll"
         },
         {
-          "topic": "addChildNode",
+          "topic": "▪addChildNode",
           "url": "doc/js/RapidContext.Widget.TreeNode.html#addChildNode"
         },
         {
-          "topic": "addClass",
+          "topic": "▪addClass",
           "url": "doc/js/RapidContext.Widget.TreeNode.html#addClass"
         },
         {
-          "topic": "animate",
+          "topic": "▪animate",
           "url": "doc/js/RapidContext.Widget.TreeNode.html#animate"
         },
         {
-          "topic": "blurAll",
+          "topic": "▪blurAll",
           "url": "doc/js/RapidContext.Widget.TreeNode.html#blurAll"
         },
         {
-          "topic": "collapse",
+          "topic": "▪collapse",
           "url": "doc/js/RapidContext.Widget.TreeNode.html#collapse"
         },
         {
-          "topic": "collapseAll",
+          "topic": "▪collapseAll",
           "url": "doc/js/RapidContext.Widget.TreeNode.html#collapseAll"
         },
         {
-          "topic": "destroy",
+          "topic": "▪destroy",
           "url": "doc/js/RapidContext.Widget.TreeNode.html#destroy"
         },
         {
-          "topic": "disable",
+          "topic": "▪disable",
           "url": "doc/js/RapidContext.Widget.TreeNode.html#disable"
         },
         {
-          "topic": "enable",
+          "topic": "▪emit",
+          "url": "doc/js/RapidContext.Widget.TreeNode.html#emit"
+        },
+        {
+          "topic": "▪enable",
           "url": "doc/js/RapidContext.Widget.TreeNode.html#enable"
         },
         {
-          "topic": "expand",
+          "topic": "▪expand",
           "url": "doc/js/RapidContext.Widget.TreeNode.html#expand"
         },
         {
-          "topic": "expandAll",
+          "topic": "▪expandAll",
           "url": "doc/js/RapidContext.Widget.TreeNode.html#expandAll"
         },
         {
-          "topic": "findByPath",
+          "topic": "▪findByPath",
           "url": "doc/js/RapidContext.Widget.TreeNode.html#findByPath"
         },
         {
-          "topic": "findChild",
+          "topic": "▪findChild",
           "url": "doc/js/RapidContext.Widget.TreeNode.html#findChild"
         },
         {
-          "topic": "getChildNodes",
+          "topic": "▪getChildNodes",
           "url": "doc/js/RapidContext.Widget.TreeNode.html#getChildNodes"
         },
         {
-          "topic": "hasClass",
+          "topic": "▪hasClass",
           "url": "doc/js/RapidContext.Widget.TreeNode.html#hasClass"
         },
         {
-          "topic": "hide",
+          "topic": "▪hide",
           "url": "doc/js/RapidContext.Widget.TreeNode.html#hide"
         },
         {
-          "topic": "isDisabled",
+          "topic": "▪isDisabled",
           "url": "doc/js/RapidContext.Widget.TreeNode.html#isDisabled"
         },
         {
-          "topic": "isExpanded",
+          "topic": "▪isExpanded",
           "url": "doc/js/RapidContext.Widget.TreeNode.html#isExpanded"
         },
         {
-          "topic": "isFolder",
+          "topic": "▪isFolder",
           "url": "doc/js/RapidContext.Widget.TreeNode.html#isFolder"
         },
         {
-          "topic": "isHidden",
+          "topic": "▪isHidden",
           "url": "doc/js/RapidContext.Widget.TreeNode.html#isHidden"
         },
         {
-          "topic": "isSelected",
+          "topic": "▪isSelected",
           "url": "doc/js/RapidContext.Widget.TreeNode.html#isSelected"
         },
         {
-          "topic": "markAll",
+          "topic": "▪markAll",
           "url": "doc/js/RapidContext.Widget.TreeNode.html#markAll"
         },
         {
-          "topic": "parent",
+          "topic": "▪off",
+          "url": "doc/js/RapidContext.Widget.TreeNode.html#off"
+        },
+        {
+          "topic": "▪on",
+          "url": "doc/js/RapidContext.Widget.TreeNode.html#on"
+        },
+        {
+          "topic": "▪once",
+          "url": "doc/js/RapidContext.Widget.TreeNode.html#once"
+        },
+        {
+          "topic": "▪parent",
           "url": "doc/js/RapidContext.Widget.TreeNode.html#parent"
         },
         {
-          "topic": "path",
+          "topic": "▪path",
           "url": "doc/js/RapidContext.Widget.TreeNode.html#path"
         },
         {
-          "topic": "removeAll",
+          "topic": "▪removeAll",
           "url": "doc/js/RapidContext.Widget.TreeNode.html#removeAll"
         },
         {
-          "topic": "removeAllMarked",
+          "topic": "▪removeAllMarked",
           "url": "doc/js/RapidContext.Widget.TreeNode.html#removeAllMarked"
         },
         {
-          "topic": "removeChildNode",
+          "topic": "▪removeChildNode",
           "url": "doc/js/RapidContext.Widget.TreeNode.html#removeChildNode"
         },
         {
-          "topic": "removeClass",
+          "topic": "▪removeClass",
           "url": "doc/js/RapidContext.Widget.TreeNode.html#removeClass"
         },
         {
-          "topic": "select",
+          "topic": "▪select",
           "url": "doc/js/RapidContext.Widget.TreeNode.html#select"
         },
         {
-          "topic": "setAttrs",
+          "topic": "▪setAttrs",
           "url": "doc/js/RapidContext.Widget.TreeNode.html#setAttrs"
         },
         {
-          "topic": "setStyle",
+          "topic": "▪setStyle",
           "url": "doc/js/RapidContext.Widget.TreeNode.html#setStyle"
         },
         {
-          "topic": "show",
+          "topic": "▪show",
           "url": "doc/js/RapidContext.Widget.TreeNode.html#show"
         },
         {
-          "topic": "toggle",
+          "topic": "▪toggle",
           "url": "doc/js/RapidContext.Widget.TreeNode.html#toggle"
         },
         {
-          "topic": "toggleClass",
+          "topic": "▪toggleClass",
           "url": "doc/js/RapidContext.Widget.TreeNode.html#toggleClass"
         },
         {
-          "topic": "tree",
+          "topic": "▪tree",
           "url": "doc/js/RapidContext.Widget.TreeNode.html#tree"
         },
         {
-          "topic": "uid",
+          "topic": "▪uid",
           "url": "doc/js/RapidContext.Widget.TreeNode.html#uid"
         },
         {
-          "topic": "unselect",
+          "topic": "▪unselect",
           "url": "doc/js/RapidContext.Widget.TreeNode.html#unselect"
         }
       ]
@@ -2914,128 +3384,144 @@
       "url": "doc/js/RapidContext.Widget.Wizard.html",
       "children": [
         {
-          "topic": "activatePage",
+          "topic": "▪activatePage",
           "url": "doc/js/RapidContext.Widget.Wizard.html#activatePage"
         },
         {
-          "topic": "activePage",
+          "topic": "▪activePage",
           "url": "doc/js/RapidContext.Widget.Wizard.html#activePage"
         },
         {
-          "topic": "activePageIndex",
+          "topic": "▪activePageIndex",
           "url": "doc/js/RapidContext.Widget.Wizard.html#activePageIndex"
         },
         {
-          "topic": "addAll",
+          "topic": "▪addAll",
           "url": "doc/js/RapidContext.Widget.Wizard.html#addAll"
         },
         {
-          "topic": "addChildNode",
+          "topic": "▪addChildNode",
           "url": "doc/js/RapidContext.Widget.Wizard.html#addChildNode"
         },
         {
-          "topic": "addClass",
+          "topic": "▪addClass",
           "url": "doc/js/RapidContext.Widget.Wizard.html#addClass"
         },
         {
-          "topic": "animate",
+          "topic": "▪animate",
           "url": "doc/js/RapidContext.Widget.Wizard.html#animate"
         },
         {
-          "topic": "blurAll",
+          "topic": "▪blurAll",
           "url": "doc/js/RapidContext.Widget.Wizard.html#blurAll"
         },
         {
-          "topic": "cancel",
+          "topic": "▪cancel",
           "url": "doc/js/RapidContext.Widget.Wizard.html#cancel"
         },
         {
-          "topic": "destroy",
+          "topic": "▪destroy",
           "url": "doc/js/RapidContext.Widget.Wizard.html#destroy"
         },
         {
-          "topic": "disable",
+          "topic": "▪disable",
           "url": "doc/js/RapidContext.Widget.Wizard.html#disable"
         },
         {
-          "topic": "done",
+          "topic": "▪done",
           "url": "doc/js/RapidContext.Widget.Wizard.html#done"
         },
         {
-          "topic": "enable",
+          "topic": "▪emit",
+          "url": "doc/js/RapidContext.Widget.Wizard.html#emit"
+        },
+        {
+          "topic": "▪enable",
           "url": "doc/js/RapidContext.Widget.Wizard.html#enable"
         },
         {
-          "topic": "oncancel",
-          "url": "doc/js/RapidContext.Widget.Wizard.html#event:oncancel"
-        },
-        {
-          "topic": "onchange",
-          "url": "doc/js/RapidContext.Widget.Wizard.html#event:onchange"
-        },
-        {
-          "topic": "onclose",
-          "url": "doc/js/RapidContext.Widget.Wizard.html#event:onclose"
-        },
-        {
-          "topic": "getChildNodes",
+          "topic": "▪getChildNodes",
           "url": "doc/js/RapidContext.Widget.Wizard.html#getChildNodes"
         },
         {
-          "topic": "hasClass",
+          "topic": "▪hasClass",
           "url": "doc/js/RapidContext.Widget.Wizard.html#hasClass"
         },
         {
-          "topic": "hide",
+          "topic": "▪hide",
           "url": "doc/js/RapidContext.Widget.Wizard.html#hide"
         },
         {
-          "topic": "isDisabled",
+          "topic": "▪isDisabled",
           "url": "doc/js/RapidContext.Widget.Wizard.html#isDisabled"
         },
         {
-          "topic": "isHidden",
+          "topic": "▪isHidden",
           "url": "doc/js/RapidContext.Widget.Wizard.html#isHidden"
         },
         {
-          "topic": "next",
+          "topic": "▪next",
           "url": "doc/js/RapidContext.Widget.Wizard.html#next"
         },
         {
-          "topic": "previous",
+          "topic": "▪off",
+          "url": "doc/js/RapidContext.Widget.Wizard.html#off"
+        },
+        {
+          "topic": "▪on",
+          "url": "doc/js/RapidContext.Widget.Wizard.html#on"
+        },
+        {
+          "topic": "▪once",
+          "url": "doc/js/RapidContext.Widget.Wizard.html#once"
+        },
+        {
+          "topic": "▪previous",
           "url": "doc/js/RapidContext.Widget.Wizard.html#previous"
         },
         {
-          "topic": "removeAll",
+          "topic": "▪removeAll",
           "url": "doc/js/RapidContext.Widget.Wizard.html#removeAll"
         },
         {
-          "topic": "removeChildNode",
+          "topic": "▪removeChildNode",
           "url": "doc/js/RapidContext.Widget.Wizard.html#removeChildNode"
         },
         {
-          "topic": "removeClass",
+          "topic": "▪removeClass",
           "url": "doc/js/RapidContext.Widget.Wizard.html#removeClass"
         },
         {
-          "topic": "setAttrs",
+          "topic": "▪setAttrs",
           "url": "doc/js/RapidContext.Widget.Wizard.html#setAttrs"
         },
         {
-          "topic": "setStyle",
+          "topic": "▪setStyle",
           "url": "doc/js/RapidContext.Widget.Wizard.html#setStyle"
         },
         {
-          "topic": "show",
+          "topic": "▪show",
           "url": "doc/js/RapidContext.Widget.Wizard.html#show"
         },
         {
-          "topic": "toggleClass",
+          "topic": "▪toggleClass",
           "url": "doc/js/RapidContext.Widget.Wizard.html#toggleClass"
         },
         {
-          "topic": "uid",
+          "topic": "▪uid",
           "url": "doc/js/RapidContext.Widget.Wizard.html#uid"
+        },
+        {
+          "topic": "▫oncancel",
+          "url": "doc/js/RapidContext.Widget.Wizard.html#event:oncancel"
+        },
+        {
+          "topic": "▫onchange",
+          "url": "doc/js/RapidContext.Widget.Wizard.html#event:onchange"
+        },
+        {
+          "topic": "▫onclose",
+          "url": "doc/js/RapidContext.Widget.Wizard.html#event:onclose"
         }
       ]
     }

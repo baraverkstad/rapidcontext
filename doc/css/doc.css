@@ -326,7 +326,8 @@ body.doc .center {
 .label-namespace {
     background: #8ac;
 }
-.label-interface {
+.label-interface,
+.label-mixin {
     background: #c8a;
 }
 .label-class {
@@ -406,7 +407,7 @@ body.doc .center {
 .doc .hljs-title,
 .doc .hljs-title.class_,
 .doc .hljs-strong {
-    color:#f4bf75
+    color: #619
 }
 .doc .hljs-strong {
     font-weight: 700;

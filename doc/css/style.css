@@ -319,5 +319,5 @@ hr.short {
     cursor: pointer;
 }
 .clickable:hover {
-    background: var(--focus-100);
+    background: var(--highlight-100);
 }

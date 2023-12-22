@@ -94,22 +94,22 @@
 <span id="line39" class="lineno">39</span> * <span class="hljs-doctag">@extends</span> RapidContext.Widget
 <span id="line40" class="lineno">40</span> *
 <span id="line41" class="lineno">41</span> * <span class="hljs-doctag">@example</span> &lt;caption&gt;JavaScript&lt;/caption&gt;
-<span id="line42" class="lineno">42</span> * var closeBtn = RapidContext.Widget.Button({ icon: &quot;OK&quot;, highlight: true }, &quot;Close&quot;);
+<span id="line42" class="lineno">42</span> * let closeBtn = RapidContext.Widget.Button({ icon: &quot;OK&quot;, highlight: true }, &quot;Close&quot;);
 <span id="line43" class="lineno">43</span> *
 <span id="line44" class="lineno">44</span> * <span class="hljs-doctag">@example</span> &lt;caption&gt;User Interface XML&lt;/caption&gt;
 <span id="line45" class="lineno">45</span> * &lt;Button id=&quot;closeBtn&quot; icon=&quot;OK&quot; highlight=&quot;true&quot;&gt;Close&lt;/Button&gt;
 <span id="line46" class="lineno">46</span> */</span>
 <span id="line47" class="lineno">47</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Button</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">attrs<span class="hljs-comment">/*, ...*/</span></span>) {
 <span id="line48" class="lineno">48</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">textNode</span>(<span class="hljs-params">val</span>) {
-<span id="line49" class="lineno">49</span>        <span class="hljs-keyword">var</span> el = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&quot;t&quot;</span>);
+<span id="line49" class="lineno">49</span>        <span class="hljs-keyword">let</span> el = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&quot;t&quot;</span>);
 <span id="line50" class="lineno">50</span>        el.<span class="hljs-property">innerText</span> = <span class="hljs-title class_">String</span>(val &amp;&amp; val.<span class="hljs-property">textContent</span> || val).<span class="hljs-title function_">trim</span>();
 <span id="line51" class="lineno">51</span>        <span class="hljs-keyword">return</span> el;
 <span id="line52" class="lineno">52</span>    }
-<span id="line53" class="lineno">53</span>    <span class="hljs-keyword">var</span> o = <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">DOM</span>.<span class="hljs-title function_">BUTTON</span>({ <span class="hljs-attr">type</span>: attrs.<span class="hljs-property">type</span> || <span class="hljs-string">&quot;button&quot;</span> });
+<span id="line53" class="lineno">53</span>    <span class="hljs-keyword">let</span> o = <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">DOM</span>.<span class="hljs-title function_">BUTTON</span>({ <span class="hljs-attr">type</span>: attrs.<span class="hljs-property">type</span> || <span class="hljs-string">&quot;button&quot;</span> });
 <span id="line54" class="lineno">54</span>    <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title function_">_widgetMixin</span>(o, <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Button</span>);
 <span id="line55" class="lineno">55</span>    o.<span class="hljs-title function_">addClass</span>(<span class="hljs-string">&quot;widgetButton&quot;</span>);
 <span id="line56" class="lineno">56</span>    o.<span class="hljs-title function_">setAttrs</span>(attrs);
-<span id="line57" class="lineno">57</span>    <span class="hljs-keyword">var</span> children = <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(<span class="hljs-variable language_">arguments</span>).<span class="hljs-title function_">slice</span>(<span class="hljs-number">1</span>).<span class="hljs-title function_">filter</span>(<span class="hljs-title class_">Boolean</span>);
+<span id="line57" class="lineno">57</span>    <span class="hljs-keyword">let</span> children = <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(<span class="hljs-variable language_">arguments</span>).<span class="hljs-title function_">slice</span>(<span class="hljs-number">1</span>).<span class="hljs-title function_">filter</span>(<span class="hljs-title class_">Boolean</span>);
 <span id="line58" class="lineno">58</span>    children.<span class="hljs-title function_">forEach</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 <span id="line59" class="lineno">59</span>        o.<span class="hljs-title function_">addChildNode</span>((item.<span class="hljs-property">nodeType</span> === <span class="hljs-number">1</span>) ? item : <span class="hljs-title function_">textNode</span>(item));
 <span id="line60" class="lineno">60</span>    });
@@ -130,31 +130,33 @@
 <span id="line75" class="lineno">75</span> */</span>
 <span id="line76" class="lineno">76</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Button</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">setAttrs</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">attrs</span>) {
 <span id="line77" class="lineno">77</span>    attrs = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>({}, attrs);
-<span id="line78" class="lineno">78</span>    <span class="hljs-keyword">var</span> locals = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Util</span>.<span class="hljs-title function_">mask</span>(attrs, [<span class="hljs-string">&quot;highlight&quot;</span>, <span class="hljs-string">&quot;icon&quot;</span>]);
-<span id="line79" class="lineno">79</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">__setAttrs</span>(attrs);
-<span id="line80" class="lineno">80</span>    <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;highlight&quot;</span> <span class="hljs-keyword">in</span> locals) {
-<span id="line81" class="lineno">81</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">classList</span>.<span class="hljs-title function_">toggle</span>(<span class="hljs-string">&quot;primary&quot;</span>, <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Base</span>.<span class="hljs-title function_">bool</span>(locals.<span class="hljs-property">highlight</span>));
-<span id="line82" class="lineno">82</span>    }
-<span id="line83" class="lineno">83</span>    <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;icon&quot;</span> <span class="hljs-keyword">in</span> locals) {
-<span id="line84" class="lineno">84</span>        <span class="hljs-keyword">var</span> child = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&quot;i&quot;</span>);
-<span id="line85" class="lineno">85</span>        <span class="hljs-keyword">if</span> (!locals.<span class="hljs-property">icon</span>) {
-<span id="line86" class="lineno">86</span>            child &amp;&amp; <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title function_">destroyWidget</span>(child);
-<span id="line87" class="lineno">87</span>        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!child) {
-<span id="line88" class="lineno">88</span>            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">insertBefore</span>(<span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title class_">Icon</span>(locals.<span class="hljs-property">icon</span>), <span class="hljs-variable language_">this</span>.<span class="hljs-property">firstChild</span>);
-<span id="line89" class="lineno">89</span>        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (locals.<span class="hljs-property">icon</span>.<span class="hljs-property">nodeType</span>) {
-<span id="line90" class="lineno">90</span>            child.<span class="hljs-title function_">replaceWith</span>(locals.<span class="hljs-property">icon</span>);
-<span id="line91" class="lineno">91</span>        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (child.<span class="hljs-property">setAttrs</span>) {
-<span id="line92" class="lineno">92</span>            child.<span class="hljs-title function_">setAttrs</span>(locals.<span class="hljs-property">icon</span>);
-<span id="line93" class="lineno">93</span>        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">typeof</span>(locals.<span class="hljs-property">icon</span>) === <span class="hljs-string">&quot;string&quot;</span>) {
-<span id="line94" class="lineno">94</span>            child.<span class="hljs-property">className</span> = locals.<span class="hljs-property">icon</span>;
-<span id="line95" class="lineno">95</span>        } <span class="hljs-keyword">else</span> {
-<span id="line96" class="lineno">96</span>            <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(locals.<span class="hljs-property">icon</span>).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">k</span>) =&gt;</span> child.<span class="hljs-title function_">setAttribute</span>(k, locals.<span class="hljs-property">icon</span>[k]));
-<span id="line97" class="lineno">97</span>        }
+<span id="line78" class="lineno">78</span>    <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;highlight&quot;</span> <span class="hljs-keyword">in</span> attrs) {
+<span id="line79" class="lineno">79</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">classList</span>.<span class="hljs-title function_">toggle</span>(<span class="hljs-string">&quot;primary&quot;</span>, <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Data</span>.<span class="hljs-title function_">bool</span>(attrs.<span class="hljs-property">highlight</span>));
+<span id="line80" class="lineno">80</span>        <span class="hljs-keyword">delete</span> attrs.<span class="hljs-property">highlight</span>;
+<span id="line81" class="lineno">81</span>    }
+<span id="line82" class="lineno">82</span>    <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;icon&quot;</span> <span class="hljs-keyword">in</span> attrs) {
+<span id="line83" class="lineno">83</span>        <span class="hljs-keyword">let</span> child = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&quot;i&quot;</span>);
+<span id="line84" class="lineno">84</span>        <span class="hljs-keyword">if</span> (!attrs.<span class="hljs-property">icon</span>) {
+<span id="line85" class="lineno">85</span>            child &amp;&amp; <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title function_">destroyWidget</span>(child);
+<span id="line86" class="lineno">86</span>        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!child) {
+<span id="line87" class="lineno">87</span>            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">insertBefore</span>(<span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title class_">Icon</span>(attrs.<span class="hljs-property">icon</span>), <span class="hljs-variable language_">this</span>.<span class="hljs-property">firstChild</span>);
+<span id="line88" class="lineno">88</span>        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (attrs.<span class="hljs-property">icon</span>.<span class="hljs-property">nodeType</span>) {
+<span id="line89" class="lineno">89</span>            child.<span class="hljs-title function_">replaceWith</span>(attrs.<span class="hljs-property">icon</span>);
+<span id="line90" class="lineno">90</span>        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (child.<span class="hljs-property">setAttrs</span>) {
+<span id="line91" class="lineno">91</span>            child.<span class="hljs-title function_">setAttrs</span>(attrs.<span class="hljs-property">icon</span>);
+<span id="line92" class="lineno">92</span>        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">typeof</span>(attrs.<span class="hljs-property">icon</span>) === <span class="hljs-string">&quot;string&quot;</span>) {
+<span id="line93" class="lineno">93</span>            child.<span class="hljs-property">className</span> = attrs.<span class="hljs-property">icon</span>;
+<span id="line94" class="lineno">94</span>        } <span class="hljs-keyword">else</span> {
+<span id="line95" class="lineno">95</span>            <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(attrs.<span class="hljs-property">icon</span>).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">k</span>) =&gt;</span> child.<span class="hljs-title function_">setAttribute</span>(k, attrs.<span class="hljs-property">icon</span>[k]));
+<span id="line96" class="lineno">96</span>        }
+<span id="line97" class="lineno">97</span>        <span class="hljs-keyword">delete</span> attrs.<span class="hljs-property">icon</span>;
 <span id="line98" class="lineno">98</span>    }
-<span id="line99" class="lineno">99</span>};
-<span id="line100" class="lineno">100</span></code></pre>
+<span id="line99" class="lineno">99</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">__setAttrs</span>(attrs);
+<span id="line100" class="lineno">100</span>};
+<span id="line101" class="lineno">101</span></code></pre>
         </article>
     </section>
+
 
 
 

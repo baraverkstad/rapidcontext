@@ -201,16 +201,12 @@ object.</div>
 
 
 
-
-
 </header>
 
 <article>
     <div class="container-overview">
 
     </div>
-
-
 
 
 
@@ -491,6 +487,7 @@ modified.</p>
 ...
 <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Log</span>.<span class="hljs-title function_">context</span>(<span class="hljs-literal">null</span>);</code></pre>
 
+
     </dd>
 
 
@@ -689,6 +686,7 @@ modified.</p>
 ...
 <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;done AJAX call to URL:&#x27;</span>, url, responseCode);</code></pre>
 
+
     </dd>
 
 
@@ -883,7 +881,8 @@ modified.</p>
     <dt class="tag-examples">Example:</dt>
     <dd class="tag-examples">
 
-    <pre class="hljs"><code>console.<span class="hljs-type">error</span>(<span class="hljs-string">&#x27;failed to initialize module&#x27;</span>);</code></pre>
+    <pre class="hljs"><code><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(<span class="hljs-string">&#x27;failed to initialize module&#x27;</span>);</code></pre>
+
 
     </dd>
 
@@ -1207,6 +1206,7 @@ global <code>console.info()</code> function.</p>
 
     <pre class="hljs"><code><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">info</span>(<span class="hljs-string">&#x27;authorization failed, user not logged in&#x27;</span>);</code></pre>
 
+
     </dd>
 
 
@@ -1321,6 +1321,174 @@ functions. Safe to call multiple times to change or update config.</p>
 
             <td class="description last">
                 the log configuration options, or null
+
+                    <h6>Properties</h6>
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>interval</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>number</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the publish delay in millis, default is 10s
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>url</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the publish URL endpoint
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>filter</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>function</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the event filter, returns a boolean
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>publisher</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>function</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the event publisher, returns a Promise
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
 
             </td>
         </tr>
@@ -1875,6 +2043,7 @@ value, but may be simplified for increased readability.</p>
     <dd class="tag-examples">
 
     <pre class="hljs"><code><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">warn</span>(<span class="hljs-string">&#x27;missing &quot;data&quot; attribute on document root:&#x27;</span>, <span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>);</code></pre>
+
 
     </dd>
 
