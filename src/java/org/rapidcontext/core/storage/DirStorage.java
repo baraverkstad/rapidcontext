@@ -87,8 +87,7 @@ public class DirStorage extends Storage {
     @Override
     public Metadata lookup(Path path) {
         if (PATH_STORAGEINFO.equals(path)) {
-            Metadata m = new Metadata(Dict.class, PATH_STORAGEINFO, path());
-            return m.modified(mountTime());
+            return new Metadata(Dict.class, PATH_STORAGEINFO, path(), mountTime());
         }
         File file = locateFile(path);
         if (file == null) {
@@ -98,15 +97,14 @@ public class DirStorage extends Storage {
         Date modified = new Date(file.lastModified());
         long size = file.length();
         if (file.isDirectory()) {
-            Metadata m = new Metadata(Index.class, toPath(file, true), path());
-            return m.modified(modified);
+            return new Metadata(Index.class, toPath(file, true), path(), modified);
         } else if (!path.name().equalsIgnoreCase(file.getName())) {
             File f = new File(file.getParentFile(), objectName(file.getName()));
-            Metadata m = new Metadata(Dict.class, toPath(f, false), path());
-            return m.mimeType(mime).modified(modified).size(size);
+            Metadata m = new Metadata(Dict.class, toPath(f, false), path(), modified);
+            return m.mimeType(mime).size(size);
         } else {
-            Metadata m = new Metadata(Binary.class, toPath(file, false), path());
-            return m.mimeType(mime).modified(modified).size(size);
+            Metadata m = new Metadata(Binary.class, toPath(file, false), path(), modified);
+            return m.mimeType(mime).size(size);
         }
     }
 

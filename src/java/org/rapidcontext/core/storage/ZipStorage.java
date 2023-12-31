@@ -163,21 +163,20 @@ public class ZipStorage extends Storage {
     @Override
     public Metadata lookup(Path path) {
         if (PATH_STORAGEINFO.equals(path)) {
-            Metadata m = new Metadata(Dict.class, PATH_STORAGEINFO, path());
-            return m.modified(mountTime());
+            return new Metadata(Dict.class, PATH_STORAGEINFO, path(), mountTime());
         }
         Path match = locatePath(path);
         Object obj = (match == null) ? null : entries.get(match);
         if (obj instanceof Index) {
-            Metadata m = new Metadata(Index.class, match, path());
-            return m.modified(((Index) obj).modified());
+            Index idx = (Index) obj;
+            return new Metadata(Index.class, match, path(), idx.modified());
         } else if (obj instanceof ZipEntry) {
             ZipEntry entry = (ZipEntry) obj;
+            Date modified = new Date(entry.getTime());
             Metadata m = path.equals(match) ?
-                new Metadata(Binary.class, match, path()) :
-                new Metadata(Dict.class, objectPath(match), path());
+                new Metadata(Binary.class, match, path(), modified) :
+                new Metadata(Dict.class, objectPath(match), path(), modified);
             m.mimeType(Mime.type(entry.getName()));
-            m.modified(new Date(entry.getTime()));
             m.size(entry.getSize());
             return m;
         } else {

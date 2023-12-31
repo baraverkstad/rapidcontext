@@ -16,6 +16,7 @@ package org.rapidcontext.core.storage;
 
 import java.util.Date;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
@@ -149,8 +150,8 @@ public class Metadata extends StorableObject {
     /**
      * Creates a new metadata container that is a merged copy of two
      * others. The first will serve as the base, adding additional
-     * storage paths as needed. For index objects, the last modified
-     * date be adjusted to the maximum of the two objects.
+     * storage paths as needed. The last modified date be adjusted to
+     * the maximum of the two objects.
      *
      * @param meta1          the first metadata object
      * @param meta2          the second metadata object
@@ -162,9 +163,7 @@ public class Metadata extends StorableObject {
         if (mimeType() == null) {
             mimeType(meta2.mimeType());
         }
-        if (isIndex() && meta2.modified().after(meta1.modified())) {
-            modified(meta2.modified());
-        }
+        modified(ObjectUtils.max(meta1.modified(), meta2.modified()));
         size(Math.max(meta1.size(), meta2.size()));
     }
 
@@ -174,14 +173,15 @@ public class Metadata extends StorableObject {
      * @param clazz          the object class
      * @param path           the absolute object path
      * @param storagePath    the absolute storage path
+     * @param modified       the last modified date, or null for unknown
      */
-    public Metadata(Class<?> clazz, Path path, Path storagePath) {
+    public Metadata(Class<?> clazz, Path path, Path storagePath, Date modified) {
         super(path.toString(), "metadata");
         dict.set(KEY_CATEGORY, category(clazz));
         dict.set(KEY_CLASS, clazz);
         dict.set(KEY_PATH, path);
         dict.set(KEY_MIMETYPE, null);
-        dict.set(KEY_MODIFIED, new Date());
+        dict.set(KEY_MODIFIED, modified);
         dict.set(KEY_SIZE, 0L);
         dict.set(PREFIX_COMPUTED + KEY_STORAGES, Array.of(storagePath));
     }
@@ -304,7 +304,8 @@ public class Metadata extends StorableObject {
     /**
      * Returns the last modified date for the object.
      *
-     * @return the last modified date for the object
+     * @return the last modified date for the object, or
+     *         null if unknown
      */
     public Date modified() {
         return dict.get(KEY_MODIFIED, Date.class);
@@ -313,12 +314,12 @@ public class Metadata extends StorableObject {
     /**
      * Sets the last modified date for the object.
      *
-     * @param date           the date to set, or null for now
+     * @param date           the date to set, or null for unknown
      *
      * @return this metadata object (for chaining)
      */
     protected Metadata modified(Date date) {
-        dict.set(KEY_MODIFIED, (date == null) ? new Date() : date);
+        dict.set(KEY_MODIFIED, date);
         return this;
     }
 
@@ -358,6 +359,7 @@ public class Metadata extends StorableObject {
         copy.remove(KEY_ID);
         copy.remove(KEY_TYPE);
         copy.remove(PREFIX_COMPUTED + KEY_ACTIVATED_TIME);
+        copy.setIfNull(KEY_MODIFIED, () -> new Date());
         copy.add(PREFIX_COMPUTED + "plugin", Plugin.source(this));
         return copy;
     }

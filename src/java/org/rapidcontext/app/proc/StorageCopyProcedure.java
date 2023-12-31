@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.data.Binary;
@@ -154,9 +155,9 @@ public class StorageCopyProcedure extends Procedure {
         if (update) {
             Metadata srcMeta = storage.lookup(src);
             Metadata dstMeta = storage.lookup(dst);
-            Date srcTime = (srcMeta == null) ? new Date(0) : srcMeta.modified();
-            Date dstTime = (dstMeta == null) ? new Date(0) : dstMeta.modified();
-            if (!dstTime.before(srcTime)) {
+            Date srcTime = (srcMeta == null) ? null : srcMeta.modified();
+            Date dstTime = (dstMeta == null) ? null : dstMeta.modified();
+            if (ObjectUtils.compare(srcTime, dstTime) <= 0) {
                 return false;
             }
         }

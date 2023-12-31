@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.TreeSet;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
@@ -253,7 +254,7 @@ public class Library {
         } else if (meta == null) {
             throw new ProcedureException("no procedure '" + name + "' found");
         }
-        if (proc == null || meta.modified().after(proc.getLastModified())) {
+        if (proc == null || ObjectUtils.compare(meta.modified(), proc.getLastModified()) > 0) {
             return loadProcedure(name);
         } else {
             return proc;
