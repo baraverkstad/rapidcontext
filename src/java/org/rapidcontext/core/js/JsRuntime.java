@@ -207,6 +207,12 @@ public final class JsRuntime {
             // Note: Need double unwrap due to JavaScript objects sometimes
             //       in turn wrapped inside e.g. NativeJavaObject...
             return unwrap(((Wrapper) obj).unwrap());
+        } else if (obj instanceof Double) {
+            boolean isInt = ((Double) obj).doubleValue() % 1 == 0;
+            return isInt ? ((Double) obj).longValue() : obj;
+        } else if (obj instanceof Float) {
+            boolean isInt = ((Float) obj).floatValue() % 1 == 0;
+            return isInt ? ((Float) obj).intValue() : obj;
         } else if (obj instanceof CharSequence) {
             String s = obj.toString();
             return DateUtil.isEpochFormat(s) ? new Date(Long.parseLong(s.substring(1))) : s;

@@ -107,8 +107,7 @@ public final class JsonSerializer {
         } else if (obj instanceof Boolean) {
             buffer.append(obj.toString());
         } else if (obj instanceof Number) {
-            boolean isInt = ((Number) obj).doubleValue() % 1 == 0;
-            buffer.append(isInt ? ((Number) obj).intValue() : obj);
+            buffer.append(StringUtils.removeEnd(obj.toString(), ".0"));
         } else if (obj instanceof Date) {
             String str = DateUtil.asEpochMillis((Date) obj);
             buffer.append(TextEncoding.encodeJsonString(str));
