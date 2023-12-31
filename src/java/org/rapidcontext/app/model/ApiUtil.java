@@ -248,7 +248,7 @@ public class ApiUtil {
             boolean hidden = opts.get("hidden", Boolean.class, false);
             return new Dict()
                 .set("type", "index")
-                .set("modified", idx.modified())
+                .set("modified", Objects.requireNonNullElse(idx.modified(), new Date()))
                 .set("paths", Array.from(idx.paths(path, hidden)));
         } else if (obj instanceof Binary) {
             Binary data = (Binary) obj;

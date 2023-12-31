@@ -16,6 +16,7 @@ package org.rapidcontext.app.plugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.core.storage.Index;
@@ -53,7 +54,7 @@ public final class PluginZipStorage extends ZipStorage {
             root.removeObject(legacyPath.name());
             paths.remove(legacyPath);
             entries.remove(legacyPath);
-            Index idx = new Index();
+            Index idx = new Index(new Date());
             root.addIndex(Plugin.PATH.name());
             paths.put(Plugin.PATH, Plugin.PATH);
             entries.put(Plugin.PATH, idx);

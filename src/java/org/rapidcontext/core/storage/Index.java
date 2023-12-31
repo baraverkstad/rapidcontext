@@ -72,16 +72,9 @@ public class Index {
     }
 
     /**
-     * Creates a new empty index modified right now.
-     */
-    public Index() {
-        this(new Date());
-    }
-
-    /**
      * Creates a new empty index.
      *
-     * @param modified       the last modified date
+     * @param modified       the last modified date, or null for unknown
      */
     public Index(Date modified) {
         this.modified = modified;
@@ -121,7 +114,7 @@ public class Index {
     /**
      * Returns the last modified date.
      *
-     * @return the last modified date
+     * @return the last modified date, or null if unknown
      */
     public Date modified() {
         return this.modified;

@@ -236,13 +236,12 @@ public class MemoryStorage extends Storage {
      */
     private void indexInsert(Path path) {
         Path parent = path.parent();
-        Index idx = Objects.requireNonNullElse((Index) objects.get(parent), new Index());
+        Index idx = Objects.requireNonNullElse((Index) objects.get(parent), new Index(null));
         if (path.isIndex()) {
             idx.addIndex(path.name());
         } else {
             idx.addObject(path.name());
         }
-        idx.setModified(null);
         if (!objects.containsKey(parent)) {
             objects.put(parent, idx);
             meta.put(parent, new Metadata(Index.class, parent, Path.ROOT, null));
@@ -267,7 +266,6 @@ public class MemoryStorage extends Storage {
         } else {
             idx.removeObject(path.name());
         }
-        idx.setModified(null);
         if (idx.isEmpty()) {
             objects.remove(parent);
             meta.remove(parent);
