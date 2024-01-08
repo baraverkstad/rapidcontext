@@ -182,7 +182,7 @@
     // signals depending on the result.
     function nextCall(res) {
         this._promise = null;
-        if (typeof res != "undefined") {
+        if (typeof(res) != "undefined") {
             signal(this, "onresponse", res);
             if (res instanceof Error) {
                 signal(this, "onerror", res);
