@@ -448,19 +448,20 @@ RapidContext.App.callProc = function (name, args, opts) {
     let url = "rapidcontext/procedure/" + name;
     let options = { method: "POST", timeout: opts.timeout || 60000 };
     return RapidContext.App.loadJSON(url, params, options).then(function (res) {
-        if (res.trace != null) {
+        if (res.trace) {
             console.log(name + " trace:", res.trace);
         }
-        if (res.error != null) {
+        if (res.error) {
             console.info(name + " error:", res.error);
+            RapidContext.App._Cache.handleError(res.error);
             throw new Error(res.error);
         } else {
             console.log(name + " response:", res.data);
+            if (name.startsWith("system/")) {
+                RapidContext.App._Cache.update(name, res.data);
+            }
+            return res.data;
         }
-        if (name.startsWith("system/") && !res.error) {
-            RapidContext.App._Cache.update(name, res.data);
-        }
-        return res.data;
     });
 };
 
@@ -767,7 +768,7 @@ RapidContext.App._Cache = {
     apps: {},
 
     // Normalizes an app manifest and its resources
-    _normalizeApp: function (app) {
+    _normalizeApp(app) {
         function toType(type, url) {
             var isJs = !type && /\.js$/i.test(url);
             var isCss = !type && /\.css$/i.test(url);
@@ -820,33 +821,40 @@ RapidContext.App._Cache = {
         return app;
     },
 
-    // Updates the cache data with the results from a procedure.
-    update: function (proc, data) {
+    // Updates the cache data with the procedure results.
+    update(proc, data) {
         switch (proc) {
         case "system/status":
-            this.status = Object.assign({}, data);
+            this.status = { ...data };
             console.log("Updated cached status", this.status);
             break;
         case "system/session/current":
             if (this.user && this.user.id !== (data && data.user && data.user.id)) {
                 RapidContext.UI.Msg.error.loggedOut();
                 RapidContext.App.callProc = () => Promise.reject(new Error("logged out"));
-            } else if (data && data.user && !this.user) {
-                // TODO: use deep clone
-                data = Object.assign({}, data.user);
-                data.longName = data.name ? `${data.name} (${data.id})` : data.id;
-                this.user = data;
+            } else if (!this.user && data && data.user) {
+                let o = this.user = RapidContext.Data.clone(data.user);
+                o.longName = o.name ? `${o.name} (${o.id})` : o.id;
                 console.log("Updated cached user", this.user);
             }
             break;
         case "system/app/list":
-            for (var i = 0; data && i < data.length; i++) {
-                var launcher = this._normalizeApp(data[i]);
-                launcher.instances = (this.apps[launcher.id] || {}).instances || [];
-                this.apps[launcher.id] = Object.assign(this.apps[launcher.id] || {}, launcher);
+            if (data) {
+                for (let o of data) {
+                    let launcher = this._normalizeApp(o);
+                    launcher.instances = (this.apps[launcher.id] || {}).instances || [];
+                    this.apps[launcher.id] = Object.assign(this.apps[launcher.id] || {}, launcher);
+                }
+                console.log("Updated cached apps", this.apps);
             }
-            console.log("Updated cached apps", this.apps);
             break;
+        }
+    },
+
+    // Updates the cache data on some procedure errors.
+    handleError(error) {
+        if (this.user && /permission denied/i.test(error)) {
+            setTimeout(() => RapidContext.App.callProc("system/session/current"));
         }
     }
 };
