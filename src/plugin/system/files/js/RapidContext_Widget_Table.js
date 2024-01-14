@@ -123,6 +123,9 @@ RapidContext.Widget.Table.prototype._handleMouseDown = function (evt) {
  * @param {Event} evt the DOM Event object
  */
 RapidContext.Widget.Table.prototype._handleClick = function (evt) {
+    if (evt.target.closest("a[href]")) {
+        return;
+    }
     let tr = evt.target.closest(".widgetTable > tbody > tr");
     let row = tr && (tr.rowIndex - 1);
     let isMulti = tr && this._selectMode === "multiple";
