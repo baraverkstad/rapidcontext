@@ -415,9 +415,12 @@ RapidContext.Widget.Table.prototype.sortData = function (field, direction) {
     this._selected = [];
     for (let col of this.getChildNodes()) {
         if (col.sort != "none") {
-            let match = col.field === field;
-            let sort = match ? direction || col.sort || "asc" : null;
-            col.setAttrs({ sort });
+            if (col.field === field) {
+                direction = direction || col.sort || "asc";
+                col.setAttrs({ sort: direction });
+            } else {
+                col.setAttrs({ sort: null });
+            }
         }
     }
     this._rows.sort(RapidContext.Data.compare((o) => o[field]));
