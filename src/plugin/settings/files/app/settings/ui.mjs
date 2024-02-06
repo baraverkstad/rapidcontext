@@ -172,7 +172,7 @@ class DetailsForm {
         RapidContext.Widget._widgetMixin(o, DetailsForm);
         o.setAttrs({ hidden: true, ...attrs });
         o.addAll(children);
-        o.on('click', 'button[data-action="hide"]', () => o.hide());
+        o.on('click', 'button[data-action="hide"]', () => o.emit('unselect'));
         return o;
     }
 }

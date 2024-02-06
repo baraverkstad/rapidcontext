@@ -9,6 +9,7 @@ export default async function init(ui) {
     ui.cxnValidateAll.on('click', () => validateAll(ui));
     ui.cxnAdd.on('click', () => edit(ui, true));
     ui.cxnTable.addEventListener('select', () => show(ui));
+    ui.cxnDetails.addEventListener('unselect', () => ui.cxnTable.setSelectedIds());
     ui.cxnValidate.addEventListener('click', () => validate(ui));
     ui.cxnEdit.addEventListener('click', () => edit(ui, false));
     ui.cxnDelete.addEventListener('click', () => remove(ui));

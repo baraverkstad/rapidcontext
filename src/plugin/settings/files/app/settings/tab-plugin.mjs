@@ -9,6 +9,7 @@ export default function init(ui) {
     ui.pluginFile.addEventListener('change', () => upload(ui));
     ui.pluginReset.addEventListener('click', () => reset(ui));
     ui.pluginTable.addEventListener('select', () => show(ui));
+    ui.pluginDetails.addEventListener('unselect', () => ui.pluginTable.setSelectedIds());
     ui.pluginLoad.addEventListener('click', () => load(ui));
     ui.pluginUnload.addEventListener('click', () => unload(ui));
     ui.pluginRemove.addEventListener('click', () => uninstall(ui));

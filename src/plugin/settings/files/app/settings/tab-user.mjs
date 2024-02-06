@@ -9,6 +9,7 @@ export default async function init(ui) {
     ui.userSearch.addEventListener('search', () => search(ui));
     ui.userAdd.addEventListener('click', () => edit(ui, true));
     ui.userTable.addEventListener('select', () => show(ui));
+    ui.userDetails.addEventListener('unselect', () => ui.userTable.setSelectedIds());
     ui.userEdit.addEventListener('click', () => edit(ui, false));
     ui.userForm.addEventListener('submit', (evt) => save(ui, evt));
     try {
