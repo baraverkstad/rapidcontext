@@ -239,7 +239,7 @@ public class ApiUtil {
                                    Object obj,
                                    Dict opts,
                                    boolean limitedTypes) {
-        if (obj instanceof Index i) {
+        if (obj instanceof Index idx) {
             boolean hidden = opts.get("hidden", Boolean.class, false);
             return new Dict()
                 .set("type", "index")
