@@ -9,7 +9,6 @@
         "font-family-no-missing-generic-family-keyword": [true, {
             "ignoreFontFamilies": "FontAwesome"
         }],
-        "max-empty-lines": null,
         "media-feature-range-notation": "prefix",
         "no-descending-specificity": null,
         "property-no-vendor-prefix": [true, {
