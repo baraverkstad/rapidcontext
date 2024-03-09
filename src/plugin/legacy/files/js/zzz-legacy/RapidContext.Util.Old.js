@@ -78,7 +78,7 @@ RapidContext.Util.functionName = RapidContext.deprecatedFunction(
             return func.displayName;
         }
     },
-    "RapidContext.Util.functionName is deprecated."
+    "RapidContext.Util.functionName() is deprecated"
 );
 
 /**
@@ -127,7 +127,7 @@ RapidContext.Util.registerFunctionNames = RapidContext.deprecatedFunction(
         }
         worker(obj, name || obj.name || obj.displayName || obj.NAME || "", []);
     },
-    "RapidContext.Util.registerFunctionNames is deprecated."
+    "RapidContext.Util.registerFunctionNames() is deprecated"
 );
 
 /**
@@ -141,10 +141,6 @@ RapidContext.Util.registerFunctionNames = RapidContext.deprecatedFunction(
  * @param {Number} [maxDepth] the maximum call depth, defaults to 20
  *
  * @return {Array} the stack trace array of function names
- *
- * @deprecated This function will be removed in the future. Custom code for
- *     logging and determining stack traces is obsolete, since `console.log`
- *     now provides a better solution.
  *
  * @see RapidContext.Util.functionName
  * @see RapidContext.Util.injectStackTrace
@@ -179,7 +175,7 @@ RapidContext.Util.stackTrace = RapidContext.deprecatedFunction(
         }
         return res;
     },
-    "RapidContext.Util.stackTrace is deprecated."
+    "RapidContext.Util.stackTrace() is deprecated"
 );
 
 /**
@@ -190,10 +186,6 @@ RapidContext.Util.stackTrace = RapidContext.deprecatedFunction(
  * @param {Array} stackTrace the stack trace, or `null` to clear
  * @param {Function} [func] the function to modify, or `null` for the
  *            currently executing function (i.e. the caller)
- *
- * @deprecated This function will be removed in the future. Custom code for
- *     logging and determining stack traces is obsolete, since `console.log`
- *     now provides a better solution.
  */
 RapidContext.Util.injectStackTrace = RapidContext.deprecatedFunction(
     function (stackTrace, func) {
@@ -206,7 +198,7 @@ RapidContext.Util.injectStackTrace = RapidContext.deprecatedFunction(
             }
         }
     },
-    "RapidContext.Util.injectStackTrace is deprecated."
+    "RapidContext.Util.injectStackTrace() is deprecated"
 );
 
 /**
@@ -218,14 +210,12 @@ RapidContext.Util.injectStackTrace = RapidContext.deprecatedFunction(
  *
  * @return {Boolean} true if the value corresponds to false, or
  *         false otherwise
- *
- * @deprecated Use MochiKit.Base.bool instead.
  */
 RapidContext.Util.isFalse = RapidContext.deprecatedFunction(
     function (value) {
         return !MochiKit.Base.bool(value);
     },
-    "RapidContext.Util.isFalse is deprecated."
+    "RapidContext.Util.isFalse() is deprecated"
 );
 
 /**
@@ -261,7 +251,7 @@ RapidContext.Util.defaultValue = RapidContext.deprecatedFunction(
         }
         return arguments[0];
     },
-    "RapidContext.Util.defaultValue is deprecated."
+    "RapidContext.Util.defaultValue() is deprecated"
 );
 
 /**
@@ -301,7 +291,7 @@ RapidContext.Util.select = RapidContext.deprecatedFunction(
         }
         return res;
     },
-    "RapidContext.Util.select is deprecated."
+    "RapidContext.Util.select() is deprecated"
 );
 
 /**
@@ -333,7 +323,102 @@ RapidContext.Util.findProperty = RapidContext.deprecatedFunction(
         }
         return -1;
     },
-    "RapidContext.Util.findProperty is deprecated."
+    "RapidContext.Util.findProperty() is deprecated"
+);
+
+/**
+ * Creates a dictionary object from a list of keys and values. Optionally a
+ * list of key-value pairs can be provided instead. As a third option, a single
+ * (non-array) value can be assigned to all the keys.
+ *
+ * If a key is specified twice, only the last value will be used. Note that
+ * this function is the reverse of `MochiKit.Base.items()`,
+ * `MochiKit.Base.keys()` and `MochiKit.Base.values()`.
+ *
+ * @param {Array} itemsOrKeys the list of keys or items
+ * @param {Array} [values] the list of values (optional if key-value
+ *            pairs are specified in first argument)
+ *
+ * @return {Object} an object with properties for each key-value pair
+ *
+ * @example
+ * RapidContext.Util.dict(['a','b'], [1, 2])
+ * ==> { a: 1, b: 2 }
+ *
+ * @example
+ * RapidContext.Util.dict([['a', 1], ['b', 2]])
+ * ==> { a: 1, b: 2 }
+ *
+ * @example
+ * RapidContext.Util.dict(['a','b'], true)
+ * ==> { a: true, b: true }
+ */
+RapidContext.Util.dict = RapidContext.deprecatedFunction(
+    function (itemsOrKeys, values) {
+        var o = {};
+        if (!MochiKit.Base.isArrayLike(itemsOrKeys)) {
+            throw new TypeError("First argument must be array-like");
+        }
+        if (MochiKit.Base.isArrayLike(values) && itemsOrKeys.length !== values.length) {
+            throw new TypeError("Both arrays must be of same length");
+        }
+        for (var i = 0; i < itemsOrKeys.length; i++) {
+            var k = itemsOrKeys[i];
+            if (k === null || k === undefined) {
+                throw new TypeError("Key at index " + i + " is null or undefined");
+            } else if (MochiKit.Base.isArrayLike(k)) {
+                o[k[0]] = k[1];
+            } else if (MochiKit.Base.isArrayLike(values)) {
+                o[k] = values[i];
+            } else {
+                o[k] = values;
+            }
+        }
+        return o;
+    },
+    "RapidContext.Util.dict() is deprecated, use RapidContext.Data.object() instead"
+);
+
+/**
+ * Filters an object by removing a list of keys. A list of key names (or an
+ * object whose property names will be used as keys) must be specified as an
+ * argument. A new object containing the source object values for the specified
+ * keys will be returned. The source object will be modified by removing all
+ * the specified keys.
+ *
+ * @param {Object} src the source object to select and modify
+ * @param {Array|Object} keys the list of keys to remove, or an
+ *            object with the keys to remove
+ *
+ * @return {Object} a new object containing the matching keys and
+ *             values found in the source object
+ *
+ * @example
+ * var o = { a: 1, b: 2 };
+ * RapidContext.Util.mask(o, ['a', 'c']);
+ * ==> { a: 1 } and modifies o to { b: 2 }
+ *
+ * @example
+ * var o = { a: 1, b: 2 };
+ * RapidContext.Util.mask(o, { a: null, c: null });
+ * ==> { a: 1 } and modifies o to { b: 2 }
+ */
+RapidContext.Util.mask = RapidContext.deprecatedFunction(
+    function (src, keys) {
+        var res = {};
+        if (!MochiKit.Base.isArrayLike(keys)) {
+            keys = MochiKit.Base.keys(keys);
+        }
+        for (var i = 0; i < keys.length; i++) {
+            var k = keys[i];
+            if (k in src) {
+                res[k] = src[k];
+                delete src[k];
+            }
+        }
+        return res;
+    },
+    "RapidContext.Util.mask() is deprecated, use object destructuring assignment instead"
 );
 
 /**
@@ -348,14 +433,12 @@ RapidContext.Util.findProperty = RapidContext.deprecatedFunction(
  * @param {String/Array} tail the optional tail to use on truncation
  *
  * @return {String/Array} the truncated string or array
- *
- * @deprecated Use MochiKit.Text.truncate instead.
  */
 RapidContext.Util.truncate = RapidContext.deprecatedFunction(
     function (obj, maxLength, tail) {
         return MochiKit.Text.truncate(obj, maxLength, tail);
     },
-    "RapidContext.Util.truncate is deprecated."
+    "RapidContext.Util.truncate() is deprecated"
 );
 
 /**
@@ -370,7 +453,7 @@ RapidContext.Util.truncate = RapidContext.deprecatedFunction(
  */
 RapidContext.Util.twoDigitNumber = RapidContext.deprecatedFunction(
     MochiKit.Format.numberFormatter("00"),
-    "RapidContext.Util.twoDigitNumber is deprecated."
+    "RapidContext.Util.twoDigitNumber() is deprecated"
 );
 
 RapidContext.Util._MILLIS_PER_SECOND = 1000;
@@ -420,7 +503,48 @@ RapidContext.Util.toApproxPeriod = RapidContext.deprecatedFunction(
             return p.millis + " milliseconds";
         }
     },
-    "RapidContext.Util.toApproxPeriod is deprecated."
+    "RapidContext.Util.toApproxPeriod() is deprecated"
+);
+
+/**
+ * Resolves a relative URI to an absolute URI. This function will return
+ * absolute URI:s directly and traverse any "../" directory paths in the
+ * specified URI. The base URI provided must be absolute.
+ *
+ * @param {string} uri the relative URI to resolve
+ * @param {string} [base] the absolute base URI, defaults to the
+ *            the current document base URI
+ *
+ * @return {string} the resolved absolute URI
+ */
+RapidContext.Util.resolveURI = RapidContext.deprecatedFunction(
+    function (uri, base) {
+        var pos;
+        base = base || document.baseURI || document.getElementsByTagName("base")[0].href;
+        if (uri.includes(":")) {
+            return uri;
+        } else if (uri.startsWith("#")) {
+            pos = base.lastIndexOf("#");
+            if (pos >= 0) {
+                base = base.substring(0, pos);
+            }
+            return base + uri;
+        } else if (uri.startsWith("/")) {
+            pos = base.indexOf("/", base.indexOf("://") + 3);
+            base = base.substring(0, pos);
+            return base + uri;
+        } else if (uri.startsWith("../")) {
+            pos = base.lastIndexOf("/");
+            base = base.substring(0, pos);
+            uri = uri.substring(3);
+            return RapidContext.Util.resolveURI(uri, base);
+        } else {
+            pos = base.lastIndexOf("/");
+            base = base.substring(0, pos + 1);
+            return base + uri;
+        }
+    },
+    "RapidContext.Util.resolveURI() is deprecated, use 'new URL(...)' instead"
 );
 
 /**
@@ -456,7 +580,7 @@ RapidContext.Util.reprDOM = RapidContext.deprecatedFunction(
             return node.toString();
         }
     },
-    "RapidContext.Util.reprDOM is deprecated."
+    "RapidContext.Util.reprDOM() is deprecated"
 );
 
 /**
@@ -477,7 +601,7 @@ RapidContext.Util.getMarginBox = RapidContext.deprecatedFunction(
                  l: px(getStyle(node, "margin-left")),
                  r: px(getStyle(node, "margin-right")) };
     },
-    "RapidContext.Util.getMarginBox is deprecated."
+    "RapidContext.Util.getMarginBox() is deprecated"
 );
 
 /**
@@ -498,7 +622,7 @@ RapidContext.Util.getBorderBox = RapidContext.deprecatedFunction(
                  l: px(getStyle(node, "border-width-left")),
                  r: px(getStyle(node, "border-width-right")) };
     },
-    "RapidContext.Util.getBorderBox is deprecated."
+    "RapidContext.Util.getBorderBox() is deprecated"
 );
 
 /**
@@ -519,7 +643,7 @@ RapidContext.Util.getPaddingBox = RapidContext.deprecatedFunction(
                  l: px(getStyle(node, "padding-left")),
                  r: px(getStyle(node, "padding-right")) };
     },
-    "RapidContext.Util.getPaddingBox is deprecated."
+    "RapidContext.Util.getPaddingBox() is deprecated"
 );
 
 /**
@@ -536,7 +660,7 @@ RapidContext.Util.toPixels = RapidContext.deprecatedFunction(
         value = parseInt(value);
         return isNaN(value) ? null : value;
     },
-    "RapidContext.Util.toPixels is deprecated."
+    "RapidContext.Util.toPixels() is deprecated"
 );
 
 /**
@@ -554,7 +678,7 @@ RapidContext.Util.getScrollOffset = RapidContext.deprecatedFunction(
         var y = node.scrollTop || 0;
         return new MochiKit.Style.Coordinates(x, y);
     },
-    "RapidContext.Util.getScrollOffset is deprecated."
+    "RapidContext.Util.getScrollOffset() is deprecated"
 );
 
 /**
@@ -570,7 +694,7 @@ RapidContext.Util.setScrollOffset = RapidContext.deprecatedFunction(
         node.scrollLeft = offset.x;
         node.scrollTop = offset.y;
     },
-    "RapidContext.Util.setScrollOffset is deprecated."
+    "RapidContext.Util.setScrollOffset() is deprecated"
 );
 
 /**
@@ -596,7 +720,7 @@ RapidContext.Util.resetScrollOffset = RapidContext.deprecatedFunction(
             }
         }
     },
-    "RapidContext.Util.resetScrollOffset is deprecated."
+    "RapidContext.Util.resetScrollOffset() is deprecated"
 );
 
 /**
@@ -631,7 +755,7 @@ RapidContext.Util.adjustScrollOffset = RapidContext.deprecatedFunction(
             node.scrollTop = yMin;
         }
     },
-    "RapidContext.Util.adjustScrollOffset is deprecated."
+    "RapidContext.Util.adjustScrollOffset() is deprecated"
 );
 
 RapidContext.Util.NS = {
@@ -658,7 +782,7 @@ RapidContext.Util.isDOM = RapidContext.deprecatedFunction(
                typeof(obj.nodeType) === "number" &&
                obj.nodeType > 0;
     },
-    "RapidContext.Util.isDOM is deprecated."
+    "RapidContext.Util.isDOM() is deprecated"
 );
 
 /**
@@ -677,7 +801,7 @@ RapidContext.Util.isHTML = RapidContext.deprecatedFunction(
         return RapidContext.Util.isDOM(obj) &&
                RapidContext.Util.NS.HTML.includes(obj.namespaceURI);
     },
-    "RapidContext.Util.isHTML is deprecated."
+    "RapidContext.Util.isHTML() is deprecated"
 );
 
 /**
@@ -703,7 +827,7 @@ RapidContext.Util.createDOMExt = RapidContext.deprecatedFunction(
         node.append(...children);
         return node;
     },
-    "RapidContext.Util.createDOMExt is deprecated."
+    "RapidContext.Util.createDOMExt() is deprecated"
 );
 
 /**
@@ -741,7 +865,7 @@ RapidContext.Util.createDOMFuncExt = RapidContext.deprecatedFunction(
             return RapidContext.Util.createDOMExt(ns, tag, myAttrs, myChildren);
         };
     },
-    "RapidContext.Util.createDOMFuncExt is deprecated."
+    "RapidContext.Util.createDOMFuncExt() is deprecated"
 );
 
 /**
@@ -757,7 +881,7 @@ RapidContext.Util.createTextNode = RapidContext.deprecatedFunction(
     function (text) {
         return MochiKit.DOM.currentDocument().createTextNode(text);
     },
-    "RapidContext.Util.createTextNode is deprecated."
+    "RapidContext.Util.createTextNode() is deprecated"
 );
 
 /**
@@ -779,7 +903,7 @@ RapidContext.Util.attributeArray = RapidContext.deprecatedFunction(
         }
         return res;
     },
-    "RapidContext.Util.attributeArray is deprecated."
+    "RapidContext.Util.attributeArray() is deprecated"
 );
 
 /**
@@ -819,5 +943,5 @@ RapidContext.Util.childNode = RapidContext.deprecatedFunction(
             return (node == null || node === parent) ? null : node;
         }
     },
-    "RapidContext.Util.childNode is deprecated."
+    "RapidContext.Util.childNode() is deprecated"
 );
