@@ -31,17 +31,19 @@ RapidContext.Widget = RapidContext.Widget || {};
  *
  * @static
  */
-RapidContext.Widget.isFormField = function (obj) {
-    RapidContext.deprecated("RapidContext.Widget.isFormField is deprecated.");
-    if (!RapidContext.Util.isHTML(obj) || typeof(obj.tagName) !== "string") {
-        return false;
-    }
-    var tagName = obj.tagName.toUpperCase();
-    return tagName == "INPUT" ||
-           tagName == "TEXTAREA" ||
-           tagName == "SELECT" ||
-           RapidContext.Widget.isWidget(obj, "Field");
-};
+RapidContext.Widget.isFormField = RapidContext.deprecatedFunction(
+    function (obj) {
+        if (!RapidContext.Util.isHTML(obj) || typeof(obj.tagName) !== "string") {
+            return false;
+        }
+        var tagName = obj.tagName.toUpperCase();
+        return tagName == "INPUT" ||
+               tagName == "TEXTAREA" ||
+               tagName == "SELECT" ||
+               RapidContext.Widget.isWidget(obj, "Field");
+    },
+    "RapidContext.Widget.isFormField() is deprecated"
+);
 
 /**
  * Emits an asynchronous signal to any listeners connected with
@@ -53,22 +55,22 @@ RapidContext.Widget.isFormField = function (obj) {
  * @param {Widget} node the widget DOM node
  * @param {String} sig the signal name ("onclick" or similar)
  * @param {Object} [...] the optional signal arguments
- *
- * @deprecated Use _dispatch() instead to emit a proper Event object.
  */
-RapidContext.Widget.emitSignal = function (node, sig/*, ...*/) {
-    RapidContext.deprecated("RapidContext.Widget.emitSignal is deprecated.");
-    var args = $.makeArray(arguments);
-    function later() {
-        try {
-            MochiKit.Signal.signal.apply(MochiKit.Signal, args);
-        } catch (e) {
-            var msg = "exception in signal '" + sig + "' handler";
-            RapidContext.Log.error(msg, node, e);
+RapidContext.Widget.emitSignal = RapidContext.deprecatedFunction(
+    function (node, sig/*, ...*/) {
+        var args = $.makeArray(arguments);
+        function later() {
+            try {
+                MochiKit.Signal.signal.apply(MochiKit.Signal, args);
+            } catch (e) {
+                var msg = "exception in signal '" + sig + "' handler";
+                RapidContext.Log.error(msg, node, e);
+            }
         }
-    }
-    setTimeout(later);
-};
+        setTimeout(later);
+    },
+    "RapidContext.Widget.emitSignal() is deprecated, use emit() method instead"
+);
 
 /**
  * Creates an event handler function that will forward any calls to
@@ -82,14 +84,63 @@ RapidContext.Widget.emitSignal = function (node, sig/*, ...*/) {
  *
  * @return {Function} a function that forwards calls as specified
  */
-RapidContext.Widget._eventHandler = function (className, methodName/*, ...*/) {
-    var baseArgs = Array.prototype.slice.call(arguments, 2);
-    return function (evt) {
-        var node = this;
-        while (!RapidContext.Widget.isWidget(node, className)) {
-            node = node.parentNode;
+RapidContext.Widget._eventHandler = RapidContext.deprecatedFunction(
+    function (className, methodName/*, ...*/) {
+        var baseArgs = Array.prototype.slice.call(arguments, 2);
+        return function (evt) {
+            var node = this;
+            while (!RapidContext.Widget.isWidget(node, className)) {
+                node = node.parentNode;
+            }
+            var e = new MochiKit.Signal.Event(this, evt);
+            return node[methodName].apply(node, baseArgs.concat([e]));
+        };
+    },
+    "RapidContext.Widget._eventHandler() is deprecated, use arrow functions instead"
+);
+
+/**
+ * Dispatches a custom event from this DOM node. The event will be
+ * created and emitted asynchronously (via setTimeout).
+ *
+ * @param {string} type the event type (e.g. `validate`)
+ * @param {Object} [opts] the event options (e.g. `{ bubbles: true }`)
+ */
+RapidContext.Widget.prototype._dispatch = RapidContext.deprecatedFunction(
+    function (type, opts) {
+        this.emit(type, opts);
+    },
+    "RapidContext.Widget._dispatch() is deprecated, use emit() method instead"
+);
+
+/**
+ * Performs a visual effect animation on this widget. This is
+ * implemented using the `MochiKit.Visual` effect package. All options
+ * sent to this function will be passed on to the appropriate
+ * `MochiKit.Visual` function.
+ *
+ * @param {Object} opts the visual effect options
+ * @param {string} opts.effect the MochiKit.Visual effect name
+ * @param {string} opts.queue the MochiKit.Visual queue handling,
+ *            defaults to "replace" and a unique scope for each widget
+ *            (see `MochiKit.Visual` for full options)
+ *
+ * @example
+ * widget.animate({ effect: "fade", duration: 0.5 });
+ * widget.animate({ effect: "Move", transition: "spring", y: 300 });
+ */
+RapidContext.Widget.prototype.animate = RapidContext.deprecatedFunction(
+    function (opts) {
+        let queue = { scope: this.uid(), position: "replace" };
+        opts = MochiKit.Base.updatetree({ queue: queue }, opts);
+        if (typeof(opts.queue) == "string") {
+            queue.position = opts.queue;
+            opts.queue = queue;
         }
-        var e = new MochiKit.Signal.Event(this, evt);
-        return node[methodName].apply(node, baseArgs.concat([e]));
-    };
-};
+        let func = MochiKit.Visual[opts.effect];
+        if (typeof(func) == "function") {
+            func.call(null, this, opts);
+        }
+    },
+    "RapidContext.Widget.animate() is deprecated, use CSS animations instead"
+);

@@ -223,20 +223,6 @@ RapidContext.Widget.prototype._styleNode = function () {
 };
 
 /**
- * Dispatches a custom event from this DOM node. The event will be
- * created and emitted asynchronously (via setTimeout).
- *
- * @param {string} type the event type (e.g. `validate`)
- * @param {Object} [opts] the event options (e.g. `{ bubbles: true }`)
- *
- * @deprecated Use `emit(type, opts)` instead.
- */
-RapidContext.Widget.prototype._dispatch = function (type, opts) {
-    console.warn("deprecated: use 'emit' method instead of '_dispatch'");
-    this.emit(type, opts);
-};
-
-/**
  * Updates the widget or HTML DOM node attributes. This method is
  * sometimes overridden by individual widgets to allow modification
  * of additional widget attributes.
@@ -479,38 +465,6 @@ RapidContext.Widget.prototype.show = function () {
  */
 RapidContext.Widget.prototype.hide = function () {
     this.setAttrs({ hidden: true });
-};
-
-/**
- * Performs a visual effect animation on this widget. This is
- * implemented using the `MochiKit.Visual` effect package. All options
- * sent to this function will be passed on to the appropriate
- * `MochiKit.Visual` function.
- *
- * @param {Object} opts the visual effect options
- * @param {string} opts.effect the MochiKit.Visual effect name
- * @param {string} opts.queue the MochiKit.Visual queue handling,
- *            defaults to "replace" and a unique scope for each widget
- *            (see `MochiKit.Visual` for full options)
- *
- * @example
- * widget.animate({ effect: "fade", duration: 0.5 });
- * widget.animate({ effect: "Move", transition: "spring", y: 300 });
- *
- * @deprecated Use CSS animations instead.
- */
-RapidContext.Widget.prototype.animate = function (opts) {
-    console.warn("deprecated: animate() method called, use CSS animations instead");
-    let queue = { scope: this.uid(), position: "replace" };
-    opts = MochiKit.Base.updatetree({ queue: queue }, opts);
-    if (typeof(opts.queue) == "string") {
-        queue.position = opts.queue;
-        opts.queue = queue;
-    }
-    let func = MochiKit.Visual[opts.effect];
-    if (typeof(func) == "function") {
-        func.call(null, this, opts);
-    }
 };
 
 /**
