@@ -434,11 +434,6 @@ RapidContext.App.callApp = function (app, method) {
 RapidContext.App.callProc = function (name, args, opts) {
     args = args || [];
     opts = opts || {};
-    // TODO: remove this legacy name conversion
-    if (name.startsWith("RapidContext.")) {
-        console.warn("deprecated: " + name + " procedure called, use new system/* name instead");
-        name = "System" + name.substring(8);
-    }
     console.log("Call request " + name, args);
     let params = RapidContext.Data.object(
         args.map((val, idx) => ["arg" + idx, RapidContext.Encode.toJSON(val)])
