@@ -239,11 +239,6 @@ public class Library {
      *             or failed to load correctly
      */
     public Procedure getProcedure(String name) throws ProcedureException {
-        // TODO: remove this legacy conversion before 1.0
-        if (name.startsWith("ReTracer.")) {
-            LOG.warning("deprecated: legacy procedure name: " + name);
-            name = "System" + name.substring(8);
-        }
         if (builtIns.containsKey(name)) {
             return builtIns.get(name);
         }
