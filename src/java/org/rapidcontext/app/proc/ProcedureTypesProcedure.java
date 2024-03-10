@@ -19,7 +19,6 @@ import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
-import org.rapidcontext.core.proc.Library;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.type.Procedure;
@@ -74,13 +73,6 @@ public class ProcedureTypesProcedure extends Procedure {
                 res.set(t.id(), new Dict().set("type", t.id()).set("bindings", arr));
             }
         });
-        for (String name : Library.getTypes()) {
-            Bindings defs = Library.getDefaultBindings(name);
-            if (defs != null) {
-                Array data = ProcedureReadProcedure.getBindingsData(defs);
-                res.set(name, new Dict().set("type", name).set("bindings", data));
-            }
-        }
         return res;
     }
 }

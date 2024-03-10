@@ -51,11 +51,6 @@ public class Library {
     public static final Path PATH_PROC = org.rapidcontext.core.type.Procedure.PATH;
 
     /**
-     * The map of procedure type names and implementation classes.
-     */
-    private static HashMap<String,Class<?>> types = new HashMap<>();
-
-    /**
      * The data storage to use for loading and listing procedures.
      */
     private Storage storage = null;
@@ -102,92 +97,6 @@ public class Library {
      * The procedure call metrics.
      */
     private Metrics metrics = null;
-
-    /**
-     * Registers a procedure type name. All add-on procedures should
-     * register their unique type names with this method. Normally
-     * each procedure class has one type name, but alias names are
-     * permitted.
-     *
-     * @param type           the unique procedure type name
-     * @param cls            the procedure implementation class
-     *
-     * @throws ProcedureException if the procedure type was already
-     *             registered
-     *
-     * @deprecated Use a storage subtype to 'type/procedure' instead
-     *     of manually registering here. Storage types are
-     *     automatically managed.
-     */
-    @Deprecated(forRemoval=true)
-    public static void registerType(String type, Class<?> cls)
-    throws ProcedureException {
-
-        if (types.containsKey(type)) {
-            String msg = "procedure type " + type + " is already registered";
-            LOG.warning(msg);
-            throw new ProcedureException(msg);
-        }
-        LOG.warning("deprecated: procedure type '" + type + "' not declared via storage");
-        types.put(type, cls);
-        LOG.fine("registered procedure type " + type +
-                 " with class " + cls.getName());
-    }
-
-    /**
-     * Unregisters a procedure type name. All add-on procedures that
-     * are created via plug-ins should call this method when the
-     * plug-in unloads.
-     *
-     * @param type           the unique procedure type name
-     *
-     * @deprecated Use a storage subtype to 'type/procedure' instead
-     *     of manually registering here. Storage types are
-     *     automatically managed.
-     */
-    @Deprecated(forRemoval=true)
-    public static void unregisterType(String type) {
-        types.remove(type);
-        LOG.fine("unregistered procedure type " + type);
-    }
-
-    /**
-     * Returns an array with all the registered procedure type names.
-     *
-     * @return an array with all procedure type names
-     *
-     * @deprecated Check the storage subtypes to 'type/procedure'
-     *     instead of this.
-     */
-    @Deprecated(forRemoval=true)
-    public static String[] getTypes() {
-        String[] res = new String[types.size()];
-        types.keySet().toArray(res);
-        return res;
-    }
-
-    /**
-     * Returns the default bindings for a registered procedure type.
-     * This function will instantiate a new empty procedure of the
-     * specified type and return the bindings thus created.
-     *
-     * @param type           the unique procedure type name
-     *
-     * @return the default bindings for the procedure type, or
-     *         null if the procedure creation failed
-     *
-     * @deprecated Check the storage subtypes to 'type/procedure'
-     *     instead of this.
-     */
-    @Deprecated(forRemoval=true)
-    public static Bindings getDefaultBindings(String type) {
-        try {
-            AddOnProcedure proc = (AddOnProcedure) types.get(type).getDeclaredConstructor().newInstance();
-            return proc.getBindings();
-        } catch (Exception ignore) {
-            return null;
-        }
-    }
 
     /**
      * Creates a new procedure library.
@@ -326,12 +235,8 @@ public class Library {
         Object obj = storage.load(Path.resolve(PATH_PROC, name));
         if (obj instanceof Procedure p) {
             return p;
-        } else if (obj instanceof Dict d) {
-            AddOnProcedure proc = createProcedure(d);
-            cache.put(proc.getName(), proc);
-            return proc;
         } else {
-            String msg = "no procedure '" + name + "' found";
+            String msg = "no (valid) procedure '" + name + "' found";
             throw new ProcedureException(msg);
         }
     }
@@ -354,24 +259,12 @@ public class Library {
     throws ProcedureException {
 
         try {
-            if (Type.find(storage, type) != null) {
-                Dict dict = new Dict();
-                dict.set(Type.KEY_ID, id);
-                dict.set(Type.KEY_TYPE, type);
-                dict.setAll(data);
-                storage.store(Path.resolve(PATH_PROC, id + Storage.EXT_YAML), dict);
-                return loadProcedure(id);
-            } else {
-                Dict dict = new Dict();
-                dict.set("name", id);
-                dict.set("type", type);
-                dict.setAll(data);
-                AddOnProcedure proc = createProcedure(dict);
-                cache.remove(proc.getName());
-                String objectName = proc.getName() + Storage.EXT_YAML;
-                storage.store(Path.resolve(PATH_PROC, objectName), proc.getData());
-                return proc;
-            }
+            Dict dict = new Dict();
+            dict.set(Type.KEY_ID, id);
+            dict.set(Type.KEY_TYPE, type);
+            dict.setAll(data);
+            storage.store(Path.resolve(PATH_PROC, id + Storage.EXT_YAML), dict);
+            return loadProcedure(id);
         } catch (StorageException e) {
             String msg = "failed to write procedure data: " + e.getMessage();
             throw new ProcedureException(msg);
@@ -394,53 +287,6 @@ public class Library {
             storage.remove(Path.resolve(PATH_PROC, name));
         } catch (StorageException e) {
             String msg = "failed to remove procedure: " + e.getMessage();
-            throw new ProcedureException(msg);
-        }
-    }
-
-    /**
-     * Creates a new add-on procedure from the specified data object.
-     *
-     * @param data           the procedure data object
-     *
-     * @return the add-on procedure created
-     *
-     * @throws ProcedureException if the procedure couldn't be
-     *             created due to errors in the data object
-     */
-    private AddOnProcedure createProcedure(Dict data) throws ProcedureException {
-        String msg;
-        String name = data.get("name", String.class);
-        if (name == null) {
-            msg = "failed to find required procedure property 'name'";
-            throw new ProcedureException(msg);
-        }
-        String type = data.get("type", String.class);
-        if (type == null) {
-            msg = "failed to create procedure '" + name + "': " +
-                  "missing required procedure property 'type'";
-            throw new ProcedureException(msg);
-        } else if (types.get(type) == null) {
-            msg = "failed to create procedure '" + name + "': " +
-                  "procedure type '" + type + "' is undefined";
-            throw new ProcedureException(msg);
-        }
-        try {
-            Object obj = types.get(type).getDeclaredConstructor().newInstance();
-            AddOnProcedure proc = (AddOnProcedure) obj;
-            proc.setData(data);
-            return proc;
-        } catch (IllegalAccessException e) {
-            msg = "failed to create procedure '" + name + "' as type '" +
-                  type + "': illegal access to class or constructor";
-            throw new ProcedureException(msg);
-        } catch (ClassCastException e) {
-            msg = "failed to create procedure '" + name + "' as type '" +
-                  type + "': class doesn't subclass AddOnProcedure";
-            throw new ProcedureException(msg);
-        } catch (Throwable e) {
-            msg = "failed to create procedure '" + name + "' as type '" +
-                  type + "': " + e.toString();
             throw new ProcedureException(msg);
         }
     }
