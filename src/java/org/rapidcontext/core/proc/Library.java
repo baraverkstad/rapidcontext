@@ -204,7 +204,10 @@ public class Library {
      *
      * @throws ProcedureException if an error occurred while removing
      *             the procedure from storage
+     *
+     * @deprecated Remove directly from storage instead.
      */
+    @Deprecated(forRemoval=true)
     public void deleteProcedure(String name) throws ProcedureException {
         try {
             storage.remove(Path.resolve(PATH_PROC, name));

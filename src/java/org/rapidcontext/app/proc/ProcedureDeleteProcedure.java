@@ -20,6 +20,8 @@ import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
+import org.rapidcontext.core.storage.Path;
+import org.rapidcontext.core.storage.StorageException;
 import org.rapidcontext.core.type.Procedure;
 
 /**
@@ -72,7 +74,12 @@ public class ProcedureDeleteProcedure extends Procedure {
         }
         CallContext.checkWriteAccess("procedure/" + name);
         LOG.info("deleting procedure " + name);
-        cx.getLibrary().deleteProcedure(name);
+        try {
+            cx.getStorage().remove(Path.resolve(Procedure.PATH, name));
+        } catch (StorageException e) {
+            String msg = "failed to remove procedure: " + e.getMessage();
+            throw new ProcedureException(msg);
+        }
         return null;
     }
 }
