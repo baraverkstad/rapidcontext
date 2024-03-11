@@ -43,7 +43,10 @@ public class Library {
 
     /**
      * The procedure object storage path.
+     *
+     * @deprecated Use org.rapidcontext.core.type.Procedure.PATH instead.
      */
+    @Deprecated(forRemoval=true)
     public static final Path PATH_PROC = org.rapidcontext.core.type.Procedure.PATH;
 
     /**
