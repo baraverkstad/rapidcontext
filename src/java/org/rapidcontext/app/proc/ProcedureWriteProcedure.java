@@ -20,6 +20,9 @@ import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
+import org.rapidcontext.core.storage.Path;
+import org.rapidcontext.core.storage.Storage;
+import org.rapidcontext.core.storage.StorageException;
 import org.rapidcontext.core.type.Procedure;
 
 /**
@@ -77,9 +80,16 @@ public class ProcedureWriteProcedure extends Procedure {
         CallContext.checkWriteAccess("procedure/" + name);
         LOG.info("writing procedure " + name);
         Dict dict = new Dict()
-            .set("description", bindings.getValue("description", ""))
-            .set("binding", bindings.getValue("bindings"));
-        org.rapidcontext.core.proc.Procedure proc = cx.getLibrary().storeProcedure(name, type, dict);
-        return ProcedureReadProcedure.getProcedureData(cx.getLibrary(), proc);
+            .set(Procedure.KEY_ID, name)
+            .set(Procedure.KEY_TYPE, type)
+            .set(Procedure.KEY_DESCRIPTION, bindings.getValue("description", ""))
+            .set(Procedure.KEY_BINDING, bindings.getValue("bindings"));
+        try {
+            cx.getStorage().store(Path.resolve(Procedure.PATH, name + Storage.EXT_YAML), dict);
+        } catch (StorageException e) {
+            String msg = "failed to write procedure data: " + e.getMessage();
+            throw new ProcedureException(msg);
+        }
+        return null;
     }
 }

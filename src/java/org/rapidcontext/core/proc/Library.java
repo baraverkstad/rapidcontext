@@ -178,7 +178,10 @@ public class Library {
      *
      * @throws ProcedureException if the procedure couldn't be
      *             created or written to the data store
+     *
+     * @deprecated Store directly to storage instead.
      */
+    @Deprecated(forRemoval=true)
     public Procedure storeProcedure(String id, String type, Dict data)
     throws ProcedureException {
 
