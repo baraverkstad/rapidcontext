@@ -19,8 +19,8 @@ import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.type.Procedure;
+import org.rapidcontext.core.type.Role;
 
 /**
  * The built-in procedure list procedure.
@@ -62,14 +62,11 @@ public class ProcedureListProcedure extends Procedure {
         throws ProcedureException {
 
         CallContext.checkSearchAccess("procedure/");
-        String[] names = cx.getLibrary().getProcedureNames();
-        Array list = new Array(names.length);
-        for (String s : names) {
-            if (SecurityContext.hasReadAccess("procedure/" + s)) {
-                list.add(s);
-            }
-        }
-        list.sort();
-        return list;
+        return Array.from(
+            cx.getStorage().query(Procedure.PATH)
+            .filterAccess(Role.PERM_READ)
+            .paths()
+            .map(path -> path.toIdent(1))
+        );
     }
 }

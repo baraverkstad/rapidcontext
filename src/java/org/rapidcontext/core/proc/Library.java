@@ -92,7 +92,10 @@ public class Library {
      * @return an array with the names of all loaded procedures
      *
      * @throws ProcedureException if the procedures couldn't be listed
+     *
+     * @deprecated Query storage directly instead.
      */
+    @Deprecated(forRemoval=true)
     public String[] getProcedureNames() throws ProcedureException {
         TreeSet<String> set = new TreeSet<>();
         storage.query(PATH_PROC).paths().forEach(path -> set.add(path.toIdent(1)));
