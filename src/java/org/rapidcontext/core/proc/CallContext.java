@@ -407,7 +407,7 @@ public class CallContext {
     public Object execute(String name, Object[] args)
         throws ProcedureException {
 
-        Procedure proc = library.getProcedure(name);
+        Procedure proc = library.load(name);
         boolean commit = false;
         if (stack.height() == 0) {
             setAttribute(ATTRIBUTE_PROCEDURE, proc);
@@ -488,7 +488,7 @@ public class CallContext {
         for (String name : bindings.getNames()) {
             if (bindings.getType(name) == Bindings.PROCEDURE) {
                 Object value = bindings.getValue(name);
-                value = library.getProcedure((String) value);
+                value = library.load((String) value);
                 callBindings.set(name, Bindings.PROCEDURE, value, null);
             } else if (bindings.getType(name) == Bindings.CONNECTION) {
                 String id = (String) bindings.getValue(name, null);

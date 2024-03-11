@@ -111,7 +111,10 @@ public class Library {
      *
      * @throws ProcedureException if the procedure couldn't be found,
      *             or failed to load correctly
+     *
+     * @deprecated Use load(String) instead.
      */
+    @Deprecated(forRemoval=true)
     public Procedure getProcedure(String name) throws ProcedureException {
         Metadata meta = storage.lookup(Path.resolve(PATH_PROC, name));
         if (meta == null && aliases.containsKey(name)) {
@@ -120,6 +123,26 @@ public class Library {
             throw new ProcedureException("no procedure '" + name + "' found");
         }
         return loadProcedure(name);
+    }
+
+    /**
+     * Locates a procedure using either its identifier or an alias.
+     *
+     * @param id             the procedure identifier
+     *
+     * @return the procedure object
+     *
+     * @throws ProcedureException if the procedure couldn't be found,
+     *             or failed to load correctly
+     */
+    public org.rapidcontext.core.type.Procedure load(String id) throws ProcedureException {
+        Metadata meta = storage.lookup(Path.resolve(org.rapidcontext.core.type.Procedure.PATH, id));
+        if (meta == null && aliases.containsKey(id)) {
+            return load(aliases.get(id));
+        } else if (meta == null) {
+            throw new ProcedureException("no procedure '" + id + "' found");
+        }
+        return org.rapidcontext.core.type.Procedure.find(storage, id);
     }
 
     /**
@@ -154,9 +177,12 @@ public class Library {
      * @return the procedure loaded
      *
      * @throws ProcedureException if the procedure couldn't be loaded
+     *
+     * @deprecated Use load(String) instead.
      */
+    @Deprecated(forRemoval=true)
     public Procedure loadProcedure(String name) throws ProcedureException {
-        Object obj = storage.load(Path.resolve(PATH_PROC, name));
+        Object obj = org.rapidcontext.core.type.Procedure.find(storage, name);
         if (obj instanceof Procedure p) {
             return p;
         } else {

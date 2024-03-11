@@ -70,14 +70,27 @@ public abstract class Procedure extends StorableObject implements org.rapidconte
     public static final long ACTIVE_MILLIS = 5L * DateUtils.MILLIS_PER_MINUTE;
 
     /**
-     * Returns a stream of all environments found in the storage.
+     * Returns a stream of all procedures found in the storage.
      *
      * @param storage        the storage to search
      *
-     * @return a stream of environment instances found
+     * @return a stream of procedure instances found
      */
     public static Stream<Procedure> all(Storage storage) {
         return storage.query(PATH).objects(Procedure.class);
+    }
+
+    /**
+     * Searches for a specific procedure in the storage.
+     *
+     * @param storage        the storage to search in
+     * @param id             the procedure identifier
+     *
+     * @return the procedure found, or
+     *         null if not found
+     */
+    public static Procedure find(Storage storage, String id) {
+        return storage.load(Path.resolve(PATH, id), Procedure.class);
     }
 
     /**

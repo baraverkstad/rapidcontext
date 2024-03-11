@@ -20,7 +20,6 @@ import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
-import org.rapidcontext.core.proc.Library;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
@@ -70,14 +69,13 @@ public class ProcedureReadProcedure extends Procedure {
 
         String name = (String) bindings.getValue("name");
         CallContext.checkAccess("procedure/" + name, cx.readPermission(1));
-        org.rapidcontext.core.proc.Procedure proc = cx.getLibrary().getProcedure(name);
-        return getProcedureData(cx.getLibrary(), proc);
+        Procedure proc = cx.getLibrary().load(name);
+        return getProcedureData(proc);
     }
 
     /**
      * Converts a procedure object into a data object.
      *
-     * @param library        the library to use for plug-in info
      * @param proc           the procedure
      *
      * @return the data object created
@@ -85,21 +83,17 @@ public class ProcedureReadProcedure extends Procedure {
      * @throws ProcedureException if the bindings data access
      *             failed
      */
-    static Object getProcedureData(Library library, org.rapidcontext.core.proc.Procedure proc)
+    static Object getProcedureData(Procedure proc)
     throws ProcedureException {
         Storage storage = ApplicationContext.getInstance().getStorage();
         Path storagePath = Plugin.storagePath(PluginManager.LOCAL_PLUGIN);
-        Path path = Path.resolve(Library.PATH_PROC, proc.getName());
+        Path path = Path.resolve(Procedure.PATH, proc.id());
         Metadata meta = storage.lookup(Path.resolve(storagePath, path));
         Dict res = new Dict();
-        if (proc instanceof StorableObject o) {
-            res.setAll(o.serialize());
-            res.remove(KEY_BINDING);
-        } else {
-            res.set("type", "built-in");
-        }
-        res.set("name", proc.getName());
-        res.set("description", proc.getDescription());
+        res.setAll(proc.serialize());
+        res.remove(KEY_BINDING);
+        res.set("name", proc.id());
+        res.set("description", proc.description());
         res.set("local", meta != null);
         res.set("bindings", getBindingsData(proc.getBindings()));
         return StorableObject.sterilize(res, true, true, true);

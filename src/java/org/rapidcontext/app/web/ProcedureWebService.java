@@ -24,8 +24,8 @@ import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.JsonSerializer;
 import org.rapidcontext.core.proc.Bindings;
-import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
+import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.core.type.WebService;
 import org.rapidcontext.core.web.Mime;
 import org.rapidcontext.core.web.Request;
@@ -193,7 +193,7 @@ public class ProcedureWebService extends WebService {
             LOG.fine(() -> logPrefix + "init procedure call");
             super.session(request, isSession); // Create session if needed
             ApplicationContext ctx = ApplicationContext.getInstance();
-            Procedure proc = ctx.getLibrary().getProcedure(name);
+            Procedure proc = ctx.getLibrary().load(name);
             Object[] args = processArgs(proc, request, logPrefix);
             if (isTracing || ctx.getLibrary().isTracing(name)) {
                 trace = new StringBuilder();

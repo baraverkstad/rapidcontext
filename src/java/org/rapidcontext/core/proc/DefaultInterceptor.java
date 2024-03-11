@@ -62,7 +62,7 @@ public class DefaultInterceptor extends Interceptor {
                     cx.connectionReserve(value, Role.PERM_INTERNAL);
                 } else if (bindings.getType(name) == Bindings.PROCEDURE) {
                     String value = (String) bindings.getValue(name);
-                    cx.reserve(cx.getLibrary().getProcedure(value));
+                    cx.reserve(cx.getLibrary().load(value));
                 }
             }
         } finally {
