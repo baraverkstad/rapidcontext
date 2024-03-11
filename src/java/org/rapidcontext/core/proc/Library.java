@@ -18,7 +18,6 @@ import java.util.HashMap;
 import java.util.TreeSet;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang3.ObjectUtils;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
@@ -28,11 +27,8 @@ import org.rapidcontext.core.type.Metrics;
 import org.rapidcontext.core.type.Type;
 
 /**
- * A procedure library. This class contains the set of loaded and
- * built-in procedures. The library automatically loads and caches
- * procedures found in the data store. If the procedure content in
- * the data store is modified, the library cache must be cleared or
- * inconsistencies will result.
+ * A procedure library. The library handles procedure aliases, call
+ * interceptors and other functions for all procedures.
  *
  * @author   Per Cederberg
  * @version  1.0
@@ -64,23 +60,6 @@ public class Library {
     private HashMap<String,String> aliases = new HashMap<>();
 
     /**
-     * The map of built-in procedures. The map is indexed by the
-     * procedure name and is populated manually by the
-     * addBuiltIn() and removeBuiltIn() methods.
-     *
-     * @see #addBuiltIn(Procedure)
-     * @see #removeBuiltIn(String)
-     */
-    private HashMap<String,Procedure> builtIns = new HashMap<>();
-
-    /**
-     * The map of cached procedures. The map is indexed by the
-     * procedure name and is populated automatically from the data
-     * store upon procedure requests.
-     */
-    private HashMap<String,AddOnProcedure> cache = new HashMap<>();
-
-    /**
      * The map of active procedure traces. The map is indexed by the
      * procedure name and an entry is only added if all calls to the
      * procedure should be traced (which affects performance
@@ -108,23 +87,6 @@ public class Library {
     }
 
     /**
-     * Checks if the specified procedure name is a registered
-     * built-in procedure.
-     *
-     * @param name           the procedure name
-     *
-     * @return true if the procedure is a built-in procedure, or
-     *         false otherwise
-     *
-     * @deprecated Built-in procedures are managed as storable
-     *     objects, so this method is no longer reliable.
-     */
-    @Deprecated(forRemoval=true)
-    public boolean hasBuiltIn(String name) {
-        return builtIns.containsKey(name);
-    }
-
-    /**
      * Returns an array with the names of all loaded procedures.
      *
      * @return an array with the names of all loaded procedures
@@ -132,7 +94,7 @@ public class Library {
      * @throws ProcedureException if the procedures couldn't be listed
      */
     public String[] getProcedureNames() throws ProcedureException {
-        TreeSet<String> set = new TreeSet<>(builtIns.keySet());
+        TreeSet<String> set = new TreeSet<>();
         storage.query(PATH_PROC).paths().forEach(path -> set.add(path.toIdent(1)));
         return set.toArray(new String[set.size()]);
     }
@@ -148,21 +110,13 @@ public class Library {
      *             or failed to load correctly
      */
     public Procedure getProcedure(String name) throws ProcedureException {
-        if (builtIns.containsKey(name)) {
-            return builtIns.get(name);
-        }
-        AddOnProcedure proc = cache.get(name);
         Metadata meta = storage.lookup(Path.resolve(PATH_PROC, name));
         if (meta == null && aliases.containsKey(name)) {
             return getProcedure(aliases.get(name));
         } else if (meta == null) {
             throw new ProcedureException("no procedure '" + name + "' found");
         }
-        if (proc == null || ObjectUtils.compare(meta.modified(), proc.getLastModified()) > 0) {
-            return loadProcedure(name);
-        } else {
-            return proc;
-        }
+        return loadProcedure(name);
     }
 
     /**
@@ -180,46 +134,13 @@ public class Library {
     }
 
     /**
-     * Adds a new built-in procedure to the library.
+     * Procedure instances are now cached in the storage layer.
      *
-     * @param proc           the procedure definition
-     *
-     * @throws ProcedureException if an identically named procedure
-     *             already exists
-     *
-     * @deprecated Built-in procedures should be initialized via the 'className'
-     *     property on a proper stored (serialized) object.
+     * @deprecated Storage cache is used instead.
      */
     @Deprecated(forRemoval=true)
-    public void addBuiltIn(Procedure proc) throws ProcedureException {
-        if (builtIns.containsKey(proc.getName())) {
-            String msg = "a procedure '" + proc.getName() + "' already exists";
-            throw new ProcedureException(msg);
-        }
-        LOG.warning("deprecated: procedure '" + proc.getName() + "' not declared via storage");
-        builtIns.put(proc.getName(), proc);
-    }
-
-    /**
-     * Removes a built-in procedure from the library.
-     *
-     * @param name           the procedure name
-     *
-     * @deprecated Built-in procedures should be managed as proper stored
-     *     (serialized) objects.
-     */
-    @Deprecated(forRemoval=true)
-    public void removeBuiltIn(String name) {
-        builtIns.remove(name);
-    }
-
-    /**
-     * Clears the cache of loaded procedures from the library. The
-     * procedure cache is continuously built up each time a procedure
-     * is accessed.
-     */
     public void clearCache() {
-        cache.clear();
+        // Does nothing
     }
 
     /**
@@ -283,7 +204,6 @@ public class Library {
      */
     public void deleteProcedure(String name) throws ProcedureException {
         try {
-            cache.remove(name);
             storage.remove(Path.resolve(PATH_PROC, name));
         } catch (StorageException e) {
             String msg = "failed to remove procedure: " + e.getMessage();

@@ -492,7 +492,6 @@ public class ApplicationContext {
      */
     public void unloadPlugin(String pluginId) throws PluginException {
         pluginManager.unload(pluginId);
-        library.clearCache();
         library.refreshAliases();
         Array pluginList = config.getArray("plugins");
         pluginList.remove(pluginId);

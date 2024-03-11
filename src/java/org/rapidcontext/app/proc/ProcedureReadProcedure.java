@@ -18,7 +18,6 @@ import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.app.plugin.PluginManager;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.proc.AddOnProcedure;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Library;
@@ -96,8 +95,6 @@ public class ProcedureReadProcedure extends Procedure {
         if (proc instanceof StorableObject o) {
             res.setAll(o.serialize());
             res.remove(KEY_BINDING);
-        } else if (proc instanceof AddOnProcedure p) {
-            res.set("type", p.getType());
         } else {
             res.set("type", "built-in");
         }

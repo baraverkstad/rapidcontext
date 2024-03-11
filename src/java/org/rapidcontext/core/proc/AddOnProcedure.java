@@ -40,9 +40,12 @@ import org.rapidcontext.core.data.Dict;
  *     transparently by the framework.
  * </ul>
  *
+ * @deprecated Use org.rapidcontext.core.type.Procedure API instead.
+ *
  * @author   Per Cederberg
  * @version  1.0
  */
+@Deprecated(forRemoval=true)
 public abstract class AddOnProcedure implements Procedure {
 
     /**
