@@ -14,6 +14,8 @@
 
 package org.rapidcontext.core.proc;
 
+import org.rapidcontext.core.type.Procedure;
+
 /**
  * A procedure exception. This class encapsulates all procedure
  * execution errors, both run-time and compile-time.
@@ -38,8 +40,32 @@ public class ProcedureException extends Exception {
      * @param proc           the procedure called
      * @param message        the detailed error message
      */
-    public ProcedureException(Procedure proc, String message) {
+    @Deprecated(forRemoval=true)
+    @SuppressWarnings({"deprecation", "removal"})
+    public ProcedureException(org.rapidcontext.core.proc.Procedure proc, String message) {
         super("in '" + proc.getName() + "': " + message);
+    }
+
+    /**
+     * Creates a new in-call procedure exception.
+     *
+     * @param proc           the procedure called
+     * @param message        the detailed error message
+     */
+    public ProcedureException(Procedure proc, String message) {
+        super("in '" + proc.id() + "': " + message);
+    }
+
+    /**
+     * Creates a new new in-call procedure exception.
+     *
+     * @param proc           the procedure called
+     * @param e              the root cause
+     */
+    @Deprecated(forRemoval=true)
+    @SuppressWarnings({"deprecation", "removal"})
+    public ProcedureException(org.rapidcontext.core.proc.Procedure proc, Throwable e) {
+        super("in '" + proc.getName() + "': " + e.getMessage(), e);
     }
 
     /**
@@ -49,6 +75,6 @@ public class ProcedureException extends Exception {
      * @param e              the root cause
      */
     public ProcedureException(Procedure proc, Throwable e) {
-        super("in '" + proc.getName() + "': " + e.getMessage(), e);
+        super("in '" + proc.id() + "': " + e.getMessage(), e);
     }
 }

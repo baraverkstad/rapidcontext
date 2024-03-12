@@ -14,6 +14,8 @@
 
 package org.rapidcontext.core.proc;
 
+import org.rapidcontext.core.type.Procedure;
+
 /**
  * A procedure call interceptor. This is an abstract class that
  * allows subclasses to override, monitor or extend any resource
@@ -66,11 +68,33 @@ public abstract class Interceptor {
      *
      * @throws ProcedureException if the connections couldn't be
      *             reserved
+     *
+     * @deprecated Replaced with org.rapidcontext.core.type.Procedure signature.
      */
+    @Deprecated(forRemoval=true)
+    @SuppressWarnings({"deprecation", "removal"})
+    public void reserve(CallContext cx, org.rapidcontext.core.proc.Procedure proc)
+        throws ProcedureException {
+
+        reserve(cx, (Procedure) proc);
+    }
+
+    /**
+     * Reserves all adapter connections needed for executing the
+     * specified procedure. All connections needed by imported
+     * procedures will also be reserved recursively.
+     *
+     * @param cx             the procedure context
+     * @param proc           the procedure definition
+     *
+     * @throws ProcedureException if the connections couldn't be
+     *             reserved
+     */
+    @SuppressWarnings({"deprecation", "removal"})
     public void reserve(CallContext cx, Procedure proc)
         throws ProcedureException {
 
-        parent.reserve(cx, proc);
+        parent.reserve(cx, (org.rapidcontext.core.proc.Procedure) proc);
     }
 
     /**
@@ -97,10 +121,34 @@ public abstract class Interceptor {
      *
      * @throws ProcedureException if the call execution caused an
      *             error
+     *
+     * @deprecated Replaced with org.rapidcontext.core.type.Procedure signature.
      */
+    @Deprecated(forRemoval=true)
+    @SuppressWarnings({"deprecation", "removal"})
+    public Object call(CallContext cx, org.rapidcontext.core.proc.Procedure proc, Bindings bindings)
+        throws ProcedureException {
+
+        return call(cx, (Procedure) proc, bindings);
+    }
+
+    /**
+     * Calls a procedure with the specified bindings.
+     *
+     * @param cx             the procedure context
+     * @param proc           the procedure definition
+     * @param bindings       the procedure bindings
+     *
+     * @return the result of the call, or
+     *         null if the call produced no result
+     *
+     * @throws ProcedureException if the call execution caused an
+     *             error
+     */
+    @SuppressWarnings({"deprecation", "removal"})
     public Object call(CallContext cx, Procedure proc, Bindings bindings)
         throws ProcedureException {
 
-        return parent.call(cx, proc, bindings);
+        return parent.call(cx, (org.rapidcontext.core.proc.Procedure) proc, bindings);
     }
 }

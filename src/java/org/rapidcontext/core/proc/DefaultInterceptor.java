@@ -14,6 +14,7 @@
 
 package org.rapidcontext.core.proc;
 
+import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.core.type.Role;
 
 /**
@@ -102,7 +103,7 @@ public class DefaultInterceptor extends Interceptor {
 
         long start = System.currentTimeMillis();
         try {
-            cx.logCall(proc.getName(), bindings);
+            cx.logCall(proc.id(), bindings);
             Object obj = proc.call(cx, bindings);
             cx.logResponse(obj);
             cx.getLibrary().report(proc, start, true, null);

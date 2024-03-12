@@ -43,10 +43,12 @@ package org.rapidcontext.core.proc;
  *
  * @see AddOnProcedure
  * @see Bindings
+ * @deprecated Use org.rapidcontext.core.type.Procedure API instead.
  *
  * @author   Per Cederberg
  * @version  1.0
  */
+@Deprecated(forRemoval=true)
 public interface Procedure {
 
     /**

@@ -16,8 +16,8 @@ package org.rapidcontext.core.js;
 
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Interceptor;
-import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
+import org.rapidcontext.core.type.Procedure;
 
 /**
  * A JavaScript compile procedure call interceptor. This interceptor

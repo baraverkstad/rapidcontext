@@ -16,6 +16,8 @@ package org.rapidcontext.core.proc;
 
 import java.util.ArrayList;
 
+import org.rapidcontext.core.type.Procedure;
+
 /**
  * A procedure call stack. The stack contains an ordered list of the
  * procedures currently being called.
@@ -34,6 +36,22 @@ public class CallStack {
      * Creates a new empty procedure call stack.
      */
     public CallStack() {}
+
+    /**
+     * Checks if the specified procedure exists in the call stack.
+     *
+     * @param proc           the procedure definition
+     *
+     * @return true if the procedure exists in the call stack, or
+     *         false otherwise
+     *
+     * @deprecated Replaced with org.rapidcontext.core.type.Procedure signature.
+     */
+    @Deprecated(forRemoval=true)
+    @SuppressWarnings({"deprecation", "removal"})
+    public boolean contains(org.rapidcontext.core.proc.Procedure proc) {
+        return stack.contains(proc);
+    }
 
     /**
      * Checks if the specified procedure exists in the call stack.
@@ -64,7 +82,7 @@ public class CallStack {
      *         null if the stack is empty
      */
     public Procedure bottom() {
-        return (stack.size() > 0) ? stack.get(0) : null;
+        return stack.isEmpty() ? null : stack.get(0);
     }
 
     /**
@@ -75,7 +93,7 @@ public class CallStack {
      *         null if the stack is empty
      */
     public Procedure top() {
-        return (stack.size() > 0) ? stack.get(stack.size() - 1) : null;
+        return stack.isEmpty() ? null : stack.get(stack.size() - 1);
     }
 
     /**
@@ -103,7 +121,7 @@ public class CallStack {
      * Removes the last entry in the call stack.
      */
     void pop() {
-        if (stack.size() > 0) {
+        if (!stack.isEmpty()) {
             stack.remove(stack.size() - 1);
         }
     }

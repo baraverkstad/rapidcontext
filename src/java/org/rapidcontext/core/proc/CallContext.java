@@ -29,6 +29,7 @@ import org.rapidcontext.core.type.Connection;
 import org.rapidcontext.core.type.ConnectionException;
 import org.rapidcontext.core.type.Environment;
 import org.rapidcontext.core.type.Role;
+import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.core.type.User;
 import org.rapidcontext.util.DateUtil;
 
@@ -445,9 +446,29 @@ public class CallContext {
      *
      * @throws ProcedureException if the connections couldn't be
      *             reserved
+     *
+     * @deprecated Replaced with org.rapidcontext.core.type.Procedure signature.
+     */
+    @Deprecated(forRemoval=true)
+    @SuppressWarnings({"deprecation", "removal"})
+    public void reserve(org.rapidcontext.core.proc.Procedure proc) throws ProcedureException {
+        this.reserve((Procedure) proc);
+    }
+
+    /**
+     * Reserves all adapter connections needed for executing the
+     * specified procedure. The reservation will be forwarded to the
+     * current call interceptor. Any connection or procedure in the
+     * default procedure bindings will be reserved recursively in
+     * this call context.
+     *
+     * @param proc           the procedure definition
+     *
+     * @throws ProcedureException if the connections couldn't be
+     *             reserved
      */
     public void reserve(Procedure proc) throws ProcedureException {
-        checkAccess("procedure/" + proc.getName(), readPermission(0));
+        checkAccess("procedure/" + proc.id(), readPermission(0));
         getInterceptor().reserve(this, proc);
     }
 
@@ -461,6 +482,32 @@ public class CallContext {
      */
     public void releaseAll(boolean commit) {
         getInterceptor().releaseAll(this, commit);
+    }
+
+    /**
+     * Calls a procedure with the specified arguments. The call will
+     * be forwarded to the current call interceptor. The arguments
+     * must be specified in the same order as in the default bindings
+     * for the procedure. All the required arguments must be provided
+     * and all connections must already have been reserved. Use
+     * execute() when a procedure is to be called from outside a
+     * prepared call context.
+     *
+     * @param proc           the procedure definition
+     * @param args           the call arguments
+     *
+     * @return the call bindings
+     *
+     * @throws ProcedureException if the argument binding failed
+     *
+     * @deprecated Replaced with org.rapidcontext.core.type.Procedure signature.
+     */
+    @Deprecated(forRemoval=true)
+    @SuppressWarnings({"deprecation", "removal"})
+    public Object call(org.rapidcontext.core.proc.Procedure proc, Object[] args)
+        throws ProcedureException {
+
+        return this.call((Procedure) proc, args);
     }
 
     /**
@@ -498,7 +545,7 @@ public class CallContext {
                     callBindings.set(name, Bindings.CONNECTION, connections.get(id), null);
                 } else {
                     String msg = "no connection '" + name +
-                                 "' reserved for " + proc.getName();
+                                 "' reserved for " + proc.id();
                     throw new ProcedureException(msg);
                 }
             } else if (bindings.getType(name) == Bindings.ARGUMENT) {
@@ -509,17 +556,45 @@ public class CallContext {
                     pos++;
                 } catch (ProcedureException ignore) {
                     String msg = "missing '" + name + "' (" + (pos + 1) +
-                                 ") argument for " + proc.getName();
+                                 ") argument for " + proc.id();
                     throw new ProcedureException(msg);
                 }
             }
         }
         if (pos < args.length) {
-            String msg = "too many arguments for '" + proc.getName() +
+            String msg = "too many arguments for '" + proc.id() +
                          "'; expected " + pos + ", found " + args.length;
             throw new ProcedureException(msg);
         }
         return call(proc, callBindings);
+    }
+
+    /**
+     * Calls a procedure with the specified arguments. The call will
+     * be forwarded to the current call interceptor. All the
+     * required arguments must be provided and all connections must
+     * already have been reserved. Use execute() when a procedure is
+     * to be called from outside a prepared call context.
+     *
+     * @param proc           the procedure definition
+     * @param bindings       the bindings to use
+     *
+     * @return the result of the call, or
+     *         null if the call produced no result
+     *
+     * @throws ProcedureException if the call execution caused an
+     *             error
+     *
+     * @see #execute(String, Object[])
+     *
+     * @deprecated Replaced with org.rapidcontext.core.type.Procedure signature.
+     */
+    @Deprecated(forRemoval=true)
+    @SuppressWarnings({"deprecation", "removal"})
+    public Object call(org.rapidcontext.core.proc.Procedure proc, Bindings bindings)
+        throws ProcedureException {
+
+        return this.call((Procedure) proc, bindings);
     }
 
     /**
@@ -546,11 +621,9 @@ public class CallContext {
         if (isInterrupted()) {
             throw new ProcedureException(proc, "call interrupted");
         }
-        if (proc instanceof org.rapidcontext.core.type.Procedure p) {
-            String deprecated = p.deprecated();
-            if (deprecated != null) {
-                LOG.warning("deprecated: " + proc + " called; " + deprecated);
-            }
+        String deprecated = proc.deprecated();
+        if (deprecated != null) {
+            LOG.warning("deprecated: " + proc + " called; " + deprecated);
         }
         stack.push(proc, bindings);
         try {

@@ -19,6 +19,8 @@ import java.util.stream.Stream;
 import org.apache.commons.lang3.time.DateUtils;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
+import org.rapidcontext.core.proc.CallContext;
+import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.core.storage.Storage;
@@ -37,6 +39,7 @@ import org.rapidcontext.core.storage.Storage;
  * @author   Per Cederberg
  * @version  1.0
  */
+@SuppressWarnings({"deprecation", "removal"})
 public abstract class Procedure extends StorableObject implements org.rapidcontext.core.proc.Procedure {
 
     /**
@@ -183,4 +186,24 @@ public abstract class Procedure extends StorableObject implements org.rapidconte
     public Bindings getBindings() {
         return new Bindings(null, dict.getArray(KEY_BINDING));
     }
+
+    /**
+     * Executes a call of this procedure in the specified context
+     * and with the specified call bindings. The semantics of what
+     * the procedure actually does, is up to each implementation.
+     * Note that the call bindings are normally inherited from the
+     * procedure bindings with arguments bound to their call values.
+     *
+     * @param cx             the procedure call context
+     * @param bindings       the call bindings to use
+     *
+     * @return the result of the call, or
+     *         null if the call produced no result
+     *
+     * @throws ProcedureException if the call execution caused an
+     *             error
+     */
+    @Override
+    public abstract Object call(CallContext cx, Bindings bindings)
+        throws ProcedureException;
 }

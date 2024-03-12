@@ -30,9 +30,9 @@ import org.mozilla.javascript.Wrapper;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.CallContext;
-import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.core.type.Channel;
+import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.util.DateUtil;
 
 /**

@@ -21,8 +21,8 @@ import org.mozilla.javascript.WrappedException;
 import org.mozilla.javascript.Wrapper;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
-import org.rapidcontext.core.proc.Procedure;
 import org.rapidcontext.core.proc.ProcedureException;
+import org.rapidcontext.core.type.Procedure;
 
 /**
  * A JavaScript procedure function wrapper. This class encapsulates a
@@ -91,9 +91,8 @@ class ProcedureWrapper extends BaseFunction implements Wrapper {
     public Object get(String name, Scriptable start) {
         switch (name) {
         case "name":
-            return "wrapped " + this.proc.getName();
-        case "arity":
-        case "length":
+            return "wrapped " + this.proc.id();
+        case "arity", "length":
             Bindings bindings = proc.getBindings();
             int args = 0;
             try {

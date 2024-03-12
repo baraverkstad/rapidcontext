@@ -19,11 +19,11 @@ import java.util.TreeSet;
 import java.util.logging.Logger;
 
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.storage.StorageException;
 import org.rapidcontext.core.type.Metrics;
+import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.core.type.Type;
 
 /**
@@ -47,7 +47,7 @@ public class Library {
      * @deprecated Use org.rapidcontext.core.type.Procedure.PATH instead.
      */
     @Deprecated(forRemoval=true)
-    public static final Path PATH_PROC = org.rapidcontext.core.type.Procedure.PATH;
+    public static final Path PATH_PROC = Procedure.PATH;
 
     /**
      * The data storage to use for loading and listing procedures.
@@ -101,7 +101,7 @@ public class Library {
     @Deprecated(forRemoval=true)
     public String[] getProcedureNames() throws ProcedureException {
         TreeSet<String> set = new TreeSet<>();
-        storage.query(PATH_PROC).paths().forEach(path -> set.add(path.toIdent(1)));
+        storage.query(Procedure.PATH).paths().forEach(path -> set.add(path.toIdent(1)));
         return set.toArray(new String[set.size()]);
     }
 
@@ -119,33 +119,7 @@ public class Library {
      */
     @Deprecated(forRemoval=true)
     public Procedure getProcedure(String name) throws ProcedureException {
-        Metadata meta = storage.lookup(Path.resolve(PATH_PROC, name));
-        if (meta == null && aliases.containsKey(name)) {
-            return getProcedure(aliases.get(name));
-        } else if (meta == null) {
-            throw new ProcedureException("no procedure '" + name + "' found");
-        }
-        return loadProcedure(name);
-    }
-
-    /**
-     * Locates a procedure using either its identifier or an alias.
-     *
-     * @param id             the procedure identifier
-     *
-     * @return the procedure object
-     *
-     * @throws ProcedureException if the procedure couldn't be found,
-     *             or failed to load correctly
-     */
-    public org.rapidcontext.core.type.Procedure load(String id) throws ProcedureException {
-        Metadata meta = storage.lookup(Path.resolve(org.rapidcontext.core.type.Procedure.PATH, id));
-        if (meta == null && aliases.containsKey(id)) {
-            return load(aliases.get(id));
-        } else if (meta == null) {
-            throw new ProcedureException("no procedure '" + id + "' found");
-        }
-        return org.rapidcontext.core.type.Procedure.find(storage, id);
+        return load(name);
     }
 
     /**
@@ -155,7 +129,7 @@ public class Library {
     public void refreshAliases() {
         // FIXME: This is very slow when a large number of procedures are available...
         aliases.clear();
-        org.rapidcontext.core.type.Procedure.all(storage).forEach(p -> {
+        Procedure.all(storage).forEach(p -> {
             if (p.alias() != null && !p.alias().isEmpty()) {
                 aliases.put(p.alias(), p.id());
             }
@@ -185,12 +159,32 @@ public class Library {
      */
     @Deprecated(forRemoval=true)
     public Procedure loadProcedure(String name) throws ProcedureException {
-        Object obj = org.rapidcontext.core.type.Procedure.find(storage, name);
-        if (obj instanceof Procedure p) {
-            return p;
+        Procedure proc = Procedure.find(storage, name);
+        if (proc != null) {
+            return proc;
         } else {
-            String msg = "no (valid) procedure '" + name + "' found";
-            throw new ProcedureException(msg);
+            throw new ProcedureException("no procedure '" + name + "' found");
+        }
+    }
+
+    /**
+     * Locates a procedure using either its identifier or an alias.
+     *
+     * @param id             the procedure identifier
+     *
+     * @return the procedure object
+     *
+     * @throws ProcedureException if the procedure couldn't be found,
+     *             or failed to load correctly
+     */
+    public Procedure load(String id) throws ProcedureException {
+        Procedure proc = Procedure.find(storage, id);
+        if (proc != null) {
+            return proc;
+        } else if (aliases.containsKey(id)) {
+            return load(aliases.get(id));
+        } else {
+            throw new ProcedureException("no procedure '" + id + "' found");
         }
     }
 
@@ -219,8 +213,8 @@ public class Library {
             dict.set(Type.KEY_ID, id);
             dict.set(Type.KEY_TYPE, type);
             dict.setAll(data);
-            storage.store(Path.resolve(PATH_PROC, id + Storage.EXT_YAML), dict);
-            return loadProcedure(id);
+            storage.store(Path.resolve(Procedure.PATH, id + Storage.EXT_YAML), dict);
+            return load(id);
         } catch (StorageException e) {
             String msg = "failed to write procedure data: " + e.getMessage();
             throw new ProcedureException(msg);
@@ -242,7 +236,7 @@ public class Library {
     @Deprecated(forRemoval=true)
     public void deleteProcedure(String name) throws ProcedureException {
         try {
-            storage.remove(Path.resolve(PATH_PROC, name));
+            storage.remove(Path.resolve(Procedure.PATH, name));
         } catch (StorageException e) {
             String msg = "failed to remove procedure: " + e.getMessage();
             throw new ProcedureException(msg);
@@ -330,7 +324,7 @@ public class Library {
         if (metrics != null) {
             long now = System.currentTimeMillis();
             int duration = (int) (System.currentTimeMillis() - start);
-            metrics.report(proc.getName(), now, 1, duration, success, error);
+            metrics.report(proc.id(), now, 1, duration, success, error);
         }
     }
 }

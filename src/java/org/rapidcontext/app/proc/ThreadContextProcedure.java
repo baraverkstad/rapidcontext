@@ -96,13 +96,8 @@ public class ThreadContextProcedure extends Procedure {
      */
     static Dict getContextData(CallContext cx) {
         Dict res = new Dict();
-        org.rapidcontext.core.proc.Procedure proc =
-            (Procedure) cx.getAttribute(CallContext.ATTRIBUTE_PROCEDURE);
-        if (proc == null) {
-            res.set("procedure", null);
-        } else {
-            res.set("procedure", proc.getName());
-        }
+        Procedure proc = (Procedure) cx.getAttribute(CallContext.ATTRIBUTE_PROCEDURE);
+        res.set("procedure", (proc == null) ? null : proc.id());
         Date startTime = (Date) cx.getAttribute(CallContext.ATTRIBUTE_START_TIME);
         if (startTime == null) {
             res.set("startMillis", null);
@@ -142,10 +137,10 @@ public class ThreadContextProcedure extends Procedure {
         res.set("error", cx.getAttribute(CallContext.ATTRIBUTE_ERROR));
         StringBuilder log = (StringBuilder) cx.getAttribute(CallContext.ATTRIBUTE_LOG_BUFFER);
         res.set("log", (log == null) ? "" : log.toString());
-        org.rapidcontext.core.proc.Procedure[] procs = cx.getCallStack().toArray();
+        Procedure[] procs = cx.getCallStack().toArray();
         Array list = new Array(procs.length);
-        for (org.rapidcontext.core.proc.Procedure p : procs) {
-            list.add(p.getName());
+        for (Procedure p : procs) {
+            list.add(p.id());
         }
         res.set("stack", list);
         return res;

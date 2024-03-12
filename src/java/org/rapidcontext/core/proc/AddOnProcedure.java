@@ -46,6 +46,7 @@ import org.rapidcontext.core.data.Dict;
  * @version  1.0
  */
 @Deprecated(forRemoval=true)
+@SuppressWarnings({"deprecation", "removal"})
 public abstract class AddOnProcedure implements Procedure {
 
     /**
