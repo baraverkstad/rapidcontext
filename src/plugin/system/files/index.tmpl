@@ -7,8 +7,30 @@
     %HEADER%
     <link rel="stylesheet" href="%CSS_FILES%">
     <script>
-      MochiKit = {__export__: false};
-      RapidContext = { _basePath: "%BASE_PATH%" };
+      window.MochiKit = { __export__: false };
+      window.RapidContext = { _loading: [] };
+      window.onerror = function (msg, url, line, col, err) {
+          url = url.replace(document.baseURI || "", "");
+          var location = [url, line, col].filter(Boolean).join(":");
+          if (RapidContext._loading) {
+              RapidContext._loading.push([msg || "Uncaught error", location, err]);
+          } else {
+              console.error(msg || "Uncaught error", location, err);
+          }
+          return true;
+      };
+      window.onload = function () {
+          if (RapidContext._loading.length > 0 || !RapidContext.Browser.isSupported()) {
+              var el = document.getElementById("unsupported-browser");
+              el.className = el.className.replace("hidden", "");
+              for (var i = 0; i < RapidContext._loading.length; i++) {
+                  console.error.apply(console, RapidContext._loading[i]);
+              }
+          } else {
+              RapidContext.App.init(document.body.dataset.app);
+          }
+          delete RapidContext._loading;
+      };
     </script>
     <script type="importmap">
       {
@@ -25,7 +47,7 @@
     <script src="%JS_FILES%" defer></script>
     <title>%TITLE%</title>
   </head>
-  <body class="overflow-hidden" style="padding: 10px;" onload="RapidContext.App.init('%APP_ID%')">
+  <body class="overflow-hidden" style="padding: 10px;" data-app="%APP_ID%">
     <div id="unsupported-browser" class="text-center hidden" style="margin: 15% auto; width: 50em;">
       <h1>Browser not supported</h1>
       <p class="mb-3">

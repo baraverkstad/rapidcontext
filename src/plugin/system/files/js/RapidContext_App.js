@@ -44,11 +44,6 @@ RapidContext.App.init = function (app) {
     // Setup libraries
     RapidContext.Log.context("RapidContext.App.init()");
     console.info("Initializing RapidContext");
-    if (!RapidContext.Browser.isSupported()) {
-        var el = document.getElementById("unsupported-browser");
-        el.className = el.className.replace("hidden", "");
-        return Promise.reject(new Error("Unsupported browser"));
-    }
 
     // Setup UI
     RapidContext.Util.registerSizeConstraints(document.body, "100%-20", "100%-20");

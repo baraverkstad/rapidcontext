@@ -79,7 +79,7 @@
         overwrite(window.console, "info", info);
         overwrite(window.console, "log", debug);
         overwrite(window.console, "debug", debug);
-        overwrite(window, "onerror", _onerror);
+        window.onerror = window.onerror || _onerror;
         opts = opts || {};
         config.interval = opts.interval || config.interval;
         config.url = opts.url || config.url;
@@ -269,12 +269,9 @@
      * Handles window.onerror events (global uncaught errors).
      */
     function _onerror(msg, url, line, col, err) {
-        if (err instanceof Error && err.stack) {
-            error(msg || "Uncaught error", err);
-        } else {
-            var location = [url, line, col].filter(Boolean).join(":");
-            error(msg || "Uncaught error", location, err);
-        }
+        url = url.replace(document.baseURI || "", "");
+        var location = [url, line, col].filter(Boolean).join(":");
+        error(msg || "Uncaught error", location, err);
         return true;
     }
 
