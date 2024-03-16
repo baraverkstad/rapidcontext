@@ -411,11 +411,7 @@ public class AppWebService extends FileWebService {
     private void processAppTemplateLine(StringBuilder res, String line, String baseUrl, String appId) {
         // Simple text replacement
         if (line.contains("%APP_ID%")) {
-            if (appId == null || appId.equals("")) {
-                line = line.replace("%APP_ID%", "null");
-            } else {
-                line = line.replace("%APP_ID%", "'" + appId + "'");
-            }
+            line = line.replace("%APP_ID%", StringUtils.defaultIfEmpty(appId, ""));
         }
         if (line.contains("%TITLE%")) {
             line = line.replace("%TITLE%", title());

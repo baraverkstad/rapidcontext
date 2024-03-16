@@ -35,7 +35,7 @@ if (typeof(RapidContext.App) == "undefined") {
  * created. Instead the app will be launched with the root document
  * as its UI container.
  *
- * @param {string|Object} [app] the app id or class name to start
+ * @param {string} [app] the app id to start
  *
  * @return {Promise} a promise that will resolve when initialization has
  *         either completed or failed
