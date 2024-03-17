@@ -20,16 +20,27 @@
           return true;
       };
       window.onload = function () {
-          if (RapidContext._loading.length > 0 || !RapidContext.Browser.isSupported()) {
-              var el = document.getElementById("unsupported-browser");
-              el.className = el.className.replace("hidden", "");
-              for (var i = 0; i < RapidContext._loading.length; i++) {
-                  console.error.apply(console, RapidContext._loading[i]);
+          var supported = false;
+          var loaded = true;
+          try {
+              while (RapidContext._loading.length > 0) {
+                  console.error.apply(console, RapidContext._loading.shift());
+                  loaded = false;
               }
+              delete RapidContext._loading;
+              supported = RapidContext.Browser.isSupported();
+          } catch (ignore) {
+              // Ignored
+          }
+          if (!supported) {
+              document.getElementById("error").className = "";
+              document.getElementById("error-unsupported").className = "";
+          } else if (!loaded) {
+              document.getElementById("error").className = "";
+              document.getElementById("error-loading").className = "";
           } else {
               RapidContext.App.init(document.body.dataset.app);
           }
-          delete RapidContext._loading;
       };
     </script>
     <script type="importmap">
@@ -48,11 +59,15 @@
     <title>%TITLE%</title>
   </head>
   <body class="overflow-hidden" style="padding: 10px;" data-app="%APP_ID%">
-    <div id="unsupported-browser" class="text-center hidden" style="margin: 15% auto; width: 50em;">
-      <h1>Browser not supported</h1>
-      <p class="mb-3">
-        Please download a recent version from one of the links below.
-      </p>
+    <div id="error" class="hidden" style="margin: 15% auto; width: 50em; text-align: center;">
+      <div id="error-unsupported" class="hidden">
+        <h1>Browser not supported</h1>
+        <p class="mb-3">Please download a recent version from one of the links below.</p>
+      </div>
+      <div id="error-loading" class="hidden">
+        <h1>Error launching app</h1>
+        <p class="mb-3">Please check your network and retry. Or test in a recent browser from the links below.</p>
+      </div>
       <div class="inline-block my-0 mx-3">
           <a href="https://www.firefox.com/">
               <i class="fa fa-5x fa-firefox block m-2"></i>
