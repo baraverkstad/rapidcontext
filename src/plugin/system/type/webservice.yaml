@@ -36,6 +36,6 @@ property:
     description: The authentication required flag.
     required: false
   - name: match[].prio
-    description:  The priority value to separate identical matches.
+    description: The priority value to separate identical matches.
     required: false
     format: number
