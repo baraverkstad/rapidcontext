@@ -322,11 +322,14 @@ public interface HttpUtil {
      */
     public static final class Helper {
 
+        private static final Pattern BOT =
+            Pattern.compile("Bot|Spider|PhantomJS|Headless|Electron|slimerjs|Python", Pattern.CASE_INSENSITIVE);
+
         /**
          * The list of recognized browsers.
          */
         private static final Pattern[] BROWSERS = {
-            Pattern.compile("Bot|Spider|PhantomJS|Headless|Electron|slimerjs|Python", Pattern.CASE_INSENSITIVE),
+            BOT,
             Pattern.compile("Edg(e|A|iOS|)/([^\\s;]+)"),
             Pattern.compile("(Chrome|CriOS)/[^\\s;]+"),
             Pattern.compile("(Firefox|FxiOS)/[^\\s;]+"),
@@ -353,6 +356,14 @@ public interface HttpUtil {
             Pattern.compile("iPad|iPhone"),
             Pattern.compile("Tablet"),
             Pattern.compile("Mobile"),
+        };
+
+        /**
+         * The list of unsupported browsers, platforms or devices.
+         */
+        private static final Pattern[] UNSUPPORTED = {
+            BOT,
+            Pattern.compile("Windows NT [56]\\.\\d+", Pattern.CASE_INSENSITIVE)
         };
 
         /**
@@ -386,13 +397,25 @@ public interface HttpUtil {
                 browser = browser.replaceFirst("/", " ");
                 if (platform.contains("OS")) {
                     platform = platform.replaceAll("(iPhone|CPU) OS", "iOS");
-                    platform = platform.replaceAll("_", ".");
+                    platform = platform.replace("_", ".");
                 }
                 device = StringUtils.defaultIfEmpty(device, "Desktop/Other");
                 return browser + ", " + platform + ", " + device;
             } else {
                 return null;
             }
+        }
+
+        /**
+         * Checks for known unsupported browser user agents.
+         *
+         * @param userAgent      the request User-Agent header
+         *
+         * @return true if the browser is unsupported, or
+         *         false otherwise
+         */
+        public static boolean browserUnsupported(String userAgent) {
+            return RegexUtil.firstMatch(UNSUPPORTED, userAgent) != null;
         }
 
         /**

@@ -182,6 +182,11 @@ public class LogWebService extends WebService {
                                    String msg,
                                    String data) {
 
+        String userAgent = request.getHeader("User-Agent");
+        boolean unsupported = Helper.browserUnsupported(userAgent);
+        if (unsupported && level.intValue() > Level.INFO.intValue()) {
+            level = Level.INFO; // Lower max level for bots
+        }
         if (LOG.isLoggable(level)) {
             StringBuilder buffer = new StringBuilder();
             buffer.append(request.getHost());
@@ -202,7 +207,6 @@ public class LogWebService extends WebService {
                     buffer.append(s.userId());
                 }
             }
-            String userAgent = request.getHeader("User-Agent");
             String browser = Helper.browserInfo(userAgent);
             if (browser != null) {
                 buffer.append("\n# browser = ");
