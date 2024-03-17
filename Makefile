@@ -14,13 +14,15 @@ all:
 	@echo ' · make VERSION=v2022.08 clean setup build doc test package'
 	@echo
 	@echo '💡 Related commands'
-	@echo ' · npm outdated           - Show outdated libraries and tools'
+	@echo ' · npm outdated           - Show outdated JS libraries and tools'
+	@echo ' · mvn versions:display-dependency-updates'
+	@echo '                          - Show outdated Java libraries'
 
 
 # Cleanup intermediary files
 clean:
 	rm -rf package-lock.json node_modules/ \
-		classes/ lib/rapidcontext-*.jar plugin/ \
+		classes/ lib/*.jar plugin/ \
 		doc.zip doc/js/* \
 		tmp/ rapidcontext-*.zip
 	find . -name .DS_Store -delete
@@ -38,6 +40,7 @@ clean:
 # Setup development environment
 setup: clean
 	npm install --omit=optional
+	mvn dependency:copy-dependencies -DoutputDirectory=lib/
 
 
 # Compile source and build plug-ins

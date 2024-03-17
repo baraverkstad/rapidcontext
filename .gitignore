@@ -6,8 +6,9 @@
 # Build
 /.scannerwork/
 /classes/
-/lib/rapidcontext-*.jar
+/lib/*.jar
 /plugin/
+/target/
 /test/classes/
 /tmp/
 
