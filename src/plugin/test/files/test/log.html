@@ -44,9 +44,16 @@ function update() {
         table.append(tr);
     }
 }
+
+window.addEventListener("load", () => {
+    RapidContext.Log.init({ publisher: () => Promise.resolve() });
+    console.info("body.onload", [1, 2, 3], null, document.body);
+    update();
+    document.body.addEventListener("click", update);
+});
     </script>
   </head>
-  <body style="padding: 10px;" onload="update(); console.log('body.onload', [1,2,3], null, document.body);" onclick="update();">
+  <body style="padding: 10px;">
     <p>
       <button onclick="console.error('console.error', [1,2,3], null, document.body)">console.error</button>
       <button onclick="RapidContext.Log.error('RapidContext.Log.error', [1,2,3], null, document.body)">RapidContext.Log.error</button>
