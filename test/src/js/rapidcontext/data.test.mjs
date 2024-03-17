@@ -172,7 +172,10 @@ test('data.map()', () => {
     assert.strictEqual(typeof(getFolderIds), 'function');
     assert.deepEqual(getFolderIds(null), []);
     assert.deepEqual(getFolderIds([{ folder: { id: 42 } }, {}, null]), [42, undefined, undefined]);
-    assert.deepEqual(getFolderIds({ a: { folder: { id: 42 } }, b: {}, c: null }), { a: 42, b: undefined, c: undefined });
+    assert.deepEqual(
+        getFolderIds({ a: { folder: { id: 42 } }, b: {}, c: null }),
+        { a: 42, b: undefined, c: undefined }
+    );
 });
 
 test('data.uniq()', () => {

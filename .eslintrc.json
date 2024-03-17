@@ -70,7 +70,8 @@
     "overrides": [
         {
             "files": [
-                "src/plugin/**/*.mjs"
+                "src/plugin/**/*.mjs",
+                "test/src/js/**/*.mjs"
             ],
             "parserOptions": {
                 "ecmaVersion": 2020,
