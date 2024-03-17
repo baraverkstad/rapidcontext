@@ -246,7 +246,11 @@ public final class Main {
         if (app.appDir == null) {
             exit(null, "Failed to locate application directory.");
         }
-        app.appDir = app.appDir.getAbsoluteFile();
+        try {
+            app.appDir = app.appDir.getCanonicalFile();
+        } catch (IOException e) {
+            exit(null, "Failed to normalize application directory: " + e);
+        }
         app.localDir = app.appDir;
         if (cli.hasOption("local")) {
             app.localDir = new File(cli.getOptionValue("local"));

@@ -17,9 +17,9 @@ package org.rapidcontext.app;
 import java.io.File;
 import java.net.ServerSocket;
 
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.servlet.Context;
-import org.mortbay.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.ee8.servlet.ServletContextHandler;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
 
 /**
  * The stand-alone server application.
@@ -130,11 +130,13 @@ public class ServerApplication {
             stop();
         }
         server = new Server(port);
-        Context root = new Context(server, "/", Context.NO_SESSIONS);
-        root.setResourceBase(appDir.toString());
-        root.addServlet(new ServletHolder(new ServletApplication()), "/*");
+        ServletContextHandler root = new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
+        root.setContextPath("/");
+        root.setBaseResourceAsPath(appDir.toPath());
+        root.addServlet(ServletApplication.class, "/*");
+        server.setHandler(root);
         server.setStopAtShutdown(true);
-        port = server.getConnectors()[0].getPort();
+        port = ((ServerConnector) server.getConnectors()[0]).getPort();
         try {
             server.start();
         } catch (Exception e) {
