@@ -301,7 +301,7 @@
      *     or an error if the request failed
      */
     function xhr(url, opts) {
-        opts = { method: "GET", headers: {}, timeout: 30000, log: "XHR request", ...opts };
+        opts = { method: "GET", headers: {}, timeout: 30000, log: false, ...opts };
         if (opts.responseType === "json" && !opts.headers["Accept"]) {
             opts.headers["Accept"] = "application/json";
         }
@@ -352,7 +352,8 @@
         this.code = xhr && xhr.status;
         this.stack = new Error().stack;
         if (log) {
-            console.warn([log, this.message].join(": "), xhr && xhr.response);
+            let logger = /timeout/i.test(this.message) ? console.info : console.warn;
+            logger([log, this.message].join(": "), xhr && xhr.response);
         }
     }
 

@@ -634,7 +634,8 @@ RapidContext.App.loadXHR = function (url, params, opts) {
             return res;
         },
         function (err) {
-            console.warn("Failed XHR loading", url, err);
+            let logger = /timeout/i.test(err) ? console.info : console.warn;
+            logger("Failed XHR loading", url, err);
             return Promise.reject(err);
         }
     );
