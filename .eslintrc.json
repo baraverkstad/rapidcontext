@@ -6,6 +6,12 @@
     "parserOptions": {
         "ecmaVersion": 2020
     },
+    "plugins": [
+        "html"
+    ],
+    "settings": {
+        "html/html-extensions": [".html", ".tmpl"]
+    },
     "extends": "eslint:recommended",
     "globals": {
         "global": "readonly",

@@ -121,7 +121,7 @@ test-html:
 	npx html-validate 'doc/*.html' 'src/plugin/*/files/index.tmpl'
 
 test-js:
-	npx eslint 'src/plugin/**/*.{js,cjs,mjs}' \
+	npx eslint src/plugin --ext '.js,.cjs,.mjs,.html,.tmpl' \
 		--ignore-pattern 'src/plugin/legacy/**/*.js' \
 		--ignore-pattern '**/*.min.js' \
 		--ignore-pattern '**/MochiKit.js'
