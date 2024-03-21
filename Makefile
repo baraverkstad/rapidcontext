@@ -22,7 +22,7 @@ all:
 # Cleanup intermediary files
 clean:
 	rm -rf package-lock.json node_modules/ \
-		classes/ lib/*.jar plugin/ \
+		classes/ lib/*.jar plugin/ target/ \
 		doc.zip doc/js/* \
 		tmp/ rapidcontext-*.zip
 	find . -name .DS_Store -delete
