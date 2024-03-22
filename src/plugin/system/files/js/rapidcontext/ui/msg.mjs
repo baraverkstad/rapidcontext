@@ -106,7 +106,7 @@ function isObject(o) {
 
 function show(type, cfg) {
     cfg = Object.assign({}, TYPES[type], isObject(cfg) ? cfg : { text: String(cfg) });
-    let dlg = RapidContext.UI.buildUI(XML);
+    let dlg = RapidContext.UI.create(XML);
     dlg.setAttrs({ title: cfg.title });
     if (isObject(cfg.css) || /:/.test(cfg.css)) {
         dlg.setAttrs({ style: cfg.css });

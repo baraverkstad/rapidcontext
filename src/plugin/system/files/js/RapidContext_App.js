@@ -230,7 +230,9 @@ RapidContext.App.startApp = function (app, container) {
                 parent.setAttribute(attr.name, attr.value);
             }
         }
-        parent.append(...RapidContext.UI.buildUI(ui, ids));
+        let arr = Array.from(ui.documentElement.childNodes);
+        parent.append(...arr.map((o) => RapidContext.UI.create(o)).filter(Boolean));
+        parent.querySelectorAll("[id]").forEach((el) => ids[el.attributes.id.value] = el);
         RapidContext.Util.resizeElements(parent);
     }
     function launch(launcher, ui) {

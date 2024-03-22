@@ -327,7 +327,7 @@ resources.#.url = example/ui.xml
 <p>The <var>ui.xml</var> file contains a mix of HTML (in XML form) and
 references to user interface widgets defined in the
 <var>RapidContext.Widget</var> namespace. The XML is processed by the
-<var>RapidContext.UI.buildUI</var> function. Here is a simple example:</p>
+<var>RapidContext.UI.create</var> function. Here is a simple example:</p>
 
 <div class="box blue">
   <i class="box-icon fa fa-fw fa-code"></i>
@@ -353,16 +353,9 @@ interpreted as follows:</p>
       HTML DOM node.</li>
   <li><strong>The <q><var>id</var></q> Attribute</strong> &mdash; The
       <q><var>id</var></q> attribute is used to map the DOM node to the app
-      <var>this.ui</var> object. It is <strong>NOT</strong> set on the HTML DOM
-      node created. The benefit of this solution is that any identified DOM
-      nodes are immediately available, without going through the DOM API
-      <var>document.getElementById</var>. Also, this solution avoids collisions
-      when the same app is launched twice or when multiple apps use the same
-      identifiers.</li>
-  <li><strong>The <q><var>$id</var></q> Attribute</strong> &mdash; The
-      <q><var>$id</var></q> attribute assigns the element <var>id</var>.
+      <var>this.ui</var> object. It is also set on the HTML DOM node created.
       Note that this may cause issues if multiple instances of the app is
-      created, as <var>document.getElementById</var> will only return one of
+      running as <var>document.getElementById</var> will only return one of
       the elements.</li>
   <li><strong>The <q><var>class</var></q> Attribute</strong> &mdash; The
       <q><var>class</var></q> attribute is set on the HTML DOM node created
@@ -371,17 +364,14 @@ interpreted as follows:</p>
       below).</li>
   <li><strong>The <q><var>w</var></q> &amp; <q><var>h</var></q>
       Attributes</strong>&mdash; The attributes <q><var>w</var></q> and
-      <q><var>h</var></q> are used in a call to
-      <var>RapidContext.Util.registerSizeConstraints()</var>. This
-      sets up either a CSS <var>calc(...)</var> style or a JavaScript function
-      for the node that will calculate the appropriate size whenever
-      <var>RapidContext.Util.resizeElements()</var> is called (handled
-      automatically on window resize).</li>
+      <q><var>h</var></q> are converted to CSS <var>width</var> and
+      <var>height</var> values, adding <var>calc(...)</var> expressions and
+      <var>px</var> units as needed.</li>
   <li><strong>Other Attributes</strong> &mdash; Other XML attributes are
       either set as string values to the HTML DOM nodes created, or sent to
       the corresponding <var>RapidContext.Widget.setAttrs()</var> function.
-      This makes it possible to configure each widget with the specific
-      attributes supported.</li>
+      This makes it possible to configure each widget with any attributes
+      supported.</li>
 </ul>
 
 

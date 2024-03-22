@@ -52,7 +52,7 @@
                 "  </div>",
                 "</Dialog>"
             ].join("");
-            errorDialog = buildUI(xml);
+            errorDialog = RapidContext.UI.create(xml);
             window.document.body.append(errorDialog);
         }
         if (errorDialog.isHidden()) {
@@ -81,9 +81,12 @@
      * @return {Array|Object} an array or an object with the root
      *         widget(s) created
      *
+     * @deprecated Use RapidContext.UI.create() instead.
+     *
      * @memberof RapidContext.UI
      */
     function buildUI(node, ids) {
+        console.warn("deprecated: call to RapidContext.UI.buildUI(), use create() instead");
         if (node.documentElement) {
             return buildUI(node.documentElement.childNodes, ids);
         } else if (node && node.item && typeof(node.length) == "number") {
