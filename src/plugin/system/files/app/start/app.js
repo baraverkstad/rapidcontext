@@ -161,11 +161,10 @@ StartApp.prototype._initDashboardApp = function (app) {
     var pane = new RapidContext.Widget.Pane(attrs);
     this.ui.inlinePane.insertBefore(pane, this.ui.inlinePane.firstChild);
     if (app.startPage == "left" || app.startPage == "right") {
-        RapidContext.Util.registerSizeConstraints(pane, "50%-3rem-3px");
+        pane.style.width = "calc(50% - 3rem - 3px)";
     } else {
-        RapidContext.Util.registerSizeConstraints(pane, "100%-3rem-3px");
+        pane.style.width = "calc(100% - 3rem - 3px)";
     }
-    RapidContext.Util.resizeElements(pane);
     this.startApp(app.className, pane);
 };
 
@@ -245,7 +244,7 @@ StartApp.prototype.initAppPane = function (pane, opts) {
             "class": "position-relative"
         };
         pane = new RapidContext.Widget.Pane(attrs);
-        RapidContext.Util.registerSizeConstraints(pane, "100%", "100%");
+        pane.style.width = pane.style.height = "100%";
         this.ui.tabContainer.addAll(pane);
         if (!opts.background) {
             this.ui.tabContainer.selectChild(pane);

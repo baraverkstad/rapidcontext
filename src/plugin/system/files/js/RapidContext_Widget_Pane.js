@@ -164,7 +164,6 @@ RapidContext.Widget.Pane.prototype._handleEnter = function (opts) {
     }
     if (RapidContext.Data.bool(opts.show)) {
         this.show();
-        RapidContext.Util.resizeElements(this);
     }
     this.emit("enter");
 };

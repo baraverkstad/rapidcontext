@@ -59,9 +59,6 @@ RapidContext.Widget.TabContainer = function (attrs/*, ... */) {
     let o = RapidContext.UI.DIV(attrs, labels, container);
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.TabContainer);
     o.classList.add("widgetTabContainer");
-    RapidContext.Util.registerSizeConstraints(container, "100% - 20", "100% - 40");
-    o.resizeContent = o._resizeContent;
-    container.resizeContent = () => {};
     o._selectedIndex = -1;
     o.setAttrs(attrs);
     o.addAll(Array.from(arguments).slice(1));
@@ -115,7 +112,7 @@ RapidContext.Widget.TabContainer.prototype.addChildNode = function (child) {
     if (!RapidContext.Widget.isWidget(child, "Pane")) {
         child = RapidContext.Widget.Pane(null, child);
     }
-    RapidContext.Util.registerSizeConstraints(child, "100%", "100%");
+    child.style.width = child.style.height = "100%";
     child.hide();
     let text = RapidContext.UI.SPAN({}, child.pageTitle);
     let icon = null;
@@ -213,20 +210,5 @@ RapidContext.Widget.TabContainer.prototype.selectChild = function (indexOrChild)
         label = this.firstChild.childNodes[this._selectedIndex];
         label.classList.add("selected");
         children[this._selectedIndex]._handleEnter();
-    }
-};
-
-/**
- * Resizes the currently selected child. This method need not be called
- * directly, but is automatically called whenever a parent node is
- * resized. It optimizes the resize chain by only resizing those DOM
- * child nodes that are visible, i.e. the currently selected tab
- * container child.
- */
-RapidContext.Widget.TabContainer.prototype._resizeContent = function () {
-    RapidContext.Util.resizeElements(this.lastChild);
-    let child = this.selectedChild();
-    if (child != null) {
-        RapidContext.Util.resizeElements(child);
     }
 };

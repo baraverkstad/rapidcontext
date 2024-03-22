@@ -41,14 +41,9 @@ if (typeof(RapidContext.App) == "undefined") {
  *         either completed or failed
  */
 RapidContext.App.init = function (app) {
-    // Setup libraries
+    // Initialize UI
     RapidContext.Log.context("RapidContext.App.init()");
     console.info("Initializing RapidContext");
-
-    // Setup UI
-    RapidContext.Util.registerSizeConstraints(document.body, "100%-20", "100%-20");
-    var resizer = () => RapidContext.Util.resizeElements(document.body);
-    MochiKit.Signal.connect(window, "onresize", resizer);
     document.body.innerHTML = "";
     document.body.append(new RapidContext.Widget.Overlay({ message: "Loading..." }));
 
@@ -233,7 +228,6 @@ RapidContext.App.startApp = function (app, container) {
         let arr = Array.from(ui.documentElement.childNodes);
         parent.append(...arr.map((o) => RapidContext.UI.create(o)).filter(Boolean));
         parent.querySelectorAll("[id]").forEach((el) => ids[el.attributes.id.value] = el);
-        RapidContext.Util.resizeElements(parent);
     }
     function launch(launcher, ui) {
         RapidContext.Log.context("RapidContext.App.startApp(" + launcher.id + ")");
@@ -284,7 +278,6 @@ RapidContext.App.startApp = function (app, container) {
         var ui = start.initAppPane(null, opts);
         ui.root.removeAll();
         ui.root.addAll(elems);
-        RapidContext.Util.resizeElements(ui.root);
     }
     return new RapidContext.Async(function (resolve, reject) {
         var launcher = RapidContext.App.findApp(app);

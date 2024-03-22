@@ -59,7 +59,6 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * let col2 = RapidContext.Widget.TableColumn(attrs2);
  * let col3 = RapidContext.Widget.TableColumn(attrs3);
  * let exampleTable = RapidContext.Widget.Table({}, col1, col2, col3);
- * RapidContext.Util.registerSizeConstraints(exampleTable, "50%", "100%");
  *
  * @example <caption>User Interface XML</caption>
  * <Table id="exampleTable" w="50%" h="100%">

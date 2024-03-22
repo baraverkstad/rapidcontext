@@ -376,6 +376,8 @@ button > .widgetIcon.fa,
 .widgetTabContainerContent {
     position: relative;
     top: -1px;
+    width: calc(100% - 20px);
+    height: calc(100% - 40px);
     border-top: 1px solid #ddd;
     padding: 10px 10px 0 10px;
     clear: both;

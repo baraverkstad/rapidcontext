@@ -118,11 +118,6 @@ AdminApp.prototype.start = function () {
     MochiKit.Signal.connect(this.ui.procExecResult, "onexpand", this, "_showExecDataExpand");
     MochiKit.Signal.connect(this.ui.procArgForm, "onsubmit", this, "_updateProcArg");
     this.ui.procExecLoading.hide();
-    this.ui.procExecResult.resizeContent = function () {
-        var pos = MochiKit.Style.getElementPosition(this, this.parentNode);
-        var dim = MochiKit.Style.getElementDimensions(this.parentNode);
-        MochiKit.Style.setElementDimensions(this, { w: dim.w - 2, h: dim.h - pos.y - 2 });
-    };
 
     // Batch view
     MochiKit.Signal.connect(this.ui.batchDelete, "onclick", this, "_clearBatch");
@@ -726,7 +721,6 @@ AdminApp.prototype._showProcedure = function () {
     this.ui.procExec.disable();
     this.ui.procBatch.disable();
     this.ui.procExecResult.removeAll();
-    RapidContext.Util.resizeElements(this.ui.procExecResult);
     if (node != null && node.data != null) {
         var cb = (res) => this._callbackShowProcedure(node.data, res);
         this.proc.procRead(node.data).then(cb, cb);
@@ -784,7 +778,6 @@ AdminApp.prototype._callbackShowProcedure = function (procName, res) {
         this.ui.procExec.enable();
         this.ui.procBatch.enable();
         this.ui.procExecResult.removeAll();
-        RapidContext.Util.resizeElements(this.ui.procExecResult);
     }
 };
 

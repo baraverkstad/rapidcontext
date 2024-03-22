@@ -301,7 +301,7 @@
         <Tree id="procTree" w="100%" h="100%-2.2em" />
       </div>
       <div w="66.666%" h="100%" class="inline-block vertical-top">
-        <Form id="procForm" class="w-100 h-100">
+        <Form id="procForm" class="flex-col w-100 h-100">
           <h3>
             Procedure Details:
             <Icon id="procAdd" class="fa fa-plus-square color-success ml-1" title="Add procedure" />
@@ -356,7 +356,7 @@
             <Button id="procExec" disabled="true" icon="fa fa-play">Execute</Button>
             <Button id="procBatch" disabled="true" icon="fa fa-lg fa-clock-o">Execute Batch</Button>
           </div>
-          <Tree id="procExecResult" w="100%-2" h="10%" style="margin-top: 6px;">
+          <Tree id="procExecResult" w="100%-2" h="10%" class="flex-fill" style="margin-top: 6px;">
           </Tree>
         </Form>
       </div>

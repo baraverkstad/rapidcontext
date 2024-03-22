@@ -115,7 +115,6 @@ window.ExampleApp = class {
             tr.append(TD({ "class": "end" }));
             this.ui.iconTable.append(tr);
         }
-        this.ui.iconTable.resizeContent = () => {};
     }
 
     // Handles show all icon backgrounds checkbox

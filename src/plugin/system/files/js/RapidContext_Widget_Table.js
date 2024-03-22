@@ -46,7 +46,6 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * let col2 = RapidContext.Widget.TableColumn(attrs2);
  * let col3 = RapidContext.Widget.TableColumn(attrs3);
  * let exampleTable = RapidContext.Widget.Table({}, col1, col2, col3);
- * RapidContext.Util.registerSizeConstraints(exampleTable, "50%", "100%");
  *
  * @example <caption>User Interface XML</caption>
  * <Table id="exampleTable" w="50%" h="100%">
@@ -62,7 +61,6 @@ RapidContext.Widget.Table = function (attrs/*, ...*/) {
     let o = RapidContext.UI.DIV({}, table);
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Table);
     o.classList.add("widgetTable");
-    o.resizeContent = o._resizeContent;
     o._data = [];
     o._rows = [];
     o._keyField = null;
@@ -638,22 +636,4 @@ RapidContext.Widget.Table.prototype._unmarkSelection = function (index) {
     for (let idx of indices) {
         tbody.childNodes[idx].classList.remove("selected");
     }
-};
-
-/**
- * Called when table content should be resized. This method is also called when
- * the widget is made visible in a container after being hidden.
- */
-RapidContext.Widget.Table.prototype._resizeContent = function () {
-    // Work-around to restore scrollTop for WebKit browsers
-    if (this.scrollTop == 0 && this._selected.length > 0) {
-        let index = this._selected[0];
-        let tbody = this.firstChild.lastChild;
-        let tr = tbody.childNodes[index];
-        let h = this.clientHeight;
-        let y = tr.offsetTop + tr.offsetHeight;
-        this.scrollTop = Math.round(y - h / 2);
-    }
-    let thead = this.firstChild.firstChild;
-    RapidContext.Util.resizeElements(thead);
 };

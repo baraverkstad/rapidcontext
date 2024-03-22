@@ -46,7 +46,6 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * let h1 = MochiKit.DOM.H1({}, "Hello, world!");
  * let attrs = { title: "Hello", modal: true };
  * let helloDialog = RapidContext.Widget.Dialog(attrs, h1);
- * RapidContext.Util.registerSizeConstraints(helloDialog, "200", "75");
  *
  * @example <caption>User Interface XML</caption>
  * <Dialog id="helloDialog" title="Hello" modal="true" w="200" h="75">
@@ -66,7 +65,6 @@ RapidContext.Widget.Dialog = function (attrs/*, ... */) {
     let o = DIV({}, title, close, resize, content);
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Dialog);
     o.classList.add("widgetDialog");
-    o.resizeContent = o._resizeContent;
     o._setHidden(true);
     o.setAttrs(Object.assign({ modal: false, system: false, center: true }, attrs));
     o.addAll(Array.from(arguments).slice(1));
@@ -330,7 +328,6 @@ RapidContext.Widget.Dialog.prototype.resizeTo = function (w, h) {
     };
     this.style.width = dim.w + "px";
     this.style.height = dim.h + "px";
-    delete this.sizeConstraints; // FIXME: Remove with RapidContext.Util.registerSizeConstraints
     this.center = false;
     this._resizeContent();
     this.emit("resize", { detail: dim });
@@ -358,7 +355,6 @@ RapidContext.Widget.Dialog.prototype.resizeToContent = function () {
  */
 RapidContext.Widget.Dialog.prototype._resizeContent = function () {
     if (!this.isHidden()) {
-        RapidContext.Util.resizeElements(this.lastChild);
         if (this.center) {
             this.moveToCenter();
         }

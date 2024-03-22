@@ -42,7 +42,6 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * let attrs = { style: { width: "100%", height: "100%" } };
  * let exampleWizard = RapidContext.Widget.Wizard(attrs, page1, page2);
  * let exampleDialog = RapidContext.Widget.Dialog({ title: "Example Dialog" }, exampleWizard);
- * RapidContext.Util.registerSizeConstraints(exampleDialog, "80%", "50%");
  *
  * @example <caption>User Interface XML</caption>
  * <Dialog id="exampleDialog" title="Example Dialog" w="80%" h="50%">
@@ -60,7 +59,6 @@ RapidContext.Widget.Wizard = function (attrs/*, ... */) {
     let o = MochiKit.DOM.DIV(attrs);
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Wizard);
     o.addClass("widgetWizard");
-    o.resizeContent = o._resizeContent;
     o._selectedIndex = -1;
     o.append(MochiKit.DOM.H3({ "class": "widgetWizardTitle" }));
     let bCancel = RapidContext.Widget.Button(
@@ -147,7 +145,8 @@ RapidContext.Widget.Wizard.prototype.addChildNode = function (child) {
     if (!RapidContext.Widget.isWidget(child, "Pane")) {
         child = RapidContext.Widget.Pane(null, child);
     }
-    RapidContext.Util.registerSizeConstraints(child, "100%", "100%-65");
+    child.style.width = "100%";
+    child.style.height = "calc(100% - 65px)";
     child.hide();
     this.append(child);
     child.style.position = "absolute";
@@ -330,17 +329,4 @@ RapidContext.Widget.Wizard.prototype.done = function () {
         }
     }
     this.emit("close");
-};
-
-/**
- * Resizes the current wizard page. This method need not be called
- * directly, but is automatically called whenever a parent node is
- * resized. It optimizes the resize chain by only resizing those DOM
- * child nodes that are visible.
- */
-RapidContext.Widget.Wizard.prototype._resizeContent = function () {
-    let page = this.activePage();
-    if (page != null) {
-        RapidContext.Util.resizeElements(page);
-    }
 };

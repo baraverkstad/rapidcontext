@@ -104,7 +104,7 @@ RapidContext.Util.blurAll = function (node) {
  * @param {number|string|function} [width] the width constraint
  * @param {number|string|function} [height] the height constraint
  *
- * @see RapidContext.Util.resizeElements
+ * @deprecated Use CSS width and height with calc() instead.
  *
  * @example
  * RapidContext.Util.registerSizeConstraints(node, "50%-20", "100%");
@@ -122,6 +122,7 @@ RapidContext.Util.registerSizeConstraints = function (node, width, height) {
         val = val.replace(/(\d)( |$)/g, "$1px$2");
         return val;
     }
+    console.warn("deprecated: call to RapidContext.Util.registerSizeConstraints(), use CSS calc() instead");
     node = MochiKit.DOM.getElement(node);
     if (typeof(width) == "number" || typeof(width) == "string") {
         node.style.width = toCSS(String(width));
@@ -157,7 +158,7 @@ RapidContext.Util.registerSizeConstraints = function (node, width, height) {
  *
  * @param {...Node} node the HTML DOM nodes to resize
  *
- * @see RapidContext.Util.registerSizeConstraints
+ * @deprecated Use CSS width and height with calc() instead.
  *
  * @example
  * RapidContext.Util.resizeElements(node);
@@ -168,6 +169,7 @@ RapidContext.Util.registerSizeConstraints = function (node, width, height) {
  * ==> Assigns a no-op child resize handler to elem
  */
 RapidContext.Util.resizeElements = function (/* ... */) {
+    console.warn("deprecated: call to RapidContext.Util.resizeElements(), use CSS calc() instead");
     Array.from(arguments).forEach(function (arg) {
         var node = MochiKit.DOM.getElement(arg);
         if (node && node.nodeType === 1 && node.parentNode && node.sizeConstraints) {
