@@ -213,5 +213,5 @@ fix-copyright:
 
 fix-trailing-space:
 	git grep -PIlz '\s+$$' -- ':!*.bat' ':!src/plugin/system/files/fonts' | \
-		xargs -0 -n 1 sed -i.bak -E -e 's/[[:space]]*$$//'
+		xargs -0 -n 1 sed -i.bak -E -e 's/[[:space:]]*$$//'
 	find . -name "*.bak" -delete
