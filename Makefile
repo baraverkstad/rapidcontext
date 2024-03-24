@@ -208,7 +208,7 @@ run: build package-zip
 
 fix-copyright:
 	git grep -PIlwz Copyright -- ':!doc/external/*' | \
-		xargs -0 -n 1 sed -i.bak -E -e 's/(20[0-9]{2})-20[0-9]{2}/\1-2023/'
+		xargs -0 -n 1 sed -i.bak -E -e 's/(20[0-9]{2})-20[0-9]{2}/\1-2024/'
 	find . -name "*.bak" -delete
 
 fix-trailing-space:

@@ -1,6 +1,6 @@
 /*
  * RapidContext <https://www.rapidcontext.com/>
- * Copyright (c) 2007-2023 Per Cederberg. All rights reserved.
+ * Copyright (c) 2007-2024 Per Cederberg. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the BSD license.
@@ -136,7 +136,7 @@ public final class AboutDialog extends JDialog {
         c.gridwidth = 2;
         c.anchor = GridBagConstraints.WEST;
         c.insets = new Insets(10, 15, 0, 15);
-        getContentPane().add(new JLabel("Copyright \u00A9 2007-2023 by Per Cederberg."), c);
+        getContentPane().add(new JLabel("Copyright \u00A9 2007-2024 by Per Cederberg."), c);
         c = new GridBagConstraints();
         c.gridx = 1;
         c.gridy = 4;
