@@ -10,6 +10,7 @@
 /plugin/
 /target/
 /test/classes/
+/test/lib/*.jar
 /tmp/
 
 # Plug-in Build

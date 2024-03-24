@@ -40,8 +40,9 @@ clean:
 # Setup development environment
 setup: clean
 	npm install --omit=optional
-	mvn dependency:copy-dependencies -DoutputDirectory=lib/
-	mvn dependency:copy-dependencies # for Eclipse project
+	mvn dependency:copy-dependencies -Dmdep.useSubDirectoryPerScope=true
+	cp target/dependency/compile/*.jar lib/
+	cp target/dependency/test/*.jar test/lib/
 
 
 # Compile source and build plug-ins
