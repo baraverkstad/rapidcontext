@@ -41,6 +41,7 @@ clean:
 setup: clean
 	npm install --omit=optional
 	mvn dependency:copy-dependencies -DoutputDirectory=lib/
+	mvn dependency:copy-dependencies # for Eclipse project
 
 
 # Compile source and build plug-ins
