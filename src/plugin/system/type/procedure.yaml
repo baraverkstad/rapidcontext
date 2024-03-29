@@ -26,7 +26,7 @@ property:
         The deprecation message for an outdated procedure. Use to warn users
         prior to eventual removal of a procedure. Optional, defaults to null.
     required: false
-    format: text
+    format: error
   - name: binding
     description: >-
         The array of bindings, listing all resources required during execution.
