@@ -16,6 +16,7 @@ import data from './data.mjs';
 import fn from './fn.mjs';
 import ui from './ui/index.mjs';
 
+export { data, fn, ui };
 export default { data, fn, ui };
 
 // Note: Setting window.RapidContext here for legacy global API
