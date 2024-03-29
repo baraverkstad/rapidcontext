@@ -31,8 +31,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * @param {string} [attrs.sort] the sort direction, one of "asc",
  *            "desc", "none" (disabled) or null (unsorted)
  * @param {number} [attrs.maxLength] the maximum data length,
- *            overflow will be displayed as a tooltip, only used by
- *            the default renderer
+ *            overflow will be displayed as a tooltip
  * @param {boolean} [attrs.key] the unique key value flag, only to be
  *            set for a single column per table
  * @param {string} [attrs.tooltip] the tooltip text to display on the
@@ -105,8 +104,7 @@ RapidContext.Widget.TableColumn.prototype._containerNode = function () {
  * @param {string} [attrs.sort] the sort direction, one of "asc",
  *            "desc", "none" (disabled) or null (unsorted)
  * @param {number} [attrs.maxLength] the maximum data length,
- *            overflow will be displayed as a tooltip, only used by
- *            the default renderer
+ *            overflow will be displayed as a tooltip
  * @param {boolean} [attrs.key] the unique key value flag, only to be
  *            set for a single column per table
  * @param {string} [attrs.tooltip] the tooltip text to display on the
@@ -192,9 +190,7 @@ RapidContext.Widget.TableColumn.prototype._map = function (src) {
             if (value instanceof Date) {
                 value = MochiKit.DateTime.toISOTime(value);
             } else {
-                if (typeof(value) !== "string") {
-                    value = value.toString();
-                }
+                value = String(value);
                 if (value.length > 8) {
                     value = value.substring(value.length - 8);
                 }
@@ -206,8 +202,10 @@ RapidContext.Widget.TableColumn.prototype._map = function (src) {
             }
             break;
         case "string":
-            if (typeof(value) !== "string") {
-                value = value.toString();
+            if (Array.isArray(value) || RapidContext.Fn.isObject(value)) {
+                value = JSON.stringify(value);
+            } else {
+                value = String(value);
             }
             break;
         }
@@ -224,34 +222,41 @@ RapidContext.Widget.TableColumn.prototype._map = function (src) {
  */
 RapidContext.Widget.TableColumn.prototype._render = function (obj) {
     let td = document.createElement("td");
-    let value = obj[this.field];
     if (typeof(this.cellStyle) === "string" && this.cellStyle.includes(":")) {
         td.style = this.cellStyle;
     } else if (typeof(this.cellStyle) === "string") {
         td.className = this.cellStyle;
     }
-    if (typeof(this.renderer) === "function") {
-        try {
-            this.renderer(td, value, obj.$data);
-        } catch (e) {
-            td.append(e.toString());
-        }
-    } else if (typeof(value) == "boolean") {
-        let css = value ? "fa fa-check-square" : "fa fa-square-o";
-        td.append(RapidContext.Widget.Icon(css));
-    } else {
-        if (value == null || (typeof(value) == "number" && isNaN(value))) {
-            value = "";
-        } else if (typeof(value) != "string") {
-            value = value.toString();
-        }
-        if (this.maxLength && this.maxLength < value.length) {
-            td.title = value;
-            value = MochiKit.Text.truncate(value, this.maxLength, "...");
-        }
-        td.append(value);
+    try {
+        this.renderer(td, obj[this.field], obj.$data);
+    } catch (e) {
+        td.append(e.toString());
+    }
+    if (this.maxLength && this.maxLength < td.innerText.length) {
+        td.title = td.innerText;
+        td.innerText = td.innerText.substring(0, this.maxLength) + "\u2026";
     }
     return td;
+};
+
+/**
+ * Default cell value renderer. Adds an HTML representation of the value to the
+ * specified table cell. The value provided has already been converted to the
+ * configured column `type`.
+ *
+ * @param {Element} td the HTML <td> element to render into
+ * @param {*} value the value to display
+ * @param {Object} data the object containing the raw row data
+ */
+RapidContext.Widget.TableColumn.prototype.renderer = function (td, value, data) {
+    if (typeof(value) == "boolean") {
+        let css = value ? "fa fa-check-square" : "fa fa-square-o";
+        td.append(RapidContext.Widget.Icon(css));
+    } else if (typeof(value) == "number") {
+        td.append(isNaN(value) ? "" : String(value));
+    } else if (value != null) {
+        td.append(String(value));
+    }
 };
 
 /**
