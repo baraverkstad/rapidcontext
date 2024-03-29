@@ -412,7 +412,7 @@ RapidContext.App.callApp = function (app, method) {
  * Performs an asynchronous procedure call.
  *
  * @param {string} name the procedure name
- * @param {Array} [args] the array of arguments, or `null`
+ * @param {Array|Object} [args] the arguments array, dictionary, or `null`
  * @param {Object} [opts] the procedure call options
  * @param {boolean} [opts.session] the HTTP session required flag
  * @param {boolean} [opts.trace] the procedure call trace flag
@@ -425,9 +425,10 @@ RapidContext.App.callProc = function (name, args, opts) {
     args = args || [];
     opts = opts || {};
     console.log("Call request " + name, args);
-    let params = RapidContext.Data.object(
-        args.map((val, idx) => ["arg" + idx, RapidContext.Encode.toJSON(val)])
-    );
+    let params = RapidContext.Data.map(RapidContext.Encode.toJSON, args);
+    if (Array.isArray(params)) {
+        params = RapidContext.Data.object(params.map((val, idx) => ["arg" + idx, val]));
+    }
     params["system:session"] = !!opts.session;
     params["system:trace"] = !!opts.trace || ["all", "log"].includes(RapidContext.Log.level());
     let url = "rapidcontext/procedure/" + name;
