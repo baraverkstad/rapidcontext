@@ -293,7 +293,7 @@
      * @param {string} [opts.method] the HTTP method (e.g. `GET`, `POST`...)
      * @param {Object} [opts.headers] the HTTP headers to send
      * @param {number} [opts.timeout] the timeout in milliseconds (default is 30s)
-     * @param {string} [opts.log] the logging prefix, or `null` (defaults to `request`)
+     * @param {string} [opts.log] the logging prefix (defaults to `null` for no logs)
      * @param {string} [opts.responseType] the expected HTTP response (e.g. `json`)
      * @param {string} [opts.body] the HTTP request body to send
      *
@@ -301,7 +301,7 @@
      *     or an error if the request failed
      */
     function xhr(url, opts) {
-        opts = { method: "GET", headers: {}, timeout: 30000, log: false, ...opts };
+        opts = { method: "GET", headers: {}, timeout: 30000, log: null, ...opts };
         if (opts.responseType === "json" && !opts.headers["Accept"]) {
             opts.headers["Accept"] = "application/json";
         }
