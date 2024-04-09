@@ -12,6 +12,7 @@ binding:
     description: The SQL query string.
   - name: flags
     type: argument
+    value: ''
     description: "Optional execution flags (space separated):\n\
       \u2022 [no-]metadata \u2014 toggle metadata in result\n\
       \u2022 [no-]column-names \u2014 toggle rows as objects/arrays\n\
