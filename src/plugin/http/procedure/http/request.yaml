@@ -6,6 +6,7 @@ description: Sends an HTTP request and returns the result.
 binding:
   - name: connection
     type: argument
+    value: ''
     description: The HTTP connection pool name, set to blank for none.
   - name: url
     type: argument
@@ -15,17 +16,20 @@ binding:
     description: The HTTP method to use (e.g. 'GET' or 'POST').
   - name: headers
     type: argument
+    value: ''
     description: >-
         Any additional HTTP headers. Headers are listed in 'Name: Value' pairs,
         separated by line breaks. Leave blank for default headers.
   - name: data
     type: argument
+    value: ''
     description: >-
         The HTTP payload data to send. Data should be URL-encoded, unless a
         'Content-Type' header is specified. URL-encoded data may be split into
         lines, which are automatically joined by '&' characters).
   - name: flags
     type: argument
+    value: ''
     description: "Optional execution flags (space separated):\n\
         \u2022 json \u2014 parse response text as JSON data\n\
         \u2022 jsonerror \u2014 parse response errors as JSON\n\
