@@ -12,7 +12,9 @@ binding:
     description: The command-line to execute.
   - name: directory
     type: data
+    value: ''
     description: The working directory or blank for current.
   - name: environment
     type: data
+    value: ''
     description: The environment variable bindings or blank for current.
