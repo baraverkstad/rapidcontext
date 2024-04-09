@@ -74,7 +74,7 @@ build-plugins:
 	mkdir -p plugin/
 	rm -rf plugin/*
 	npx esbuild --bundle --minify \
-		--platform=browser --target=chrome58,firefox57,safari11 \
+		--platform=browser --target=chrome69,firefox65,safari11 \
 		--outfile=src/plugin/system/files/js/rapidcontext.min.js \
 		src/plugin/system/files/js/rapidcontext/index.mjs
 	@$(MAKE) -C src/plugin/system VERSION=$(VER)
