@@ -11,7 +11,9 @@ binding:
     description: The command-line to execute.
   - name: directory
     type: argument
+    value: ''
     description: The working directory or blank for current.
   - name: environment
     type: argument
+    value: ''
     description: The environment variable bindings or blank for current.
