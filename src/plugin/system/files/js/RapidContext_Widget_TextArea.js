@@ -103,6 +103,9 @@ RapidContext.Widget.TextArea.prototype.setAttrs = function (attrs) {
         delete attrs.value;
     }
     this.__setAttrs(attrs);
+    if (this.autosize && this.scrollHeight == 0) {
+        this.rows = this.value.split("\n").length;
+    }
 };
 
 /**
