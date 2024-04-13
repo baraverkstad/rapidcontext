@@ -26,6 +26,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * @param {string} attrs.name the form field name
  * @param {string} [attrs.value] the initial field value, defaults
  *            to an empty string
+ * @param {string} [attrs.tag] the HTML tag to use, defaults to "span"
  * @param {string} [attrs.format] the field format string, defaults
  *            to "{:s}"
  * @param {function} [attrs.formatter] the value formatter function
@@ -51,7 +52,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * <Field name="ratio" value="0.23" format="Ratio: {:%}" />
  */
 RapidContext.Widget.Field = function (attrs) {
-    let o = document.createElement("span");
+    let o = document.createElement(attrs.tag || "span");
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Field);
     o.addClass("widgetField");
     o.setAttrs(Object.assign({ name: "", value: "" }, attrs));
