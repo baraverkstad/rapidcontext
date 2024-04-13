@@ -80,7 +80,7 @@ AdminApp.prototype.start = function () {
     var urlRenderer = function (td, value, data) {
         if (value) {
             var ico = RapidContext.Widget.Icon({ "class": "fa fa-external-link-square ml-1" });
-            var link = MochiKit.DOM.A({ href: value, target: "_blank" }, value, ico);
+            var link = RapidContext.UI.A({ href: value, target: "_blank" }, value, ico);
             td.append(link);
         }
     };
@@ -278,7 +278,7 @@ AdminApp.prototype._showConnection = function () {
                 v = "";
             }
             if (/error$/i.test(k)) {
-                v = MochiKit.DOM.SPAN({ "class": "important" }, v);
+                v = RapidContext.UI.SPAN({ "class": "important" }, v);
             } else if (/password$/i.test(k)) {
                 v = RapidContext.Widget.Field({ name: k, value: v, mask: true });
             }
@@ -341,7 +341,7 @@ AdminApp.prototype._initConnectionEdit = function (data) {
                     if (data.type === k) {
                         attrs.selected = true;
                     }
-                    select.append(MochiKit.DOM.OPTION(attrs, k));
+                    select.append(RapidContext.UI.OPTION(attrs, k));
                 }
             }
         })
@@ -390,7 +390,7 @@ AdminApp.prototype._updateConnectionEdit = function () {
             tr.lastChild.append(validator);
         }
         if (p.description) {
-            var help = MochiKit.DOM.DIV({ "class": "helptext text-pre-wrap" }, p.description);
+            var help = RapidContext.UI.DIV({ "class": "helptext text-pre-wrap" }, p.description);
             tr.lastChild.append(help);
         }
         if (!showAll && !p.required && !p.custom && !value) {
@@ -759,7 +759,7 @@ AdminApp.prototype._callbackShowProcedure = function (procName, res) {
             if (b.type == "argument") {
                 var attrs = { "class": "-form-layout-label" };
                 var text = RapidContext.Util.toTitleCase(b.name) + ":";
-                var col1 = MochiKit.DOM.TH(attrs, text);
+                var col1 = RapidContext.UI.TH(attrs, text);
                 var name = "arg" + count;
                 var value = this._defaults[b.name] || "";
                 var field = RapidContext.Widget.TextField({ name: name, value: value });
@@ -768,9 +768,9 @@ AdminApp.prototype._callbackShowProcedure = function (procName, res) {
                     "icon": "fa fa-lg fa-pencil"
                 });
                 btn.onclick = this._editProcArg.bind(this, count);
-                var col2 = MochiKit.DOM.TD({ "class": "text-nowrap pr-2" }, field, btn);
-                var col3 = MochiKit.DOM.TD({ "class": "text-pre-wrap w-100 pt-1" }, b.description);
-                var tr = MochiKit.DOM.TR({}, col1, col2, col3);
+                var col2 = RapidContext.UI.TD({ "class": "text-nowrap pr-2" }, field, btn);
+                var col3 = RapidContext.UI.TD({ "class": "text-pre-wrap w-100 pt-1" }, b.description);
+                var tr = RapidContext.UI.TR({}, col1, col2, col3);
                 this.ui.procArgTable.append(tr);
                 count++;
             }
@@ -914,7 +914,7 @@ AdminApp.prototype._initProcEdit = function (data) {
             select.innerHTML = "";
             Object.keys(res).sort().forEach(function (k) {
                 var name = k.replace("procedure/", "");
-                select.append(MochiKit.DOM.OPTION({ value: k }, name));
+                select.append(RapidContext.UI.OPTION({ value: k }, name));
                 var values = res[k].bindings;
                 var keys = MochiKit.Base.map(MochiKit.Base.itemgetter("name"), values);
                 data.defaults[k] = RapidContext.Data.object(keys, values);
@@ -934,11 +934,11 @@ AdminApp.prototype._renderProcEdit = function () {
         return RapidContext.Widget.Icon({ "class": cls, "data-action": action });
     }
     function buildBinding(b, def) {
-        var name = MochiKit.DOM.STRONG({}, b.name + ": ");
+        var name = RapidContext.UI.STRONG({}, b.name + ": ");
         var icon = def ? null : buildIcon("fa fa-minus-square color-danger", "remove");
         var up = def ? null : buildIcon("fa fa-arrow-circle-up widget-grey", "up");
         var desc = def ? def.description : b.description || "";
-        var div = MochiKit.DOM.DIV({ "class": "text-pre-wrap py-1" }, name, icon, up, desc);
+        var div = RapidContext.UI.DIV({ "class": "text-pre-wrap py-1" }, name, icon, up, desc);
         var attrs = {
             name: "binding." + b.name,
             value: b.value,
@@ -952,7 +952,7 @@ AdminApp.prototype._renderProcEdit = function () {
             attrs.wrap = "off";
             field = RapidContext.Widget.TextArea(attrs);
         }
-        return MochiKit.DOM.DIV({ "class": "binding" }, div, field);
+        return RapidContext.UI.DIV({ "class": "binding" }, div, field);
     }
     var data = this.ui.procEditDialog.data;
     var elems = this.ui.procEditForm.querySelectorAll(".binding");
@@ -970,7 +970,7 @@ AdminApp.prototype._renderProcEdit = function () {
     }
     Object.values(parents).forEach(function (node) {
         if (node.childNodes.length == 0) {
-            var div = MochiKit.DOM.DIV({ "class": "py-1 widget-grey binding" }, "\u2014");
+            var div = RapidContext.UI.DIV({ "class": "py-1 widget-grey binding" }, "\u2014");
             node.append(div);
         }
     });
