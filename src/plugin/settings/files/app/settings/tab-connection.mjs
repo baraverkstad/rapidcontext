@@ -1,22 +1,23 @@
-import { elem, typeIds, typePath, objectProps, renderProp } from './util.mjs';
+import { create } from 'rapidcontext/ui';
+import { typeIds, typePath, objectProps, renderProp } from './util.mjs';
 
 let connections = [];
 
 export default async function init(ui) {
-    ui.cxnPane.addEventListener('enter', () => refresh(ui), { once: true });
+    ui.cxnPane.once('enter', () => refresh(ui));
     ui.cxnSearch.on('reload', () => refresh(ui));
     ui.cxnSearch.on('search', () => search(ui));
     ui.cxnValidateAll.on('click', () => validateAll(ui));
-    ui.cxnAdd.on('click', () => edit(ui, true));
-    ui.cxnTable.addEventListener('select', () => show(ui));
-    ui.cxnDetails.addEventListener('unselect', () => ui.cxnTable.setSelectedIds());
-    ui.cxnValidate.addEventListener('click', () => validate(ui));
-    ui.cxnEdit.addEventListener('click', () => edit(ui, false));
-    ui.cxnDelete.addEventListener('click', () => remove(ui));
-    ui.cxnEditType.addEventListener('change', () => renderEdit(ui));
-    ui.cxnEditShowAll.addEventListener('change', () => renderEdit(ui));
-    ui.cxnEditForm.addEventListener('click', (evt) => addRemoveProps(ui, evt));
-    ui.cxnEditForm.addEventListener('submit', (evt) => save(ui, evt));
+    ui.cxnAdd.on('click', () => edit(ui, {}));
+    ui.cxnTable.on('select', () => show(ui));
+    ui.cxnDetails.on('unselect', () => ui.cxnTable.setSelectedIds());
+    ui.cxnValidate.on('click', () => validate(ui));
+    ui.cxnEdit.on('click', () => edit(ui, ui.cxnTable.getSelectedData()));
+    ui.cxnDelete.on('click', () => remove(ui));
+    ui.cxnEditType.addEventListener('change', () => editRender(ui));
+    ui.cxnEditShowAll.addEventListener('change', () => editRender(ui));
+    ui.cxnEditForm.on('click', '[data-action]', (evt) => editAction(ui, evt.delegateTarget));
+    ui.cxnEditForm.on('submit', (evt) => save(ui, evt));
     ui.cxnTable.getChildNodes()[1].setAttrs({ renderer: typeRenderer });
     ui.cxnTable.getChildNodes()[3].setAttrs({ renderer: statusRenderer });
     ui.cxnTable.getChildNodes()[4].setAttrs({ renderer: openRenderer });
@@ -110,69 +111,53 @@ async function validateAll(ui) {
     await refresh(ui);
 }
 
-async function edit(ui, create) {
-    let data = create ? {} : ui.cxnTable.getSelectedData();
-    if (data) {
-        ui.cxnEditType.replaceChildren(ui.cxnEditType.firstChild);
-        for (let id of typeIds('connection')) {
-            ui.cxnEditType.append(elem('option', { value: id }, id));
-        }
-        ui.cxnEditForm.reset();
-        ui.cxnEditForm.update(data);
-        ui.cxnEditForm.original = data;
-        ui.cxnEditDialog.show();
-        renderEdit(ui);
-    }
+async function edit(ui, data) {
+    let createOption = (id) => create('option', { value: id }, id.replace('connection/', ''));
+    ui.cxnEditType.replaceChildren(ui.cxnEditType.firstChild);
+    ui.cxnEditType.append(...typeIds('connection').map(createOption));
+    ui.cxnEditForm.reset();
+    ui.cxnEditForm.update(data);
+    ui.cxnEditForm.original = data;
+    ui.cxnEditDialog.show();
+    editRender(ui, data);
 }
 
-function renderEdit(ui) {
-    function buildRow(p) {
-        let title = p.title || RapidContext.Util.toTitleCase(p.name || '');
-        let value = data[p.name] || '';
-        let defaultValue = data['_' + p.name] || '';
-        let lines = lineCount(value);
-        let tr = ui.cxnEditTpl.render({ title })[0];
-        let attrs = { name: p.name, size: 60 };
-        if (p.required && p.format != 'password' && p.format != 'text') {
-            attrs.required = true;
-        }
-        if (defaultValue) {
-            attrs.placeholder = defaultValue;
-        }
-        let input = null;
-        if (p.format == 'text' || lines > 1) {
-            attrs.cols = 55;
-            attrs.rows = Math.min(Math.max(1, lines), 20);
-            attrs.autosize = true;
-            input = RapidContext.Widget.TextArea(attrs);
-        } else if (p.format == 'password') {
-            attrs.type = 'password';
-            input = RapidContext.Widget.TextField(attrs);
+function editRender(ui, extra) {
+    function buildInput(name, format, placeholder, required) {
+        if (format == 'password') {
+            let defs = { type: 'password', 'class': 'flex-fill' };
+            return RapidContext.Widget.TextField({ name, ...defs });
         } else {
-            input = RapidContext.Widget.TextField(attrs);
+            let defs = { autosize: true, rows: 1, wrap: 'off', 'class': 'flex-fill' };
+            return RapidContext.Widget.TextArea({ name, placeholder, required, ...defs });
         }
-        tr.lastChild.append(input);
-        if (p.custom) {
-            input.size = 55;
-            let btn = { icon: 'fa fa-lg fa-minus', 'class': 'font-smaller ml-1', 'data-action': 'remove' };
-            tr.lastChild.append(RapidContext.Widget.Button(btn));
+    }
+    function buildBtn(icon, action) {
+        return RapidContext.Widget.Button({
+            icon,
+            'class': 'font-smaller ml-1',
+            'data-action': action,
+        });
+    }
+    function buildRow(p) {
+        let name = p.name;
+        let title = p.title || RapidContext.Util.toTitleCase(name || '');
+        let placeholder = data[`_${name}`] || '';
+        let help = p.description || '';
+        let input = buildInput(name, p.format, placeholder, p.required && p.format != 'text');
+        let rm = p.custom ? buildBtn('fa fa-lg fa-minus', 'remove') : '';
+        let tr = ui.cxnEditTpl.render({ name, title, help })[0];
+        tr.lastChild.firstChild.append(input, rm);
+        if (input.required) {
+            let validator = RapidContext.Widget.FormValidator({ name });
+            tr.lastChild.insertBefore(validator, tr.lastChild.lastChild);
         }
-        if (attrs.required) {
-            tr.lastChild.append(RapidContext.Widget.FormValidator({ name: p.name }));
-        }
-        if (p.description) {
-            let help = document.createElement('div');
-            help.className = 'helptext text-pre-wrap pt-0';
-            help.append(p.description);
-            tr.lastChild.append(help);
-        }
-        if (!showAll && !p.required && !p.custom && !value) {
+        if (!showAll && !p.required && !p.custom && !data[name]) {
             tr.classList.add('hidden');
         }
         return tr;
     }
-
-    let data = { ...ui.cxnEditForm.original, ...ui.cxnEditForm.valueMap() };
+    let data = { ...ui.cxnEditForm.valueMap(), ...extra };
     ui.cxnEditForm.reset();
     let showAll = (data._showAll == 'yes');
     let ignore = ['id', 'type', 'className'];
@@ -185,9 +170,8 @@ function renderEdit(ui) {
     ui.cxnEditDialog.moveToCenter();
 }
 
-function addRemoveProps(ui, evt) {
-    let el = evt.target.closest('[data-action]');
-    if (el && el.dataset.action === 'add') {
+function editAction(ui, el) {
+    if (el.dataset.action === 'add') {
         let data = ui.cxnEditForm.valueMap();
         let name = ui.cxnEditAddParam.value.trim();
         ui.cxnEditParamValidator1.reset();
@@ -197,24 +181,24 @@ function addRemoveProps(ui, evt) {
         } else if (name in data) {
             ui.cxnEditParamValidator2.addError(ui.cxnEditAddParam);
         } else {
-            ui.cxnEditAddParam.setAttrs({ name: name, value: 'value' });
-            renderEdit(ui);
-            ui.cxnEditAddParam.setAttrs({ name: '_add', value: '' });
+            editRender(ui, { [name]: 'value' });
+            ui.cxnEditAddParam.setAttrs({ value: '' });
+            ui.cxnEditForm.querySelector(`textarea[name="${name}"]`).focus();
         }
-    } else if (el && el.dataset.action === 'remove') {
+    } else if (el.dataset.action === 'remove') {
         RapidContext.Widget.destroyWidget(el.closest('tr'));
     }
 }
 
-// FIXME: implement this with modern UI
 async function save(ui, evt) {
     evt.preventDefault();
     ui.cxnEditForm.querySelectorAll('button').forEach((el) => el.disabled = true);
     try {
         let orig = ui.cxnEditForm.original;
         let data = ui.cxnEditForm.valueMap();
-        for (let k in data) {
-            let v = data[k].trim();
+        let all = { ...orig, ...data };
+        for (let k in all) {
+            let v = (data[k] || '').trim();
             if (!v && orig.id && !k.startsWith('.')) {
                 data[k] = null; // Remove previous value
             } else if (!v) {
@@ -255,12 +239,4 @@ async function remove(ui) {
             RapidContext.UI.showError(e);
         }
     }
-}
-
-function lineCount(str) {
-    let count = 0;
-    str.split(/\n|\r\n|\r/g).forEach((s) => {
-        count += s.split(/.{1,60}\s/g).length;
-    });
-    return count;
 }

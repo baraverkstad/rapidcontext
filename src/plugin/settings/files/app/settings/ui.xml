@@ -2,7 +2,7 @@
 
 <ui class="settings-app" xmlns:settings="app/settings">
   <div class="flex flex-dir-row position-relative w-100 h-100">
-    <div id="tabs" class="vertical-tabs select-none" style="min-width: 7rem;">
+    <Pane id="tabs" class="vertical-tabs select-none" style="min-width: 7rem;">
       <div data-view="pluginPane">
         <i class="fa fa-3x fa-puzzle-piece" />
         <h3>Plug-ins</h3>
@@ -11,7 +11,7 @@
         <i class="fa fa-3x fa-plug" />
         <h3>Connections</h3>
       </div>
-      <div class="disabled" data-view="procPane">
+      <div data-view="procPane">
         <i class="fa fa-3x fa-bolt" />
         <h3>Procedures</h3>
       </div>
@@ -23,9 +23,10 @@
         <i class="fa fa-3x fa-sitemap" />
         <h3>Storage</h3>
       </div>
-    </div>
+    </Pane>
     <div id="views" class="flex-fill position-relative border-l pl-3" style="left: -1px;">
-      <div id="pluginPane" class="view flex flex-dir-column w-100 h-100">
+
+      <Pane id="pluginPane" class="view flex flex-dir-column w-100 h-100">
         <settings:search-form id="pluginSearch" placeholder="Search by id, name, etc">
           <label id="pluginInstall" class="btn m-0 mr-2">
             <i class="fa fa-lg fa-puzzle-piece"></i>
@@ -53,9 +54,9 @@
                   </td>
                 </tr>
                 <settings:template id="pluginPropTpl">
-                  <tr>
+                  <tr class="{{style}}">
                     <th>{{title}}:</th>
-                    <td class="text-pre-wrap text-wrap-any {{style}}">{{value}}</td>
+                    <td class="text-pre-wrap text-wrap-any">{{value}}</td>
                   </tr>
                 </settings:template>
               </tbody>
@@ -67,8 +68,9 @@
             </div>
           </settings:details-form>
         </div>
-      </div>
-      <div id="cxnPane" class="view flex flex-dir-column w-100 h-100">
+      </Pane>
+
+      <Pane id="cxnPane" class="view flex flex-dir-column w-100 h-100">
         <settings:search-form id="cxnSearch" placeholder="Search by id, type, etc">
           <Button id="cxnValidateAll" icon="fa fa-lg fa-magic" class="m-0 mr-2">Check all</Button>
           <Button id="cxnAdd" icon="fa fa-lg fa-plus" class="m-0">Add connection</Button>
@@ -92,9 +94,9 @@
                   </td>
                 </tr>
                 <settings:template id="cxnPropTpl">
-                  <tr>
+                  <tr class="{{style}}">
                     <th>{{title}}:</th>
-                    <td class="text-pre-wrap text-wrap-any {{style}}">{{value}}</td>
+                    <td class="text-pre-wrap text-wrap-any">{{value}}</td>
                   </tr>
                 </settings:template>
               </tbody>
@@ -114,12 +116,12 @@
                   <th><label>Identifier:</label></th>
                   <td>
                     <div class="flex flex-dir-row flex-align-center">
-                      <span class="unimportant pr-1">/connection/</span>
-                      <TextField id="cxnIdField" name="id" class="flex-fill"
+                      <span class="help-text pr-1">/connection/</span>
+                      <TextField name="id" class="flex-fill"
                           required="true" pattern="[a-zA-Z0-9._-]+(/[a-zA-Z0-9._-]+)*" />
                     </div>
                     <FormValidator name="id" message="Only alphanumeric characters allowed in identifier." />
-                    <div class="helptext pt-0">
+                    <div class="help-text pb-1">
                       The unique connection identifier. Optionally prefixed with
                       an environment path.
                     </div>
@@ -136,13 +138,16 @@
                       Show all parameters
                     </label>
                     <FormValidator name="type" message="A valid connection type must be selected." />
-                    <div id="cxnEditTypeHelp" class="helptext pt-0"></div>
+                    <div id="cxnEditTypeHelp" class="help-text pt-1 pb-2"></div>
                   </td>
                 </tr>
                 <settings:template id="cxnEditTpl">
                   <tr>
                     <th><label>{{title}}:</label></th>
-                    <td></td>
+                    <td>
+                      <div class="flex-row flex-align-start w-100"></div>
+                      <div class="help-text text-pre-wrap pb-1">{{help}}</div>
+                    </td>
                   </tr>
                 </settings:template>
                 <tr>
@@ -164,10 +169,246 @@
             </div>
           </Form>
         </Dialog>
-      </div>
-      <div id="procPane" class="view flex flex-dir-column w-100 h-100">
-      </div>
-      <div id="userPane" class="view flex flex-dir-column w-100 h-100">
+      </Pane>
+
+      <Pane id="procPane" class="view flex flex-dir-column w-100 h-100">
+        <settings:search-form id="procSearch" placeholder="Search by id">
+          <Button id="procAdd" icon="fa fa-lg fa-plus" class="m-0">Add procedure</Button>
+        </settings:search-form>
+        <div class="flex-fill flex flex-dir-row" style="min-height: 0;">
+          <Tree id="procTree" class="flex-fill" style="min-width: 15rem; max-width: 33%;" />
+          <Form id="procDetails" class="flex-fill overflow-y-auto ml-3 pt-1" style="min-width: 25rem; max-width: 66%;" hidden="true">
+            <table class="properties-table">
+              <tbody>
+                <tr>
+                  <th class="pl-4">Identifier:</th>
+                  <td>
+                    <settings:id-link id="procIdLink" type="procedure" />
+                  </td>
+                </tr>
+                <settings:template id="procPropTpl">
+                  <tr class="{{style}}">
+                    <th>{{title}}:</th>
+                    <td class="text-pre-wrap text-wrap-any">{{value}}</td>
+                  </tr>
+                </settings:template>
+                <settings:template id="procArgTpl">
+                  <tr class="procedure-argument">
+                    <th><label><i class="fa fa-tag mr-1"></i> {{title}}:</label></th>
+                    <td>
+                      <input type="text" name="{{name}}" value="{{value}}" size="30" data-binding="{{binding}}" />
+                      <button class="font-smaller ml-1" data-action="edit"><i class="fa fa-lg fa-pencil"></i></button>
+                      <div class="help-text pb-1">{{help}}</div>
+                    </td>
+                  </tr>
+                </settings:template>
+              </tbody>
+            </table>
+            <div class="my-1">
+              <Button id="procCall" icon="fa fa-lg fa-play" class="primary">Call</Button>
+              <Button id="procEdit" icon="fa fa-lg fa-dot-circle-o">Edit</Button>
+              <Button id="procDelete" class="danger" icon="fa fa-lg fa-ban">Delete</Button>
+            </div>
+          </Form>
+        </div>
+        <Dialog id="procArgDialog" title="Edit Argument" modal="true" w="40rem">
+          <Form id="procArgForm">
+            <input type="hidden" name="name" />
+            <table class="properties-table">
+              <tbody>
+                <tr>
+                  <th><label>Format:</label></th>
+                  <td>
+                    <label class="select-none">
+                      <input type="radio" name="type" value="string" checked="checked" /> Plain Text
+                    </label>
+                    <label class="select-none ml-2">
+                      <input type="radio" name="type" value="json" /> JSON
+                    </label>
+                    <label class="select-none ml-2 hidden">
+                      <input type="radio" name="type" value="array" /> Batch List
+                    </label>
+                  </td>
+                </tr>
+                <tr>
+                  <th><label>Value:</label></th>
+                  <td>
+                    <TextArea name="value" rows="10" autosize="true" class="w-100" />
+                    <FormValidator id="procArgValueValidator" />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="text-right mt-1">
+              <Button icon="fa fa-lg fa-times" data-dialog="close">Cancel</Button>
+              <Button type="submit" highlight="true" icon="fa fa-lg fa-check">Save</Button>
+            </div>
+          </Form>
+        </Dialog>
+        <Dialog id="procResultDialog" title="Call Result" modal="true" w="75%" h="75%">
+          <Form id="procResultForm" class="flex-col w-100 h-100">
+            <table class="properties-table mb-2">
+              <tbody>
+                <tr>
+                  <th>Procedure Call:</th>
+                  <td>
+                    <b><Field name="id" /></b> &#8226;
+                    <Field name="size" /> &#8226;
+                    <Field name="duration" /> (on server)
+                  </td>
+                </tr>
+                <tr>
+                  <th><label>Display Format:</label></th>
+                  <td>
+                    <label class="select-none">
+                      <input type="radio" name="format" value="tree" checked="checked" /> Data Tree
+                    </label>
+                    <label class="select-none ml-2">
+                      <input type="radio" name="format" value="table" /> Data Table
+                    </label>
+                    <label class="select-none ml-2">
+                      <input type="radio" name="format" value="raw" /> Raw Response
+                    </label>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <Tree id="procResultTree" class="flex-fill" />
+            <Table id="procResultTable" class="flex-fill" hidden="true" />
+            <TextArea id="procResultRaw" name="text" class="flex-fill" readonly="true" hidden="true" />
+            <div class="text-right mt-1">
+              <Button icon="fa fa-lg fa-times" data-dialog="close">Close</Button>
+            </div>
+          </Form>
+        </Dialog>
+        <Dialog id="procEditDialog" title="Edit Procedure" modal="true" w="70%">
+          <Form id="procEditForm">
+            <table class="properties-table">
+              <tbody>
+                <tr>
+                  <th><label>Identifier:</label></th>
+                  <td>
+                    <div class="flex flex-dir-row flex-align-center">
+                      <span class="help-text pr-1">/procedure/</span>
+                      <TextField name="id" class="flex-fill"
+                          required="true" pattern="[a-zA-Z0-9._-]+(/[a-zA-Z0-9._-]+)*" />
+                    </div>
+                    <FormValidator name="id" message="Only alphanumeric characters allowed in identifier." />
+                    <div class="help-text pb-1">
+                      The unique procedure identifier.
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <th><label>Type:</label></th>
+                  <td>
+                    <select id="procEditType" name="type" required="true"></select>
+                    <div id="procEditTypeHelp" class="help-text pt-1 pb-2"></div>
+                  </td>
+                </tr>
+                <tr>
+                  <th><label>Description:</label></th>
+                  <td>
+                    <TextArea name="description" rows="1" autosize="true" class="w-100" />
+                    <div class="help-text">The optional procedure description or notes.</div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <fieldset class="procedure-bindings">
+              <legend>Connections:</legend>
+              <table class="properties-table">
+                <tbody>
+                  <settings:template id="procEditConTpl">
+                    <tr data-binding="{{name}}">
+                      <th><label>{{name}}:</label></th>
+                      <td>
+                        <div class="flex-row flex-align-start w-100"></div>
+                        <div class="help-text text-pre-wrap pb-1">{{help}}</div>
+                      </td>
+                    </tr>
+                  </settings:template>
+                </tbody>
+              </table>
+            </fieldset>
+            <fieldset class="procedure-bindings">
+              <legend>Data:</legend>
+              <table class="properties-table">
+                <tbody>
+                  <settings:template id="procEditDataTpl">
+                    <tr data-binding="{{name}}">
+                      <th><label>{{name}}:</label></th>
+                      <td>
+                        <div class="flex-row flex-align-start w-100"></div>
+                        <div class="help-text text-pre-wrap pb-1">{{help}}</div>
+                      </td>
+                    </tr>
+                  </settings:template>
+                </tbody>
+              </table>
+            </fieldset>
+            <fieldset class="procedure-bindings">
+              <legend>Procedures:</legend>
+              <table class="properties-table">
+                <tbody>
+                  <settings:template id="procEditProcTpl">
+                    <tr data-binding="{{name}}">
+                      <th><label>{{name}}:</label></th>
+                      <td>
+                        <div class="flex-row flex-align-start w-100"></div>
+                        <div class="help-text text-pre-wrap pb-1">{{help}}</div>
+                      </td>
+                    </tr>
+                  </settings:template>
+                </tbody>
+              </table>
+            </fieldset>
+            <fieldset class="procedure-bindings">
+              <legend>Arguments:</legend>
+              <table class="properties-table">
+                <tbody>
+                  <settings:template id="procEditArgTpl">
+                    <tr data-binding="{{name}}">
+                      <th><label>{{name}}:</label></th>
+                      <td>
+                        <div class="flex-row flex-align-start w-100"></div>
+                        <div class="help-text text-pre-wrap pb-1">{{help}}</div>
+                      </td>
+                    </tr>
+                  </settings:template>
+                </tbody>
+              </table>
+            </fieldset>
+            <table class="properties-table">
+              <tbody>
+                <tr>
+                  <th><label>Add Binding:</label></th>
+                  <td>
+                    <select id="procEditAddBinding" class="mr-1">
+                      <option value="connection">Connection</option>
+                      <option value="data">Data</option>
+                      <option value="procedure">Procedure</option>
+                      <option value="argument" selected="true">Argument</option>
+                    </select>
+                    <TextField id="procEditAddName" name="_add" placeholder="Enter variable name" size="25" />
+                    <Button icon="fa fa-lg fa-plus" class="font-smaller mx-1" data-action="add" />
+                    <FormValidator id="procEditAddValidator1"
+                        message="Only alphanumeric characters allowed in binding name." />
+                    <FormValidator id="procEditAddValidator2"
+                        message="A binding with this name already exists." />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="text-right mt-1">
+              <Button icon="fa fa-lg fa-times" data-dialog="close">Cancel</Button>
+              <Button type="submit" highlight="true" icon="fa fa-lg fa-check">Save</Button>
+            </div>
+          </Form>
+        </Dialog>
+      </Pane>
+
+      <Pane id="userPane" class="view flex flex-dir-column w-100 h-100">
         <settings:search-form id="userSearch" placeholder="Search by name, email, etc">
           <Button id="userAdd" icon="fa fa-lg fa-plus" class="m-0">Add user</Button>
         </settings:search-form>
@@ -190,9 +431,9 @@
                   </td>
                 </tr>
                 <settings:template id="userPropTpl">
-                  <tr>
+                  <tr class="{{style}}">
                     <th>{{title}}:</th>
-                    <td class="text-pre-wrap text-wrap-any {{style}}">{{value}}</td>
+                    <td class="text-pre-wrap text-wrap-any">{{value}}</td>
                   </tr>
                 </settings:template>
                 <tr>
@@ -209,7 +450,7 @@
                       <div>
                         <i class="fa fa-check-square"></i>
                         {{name}}
-                        <span class="unimportant">&#8226; {{description}}</span>
+                        <span class="help-text">&#8226; {{description}}</span>
                       </div>
                     </settings:template>
                   </td>
@@ -229,12 +470,12 @@
                   <th><label>Identifier:</label></th>
                   <td>
                     <div class="flex flex-dir-row flex-align-center">
-                      <span class="unimportant pr-1">/user/</span>
+                      <span class="help-text pr-1">/user/</span>
                       <TextField id="userIdField" name="id" class="flex-fill"
                           required="true" pattern="[a-zA-Z0-9._-]+(/[a-zA-Z0-9._-]+)*" />
                     </div>
                     <FormValidator name="id" message="Only alphanumeric characters allowed in identifier." />
-                    <div class="helptext pt-0">
+                    <div class="help-text pb-1">
                       The unique user identifier.
                     </div>
                   </td>
@@ -243,7 +484,7 @@
                   <th><label>Name:</label></th>
                   <td>
                     <TextField name="name" class="w-100" />
-                    <div class="helptext pt-0">
+                    <div class="help-text pb-1">
                       The optional descriptive name of the user.
                     </div>
                   </td>
@@ -254,7 +495,7 @@
                     <TextField name="email" type="email" class="w-100" />
                     <FormValidator name="email" mandatory="false" regex=".+@.+\..+"
                                    message="Invalid e-mail address" />
-                    <div class="helptext pt-0">
+                    <div class="help-text pb-1">
                       The optional user email address.
                     </div>
                   </td>
@@ -262,8 +503,8 @@
                 <tr>
                   <th><label>Description:</label></th>
                   <td>
-                    <TextArea name="description" rows="2" autosize="true" class="w-100" />
-                    <div class="helptext pt-0">
+                    <TextArea name="description" rows="1" autosize="true" class="w-100" />
+                    <div class="help-text pb-1">
                       The optional user description, department or notes.
                     </div>
                   </td>
@@ -272,10 +513,10 @@
                   <th><label>Password:</label></th>
                   <td>
                     <TextField id="userPwdField" type="password" name="password" minlength="5" size="25" />
-                    <span id="userPwdHint" class="unimportant ml-3">Leave blank for unmodified</span>
+                    <span id="userPwdHint" class="help-text ml-3">Leave blank for unmodified</span>
                     <FormValidator name="password" mandatory="false"
                                    message="Password must contain at least 5 characters" />
-                    <div class="helptext pt-0">
+                    <div class="help-text pb-1">
                       The user login password (for built-in authentication).
                     </div>
                   </td>
@@ -286,7 +527,7 @@
                     <label class="inline">
                       <input type="checkbox" name="enabled" /> Enabled
                     </label>
-                    <span class="helptext vertical-top pt-0"> &#8226; Access is denied if not enabled.</span>
+                    <span class="help-text vertical-top pb-1"> &#8226; Access is denied if not enabled.</span>
                   </td>
                 </tr>
                 <tr>
@@ -298,7 +539,7 @@
                           <input type="checkbox" name="role" value="{{id}}" />
                           {{name}}
                         </label>
-                        <span class="unimportant">&#8226; {{description}}</span>
+                        <span class="help-text">&#8226; {{description}}</span>
                       </div>
                     </settings:template>
                   </td>
@@ -311,9 +552,11 @@
             </div>
           </Form>
         </Dialog>
-      </div>
+      </Pane>
+
       <div id="storagePane" class="view flex flex-dir-column w-100 h-100">
       </div>
+
     </div>
   </div>
 </ui>

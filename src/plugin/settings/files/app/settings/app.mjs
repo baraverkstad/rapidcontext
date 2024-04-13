@@ -1,5 +1,6 @@
 import initPluginTab from './tab-plugin.mjs';
 import initConnectionTab from './tab-connection.mjs';
+import initProcedureTab from './tab-procedure.mjs';
 import initUserTab from './tab-user.mjs';
 import { loadTypes } from './util.mjs';
 
@@ -16,15 +17,16 @@ export default class {
         // FIXME: Support non-admin users with disabled tabs
         await initPluginTab(this.ui);
         await initConnectionTab(this.ui);
+        await initProcedureTab(this.ui);
         await initUserTab(this.ui);
 
         // Setup event handlers
-        this.ui.tabs.addEventListener('click', (evt) => {
-            this.selectTab(evt.target.closest('div[data-view]:not(.disabled)'));
+        this.ui.tabs.on('click', '[data-view]:not(.disabled)', (evt) => {
+            this.selectTab(evt.delegateTarget);
         });
 
         // Select first tab
-        this.selectTab(this.ui.tabs.querySelector('div[data-view]:not(.disabled)'));
+        this.selectTab(this.ui.tabs.querySelector('[data-view]:not(.disabled)'));
     }
 
     stop() {

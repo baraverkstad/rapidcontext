@@ -17,9 +17,17 @@ class Template {
     }
 
     clear() {
-        while (this.previousSibling && this.previousSibling.classList.contains(this.dataset.tpl)) {
-            this.previousSibling.remove();
+        this.copies().forEach((el) => el.remove());
+    }
+
+    copies() {
+        let res = [];
+        let el = this.previousSibling;
+        while (el && el.classList.contains(this.dataset.tpl)) {
+            res.unshift(el);
+            el = el.previousSibling;
         }
+        return res;
     }
 
     render(data) {
@@ -41,7 +49,7 @@ class Template {
 
 class IdLink {
     static create(attrs, ...children) {
-        let o = RapidContext.UI.buildUI(IdLink.UI.trim());
+        let o = RapidContext.UI.create(IdLink.UI.trim());
         RapidContext.Widget._widgetMixin(o, IdLink);
         o.setAttrs({ url: 'rapidcontext/storage/{{type}}/{{value}}', ...attrs });
         o.addAll(children);
@@ -49,23 +57,23 @@ class IdLink {
     }
 
     get type() {
-        let path = this.querySelector('[data-ref="type"]').innerText;
+        let path = this.querySelector('div > span').innerText;
         return path.split('/').filter(Boolean)[0];
     }
 
     set type(val) {
         let base = String(val).split('/')[0];
         let html = ['', base, ''].map(escape).join(IdLink.SEPARATOR);
-        this.querySelector('[data-ref="type"]').innerHTML = html;
+        this.querySelector('div > span').innerHTML = html;
     }
 
     get value() {
-        return this.querySelector('[data-ref="id"]').innerText;
+        return this.querySelector('b').innerText;
     }
 
     set value(val) {
         let html = String(val).split('/').map(escape).join(IdLink.SEPARATOR);
-        this.querySelector('[data-ref="id"]').innerHTML = html;
+        this.querySelector('b').innerHTML = html;
         this.querySelector('a').setAttribute('href', template(this.url, this));
     }
 }
@@ -73,8 +81,8 @@ class IdLink {
 IdLink.SEPARATOR = '<span class="separator">/</span>';
 IdLink.UI = `
     <div>
-        <span data-ref="type">type</span>
-        <b data-ref="id"></b>
+        <span class="help-text">type</span>
+        <b></b>
         <a href="#" target="_blank" title="Open in storage" class="btn reactive" style="margin: -0.3em 0;">
             <i class="fa fa-sitemap" />
         </a>
@@ -84,7 +92,7 @@ IdLink.UI = `
 
 class Toggle {
     static create(attrs, ...children) {
-        let o = RapidContext.UI.buildUI(Toggle.UI.trim());
+        let o = RapidContext.UI.create(Toggle.UI.trim());
         RapidContext.Widget._widgetMixin(o, Toggle);
         o.classList.add('toggle');
         o.setAttrs(attrs);
@@ -114,7 +122,7 @@ Toggle.UI = `
 
 class SearchForm {
     static create(attrs, ...children) {
-        let o = RapidContext.UI.buildUI(SearchForm.UI.trim());
+        let o = RapidContext.UI.create(SearchForm.UI.trim());
         RapidContext.Widget._widgetMixin(o, SearchForm);
         o.setAttrs({ loading: false, ...attrs });
         o.addAll(children);
@@ -137,7 +145,7 @@ class SearchForm {
 
     set loading(val) {
         this.reload.setAttrs({ hidden: !!val });
-        this.querySelector('[data-ref="loading"]').setAttrs({ hidden: !val });
+        this.querySelector('div > i.fa-spin').setAttrs({ hidden: !val });
     }
 
     get placeholder() {
@@ -150,7 +158,7 @@ class SearchForm {
 
     info(count, total, type) {
         let html = `Showing ${count} <span class="unimportant">(of ${total})</span> ${type}`;
-        this.querySelector('[data-ref="info"]').innerHTML = html;
+        this.querySelector('div > div').innerHTML = html;
     }
 }
 
@@ -159,8 +167,8 @@ SearchForm.UI = `
         <div class="flex-fill flex-row flex-align-center">
             <TextField type="search" name="search" w="25em" class="flex-fill m-0" style="max-width: 25em;" />
             <Button name="reload" icon="fa fa-refresh" class="reactive" title="Reload" data-action="reload" />
-            <Icon data-ref="loading" class="fa fa-spin fa-refresh ml-1" />
-            <div data-ref="info" class="flex-fill mx-2"></div>
+            <Icon class="fa fa-spin fa-refresh ml-1" />
+            <div class="flex-fill mx-2"></div>
         </div>
     </Form>
 `;
@@ -168,7 +176,7 @@ SearchForm.UI = `
 
 class DetailsForm {
     static create(attrs, ...children) {
-        let o = RapidContext.UI.buildUI(DetailsForm.UI.trim());
+        let o = RapidContext.UI.create(DetailsForm.UI.trim());
         RapidContext.Widget._widgetMixin(o, DetailsForm);
         o.setAttrs({ hidden: true, ...attrs });
         o.addAll(children);
@@ -179,7 +187,7 @@ class DetailsForm {
 
 DetailsForm.UI = `
     <Form class="overflow-y-auto border-l ml-2 pt-1 pl-2 position-relative">
-        <Button data-action="hide" class="reactive position-absolute top-0 left-0">
+        <Button data-action="hide" class="reactive position-absolute top-0 left-0 mt-0">
             <i class="fa fa-chevron-right" style="margin-left: 0.1em;"></i>
         </Button>
     </Form>

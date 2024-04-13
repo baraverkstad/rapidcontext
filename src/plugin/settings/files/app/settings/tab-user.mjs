@@ -4,14 +4,14 @@ let users = [];
 let roles = [];
 
 export default async function init(ui) {
-    ui.userPane.addEventListener('enter', () => refresh(ui), { once: true });
-    ui.userSearch.addEventListener('reload', () => refresh(ui));
-    ui.userSearch.addEventListener('search', () => search(ui));
-    ui.userAdd.addEventListener('click', () => edit(ui, true));
-    ui.userTable.addEventListener('select', () => show(ui));
-    ui.userDetails.addEventListener('unselect', () => ui.userTable.setSelectedIds());
-    ui.userEdit.addEventListener('click', () => edit(ui, false));
-    ui.userForm.addEventListener('submit', (evt) => save(ui, evt));
+    ui.userPane.once('enter', () => refresh(ui));
+    ui.userSearch.on('reload', () => refresh(ui));
+    ui.userSearch.on('search', () => search(ui));
+    ui.userAdd.on('click', () => edit(ui, true));
+    ui.userTable.on('select', () => show(ui));
+    ui.userDetails.on('unselect', () => ui.userTable.setSelectedIds());
+    ui.userEdit.on('click', () => edit(ui, false));
+    ui.userForm.on('submit', (evt) => save(ui, evt));
     try {
         roles = await RapidContext.App.callProc('system/storage/read', ['/role/']);
         ui.userEditRoleTpl.render(roles.filter((r) => !r.auto));
@@ -49,7 +49,7 @@ function show(ui) {
     let data = ui.userTable.getSelectedData();
     if (data) {
         ui.userIdLink.value = data.id;
-        let ignore = ['id', 'className', 'password', 'enabled', 'role', 'roleCount', 'admin', 'realm'];
+        let ignore = ['id', 'className', 'enabled', 'role', 'roleCount', 'admin', 'realm'];
         let props = objectProps(data, ignore).map((p) => renderProp(p, data));
         ui.userPropTpl.clear();
         ui.userPropTpl.render(props);

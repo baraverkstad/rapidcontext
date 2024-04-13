@@ -36,6 +36,13 @@
 .settings-app .vertical-tabs > div.selected:hover {
     background-image: linear-gradient(to right, var(--highlight-100), #fff);
 }
+.settings-app .vertical-tabs > div > i {
+    opacity: 0.66;
+}
+.settings-app .vertical-tabs > div.selected > i {
+    color: var(--highlight-700);
+    opacity: inherit;
+}
 
 /**
  * Properties table
@@ -48,9 +55,13 @@
     padding: 0 0 0.25em 0;
 }
 .settings-app table.properties-table th {
+    width: 10%;
     font-weight: 200;
     text-align: right;
     white-space: nowrap;
+}
+.settings-app table.properties-table td {
+    width: 90%;
 }
 .settings-app table.properties-table th + td,
 .settings-app table.properties-table td + td,
@@ -98,16 +109,14 @@
  */
 .settings-app button.reactive,
 .settings-app .btn.reactive {
-    margin: 0.1em 0.2em;
-    border-radius: 50%;
-    border-color: transparent;
-    padding: 0.4em 0.5em 0.3em 0.5em;
-    box-shadow: none;
-    text-shadow: 0 1px 1px #fff;
-    background: transparent;
+    padding: 0.3em 0.4em 0.2em 0.4em;
+    vertical-align: 1px;
 }
 .settings-app button.reactive:not(:active):not(.active):not(:hover):not(.hover),
 .settings-app .btn.reactive:not(:active):not(.active):not(:hover):not(.hover) {
+    border-color: transparent;
+    box-shadow: none;
+    background: transparent;
     opacity: 0.25;
 }
 .settings-app button.reactive:active:not(:disabled):not(.disabled),
@@ -118,10 +127,7 @@
 .settings-app .btn.reactive.active:not(:disabled):not(.disabled),
 .settings-app .btn.reactive:hover:not(:disabled):not(.disabled),
 .settings-app .btn.reactive.hover:not(:disabled):not(.disabled) {
-    border-color: var(--highlight-500);
-    background: linear-gradient(to bottom, var(--highlight-000), var(--highlight-200));
-    color: #000b !important;
-    box-shadow: 0 1px 2px #0002;
+    background: linear-gradient(to bottom, #fff, #f0f0f0);
 }
 
 /**
@@ -176,11 +182,44 @@
 }
 
 /**
+ * Procedure arguments
+ */
+.settings-app .procedure-argument > * {
+    padding-top: 1em !important;
+}
+.settings-app .procedure-argument + .procedure-argument > * {
+    padding-top: 0 !important;
+}
+.settings-app .procedure-argument label > i {
+    color: #0003;
+}
+
+/**
+ * Procedure bindings
+ */
+.settings-app fieldset.procedure-bindings {
+    margin: 0 0 0.75em 0;
+    padding: 0.25em 0.5em 0 0.5em;
+}
+.settings-app fieldset.procedure-bindings legend {
+    font-weight: 200;
+    color: #0008;
+}
+.settings-app fieldset.procedure-bindings th {
+    min-width: 7em;
+    height: 2.5em;
+}
+
+/**
  * Utilities
  */
 .settings-app .default-value {
     font-weight: 200;
     color: #0006;
+}
+.settings-app .help-text {
+    font-weight: 200;
+    color: #0008;
 }
 .settings-app .text-wrap-any {
     word-wrap: anywhere;

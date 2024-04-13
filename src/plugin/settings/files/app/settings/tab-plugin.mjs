@@ -1,18 +1,18 @@
-import { loadTypes, objectProps, renderProp } from './util.mjs';
+import { loadTypes, objectProps, renderProp, approxSize } from './util.mjs';
 
 let plugins = [];
 
 export default function init(ui) {
-    ui.pluginPane.addEventListener('enter', () => refresh(ui), { once: true });
-    ui.pluginSearch.addEventListener('reload', () => refresh(ui));
-    ui.pluginSearch.addEventListener('search', () => search(ui));
+    ui.pluginPane.once('enter', () => refresh(ui));
+    ui.pluginSearch.on('reload', () => refresh(ui));
+    ui.pluginSearch.on('search', () => search(ui));
     ui.pluginFile.addEventListener('change', () => upload(ui));
-    ui.pluginReset.addEventListener('click', () => reset(ui));
-    ui.pluginTable.addEventListener('select', () => show(ui));
-    ui.pluginDetails.addEventListener('unselect', () => ui.pluginTable.setSelectedIds());
-    ui.pluginLoad.addEventListener('click', () => load(ui));
-    ui.pluginUnload.addEventListener('click', () => unload(ui));
-    ui.pluginRemove.addEventListener('click', () => uninstall(ui));
+    ui.pluginReset.on('click', () => reset(ui));
+    ui.pluginTable.on('select', () => show(ui));
+    ui.pluginDetails.on('unselect', () => ui.pluginTable.setSelectedIds());
+    ui.pluginLoad.on('click', () => load(ui));
+    ui.pluginUnload.on('click', () => unload(ui));
+    ui.pluginRemove.on('click', () => uninstall(ui));
     ui.pluginTable.getChildNodes()[4].setAttrs({
         renderer: (td, val, data) => td.append(data._content.join(' \u2022 ')),
     });
@@ -58,15 +58,6 @@ function show(ui) {
 }
 
 async function upload(ui) {
-    function approxSize(size) {
-        if (size > 1000000) {
-            return MochiKit.Format.roundToFixed(size / 1048576, 1) + ' MiB';
-        } else if (size > 2000) {
-            return MochiKit.Format.roundToFixed(size / 1024, 1) + ' KiB';
-        } else {
-            return size + ' bytes';
-        }
-    }
     let file = ui.pluginFile.files[0];
     let size = approxSize(file.size);
     ui.pluginProgress.setAttrs({ min: 0, max: file.size, value: 0, text: size });
