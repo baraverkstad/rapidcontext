@@ -698,26 +698,26 @@ RapidContext.App.loadStyles = function (url) {
 RapidContext.App.downloadFile = function (url, data) {
     if (data == null) {
         url = url + (url.includes("?") ? "&" : "?") + "download";
-        var attrs = {
+        let attrs = {
             src: url,
             border: "0",
             frameborder: "0",
             height: "0",
             width: "0"
         };
-        var iframe = MochiKit.DOM.createDOM("iframe", attrs);
+        let iframe = RapidContext.UI.create("iframe", attrs);
         document.body.append(iframe);
     } else {
-        var name = MochiKit.DOM.INPUT({ name: "fileName", value: url });
-        var file = MochiKit.DOM.INPUT({ name: "fileData", value: data });
-        var flag = MochiKit.DOM.INPUT({ name: "download", value: "1" });
-        var formAttrs = {
+        let name = RapidContext.UI.INPUT({ name: "fileName", value: url });
+        let file = RapidContext.UI.INPUT({ name: "fileData", value: data });
+        let flag = RapidContext.UI.INPUT({ name: "download", value: "1" });
+        let attrs = {
             action: "rapidcontext/download",
             method: "POST",
             target: "_blank",
             style: { display: "none" }
         };
-        var form = MochiKit.DOM.FORM(formAttrs, name, file, flag);
+        let form = RapidContext.UI.FORM(attrs, name, file, flag);
         document.body.append(form);
         form.submit();
     }
