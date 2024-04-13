@@ -130,12 +130,13 @@ public class ServerApplication {
             stop();
         }
         server = new Server(port);
+        server.setStopTimeout(10000L);
+        server.setStopAtShutdown(true);
         ServletContextHandler root = new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
         root.setContextPath("/");
         root.setBaseResourceAsPath(appDir.toPath());
         root.addServlet(ServletApplication.class, "/*");
         server.setHandler(root);
-        server.setStopAtShutdown(true);
         port = ((ServerConnector) server.getConnectors()[0]).getPort();
         try {
             server.start();
