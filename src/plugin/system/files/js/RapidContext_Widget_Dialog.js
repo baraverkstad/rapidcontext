@@ -43,7 +43,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * @extends RapidContext.Widget
  *
  * @example <caption>JavaScript</caption>
- * let h1 = MochiKit.DOM.H1({}, "Hello, world!");
+ * let h1 = RapidContext.UI.H1({}, "Hello, world!");
  * let attrs = { title: "Hello", modal: true };
  * let helloDialog = RapidContext.Widget.Dialog(attrs, h1);
  *
@@ -53,7 +53,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * </Dialog>
  */
 RapidContext.Widget.Dialog = function (attrs/*, ... */) {
-    let DIV = MochiKit.DOM.DIV;
+    let DIV = RapidContext.UI.DIV;
     let title = DIV({ "class": "widgetDialogTitle", "data-dialog": "move" }, "Dialog");
     let close = RapidContext.Widget.Icon({
         "class": "widgetDialogClose fa fa-times",

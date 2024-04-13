@@ -47,7 +47,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * </Tree>
  */
 RapidContext.Widget.Tree = function (attrs/*, ...*/) {
-    var o = MochiKit.DOM.DIV(attrs);
+    var o = RapidContext.UI.DIV(attrs);
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Tree);
     o.classList.add("widgetTree");
     o.selectedPath = null;

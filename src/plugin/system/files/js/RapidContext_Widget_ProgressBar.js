@@ -55,9 +55,9 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * <ProgressBar text="Working" noratio="true" notime="true" />
  */
 RapidContext.Widget.ProgressBar = function (attrs) {
-    let text = MochiKit.DOM.DIV({ "class": "widgetProgressBarText" });
+    let text = RapidContext.UI.DIV({ "class": "widgetProgressBarText" });
     let meter = document.createElement("progress");
-    let o = MochiKit.DOM.DIV({}, text, meter);
+    let o = RapidContext.UI.DIV({}, text, meter);
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.ProgressBar);
     o.addClass("widgetProgressBar");
     o.setAttrs(Object.assign({ min: 0, max: 100, value: 0 }, attrs));

@@ -48,7 +48,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * @extends RapidContext.Widget
  *
  * @example <caption>JavaScript</caption>
- * let h1 = MochiKit.DOM.H1({}, "Hello, world!");
+ * let h1 = RapidContext.UI.H1({}, "Hello, world!");
  * let helloPane = RapidContext.Widget.Pane({}, h1);
  *
  * @example <caption>User Interface XML</caption>

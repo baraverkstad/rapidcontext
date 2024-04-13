@@ -56,11 +56,11 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * </Dialog>
  */
 RapidContext.Widget.Wizard = function (attrs/*, ... */) {
-    let o = MochiKit.DOM.DIV(attrs);
+    let o = RapidContext.UI.DIV(attrs);
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Wizard);
     o.addClass("widgetWizard");
     o._selectedIndex = -1;
-    o.append(MochiKit.DOM.H3({ "class": "widgetWizardTitle" }));
+    o.append(RapidContext.UI.H3({ "class": "widgetWizardTitle" }));
     let bCancel = RapidContext.Widget.Button(
         { icon: "fa fa-lg fa-times", "class": "mr-2", "data-action": "cancel" },
         "Cancel"
@@ -80,7 +80,7 @@ RapidContext.Widget.Wizard = function (attrs/*, ... */) {
     );
     bCancel.hide();
     let divAttrs = { "class": "widgetWizardButtons" };
-    o.append(MochiKit.DOM.DIV(divAttrs, bCancel, bPrev, bNext, bDone));
+    o.append(RapidContext.UI.DIV(divAttrs, bCancel, bPrev, bNext, bDone));
     o._updateStatus();
     o.setAttrs(attrs);
     o.addAll(Array.from(arguments).slice(1));
@@ -201,7 +201,7 @@ RapidContext.Widget.Wizard.prototype._updateStatus = function () {
     bPrev.setAttrs({ disabled: (this._selectedIndex <= 0) || !status.previous });
     bNext.setAttrs({ disabled: !status.next });
     bDone.setAttrs({ disabled: !status.next });
-    info = MochiKit.DOM.SPAN({ "class": "widgetWizardInfo" }, info);
+    info = RapidContext.UI.SPAN({ "class": "widgetWizardInfo" }, info);
     h3.innerHTML = "";
     h3.append(icon, title, info);
 };

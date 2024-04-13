@@ -47,7 +47,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * var style = { "margin-left": "3px" };
  * var dataReload = RapidContext.Widget.Icon({ ref: "RELOAD", style: style });
  * var dataLoading = RapidContext.Widget.Icon({ ref: "LOADING", hidden: true, style: style });
- * var h3 = MochiKit.DOM.H3({}, "Data List:", dataReload, dataLoading);
+ * var h3 = RapidContext.UI.H3({}, "Data List:", dataReload, dataLoading);
  *
  * @example <caption>User Interface XML</caption>
  * <h3>

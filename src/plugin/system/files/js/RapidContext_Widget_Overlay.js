@@ -44,9 +44,9 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * <Overlay id="workOverlay" message="Doing Stuff..." />
  */
 RapidContext.Widget.Overlay = function (attrs) {
-    let cover = MochiKit.DOM.DIV({ "class": "widgetOverlayCover" });
-    let msg = MochiKit.DOM.DIV({ "class": "widgetOverlayMessage" });
-    let o = MochiKit.DOM.DIV({}, cover, msg);
+    let cover = RapidContext.UI.DIV({ "class": "widgetOverlayCover" });
+    let msg = RapidContext.UI.DIV({ "class": "widgetOverlayMessage" });
+    let o = RapidContext.UI.DIV({}, cover, msg);
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Overlay);
     o.addClass("widgetOverlay");
     o.setAttrs(Object.assign({ loading: true, message: "Working..." }, attrs));

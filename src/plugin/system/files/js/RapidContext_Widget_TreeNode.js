@@ -53,10 +53,10 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
 RapidContext.Widget.TreeNode = function (attrs/*, ...*/) {
     let toggle = RapidContext.Widget.Icon("fa fa-fw");
     let icon = RapidContext.Widget.Icon("fa fa-fw fa-dot-circle-o");
-    let label = MochiKit.DOM.SPAN({ "class": "widgetTreeNodeText" });
+    let label = RapidContext.UI.SPAN({ "class": "widgetTreeNodeText" });
     let cls = "widgetTreeNodeLabel overflow-ellipsis text-nowrap";
-    let div = MochiKit.DOM.DIV({ "class": cls }, toggle, icon, label);
-    let o = MochiKit.DOM.DIV({}, div);
+    let div = RapidContext.UI.DIV({ "class": cls }, toggle, icon, label);
+    let o = RapidContext.UI.DIV({}, div);
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.TreeNode);
     o.classList.add("widgetTreeNode");
     let isFolder = (arguments.length > 1);
@@ -83,7 +83,7 @@ RapidContext.Widget.TreeNode.prototype._containerNode = function (create) {
     if (container.classList.contains("widgetTreeNodeContainer")) {
         return container;
     } else if (create) {
-        container = MochiKit.DOM.DIV({ "class": "widgetTreeNodeContainer widgetHidden" });
+        container = RapidContext.UI.DIV({ "class": "widgetTreeNodeContainer widgetHidden" });
         this.append(container);
         this.firstChild.childNodes[0].setAttrs({ "class": "fa fa-fw fa-plus-square-o" });
         if (!this.icon) {
