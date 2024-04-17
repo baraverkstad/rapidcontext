@@ -1,37 +1,40 @@
 @echo off
 
-::Setup default values
-set _JAVA=java.exe
-set _JAVA_OPTS=%JAVA_OPTS%
-
-::Change to application directory & locate JAR file
+::Change to application directory
 for %%x in (%0) do pushd %%~dpsx
 cd ..
-for %%x in (lib\rapidcontext-*.jar) do set _JARFILE=%%~x
 
-::Check for command-line execution
-if not "%1" == "" goto JAVA
-start javaw.exe %_JAVA_OPTS% -jar %_JARFILE%
-goto DONE
+::Set default values
+set _JAVA=java.exe
+for %%x in (lib\rapidcontext-*.jar) do set _JAR=%%~x
+set _OPTS=%JAVA_TOOL_OPTIONS%
+set _CONF=lib\logging.properties
 
-::Check for Java executable
-:JAVA
-if not exist "%JAVA_HOME%\bin\java.exe" goto OPTIONS
-set _JAVA=%JAVA_HOME%\bin\java.exe
+::Check for debug flag in options
+echo %_OPTS% | find "DDEBUG" > nul
+if errorlevel 1 goto CONFIG
+set _CONF=lib\debug.properties
 
-::Check for debug flag in Java options
-:OPTIONS
-set _JAVA_OPTS=%_JAVA_OPTS% -Dorg.mortbay.jetty.Request.maxFormContentSize=1000000
-echo %_JAVA_OPTS% | find "DDEBUG" > nul
-if errorlevel 1 goto RUNAPP
-set _JAVA_OPTS=%_JAVA_OPTS% -Djava.util.logging.config.file=lib\debug.properties
+::Set options
+:CONFIG
+set JAVA_TOOL_OPTIONS=%JAVA_TOOL_OPTIONS% -Dfile.encoding=UTF-8
+set JAVA_TOOL_OPTIONS=%JAVA_TOOL_OPTIONS% -Djava.util.logging.config.file=%_CONF%
+set JAVA_TOOL_OPTIONS=%JAVA_TOOL_OPTIONS% -Dorg.eclipse.jetty.server.Request.maxFormContentSize=1000000
+set JAVA_TOOL_OPTIONS=%JAVA_TOOL_OPTIONS% --add-opens=java.base/java.net=ALL-UNNAMED
+set JAVA_TOOL_OPTIONS=%JAVA_TOOL_OPTIONS% --add-opens=java.base/sun.net.www.protocol.https=ALL-UNNAMED
 
 ::Run application
-:RUNAPP
-"%_JAVA%" %_JAVA_OPTS% -jar %_JARFILE% %1 %2 %3 %4 %5 %6 %7 %8 %9
+if "%1" == "" (
+    start javaw.exe -jar %_JAR%
+    goto DONE
+)
+if exist "%JAVA_HOME%\bin\java.exe" set _JAVA=%JAVA_HOME%\bin\java.exe
+"%_JAVA%" %_OPTS% -jar %_JAR% %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 :DONE
+set JAVA_TOOL_OPTIONS=%_OPTS%
 set _JAVA=
-set _JAVA_OPTS=
-set _JARFILE=
+set _JAR=
+set _OPTS=
+set _CONF=
 popd

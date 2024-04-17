@@ -61,20 +61,17 @@ if [ "$LOGFILE" != "" ] ; then
     exec >>$LOGFILE 2>&1
 fi
 
-# Setup JAVA_OPTS variable
-JAVA_OPTS="$JAVA_OPTS -Dorg.mortbay.jetty.Request.maxFormContentSize=1000000"
-case "$JAVA_OPTS" in
-(*-DDEBUG*)
-    JAVA_OPTS="$JAVA_OPTS -Djava.util.logging.config.file=lib/debug.properties"
-    echo "Base Dir:  " `pwd`
-    echo "JAVA:       $JAVA"
-    echo "JAVA_OPTS:  $JAVA_OPTS"
-    echo
-    ;;
-(*)
-    JAVA_OPTS="$JAVA_OPTS -Djava.util.logging.config.file=lib/logging.properties"
-    ;;
-esac
+# Setup JAVA_TOOL_OPTIONS variable
+LOGGING="lib/logging.properties"
+if [[ "$JAVA_TOOL_OPTIONS" == *DEBUG* ]] ; then
+    LOGGING="lib/debug.properties"
+fi
+JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -Dfile.encoding=UTF-8"
+JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -Djava.util.logging.config.file=$LOGGING"
+JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -Dorg.eclipse.jetty.server.Request.maxFormContentSize=1000000"
+JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS --add-opens=java.base/java.net=ALL-UNNAMED"
+JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS --add-opens=java.base/sun.net.www.protocol.https=ALL-UNNAMED"
+export JAVA_TOOL_OPTIONS
 
 # Launch application
-exec "$JAVA" $JAVA_OPTS -jar lib/rapidcontext-*.jar "$@"
+exec "$JAVA" -jar lib/rapidcontext-*.jar "$@"
