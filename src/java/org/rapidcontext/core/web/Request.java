@@ -836,8 +836,9 @@ public class Request implements HttpUtil {
         Cookie cookie = new Cookie(SESSION_COOKIE, Objects.toString(sessionId, "deleted"));
         cookie.setPath(StringUtils.prependIfMissing(path, "/"));
         cookie.setSecure(request.isSecure());
-        // FIXME: Add when Jetty is updated: cookie.setHttpOnly(true);
-        cookie.setMaxAge((sessionId == null) ? 0 : (int) Session.MAX_AGE_MILLIS / 1000);
+        cookie.setMaxAge((sessionId == null) ? 0 : (int) (Session.MAX_AGE_MILLIS / 1000L));
+        cookie.setHttpOnly(true);
+        cookie.setVersion(1);
         response.addCookie(cookie);
     }
 
