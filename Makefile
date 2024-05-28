@@ -5,6 +5,11 @@ TAG     := $(or $(VERSION),'latest')
 ARCH    := 'linux/amd64,linux/arm64'
 MAKE    := $(MAKE) --no-print-directory
 
+define FOREACH
+    for DIR in src/plugin/*/; do \
+        $(MAKE) -C $$DIR -f ../Makefile.plugin VERSION=$(VER) $(1); \
+    done
+endef
 
 all:
 	@echo '🌈 Makefile commands'
@@ -27,14 +32,7 @@ clean:
 		tmp/ rapidcontext-*.zip
 	find . -name .DS_Store -delete
 	find doc/java -mindepth 1 -not -name "topics.json" -delete
-	@$(MAKE) -C src/plugin/system clean
-	@$(MAKE) -C src/plugin/local clean
-	@$(MAKE) -C src/plugin/cmdline clean
-	@$(MAKE) -C src/plugin/http clean
-	@$(MAKE) -C src/plugin/jdbc clean
-	@$(MAKE) -C src/plugin/legacy clean
-	@$(MAKE) -C src/plugin/settings clean
-	@$(MAKE) -C src/plugin/test clean
+	$(call FOREACH,clean)
 
 
 # Setup development environment
@@ -77,14 +75,7 @@ build-plugins:
 		--platform=browser --target=chrome69,firefox65,safari11 \
 		--outfile=src/plugin/system/files/js/rapidcontext.min.js \
 		src/plugin/system/files/js/rapidcontext/index.mjs
-	@$(MAKE) -C src/plugin/system VERSION=$(VER)
-	@$(MAKE) -C src/plugin/local VERSION=$(VER)
-	@$(MAKE) -C src/plugin/cmdline VERSION=$(VER)
-	@$(MAKE) -C src/plugin/http VERSION=$(VER)
-	@$(MAKE) -C src/plugin/jdbc VERSION=$(VER)
-	@$(MAKE) -C src/plugin/legacy VERSION=$(VER)
-	@$(MAKE) -C src/plugin/settings VERSION=$(VER)
-	@$(MAKE) -C src/plugin/test VERSION=$(VER)
+	$(call FOREACH,all)
 	@echo
 	cp src/plugin/*/*.plugin plugin/
 	for FILE in plugin/*.plugin ; do mv $$FILE $${FILE%-$(VER).plugin}.zip ; done
