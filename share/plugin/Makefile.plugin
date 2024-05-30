@@ -8,7 +8,7 @@
 
 CONFIG    := $(firstword $(wildcard plugin.* plugin/*))
 DATE      := $(or $(DATE),$(shell date '+%F'))
-BUILD     := $(or $(file <.build),0)
+BUILD     := $(or $(shell cat .build),0)
 ID        := $(lastword $(shell grep -rE "^id\s[:=]" $(CONFIG)))
 ifneq (,$(VERSION))
 VER       := $(VERSION)
@@ -69,4 +69,4 @@ ifneq (,$(wildcard platform.*))
 endif
 	cd tmp/ && zip -rq9 ../$(ID)-$(VER).plugin .
 	rm -rf tmp/
-	@echo $$(($(BUILD)+1)) >.build
+	@echo $$(($(BUILD)+1)) > .build
