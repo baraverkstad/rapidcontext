@@ -273,8 +273,14 @@ input[type="checkbox"] {
 input[type="radio"] {
     border-radius: 50%;
 }
-input[type="checkbox"]:checked,
-input[type="radio"]:checked {
+input[type="checkbox"]:disabled,
+input[type="checkbox"].disabled,
+input[type="radio"]:disabled,
+input[type="radio"].disabled {
+    background-color: #ccc;
+}
+input[type="checkbox"]:checked:not(:disabled):not(.disabled),
+input[type="radio"]:checked:not(:disabled):not(.disabled) {
     background-color: var(--info-600);
     border-color: var(--info-600);
 }
