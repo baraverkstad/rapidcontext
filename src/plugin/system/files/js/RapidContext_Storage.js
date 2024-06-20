@@ -70,6 +70,7 @@
     function read(pathOrObj) {
         var url = storageUrl(pathOrObj);
         url += url.endsWith("/") ? "index.json" : ".json";
+        url += "?_=" + (+new Date() % 100000);
         return RapidContext.App.loadJSON(url, null, null);
     }
 
