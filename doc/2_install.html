@@ -122,17 +122,18 @@ multi-architecture and supports both <code>linux/amd64</code> and
 shows the image tags available. Note that <code>latest</code> references
 the current development version. </p>
 
-<p>An alternative way to run RapidContext in Docker is to build your
+<p>The recommended way to run RapidContext in Docker is to build your
 own image. This can either be built from scratch, or reuse the default
 image to install additional software, etc:</p>
 
 <div class="box blue">
   <i class="box-icon fa fa-fw fa-code"></i>
   <pre class="box-content code">
-FROM ghcr.io/baraverkstad/rapidcontext
+FROM ghcr.io/baraverkstad/rapidcontext:v...
 
-<span class="comment"># Install extras</span>
-RUN apk add --no-cache ...
+<span class="comment"># Update packages & install extras</span>
+RUN apk --no-cache upgrade && \
+    apk --no-cache add ...
 
 <span class="comment"># Diagnostics</span>
 HEALTHCHECK --timeout=5s CMD \
@@ -140,9 +141,9 @@ HEALTHCHECK --timeout=5s CMD \
   </pre>
 </div>
 
-<p>Either way, the RapidContext
+<p>The RapidContext
 <a href="https://github.com/baraverkstad/rapidcontext/blob/main/share/docker/Dockerfile">Dockerfile</a>
-is a good reference for how to build an image.</p>
+can serve as a good reference for building an image from scratch.</p>
 
 
 <h2 id="installation">2.3 Server Installation</h2>

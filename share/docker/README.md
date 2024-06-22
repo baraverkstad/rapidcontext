@@ -18,3 +18,5 @@ credentials:
 
     Login:     admin
     Password:  <blank>
+
+Please refer to the full documentation for details and other alternatives.
