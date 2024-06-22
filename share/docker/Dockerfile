@@ -1,7 +1,8 @@
 FROM alpine:3.20
 ARG VERSION
 ADD rapidcontext-${VERSION}.zip /opt/
-RUN apk add --no-cache openjdk21-jre && \
+RUN apk --no-cache upgrade && \
+    apk --no-cache add openjdk21-jre && \
     mkdir -p /opt/local/plugin && \
     cd /opt && \
     unzip rapidcontext-${VERSION}.zip && \
