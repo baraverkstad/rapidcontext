@@ -131,8 +131,8 @@ image to install additional software, etc:</p>
   <pre class="box-content code">
 FROM ghcr.io/baraverkstad/rapidcontext:v...
 
-<span class="comment"># Update packages & install extras</span>
-RUN apk --no-cache upgrade && \
+<span class="comment"># Update packages &amp; install extras</span>
+RUN apk --no-cache upgrade &amp;&amp; \
     apk --no-cache add ...
 
 <span class="comment"># Diagnostics</span>
