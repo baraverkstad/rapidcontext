@@ -53,7 +53,13 @@ RapidContext.Widget.TextArea = function (attrs/*, ...*/) {
     }
     var text = (attrs && attrs.value) || "";
     text += Array.from(arguments).slice(1).map(scrape).join("");
-    var o = RapidContext.UI.TEXTAREA({ value: text });
+    var o = RapidContext.UI.TEXTAREA({
+        autocapitalize: "off",
+        autocomplete: "off",
+        autocorrect: "off",
+        spellcheck: "off",
+        value: text,
+    });
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.TextArea);
     o.addClass("widgetTextArea");
     o.setAttrs(Object.assign({}, attrs, { value: text }));
