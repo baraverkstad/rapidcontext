@@ -66,7 +66,8 @@ RapidContext.Widget.Dialog = function (attrs/*, ... */) {
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Dialog);
     o.classList.add("widgetDialog");
     o._setHidden(true);
-    o.setAttrs(Object.assign({ modal: false, system: false, center: true }, attrs));
+    let def = { modal: false, system: false, center: true, resizeable: true, closeable: true };
+    o.setAttrs(Object.assign(def, attrs));
     o.addAll(Array.from(arguments).slice(1));
     o.on("click", "[data-dialog]", o._handleClick);
     o.on("mousedown", "[data-dialog]", o._handleMouseDown);
@@ -371,3 +372,15 @@ RapidContext.Widget.Dialog.prototype.resetScroll = function () {
     }
     Array.from(this.querySelectorAll("*")).forEach(scrollReset);
 };
+
+// Add global keydown handler
+window.addEventListener("DOMContentLoaded", () => {
+    document.body.addEventListener("keydown", (evt) => {
+        if (evt.key == "Escape") {
+            let isVisible = (el) => el.offsetHeight > 0;
+            let dlgs = Array.from(document.body.querySelectorAll(".widgetDialog")).filter(isVisible);
+            let last = dlgs[dlgs.length - 1];
+            last && last.closeable && last.hide();
+        }
+    });
+});
