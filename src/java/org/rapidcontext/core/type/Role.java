@@ -25,6 +25,7 @@ import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.core.storage.Storage;
+import org.rapidcontext.util.RegexUtil;
 
 /**
  * A user access role. Each role contains an access rule list for
@@ -265,8 +266,7 @@ public class Role extends StorableObject {
     public boolean hasAccess(String path, String permission) {
         LOG.fine(this + ": " + permission + " permission check for " + path);
         for (Object o : dict.getArray(KEY_ACCESS)) {
-            Dict dict = (Dict) o;
-            if (matchPath(dict, path)) {
+            if (o instanceof Dict dict && matchPath(dict, path)) {
                 String perms = dict.get(ACCESS_PERMISSION, String.class, "").trim();
                 @SuppressWarnings("unchecked")
                 HashSet<String> set = dict.get(PREFIX_COMPUTED + ACCESS_PERMISSION, HashSet.class);
@@ -309,18 +309,9 @@ public class Role extends StorableObject {
         String regex = dict.get(ACCESS_REGEX, String.class);
         Pattern m = dict.get(PREFIX_COMPUTED + ACCESS_REGEX, Pattern.class);
         if (m == null && glob != null) {
-            glob = glob.replace("\\", "\\\\").replace(".", "\\.");
-            glob = glob.replace("+", "\\+").replace("|", "\\|");
-            glob = glob.replace("^", "\\^").replace("$", "\\$");
-            glob = glob.replace("(", "\\(").replace(")", "\\)");
-            glob = glob.replace("[", "\\[").replace("]", "\\]");
-            glob = glob.replace("{", "\\{").replace("}", "\\}");
-            glob = glob.replace("**", ".+");
-            glob = glob.replace("*", "[^/]*");
-            glob = glob.replace(".+", ".*");
-            glob = glob.replace("?", ".");
+            glob = StringUtils.removeStart(glob, "/");
             try {
-                m = Pattern.compile("^" + glob + "$", Pattern.CASE_INSENSITIVE);
+                m = Pattern.compile("^" + RegexUtil.fromGlob(glob) + "$", Pattern.CASE_INSENSITIVE);
             } catch (Exception e) {
                 LOG.log(Level.WARNING, "invalid pattern in role " + id(), e);
                 m = Pattern.compile("^invalid-glob-pattern$");
@@ -338,6 +329,6 @@ public class Role extends StorableObject {
             }
             dict.set(PREFIX_COMPUTED + ACCESS_REGEX, m);
         }
-        return (m != null) ? m.matcher(path).matches() : false;
+        return m != null && m.matcher(path).matches();
     }
 }
