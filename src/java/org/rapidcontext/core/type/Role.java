@@ -202,6 +202,72 @@ public class Role extends StorableObject {
     }
 
     /**
+     * Initializes this role after loading it from a storage.
+     */
+    @Override
+    protected void init() {
+        for (Object o : dict.getArray(KEY_ACCESS)) {
+            if (o instanceof Dict dict) {
+                dict.set(PREFIX_COMPUTED + ACCESS_REGEX, initPathRegex(dict));
+                dict.set(PREFIX_COMPUTED + ACCESS_PERMISSION, initPermissions(dict));
+            }
+        }
+    }
+
+    /**
+     * Initializes the access dictionary storage path pattern.
+     *
+     * @param dict           the access dictionary
+     *
+     * @return the storage path pattern regex
+     */
+    protected Pattern initPathRegex(Dict dict) {
+        Pattern m = Pattern.compile("^invalid-pattern$");
+        if (dict.get(ACCESS_PATH) instanceof String glob) {
+            glob = StringUtils.removeStart(glob, "/");
+            try {
+                m = Pattern.compile("^" + RegexUtil.fromGlob(glob) + "$", Pattern.CASE_INSENSITIVE);
+            } catch (Exception e) {
+                LOG.log(Level.WARNING, "invalid pattern in role " + id(), e);
+            }
+        } else if (dict.get(ACCESS_REGEX) instanceof String regex) {
+            regex = StringUtils.removeStart(regex, "^");
+            regex = StringUtils.removeStart(regex, "/");
+            regex = StringUtils.removeEnd(regex, "$");
+            try {
+                m = Pattern.compile("^" + regex + "$", Pattern.CASE_INSENSITIVE);
+            } catch (Exception e) {
+                LOG.log(Level.WARNING, "invalid pattern in role " + id(), e);
+            }
+        }
+        return m;
+    }
+
+    /**
+     * Initialize the access dictionary permissions set.
+     *
+     * @param dict           the access dictionary
+     *
+     * @return the permissions set
+     */
+    protected HashSet<String> initPermissions(Dict dict) {
+        HashSet<String> set = new HashSet<>(4);
+        String perms = dict.get(ACCESS_PERMISSION, String.class, "");
+        for (String s : perms.trim().split("[,;\\s]+")) {
+            if (s.isEmpty() || s.equalsIgnoreCase(PERM_NONE)) {
+                set.clear();
+                break;
+            } else if (s.equalsIgnoreCase(PERM_READ)) {
+                set.add(PERM_INTERNAL);
+                set.add(PERM_READ);
+            } else {
+                set.add(s.toLowerCase());
+            }
+        }
+        return set;
+    }
+
+    /**
      * Returns the role name.
      *
      * @return the role name.
@@ -267,29 +333,10 @@ public class Role extends StorableObject {
         LOG.fine(this + ": " + permission + " permission check for " + path);
         for (Object o : dict.getArray(KEY_ACCESS)) {
             if (o instanceof Dict dict && matchPath(dict, path)) {
-                String perms = dict.get(ACCESS_PERMISSION, String.class, "").trim();
-                @SuppressWarnings("unchecked")
-                HashSet<String> set = dict.get(PREFIX_COMPUTED + ACCESS_PERMISSION, HashSet.class);
-                if (set == null) {
-                    String[] list = perms.split("[,;\\s]+");
-                    set = new HashSet<>(list.length + 1);
-                    for (String s : list) {
-                        if (s.isEmpty() || s.equalsIgnoreCase(PERM_READ)) {
-                            set.add(PERM_INTERNAL);
-                            set.add(PERM_READ);
-                        } else {
-                            set.add(s.toLowerCase());
-                        }
-                    }
-                    dict.set(PREFIX_COMPUTED + ACCESS_PERMISSION, set);
-                }
-                if (set.contains(PERM_NONE)) {
-                    return false;
-                } else if (set.contains(PERM_ALL)) {
-                    return true;
-                } else if (set.contains(permission)) {
-                    return true;
-                }
+                return (
+                    dict.get(PREFIX_COMPUTED + ACCESS_PERMISSION) instanceof HashSet<?> set &&
+                    (set.contains(PERM_ALL) || set.contains(permission))
+                );
             }
         }
         return false;
@@ -305,30 +352,7 @@ public class Role extends StorableObject {
      *         false otherwise
      */
     private boolean matchPath(Dict dict, String path) {
-        String glob = dict.get(ACCESS_PATH, String.class);
-        String regex = dict.get(ACCESS_REGEX, String.class);
         Pattern m = dict.get(PREFIX_COMPUTED + ACCESS_REGEX, Pattern.class);
-        if (m == null && glob != null) {
-            glob = StringUtils.removeStart(glob, "/");
-            try {
-                m = Pattern.compile("^" + RegexUtil.fromGlob(glob) + "$", Pattern.CASE_INSENSITIVE);
-            } catch (Exception e) {
-                LOG.log(Level.WARNING, "invalid pattern in role " + id(), e);
-                m = Pattern.compile("^invalid-glob-pattern$");
-            }
-            dict.set(PREFIX_COMPUTED + ACCESS_REGEX, m);
-        } else if (m == null && regex != null) {
-            regex = StringUtils.removeStart(regex, "^");
-            regex = StringUtils.removeStart(regex, "/");
-            regex = StringUtils.removeEnd(regex, "$");
-            try {
-                m = Pattern.compile("^" + regex + "$", Pattern.CASE_INSENSITIVE);
-            } catch (Exception e) {
-                LOG.log(Level.WARNING, "invalid pattern in role " + id(), e);
-                m = Pattern.compile("^invalid-regex-pattern$");
-            }
-            dict.set(PREFIX_COMPUTED + ACCESS_REGEX, m);
-        }
-        return m != null && m.matcher(path).matches();
+        return m.matcher(path).matches();
     }
 }
