@@ -625,7 +625,7 @@ public class CallContext {
         if (deprecated != null) {
             LOG.warning("deprecated: " + proc + " called; " + deprecated);
         }
-        stack.push(proc, bindings);
+        stack.push(proc);
         try {
             return getInterceptor().call(this, proc, bindings);
         } finally {

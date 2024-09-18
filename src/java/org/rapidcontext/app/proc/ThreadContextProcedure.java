@@ -137,12 +137,7 @@ public class ThreadContextProcedure extends Procedure {
         res.set("error", cx.getAttribute(CallContext.ATTRIBUTE_ERROR));
         StringBuilder log = (StringBuilder) cx.getAttribute(CallContext.ATTRIBUTE_LOG_BUFFER);
         res.set("log", (log == null) ? "" : log.toString());
-        Procedure[] procs = cx.getCallStack().toArray();
-        Array list = new Array(procs.length);
-        for (Procedure p : procs) {
-            list.add(p.id());
-        }
-        res.set("stack", list);
+        res.set("stack", Array.from(cx.getCallStack().toStackTrace(20)));
         return res;
     }
 }

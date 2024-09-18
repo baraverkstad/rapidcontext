@@ -55,7 +55,7 @@ public class DefaultInterceptor extends Interceptor {
             return;
         }
         Bindings bindings = proc.getBindings();
-        cx.getCallStack().push(proc, bindings);
+        cx.getCallStack().push(proc);
         try {
             for (String name : bindings.getNames()) {
                 if (bindings.getType(name) == Bindings.CONNECTION) {

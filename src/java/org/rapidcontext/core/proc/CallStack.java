@@ -15,7 +15,9 @@
 package org.rapidcontext.core.proc;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.type.Procedure;
 
 /**
@@ -80,7 +82,10 @@ public class CallStack {
      *
      * @return the bottom procedure in the stack, or
      *         null if the stack is empty
+     *
+     * @deprecated Use {@link #top(int)} with stack height instead.
      */
+    @Deprecated(forRemoval=true)
     public Procedure bottom() {
         return stack.isEmpty() ? null : stack.get(0);
     }
@@ -91,19 +96,54 @@ public class CallStack {
      *
      * @return the top procedure in the stack, or
      *         null if the stack is empty
+     *
+     * @deprecated Use {@link #top(int)} instead.
      */
+    @Deprecated(forRemoval=true)
     public Procedure top() {
         return stack.isEmpty() ? null : stack.get(stack.size() - 1);
+    }
+
+    /**
+     * Returns the most recent caller from the stack.
+     *
+     * @param offset         the offset from the top (0 for top)
+     *
+     * @return the top caller in the stack, or
+     *         null if the stack is empty
+     */
+    public Path top(int offset) {
+        int idx = stack.size() - 1 - offset;
+        return (0 <= idx && idx < stack.size()) ? stack.get(idx).path() : null;
     }
 
     /**
      * Returns all procedures on the stack in an array.
      *
      * @return an array with all the procedures on the stack
+     *
+     * @deprecated Use {@link #toStackTrace(int)} instead.
      */
+    @Deprecated(forRemoval=true)
     public Procedure[] toArray() {
-        Procedure[] res = new Procedure[stack.size()];
-        stack.toArray(res);
+        return stack.toArray(size -> new Procedure[size]);
+    }
+
+    /**
+     * Returns a printable stack trace for debugging purposes.
+     *
+     * @return an array with all the procedures on the stack
+     */
+    public List<String> toStackTrace(int length) {
+        ArrayList<String> res = new ArrayList<>(length + 1);
+        int size = stack.size();
+        int start = Math.max(0, size - length);
+        for (int i = size - 1; i >= start; i--) {
+            res.add(stack.get(i).id());
+        }
+        if (size > length) {
+            res.add("...");
+        }
         return res;
     }
 
@@ -111,9 +151,8 @@ public class CallStack {
      * Adds a new last entry to the call stack.
      *
      * @param proc           the procedure being called
-     * @param bindings       the bindings used
      */
-    void push(Procedure proc, Bindings bindings) {
+    void push(Procedure proc) {
         stack.add(proc);
     }
 
