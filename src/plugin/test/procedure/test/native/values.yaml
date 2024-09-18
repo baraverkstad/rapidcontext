@@ -1,0 +1,8 @@
+id: test/native/values
+type: procedure
+className: org.rapidcontext.app.plugin.test.NativeValuesProcedure
+description: Returns a set of native Java values to check serialization.
+binding:
+  - name: input
+    type: argument
+    description: An input value to check.
