@@ -1,13 +1,18 @@
+import { object } from 'rapidcontext/data';
 import { hasValue } from 'rapidcontext/fn';
+import { create } from 'rapidcontext/ui';
 import { escape, template } from './util.mjs';
 
+function uid(prefix) {
+    let num = Math.round(Math.random() * 0xffffffff);
+    return `${prefix}-${num.toString(16).padStart(8, '0')}`;
+}
 
 class Template {
-    static create(attrs, ...children) {
+    static build(attrs, ...children) {
         let o = document.createElement('template');
         RapidContext.Widget._widgetMixin(o, Template);
-        let uid = Math.round(Math.random() * 0xffffff).toString(16).padStart(4, '0');
-        o.setAttrs({ 'data-tpl': `tpl-${uid}` });
+        o.setAttrs({ 'data-tpl': uid('tpl') });
         o.addAll(children);
         return o;
     }
@@ -48,8 +53,8 @@ class Template {
 
 
 class IdLink {
-    static create(attrs, ...children) {
-        let o = RapidContext.UI.create(IdLink.UI.trim());
+    static build(attrs, ...children) {
+        let o = create(IdLink.UI.trim());
         RapidContext.Widget._widgetMixin(o, IdLink);
         o.setAttrs({ url: 'rapidcontext/storage/{{type}}/{{value}}', ...attrs });
         o.addAll(children);
@@ -91,8 +96,8 @@ IdLink.UI = `
 
 
 class Toggle {
-    static create(attrs, ...children) {
-        let o = RapidContext.UI.create(Toggle.UI.trim());
+    static build(attrs, ...children) {
+        let o = create(Toggle.UI.trim());
         RapidContext.Widget._widgetMixin(o, Toggle);
         o.classList.add('toggle');
         o.setAttrs(attrs);
@@ -121,8 +126,8 @@ Toggle.UI = `
 
 
 class SearchForm {
-    static create(attrs, ...children) {
-        let o = RapidContext.UI.create(SearchForm.UI.trim());
+    static build(attrs, ...children) {
+        let o = create(SearchForm.UI.trim());
         RapidContext.Widget._widgetMixin(o, SearchForm);
         o.setAttrs({ loading: false, ...attrs });
         o.addAll(children);
@@ -156,6 +161,18 @@ class SearchForm {
         this.search.placeholder = val;
     }
 
+    set datalist(items) {
+        let list = create('datalist', { id: uid('list') });
+        items = Array.isArray(items) ? object(items, items) : items;
+        for (let k in items) {
+            let v = items[k];
+            let attrs = (k == v) ? { value: k } : { value: k, label: v };
+            list.append(create('option', attrs));
+        }
+        this.search.insertAdjacentElement('afterend', list);
+        this.search.setAttrs({ list: list.id });
+    }
+
     info(count, total, type) {
         let html = `Showing ${count} <span class="unimportant">(of ${total})</span> ${type}`;
         this.querySelector('div > div').innerHTML = html;
@@ -175,8 +192,8 @@ SearchForm.UI = `
 
 
 class DetailsForm {
-    static create(attrs, ...children) {
-        let o = RapidContext.UI.create(DetailsForm.UI.trim());
+    static build(attrs, ...children) {
+        let o = create(DetailsForm.UI.trim());
         RapidContext.Widget._widgetMixin(o, DetailsForm);
         o.setAttrs({ hidden: true, ...attrs });
         o.addAll(children);
@@ -194,8 +211,8 @@ DetailsForm.UI = `
 `;
 
 
-RapidContext.Widget.Classes['settings:template'] = Template.create;
-RapidContext.Widget.Classes['settings:id-link'] = IdLink.create;
-RapidContext.Widget.Classes['settings:toggle'] = Toggle.create;
-RapidContext.Widget.Classes['settings:search-form'] = SearchForm.create;
-RapidContext.Widget.Classes['settings:details-form'] = DetailsForm.create;
+RapidContext.Widget.Classes['settings:template'] = Template.build;
+RapidContext.Widget.Classes['settings:id-link'] = IdLink.build;
+RapidContext.Widget.Classes['settings:toggle'] = Toggle.build;
+RapidContext.Widget.Classes['settings:search-form'] = SearchForm.build;
+RapidContext.Widget.Classes['settings:details-form'] = DetailsForm.build;

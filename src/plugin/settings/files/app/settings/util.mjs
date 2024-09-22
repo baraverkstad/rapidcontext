@@ -10,7 +10,11 @@ export function str(val) {
 
 export function text(val) {
     let lines = str(val).split(/\n\n+/g);
-    return lines.map((s) => s.replace(/\s+/g, ' ')).join('\n\n');
+    if (lines.length > 1) {
+        return lines.map((s) => s.replace(/\s+/g, ' ')).join('\n\n');
+    } else {
+        return lines[0];
+    }
 }
 
 export function escape(val) {

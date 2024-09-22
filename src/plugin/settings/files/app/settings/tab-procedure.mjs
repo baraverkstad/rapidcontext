@@ -1,6 +1,6 @@
 import { isObject } from 'rapidcontext/fn';
 import { object, clone } from 'rapidcontext/data';
-import { create } from 'rapidcontext/ui';
+import { create, msg } from 'rapidcontext/ui';
 import { typeIds, typePath, objectProps, renderProp, approxSize, approxDuration } from './util.mjs';
 
 const placeholders = {
@@ -147,33 +147,45 @@ function callArgSave(ui) {
 }
 
 async function call(ui) {
-    ui.procCall.disable();
-    try {
-        let id = active.id;
+    function toParam(el) {
+        let type = el.dataset.type || 'string';
+        let value = el.dataset.value || el.value;
+        defaults[el.dataset.binding] = { type, value };
+        return [el.name, (type === 'json') ? value : RapidContext.Encode.toJSON(value)];
+    }
+    function callProc(id) {
         let inputs = Array.from(ui.procDetails.elements).filter((el) => el.name);
-        let toParam = (el) => {
-            let type = el.dataset.type || 'string';
-            let value = el.dataset.value || el.value;
-            defaults[el.dataset.binding] = { type, value };
-            return [el.name, (type === 'json') ? value : RapidContext.Encode.toJSON(value)];
-        };
         let params = object(inputs.map(toParam));
         let opts = { method: 'POST', timeout: 60000, responseType: 'text' };
-        let xhr = await RapidContext.App.loadXHR(`rapidcontext/procedure/${id}`, params, opts);
+        return RapidContext.App.loadXHR(`rapidcontext/procedure/${id}`, params, opts);
+    }
+    try {
+        let id = active.id;
+        ui.procResultForm.reset();
+        ui.procResultForm.update({ id });
+        ui.procResultLoading.show();
+        ui.procResultTree.removeAll();
+        ui.procResultTable.removeAll();
+        ui.procResultDialog.show();
+        let promise = callProc(active.id);
+        ui.procResultDialog.on('hide', () => promise.cancel());
+        let xhr = await promise;
         let text = xhr.response;
         let json = JSON.parse(xhr.response);
         let size = approxSize(+xhr.getResponseHeader('Content-Length'));
         let duration = approxDuration(json.execTime);
-        ui.procResultForm.reset();
-        ui.procResultForm.update({ id, size, duration, text });
-        ui.procResultTree.removeAll();
-        renderDataTree(ui.procResultTree, json.data);
-        renderDataTable(ui.procResultTable, json.data);
-        ui.procResultDialog.show();
+        ui.procResultForm.update({ size, duration, text });
+        if (json.error) {
+            ui.procResultForm.update({ format: 'raw' });
+        } else {
+            renderDataTree(ui.procResultTree, json.data);
+            renderDataTable(ui.procResultTable, json.data);
+        }
     } catch (e) {
-        RapidContext.UI.showError(e);
+        ui.procResultForm.update({ format: 'raw', text: String(e) });
     }
-    ui.procCall.enable();
+    ui.procResultDialog.off('hide');
+    ui.procResultLoading.hide();
 }
 
 async function edit(ui, data) {
@@ -345,7 +357,7 @@ async function save(ui, evt) {
 
 async function remove(ui) {
     try {
-        await RapidContext.UI.Msg.warning.remove('procedure', active.id);
+        await msg.warning.remove('procedure', active.id);
         let path = RapidContext.Storage.path(active);
         await RapidContext.App.callProc('system/storage/delete', [path]);
         await refresh(ui);

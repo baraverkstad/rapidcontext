@@ -19,7 +19,7 @@
         <i class="fa fa-3x fa-users" />
         <h3>Users</h3>
       </div>
-      <div class="disabled" data-view="storagePane">
+      <div class="disabled hidden" data-view="storagePane">
         <i class="fa fa-3x fa-sitemap" />
         <h3>Storage</h3>
       </div>
@@ -245,29 +245,32 @@
             </div>
           </Form>
         </Dialog>
-        <Dialog id="procResultDialog" title="Call Result" modal="true" w="75%" h="75%">
+        <Dialog id="procResultDialog" title="Procedure Call" modal="true" w="75%" h="75%">
           <Form id="procResultForm" class="flex-col w-100 h-100">
             <table class="properties-table mb-2">
               <tbody>
                 <tr>
-                  <th>Procedure Call:</th>
+                  <th>Procedure:</th>
                   <td>
-                    <b><Field name="id" /></b> &#8226;
-                    <Field name="size" /> &#8226;
-                    <Field name="duration" /> (on server)
+                    <span class="properties-list">
+                      <Field name="id" class="font-bold" />
+                      <Field name="size" />
+                      <Field name="duration" format="{} (server-side)" />
+                    </span>
+                    <Icon id="procResultLoading" ref="LOADING" />
                   </td>
                 </tr>
                 <tr>
-                  <th><label>Display Format:</label></th>
+                  <th><label>Format:</label></th>
                   <td>
                     <label class="select-none">
-                      <input type="radio" name="format" value="tree" checked="checked" /> Data Tree
+                      <input type="radio" name="format" value="tree" checked="checked" /> Tree
                     </label>
                     <label class="select-none ml-2">
-                      <input type="radio" name="format" value="table" /> Data Table
+                      <input type="radio" name="format" value="table" /> Table
                     </label>
                     <label class="select-none ml-2">
-                      <input type="radio" name="format" value="raw" /> Raw Response
+                      <input type="radio" name="format" value="raw" /> Raw JSON
                     </label>
                   </td>
                 </tr>

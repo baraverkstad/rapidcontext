@@ -1,7 +1,8 @@
+import { object } from 'rapidcontext/data';
 import { objectProps, renderProp } from './util.mjs';
 
 let users = [];
-let roles = [];
+let roles = {};
 
 export default async function init(ui) {
     ui.userPane.once('enter', () => refresh(ui));
@@ -13,8 +14,11 @@ export default async function init(ui) {
     ui.userEdit.on('click', () => edit(ui, false));
     ui.userForm.on('submit', (evt) => save(ui, evt));
     try {
-        roles = await RapidContext.App.callProc('system/storage/read', ['/role/']);
-        ui.userEditRoleTpl.render(roles.filter((r) => !r.auto));
+        let data = await RapidContext.App.callProc('system/storage/read', ['/role/']);
+        let list = data.filter((r) => !r.auto);
+        ui.userEditRoleTpl.render(list);
+        ui.userSearch.datalist = list.map((r) => r.name);
+        roles = object('id', data);
     } catch (e) {
         RapidContext.UI.showError(e);
     }
@@ -26,7 +30,7 @@ async function refresh(ui) {
         users = await RapidContext.App.callProc('system/user/list', []);
         users.forEach((u) => {
             u.admin = u.role.includes('admin');
-            u.roleCount = u.role.length;
+            u.roleCount = u.role.filter((id) => roles[id]).length;
         });
         search(ui);
     } catch (e) {
@@ -38,7 +42,8 @@ async function refresh(ui) {
 function search(ui) {
     let q = ui.userSearch.query.toLowerCase().trim();
     let data = users.filter((o) => {
-        let s = `${o.id}#${o.name}#${o.email}#${o.description}`;
+        let names = o.role.map((id) => roles[id]?.name).filter(Boolean);
+        let s = `${o.id}#${o.name}#${o.email}#${o.description}#${names.join('#')}`;
         return s.toLowerCase().includes(q);
     });
     ui.userSearch.info(data.length, users.length, 'users');
@@ -56,7 +61,7 @@ function show(ui) {
         ui.userEnabled.className = data.enabled ? 'fa fa-check-square' : 'fa fa-square-o';
         ui.userEnabledText.innerText = data.enabled ? 'Yes' : 'No';
         ui.userRoleTpl.clear();
-        ui.userRoleTpl.render(roles.filter((r) => data.role.includes(r.id)));
+        ui.userRoleTpl.render(Object.values(roles).filter((r) => data.role.includes(r.id)));
         ui.userDetails.show();
     } else {
         ui.userDetails.hide();

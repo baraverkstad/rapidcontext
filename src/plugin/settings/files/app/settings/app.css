@@ -82,6 +82,28 @@
 }
 
 /**
+ * Properties list
+ */
+.settings-app ul.properties-list {
+    display: block;
+    margin: 0;
+    padding: 0;
+}
+.settings-app .properties-list > * {
+    display: inline-block;
+    margin: 0 0.25em 0 0;
+    padding: 0;
+}
+.settings-app .properties-list > *:empty {
+    display: none;
+}
+.settings-app .properties-list > * + *::before {
+    content: '\2022';
+    margin-right: 0.25em;
+    color: #0008;
+}
+
+/**
  * Responsive container
  */
 .settings-app .container-responsive {
