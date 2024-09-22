@@ -12,13 +12,13 @@
     "jquery": "3.7.1"
   },
   "devDependencies": {
-    "esbuild": "^0.21.4",
-    "eslint": "^9.3.0",
-    "eslint-plugin-html": "^8.0.0",
-    "highlight.js": "^11.8.0",
-    "html-validate": "^8.0.5",
-    "jsdoc": "^4.0.2",
-    "stylelint": "^16.2.1",
-    "stylelint-config-standard": "^36.0.0"
+    "esbuild": "^0.24.0",
+    "eslint": "^9.11.0",
+    "eslint-plugin-html": "^8.1.2",
+    "highlight.js": "^11.10.0",
+    "html-validate": "^8.23.0",
+    "jsdoc": "^4.0.3",
+    "stylelint": "^16.9.0",
+    "stylelint-config-standard": "^36.0.1"
   }
 }
