@@ -229,8 +229,8 @@ public class HttpRequestProcedure extends HttpProcedure {
             } else {
                 return new URI(str).toURL();
             }
-        } catch (MalformedURLException | URISyntaxException e) {
-            throw new ProcedureException("invalid URL: " + str);
+        } catch (MalformedURLException | URISyntaxException | IllegalArgumentException e) {
+            throw new ProcedureException("invalid URL; " + e.getMessage() + ": "+ str);
         }
     }
 
