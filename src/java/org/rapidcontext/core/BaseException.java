@@ -12,35 +12,33 @@
  * See the RapidContext LICENSE for more details.
  */
 
-package org.rapidcontext.core.js;
-
-import org.rapidcontext.core.BaseException;
+package org.rapidcontext.core;
 
 /**
- * A JavaScript processing exception. This class encapsulates all
- * JavaScript errors.
+ * An abstract base exception. This class exists to make it easy to
+ * catch any checked exception thrown from the core library layer.
  *
  * @author   Per Cederberg
  * @version  1.0
  */
-public class JsException extends BaseException {
+public abstract class BaseException extends Exception {
 
     /**
-     * Creates a new JavaScript processing exception.
+     * Creates a new base exception.
      *
      * @param message        the detailed error message
      */
-    public JsException(String message) {
+    public BaseException(String message) {
         super(message);
     }
 
     /**
-     * Creates a new JavaScript processing exception.
+     * Creates a new base exception.
      *
      * @param message        the detailed error message
      * @param e              the base exception
      */
-    public JsException(String message, Throwable e) {
+    public BaseException(String message, Throwable e) {
         super(message, e);
     }
 }

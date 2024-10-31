@@ -14,13 +14,15 @@
 
 package org.rapidcontext.core.storage;
 
+import org.rapidcontext.core.BaseException;
+
 /**
  * A storage exception. This class encapsulates all storage errors.
  *
  * @author   Per Cederberg
  * @version  1.0
  */
-public class StorageException extends Exception {
+public class StorageException extends BaseException {
 
     /**
      * Creates a new storage exception.

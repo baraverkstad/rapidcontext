@@ -14,6 +14,7 @@
 
 package org.rapidcontext.core.proc;
 
+import org.rapidcontext.core.BaseException;
 import org.rapidcontext.core.type.Procedure;
 
 /**
@@ -23,7 +24,7 @@ import org.rapidcontext.core.type.Procedure;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class ProcedureException extends Exception {
+public class ProcedureException extends BaseException {
 
     /**
      * Creates a new generic procedure exception.

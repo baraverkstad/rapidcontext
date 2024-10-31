@@ -14,6 +14,8 @@
 
 package org.rapidcontext.core.type;
 
+import org.rapidcontext.core.BaseException;
+
 /**
  * A general connection or channel exception. This class encapsulates
  * all types of errors that may happen on a connection.
@@ -21,7 +23,7 @@ package org.rapidcontext.core.type;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class ConnectionException extends Exception {
+public class ConnectionException extends BaseException {
 
     /**
      * Creates a new connection exception.
