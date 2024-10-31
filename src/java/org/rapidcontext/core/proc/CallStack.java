@@ -132,16 +132,18 @@ public class CallStack {
     /**
      * Returns a printable stack trace for debugging purposes.
      *
+     * @param maxSize        the maximum stack trace length
+     *
      * @return an array with all the procedures on the stack
      */
-    public List<String> toStackTrace(int length) {
-        ArrayList<String> res = new ArrayList<>(length + 1);
+    public List<String> toStackTrace(int maxSize) {
+        ArrayList<String> res = new ArrayList<>(maxSize + 1);
         int size = stack.size();
-        int start = Math.max(0, size - length);
+        int start = Math.max(0, size - maxSize);
         for (int i = size - 1; i >= start; i--) {
             res.add(stack.get(i).id());
         }
-        if (size > length) {
+        if (size > maxSize) {
             res.add("...");
         }
         return res;
