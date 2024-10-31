@@ -24,15 +24,15 @@ property:
     format: array
   - name: access[].path
     description: >-
-        The storage path glob pattern. Supports the '?', '*' and '**' glob
-        symbols. Requires a match to the complete storage path (not just a
-        prefix). Either 'path' or 'regex' is required.
+        The storage path (glob pattern) to match. Supports the '?', '*' and
+        '**' glob symbols. Requires a match to the complete storage path (not
+        just a prefix). Either 'path' or 'regex' is required.
     required: false
   - name: access[].regex
     description: >-
-        The storage path regular expression pattern. Requires a match to the
-        complete storage path (not just a prefix). Either 'path' or 'regex' is
-        required.
+        The storage path (regular expression) pattern to match. Requires a
+        match to the complete storage path (not just a prefix). Either 'path'
+        or 'regex' is required.
     required: false
   - name: access[].permission
     description: >-
