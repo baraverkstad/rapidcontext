@@ -411,14 +411,35 @@ public class Request implements HttpUtil {
         String path = getPath();
         prefix = StringUtils.removeStart(prefix, "/");
         if (path.startsWith(prefix)) {
-            if (prefix.length() > 0) {
-                setPath(path.substring(prefix.length()));
-            }
+            setPath(path.substring(prefix.length()));
             return true;
         } else if (path.equals(StringUtils.removeEnd(prefix, "/"))) {
             sendRedirect(getUrl() + "/");
         }
         return false;
+    }
+
+    /**
+     * Matches and modifies the request path with the specified path
+     * prefix regular expression. If a match is found, the matched string
+     * is removed from the request path and true is returned. Note that
+     * the regex pattern should always start with ^ to anchor at the
+     * start of the path.
+     *
+     * @param prefix         the path prefix pattern to check
+     *
+     * @return true if the request path matched, or
+     *         false otherwise
+     */
+    public boolean matchPath(Pattern prefix) {
+        String path = getPath();
+        String match = RegexUtil.firstMatch(prefix, path);
+        if (match != null && match.length() > 0) {
+            setPath(path.substring(match.length()));
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**

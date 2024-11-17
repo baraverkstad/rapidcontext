@@ -87,6 +87,11 @@ public class AppWebService extends FileWebService {
     public static final String KEY_HEADER = "header";
 
     /**
+     * The regular expression for matching a static file path.
+     */
+    private static final Pattern RE_FILES = Pattern.compile("^(rapidcontext/files(@.+?)|@.+?)/");
+
+    /**
      * The regular expression for checking for a file version number.
      */
     private static final Pattern RE_VERSION = Pattern.compile("\\d\\.\\d");
@@ -300,10 +305,7 @@ public class AppWebService extends FileWebService {
     @Override
     protected void doGet(Request request) {
         String baseUrl = StringUtils.removeEnd(request.getUrl(), request.getPath());
-        if (request.getPath().startsWith("rapidcontext/files@")) {
-            String path = Path.from(request.getPath()).toIdent(2);
-            processFile(request, Path.resolve(RootStorage.PATH_FILES, path), true);
-        } else if (request.matchPath("rapidcontext/files/")) {
+        if (request.matchPath(RE_FILES)) {
             processFile(request, Path.resolve(RootStorage.PATH_FILES, request.getPath()), true);
         } else if (request.matchPath("rapidcontext/app/")) {
             String appId = StringUtils.removeEnd(request.getPath(), "/");
