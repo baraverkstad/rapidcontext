@@ -22,7 +22,7 @@
 /src/plugin/http/lib/http-*.jar
 /src/plugin/jdbc/lib/jdbc-*.jar
 /src/plugin/test/lib/test-*.jar
-/src/plugin/system/files/js/rapidcontext.min.js
+/src/plugin/system/files/js/rapidcontext.*.min.js
 
 # Documentation
 /doc.zip
