@@ -16,8 +16,10 @@ package org.rapidcontext.app.proc;
 
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
+import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
@@ -96,37 +98,49 @@ public class AppListProcedure extends Procedure {
             dict.set(KEY_ID, meta.id());
             LOG.warning("deprecated: app " + meta.id() + ": missing 'id' property");
         }
-        String pluginId = Plugin.source(meta);
-        dict.set("_plugin", pluginId);
-        dict.set("_version", (pluginId == null) ? null : Plugin.version(storage, pluginId));
-        Array arr = dict.getArray("resources");
-        for (int i = 0; i < arr.size(); i++) {
-            Object obj = arr.get(i);
-            Dict resource = (obj instanceof Dict d) ? d : new Dict();
-            String url = resource.get("url", String.class, obj.toString());
-            if (!url.contains("//:") && StringUtils.containsAny(url, "*?")) {
-                arr.remove(i--);
-                for (String str : resolveFiles(storage, url, permission)) {
-                    Dict copy = resource.copy();
-                    copy.set("url", str);
-                    arr.add(copy);
-                }
+        String ver = version(storage, meta);
+        Array arr = new Array();
+        for (Object o : dict.getArray("resources")) {
+            Dict res = (o instanceof Dict d) ? d : new Dict();
+            String url = (o instanceof Dict d) ? d.get("url", String.class) : o.toString();
+            if (url == null) {
+                arr.add(res);
+            } else {
+                resources(storage, res, url, permission, ver).forEach(d -> arr.add(d));
             }
         }
+        dict.set("resources", arr);
         return dict;
     }
 
-    private String[] resolveFiles(Storage storage, String url, String permission) {
-        Path base = Path.resolve(RootStorage.PATH_FILES, url);
-        while (StringUtils.containsAny(base.toString(), "*?")) {
-            base = base.parent();
+    private String version(Storage storage, Metadata meta) {
+        String pluginId = Plugin.source(meta);
+        String version = (pluginId == null) ? null : Plugin.version(storage, pluginId);
+        if (version == null) {
+            long time = ApplicationContext.START_TIME.getTime() % 0xffffffff;
+            return "@" + Long.toHexString(time);
+        } else {
+            return pluginId + "-" + version;
         }
-        Pattern re = Pattern.compile(RegexUtil.fromGlob(url) + "$");
-        return storage.query(base)
-            .filterAccess(permission)
-            .paths()
-            .filter(path -> re.matcher(path.toString()).find())
-            .map(path -> path.toIdent(1))
-            .toArray(String[]::new);
+    }
+
+    private Stream<Dict> resources(Storage storage, Dict res, String url, String perm, String ver) {
+        if (url.contains(":") || url.startsWith("/")) {
+            return Stream.of(res.copy().set("url", url));
+        } else {
+            Path base = Path.resolve(RootStorage.PATH_FILES, url);
+            while (StringUtils.containsAny(base.toString(), "*?")) {
+                base = base.parent();
+            }
+            Pattern re = Pattern.compile(RegexUtil.fromGlob(url) + "$");
+            return storage.query(base)
+                .filterAccess(perm)
+                .filter(p -> re.matcher(p.toString()).find())
+                .paths()
+                .map(p -> {
+                    String u = "@" + ver + "/" + p.toIdent(RootStorage.PATH_FILES.length());
+                    return res.copy().set("url", u);
+                });
+        }
     }
 }

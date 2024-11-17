@@ -138,7 +138,6 @@
         <Table id="appTable" w="100%" h="100%-2.2em">
           <TableColumn title="Identifier" field="id" sort="asc" key="true" />
           <TableColumn title="Name" field="name" />
-          <TableColumn title="Plug-in" field="_plugin" />
         </Table>
       </div>
       <Form id="appForm" w="50%" h="100%" class="inline-block vertical-top">
@@ -160,12 +159,6 @@
                   <Field name="id" />
                   <Icon class="fa fa-external-link-square ml-1" />
                 </a>
-              </td>
-            </tr>
-            <tr>
-              <th class="label" style="padding-right: 4px;">Plug-In:</th>
-              <td>
-                <Field name="_plugin" />
               </td>
             </tr>
             <tr>

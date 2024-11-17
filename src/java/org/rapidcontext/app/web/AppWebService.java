@@ -39,6 +39,7 @@ import org.rapidcontext.core.type.Session;
 import org.rapidcontext.core.web.Mime;
 import org.rapidcontext.core.web.Request;
 import org.rapidcontext.util.FileUtil;
+import org.rapidcontext.util.RegexUtil;
 
 /**
  * An app web service. This service extends the file web service with
@@ -144,20 +145,16 @@ public class AppWebService extends FileWebService {
     protected static String[] resources(String type, Path base) {
         Storage storage = ApplicationContext.getInstance().getStorage();
         Path storagePath = Path.resolve(RootStorage.PATH_FILES, type + "/");
-        String rootPath = RootStorage.PATH_FILES.toString();
-        String basePath = base.toString();
         String ver = version();
         return storage.query(storagePath)
             .filterFileExtension("." + type)
             .paths()
             .map(path -> {
-                boolean isVersioned = RE_VERSION.matcher(path.name()).find();
-                String file = path.toString();
-                if (isVersioned && file.startsWith(basePath)) {
-                    return StringUtils.removeStart(file, basePath);
+                if (path.startsWith(base) && RegexUtil.firstMatch(RE_VERSION, path.name()) != null) {
+                    return path.toIdent(base.length());
                 } else {
-                    file = StringUtils.removeStart(file, rootPath);
-                    return "rapidcontext/files@" + ver + "/" + file;
+                    String file = path.toIdent(RootStorage.PATH_FILES.length());
+                    return "@system-" + ver + "/" + file;
                 }
             })
             .sorted(String.CASE_INSENSITIVE_ORDER)
@@ -444,8 +441,7 @@ public class AppWebService extends FileWebService {
                 res.append("\n");
             }
         } else if (line.contains("%FILES%")) {
-            String str = "rapidcontext/files@" + version();
-            res.append(line.replace("%FILES%", str));
+            res.append(line.replace("%FILES%", "@system-" + version()));
         } else if (line.contains("%JS_FILES%")) {
             for (String str : resources("js", path())) {
                 res.append(line.replace("%JS_FILES%", str));
