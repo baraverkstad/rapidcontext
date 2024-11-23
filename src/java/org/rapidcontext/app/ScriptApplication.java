@@ -189,7 +189,7 @@ public class ScriptApplication {
                 System.out.print(", until " + doneTime);
             }
             System.out.println(":");
-            if (line.trim().length() <= 0) {
+            if (line.isBlank()) {
                 System.out.println("    <empty, skipped>");
             } else {
                 LinkedList<String> params = new LinkedList<>(Arrays.asList(prefix));

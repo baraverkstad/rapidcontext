@@ -295,7 +295,7 @@ public final class PluginManager {
                 throw new PluginException("missing plugin.properties");
             }
             String pluginId = dict.get(Plugin.KEY_ID, String.class);
-            if (pluginId == null || pluginId.trim().length() < 0) {
+            if (pluginId == null || pluginId.isBlank()) {
                 String msg = "missing plug-in identifier in plugin.properties";
                 throw new PluginException(msg);
             }

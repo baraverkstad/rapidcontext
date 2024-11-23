@@ -221,7 +221,7 @@ public final class Mime {
             return ICO[0];
         } else if (context != null) {
             String mime = context.getMimeType(fileName);
-            if (mime != null && mime.trim().length() > 0) {
+            if (mime != null && !mime.isBlank()) {
                 return mime;
             }
         }

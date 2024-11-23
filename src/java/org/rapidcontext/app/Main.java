@@ -296,7 +296,7 @@ public final class Main {
             fmt.printOptions(out, 74, options, 2, 3);
             out.println();
         }
-        if (error != null && error.length() > 0) {
+        if (error != null && !error.isBlank()) {
             out.println("ERROR:");
             out.print("    ");
             out.println(error);

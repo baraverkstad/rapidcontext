@@ -106,7 +106,7 @@ public final class DictWrapper extends ScriptableObject implements Wrapper {
      */
     @Override
     public void put(String name, Scriptable start, Object value) {
-        if (name != null && name.length() > 0) {
+        if (name != null && !name.isBlank()) {
             dict.set(name, value);
             cache.remove(name);
             setAttributes(name, EMPTY);

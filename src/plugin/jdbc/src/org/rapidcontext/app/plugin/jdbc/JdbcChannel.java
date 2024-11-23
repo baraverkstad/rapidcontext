@@ -180,7 +180,7 @@ public class JdbcChannel extends Channel {
      */
     @Override
     public void validate() {
-        if (sqlPing != null && sqlPing.trim().length() > 0) {
+        if (sqlPing != null && !sqlPing.isBlank()) {
             reset();
             startTime = 0;
             try {

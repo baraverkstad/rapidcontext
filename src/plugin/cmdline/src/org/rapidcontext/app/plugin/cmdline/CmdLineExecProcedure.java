@@ -129,7 +129,7 @@ public class CmdLineExecProcedure extends Procedure {
         // TODO: parse command-line properly, avoid StringTokenizer
         String cmd = bindings.processTemplate(str, TextEncoding.NONE).trim();
         str = ((String) bindings.getValue(BINDING_DIRECTORY, "")).trim();
-        if (str.length() > 0) {
+        if (!str.isBlank()) {
             str = bindings.processTemplate(str, TextEncoding.NONE);
             if (str.startsWith("/")) {
                 dir = new File(str);
@@ -139,7 +139,7 @@ public class CmdLineExecProcedure extends Procedure {
         }
         String[] env = null;
         str = ((String) bindings.getValue(BINDING_ENVIRONMENT, "")).trim();
-        if (str.length() > 0) {
+        if (!str.isBlank()) {
             env = bindings.processTemplate(str, TextEncoding.NONE).split(";");
         }
         Runtime runtime = Runtime.getRuntime();

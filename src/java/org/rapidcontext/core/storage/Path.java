@@ -92,7 +92,7 @@ public class Path {
      */
     public static Path resolve(Path parent, String path) {
         String normalized = StringUtils.strip(path, "/");
-        if (normalized == null || normalized.equals("")) {
+        if (normalized == null || normalized.isBlank()) {
             return parent;
         } else {
             parent = parent.isIndex() ? parent : parent.parent();

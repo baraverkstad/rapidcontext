@@ -602,7 +602,7 @@ public class Dict {
             String msg = "cannot modify sealed dictionary";
             throw new UnsupportedOperationException(msg);
         }
-        if (key == null || key.length() == 0) {
+        if (key == null || key.isBlank()) {
             String msg = "property key cannot be null or empty";
             throw new NullPointerException(msg);
         }

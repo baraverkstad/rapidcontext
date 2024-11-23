@@ -251,7 +251,7 @@ public final class PropertiesSerializer {
      */
     private static int toIndex(String str) {
         int index = -1;
-        if (str.length() > 0 && StringUtils.isNumeric(str)) {
+        if (!str.isBlank() && StringUtils.isNumeric(str)) {
             try {
                 index = Integer.parseInt(str);
             } catch (NumberFormatException ignore) {
@@ -445,7 +445,7 @@ public final class PropertiesSerializer {
      * @param value            the property value
      */
     private static void write(PrintWriter os, String name, String value) {
-        if (name == null || name.trim().length() == 0) {
+        if (name == null || name.isBlank()) {
             name = "value";
         }
         for (int i = 0; i < name.length(); i ++) {

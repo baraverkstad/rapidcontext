@@ -72,7 +72,7 @@ public class SessionTerminateProcedure extends Procedure {
 
         Session session = null;
         String id = (String) bindings.getValue("sessionId", "");
-        if (id == null || id.trim().equals("")) {
+        if (id == null || id.isBlank()) {
             session = Session.activeSession.get();
         } else {
             CallContext.checkWriteAccess("session/" + id);

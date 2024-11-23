@@ -64,7 +64,7 @@ public class SessionAuthenticateProcedure extends Procedure {
         Session session = Session.activeSession.get();
         if (session == null) {
             return response(false, "no active session found", null);
-        } else if (session.userId().length() > 0) {
+        } else if (!session.userId().isBlank()) {
             return response(true, "session already authenticated", session.userId());
         }
         String userId = bindings.getValue("user").toString();

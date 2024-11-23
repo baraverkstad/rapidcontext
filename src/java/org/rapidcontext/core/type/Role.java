@@ -254,7 +254,7 @@ public class Role extends StorableObject {
         HashSet<String> set = new HashSet<>(4);
         String perms = dict.get(ACCESS_PERMISSION, String.class, "");
         for (String s : perms.trim().split("[,;\\s]+")) {
-            if (s.isEmpty() || s.equalsIgnoreCase(PERM_NONE)) {
+            if (s.isBlank() || s.equalsIgnoreCase(PERM_NONE)) {
                 set.clear();
                 break;
             } else if (s.equalsIgnoreCase(PERM_READ)) {

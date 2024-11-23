@@ -234,7 +234,7 @@ public final class JsRuntime {
                 } else {
                     value = scr.get(str, scr);
                 }
-                if (str != null && str.length() > 0) {
+                if (str != null && !str.isBlank()) {
                     dict.set(str, unwrap(value));
                 }
             }

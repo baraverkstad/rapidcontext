@@ -80,7 +80,7 @@ public class UserAuthenticationTokenProcedure extends Procedure {
         long expires = System.currentTimeMillis() + DEFAULT_DURATION;
         if (StringUtils.isNumeric(duration)) {
             expires = System.currentTimeMillis() + Long.parseLong(duration);
-        } else if (!duration.isEmpty()) {
+        } else if (!duration.isBlank()) {
             expires = Instant.now().plus(Duration.parse(duration)).toEpochMilli();
         }
         return user.createAuthToken(expires);

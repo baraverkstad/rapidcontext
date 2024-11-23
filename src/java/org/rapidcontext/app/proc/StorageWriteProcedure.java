@@ -91,7 +91,7 @@ public class StorageWriteProcedure extends Procedure {
         }
         boolean isObjectPath = path.equals(Storage.objectPath(path));
         String fmt = ((String) bindings.getValue("format", "")).trim();
-        if (fmt.equals("")) {
+        if (fmt.isBlank()) {
             // Format is selected in storage layer
         } else if (fmt.equalsIgnoreCase("binary")) {
             if (!isString && !isBinary) {

@@ -64,7 +64,7 @@ public class StorageListProcedure extends Procedure {
 
         String str = ((String) bindings.getValue("path", "")).trim();
         Path path = Path.from(str);
-        if (str.isEmpty()) {
+        if (str.isBlank()) {
             throw new ProcedureException(this, "path cannot be empty");
         } else if (!path.isIndex()) {
             throw new ProcedureException(this, "path must be an index");

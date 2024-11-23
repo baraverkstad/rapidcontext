@@ -192,7 +192,7 @@ public class User extends StorableObject {
             copy[2] = (parts.length > 2) ? parts[2] : "";
             parts = copy;
         }
-        if (parts[1].length() <= 0 || !StringUtils.isNumeric(parts[1])) {
+        if (parts[1].isBlank() || !StringUtils.isNumeric(parts[1])) {
             parts[1] = "0";
         }
         return parts;
@@ -391,7 +391,7 @@ public class User extends StorableObject {
      */
     public boolean verifyPasswordHash(String passwordHash) {
         String hash = passwordHash();
-        return isEnabled() && (hash.length() == 0 || hash.equals(passwordHash));
+        return isEnabled() && (hash.isBlank() || hash.equals(passwordHash));
     }
 
     /**
@@ -477,7 +477,7 @@ public class User extends StorableObject {
         if (roles != null) {
             for (String name : roles) {
                 name = name.trim();
-                if (name.length() > 0 && !list.containsValue(name)) {
+                if (!name.isBlank() && !list.containsValue(name)) {
                     list.add(name);
                 }
             }

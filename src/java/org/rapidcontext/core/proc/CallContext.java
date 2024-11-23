@@ -847,7 +847,7 @@ public class CallContext {
             StringBuilder buffer = new StringBuilder();
             String indentStr = StringUtils.repeat(" ", indent);
             for (String line : text.split("\n")) {
-                boolean isEmpty = line.trim().length() <= 0;
+                boolean isEmpty = line.isBlank();
                 boolean isNext = buffer.length() > 0;
                 buffer.append(isNext ? "\n" : "");
                 buffer.append(isNext && !isEmpty ? indentStr : "");

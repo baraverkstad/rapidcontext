@@ -73,7 +73,7 @@ public class UserChangeProcedure extends Procedure {
 
         // Validate arguments
         String id = bindings.getValue("id", "").toString().trim();
-        if (id.length() <= 0) {
+        if (id.isBlank()) {
             throw new ProcedureException(this, "user id cannot be blank");
         } else if (!id.matches("^[a-zA-Z0-9_/]*$")) {
             throw new ProcedureException(this, "user id contains invalid character");
@@ -84,7 +84,7 @@ public class UserChangeProcedure extends Procedure {
         String email = bindings.getValue("email", "").toString();
         String descr = bindings.getValue("description", "").toString();
         String str = bindings.getValue("enabled", "").toString();
-        boolean enabled = (!str.equals("") && !str.equals("false") && !str.equals("0"));
+        boolean enabled = (!str.isBlank() && !str.equals("false") && !str.equals("0"));
         String pwd = bindings.getValue("password").toString();
         if ((user == null || pwd.length() > 0) && pwd.length() < 5) {
             throw new ProcedureException(this, "password must be at least 5 characters");

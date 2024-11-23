@@ -63,7 +63,7 @@ public class StorageDeleteProcedure extends Procedure {
 
         String str = ((String) bindings.getValue("path", "")).trim();
         Path path = Path.from(str);
-        if (str.isEmpty()) {
+        if (str.isBlank()) {
             throw new ProcedureException(this, "path cannot be empty");
         }
         CallContext.checkWriteAccess(path.toString());

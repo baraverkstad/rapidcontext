@@ -271,10 +271,10 @@ public final class FileUtil {
     public static File tempFile(String name) throws IOException {
         String prefix = StringUtils.substringBeforeLast(name, ".");
         String suffix = StringUtils.substringAfterLast(name, ".");
-        if (prefix == null || prefix.length() <= 0) {
+        if (prefix == null || prefix.isBlank()) {
             prefix = "file";
         }
-        if (suffix != null && suffix.length() > 0) {
+        if (suffix != null && !suffix.isBlank()) {
             suffix = "." + suffix;
         }
         File file = File.createTempFile(prefix + "-", suffix, tempDir);

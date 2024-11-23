@@ -129,7 +129,7 @@ public class JdbcConnection extends Connection {
             dict.remove(JDBC_SQL_INIT);
         }
         String ping = dict.get(JDBC_PING, String.class, "").trim();
-        if (driver.length() == 0) {
+        if (driver.isBlank()) {
             // Adjust older MySQL connection URLs (for default driver)
             if (url.startsWith("jdbc:mysql:thin:")) {
                 url = StringUtils.replaceOnce(url, "jdbc:mysql:thin:", "jdbc:mariadb:");
@@ -155,9 +155,9 @@ public class JdbcConnection extends Connection {
         } else {
             dict.set(PREFIX_COMPUTED + JDBC_DRIVER, driver);
         }
-        if (ping.length() == 0 && url.startsWith("jdbc:oracle:")) {
+        if (ping.isBlank() && url.startsWith("jdbc:oracle:")) {
             dict.set(PREFIX_COMPUTED + JDBC_PING, "SELECT 1 FROM dual");
-        } else if (ping.length() == 0) {
+        } else if (ping.isBlank()) {
             dict.set(PREFIX_COMPUTED + JDBC_PING, "SELECT 1");
         } else {
             dict.set(PREFIX_COMPUTED + JDBC_PING, ping);

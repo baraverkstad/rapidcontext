@@ -743,7 +743,7 @@ public class Request implements HttpUtil {
         sendClear();
         responseType = TEXT_RESPONSE;
         responseCode = code;
-        if (mimeType == null || mimeType.length() == 0) {
+        if (mimeType == null || mimeType.isBlank()) {
             responseMimeType = "text/plain; charset=UTF-8";
         } else if (mimeType.indexOf("charset") > 0) {
             responseMimeType = mimeType;

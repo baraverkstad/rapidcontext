@@ -80,12 +80,12 @@ public class StorageCopyProcedure extends Procedure {
         throws ProcedureException {
 
         String src = ((String) bindings.getValue("src", "")).trim();
-        if (src.length() <= 0) {
+        if (src.isBlank()) {
             throw new ProcedureException(this, "source path cannot be empty");
         }
         CallContext.checkAccess(src, cx.readPermission(1));
         String dst = ((String) bindings.getValue("dst", "")).trim();
-        if (dst.length() <= 0) {
+        if (dst.isBlank()) {
             throw new ProcedureException(this, "destination path cannot be empty");
         }
         CallContext.checkWriteAccess(dst);

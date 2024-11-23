@@ -478,7 +478,7 @@ public class AppWebService extends FileWebService {
                     name = StringUtils.substringAfterLast(name, "/");
                 }
                 String disp = "attachment";
-                if (name.length() > 0) {
+                if (!name.isBlank()) {
                     disp += "; filename=" + name;
                 }
                 request.setResponseHeader("Content-Disposition", disp);
@@ -517,7 +517,7 @@ public class AppWebService extends FileWebService {
             while (fileId != null && fileId.startsWith("/")) {
                 fileId = fileId.substring(1);
             }
-            if (fileId == null || fileId.trim().length() == 0) {
+            if (fileId == null || fileId.isBlank()) {
                 fileId = fileName;
             }
             File file = FileUtil.tempFile(fileName);

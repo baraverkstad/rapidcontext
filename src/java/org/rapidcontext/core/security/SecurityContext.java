@@ -285,7 +285,7 @@ public final class SecurityContext {
         }
         try {
             String test = BinaryUtil.hashMD5(user.passwordHash() + suffix);
-            if (user.passwordHash().length() > 0 && !test.equals(hash)) {
+            if (!user.passwordHash().isBlank() && !test.equals(hash)) {
                 String msg = "invalid password for user " + id;
                 LOG.info("failed authentication: " + msg +
                          ", expected: " + test + ", received: " + hash);

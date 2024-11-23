@@ -201,7 +201,7 @@ public class Session extends StorableObject {
                 LOG.fine("deleting session " + session.id() +
                          ", expired on " + session.destroyTime());
                 remove(storage, session.id());
-            } else if (userId.length() > 0) {
+            } else if (!userId.isBlank()) {
                 User user = User.find(storage, userId);
                 if (user == null || !user.isEnabled()) {
                     String msg = "no enabled user " + userId;
@@ -311,7 +311,7 @@ public class Session extends StorableObject {
      *         false otherwise
      */
     public boolean isAuthenticated() {
-        return userId().length() > 0;
+        return !userId().isBlank();
     }
 
     /**
@@ -344,7 +344,7 @@ public class Session extends StorableObject {
      *     the specified user identifier
      */
     public void setUserId(String userId) {
-        if (userId == null || userId.trim().length() <= 0) {
+        if (userId == null || userId.isBlank()) {
             String msg = "Attempt to re-bind HTTP session to blank user id";
             throw new SecurityException(msg);
         }

@@ -64,7 +64,7 @@ public class UserAccessProcedure extends Procedure {
         String path = bindings.getValue("path").toString();
         String perm = bindings.getValue("permission", "read").toString();
         String userId = bindings.getValue("user", "").toString();
-        if (userId.trim().length() <= 0) {
+        if (userId.isBlank()) {
             return SecurityContext.hasAccess(path, perm);
         } else {
             CallContext.checkAccess("user/" + userId, cx.readPermission(1));

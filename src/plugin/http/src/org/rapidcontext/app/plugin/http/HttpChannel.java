@@ -95,7 +95,7 @@ public class HttpChannel extends Channel {
     @Override
     public void validate() {
         String method = ((HttpConnection) connection).validateMethod();
-        if (method != null && method.trim().length() > 0) {
+        if (method != null && !method.isBlank()) {
             try {
                 HttpURLConnection con = HttpProcedure.setup(getUrl(), false);
                 try {

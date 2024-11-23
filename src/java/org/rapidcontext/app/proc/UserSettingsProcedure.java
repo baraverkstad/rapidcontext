@@ -73,7 +73,7 @@ public class UserSettingsProcedure extends Procedure {
         User user = null;
         String id = (String) bindings.getValue("userId", "");
         Object data = bindings.getValue("settings");
-        if (id == null || id.trim().equals("")) {
+        if (id == null || id.isBlank()) {
             user = SecurityContext.currentUser();
         } else {
             CallContext.checkWriteAccess("user/" + id);

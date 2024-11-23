@@ -203,7 +203,7 @@ public class ServletApplication extends HttpServlet {
         String sessionId = Objects.toString(request.getSessionId(), "");
         Session session = null;
         try {
-            if (sessionId.length() > 0) {
+            if (!sessionId.isBlank()) {
                 session = Session.find(ctx.getStorage(), sessionId);
             }
             if (session != null) {

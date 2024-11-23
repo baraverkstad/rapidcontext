@@ -317,7 +317,7 @@ public abstract class JdbcProcedure extends Procedure {
                 }
                 pos--;
             }
-            if (sql.substring(pos, end).trim().length() > 0) {
+            if (!sql.substring(pos, end).isBlank()) {
                 return pos;
             } else {
                 return -1;

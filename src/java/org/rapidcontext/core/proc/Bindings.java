@@ -251,9 +251,9 @@ public class Bindings {
      */
     public String getDescription(String name) throws ProcedureException {
         String desc = find(name).get("description", String.class, "");
-        if (desc.equals("") && parent != null && parent.hasName(name)) {
+        if (desc.isBlank() && parent != null && parent.hasName(name)) {
             return parent.getDescription(name);
-        } else if (desc.equals("") && getType(name) == ARGUMENT) {
+        } else if (desc.isBlank() && getType(name) == ARGUMENT) {
             // TODO: remove this hack once all serialized add-on procedures
             //       have been corrected
             return (String) getValue(name, "");
