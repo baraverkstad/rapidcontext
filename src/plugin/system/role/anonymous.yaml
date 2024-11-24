@@ -17,5 +17,7 @@ access:
     permission: read
   - path: session/@self
     permission: read
+  - path: type/**
+    permission: search read
   - path: user/@self
     permission: internal
