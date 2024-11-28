@@ -53,8 +53,8 @@
     z-index: 1;
     border-radius: 0.25rem;
     padding: 0.1em 0 !important;
-    font-size: 1.4em;
-    line-height: 1;
+    font-size: 1.4em !important;
+    line-height: 1 !important;
     color: #fff;
 }
 .widgetDialogClose:hover {
