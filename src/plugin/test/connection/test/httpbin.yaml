@@ -3,3 +3,4 @@ type: connection/http
 description: HTTP plug-in test connection.
 url: http://eu.httpbin.org/
 headers: 'X-Test-Connection: yes'
+validate: OPTIONS

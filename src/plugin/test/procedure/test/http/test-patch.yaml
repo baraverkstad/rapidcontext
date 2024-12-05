@@ -9,7 +9,7 @@ description: |-
     * Response: metadata + json
 binding:
   - name: connection
-    type: data
+    type: connection
     value: ''
   - name: url
     type: data

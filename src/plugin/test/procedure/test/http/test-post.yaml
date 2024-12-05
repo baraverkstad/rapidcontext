@@ -9,7 +9,7 @@ description: |-
     * Response: raw
 binding:
   - name: connection
-    type: data
+    type: connection
     value: test/httpbin
   - name: url
     type: data
