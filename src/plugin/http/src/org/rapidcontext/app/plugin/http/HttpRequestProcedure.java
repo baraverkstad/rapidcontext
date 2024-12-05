@@ -86,6 +86,14 @@ public class HttpRequestProcedure extends HttpProcedure {
             this.dict.set(KEY_TYPE, "procedure/http/request");
             LOG.warning("deprecated: procedure " + id + " references legacy type: " + type);
         }
+        try {
+            Bindings b = getBindings();
+            if (b.hasName(BINDING_CONNECTION) && b.getType(BINDING_CONNECTION) != Bindings.CONNECTION) {
+                LOG.warning("deprecated: procedure " + id + " connection binding has improper type: " + b.getTypeName(BINDING_CONNECTION));
+            }
+        } catch (ProcedureException e) {
+            LOG.warning("deprecated: procedure " + id + " invalid connection binding: " + e);
+        }
     }
 
     /**
