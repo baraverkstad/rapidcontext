@@ -192,10 +192,9 @@ public class HttpRequestProcedure extends HttpProcedure {
         if (bindings.hasName(BINDING_CONNECTION)) {
             obj = bindings.getValue(BINDING_CONNECTION, null);
             boolean isArg = bindings.getType(BINDING_CONNECTION) == Bindings.ARGUMENT;
-            if (obj instanceof String s && !s.isBlank()) {
-                obj = cx.connectionReserve(s.trim(), cx.readPermission(isArg ? 1 : 0));
-            } else {
-                obj = null;
+            if (obj instanceof String s) {
+                String perm = cx.readPermission(isArg ? 1 : 0);
+                obj = s.isBlank() ? null : cx.connectionReserve(s.trim(), perm);
             }
         }
         if (obj != null && !(obj instanceof HttpChannel)) {
