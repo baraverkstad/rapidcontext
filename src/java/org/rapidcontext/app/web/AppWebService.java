@@ -39,7 +39,6 @@ import org.rapidcontext.core.type.Session;
 import org.rapidcontext.core.web.Mime;
 import org.rapidcontext.core.web.Request;
 import org.rapidcontext.util.FileUtil;
-import org.rapidcontext.util.RegexUtil;
 
 /**
  * An app web service. This service extends the file web service with
@@ -93,11 +92,6 @@ public class AppWebService extends FileWebService {
     private static final Pattern RE_FILES = Pattern.compile("^((rapidcontext/files|@).*?)/");
 
     /**
-     * The regular expression for checking for a file version number.
-     */
-    private static final Pattern RE_VERSION = Pattern.compile("\\d\\.\\d");
-
-    /**
      * The log web service used for the "rapidcontext/log" URL.
      */
     protected LogWebService logger;
@@ -118,17 +112,6 @@ public class AppWebService extends FileWebService {
     protected StorageWebService storageService;
 
     /**
-     * Returns the platform version number.
-     *
-     * @return the platform version number
-     */
-    protected static String version() {
-        ApplicationContext ctx = ApplicationContext.getInstance();
-        Dict dict = ctx.getStorage().load(ApplicationContext.PATH_PLATFORM, Dict.class);
-        return dict.get("version", String.class, "1");
-    }
-
-    /**
      * Finds binary files of a specified type from the storage. The
      * file type is both used as a subdirectory (i.e. "files/css")
      * and as a suffix (i.e. "*.css") when performing the search. The
@@ -145,18 +128,12 @@ public class AppWebService extends FileWebService {
     protected static String[] resources(String type, Path base) {
         Storage storage = ApplicationContext.getInstance().getStorage();
         Path storagePath = Path.resolve(RootStorage.PATH_FILES, type + "/");
-        String ver = version();
+        String cache = ApplicationContext.getInstance().cachePath();
+        int start = RootStorage.PATH_FILES.length();
         return storage.query(storagePath)
             .filterFileExtension("." + type)
             .paths()
-            .map(path -> {
-                if (path.startsWith(base) && RegexUtil.firstMatch(RE_VERSION, path.name()) != null) {
-                    return path.toIdent(base.length());
-                } else {
-                    String file = path.toIdent(RootStorage.PATH_FILES.length());
-                    return "@system-" + ver + "/" + file;
-                }
-            })
+            .map(path -> cache + "/" + path.toIdent(start))
             .sorted(String.CASE_INSENSITIVE_ORDER)
             .toArray(String[]::new);
     }
@@ -441,7 +418,8 @@ public class AppWebService extends FileWebService {
                 res.append("\n");
             }
         } else if (line.contains("%FILES%")) {
-            res.append(line.replace("%FILES%", "@system-" + version()));
+            String cache = ApplicationContext.getInstance().cachePath();
+            res.append(line.replace("%FILES%", cache));
         } else if (line.contains("%JS_FILES%")) {
             for (String str : resources("js", path())) {
                 res.append(line.replace("%JS_FILES%", str));

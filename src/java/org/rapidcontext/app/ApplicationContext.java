@@ -338,6 +338,16 @@ public class ApplicationContext {
     }
 
     /**
+     * Returns the current web cache path. This is renewed each time the
+     * application context is initialized or reset.
+     *
+     * @return the current web cache path
+     */
+    public String cachePath() {
+        return "@" + Integer.toHexString(START_TIME.hashCode() & 0xffffffff);
+    }
+
+    /**
      * Returns the application configuration.
      *
      * @return the application configuration

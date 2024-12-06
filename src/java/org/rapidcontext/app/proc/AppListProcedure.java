@@ -29,7 +29,6 @@ import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.RootStorage;
 import org.rapidcontext.core.storage.Storage;
-import org.rapidcontext.core.type.Plugin;
 import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.util.RegexUtil;
 
@@ -98,33 +97,21 @@ public class AppListProcedure extends Procedure {
             dict.set(KEY_ID, meta.id());
             LOG.warning("deprecated: app " + meta.id() + ": missing 'id' property");
         }
-        String ver = version(storage, meta);
         Array arr = new Array();
         for (Object o : dict.getArray("resources")) {
             Dict res = (o instanceof Dict d) ? d : new Dict();
-            String url = (o instanceof Dict d) ? d.get("url", String.class) : o.toString();
+            String url = (o == res) ? res.get("url", String.class) : o.toString();
             if (url == null) {
                 arr.add(res);
             } else {
-                resources(storage, res, url, permission, ver).forEach(d -> arr.add(d));
+                resources(storage, res, url, permission).forEach(d -> arr.add(d));
             }
         }
         dict.set("resources", arr);
         return dict;
     }
 
-    private String version(Storage storage, Metadata meta) {
-        String pluginId = Plugin.source(meta);
-        String version = (pluginId == null) ? null : Plugin.version(storage, pluginId);
-        if (version == null) {
-            long time = ApplicationContext.START_TIME.getTime() % 0xffffffff;
-            return "@" + Long.toHexString(time);
-        } else {
-            return pluginId + "-" + version;
-        }
-    }
-
-    private Stream<Dict> resources(Storage storage, Dict res, String url, String perm, String ver) {
+    private Stream<Dict> resources(Storage storage, Dict res, String url, String perm) {
         if (url.contains(":") || url.startsWith("/")) {
             return Stream.of(res.copy().set("url", url));
         } else {
@@ -133,14 +120,14 @@ public class AppListProcedure extends Procedure {
                 base = base.parent();
             }
             Pattern re = Pattern.compile(RegexUtil.fromGlob(url) + "$");
+            String cache = ApplicationContext.getInstance().cachePath();
+            int start = RootStorage.PATH_FILES.length();
+            // Search permission granted by default (not yet configurable)
             return storage.query(base)
                 .filterAccess(perm)
                 .filter(p -> re.matcher(p.toString()).find())
                 .paths()
-                .map(p -> {
-                    String u = "@" + ver + "/" + p.toIdent(RootStorage.PATH_FILES.length());
-                    return res.copy().set("url", u);
-                });
+                .map(p -> res.copy().set("url", cache + "/" + p.toIdent(start)));
         }
     }
 }
