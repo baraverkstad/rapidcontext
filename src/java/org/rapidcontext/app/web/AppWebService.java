@@ -90,7 +90,7 @@ public class AppWebService extends FileWebService {
     /**
      * The regular expression for matching a static file path.
      */
-    private static final Pattern RE_FILES = Pattern.compile("^(rapidcontext/files(@.+?)|@.+?)/");
+    private static final Pattern RE_FILES = Pattern.compile("^((rapidcontext/files|@).*?)/");
 
     /**
      * The regular expression for checking for a file version number.
