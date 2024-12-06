@@ -78,6 +78,7 @@ public class StatusProcedure extends Procedure {
         if (res == null) {
             return null;
         }
+        res.set("cache", ctx.cachePath());
         res.set("guid", ctx.getConfig().get("guid"));
         res.set("environment", getEnvironmentData(ctx.getEnvironment()));
         // TODO: Allow multiple security realms (depending on web site)
