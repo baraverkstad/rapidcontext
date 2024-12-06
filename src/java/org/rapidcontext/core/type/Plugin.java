@@ -163,7 +163,10 @@ public class Plugin extends StorableObject {
      *
      * @return the loaded plug-in version number, or
      *         null if not loaded or available
+     *
+     * @deprecated Use #version() on the instance instead.
      */
+    @Deprecated(forRemoval = true)
     public static String version(Storage storage, String pluginId) {
         Plugin plugin = storage.load(instancePath(pluginId), Plugin.class);
         return (plugin == null) ? null : plugin.version();
