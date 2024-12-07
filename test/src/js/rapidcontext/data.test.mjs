@@ -195,10 +195,14 @@ test('data.uniq()', () => {
 
 test('data.compare()', () => {
     assert.strictEqual(data.compare(null, undefined), 0);
+    assert.strictEqual(data.compare(null, NaN), 0);
     assert.strictEqual(data.compare(undefined, null), 0);
+    assert.strictEqual(data.compare(undefined, NaN), 0);
     assert.strictEqual(data.compare(1, 1), 0);
     assert.strictEqual(data.compare(1, 42), -1);
-    assert.strictEqual(data.compare(1, NaN), 0);
+    assert.strictEqual(data.compare(1, NaN), 1);
+    assert.strictEqual(data.compare(null, 1), -1);
+    assert.strictEqual(data.compare('', 'abc'), -1);
     assert.strictEqual(data.compare('abc', 'abc'), 0);
     assert.strictEqual(data.compare('abc', 'cde'), -1);
     assert.strictEqual(data.compare('cde', 'abc'), 1);

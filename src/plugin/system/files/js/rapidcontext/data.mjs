@@ -17,7 +17,7 @@
  * @namespace RapidContext.Data
  */
 
-import { isNil, isFunction, isObject, isArrayLike, isIterable, hasProperty, hasValue } from './fn.mjs';
+import { isNil, isFunction, isNumber, isObject, isArrayLike, isIterable, hasProperty, hasValue } from './fn.mjs';
 
 const OFF = ['null', 'undefined', '0', 'f', 'false', 'off', 'n', 'no'];
 
@@ -380,7 +380,13 @@ export function compare(valueOf, a, b) {
         a = valueOf(a);
         b = valueOf(b);
     }
-    return a < b ? -1 : (a > b ? 1 : 0);
+    let aNil = isNil(a) || (isNumber(a) && isNaN(a));
+    let bNil = isNil(b) || (isNumber(b) && isNaN(b));
+    if (aNil || bNil) {
+        return (aNil && bNil) ? 0 : (aNil ? -1 : 1);
+    } else {
+        return (a < b) ? -1 : (a > b ? 1 : 0);
+    }
 }
 
 /**
