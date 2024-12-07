@@ -70,7 +70,7 @@ build-java:
 build-plugins: CLASSPATH=$(wildcard $(PWD)/lib/rapidcontext-*.jar)
 build-plugins:
 	mkdir -p plugin/
-	rm -rf plugin/*
+	rm -rf plugin/* src/plugin/system/files/js/rapidcontext.*.min.js
 	npx esbuild --bundle --minify \
 		--platform=browser --target=chrome69,firefox65,safari11 \
 		--outfile=src/plugin/system/files/js/rapidcontext.$(VER).min.js \
