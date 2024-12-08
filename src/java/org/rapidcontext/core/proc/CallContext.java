@@ -14,9 +14,12 @@
 
 package org.rapidcontext.core.proc;
 
+import static org.rapidcontext.core.security.SecurityContext.currentUser;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,7 +33,6 @@ import org.rapidcontext.core.type.ConnectionException;
 import org.rapidcontext.core.type.Environment;
 import org.rapidcontext.core.type.Role;
 import org.rapidcontext.core.type.Procedure;
-import org.rapidcontext.core.type.User;
 import org.rapidcontext.util.DateUtil;
 
 /**
@@ -299,10 +301,10 @@ public class CallContext {
     throws ProcedureException {
 
         if (!SecurityContext.hasAccess(path, permission)) {
-            User user = SecurityContext.currentUser();
-            String id = (user == null) ? "anonymous user" : user.toString();
-            LOG.info(permission + " permission denied for " + path + ", " + id);
-            throw new ProcedureException("permission denied");
+            String user = Objects.toString(currentUser(), "anonymous user");
+            String msg = permission + " access denied for " + user;
+            LOG.info(msg + ", path: " + path);
+            throw new ProcedureException(msg);
         }
     }
 
