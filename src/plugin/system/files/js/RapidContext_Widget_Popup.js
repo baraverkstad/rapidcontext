@@ -225,12 +225,14 @@ RapidContext.Widget.Popup.prototype.selectChild = function (indexOrNode) {
 RapidContext.Widget.Popup.prototype.selectMove = function (offset) {
     let active = this.selectedChild();
     let items = this.querySelectorAll("li:not(.disabled), .widgetPopupItem:not(.disabled)");
-    let index = (offset < 0) ? offset : Math.max(0, offset - 1);
+    let index;
     if (active) {
         index = Array.from(items).indexOf(active) + offset;
+    } else {
+        index = (offset < 0) ? items.length - 1 : 0;
     }
     index += (index < 0) ? items.length : 0;
-    index -= (index >= items.length) ? items.length - 1 : 0;
+    index -= (index >= items.length) ? items.length : 0;
     return this.selectChild(items[index]);
 };
 
@@ -240,7 +242,7 @@ RapidContext.Widget.Popup.prototype.selectMove = function (offset) {
  * @param {Event} evt the DOM Event object
  */
 RapidContext.Widget.Popup.prototype._handleMouseEvent = function (evt) {
-    this.show();
+    this.resetDelay();
     let node = evt.delegateTarget;
     if (this.selectChild(node) >= 0 && evt.type == "click") {
         let detail = { menu: this, item: node };
@@ -254,7 +256,7 @@ RapidContext.Widget.Popup.prototype._handleMouseEvent = function (evt) {
  * @param {Event} evt the DOM Event object
  */
 RapidContext.Widget.Popup.prototype._handleKeyDown = function (evt) {
-    this.show();
+    this.resetDelay();
     switch (evt.key) {
     case "ArrowUp":
     case "ArrowDown":
