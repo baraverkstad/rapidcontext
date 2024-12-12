@@ -377,9 +377,10 @@ RapidContext.Widget.Dialog.prototype.resetScroll = function () {
 window.addEventListener("DOMContentLoaded", () => {
     document.body.addEventListener("keydown", (evt) => {
         if (evt.key == "Escape") {
+            let selector = ".widgetDialog, .widgetPopup";
             let isVisible = (el) => el.offsetHeight > 0;
-            let dlgs = Array.from(document.body.querySelectorAll(".widgetDialog")).filter(isVisible);
-            let last = dlgs[dlgs.length - 1];
+            let elems = Array.from(document.body.querySelectorAll(selector)).filter(isVisible);
+            let last = elems[elems.length - 1];
             last && last.closeable && last.hide();
         }
     });
