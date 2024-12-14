@@ -1,9 +1,11 @@
 import js from "@eslint/js";
 import globals from "globals";
 import html from "eslint-plugin-html";
+import yml from "eslint-plugin-yml";
 
 export default [
     js.configs.recommended,
+    ...yml.configs['flat/recommended'],
     {
         languageOptions: {
             ecmaVersion: 2020,
