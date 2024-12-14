@@ -1,4 +1,4 @@
-window.ExampleApp = class {
+class ExampleApp {
 
     constructor() {
         this.interval = null;
@@ -14,14 +14,12 @@ window.ExampleApp = class {
 
         // Attach signal handlers
         this.ui.zooPane.on("click", "[data-action]", (evt) => this.action(evt));
-        MochiKit.Signal.connect(this.ui.progressForm, "onclick", this, "progressConfig");
-        RapidContext.UI.connectProc(this.proc.appList, this.ui.appLoading, this.ui.appReload);
-        MochiKit.Signal.connect(this.proc.appList, "oncall", this.ui.appTable, "clear");
-        MochiKit.Signal.connect(this.proc.appList, "onsuccess", this.ui.appTable, "setData");
-        MochiKit.Signal.connect(this.ui.iconShowAll, "onchange", this, "toggleIcons");
+        this.ui.progressForm.on("click", () => this.progressConfig());
+        this.ui.appReload.on("click", () => this.loadApps());
+        RapidContext.UI.Event.on(this.ui.iconShowAll, "change", () => this.toggleIcons());
 
         // Initialize data
-        this.proc.appList();
+        this.loadApps();
         this.initIcons();
         this.interval = setInterval(() => this.progressUpdate(), 500);
     }
@@ -30,6 +28,20 @@ window.ExampleApp = class {
     stop() {
         // Cleanup any resources or handlers
         clearInterval(this.interval);
+    }
+
+    async loadApps() {
+        this.ui.appLoading.show();
+        this.ui.appReload.hide();
+        try {
+            this.ui.appTable.clear();
+            let data = await this.proc.appList();
+            this.ui.appTable.setData(data);
+        } catch (e) {
+            RapidContext.UI.showError(e);
+        }
+        this.ui.appLoading.hide();
+        this.ui.appReload.show();
     }
 
     action(evt) {
@@ -119,6 +131,9 @@ window.ExampleApp = class {
 
     // Handles show all icon backgrounds checkbox
     toggleIcons() {
-        $(this.ui.iconTable).find(".extra").toggleClass("hidden");
+        this.ui.iconTable.querySelectorAll(".extra").forEach((el) => el.classList.toggle("hidden"));
     }
-};
+}
+
+// FIXME: Switch to module and export class instead
+window.ExampleApp = ExampleApp;

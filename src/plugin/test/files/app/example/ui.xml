@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui class="example-app">
   <TabContainer w="100%" h="100%">
-    <Pane id="zooPane" pageTitle="Widget Zoo" pageCloseable="false">
-      <div class="zoo" w="550" h="100%" style="float: left; padding: 0 10px 0 0;">
+    <Pane id="zooPane" pageTitle="Widget Zoo" pageCloseable="false" class="flex-row">
+      <div class="zoo pr-3" style="max-width: 40%;">
         <h3>Form Widgets:</h3>
-        <fieldset>
+        <fieldset w="100%-2em-2px">
           <legend>Plain Buttons</legend>
           <Button>Normal</Button>
           <Button disabled="true">Disabled</Button>
@@ -14,7 +14,7 @@
           <Button class="success">Success</Button>
           <Button class="info">Info</Button>
         </fieldset>
-        <fieldset>
+        <fieldset w="100%-2em-2px">
           <legend>Icon Buttons</legend>
           <Button icon="fa fa-check">Normal</Button>
           <Button icon="fa fa-check" disabled="true">Disabled</Button>
@@ -24,7 +24,7 @@
           <Button icon="fa fa-heart" class="success">Success</Button>
           <Button icon="fa fa-info-circle" class="info">Info</Button>
         </fieldset>
-        <fieldset>
+        <fieldset w="100%-2em-2px">
           <legend>Text Input</legend>
           <div>
             <TextField type="search" placeholder="Search value" />
@@ -36,45 +36,45 @@
             <TextArea cols="40" rows="2" autosize="true" placeholder="Enter a multi-line value" />
           </div>
         </fieldset>
-        <fieldset w="100%-20">
+        <fieldset w="100%-2em-2px">
           <legend>Progress Bar</legend>
           <Form id="progressForm">
-            <label class="label" style="margin-right: 10px;">
+            <label class="label mr-2">
               <input type="checkbox" name="ratio" checked="checked"/> Ratio (Percent)
             </label>
-            <label class="label" style="margin-right: 10px;">
+            <label class="label mr-2">
               <input type="checkbox" name="value" checked="checked"/> Value (Step)
             </label>
-            <label class="label" style="margin-right: 10px;">
+            <label class="label mr-2">
               <input type="checkbox" name="text" /> Information Text
             </label>
-            <label class="label">
+            <label class="label mr-2">
               <input type="checkbox" name="time" checked="checked"/> Time Remaining
             </label>
           </Form>
-          <ProgressBar id="progressBar" style="margin: 10px 0;" />
+          <ProgressBar id="progressBar" class="my-2"/>
         </fieldset>
       </div>
-      <div class="zoo" w="100%-575" h="100%" style="float: left; padding: 0 0 0 10px; border-left: 1px solid #ACF;">
+      <div class="zoo flex-fill border-l pl-3">
         <h3>Data Widgets:</h3>
-        <fieldset w="100%-20">
+        <fieldset w="100%-2em-2px">
           <legend>
             Table
             <Icon id="appReload" ref="RELOAD" />
             <Icon id="appLoading" ref="LOADING" hidden="true" />
           </legend>
-          <Table id="appTable" select="multiple" style="width: 100%; height: 150px;">
+          <Table id="appTable" select="multiple">
             <TableColumn title="Id" field="id" sort="asc" />
             <TableColumn title="Name" field="name" />
             <TableColumn title="Plugin" field="_plugin" />
             <TableColumn title="Version" field="_version" />
           </Table>
         </fieldset>
-        <fieldset w="100%-20">
+        <fieldset w="100%-2em-2px">
           <legend>
             Tree
           </legend>
-          <Tree style="width: 100%; height: 150px;">
+          <Tree>
             <TreeNode name="One">
               <TreeNode name="Subnode 1" />
               <TreeNode name="Subnode 2" />
@@ -83,19 +83,19 @@
             <TreeNode name="Three" />
           </Tree>
         </fieldset>
-        <h3 style="padding-top: 15px; border-top: 1px solid #ACF;">Other Widgets:</h3>
-        <fieldset w="100%-20">
+        <h3 class="border-t pt-2">Other Widgets:</h3>
+        <fieldset w="100%-2em-2px">
           <legend>Dialogs</legend>
           <Button icon="fa fa-check" data-action="dlg-show">Show</Button>
         </fieldset>
-        <fieldset w="100%-20">
+        <fieldset w="100%-2em-2px">
           <legend>Messages</legend>
           <Button icon="fa fa-bolt" class="danger" data-action="msg-error">Error</Button>
           <Button icon="fa fa-exclamation-triangle" class="warning" data-action="msg-warning">Warning</Button>
           <Button icon="fa fa-heart" class="success" data-action="msg-success">Success</Button>
           <Button icon="fa fa-info-circle" class="info" data-action="msg-info">Info</Button>
         </fieldset>
-        <fieldset w="100%-20">
+        <fieldset w="100%-2em-2px">
           <legend>Overlay</legend>
           <Button data-action="show-overlay">Show Overlay</Button>
         </fieldset>
@@ -108,11 +108,11 @@
         </div>
       </Dialog>
     </Pane>
-    <Pane pageTitle="Icon Expos&#233;" pageCloseable="false">
-      <div style="height: 25px;">
+    <Pane pageTitle="Icon Expos&#233;" pageCloseable="false" class="flex-col">
+      <div class="mb-2">
         <label class="label"><input id="iconShowAll" type="checkbox" /> Show alternate backgrounds</label>
       </div>
-      <div class="expose" w="100%" h="100%-25" style="overflow: auto;">
+      <div class="expose flex-fill overflow-auto">
         <table>
           <tbody id="iconTable">
           </tbody>
