@@ -30,7 +30,7 @@
       </Pane>
     </Pane>
   </TabContainer>
-  <Pane id="infoBar" class="position-absolute top-0 right-0 p-2">
+  <Pane id="infoBar" class="position-absolute top-0 right-0 p-2 cursor-default">
     <i class="fa fa-user"></i>
     <span id="infoUser" class="pl-1"></span>
     <i class="fa fa-plug pl-2"></i>

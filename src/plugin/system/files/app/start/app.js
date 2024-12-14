@@ -4,7 +4,6 @@
 function StartApp() {
     this.appStatus = {};
     this.gradients = ["yellow", "red", "green", "blue"];
-    this.focused = true;
     this.showingModifiers = false;
     this.showingInlinePanes = false;
 }
@@ -21,10 +20,8 @@ StartApp.prototype.start = function () {
     var status = RapidContext.App.status();
 
     // General events
-    MochiKit.Signal.connect(document, "onkeydown", this, "_handleKeyEvent");
-    MochiKit.Signal.connect(document, "onkeyup", this, "_handleKeyEvent");
-    MochiKit.Signal.connect(this.ui.root, "onenter", this, "_focusGained");
-    MochiKit.Signal.connect(this.ui.root, "onexit", this, "_focusLost");
+    RapidContext.UI.Event.on(document, "keydown", (evt) => this._showAppModifiers(evt.ctrlKey || evt.metaKey));
+    RapidContext.UI.Event.on(document, "keyup visibilitychange", () => this._showAppModifiers(false));
 
     // Info bar & popup menu
     this._initInfoMenu();
@@ -32,38 +29,38 @@ StartApp.prototype.start = function () {
     env = (env && env.name) ? env.name : "<none>";
     this.ui.infoEnv.innerText = env;
     MochiKit.Signal.connect(this.proc.sessionInfo, "onsuccess", this, "_initInfoMenu");
-    MochiKit.Signal.connect(this.ui.infoBar, "onmousemove", this.ui.menu, "show");
-    MochiKit.Signal.connect(this.ui.infoBar, "onmouseleave", this.ui.menu, "hide");
-    MochiKit.Signal.connect(this.ui.menu, "onmouseleave", this.ui.menu, "hide");
-    MochiKit.Signal.connect(this.ui.menu, "onmenuselect", this, "_popupSelect");
+    this.ui.infoBar.on("click", () => this.ui.menu.setAttrs({ hidden: !this.ui.menu.isHidden() }));
+    this.ui.infoBar.on("click", false);
+    this.ui.menu.on("menuselect", (evt) => this._popupSelect(evt.detail.item));
+    RapidContext.UI.Event.on(document, "click", () => this.ui.menu.hide());
 
     // App pane
     RapidContext.UI.connectProc(this.proc.appList, this.ui.appLoading, this.ui.appReload);
     MochiKit.Signal.connect(this.proc.appList, "onsuccess", this, "_initApps");
-    MochiKit.Signal.connect(this.ui.appTable, "onclick", this, "_handleAppLaunch");
+    RapidContext.UI.Event.on(this.ui.appTable, "click", "[data-appid]", (evt) => this._handleAppLaunch(evt));
 
     // About dialog
     var version = MochiKit.Text.format("{version} ({date})", status);
     this.ui.aboutVersion.innerText = version;
 
     // Password dialog
-    MochiKit.Signal.connect(this.ui.passwordForm, "onsubmit", this, "_changePassword");
+    this.ui.passwordForm.on("submit", () => this._changePassword());
     MochiKit.Signal.connect(this.proc.changePassword, "onresponse", this, "_changePasswordCallback");
     this.ui.passwordForm.addValidator("passwordcheck", function (value, field, form) {
         return value === form.elements["password"].value;
     });
 
     // Login dialog
-    MochiKit.Signal.connect(this.ui.loginForm, "onsubmit", this, "_loginAuth");
+    this.ui.loginForm.on("submit", () => this._loginAuth());
 
     // Tour wizard
-    MochiKit.Signal.connect(this.ui.tourButton, "onclick", this, "_tourStart");
-    MochiKit.Signal.connect(this.ui.tourWizard, "onclose", this, "_tourStop");
-    MochiKit.Signal.connect(this.ui.tourWizard, "onchange", this, "_tourChange");
-    MochiKit.Signal.connect(this.ui.tourStartLocate, "onclick", this, "_tourLocateStart");
-    MochiKit.Signal.connect(this.ui.tourUserLocate, "onclick", this, "_tourLocateUser");
-    MochiKit.Signal.connect(this.ui.tourHelpLocate, "onclick", this, "_tourLocateHelp");
-    MochiKit.Signal.connect(this.ui.tourTabsLocate, "onclick", this, "_tourLocateTabs");
+    this.ui.tourButton.on("click", () => this._tourStart());
+    this.ui.tourWizard.on("close", () => this._tourStop());
+    this.ui.tourWizard.on("change", () => this._tourChange());
+    this.ui.tourStartLocate.on("click", () => this._tourLocateStart());
+    this.ui.tourUserLocate.on("click", () => this._tourLocateUser());
+    this.ui.tourHelpLocate.on("click", () => this._tourLocateHelp());
+    this.ui.tourTabsLocate.on("click", () => this._tourLocateTabs());
 
     // Init app list
     this.proc.appList();
@@ -169,43 +166,16 @@ StartApp.prototype._initDashboardApp = function (app) {
 };
 
 /**
- * Event handler for the focus gain event (onenter).
- */
-StartApp.prototype._focusGained = function (evt) {
-    this.focused = true;
-};
-
-/**
- * Event handler for the focus lost event (onexit).
- */
-StartApp.prototype._focusLost = function (evt) {
-    this.focused = false;
-    this._showAppModifiers(false);
-};
-
-/**
- * Handles global key events. This handler only processes events if
- * the app is currently in focus (as far as can be determined). It
- * currently only handles the launcher modifier keys.
- */
-StartApp.prototype._handleKeyEvent = function (evt) {
-    if (evt.type() == "keydown" && evt.modifier().any && this.focused && !this.showingModifiers) {
-        this.showingModifiers = true;
-        this._showAppModifiers(true);
-    } else if (evt.type() == "keyup" && this.showingModifiers) {
-        this.showingModifiers = false;
-        this._showAppModifiers(false);
-    }
-};
-
-/**
  * Shows or hides the application launcher modifier icons.
  *
  * @param {boolean} visible the visible flag
  */
 StartApp.prototype._showAppModifiers = function (visible) {
-    var icons = $(this.ui.appTable).find("a > i").not(".launch-window");
-    icons.toggleClass("hidden", !visible);
+    if (this.showingModifiers !== visible) {
+        this.showingModifiers = visible;
+        let icons = $(this.ui.appTable).find("a > i").not(".launch-window");
+        icons.toggleClass("hidden", !visible);
+    }
 };
 
 /**
@@ -214,15 +184,13 @@ StartApp.prototype._showAppModifiers = function (visible) {
  * @param {Event} evt the click event
  */
 StartApp.prototype._handleAppLaunch = function (evt) {
-    var $tr = $(evt.target()).closest("tr");
-    var appId = $tr.data("appid");
+    let appId = evt.delegateTarget.dataset.appid;
     if (appId) {
-        var app = RapidContext.App.findApp(appId);
-        var win = evt.modifier().any || (app && app.launch == "window");
+        let app = RapidContext.App.findApp(appId);
+        let win = evt.ctrlKey || evt.metaKey || (app && app.launch == "window");
         this.startApp(appId, win ? window.open() : null);
         this._showAppModifiers(false);
     }
-    evt.stop();
 };
 
 /**
@@ -269,9 +237,9 @@ StartApp.prototype.startApp = function (app, container) {
 /**
  * Handles a popup menu item selection.
  */
-StartApp.prototype._popupSelect = function (evt) {
+StartApp.prototype._popupSelect = function (item) {
     this.ui.menu.hide();
-    switch (evt.event().detail.item.dataset.action) {
+    switch (item.dataset.action) {
     case "about":
         this.ui.about.show();
         break;
