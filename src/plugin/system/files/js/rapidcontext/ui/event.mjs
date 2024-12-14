@@ -129,7 +129,7 @@ export function emit(src, event, opts) {
  * @function RapidContext.UI.Event.on
  */
 export function on(src, event, selector, listener, opts) {
-    if (typeof(selector) == 'function') {
+    if (typeof(selector) != 'string') {
         opts = arguments[3];
         listener = arguments[2];
         selector = null;
@@ -183,7 +183,7 @@ export function once(src, event, selector, listener, opts) {
  * @function RapidContext.UI.Event.off
  */
 export function off(src, event, selector, listener) {
-    if (typeof(selector) == 'function') {
+    if (typeof(selector) != 'string') {
         listener = arguments[2];
         selector = null;
     }
