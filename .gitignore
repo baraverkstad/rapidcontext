@@ -1,3 +1,4 @@
+/.scannerwork/
 /classes/
 /lib/
 /node_modules/
@@ -6,4 +7,6 @@
 /README.md
 /rapidcontext*
 /src/
+/target/
 /test/
+/tmp/
