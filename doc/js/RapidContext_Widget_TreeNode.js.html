@@ -55,7 +55,7 @@
         <article>
             <pre><code class="hljs language-js"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
 <span id="line2" class="lineno">2</span> * RapidContext &lt;https://www.rapidcontext.com/&gt;
-<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2023 Per Cederberg. All rights reserved.
+<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2024 Per Cederberg. All rights reserved.
 <span id="line4" class="lineno">4</span> *
 <span id="line5" class="lineno">5</span> * This program is free software: you can redistribute it and/or
 <span id="line6" class="lineno">6</span> * modify it under the terms of the BSD license.
@@ -108,10 +108,10 @@
 <span id="line53" class="lineno">53</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TreeNode</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">attrs<span class="hljs-comment">/*, ...*/</span></span>) {
 <span id="line54" class="lineno">54</span>    <span class="hljs-keyword">let</span> toggle = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title class_">Icon</span>(<span class="hljs-string">&quot;fa fa-fw&quot;</span>);
 <span id="line55" class="lineno">55</span>    <span class="hljs-keyword">let</span> icon = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title class_">Icon</span>(<span class="hljs-string">&quot;fa fa-fw fa-dot-circle-o&quot;</span>);
-<span id="line56" class="lineno">56</span>    <span class="hljs-keyword">let</span> label = <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">DOM</span>.<span class="hljs-title function_">SPAN</span>({ <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;widgetTreeNodeText&quot;</span> });
+<span id="line56" class="lineno">56</span>    <span class="hljs-keyword">let</span> label = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">SPAN</span>({ <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;widgetTreeNodeText&quot;</span> });
 <span id="line57" class="lineno">57</span>    <span class="hljs-keyword">let</span> cls = <span class="hljs-string">&quot;widgetTreeNodeLabel overflow-ellipsis text-nowrap&quot;</span>;
-<span id="line58" class="lineno">58</span>    <span class="hljs-keyword">let</span> div = <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">DOM</span>.<span class="hljs-title function_">DIV</span>({ <span class="hljs-string">&quot;class&quot;</span>: cls }, toggle, icon, label);
-<span id="line59" class="lineno">59</span>    <span class="hljs-keyword">let</span> o = <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">DOM</span>.<span class="hljs-title function_">DIV</span>({}, div);
+<span id="line58" class="lineno">58</span>    <span class="hljs-keyword">let</span> div = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">DIV</span>({ <span class="hljs-string">&quot;class&quot;</span>: cls }, toggle, icon, label);
+<span id="line59" class="lineno">59</span>    <span class="hljs-keyword">let</span> o = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">DIV</span>({}, div);
 <span id="line60" class="lineno">60</span>    <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title function_">_widgetMixin</span>(o, <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TreeNode</span>);
 <span id="line61" class="lineno">61</span>    o.<span class="hljs-property">classList</span>.<span class="hljs-title function_">add</span>(<span class="hljs-string">&quot;widgetTreeNode&quot;</span>);
 <span id="line62" class="lineno">62</span>    <span class="hljs-keyword">let</span> isFolder = (<span class="hljs-variable language_">arguments</span>.<span class="hljs-property">length</span> &gt; <span class="hljs-number">1</span>);
@@ -138,7 +138,7 @@
 <span id="line83" class="lineno">83</span>    <span class="hljs-keyword">if</span> (container.<span class="hljs-property">classList</span>.<span class="hljs-title function_">contains</span>(<span class="hljs-string">&quot;widgetTreeNodeContainer&quot;</span>)) {
 <span id="line84" class="lineno">84</span>        <span class="hljs-keyword">return</span> container;
 <span id="line85" class="lineno">85</span>    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (create) {
-<span id="line86" class="lineno">86</span>        container = <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">DOM</span>.<span class="hljs-title function_">DIV</span>({ <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;widgetTreeNodeContainer widgetHidden&quot;</span> });
+<span id="line86" class="lineno">86</span>        container = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">DIV</span>({ <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;widgetTreeNodeContainer widgetHidden&quot;</span> });
 <span id="line87" class="lineno">87</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">append</span>(container);
 <span id="line88" class="lineno">88</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">firstChild</span>.<span class="hljs-property">childNodes</span>[<span class="hljs-number">0</span>].<span class="hljs-title function_">setAttrs</span>({ <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-fw fa-plus-square-o&quot;</span> });
 <span id="line89" class="lineno">89</span>        <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">icon</span>) {
@@ -482,7 +482,7 @@
 
     <section class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2023 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2024 Per Cederberg. All rights reserved.
     </section>
 
   </body>

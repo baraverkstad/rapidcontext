@@ -87,30 +87,6 @@ jQuery.</p></div>
                     </td>
                     <td class="name-description">
                         <div class="deprecated">
-                            <code><a href="#.dict">dict<span class="signature">(itemsOrKeys, values<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Object}</span></a></code>
-                        </div>
-                        <div class="description">Creates a dictionary object from a list of keys and values.</div>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td class="attributes">
-                        <span class="type-signature">(static) </span>
-                    </td>
-                    <td class="name-description">
-                        <div class="deprecated">
-                            <code><a href="#.mask">mask<span class="signature">(src, keys)</span><span class="type-signature"> &rarr; {Object}</span></a></code>
-                        </div>
-                        <div class="description">Filters an object by removing a list of keys.</div>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td class="attributes">
-                        <span class="type-signature">(static) </span>
-                    </td>
-                    <td class="name-description">
-                        <div >
                             <code><a href="#.registerSizeConstraints">registerSizeConstraints<span class="signature">(node, width<span class="signature-attributes">opt</span>, height<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></a></code>
                         </div>
                         <div class="description">Registers size constraints for the element width and/or height.</div>
@@ -122,23 +98,11 @@ jQuery.</p></div>
                         <span class="type-signature">(static) </span>
                     </td>
                     <td class="name-description">
-                        <div >
+                        <div class="deprecated">
                             <code><a href="#.resizeElements">resizeElements<span class="signature">(&hellip;node)</span><span class="type-signature"></span></a></code>
                         </div>
                         <div class="description">Resizes one or more DOM nodes using their registered size constraints and
 their parent element sizes.</div>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td class="attributes">
-                        <span class="type-signature">(static) </span>
-                    </td>
-                    <td class="name-description">
-                        <div class="deprecated">
-                            <code><a href="#.resolveURI">resolveURI<span class="signature">(uri, base<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {string}</span></a></code>
-                        </div>
-                        <div class="description">Resolves a relative URI to an absolute URI.</div>
                     </td>
                 </tr>
 
@@ -313,431 +277,7 @@ function will recursively blur all <code>&lt;a&gt;</code>, <code>&lt;button&gt;<
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext.Util.js.html">RapidContext.Util.js</a>, <a href="RapidContext.Util.js.html#line219">line 219</a>
-    </dd>
-
-</dl>
-
-
-
-
-
-
-
-    <h4 class="name" id=".dict">
-        <span class="type-signature">(static) </span>dict<span class="signature">(itemsOrKeys, values<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Object}</span>
-    </h4>
-
-
-
-
-
-<div class="description">
-    <p>Creates a dictionary object from a list of keys and values. Optionally a
-list of key-value pairs can be provided instead. As a third option, a single
-(non-array) value can be assigned to all the keys.</p>
-
-<p>If a key is specified twice, only the last value will be used. Note that
-this function is the reverse of <code>MochiKit.Base.items()</code>,
-<code>MochiKit.Base.keys()</code> and <code>MochiKit.Base.values()</code>.</p>
-</div>
-
-
-
-
-<dl class="details">
-
-
-
-
-
-
-
-
-
-    <dt class="tag-params">Parameters:</dt>
-    <dd class="tag-params">
-
-
-<table class="params">
-    <thead>
-    <tr>
-
-        <th>Name</th>
-
-
-        <th>Type</th>
-
-
-        <th>Attributes</th>
-
-
-
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-
-
-        <tr>
-
-                <td class="name"><code>itemsOrKeys</code></td>
-
-
-            <td class="type">
-
-
-    <span class="param-type">{<b>Array</b>}</span>
-
-
-            </td>
-
-
-                <td class="attributes">
-
-
-
-
-
-                </td>
-
-
-
-
-            <td class="description last">
-                the list of keys or items
-
-            </td>
-        </tr>
-
-
-
-        <tr>
-
-                <td class="name"><code>values</code></td>
-
-
-            <td class="type">
-
-
-    <span class="param-type">{<b>Array</b>}</span>
-
-
-            </td>
-
-
-                <td class="attributes">
-
-                    &lt;optional><br>
-
-
-
-
-
-                </td>
-
-
-
-
-            <td class="description last">
-                the list of values (optional if key-value
-           pairs are specified in first argument)
-
-            </td>
-        </tr>
-
-
-    </tbody>
-</table>
-
-    </dd>
-
-
-
-    <dt class="tag-returns">Returns:</dt>
-    <dd class="tag-returns">
-
-
-    <span class="param-type">{<b>Object</b>}</span>
-
-    an object with properties for each key-value pair
-
-    </dd>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <dt class="tag-deprecated">Deprecated:</dt>
-        <dd class="important">
-            Use RapidContext.Data.object() instead.
-        </dd>
-
-
-
-
-
-
-
-    <dt class="tag-examples">Examples:</dt>
-    <dd class="tag-examples">
-
-    <pre class="hljs"><code><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Util</span>.<span class="hljs-title function_">dict</span>([<span class="hljs-string">&#x27;a&#x27;</span>,<span class="hljs-string">&#x27;b&#x27;</span>], [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>])
-==&gt; { <span class="hljs-attr">a</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">b</span>: <span class="hljs-number">2</span> }</code></pre>
-
-    <pre class="hljs"><code><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Util</span>.<span class="hljs-title function_">dict</span>([[<span class="hljs-string">&#x27;a&#x27;</span>, <span class="hljs-number">1</span>], [<span class="hljs-string">&#x27;b&#x27;</span>, <span class="hljs-number">2</span>]])
-==&gt; { <span class="hljs-attr">a</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">b</span>: <span class="hljs-number">2</span> }</code></pre>
-
-    <pre class="hljs"><code><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Util</span>.<span class="hljs-title function_">dict</span>([<span class="hljs-string">&#x27;a&#x27;</span>,<span class="hljs-string">&#x27;b&#x27;</span>], <span class="hljs-literal">true</span>)
-==&gt; { <span class="hljs-attr">a</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">b</span>: <span class="hljs-literal">true</span> }</code></pre>
-
-
-    </dd>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source">
-        <a href="RapidContext.Util.js.html">RapidContext.Util.js</a>, <a href="RapidContext.Util.js.html#line62">line 62</a>
-    </dd>
-
-</dl>
-
-
-
-
-
-
-
-    <h4 class="name" id=".mask">
-        <span class="type-signature">(static) </span>mask<span class="signature">(src, keys)</span><span class="type-signature"> &rarr; {Object}</span>
-    </h4>
-
-
-
-
-
-<div class="description">
-    <p>Filters an object by removing a list of keys. A list of key names (or an
-object whose property names will be used as keys) must be specified as an
-argument. A new object containing the source object values for the specified
-keys will be returned. The source object will be modified by removing all
-the specified keys.</p>
-</div>
-
-
-
-
-<dl class="details">
-
-
-
-
-
-
-
-
-
-    <dt class="tag-params">Parameters:</dt>
-    <dd class="tag-params">
-
-
-<table class="params">
-    <thead>
-    <tr>
-
-        <th>Name</th>
-
-
-        <th>Type</th>
-
-
-
-
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-
-
-        <tr>
-
-                <td class="name"><code>src</code></td>
-
-
-            <td class="type">
-
-
-    <span class="param-type">{<b>Object</b>}</span>
-
-
-            </td>
-
-
-
-
-
-            <td class="description last">
-                the source object to select and modify
-
-            </td>
-        </tr>
-
-
-
-        <tr>
-
-                <td class="name"><code>keys</code></td>
-
-
-            <td class="type">
-
-
-    <span class="param-type">{<b>Array</b>|<b>Object</b>}</span>
-
-
-            </td>
-
-
-
-
-
-            <td class="description last">
-                the list of keys to remove, or an
-           object with the keys to remove
-
-            </td>
-        </tr>
-
-
-    </tbody>
-</table>
-
-    </dd>
-
-
-
-    <dt class="tag-returns">Returns:</dt>
-    <dd class="tag-returns">
-
-
-    <span class="param-type">{<b>Object</b>}</span>
-
-    a new object containing the matching keys and
-            values found in the source object
-
-    </dd>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <dt class="tag-deprecated">Deprecated:</dt>
-        <dd class="important">
-            This function will be removed in the future.
-        </dd>
-
-
-
-
-
-
-
-    <dt class="tag-examples">Examples:</dt>
-    <dd class="tag-examples">
-
-    <pre class="hljs"><code><span class="hljs-keyword">var</span> o = { <span class="hljs-attr">a</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">b</span>: <span class="hljs-number">2</span> };
-<span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Util</span>.<span class="hljs-title function_">mask</span>(o, [<span class="hljs-string">&#x27;a&#x27;</span>, <span class="hljs-string">&#x27;c&#x27;</span>]);
-==&gt; { <span class="hljs-attr">a</span>: <span class="hljs-number">1</span> } and modifies o to { <span class="hljs-attr">b</span>: <span class="hljs-number">2</span> }</code></pre>
-
-    <pre class="hljs"><code><span class="hljs-keyword">var</span> o = { <span class="hljs-attr">a</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">b</span>: <span class="hljs-number">2</span> };
-<span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Util</span>.<span class="hljs-title function_">mask</span>(o, { <span class="hljs-attr">a</span>: <span class="hljs-literal">null</span>, <span class="hljs-attr">c</span>: <span class="hljs-literal">null</span> });
-==&gt; { <span class="hljs-attr">a</span>: <span class="hljs-number">1</span> } and modifies o to { <span class="hljs-attr">b</span>: <span class="hljs-number">2</span> }</code></pre>
-
-
-    </dd>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source">
-        <a href="RapidContext.Util.js.html">RapidContext.Util.js</a>, <a href="RapidContext.Util.js.html#line112">line 112</a>
+        <a href="RapidContext.Util.js.html">RapidContext.Util.js</a>, <a href="RapidContext.Util.js.html#line82">line 82</a>
     </dd>
 
 </dl>
@@ -941,12 +481,12 @@ also be bounded by the parent element size to avoid calculation errors.</p>
 
 
 
+        <dt class="tag-deprecated">Deprecated:</dt>
+        <dd class="important">
+            Use CSS width and height with calc() instead.
+        </dd>
 
 
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <a href="RapidContext.Util.html#.resizeElements">RapidContext.Util.resizeElements</a>
-    </dd>
 
 
 
@@ -982,7 +522,7 @@ also be bounded by the parent element size to avoid calculation errors.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext.Util.js.html">RapidContext.Util.js</a>, <a href="RapidContext.Util.js.html#line254">line 254</a>
+        <a href="RapidContext.Util.js.html">RapidContext.Util.js</a>, <a href="RapidContext.Util.js.html#line117">line 117</a>
     </dd>
 
 </dl>
@@ -1124,12 +664,12 @@ DOM tree traversal.</p>
 
 
 
+        <dt class="tag-deprecated">Deprecated:</dt>
+        <dd class="important">
+            Use CSS width and height with calc() instead.
+        </dd>
 
 
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <a href="RapidContext.Util.html#.registerSizeConstraints">RapidContext.Util.registerSizeConstraints</a>
-    </dd>
 
 
 
@@ -1165,212 +705,7 @@ DOM tree traversal.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext.Util.js.html">RapidContext.Util.js</a>, <a href="RapidContext.Util.js.html#line307">line 307</a>
-    </dd>
-
-</dl>
-
-
-
-
-
-
-
-    <h4 class="name" id=".resolveURI">
-        <span class="type-signature">(static) </span>resolveURI<span class="signature">(uri, base<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {string}</span>
-    </h4>
-
-
-
-
-
-<div class="description">
-    <p>Resolves a relative URI to an absolute URI. This function will return
-absolute URI:s directly and traverse any &quot;../&quot; directory paths in the
-specified URI. The base URI provided must be absolute.</p>
-</div>
-
-
-
-
-<dl class="details">
-
-
-
-
-
-
-
-
-
-    <dt class="tag-params">Parameters:</dt>
-    <dd class="tag-params">
-
-
-<table class="params">
-    <thead>
-    <tr>
-
-        <th>Name</th>
-
-
-        <th>Type</th>
-
-
-        <th>Attributes</th>
-
-
-
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-
-
-        <tr>
-
-                <td class="name"><code>uri</code></td>
-
-
-            <td class="type">
-
-
-    <span class="param-type">{<b>string</b>}</span>
-
-
-            </td>
-
-
-                <td class="attributes">
-
-
-
-
-
-                </td>
-
-
-
-
-            <td class="description last">
-                the relative URI to resolve
-
-            </td>
-        </tr>
-
-
-
-        <tr>
-
-                <td class="name"><code>base</code></td>
-
-
-            <td class="type">
-
-
-    <span class="param-type">{<b>string</b>}</span>
-
-
-            </td>
-
-
-                <td class="attributes">
-
-                    &lt;optional><br>
-
-
-
-
-
-                </td>
-
-
-
-
-            <td class="description last">
-                the absolute base URI, defaults to the
-           the current document base URI
-
-            </td>
-        </tr>
-
-
-    </tbody>
-</table>
-
-    </dd>
-
-
-
-    <dt class="tag-returns">Returns:</dt>
-    <dd class="tag-returns">
-
-
-    <span class="param-type">{<b>string</b>}</span>
-
-    the resolved absolute URI
-
-    </dd>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <dt class="tag-deprecated">Deprecated:</dt>
-        <dd class="important">
-            This function will be removed and/or renamed in the future.
-    Use `new URL(..., document.baseURI)` instead.
-        </dd>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source">
-        <a href="RapidContext.Util.js.html">RapidContext.Util.js</a>, <a href="RapidContext.Util.js.html#line181">line 181</a>
+        <a href="RapidContext.Util.js.html">RapidContext.Util.js</a>, <a href="RapidContext.Util.js.html#line171">line 171</a>
     </dd>
 
 </dl>
@@ -1544,7 +879,7 @@ capitalization of other characters in the string.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext.Util.js.html">RapidContext.Util.js</a>, <a href="RapidContext.Util.js.html#line156">line 156</a>
+        <a href="RapidContext.Util.js.html">RapidContext.Util.js</a>, <a href="RapidContext.Util.js.html#line61">line 61</a>
     </dd>
 
 </dl>
@@ -1567,7 +902,7 @@ capitalization of other characters in the string.</p>
 
     <section class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2023 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2024 Per Cederberg. All rights reserved.
     </section>
 
   </body>

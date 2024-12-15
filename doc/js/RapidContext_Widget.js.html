@@ -55,7 +55,7 @@
         <article>
             <pre><code class="hljs language-js"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
 <span id="line2" class="lineno">2</span> * RapidContext &lt;https://www.rapidcontext.com/&gt;
-<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2023 Per Cederberg. All rights reserved.
+<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2024 Per Cederberg. All rights reserved.
 <span id="line4" class="lineno">4</span> *
 <span id="line5" class="lineno">5</span> * This program is free software: you can redistribute it and/or
 <span id="line6" class="lineno">6</span> * modify it under the terms of the BSD license.
@@ -278,381 +278,335 @@
 <span id="line223" class="lineno">223</span>};
 <span id="line224" class="lineno">224</span>
 <span id="line225" class="lineno">225</span><span class="hljs-comment">/**
-<span id="line226" class="lineno">226</span> * Dispatches a custom event from this DOM node. The event will be
-<span id="line227" class="lineno">227</span> * created and emitted asynchronously (via setTimeout).
-<span id="line228" class="lineno">228</span> *
-<span id="line229" class="lineno">229</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} type the event type (e.g. `validate`)
-<span id="line230" class="lineno">230</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Object</span>} [opts] the event options (e.g. `{ bubbles: true }`)
-<span id="line231" class="lineno">231</span> *
-<span id="line232" class="lineno">232</span> * <span class="hljs-doctag">@deprecated</span> Use `emit(type, opts)` instead.
-<span id="line233" class="lineno">233</span> */</span>
-<span id="line234" class="lineno">234</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">_dispatch</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">type, opts</span>) {
-<span id="line235" class="lineno">235</span>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">warn</span>(<span class="hljs-string">&quot;deprecated: use &#x27;emit&#x27; method instead of &#x27;_dispatch&#x27;&quot;</span>);
-<span id="line236" class="lineno">236</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">emit</span>(type, opts);
-<span id="line237" class="lineno">237</span>};
-<span id="line238" class="lineno">238</span>
-<span id="line239" class="lineno">239</span><span class="hljs-comment">/**
-<span id="line240" class="lineno">240</span> * Updates the widget or HTML DOM node attributes. This method is
-<span id="line241" class="lineno">241</span> * sometimes overridden by individual widgets to allow modification
-<span id="line242" class="lineno">242</span> * of additional widget attributes.
-<span id="line243" class="lineno">243</span> *
-<span id="line244" class="lineno">244</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Object</span>} attrs the widget and node attributes to set
-<span id="line245" class="lineno">245</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">boolean</span>} [attrs.disabled] the disabled widget flag
-<span id="line246" class="lineno">246</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">boolean</span>} [attrs.hidden] the hidden widget flag
-<span id="line247" class="lineno">247</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} [attrs.class] the CSS class names
-<span id="line248" class="lineno">248</span> */</span>
-<span id="line249" class="lineno">249</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">setAttrs</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">attrs</span>) {
-<span id="line250" class="lineno">250</span>    <span class="hljs-comment">/* eslint max-depth: &quot;off&quot; */</span>
-<span id="line251" class="lineno">251</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> name <span class="hljs-keyword">in</span> attrs) {
-<span id="line252" class="lineno">252</span>        <span class="hljs-keyword">let</span> value = attrs[name];
-<span id="line253" class="lineno">253</span>        <span class="hljs-keyword">if</span> (name == <span class="hljs-string">&quot;disabled&quot;</span>) {
-<span id="line254" class="lineno">254</span>            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_setDisabled</span>(value);
-<span id="line255" class="lineno">255</span>        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (name == <span class="hljs-string">&quot;hidden&quot;</span>) {
-<span id="line256" class="lineno">256</span>            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_setHidden</span>(value);
-<span id="line257" class="lineno">257</span>        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (name == <span class="hljs-string">&quot;class&quot;</span>) {
-<span id="line258" class="lineno">258</span>            <span class="hljs-keyword">let</span> elem = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_styleNode</span>();
-<span id="line259" class="lineno">259</span>            <span class="hljs-variable language_">this</span>.<span class="hljs-property">removeClass</span>.<span class="hljs-title function_">apply</span>(<span class="hljs-variable language_">this</span>, elem.<span class="hljs-property">className</span>.<span class="hljs-title function_">split</span>(<span class="hljs-regexp">/\s+/</span>));
-<span id="line260" class="lineno">260</span>            <span class="hljs-variable language_">this</span>.<span class="hljs-property">addClass</span>.<span class="hljs-title function_">apply</span>(<span class="hljs-variable language_">this</span>, value.<span class="hljs-title function_">split</span>(<span class="hljs-regexp">/\s+/</span>));
-<span id="line261" class="lineno">261</span>        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (name == <span class="hljs-string">&quot;style&quot;</span>) {
-<span id="line262" class="lineno">262</span>            <span class="hljs-keyword">if</span> (<span class="hljs-title function_">typeof</span>(value) == <span class="hljs-string">&quot;string&quot;</span>) {
-<span id="line263" class="lineno">263</span>                <span class="hljs-keyword">let</span> <span class="hljs-title function_">func</span> = (<span class="hljs-params">res, part</span>) =&gt; {
-<span id="line264" class="lineno">264</span>                    <span class="hljs-keyword">let</span> a = part.<span class="hljs-title function_">split</span>(<span class="hljs-string">&quot;:&quot;</span>);
-<span id="line265" class="lineno">265</span>                    <span class="hljs-keyword">let</span> k = a[<span class="hljs-number">0</span>].<span class="hljs-title function_">trim</span>();
-<span id="line266" class="lineno">266</span>                    <span class="hljs-keyword">if</span> (k &amp;&amp; a.<span class="hljs-property">length</span> &gt; <span class="hljs-number">1</span>) {
-<span id="line267" class="lineno">267</span>                        res[k] = a.<span class="hljs-title function_">slice</span>(<span class="hljs-number">1</span>).<span class="hljs-title function_">join</span>(<span class="hljs-string">&quot;:&quot;</span>).<span class="hljs-title function_">trim</span>();
-<span id="line268" class="lineno">268</span>                    }
-<span id="line269" class="lineno">269</span>                    <span class="hljs-keyword">return</span> res;
-<span id="line270" class="lineno">270</span>                };
-<span id="line271" class="lineno">271</span>                value = value.<span class="hljs-title function_">split</span>(<span class="hljs-string">&quot;;&quot;</span>).<span class="hljs-title function_">reduce</span>(func, {});
-<span id="line272" class="lineno">272</span>            }
-<span id="line273" class="lineno">273</span>            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setStyle</span>(value);
-<span id="line274" class="lineno">274</span>        } <span class="hljs-keyword">else</span> {
-<span id="line275" class="lineno">275</span>            <span class="hljs-keyword">let</span> isString = <span class="hljs-title function_">typeof</span>(value) == <span class="hljs-string">&quot;string&quot;</span>;
-<span id="line276" class="lineno">276</span>            <span class="hljs-keyword">let</span> isBoolean = <span class="hljs-title function_">typeof</span>(value) == <span class="hljs-string">&quot;boolean&quot;</span>;
-<span id="line277" class="lineno">277</span>            <span class="hljs-keyword">let</span> isNumber = <span class="hljs-title function_">typeof</span>(value) == <span class="hljs-string">&quot;number&quot;</span>;
-<span id="line278" class="lineno">278</span>            <span class="hljs-keyword">if</span> (isString || isBoolean || isNumber) {
-<span id="line279" class="lineno">279</span>                <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setAttribute</span>(name, value);
-<span id="line280" class="lineno">280</span>            } <span class="hljs-keyword">else</span> {
-<span id="line281" class="lineno">281</span>                <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">removeAttribute</span>(name);
-<span id="line282" class="lineno">282</span>            }
-<span id="line283" class="lineno">283</span>            <span class="hljs-keyword">if</span> (value != <span class="hljs-literal">null</span>) {
-<span id="line284" class="lineno">284</span>                <span class="hljs-variable language_">this</span>[name] = value;
-<span id="line285" class="lineno">285</span>            } <span class="hljs-keyword">else</span> {
-<span id="line286" class="lineno">286</span>                <span class="hljs-keyword">delete</span> <span class="hljs-variable language_">this</span>[name];
-<span id="line287" class="lineno">287</span>            }
-<span id="line288" class="lineno">288</span>        }
-<span id="line289" class="lineno">289</span>    }
-<span id="line290" class="lineno">290</span>};
-<span id="line291" class="lineno">291</span>
-<span id="line292" class="lineno">292</span><span class="hljs-comment">/**
-<span id="line293" class="lineno">293</span> * Updates the CSS styles of this HTML DOM node. This method is
-<span id="line294" class="lineno">294</span> * identical to `MochiKit.Style.setStyle`, but uses &quot;this&quot; as the
-<span id="line295" class="lineno">295</span> * first argument.
-<span id="line296" class="lineno">296</span> *
-<span id="line297" class="lineno">297</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Object</span>} styles an object with the styles to set
-<span id="line298" class="lineno">298</span> *
-<span id="line299" class="lineno">299</span> * <span class="hljs-doctag">@example</span>
-<span id="line300" class="lineno">300</span> * widget.setStyle({ &quot;font-size&quot;: &quot;bold&quot;, &quot;color&quot;: &quot;red&quot; });
-<span id="line301" class="lineno">301</span> */</span>
-<span id="line302" class="lineno">302</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">setStyle</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">styles</span>) {
-<span id="line303" class="lineno">303</span>    <span class="hljs-keyword">let</span> <span class="hljs-title function_">copyStyle</span> = (<span class="hljs-params">o, k</span>) =&gt; (o[k] = styles[k], o);
-<span id="line304" class="lineno">304</span>    <span class="hljs-keyword">let</span> thisProps = [
-<span id="line305" class="lineno">305</span>        <span class="hljs-string">&quot;width&quot;</span>, <span class="hljs-string">&quot;height&quot;</span>, <span class="hljs-string">&quot;zIndex&quot;</span>, <span class="hljs-string">&quot;z-index&quot;</span>,
-<span id="line306" class="lineno">306</span>        <span class="hljs-string">&quot;position&quot;</span>, <span class="hljs-string">&quot;top&quot;</span>, <span class="hljs-string">&quot;bottom&quot;</span>, <span class="hljs-string">&quot;left&quot;</span>, <span class="hljs-string">&quot;right&quot;</span>
-<span id="line307" class="lineno">307</span>    ].<span class="hljs-title function_">filter</span>(<span class="hljs-function">(<span class="hljs-params">k</span>) =&gt;</span> k <span class="hljs-keyword">in</span> styles);
-<span id="line308" class="lineno">308</span>    <span class="hljs-keyword">let</span> thisStyles = thisProps.<span class="hljs-title function_">reduce</span>(copyStyle, {});
-<span id="line309" class="lineno">309</span>    <span class="hljs-keyword">let</span> otherProps = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(styles).<span class="hljs-title function_">filter</span>(<span class="hljs-function">(<span class="hljs-params">k</span>) =&gt;</span> !thisProps.<span class="hljs-title function_">includes</span>(k));
-<span id="line310" class="lineno">310</span>    <span class="hljs-keyword">let</span> otherStyles = otherProps.<span class="hljs-title function_">reduce</span>(copyStyle, {});
-<span id="line311" class="lineno">311</span>    <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Style</span>.<span class="hljs-title function_">setStyle</span>(<span class="hljs-variable language_">this</span>, thisStyles);
-<span id="line312" class="lineno">312</span>    <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Style</span>.<span class="hljs-title function_">setStyle</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_styleNode</span>(), otherStyles);
-<span id="line313" class="lineno">313</span>};
-<span id="line314" class="lineno">314</span>
-<span id="line315" class="lineno">315</span><span class="hljs-comment">/**
-<span id="line316" class="lineno">316</span> * Checks if this HTML DOM node has the specified CSS class names.
-<span id="line317" class="lineno">317</span> * Note that more than one CSS class name may be checked, in which
-<span id="line318" class="lineno">318</span> * case all must be present.
-<span id="line319" class="lineno">319</span> *
-<span id="line320" class="lineno">320</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">...(string|Array)</span>} cls the CSS class names to check
-<span id="line321" class="lineno">321</span> *
-<span id="line322" class="lineno">322</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">boolean</span>} `true` if all CSS classes were present, or
-<span id="line323" class="lineno">323</span> *         `false` otherwise
-<span id="line324" class="lineno">324</span> */</span>
-<span id="line325" class="lineno">325</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">hasClass</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"><span class="hljs-comment">/* ... */</span></span>) {
-<span id="line326" class="lineno">326</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">isMatch</span>(<span class="hljs-params">val</span>) {
-<span id="line327" class="lineno">327</span>        <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(val)) {
-<span id="line328" class="lineno">328</span>            <span class="hljs-keyword">return</span> val.<span class="hljs-title function_">every</span>(isMatch);
-<span id="line329" class="lineno">329</span>        } <span class="hljs-keyword">else</span> {
-<span id="line330" class="lineno">330</span>            <span class="hljs-keyword">return</span> elem.<span class="hljs-property">classList</span>.<span class="hljs-title function_">contains</span>(val);
-<span id="line331" class="lineno">331</span>        }
-<span id="line332" class="lineno">332</span>    }
-<span id="line333" class="lineno">333</span>    <span class="hljs-keyword">let</span> elem = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_styleNode</span>();
-<span id="line334" class="lineno">334</span>    <span class="hljs-comment">// <span class="hljs-doctag">FIXME:</span> Use Array.prototype.flatMap(...) here</span>
-<span id="line335" class="lineno">335</span>    <span class="hljs-keyword">return</span> <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(<span class="hljs-variable language_">arguments</span>).<span class="hljs-title function_">map</span>(<span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">_toCssClass</span>).<span class="hljs-title function_">every</span>(isMatch);
-<span id="line336" class="lineno">336</span>};
-<span id="line337" class="lineno">337</span>
-<span id="line338" class="lineno">338</span><span class="hljs-comment">/**
-<span id="line339" class="lineno">339</span> * Adds the specified CSS class names to this HTML DOM node.
-<span id="line340" class="lineno">340</span> *
-<span id="line341" class="lineno">341</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">...(string|Array)</span>} cls the CSS class names to add
-<span id="line342" class="lineno">342</span> */</span>
-<span id="line343" class="lineno">343</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">addClass</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"><span class="hljs-comment">/* ... */</span></span>) {
-<span id="line344" class="lineno">344</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">add</span>(<span class="hljs-params">val</span>) {
-<span id="line345" class="lineno">345</span>        <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(val)) {
-<span id="line346" class="lineno">346</span>            val.<span class="hljs-title function_">forEach</span>(add);
-<span id="line347" class="lineno">347</span>        } <span class="hljs-keyword">else</span> {
-<span id="line348" class="lineno">348</span>            elem.<span class="hljs-property">classList</span>.<span class="hljs-title function_">add</span>(val);
-<span id="line349" class="lineno">349</span>        }
-<span id="line350" class="lineno">350</span>    }
-<span id="line351" class="lineno">351</span>    <span class="hljs-keyword">let</span> elem = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_styleNode</span>();
-<span id="line352" class="lineno">352</span>    <span class="hljs-comment">// <span class="hljs-doctag">FIXME:</span> Use Array.prototype.flatMap(...) here</span>
-<span id="line353" class="lineno">353</span>    <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(<span class="hljs-variable language_">arguments</span>).<span class="hljs-title function_">map</span>(<span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">_toCssClass</span>).<span class="hljs-title function_">forEach</span>(add);
-<span id="line354" class="lineno">354</span>};
-<span id="line355" class="lineno">355</span>
-<span id="line356" class="lineno">356</span><span class="hljs-comment">/**
-<span id="line357" class="lineno">357</span> * Removes the specified CSS class names from this HTML DOM node.
-<span id="line358" class="lineno">358</span> * Note that this method will not remove any class starting with
-<span id="line359" class="lineno">359</span> * &quot;widget&quot;.
-<span id="line360" class="lineno">360</span> *
-<span id="line361" class="lineno">361</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">...(string|Array)</span>} cls the CSS class names to remove
-<span id="line362" class="lineno">362</span> */</span>
-<span id="line363" class="lineno">363</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">removeClass</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"><span class="hljs-comment">/* ... */</span></span>) {
-<span id="line364" class="lineno">364</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">remove</span>(<span class="hljs-params">val</span>) {
-<span id="line365" class="lineno">365</span>        <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(val)) {
-<span id="line366" class="lineno">366</span>            val.<span class="hljs-title function_">filter</span>(<span class="hljs-title class_">Boolean</span>).<span class="hljs-title function_">forEach</span>(remove);
-<span id="line367" class="lineno">367</span>        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!val.<span class="hljs-title function_">startsWith</span>(<span class="hljs-string">&quot;widget&quot;</span>)) {
-<span id="line368" class="lineno">368</span>            elem.<span class="hljs-property">classList</span>.<span class="hljs-title function_">remove</span>(val);
-<span id="line369" class="lineno">369</span>        }
-<span id="line370" class="lineno">370</span>    }
-<span id="line371" class="lineno">371</span>    <span class="hljs-keyword">let</span> elem = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_styleNode</span>();
-<span id="line372" class="lineno">372</span>    <span class="hljs-comment">// <span class="hljs-doctag">FIXME:</span> Use Array.prototype.flatMap(...) here</span>
-<span id="line373" class="lineno">373</span>    <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(<span class="hljs-variable language_">arguments</span>).<span class="hljs-title function_">map</span>(<span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">_toCssClass</span>).<span class="hljs-title function_">forEach</span>(remove);
-<span id="line374" class="lineno">374</span>};
-<span id="line375" class="lineno">375</span>
-<span id="line376" class="lineno">376</span><span class="hljs-comment">/**
-<span id="line377" class="lineno">377</span> * Toggles adding and removing the specified CSS class names to and
-<span id="line378" class="lineno">378</span> * from this HTML DOM node. If all the CSS classes are already set,
-<span id="line379" class="lineno">379</span> * they will be removed. Otherwise they will be added.
-<span id="line380" class="lineno">380</span> *
-<span id="line381" class="lineno">381</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">...(string|Array)</span>} cls the CSS class names to remove
-<span id="line382" class="lineno">382</span> *
-<span id="line383" class="lineno">383</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">boolean</span>} `true` if the CSS classes were added, or
-<span id="line384" class="lineno">384</span> *         `false` otherwise
-<span id="line385" class="lineno">385</span> */</span>
-<span id="line386" class="lineno">386</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">toggleClass</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"><span class="hljs-comment">/* ... */</span></span>) {
-<span id="line387" class="lineno">387</span>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">hasClass</span>.<span class="hljs-title function_">apply</span>(<span class="hljs-variable language_">this</span>, <span class="hljs-variable language_">arguments</span>)) {
-<span id="line388" class="lineno">388</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">removeClass</span>.<span class="hljs-title function_">apply</span>(<span class="hljs-variable language_">this</span>, <span class="hljs-variable language_">arguments</span>);
-<span id="line389" class="lineno">389</span>        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-<span id="line390" class="lineno">390</span>    } <span class="hljs-keyword">else</span> {
-<span id="line391" class="lineno">391</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">addClass</span>.<span class="hljs-title function_">apply</span>(<span class="hljs-variable language_">this</span>, <span class="hljs-variable language_">arguments</span>);
-<span id="line392" class="lineno">392</span>        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
-<span id="line393" class="lineno">393</span>    }
-<span id="line394" class="lineno">394</span>};
-<span id="line395" class="lineno">395</span>
-<span id="line396" class="lineno">396</span><span class="hljs-comment">/**
-<span id="line397" class="lineno">397</span> * Checks if this widget is disabled. This method checks both the
-<span id="line398" class="lineno">398</span> * &quot;widgetDisabled&quot; CSS class and the `disabled` property. Changes
-<span id="line399" class="lineno">399</span> * to the disabled status can be made with `enable()`, `disable()` or
-<span id="line400" class="lineno">400</span> * `setAttrs()`.
-<span id="line401" class="lineno">401</span> *
-<span id="line402" class="lineno">402</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">boolean</span>} `true` if the widget is disabled, or
-<span id="line403" class="lineno">403</span> *         `false` otherwise
-<span id="line404" class="lineno">404</span> */</span>
-<span id="line405" class="lineno">405</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">isDisabled</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line406" class="lineno">406</span>    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">disabled</span> === <span class="hljs-literal">true</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">classList</span>.<span class="hljs-title function_">contains</span>(<span class="hljs-string">&quot;widgetDisabled&quot;</span>);
-<span id="line407" class="lineno">407</span>};
-<span id="line408" class="lineno">408</span>
-<span id="line409" class="lineno">409</span><span class="hljs-comment">/**
-<span id="line410" class="lineno">410</span> * Performs the changes corresponding to setting the `disabled`
-<span id="line411" class="lineno">411</span> * widget attribute.
-<span id="line412" class="lineno">412</span> *
-<span id="line413" class="lineno">413</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">boolean</span>} value the new attribute value
-<span id="line414" class="lineno">414</span> */</span>
-<span id="line415" class="lineno">415</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">_setDisabled</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">value</span>) {
-<span id="line416" class="lineno">416</span>    value = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Data</span>.<span class="hljs-title function_">bool</span>(value);
-<span id="line417" class="lineno">417</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">classList</span>.<span class="hljs-title function_">toggle</span>(<span class="hljs-string">&quot;widgetDisabled&quot;</span>, value);
-<span id="line418" class="lineno">418</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&quot;disabled&quot;</span>, value);
-<span id="line419" class="lineno">419</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">disabled</span> = value;
-<span id="line420" class="lineno">420</span>};
-<span id="line421" class="lineno">421</span>
-<span id="line422" class="lineno">422</span><span class="hljs-comment">/**
-<span id="line423" class="lineno">423</span> * Enables this widget if it was previously disabled. This is
-<span id="line424" class="lineno">424</span> * equivalent to calling `setAttrs({ disabled: false })`.
-<span id="line425" class="lineno">425</span> */</span>
-<span id="line426" class="lineno">426</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">enable</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line427" class="lineno">427</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setAttrs</span>({ <span class="hljs-attr">disabled</span>: <span class="hljs-literal">false</span> });
-<span id="line428" class="lineno">428</span>};
-<span id="line429" class="lineno">429</span>
-<span id="line430" class="lineno">430</span><span class="hljs-comment">/**
-<span id="line431" class="lineno">431</span> * Disables this widget if it was previously enabled. This method is
-<span id="line432" class="lineno">432</span> * equivalent to calling `setAttrs({ disabled: true })`.
-<span id="line433" class="lineno">433</span> */</span>
-<span id="line434" class="lineno">434</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">disable</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line435" class="lineno">435</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setAttrs</span>({ <span class="hljs-attr">disabled</span>: <span class="hljs-literal">true</span> });
-<span id="line436" class="lineno">436</span>};
-<span id="line437" class="lineno">437</span>
-<span id="line438" class="lineno">438</span><span class="hljs-comment">/**
-<span id="line439" class="lineno">439</span> * Checks if this widget node is hidden. This method checks for the
-<span id="line440" class="lineno">440</span> * existence of the `widgetHidden` CSS class. It does NOT check the
-<span id="line441" class="lineno">441</span> * actual widget visibility (the `display` style property set by
-<span id="line442" class="lineno">442</span> * animations for example).
-<span id="line443" class="lineno">443</span> *
-<span id="line444" class="lineno">444</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">boolean</span>} `true` if the widget is hidden, or
-<span id="line445" class="lineno">445</span> *         `false` otherwise
-<span id="line446" class="lineno">446</span> */</span>
-<span id="line447" class="lineno">447</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">isHidden</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line448" class="lineno">448</span>    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">classList</span>.<span class="hljs-title function_">contains</span>(<span class="hljs-string">&quot;widgetHidden&quot;</span>);
-<span id="line449" class="lineno">449</span>};
-<span id="line450" class="lineno">450</span>
-<span id="line451" class="lineno">451</span><span class="hljs-comment">/**
-<span id="line452" class="lineno">452</span> * Performs the changes corresponding to setting the `hidden`
-<span id="line453" class="lineno">453</span> * widget attribute.
-<span id="line454" class="lineno">454</span> *
-<span id="line455" class="lineno">455</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">boolean</span>} value the new attribute value
-<span id="line456" class="lineno">456</span> */</span>
-<span id="line457" class="lineno">457</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">_setHidden</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">value</span>) {
-<span id="line458" class="lineno">458</span>    value = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Data</span>.<span class="hljs-title function_">bool</span>(value);
-<span id="line459" class="lineno">459</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">classList</span>.<span class="hljs-title function_">toggle</span>(<span class="hljs-string">&quot;widgetHidden&quot;</span>, value);
-<span id="line460" class="lineno">460</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&quot;hidden&quot;</span>, value);
-<span id="line461" class="lineno">461</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">hidden</span> = value;
-<span id="line462" class="lineno">462</span>};
-<span id="line463" class="lineno">463</span>
-<span id="line464" class="lineno">464</span><span class="hljs-comment">/**
-<span id="line465" class="lineno">465</span> * Shows this widget node if it was previously hidden. This method is
-<span id="line466" class="lineno">466</span> * equivalent to calling `setAttrs({ hidden: false })`. It is safe
-<span id="line467" class="lineno">467</span> * for all types of widgets, since it only removes the `widgetHidden`
-<span id="line468" class="lineno">468</span> * CSS class instead of setting the `display` style property.
-<span id="line469" class="lineno">469</span> */</span>
-<span id="line470" class="lineno">470</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">show</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line471" class="lineno">471</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setAttrs</span>({ <span class="hljs-attr">hidden</span>: <span class="hljs-literal">false</span> });
-<span id="line472" class="lineno">472</span>};
-<span id="line473" class="lineno">473</span>
-<span id="line474" class="lineno">474</span><span class="hljs-comment">/**
-<span id="line475" class="lineno">475</span> * Hides this widget node if it was previously visible. This method
-<span id="line476" class="lineno">476</span> * is equivalent to calling `setAttrs({ hidden: true })`. It is safe
-<span id="line477" class="lineno">477</span> * for all types of widgets, since it only adds the `widgetHidden`
-<span id="line478" class="lineno">478</span> * CSS class instead of setting the `display` style property.
-<span id="line479" class="lineno">479</span> */</span>
-<span id="line480" class="lineno">480</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">hide</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line481" class="lineno">481</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setAttrs</span>({ <span class="hljs-attr">hidden</span>: <span class="hljs-literal">true</span> });
-<span id="line482" class="lineno">482</span>};
-<span id="line483" class="lineno">483</span>
-<span id="line484" class="lineno">484</span><span class="hljs-comment">/**
-<span id="line485" class="lineno">485</span> * Performs a visual effect animation on this widget. This is
-<span id="line486" class="lineno">486</span> * implemented using the `MochiKit.Visual` effect package. All options
-<span id="line487" class="lineno">487</span> * sent to this function will be passed on to the appropriate
-<span id="line488" class="lineno">488</span> * `MochiKit.Visual` function.
-<span id="line489" class="lineno">489</span> *
-<span id="line490" class="lineno">490</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Object</span>} opts the visual effect options
-<span id="line491" class="lineno">491</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} opts.effect the MochiKit.Visual effect name
-<span id="line492" class="lineno">492</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} opts.queue the MochiKit.Visual queue handling,
-<span id="line493" class="lineno">493</span> *            defaults to &quot;replace&quot; and a unique scope for each widget
-<span id="line494" class="lineno">494</span> *            (see `MochiKit.Visual` for full options)
-<span id="line495" class="lineno">495</span> *
-<span id="line496" class="lineno">496</span> * <span class="hljs-doctag">@example</span>
-<span id="line497" class="lineno">497</span> * widget.animate({ effect: &quot;fade&quot;, duration: 0.5 });
-<span id="line498" class="lineno">498</span> * widget.animate({ effect: &quot;Move&quot;, transition: &quot;spring&quot;, y: 300 });
-<span id="line499" class="lineno">499</span> *
-<span id="line500" class="lineno">500</span> * <span class="hljs-doctag">@deprecated</span> Use CSS animations instead.
-<span id="line501" class="lineno">501</span> */</span>
-<span id="line502" class="lineno">502</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">animate</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">opts</span>) {
-<span id="line503" class="lineno">503</span>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">warn</span>(<span class="hljs-string">&quot;deprecated: animate() method called, use CSS animations instead&quot;</span>);
-<span id="line504" class="lineno">504</span>    <span class="hljs-keyword">let</span> queue = { <span class="hljs-attr">scope</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">uid</span>(), <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;replace&quot;</span> };
-<span id="line505" class="lineno">505</span>    opts = <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Base</span>.<span class="hljs-title function_">updatetree</span>({ <span class="hljs-attr">queue</span>: queue }, opts);
-<span id="line506" class="lineno">506</span>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">typeof</span>(opts.<span class="hljs-property">queue</span>) == <span class="hljs-string">&quot;string&quot;</span>) {
-<span id="line507" class="lineno">507</span>        queue.<span class="hljs-property">position</span> = opts.<span class="hljs-property">queue</span>;
-<span id="line508" class="lineno">508</span>        opts.<span class="hljs-property">queue</span> = queue;
-<span id="line509" class="lineno">509</span>    }
-<span id="line510" class="lineno">510</span>    <span class="hljs-keyword">let</span> func = <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Visual</span>[opts.<span class="hljs-property">effect</span>];
-<span id="line511" class="lineno">511</span>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">typeof</span>(func) == <span class="hljs-string">&quot;function&quot;</span>) {
-<span id="line512" class="lineno">512</span>        func.<span class="hljs-title function_">call</span>(<span class="hljs-literal">null</span>, <span class="hljs-variable language_">this</span>, opts);
-<span id="line513" class="lineno">513</span>    }
-<span id="line514" class="lineno">514</span>};
-<span id="line515" class="lineno">515</span>
-<span id="line516" class="lineno">516</span><span class="hljs-comment">/**
-<span id="line517" class="lineno">517</span> * Blurs (unfocuses) this DOM node and all relevant child nodes. This function
-<span id="line518" class="lineno">518</span> * will recursively blur all `&lt;a&gt;`, `&lt;button&gt;`, `&lt;input&gt;`, `&lt;textarea&gt;` and
-<span id="line519" class="lineno">519</span> * `&lt;select&gt;` child nodes found.
-<span id="line520" class="lineno">520</span> */</span>
-<span id="line521" class="lineno">521</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">blurAll</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line522" class="lineno">522</span>    <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Util</span>.<span class="hljs-title function_">blurAll</span>(<span class="hljs-variable language_">this</span>);
+<span id="line226" class="lineno">226</span> * Updates the widget or HTML DOM node attributes. This method is
+<span id="line227" class="lineno">227</span> * sometimes overridden by individual widgets to allow modification
+<span id="line228" class="lineno">228</span> * of additional widget attributes.
+<span id="line229" class="lineno">229</span> *
+<span id="line230" class="lineno">230</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Object</span>} attrs the widget and node attributes to set
+<span id="line231" class="lineno">231</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">boolean</span>} [attrs.disabled] the disabled widget flag
+<span id="line232" class="lineno">232</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">boolean</span>} [attrs.hidden] the hidden widget flag
+<span id="line233" class="lineno">233</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} [attrs.class] the CSS class names
+<span id="line234" class="lineno">234</span> */</span>
+<span id="line235" class="lineno">235</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">setAttrs</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">attrs</span>) {
+<span id="line236" class="lineno">236</span>    <span class="hljs-comment">/* eslint max-depth: &quot;off&quot; */</span>
+<span id="line237" class="lineno">237</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> name <span class="hljs-keyword">in</span> attrs) {
+<span id="line238" class="lineno">238</span>        <span class="hljs-keyword">let</span> value = attrs[name];
+<span id="line239" class="lineno">239</span>        <span class="hljs-keyword">if</span> (name == <span class="hljs-string">&quot;disabled&quot;</span>) {
+<span id="line240" class="lineno">240</span>            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_setDisabled</span>(value);
+<span id="line241" class="lineno">241</span>        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (name == <span class="hljs-string">&quot;hidden&quot;</span>) {
+<span id="line242" class="lineno">242</span>            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_setHidden</span>(value);
+<span id="line243" class="lineno">243</span>        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (name == <span class="hljs-string">&quot;class&quot;</span>) {
+<span id="line244" class="lineno">244</span>            <span class="hljs-keyword">let</span> elem = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_styleNode</span>();
+<span id="line245" class="lineno">245</span>            <span class="hljs-variable language_">this</span>.<span class="hljs-property">removeClass</span>.<span class="hljs-title function_">apply</span>(<span class="hljs-variable language_">this</span>, elem.<span class="hljs-property">className</span>.<span class="hljs-title function_">split</span>(<span class="hljs-regexp">/\s+/</span>));
+<span id="line246" class="lineno">246</span>            <span class="hljs-variable language_">this</span>.<span class="hljs-property">addClass</span>.<span class="hljs-title function_">apply</span>(<span class="hljs-variable language_">this</span>, value.<span class="hljs-title function_">split</span>(<span class="hljs-regexp">/\s+/</span>));
+<span id="line247" class="lineno">247</span>        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (name == <span class="hljs-string">&quot;style&quot;</span>) {
+<span id="line248" class="lineno">248</span>            <span class="hljs-keyword">if</span> (<span class="hljs-title function_">typeof</span>(value) == <span class="hljs-string">&quot;string&quot;</span>) {
+<span id="line249" class="lineno">249</span>                <span class="hljs-keyword">let</span> <span class="hljs-title function_">func</span> = (<span class="hljs-params">res, part</span>) =&gt; {
+<span id="line250" class="lineno">250</span>                    <span class="hljs-keyword">let</span> a = part.<span class="hljs-title function_">split</span>(<span class="hljs-string">&quot;:&quot;</span>);
+<span id="line251" class="lineno">251</span>                    <span class="hljs-keyword">let</span> k = a[<span class="hljs-number">0</span>].<span class="hljs-title function_">trim</span>();
+<span id="line252" class="lineno">252</span>                    <span class="hljs-keyword">if</span> (k &amp;&amp; a.<span class="hljs-property">length</span> &gt; <span class="hljs-number">1</span>) {
+<span id="line253" class="lineno">253</span>                        res[k] = a.<span class="hljs-title function_">slice</span>(<span class="hljs-number">1</span>).<span class="hljs-title function_">join</span>(<span class="hljs-string">&quot;:&quot;</span>).<span class="hljs-title function_">trim</span>();
+<span id="line254" class="lineno">254</span>                    }
+<span id="line255" class="lineno">255</span>                    <span class="hljs-keyword">return</span> res;
+<span id="line256" class="lineno">256</span>                };
+<span id="line257" class="lineno">257</span>                value = value.<span class="hljs-title function_">split</span>(<span class="hljs-string">&quot;;&quot;</span>).<span class="hljs-title function_">reduce</span>(func, {});
+<span id="line258" class="lineno">258</span>            }
+<span id="line259" class="lineno">259</span>            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setStyle</span>(value);
+<span id="line260" class="lineno">260</span>        } <span class="hljs-keyword">else</span> {
+<span id="line261" class="lineno">261</span>            <span class="hljs-keyword">let</span> isString = <span class="hljs-title function_">typeof</span>(value) == <span class="hljs-string">&quot;string&quot;</span>;
+<span id="line262" class="lineno">262</span>            <span class="hljs-keyword">let</span> isBoolean = <span class="hljs-title function_">typeof</span>(value) == <span class="hljs-string">&quot;boolean&quot;</span>;
+<span id="line263" class="lineno">263</span>            <span class="hljs-keyword">let</span> isNumber = <span class="hljs-title function_">typeof</span>(value) == <span class="hljs-string">&quot;number&quot;</span>;
+<span id="line264" class="lineno">264</span>            <span class="hljs-keyword">if</span> (isString || isBoolean || isNumber) {
+<span id="line265" class="lineno">265</span>                <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setAttribute</span>(name, value);
+<span id="line266" class="lineno">266</span>            } <span class="hljs-keyword">else</span> {
+<span id="line267" class="lineno">267</span>                <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">removeAttribute</span>(name);
+<span id="line268" class="lineno">268</span>            }
+<span id="line269" class="lineno">269</span>            <span class="hljs-keyword">if</span> (value != <span class="hljs-literal">null</span>) {
+<span id="line270" class="lineno">270</span>                <span class="hljs-variable language_">this</span>[name] = value;
+<span id="line271" class="lineno">271</span>            } <span class="hljs-keyword">else</span> {
+<span id="line272" class="lineno">272</span>                <span class="hljs-keyword">delete</span> <span class="hljs-variable language_">this</span>[name];
+<span id="line273" class="lineno">273</span>            }
+<span id="line274" class="lineno">274</span>        }
+<span id="line275" class="lineno">275</span>    }
+<span id="line276" class="lineno">276</span>};
+<span id="line277" class="lineno">277</span>
+<span id="line278" class="lineno">278</span><span class="hljs-comment">/**
+<span id="line279" class="lineno">279</span> * Updates the CSS styles of this HTML DOM node. This method is
+<span id="line280" class="lineno">280</span> * identical to `MochiKit.Style.setStyle`, but uses &quot;this&quot; as the
+<span id="line281" class="lineno">281</span> * first argument.
+<span id="line282" class="lineno">282</span> *
+<span id="line283" class="lineno">283</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Object</span>} styles an object with the styles to set
+<span id="line284" class="lineno">284</span> *
+<span id="line285" class="lineno">285</span> * <span class="hljs-doctag">@example</span>
+<span id="line286" class="lineno">286</span> * widget.setStyle({ &quot;font-size&quot;: &quot;bold&quot;, &quot;color&quot;: &quot;red&quot; });
+<span id="line287" class="lineno">287</span> */</span>
+<span id="line288" class="lineno">288</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">setStyle</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">styles</span>) {
+<span id="line289" class="lineno">289</span>    <span class="hljs-keyword">let</span> <span class="hljs-title function_">copyStyle</span> = (<span class="hljs-params">o, k</span>) =&gt; (o[k] = styles[k], o);
+<span id="line290" class="lineno">290</span>    <span class="hljs-keyword">let</span> thisProps = [
+<span id="line291" class="lineno">291</span>        <span class="hljs-string">&quot;width&quot;</span>, <span class="hljs-string">&quot;height&quot;</span>, <span class="hljs-string">&quot;zIndex&quot;</span>, <span class="hljs-string">&quot;z-index&quot;</span>,
+<span id="line292" class="lineno">292</span>        <span class="hljs-string">&quot;position&quot;</span>, <span class="hljs-string">&quot;top&quot;</span>, <span class="hljs-string">&quot;bottom&quot;</span>, <span class="hljs-string">&quot;left&quot;</span>, <span class="hljs-string">&quot;right&quot;</span>
+<span id="line293" class="lineno">293</span>    ].<span class="hljs-title function_">filter</span>(<span class="hljs-function">(<span class="hljs-params">k</span>) =&gt;</span> k <span class="hljs-keyword">in</span> styles);
+<span id="line294" class="lineno">294</span>    <span class="hljs-keyword">let</span> thisStyles = thisProps.<span class="hljs-title function_">reduce</span>(copyStyle, {});
+<span id="line295" class="lineno">295</span>    <span class="hljs-keyword">let</span> otherProps = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(styles).<span class="hljs-title function_">filter</span>(<span class="hljs-function">(<span class="hljs-params">k</span>) =&gt;</span> !thisProps.<span class="hljs-title function_">includes</span>(k));
+<span id="line296" class="lineno">296</span>    <span class="hljs-keyword">let</span> otherStyles = otherProps.<span class="hljs-title function_">reduce</span>(copyStyle, {});
+<span id="line297" class="lineno">297</span>    <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Style</span>.<span class="hljs-title function_">setStyle</span>(<span class="hljs-variable language_">this</span>, thisStyles);
+<span id="line298" class="lineno">298</span>    <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Style</span>.<span class="hljs-title function_">setStyle</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_styleNode</span>(), otherStyles);
+<span id="line299" class="lineno">299</span>};
+<span id="line300" class="lineno">300</span>
+<span id="line301" class="lineno">301</span><span class="hljs-comment">/**
+<span id="line302" class="lineno">302</span> * Checks if this HTML DOM node has the specified CSS class names.
+<span id="line303" class="lineno">303</span> * Note that more than one CSS class name may be checked, in which
+<span id="line304" class="lineno">304</span> * case all must be present.
+<span id="line305" class="lineno">305</span> *
+<span id="line306" class="lineno">306</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">...(string|Array)</span>} cls the CSS class names to check
+<span id="line307" class="lineno">307</span> *
+<span id="line308" class="lineno">308</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">boolean</span>} `true` if all CSS classes were present, or
+<span id="line309" class="lineno">309</span> *         `false` otherwise
+<span id="line310" class="lineno">310</span> */</span>
+<span id="line311" class="lineno">311</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">hasClass</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"><span class="hljs-comment">/* ... */</span></span>) {
+<span id="line312" class="lineno">312</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">isMatch</span>(<span class="hljs-params">val</span>) {
+<span id="line313" class="lineno">313</span>        <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(val)) {
+<span id="line314" class="lineno">314</span>            <span class="hljs-keyword">return</span> val.<span class="hljs-title function_">every</span>(isMatch);
+<span id="line315" class="lineno">315</span>        } <span class="hljs-keyword">else</span> {
+<span id="line316" class="lineno">316</span>            <span class="hljs-keyword">return</span> elem.<span class="hljs-property">classList</span>.<span class="hljs-title function_">contains</span>(val);
+<span id="line317" class="lineno">317</span>        }
+<span id="line318" class="lineno">318</span>    }
+<span id="line319" class="lineno">319</span>    <span class="hljs-keyword">let</span> elem = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_styleNode</span>();
+<span id="line320" class="lineno">320</span>    <span class="hljs-comment">// <span class="hljs-doctag">FIXME:</span> Use Array.prototype.flatMap(...) here</span>
+<span id="line321" class="lineno">321</span>    <span class="hljs-keyword">return</span> <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(<span class="hljs-variable language_">arguments</span>).<span class="hljs-title function_">map</span>(<span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">_toCssClass</span>).<span class="hljs-title function_">every</span>(isMatch);
+<span id="line322" class="lineno">322</span>};
+<span id="line323" class="lineno">323</span>
+<span id="line324" class="lineno">324</span><span class="hljs-comment">/**
+<span id="line325" class="lineno">325</span> * Adds the specified CSS class names to this HTML DOM node.
+<span id="line326" class="lineno">326</span> *
+<span id="line327" class="lineno">327</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">...(string|Array)</span>} cls the CSS class names to add
+<span id="line328" class="lineno">328</span> */</span>
+<span id="line329" class="lineno">329</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">addClass</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"><span class="hljs-comment">/* ... */</span></span>) {
+<span id="line330" class="lineno">330</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">add</span>(<span class="hljs-params">val</span>) {
+<span id="line331" class="lineno">331</span>        <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(val)) {
+<span id="line332" class="lineno">332</span>            val.<span class="hljs-title function_">forEach</span>(add);
+<span id="line333" class="lineno">333</span>        } <span class="hljs-keyword">else</span> {
+<span id="line334" class="lineno">334</span>            elem.<span class="hljs-property">classList</span>.<span class="hljs-title function_">add</span>(val);
+<span id="line335" class="lineno">335</span>        }
+<span id="line336" class="lineno">336</span>    }
+<span id="line337" class="lineno">337</span>    <span class="hljs-keyword">let</span> elem = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_styleNode</span>();
+<span id="line338" class="lineno">338</span>    <span class="hljs-comment">// <span class="hljs-doctag">FIXME:</span> Use Array.prototype.flatMap(...) here</span>
+<span id="line339" class="lineno">339</span>    <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(<span class="hljs-variable language_">arguments</span>).<span class="hljs-title function_">map</span>(<span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">_toCssClass</span>).<span class="hljs-title function_">forEach</span>(add);
+<span id="line340" class="lineno">340</span>};
+<span id="line341" class="lineno">341</span>
+<span id="line342" class="lineno">342</span><span class="hljs-comment">/**
+<span id="line343" class="lineno">343</span> * Removes the specified CSS class names from this HTML DOM node.
+<span id="line344" class="lineno">344</span> * Note that this method will not remove any class starting with
+<span id="line345" class="lineno">345</span> * &quot;widget&quot;.
+<span id="line346" class="lineno">346</span> *
+<span id="line347" class="lineno">347</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">...(string|Array)</span>} cls the CSS class names to remove
+<span id="line348" class="lineno">348</span> */</span>
+<span id="line349" class="lineno">349</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">removeClass</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"><span class="hljs-comment">/* ... */</span></span>) {
+<span id="line350" class="lineno">350</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">remove</span>(<span class="hljs-params">val</span>) {
+<span id="line351" class="lineno">351</span>        <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(val)) {
+<span id="line352" class="lineno">352</span>            val.<span class="hljs-title function_">filter</span>(<span class="hljs-title class_">Boolean</span>).<span class="hljs-title function_">forEach</span>(remove);
+<span id="line353" class="lineno">353</span>        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!val.<span class="hljs-title function_">startsWith</span>(<span class="hljs-string">&quot;widget&quot;</span>)) {
+<span id="line354" class="lineno">354</span>            elem.<span class="hljs-property">classList</span>.<span class="hljs-title function_">remove</span>(val);
+<span id="line355" class="lineno">355</span>        }
+<span id="line356" class="lineno">356</span>    }
+<span id="line357" class="lineno">357</span>    <span class="hljs-keyword">let</span> elem = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_styleNode</span>();
+<span id="line358" class="lineno">358</span>    <span class="hljs-comment">// <span class="hljs-doctag">FIXME:</span> Use Array.prototype.flatMap(...) here</span>
+<span id="line359" class="lineno">359</span>    <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(<span class="hljs-variable language_">arguments</span>).<span class="hljs-title function_">map</span>(<span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">_toCssClass</span>).<span class="hljs-title function_">forEach</span>(remove);
+<span id="line360" class="lineno">360</span>};
+<span id="line361" class="lineno">361</span>
+<span id="line362" class="lineno">362</span><span class="hljs-comment">/**
+<span id="line363" class="lineno">363</span> * Toggles adding and removing the specified CSS class names to and
+<span id="line364" class="lineno">364</span> * from this HTML DOM node. If all the CSS classes are already set,
+<span id="line365" class="lineno">365</span> * they will be removed. Otherwise they will be added.
+<span id="line366" class="lineno">366</span> *
+<span id="line367" class="lineno">367</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">...(string|Array)</span>} cls the CSS class names to remove
+<span id="line368" class="lineno">368</span> *
+<span id="line369" class="lineno">369</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">boolean</span>} `true` if the CSS classes were added, or
+<span id="line370" class="lineno">370</span> *         `false` otherwise
+<span id="line371" class="lineno">371</span> */</span>
+<span id="line372" class="lineno">372</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">toggleClass</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"><span class="hljs-comment">/* ... */</span></span>) {
+<span id="line373" class="lineno">373</span>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">hasClass</span>.<span class="hljs-title function_">apply</span>(<span class="hljs-variable language_">this</span>, <span class="hljs-variable language_">arguments</span>)) {
+<span id="line374" class="lineno">374</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">removeClass</span>.<span class="hljs-title function_">apply</span>(<span class="hljs-variable language_">this</span>, <span class="hljs-variable language_">arguments</span>);
+<span id="line375" class="lineno">375</span>        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+<span id="line376" class="lineno">376</span>    } <span class="hljs-keyword">else</span> {
+<span id="line377" class="lineno">377</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">addClass</span>.<span class="hljs-title function_">apply</span>(<span class="hljs-variable language_">this</span>, <span class="hljs-variable language_">arguments</span>);
+<span id="line378" class="lineno">378</span>        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+<span id="line379" class="lineno">379</span>    }
+<span id="line380" class="lineno">380</span>};
+<span id="line381" class="lineno">381</span>
+<span id="line382" class="lineno">382</span><span class="hljs-comment">/**
+<span id="line383" class="lineno">383</span> * Checks if this widget is disabled. This method checks both the
+<span id="line384" class="lineno">384</span> * &quot;widgetDisabled&quot; CSS class and the `disabled` property. Changes
+<span id="line385" class="lineno">385</span> * to the disabled status can be made with `enable()`, `disable()` or
+<span id="line386" class="lineno">386</span> * `setAttrs()`.
+<span id="line387" class="lineno">387</span> *
+<span id="line388" class="lineno">388</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">boolean</span>} `true` if the widget is disabled, or
+<span id="line389" class="lineno">389</span> *         `false` otherwise
+<span id="line390" class="lineno">390</span> */</span>
+<span id="line391" class="lineno">391</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">isDisabled</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line392" class="lineno">392</span>    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">disabled</span> === <span class="hljs-literal">true</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">classList</span>.<span class="hljs-title function_">contains</span>(<span class="hljs-string">&quot;widgetDisabled&quot;</span>);
+<span id="line393" class="lineno">393</span>};
+<span id="line394" class="lineno">394</span>
+<span id="line395" class="lineno">395</span><span class="hljs-comment">/**
+<span id="line396" class="lineno">396</span> * Performs the changes corresponding to setting the `disabled`
+<span id="line397" class="lineno">397</span> * widget attribute.
+<span id="line398" class="lineno">398</span> *
+<span id="line399" class="lineno">399</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">boolean</span>} value the new attribute value
+<span id="line400" class="lineno">400</span> */</span>
+<span id="line401" class="lineno">401</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">_setDisabled</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">value</span>) {
+<span id="line402" class="lineno">402</span>    value = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Data</span>.<span class="hljs-title function_">bool</span>(value);
+<span id="line403" class="lineno">403</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">classList</span>.<span class="hljs-title function_">toggle</span>(<span class="hljs-string">&quot;widgetDisabled&quot;</span>, value);
+<span id="line404" class="lineno">404</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&quot;disabled&quot;</span>, value);
+<span id="line405" class="lineno">405</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">disabled</span> = value;
+<span id="line406" class="lineno">406</span>};
+<span id="line407" class="lineno">407</span>
+<span id="line408" class="lineno">408</span><span class="hljs-comment">/**
+<span id="line409" class="lineno">409</span> * Enables this widget if it was previously disabled. This is
+<span id="line410" class="lineno">410</span> * equivalent to calling `setAttrs({ disabled: false })`.
+<span id="line411" class="lineno">411</span> */</span>
+<span id="line412" class="lineno">412</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">enable</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line413" class="lineno">413</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setAttrs</span>({ <span class="hljs-attr">disabled</span>: <span class="hljs-literal">false</span> });
+<span id="line414" class="lineno">414</span>};
+<span id="line415" class="lineno">415</span>
+<span id="line416" class="lineno">416</span><span class="hljs-comment">/**
+<span id="line417" class="lineno">417</span> * Disables this widget if it was previously enabled. This method is
+<span id="line418" class="lineno">418</span> * equivalent to calling `setAttrs({ disabled: true })`.
+<span id="line419" class="lineno">419</span> */</span>
+<span id="line420" class="lineno">420</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">disable</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line421" class="lineno">421</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setAttrs</span>({ <span class="hljs-attr">disabled</span>: <span class="hljs-literal">true</span> });
+<span id="line422" class="lineno">422</span>};
+<span id="line423" class="lineno">423</span>
+<span id="line424" class="lineno">424</span><span class="hljs-comment">/**
+<span id="line425" class="lineno">425</span> * Checks if this widget node is hidden. This method checks for the
+<span id="line426" class="lineno">426</span> * existence of the `widgetHidden` CSS class. It does NOT check the
+<span id="line427" class="lineno">427</span> * actual widget visibility (the `display` style property set by
+<span id="line428" class="lineno">428</span> * animations for example).
+<span id="line429" class="lineno">429</span> *
+<span id="line430" class="lineno">430</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">boolean</span>} `true` if the widget is hidden, or
+<span id="line431" class="lineno">431</span> *         `false` otherwise
+<span id="line432" class="lineno">432</span> */</span>
+<span id="line433" class="lineno">433</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">isHidden</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line434" class="lineno">434</span>    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">classList</span>.<span class="hljs-title function_">contains</span>(<span class="hljs-string">&quot;widgetHidden&quot;</span>);
+<span id="line435" class="lineno">435</span>};
+<span id="line436" class="lineno">436</span>
+<span id="line437" class="lineno">437</span><span class="hljs-comment">/**
+<span id="line438" class="lineno">438</span> * Performs the changes corresponding to setting the `hidden`
+<span id="line439" class="lineno">439</span> * widget attribute.
+<span id="line440" class="lineno">440</span> *
+<span id="line441" class="lineno">441</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">boolean</span>} value the new attribute value
+<span id="line442" class="lineno">442</span> */</span>
+<span id="line443" class="lineno">443</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">_setHidden</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">value</span>) {
+<span id="line444" class="lineno">444</span>    value = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Data</span>.<span class="hljs-title function_">bool</span>(value);
+<span id="line445" class="lineno">445</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">classList</span>.<span class="hljs-title function_">toggle</span>(<span class="hljs-string">&quot;widgetHidden&quot;</span>, value);
+<span id="line446" class="lineno">446</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&quot;hidden&quot;</span>, value);
+<span id="line447" class="lineno">447</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">hidden</span> = value;
+<span id="line448" class="lineno">448</span>};
+<span id="line449" class="lineno">449</span>
+<span id="line450" class="lineno">450</span><span class="hljs-comment">/**
+<span id="line451" class="lineno">451</span> * Shows this widget node if it was previously hidden. This method is
+<span id="line452" class="lineno">452</span> * equivalent to calling `setAttrs({ hidden: false })`. It is safe
+<span id="line453" class="lineno">453</span> * for all types of widgets, since it only removes the `widgetHidden`
+<span id="line454" class="lineno">454</span> * CSS class instead of setting the `display` style property.
+<span id="line455" class="lineno">455</span> */</span>
+<span id="line456" class="lineno">456</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">show</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line457" class="lineno">457</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setAttrs</span>({ <span class="hljs-attr">hidden</span>: <span class="hljs-literal">false</span> });
+<span id="line458" class="lineno">458</span>};
+<span id="line459" class="lineno">459</span>
+<span id="line460" class="lineno">460</span><span class="hljs-comment">/**
+<span id="line461" class="lineno">461</span> * Hides this widget node if it was previously visible. This method
+<span id="line462" class="lineno">462</span> * is equivalent to calling `setAttrs({ hidden: true })`. It is safe
+<span id="line463" class="lineno">463</span> * for all types of widgets, since it only adds the `widgetHidden`
+<span id="line464" class="lineno">464</span> * CSS class instead of setting the `display` style property.
+<span id="line465" class="lineno">465</span> */</span>
+<span id="line466" class="lineno">466</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">hide</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line467" class="lineno">467</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setAttrs</span>({ <span class="hljs-attr">hidden</span>: <span class="hljs-literal">true</span> });
+<span id="line468" class="lineno">468</span>};
+<span id="line469" class="lineno">469</span>
+<span id="line470" class="lineno">470</span><span class="hljs-comment">/**
+<span id="line471" class="lineno">471</span> * Blurs (unfocuses) this DOM node and all relevant child nodes. This function
+<span id="line472" class="lineno">472</span> * will recursively blur all `&lt;a&gt;`, `&lt;button&gt;`, `&lt;input&gt;`, `&lt;textarea&gt;` and
+<span id="line473" class="lineno">473</span> * `&lt;select&gt;` child nodes found.
+<span id="line474" class="lineno">474</span> */</span>
+<span id="line475" class="lineno">475</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">blurAll</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line476" class="lineno">476</span>    <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Util</span>.<span class="hljs-title function_">blurAll</span>(<span class="hljs-variable language_">this</span>);
+<span id="line477" class="lineno">477</span>};
+<span id="line478" class="lineno">478</span>
+<span id="line479" class="lineno">479</span><span class="hljs-comment">/**
+<span id="line480" class="lineno">480</span> * Returns an array with all child DOM nodes. Note that the array is
+<span id="line481" class="lineno">481</span> * a real JavaScript array, not a dynamic `NodeList`. This method is
+<span id="line482" class="lineno">482</span> * sometimes overridden by child widgets in order to hide
+<span id="line483" class="lineno">483</span> * intermediate DOM nodes required by the widget.
+<span id="line484" class="lineno">484</span> *
+<span id="line485" class="lineno">485</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Array</span>} the array of child DOM nodes
+<span id="line486" class="lineno">486</span> */</span>
+<span id="line487" class="lineno">487</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">getChildNodes</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line488" class="lineno">488</span>    <span class="hljs-keyword">let</span> elem = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_containerNode</span>();
+<span id="line489" class="lineno">489</span>    <span class="hljs-keyword">return</span> elem ? <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(elem.<span class="hljs-property">childNodes</span>) : [];
+<span id="line490" class="lineno">490</span>};
+<span id="line491" class="lineno">491</span>
+<span id="line492" class="lineno">492</span><span class="hljs-comment">/**
+<span id="line493" class="lineno">493</span> * Adds a single child DOM node to this widget. This method is
+<span id="line494" class="lineno">494</span> * sometimes overridden by child widgets in order to hide or control
+<span id="line495" class="lineno">495</span> * intermediate DOM nodes required by the widget.
+<span id="line496" class="lineno">496</span> *
+<span id="line497" class="lineno">497</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Widget|Node</span>} child the DOM node to add
+<span id="line498" class="lineno">498</span> */</span>
+<span id="line499" class="lineno">499</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">addChildNode</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">child</span>) {
+<span id="line500" class="lineno">500</span>    <span class="hljs-keyword">let</span> elem = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_containerNode</span>();
+<span id="line501" class="lineno">501</span>    <span class="hljs-keyword">if</span> (elem) {
+<span id="line502" class="lineno">502</span>        elem.<span class="hljs-title function_">append</span>(child);
+<span id="line503" class="lineno">503</span>    } <span class="hljs-keyword">else</span> {
+<span id="line504" class="lineno">504</span>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">&quot;cannot add child node, widget is not a container&quot;</span>);
+<span id="line505" class="lineno">505</span>    }
+<span id="line506" class="lineno">506</span>};
+<span id="line507" class="lineno">507</span>
+<span id="line508" class="lineno">508</span><span class="hljs-comment">/**
+<span id="line509" class="lineno">509</span> * Removes a single child DOM node from this widget. This method is
+<span id="line510" class="lineno">510</span> * sometimes overridden by child widgets in order to hide or control
+<span id="line511" class="lineno">511</span> * intermediate DOM nodes required by the widget.
+<span id="line512" class="lineno">512</span> *
+<span id="line513" class="lineno">513</span> * Note that this method will NOT destroy the removed child widget,
+<span id="line514" class="lineno">514</span> * so care must be taken to ensure proper child widget destruction.
+<span id="line515" class="lineno">515</span> *
+<span id="line516" class="lineno">516</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Widget|Node</span>} child the DOM node to remove
+<span id="line517" class="lineno">517</span> */</span>
+<span id="line518" class="lineno">518</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">removeChildNode</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">child</span>) {
+<span id="line519" class="lineno">519</span>    <span class="hljs-keyword">let</span> elem = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_containerNode</span>();
+<span id="line520" class="lineno">520</span>    <span class="hljs-keyword">if</span> (elem) {
+<span id="line521" class="lineno">521</span>        elem.<span class="hljs-title function_">removeChild</span>(child);
+<span id="line522" class="lineno">522</span>    }
 <span id="line523" class="lineno">523</span>};
 <span id="line524" class="lineno">524</span>
 <span id="line525" class="lineno">525</span><span class="hljs-comment">/**
-<span id="line526" class="lineno">526</span> * Returns an array with all child DOM nodes. Note that the array is
-<span id="line527" class="lineno">527</span> * a real JavaScript array, not a dynamic `NodeList`. This method is
-<span id="line528" class="lineno">528</span> * sometimes overridden by child widgets in order to hide
-<span id="line529" class="lineno">529</span> * intermediate DOM nodes required by the widget.
-<span id="line530" class="lineno">530</span> *
-<span id="line531" class="lineno">531</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Array</span>} the array of child DOM nodes
-<span id="line532" class="lineno">532</span> */</span>
-<span id="line533" class="lineno">533</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">getChildNodes</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line534" class="lineno">534</span>    <span class="hljs-keyword">let</span> elem = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_containerNode</span>();
-<span id="line535" class="lineno">535</span>    <span class="hljs-keyword">return</span> elem ? <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(elem.<span class="hljs-property">childNodes</span>) : [];
-<span id="line536" class="lineno">536</span>};
-<span id="line537" class="lineno">537</span>
-<span id="line538" class="lineno">538</span><span class="hljs-comment">/**
-<span id="line539" class="lineno">539</span> * Adds a single child DOM node to this widget. This method is
-<span id="line540" class="lineno">540</span> * sometimes overridden by child widgets in order to hide or control
-<span id="line541" class="lineno">541</span> * intermediate DOM nodes required by the widget.
-<span id="line542" class="lineno">542</span> *
-<span id="line543" class="lineno">543</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Widget|Node</span>} child the DOM node to add
-<span id="line544" class="lineno">544</span> */</span>
-<span id="line545" class="lineno">545</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">addChildNode</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">child</span>) {
-<span id="line546" class="lineno">546</span>    <span class="hljs-keyword">let</span> elem = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_containerNode</span>();
-<span id="line547" class="lineno">547</span>    <span class="hljs-keyword">if</span> (elem) {
-<span id="line548" class="lineno">548</span>        elem.<span class="hljs-title function_">append</span>(child);
-<span id="line549" class="lineno">549</span>    } <span class="hljs-keyword">else</span> {
-<span id="line550" class="lineno">550</span>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">&quot;cannot add child node, widget is not a container&quot;</span>);
-<span id="line551" class="lineno">551</span>    }
-<span id="line552" class="lineno">552</span>};
-<span id="line553" class="lineno">553</span>
-<span id="line554" class="lineno">554</span><span class="hljs-comment">/**
-<span id="line555" class="lineno">555</span> * Removes a single child DOM node from this widget. This method is
-<span id="line556" class="lineno">556</span> * sometimes overridden by child widgets in order to hide or control
-<span id="line557" class="lineno">557</span> * intermediate DOM nodes required by the widget.
-<span id="line558" class="lineno">558</span> *
-<span id="line559" class="lineno">559</span> * Note that this method will NOT destroy the removed child widget,
-<span id="line560" class="lineno">560</span> * so care must be taken to ensure proper child widget destruction.
-<span id="line561" class="lineno">561</span> *
-<span id="line562" class="lineno">562</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Widget|Node</span>} child the DOM node to remove
-<span id="line563" class="lineno">563</span> */</span>
-<span id="line564" class="lineno">564</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">removeChildNode</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">child</span>) {
-<span id="line565" class="lineno">565</span>    <span class="hljs-keyword">let</span> elem = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_containerNode</span>();
-<span id="line566" class="lineno">566</span>    <span class="hljs-keyword">if</span> (elem) {
-<span id="line567" class="lineno">567</span>        elem.<span class="hljs-title function_">removeChild</span>(child);
-<span id="line568" class="lineno">568</span>    }
-<span id="line569" class="lineno">569</span>};
-<span id="line570" class="lineno">570</span>
-<span id="line571" class="lineno">571</span><span class="hljs-comment">/**
-<span id="line572" class="lineno">572</span> * Adds one or more children to this widget. This method will flatten any
-<span id="line573" class="lineno">573</span> * arrays among the arguments and ignores any `null` or `undefined` arguments.
-<span id="line574" class="lineno">574</span> * Any DOM nodes or widgets will be added to the end, and other objects will be
-<span id="line575" class="lineno">575</span> * converted to a text node first. Subclasses should normally override the
-<span id="line576" class="lineno">576</span> * `addChildNode()` method instead of this one, since that is the basis for
-<span id="line577" class="lineno">577</span> * DOM node insertion.
-<span id="line578" class="lineno">578</span> *
-<span id="line579" class="lineno">579</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">...(string|Node|Array)</span>} child the children to add
-<span id="line580" class="lineno">580</span> */</span>
-<span id="line581" class="lineno">581</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">addAll</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">...children</span>) {
-<span id="line582" class="lineno">582</span>    [].<span class="hljs-title function_">concat</span>(...children).<span class="hljs-title function_">filter</span>(<span class="hljs-function">(<span class="hljs-params">o</span>) =&gt;</span> o != <span class="hljs-literal">null</span>).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">child</span>) =&gt;</span> {
-<span id="line583" class="lineno">583</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">addChildNode</span>(child);
-<span id="line584" class="lineno">584</span>    });
-<span id="line585" class="lineno">585</span>};
-<span id="line586" class="lineno">586</span>
-<span id="line587" class="lineno">587</span><span class="hljs-comment">/**
-<span id="line588" class="lineno">588</span> * Removes all children to this widget. This method will also destroy and child
-<span id="line589" class="lineno">589</span> * widgets and disconnect all signal listeners. This method uses the
-<span id="line590" class="lineno">590</span> * `getChildNodes()` and `removeChildNode()` methods to find and remove the
-<span id="line591" class="lineno">591</span> * individual child nodes.
-<span id="line592" class="lineno">592</span> */</span>
-<span id="line593" class="lineno">593</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">removeAll</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line594" class="lineno">594</span>    <span class="hljs-keyword">let</span> children = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>();
-<span id="line595" class="lineno">595</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = children.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i--) {
-<span id="line596" class="lineno">596</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">removeChildNode</span>(children[i]);
-<span id="line597" class="lineno">597</span>        <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title function_">destroyWidget</span>(children[i]);
-<span id="line598" class="lineno">598</span>    }
-<span id="line599" class="lineno">599</span>};
-<span id="line600" class="lineno">600</span></code></pre>
+<span id="line526" class="lineno">526</span> * Adds one or more children to this widget. This method will flatten any
+<span id="line527" class="lineno">527</span> * arrays among the arguments and ignores any `null` or `undefined` arguments.
+<span id="line528" class="lineno">528</span> * Any DOM nodes or widgets will be added to the end, and other objects will be
+<span id="line529" class="lineno">529</span> * converted to a text node first. Subclasses should normally override the
+<span id="line530" class="lineno">530</span> * `addChildNode()` method instead of this one, since that is the basis for
+<span id="line531" class="lineno">531</span> * DOM node insertion.
+<span id="line532" class="lineno">532</span> *
+<span id="line533" class="lineno">533</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">...(string|Node|Array)</span>} child the children to add
+<span id="line534" class="lineno">534</span> */</span>
+<span id="line535" class="lineno">535</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">addAll</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">...children</span>) {
+<span id="line536" class="lineno">536</span>    [].<span class="hljs-title function_">concat</span>(...children).<span class="hljs-title function_">filter</span>(<span class="hljs-function">(<span class="hljs-params">o</span>) =&gt;</span> o != <span class="hljs-literal">null</span>).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">child</span>) =&gt;</span> {
+<span id="line537" class="lineno">537</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">addChildNode</span>(child);
+<span id="line538" class="lineno">538</span>    });
+<span id="line539" class="lineno">539</span>};
+<span id="line540" class="lineno">540</span>
+<span id="line541" class="lineno">541</span><span class="hljs-comment">/**
+<span id="line542" class="lineno">542</span> * Removes all children to this widget. This method will also destroy and child
+<span id="line543" class="lineno">543</span> * widgets and disconnect all signal listeners. This method uses the
+<span id="line544" class="lineno">544</span> * `getChildNodes()` and `removeChildNode()` methods to find and remove the
+<span id="line545" class="lineno">545</span> * individual child nodes.
+<span id="line546" class="lineno">546</span> */</span>
+<span id="line547" class="lineno">547</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">removeAll</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line548" class="lineno">548</span>    <span class="hljs-keyword">let</span> children = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>();
+<span id="line549" class="lineno">549</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = children.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i--) {
+<span id="line550" class="lineno">550</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">removeChildNode</span>(children[i]);
+<span id="line551" class="lineno">551</span>        <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title function_">destroyWidget</span>(children[i]);
+<span id="line552" class="lineno">552</span>    }
+<span id="line553" class="lineno">553</span>};
+<span id="line554" class="lineno">554</span></code></pre>
         </article>
     </section>
 
@@ -665,7 +619,7 @@
 
     <section class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2023 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2024 Per Cederberg. All rights reserved.
     </section>
 
   </body>

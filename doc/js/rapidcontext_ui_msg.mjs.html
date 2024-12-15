@@ -55,7 +55,7 @@
         <article>
             <pre><code class="hljs language-js"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
 <span id="line2" class="lineno">2</span> * RapidContext &lt;https://www.rapidcontext.com/&gt;
-<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2023 Per Cederberg. All rights reserved.
+<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2024 Per Cederberg. All rights reserved.
 <span id="line4" class="lineno">4</span> *
 <span id="line5" class="lineno">5</span> * This program is free software: you can redistribute it and/or
 <span id="line6" class="lineno">6</span> * modify it under the terms of the BSD license.
@@ -161,7 +161,7 @@
 <span id="line106" class="lineno">106</span>
 <span id="line107" class="lineno">107</span><span class="hljs-keyword">function</span> <span class="hljs-title function_">show</span>(<span class="hljs-params">type, cfg</span>) {
 <span id="line108" class="lineno">108</span>    cfg = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>({}, <span class="hljs-variable constant_">TYPES</span>[type], <span class="hljs-title function_">isObject</span>(cfg) ? cfg : { <span class="hljs-attr">text</span>: <span class="hljs-title class_">String</span>(cfg) });
-<span id="line109" class="lineno">109</span>    <span class="hljs-keyword">let</span> dlg = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">buildUI</span>(<span class="hljs-variable constant_">XML</span>);
+<span id="line109" class="lineno">109</span>    <span class="hljs-keyword">let</span> dlg = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">create</span>(<span class="hljs-variable constant_">XML</span>);
 <span id="line110" class="lineno">110</span>    dlg.<span class="hljs-title function_">setAttrs</span>({ <span class="hljs-attr">title</span>: cfg.<span class="hljs-property">title</span> });
 <span id="line111" class="lineno">111</span>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isObject</span>(cfg.<span class="hljs-property">css</span>) || <span class="hljs-regexp">/:/</span>.<span class="hljs-title function_">test</span>(cfg.<span class="hljs-property">css</span>)) {
 <span id="line112" class="lineno">112</span>        dlg.<span class="hljs-title function_">setAttrs</span>({ <span class="hljs-attr">style</span>: cfg.<span class="hljs-property">css</span> });
@@ -401,7 +401,7 @@
 
     <section class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2023 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2024 Per Cederberg. All rights reserved.
     </section>
 
   </body>

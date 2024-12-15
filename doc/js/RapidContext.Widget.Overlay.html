@@ -124,18 +124,6 @@
                         <span class="type-signature"></span>
                     </td>
                     <td class="name-description">
-                        <div class="deprecated">
-                            <code><a href="#animate">animate<span class="signature">(opts)</span><span class="type-signature"></span></a></code>
-                        </div>
-                        <div class="description">Performs a visual effect animation on this widget.</div>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td class="attributes">
-                        <span class="type-signature"></span>
-                    </td>
-                    <td class="name-description">
                         <div >
                             <code><a href="#blurAll">blurAll<span class="signature">()</span><span class="type-signature"></span></a></code>
                         </div>
@@ -911,7 +899,7 @@ DOM node insertion.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line581">line 581</a>
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line535">line 535</a>
     </dd>
 
 </dl>
@@ -1059,7 +1047,7 @@ intermediate DOM nodes required by the widget.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line545">line 545</a>
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line499">line 499</a>
     </dd>
 
 </dl>
@@ -1217,248 +1205,7 @@ intermediate DOM nodes required by the widget.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line343">line 343</a>
-    </dd>
-
-</dl>
-
-
-
-
-
-
-
-    <h4 class="name" id="animate">
-        <span class="type-signature"></span>animate<span class="signature">(opts)</span><span class="type-signature"></span>
-    </h4>
-
-
-
-
-
-<div class="description">
-    <p>Performs a visual effect animation on this widget. This is
-implemented using the <code>MochiKit.Visual</code> effect package. All options
-sent to this function will be passed on to the appropriate
-<code>MochiKit.Visual</code> function.</p>
-</div>
-
-
-
-
-<dl class="details">
-
-
-
-
-
-
-
-
-
-    <dt class="tag-params">Parameters:</dt>
-    <dd class="tag-params">
-
-
-<table class="params">
-    <thead>
-    <tr>
-
-        <th>Name</th>
-
-
-        <th>Type</th>
-
-
-
-
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-
-
-        <tr>
-
-                <td class="name"><code>opts</code></td>
-
-
-            <td class="type">
-
-
-    <span class="param-type">{<b>Object</b>}</span>
-
-
-            </td>
-
-
-
-
-
-            <td class="description last">
-                the visual effect options
-
-                    <h6>Properties</h6>
-
-
-<table class="params">
-    <thead>
-    <tr>
-
-        <th>Name</th>
-
-
-        <th>Type</th>
-
-
-
-
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-
-
-        <tr>
-
-                <td class="name"><code>effect</code></td>
-
-
-            <td class="type">
-
-
-    <span class="param-type">{<b>string</b>}</span>
-
-
-            </td>
-
-
-
-
-
-            <td class="description last">
-                the MochiKit.Visual effect name
-
-            </td>
-        </tr>
-
-
-
-        <tr>
-
-                <td class="name"><code>queue</code></td>
-
-
-            <td class="type">
-
-
-    <span class="param-type">{<b>string</b>}</span>
-
-
-            </td>
-
-
-
-
-
-            <td class="description last">
-                the MochiKit.Visual queue handling,
-           defaults to &quot;replace&quot; and a unique scope for each widget
-           (see <code>MochiKit.Visual</code> for full options)
-
-            </td>
-        </tr>
-
-
-    </tbody>
-</table>
-
-
-            </td>
-        </tr>
-
-
-    </tbody>
-</table>
-
-    </dd>
-
-
-
-
-
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from">
-        <a href="RapidContext.Widget.html#animate">RapidContext.Widget#animate</a>
-    </dd>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <dt class="tag-deprecated">Deprecated:</dt>
-        <dd class="important">
-            Use CSS animations instead.
-        </dd>
-
-
-
-
-
-
-
-    <dt class="tag-examples">Example:</dt>
-    <dd class="tag-examples">
-
-    <pre class="hljs"><code>widget.<span class="hljs-title function_">animate</span>({ <span class="hljs-attr">effect</span>: <span class="hljs-string">&quot;fade&quot;</span>, <span class="hljs-attr">duration</span>: <span class="hljs-number">0.5</span> });
-widget.<span class="hljs-title function_">animate</span>({ <span class="hljs-attr">effect</span>: <span class="hljs-string">&quot;Move&quot;</span>, <span class="hljs-attr">transition</span>: <span class="hljs-string">&quot;spring&quot;</span>, <span class="hljs-attr">y</span>: <span class="hljs-number">300</span> });</code></pre>
-
-
-    </dd>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source">
-        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line502">line 502</a>
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line329">line 329</a>
     </dd>
 
 </dl>
@@ -1553,7 +1300,7 @@ will recursively blur all <code>&lt;a&gt;</code>, <code>&lt;button&gt;</code>, <
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line521">line 521</a>
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line475">line 475</a>
     </dd>
 
 </dl>
@@ -1742,7 +1489,7 @@ equivalent to calling <code>setAttrs({ disabled: true })</code>.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line434">line 434</a>
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line420">line 420</a>
     </dd>
 
 </dl>
@@ -2230,7 +1977,7 @@ equivalent to calling <code>setAttrs({ disabled: false })</code>.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line426">line 426</a>
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line412">line 412</a>
     </dd>
 
 </dl>
@@ -2336,7 +2083,7 @@ intermediate DOM nodes required by the widget.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line533">line 533</a>
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line487">line 487</a>
     </dd>
 
 </dl>
@@ -2507,7 +2254,7 @@ case all must be present.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line325">line 325</a>
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line311">line 311</a>
     </dd>
 
 </dl>
@@ -2603,7 +2350,7 @@ CSS class instead of setting the <code>display</code> style property.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line480">line 480</a>
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line466">line 466</a>
     </dd>
 
 </dl>
@@ -2710,7 +2457,7 @@ to the disabled status can be made with <code>enable()</code>, <code>disable()</
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line405">line 405</a>
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line391">line 391</a>
     </dd>
 
 </dl>
@@ -2817,7 +2564,7 @@ animations for example).</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line447">line 447</a>
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line433">line 433</a>
     </dd>
 
 </dl>
@@ -3818,7 +3565,7 @@ individual child nodes.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line593">line 593</a>
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line547">line 547</a>
     </dd>
 
 </dl>
@@ -3969,7 +3716,7 @@ so care must be taken to ensure proper child widget destruction.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line564">line 564</a>
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line518">line 518</a>
     </dd>
 
 </dl>
@@ -4129,7 +3876,7 @@ Note that this method will not remove any class starting with
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line363">line 363</a>
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line349">line 349</a>
     </dd>
 
 </dl>
@@ -4564,7 +4311,7 @@ first argument.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line302">line 302</a>
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line288">line 288</a>
     </dd>
 
 </dl>
@@ -4660,7 +4407,7 @@ CSS class instead of setting the <code>display</code> style property.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line470">line 470</a>
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line456">line 456</a>
     </dd>
 
 </dl>
@@ -4831,7 +4578,7 @@ they will be removed. Otherwise they will be added.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line386">line 386</a>
+        <a href="RapidContext_Widget.js.html">RapidContext_Widget.js</a>, <a href="RapidContext_Widget.js.html#line372">line 372</a>
     </dd>
 
 </dl>
@@ -4959,7 +4706,7 @@ will be generated and assigned to the widget DOM node.</p>
 
     <section class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2023 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2024 Per Cederberg. All rights reserved.
     </section>
 
   </body>

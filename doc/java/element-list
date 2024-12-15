@@ -4,6 +4,7 @@ org.rapidcontext.app.plugin
 org.rapidcontext.app.proc
 org.rapidcontext.app.ui
 org.rapidcontext.app.web
+org.rapidcontext.core
 org.rapidcontext.core.data
 org.rapidcontext.core.data.stat
 org.rapidcontext.core.js

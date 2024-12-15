@@ -55,7 +55,7 @@
         <article>
             <pre><code class="hljs language-js"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
 <span id="line2" class="lineno">2</span> * RapidContext &lt;https://www.rapidcontext.com/&gt;
-<span id="line3" class="lineno">3</span> * Copyright (c) 2009-2023 Per Cederberg. All rights reserved.
+<span id="line3" class="lineno">3</span> * Copyright (c) 2009-2024 Per Cederberg. All rights reserved.
 <span id="line4" class="lineno">4</span> *
 <span id="line5" class="lineno">5</span> * This program is free software: you can redistribute it and/or
 <span id="line6" class="lineno">6</span> * modify it under the terms of the BSD license.
@@ -237,7 +237,7 @@
 <span id="line182" class="lineno">182</span>    <span class="hljs-comment">// signals depending on the result.</span>
 <span id="line183" class="lineno">183</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">nextCall</span>(<span class="hljs-params">res</span>) {
 <span id="line184" class="lineno">184</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">_promise</span> = <span class="hljs-literal">null</span>;
-<span id="line185" class="lineno">185</span>        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> res != <span class="hljs-string">&quot;undefined&quot;</span>) {
+<span id="line185" class="lineno">185</span>        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">typeof</span>(res) != <span class="hljs-string">&quot;undefined&quot;</span>) {
 <span id="line186" class="lineno">186</span>            <span class="hljs-title function_">signal</span>(<span class="hljs-variable language_">this</span>, <span class="hljs-string">&quot;onresponse&quot;</span>, res);
 <span id="line187" class="lineno">187</span>            <span class="hljs-keyword">if</span> (res <span class="hljs-keyword">instanceof</span> <span class="hljs-title class_">Error</span>) {
 <span id="line188" class="lineno">188</span>                <span class="hljs-title function_">signal</span>(<span class="hljs-variable language_">this</span>, <span class="hljs-string">&quot;onerror&quot;</span>, res);
@@ -347,7 +347,7 @@
 
     <section class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2023 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2024 Per Cederberg. All rights reserved.
     </section>
 
   </body>

@@ -464,6 +464,10 @@
           "url": "doc/js/RapidContext.UI.html#.connectProc"
         },
         {
+          "topic": "create",
+          "url": "doc/js/RapidContext.UI.html#.create"
+        },
+        {
           "topic": "showError",
           "url": "doc/js/RapidContext.UI.html#.showError"
         }
@@ -542,24 +546,12 @@
           "url": "doc/js/RapidContext.Util.html#.blurAll"
         },
         {
-          "topic": "dict",
-          "url": "doc/js/RapidContext.Util.html#.dict"
-        },
-        {
-          "topic": "mask",
-          "url": "doc/js/RapidContext.Util.html#.mask"
-        },
-        {
           "topic": "registerSizeConstraints",
           "url": "doc/js/RapidContext.Util.html#.registerSizeConstraints"
         },
         {
           "topic": "resizeElements",
           "url": "doc/js/RapidContext.Util.html#.resizeElements"
-        },
-        {
-          "topic": "resolveURI",
-          "url": "doc/js/RapidContext.Util.html#.resolveURI"
         },
         {
           "topic": "toTitleCase",
@@ -598,10 +590,6 @@
         {
           "topic": "▪addClass",
           "url": "doc/js/RapidContext.Widget.html#addClass"
-        },
-        {
-          "topic": "▪animate",
-          "url": "doc/js/RapidContext.Widget.html#animate"
         },
         {
           "topic": "▪blurAll",
@@ -706,10 +694,6 @@
           "url": "doc/js/RapidContext.Widget.Button.html#addClass"
         },
         {
-          "topic": "▪animate",
-          "url": "doc/js/RapidContext.Widget.Button.html#animate"
-        },
-        {
           "topic": "▪blurAll",
           "url": "doc/js/RapidContext.Widget.Button.html#blurAll"
         },
@@ -810,10 +794,6 @@
         {
           "topic": "▪addClass",
           "url": "doc/js/RapidContext.Widget.Dialog.html#addClass"
-        },
-        {
-          "topic": "▪animate",
-          "url": "doc/js/RapidContext.Widget.Dialog.html#animate"
         },
         {
           "topic": "▪blurAll",
@@ -954,10 +934,6 @@
           "url": "doc/js/RapidContext.Widget.Field.html#addClass"
         },
         {
-          "topic": "▪animate",
-          "url": "doc/js/RapidContext.Widget.Field.html#animate"
-        },
-        {
           "topic": "▪blurAll",
           "url": "doc/js/RapidContext.Widget.Field.html#blurAll"
         },
@@ -1070,10 +1046,6 @@
         {
           "topic": "▪addValidator",
           "url": "doc/js/RapidContext.Widget.Form.html#addValidator"
-        },
-        {
-          "topic": "▪animate",
-          "url": "doc/js/RapidContext.Widget.Form.html#animate"
         },
         {
           "topic": "▪blurAll",
@@ -1216,10 +1188,6 @@
         {
           "topic": "▪addError",
           "url": "doc/js/RapidContext.Widget.FormValidator.html#addError"
-        },
-        {
-          "topic": "▪animate",
-          "url": "doc/js/RapidContext.Widget.FormValidator.html#animate"
         },
         {
           "topic": "▪blurAll",
@@ -1836,10 +1804,6 @@
           "url": "doc/js/RapidContext.Widget.Icon.html#addClass"
         },
         {
-          "topic": "▪animate",
-          "url": "doc/js/RapidContext.Widget.Icon.html#animate"
-        },
-        {
           "topic": "▪blurAll",
           "url": "doc/js/RapidContext.Widget.Icon.html#blurAll"
         },
@@ -1940,10 +1904,6 @@
         {
           "topic": "▪addClass",
           "url": "doc/js/RapidContext.Widget.Overlay.html#addClass"
-        },
-        {
-          "topic": "▪animate",
-          "url": "doc/js/RapidContext.Widget.Overlay.html#animate"
         },
         {
           "topic": "▪blurAll",
@@ -2064,10 +2024,6 @@
           "url": "doc/js/RapidContext.Widget.Pane.html#addClass"
         },
         {
-          "topic": "▪animate",
-          "url": "doc/js/RapidContext.Widget.Pane.html#animate"
-        },
-        {
           "topic": "▪blurAll",
           "url": "doc/js/RapidContext.Widget.Pane.html#blurAll"
         },
@@ -2180,10 +2136,6 @@
         {
           "topic": "▪addClass",
           "url": "doc/js/RapidContext.Widget.Popup.html#addClass"
-        },
-        {
-          "topic": "▪animate",
-          "url": "doc/js/RapidContext.Widget.Popup.html#animate"
         },
         {
           "topic": "▪blurAll",
@@ -2316,10 +2268,6 @@
           "url": "doc/js/RapidContext.Widget.ProgressBar.html#addClass"
         },
         {
-          "topic": "▪animate",
-          "url": "doc/js/RapidContext.Widget.ProgressBar.html#animate"
-        },
-        {
           "topic": "▪blurAll",
           "url": "doc/js/RapidContext.Widget.ProgressBar.html#blurAll"
         },
@@ -2420,10 +2368,6 @@
         {
           "topic": "▪addClass",
           "url": "doc/js/RapidContext.Widget.TabContainer.html#addClass"
-        },
-        {
-          "topic": "▪animate",
-          "url": "doc/js/RapidContext.Widget.TabContainer.html#animate"
         },
         {
           "topic": "▪blurAll",
@@ -2542,10 +2486,6 @@
         {
           "topic": "▪addSelectedIds",
           "url": "doc/js/RapidContext.Widget.Table.html#addSelectedIds"
-        },
-        {
-          "topic": "▪animate",
-          "url": "doc/js/RapidContext.Widget.Table.html#animate"
         },
         {
           "topic": "▪blurAll",
@@ -2726,10 +2666,6 @@
           "url": "doc/js/RapidContext.Widget.TableColumn.html#addClass"
         },
         {
-          "topic": "▪animate",
-          "url": "doc/js/RapidContext.Widget.TableColumn.html#animate"
-        },
-        {
           "topic": "▪blurAll",
           "url": "doc/js/RapidContext.Widget.TableColumn.html#blurAll"
         },
@@ -2794,6 +2730,10 @@
           "url": "doc/js/RapidContext.Widget.TableColumn.html#removeClass"
         },
         {
+          "topic": "▪renderer",
+          "url": "doc/js/RapidContext.Widget.TableColumn.html#renderer"
+        },
+        {
           "topic": "▪setAttrs",
           "url": "doc/js/RapidContext.Widget.TableColumn.html#setAttrs"
         },
@@ -2830,10 +2770,6 @@
         {
           "topic": "▪addClass",
           "url": "doc/js/RapidContext.Widget.TextArea.html#addClass"
-        },
-        {
-          "topic": "▪animate",
-          "url": "doc/js/RapidContext.Widget.TextArea.html#animate"
         },
         {
           "topic": "▪blurAll",
@@ -2948,10 +2884,6 @@
         {
           "topic": "▪addClass",
           "url": "doc/js/RapidContext.Widget.TextField.html#addClass"
-        },
-        {
-          "topic": "▪animate",
-          "url": "doc/js/RapidContext.Widget.TextField.html#animate"
         },
         {
           "topic": "▪blurAll",
@@ -3070,10 +3002,6 @@
         {
           "topic": "▪addPath",
           "url": "doc/js/RapidContext.Widget.Tree.html#addPath"
-        },
-        {
-          "topic": "▪animate",
-          "url": "doc/js/RapidContext.Widget.Tree.html#animate"
         },
         {
           "topic": "▪blurAll",
@@ -3220,10 +3148,6 @@
         {
           "topic": "▪addClass",
           "url": "doc/js/RapidContext.Widget.TreeNode.html#addClass"
-        },
-        {
-          "topic": "▪animate",
-          "url": "doc/js/RapidContext.Widget.TreeNode.html#animate"
         },
         {
           "topic": "▪blurAll",
@@ -3406,10 +3330,6 @@
         {
           "topic": "▪addClass",
           "url": "doc/js/RapidContext.Widget.Wizard.html#addClass"
-        },
-        {
-          "topic": "▪animate",
-          "url": "doc/js/RapidContext.Widget.Wizard.html#animate"
         },
         {
           "topic": "▪blurAll",

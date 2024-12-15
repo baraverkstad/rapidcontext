@@ -55,7 +55,7 @@
         <article>
             <pre><code class="hljs language-js"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
 <span id="line2" class="lineno">2</span> * RapidContext &lt;https://www.rapidcontext.com/&gt;
-<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2023 Per Cederberg. All rights reserved.
+<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2024 Per Cederberg. All rights reserved.
 <span id="line4" class="lineno">4</span> *
 <span id="line5" class="lineno">5</span> * This program is free software: you can redistribute it and/or
 <span id="line6" class="lineno">6</span> * modify it under the terms of the BSD license.
@@ -72,7 +72,7 @@
 <span id="line17" class="lineno">17</span> * <span class="hljs-doctag">@namespace</span> RapidContext.Data
 <span id="line18" class="lineno">18</span> */</span>
 <span id="line19" class="lineno">19</span>
-<span id="line20" class="lineno">20</span><span class="hljs-keyword">import</span> { isNil, isFunction, isObject, isArrayLike, isIterable, hasProperty, hasValue } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./fn.mjs&#x27;</span>;
+<span id="line20" class="lineno">20</span><span class="hljs-keyword">import</span> { isNil, isFunction, isNumber, isObject, isArrayLike, isIterable, hasProperty, hasValue } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./fn.mjs&#x27;</span>;
 <span id="line21" class="lineno">21</span>
 <span id="line22" class="lineno">22</span><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">OFF</span> = [<span class="hljs-string">&#x27;null&#x27;</span>, <span class="hljs-string">&#x27;undefined&#x27;</span>, <span class="hljs-string">&#x27;0&#x27;</span>, <span class="hljs-string">&#x27;f&#x27;</span>, <span class="hljs-string">&#x27;false&#x27;</span>, <span class="hljs-string">&#x27;off&#x27;</span>, <span class="hljs-string">&#x27;n&#x27;</span>, <span class="hljs-string">&#x27;no&#x27;</span>];
 <span id="line23" class="lineno">23</span>
@@ -435,46 +435,52 @@
 <span id="line380" class="lineno">380</span>        a = <span class="hljs-title function_">valueOf</span>(a);
 <span id="line381" class="lineno">381</span>        b = <span class="hljs-title function_">valueOf</span>(b);
 <span id="line382" class="lineno">382</span>    }
-<span id="line383" class="lineno">383</span>    <span class="hljs-keyword">return</span> a &lt; b ? -<span class="hljs-number">1</span> : (a &gt; b ? <span class="hljs-number">1</span> : <span class="hljs-number">0</span>);
-<span id="line384" class="lineno">384</span>}
-<span id="line385" class="lineno">385</span>
-<span id="line386" class="lineno">386</span><span class="hljs-comment">/**
-<span id="line387" class="lineno">387</span> * Returns a sorted copy of a collection. An optional function may be provided
-<span id="line388" class="lineno">388</span> * to extract the value to compare with the other elements. If no function is
-<span id="line389" class="lineno">389</span> * specified, the comparison is made on the elements themselves. Returns a bound
-<span id="line390" class="lineno">390</span> * function if only a single function argument is specified.
-<span id="line391" class="lineno">391</span> *
-<span id="line392" class="lineno">392</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">function</span>} [fn] the value extract function
-<span id="line393" class="lineno">393</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Array|Object|Iterable</span>} coll the input collection
-<span id="line394" class="lineno">394</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Array|function</span>} the new sorted `Array`, or a bound function
-<span id="line395" class="lineno">395</span> * <span class="hljs-doctag">@name</span> <span class="hljs-variable">sort</span>
-<span id="line396" class="lineno">396</span> * <span class="hljs-doctag">@memberof</span> RapidContext.Data
+<span id="line383" class="lineno">383</span>    <span class="hljs-keyword">let</span> aNil = <span class="hljs-title function_">isNil</span>(a) || (<span class="hljs-title function_">isNumber</span>(a) &amp;&amp; <span class="hljs-built_in">isNaN</span>(a));
+<span id="line384" class="lineno">384</span>    <span class="hljs-keyword">let</span> bNil = <span class="hljs-title function_">isNil</span>(b) || (<span class="hljs-title function_">isNumber</span>(b) &amp;&amp; <span class="hljs-built_in">isNaN</span>(b));
+<span id="line385" class="lineno">385</span>    <span class="hljs-keyword">if</span> (aNil || bNil) {
+<span id="line386" class="lineno">386</span>        <span class="hljs-keyword">return</span> (aNil &amp;&amp; bNil) ? <span class="hljs-number">0</span> : (aNil ? -<span class="hljs-number">1</span> : <span class="hljs-number">1</span>);
+<span id="line387" class="lineno">387</span>    } <span class="hljs-keyword">else</span> {
+<span id="line388" class="lineno">388</span>        <span class="hljs-keyword">return</span> (a &lt; b) ? -<span class="hljs-number">1</span> : (a &gt; b ? <span class="hljs-number">1</span> : <span class="hljs-number">0</span>);
+<span id="line389" class="lineno">389</span>    }
+<span id="line390" class="lineno">390</span>}
+<span id="line391" class="lineno">391</span>
+<span id="line392" class="lineno">392</span><span class="hljs-comment">/**
+<span id="line393" class="lineno">393</span> * Returns a sorted copy of a collection. An optional function may be provided
+<span id="line394" class="lineno">394</span> * to extract the value to compare with the other elements. If no function is
+<span id="line395" class="lineno">395</span> * specified, the comparison is made on the elements themselves. Returns a bound
+<span id="line396" class="lineno">396</span> * function if only a single function argument is specified.
 <span id="line397" class="lineno">397</span> *
-<span id="line398" class="lineno">398</span> * <span class="hljs-doctag">@example</span>
-<span id="line399" class="lineno">399</span> * sort([3, 2, 1]) //==&gt; [1, 2, 3]
-<span id="line400" class="lineno">400</span> * sort(get(&#x27;pos&#x27;), [{ pos: 3 }, { pos: 1 }]) //==&gt; [{ pos: 1 }, { pos: 3 }]
-<span id="line401" class="lineno">401</span> *
-<span id="line402" class="lineno">402</span> * <span class="hljs-doctag">@example</span>
-<span id="line403" class="lineno">403</span> * const toLower = (s) =&gt; s.toLowerCase();
-<span id="line404" class="lineno">404</span> * const sortInsensitive = sort(toLower);
-<span id="line405" class="lineno">405</span> * sortInsensitive([&#x27;b&#x27;, &#x27;B&#x27;, &#x27;a&#x27;, &#x27;aa&#x27;, &#x27;A&#x27;]) //==&gt; [&#x27;a&#x27;, &#x27;A&#x27;, &#x27;aa&#x27;, &#x27;b&#x27;, &#x27;B&#x27;]
-<span id="line406" class="lineno">406</span> */</span>
-<span id="line407" class="lineno">407</span><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">sort</span>(<span class="hljs-params">fn, coll</span>) {
-<span id="line408" class="lineno">408</span>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">arguments</span>.<span class="hljs-property">length</span> === <span class="hljs-number">0</span>) {
-<span id="line409" class="lineno">409</span>        <span class="hljs-keyword">return</span> [];
-<span id="line410" class="lineno">410</span>    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">arguments</span>.<span class="hljs-property">length</span> === <span class="hljs-number">1</span> &amp;&amp; <span class="hljs-title function_">isFunction</span>(fn)) {
-<span id="line411" class="lineno">411</span>        <span class="hljs-keyword">return</span> sort.<span class="hljs-title function_">bind</span>(<span class="hljs-literal">null</span>, fn);
-<span id="line412" class="lineno">412</span>    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">arguments</span>.<span class="hljs-property">length</span> === <span class="hljs-number">1</span>) {
-<span id="line413" class="lineno">413</span>        coll = <span class="hljs-variable language_">arguments</span>[<span class="hljs-number">0</span>];
-<span id="line414" class="lineno">414</span>        fn = <span class="hljs-literal">null</span>;
-<span id="line415" class="lineno">415</span>    }
-<span id="line416" class="lineno">416</span>    <span class="hljs-keyword">let</span> arr = <span class="hljs-title function_">array</span>(coll);
-<span id="line417" class="lineno">417</span>    arr.<span class="hljs-title function_">sort</span>(fn ? <span class="hljs-title function_">compare</span>(fn) : compare);
-<span id="line418" class="lineno">418</span>    <span class="hljs-keyword">return</span> arr;
-<span id="line419" class="lineno">419</span>}
-<span id="line420" class="lineno">420</span>
-<span id="line421" class="lineno">421</span><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> { bool, array, object, clone, get, filter, flatten, map, uniq, compare, sort };
-<span id="line422" class="lineno">422</span></code></pre>
+<span id="line398" class="lineno">398</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">function</span>} [fn] the value extract function
+<span id="line399" class="lineno">399</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Array|Object|Iterable</span>} coll the input collection
+<span id="line400" class="lineno">400</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Array|function</span>} the new sorted `Array`, or a bound function
+<span id="line401" class="lineno">401</span> * <span class="hljs-doctag">@name</span> <span class="hljs-variable">sort</span>
+<span id="line402" class="lineno">402</span> * <span class="hljs-doctag">@memberof</span> RapidContext.Data
+<span id="line403" class="lineno">403</span> *
+<span id="line404" class="lineno">404</span> * <span class="hljs-doctag">@example</span>
+<span id="line405" class="lineno">405</span> * sort([3, 2, 1]) //==&gt; [1, 2, 3]
+<span id="line406" class="lineno">406</span> * sort(get(&#x27;pos&#x27;), [{ pos: 3 }, { pos: 1 }]) //==&gt; [{ pos: 1 }, { pos: 3 }]
+<span id="line407" class="lineno">407</span> *
+<span id="line408" class="lineno">408</span> * <span class="hljs-doctag">@example</span>
+<span id="line409" class="lineno">409</span> * const toLower = (s) =&gt; s.toLowerCase();
+<span id="line410" class="lineno">410</span> * const sortInsensitive = sort(toLower);
+<span id="line411" class="lineno">411</span> * sortInsensitive([&#x27;b&#x27;, &#x27;B&#x27;, &#x27;a&#x27;, &#x27;aa&#x27;, &#x27;A&#x27;]) //==&gt; [&#x27;a&#x27;, &#x27;A&#x27;, &#x27;aa&#x27;, &#x27;b&#x27;, &#x27;B&#x27;]
+<span id="line412" class="lineno">412</span> */</span>
+<span id="line413" class="lineno">413</span><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">sort</span>(<span class="hljs-params">fn, coll</span>) {
+<span id="line414" class="lineno">414</span>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">arguments</span>.<span class="hljs-property">length</span> === <span class="hljs-number">0</span>) {
+<span id="line415" class="lineno">415</span>        <span class="hljs-keyword">return</span> [];
+<span id="line416" class="lineno">416</span>    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">arguments</span>.<span class="hljs-property">length</span> === <span class="hljs-number">1</span> &amp;&amp; <span class="hljs-title function_">isFunction</span>(fn)) {
+<span id="line417" class="lineno">417</span>        <span class="hljs-keyword">return</span> sort.<span class="hljs-title function_">bind</span>(<span class="hljs-literal">null</span>, fn);
+<span id="line418" class="lineno">418</span>    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">arguments</span>.<span class="hljs-property">length</span> === <span class="hljs-number">1</span>) {
+<span id="line419" class="lineno">419</span>        coll = <span class="hljs-variable language_">arguments</span>[<span class="hljs-number">0</span>];
+<span id="line420" class="lineno">420</span>        fn = <span class="hljs-literal">null</span>;
+<span id="line421" class="lineno">421</span>    }
+<span id="line422" class="lineno">422</span>    <span class="hljs-keyword">let</span> arr = <span class="hljs-title function_">array</span>(coll);
+<span id="line423" class="lineno">423</span>    arr.<span class="hljs-title function_">sort</span>(fn ? <span class="hljs-title function_">compare</span>(fn) : compare);
+<span id="line424" class="lineno">424</span>    <span class="hljs-keyword">return</span> arr;
+<span id="line425" class="lineno">425</span>}
+<span id="line426" class="lineno">426</span>
+<span id="line427" class="lineno">427</span><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> { bool, array, object, clone, get, filter, flatten, map, uniq, compare, sort };
+<span id="line428" class="lineno">428</span></code></pre>
         </article>
     </section>
 
@@ -487,7 +493,7 @@
 
     <section class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2023 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2024 Per Cederberg. All rights reserved.
     </section>
 
   </body>

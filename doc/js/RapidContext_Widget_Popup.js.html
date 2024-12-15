@@ -55,7 +55,7 @@
         <article>
             <pre><code class="hljs language-js"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
 <span id="line2" class="lineno">2</span> * RapidContext &lt;https://www.rapidcontext.com/&gt;
-<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2023 Per Cederberg. All rights reserved.
+<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2024 Per Cederberg. All rights reserved.
 <span id="line4" class="lineno">4</span> *
 <span id="line5" class="lineno">5</span> * This program is free software: you can redistribute it and/or
 <span id="line6" class="lineno">6</span> * modify it under the terms of the BSD license.
@@ -92,8 +92,8 @@
 <span id="line37" class="lineno">37</span> * <span class="hljs-doctag">@extends</span> RapidContext.Widget
 <span id="line38" class="lineno">38</span> *
 <span id="line39" class="lineno">39</span> * <span class="hljs-doctag">@example</span> &lt;caption&gt;JavaScript&lt;/caption&gt;
-<span id="line40" class="lineno">40</span> * let hr = MochiKit.DOM.HR();
-<span id="line41" class="lineno">41</span> * let third = MochiKit.DOM.LI({ &quot;class&quot;: &quot;disabled&quot; }, &quot;Third&quot;);
+<span id="line40" class="lineno">40</span> * let hr = document.createElement(&quot;hr&quot;);
+<span id="line41" class="lineno">41</span> * let third = RapidContext.UI.LI({ &quot;class&quot;: &quot;disabled&quot; }, &quot;Third&quot;);
 <span id="line42" class="lineno">42</span> * let popup = RapidContext.Widget.Popup({}, &quot;First&quot;,  &quot;Second&quot;, hr, third);
 <span id="line43" class="lineno">43</span> *
 <span id="line44" class="lineno">44</span> * <span class="hljs-doctag">@example</span> &lt;caption&gt;User Interface XML&lt;/caption&gt;
@@ -179,7 +179,7 @@
 <span id="line124" class="lineno">124</span> */</span>
 <span id="line125" class="lineno">125</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Popup</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">addChildNode</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">child</span>) {
 <span id="line126" class="lineno">126</span>    <span class="hljs-keyword">if</span> (!child.<span class="hljs-property">nodeType</span>) {
-<span id="line127" class="lineno">127</span>        child = <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">DOM</span>.<span class="hljs-title function_">LI</span>(<span class="hljs-literal">null</span>, child);
+<span id="line127" class="lineno">127</span>        child = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">LI</span>({}, child);
 <span id="line128" class="lineno">128</span>    }
 <span id="line129" class="lineno">129</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_containerNode</span>(<span class="hljs-literal">true</span>).<span class="hljs-title function_">append</span>(child);
 <span id="line130" class="lineno">130</span>};
@@ -280,60 +280,62 @@
 <span id="line225" class="lineno">225</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Popup</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">selectMove</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">offset</span>) {
 <span id="line226" class="lineno">226</span>    <span class="hljs-keyword">let</span> active = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">selectedChild</span>();
 <span id="line227" class="lineno">227</span>    <span class="hljs-keyword">let</span> items = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&quot;li:not(.disabled), .widgetPopupItem:not(.disabled)&quot;</span>);
-<span id="line228" class="lineno">228</span>    <span class="hljs-keyword">let</span> index = (offset &lt; <span class="hljs-number">0</span>) ? offset : <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">max</span>(<span class="hljs-number">0</span>, offset - <span class="hljs-number">1</span>);
+<span id="line228" class="lineno">228</span>    <span class="hljs-keyword">let</span> index;
 <span id="line229" class="lineno">229</span>    <span class="hljs-keyword">if</span> (active) {
 <span id="line230" class="lineno">230</span>        index = <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(items).<span class="hljs-title function_">indexOf</span>(active) + offset;
-<span id="line231" class="lineno">231</span>    }
-<span id="line232" class="lineno">232</span>    index += (index &lt; <span class="hljs-number">0</span>) ? items.<span class="hljs-property">length</span> : <span class="hljs-number">0</span>;
-<span id="line233" class="lineno">233</span>    index -= (index &gt;= items.<span class="hljs-property">length</span>) ? items.<span class="hljs-property">length</span> - <span class="hljs-number">1</span> : <span class="hljs-number">0</span>;
-<span id="line234" class="lineno">234</span>    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">selectChild</span>(items[index]);
-<span id="line235" class="lineno">235</span>};
-<span id="line236" class="lineno">236</span>
-<span id="line237" class="lineno">237</span><span class="hljs-comment">/**
-<span id="line238" class="lineno">238</span> * Handles mouse events on the popup.
-<span id="line239" class="lineno">239</span> *
-<span id="line240" class="lineno">240</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Event</span>} evt the DOM Event object
-<span id="line241" class="lineno">241</span> */</span>
-<span id="line242" class="lineno">242</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Popup</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">_handleMouseEvent</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">evt</span>) {
-<span id="line243" class="lineno">243</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">show</span>();
-<span id="line244" class="lineno">244</span>    <span class="hljs-keyword">let</span> node = evt.<span class="hljs-property">delegateTarget</span>;
-<span id="line245" class="lineno">245</span>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">selectChild</span>(node) &gt;= <span class="hljs-number">0</span> &amp;&amp; evt.<span class="hljs-property">type</span> == <span class="hljs-string">&quot;click&quot;</span>) {
-<span id="line246" class="lineno">246</span>        <span class="hljs-keyword">let</span> detail = { <span class="hljs-attr">menu</span>: <span class="hljs-variable language_">this</span>, <span class="hljs-attr">item</span>: node };
-<span id="line247" class="lineno">247</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">emit</span>(<span class="hljs-string">&quot;menuselect&quot;</span>, { detail });
-<span id="line248" class="lineno">248</span>    }
-<span id="line249" class="lineno">249</span>};
-<span id="line250" class="lineno">250</span>
-<span id="line251" class="lineno">251</span><span class="hljs-comment">/**
-<span id="line252" class="lineno">252</span> * Handles the key down event on the popup.
-<span id="line253" class="lineno">253</span> *
-<span id="line254" class="lineno">254</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Event</span>} evt the DOM Event object
-<span id="line255" class="lineno">255</span> */</span>
-<span id="line256" class="lineno">256</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Popup</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">_handleKeyDown</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">evt</span>) {
-<span id="line257" class="lineno">257</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">show</span>();
-<span id="line258" class="lineno">258</span>    <span class="hljs-keyword">switch</span> (evt.<span class="hljs-property">key</span>) {
-<span id="line259" class="lineno">259</span>    <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;ArrowUp&quot;</span>:
-<span id="line260" class="lineno">260</span>    <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;ArrowDown&quot;</span>:
-<span id="line261" class="lineno">261</span>        evt.<span class="hljs-title function_">preventDefault</span>();
-<span id="line262" class="lineno">262</span>        evt.<span class="hljs-title function_">stopImmediatePropagation</span>();
-<span id="line263" class="lineno">263</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">selectMove</span>(evt.<span class="hljs-property">key</span> == <span class="hljs-string">&quot;ArrowUp&quot;</span> ? -<span class="hljs-number">1</span> : <span class="hljs-number">1</span>);
-<span id="line264" class="lineno">264</span>        <span class="hljs-keyword">break</span>;
-<span id="line265" class="lineno">265</span>    <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;Escape&quot;</span>:
-<span id="line266" class="lineno">266</span>        evt.<span class="hljs-title function_">preventDefault</span>();
-<span id="line267" class="lineno">267</span>        evt.<span class="hljs-title function_">stopImmediatePropagation</span>();
-<span id="line268" class="lineno">268</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">hide</span>();
-<span id="line269" class="lineno">269</span>        <span class="hljs-keyword">break</span>;
-<span id="line270" class="lineno">270</span>    <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;Tab&quot;</span>:
-<span id="line271" class="lineno">271</span>    <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;Enter&quot;</span>:
-<span id="line272" class="lineno">272</span>        evt.<span class="hljs-title function_">preventDefault</span>();
-<span id="line273" class="lineno">273</span>        evt.<span class="hljs-title function_">stopImmediatePropagation</span>();
-<span id="line274" class="lineno">274</span>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">selectedChild</span>()) {
-<span id="line275" class="lineno">275</span>            <span class="hljs-keyword">let</span> detail = { <span class="hljs-attr">menu</span>: <span class="hljs-variable language_">this</span>, <span class="hljs-attr">item</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">selectedChild</span>() };
-<span id="line276" class="lineno">276</span>            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">emit</span>(<span class="hljs-string">&quot;menuselect&quot;</span>, { detail });
-<span id="line277" class="lineno">277</span>        }
-<span id="line278" class="lineno">278</span>        <span class="hljs-keyword">break</span>;
-<span id="line279" class="lineno">279</span>    }
-<span id="line280" class="lineno">280</span>};
-<span id="line281" class="lineno">281</span></code></pre>
+<span id="line231" class="lineno">231</span>    } <span class="hljs-keyword">else</span> {
+<span id="line232" class="lineno">232</span>        index = (offset &lt; <span class="hljs-number">0</span>) ? items.<span class="hljs-property">length</span> - <span class="hljs-number">1</span> : <span class="hljs-number">0</span>;
+<span id="line233" class="lineno">233</span>    }
+<span id="line234" class="lineno">234</span>    index += (index &lt; <span class="hljs-number">0</span>) ? items.<span class="hljs-property">length</span> : <span class="hljs-number">0</span>;
+<span id="line235" class="lineno">235</span>    index -= (index &gt;= items.<span class="hljs-property">length</span>) ? items.<span class="hljs-property">length</span> : <span class="hljs-number">0</span>;
+<span id="line236" class="lineno">236</span>    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">selectChild</span>(items[index]);
+<span id="line237" class="lineno">237</span>};
+<span id="line238" class="lineno">238</span>
+<span id="line239" class="lineno">239</span><span class="hljs-comment">/**
+<span id="line240" class="lineno">240</span> * Handles mouse events on the popup.
+<span id="line241" class="lineno">241</span> *
+<span id="line242" class="lineno">242</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Event</span>} evt the DOM Event object
+<span id="line243" class="lineno">243</span> */</span>
+<span id="line244" class="lineno">244</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Popup</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">_handleMouseEvent</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">evt</span>) {
+<span id="line245" class="lineno">245</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">resetDelay</span>();
+<span id="line246" class="lineno">246</span>    <span class="hljs-keyword">let</span> node = evt.<span class="hljs-property">delegateTarget</span>;
+<span id="line247" class="lineno">247</span>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">selectChild</span>(node) &gt;= <span class="hljs-number">0</span> &amp;&amp; evt.<span class="hljs-property">type</span> == <span class="hljs-string">&quot;click&quot;</span>) {
+<span id="line248" class="lineno">248</span>        <span class="hljs-keyword">let</span> detail = { <span class="hljs-attr">menu</span>: <span class="hljs-variable language_">this</span>, <span class="hljs-attr">item</span>: node };
+<span id="line249" class="lineno">249</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">emit</span>(<span class="hljs-string">&quot;menuselect&quot;</span>, { detail });
+<span id="line250" class="lineno">250</span>    }
+<span id="line251" class="lineno">251</span>};
+<span id="line252" class="lineno">252</span>
+<span id="line253" class="lineno">253</span><span class="hljs-comment">/**
+<span id="line254" class="lineno">254</span> * Handles the key down event on the popup.
+<span id="line255" class="lineno">255</span> *
+<span id="line256" class="lineno">256</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Event</span>} evt the DOM Event object
+<span id="line257" class="lineno">257</span> */</span>
+<span id="line258" class="lineno">258</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Popup</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">_handleKeyDown</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">evt</span>) {
+<span id="line259" class="lineno">259</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">resetDelay</span>();
+<span id="line260" class="lineno">260</span>    <span class="hljs-keyword">switch</span> (evt.<span class="hljs-property">key</span>) {
+<span id="line261" class="lineno">261</span>    <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;ArrowUp&quot;</span>:
+<span id="line262" class="lineno">262</span>    <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;ArrowDown&quot;</span>:
+<span id="line263" class="lineno">263</span>        evt.<span class="hljs-title function_">preventDefault</span>();
+<span id="line264" class="lineno">264</span>        evt.<span class="hljs-title function_">stopImmediatePropagation</span>();
+<span id="line265" class="lineno">265</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">selectMove</span>(evt.<span class="hljs-property">key</span> == <span class="hljs-string">&quot;ArrowUp&quot;</span> ? -<span class="hljs-number">1</span> : <span class="hljs-number">1</span>);
+<span id="line266" class="lineno">266</span>        <span class="hljs-keyword">break</span>;
+<span id="line267" class="lineno">267</span>    <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;Escape&quot;</span>:
+<span id="line268" class="lineno">268</span>        evt.<span class="hljs-title function_">preventDefault</span>();
+<span id="line269" class="lineno">269</span>        evt.<span class="hljs-title function_">stopImmediatePropagation</span>();
+<span id="line270" class="lineno">270</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">hide</span>();
+<span id="line271" class="lineno">271</span>        <span class="hljs-keyword">break</span>;
+<span id="line272" class="lineno">272</span>    <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;Tab&quot;</span>:
+<span id="line273" class="lineno">273</span>    <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;Enter&quot;</span>:
+<span id="line274" class="lineno">274</span>        evt.<span class="hljs-title function_">preventDefault</span>();
+<span id="line275" class="lineno">275</span>        evt.<span class="hljs-title function_">stopImmediatePropagation</span>();
+<span id="line276" class="lineno">276</span>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">selectedChild</span>()) {
+<span id="line277" class="lineno">277</span>            <span class="hljs-keyword">let</span> detail = { <span class="hljs-attr">menu</span>: <span class="hljs-variable language_">this</span>, <span class="hljs-attr">item</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">selectedChild</span>() };
+<span id="line278" class="lineno">278</span>            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">emit</span>(<span class="hljs-string">&quot;menuselect&quot;</span>, { detail });
+<span id="line279" class="lineno">279</span>        }
+<span id="line280" class="lineno">280</span>        <span class="hljs-keyword">break</span>;
+<span id="line281" class="lineno">281</span>    }
+<span id="line282" class="lineno">282</span>};
+<span id="line283" class="lineno">283</span></code></pre>
         </article>
     </section>
 
@@ -346,7 +348,7 @@
 
     <section class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2023 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2024 Per Cederberg. All rights reserved.
     </section>
 
   </body>

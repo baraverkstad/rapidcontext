@@ -72,7 +72,7 @@
                         <span class="type-signature">(static) </span>
                     </td>
                     <td class="name-description">
-                        <div >
+                        <div class="deprecated">
                             <code><a href="#.buildUI">buildUI<span class="signature">(node, ids<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Array|Object}</span></a></code>
                         </div>
                         <div class="description">Creates a tree of widgets from a parsed XML document.</div>
@@ -88,6 +88,18 @@
                             <code><a href="#.connectProc">connectProc<span class="signature">(proc, loadingIcon<span class="signature-attributes">opt</span>, reloadIcon<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></a></code>
                         </div>
                         <div class="description">Connects the default UI signals for a procedure.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature">(static) </span>
+                    </td>
+                    <td class="name-description">
+                        <div >
+                            <code><a href="#.create">create<span class="signature">(nodeOrName, attrs<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Node}</span></a></code>
+                        </div>
+                        <div class="description">Creates a DOM element with attributes and child content.</div>
                     </td>
                 </tr>
 
@@ -297,6 +309,11 @@ nodes.</p>
 
 
 
+        <dt class="tag-deprecated">Deprecated:</dt>
+        <dd class="important">
+            Use RapidContext.UI.create() instead.
+        </dd>
+
 
 
 
@@ -321,7 +338,7 @@ nodes.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_UI.js.html">RapidContext_UI.js</a>, <a href="RapidContext_UI.js.html#line86">line 86</a>
+        <a href="RapidContext_UI.js.html">RapidContext_UI.js</a>, <a href="RapidContext_UI.js.html#line88">line 88</a>
     </dd>
 
 </dl>
@@ -549,7 +566,239 @@ with the appropriate click handler.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_UI.js.html">RapidContext_UI.js</a>, <a href="RapidContext_UI.js.html#line190">line 190</a>
+        <a href="RapidContext_UI.js.html">RapidContext_UI.js</a>, <a href="RapidContext_UI.js.html#line123">line 123</a>
+    </dd>
+
+</dl>
+
+
+
+
+
+
+
+    <h4 class="name" id=".create">
+        <span class="type-signature">(static) </span>create<span class="signature">(nodeOrName, attrs<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Node}</span>
+    </h4>
+
+
+
+
+
+<div class="description">
+    <p>Creates a DOM element with attributes and child content. Also supports
+building a UI recursively from either an XML document or an XML string.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+        <th>Attributes</th>
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>nodeOrName</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>String/Node</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the element name or UI to create
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>attrs</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Object</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the optional name-value attribute mappings
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>...content</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>Node/String</b>}</span>
+
+
+            </td>
+
+
+                <td class="attributes">
+
+                    &lt;optional><br>
+
+
+
+
+
+                </td>
+
+
+
+
+            <td class="description last">
+                the child nodes or text
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>Node</b>}</span>
+
+    the DOM element node created
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="rapidcontext_ui_create.mjs.html">rapidcontext/ui/create.mjs</a>, <a href="rapidcontext_ui_create.mjs.html#line15">line 15</a>
     </dd>
 
 </dl>
@@ -730,7 +979,7 @@ concatenated and displayed.</p>
 
     <section class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2023 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2024 Per Cederberg. All rights reserved.
     </section>
 
   </body>

@@ -55,7 +55,7 @@
         <article>
             <pre><code class="hljs language-js"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
 <span id="line2" class="lineno">2</span> * RapidContext &lt;https://www.rapidcontext.com/&gt;
-<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2023 Per Cederberg. All rights reserved.
+<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2024 Per Cederberg. All rights reserved.
 <span id="line4" class="lineno">4</span> *
 <span id="line5" class="lineno">5</span> * This program is free software: you can redistribute it and/or
 <span id="line6" class="lineno">6</span> * modify it under the terms of the BSD license.
@@ -101,7 +101,7 @@
 <span id="line46" class="lineno">46</span> * &lt;/Form&gt;
 <span id="line47" class="lineno">47</span> */</span>
 <span id="line48" class="lineno">48</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Form</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">attrs<span class="hljs-comment">/*, ...*/</span></span>) {
-<span id="line49" class="lineno">49</span>    <span class="hljs-keyword">var</span> o = <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">DOM</span>.<span class="hljs-title function_">FORM</span>(attrs);
+<span id="line49" class="lineno">49</span>    <span class="hljs-keyword">var</span> o = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">FORM</span>(attrs);
 <span id="line50" class="lineno">50</span>    o.<span class="hljs-property">_validators</span> = {};
 <span id="line51" class="lineno">51</span>    o.<span class="hljs-property">_originalReset</span> = o.<span class="hljs-property">reset</span>;
 <span id="line52" class="lineno">52</span>    <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title function_">_widgetMixin</span>(o, <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Form</span>);
@@ -377,7 +377,7 @@
 
     <section class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2023 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2024 Per Cederberg. All rights reserved.
     </section>
 
   </body>
