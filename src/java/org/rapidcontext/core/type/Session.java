@@ -93,12 +93,14 @@ public class Session extends StorableObject {
     /**
      * The expiry timeout (after last access) for logged in users (30 days).
      */
-    public static final long EXPIRY_AUTH_MILLIS = 30L * DateUtils.MILLIS_PER_DAY;
+    public static final long EXPIRY_AUTH_MILLIS =
+        30L * DateUtils.MILLIS_PER_DAY + 12L * DateUtils.MILLIS_PER_HOUR;
 
     /**
      * The maximum session age (90 days).
      */
-    public static final long MAX_AGE_MILLIS = 90L * DateUtils.MILLIS_PER_DAY;
+    public static final long MAX_AGE_MILLIS =
+        90L * DateUtils.MILLIS_PER_DAY + 12L * DateUtils.MILLIS_PER_HOUR;
 
     /**
      * The default active session time (5 minutes).
