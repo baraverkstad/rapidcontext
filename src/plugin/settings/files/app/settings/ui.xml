@@ -3,19 +3,19 @@
 <ui class="settings-app" xmlns:settings="app/settings">
   <div class="flex flex-dir-row position-relative w-100 h-100">
     <Pane id="tabs" class="vertical-tabs select-none" style="min-width: 7rem;">
-      <div data-view="pluginPane">
+      <div class="disabled" data-view="pluginPane">
         <i class="fa fa-3x fa-puzzle-piece" />
         <h3>Plug-ins</h3>
       </div>
-      <div data-view="cxnPane">
+      <div class="disabled" data-view="cxnPane">
         <i class="fa fa-3x fa-plug" />
         <h3>Connections</h3>
       </div>
-      <div data-view="procPane">
+      <div class="disabled" data-view="procPane">
         <i class="fa fa-3x fa-bolt" />
         <h3>Procedures</h3>
       </div>
-      <div data-view="userPane">
+      <div class="disabled" data-view="userPane">
         <i class="fa fa-3x fa-users" />
         <h3>Users</h3>
       </div>
@@ -26,7 +26,7 @@
     </Pane>
     <div id="views" class="flex-fill position-relative border-l pl-3" style="left: -1px;">
 
-      <Pane id="pluginPane" class="view flex flex-dir-column w-100 h-100">
+      <Pane id="pluginPane" class="view flex flex-dir-column w-100 h-100 hidden">
         <settings:search-form id="pluginSearch" placeholder="Search by id, name, etc">
           <label id="pluginInstall" class="btn m-0 mr-2">
             <i class="fa fa-lg fa-puzzle-piece"></i>
@@ -70,7 +70,7 @@
         </div>
       </Pane>
 
-      <Pane id="cxnPane" class="view flex flex-dir-column w-100 h-100">
+      <Pane id="cxnPane" class="view flex flex-dir-column w-100 h-100 hidden">
         <settings:search-form id="cxnSearch" placeholder="Search by id, type, etc">
           <Button id="cxnValidateAll" icon="fa fa-lg fa-magic" class="m-0 mr-2">Check all</Button>
           <Button id="cxnAdd" icon="fa fa-lg fa-plus" class="m-0">Add connection</Button>
@@ -171,7 +171,7 @@
         </Dialog>
       </Pane>
 
-      <Pane id="procPane" class="view flex flex-dir-column w-100 h-100">
+      <Pane id="procPane" class="view flex flex-dir-column w-100 h-100 hidden">
         <settings:search-form id="procSearch" placeholder="Search by id">
           <Button id="procAdd" icon="fa fa-lg fa-plus" class="m-0">Add procedure</Button>
         </settings:search-form>
@@ -411,7 +411,7 @@
         </Dialog>
       </Pane>
 
-      <Pane id="userPane" class="view flex flex-dir-column w-100 h-100">
+      <Pane id="userPane" class="view flex flex-dir-column w-100 h-100 hidden">
         <settings:search-form id="userSearch" placeholder="Search by name, email, etc">
           <Button id="userAdd" icon="fa fa-lg fa-plus" class="m-0">Add user</Button>
         </settings:search-form>
@@ -557,7 +557,7 @@
         </Dialog>
       </Pane>
 
-      <div id="storagePane" class="view flex flex-dir-column w-100 h-100">
+      <div id="storagePane" class="view flex flex-dir-column w-100 h-100 hidden">
       </div>
 
     </div>

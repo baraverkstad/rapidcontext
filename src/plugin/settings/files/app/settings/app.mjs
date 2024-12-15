@@ -4,6 +4,15 @@ import initProcedureTab from './tab-procedure.mjs';
 import initUserTab from './tab-user.mjs';
 import { loadTypes } from './util.mjs';
 
+async function hasAccess(path, perm) {
+    try {
+        return await RapidContext.App.callProc('system/user/access', [path, perm, null]);
+    } catch (e) {
+        console.error('settings: failed to check', path, 'access', e);
+        return false;
+    }
+}
+
 export default class {
     async start() {
         // Initialize shared data
@@ -13,12 +22,19 @@ export default class {
             RapidContext.UI.showError(e);
         }
 
-        // Initialize tab UI
-        // FIXME: Support non-admin users with disabled tabs
-        await initPluginTab(this.ui);
-        await initConnectionTab(this.ui);
-        await initProcedureTab(this.ui);
-        await initUserTab(this.ui);
+        // Initialize views
+        if (await hasAccess('/.storage/plugin/', 'search')) {
+            await this.initTab('pluginPane', initPluginTab);
+        }
+        if (await hasAccess('/connection/', 'search')) {
+            await this.initTab('cxnPane', initConnectionTab);
+        }
+        if (await hasAccess('/procedure/', 'search')) {
+            await this.initTab('procPane', initProcedureTab);
+        }
+        if (await hasAccess('/user/', 'search')) {
+            await this.initTab('userPane', initUserTab);
+        }
 
         // Setup event handlers
         this.ui.tabs.on('click', '[data-view]:not(.disabled)', (evt) => {
@@ -33,16 +49,23 @@ export default class {
         // Do nothing here
     }
 
-    selectTab(target) {
-        if (target) {
-            let view = this.ui[target.dataset.view];
-            this.ui.tabs.querySelectorAll('div[data-view]').forEach((el) => {
-                el.classList.toggle('selected', el == target);
-            });
-            this.ui.views.querySelectorAll('.view').forEach((el) => {
-                el.classList.toggle('hidden', el != view);
-            });
-            view && view.dispatchEvent(new CustomEvent('enter'));
+    async initTab(id, fn) {
+        try {
+            this.ui.tabs.querySelector(`div[data-view="${id}"]`).classList.remove('disabled');
+            await fn(this.ui);
+        } catch (e) {
+            console.error(`settings: failed to init ${id} view`, e);
         }
+    }
+
+    selectTab(target) {
+        let view = target && this.ui[target.dataset.view];
+        this.ui.tabs.querySelectorAll('div[data-view]').forEach((el) => {
+            el.classList.toggle('selected', el == target);
+        });
+        this.ui.views.querySelectorAll('.view').forEach((el) => {
+            el.classList.toggle('hidden', el != view);
+        });
+        view && view.dispatchEvent(new CustomEvent('enter'));
     }
 }
