@@ -21,7 +21,6 @@ import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.RootStorage;
 import org.rapidcontext.core.storage.StorableObject;
-import org.rapidcontext.core.storage.Storage;
 
 /**
  * A bundle of add-on functionality to the system. The plug-in
@@ -54,12 +53,6 @@ public class Plugin extends StorableObject {
      * The dictionary key for the plug-in build version.
      */
     public static final String KEY_VERSION = "version";
-
-    /**
-     * The dictionary key for the minimum platform version needed.
-     */
-    @Deprecated(forRemoval=true)
-    public static final String KEY_PLATFORM = "platform";
 
     /**
      * The dictionary key for the plug-in build date.
@@ -151,25 +144,6 @@ public class Plugin extends StorableObject {
             }
         }
         return null;
-    }
-
-    /**
-     * Returns the current version for a loaded plug-in. The plug-in
-     * instance will be loaded from storage (cache) and its version
-     * number will be returned.
-     *
-     * @param storage        the storage to use
-     * @param pluginId       the unique plug-in id
-     *
-     * @return the loaded plug-in version number, or
-     *         null if not loaded or available
-     *
-     * @deprecated Use #version() on the instance instead.
-     */
-    @Deprecated(forRemoval = true)
-    public static String version(Storage storage, String pluginId) {
-        Plugin plugin = storage.load(instancePath(pluginId), Plugin.class);
-        return (plugin == null) ? null : plugin.version();
     }
 
     /**
