@@ -130,19 +130,6 @@ public abstract class Channel {
     }
 
     /**
-     * Reports channel usage metrics for a single query/call/etc.
-     *
-     * @param success        the success flag
-     * @param error          the optional error message
-     *
-     * @deprecated Use {@link #report(long, boolean, String)} instead.
-     */
-    @Deprecated(forRemoval=true)
-    public void report(boolean success, String error) {
-        report(0, success, error);
-    }
-
-    /**
      * Reports channel usage metrics for a single query/call/etc. If the start
      * time isn't positive, no actual usage and duration will be reported, only
      * potential errors.
