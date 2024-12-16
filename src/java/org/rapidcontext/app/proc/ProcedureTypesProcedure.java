@@ -60,7 +60,6 @@ public class ProcedureTypesProcedure extends Procedure {
      * @throws ProcedureException if the call execution caused an
      *             error
      */
-    @SuppressWarnings("deprecation")
     @Override
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {

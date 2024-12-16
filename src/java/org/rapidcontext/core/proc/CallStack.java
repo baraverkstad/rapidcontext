@@ -46,22 +46,6 @@ public class CallStack {
      *
      * @return true if the procedure exists in the call stack, or
      *         false otherwise
-     *
-     * @deprecated Replaced with org.rapidcontext.core.type.Procedure signature.
-     */
-    @Deprecated(forRemoval=true)
-    @SuppressWarnings({"deprecation", "removal"})
-    public boolean contains(org.rapidcontext.core.proc.Procedure proc) {
-        return stack.contains(proc);
-    }
-
-    /**
-     * Checks if the specified procedure exists in the call stack.
-     *
-     * @param proc           the procedure definition
-     *
-     * @return true if the procedure exists in the call stack, or
-     *         false otherwise
      */
     public boolean contains(Procedure proc) {
         return stack.contains(proc);
@@ -77,34 +61,6 @@ public class CallStack {
     }
 
     /**
-     * Returns the bottom procedure in the stack, i.e. the first
-     * procedure in the call chain.
-     *
-     * @return the bottom procedure in the stack, or
-     *         null if the stack is empty
-     *
-     * @deprecated Use {@link #top(int)} with stack height instead.
-     */
-    @Deprecated(forRemoval=true)
-    public Procedure bottom() {
-        return stack.isEmpty() ? null : stack.get(0);
-    }
-
-    /**
-     * Returns the top procedure in the stack, i.e. the last
-     * procedure in the call chain.
-     *
-     * @return the top procedure in the stack, or
-     *         null if the stack is empty
-     *
-     * @deprecated Use {@link #top(int)} instead.
-     */
-    @Deprecated(forRemoval=true)
-    public Procedure top() {
-        return stack.isEmpty() ? null : stack.get(stack.size() - 1);
-    }
-
-    /**
      * Returns the most recent caller from the stack.
      *
      * @param offset         the offset from the top (0 for top)
@@ -115,18 +71,6 @@ public class CallStack {
     public Path top(int offset) {
         int idx = stack.size() - 1 - offset;
         return (0 <= idx && idx < stack.size()) ? stack.get(idx).path() : null;
-    }
-
-    /**
-     * Returns all procedures on the stack in an array.
-     *
-     * @return an array with all the procedures on the stack
-     *
-     * @deprecated Use {@link #toStackTrace(int)} instead.
-     */
-    @Deprecated(forRemoval=true)
-    public Procedure[] toArray() {
-        return stack.toArray(size -> new Procedure[size]);
     }
 
     /**

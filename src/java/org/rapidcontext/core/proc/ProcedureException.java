@@ -41,32 +41,8 @@ public class ProcedureException extends BaseException {
      * @param proc           the procedure called
      * @param message        the detailed error message
      */
-    @Deprecated(forRemoval=true)
-    @SuppressWarnings({"deprecation", "removal"})
-    public ProcedureException(org.rapidcontext.core.proc.Procedure proc, String message) {
-        super("in '" + proc.getName() + "': " + message);
-    }
-
-    /**
-     * Creates a new in-call procedure exception.
-     *
-     * @param proc           the procedure called
-     * @param message        the detailed error message
-     */
     public ProcedureException(Procedure proc, String message) {
         super("in '" + proc.id() + "': " + message);
-    }
-
-    /**
-     * Creates a new new in-call procedure exception.
-     *
-     * @param proc           the procedure called
-     * @param e              the root cause
-     */
-    @Deprecated(forRemoval=true)
-    @SuppressWarnings({"deprecation", "removal"})
-    public ProcedureException(org.rapidcontext.core.proc.Procedure proc, Throwable e) {
-        super("in '" + proc.getName() + "': " + e.getMessage(), e);
     }
 
     /**

@@ -39,8 +39,7 @@ import org.rapidcontext.core.storage.Storage;
  * @author   Per Cederberg
  * @version  1.0
  */
-@SuppressWarnings({"deprecation", "removal"})
-public abstract class Procedure extends StorableObject implements org.rapidcontext.core.proc.Procedure {
+public abstract class Procedure extends StorableObject {
 
     /**
      * The dictionary key for the description.
@@ -122,38 +121,12 @@ public abstract class Procedure extends StorableObject implements org.rapidconte
     }
 
     /**
-     * Returns the procedure name.
-     *
-     * @return the procedure name
-     *
-     * @deprecated Use id() instead.
-     */
-    @Deprecated(forRemoval=true)
-    @Override
-    public String getName() {
-        return id();
-    }
-
-    /**
      * Returns the procedure description.
      *
      * @return the procedure description
      */
     public String description() {
         return dict.get(KEY_DESCRIPTION, String.class, "");
-    }
-
-    /**
-     * Returns the procedure description.
-     *
-     * @return the procedure description
-     *
-     * @deprecated Use description() instead.
-     */
-    @Deprecated(forRemoval=true)
-    @Override
-    public String getDescription() {
-        return description();
     }
 
     /**
@@ -182,7 +155,6 @@ public abstract class Procedure extends StorableObject implements org.rapidconte
      *
      * @return the bindings for this procedure
      */
-    @Override
     public Bindings getBindings() {
         return new Bindings(null, dict.getArray(KEY_BINDING));
     }
@@ -203,7 +175,6 @@ public abstract class Procedure extends StorableObject implements org.rapidconte
      * @throws ProcedureException if the call execution caused an
      *             error
      */
-    @Override
     public abstract Object call(CallContext cx, Bindings bindings)
         throws ProcedureException;
 }
