@@ -16,8 +16,7 @@ package org.rapidcontext.core.data;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-
-import org.apache.commons.lang3.CharUtils;
+import java.util.Objects;
 
 /**
  * A text encoding/escaping helper. Always encodes to printable ASCII
@@ -98,13 +97,12 @@ public enum TextEncoding {
      */
     public static String encodeAscii(String str, boolean linebreaks) {
         StringBuilder buffer = new StringBuilder();
-        for (int i = 0; str != null && i < str.length(); i ++) {
-            char c = str.charAt(i);
+        Objects.requireNonNullElse(str, "").chars().forEach(c -> {
             buffer.append(switch (c) {
-                case '\n', '\r' -> linebreaks ? c : ' ';
-                default -> CharUtils.isAsciiPrintable(c) ? c : ' ';
+                case '\n', '\r' -> linebreaks ? (char) c : ' ';
+                default -> (32 <= c && c < 127) ? (char) c : ' ';
             });
-        }
+        });
         return buffer.toString();
     }
 
@@ -122,40 +120,18 @@ public enum TextEncoding {
      */
     public static String encodeProperty(String str, boolean linebreaks) {
         StringBuilder buffer = new StringBuilder();
-        for (int i = 0; str != null && i < str.length(); i ++) {
-            char c = str.charAt(i);
-            switch (c) {
-            case '\\':
-                buffer.append("\\\\");
-                break;
-            case '\t':
-                buffer.append("\\t");
-                break;
-            case ' ':
-                if (buffer.lastIndexOf("\n") == buffer.length() - 1) {
-                    buffer.append("\\");
-                }
-                buffer.append(" ");
-                break;
-            case '\n':
-                buffer.append("\\n");
-                if (linebreaks) {
-                    buffer.append("\\\n");
-                }
-                break;
-            case '\r':
-                if (!linebreaks) {
-                    buffer.append("\\r");
-                }
-                break;
-            default:
-                if (CharUtils.isAsciiPrintable(c)) {
-                    buffer.append(c);
-                } else {
-                    buffer.append(String.format("\\u%04x", Integer.valueOf(c)));
-                }
-            }
-        }
+        Objects.requireNonNullElse(str, "").chars().forEach(c -> {
+            int len = buffer.length();
+            boolean initial = len == 0 || buffer.charAt(len - 1) == '\n';
+            buffer.append(switch (c) {
+                case '\\' -> "\\\\";
+                case '\t' -> "\\t";
+                case ' ' -> initial ? "\\ " : " ";
+                case '\n' -> linebreaks ? "\\n\\\n" : "\\n";
+                case '\r' -> linebreaks ? "" : "\\r";
+                default -> (32 <= c && c < 127) ? (char) c : String.format("\\u%04x", c);
+            });
+        });
         return buffer.toString();
     }
 
@@ -170,32 +146,16 @@ public enum TextEncoding {
      */
     public static String encodeJson(String str) {
         StringBuilder buffer = new StringBuilder();
-        for (int i = 0; str != null && i < str.length(); i++) {
-            char c = str.charAt(i);
-            switch (c) {
-            case '\\':
-                buffer.append("\\\\");
-                break;
-            case '\"':
-                buffer.append("\\\"");
-                break;
-            case '\t':
-                buffer.append("\\t");
-                break;
-            case '\n':
-                buffer.append("\\n");
-                break;
-            case '\r':
-                buffer.append("\\r");
-                break;
-            default:
-                if (32 <= c && c < 127) {
-                    buffer.append(c);
-                } else {
-                    buffer.append(String.format("\\u%04x", Integer.valueOf(c)));
-                }
-            }
-        }
+        Objects.requireNonNullElse(str, "").chars().forEach(c -> {
+            buffer.append(switch (c) {
+                case '\\' -> "\\\\";
+                case '\"' -> "\\\"";
+                case '\t' -> "\\t";
+                case '\n' -> "\\n";
+                case '\r' -> "\\r";
+                default -> (32 <= c && c < 127) ? (char) c : String.format("\\u%04x", c);
+            });
+        });
         return buffer.toString();
     }
 
@@ -230,37 +190,17 @@ public enum TextEncoding {
      */
     public static String encodeXml(String str, boolean linebreaks) {
         StringBuilder buffer = new StringBuilder();
-        for (int i = 0; str != null && i < str.length(); i ++) {
-            char c = str.charAt(i);
-            switch (c) {
-            case '<':
-                buffer.append("&lt;");
-                break;
-            case '>':
-                buffer.append("&gt;");
-                break;
-            case '&':
-                buffer.append("&amp;");
-                break;
-            case '"':
-                buffer.append("&quot;");
-                break;
-            case '\n':
-                buffer.append(linebreaks ? "\n" : "&#10;");
-                break;
-            case '\r':
-                buffer.append(linebreaks ? "\r" : "&#13;");
-                break;
-            default:
-                if (CharUtils.isAsciiPrintable(c)) {
-                    buffer.append(c);
-                } else {
-                    buffer.append("&#");
-                    buffer.append(String.valueOf((int) c));
-                    buffer.append(";");
-                }
-            }
-        }
+        Objects.requireNonNullElse(str, "").codePoints().forEach(c -> {
+            buffer.append(switch (c) {
+                case '<' -> "&lt;";
+                case '>' -> "&gt;";
+                case '&' -> "&amp;";
+                case '"' -> "&quot;";
+                case '\n' -> linebreaks ? "\n" : "&#10;";
+                case '\r' -> linebreaks ? "\r" : "&#13;";
+                default -> (32 <= c && c < 127) ? (char) c : String.format("&#%d;", c);
+            });
+        });
         return buffer.toString();
     }
 
