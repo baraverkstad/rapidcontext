@@ -17,7 +17,6 @@ package org.rapidcontext.core.data;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
@@ -448,25 +447,6 @@ public class Array implements Iterable<Object> {
     }
 
     /**
-     * Returns the array value at the specified index. If the index
-     * is not defined or if the value is set to null, a default
-     * value will be returned instead.
-     *
-     * @param index          the array index
-     * @param defaultValue   the default value
-     *
-     * @return the array element value, or
-     *         the default value if the index or value is not defined
-     *
-     * @deprecated Use get(index, Object.class, defaultValue) instead.
-     */
-    @Deprecated(forRemoval=true)
-    public Object get(int index, Object defaultValue) {
-        Object value = get(index);
-        return (value == null) ? defaultValue : value;
-    }
-
-    /**
      * Returns the array value at the specified index. The value is
      * either converted or casted to a specified object class. If the
      * index is not defined or if the value is set to null, a default
@@ -490,91 +470,6 @@ public class Array implements Iterable<Object> {
     public <T> T get(int index, Class<T> clazz, T defaultValue) {
         T value = get(index, clazz);
         return (value == null) ? defaultValue : value;
-    }
-
-    /**
-     * Returns the array string value for the specified index. If
-     * the index is not defined or if the value is set to null, a
-     * default value will be returned instead. If the value object
-     * is not a string, the toString() method will be called.
-     *
-     * @param index          the array index
-     * @param defaultValue   the default value
-     *
-     * @return the array element value, or
-     *         the default value if the index or value is not defined
-     *
-     * @deprecated Use get(index, String.class, defaultValue) instead.
-     */
-    @Deprecated(forRemoval=true)
-    public String getString(int index, String defaultValue) {
-        return get(index, String.class, defaultValue);
-    }
-
-    /**
-     * Returns the array boolean value for the specified index. If
-     * the index is not defined or if the value is set to null, a
-     * default value will be returned instead. If the value object
-     * is not a boolean, any object that does not equal "", "0", "f",
-     * "false", "no" or "off" is considered true.
-     *
-     * @param index          the array index
-     * @param defaultValue   the default value
-     *
-     * @return the array element value, or
-     *         the default value if the index or value is not defined
-     *
-     * @deprecated Use get(index, Boolean.class, defaultValue) instead.
-     */
-    @Deprecated(forRemoval=true)
-    public boolean getBoolean(int index, boolean defaultValue) {
-        return get(index, Boolean.class, defaultValue);
-    }
-
-    /**
-     * Returns the array integer value for the specified index. If
-     * the index is not defined or if the value is set to null, a
-     * default value will be returned instead. If the value object
-     * is not a number, a conversion of the toString() value of the
-     * object will be attempted.
-     *
-     * @param index          the array index
-     * @param defaultValue   the default value
-     *
-     * @return the array element value, or
-     *         the default value if the index or value is not defined
-     *
-     * @throws NumberFormatException if the value didn't contain a
-     *             valid integer
-     *
-     * @deprecated Use get(index, Integer.class, defaultValue) instead.
-     */
-    @Deprecated(forRemoval=true)
-    public int getInt(int index, int defaultValue) {
-        return get(index, Integer.class, defaultValue);
-    }
-
-    /**
-     * Returns the array date value for the specified key. If the key
-     * is not defined or if the value is set to null, a default value
-     * will be returned instead. If the value object is not a date, a
-     * numeric conversion of the string value (excluding any '@'
-     * prefix) will be attempted.
-     *
-     * @param index          the array index
-     * @param defaultValue   the default value
-     *
-     * @return the array element value, or
-     *         the default value if the index or value is not defined
-     *
-     * @throws NumberFormatException if the value didn't contain a
-     *             valid date, number or numeric string
-     *
-     * @deprecated Use get(index, Date.class, defaultValue) instead.
-     */
-    @Deprecated(forRemoval=true)
-    public Date getDate(int index, Date defaultValue) {
-        return get(index, Date.class, defaultValue);
     }
 
     /**
@@ -641,52 +536,6 @@ public class Array implements Iterable<Object> {
     }
 
     /**
-     * Modifies or defines the boolean array value for the specified
-     * index. The array will automatically be padded with null values
-     * to accommodate an index beyond the current valid range.
-     *
-     * @param index          the array index
-     * @param value          the array value
-     *
-     * @return this array for chained operations
-     *
-     * @throws IndexOutOfBoundsException if index is negative
-     * @throws UnsupportedOperationException if this object has been
-     *             sealed
-     *
-     * @deprecated Use set(index, value) with auto-boxing instead.
-     */
-    @Deprecated(forRemoval=true)
-    public Array setBoolean(int index, boolean value)
-        throws IndexOutOfBoundsException, UnsupportedOperationException {
-
-        return set(index, Boolean.valueOf(value));
-    }
-
-    /**
-     * Modifies or defines the integer array value for the specified
-     * index. The array will automatically be padded with null values
-     * to accommodate an index beyond the current valid range.
-     *
-     * @param index          the array index
-     * @param value          the array value
-     *
-     * @return this array for chained operations
-     *
-     * @throws IndexOutOfBoundsException if index is negative
-     * @throws UnsupportedOperationException if this object has been
-     *             sealed
-     *
-     * @deprecated Use set(index, value) with auto-boxing instead.
-     */
-    @Deprecated(forRemoval=true)
-    public Array setInt(int index, int value)
-        throws IndexOutOfBoundsException, UnsupportedOperationException {
-
-        return set(index, Integer.valueOf(value));
-    }
-
-    /**
      * Adds an array value to the end of the list. This method will
      * increase the array size by one.
      *
@@ -705,44 +554,6 @@ public class Array implements Iterable<Object> {
         }
         set(index, value);
         return this;
-    }
-
-    /**
-     * Adds a boolean array value to the end of the list. This method
-     * will increase the array size by one.
-     *
-     * @param value          the array value
-     *
-     * @return this array for chained operations
-     *
-     * @throws UnsupportedOperationException if this object has been
-     *             sealed
-     *
-     * @deprecated Use add(value) with auto-boxing instead.
-     */
-    @Deprecated(forRemoval=true)
-    public Array addBoolean(boolean value)
-        throws UnsupportedOperationException {
-
-        return add(Boolean.valueOf(value));
-    }
-
-    /**
-     * Adds an integer array value to the end of the list. This
-     * method will increase the array size by one.
-     *
-     * @param value          the array value
-     *
-     * @return this array for chained operations
-     *
-     * @throws UnsupportedOperationException if this object has been
-     *             sealed
-     *
-     * @deprecated Use add(value) with auto-boxing instead.
-     */
-    @Deprecated(forRemoval=true)
-    public Array addInt(int value) throws UnsupportedOperationException {
-        return add(Integer.valueOf(value));
     }
 
     /**

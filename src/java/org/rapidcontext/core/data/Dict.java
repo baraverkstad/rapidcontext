@@ -421,25 +421,6 @@ public class Dict {
     }
 
     /**
-     * Returns the dictionary value for the specified key. If the key
-     * is not defined or if the value is set to null, a default
-     * value will be returned instead.
-     *
-     * @param key            the dictionary key name
-     * @param defaultValue   the default value
-     *
-     * @return the dictionary key value value, or
-     *         the default value if the key or value is not defined
-     *
-     * @deprecated Use get(key, Object.class, defaultValue) instead.
-     */
-    @Deprecated(forRemoval=true)
-    public Object get(String key, Object defaultValue) {
-        Object value = get(key);
-        return (value == null) ? defaultValue : value;
-    }
-
-    /**
      * Returns the dictionary value for the specified key. The value
      * is either converted or casted to a specified object class. If
      * the key is not defined or if the value is set to null, a
@@ -463,91 +444,6 @@ public class Dict {
     public <T> T get(String key, Class<T> clazz, T defaultValue) {
         T value = get(key, clazz);
         return (value == null) ? defaultValue : value;
-    }
-
-    /**
-     * Returns the dictionary string value for the specified key. If
-     * the key is not defined or if the value is set to null, a
-     * default value will be returned instead. If the value object
-     * is not a string, the toString() method will be called.
-     *
-     * @param key            the dictionary key name
-     * @param defaultValue   the default value
-     *
-     * @return the dictionary key value, or
-     *         the default value if the key or value is not defined
-     *
-     * @deprecated Use get(key, String.class, defaultValue) instead.
-     */
-    @Deprecated(forRemoval=true)
-    public String getString(String key, String defaultValue) {
-        return get(key, String.class, defaultValue);
-    }
-
-    /**
-     * Returns the dictionary boolean value for the specified key. If
-     * the key is not defined or if the value is set to null, a
-     * default value will be returned instead. If the value object
-     * is not a boolean, any object that does not equal "", "0", "f",
-     * "false", "no" or "off" is considered true.
-     *
-     * @param key            the dictionary key name
-     * @param defaultValue   the default value
-     *
-     * @return the dictionary key value, or
-     *         the default value if the key or value is not defined
-     *
-     * @deprecated Use get(key, Boolean.class, defaultValue) instead.
-     */
-    @Deprecated(forRemoval=true)
-    public boolean getBoolean(String key, boolean defaultValue) {
-        return get(key, Boolean.class, defaultValue);
-    }
-
-    /**
-     * Returns the dictionary integer value for the specified key. If
-     * the key is not defined or if the value is set to null, a
-     * default value will be returned instead. If the value object
-     * is not a number, a conversion of the toString() value of the
-     * object will be attempted.
-     *
-     * @param key            the dictionary key name
-     * @param defaultValue   the default value
-     *
-     * @return the dictionary key value, or
-     *         the default value if the key or value is not defined
-     *
-     * @throws NumberFormatException if the value wasn't possible to
-     *             parse as an integer
-     *
-     * @deprecated Use get(key, Integer.class, defaultValue) instead.
-     */
-    @Deprecated(forRemoval=true)
-    public int getInt(String key, int defaultValue) {
-        return get(key, Integer.class, defaultValue);
-    }
-
-    /**
-     * Returns the dictionary date value for the specified key. If
-     * the key is not defined or if the value is set to null, a
-     * default value will be returned instead. If the value object
-     * is not a date, a numeric conversion of the string value
-     * (excluding any '@' prefix) will be attempted.
-     *
-     * @param key            the dictionary key name
-     * @param defaultValue   the default value
-     *
-     * @return the dictionary key value, or
-     *         the default value if the key or value is not defined
-     *
-     * @throws NumberFormatException if the value didn't contain a
-     *             valid date, number or numeric string
-     *
-     * @deprecated Use get(key, Date.class, defaultValue) instead.
-     */
-    @Deprecated(forRemoval=true)
-    public Date getDate(String key, Date defaultValue) {
-        return get(key, Date.class, defaultValue);
     }
 
     /**
@@ -651,52 +547,6 @@ public class Dict {
             set(key, supplier.get());
         }
         return this;
-    }
-
-    /**
-     * Modifies or defines the boolean dictionary value for the
-     * specified key.
-     *
-     * @param key            the dictionary key name
-     * @param value          the value to set
-     *
-     * @return this dictionary for chained operations
-     *
-     * @throws NullPointerException if the key is null or an empty
-     *             string
-     * @throws UnsupportedOperationException if this object has been
-     *             sealed
-     *
-     * @deprecated Use set(key, value) with auto-boxing instead.
-     */
-    @Deprecated(forRemoval=true)
-    public Dict setBoolean(String key, boolean value)
-        throws NullPointerException, UnsupportedOperationException {
-
-        return set(key, Boolean.valueOf(value));
-    }
-
-    /**
-     * Modifies or defines the integer dictionary value for the
-     * specified key.
-     *
-     * @param key            the dictionary key name
-     * @param value          the value to set
-     *
-     * @return this dictionary for chained operations
-     *
-     * @throws NullPointerException if the key is null or an empty
-     *             string
-     * @throws UnsupportedOperationException if this object has been
-     *             sealed
-     *
-     * @deprecated Use set(key, value) with auto-boxing instead.
-     */
-    @Deprecated(forRemoval=true)
-    public Dict setInt(String key, int value)
-        throws NullPointerException, UnsupportedOperationException {
-
-        return set(key, Integer.valueOf(value));
     }
 
     /**
