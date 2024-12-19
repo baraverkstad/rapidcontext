@@ -945,3 +945,157 @@ RapidContext.Util.childNode = RapidContext.deprecatedFunction(
     },
     "RapidContext.Util.childNode() is deprecated"
 );
+
+/**
+ * Registers size constraints for the element width and/or height. The
+ * constraints may either be fixed numeric values or simple arithmetic (in a
+ * string). The formulas will be converted to CSS calc() expressions.
+ *
+ * Legacy constraint functions are still supported and must take two arguments
+ * (parent width and height) and should return a number. The returned number is
+ * set as the new element width or height (in pixels). Any returned value will
+ * also be bounded by the parent element size to avoid calculation errors.
+ *
+ * @param {Object} node the HTML DOM node
+ * @param {number|string|function} [width] the width constraint
+ * @param {number|string|function} [height] the height constraint
+ *
+ * @deprecated Use CSS width and height with calc() instead.
+ *
+ * @example
+ * RapidContext.Util.registerSizeConstraints(node, "50%-20", "100%");
+ * ==> Sets width to 50%-20 px and height to 100% of parent dimension
+ *
+ * @example
+ * RapidContext.Util.resizeElements(node, otherNode);
+ * ==> Evaluates the size constraints for both nodes
+ */
+RapidContext.Util.registerSizeConstraints = RapidContext.deprecatedFunction(
+    function (node, width, height) {
+        function toCSS(val) {
+            if (/[+-]/.test(val)) {
+                val = "calc( " + val.replace(/[+-]/g, " $& ") + " )";
+            }
+            val = val.replace(/(\d)( |$)/g, "$1px$2");
+            return val;
+        }
+        node = MochiKit.DOM.getElement(node);
+        if (typeof(width) == "number" || typeof(width) == "string") {
+            node.style.width = toCSS(String(width));
+        } else if (typeof(width) == "function") {
+            console.info("registerSizeConstraints: width function support will be removed", node);
+            node.sizeConstraints = node.sizeConstraints || { w: null, h: null };
+            node.sizeConstraints.w = width;
+        }
+        if (typeof(height) == "number" || typeof(height) == "string") {
+            node.style.height = toCSS(String(height));
+        } else if (typeof(height) == "function") {
+            console.info("registerSizeConstraints: height function support will be removed", node);
+            node.sizeConstraints = node.sizeConstraints || { w: null, h: null };
+            node.sizeConstraints.h = height;
+        }
+    },
+    "RapidContext.Util.registerSizeConstraints() is deprecated, use CSS calc() instead"
+);
+
+/**
+ * Resizes one or more DOM nodes using their registered size constraints and
+ * their parent element sizes. The resize operation will only modify those
+ * elements that have constraints, but will perform a depth-first recursion
+ * over all element child nodes as well.
+ *
+ * Partial constraints are accepted, in which case only the width or the height
+ * is modified. Aspect ratio constraints are applied after the width and height
+ * constraints. The result will always be bounded by the parent element width
+ * or height.
+ *
+ * The recursive descent of this function can be limited by adding a
+ * `resizeContent` function to a DOM node. Such a function will be called to
+ * handle all subnode resizing, making it possible to limit or omitting the
+ * DOM tree traversal.
+ *
+ * @param {...Node} node the HTML DOM nodes to resize
+ *
+ * @deprecated Use CSS width and height with calc() instead.
+ *
+ * @example
+ * RapidContext.Util.resizeElements(node);
+ * ==> Evaluates the size constraints for a node and all child nodes
+ *
+ * @example
+ * elem.resizeContent = () => {};
+ * ==> Assigns a no-op child resize handler to elem
+ */
+RapidContext.Util.resizeElements = RapidContext.deprecatedFunction(
+    function (/* ... */) {
+        Array.from(arguments).forEach(function (arg) {
+            var node = MochiKit.DOM.getElement(arg);
+            if (node && node.nodeType === 1 && node.parentNode && node.sizeConstraints) {
+                var ref = { w: node.parentNode.w, h: node.parentNode.h };
+                if (ref.w == null && ref.h == null) {
+                    ref = MochiKit.Style.getElementDimensions(node.parentNode, true);
+                }
+                var dim = RapidContext.Util._evalConstraints(node.sizeConstraints, ref);
+                MochiKit.Style.setElementDimensions(node, dim);
+                node.w = dim.w;
+                node.h = dim.h;
+            }
+            if (node && typeof(node.resizeContent) == "function") {
+                try {
+                    node.resizeContent();
+                } catch (e) {
+                    console.error("Error in resizeContent()", node, e);
+                }
+            } else if (node && node.childNodes) {
+                Array.from(node.childNodes).forEach(function (child) {
+                    if (child.nodeType === 1) {
+                        RapidContext.Util.resizeElements(child);
+                    }
+                });
+            }
+        });
+    },
+    "RapidContext.Util.resizeElements() is deprecated, use CSS calc() instead"
+);
+
+/**
+ * Evaluates the size constraint functions with a refeence dimension
+ * object. This is an internal function used to encapsulate the
+ * function calls and provide logging on errors.
+ *
+ * @param {Object} sc the size constraints object
+ * @param {Object} ref the MochiKit.Style.Dimensions maximum
+ *            reference values
+ *
+ * @return {Object} the MochiKit.Style.Dimensions with evaluated size
+ *         constraint values (some may be null)
+ */
+RapidContext.Util._evalConstraints = RapidContext.deprecatedFunction(
+    function (sc, ref) {
+        var w, h;
+        if (typeof(sc.w) == "function") {
+            try {
+                w = Math.max(0, Math.min(ref.w, sc.w(ref.w, ref.h)));
+            } catch (e) {
+                console.error("Error evaluating width size constraint; " +
+                            "w: " + ref.w + ", h: " + ref.h, e);
+            }
+        }
+        if (typeof(sc.h) == "function") {
+            try {
+                h = Math.max(0, Math.min(ref.h, sc.h(ref.w, ref.h)));
+            } catch (e) {
+                console.error("Error evaluating height size constraint; " +
+                            "w: " + ref.w + ", h: " + ref.h, e);
+            }
+        }
+        if (w != null) {
+            w = Math.floor(w);
+        }
+        if (h != null) {
+            h = Math.floor(h);
+        }
+        return new MochiKit.Style.Dimensions(w, h);
+    },
+    "RapidContext.Util._evalConstraints is deprecated"
+);
