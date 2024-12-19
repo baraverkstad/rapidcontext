@@ -72,7 +72,7 @@ build-plugins:
 	mkdir -p plugin/
 	rm -rf plugin/* src/plugin/system/files/js/rapidcontext.*.min.js
 	npx esbuild --bundle --minify \
-		--platform=browser --target=chrome69,firefox65,safari11 \
+		--platform=browser --target=chrome76,firefox71,safari13 \
 		--outfile=src/plugin/system/files/js/rapidcontext.$(VER).min.js \
 		src/plugin/system/files/js/rapidcontext/index.mjs
 	$(call FOREACH,all)
