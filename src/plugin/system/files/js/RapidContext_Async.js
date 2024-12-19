@@ -144,6 +144,7 @@
          * @deprecated Provided for `MochiKit.Async.Deferred` compatibility
          */
         addCallbacks: function (callback, errback) {
+            console.warn("deprecated: call to RapidContext.Async.addCallbacks(), use then() instead.");
             this._promise = wrapPromise(this, callback, errback);
             return this;
         },
@@ -157,6 +158,7 @@
          * @deprecated Provided for `MochiKit.Async.Deferred` compatibility
          */
         addCallback: function (callback) {
+            console.warn("deprecated: call to RapidContext.Async.addCallback(), use then() instead.");
             if (arguments.length > 1) {
                 var args = Array.from(arguments);
                 args.splice(1, 0, undefined);
@@ -175,6 +177,7 @@
          * @deprecated Provided for `MochiKit.Async.Deferred` compatibility
          */
         addErrback: function (errback) {
+            console.warn("deprecated: call to RapidContext.Async.addErrback(), use catch() instead.");
             if (arguments.length > 1) {
                 var args = Array.from(arguments);
                 args.splice(1, 0, undefined);
@@ -194,6 +197,7 @@
          * @deprecated Provided for `MochiKit.Async.Deferred` compatibility
          */
         addBoth: function (callback) {
+            console.warn("deprecated: call to RapidContext.Async.addBoth(), use then() instead.");
             if (arguments.length > 1) {
                 var args = Array.from(arguments);
                 args.splice(1, 0, undefined);
