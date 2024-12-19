@@ -181,7 +181,7 @@ export function get(key, val) {
             let el = path.shift();
             if (el === '*' || el === '[]') {
                 let arrs = (el === '*') ? ctx.map(Object.values) : ctx.filter(Array.isArray);
-                ctx = Array.prototype.concat.apply([], arrs); // FIXME: arrs.flat()
+                ctx = arrs.flat();
             } else {
                 let k = /^\[\d+\]$/.test(el) ? parseInt(el.substr(1), 10) : el;
                 ctx = ctx.filter(hasProperty(k)).map((o) => o[k]);

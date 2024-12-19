@@ -75,8 +75,7 @@ RapidContext.Widget.isWidget = function (obj, className) {
  */
 RapidContext.Widget._toCssClass = function (val) {
     if (Array.isArray(val)) {
-        // FIXME: Use Array.prototype.flatMap(...) here
-        return val.map(RapidContext.Widget._toCssClass);
+        return val.flatMap(RapidContext.Widget._toCssClass);
     } else if (val) {
         return String(val).split(/\s+/g).filter(Boolean);
     } else {
@@ -317,8 +316,7 @@ RapidContext.Widget.prototype.hasClass = function (/* ... */) {
         }
     }
     let elem = this._styleNode();
-    // FIXME: Use Array.prototype.flatMap(...) here
-    return Array.from(arguments).map(RapidContext.Widget._toCssClass).every(isMatch);
+    return Array.from(arguments).flatMap(RapidContext.Widget._toCssClass).every(isMatch);
 };
 
 /**
@@ -335,8 +333,7 @@ RapidContext.Widget.prototype.addClass = function (/* ... */) {
         }
     }
     let elem = this._styleNode();
-    // FIXME: Use Array.prototype.flatMap(...) here
-    Array.from(arguments).map(RapidContext.Widget._toCssClass).forEach(add);
+    Array.from(arguments).flatMap(RapidContext.Widget._toCssClass).forEach(add);
 };
 
 /**
@@ -355,8 +352,7 @@ RapidContext.Widget.prototype.removeClass = function (/* ... */) {
         }
     }
     let elem = this._styleNode();
-    // FIXME: Use Array.prototype.flatMap(...) here
-    Array.from(arguments).map(RapidContext.Widget._toCssClass).forEach(remove);
+    Array.from(arguments).flatMap(RapidContext.Widget._toCssClass).forEach(remove);
 };
 
 /**
