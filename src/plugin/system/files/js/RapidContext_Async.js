@@ -372,4 +372,4 @@
     RapidContext.Async = Async;
     Object.assign(Async, { isPromise, wait, img, css, script, xhr, AsyncError });
 
-})(this);
+})(globalThis);

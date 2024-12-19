@@ -278,4 +278,4 @@
     Object.assign(Procedure.prototype, { recall, multicall, cancel, reset });
     Object.assign(Procedure, { mapAll });
 
-})(this);
+})(globalThis);

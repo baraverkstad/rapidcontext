@@ -128,4 +128,4 @@
     var Storage = RapidContext.Storage || (RapidContext.Storage = {});
     Object.assign(Storage, { path, read, write, update });
 
-})(this);
+})(globalThis);

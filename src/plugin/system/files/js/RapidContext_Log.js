@@ -450,4 +450,4 @@
     // Install console loggers and global error handler
     init();
 
-})(this);
+})(globalThis);

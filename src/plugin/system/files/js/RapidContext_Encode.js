@@ -88,4 +88,4 @@
     var Encode = RapidContext.Encode || (RapidContext.Encode = {});
     Object.assign(Encode, { toJSON, toUrlPart, toUrlQuery });
 
-})(this);
+})(globalThis);

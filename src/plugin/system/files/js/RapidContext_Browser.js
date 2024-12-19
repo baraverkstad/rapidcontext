@@ -387,4 +387,4 @@
     module.info = info;
     module.cookie = cookie;
 
-})(this);
+})(globalThis);

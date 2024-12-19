@@ -100,4 +100,4 @@
     let module = RapidContext.UI || (RapidContext.UI = {});
     Object.assign(module, { showError, connectProc });
 
-})(this);
+})(globalThis);
