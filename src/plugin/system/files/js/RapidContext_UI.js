@@ -68,46 +68,6 @@
     }
 
     /**
-     * Creates a tree of widgets from a parsed XML document. This
-     * function will call `createWidget()` for any XML element node found,
-     * performing some basic adjustments on the element attributes
-     * before sending them as attributes to the widget constructor. Text
-     * nodes with non-whitespace content will be mapped to HTML DOM text
-     * nodes.
-     *
-     * @param {Object} node the XML document or node
-     * @param {Object} [ids] the optional node id mappings
-     *
-     * @return {Array|Object} an array or an object with the root
-     *         widget(s) created
-     *
-     * @deprecated Use RapidContext.UI.create() instead.
-     *
-     * @memberof RapidContext.UI
-     */
-    function buildUI(node, ids) {
-        console.warn("deprecated: call to RapidContext.UI.buildUI(), use create() instead");
-        if (node.documentElement) {
-            return buildUI(node.documentElement.childNodes, ids);
-        } else if (node && node.item && typeof(node.length) == "number") {
-            return Array.from(node).map((el) => buildUI(el, ids)).filter(Boolean);
-        } else {
-            try {
-                let el = RapidContext.UI.create(node);
-                if (el) {
-                    [el.matches("[id]") && el, ...el.querySelectorAll("[id]")]
-                        .filter(Boolean)
-                        .forEach((el) => ids[el.attributes.id.value] = el);
-                }
-                return el;
-            } catch (e) {
-                console.error("Failed to build UI element", node, e);
-                return null;
-            }
-        }
-    }
-
-    /**
      * Connects the default UI signals for a procedure. This includes a default
      * error handler, a loading icon with cancellation handler and a reload icon
      * with the appropriate click handler.
@@ -138,6 +98,6 @@
     // Export module API
     let RapidContext = window.RapidContext || (window.RapidContext = {});
     let module = RapidContext.UI || (RapidContext.UI = {});
-    Object.assign(module, { showError, buildUI, connectProc });
+    Object.assign(module, { showError, connectProc });
 
 })(this);
