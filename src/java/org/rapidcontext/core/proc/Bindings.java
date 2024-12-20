@@ -176,13 +176,13 @@ public class Bindings {
         if (type == null) {
             throw new ProcedureException("no binding type for '" + name + "' found");
         }
-        if (type.equals("1") || type.equals(toTypeName(DATA))) {
+        if (type.equals(toTypeName(DATA))) {
             return DATA;
-        } else if (type.equals("2") || type.equals(toTypeName(PROCEDURE))) {
+        } else if (type.equals(toTypeName(PROCEDURE))) {
             return PROCEDURE;
-        } else if (type.equals("3") || type.equals(toTypeName(CONNECTION))) {
+        } else if (type.equals(toTypeName(CONNECTION))) {
             return CONNECTION;
-        } else if (type.equals("4") || type.equals(toTypeName(ARGUMENT))) {
+        } else if (type.equals(toTypeName(ARGUMENT))) {
             return ARGUMENT;
         } else {
             throw new ProcedureException("invalid binding type for '" + name + "': " + type);

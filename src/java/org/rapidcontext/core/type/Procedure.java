@@ -14,6 +14,7 @@
 
 package org.rapidcontext.core.type;
 
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.time.DateUtils;
@@ -40,6 +41,11 @@ import org.rapidcontext.core.storage.Storage;
  * @version  1.0
  */
 public abstract class Procedure extends StorableObject {
+
+    /**
+     * The class logger.
+     */
+    private static final Logger LOG = Logger.getLogger(Procedure.class.getName());
 
     /**
      * The dictionary key for the description.
@@ -96,6 +102,39 @@ public abstract class Procedure extends StorableObject {
     }
 
     /**
+     * Normalizes a procedure data object if needed. This method will
+     * modify legacy data into the proper keys and values.
+     *
+     * @param id             the object identifier
+     * @param dict           the storage data
+     *
+     * @return the storage data (possibly modified)
+     */
+    public static Dict normalize(String id, Dict dict) {
+        for (Object o : dict.getArray(KEY_BINDING)) {
+            if (o instanceof Dict d) {
+                String type = d.get("type", String.class);
+                if (type.equals("1")) {
+                    LOG.warning("deprecated: procedure/" + id + " binding type: " + o);
+                    d.set("type", "data");
+                } else if (type.equals("2")) {
+                    LOG.warning("deprecated: procedure/" + id + " binding type: " + o);
+                    d.set("type", "procedure");
+                } else if (type.equals("3")) {
+                    LOG.warning("deprecated: procedure/" + id + " binding type: " + o);
+                    d.set("type", "connection");
+                } else if (type.equals("4")) {
+                    LOG.warning("deprecated: procedure/" + id + " binding type: " + o);
+                    d.set("type", "argument");
+                }
+            } else {
+                LOG.warning("invalid procedure/" + id + " binding: " + o);
+            }
+        }
+        return dict;
+    }
+
+    /**
      * Creates a new procedure from a serialized representation.
      *
      * @param id             the object identifier
@@ -105,7 +144,7 @@ public abstract class Procedure extends StorableObject {
      * @see #init()
      */
     protected Procedure(String id, String type, Dict dict) {
-        super(id, type, dict);
+        super(id, type, normalize(id, dict));
     }
 
     /**
