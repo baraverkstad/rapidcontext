@@ -15,6 +15,8 @@
 package org.rapidcontext.core.storage;
 
 import java.util.Date;
+import java.util.Objects;
+import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.core.data.Array;
@@ -50,6 +52,11 @@ import org.rapidcontext.core.data.Dict;
  * @version  1.0
  */
 public class StorableObject {
+
+    /**
+     * The class logger.
+     */
+    private static final Logger LOG = Logger.getLogger(StorableObject.class.getName());
 
     /**
      * The dictionary key for the object identifier. The value stored
@@ -173,11 +180,17 @@ public class StorableObject {
      * @see #init()
      */
     protected StorableObject(String id, String type, Dict dict) {
-        this.dict = new Dict()
-            .set(KEY_ID, id)
-            .set(KEY_TYPE, type)
-            .setAll(dict)
-            .set(KEY_ID, id);  // Overwrite dict value (if set)
+        this(id, type);
+        this.dict.setAll(dict);
+        if (!Objects.equals(id, dict.get(KEY_ID, String.class))) {
+            LOG.warning("invalid " + type + "/" + id + " 'id' value: " + dict.get(KEY_ID));
+            this.dict.set(KEY_ID, id);
+        }
+        String dictType = dict.get(KEY_TYPE, String.class);
+        if (!Objects.requireNonNullElse(dictType, "").startsWith(type)) {
+            LOG.warning("invalid " + type + "/" + id + " 'type' value: " + dict.get(KEY_TYPE));
+            this.dict.set(KEY_TYPE, type);
+        }
     }
 
     /**

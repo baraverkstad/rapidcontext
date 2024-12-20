@@ -150,10 +150,10 @@ public class AppWebService extends FileWebService {
         this.dict.setDefault(KEY_APP, null);
         this.dict.setDefault(KEY_TITLE, "RapidContext");
         this.dict.setDefault(KEY_LANG, "en");
-        logger = new LogWebService("id", "type", new Dict());
-        statusService = new StatusWebService("id", "type", new Dict());
-        procedureService = new ProcedureWebService("id", "type", new Dict());
-        storageService = new StorageWebService("id", "type", new Dict());
+        logger = new LogWebService(id, type, dict);
+        statusService = new StatusWebService(id, type, dict);
+        procedureService = new ProcedureWebService(id, type, dict);
+        storageService = new StorageWebService(id, type, dict);
     }
 
     /**
