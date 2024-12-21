@@ -271,7 +271,7 @@ public final class FileUtil {
     public static File tempFile(String name) throws IOException {
         String prefix = StringUtils.substringBeforeLast(name, ".");
         String suffix = StringUtils.substringAfterLast(name, ".");
-        if (prefix == null || prefix.isBlank()) {
+        if (prefix == null || prefix.isBlank() || prefix.length() < 3) {
             prefix = "file";
         }
         if (suffix != null && !suffix.isBlank()) {
