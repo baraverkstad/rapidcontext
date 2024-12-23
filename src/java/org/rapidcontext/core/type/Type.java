@@ -20,7 +20,6 @@ import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
-import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.storage.Path;
@@ -75,6 +74,11 @@ public class Type extends StorableObject {
      * The connection object storage path.
      */
     public static final Path PATH = Path.from("/type/");
+
+    /**
+     * The class loader for loading Java implementations.
+     */
+    public static ClassLoader loader = Type.class.getClassLoader();
 
     /**
      * The storable object initializer constructor arguments.
@@ -183,17 +187,16 @@ public class Type extends StorableObject {
      * Loads and returns a specified class.
      *
      * @param className      the fully qualified class name to load
-     * @param objId          the object identifier for logging
+     * @param ident          the object identifier for logging
      *
      * @return the class found in the class loader, or
      *         null if not found
      */
-    protected static Class<?> loadClass(String className, String objId) {
-        ClassLoader loader = ApplicationContext.getInstance().getClassLoader();
+    protected static Class<?> loadClass(String className, Object ident) {
         try {
             return (className == null) ? null : loader.loadClass(className);
         } catch (Exception e) {
-            String msg = "couldn't find or load " + objId +
+            String msg = "couldn't find or load " + ident +
                          " initializer class " + className;
             LOG.log(Level.WARNING, msg, e);
             return null;

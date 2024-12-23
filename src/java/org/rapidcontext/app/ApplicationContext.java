@@ -44,6 +44,7 @@ import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.storage.StorageException;
 import org.rapidcontext.core.type.Environment;
 import org.rapidcontext.core.type.Session;
+import org.rapidcontext.core.type.Type;
 import org.rapidcontext.core.type.WebMatcher;
 import org.rapidcontext.core.type.WebService;
 import org.rapidcontext.util.FileUtil;
@@ -257,6 +258,7 @@ public class ApplicationContext {
      * and the environment configuration.
      */
     private void initAll() {
+        Type.loader = this.pluginManager.classLoader;
         initLibrary();
         initPlugins();
         initScheduler();
@@ -407,15 +409,6 @@ public class ApplicationContext {
      */
     public File getBaseDir() {
         return pluginManager.pluginDir;
-    }
-
-    /**
-     * Returns the plug-in class loader.
-     *
-     * @return the plug-in class loader
-     */
-    public ClassLoader getClassLoader() {
-        return pluginManager.classLoader;
     }
 
     /**

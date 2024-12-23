@@ -15,12 +15,12 @@
 package org.rapidcontext.app.plugin.jdbc;
 
 import org.apache.commons.lang3.StringUtils;
-import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.storage.StorageException;
 import org.rapidcontext.core.type.Channel;
 import org.rapidcontext.core.type.Connection;
 import org.rapidcontext.core.type.ConnectionException;
+import org.rapidcontext.core.type.Type;
 
 import java.sql.Driver;
 import java.util.Properties;
@@ -194,8 +194,7 @@ public class JdbcConnection extends Connection {
         }
         String msg;
         try {
-            ClassLoader loader = ApplicationContext.getInstance().getClassLoader();
-            return (Driver) loader.loadClass(driverClass).getDeclaredConstructor().newInstance();
+            return (Driver) Type.loader.loadClass(driverClass).getDeclaredConstructor().newInstance();
         } catch (ClassNotFoundException e) {
             msg = "couldn't find or load JDBC driver class " + driverClass +
                   ": class not found";
