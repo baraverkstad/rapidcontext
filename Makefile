@@ -7,7 +7,7 @@ MAKE    := $(MAKE) --no-print-directory
 
 define FOREACH
     for DIR in src/plugin/*/; do \
-        $(MAKE) -C $$DIR -f ../Makefile.plugin VERSION=$(VER) $(1); \
+        $(MAKE) -C $$DIR -f ../Makefile.plugin VERSION=$(VER) $(1) || exit ; \
     done
 endef
 
