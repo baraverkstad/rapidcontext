@@ -74,6 +74,9 @@ public class Metrics extends StorableObject {
      */
     private long updated = 0;
 
+    /**
+     * The map of data points.
+     */
     private HashMap<String, MovingUsage> points = new HashMap<>();
 
     /**
