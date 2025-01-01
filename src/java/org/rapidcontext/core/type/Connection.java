@@ -118,9 +118,6 @@ public abstract class Connection extends StorableObject {
      *         null if not found
      */
     public static Connection find(Storage storage, String id) {
-        if (metrics == null) {
-            getMetrics(storage);
-        }
         return storage.load(Path.resolve(PATH, id), Connection.class);
     }
 
@@ -132,7 +129,7 @@ public abstract class Connection extends StorableObject {
      *
      * @return the connection usage metrics
      */
-    public static Metrics getMetrics(Storage storage) {
+    public static Metrics metrics(Storage storage) {
         if (metrics == null) {
             metrics = Metrics.findOrCreate(storage, "connection");
         }
@@ -423,13 +420,9 @@ public abstract class Connection extends StorableObject {
         }
         if (metrics != null) {
             long now = System.currentTimeMillis();
-            if (start > 0) {
-                int duration = (int) (System.currentTimeMillis() - start);
-                metrics.report(id(), now, 1, duration, success, error);
-            } else {
-                int count = success ? 0 : 1;
-                metrics.report(id(), now, count, 0, success, error);
-            }
+            int duration = (start <= 0) ? 0 : (int) (now - start);
+            int count = (start <= 0 && success) ? 0 : 1; // validate doesn't count
+            metrics.report(id(), now, count, duration, success, error);
         }
     }
 

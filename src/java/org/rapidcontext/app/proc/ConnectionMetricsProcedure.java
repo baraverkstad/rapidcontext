@@ -64,7 +64,7 @@ public class ConnectionMetricsProcedure extends Procedure {
 
         CallContext.checkSearchAccess(Connection.PATH.toString());
         Dict res = new Dict();
-        Connection.getMetrics(cx.getStorage()).stream()
+        Connection.metrics(cx.getStorage()).stream()
             .filter(e -> {
                 Path path = Path.resolve(Connection.PATH, e.getKey());
                 return SecurityContext.hasReadAccess(path.toString());
