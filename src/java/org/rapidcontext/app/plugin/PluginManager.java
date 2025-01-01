@@ -33,7 +33,6 @@ import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.storage.StorageException;
 import org.rapidcontext.core.storage.ZipStorage;
 import org.rapidcontext.core.type.Plugin;
-import org.rapidcontext.core.type.Type;
 import org.rapidcontext.util.FileUtil;
 
 /**
@@ -360,7 +359,6 @@ public final class PluginManager {
         }
         loadOverlay(pluginId);
         loadJarFiles(pluginId);
-        Type.all(storage).forEach(o -> { /* Force refresh cached types */ });
         Object obj = storage.load(Path.resolve(Plugin.PATH, pluginId));
         if (!(obj instanceof Plugin)) {
             String msg = pluginId + " plug-in failed to initialize properly";

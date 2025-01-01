@@ -262,15 +262,7 @@ public class ApplicationContext {
         initLibrary();
         initPlugins();
         initScheduler();
-        // TODO: Move aliases into storage catalog
-        scheduler.submit(() -> library.refreshAliases());
-        // TODO: Remove singleton environment reference
-        env = Environment.all(storage).findFirst().orElse(null);
-        try {
-            SecurityContext.init(storage);
-        } catch (StorageException e) {
-            LOG.severe("Failed to load security config: " + e.getMessage());
-        }
+        initCaches();
         START_TIME = new Date();
     }
 
@@ -292,7 +284,7 @@ public class ApplicationContext {
         for (Object o : config.getArray("plugins")) {
             String pluginId = o.toString();
             try {
-                loadPlugin(pluginId);
+                pluginManager.load(pluginId);
             } catch (PluginException e) {
                 LOG.warning("failed to load plugin " + pluginId + ": " +
                             e.getMessage());
@@ -318,6 +310,26 @@ public class ApplicationContext {
                 ThreadLocalRandom.current().nextInt(SESSION_CLEAN_WAIT_MINS),
                 SESSION_CLEAN_WAIT_MINS,
                 TimeUnit.MINUTES);
+    }
+
+    /**
+     * Initializes cached objects.
+     */
+    private void initCaches() {
+        // FIXME: Remove singleton environment reference
+        env = Environment.all(storage).findFirst().orElse(null);
+        // FIXME: Remove role cache from SecurityContext
+        try {
+            SecurityContext.init(storage);
+        } catch (StorageException e) {
+            LOG.severe("Failed to load security config: " + e.getMessage());
+        }
+        // FIXME: Why is pre-loading of all types necessary?
+        Type.all(storage).forEach(o -> { /* Force refresh cached types */ });
+        scheduler.submit(() -> {
+            // FIXME: Move aliases into storage catalog
+            library.refreshAliases();
+        });
     }
 
     /**
@@ -481,7 +493,7 @@ public class ApplicationContext {
                              e.getMessage();
                 throw new PluginException(msg);
             }
-            library.refreshAliases();
+            initCaches();
         }
     }
 
@@ -495,7 +507,7 @@ public class ApplicationContext {
      */
     public void unloadPlugin(String pluginId) throws PluginException {
         pluginManager.unload(pluginId);
-        library.refreshAliases();
+        initCaches();
         Array pluginList = config.getArray("plugins");
         pluginList.remove(pluginId);
         try {
