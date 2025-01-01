@@ -410,7 +410,10 @@ public class CallContext {
     public Object execute(String name, Object[] args)
         throws ProcedureException {
 
-        Procedure proc = library.load(name);
+        Procedure proc = Procedure.find(storage, name);
+        if (proc == null) {
+            throw new ProcedureException("no procedure '" + name + "' found");
+        }
         boolean commit = false;
         if (stack.height() == 0) {
             setAttribute(ATTRIBUTE_PROCEDURE, proc);
@@ -490,9 +493,14 @@ public class CallContext {
         int pos = 0;
         for (String name : bindings.getNames()) {
             if (bindings.getType(name) == Bindings.PROCEDURE) {
-                Object value = bindings.getValue(name);
-                value = library.load((String) value);
-                callBindings.set(name, Bindings.PROCEDURE, value, null);
+                String id = (String) bindings.getValue(name, null);
+                Procedure value = Procedure.find(storage, id);
+                if (value != null) {
+                    callBindings.set(name, Bindings.PROCEDURE, value, null);
+                } else {
+                    String msg = "no procedure '" + id + "' found for " + proc.id();
+                    throw new ProcedureException(msg);
+                }
             } else if (bindings.getType(name) == Bindings.CONNECTION) {
                 String id = (String) bindings.getValue(name, null);
                 if (id == null || id.isBlank()) {

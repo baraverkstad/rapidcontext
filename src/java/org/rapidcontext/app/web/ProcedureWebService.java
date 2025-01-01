@@ -193,7 +193,11 @@ public class ProcedureWebService extends WebService {
             LOG.fine(() -> logPrefix + "init procedure call");
             super.session(request, isSession); // Create session if needed
             ApplicationContext ctx = ApplicationContext.getInstance();
-            Procedure proc = ctx.getLibrary().load(name);
+            Procedure proc = Procedure.find(ctx.getStorage(), name);
+            if (proc == null) {
+                String msg = "no procedure '" + name + "' found";
+                throw new ProcedureException(msg);
+            }
             Object[] args = processArgs(proc, request, logPrefix);
             if (isTracing || ctx.getLibrary().isTracing(name)) {
                 trace = new StringBuilder();

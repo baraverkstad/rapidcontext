@@ -69,8 +69,8 @@ public class ProcedureReadProcedure extends Procedure {
 
         String name = (String) bindings.getValue("name");
         CallContext.checkAccess("procedure/" + name, cx.readPermission(1));
-        Procedure proc = cx.getLibrary().load(name);
-        return getProcedureData(proc);
+        Procedure proc = Procedure.find(cx.getStorage(), name);
+        return (proc == null) ? null : getProcedureData(proc);
     }
 
     /**

@@ -64,7 +64,10 @@ public class Library {
      *
      * @throws ProcedureException if the procedure couldn't be found,
      *             or failed to load correctly
+     *
+     * @deprecated Use Procedure.find(storage,id) directly instead.
      */
+    @Deprecated(forRemoval = true)
     public Procedure load(String id) throws ProcedureException {
         Procedure proc = Procedure.find(storage, id);
         if (proc != null) {

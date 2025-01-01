@@ -62,8 +62,13 @@ public class DefaultInterceptor extends Interceptor {
                     String value = (String) bindings.getValue(name, null);
                     cx.connectionReserve(value, Role.PERM_INTERNAL);
                 } else if (bindings.getType(name) == Bindings.PROCEDURE) {
-                    String value = (String) bindings.getValue(name);
-                    cx.reserve(cx.getLibrary().load(value));
+                    String id = (String) bindings.getValue(name);
+                    Procedure value = Procedure.find(cx.getStorage(), id);
+                    if (value == null) {
+                        String msg = "no procedure '" + id + "' found for " + proc.id();
+                        throw new ProcedureException(msg);
+                    }
+                    cx.reserve(value);
                 }
             }
         } finally {
