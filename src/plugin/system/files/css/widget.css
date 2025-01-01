@@ -324,16 +324,14 @@ button > .widgetIcon.fa,
     z-index: 2;
 }
 .widgetTabContainerLabel {
-    float: left;
-    margin-right: 1px;
+    display: inline-block;
+    margin-right: 0.25rem;
     padding-left: 0.5rem;
-    border-top: 1px solid transparent;
-    border-left: 1px solid transparent;
-    border-right: 1px solid transparent;
+    border: 1px solid #fff0;
     border-radius: 0.25rem 0.25rem 0 0;
     cursor: pointer;
     white-space: nowrap;
-    color: #666;
+    color: #0006;
     -moz-user-select: none;
     -ms-user-select: none;
     -webkit-user-select: none;
@@ -346,11 +344,14 @@ button > .widgetIcon.fa,
     border-color: #ddd;
     background: linear-gradient(to bottom, #eee, #fff);
     color: #000;
+    text-shadow: 0 1px 1px #fff;
 }
 .widgetTabContainerLabel.selected {
     border-color: var(--highlight-200);
+    border-bottom-color: #fff;
     background: linear-gradient(to bottom, var(--highlight-000), #fff);
     color: #000;
+    text-shadow: 0 1px 1px #fff;
 }
 .widgetTabContainerLabel.selected:hover {
     background: linear-gradient(to bottom, var(--highlight-100), #fff);
@@ -368,6 +369,7 @@ button > .widgetIcon.fa,
     border-radius: 3px;
     padding: 1px 0;
     color: #0004;
+    text-shadow: none;
 }
 .widgetTabContainerLabel .widgetIcon:hover {
     background: #e66;
@@ -375,7 +377,7 @@ button > .widgetIcon.fa,
 }
 .widgetTabContainerContent {
     position: relative;
-    top: -1px;
+    top: -2px;
     width: calc(100% - 20px);
     height: calc(100% - 40px);
     border-top: 1px solid #ddd;
