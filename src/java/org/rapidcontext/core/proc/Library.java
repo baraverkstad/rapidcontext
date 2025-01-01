@@ -15,10 +15,8 @@
 package org.rapidcontext.core.proc;
 
 import java.util.HashMap;
-import java.util.logging.Logger;
 
 import org.rapidcontext.core.storage.Storage;
-import org.rapidcontext.core.storage.StorageException;
 import org.rapidcontext.core.type.Metrics;
 import org.rapidcontext.core.type.Procedure;
 
@@ -30,12 +28,6 @@ import org.rapidcontext.core.type.Procedure;
  * @version  1.0
  */
 public class Library {
-
-    /**
-     * The class logger.
-     */
-    private static final Logger LOG =
-        Logger.getLogger(Library.class.getName());
 
     /**
      * The data storage to use for loading and listing procedures.
@@ -169,12 +161,7 @@ public class Library {
     public Metrics getMetrics() {
         if (metrics == null) {
             synchronized (this) {
-                try {
-                    metrics = Metrics.findOrCreate(storage, "procedure");
-                } catch (StorageException e) {
-                    LOG.warning("failed to initialize procedure usage metrics: " + e);
-                    return null;
-                }
+                metrics = Metrics.findOrCreate(storage, "procedure");
             }
         }
         return metrics;

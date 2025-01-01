@@ -17,6 +17,8 @@ package org.rapidcontext.core.type;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import org.rapidcontext.core.data.Dict;
@@ -33,6 +35,11 @@ import org.rapidcontext.core.storage.StorageException;
  * @version  1.0
  */
 public class Metrics extends StorableObject {
+
+    /**
+     * The class logger.
+     */
+    private static final Logger LOG = Logger.getLogger(Metrics.class.getName());
 
     /**
      * The metrics object storage path.
@@ -56,17 +63,18 @@ public class Metrics extends StorableObject {
      * @param id             the metrics identifier
      *
      * @return the metrics set found or newly created
-     *
-     * @throws StorageException if a new metrics set couldn't be stored
      */
-    public static Metrics findOrCreate(Storage storage, String id)
-    throws StorageException {
+    public static Metrics findOrCreate(Storage storage, String id) {
         Metrics obj = storage.load(Path.resolve(PATH, id), Metrics.class);
         if (obj == null) {
             String type = "metrics/usage";
             Dict dict = new Dict().set(KEY_ID, id).set(KEY_TYPE, type);
             obj = new Metrics(id, type, dict);
-            storage.store(Path.resolve(PATH, id + Storage.EXT_JSON), obj);
+            try {
+                storage.store(Path.resolve(PATH, id + Storage.EXT_JSON), obj);
+            } catch (StorageException e) {
+                LOG.log(Level.WARNING, "failed to store metrics for " + id, e);
+            }
         }
         return obj;
     }

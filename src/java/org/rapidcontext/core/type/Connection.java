@@ -134,11 +134,7 @@ public abstract class Connection extends StorableObject {
      */
     public static Metrics getMetrics(Storage storage) {
         if (metrics == null) {
-            try {
-                metrics = Metrics.findOrCreate(storage, "connection");
-            } catch (StorageException e) {
-                LOG.warning("failed to initialize connection usage metrics: " + e);
-            }
+            metrics = Metrics.findOrCreate(storage, "connection");
         }
         return metrics;
     }
