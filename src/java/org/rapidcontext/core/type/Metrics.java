@@ -63,7 +63,9 @@ public class Metrics extends StorableObject {
     throws StorageException {
         Metrics obj = storage.load(Path.resolve(PATH, id), Metrics.class);
         if (obj == null) {
-            obj = new Metrics(id, "metrics/usage", new Dict());
+            String type = "metrics/usage";
+            Dict dict = new Dict().set(KEY_ID, id).set(KEY_TYPE, type);
+            obj = new Metrics(id, type, dict);
             storage.store(Path.resolve(PATH, id + Storage.EXT_JSON), obj);
         }
         return obj;

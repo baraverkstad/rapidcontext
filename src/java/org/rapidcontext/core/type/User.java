@@ -230,7 +230,7 @@ public class User extends StorableObject {
      * @param id             the user identifier
      */
     public User(String id) {
-        this(id, "user", DEFAULTS.copy());
+        this(id, "user", DEFAULTS.copy().set(KEY_ID, id));
     }
 
     /**
