@@ -106,11 +106,11 @@ public class DefaultInterceptor extends Interceptor {
             cx.logCall(proc.id(), bindings);
             Object obj = proc.call(cx, bindings);
             cx.logResponse(obj);
-            cx.getLibrary().report(proc, start, true, null);
+            proc.report(start, true, null);
             return obj;
         } catch (ProcedureException e) {
             cx.logError(e);
-            cx.getLibrary().report(proc, start, false, e.toString());
+            proc.report(start, false, e.toString());
             throw e;
         }
     }

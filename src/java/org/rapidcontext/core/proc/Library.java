@@ -17,7 +17,6 @@ package org.rapidcontext.core.proc;
 import java.util.HashMap;
 
 import org.rapidcontext.core.storage.Storage;
-import org.rapidcontext.core.type.Metrics;
 import org.rapidcontext.core.type.Procedure;
 
 /**
@@ -56,11 +55,6 @@ public class Library {
     private Interceptor interceptor = new DefaultInterceptor();
 
     /**
-     * The procedure call metrics.
-     */
-    private Metrics metrics = null;
-
-    /**
      * Creates a new procedure library.
      *
      * @param storage        the data storage to use
@@ -77,7 +71,7 @@ public class Library {
         // FIXME: This is very slow when a large number of procedures are available...
         aliases.clear();
         Procedure.all(storage).forEach(p -> {
-            if (p.alias() != null && !p.alias().isEmpty()) {
+            if (p.alias() != null && !p.alias().isBlank()) {
                 aliases.put(p.alias(), p.id());
             }
         });
@@ -150,37 +144,6 @@ public class Library {
             traces.put(name, Boolean.TRUE);
         } else {
             traces.remove(name);
-        }
-    }
-
-    /**
-     * Returns the procedure usage metrics.
-     *
-     * @return the procedure usage metrics
-     */
-    public Metrics getMetrics() {
-        if (metrics == null) {
-            synchronized (this) {
-                metrics = Metrics.findOrCreate(storage, "procedure");
-            }
-        }
-        return metrics;
-    }
-
-    /**
-     * Reports procedure usage metrics for a single call.
-     *
-     * @param proc           the procedure executed
-     * @param start          the start time (in millis)
-     * @param success        the success flag
-     * @param error          the optional error message
-     */
-    public void report(Procedure proc, long start, boolean success, String error) {
-        getMetrics();
-        if (metrics != null) {
-            long now = System.currentTimeMillis();
-            int duration = (int) (System.currentTimeMillis() - start);
-            metrics.report(proc.id(), now, 1, duration, success, error);
         }
     }
 }

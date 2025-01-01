@@ -62,7 +62,7 @@ public class ProcedureMetricsProcedure extends Procedure {
 
         CallContext.checkSearchAccess("procedure/");
         Dict res = new Dict();
-        cx.getLibrary().getMetrics().stream()
+        Procedure.metrics(cx.getStorage()).stream()
             .filter(e -> SecurityContext.hasReadAccess("procedure/" + e.getKey()))
             .forEach(e -> res.set(e.getKey(), e.getValue().values()));
         return res;

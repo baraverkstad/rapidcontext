@@ -44,6 +44,7 @@ import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.storage.StorageException;
 import org.rapidcontext.core.type.Connection;
 import org.rapidcontext.core.type.Environment;
+import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.core.type.Session;
 import org.rapidcontext.core.type.Type;
 import org.rapidcontext.core.type.WebMatcher;
@@ -328,6 +329,7 @@ public class ApplicationContext {
         // FIXME: Why is pre-loading of all types necessary?
         Type.all(storage).forEach(o -> { /* Force refresh cached types */ });
         Connection.metrics(storage); // Load or create connection metrics
+        Procedure.metrics(storage); // Load or create procedure metrics
         scheduler.submit(() -> {
             // FIXME: Move aliases into storage catalog
             library.refreshAliases();

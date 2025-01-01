@@ -78,6 +78,11 @@ public abstract class Procedure extends StorableObject {
     public static final long ACTIVE_MILLIS = 5L * DateUtils.MILLIS_PER_MINUTE;
 
     /**
+     * The shared metrics to use for all procedures.
+     */
+    private static Metrics metrics = null;
+
+    /**
      * Returns a stream of all procedures found in the storage.
      *
      * @param storage        the storage to search
@@ -99,6 +104,21 @@ public abstract class Procedure extends StorableObject {
      */
     public static Procedure find(Storage storage, String id) {
         return storage.load(Path.resolve(PATH, id), Procedure.class);
+    }
+
+    /**
+     * Returns the procedure usage metrics. The metrics will be loaded
+     * from storage if not already in memory.
+     *
+     * @param storage        the storage to load from
+     *
+     * @return the connection usage metrics
+     */
+    public static Metrics metrics(Storage storage) {
+        if (metrics == null) {
+            metrics = Metrics.findOrCreate(storage, "connection");
+        }
+        return metrics;
     }
 
     /**
@@ -216,4 +236,22 @@ public abstract class Procedure extends StorableObject {
      */
     public abstract Object call(CallContext cx, Bindings bindings)
         throws ProcedureException;
+
+    /**
+     * Reports connection usage metrics for a single query/request/etc.
+     * If the start time isn't positive, no actual usage and duration
+     * will be reported, only potential errors.
+     *
+     * @param start          the start time (in millis), or zero (0) for none
+     * @param success        the success flag
+     * @param error          the optional error message
+     */
+    public void report(long start, boolean success, String error) {
+        if (metrics != null) {
+            long now = System.currentTimeMillis();
+            int duration = (start <= 0) ? 0 : (int) (now - start);
+            int count = (start <= 0 && success) ? 0 : 1; // validate doesn't count
+            metrics.report(id(), now, count, duration, success, error);
+        }
+    }
 }
