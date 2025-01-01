@@ -332,7 +332,7 @@ public class ApplicationContext {
         Procedure.metrics(storage); // Load or create procedure metrics
         scheduler.submit(() -> {
             // FIXME: Move aliases into storage catalog
-            library.refreshAliases();
+            Procedure.refreshAliases(storage);
         });
     }
 

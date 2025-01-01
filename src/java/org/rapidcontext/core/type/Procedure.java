@@ -14,6 +14,8 @@
 
 package org.rapidcontext.core.type;
 
+import java.util.HashMap;
+import java.util.Objects;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
@@ -78,6 +80,11 @@ public abstract class Procedure extends StorableObject {
     public static final long ACTIVE_MILLIS = 5L * DateUtils.MILLIS_PER_MINUTE;
 
     /**
+     * The map of procedure aliases to procedure ids.
+     */
+    private static HashMap<String,String> aliases = new HashMap<>();
+
+    /**
      * The shared metrics to use for all procedures.
      */
     private static Metrics metrics = null;
@@ -103,7 +110,29 @@ public abstract class Procedure extends StorableObject {
      *         null if not found
      */
     public static Procedure find(Storage storage, String id) {
-        return storage.load(Path.resolve(PATH, id), Procedure.class);
+        Procedure proc = storage.load(Path.resolve(PATH, id), Procedure.class);
+        if (proc == null && aliases.containsKey(id)) {
+            proc = find(storage, aliases.get(id));
+        }
+        return proc;
+    }
+
+    /**
+     * Updates the cached procedure aliases by loading all procedures
+     * from storage and inspecting them. This method is safe to call
+     * repeatedly (after each plug-in load), but is potentially slow.
+     *
+     * @param storage        the storage to load from
+     */
+    public static void refreshAliases(Storage storage) {
+        // FIXME: This is slow if many procedures are found...
+        aliases.clear();
+        all(storage).forEach(p -> {
+            String alias = Objects.requireNonNullElse(p.alias(), "");
+            if (!alias.isBlank() && !aliases.containsKey(alias)) {
+                aliases.put(alias, p.id());
+            }
+        });
     }
 
     /**

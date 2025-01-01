@@ -34,14 +34,6 @@ public class Library {
     private Storage storage = null;
 
     /**
-     * The map of procedure name aliases. The map is indexed by the
-     * old procedure name and points to the new one.
-     *
-     * @see #refreshAliases()
-     */
-    private HashMap<String,String> aliases = new HashMap<>();
-
-    /**
      * The map of active procedure traces. The map is indexed by the
      * procedure name and an entry is only added if all calls to the
      * procedure should be traced (which affects performance
@@ -64,20 +56,6 @@ public class Library {
     }
 
     /**
-     * Loads built-in procedures via storage types. This method is safe to call
-     * repeatedly (after each plug-in load).
-     */
-    public void refreshAliases() {
-        // FIXME: This is very slow when a large number of procedures are available...
-        aliases.clear();
-        Procedure.all(storage).forEach(p -> {
-            if (p.alias() != null && !p.alias().isBlank()) {
-                aliases.put(p.alias(), p.id());
-            }
-        });
-    }
-
-    /**
      * Locates a procedure using either its identifier or an alias.
      *
      * @param id             the procedure identifier
@@ -91,8 +69,6 @@ public class Library {
         Procedure proc = Procedure.find(storage, id);
         if (proc != null) {
             return proc;
-        } else if (aliases.containsKey(id)) {
-            return load(aliases.get(id));
         } else {
             throw new ProcedureException("no procedure '" + id + "' found");
         }
