@@ -87,7 +87,7 @@ public class HttpRequestProcedure extends HttpProcedure {
             LOG.warning("deprecated: procedure " + id + " references legacy type: " + type);
         }
         try {
-            Bindings b = getBindings();
+            Bindings b = new Bindings(null, dict.getArray(KEY_BINDING));
             if (b.hasName(BINDING_CONNECTION) && b.getType(BINDING_CONNECTION) != Bindings.CONNECTION) {
                 LOG.warning("deprecated: procedure " + id + " connection binding has improper type: " + b.getTypeName(BINDING_CONNECTION));
             }
@@ -205,11 +205,14 @@ public class HttpRequestProcedure extends HttpProcedure {
                 obj = s.isBlank() ? null : cx.connectionReserve(s.trim(), perm);
             }
         }
-        if (obj != null && !(obj instanceof HttpChannel)) {
+        if (obj instanceof HttpChannel channel) {
+            return channel;
+        } else if (obj != null) {
             throw new ProcedureException("connection not of HTTP type: " +
                                          obj.getClass().getName());
+        } else {
+            return null;
         }
-        return (HttpChannel) obj;
     }
 
     /**
