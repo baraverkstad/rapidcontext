@@ -599,7 +599,10 @@ public class ApplicationContext {
      *
      * @return the call context found, or
      *         null if no context was active
+     *
+     * @deprecated Thread introspection will be removed in a future release.
      */
+    @Deprecated(forRemoval = true)
     public CallContext findContext(Thread thread) {
         return threadContext.get(thread);
     }
@@ -612,7 +615,10 @@ public class ApplicationContext {
      *
      * @return the call context found, or
      *         null if no context was active
+     *
+     * @deprecated Thread introspection will be removed in a future release.
      */
+    @Deprecated(forRemoval = true)
     public CallContext findContext(int threadId) {
         synchronized (threadContext) {
             for (Entry<Thread, CallContext> e : threadContext.entrySet()) {

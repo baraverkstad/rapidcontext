@@ -1,6 +1,7 @@
 id: system/thread/context
 type: procedure
 alias: System.Thread.Context
+deprecated: Thread introspection will be removed in a future release.
 className: org.rapidcontext.app.proc.ThreadContextProcedure
 description: Returns the call context for a specified (running) thread.
 binding:

@@ -32,7 +32,10 @@ import org.rapidcontext.util.DateUtil;
  *
  * @author   Per Cederberg
  * @version  1.0
+ *
+ * @deprecated Thread introspection will be removed in a future release.
  */
+@Deprecated(forRemoval = true)
 public class ThreadContextProcedure extends Procedure {
 
     /**
@@ -63,6 +66,7 @@ public class ThreadContextProcedure extends Procedure {
      *             error
      */
     @Override
+    @SuppressWarnings("removal")
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 

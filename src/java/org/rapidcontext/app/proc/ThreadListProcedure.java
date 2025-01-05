@@ -28,7 +28,10 @@ import org.rapidcontext.core.type.Procedure;
  *
  * @author   Per Cederberg
  * @version  1.0
+ *
+ * @deprecated Thread introspection will be removed in a future release.
  */
+@Deprecated(forRemoval = true)
 public class ThreadListProcedure extends Procedure {
 
     /**
@@ -59,6 +62,7 @@ public class ThreadListProcedure extends Procedure {
      *             error
      */
     @Override
+    @SuppressWarnings("removal")
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 

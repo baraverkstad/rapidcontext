@@ -1,5 +1,6 @@
 id: system/thread/list
 type: procedure
 alias: System.Thread.List
+deprecated: Thread introspection will be removed in a future release.
 className: org.rapidcontext.app.proc.ThreadListProcedure
 description: Returns a list of all currently running threads.
