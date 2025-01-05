@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.storage.Path;
@@ -94,6 +95,11 @@ public class User extends StorableObject {
      * The user object storage path.
      */
     public static final Path PATH = Path.from("/user/");
+
+    /**
+     * The default active user time (5 minutes).
+     */
+    public static final long ACTIVE_MILLIS = 5L * DateUtils.MILLIS_PER_MINUTE;
 
     /**
      * The default user data (copied for new users).
@@ -231,6 +237,18 @@ public class User extends StorableObject {
      */
     public User(String id) {
         this(id, "user", DEFAULTS.copy());
+    }
+
+    /**
+     * Checks if this object is in active use. This method will return
+     * true if the object was activated during the last 5 minutes.
+     *
+     * @return true if the object is considered active, or
+     *         false otherwise
+     */
+    @Override
+    protected boolean isActive() {
+        return System.currentTimeMillis() - activatedTime().getTime() <= ACTIVE_MILLIS;
     }
 
     /**
