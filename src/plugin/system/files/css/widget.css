@@ -321,7 +321,7 @@ button > .widgetIcon.fa,
  */
 .widgetTabContainerLabels {
     position: relative;  /* Needed for z-index to work */
-    z-index: 2;
+    z-index: 1;
 }
 .widgetTabContainerLabel {
     display: inline-block;

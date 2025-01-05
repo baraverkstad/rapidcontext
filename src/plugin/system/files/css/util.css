@@ -187,6 +187,9 @@
 .right-0 {
     right: 0 !important;
 }
+.z-over {
+    z-index: 10 !important;
+}
 .z-max {
     z-index: 100000 !important;
 }
