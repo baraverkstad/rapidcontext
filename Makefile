@@ -199,6 +199,9 @@ run: build package-zip
 	cd tmp/docker && docker compose run --rm --service-ports rapidcontext
 
 
+shell:
+	jshell --class-path "lib/*:$(CLASSPATH)"
+
 fix-copyright:
 	git grep -PIlwz Copyright -- ':!doc/external/*' | \
 		xargs -0 -n 1 sed -i.bak -E -e 's/(20[0-9]{2})-20[0-9]{2}/\1-2025/'
