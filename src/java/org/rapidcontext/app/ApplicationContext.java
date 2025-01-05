@@ -22,8 +22,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
@@ -104,27 +104,6 @@ public class ApplicationContext {
     private static ApplicationContext instance = null;
 
     /**
-     * The thread factory for background (scheduled) jobs.
-     */
-    private static final ThreadFactory THREAD_FACTORY = new ThreadFactory() {
-
-        /**
-         * The thread group to use.
-         */
-        private ThreadGroup group = new ThreadGroup("background");
-
-        /**
-         * The count of created threads.
-         */
-        private int count = 0;
-
-        @Override
-        public synchronized Thread newThread(Runnable r) {
-            return new Thread(group, r, "background-" + count++);
-        }
-    };
-
-    /**
      * The application root storage.
      */
     private AppStorage storage;
@@ -137,7 +116,7 @@ public class ApplicationContext {
     /**
      * The background task scheduler.
      */
-    private ScheduledThreadPoolExecutor scheduler = null;
+    private ScheduledExecutorService scheduler = null;
 
     /**
      * The application configuration.
@@ -298,17 +277,14 @@ public class ApplicationContext {
      * Initializes and starts the background task scheduler.
      */
     private void initScheduler() {
-        scheduler = new ScheduledThreadPoolExecutor(1, THREAD_FACTORY);
-        scheduler.setRemoveOnCancelPolicy(true);
-        scheduler.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
-        scheduler.setContinueExistingPeriodicTasksAfterShutdownPolicy(false);
+        scheduler = Executors.newScheduledThreadPool(0, Thread.ofVirtual().factory());
         scheduler.scheduleWithFixedDelay(
                 () -> storage.cacheClean(false),
                 ThreadLocalRandom.current().nextInt(CACHE_CLEAN_WAIT_SECS),
                 CACHE_CLEAN_WAIT_SECS,
                 TimeUnit.SECONDS);
         scheduler.scheduleWithFixedDelay(
-                () -> Session.removeExpired(this.getStorage()),
+                () -> Session.removeExpired(storage),
                 ThreadLocalRandom.current().nextInt(SESSION_CLEAN_WAIT_MINS),
                 SESSION_CLEAN_WAIT_MINS,
                 TimeUnit.MINUTES);
@@ -330,10 +306,7 @@ public class ApplicationContext {
         Type.all(storage).forEach(o -> { /* Force refresh cached types */ });
         Connection.metrics(storage); // Load or create connection metrics
         Procedure.metrics(storage); // Load or create procedure metrics
-        scheduler.submit(() -> {
-            // FIXME: Move aliases into storage catalog
-            Procedure.refreshAliases(storage);
-        });
+        scheduler.submit(() -> Procedure.refreshAliases(storage)); // FIXME: Move aliases into storage catalog
     }
 
     /**
@@ -341,6 +314,11 @@ public class ApplicationContext {
      */
     private void destroyAll() {
         scheduler.shutdownNow();
+        try {
+            scheduler.awaitTermination(10, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            LOG.warning("timeout waiting for scheduled/background tasks to terminate");
+        }
         scheduler = null;
         pluginManager.unloadAll();
         library = new Library(this.storage);
