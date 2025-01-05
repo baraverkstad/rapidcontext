@@ -1,6 +1,7 @@
 id: system/procedure/trace
 type: procedure
 alias: System.Procedure.Trace
+deprecated: Tracing per-procedure will be removed in a future release. Use per-call tracing instead.
 className: org.rapidcontext.app.proc.ProcedureTraceProcedure
 description: >-
     Sets the procedure call tracing flag for subsequent calls. This is an

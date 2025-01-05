@@ -26,7 +26,10 @@ import org.rapidcontext.util.ValueUtil;
  *
  * @author   Per Cederberg
  * @version  1.0
+ *
+ * @deprecated Tracing per-procedure will be removed in a future release. Use per-call tracing instead.
  */
+@Deprecated(forRemoval = true)
 public class ProcedureTraceProcedure extends Procedure {
 
     /**
