@@ -20,6 +20,7 @@ import java.net.ServerSocket;
 import org.eclipse.jetty.ee8.servlet.ServletContextHandler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.util.thread.VirtualThreadPool;
 
 /**
  * The stand-alone server application.
@@ -125,11 +126,15 @@ public class ServerApplication {
      *
      * @throws Exception if the server failed to start correctly
      */
+    @SuppressWarnings("resource")
     public void start() throws Exception {
         if (isRunning()) {
             stop();
         }
-        server = new Server(port);
+        server = new Server(new VirtualThreadPool());
+        ServerConnector connector = new ServerConnector(server);
+        connector.setPort(port);
+        server.addConnector(connector);
         server.setStopTimeout(10000L);
         server.setStopAtShutdown(true);
         ServletContextHandler root = new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
@@ -137,7 +142,7 @@ public class ServerApplication {
         root.setBaseResourceAsPath(appDir.toPath());
         root.addServlet(ServletApplication.class, "/*");
         server.setHandler(root);
-        port = ((ServerConnector) server.getConnectors()[0]).getPort();
+        port = connector.getPort();
         try {
             server.start();
         } catch (Exception e) {
