@@ -183,6 +183,7 @@ public class ProcedureWebService extends WebService {
      *
      * @return the process result dictionary (with "data" or "error" keys)
      */
+    @SuppressWarnings("removal")
     protected Dict processCall(String name, Request request, String source) {
         boolean isSession = ValueUtil.isOn(request.getParameter("system:session"));
         boolean isTracing = ValueUtil.isOn(request.getParameter("system:trace"));

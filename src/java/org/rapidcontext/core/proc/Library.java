@@ -106,7 +106,10 @@ public class Library {
      *
      * @return true if all calls should be traced, or
      *         false otherwise
+     *
+     * @deprecated Tracing per-procedure will be removed in a future release. Use per-call tracing instead.
      */
+    @Deprecated(forRemoval = true)
     public boolean isTracing(String name) {
         return traces.containsKey(name);
     }
@@ -117,7 +120,10 @@ public class Library {
      * @param name           the name of the procedure
      * @param enabled        true to enabled tracing,
      *                       false to disable
+     *
+     * @deprecated Tracing per-procedure will be removed in a future release. Use per-call tracing instead.
      */
+    @Deprecated(forRemoval = true)
     public void setTracing(String name, boolean enabled) {
         if (enabled) {
             traces.put(name, Boolean.TRUE);

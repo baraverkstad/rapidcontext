@@ -60,6 +60,7 @@ public class ProcedureTraceProcedure extends Procedure {
      *             error
      */
     @Override
+    @SuppressWarnings("removal")
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
