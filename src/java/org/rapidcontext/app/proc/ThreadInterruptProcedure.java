@@ -30,7 +30,10 @@ import org.rapidcontext.core.type.User;
  *
  * @author   Per Cederberg
  * @version  1.0
+ *
+ * @deprecated Background thread execution will be removed in a future release.
  */
+@Deprecated(forRemoval = true)
 public class ThreadInterruptProcedure extends Procedure {
 
     /**

@@ -30,7 +30,10 @@ import org.rapidcontext.core.type.Procedure;
  *
  * @author   Per Cederberg
  * @version  1.0
+ *
+ * @deprecated Background thread execution will be removed in a future release.
  */
+@Deprecated(forRemoval = true)
 public class ThreadCreateProcedure extends Procedure {
 
     /**
@@ -144,6 +147,7 @@ public class ThreadCreateProcedure extends Procedure {
          * Executes the procedure in the current application context.
          */
         @Override
+        @SuppressWarnings("removal")
         public void run() {
             SecurityContext.auth(userName);
             try {

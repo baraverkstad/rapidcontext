@@ -1,6 +1,7 @@
 id: system/thread/interrupt
 type: procedure
 alias: System.Thread.Interrupt
+deprecated: Background thread execution will be removed in a future release.
 className: org.rapidcontext.app.proc.ThreadInterruptProcedure
 description: Interrupts the specified (running) thread.
 binding:

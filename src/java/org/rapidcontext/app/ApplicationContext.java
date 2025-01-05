@@ -566,7 +566,10 @@ public class ApplicationContext {
      * @param name           the procedure name
      * @param args           the procedure arguments
      * @param source         the call source information
+     *
+     * @deprecated Background thread execution will be removed in a future release.
      */
+    @Deprecated(forRemoval = true)
     public void executeAsync(String name, Object[] args, String source) {
         CallContext cx = new CallContext(storage, env, library);
         threadContext.put(Thread.currentThread(), cx);

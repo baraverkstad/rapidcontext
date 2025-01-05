@@ -1,6 +1,7 @@
 id: system/thread/create
 type: procedure
 alias: System.Thread.Create
+deprecated: Background thread execution will be removed in a future release.
 className: org.rapidcontext.app.proc.ThreadCreateProcedure
 description: Creates a new server thread for executing the specified procedure.
 binding:
