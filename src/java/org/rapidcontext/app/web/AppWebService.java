@@ -28,6 +28,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.app.ApplicationContext;
+import org.rapidcontext.core.ctx.Context;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.security.SecurityContext;
@@ -126,7 +127,7 @@ public class AppWebService extends FileWebService {
      * @return a sorted list of all matching files found in storage
      */
     protected static String[] resources(String type, Path base) {
-        Storage storage = ApplicationContext.getInstance().getStorage();
+        Storage storage = Context.get().storage();
         Path storagePath = Path.resolve(RootStorage.PATH_FILES, type + "/");
         String cache = ApplicationContext.getInstance().cachePath();
         int start = RootStorage.PATH_FILES.length();
@@ -321,7 +322,7 @@ public class AppWebService extends FileWebService {
      */
     protected void processApp(Request request, String appId, String baseUrl) {
         session(request, true);
-        Storage storage = ApplicationContext.getInstance().getStorage();
+        Storage storage = Context.get().storage();
         Metadata meta = storage.lookup(Path.from("/app/" + appId));
         if (meta == null || !meta.isObject(Dict.class)) {
             LOG.warning(this + " misconfigured; app '" + appId + "' not found,");

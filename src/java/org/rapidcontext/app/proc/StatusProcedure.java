@@ -74,13 +74,13 @@ public class StatusProcedure extends Procedure {
      */
     public static Dict getStatusData() {
         ApplicationContext ctx = ApplicationContext.getInstance();
-        Dict res = ctx.getStorage().load(ApplicationContext.PATH_PLATFORM, Dict.class);
+        Dict res = ctx.storage().load(ApplicationContext.PATH_PLATFORM, Dict.class);
         if (res == null) {
             return null;
         }
         res.set("cache", ctx.cachePath());
         res.set("guid", ctx.getConfig().get("guid"));
-        res.set("environment", getEnvironmentData(ctx.getEnvironment()));
+        res.set("environment", getEnvironmentData(ctx.environment()));
         // TODO: Allow multiple security realms (depending on web site)
         res.set("realm", User.DEFAULT_REALM);
         res.set("initTime", ApplicationContext.INIT_TIME);

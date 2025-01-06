@@ -14,8 +14,8 @@
 
 package org.rapidcontext.app.proc;
 
-import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.app.plugin.PluginManager;
+import org.rapidcontext.core.ctx.Context;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
@@ -85,7 +85,7 @@ public class ProcedureReadProcedure extends Procedure {
      */
     static Object getProcedureData(Procedure proc)
     throws ProcedureException {
-        Storage storage = ApplicationContext.getInstance().getStorage();
+        Storage storage = Context.get().storage();
         Path storagePath = Plugin.storagePath(PluginManager.LOCAL_PLUGIN);
         Path path = Path.resolve(Procedure.PATH, proc.id());
         Metadata meta = storage.lookup(Path.resolve(storagePath, path));
