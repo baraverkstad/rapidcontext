@@ -33,6 +33,7 @@ import java.util.logging.Logger;
 import org.rapidcontext.app.model.AppStorage;
 import org.rapidcontext.app.plugin.PluginException;
 import org.rapidcontext.app.plugin.PluginManager;
+import org.rapidcontext.core.ctx.Context;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.js.JsCompileInterceptor;
@@ -65,7 +66,7 @@ import org.rapidcontext.util.FileUtil;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class ApplicationContext {
+public class ApplicationContext extends Context {
 
     /**
      * The class logger.
@@ -104,11 +105,6 @@ public class ApplicationContext {
     private static ApplicationContext instance = null;
 
     /**
-     * The application root storage.
-     */
-    private AppStorage storage;
-
-    /**
      * The plug-in manager.
      */
     private PluginManager pluginManager;
@@ -127,11 +123,6 @@ public class ApplicationContext {
      * The platform version.
      */
     private Dict version;
-
-    /**
-     * The active environment.
-     */
-    private Environment env = null;
 
     /**
      * The cached list of web matchers (from the web services).
@@ -202,19 +193,22 @@ public class ApplicationContext {
      * @param localDir       the local add-on directory
      */
     private ApplicationContext(File baseDir, File localDir) {
+        super("global");
         File builtinDir = FileUtil.canonical(new File(baseDir, "plugin"));
         File pluginDir = FileUtil.canonical(new File(localDir, "plugin"));
         initTmpDir(FileUtil.canonical(new File(localDir, "tmp")));
-        this.storage = new AppStorage();
-        this.pluginManager = new PluginManager(builtinDir, pluginDir, this.storage);
-        this.library = new Library(this.storage);
-        this.config = this.storage.load(PATH_CONFIG, Dict.class);
+        set(CX_DIRECTORY, pluginDir);
+        AppStorage storage = new AppStorage();
+        set(CX_STORAGE, storage);
+        this.pluginManager = new PluginManager(builtinDir, pluginDir, storage);
+        this.library = new Library(storage);
+        this.config = storage.load(PATH_CONFIG, Dict.class);
         if (this.config == null) {
             LOG.severe("failed to load application config");
         } else if (!this.config.containsKey("guid")) {
             this.config.set("guid", UUID.randomUUID().toString());
             try {
-                this.storage.store(PATH_CONFIG, this.config);
+                storage.store(PATH_CONFIG, this.config);
             } catch (Exception e) {
                 LOG.severe("failed to update application config with GUID");
             }
@@ -293,12 +287,12 @@ public class ApplicationContext {
     private void initScheduler() {
         scheduler = Executors.newScheduledThreadPool(0, Thread.ofVirtual().factory());
         scheduler.scheduleWithFixedDelay(
-                () -> storage.cacheClean(false),
+                () -> appStorage().cacheClean(false),
                 ThreadLocalRandom.current().nextInt(CACHE_CLEAN_WAIT_SECS),
                 CACHE_CLEAN_WAIT_SECS,
                 TimeUnit.SECONDS);
         scheduler.scheduleWithFixedDelay(
-                () -> Session.removeExpired(storage),
+                () -> Session.removeExpired(storage()),
                 ThreadLocalRandom.current().nextInt(SESSION_CLEAN_WAIT_MINS),
                 SESSION_CLEAN_WAIT_MINS,
                 TimeUnit.MINUTES);
@@ -308,21 +302,21 @@ public class ApplicationContext {
      * Initializes cached objects.
      */
     private void initCaches() {
-        Vault.loadAll(storage);
+        Vault.loadAll(storage());
         // FIXME: Why is pre-loading of all types necessary?
-        Type.all(storage).forEach(o -> { /* Force refresh cached types */ });
+        Type.all(storage()).forEach(o -> { /* Force refresh cached types */ });
         // FIXME: Remove singleton environment reference
-        env = Environment.all(storage).findFirst().orElse(null);
+        set(CX_ENVIRONMENT, Environment.all(storage()).findFirst().orElse(null));
         // FIXME: Remove role cache from SecurityContext
         try {
-            SecurityContext.init(storage);
+            SecurityContext.init(storage());
         } catch (StorageException e) {
             LOG.severe("Failed to load security config: " + e.getMessage());
         }
-        Connection.metrics(storage); // Load or create connection metrics
-        Procedure.metrics(storage); // Load or create procedure metrics
-        User.metrics(storage); // Load or create user metrics
-        scheduler.submit(() -> Procedure.refreshAliases(storage)); // FIXME: Move aliases into storage catalog
+        Connection.metrics(storage()); // Load or create connection metrics
+        Procedure.metrics(storage()); // Load or create procedure metrics
+        User.metrics(storage()); // Load or create user metrics
+        scheduler.submit(() -> Procedure.refreshAliases(storage())); // FIXME: Move aliases into storage catalog
     }
 
     /**
@@ -337,7 +331,7 @@ public class ApplicationContext {
         }
         scheduler = null;
         pluginManager.unloadAll();
-        library = new Library(this.storage);
+        library = new Library(storage());
         matchers = null;
     }
 
@@ -383,18 +377,33 @@ public class ApplicationContext {
      * them in order.
      *
      * @return the application data store
+     *
+     * @deprecated Use inherited Context.storage() or appStorage() instead.
      */
+    @Deprecated(forRemoval = true)
     public Storage getStorage() {
-        return this.storage;
+        return storage();
+    }
+
+    /**
+     * Returns the app (root) data store.
+     *
+     * @return the context data store
+     */
+    public AppStorage appStorage() {
+        return get(CX_STORAGE, AppStorage.class);
     }
 
     /**
      * Returns the environment used.
      *
      * @return the environment used
+     *
+     * @deprecated Use inherited Context.environment() instead.
      */
+    @Deprecated(forRemoval = true)
     public Environment getEnvironment() {
-        return this.env;
+        return environment();
     }
 
     /**
@@ -407,7 +416,7 @@ public class ApplicationContext {
      */
     public WebMatcher[] getWebMatchers() {
         if (matchers == null) {
-            matchers = WebService.matchers(storage).toArray(WebMatcher[]::new);
+            matchers = WebService.matchers(storage()).toArray(WebMatcher[]::new);
         }
         return matchers;
     }
@@ -416,7 +425,10 @@ public class ApplicationContext {
      * Returns the procedure library used.
      *
      * @return the procedure library used
+     *
+     * @deprecated The procedure Library is no longer needed.
      */
+    @Deprecated(forRemoval = true)
     public Library getLibrary() {
         return library;
     }
@@ -425,7 +437,10 @@ public class ApplicationContext {
      * Returns the application base directory.
      *
      * @return the application base directory
+     *
+     * @deprecated Use inherited Context.baseDir() instead.
      */
+    @Deprecated(forRemoval = true)
     public File getBaseDir() {
         return pluginManager.pluginDir;
     }
@@ -494,7 +509,7 @@ public class ApplicationContext {
         if (!pluginList.containsValue(pluginId)) {
             pluginList.add(pluginId);
             try {
-                storage.store(PATH_CONFIG, config);
+                storage().store(PATH_CONFIG, config);
             } catch (StorageException e) {
                 String msg = "failed to update application config: " +
                              e.getMessage();
@@ -518,7 +533,7 @@ public class ApplicationContext {
         Array pluginList = config.getArray("plugins");
         pluginList.remove(pluginId);
         try {
-            storage.store(PATH_CONFIG, config);
+            storage().store(PATH_CONFIG, config);
         } catch (StorageException e) {
             String msg = "failed to update application config: " + e.getMessage();
             throw new PluginException(msg);
@@ -544,7 +559,7 @@ public class ApplicationContext {
                           StringBuilder trace)
         throws ProcedureException {
 
-        CallContext cx = new CallContext(storage, env, library);
+        CallContext cx = new CallContext(storage(), environment(), library);
         threadContext.put(Thread.currentThread(), cx);
         cx.setAttribute(CallContext.ATTRIBUTE_USER,
                         SecurityContext.currentUser());
@@ -574,7 +589,7 @@ public class ApplicationContext {
      */
     @Deprecated(forRemoval = true)
     public void executeAsync(String name, Object[] args, String source) {
-        CallContext cx = new CallContext(storage, env, library);
+        CallContext cx = new CallContext(storage(), environment(), library);
         threadContext.put(Thread.currentThread(), cx);
         cx.setAttribute(CallContext.ATTRIBUTE_USER,
                         SecurityContext.currentUser());
