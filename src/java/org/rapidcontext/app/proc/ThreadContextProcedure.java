@@ -17,6 +17,7 @@ package org.rapidcontext.app.proc;
 import java.util.Date;
 
 import org.rapidcontext.app.ApplicationContext;
+import org.rapidcontext.core.ctx.Context;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
@@ -77,7 +78,7 @@ public class ThreadContextProcedure extends Procedure {
         } catch (NumberFormatException e) {
             throw new ProcedureException(this, "invalid thread id: " + str);
         }
-        CallContext tcx = ApplicationContext.getInstance().findContext(threadId);
+        CallContext tcx = Context.active(ApplicationContext.class).findContext(threadId);
         if (tcx == null) {
             return null;
         }

@@ -20,6 +20,7 @@ import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.app.ApplicationContext;
+import org.rapidcontext.core.ctx.Context;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
@@ -120,7 +121,7 @@ public class AppListProcedure extends Procedure {
                 base = base.parent();
             }
             Pattern re = Pattern.compile(RegexUtil.fromGlob(url) + "$");
-            String cache = ApplicationContext.getInstance().cachePath();
+            String cache = Context.active(ApplicationContext.class).cachePath();
             int start = RootStorage.PATH_FILES.length();
             // Search permission granted by default (not yet configurable)
             return storage.query(base)

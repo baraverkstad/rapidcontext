@@ -15,6 +15,7 @@
 package org.rapidcontext.app.proc;
 
 import org.rapidcontext.app.ApplicationContext;
+import org.rapidcontext.core.ctx.Context;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
@@ -66,7 +67,7 @@ public class ThreadListProcedure extends Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        ApplicationContext ctx = ApplicationContext.getInstance();
+        ApplicationContext ctx = Context.active(ApplicationContext.class);
         CallContext.checkSearchAccess("thread/");
         Array res = new Array();
         for (Thread t : Thread.getAllStackTraces().keySet()) {

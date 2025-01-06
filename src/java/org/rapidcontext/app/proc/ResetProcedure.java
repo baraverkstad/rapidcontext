@@ -17,6 +17,7 @@ package org.rapidcontext.app.proc;
 import java.util.logging.Logger;
 
 import org.rapidcontext.app.ApplicationContext;
+import org.rapidcontext.core.ctx.Context;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
@@ -70,7 +71,7 @@ public class ResetProcedure extends Procedure {
 
         CallContext.checkWriteAccess("plugin/system");
         LOG.info("resetting app, reloading all plug-ins");
-        ApplicationContext.getInstance().reset();
+        Context.active(ApplicationContext.class).reset();
         return "OK";
     }
 }

@@ -41,6 +41,7 @@ import javax.swing.UIManager;
 import org.apache.commons.lang3.SystemUtils;
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.app.ServerApplication;
+import org.rapidcontext.core.ctx.Context;
 import org.rapidcontext.core.data.Dict;
 
 /**
@@ -201,7 +202,7 @@ public final class ControlPanel extends JFrame {
         c.gridy = 3;
         c.insets = new Insets(0, 0, 6, 10);
         c.anchor = GridBagConstraints.WEST;
-        Dict info = ApplicationContext.getInstance().version();
+        Dict info = Context.active(ApplicationContext.class).version();
         str = info.get("version") + " (built " + info.get("date") + ")";
         getContentPane().add(new JLabel(str), c);
 

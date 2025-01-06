@@ -17,6 +17,7 @@ package org.rapidcontext.app.proc;
 import java.util.logging.Logger;
 
 import org.rapidcontext.app.ApplicationContext;
+import org.rapidcontext.core.ctx.Context;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
@@ -151,7 +152,7 @@ public class ThreadCreateProcedure extends Procedure {
         public void run() {
             SecurityContext.auth(userName);
             try {
-                ApplicationContext ctx = ApplicationContext.getInstance();
+                ApplicationContext ctx = Context.active(ApplicationContext.class);
                 ctx.executeAsync(proc, args, source);
             } finally {
                 SecurityContext.deauth();
