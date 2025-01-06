@@ -423,8 +423,7 @@ public class HttpRequestProcedure extends Procedure {
         builder.setHeader(Header.CACHE_CONTROL, "no-cache");
         builder.setHeader(Header.ACCEPT, "text/*, application/*");
         builder.setHeader(Header.ACCEPT_CHARSET, "UTF-8");
-        ApplicationContext ctx = ApplicationContext.getInstance();
-        String ver = ctx.version().get("version", String.class, "1.0");
+        String ver = ApplicationContext.active().version().get("version", String.class, "1.0");
         builder.setHeader(Header.USER_AGENT, "RapidContext/" + ver);
         headers.forEach((name, value) -> builder.setHeader(name, value));
         return builder.build();

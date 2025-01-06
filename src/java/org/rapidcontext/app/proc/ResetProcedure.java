@@ -69,7 +69,7 @@ public class ResetProcedure extends Procedure {
 
         CallContext.checkWriteAccess("plugin/system");
         LOG.info("resetting app, reloading all plug-ins");
-        ApplicationContext.getInstance().reset();
+        ApplicationContext.active().reset();
         return "OK";
     }
 }

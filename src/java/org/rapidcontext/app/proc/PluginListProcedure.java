@@ -70,7 +70,6 @@ public class PluginListProcedure extends Procedure {
         throws ProcedureException {
 
         CallContext.checkSearchAccess(Plugin.PATH_STORAGE.toString());
-        ApplicationContext ctx = ApplicationContext.getInstance();
         AppStorage storage = (AppStorage) cx.getStorage();
         return Array.from(
             storage.mounts(Plugin.PATH_STORAGE)
@@ -99,7 +98,7 @@ public class PluginListProcedure extends Procedure {
                     }
                     Stream<?> types = idx.indices(false).filter(s -> !s.equals("plugin"));
                     config.set("_content", Array.from(types));
-                    config.set("_builtin", ctx.isPluginBuiltIn(pluginId));
+                    config.set("_builtin", ApplicationContext.active().isPluginBuiltIn(pluginId));
                     return config;
                 } else {
                     return null;

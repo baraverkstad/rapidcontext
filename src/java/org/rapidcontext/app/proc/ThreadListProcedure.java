@@ -68,7 +68,7 @@ public class ThreadListProcedure extends Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        ApplicationContext ctx = ApplicationContext.getInstance();
+        ApplicationContext ctx = ApplicationContext.active();
         CallContext.checkSearchAccess("thread/");
         Array res = new Array();
         HashSet<Thread> set = new HashSet<>();

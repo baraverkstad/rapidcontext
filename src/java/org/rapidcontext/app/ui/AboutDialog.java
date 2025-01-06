@@ -92,7 +92,7 @@ public final class AboutDialog extends JDialog {
         label = new JLabel("Version:");
         label.setFont(label.getFont().deriveFont(Font.BOLD));
         getContentPane().add(label, c);
-        Dict info = ApplicationContext.getInstance().version();
+        Dict info = ApplicationContext.active().version();
         str = info.get("version") + " (built " + info.get("date") + ")";
         label = new JLabel(str);
         c = new GridBagConstraints();

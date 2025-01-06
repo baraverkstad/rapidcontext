@@ -70,7 +70,6 @@ public class PluginLoadProcedure extends Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        ApplicationContext ctx = ApplicationContext.getInstance();
         String pluginId = (String) bindings.getValue("pluginId");
         Path path = Plugin.instancePath(pluginId);
         CallContext.checkReadAccess(path.toString());
@@ -81,7 +80,7 @@ public class PluginLoadProcedure extends Procedure {
         }
         try {
             LOG.info("loading plugin " + pluginId);
-            ctx.loadPlugin(pluginId);
+            ApplicationContext.active().loadPlugin(pluginId);
         } catch (PluginException e) {
             String msg = "failed to load plug-in '" + pluginId + "': " +
                          e.getMessage();

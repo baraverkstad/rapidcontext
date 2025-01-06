@@ -25,7 +25,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-import org.rapidcontext.app.ApplicationContext;
+import org.rapidcontext.core.ctx.Context;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.TextEncoding;
 import org.rapidcontext.core.proc.Bindings;
@@ -123,7 +123,7 @@ public class CmdLineExecProcedure extends Procedure {
     static Object execCall(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        File dir = ApplicationContext.getInstance().getBaseDir();
+        File dir = Context.active().baseDir();
         String str = bindings.getValue(BINDING_COMMAND).toString();
         // TODO: parse command-line properly, avoid StringTokenizer
         String cmd = bindings.processTemplate(str, TextEncoding.NONE).trim();

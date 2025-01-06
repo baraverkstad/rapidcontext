@@ -70,28 +70,22 @@ public class PluginInstallProcedure extends Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        ApplicationContext  ctx = ApplicationContext.getInstance();
-        Session             session = Session.activeSession.get();
-        String              fileId;
-        File                file;
-        String              pluginId;
-        String              msg;
-
-        fileId = (String) bindings.getValue("sessionFileId");
-        file = (session == null) ? null : session.file(fileId);
+        Session session = Session.activeSession.get();
+        String fileId = (String) bindings.getValue("sessionFileId");
+        File file = (session == null) ? null : session.file(fileId);
         if (session == null || file == null || !file.canRead()) {
-            msg = "failed to read session file with id '" + fileId + "'";
+            String msg = "failed to read session file with id '" + fileId + "'";
             throw new ProcedureException(this, msg);
         }
         CallContext.checkWriteAccess("plugin/" + fileId);
         try {
             LOG.info("installing plugin " + file.getName());
-            pluginId = ctx.installPlugin(file);
+            String pluginId = ApplicationContext.active().installPlugin(file);
             session.removeFile(fileId);
             return pluginId;
         } catch (PluginException e) {
-            msg = "failed to install plug-in file '" + file.getName() + "': " +
-                  e.getMessage();
+            String msg = "failed to install plug-in file '" + file.getName() +
+                "': " + e.getMessage();
             throw new ProcedureException(this, msg);
         }
     }

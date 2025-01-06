@@ -16,7 +16,7 @@ package org.rapidcontext.app.web;
 
 import java.util.stream.Stream;
 
-import org.rapidcontext.app.ApplicationContext;
+import org.rapidcontext.core.ctx.Context;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.storage.Index;
@@ -104,7 +104,7 @@ public class FileWebService extends WebService {
      * @param exact          the exact path match flag
      */
     protected void processFile(Request request, Path filePath, boolean exact) {
-        Storage storage = ApplicationContext.getInstance().getStorage();
+        Storage storage = Context.active().storage();
         Object obj = lookupPaths(filePath, exact)
             .map(storage::load)
             .filter(o -> o instanceof Binary || o instanceof Index)

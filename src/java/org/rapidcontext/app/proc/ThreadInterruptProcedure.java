@@ -80,7 +80,7 @@ public class ThreadInterruptProcedure extends Procedure {
         } catch (NumberFormatException e) {
             throw new ProcedureException(this, "invalid thread id: " + str);
         }
-        CallContext tcx = ApplicationContext.getInstance().findContext(threadId);
+        CallContext tcx = ApplicationContext.active().findContext(threadId);
         if (tcx == null) {
             throw new ProcedureException(this, "cannot interrupt thread without context");
         }

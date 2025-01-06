@@ -119,7 +119,7 @@ public class AppListProcedure extends Procedure {
                 base = base.parent();
             }
             Pattern re = Pattern.compile(RegexUtil.fromGlob(url) + "$");
-            String cache = ApplicationContext.getInstance().cachePath();
+            String cache = ApplicationContext.active().cachePath();
             int start = RootStorage.PATH_FILES.length();
             // Search permission granted by default (not yet configurable)
             return storage.query(base)

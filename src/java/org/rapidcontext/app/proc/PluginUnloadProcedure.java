@@ -70,7 +70,6 @@ public class PluginUnloadProcedure extends Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        ApplicationContext ctx = ApplicationContext.getInstance();
         String pluginId = (String) bindings.getValue("pluginId");
         Path path = Plugin.instancePath(pluginId);
         CallContext.checkReadAccess(path.toString());
@@ -81,7 +80,7 @@ public class PluginUnloadProcedure extends Procedure {
         }
         try {
             LOG.info("unloading plugin " + pluginId);
-            ctx.unloadPlugin(pluginId);
+            ApplicationContext.active().unloadPlugin(pluginId);
         } catch (PluginException e) {
             String msg = "failed to unload plug-in '" + pluginId + "': " +
                          e.getMessage();

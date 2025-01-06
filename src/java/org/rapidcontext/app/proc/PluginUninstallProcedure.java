@@ -70,7 +70,7 @@ public class PluginUninstallProcedure extends Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        ApplicationContext ctx = ApplicationContext.getInstance();
+        ApplicationContext ctx = ApplicationContext.active();
         String pluginId = (String) bindings.getValue("pluginId");
         Path path = Plugin.instancePath(pluginId);
         CallContext.checkReadAccess(path.toString());
