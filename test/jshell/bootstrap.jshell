@@ -12,6 +12,7 @@ void println(Object obj) { System.out.println(obj); }
 
 // Import some application classes
 import org.rapidcontext.app.ApplicationContext;
+import org.rapidcontext.core.ctx.*;
 import org.rapidcontext.core.data.*;
 import org.rapidcontext.core.storage.*;
 import org.rapidcontext.core.type.*;
