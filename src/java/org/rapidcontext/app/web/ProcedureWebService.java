@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.rapidcontext.app.ApplicationContext;
+import org.rapidcontext.core.ctx.Context;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.JsonSerializer;
 import org.rapidcontext.core.proc.Bindings;
@@ -195,8 +196,8 @@ public class ProcedureWebService extends WebService {
         try {
             LOG.fine(() -> logPrefix + "init procedure call");
             super.session(request, isSession); // Create session if needed
-            ApplicationContext ctx = ApplicationContext.getInstance();
-            Procedure proc = Procedure.find(ctx.getStorage(), name);
+            ApplicationContext ctx = Context.active(ApplicationContext.class);
+            Procedure proc = Procedure.find(ctx.storage(), name);
             if (proc == null) {
                 String msg = "no procedure '" + name + "' found";
                 throw new ProcedureException(msg);

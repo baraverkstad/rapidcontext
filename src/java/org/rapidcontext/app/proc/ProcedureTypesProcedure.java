@@ -14,7 +14,7 @@
 
 package org.rapidcontext.app.proc;
 
-import org.rapidcontext.app.ApplicationContext;
+import org.rapidcontext.core.ctx.Context;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
@@ -63,7 +63,7 @@ public class ProcedureTypesProcedure extends Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        Storage storage = ApplicationContext.getInstance().getStorage();
+        Storage storage = Context.active().storage();
         Dict res = new Dict();
         Type.all(storage).forEach(t -> {
             if (t.id().startsWith("procedure/")) {

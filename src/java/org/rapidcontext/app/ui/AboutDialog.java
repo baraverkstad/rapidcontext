@@ -26,6 +26,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 
 import org.rapidcontext.app.ApplicationContext;
+import org.rapidcontext.core.ctx.Context;
 import org.rapidcontext.core.data.Dict;
 
 /**
@@ -92,7 +93,7 @@ public final class AboutDialog extends JDialog {
         label = new JLabel("Version:");
         label.setFont(label.getFont().deriveFont(Font.BOLD));
         getContentPane().add(label, c);
-        Dict info = ApplicationContext.getInstance().version();
+        Dict info = Context.active(ApplicationContext.class).version();
         str = info.get("version") + " (built " + info.get("date") + ")";
         label = new JLabel(str);
         c = new GridBagConstraints();

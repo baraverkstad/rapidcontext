@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
-import org.rapidcontext.app.ApplicationContext;
+import org.rapidcontext.core.ctx.Context;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
@@ -130,7 +130,7 @@ public class StorageCopyProcedure extends Procedure {
      */
     public static boolean copy(Path src, Path dst, boolean update, String ext) {
         if (src.isIndex()) {
-            Storage storage = ApplicationContext.getInstance().getStorage();
+            Storage storage = Context.active().storage();
             return storage.query(src).paths().map(p -> {
                 return copyObject(p, Path.resolve(dst, p.removePrefix(src)), update, ext);
             }).allMatch(res -> res);
@@ -151,7 +151,7 @@ public class StorageCopyProcedure extends Procedure {
      *         false otherwise
      */
     public static boolean copyObject(Path src, Path dst, boolean update, String ext) {
-        Storage storage = ApplicationContext.getInstance().getStorage();
+        Storage storage = Context.active().storage();
         if (update) {
             Metadata srcMeta = storage.lookup(src);
             Metadata dstMeta = storage.lookup(dst);

@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.app.plugin.PluginException;
+import org.rapidcontext.core.ctx.Context;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
@@ -70,7 +71,7 @@ public class PluginUnloadProcedure extends Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        ApplicationContext ctx = ApplicationContext.getInstance();
+        ApplicationContext ctx = Context.active(ApplicationContext.class);
         String pluginId = (String) bindings.getValue("pluginId");
         Path path = Plugin.instancePath(pluginId);
         CallContext.checkReadAccess(path.toString());

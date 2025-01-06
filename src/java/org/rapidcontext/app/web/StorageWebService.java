@@ -25,8 +25,8 @@ import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
 import org.apache.commons.text.StringEscapeUtils;
-import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.app.model.ApiUtil;
+import org.rapidcontext.core.ctx.Context;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
@@ -127,7 +127,7 @@ public class StorageWebService extends WebService {
             errorUnauthorized(request);
             return;
         }
-        Storage storage = ApplicationContext.getInstance().getStorage();
+        Storage storage = Context.active().storage();
         Path path = Path.from(request.getPath());
         Metadata meta = lookup(path);
         Object data = (meta == null) ? null : storage.load(meta.path());
@@ -190,7 +190,7 @@ public class StorageWebService extends WebService {
             request.sendError(Status.UNSUPPORTED_MEDIA_TYPE, null, msg);
         } else {
             try {
-                Storage storage = ApplicationContext.getInstance().getStorage();
+                Storage storage = Context.active().storage();
                 Object patch = JsonSerializer.unserialize(request.getInputString());
                 if (!(patch instanceof Dict)) {
                     String msg = "patch data should be JSON object";
@@ -229,7 +229,7 @@ public class StorageWebService extends WebService {
             request.sendError(Status.UNSUPPORTED_MEDIA_TYPE, null, msg);
         } else {
             try {
-                Storage storage = ApplicationContext.getInstance().getStorage();
+                Storage storage = Context.active().storage();
                 Object data = JsonSerializer.unserialize(request.getInputString());
                 if (ApiUtil.store(storage, path, data)) {
                     request.sendText(Status.NO_CONTENT, null, null);
@@ -260,7 +260,7 @@ public class StorageWebService extends WebService {
             errorBadRequest(request, "cannot write data to a directory");
         } else {
             try (InputStream is = request.getInputStream()) {
-                Storage storage = ApplicationContext.getInstance().getStorage();
+                Storage storage = Context.active().storage();
                 Binary data = new Binary.BinaryStream(is, -1);
                 if (ApiUtil.store(storage, path, data)) {
                     request.sendText(Status.NO_CONTENT, null, null);
@@ -282,7 +282,7 @@ public class StorageWebService extends WebService {
      */
     @Override
     protected void doDelete(Request request) {
-        Storage storage = ApplicationContext.getInstance().getStorage();
+        Storage storage = Context.active().storage();
         Path path = Path.from(request.getPath());
         if (!SecurityContext.hasWriteAccess(path.toString())) {
             errorUnauthorized(request);
@@ -303,7 +303,7 @@ public class StorageWebService extends WebService {
      * @return the metadata for the object, or null if not found
      */
     private Metadata lookup(Path path) {
-        Storage storage = ApplicationContext.getInstance().getStorage();
+        Storage storage = Context.active().storage();
         String name = Storage.objectName(path.name());
         name = name.equals(path.name()) ? Strings.CI.removeEnd(name, EXT_HTML) : name;
         boolean idx = Strings.CI.equalsAny(name, ".", "index");

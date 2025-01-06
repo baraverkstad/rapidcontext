@@ -25,10 +25,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.rapidcontext.app.model.AppStorage;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Path;
-import org.rapidcontext.core.storage.RootStorage;
 import org.rapidcontext.core.storage.StorageException;
 import org.rapidcontext.core.storage.ZipStorage;
 import org.rapidcontext.core.type.Session;
@@ -82,8 +82,8 @@ public class ServletApplication extends HttpServlet {
         try {
             File docZip = new File(baseDir, "doc.zip");
             ZipStorage docStore = new ZipStorage(docZip);
-            RootStorage root = (RootStorage) ctx.getStorage();
-            Path storagePath = RootStorage.PATH_STORAGE.child("doc", true);
+            AppStorage root = ctx.appStorage();
+            Path storagePath = AppStorage.PATH_STORAGE.child("doc", true);
             root.mount(docStore, storagePath);
             root.remount(storagePath, false, null, DOC_PATH, 0);
         } catch (Exception e) {
@@ -176,7 +176,7 @@ public class ServletApplication extends HttpServlet {
         Session session = Session.activeSession.get();
         if (session != null && session.isNew()) {
             try {
-                Session.store(ctx.getStorage(), session);
+                Session.store(ctx.storage(), session);
             } catch (StorageException e) {
                 LOG.log(Level.WARNING, "failed to store session " + session.id(), e);
             }
@@ -203,7 +203,7 @@ public class ServletApplication extends HttpServlet {
         Session session = null;
         try {
             if (!sessionId.isBlank()) {
-                session = Session.find(ctx.getStorage(), sessionId);
+                session = Session.find(ctx.storage(), sessionId);
             }
             if (session != null) {
                 session.authenticate();
@@ -217,7 +217,7 @@ public class ServletApplication extends HttpServlet {
             if (session != null) {
                 LOG.info("request session " + session.id() +
                          " invalid, removing from storage");
-                Session.remove(ctx.getStorage(), session.id());
+                Session.remove(ctx.storage(), session.id());
             }
         }
 

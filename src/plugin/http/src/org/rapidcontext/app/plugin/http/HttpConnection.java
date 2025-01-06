@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.logging.Logger;
 
 import org.rapidcontext.app.ApplicationContext;
+import org.rapidcontext.core.ctx.Context;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.type.Channel;
@@ -239,6 +240,6 @@ public class HttpConnection extends Connection {
      */
     @SuppressWarnings("removal")
     protected CallContext callContext() {
-        return ApplicationContext.getInstance().findContext(Thread.currentThread());
+        return Context.active(ApplicationContext.class).findContext(Thread.currentThread());
     }
 }

@@ -17,6 +17,7 @@ package org.rapidcontext.app.proc;
 import java.util.Date;
 
 import org.rapidcontext.app.ApplicationContext;
+import org.rapidcontext.core.ctx.Context;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
@@ -72,12 +73,12 @@ public class StatusProcedure extends Procedure {
      * @return the status data object
      */
     public static Dict getStatusData() {
-        ApplicationContext ctx = ApplicationContext.getInstance();
+        ApplicationContext ctx = Context.active(ApplicationContext.class);
         Dict res = new Dict();
         res.merge(ctx.version());
         res.set("cache", ctx.cachePath());
         res.set("guid", ctx.getConfig().get("guid"));
-        res.set("environment", getEnvironmentData(ctx.getEnvironment()));
+        res.set("environment", getEnvironmentData(ctx.environment()));
         // TODO: Allow multiple security realms (depending on web site)
         res.set("realm", User.DEFAULT_REALM);
         res.set("initTime", ApplicationContext.INIT_TIME);

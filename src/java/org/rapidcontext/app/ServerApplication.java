@@ -21,6 +21,7 @@ import org.eclipse.jetty.ee8.servlet.ServletContextHandler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.util.thread.VirtualThreadPool;
+import org.rapidcontext.core.ctx.Context;
 
 /**
  * The stand-alone server application.
@@ -85,7 +86,8 @@ public class ServerApplication {
         if (port > 0 && isPortAvailable(port)) {
             return port;
         }
-        port = ApplicationContext.getInstance().getConfig().get("port", Integer.class, 0);
+        ApplicationContext ctx = Context.active(ApplicationContext.class);
+        port = ctx.getConfig().get("port", Integer.class, 0);
         if (port > 0 && isPortAvailable(port)) {
             return port;
         }
