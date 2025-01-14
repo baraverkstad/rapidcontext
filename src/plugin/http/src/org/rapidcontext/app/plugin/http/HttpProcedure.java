@@ -225,7 +225,9 @@ public abstract class HttpProcedure extends Procedure {
             if (metadata) {
                 Dict headers = new Dict();
                 con.getHeaderFields().forEach((k, v) -> {
-                    headers.add(k, (v.size() == 1) ? v.get(0) : v);
+                    if (k != null && !k.isBlank()) {
+                        headers.add(k, (v.size() == 1) ? v.get(0) : v);
+                    }
                 });
                 return new Dict()
                     .set("success", success)
