@@ -17,7 +17,6 @@ set _CONF=lib\debug.properties
 
 ::Set options
 :CONFIG
-set JAVA_TOOL_OPTIONS=%JAVA_TOOL_OPTIONS% -Dfile.encoding=UTF-8
 set JAVA_TOOL_OPTIONS=%JAVA_TOOL_OPTIONS% -Djava.util.logging.config.file=%_CONF%
 set JAVA_TOOL_OPTIONS=%JAVA_TOOL_OPTIONS% -Dorg.eclipse.jetty.server.Request.maxFormContentSize=1000000
 set JAVA_TOOL_OPTIONS=%JAVA_TOOL_OPTIONS% --add-opens=java.base/java.net=ALL-UNNAMED

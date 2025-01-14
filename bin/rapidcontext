@@ -47,7 +47,7 @@ else
         fi
     done
     if [[ "$JAVA_HOME" == "" ]] ; then
-        echo "ERROR: Failed to find java version 1.4 or higher." >&2
+        echo "ERROR: Failed to find java 21 or higher." >&2
         exit 1
     fi
     JAVA=$JAVA_HOME/bin/java
@@ -66,7 +66,6 @@ LOGGING="lib/logging.properties"
 if [[ "$JAVA_TOOL_OPTIONS" == *DEBUG* ]] ; then
     LOGGING="lib/debug.properties"
 fi
-JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -Dfile.encoding=UTF-8"
 JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -Djava.util.logging.config.file=$LOGGING"
 JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -Dorg.eclipse.jetty.server.Request.maxFormContentSize=1000000"
 JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS --add-opens=java.base/java.net=ALL-UNNAMED"

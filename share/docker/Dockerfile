@@ -13,7 +13,6 @@ WORKDIR /opt/rapidcontext/
 # EXPOSE 80/tcp
 # VOLUME /opt/local
 ENV JAVA_TOOL_OPTIONS \
-  -Dfile.encoding=UTF-8 \
   -Djava.util.logging.config.file=lib/logging.properties \
   -Dorg.eclipse.jetty.server.Request.maxFormContentSize=1000000 \
   --add-opens=java.base/java.net=ALL-UNNAMED \
