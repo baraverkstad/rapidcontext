@@ -6,6 +6,11 @@
         "declaration-block-no-redundant-longhand-properties": [true, {
             "ignoreShorthands": "inset"
         }],
+        "declaration-property-value-no-unknown": [true, {
+            "ignoreProperties": {
+                "-ms-user-select": "all"
+            }
+        }],
         "font-family-no-missing-generic-family-keyword": [true, {
             "ignoreFontFamilies": "FontAwesome"
         }],

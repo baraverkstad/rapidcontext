@@ -12,14 +12,14 @@
     "jquery": "3.7.1"
   },
   "devDependencies": {
-    "esbuild": "^0.24.0",
-    "eslint": "^9.11.0",
+    "esbuild": "^0.25.1",
+    "eslint": "^9.22.0",
     "eslint-plugin-html": "^8.1.2",
-    "eslint-plugin-yml": "^1.16.0",
+    "eslint-plugin-yml": "^1.17.0",
     "highlight.js": "^11.11.1",
-    "html-validate": "^9.1.0",
+    "html-validate": "^9.5.2",
     "jsdoc": "^4.0.4",
-    "stylelint": "^16.12.0",
-    "stylelint-config-standard": "^36.0.1"
+    "stylelint": "^16.16.0",
+    "stylelint-config-standard": "^37.0.0"
   }
 }
