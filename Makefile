@@ -41,6 +41,7 @@ setup: clean
 	mvn dependency:copy-dependencies -Dmdep.useSubDirectoryPerScope=true
 	cp target/dependency/compile/*.jar lib/
 	cp target/dependency/test/*.jar test/lib/
+	cp target/dependency/runtime/*.jar src/plugin/jdbc/lib
 
 
 # Compile source and build plug-ins
