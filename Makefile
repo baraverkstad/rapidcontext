@@ -112,7 +112,7 @@ doc-js:
 test: test-css test-html test-js test-java
 
 test-css:
-	npx stylelint 'src/plugin/system/files/**/*.css' 'share/**/*.css' '!**/*.min.css'
+	npx stylelint 'src/plugin/*/files/**/*.css' 'share/**/*.css' '!**/*.min.css'
 
 test-html:
 	npx html-validate 'doc/*.html' 'src/plugin/*/files/index.tmpl'

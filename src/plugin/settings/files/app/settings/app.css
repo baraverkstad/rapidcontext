@@ -5,8 +5,7 @@
     z-index: 10;
     padding-top: 1rem;
     text-align: center;
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow: hidden auto;
 }
 .settings-app .vertical-tabs > div {
     margin-bottom: 0.5rem;
@@ -244,7 +243,7 @@
     color: #0008;
 }
 .settings-app .text-wrap-any {
-    word-wrap: anywhere;
+    overflow-wrap: anywhere;
 }
 .settings-app .separator {
     padding-left: 0.1rem;
