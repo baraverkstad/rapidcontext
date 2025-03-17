@@ -70,7 +70,7 @@ public final class JsRuntime {
 
         JsErrorHandler errors = new JsErrorHandler();
         try (Context cx = Context.enter()) {
-            cx.setLanguageVersion(Context.VERSION_ES6);
+            cx.setLanguageVersion(Context.VERSION_ECMASCRIPT);
             cx.setErrorReporter(errors);
             if (globalScope == null) {
                 globalScope = cx.initSafeStandardObjects(null, true);
@@ -118,7 +118,7 @@ public final class JsRuntime {
      */
     public static Object call(Function f, Object[] args, CallContext procCx) throws JsException {
         try (Context cx = Context.enter()) {
-            cx.setLanguageVersion(Context.VERSION_ES6);
+            cx.setLanguageVersion(Context.VERSION_ECMASCRIPT);
             Scriptable scope = cx.newObject(globalScope);
             Object[] safeArgs = new Object[args.length];
             for (int i = 0; i < args.length; i++) {
