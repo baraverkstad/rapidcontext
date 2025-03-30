@@ -197,7 +197,7 @@ public final class PropertiesSerializer {
             }
             parent = child;
         }
-        setKey(parent, path[path.length - 1], toValue(value));
+        setKey(parent, path[path.length - 1], ValueUtil.convert(value));
     }
 
     /**
@@ -257,28 +257,6 @@ public final class PropertiesSerializer {
             }
         }
         return str.equals(String.valueOf(index)) ? index : -1;
-    }
-
-    /**
-     * Converts a string into an approximate value type. The strings
-     * "true" and "false" will be converted into boolean values. Any
-     * numeric strings will be converted into an integer. All
-     * remaining string values will be returned as-is.
-     *
-     * @param value          the string to convert
-     *
-     * @return the converted value
-     */
-    private static Object toValue(String value) {
-        if (ValueUtil.isBool(value)) {
-            return ValueUtil.bool(value, !value.isBlank());
-        } else if (value.length() > 0 && value.length() <= 9 && StringUtils.isNumeric(value)) {
-            return Integer.valueOf(value);
-        } else if (DateUtil.isEpochFormat(value)) {
-            return new Date(Long.parseLong(value.substring(1)));
-        } else {
-            return value;
-        }
     }
 
     /**

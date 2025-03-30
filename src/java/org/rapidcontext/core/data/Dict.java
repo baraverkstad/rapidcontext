@@ -15,7 +15,6 @@
 package org.rapidcontext.core.data;
 
 import java.util.AbstractMap.SimpleImmutableEntry;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -24,7 +23,6 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.rapidcontext.util.DateUtil;
 import org.rapidcontext.util.ValueUtil;
 
 /**
@@ -67,65 +65,7 @@ public class Dict {
      */
     private boolean sealed = false;
 
-    /**
-     * Converts a value to a specified object class. The value is
-     * either converted (as below) or casted.
-     *
-     * <p>If the object class is String (and the value isn't), the
-     * string representation will be returned. Any Date object will
-     * instead be converted to "\@millis".</p>
-     *
-     * <p>If the object class is Boolean (and the value isn't), the
-     * string representation that does not equal "", "0", "f",
-     * "false", "no" or "off" is considered true.</p>
-     *
-     * <p>If the object class is Integer or Long (and the value
-     * isn't), a numeric conversion of the string representation will
-     * be attempted.</p>
-     *
-     * <p>If the object class is Date (and the value isn't), a number
-     * conversion (to milliseconds) of the string representation
-     * (excluding any '@' prefix) will be attempted.</p>
-     *
-     * @param <T>            the object type to return
-     * @param value          the object value
-     * @param clazz          the object class
-     *
-     * @return the converted or casted value
-     *
-     * @throws ClassCastException if the wasn't possible to cast to
-     *             the specified object class
-     * @throws NumberFormatException if the value wasn't possible to
-     *             parse as a number
-     */
-    @SuppressWarnings("unchecked")
-    protected static <T> T convert(Object value, Class<T> clazz) {
-        if (value == null || clazz.isInstance(value)) {
-            return (T) value;
-        } else if (clazz.equals(String.class) && value instanceof Date dt) {
-            return (T) DateUtil.asEpochMillis(dt);
-        } else if (clazz.equals(String.class)) {
-            return (T) value.toString();
-        } else if (clazz.equals(Boolean.class)) {
-            String str = value.toString();
-            return (T) Boolean.valueOf(ValueUtil.bool(str, !str.isBlank()));
-        } else if (clazz.equals(Integer.class)) {
-            return (T) Integer.valueOf(value.toString());
-        } else if (clazz.equals(Long.class)) {
-            return (T) Long.valueOf(value.toString());
-        } else if (clazz.equals(Date.class) && value instanceof Number n) {
-            long millis = n.longValue();
-            return (T) new Date(millis);
-        } else if (clazz.equals(Date.class)) {
-            String str = value.toString();
-            if (str.startsWith("@")) {
-                str = str.substring(1);
-            }
-            return (T) new Date(Long.parseLong(str));
-        } else {
-            return (T) value; // throws ClassCastException
-        }
-    }
+
 
     /**
      * Creates a new dictionary containing all entries in a map. All
@@ -249,11 +189,11 @@ public class Dict {
      * @throws NumberFormatException if the value wasn't possible to
      *             parse as a number
      *
-     * @see Dict#convert(Object, Class)
+     * @see ValueUtil#convert(Object, Class)
      */
     public <T> Stream<Entry<String, T>> stream(Class<T> clazz) {
         return stream().map(e -> {
-            T val = convert(e.getValue(), clazz);
+            T val = ValueUtil.convert(e.getValue(), clazz);
             return new SimpleImmutableEntry<>(e.getKey(), val);
         });
     }
@@ -410,10 +350,10 @@ public class Dict {
      * @throws NumberFormatException if the value wasn't possible to
      *             parse as a number
      *
-     * @see #convert(Object, Class)
+     * @see ValueUtil#convert(Object, Class)
      */
     public <T> T get(String key, Class<T> clazz) {
-        return convert(get(key), clazz);
+        return ValueUtil.convert(get(key), clazz);
     }
 
     /**
@@ -435,7 +375,7 @@ public class Dict {
      * @throws NumberFormatException if the value wasn't possible to
      *             parse as a number
      *
-     * @see #convert(Object, Class)
+     * @see ValueUtil#convert(Object, Class)
      */
     public <T> T get(String key, Class<T> clazz, T defaultValue) {
         T value = get(key, clazz);

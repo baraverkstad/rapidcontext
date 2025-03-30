@@ -23,6 +23,7 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.rapidcontext.util.ValueUtil;
 
 /**
  * A general data array. Compared to the standard ArrayList, this
@@ -234,10 +235,10 @@ public class Array implements Iterable<Object> {
      * @throws NumberFormatException if the value wasn't possible to
      *             parse as a number
      *
-     * @see Dict#convert(Object, Class)
+     * @see ValueUtil#convert(Object, Class)
      */
     public <T> Stream<T> stream(Class<T> clazz) {
-        return stream().map(o -> Dict.convert(o, clazz));
+        return stream().map(o -> ValueUtil.convert(o, clazz));
     }
 
     /**
@@ -440,10 +441,10 @@ public class Array implements Iterable<Object> {
      * @throws NumberFormatException if the value wasn't possible to
      *             parse as a number
      *
-     * @see Dict#convert(Object, Class)
+     * @see ValueUtil#convert(Object, Class)
      */
     public <T> T get(int index, Class<T> clazz) {
-        return Dict.convert(get(index), clazz);
+        return ValueUtil.convert(get(index), clazz);
     }
 
     /**
@@ -465,7 +466,7 @@ public class Array implements Iterable<Object> {
      * @throws NumberFormatException if the value wasn't possible to
      *             parse as a number
      *
-     * @see Dict#convert(Object, Class)
+     * @see ValueUtil#convert(Object, Class)
      */
     public <T> T get(int index, Class<T> clazz, T defaultValue) {
         T value = get(index, clazz);

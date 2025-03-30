@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.util.DateUtil;
 import org.rapidcontext.util.ValueUtil;
 import org.snakeyaml.engine.v2.api.Dump;
@@ -209,7 +208,7 @@ public class YamlSerializer {
         } else if (obj instanceof List<?> l) {
             return fromYaml(l);
         } else if (obj instanceof String s) {
-            return fromYaml(s);
+            return ValueUtil.convert(s);
         } else {
             return obj;
         }
@@ -243,26 +242,6 @@ public class YamlSerializer {
             arr.add(fromYaml(item));
         }
         return arr;
-    }
-
-    /**
-     * Converts a YAML-serialized string to a Boolean, Integer, Date
-     * or other native Java type.
-     *
-     * @param str            the unserialized string to convert
-     *
-     * @return the object value
-     */
-    private static Object fromYaml(String str) {
-        if (ValueUtil.isBool(str)) {
-            return ValueUtil.bool(str, !str.isBlank());
-        } else if (str.length() > 0 && str.length() <= 9 && StringUtils.isNumeric(str)) {
-            return Integer.valueOf(str);
-        } else if (DateUtil.isEpochFormat(str)) {
-            return new Date(Long.parseLong(str.substring(1)));
-        } else {
-            return str;
-        }
     }
 
     // No instances
