@@ -25,6 +25,7 @@ import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.storage.StorageException;
 import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.core.type.User;
+import org.rapidcontext.util.ValueUtil;
 
 /**
  * The built-in user modification procedure.
@@ -84,7 +85,7 @@ public class UserChangeProcedure extends Procedure {
         String email = bindings.getValue("email", "").toString();
         String descr = bindings.getValue("description", "").toString();
         String str = bindings.getValue("enabled", "").toString();
-        boolean enabled = (!str.isBlank() && !str.equals("false") && !str.equals("0"));
+        boolean enabled = ValueUtil.bool(str, !str.isBlank());
         String pwd = bindings.getValue("password").toString();
         if ((user == null || pwd.length() > 0) && pwd.length() < 5) {
             throw new ProcedureException(this, "password must be at least 5 characters");

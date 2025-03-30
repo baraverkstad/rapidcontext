@@ -28,6 +28,7 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.util.DateUtil;
+import org.rapidcontext.util.ValueUtil;
 import org.snakeyaml.engine.v2.api.Dump;
 import org.snakeyaml.engine.v2.api.DumpSettings;
 import org.snakeyaml.engine.v2.api.Load;
@@ -253,8 +254,8 @@ public class YamlSerializer {
      * @return the object value
      */
     private static Object fromYaml(String str) {
-        if (str.equals("true") || str.equals("false")) {
-            return Boolean.valueOf(str);
+        if (ValueUtil.isBool(str)) {
+            return ValueUtil.bool(str, !str.isBlank());
         } else if (str.length() > 0 && str.length() <= 9 && StringUtils.isNumeric(str)) {
             return Integer.valueOf(str);
         } else if (DateUtil.isEpochFormat(str)) {

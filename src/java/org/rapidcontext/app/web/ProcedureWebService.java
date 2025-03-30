@@ -185,8 +185,8 @@ public class ProcedureWebService extends WebService {
      */
     @SuppressWarnings("removal")
     protected Dict processCall(String name, Request request, String source) {
-        boolean isSession = ValueUtil.isOn(request.getParameter("system:session"));
-        boolean isTracing = ValueUtil.isOn(request.getParameter("system:trace"));
+        boolean isSession = ValueUtil.bool(request.getParameter("system:session"), false);
+        boolean isTracing = ValueUtil.bool(request.getParameter("system:trace"), false);
         String logPrefix = source + "-->" + name + "(): ";
         StringBuilder trace = null;
         Dict res = new Dict();

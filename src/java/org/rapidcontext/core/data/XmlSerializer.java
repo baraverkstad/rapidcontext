@@ -274,7 +274,7 @@ public final class XmlSerializer {
             }
             String str = (val == null) ? "" : val.toString();
             if (type.equalsIgnoreCase("boolean")) {
-                val = ValueUtil.isOn(str);
+                val = ValueUtil.bool(str, !str.isBlank());
             } else if (type.equalsIgnoreCase("date")) {
                 if (DateUtil.isEpochFormat(str)) {
                     val = new Date(Long.parseLong(str.substring(1)));

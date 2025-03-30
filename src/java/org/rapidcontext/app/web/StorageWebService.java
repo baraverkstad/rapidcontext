@@ -133,8 +133,8 @@ public class StorageWebService extends WebService {
         Object data = (meta == null) ? null : storage.load(meta.path());
         Dict opts = new Dict();
         opts.set("computed", Boolean.TRUE);
-        opts.set("hidden", ValueUtil.isOn(request.getParameter("hidden")));
-        opts.set("metadata", ValueUtil.isOn(request.getParameter("metadata")));
+        opts.set("hidden", ValueUtil.bool(request.getParameter("hidden"), false));
+        opts.set("metadata", ValueUtil.bool(request.getParameter("metadata"), false));
         if (meta == null || data == null) {
             errorNotFound(request);
         } else if (data instanceof Binary b && path.equals(meta.path())) {

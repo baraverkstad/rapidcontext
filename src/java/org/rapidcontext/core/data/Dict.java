@@ -25,6 +25,7 @@ import java.util.stream.Stream;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.rapidcontext.util.DateUtil;
+import org.rapidcontext.util.ValueUtil;
 
 /**
  * A general data dictionary. Compared to the standard Map interface,
@@ -53,11 +54,6 @@ import org.rapidcontext.util.DateUtil;
  * @version  1.0
  */
 public class Dict {
-
-    /**
-     * All the recognized false values.
-     */
-    protected static final String[] OFF = { "", "0", "f", "false", "no", "off" };
 
     /**
      * A hash map with names and values.
@@ -111,8 +107,8 @@ public class Dict {
         } else if (clazz.equals(String.class)) {
             return (T) value.toString();
         } else if (clazz.equals(Boolean.class)) {
-            String str = value.toString().toLowerCase().trim();
-            return (T) Boolean.valueOf(ArrayUtils.contains(OFF, str));
+            String str = value.toString();
+            return (T) Boolean.valueOf(ValueUtil.bool(str, !str.isBlank()));
         } else if (clazz.equals(Integer.class)) {
             return (T) Integer.valueOf(value.toString());
         } else if (clazz.equals(Long.class)) {

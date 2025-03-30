@@ -68,8 +68,8 @@ public class ProcedureTraceProcedure extends Procedure {
         if (name.isBlank()) {
             throw new ProcedureException(this, "invalid procedure name");
         }
-        String flag = bindings.getValue("tracing").toString().trim();
-        boolean tracing = ValueUtil.isOn(flag);
+        String str = bindings.getValue("tracing").toString();
+        boolean tracing = ValueUtil.bool(str, false);
         CallContext.checkWriteAccess("procedure/" + name);
         cx.getLibrary().setTracing(name, tracing);
         return "" + tracing;

@@ -35,6 +35,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.util.DateUtil;
 import org.rapidcontext.util.FileUtil;
+import org.rapidcontext.util.ValueUtil;
 
 /**
  * A data serializer for the Java properties file format. The mapping
@@ -269,8 +270,8 @@ public final class PropertiesSerializer {
      * @return the converted value
      */
     private static Object toValue(String value) {
-        if (value.equals("true") || value.equals("false")) {
-            return Boolean.valueOf(value);
+        if (ValueUtil.isBool(value)) {
+            return ValueUtil.bool(value, !value.isBlank());
         } else if (value.length() > 0 && value.length() <= 9 && StringUtils.isNumeric(value)) {
             return Integer.valueOf(value);
         } else if (DateUtil.isEpochFormat(value)) {

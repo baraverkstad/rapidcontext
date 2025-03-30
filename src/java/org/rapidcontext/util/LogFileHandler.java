@@ -139,7 +139,7 @@ public final class LogFileHandler extends StreamHandler {
         String prefix = getClass().getName();
         String str = manager.getProperty(prefix + ".pattern");
         pattern = Objects.toString(str, "%t/rapidcontext-%d{yyyy-MM-dd}.log");
-        append = !ValueUtil.isOff(manager.getProperty(prefix + ".append"));
+        append = ValueUtil.bool(manager.getProperty(prefix + ".append"), true);
         str = manager.getProperty(prefix + ".filter");
         if (!StringUtils.isBlank(str)) {
             Class<?> cls = getClass().getClassLoader().loadClass(str);
