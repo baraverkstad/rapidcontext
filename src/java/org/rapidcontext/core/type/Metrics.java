@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.data.stat.MovingUsage;
+import org.rapidcontext.core.stats.MovingUsage;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.core.storage.Storage;

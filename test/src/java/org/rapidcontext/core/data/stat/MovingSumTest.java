@@ -18,7 +18,8 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.rapidcontext.core.data.Array;
-import org.rapidcontext.core.data.stat.MovingSum.Interval;
+import org.rapidcontext.core.stats.MovingSum;
+import org.rapidcontext.core.stats.MovingSum.Interval;
 
 /**
  * Unit tests for the RollingCount class.

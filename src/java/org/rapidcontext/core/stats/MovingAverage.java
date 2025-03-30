@@ -12,7 +12,7 @@
  * See the RapidContext LICENSE for more details.
  */
 
-package org.rapidcontext.core.data.stat;
+package org.rapidcontext.core.stats;
 
 import org.rapidcontext.core.data.Array;
 
