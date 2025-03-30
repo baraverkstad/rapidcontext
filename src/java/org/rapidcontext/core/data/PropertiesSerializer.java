@@ -14,26 +14,27 @@
 
 package org.rapidcontext.core.data;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.Reader;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.CharUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.util.DateUtil;
+import org.rapidcontext.util.FileUtil;
 
 /**
  * A data serializer for the Java properties file format. The mapping
@@ -115,13 +116,9 @@ public final class PropertiesSerializer {
      * @throws IOException if an error occurred while reading
      */
     public static Object unserialize(InputStream is) throws IOException {
-        byte[] buffer = is.readAllBytes();
-        try (
-            ByteArrayInputStream bs = new ByteArrayInputStream(buffer);
-            ByteArrayInputStream rs = new ByteArrayInputStream(buffer);
-            BufferedReader br = new BufferedReader(new InputStreamReader(rs));
-        ) {
-            return unserialize(bs, br);
+        String buffer = FileUtil.readText(is);
+        try (StringReader r = new StringReader(buffer)) {
+            return unserialize(r, buffer.lines());
         }
     }
 
@@ -133,26 +130,26 @@ public final class PropertiesSerializer {
      * separators, and numbers are interpreted as an array indices.
      * Values are stored as booleans, integers or strings.
      *
-     * Note that the input stream is read twice in order to preserve
-     * the original ordering.
+     * Note that the input stream must be buffered to allow separate
+     * processing of the context (to preserve property order).
      *
-     * @param is             the input stream
-     * @param r              the input stream reader (used for order)
+     * @param r              the input reader
+     * @param lines          the stream of lines (used for order)
      *
      * @return the dictionary read from the file
      *
      * @throws IOException if an error occurred while reading
      */
-    private static Dict unserialize(InputStream is, BufferedReader r)
+    private static Dict unserialize(Reader r, Stream<String> lines)
     throws IOException {
 
         // Read properties file (but doesn't preserve ordering)
         Properties props = new Properties();
-        props.load(is);
+        props.load(r);
 
         // Add properties in file order (using simplified parsing)
         Dict res = new Dict();
-        r.lines().forEach((str) -> {
+        lines.forEach((str) -> {
             str = StringUtils.substringBefore(str, '=').trim();
             str = StringUtils.substringBefore(str, ':').trim();
             if (props.containsKey(str)) {
