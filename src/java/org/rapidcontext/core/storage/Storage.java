@@ -299,7 +299,7 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
      *         the current system time if not mounted
      */
     public Date mountTime() {
-        return dict.get(KEY_MOUNT_TIME, Date.class, new Date());
+        return dict.getElse(KEY_MOUNT_TIME, Date.class, () -> new Date());
     }
 
     /**

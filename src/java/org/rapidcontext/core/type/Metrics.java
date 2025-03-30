@@ -110,7 +110,7 @@ public class Metrics extends StorableObject {
      */
     @Override
     protected void init() {
-        updated = dict.get(KEY_UPDATED, Date.class, new Date()).getTime();
+        updated = dict.getElse(KEY_UPDATED, Date.class, () -> new Date()).getTime();
         Dict data = dict.getDict(KEY_DATA);
         for (String key : data.keys()) {
             points.put(key, new MovingUsage(updated, data.getDict(key)));

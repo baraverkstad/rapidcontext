@@ -366,7 +366,7 @@ public class Session extends StorableObject {
      * @return the session creation timestamp.
      */
     public Date createTime() {
-        return dict.get(KEY_CREATE_TIME, Date.class, new Date(0));
+        return dict.getElse(KEY_CREATE_TIME, Date.class, () -> new Date(0));
     }
 
     /**
@@ -378,7 +378,7 @@ public class Session extends StorableObject {
         long exp = isAuthenticated() ? EXPIRY_AUTH_MILLIS : EXPIRY_ANON_MILLIS;
         long access = accessTime().getTime() + exp;
         long create = createTime().getTime() + MAX_AGE_MILLIS;
-        return dict.get(KEY_DESTROY_TIME, Date.class, new Date(Math.min(access, create)));
+        return dict.getElse(KEY_DESTROY_TIME, Date.class, () -> new Date(Math.min(access, create)));
     }
 
     /**
@@ -401,7 +401,7 @@ public class Session extends StorableObject {
      * @return the session last access timestamp.
      */
     public Date accessTime() {
-        return dict.get(KEY_ACCESS_TIME, Date.class, new Date(0));
+        return dict.getElse(KEY_ACCESS_TIME, Date.class, () -> new Date(0));
     }
 
     /**

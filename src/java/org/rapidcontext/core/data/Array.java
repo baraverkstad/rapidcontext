@@ -20,6 +20,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -469,8 +470,32 @@ public class Array implements Iterable<Object> {
      * @see ValueUtil#convert(Object, Class)
      */
     public <T> T get(int index, Class<T> clazz, T defaultValue) {
-        T value = get(index, clazz);
-        return (value == null) ? defaultValue : value;
+        return Objects.requireNonNullElse(get(index, clazz), defaultValue);
+    }
+
+    /**
+     * Returns the array value at the specified index. The value is
+     * either converted or casted to a specified object class. If the
+     * index is not defined or if the value is set to null, a default
+     * value will be returned instead.
+     *
+     * @param <T>            the object type to return
+     * @param index          the array index
+     * @param clazz          the object class
+     * @param supplier       the default value supplier
+     *
+     * @return the array element value, or
+     *         null if the index or value is not defined
+     *
+     * @throws ClassCastException if the wasn't possible to cast to
+     *             the specified object class
+     * @throws NumberFormatException if the value wasn't possible to
+     *             parse as a number
+     *
+     * @see ValueUtil#convert(Object, Class)
+     */
+    public <T> T getElse(int index, Class<T> clazz, Supplier<? extends T> supplier) {
+        return Objects.requireNonNullElseGet(get(index, clazz), supplier);
     }
 
     /**
@@ -485,8 +510,7 @@ public class Array implements Iterable<Object> {
      * @throws ClassCastException if the value is not a dictionary
      */
     public Dict getDict(int index) throws ClassCastException {
-        Dict dict = get(index, Dict.class);
-        return (dict == null) ? new Dict() : dict;
+        return getElse(index, Dict.class, () -> new Dict());
     }
 
     /**
@@ -501,8 +525,7 @@ public class Array implements Iterable<Object> {
      * @throws ClassCastException if the value is not an array
      */
     public Array getArray(int index) throws ClassCastException {
-        Array arr = get(index, Array.class);
-        return (arr == null) ? new Array() : arr;
+        return getElse(index, Array.class, () -> new Array());
     }
 
     /**

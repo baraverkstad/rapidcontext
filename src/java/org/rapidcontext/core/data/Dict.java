@@ -331,7 +331,7 @@ public class Dict {
      *         null if the key or value is not defined
      */
     public Object get(String key) {
-        return (map == null) ? null : map.get(key);
+        return (map == null || key == null) ? null : map.get(key);
     }
 
     /**
@@ -378,8 +378,32 @@ public class Dict {
      * @see ValueUtil#convert(Object, Class)
      */
     public <T> T get(String key, Class<T> clazz, T defaultValue) {
-        T value = get(key, clazz);
-        return (value == null) ? defaultValue : value;
+        return Objects.requireNonNullElse(get(key, clazz), defaultValue);
+    }
+
+    /**
+     * Returns the dictionary value for the specified key. The value
+     * is either converted or casted to a specified object class. If
+     * the key is not defined or if the value is set to null, a
+     * default value will be returned instead.
+     *
+     * @param <T>            the object type to return
+     * @param key            the dictionary key name
+     * @param clazz          the object class
+     * @param supplier       the default value supplier
+     *
+     * @return the dictionary key value value, or
+     *         the default value if the key or value is not defined
+     *
+     * @throws ClassCastException if the wasn't possible to cast to
+     *             the specified object class
+     * @throws NumberFormatException if the value wasn't possible to
+     *             parse as a number
+     *
+     * @see ValueUtil#convert(Object, Class)
+     */
+    public <T> T getElse(String key, Class<T> clazz, Supplier<? extends T> supplier) {
+        return Objects.requireNonNullElseGet(get(key, clazz), supplier);
     }
 
     /**
@@ -394,8 +418,7 @@ public class Dict {
      * @throws ClassCastException if the value is not a dictionary
      */
     public Dict getDict(String key) throws ClassCastException {
-        Dict dict = get(key, Dict.class);
-        return (dict == null) ? new Dict() : dict;
+        return getElse(key, Dict.class, () -> new Dict());
     }
 
     /**
@@ -410,8 +433,7 @@ public class Dict {
      * @throws ClassCastException if the value is not an array
      */
     public Array getArray(String key) throws ClassCastException {
-        Array arr = get(key, Array.class);
-        return (arr == null) ? new Array() : arr;
+        return getElse(key, Array.class, () -> new Array());
     }
 
     /**
