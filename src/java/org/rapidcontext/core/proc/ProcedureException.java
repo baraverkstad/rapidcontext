@@ -14,8 +14,8 @@
 
 package org.rapidcontext.core.proc;
 
-import org.rapidcontext.core.BaseException;
 import org.rapidcontext.core.type.Procedure;
+import org.rapidcontext.util.BaseException;
 
 /**
  * A procedure exception. This class encapsulates all procedure

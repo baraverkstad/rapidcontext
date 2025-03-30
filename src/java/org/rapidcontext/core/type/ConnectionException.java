@@ -14,7 +14,7 @@
 
 package org.rapidcontext.core.type;
 
-import org.rapidcontext.core.BaseException;
+import org.rapidcontext.util.BaseException;
 
 /**
  * A general connection or channel exception. This class encapsulates

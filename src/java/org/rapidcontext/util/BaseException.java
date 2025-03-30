@@ -12,11 +12,11 @@
  * See the RapidContext LICENSE for more details.
  */
 
-package org.rapidcontext.core;
+package org.rapidcontext.util;
 
 /**
  * An abstract base exception. This class exists to make it easy to
- * catch any checked exception thrown from the core library layer.
+ * catch any type of checked exception.
  *
  * @author   Per Cederberg
  * @version  1.0

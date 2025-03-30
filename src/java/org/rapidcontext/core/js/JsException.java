@@ -14,7 +14,7 @@
 
 package org.rapidcontext.core.js;
 
-import org.rapidcontext.core.BaseException;
+import org.rapidcontext.util.BaseException;
 
 /**
  * A JavaScript processing exception. This class encapsulates all
