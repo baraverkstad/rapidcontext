@@ -140,6 +140,19 @@ RapidContext.Widget.TreeNode.prototype.addChildNode = function (child) {
 };
 
 /**
+ * Removes a single child tree node widget from this widget.
+ *
+ * @param {Widget} child the tree node widget to remove
+ */
+RapidContext.Widget.prototype.removeChildNode = function (child) {
+    let elem = this._containerNode();
+    if (elem) {
+        elem.unselect();
+        elem.removeChild(child);
+    }
+};
+
+/**
  * Removes all marked tree nodes. When adding or updating tree nodes, any
  * node modified is automatically unmarked (e.g. by calling `setAttrs`). This
  * makes it easy to prune a tree after an update, by initially marking all

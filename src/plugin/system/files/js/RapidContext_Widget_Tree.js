@@ -207,11 +207,7 @@ RapidContext.Widget.Tree.prototype.findByPath = function (path) {
  *         null if no node is selected
  */
 RapidContext.Widget.Tree.prototype.selectedChild = function () {
-    if (this.selectedPath == null) {
-        return null;
-    } else {
-        return this.findByPath(this.selectedPath);
-    }
+    return this.findByPath(this.selectedPath);
 };
 
 /**
