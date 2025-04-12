@@ -68,7 +68,7 @@ public class ConnectionValidateProcedure extends Procedure {
         String id = (String) bindings.getValue("connection");
         Channel channel = cx.connectionReserve(id, cx.readPermission(1));
         // FIXME: call context trace should capture logs here
-        channel.validate();
+        channel.revalidate();
         Dict dict = (Dict) StorableObject.sterilize(channel.getConnection(), true, false, true);
         Metadata meta = cx.getStorage().lookup(Path.resolve(Connection.PATH, id));
         dict.add("_plugin", Plugin.source(meta));

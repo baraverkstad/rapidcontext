@@ -116,6 +116,18 @@ public abstract class Channel {
     public abstract void validate();
 
     /**
+     * Checks if the channel connection is still valid. This method
+     * also resets the last known error.
+     *
+     * @see #isValid()
+     * @see #validate()
+     */
+    public void revalidate() {
+        connection.lastError = null;
+        validate();
+    }
+
+    /**
      * Marks the channel as invalid, meaning that it should no longer
      * be used and is scheduled for destruction when returned to the
      * parent connection. During normal operations, this method
