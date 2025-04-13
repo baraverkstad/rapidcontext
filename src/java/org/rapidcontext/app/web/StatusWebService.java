@@ -65,6 +65,6 @@ public class StatusWebService extends WebService {
     @Override
     protected void doGet(Request request) {
         Dict res = StatusProcedure.getStatusData();
-        request.sendText(Mime.JSON[0], JsonSerializer.serialize(res, true));
+        request.sendText(Mime.JSON[0], JsonSerializer.serialize(res, false));
     }
 }

@@ -167,10 +167,10 @@ public class ProcedureWebService extends WebService {
                 request.sendText(Mime.TEXT[0], res.get("data", String.class, ""));
             } else {
                 Object data = res.get("data");
-                request.sendText(Mime.JSON[0], JsonSerializer.serialize(data, true));
+                request.sendText(Mime.JSON[0], JsonSerializer.serialize(data, false));
             }
         } else {
-            request.sendText(Mime.JSON[0], JsonSerializer.serialize(res, true));
+            request.sendText(Mime.JSON[0], JsonSerializer.serialize(res, false));
         }
     }
 

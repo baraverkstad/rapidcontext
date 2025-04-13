@@ -144,7 +144,7 @@ RapidContext.Widget.TreeNode.prototype.addChildNode = function (child) {
  *
  * @param {Widget} child the tree node widget to remove
  */
-RapidContext.Widget.prototype.removeChildNode = function (child) {
+RapidContext.Widget.TreeNode.prototype.removeChildNode = function (child) {
     let elem = this._containerNode();
     if (elem) {
         elem.unselect();
