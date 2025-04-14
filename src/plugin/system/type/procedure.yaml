@@ -23,8 +23,8 @@ property:
     required: false
   - name: deprecated
     description: >-
-        The deprecation message for an outdated procedure. Use to warn users
-        prior to eventual removal of a procedure. Optional, defaults to null.
+        The deprecation message for an outdated or experimental procedure. Used
+        for warning users. Optional, defaults to null.
     required: false
     format: error
   - name: binding

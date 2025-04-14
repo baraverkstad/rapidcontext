@@ -28,7 +28,9 @@ import org.rapidcontext.core.type.Procedure;
  *
  * @author   Per Cederberg
  * @version  1.0
+ * @deprecated [EXPERIMENTAL] Subject to change or removal without notice.
  */
+@Deprecated
 public class ConnectionMetricsProcedure extends Procedure {
 
     /**

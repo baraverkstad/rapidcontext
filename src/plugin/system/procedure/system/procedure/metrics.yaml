@@ -1,4 +1,5 @@
 id: system/procedure/metrics
 type: procedure
 className: org.rapidcontext.app.proc.ProcedureMetricsProcedure
-description: Returns the current procedure metrics. [EXPERIMENTAL]
+description: Returns the current procedure metrics.
+deprecated: Subject to change or removal without notice. [EXPERIMENTAL]
