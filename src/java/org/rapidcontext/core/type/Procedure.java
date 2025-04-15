@@ -145,7 +145,7 @@ public abstract class Procedure extends StorableObject {
      */
     public static Metrics metrics(Storage storage) {
         if (metrics == null) {
-            metrics = Metrics.findOrCreate(storage, "connection");
+            metrics = Metrics.findOrCreate(storage, "procedure");
         }
         return metrics;
     }
