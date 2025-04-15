@@ -83,7 +83,7 @@ public abstract class Connection extends StorableObject {
     private static long MAX_WAIT_MILLIS = 5000L;
 
     /**
-     * The shared metrics to use for all connections.
+     * The shared usage metrics for all connections.
      */
     private static Metrics metrics = null;
 

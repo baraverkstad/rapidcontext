@@ -116,6 +116,11 @@ public class User extends StorableObject {
         .set(KEY_ROLE, new Array());
 
     /**
+     * The shared request metrics for all users.
+     */
+    private static Metrics metrics = null;
+
+    /**
      * Searches for a specific user in the storage.
      *
      * @param storage        the storage to search in
@@ -140,6 +145,37 @@ public class User extends StorableObject {
         throws StorageException {
 
         storage.store(user.path(), user);
+    }
+
+    /**
+     * Returns the user request metrics. The metrics will be loaded
+     * from storage if not already in memory.
+     *
+     * @param storage        the storage to load from
+     *
+     * @return the user request metrics
+     */
+    public static Metrics metrics(Storage storage) {
+        if (metrics == null) {
+            metrics = Metrics.findOrCreate(storage, "user");
+        }
+        return metrics;
+    }
+
+    /**
+     * Reports user request metrics for a single request.
+     *
+     * @param start          the start time (in millis)
+     * @param success        the success flag
+     * @param error          the optional error message
+     */
+    public static void report(User user, long start, boolean success, String error) {
+        if (metrics != null) {
+            String id = (user == null) ? "anonymous" : user.id();
+            long now = System.currentTimeMillis();
+            int duration = (int) (now - start);
+            metrics.report(id, now, 1, duration, success, error);
+        }
     }
 
     /**

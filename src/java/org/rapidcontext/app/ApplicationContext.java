@@ -47,6 +47,7 @@ import org.rapidcontext.core.type.Environment;
 import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.core.type.Session;
 import org.rapidcontext.core.type.Type;
+import org.rapidcontext.core.type.User;
 import org.rapidcontext.core.type.WebMatcher;
 import org.rapidcontext.core.type.WebService;
 import org.rapidcontext.util.FileUtil;
@@ -306,6 +307,7 @@ public class ApplicationContext {
         Type.all(storage).forEach(o -> { /* Force refresh cached types */ });
         Connection.metrics(storage); // Load or create connection metrics
         Procedure.metrics(storage); // Load or create procedure metrics
+        User.metrics(storage); // Load or create user metrics
         scheduler.submit(() -> Procedure.refreshAliases(storage)); // FIXME: Move aliases into storage catalog
     }
 

@@ -25,7 +25,9 @@ import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.JsonSerializer;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.ProcedureException;
+import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.type.Procedure;
+import org.rapidcontext.core.type.User;
 import org.rapidcontext.core.type.WebService;
 import org.rapidcontext.core.web.Mime;
 import org.rapidcontext.core.web.Request;
@@ -157,6 +159,8 @@ public class ProcedureWebService extends WebService {
         }
         res.set("execStart", new Date(startTime));
         res.set("execTime", (int) execTime);
+        String err = res.get("error", String.class);
+        User.report(SecurityContext.currentUser(), startTime, err == null, err);
         boolean isTextOutput = outputType().equalsIgnoreCase("text");
         boolean isJsonOutput = outputType().equalsIgnoreCase("json");
         if (isTextOutput || isJsonOutput) {

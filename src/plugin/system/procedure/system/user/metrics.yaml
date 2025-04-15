@@ -1,0 +1,5 @@
+id: system/user/metrics
+type: procedure
+className: org.rapidcontext.app.proc.UserMetricsProcedure
+description: Returns the current user request metrics.
+deprecated: Subject to change or removal without notice. [EXPERIMENTAL]

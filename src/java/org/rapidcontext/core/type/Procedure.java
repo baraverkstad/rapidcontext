@@ -85,7 +85,7 @@ public abstract class Procedure extends StorableObject {
     private static HashMap<String,String> aliases = new HashMap<>();
 
     /**
-     * The shared metrics to use for all procedures.
+     * The shared call metrics for all procedures.
      */
     private static Metrics metrics = null;
 
@@ -136,12 +136,12 @@ public abstract class Procedure extends StorableObject {
     }
 
     /**
-     * Returns the procedure usage metrics. The metrics will be loaded
+     * Returns the procedure call metrics. The metrics will be loaded
      * from storage if not already in memory.
      *
      * @param storage        the storage to load from
      *
-     * @return the connection usage metrics
+     * @return the procedure call metrics
      */
     public static Metrics metrics(Storage storage) {
         if (metrics == null) {
@@ -267,20 +267,17 @@ public abstract class Procedure extends StorableObject {
         throws ProcedureException;
 
     /**
-     * Reports connection usage metrics for a single query/request/etc.
-     * If the start time isn't positive, no actual usage and duration
-     * will be reported, only potential errors.
+     * Reports procedure call metrics for a single call.
      *
-     * @param start          the start time (in millis), or zero (0) for none
+     * @param start          the start time (in millis)
      * @param success        the success flag
      * @param error          the optional error message
      */
     public void report(long start, boolean success, String error) {
         if (metrics != null) {
             long now = System.currentTimeMillis();
-            int duration = (start <= 0) ? 0 : (int) (now - start);
-            int count = (start <= 0 && success) ? 0 : 1; // validate doesn't count
-            metrics.report(id(), now, count, duration, success, error);
+            int duration = (int) (now - start);
+            metrics.report(id(), now, 1, duration, success, error);
         }
     }
 }
