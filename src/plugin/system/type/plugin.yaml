@@ -24,3 +24,6 @@ property:
     description: The plug-in copyright notice.
     required: false
     format: text
+  - name: post-install
+    description: The post-install validation or update procedure (if applicable).
+    required: false

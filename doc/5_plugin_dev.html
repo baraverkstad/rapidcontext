@@ -120,6 +120,8 @@ fields:</p>
   <li><var>className</var> &mdash; The optional fully qualified name of
       a Java class that handles the plug-in life-cycle. The class must be a
       subclass of <var>org.rapidcontext.core.type.Plugin</var>.</li>
+  <li><var>post-install</var> &mdash; The optional procedure that should be
+      called after each installation (for validation, upgrade or similar).</li>
 </ul>
 
 <p>The plug-in configuration is the first file to write when developing a
