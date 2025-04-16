@@ -2,4 +2,3 @@ id: system/connection/metrics
 type: procedure
 className: org.rapidcontext.app.proc.ConnectionMetricsProcedure
 description: Returns the current connection usage metrics.
-deprecated: Subject to change or removal without notice. [EXPERIMENTAL]

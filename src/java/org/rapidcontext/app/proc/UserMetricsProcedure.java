@@ -28,9 +28,7 @@ import org.rapidcontext.core.type.User;
  *
  * @author   Per Cederberg
  * @version  1.0
- * @deprecated [EXPERIMENTAL] Subject to change or removal without notice.
  */
-@Deprecated
 public class UserMetricsProcedure extends Procedure {
 
     /**
