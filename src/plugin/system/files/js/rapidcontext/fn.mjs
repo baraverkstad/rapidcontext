@@ -325,7 +325,7 @@ export function eq(...values) {
         for (let el of values) {
             if (isFunction(el)) {
                 try {
-                    el = el.apply(null, arguments);
+                    el = el(...arguments);
                 } catch (ignore) {
                     return false;
                 }

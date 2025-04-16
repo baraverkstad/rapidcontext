@@ -145,7 +145,7 @@ class StartApp {
         }
         let cls = ["dash-item", "box", this.gradients.shift() || "grey"];
         if (app.startPage == "left" || app.startPage == "right") {
-            cls.push("float-" + app.startPage, "clear-" + app.startPage);
+            cls.push(`float-${app.startPage}`, `clear-${app.startPage}`);
         } else {
             cls.push("clear-both");
         }
@@ -265,7 +265,7 @@ class StartApp {
     _changePassword() {
         let data = this.ui.passwordForm.valueMap();
         let user = RapidContext.App.user();
-        let prefix = user.id + ":" + user.realm + ":";
+        let prefix = `${user.id}:${user.realm}:`;
         let oldHash = CryptoJS.MD5(prefix + data.current).toString();
         let newHash = CryptoJS.MD5(prefix + data.password).toString();
         this.proc.changePassword(oldHash, newHash);
@@ -425,10 +425,10 @@ class StartApp {
     _tourLocate() {
         let box = this._getBoundingBox(...arguments);
         let style = {
-            left: box.x + "px",
-            top: box.y + "px",
-            width: box.w + "px",
-            height: box.h + "px"
+            left: `${box.x}px`,
+            top: `${box.y}px`,
+            width: `${box.w}px`,
+            height: `${box.h}px`
         };
         Object.assign(this.ui.tourLocator.style, style);
         this.ui.tourLocator.classList.remove("hidden");
@@ -453,7 +453,7 @@ class StartApp {
                 elemBox = MochiKit.Style.getElementPosition(elem);
                 Object.assign(elemBox, MochiKit.Style.getElementDimensions(elem));
             } else if (elem && typeof(elem.x) == "number") {
-                elemBox = Object.assign({ x: 0, y: 0, w: 0, h: 0 }, elem);
+                elemBox = { x: 0, y: 0, w: 0, h: 0, ...elem };
             }
             if (elemBox != null && box == null) {
                 box = elemBox;

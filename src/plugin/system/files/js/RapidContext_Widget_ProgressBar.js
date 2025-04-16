@@ -60,7 +60,7 @@ RapidContext.Widget.ProgressBar = function (attrs) {
     let o = RapidContext.UI.DIV({}, text, meter);
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.ProgressBar);
     o.addClass("widgetProgressBar");
-    o.setAttrs(Object.assign({ min: 0, max: 100, value: 0 }, attrs));
+    o.setAttrs({ min: 0, max: 100, value: 0, ...attrs });
     return o;
 };
 
@@ -99,7 +99,7 @@ RapidContext.Widget.ProgressBar.prototype._containerNode = function () {
 RapidContext.Widget.ProgressBar.prototype.setAttrs = function (attrs) {
     /* eslint complexity: "off" */
     let now = new Date().getTime();
-    attrs = Object.assign({}, attrs);
+    attrs = { ...attrs };
     if ("min" in attrs || "max" in attrs) {
         attrs.min = Math.max(parseInt(attrs.min, 10) || this.min || 0, 0);
         attrs.max = Math.max(parseInt(attrs.max, 10) || this.max || 100, attrs.min);
@@ -157,17 +157,16 @@ RapidContext.Widget.ProgressBar.prototype._remainingTime = function () {
             seconds: Math.floor(duration / 1000) % 60,
             millis: duration % 1000
         };
-        let pad = MochiKit.Text.padLeft;
         if (res.days >= 10) {
-            res.text = res.days + " days";
+            res.text = `${res.days} days`;
         } else if (res.days >= 1) {
-            res.text = res.days + " days " + res.hours + " hours";
+            res.text = `${res.days} days ${res.hours} hours`;
         } else if (res.hours >= 1) {
-            res.text = res.hours + ":" + pad("" + res.minutes, 2, "0") + " hours";
+            res.text = `${res.hours}:${String(res.minutes).padStart(2, "0")} hours`;
         } else if (res.minutes >= 1) {
-            res.text = res.minutes + ":" + pad("" + res.seconds, 2, "0") + " min";
+            res.text = `${res.minutes}:${String(res.seconds).padStart(2, "0")} min`;
         } else {
-            res.text = res.seconds + " sec";
+            res.text = `${res.seconds} sec`;
         }
         return res;
     }
@@ -185,18 +184,18 @@ RapidContext.Widget.ProgressBar.prototype._render = function () {
     let info = [];
     if (!this.noratio) {
         percent = Math.round(this.ratio * 1000) / 10;
-        info.push(Math.round(percent) + "%");
+        info.push(`${Math.round(percent)}%`);
     }
     if (!this.novalue && typeof(this.value) == "number") {
         let pos = this.value - this.min;
         let total = this.max - this.min;
-        info.push(pos + " of " + total);
+        info.push(`${pos} of ${total}`);
     }
     if (this.text) {
         info.push(this.text);
     }
     if (this.timeRemaining && percent > 0 && percent < 100) {
-        info.push(this.timeRemaining + " remaining");
+        info.push(`${this.timeRemaining} remaining`);
     }
     this.firstChild.innerText = info.join(" \u2022 ");
 };

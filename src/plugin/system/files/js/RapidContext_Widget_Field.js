@@ -55,7 +55,7 @@ RapidContext.Widget.Field = function (attrs) {
     let o = document.createElement(attrs.tag || "span");
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Field);
     o.addClass("widgetField");
-    o.setAttrs(Object.assign({ name: "", value: "" }, attrs));
+    o.setAttrs({ name: "", value: "", ...attrs });
     o.defaultValue = o.value;
     o.defaultMask = !!o.mask;
     o.on("click", o._handleClick);
@@ -93,7 +93,7 @@ RapidContext.Widget.Field.prototype._containerNode = function () {
  * field.setAttrs({ value: 0.23 });
  */
 RapidContext.Widget.Field.prototype.setAttrs = function (attrs) {
-    attrs = Object.assign({}, attrs);
+    attrs = { ...attrs };
     if ("formatter" in attrs) {
         let valid = typeof(attrs.formatter) == "function";
         attrs.formatter = valid ? attrs.formatter : null;

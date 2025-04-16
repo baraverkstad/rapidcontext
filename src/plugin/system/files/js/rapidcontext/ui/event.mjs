@@ -106,7 +106,7 @@ export class Event {
  * @function RapidContext.UI.Event.emit
  */
 export function emit(src, event, opts) {
-    opts = Object.assign({ async: true }, opts);
+    opts = { async: true, ...opts };
     event = (event instanceof window.Event) ? event : new CustomEvent(event, opts);
     if (opts.async) {
         setTimeout(() => src.dispatchEvent(event));

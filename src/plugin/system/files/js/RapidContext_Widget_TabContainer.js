@@ -197,7 +197,7 @@ RapidContext.Widget.TabContainer.prototype.selectChild = function (indexOrChild)
         label.classList.remove("selected");
         children[this._selectedIndex]._handleExit();
     }
-    let index = -1;
+    let index;
     if (indexOrChild == null) {
         index = this._selectedIndex;
     } else if (typeof(indexOrChild) == "number") {

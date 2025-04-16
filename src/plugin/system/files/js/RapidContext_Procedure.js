@@ -46,7 +46,7 @@
         self.procedure = procedure;
         self.args = null;
         self._promise = null;
-        for (var k in Procedure.prototype) {
+        for (let k in Procedure.prototype) {
             if (!self[k]) {
                 self[k] = Procedure.prototype[k];
             }
@@ -128,11 +128,11 @@
      */
     function recall() {
         if (this.args === null) {
-            throw new Error("No arguments supplied for procedure call to " + this.procedure);
+            throw new Error(`No arguments supplied for procedure call to ${this.procedure}`);
         }
         this.cancel();
         signal(this, "oncall");
-        var cb = callback.bind(this);
+        let cb = callback.bind(this);
         this._promise = RapidContext.App.callProc(this.procedure, this.args).then(cb, cb);
         return this._promise;
     }
@@ -204,7 +204,7 @@
         if (this._mapPos < this._mapArgs.length) {
             this.args = this._mapArgs[this._mapPos++];
             signal(this, "oncall");
-            var cb = nextCall.bind(this);
+            let cb = nextCall.bind(this);
             this._promise = RapidContext.App.callProc(this.procedure, this.args).then(cb, cb);
             return this._promise;
         } else {
@@ -249,8 +249,8 @@
      * @return {Object} an object mapping keys to procedure instances
      */
     function mapAll(obj) {
-        var res = {};
-        for (var k in obj) {
+        let res = {};
+        for (let k in obj) {
             res[k] = Procedure(obj[k]);
         }
         return res;
@@ -265,7 +265,7 @@
                 MochiKit.Signal.signal(src, sig, value);
             }
         } catch (e) {
-            var msg = ["exception in", src.procedure, sig, "handler:"].join(" ");
+            let msg = ["exception in", src.procedure, sig, "handler:"].join(" ");
             (e.errors || [e]).forEach(function (err) {
                 console.error(msg, err);
             });
@@ -273,7 +273,7 @@
     }
 
     // Create namespace and export API
-    var RapidContext = window.RapidContext || (window.RapidContext = {});
+    let RapidContext = window.RapidContext || (window.RapidContext = {});
     RapidContext.Procedure = Procedure;
     Object.assign(Procedure.prototype, { recall, multicall, cancel, reset });
     Object.assign(Procedure, { mapAll });

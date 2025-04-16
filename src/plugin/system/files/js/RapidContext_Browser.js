@@ -17,6 +17,7 @@
  * @namespace RapidContext.Browser
  */
 (function (window) {
+    /* eslint no-var: "off", prefer-template: "off" */
 
     /**
      * List of all required browser features.
@@ -237,6 +238,7 @@
         }
         function checkEval(code) {
             try {
+                /* eslint no-eval: "off" */
                 var val = eval(code);
                 return val !== undefined && val !== null;
             } catch (ignore) {

@@ -49,7 +49,7 @@ RapidContext.Widget.Overlay = function (attrs) {
     let o = RapidContext.UI.DIV({}, cover, msg);
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Overlay);
     o.addClass("widgetOverlay");
-    o.setAttrs(Object.assign({ loading: true, message: "Working..." }, attrs));
+    o.setAttrs({ loading: true, message: "Working...", ...attrs });
     return o;
 };
 
@@ -74,7 +74,7 @@ RapidContext.Widget.Overlay.prototype._containerNode = function () {
  * @param {boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.Overlay.prototype.setAttrs = function (attrs) {
-    attrs = Object.assign({}, attrs);
+    attrs = { ...attrs };
     if ("loading" in attrs) {
         attrs.loading = RapidContext.Data.bool(attrs.loading);
     }

@@ -1,6 +1,8 @@
 import { create } from 'rapidcontext/ui';
 import { typeIds, typePath, objectProps, renderProp } from './util.mjs';
 
+/* eslint require-await: "off" */
+
 let connections = [];
 
 export default async function init(ui) {
@@ -207,7 +209,7 @@ async function save(ui, evt) {
         }
         let oldPath = orig.id ? RapidContext.Storage.path(orig) : null;
         let newPath = RapidContext.Storage.path(data);
-        let opts = { path: newPath + '.yaml' };
+        let opts = { path: `${newPath }.yaml` };
         if (oldPath && oldPath !== newPath) {
             opts = { path: oldPath, updateTo: opts.path };
         } else if (oldPath) {

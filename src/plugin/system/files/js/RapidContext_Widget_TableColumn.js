@@ -73,7 +73,7 @@ RapidContext.Widget.TableColumn = function (attrs) {
     let o = document.createElement("th");
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.TableColumn);
     o.addClass("widgetTableColumn");
-    o.setAttrs(Object.assign({ title: attrs.field, type: "string", key: false }, attrs));
+    o.setAttrs({ title: attrs.field, type: "string", key: false, ...attrs });
     o.on("click", o._handleClick);
     return o;
 };
@@ -117,7 +117,7 @@ RapidContext.Widget.TableColumn.prototype._containerNode = function () {
  *            data object as arguments
  */
 RapidContext.Widget.TableColumn.prototype.setAttrs = function (attrs) {
-    attrs = Object.assign({}, attrs);
+    attrs = { ...attrs };
     if ("title" in attrs) {
         this.innerText = attrs.title;
         delete attrs.title;
@@ -234,7 +234,7 @@ RapidContext.Widget.TableColumn.prototype._render = function (obj) {
     }
     if (this.maxLength && this.maxLength < td.innerText.length) {
         td.title = td.innerText;
-        td.innerText = td.innerText.substring(0, this.maxLength) + "\u2026";
+        td.innerText = `${td.innerText.substring(0, this.maxLength)}\u2026`;
     }
     return td;
 };

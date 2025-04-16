@@ -57,7 +57,7 @@ RapidContext.Widget.Popup = function (attrs/*, ...*/) {
     o.tabIndex = -1;
     o.selectedIndex = -1;
     o._delayTimer = null;
-    o.setAttrs(Object.assign({ delay: 5000 }, attrs));
+    o.setAttrs({ delay: 5000, ...attrs });
     o.addAll(Array.from(arguments).slice(1));
     o.on("click mousemove", ".widgetPopup > *", o._handleMouseEvent);
     o.on("keydown", o._handleKeyDown);
@@ -97,7 +97,7 @@ RapidContext.Widget.Classes.Popup = RapidContext.Widget.Popup;
  * @param {boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.Popup.prototype.setAttrs = function (attrs) {
-    attrs = Object.assign({}, attrs);
+    attrs = { ...attrs };
     if ("delay" in attrs) {
         attrs.delay = parseInt(attrs.delay, 10) || 5000;
         this.resetDelay();
@@ -144,7 +144,7 @@ RapidContext.Widget.Popup.prototype._setHiddenPopup = function (value) {
     } else if (!value && this.isHidden()) {
         this.selectChild(-1);
         this._setHidden(false);
-        this.style.maxHeight = (this.scrollHeight + 10) + "px";
+        this.style.maxHeight = `${this.scrollHeight + 10}px`;
         this.scrollTop = 0;
         this.emit("show");
         setTimeout(() => this.focus(), 100);

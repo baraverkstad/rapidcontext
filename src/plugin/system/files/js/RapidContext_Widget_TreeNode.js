@@ -60,7 +60,7 @@ RapidContext.Widget.TreeNode = function (attrs/*, ...*/) {
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.TreeNode);
     o.classList.add("widgetTreeNode");
     let isFolder = (arguments.length > 1);
-    attrs = Object.assign({ name: "Tree Node", folder: isFolder }, attrs);
+    attrs = { name: "Tree Node", folder: isFolder, ...attrs };
     o.setAttrs(attrs);
     o.addAll(Array.from(arguments).slice(1));
     return o;
@@ -109,7 +109,7 @@ RapidContext.Widget.TreeNode.prototype._containerNode = function (create) {
  */
 RapidContext.Widget.TreeNode.prototype.setAttrs = function (attrs) {
     this.marked = false;
-    attrs = Object.assign({}, attrs);
+    attrs = { ...attrs };
     if ("name" in attrs) {
         this.querySelector(".widgetTreeNodeText").innerText = attrs.name;
     }
@@ -307,8 +307,10 @@ RapidContext.Widget.TreeNode.prototype.findChild = function (name) {
  */
 RapidContext.Widget.TreeNode.prototype.findByPath = function (path) {
     let node = this;
-    for (let i = 0; node != null && path != null && i < path.length; i++) {
-        node = node.findChild(path[i]);
+    if (path != null) {
+        for (let i = 0; node != null && i < path.length; i++) {
+            node = node.findChild(path[i]);
+        }
     }
     return node;
 };
@@ -373,9 +375,11 @@ RapidContext.Widget.TreeNode.prototype.expandAll = function (depth) {
         depth = 10;
     }
     this.expand();
-    let children = this.getChildNodes();
-    for (let i = 0; depth > 0 && i < children.length; i++) {
-        children[i].expandAll(depth - 1);
+    if (depth > 0) {
+        let children = this.getChildNodes();
+        for (let i = 0; i < children.length; i++) {
+            children[i].expandAll(depth - 1);
+        }
     }
 };
 

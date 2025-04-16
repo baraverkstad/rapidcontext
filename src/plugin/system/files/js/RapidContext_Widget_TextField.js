@@ -50,10 +50,10 @@ RapidContext.Widget.TextField = function (attrs/*, ...*/) {
     function scrape(val) {
         return String(val && val.textContent || val || "");
     }
-    var type = (attrs && attrs.type) || "text";
-    var text = (attrs && attrs.value) || "";
+    let type = (attrs && attrs.type) || "text";
+    let text = (attrs && attrs.value) || "";
     text += Array.from(arguments).slice(1).map(scrape).join("");
-    var o = RapidContext.UI.INPUT({
+    let o = RapidContext.UI.INPUT({
         autocapitalize: "off",
         autocorrect: "off",
         spellcheck: "off",
@@ -62,7 +62,7 @@ RapidContext.Widget.TextField = function (attrs/*, ...*/) {
     });
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.TextField);
     o.addClass("widgetTextField");
-    o.setAttrs(Object.assign({}, attrs, { value: text }));
+    o.setAttrs({ ...attrs, value: text });
     o.on("input", o._handleChange);
     return o;
 };
@@ -93,7 +93,7 @@ RapidContext.Widget.Classes.TextField = RapidContext.Widget.TextField;
  * @param {boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.TextField.prototype.setAttrs = function (attrs) {
-    attrs = Object.assign({}, attrs);
+    attrs = { ...attrs };
     if ("helpText" in attrs) {
         console.warn("deprecated: setting 'helpText' attribute, use 'placeholder' instead");
         attrs.placeholder = attrs.placeholder || attrs.helpText;
@@ -132,8 +132,8 @@ RapidContext.Widget.TextField.prototype.getValue = function () {
  * @param {Event} [evt] the DOM Event object or null for manual
  */
 RapidContext.Widget.TextField.prototype._handleChange = function (evt) {
-    var cause = (evt && evt.inputType) || "set";
-    var detail = { before: this.storedValue || "", after: this.value, cause: cause };
+    let cause = (evt && evt.inputType) || "set";
+    let detail = { before: this.storedValue || "", after: this.value, cause: cause };
     this.emit("change", { detail: detail, bubbles: true });
     this.storedValue = this.value;
 };

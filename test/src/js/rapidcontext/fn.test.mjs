@@ -101,7 +101,6 @@ test('fn.isRegExp()', () => {
     assert.strictEqual(fn.isRegExp(undefined), false);
     assert.strictEqual(fn.isRegExp(null), false);
     assert.strictEqual(fn.isRegExp({}), false);
-    assert.strictEqual(fn.isRegExp(new RegExp('.')), true);
     assert.strictEqual(fn.isRegExp(/abc/), true);
 });
 
@@ -109,7 +108,7 @@ test('fn.isPromise()', () => {
     assert.strictEqual(fn.isPromise(undefined), false);
     assert.strictEqual(fn.isPromise(null), false);
     assert.strictEqual(fn.isPromise({}), false);
-    assert.strictEqual(fn.isPromise(new Promise(() => null)), true);
+    assert.strictEqual(fn.isPromise(Promise.resolve(null)), true);
     assert.strictEqual(fn.isPromise(Promise.all([])), true);
 });
 

@@ -179,8 +179,7 @@ RapidContext.Widget.Wizard.prototype._updateStatus = function () {
     if (page != null) {
         status = page.pageStatus || RapidContext.Widget.Pane.ANY;
         title = page.pageTitle;
-        info = " (Step " + (this._selectedIndex + 1) + " of " +
-               this.getChildNodes().length + ")";
+        info = ` (Step ${this._selectedIndex + 1} of ${this.getChildNodes().length})`;
     }
     if (status === RapidContext.Widget.Pane.WORKING) {
         bCancel.show();
@@ -250,7 +249,7 @@ RapidContext.Widget.Wizard.prototype.activatePage = function (indexOrPage) {
         index = Array.from(this.childNodes).indexOf(page, 2) - 2;
     }
     if (index < 0 || index >= this.getChildNodes().length) {
-        throw new RangeError("Page index out of bounds: " + index);
+        throw new RangeError(`Page index out of bounds: ${index}`);
     }
     let oldIndex = this._selectedIndex;
     let oldPage = this.activePage();

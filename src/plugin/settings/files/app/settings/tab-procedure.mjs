@@ -3,6 +3,8 @@ import { object, clone } from 'rapidcontext/data';
 import { create, msg } from 'rapidcontext/ui';
 import { typeIds, typePath, objectProps, renderProp, approxSize, approxDuration } from './util.mjs';
 
+/* eslint require-await: "off" */
+
 const placeholders = {
     connection: 'Enter connection identifier',
     data: 'Enter value or code',
@@ -70,7 +72,7 @@ function search(ui) {
 }
 
 async function show(ui) {
-    var node = ui.procTree.selectedChild();
+    let node = ui.procTree.selectedChild();
     if (node && node.data) {
         try {
             ui.procIdLink.value = node.data;
@@ -213,7 +215,7 @@ function editRender(ui) {
         let isArg = b.type == 'argument';
         let help = def ? def.description : (!isArg && b.description) || '';
         let input = RapidContext.Widget.TextArea({
-            name: 'binding.' + b.name,
+            name: `binding.${ b.name}`,
             value: isArg ? b.description : b.value,
             placeholder: placeholders[b.type],
             autosize: true,
@@ -221,8 +223,8 @@ function editRender(ui) {
             wrap: 'off',
             'class': 'flex-fill',
         });
-        var up = def ? '' : buildBtn('fa fa-lg fa-level-down', 'down');
-        var rm = def ? '' : buildBtn('fa fa-lg fa-minus', 'remove');
+        let up = def ? '' : buildBtn('fa fa-lg fa-level-down', 'down');
+        let rm = def ? '' : buildBtn('fa fa-lg fa-minus', 'remove');
         let tr = tpl.render({ name: b.name, help })[0];
         tr.lastChild.firstChild.append(input, up, rm);
         return tr;
@@ -335,7 +337,7 @@ async function save(ui, evt) {
             return res;
         });
         delete data.bindings;
-        let opts = { path: newPath + '.yaml' };
+        let opts = { path: `${newPath }.yaml` };
         if (oldPath && oldPath !== newPath) {
             opts = { path: oldPath, updateTo: opts.path };
         } else if (oldPath) {

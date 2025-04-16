@@ -80,7 +80,7 @@ class HelpApp {
         // Add app topics
         let apps = RapidContext.App.apps();
         for (let i = 0; i < apps.length; i++) {
-            addAll(root, apps[i].name + " (App)", apps[i].resources);
+            addAll(root, `${apps[i].name} (App)`, apps[i].resources);
         }
 
         // Add platform topics
@@ -301,13 +301,13 @@ class HelpApp {
      * @param {string} name the link name attribute
      */
     _scrollLink(name) {
-        let selector = "a[name='" + name + "'], *[id='" + name + "']";
+        let selector = `a[name='${name}'], *[id='${name}']`;
         let ctx = $(this.ui.contentText).find(selector);
         if (ctx.length) {
             let elem = ctx[0];
             this.ui.contentScroll.scrollTop = elem.offsetTop;
             this.ui.contentLocator.classList.remove("hidden", "-fade-out");
-            this.ui.contentLocator.style.top = elem.offsetTop + "px";
+            this.ui.contentLocator.style.top = `${elem.offsetTop}px`;
             this.ui.contentLocator.classList.add("-fade-out");
         }
     }

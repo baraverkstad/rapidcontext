@@ -47,7 +47,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * </Tree>
  */
 RapidContext.Widget.Tree = function (attrs/*, ...*/) {
-    var o = RapidContext.UI.DIV(attrs);
+    let o = RapidContext.UI.DIV(attrs);
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Tree);
     o.classList.add("widgetTree");
     o.selectedPath = null;
@@ -96,7 +96,7 @@ RapidContext.Widget.Classes.Tree = RapidContext.Widget.Tree;
  * @param {Event} evt the DOM Event object
  */
 RapidContext.Widget.Tree.prototype._handleNodeLabelClick = function (evt) {
-    var node = evt.target.closest("div.widgetTreeNode");
+    let node = evt.target.closest("div.widgetTreeNode");
     if (RapidContext.Widget.isWidget(evt.target, "Icon")) {
         node.toggle();
     } else {
@@ -131,8 +131,8 @@ RapidContext.Widget.Tree.prototype.addChildNode = function (child) {
  * tree.removeAllMarked();
  */
 RapidContext.Widget.Tree.prototype.removeAllMarked = function () {
-    var children = this.getChildNodes();
-    for (var i = 0; i < children.length; i++) {
+    let children = this.getChildNodes();
+    for (let i = 0; i < children.length; i++) {
         if (children[i].marked === true) {
             this.removeChildNode(children[i]);
         } else {
@@ -156,8 +156,8 @@ RapidContext.Widget.Tree.prototype.removeAllMarked = function () {
  * tree.removeAllMarked();
  */
 RapidContext.Widget.Tree.prototype.markAll = function () {
-    var children = this.getChildNodes();
-    for (var i = 0; i < children.length; i++) {
+    let children = this.getChildNodes();
+    for (let i = 0; i < children.length; i++) {
         children[i].markAll();
     }
 };
@@ -171,8 +171,8 @@ RapidContext.Widget.Tree.prototype.markAll = function () {
  *         null if not found
  */
 RapidContext.Widget.Tree.prototype.findRoot = function (name) {
-    var children = this.getChildNodes();
-    for (var i = 0; i < children.length; i++) {
+    let children = this.getChildNodes();
+    for (let i = 0; i < children.length; i++) {
         if (children[i].name == name) {
             return children[i];
         }
@@ -192,7 +192,7 @@ RapidContext.Widget.Tree.prototype.findByPath = function (path) {
     if (path == null || path.length < 1) {
         return null;
     }
-    var root = this.findRoot(path[0]);
+    let root = this.findRoot(path[0]);
     if (root != null) {
         return root.findByPath(path.slice(1));
     } else {
@@ -217,7 +217,7 @@ RapidContext.Widget.Tree.prototype.selectedChild = function () {
  * @param {Widget} node the new selected tree node, or null for none
  */
 RapidContext.Widget.Tree.prototype._handleSelect = function (node) {
-    var prev = this.selectedChild();
+    let prev = this.selectedChild();
     if (node == null) {
         this.selectedPath = null;
         this.emit("unselect");
@@ -240,9 +240,11 @@ RapidContext.Widget.Tree.prototype.expandAll = function (depth) {
     if (typeof(depth) !== "number") {
         depth = 10;
     }
-    var children = this.getChildNodes();
-    for (var i = 0; depth > 0 && i < children.length; i++) {
-        children[i].expandAll(depth - 1);
+    if (depth > 0) {
+        let children = this.getChildNodes();
+        for (let i = 0; i < children.length; i++) {
+            children[i].expandAll(depth - 1);
+        }
     }
 };
 
@@ -256,8 +258,8 @@ RapidContext.Widget.Tree.prototype.collapseAll = function (depth) {
     if (typeof(depth) !== "number") {
         depth = 0;
     }
-    var children = this.getChildNodes();
-    for (var i = 0; i < children.length; i++) {
+    let children = this.getChildNodes();
+    for (let i = 0; i < children.length; i++) {
         children[i].collapseAll(depth - 1);
     }
 };
@@ -275,16 +277,16 @@ RapidContext.Widget.Tree.prototype.addPath = function (path) {
     if (path == null || path.length < 1) {
         return null;
     }
-    var node = this.findRoot(path[0]);
+    let node = this.findRoot(path[0]);
     if (node == null) {
         node = RapidContext.Widget.TreeNode({ name: path[0], folder: (path.length > 1) });
         this.addChildNode(node);
     }
     node.marked = false;
-    for (var i = 1; i < path.length; i++) {
-        var child = node.findChild(path[i]);
+    for (let i = 1; i < path.length; i++) {
+        let child = node.findChild(path[i]);
         if (child == null) {
-            var attrs = { name: path[i], folder: (path.length > i + 1) };
+            let attrs = { name: path[i], folder: (path.length > i + 1) };
             child = RapidContext.Widget.TreeNode(attrs);
             node.addChildNode(child);
         }

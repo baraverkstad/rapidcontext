@@ -88,13 +88,13 @@ RapidContext.Widget.Classes.FormValidator = RapidContext.Widget.FormValidator;
  * @param {boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.FormValidator.prototype.setAttrs = function (attrs) {
-    attrs = Object.assign({}, attrs);
+    attrs = { ...attrs };
     if ("mandatory" in attrs) {
         attrs.mandatory = RapidContext.Data.bool(attrs.mandatory);
     }
     if ("regex" in attrs && attrs.regex && !(attrs.regex instanceof RegExp)) {
         if (!attrs.regex.startsWith("^")) {
-            attrs.regex = "^" + attrs.regex;
+            attrs.regex = `^${attrs.regex}`;
         }
         if (!attrs.regex.endsWith("$")) {
             attrs.regex += "$";

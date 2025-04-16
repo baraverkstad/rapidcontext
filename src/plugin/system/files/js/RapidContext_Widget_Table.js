@@ -169,7 +169,7 @@ RapidContext.Widget.Table.prototype._handleClick = function (evt) {
  * @param {boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.Table.prototype.setAttrs = function (attrs) {
-    attrs = Object.assign({}, attrs);
+    attrs = { ...attrs };
     if ("select" in attrs) {
         this._selectMode = attrs.select;
     }
@@ -393,7 +393,7 @@ RapidContext.Widget.Table.prototype.updateData = function (data) {
  * @return {Object} the data row object created
  */
 RapidContext.Widget.Table.prototype._mapRow = function (columns, key, obj, idx) {
-    let id = (key && obj[key] != null) ? obj[key] : "id" + idx;
+    let id = (key && obj[key] != null) ? obj[key] : `id${idx}`;
     let row = { $id: id, $data: obj };
     for (let col of columns) {
         row[col.field] = col._map(obj);

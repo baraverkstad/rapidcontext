@@ -19,7 +19,7 @@
 (function (window) {
 
     // The global error dialog
-    var errorDialog = null;
+    let errorDialog = null;
 
     /**
      * Displays an error message for the user. This operation may or may
@@ -32,13 +32,13 @@
      * @memberof RapidContext.UI
      */
     function showError() {
-        var msg = Array.from(arguments).map(function (arg) {
-            var isError = arg instanceof Error && arg.message;
+        let msg = Array.from(arguments).map(function (arg) {
+            let isError = arg instanceof Error && arg.message;
             return isError ? arg.message : arg;
         }).join(", ");
         console.warn(msg, ...arguments);
         if (!errorDialog) {
-            var xml = [
+            let xml = [
                 "<Dialog title='Error' system='true' style='width: 25rem;'>",
                 "  <i class='fa fa-exclamation-circle fa-3x color-danger mr-3'></i>",
                 "  <div class='inline-block vertical-top' style='width: calc(100% - 4em);'>",
@@ -59,9 +59,9 @@
             errorDialog.querySelector("[data-message]").innerText = msg;
             errorDialog.show();
         } else {
-            var txt = errorDialog.querySelector("[data-message]").innerText;
+            let txt = errorDialog.querySelector("[data-message]").innerText;
             if (!txt.includes(msg)) {
-                txt += "\n\n" + msg;
+                txt += `\n\n${msg}`;
             }
             errorDialog.querySelector("[data-message]").innerText = txt;
         }

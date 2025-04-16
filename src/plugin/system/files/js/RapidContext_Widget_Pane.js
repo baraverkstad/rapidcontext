@@ -60,7 +60,7 @@ RapidContext.Widget.Pane = function (attrs/*, ... */) {
     let o = document.createElement("div");
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Pane);
     o.addClass("widgetPane");
-    o.setAttrs(Object.assign({ pageTitle: "Page", pageStatus: "ANY", pageCloseable: false }, attrs));
+    o.setAttrs({ pageTitle: "Page", pageStatus: "ANY", pageCloseable: false, ...attrs });
     o.addAll(Array.from(arguments).slice(1));
     return o;
 };
@@ -128,7 +128,7 @@ RapidContext.Widget.Pane.WORKING = { previous: false, next: false };
  * @param {boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.Pane.prototype.setAttrs = function (attrs) {
-    attrs = Object.assign({}, attrs);
+    attrs = { ...attrs };
     if ("pageStatus" in attrs && typeof(attrs.pageStatus) != "object") {
         attrs.pageStatus = RapidContext.Widget.Pane[attrs.pageStatus] || RapidContext.Widget.Pane.ANY;
     }
@@ -153,7 +153,7 @@ RapidContext.Widget.Pane.prototype.setAttrs = function (attrs) {
  *            flag, used to clear all form validations in the pane
  */
 RapidContext.Widget.Pane.prototype._handleEnter = function (opts) {
-    opts = Object.assign({ show: true, validateReset: false }, opts);
+    opts = { show: true, validateReset: false, ...opts };
     if (RapidContext.Data.bool(opts.validateReset)) {
         let forms = this.getElementsByTagName("FORM");
         for (let i = 0; i < forms.length; i++) {
@@ -193,7 +193,7 @@ RapidContext.Widget.Pane.prototype._handleExit = function (opts) {
         }
         return undefined;
     }
-    opts = Object.assign({ hide: true, validate: false }, opts);
+    opts = { hide: true, validate: false, ...opts };
     if (RapidContext.Data.bool(opts.validate)) {
         let forms = this.getElementsByTagName("FORM");
         for (let i = 0; i < forms.length; i++) {

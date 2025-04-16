@@ -119,7 +119,7 @@ export function object(keys, values) {
         }
     } else if (isObject(keys)) {
         if (arguments.length < 2) {
-            return Object.assign({}, keys);
+            return { ...keys };
         } else {
             return Object.keys(keys).map(keyPair).reduce(merge, {});
         }
@@ -173,7 +173,7 @@ export function get(key, val) {
     if (arguments.length < 2) {
         return get.bind(null, ...arguments);
     } else {
-        let path = Array.isArray(key) ? [].concat(key) : ('' + key).split(/(?=\[)|\./);
+        let path = Array.isArray(key) ? [].concat(key) : String(key).split(/(?=\[)|\./);
         let hasWildcard = path.some((el) => el === '*' || el === '[]');
         let ctx = [val];
         while (path.length > 0 && ctx.length > 0) {

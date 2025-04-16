@@ -100,7 +100,8 @@ function createStyleElem(css) {
 // Translates a short length into a CSS calc() expression
 function toCssLength(val) {
     if (/[+-]/.test(val)) {
-        val = 'calc( ' + val.replace(/[+-]/g, ' $& ') + ' )';
+        let expr = val.replace(/[+-]/g, ' $& ');
+        val = `calc( ${expr} )`;
     }
     val = val.replace(/(\d)( |$)/g, '$1px$2');
     return val;

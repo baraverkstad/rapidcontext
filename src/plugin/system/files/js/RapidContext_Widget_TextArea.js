@@ -51,9 +51,9 @@ RapidContext.Widget.TextArea = function (attrs/*, ...*/) {
     function scrape(val) {
         return String(val && val.textContent || val || "");
     }
-    var text = (attrs && attrs.value) || "";
+    let text = (attrs && attrs.value) || "";
     text += Array.from(arguments).slice(1).map(scrape).join("");
-    var o = RapidContext.UI.TEXTAREA({
+    let o = RapidContext.UI.TEXTAREA({
         autocapitalize: "off",
         autocomplete: "off",
         autocorrect: "off",
@@ -62,7 +62,7 @@ RapidContext.Widget.TextArea = function (attrs/*, ...*/) {
     });
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.TextArea);
     o.addClass("widgetTextArea");
-    o.setAttrs(Object.assign({}, attrs, { value: text }));
+    o.setAttrs({ ...attrs, value: text });
     o.on("input", o._handleChange);
     return o;
 };
@@ -94,7 +94,7 @@ RapidContext.Widget.Classes.TextArea = RapidContext.Widget.TextArea;
  * @param {boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.TextArea.prototype.setAttrs = function (attrs) {
-    attrs = Object.assign({}, attrs);
+    attrs = { ...attrs };
     if ("helpText" in attrs) {
         console.warn("deprecated: setting 'helpText' attribute, use 'placeholder' instead");
         attrs.placeholder = attrs.placeholder || attrs.helpText;
@@ -134,7 +134,7 @@ RapidContext.Widget.TextArea.prototype.reset = function () {
  * field.setAttrs({ "value": lines.join("\n") });
  */
 RapidContext.Widget.TextArea.prototype.getValue = function () {
-    var str = this.value;
+    let str = this.value;
     // This is a hack to remove multiple newlines caused by
     // platforms inserting or failing to normalize newlines
     // within the HTML textarea control.
@@ -151,14 +151,14 @@ RapidContext.Widget.TextArea.prototype.getValue = function () {
  * @param {Event} [evt] the DOM Event object or null for manual
  */
 RapidContext.Widget.TextArea.prototype._handleChange = function (evt) {
-    var cause = (evt && evt.inputType) || "set";
-    var detail = { before: this.storedValue || "", after: this.value, cause: cause };
+    let cause = (evt && evt.inputType) || "set";
+    let detail = { before: this.storedValue || "", after: this.value, cause: cause };
     this.emit("change", { detail: detail, bubbles: true });
     this.storedValue = this.value;
     if (this.autosize) {
         this.style.height = "auto";
         if (this.scrollHeight > 10) {
-            this.style.height = this.scrollHeight + "px";
+            this.style.height = `${this.scrollHeight}px`;
         }
     }
 };

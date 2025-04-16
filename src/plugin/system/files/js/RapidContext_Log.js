@@ -28,10 +28,10 @@
 (function (window) {
 
     // The original console logger functions
-    var backup = {};
+    let backup = {};
 
     // The current log state
-    var state = {
+    let state = {
         count: 0,
         level: 3,
         context: null,
@@ -43,7 +43,7 @@
     };
 
     // The configuration settings
-    var config = {
+    let config = {
         interval: 10000,
         url: "rapidcontext/log",
         filter: null,
@@ -197,7 +197,7 @@
      */
     function error(msg/**, ...*/) {
         if (state.level >= 1) {
-            var args = Array.prototype.slice.call(arguments);
+            let args = Array.prototype.slice.call(arguments);
             _log("error", args);
             _store("error", args.map(stringify));
         }
@@ -217,7 +217,7 @@
      */
     function warn(msg/**, ...*/) {
         if (state.level >= 2) {
-            var args = Array.prototype.slice.call(arguments);
+            let args = Array.prototype.slice.call(arguments);
             _log("warn", args);
             _store("warn", args.map(stringify));
         }
@@ -237,7 +237,7 @@
      */
     function info(msg/**, ...*/) {
         if (state.level >= 3) {
-            var args = Array.prototype.slice.call(arguments);
+            let args = Array.prototype.slice.call(arguments);
             _log("info", args);
             _store("info", args.map(stringify));
         }
@@ -259,7 +259,7 @@
      */
     function debug(msg/**, ...*/) {
         if (state.level >= 4) {
-            var args = Array.prototype.slice.call(arguments);
+            let args = Array.prototype.slice.call(arguments);
             _log("log", args);
             _store("log", args.map(stringify));
         }
@@ -270,7 +270,7 @@
      */
     function _onerror(msg, url, line, col, err) {
         url = url.replace(document.baseURI || "", "");
-        var location = [url, line, col].filter(Boolean).join(":");
+        let location = [url, line, col].filter(Boolean).join(":");
         error(msg || "Uncaught error", location, err);
         return true;
     }
@@ -282,7 +282,7 @@
      * @param {Array} args the log message & data (as raw objects)
      */
     function _log(level, args) {
-        var logger = backup[level];
+        let logger = backup[level];
         if (typeof(logger) === "function") {
             _group(state.context);
             logger.apply(window.console, args);
@@ -296,7 +296,7 @@
      * @param {string} label the log context label
      */
     function _group(label) {
-        var console = window.console;
+        let console = window.console;
         if (console._group !== label) {
             if (console._group) {
                 delete console._group;
@@ -307,7 +307,7 @@
             if (label) {
                 console._group = label;
                 if (typeof(console.group) === "function") {
-                    console.group(label + ":");
+                    console.group(`${label}:`);
                 }
             }
         }
@@ -320,7 +320,7 @@
      * @param {Array} args the log message arguments (as strings)
      */
     function _store(level, args) {
-        var m = 1;
+        let m = 1;
         for (; m < args.length; m++) {
             if (args[m] && args[m].indexOf("\n") >= 0) {
                 break;
@@ -344,28 +344,24 @@
      * Handles stored events publishing in a timer loop.
      */
     function _publishLoop() {
-        function isValid(evt) {
+        let lastId = 0;
+        let events = state.history.filter((evt) => {
             lastId = evt.id;
             return evt.id > state.publish.last && config.filter(evt);
-        }
-        function onSuccess() {
-            state.publish.last = lastId;
-            state.publish.timer = setTimeout(_publishLoop, config.interval);
-        }
-        function onError(err) {
-            info("error publishing log events", err);
-            state.publish.timer = setTimeout(_publishLoop, config.interval);
-        }
-        var lastId = 0;
-        var events = state.history.filter(isValid);
+        });
         if (events.length <= 0) {
             state.publish.last = lastId;
             state.publish.timer = null;
         } else {
             try {
-                config.publisher(events).then(onSuccess, onError);
+                config.publisher(events).then(
+                    () => state.publish.last = lastId,
+                    (e) => info("error publishing log events", e)
+                ).finally(
+                    () => state.publish.timer = setTimeout(_publishLoop, config.interval)
+                );
             } catch (e) {
-                onError(e);
+                info("error publishing log events", e);
             }
         }
     }
@@ -400,9 +396,9 @@
      * @memberof RapidContext.Log
      */
     function stringify(val) {
-        var isObject = Object.prototype.toString.call(val) === "[object Object]";
-        var isArray = val instanceof Array;
-        var isSerializable = val && typeof(val.toJSON) === "function";
+        let isObject = Object.prototype.toString.call(val) === "[object Object]";
+        let isArray = val instanceof Array;
+        let isSerializable = val && typeof(val.toJSON) === "function";
         if (val && (isObject || isArray || isSerializable)) {
             try {
                 return JSON.stringify(val, null, 2);
@@ -410,10 +406,10 @@
                 return String(val);
             }
         } else if (val instanceof Error) {
-            var parts = [val.toString()];
+            let parts = [val.toString()];
             if (val.stack) {
-                var stack = String(val.stack).trim()
-                    .replace(val.toString() + "\n", "")
+                let stack = String(val.stack).trim()
+                    .replace(`${val.toString()}\n`, "")
                     .replace(/https?:.*\//g, "")
                     .replace(/\?[^:\s]+:/g, ":")
                     .replace(/@(.*)/mg, " ($1)")
@@ -422,9 +418,9 @@
             }
             return parts.join("");
         } else if (val && (val.nodeType === 1 || val.nodeType === 9)) {
-            var el = val.documentElement || val.document || val;
-            var xml = el.outerHTML || el.outerXML || el.xml || String(el);
-            var children = el.childNodes && el.childNodes.length;
+            let el = val.documentElement || val.document || val;
+            let xml = el.outerHTML || el.outerXML || el.xml || String(el);
+            let children = el.childNodes && el.childNodes.length;
             return xml.replace(/>[^<]*/, children ? ">..." : "/>");
         } else {
             return String(val);
@@ -432,8 +428,8 @@
     }
 
     // Create namespaces
-    var RapidContext = window.RapidContext || (window.RapidContext = {});
-    var module = RapidContext.Log || (RapidContext.Log = {});
+    let RapidContext = window.RapidContext || (window.RapidContext = {});
+    let module = RapidContext.Log || (RapidContext.Log = {});
 
     // Export namespace symbols
     module.init = init;

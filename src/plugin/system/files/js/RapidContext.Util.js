@@ -60,12 +60,8 @@ if (typeof(RapidContext.Util) == "undefined") {
  */
 RapidContext.Util.toTitleCase = function (str) {
     str = str.replace(/[._-]+/g, " ").trim();
-    str = str.replace(/[a-z][A-Z]/g, function (match) {
-        return match.charAt(0) + " " + match.charAt(1);
-    });
-    str = str.replace(/(^|\s)[a-z]/g, function (match) {
-        return match.toUpperCase();
-    });
+    str = str.replace(/[a-z][A-Z]/g, (s) => `${s.charAt(0)} ${s.charAt(1)}`);
+    str = str.replace(/(^|\s)[a-z]/g, (s) => s.toUpperCase());
     return str;
 };
 
@@ -81,10 +77,10 @@ RapidContext.Util.toTitleCase = function (str) {
  */
 RapidContext.Util.blurAll = function (node) {
     node.blur();
-    var tags = ["A", "BUTTON", "INPUT", "TEXTAREA", "SELECT"];
-    for (var i = 0; i < tags.length; i++) {
-        var nodes = node.getElementsByTagName(tags[i]);
-        for (var j = 0; j < nodes.length; j++) {
+    let tags = ["A", "BUTTON", "INPUT", "TEXTAREA", "SELECT"];
+    for (let i = 0; i < tags.length; i++) {
+        let nodes = node.getElementsByTagName(tags[i]);
+        for (let j = 0; j < nodes.length; j++) {
             nodes[j].blur();
         }
     }

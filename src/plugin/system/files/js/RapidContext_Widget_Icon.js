@@ -57,7 +57,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * </h3>
  */
 RapidContext.Widget.Icon = function (def) {
-    var o = (def && def.nodeType === 1) ? def : document.createElement("i");
+    let o = (def && def.nodeType === 1) ? def : document.createElement("i");
     if (!RapidContext.Widget.isWidget(o, "Icon")) {
         RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Icon);
         o.addClass("widgetIcon");
@@ -97,17 +97,17 @@ RapidContext.Widget.Icon.prototype.setAttrs = function (attrs) {
         let key = (attrs in RapidContext.Widget.Icon) ? "ref" : "class";
         attrs = { [key]: attrs };
     } else {
-        attrs = Object.assign({}, attrs);
+        attrs = { ...attrs };
     }
     while ("ref" in attrs) {
         let def = RapidContext.Widget.Icon[attrs.ref] || {};
         delete attrs.ref;
-        attrs = Object.assign({}, def, attrs);
+        attrs = { ...def, ...attrs };
     }
     let styles = {};
     if ("url" in attrs) {
         this.addClass("widgetIconSprite");
-        styles.backgroundImage = "url('" + attrs.url + "')";
+        styles.backgroundImage = `url('${attrs.url}')`;
         delete attrs.url;
     }
     if ("position" in attrs) {
@@ -115,11 +115,11 @@ RapidContext.Widget.Icon.prototype.setAttrs = function (attrs) {
         delete attrs.position;
     }
     if ("width" in attrs) {
-        styles.width = attrs.width + "px";
+        styles.width = `${attrs.width}px`;
         delete attrs.width;
     }
     if ("height" in attrs) {
-        styles.height = attrs.height + "px";
+        styles.height = `${attrs.height}px`;
         delete attrs.height;
     }
     if ("tooltip" in attrs) {

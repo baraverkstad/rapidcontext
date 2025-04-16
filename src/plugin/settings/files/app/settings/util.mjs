@@ -40,7 +40,7 @@ export async function loadTypes() {
 }
 
 export function typeIds(base) {
-    return Object.keys(types).filter((id) => id.startsWith(base + '/'));
+    return Object.keys(types).filter((id) => id.startsWith(`${base }/`));
 }
 
 export function typePath(type) {

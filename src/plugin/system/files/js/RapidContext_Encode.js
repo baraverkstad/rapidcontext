@@ -26,7 +26,7 @@
      * @private
      */
     function toCharEscape(chr) {
-        return "\\u" + chr.charCodeAt(0).toString(16).padStart(4, "0");
+        return `\\u${chr.charCodeAt(0).toString(16).padStart(4, "0")}`;
     }
 
     /**
@@ -55,8 +55,8 @@
      */
     function toUrlPart(val, isForm) {
         val = (val == null) ? "" : val;
-        var isObject = typeof(val) === "object";
-        var res = encodeURIComponent(isObject ? toJSON(val) : String(val));
+        let isObject = typeof(val) === "object";
+        let res = encodeURIComponent(isObject ? toJSON(val) : String(val));
         return isForm ? res.replace(/%20/g, "+") : res;
     }
 
@@ -71,21 +71,21 @@
      */
     function toUrlQuery(data, isForm) {
         data = data || {};
-        var parts = [];
-        for (var key in data) {
-            var val = data[key];
-            var arr = Array.isArray(val) ? val : [val];
+        let parts = [];
+        for (let key in data) {
+            let val = data[key];
+            let arr = Array.isArray(val) ? val : [val];
             arr.length || arr.push("");
             arr.forEach(function (v) {
-                parts.push(toUrlPart(key, isForm) + "=" + toUrlPart(v, isForm));
+                parts.push(`${toUrlPart(key, isForm)}=${toUrlPart(v, isForm)}`);
             });
         }
         return parts.join("&");
     }
 
     // Create namespaces & export symbols
-    var RapidContext = window.RapidContext || (window.RapidContext = {});
-    var Encode = RapidContext.Encode || (RapidContext.Encode = {});
+    let RapidContext = window.RapidContext || (window.RapidContext = {});
+    let Encode = RapidContext.Encode || (RapidContext.Encode = {});
     Object.assign(Encode, { toJSON, toUrlPart, toUrlQuery });
 
 })(globalThis);

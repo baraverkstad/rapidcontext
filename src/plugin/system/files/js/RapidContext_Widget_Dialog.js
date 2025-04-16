@@ -200,7 +200,7 @@ RapidContext.Widget.Dialog.prototype._handleMouseMove = function (evt) {
  * @param {boolean} [attrs.hidden] the hidden widget flag
  */
 RapidContext.Widget.Dialog.prototype.setAttrs = function (attrs) {
-    attrs = Object.assign({}, attrs);
+    attrs = { ...attrs };
     if ("title" in attrs) {
         this.firstChild.innerText = attrs.title || "";
         delete attrs.title;
@@ -283,11 +283,11 @@ RapidContext.Widget.Dialog.prototype.moveTo = function (x, y) {
         x: Math.round(Math.max(0, Math.min(x, max.x))),
         y: Math.round(Math.max(0, Math.min(y, max.y)))
     };
-    this.style.left = pos.x + "px";
-    this.style.top = pos.y + "px";
+    this.style.left = `${pos.x}px`;
+    this.style.top = `${pos.y}px`;
     let el = this.lastChild;
-    el.style.maxWidth = (this.parentNode.offsetWidth - pos.x - el.offsetLeft - 5) + "px";
-    el.style.maxHeight = (this.parentNode.offsetHeight - pos.y - el.offsetTop - 5) + "px";
+    el.style.maxWidth = `${this.parentNode.offsetWidth - pos.x - el.offsetLeft - 5}px`;
+    el.style.maxHeight = `${this.parentNode.offsetHeight - pos.y - el.offsetTop - 5}px`;
     this.center = false;
     this.emit("move", { detail: pos });
 };
@@ -327,8 +327,8 @@ RapidContext.Widget.Dialog.prototype.resizeTo = function (w, h) {
         w: Math.round(Math.max(150, Math.min(w, max.w))),
         h: Math.round(Math.max(100, Math.min(h, max.h)))
     };
-    this.style.width = dim.w + "px";
-    this.style.height = dim.h + "px";
+    this.style.width = `${dim.w}px`;
+    this.style.height = `${dim.h}px`;
     this.center = false;
     this._resizeContent();
     this.emit("resize", { detail: dim });

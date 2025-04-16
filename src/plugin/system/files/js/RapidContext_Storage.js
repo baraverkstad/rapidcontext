@@ -33,11 +33,11 @@
      * @private
      */
     function storageUrl(pathOrObj) {
-        var ident = (typeof(pathOrObj) === "string") ? pathOrObj : path(pathOrObj);
+        let ident = (typeof(pathOrObj) === "string") ? pathOrObj : path(pathOrObj);
         if (!ident) {
             throw new Error("Invalid object or storage path");
         }
-        return "rapidcontext/storage/" + ident.replace(/^\//, "");
+        return `rapidcontext/storage/${ident.replace(/^\//, "")}`;
     }
 
     /**
@@ -51,8 +51,8 @@
      * @memberof RapidContext.Storage
      */
     function path(obj) {
-        var type = obj && obj.type && obj.type.split("/")[0];
-        return (type && obj.id) ? type + "/" + obj.id : null;
+        let type = obj && obj.type && obj.type.split("/")[0];
+        return (type && obj.id) ? `${type}/${obj.id}` : null;
     }
 
     /**
@@ -68,9 +68,9 @@
      * @memberof RapidContext.Storage
      */
     function read(pathOrObj) {
-        var url = storageUrl(pathOrObj);
+        let url = storageUrl(pathOrObj);
         url += url.endsWith("/") ? "index.json" : ".json";
-        url += "?_=" + (+new Date() % 100000);
+        url += `?_=${+new Date() % 100000}`;
         return RapidContext.App.loadJSON(url, null, null);
     }
 
@@ -88,13 +88,13 @@
      * @memberof RapidContext.Storage
      */
     function write(pathOrObj, data) {
-        var url = storageUrl(pathOrObj);
+        let url = storageUrl(pathOrObj);
         if (typeof(pathOrObj) == "string" && data == null) {
             return RapidContext.App.loadXHR(url, null, { method: "DELETE" });
         } else {
-            var headers = { "Content-Type": "application/json" };
-            var opts = { method: "POST", headers: headers };
-            return RapidContext.App.loadXHR(url + ".yaml", data || pathOrObj, opts);
+            let headers = { "Content-Type": "application/json" };
+            let opts = { method: "POST", headers: headers };
+            return RapidContext.App.loadXHR(`${url}.yaml`, data || pathOrObj, opts);
         }
     }
 
@@ -113,19 +113,19 @@
      * @memberof RapidContext.Storage
      */
     function update(pathOrObj, data) {
-        var url = storageUrl(pathOrObj);
-        var newPath = path(data);
-        var headers = { "Content-Type": "application/json" };
+        let url = storageUrl(pathOrObj);
+        let newPath = path(data);
+        let headers = { "Content-Type": "application/json" };
         if (newPath && newPath != path(pathOrObj)) {
-            headers["X-Move-To"] = newPath + ".yaml";
+            headers["X-Move-To"] = `${newPath}.yaml`;
         }
-        var opts = { method: "PATCH", headers: headers };
+        let opts = { method: "PATCH", headers: headers };
         return RapidContext.App.loadJSON(url, data || pathOrObj, opts);
     }
 
     // Create namespaces & export symbols
-    var RapidContext = window.RapidContext || (window.RapidContext = {});
-    var Storage = RapidContext.Storage || (RapidContext.Storage = {});
+    let RapidContext = window.RapidContext || (window.RapidContext = {});
+    let Storage = RapidContext.Storage || (RapidContext.Storage = {});
     Object.assign(Storage, { path, read, write, update });
 
 })(globalThis);

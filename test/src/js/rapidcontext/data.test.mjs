@@ -206,7 +206,7 @@ test('data.compare()', () => {
     assert.strictEqual(data.compare('abc', 'abc'), 0);
     assert.strictEqual(data.compare('abc', 'cde'), -1);
     assert.strictEqual(data.compare('cde', 'abc'), 1);
-    let toLower = (o) => String.prototype.toLowerCase.call('' + o);
+    let toLower = (o) => String.prototype.toLowerCase.call(String(o));
     let cmpIgnoreCase = data.compare(toLower);
     assert.strictEqual(typeof(cmpIgnoreCase), 'function');
     assert.strictEqual(cmpIgnoreCase('AbC', 'abc'), 0);

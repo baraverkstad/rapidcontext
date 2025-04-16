@@ -63,7 +63,7 @@ RapidContext.Widget.isWidget = function (obj, className) {
     return obj &&
            obj.nodeType > 0 &&
            obj.classList.contains("widget") &&
-           (!className || obj.classList.contains("widget" + className));
+           (!className || obj.classList.contains(`widget${className}`));
 };
 
 /**
@@ -111,7 +111,7 @@ RapidContext.Widget._widgetMixin = function (node, ...mixins) {
             if (k !== "constructor") {
                 try {
                     if (k in node) {
-                        node["__" + k] = node[k];
+                        node[`__${k}`] = node[k];
                     }
                     let desc = Object.getOwnPropertyDescriptor(proto, k);
                     Object.defineProperty(node, k, desc);
@@ -143,8 +143,8 @@ RapidContext.Widget._widgetMixin = function (node, ...mixins) {
 RapidContext.Widget.createWidget = function (name, attrs/*, ...*/) {
     let cls = RapidContext.Widget.Classes[name];
     if (cls == null) {
-        throw new ReferenceError("failed to find widget '" + name +
-                                 "' in RapidContext.Widget.Classes");
+        let msg = `failed to find widget '${name}' in RapidContext.Widget.Classes`;
+        throw new ReferenceError(msg);
     }
     return cls.apply(this, Array.from(arguments).slice(1));
 };
@@ -184,7 +184,7 @@ RapidContext.Widget.destroyWidget = function (node) {
  */
 RapidContext.Widget.prototype.uid = function () {
     if (!this.id) {
-        this.id = "widget" + RapidContext.Widget._nextId();
+        this.id = `widget${RapidContext.Widget._nextId()}`;
     }
     return this.id;
 };
@@ -241,8 +241,8 @@ RapidContext.Widget.prototype.setAttrs = function (attrs) {
             this._setHidden(value);
         } else if (name == "class") {
             let elem = this._styleNode();
-            this.removeClass.apply(this, elem.className.split(/\s+/));
-            this.addClass.apply(this, value.split(/\s+/));
+            this.removeClass(...elem.className.split(/\s+/));
+            this.addClass(...value.split(/\s+/));
         } else if (name == "style") {
             if (typeof(value) == "string") {
                 let func = (res, part) => {
@@ -366,11 +366,11 @@ RapidContext.Widget.prototype.removeClass = function (/* ... */) {
  *         `false` otherwise
  */
 RapidContext.Widget.prototype.toggleClass = function (/* ... */) {
-    if (this.hasClass.apply(this, arguments)) {
-        this.removeClass.apply(this, arguments);
+    if (this.hasClass(...arguments)) {
+        this.removeClass(...arguments);
         return false;
     } else {
-        this.addClass.apply(this, arguments);
+        this.addClass(...arguments);
         return true;
     }
 };
