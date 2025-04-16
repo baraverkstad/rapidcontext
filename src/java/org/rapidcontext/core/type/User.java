@@ -165,6 +165,7 @@ public class User extends StorableObject {
     /**
      * Reports user request metrics for a single request.
      *
+     * @param user           the user object, or null for anonymous
      * @param start          the start time (in millis)
      * @param success        the success flag
      * @param error          the optional error message
