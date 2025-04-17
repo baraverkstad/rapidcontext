@@ -23,6 +23,7 @@ property:
         The fully qualified JDBC driver class name. Optional, will use built-in
         URL mapping if omitted.
     required: false
+    value: ''
   - name: user
     description: The database user name.
     required: true
@@ -37,6 +38,7 @@ property:
         to an empty string if omitted.
     required: false
     format: text
+    value: ''
   - name: sqlping
     title: SQL Ping
     description: >-
@@ -44,15 +46,18 @@ property:
         to "SELECT 1" if omitted.
     required: false
     format: text
+    value: SELECT 1
   - name: autocommit
     description: >-
         The auto-commit each SQL statement flag. Optional, will default to
         false.
     required: false
     format: boolean
+    value: false
   - name: timeout
     description: >-
         The connection and query timeout (in seconds). Optional, will default
         to 30 seconds.
     required: false
     format: number
+    value: 30

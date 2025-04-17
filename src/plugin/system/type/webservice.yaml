@@ -11,6 +11,7 @@ property:
     description: The description of the web service. Defaults to blank.
     required: true
     format: text
+    value: ''
   - name: match
     description: >-
         The web request match array. Contains a list of match criteria objects.

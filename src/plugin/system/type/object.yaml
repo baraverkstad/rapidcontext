@@ -17,12 +17,14 @@ property:
         The object type. The object type identifies the kind of object, e.g.
         "plugin", "session", etc.
     required: false
+    value: ''
   - name: className
     description: >-
         The fully qualified Java class name used for creating an object instance
         (from the serialized data). Optional, defaults to creating a dictionary
         instance.
     required: false
+    value: ''
   - name: _activatedTime
     description: >-
         The most recent object activation time.

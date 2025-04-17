@@ -14,16 +14,20 @@ property:
     description: The plug-in description text.
     required: true
     format: text
+    value: ''
   - name: version
     description: The plug-in build/release version.
     required: true
   - name: date
     description: The plug-in build/release date.
     required: false
+    value: ''
   - name: copyright
     description: The plug-in copyright notice.
     required: false
     format: text
+    value: ''
   - name: post-install
     description: The post-install validation or update procedure (if applicable).
     required: false
+    value: ''

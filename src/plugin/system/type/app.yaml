@@ -15,10 +15,12 @@ property:
         The app description presented to the user. Defaults to blank.
     required: true
     format: text
+    value: ''
   - name: sort
     description: >-
         The app alphanumeric sort key. Defaults to the app name.
     required: false
+    value: name
   - name: className
     description: >-
         The app JavaScript class name (for non-ESM code). This name refers to
@@ -27,11 +29,13 @@ property:
         same time (in the web page). The source code for the class should be
         placed in one of the code resources specified.
     required: false
+    value: ''
   - name: launch
     description: >-
         The app launch setting. Should be either 'manual' (default), 'auto',
         'once', 'window' or 'limited'.
     required: false
+    value: manual
   - name: resources
     description: >-
         The array of app resources. Each resource is a dictionary with 'type',

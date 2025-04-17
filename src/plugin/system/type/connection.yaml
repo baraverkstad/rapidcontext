@@ -8,12 +8,14 @@ property:
     description: The description of the connection. Defaults to blank.
     required: true
     format: text
+    value: ''
   - name: maxOpen
     description: >-
         The maximum number of open connection channels (at the same time).
         Optional, defaults to 4.
     required: false
     format: number
+    value: 4
   - name: maxIdleSecs
     description: >-
         The maximum number of seconds a connection channel may sit idle in
@@ -21,6 +23,7 @@ property:
         some connection types cannot be reused and thus ignores this setting.
     required: false
     format: number
+    value: 600
   - name: _openChannels
     description: >-
         The number of connection channels currently open.

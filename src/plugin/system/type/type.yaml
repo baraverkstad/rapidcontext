@@ -11,15 +11,18 @@ property:
     description: >-
         The optional legacy type id (or alias). Optional, defaults to blank.
     required: false
+    value: ''
   - name: description
     description: The description for the type. Defaults to blank.
     required: true
     format: text
+    value: ''
   - name: initializer
     description: >-
         The fully qualified Java class name used for creating an object instance
         (from the serialized data). Optional, defaults to a dictionary instance.
     required: false
+    value: ''
   - name: property
     description: >-
         The array of object properties. Each property is a dictionary with keys
@@ -28,3 +31,4 @@ property:
         changed semantical meaning. Optional, defaults to an empty array.
     required: true
     format: array
+    value: []
