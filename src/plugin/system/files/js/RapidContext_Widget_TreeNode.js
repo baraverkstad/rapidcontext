@@ -147,7 +147,7 @@ RapidContext.Widget.TreeNode.prototype.addChildNode = function (child) {
 RapidContext.Widget.TreeNode.prototype.removeChildNode = function (child) {
     let elem = this._containerNode();
     if (elem) {
-        elem.unselect();
+        child && child.unselect();
         elem.removeChild(child);
     }
 };
